@@ -2,5 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Script.cpp" />
+    <ClCompile Include="src\ScriptDomain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Script.hpp" />
+    <ClInclude Include="src\ScriptDomain.hpp" />
   </ItemGroup>
 </Project>
