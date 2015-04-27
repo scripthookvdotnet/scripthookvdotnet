@@ -11,4 +11,4 @@ Any contributions to the project are welcomed, it's recommended to use GitHub [p
 
 ## License
 
-All the source code is licensed under the conditions of the [zlib license](LICENSE.txt).
+All the source code except for the Vector, Matrix and Quaternion classes, which are licensed separatly, is licensed under the conditions of the [zlib license](LICENSE.txt).
