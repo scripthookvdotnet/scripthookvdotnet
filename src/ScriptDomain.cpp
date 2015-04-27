@@ -47,7 +47,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
+	ScriptDomain::ScriptDomain() : mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
 	{
 		Log("Initialized script domain.");
 
@@ -332,9 +332,24 @@ namespace GTA
 				AbortScript(script);
 			}
 		}
+
+		for each (IntPtr handle in this->mPinnedStrings)
+		{
+			Runtime::InteropServices::Marshal::FreeHGlobal(handle);
+		}
+
+		this->mPinnedStrings->Clear();
 	}
 	void ScriptDomain::HandleException(Exception ^exception)
 	{
 		Log("Caught unhandled exception:", Environment::NewLine, exception->ToString());
+	}
+	IntPtr ScriptDomain::PinString(String ^string)
+	{
+		IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
+
+		this->mPinnedStrings->Add(handle);
+
+		return handle;
 	}
 }

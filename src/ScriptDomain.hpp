@@ -35,6 +35,7 @@ namespace GTA
 	internal:
 		void Run();
 		void HandleException(Exception ^exception);
+		IntPtr PinString(String ^string);
 
 	private:
 		bool LoadScript(String ^filename);
@@ -44,6 +45,7 @@ namespace GTA
 
 		static AppDomain ^sAppDomain;
 		static ScriptDomain ^sScriptDomain;
+		List<IntPtr> ^mPinnedStrings;
 		List<Script ^> ^mRunningScripts;
 		Dictionary<String ^, Type ^> ^mScriptTypes;
 	};
