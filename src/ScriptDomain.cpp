@@ -92,8 +92,7 @@ namespace GTA
 		{
 			filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb"));
 			filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs"));
-			filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.net"));
-			filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.net.dll"));
+			filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll"));
 		}
 		catch (Exception ^ex)
 		{
@@ -199,7 +198,7 @@ namespace GTA
 
 		try
 		{
-			assembly = Reflection::Assembly::LoadFile(filename);
+			assembly = Reflection::Assembly::LoadFrom(filename);
 		}
 		catch (Exception ^ex)
 		{
