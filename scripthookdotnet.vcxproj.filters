@@ -1,14 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Native.cpp" />
-    <ClCompile Include="src\Script.cpp" />
-    <ClCompile Include="src\ScriptDomain.cpp" />
+    <Filter Include="Core">
+      <UniqueIdentifier>{eb0c107f-5b5a-4c80-9efa-0647cdf29f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{56aa5d32-293c-45fc-ac7e-2fc6fd6d805b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Native.hpp" />
-    <ClInclude Include="src\Script.hpp" />
-    <ClInclude Include="src\ScriptDomain.hpp" />
+    <ClCompile Include="src\Main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Native.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScriptDomain.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quaternion.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Native.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScriptDomain.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Quaternion.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Matrix.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

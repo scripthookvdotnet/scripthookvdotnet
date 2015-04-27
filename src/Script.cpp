@@ -29,7 +29,7 @@ namespace GTA
 	{
 		this->mScriptDomain->AbortScript(this);
 	}
-	bool Script::IsKeyPressed(Windows::Forms::Keys key)
+	bool Script::IsKeyPressed(System::Windows::Forms::Keys key)
 	{
 		return this->mScriptDomain->IsKeyPressed(key);
 	}

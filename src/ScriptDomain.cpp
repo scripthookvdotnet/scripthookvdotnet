@@ -4,6 +4,9 @@
 
 namespace GTA
 {
+	using namespace System;
+	using namespace System::Collections::Generic;
+
 	namespace
 	{
 		void Log(... array<String ^> ^message)

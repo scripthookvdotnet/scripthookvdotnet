@@ -4,10 +4,7 @@
 
 namespace GTA
 {
-	using namespace System;
-	using namespace System::Collections::Generic;
-
-	private ref class ScriptDomain sealed : public MarshalByRefObject
+	private ref class ScriptDomain sealed : public System::MarshalByRefObject
 	{
 	public:
 		ScriptDomain();
@@ -34,21 +31,21 @@ namespace GTA
 
 	internal:
 		void Run();
-		void HandleException(Exception ^exception);
-		IntPtr PinString(String ^string);
-		bool IsKeyPressed(Windows::Forms::Keys key);
+		void HandleException(System::Exception ^exception);
+		System::IntPtr PinString(System::String ^string);
+		bool IsKeyPressed(System::Windows::Forms::Keys key);
 
 	private:
-		bool LoadScript(String ^filename);
-		bool LoadAssembly(String ^filename);
-		bool LoadAssembly(String ^filename, Reflection::Assembly ^assembly);
-		Script ^InstantiateScript(Type ^scripttype);
+		bool LoadScript(System::String ^filename);
+		bool LoadAssembly(System::String ^filename);
+		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
+		Script ^InstantiateScript(System::Type ^scripttype);
 
-		static AppDomain ^sAppDomain;
+		static System::AppDomain ^sAppDomain;
 		static ScriptDomain ^sScriptDomain;
 		array<bool> ^mKeyboardState;
-		List<IntPtr> ^mPinnedStrings;
-		List<Script ^> ^mRunningScripts;
-		Dictionary<String ^, Type ^> ^mScriptTypes;
+		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
+		System::Collections::Generic::List<Script ^> ^mRunningScripts;
+		System::Collections::Generic::Dictionary<System::String ^, System::Type ^> ^mScriptTypes;
 	};
 }

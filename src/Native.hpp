@@ -4,9 +4,6 @@ namespace GTA
 {
 	namespace Native
 	{
-		using namespace System;
-		using namespace System::Collections::Generic;
-
 		public ref class Argument
 		{
 		public:
@@ -14,8 +11,8 @@ namespace GTA
 			Argument(int value);
 			Argument(float value);
 			Argument(double value);
-			Argument(IntPtr value);
-			Argument(String ^value);
+			Argument(System::IntPtr value);
+			Argument(System::String ^value);
 
 			static inline operator Argument ^ (bool value)
 			{
@@ -25,26 +22,34 @@ namespace GTA
 			{
 				return gcnew Argument(value);
 			}
+			static inline operator Argument ^ (int *value)
+			{
+				return gcnew Argument(System::IntPtr(value));
+			}
 			static inline operator Argument ^ (float value)
 			{
 				return gcnew Argument(value);
+			}
+			static inline operator Argument ^ (float *value)
+			{
+				return gcnew Argument(System::IntPtr(value));
 			}
 			static inline operator Argument ^ (double value)
 			{
 				return gcnew Argument(value);
 			}
-			static inline operator Argument ^ (String ^value)
+			static inline operator Argument ^ (System::String ^value)
 			{
 				return gcnew Argument(value);
 			}
 
-			virtual String ^ToString() override
+			virtual System::String ^ToString() override
 			{
 				return this->mData.ToString();
 			}
 
 		internal:
-			UInt64 mData;
+			System::UInt64 mData;
 		};
 		public ref class OutArgument : public Argument
 		{
@@ -58,18 +63,18 @@ namespace GTA
 		public ref class Function abstract sealed
 		{
 		public:
-			static UInt64 Address(String ^name);
+			static System::UInt64 Address(System::String ^name);
 
 			generic <typename T>
-			static T Call(String ^name, ... array<Argument ^> ^arguments);
-			static void Call(String ^name, ... array<Argument ^> ^arguments);
+			static T Call(System::String ^name, ... array<Argument ^> ^arguments);
+			static void Call(System::String ^name, ... array<Argument ^> ^arguments);
 
 		internal:
 			generic <typename T>
-			static T Call(UInt64 address, ... array<Argument ^> ^arguments);
+			static T Call(System::UInt64 address, ... array<Argument ^> ^arguments);
 
 		private:
-			static Dictionary<String ^, UInt64> ^sAddresses = gcnew Dictionary<String ^, UInt64>();
+			static System::Collections::Generic::Dictionary<System::String ^, System::UInt64> ^sAddresses = gcnew System::Collections::Generic::Dictionary<System::String ^, System::UInt64>();
 		};
 	}
 }

@@ -1,11 +1,15 @@
 #include "Native.hpp"
 #include "NativeCaller.h"
+#include "Vector.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA
 {
 	namespace Native
 	{
+		using namespace System;
+		using namespace System::Collections::Generic;
+
 		namespace
 		{
 			unsigned int sStackPosition = 0;
@@ -4080,6 +4084,23 @@ namespace GTA
 				{
 					return String::Empty;
 				}
+			}
+
+			if (type == Vector3::typeid)
+			{
+				#pragma pack(push, 1)
+				struct NativeVector3
+				{
+					float x;
+					DWORD _paddingx;
+					float y;
+					DWORD _paddingy;
+					float z;
+					DWORD _paddingz;
+				};
+				#pragma pack(pop)
+
+				return gcnew Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));

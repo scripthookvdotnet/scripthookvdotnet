@@ -4,27 +4,25 @@ namespace GTA
 {
 	ref class ScriptDomain;
 
-	using namespace System;
-
 	public ref class Script abstract
 	{
 	public:
 		Script();
 
-		event EventHandler ^Tick;
-		event Windows::Forms::KeyEventHandler ^KeyUp;
-		event Windows::Forms::KeyEventHandler ^KeyDown;
+		event System::EventHandler ^Tick;
+		event System::Windows::Forms::KeyEventHandler ^KeyUp;
+		event System::Windows::Forms::KeyEventHandler ^KeyDown;
 
-		property String ^Name
+		property System::String ^Name
 		{
-			String ^get()
+			System::String ^get()
 			{
 				return GetType()->FullName;
 			}
 		}
-		property String ^Filename
+		property System::String ^Filename
 		{
-			String ^get()
+			System::String ^get()
 			{
 				return this->mFilename;
 			}
@@ -32,7 +30,7 @@ namespace GTA
 
 		void Abort();
 
-		virtual String ^ToString() override
+		virtual System::String ^ToString() override
 		{
 			return Name;
 		}
@@ -44,26 +42,26 @@ namespace GTA
 			void set(int value);
 		}
 
-		bool IsKeyPressed(Windows::Forms::Keys key);
+		bool IsKeyPressed(System::Windows::Forms::Keys key);
 
 	internal:
-		void RaiseTick(Object ^sender)
+		void RaiseTick(System::Object ^sender)
 		{
-			Tick(sender, EventArgs::Empty);
+			Tick(sender, System::EventArgs::Empty);
 		}
-		void RaiseKeyUp(Object ^sender, Windows::Forms::KeyEventArgs ^args)
+		void RaiseKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
 		{
 			KeyUp(sender, args);
 		}
-		void RaiseKeyDown(Object ^sender, Windows::Forms::KeyEventArgs ^args)
+		void RaiseKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
 		{
 			KeyDown(sender, args);
 		}
 
 		int mInterval;
 		bool mRunning;
-		DateTime mNextTick;
+		System::DateTime mNextTick;
 		ScriptDomain ^mScriptDomain;
-		String ^mFilename;
+		System::String ^mFilename;
 	};
 }

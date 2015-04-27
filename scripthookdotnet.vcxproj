@@ -78,17 +78,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Matrix.cpp" />
     <ClCompile Include="src\Native.cpp" />
+    <ClCompile Include="src\Quaternion.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\ScriptDomain.cpp" />
+    <ClCompile Include="src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Matrix.hpp" />
     <ClInclude Include="src\Native.hpp" />
+    <ClInclude Include="src\Quaternion.hpp" />
     <ClInclude Include="src\Script.hpp" />
     <ClInclude Include="src\ScriptDomain.hpp" />
+    <ClInclude Include="src\Vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
