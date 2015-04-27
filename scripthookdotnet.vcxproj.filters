@@ -7,6 +7,9 @@
     <Filter Include="Math">
       <UniqueIdentifier>{56aa5d32-293c-45fc-ac7e-2fc6fd6d805b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripting">
+      <UniqueIdentifier>{921247d8-e2c0-463b-afc6-e0e43a621070}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -30,6 +33,27 @@
     <ClCompile Include="src\Matrix.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ped.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vehicle.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\World.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Native.hpp">
@@ -49,6 +73,27 @@
     </ClInclude>
     <ClInclude Include="src\Matrix.hpp">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ped.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vehicle.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\World.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

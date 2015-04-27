@@ -71,7 +71,7 @@
       <AdditionalIncludeDirectories>src;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -82,21 +82,35 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Matrix.cpp" />
+    <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Native.cpp" />
+    <ClCompile Include="src\Ped.cpp" />
+    <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Quaternion.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\ScriptDomain.cpp" />
     <ClCompile Include="src\Vector.cpp" />
+    <ClCompile Include="src\Vehicle.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Entity.hpp" />
+    <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\Matrix.hpp" />
+    <ClInclude Include="src\Model.hpp" />
     <ClInclude Include="src\Native.hpp" />
+    <ClInclude Include="src\Ped.hpp" />
+    <ClInclude Include="src\Player.hpp" />
     <ClInclude Include="src\Quaternion.hpp" />
     <ClInclude Include="src\Script.hpp" />
     <ClInclude Include="src\ScriptDomain.hpp" />
     <ClInclude Include="src\Vector.hpp" />
+    <ClInclude Include="src\Vehicle.hpp" />
+    <ClInclude Include="src\World.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
