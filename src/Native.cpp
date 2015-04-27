@@ -10,37 +10,31 @@ namespace GTA
 		using namespace System;
 		using namespace System::Collections::Generic;
 
-		namespace
-		{
-			unsigned int sStackPosition = 0;
-			unsigned char sStack[512] = { 0 };
-		}
-
-		Argument::Argument(bool value) : mData(value ? 1 : 0)
+		InputArgument::InputArgument(bool value) : mData(value ? 1 : 0)
 		{
 		}
-		Argument::Argument(int value) : mData(value)
+		InputArgument::InputArgument(int value) : mData(value)
 		{
 
 		}
-		Argument::Argument(float value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(value), 0))
+		InputArgument::InputArgument(float value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(value), 0))
 		{
 		}
-		Argument::Argument(double value) : mData(BitConverter::ToUInt64(BitConverter::GetBytes(static_cast<float>(value)), 0))
+		InputArgument::InputArgument(double value) : mData(BitConverter::ToUInt64(BitConverter::GetBytes(static_cast<float>(value)), 0))
 		{
 		}
-		Argument::Argument(IntPtr value) : mData(value.ToInt64())
+		InputArgument::InputArgument(IntPtr value) : mData(value.ToInt64())
 		{
 		}
-		Argument::Argument(String ^value) : mData(ScriptDomain::CurrentDomain->PinString(value).ToInt64())
+		InputArgument::InputArgument(String ^value) : mData(ScriptDomain::CurrentDomain->PinString(value).ToInt64())
 		{
 		}
-		OutArgument::OutArgument() : Argument(IntPtr(sStack + sStackPosition))
+		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))
 		{
-			if (sStackPosition += 20 > 512)
-			{
-				sStackPosition = 0;
-			}
+		}
+		OutputArgument::!OutputArgument()
+		{
+			delete[] this->mStorage;
 		}
 
 		UInt64 Function::Address(String ^name)
@@ -4106,22 +4100,22 @@ namespace GTA
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
 		generic <typename T>
-		T OutArgument::GetResult()
+		T OutputArgument::GetResult()
 		{
 			return static_cast<T>(Native::GetResult(T::typeid, reinterpret_cast<PUINT64>(this->mData)));
 		}
 
 		generic <typename T>
-		T Function::Call(String ^name, ... array<Argument ^> ^arguments)
+		T Function::Call(String ^name, ... array<InputArgument ^> ^arguments)
 		{
 			return Call<T>(Address(name), arguments);
 		}
-		void Function::Call(String ^name, ... array<Argument ^> ^arguments)
+		void Function::Call(String ^name, ... array<InputArgument ^> ^arguments)
 		{
 			Call<int>(Address(name), arguments);
 		}
 		generic <typename T>
-		T Function::Call(UInt64 address, ... array<Argument ^> ^arguments)
+		T Function::Call(UInt64 address, ... array<InputArgument ^> ^arguments)
 		{
 			if (address == 0)
 			{
@@ -4130,7 +4124,7 @@ namespace GTA
 
 			nativeInit(address);
 
-			for each (Argument ^argument in arguments)
+			for each (InputArgument ^argument in arguments)
 			{
 				nativePush64(argument->mData);
 			}
