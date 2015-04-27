@@ -36,6 +36,7 @@ namespace GTA
 		void Run();
 		void HandleException(Exception ^exception);
 		IntPtr PinString(String ^string);
+		bool IsKeyPressed(Windows::Forms::Keys key);
 
 	private:
 		bool LoadScript(String ^filename);
@@ -45,6 +46,7 @@ namespace GTA
 
 		static AppDomain ^sAppDomain;
 		static ScriptDomain ^sScriptDomain;
+		array<bool> ^mKeyboardState;
 		List<IntPtr> ^mPinnedStrings;
 		List<Script ^> ^mRunningScripts;
 		Dictionary<String ^, Type ^> ^mScriptTypes;

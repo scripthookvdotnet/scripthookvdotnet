@@ -1,5 +1,7 @@
 #include "ScriptDomain.hpp"
 
+#include <windows.h>
+
 namespace GTA
 {
 	namespace
@@ -47,7 +49,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
+	ScriptDomain::ScriptDomain() : mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
 	{
 		Log("Initialized script domain.");
 
@@ -303,6 +305,45 @@ namespace GTA
 	{
 		CurrentDomain = this;
 
+		// Update keyboard input
+		for (int key = 1; key < 255; ++key)
+		{
+			const bool status = (GetAsyncKeyState(key) & 0x8000) != 0;
+
+			if (status == this->mKeyboardState[key])
+			{
+				continue;
+			}
+
+			const bool ctrl = IsKeyPressed(Windows::Forms::Keys::ControlKey) || IsKeyPressed(Windows::Forms::Keys::LControlKey) || IsKeyPressed(Windows::Forms::Keys::RControlKey);
+			const bool shift = IsKeyPressed(Windows::Forms::Keys::ShiftKey) || IsKeyPressed(Windows::Forms::Keys::LShiftKey) || IsKeyPressed(Windows::Forms::Keys::RShiftKey);
+			const bool alt = IsKeyPressed(Windows::Forms::Keys::Menu) || IsKeyPressed(Windows::Forms::Keys::LMenu) || IsKeyPressed(Windows::Forms::Keys::RMenu);
+
+			Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(static_cast<Windows::Forms::Keys>(key) | (ctrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (shift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (alt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
+
+			for each (Script ^script in this->mRunningScripts)
+			{
+				try
+				{
+					if (!status)
+					{
+						script->RaiseKeyUp(this, args);
+					}
+					else
+					{
+						script->RaiseKeyDown(this, args);
+					}
+				}
+				catch (Exception ^ex)
+				{
+					HandleException(ex);
+				}
+			}
+
+			this->mKeyboardState[key] = status;
+		}
+
+		// Update scripts
 		for each (Script ^script in this->mRunningScripts)
 		{
 			if (!script->mRunning)
@@ -323,7 +364,7 @@ namespace GTA
 
 			try
 			{
-				script->DoTick();
+				script->RaiseTick(this);
 			}
 			catch (Exception ^ex)
 			{
@@ -351,5 +392,9 @@ namespace GTA
 		this->mPinnedStrings->Add(handle);
 
 		return handle;
+	}
+	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
+	{
+		return this->mKeyboardState[static_cast<int>(key)];
 	}
 }

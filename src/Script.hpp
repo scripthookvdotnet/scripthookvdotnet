@@ -12,6 +12,8 @@ namespace GTA
 		Script();
 
 		event EventHandler ^Tick;
+		event Windows::Forms::KeyEventHandler ^KeyUp;
+		event Windows::Forms::KeyEventHandler ^KeyDown;
 
 		property String ^Name
 		{
@@ -42,10 +44,20 @@ namespace GTA
 			void set(int value);
 		}
 
+		bool IsKeyPressed(Windows::Forms::Keys key);
+
 	internal:
-		void DoTick()
+		void RaiseTick(Object ^sender)
 		{
-			Tick(this, EventArgs::Empty);
+			Tick(sender, EventArgs::Empty);
+		}
+		void RaiseKeyUp(Object ^sender, Windows::Forms::KeyEventArgs ^args)
+		{
+			KeyUp(sender, args);
+		}
+		void RaiseKeyDown(Object ^sender, Windows::Forms::KeyEventArgs ^args)
+		{
+			KeyDown(sender, args);
 		}
 
 		int mInterval;
