@@ -251,6 +251,8 @@ namespace GTA
 			return nullptr;
 		}
 
+		CurrentDomain = this;
+
 		Log("Instantiating script '", scripttype->FullName, "' ...");
 
 		try
