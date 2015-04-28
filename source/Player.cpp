@@ -113,15 +113,15 @@ namespace GTA
 
 		if (Native::Function::Call<bool>(Native::Hash::_GET_AIMED_ENTITY, this->ID, &entity))
 		{
-			if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, this->ID, entity))
+			if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity))
 			{
 				return nullptr;
 			}
-			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, this->ID, entity))
+			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entity))
 			{
 				return gcnew Ped(entity);
 			}
-			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, this->ID, entity))
+			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entity))
 			{
 				return gcnew Vehicle(entity);
 			}
