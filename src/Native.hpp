@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "NativeHashes.hpp"
+
 namespace GTA
 {
 	namespace Native
@@ -88,15 +90,13 @@ namespace GTA
 		public ref class Function abstract sealed
 		{
 		public:
-			static System::UInt64 Address(System::String ^name);
-
 			generic <typename T>
-			static T Call(System::String ^name, ... array<InputArgument ^> ^arguments);
-			static void Call(System::String ^name, ... array<InputArgument ^> ^arguments);
+			static T Call(Hash hash, ... array<InputArgument ^> ^arguments);
+			static void Call(Hash hash, ... array<InputArgument ^> ^arguments);
 
 		internal:
 			generic <typename T>
-			static T Call(System::UInt64 address, ... array<InputArgument ^> ^arguments);
+			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
 
 		private:
 			static System::Collections::Generic::Dictionary<System::String ^, System::UInt64> ^sAddresses = gcnew System::Collections::Generic::Dictionary<System::String ^, System::UInt64>();

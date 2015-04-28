@@ -40,6 +40,10 @@ namespace GTA
 		{
 			int get();
 		}
+		property bool IsDead
+		{
+			bool get();
+		}
 		property bool IsAlive
 		{
 			bool get();

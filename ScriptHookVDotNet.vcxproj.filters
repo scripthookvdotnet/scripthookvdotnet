@@ -59,6 +59,9 @@
     <ClInclude Include="src\Native.hpp">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\NativeHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script.hpp">
       <Filter>Core</Filter>
     </ClInclude>
