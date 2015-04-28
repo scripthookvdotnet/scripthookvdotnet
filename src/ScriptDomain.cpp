@@ -50,10 +50,8 @@ namespace GTA
 			{
 				return Reflection::Assembly::GetAssembly(GTA::Script::typeid);
 			}
-			else
-			{
-				return nullptr;
-			}
+
+			return nullptr;
 		}
 		void UnhandledExceptionHandler(Object ^sender, UnhandledExceptionEventArgs ^args)
 		{
@@ -88,14 +86,18 @@ namespace GTA
 	{
 		path = IO::Path::GetFullPath(path);
 
-		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + path->GetHashCode().ToString("X"));
+		AppDomainSetup ^setup = gcnew AppDomainSetup();
+		setup->ApplicationBase = path;
+		Security::PermissionSet ^permissions = gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted);
+
+		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + path->GetHashCode().ToString("X"), nullptr, setup, permissions);
 		appdomain->InitializeLifetimeService();
 
 		ScriptDomain ^scriptdomain = nullptr;
 
 		try
 		{
-			scriptdomain = static_cast<ScriptDomain ^>(appdomain->CreateInstanceFromAndUnwrap(Reflection::Assembly::GetAssembly(ScriptDomain::typeid)->Location, ScriptDomain::typeid->FullName));
+			scriptdomain = static_cast<ScriptDomain ^>(appdomain->CreateInstanceFromAndUnwrap(ScriptDomain::typeid->Assembly->Location, ScriptDomain::typeid->FullName));
 		}
 		catch (Exception ^ex)
 		{
@@ -161,7 +163,7 @@ namespace GTA
 		compilerOptions->ReferencedAssemblies->Add("System.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
-		compilerOptions->ReferencedAssemblies->Add(Reflection::Assembly::GetAssembly(GTA::Script::typeid)->Location);
+		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
 
 		CodeDom::Compiler::CompilerResults ^compilerResult = compiler->CompileAssemblyFromFile(compilerOptions, filename);
 
