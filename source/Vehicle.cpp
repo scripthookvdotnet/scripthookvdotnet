@@ -183,4 +183,15 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::EXPLODE_VEHICLE, this->ID, true, false);
 	}
+	bool Vehicle::SetOnGround()
+	{
+		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
+	}
+
+	Vehicle ^Vehicle::Create(GTA::Model model, Math::Vector3 vec, float heading, bool networkHandle, bool vehHandle)
+	{
+		model.Request();
+		model.BlockTillLoaded();
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, vec.X, vec.Y, vec.Z, heading, networkHandle, vehHandle));
+	}
 }

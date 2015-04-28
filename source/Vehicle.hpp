@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Model.hpp"
+#include "Vector.hpp"
 
 namespace GTA
 {
@@ -136,6 +138,9 @@ namespace GTA
 
 		void Repair();
 		void Explode();
+		bool SetOnGround();
+
+		static Vehicle ^Create(GTA::Model, Math::Vector3, float, bool, bool);
 
 	private:
 		int mID;
