@@ -199,7 +199,8 @@ namespace GTA
 
 		try
 		{
-			assembly = Reflection::Assembly::LoadFrom(filename);
+			auto file = System::IO::File::ReadAllBytes(filename);
+			assembly = Reflection::Assembly::Load(file);
 		}
 		catch (Exception ^ex)
 		{
