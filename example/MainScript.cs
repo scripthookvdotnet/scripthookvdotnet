@@ -6,13 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GTA;
-using GTA.Native;
 
 namespace ScriptHookVDotNetExample
 {
-    public class Script : GTA.Script
+    public class MainScript : Script
     {
-        public Script()
+        public MainScript()
         {
             Tick += OnTick; // Main loop event, called every few milliseconds specified via the Interval property.
             KeyUp += OnKeyUp; // Called when a key or mouse button is released.
@@ -26,18 +25,16 @@ namespace ScriptHookVDotNetExample
 
         void OnTick(object sender, EventArgs e)
         {
-            File.AppendAllText("log.txt", "TICK");
             // Calling native functions:
             // - No return type: GTA.Native.Function.Call(GTA.Native.Hash.SET_MAX_WANTED_LEVEL, 0);
             // - With return type: int id = GTA.Native.Function.Call<int>(GTA.Native.Hash.PLAYER_PED_ID);
         }
         void OnKeyUp(object sender, KeyEventArgs e)
         {
-            File.AppendAllText("log.txt", e.KeyCode.ToString() + System.Environment.NewLine);
+
         }
         void OnKeyDown(object sender, KeyEventArgs e)
         {
-            File.AppendAllText("log.txt", e.KeyCode.ToString() + System.Environment.NewLine);
             Ped player = Game.Player.Character;
 
             if (player.IsInVehicle())
@@ -51,9 +48,6 @@ namespace ScriptHookVDotNetExample
                         break;
                     case Keys.E:
                         vehicle.RightIndicatorLightOn = mIndicatorRight = !mIndicatorRight;
-                        break;
-                    case Keys.Z:
-                        vehicle.Explode();
                         break;
                 }
             }
