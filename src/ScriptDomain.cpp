@@ -44,17 +44,6 @@ namespace GTA
 			fs->Close();
 		}
 
-		void UnhandledExceptionHandler(Object ^sender, UnhandledExceptionEventArgs ^args)
-		{
-			if (args->IsTerminating)
-			{
-				Log("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
-			}
-			else
-			{
-				ScriptDomain::CurrentDomain->HandleException(static_cast<Exception ^>(args->ExceptionObject));
-			}
-		}
 		Reflection::Assembly ^ResolveHandler(Object ^sender, ResolveEventArgs ^args)
 		{
 			if (args->Name->ToLower()->Contains("scripthookvdotnet"))
@@ -66,43 +55,61 @@ namespace GTA
 				return nullptr;
 			}
 		}
-	}
-
-	ScriptDomain::ScriptDomain() : mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
-	{
-		Log("Initialized script domain.");
-
-		AppDomain::CurrentDomain->AssemblyResolve += gcnew ResolveEventHandler(&ResolveHandler);
-		AppDomain::CurrentDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&UnhandledExceptionHandler);
-	}
-
-	bool ScriptDomain::Reload()
-	{
-		if (!Object::ReferenceEquals(sAppDomain, nullptr))
+		void UnhandledExceptionHandler(Object ^sender, UnhandledExceptionEventArgs ^args)
 		{
-			Unload();
+			if (!args->IsTerminating)
+			{
+				Log("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+			}
+			else
+			{
+				Log("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+			}
 		}
+	}
 
-		Reflection::Assembly ^assembly = Reflection::Assembly::GetAssembly(Script::typeid);
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
+	{
+		sCurrentDomain = this;
 
-		sAppDomain = AppDomain::CreateDomain("ScriptDomain");
-		sAppDomain->InitializeLifetimeService();
+		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&ResolveHandler);
+		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&UnhandledExceptionHandler);
+
+		Log("Created script domain '", this->mAppDomain->FriendlyName, "'.");
+	}
+	ScriptDomain::~ScriptDomain()
+	{
+		CleanupStrings();
+
+		Log("Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
+	}
+
+	ScriptDomain ^ScriptDomain::Load(String ^path)
+	{
+		path = IO::Path::GetFullPath(path);
+
+		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + path->GetHashCode().ToString("X"));
+		appdomain->InitializeLifetimeService();
+
+		ScriptDomain ^scriptdomain = nullptr;
 
 		try
 		{
-			sScriptDomain = static_cast<ScriptDomain ^>(sAppDomain->CreateInstanceFromAndUnwrap(assembly->Location, ScriptDomain::typeid->FullName));
+			scriptdomain = static_cast<ScriptDomain ^>(appdomain->CreateInstanceFromAndUnwrap(Reflection::Assembly::GetAssembly(ScriptDomain::typeid)->Location, ScriptDomain::typeid->FullName));
 		}
 		catch (Exception ^ex)
 		{
-			Log("Failed to create script domain:", Environment::NewLine, ex->ToString());
+			Log("Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
 
-			return false;
+			System::AppDomain::Unload(appdomain);
+
+			return nullptr;
 		}
 
-		String ^path = IO::Path::Combine(IO::Path::GetDirectoryName(assembly->Location), "scripts");
-		List<String ^> ^filenameScripts = gcnew List<String ^>(), ^filenameAssemblies = gcnew List<String ^>();
+		Log("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
 
-		Log("Loading scripts from '", path, "' ...");
+		List<String ^> ^filenameScripts = gcnew List<String ^>();
+		List<String ^> ^filenameAssemblies = gcnew List<String ^>();
 
 		try
 		{
@@ -114,46 +121,22 @@ namespace GTA
 		{
 			Log("Failed to reload scripts:", Environment::NewLine, ex->ToString());
 
-			return false;
+			System::AppDomain::Unload(appdomain);
+
+			return nullptr;
 		}
 
 		for each (String ^filename in filenameScripts)
 		{
-			sScriptDomain->LoadScript(filename);
+			scriptdomain->LoadScript(filename);
 		}
 		for each (String ^filename in filenameAssemblies)
 		{
-			sScriptDomain->LoadAssembly(filename);
+			scriptdomain->LoadAssembly(filename);
 		}
 
-		return true;
+		return scriptdomain;
 	}
-	void ScriptDomain::Unload()
-	{
-		if (Object::ReferenceEquals(sAppDomain, nullptr))
-		{
-			return;
-		}
-
-		Log("Unloading scripts ...");
-
-		sScriptDomain->AbortScripts();
-
-		try
-		{
-			AppDomain::Unload(sAppDomain);
-		}
-		catch (Exception ^ex)
-		{
-			Log("Failed to unload script domain:", Environment::NewLine, ex->ToString());
-		}
-
-		sAppDomain = nullptr;
-		sScriptDomain = nullptr;
-
-		GC::Collect();
-	}
-
 	bool ScriptDomain::LoadScript(String ^filename)
 	{
 		String ^extension = IO::Path::GetExtension(filename);
@@ -244,6 +227,27 @@ namespace GTA
 
 		return count != 0;
 	}
+	void ScriptDomain::Unload(ScriptDomain ^domain)
+	{
+		Log("Unloading script domain '", domain->Name, "' ...");
+
+		domain->Abort();
+
+		System::AppDomain ^appdomain = domain->AppDomain;
+
+		delete domain;
+
+		try
+		{
+			System::AppDomain::Unload(appdomain);
+		}
+		catch (Exception ^ex)
+		{
+			Log("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
+		}
+
+		GC::Collect();
+	}
 	Script ^ScriptDomain::InstantiateScript(Type ^scripttype)
 	{
 		if (!scripttype->IsSubclassOf(Script::typeid))
@@ -251,9 +255,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		CurrentDomain = this;
-
-		Log("Instantiating script '", scripttype->FullName, "' ...");
+		Log("Instantiating script '", scripttype->FullName, "' in script domain '", Name, "' ...");
 
 		try
 		{
@@ -275,7 +277,7 @@ namespace GTA
 		return nullptr;
 	}
 
-	void ScriptDomain::StartScripts()
+	void ScriptDomain::Start()
 	{
 		if (this->mRunningScripts->Count != 0 || this->mScriptTypes->Count == 0)
 		{
@@ -302,13 +304,7 @@ namespace GTA
 			this->mRunningScripts->Add(script);
 		}
 	}
-	void ScriptDomain::AbortScript(Script ^script)
-	{
-		script->mRunning = false;
-
-		Log("Aborted script '", script->Name, "'.");
-	}
-	void ScriptDomain::AbortScripts()
+	void ScriptDomain::Abort()
 	{
 		Log("Stopping ", this->mRunningScripts->Count.ToString(), " script(s) ...");
 
@@ -320,11 +316,14 @@ namespace GTA
 		this->mScriptTypes->Clear();
 		this->mRunningScripts->Clear();
 	}
-
-	void ScriptDomain::Run()
+	void ScriptDomain::AbortScript(Script ^script)
 	{
-		CurrentDomain = this;
+		script->mRunning = false;
 
+		Log("Aborted script '", script->Name, "'.");
+	}
+	void ScriptDomain::DoTick()
+	{
 		// Update keyboard input
 		for (int key = 1; key < 255; ++key)
 		{
@@ -356,7 +355,7 @@ namespace GTA
 				}
 				catch (Exception ^ex)
 				{
-					HandleException(ex);
+					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
 				}
 			}
 
@@ -388,22 +387,19 @@ namespace GTA
 			}
 			catch (Exception ^ex)
 			{
-				HandleException(ex);
+				UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
 
 				AbortScript(script);
 			}
 		}
 
-		for each (IntPtr handle in this->mPinnedStrings)
-		{
-			Runtime::InteropServices::Marshal::FreeHGlobal(handle);
-		}
-
-		this->mPinnedStrings->Clear();
+		// Clean up pinned strings
+		CleanupStrings();
 	}
-	void ScriptDomain::HandleException(Exception ^exception)
+
+	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
 	{
-		Log("Caught unhandled exception:", Environment::NewLine, exception->ToString());
+		return this->mKeyboardState[static_cast<int>(key)];
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
 	{
@@ -413,8 +409,13 @@ namespace GTA
 
 		return handle;
 	}
-	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
+	void ScriptDomain::CleanupStrings()
 	{
-		return this->mKeyboardState[static_cast<int>(key)];
+		for each (IntPtr handle in this->mPinnedStrings)
+		{
+			Runtime::InteropServices::Marshal::FreeHGlobal(handle);
+		}
+
+		this->mPinnedStrings->Clear();
 	}
 }

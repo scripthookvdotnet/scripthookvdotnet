@@ -19,24 +19,29 @@
 
 void ScriptMain()
 {
-	if (!GTA::ScriptDomain::Reload() && System::Object::ReferenceEquals(GTA::ScriptDomain::CurrentDomain, nullptr))
-	{
-		return;
-	}
-
-	GTA::ScriptDomain::CurrentDomain->StartScripts();
-
 	while (true)
 	{
-		if (GetAsyncKeyState(VK_INSERT) & 0x8000)
+		GTA::ScriptDomain ^domain = GTA::ScriptDomain::Load(System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
+
+		if (System::Object::ReferenceEquals(domain, nullptr))
 		{
-			GTA::ScriptDomain::Reload();
-			GTA::ScriptDomain::CurrentDomain->StartScripts();
+			return;
 		}
 
-		GTA::ScriptDomain::CurrentDomain->Run();
+		domain->Start();
 
-		scriptWait(0);
+		while (true)
+		{
+			if (GetAsyncKeyState(VK_INSERT) & 0x8000)
+			{
+				GTA::ScriptDomain::Unload(domain);
+				break;
+			}
+
+			domain->DoTick();
+
+			scriptWait(0);
+		}
 	}
 }
 

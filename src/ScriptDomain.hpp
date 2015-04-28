@@ -24,32 +24,42 @@ namespace GTA
 	{
 	public:
 		ScriptDomain();
+		~ScriptDomain();
 
 		static property ScriptDomain ^CurrentDomain
 		{
 			ScriptDomain ^get()
 			{
-				return sScriptDomain;
-			}
-		private:
-			void set(ScriptDomain ^value)
-			{
-				sScriptDomain = value;
+				return sCurrentDomain;
 			}
 		}
 
-		static bool Reload();
-		static void Unload();
+		static ScriptDomain ^Load(System::String ^path);
+		static void Unload(ScriptDomain ^domain);
 
-		void StartScripts();
-		void AbortScript(Script ^script);
-		void AbortScripts();
+		property System::String ^Name
+		{
+			System::String ^get()
+			{
+				return this->mAppDomain->FriendlyName;
+			}
+		}
+		property System::AppDomain ^AppDomain
+		{
+			System::AppDomain ^get()
+			{
+				return this->mAppDomain;
+			}
+		}
 
-	internal:
-		void Run();
-		void HandleException(System::Exception ^exception);
-		System::IntPtr PinString(System::String ^string);
+		void Start();
+		void Abort();
+		static void AbortScript(Script ^script);
+		void DoTick();
+
 		bool IsKeyPressed(System::Windows::Forms::Keys key);
+		System::IntPtr PinString(System::String ^string);
+		void CleanupStrings();
 
 	private:
 		bool LoadScript(System::String ^filename);
@@ -57,9 +67,9 @@ namespace GTA
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
 		Script ^InstantiateScript(System::Type ^scripttype);
 
-		static System::AppDomain ^sAppDomain;
-		static ScriptDomain ^sScriptDomain;
+		static ScriptDomain ^sCurrentDomain;
 		array<bool> ^mKeyboardState;
+		System::AppDomain ^mAppDomain;
 		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;
 		System::Collections::Generic::Dictionary<System::String ^, System::Type ^> ^mScriptTypes;
