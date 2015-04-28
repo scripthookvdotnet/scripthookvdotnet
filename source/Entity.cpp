@@ -11,11 +11,11 @@ namespace GTA
 	{
 		return this->mID;
 	}
-	Vector3 Entity::Position::get()
+	Math::Vector3 Entity::Position::get()
 	{
-		return Native::Function::Call<Vector3>(Native::Hash::GET_ENTITY_COORDS, this->ID, 0);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, this->ID, 0);
 	}
-	void Entity::Position::set(Vector3 value)
+	void Entity::Position::set(Math::Vector3 value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_COORDS, this->ID, value.X, value.Y, value.Z, 0, 0, 0, 1);
 	}
@@ -27,15 +27,15 @@ namespace GTA
 	{
 		Native::Function::Call<float>(Native::Hash::SET_ENTITY_HEADING, this->ID, value);
 	}
-	Vector3 Entity::Rotation::get()
+	Math::Vector3 Entity::Rotation::get()
 	{
-		return Native::Function::Call<Vector3>(Native::Hash::GET_ENTITY_ROTATION, this->ID, 0);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_ROTATION, this->ID, 0);
 	}
-	Vector3 Entity::Velocity::get()
+	Math::Vector3 Entity::Velocity::get()
 	{
-		return Native::Function::Call<Vector3>(Native::Hash::GET_ENTITY_VELOCITY, this->ID);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_VELOCITY, this->ID);
 	}
-	void Entity::Velocity::set(Vector3 value)
+	void Entity::Velocity::set(Math::Vector3 value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VELOCITY, this->ID, value.X, value.Y, value.Z);
 	}

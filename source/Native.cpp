@@ -25,6 +25,7 @@ namespace GTA
 	{
 		using namespace System;
 		using namespace System::Collections::Generic;
+		using namespace GTA::Math;
 
 		InputArgument::InputArgument(bool value) : mData(value ? 1 : 0)
 		{

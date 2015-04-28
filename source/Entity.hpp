@@ -14,24 +14,24 @@ namespace GTA
 		{
 			int get();
 		}
-		property Vector3 Position
+		property Math::Vector3 Position
 		{
-			Vector3 get();
-			void set(Vector3 value);
+			Math::Vector3 get();
+			void set(Math::Vector3 value);
 		}
 		property float Heading
 		{
 			float get();
 			void set(float value);
 		}
-		property Vector3 Rotation
+		property Math::Vector3 Rotation
 		{
-			Vector3 get();
+			Math::Vector3 get();
 		}
-		property Vector3 Velocity
+		property Math::Vector3 Velocity
 		{
-			Vector3 get();
-			void set(Vector3 value);
+			Math::Vector3 get();
+			void set(Math::Vector3 value);
 		}
 		property int Health
 		{
