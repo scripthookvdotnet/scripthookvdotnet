@@ -12,90 +12,90 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Main.cpp">
+    <ClCompile Include="source\Main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Native.cpp">
+    <ClCompile Include="source\Native.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script.cpp">
+    <ClCompile Include="source\Script.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\ScriptDomain.cpp">
+    <ClCompile Include="source\ScriptDomain.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vector.cpp">
+    <ClCompile Include="source\Vector.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Quaternion.cpp">
+    <ClCompile Include="source\Quaternion.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Matrix.cpp">
+    <ClCompile Include="source\Matrix.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity.cpp">
+    <ClCompile Include="source\Entity.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game.cpp">
+    <ClCompile Include="source\Game.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model.cpp">
+    <ClCompile Include="source\Model.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ped.cpp">
+    <ClCompile Include="source\Ped.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Player.cpp">
+    <ClCompile Include="source\Player.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vehicle.cpp">
+    <ClCompile Include="source\Vehicle.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\World.cpp">
+    <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Native.hpp">
+    <ClInclude Include="source\Native.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\NativeHashes.hpp">
+    <ClInclude Include="source\NativeHashes.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script.hpp">
+    <ClInclude Include="source\Script.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\ScriptDomain.hpp">
+    <ClInclude Include="source\ScriptDomain.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vector.hpp">
+    <ClInclude Include="source\Vector.hpp">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Quaternion.hpp">
+    <ClInclude Include="source\Quaternion.hpp">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Matrix.hpp">
+    <ClInclude Include="source\Matrix.hpp">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity.hpp">
+    <ClInclude Include="source\Entity.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game.hpp">
+    <ClInclude Include="source\Game.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model.hpp">
+    <ClInclude Include="source\Model.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ped.hpp">
+    <ClInclude Include="source\Ped.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Player.hpp">
+    <ClInclude Include="source\Player.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Vehicle.hpp">
+    <ClInclude Include="source\Vehicle.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\World.hpp">
+    <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>

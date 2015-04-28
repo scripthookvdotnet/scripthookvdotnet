@@ -41,8 +41,6 @@
   <PropertyGroup>
     <OutDir>bin\$(Configuration)\</OutDir>
     <IntDir>obj\$(Configuration)\</IntDir>
-    <TargetName>ScriptHookVDotNet</TargetName>
-    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -55,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,20 +61,23 @@
       <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>cp $(TargetDir)$(AssemblyName).dll $(TargetDir)$(AssemblyName).asi</Command>
+      <Command>copy $(TargetPath) $(TargetDir)$(TargetName).asi</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>source;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) $(TargetDir)$(TargetName).asi</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -84,36 +85,36 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Matrix.cpp" />
-    <ClCompile Include="src\Model.cpp" />
-    <ClCompile Include="src\Native.cpp" />
-    <ClCompile Include="src\Ped.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Quaternion.cpp" />
-    <ClCompile Include="src\Script.cpp" />
-    <ClCompile Include="src\ScriptDomain.cpp" />
-    <ClCompile Include="src\Vector.cpp" />
-    <ClCompile Include="src\Vehicle.cpp" />
-    <ClCompile Include="src\World.cpp" />
+    <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\Matrix.cpp" />
+    <ClCompile Include="source\Model.cpp" />
+    <ClCompile Include="source\Native.cpp" />
+    <ClCompile Include="source\Ped.cpp" />
+    <ClCompile Include="source\Player.cpp" />
+    <ClCompile Include="source\Quaternion.cpp" />
+    <ClCompile Include="source\Script.cpp" />
+    <ClCompile Include="source\ScriptDomain.cpp" />
+    <ClCompile Include="source\Vector.cpp" />
+    <ClCompile Include="source\Vehicle.cpp" />
+    <ClCompile Include="source\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Entity.hpp" />
-    <ClInclude Include="src\Game.hpp" />
-    <ClInclude Include="src\Matrix.hpp" />
-    <ClInclude Include="src\Model.hpp" />
-    <ClInclude Include="src\Native.hpp" />
-    <ClInclude Include="src\NativeHashes.hpp" />
-    <ClInclude Include="src\Ped.hpp" />
-    <ClInclude Include="src\Player.hpp" />
-    <ClInclude Include="src\Quaternion.hpp" />
-    <ClInclude Include="src\Script.hpp" />
-    <ClInclude Include="src\ScriptDomain.hpp" />
-    <ClInclude Include="src\Vector.hpp" />
-    <ClInclude Include="src\Vehicle.hpp" />
-    <ClInclude Include="src\World.hpp" />
+    <ClInclude Include="source\Entity.hpp" />
+    <ClInclude Include="source\Game.hpp" />
+    <ClInclude Include="source\Matrix.hpp" />
+    <ClInclude Include="source\Model.hpp" />
+    <ClInclude Include="source\Native.hpp" />
+    <ClInclude Include="source\NativeHashes.hpp" />
+    <ClInclude Include="source\Ped.hpp" />
+    <ClInclude Include="source\Player.hpp" />
+    <ClInclude Include="source\Quaternion.hpp" />
+    <ClInclude Include="source\Script.hpp" />
+    <ClInclude Include="source\ScriptDomain.hpp" />
+    <ClInclude Include="source\Vector.hpp" />
+    <ClInclude Include="source\Vehicle.hpp" />
+    <ClInclude Include="source\World.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
