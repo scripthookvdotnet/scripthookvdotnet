@@ -183,4 +183,8 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::EXPLODE_VEHICLE, this->ID, true, false);
 	}
+	bool Vehicle::SetOnGround()
+	{
+		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
+	}
 }

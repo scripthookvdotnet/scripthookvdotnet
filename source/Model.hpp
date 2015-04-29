@@ -49,6 +49,17 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsInCdImage
+		{
+			bool get();
+		}
+		property bool HasLoaded
+		{
+			bool get();
+		}
+
+		void Request();
+		void Request(bool blockUntilLoaded);
 
 	private:
 		int mHash;

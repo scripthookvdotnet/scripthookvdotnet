@@ -16,9 +16,14 @@
 
 #include "Native.hpp"
 #include "NativeCaller.h"
+#include "ScriptDomain.hpp"
+
+#include "Entity.hpp"
+#include "Ped.hpp"
+#include "Player.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-#include "ScriptDomain.hpp"
+#include "Vehicle.hpp"
 
 namespace GTA
 {
@@ -44,6 +49,18 @@ namespace GTA
 		{
 		}
 		InputArgument::InputArgument(String ^value) : mData(ScriptDomain::CurrentDomain->PinString(value).ToInt64())
+		{
+		}
+		InputArgument::InputArgument(Entity ^object) : InputArgument(object->ID)
+		{
+		}
+		InputArgument::InputArgument(Ped ^object) : InputArgument(object->ID)
+		{
+		}
+		InputArgument::InputArgument(Player ^object) : InputArgument(object->ID)
+		{
+		}
+		InputArgument::InputArgument(Vehicle ^object) : InputArgument(object->ID)
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))
@@ -103,6 +120,19 @@ namespace GTA
 			if (type == Math::Vector3::typeid)
 			{
 				return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
+			}
+
+			if (type == Ped::typeid)
+			{
+				return gcnew Ped(*reinterpret_cast<int *>(value));
+			}
+			if (type == Player::typeid)
+			{
+				return gcnew Vehicle(*reinterpret_cast<int *>(value));
+			}
+			if (type == Player::typeid)
+			{
+				return gcnew Vehicle(*reinterpret_cast<int *>(value));
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));

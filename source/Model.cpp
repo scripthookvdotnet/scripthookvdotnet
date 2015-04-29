@@ -1,5 +1,6 @@
 #include "Model.hpp"
 #include "Native.hpp"
+#include "NativeCaller.h"
 
 namespace GTA
 {
@@ -49,6 +50,28 @@ namespace GTA
 	}
 	bool Model::IsVehicle::get()
 	{
-		return IsBicycle || IsBike || IsBoat || IsCar || IsHelicopter || IsPlane || IsQuadbike || IsTrain;
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, this->mHash);
+	}
+	bool Model::IsInCdImage::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_IN_CDIMAGE, this->mHash);
+	}
+	bool Model::HasLoaded::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_MODEL_LOADED, this->mHash);
+	}
+
+	void Model::Request()
+	{
+		return Request(false);
+	}
+	void Model::Request(bool blockUntilLoaded)
+	{
+		Native::Function::Call(Native::Hash::REQUEST_MODEL, this->mHash);
+		if (blockUntilLoaded)
+		{
+			while (!HasLoaded)
+				scriptWait(0);
+		}
 	}
 }
