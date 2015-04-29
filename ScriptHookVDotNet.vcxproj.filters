@@ -27,13 +27,16 @@
     <ClCompile Include="source\Settings.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="source\Vector.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="source\Quaternion.cpp">
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="source\Matrix.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Vector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Vector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="source\Entity.cpp">
@@ -57,9 +60,6 @@
     <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\Vector2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -77,13 +77,16 @@
     <ClInclude Include="source\Settings.hpp">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="source\Vector.hpp">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="source\Quaternion.hpp">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="source\Matrix.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Vector2.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Vector3.hpp">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="source\Entity.hpp">
@@ -106,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Vector2.hpp">
-      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

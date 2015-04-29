@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Model.hpp"
-#include "Vector.hpp"
+#include "Vector3.hpp"
 
 namespace GTA
 {
