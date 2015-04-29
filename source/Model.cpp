@@ -1,6 +1,6 @@
 #include "Model.hpp"
 #include "Native.hpp"
-#include "NativeCaller.h"
+#include "Script.hpp"
 
 namespace GTA
 {
@@ -14,6 +14,23 @@ namespace GTA
 	int Model::Hash::get()
 	{
 		return this->mHash;
+	}
+
+	bool Model::IsValid::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_VALID, this->mHash);
+	}
+	bool Model::IsInCdImage::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_IN_CDIMAGE, this->mHash);
+	}
+	bool Model::IsLoaded::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_MODEL_LOADED, this->mHash);
+	}
+	bool Model::IsCollisionLoaded::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_COLLISION_FOR_MODEL_LOADED, this->mHash);
 	}
 
 	bool Model::IsBicycle::get()
@@ -52,26 +69,49 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, this->mHash);
 	}
-	bool Model::IsInCdImage::get()
+
+	void Model::GetDimensions(Math::Vector3 %minimum, Math::Vector3 %maximum)
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_IN_CDIMAGE, this->mHash);
+		Native::OutputArgument ^outmin = gcnew Native::OutputArgument();
+		Native::OutputArgument ^outmax = gcnew Native::OutputArgument();
+		Native::Function::Call(Native::Hash::GET_MODEL_DIMENSIONS, this->mHash, outmin, outmax);
+
+		minimum = outmin->GetResult<Math::Vector3>();
+		maximum = outmax->GetResult<Math::Vector3>();
 	}
-	bool Model::HasLoaded::get()
+	Math::Vector3 Model::GetDimensions()
 	{
-		return Native::Function::Call<bool>(Native::Hash::HAS_MODEL_LOADED, this->mHash);
+		Math::Vector3 min, max;
+		GetDimensions(min, max);
+
+		return Math::Vector3::Subtract(max, min);
 	}
 
 	void Model::Request()
 	{
-		return Request(false);
-	}
-	void Model::Request(bool blockUntilLoaded)
-	{
 		Native::Function::Call(Native::Hash::REQUEST_MODEL, this->mHash);
-		if (blockUntilLoaded)
+	}
+	bool Model::Request(int timeout)
+	{
+		Request();
+
+		const System::DateTime endtime = timeout >= 0 ? System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, timeout) : System::DateTime::MaxValue;
+
+		while (!IsLoaded)
 		{
-			while (!HasLoaded)
-				scriptWait(0);
+			Script::Wait(0);
+
+			if (System::DateTime::Now >= endtime)
+			{
+				return false;
+			}
 		}
+
+		return true;
+	}
+
+	System::String ^Model::ToString()
+	{
+		return "0x" + this->mHash.ToString("X");
 	}
 }

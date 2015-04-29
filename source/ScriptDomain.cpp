@@ -14,6 +14,7 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
+#include "NativeCaller.h"
 #include "ScriptDomain.hpp"
 
 #include <windows.h>
@@ -323,6 +324,10 @@ namespace GTA
 		script->mRunning = false;
 
 		Log("Aborted script '", script->Name, "'.");
+	}
+	void ScriptDomain::Wait(int ms)
+	{
+		scriptWait(ms);
 	}
 	void ScriptDomain::DoTick()
 	{

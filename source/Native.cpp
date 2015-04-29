@@ -37,7 +37,6 @@ namespace GTA
 		}
 		InputArgument::InputArgument(int value) : mData(value)
 		{
-
 		}
 		InputArgument::InputArgument(float value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(value), 0))
 		{
@@ -51,16 +50,16 @@ namespace GTA
 		InputArgument::InputArgument(String ^value) : mData(ScriptDomain::CurrentDomain->PinString(value).ToInt64())
 		{
 		}
-		InputArgument::InputArgument(Entity ^object) : InputArgument(object->ID)
+		InputArgument::InputArgument(Entity ^object) : mData(object->ID)
 		{
 		}
-		InputArgument::InputArgument(Ped ^object) : InputArgument(object->ID)
+		InputArgument::InputArgument(Ped ^object) : mData(object->ID)
 		{
 		}
-		InputArgument::InputArgument(Player ^object) : InputArgument(object->ID)
+		InputArgument::InputArgument(Player ^object) : mData(object->ID)
 		{
 		}
-		InputArgument::InputArgument(Vehicle ^object) : InputArgument(object->ID)
+		InputArgument::InputArgument(Vehicle ^object) : mData(object->ID)
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))
