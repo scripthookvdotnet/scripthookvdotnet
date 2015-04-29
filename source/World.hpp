@@ -5,6 +5,7 @@
 namespace GTA
 {
 	value class Model;
+	ref class Ped;
 	ref class Vehicle;
 
 	public enum class Weather
@@ -47,6 +48,8 @@ namespace GTA
 			void set(int value);
 		}
 
+		static Ped ^CreatePed(Model model, Math::Vector3 position);
+		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
 	};

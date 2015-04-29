@@ -53,6 +53,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_HELI, this->mHash);
 	}
+	bool Model::IsPed::get()
+	{
+		return IsValid && !IsVehicle;
+	}
 	bool Model::IsPlane::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_PLANE, this->mHash);
