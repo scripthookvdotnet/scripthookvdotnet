@@ -33,6 +33,14 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property Math::Vector3 ForwardVector
+		{
+			Math::Vector3 get();
+		}
+		property float HeightAboveGround
+		{
+			float get();
+		}
 		property int Health
 		{
 			int get();

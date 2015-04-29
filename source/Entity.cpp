@@ -39,6 +39,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VELOCITY, this->ID, value.X, value.Y, value.Z);
 	}
+	Math::Vector3 Entity::ForwardVector::get()
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_FORWARD_VECTOR, this->ID);
+	}
+	float Entity::HeightAboveGround::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEIGHT_ABOVE_GROUND, this->ID);
+	}
 	int Entity::Health::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, this->ID);
