@@ -98,6 +98,7 @@
     <ClCompile Include="source\ScriptDomain.cpp" />
     <ClCompile Include="source\Settings.cpp" />
     <ClCompile Include="source\Vector.cpp" />
+    <ClCompile Include="source\Vector2.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
     <ClCompile Include="source\World.cpp" />
   </ItemGroup>
@@ -115,6 +116,7 @@
     <ClInclude Include="source\ScriptDomain.hpp" />
     <ClInclude Include="source\Settings.hpp" />
     <ClInclude Include="source\Vector.hpp" />
+    <ClInclude Include="source\Vector2.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />
     <ClInclude Include="source\World.hpp" />
   </ItemGroup>
