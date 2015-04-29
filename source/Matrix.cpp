@@ -17,8 +17,8 @@
  * OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "Vector.hpp"
 #include "Matrix.hpp"
+#include "Vector3.hpp"
 #include "Quaternion.hpp"
 
 namespace GTA

@@ -16,7 +16,8 @@
 
 #include "Native.hpp"
 #include "NativeCaller.h"
-#include "Vector.hpp"
+#include "Vector2.hpp"
+#include "Vector3.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA
@@ -25,7 +26,6 @@ namespace GTA
 	{
 		using namespace System;
 		using namespace System::Collections::Generic;
-		using namespace GTA::Math;
 
 		InputArgument::InputArgument(bool value) : mData(value ? 1 : 0)
 		{
@@ -84,21 +84,25 @@ namespace GTA
 				}
 			}
 
-			if (type == Vector3::typeid)
+			#pragma pack(push, 1)
+			struct NativeVector3
 			{
-				#pragma pack(push, 1)
-				struct NativeVector3
-				{
-					float x;
-					DWORD _paddingx;
-					float y;
-					DWORD _paddingy;
-					float z;
-					DWORD _paddingz;
-				};
-				#pragma pack(pop)
+				float x;
+				DWORD _paddingx;
+				float y;
+				DWORD _paddingy;
+				float z;
+				DWORD _paddingz;
+			};
+			#pragma pack(pop)
 
-				return gcnew Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
+			if (type == Math::Vector2::typeid)
+			{
+				return gcnew Math::Vector2(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y);
+			}
+			if (type == Math::Vector3::typeid)
+			{
+				return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
