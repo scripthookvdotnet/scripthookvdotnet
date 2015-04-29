@@ -85,7 +85,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Config.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\Main.cpp" />
@@ -97,12 +96,12 @@
     <ClCompile Include="source\Quaternion.cpp" />
     <ClCompile Include="source\Script.cpp" />
     <ClCompile Include="source\ScriptDomain.cpp" />
+    <ClCompile Include="source\Settings.cpp" />
     <ClCompile Include="source\Vector.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
     <ClCompile Include="source\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Config.hpp" />
     <ClInclude Include="source\Entity.hpp" />
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
@@ -114,6 +113,7 @@
     <ClInclude Include="source\Quaternion.hpp" />
     <ClInclude Include="source\Script.hpp" />
     <ClInclude Include="source\ScriptDomain.hpp" />
+    <ClInclude Include="source\Settings.hpp" />
     <ClInclude Include="source\Vector.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />
     <ClInclude Include="source\World.hpp" />

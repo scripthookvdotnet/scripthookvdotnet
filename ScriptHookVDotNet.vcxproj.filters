@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Config.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="source\Main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -25,6 +22,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="source\ScriptDomain.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Settings.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="source\Vector.cpp">
@@ -59,9 +59,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Config.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="source\Native.hpp">
       <Filter>Core</Filter>
     </ClInclude>
@@ -72,6 +69,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\ScriptDomain.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Settings.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\Vector.hpp">

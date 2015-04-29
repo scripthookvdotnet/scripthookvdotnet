@@ -18,10 +18,10 @@
 
 namespace GTA
 {
-	public ref class Config sealed
+	public ref class ScriptSettings sealed
 	{
 	public:
-		static Config ^Load(System::String ^filename);
+		static ScriptSettings ^Load(System::String ^filename);
 
 		generic <typename T>
 		T GetValue(System::String ^section, System::String ^name, T defaultvalue);

@@ -18,8 +18,8 @@
 
 namespace GTA
 {
-	ref class Config;
 	ref class ScriptDomain;
+	ref class ScriptSettings;
 
 	public ref class Script abstract
 	{
@@ -44,9 +44,9 @@ namespace GTA
 				return this->mFilename;
 			}
 		}
-		property GTA::Config ^Config
+		property ScriptSettings ^Settings
 		{
-			GTA::Config ^get();
+			ScriptSettings ^get();
 		}
 
 		void Abort();
@@ -82,8 +82,8 @@ namespace GTA
 		int mInterval;
 		bool mRunning;
 		System::DateTime mNextTick;
-		GTA::Config ^mConfig;
 		ScriptDomain ^mScriptDomain;
+		ScriptSettings ^mSettings;
 		System::String ^mFilename;
 	};
 }
