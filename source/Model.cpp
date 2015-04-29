@@ -50,7 +50,7 @@ namespace GTA
 	}
 	bool Model::IsVehicle::get()
 	{
-		return IsBicycle || IsBike || IsBoat || IsCar || IsHelicopter || IsPlane || IsQuadbike || IsTrain; //TODO Exchange with IS_MODEL_A_VEHICLE?
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, this->mHash);
 	}
 	bool Model::IsInCdImage::get()
 	{
