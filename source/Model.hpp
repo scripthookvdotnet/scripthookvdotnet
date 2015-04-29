@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vector3.hpp"
+
 namespace GTA
 {
 	public value class Model
@@ -8,9 +10,35 @@ namespace GTA
 		Model(int hash);
 		Model(System::String ^name);
 
+		static inline operator Model(int source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(System::String ^source)
+		{
+			return Model(source);
+		}
+
 		property int Hash
 		{
 			int get();
+		}
+
+		property bool IsValid
+		{
+			bool get();
+		}
+		property bool IsInCdImage
+		{
+			bool get();
+		}
+		property bool IsLoaded
+		{
+			bool get();
+		}
+		property bool IsCollisionLoaded
+		{
+			bool get();
 		}
 
 		property bool IsBicycle
@@ -49,17 +77,14 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsInCdImage
-		{
-			bool get();
-		}
-		property bool HasLoaded
-		{
-			bool get();
-		}
+
+		void GetDimensions(Math::Vector3 %minimum, Math::Vector3 %maximum);
+		Math::Vector3 GetDimensions();
 
 		void Request();
-		void Request(bool blockUntilLoaded);
+		bool Request(int timeout);
+
+		virtual System::String ^ToString() override;
 
 	private:
 		int mHash;

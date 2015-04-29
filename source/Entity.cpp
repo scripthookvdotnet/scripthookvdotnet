@@ -49,7 +49,7 @@ namespace GTA
 	}
 	GTA::Model Entity::Model::get()
 	{
-		return GTA::Model(Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, this->ID));
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, this->ID);
 	}
 	bool Entity::IsDead::get()
 	{
