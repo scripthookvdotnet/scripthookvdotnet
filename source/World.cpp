@@ -43,9 +43,14 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_GRAVITY_LEVEL, value);
 	}
 
-	Vehicle ^World::CreateVehicle(GTA::Model model, Math::Vector3 vec, float heading, bool networkHandle, bool vehHandle)
+	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
-		model.Request();
-		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, vec.X, vec.Y, vec.Z, heading, networkHandle, vehHandle));
+		return CreateVehicle(model, position, 0.0f);
+	}
+	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position, float heading)
+	{
+		model.Request(true);
+
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 	}
 }

@@ -1,10 +1,12 @@
 #pragma once
-#include "Model.hpp"
-#include "Vector.hpp"
-#include "Vehicle.hpp"
+
+#include "Vector3.hpp"
 
 namespace GTA
 {
+	value class Model;
+	ref class Vehicle;
+
 	public enum class Weather
 	{
 		ExtraSunny,
@@ -45,6 +47,7 @@ namespace GTA
 			void set(int value);
 		}
 
-		static Vehicle ^CreateVehicle(GTA::Model, Math::Vector3, float, bool, bool);
+		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
+		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
 	};
 }

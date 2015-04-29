@@ -63,7 +63,7 @@ namespace GTA
 
 	void Model::Request()
 	{
-		return Request(true);
+		return Request(false);
 	}
 	void Model::Request(bool blockUntilLoaded)
 	{

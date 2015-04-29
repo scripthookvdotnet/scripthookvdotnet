@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Entity.hpp"
-#include "Model.hpp"
-#include "Vector.hpp"
 
 namespace GTA
 {

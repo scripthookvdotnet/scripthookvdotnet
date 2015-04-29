@@ -59,7 +59,7 @@ namespace GTA
 		}
 
 		void Request();
-		void Request(bool);
+		void Request(bool blockUntilLoaded);
 
 	private:
 		int mHash;
