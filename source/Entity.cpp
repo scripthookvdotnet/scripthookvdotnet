@@ -119,11 +119,11 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ON_FIRE, this->ID);
 	}
-	bool Entity::IsRequiredForMission::get()
+	bool Entity::IsPersistent::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_MISSION_ENTITY, this->ID);
 	}
-	void Entity::IsRequiredForMission::set(bool value)
+	void Entity::IsPersistent::set(bool value)
 	{
 		if (value)
 		{
@@ -131,8 +131,7 @@ namespace GTA
 		}
 		else
 		{
-			int id = this->ID;
-			Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &id);
+			MarkAsNoLongerNeeded();
 		}
 	}
 
@@ -160,5 +159,10 @@ namespace GTA
 	bool Entity::Exists(Entity ^entity)
 	{
 		return !Object::ReferenceEquals(entity, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity->ID);
+	}
+	void Entity::MarkAsNoLongerNeeded()
+	{
+		int id = this->ID;
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &id);
 	}
 }

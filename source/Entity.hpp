@@ -104,7 +104,7 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsRequiredForMission
+		property bool IsPersistent
 		{
 			bool get();
 			void set(bool value);
@@ -117,6 +117,7 @@ namespace GTA
 
 		bool Exists();
 		static bool Exists(Entity ^entity);
+		void MarkAsNoLongerNeeded();
 
 	private:
 		int mID;

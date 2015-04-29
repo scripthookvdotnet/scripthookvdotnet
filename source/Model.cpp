@@ -113,6 +113,10 @@ namespace GTA
 
 		return true;
 	}
+	void Model::MarkAsNoLongerNeeded()
+	{
+		Native::Function::Call(Native::Hash::SET_MODEL_AS_NO_LONGER_NEEDED, this->mHash);
+	}
 
 	System::String ^Model::ToString()
 	{

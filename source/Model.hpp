@@ -87,6 +87,7 @@ namespace GTA
 
 		void Request();
 		bool Request(int timeout);
+		void MarkAsNoLongerNeeded();
 
 		virtual System::String ^ToString() override;
 
