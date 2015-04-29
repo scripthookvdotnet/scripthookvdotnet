@@ -12,6 +12,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Config.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="source\Main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -56,6 +59,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Config.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="source\Native.hpp">
       <Filter>Core</Filter>
     </ClInclude>

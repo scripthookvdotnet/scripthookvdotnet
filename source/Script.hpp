@@ -18,6 +18,7 @@
 
 namespace GTA
 {
+	ref class Config;
 	ref class ScriptDomain;
 
 	public ref class Script abstract
@@ -43,6 +44,10 @@ namespace GTA
 				return this->mFilename;
 			}
 		}
+		property GTA::Config ^Config
+		{
+			GTA::Config ^get();
+		}
 
 		void Abort();
 
@@ -61,15 +66,15 @@ namespace GTA
 		bool IsKeyPressed(System::Windows::Forms::Keys key);
 
 	internal:
-		void RaiseTick(System::Object ^sender)
+		inline void RaiseTick(System::Object ^sender)
 		{
 			Tick(sender, System::EventArgs::Empty);
 		}
-		void RaiseKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
+		inline void RaiseKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
 		{
 			KeyUp(sender, args);
 		}
-		void RaiseKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
+		inline void RaiseKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
 		{
 			KeyDown(sender, args);
 		}
@@ -77,6 +82,7 @@ namespace GTA
 		int mInterval;
 		bool mRunning;
 		System::DateTime mNextTick;
+		GTA::Config ^mConfig;
 		ScriptDomain ^mScriptDomain;
 		System::String ^mFilename;
 	};

@@ -14,49 +14,25 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Config.hpp"
-#include "ScriptDomain.hpp"
+#pragma once
 
 namespace GTA
 {
-	Script::Script()
+	public ref class Config sealed
 	{
-		Interval = 0;
-	}
+	public:
+		static Config ^Load(System::String ^filename);
 
-	GTA::Config ^Script::Config::get()
-	{
-		if (Object::ReferenceEquals(this->mConfig, nullptr))
-		{
-			this->mConfig = GTA::Config::Load(System::IO::Path::ChangeExtension(this->mFilename, "ini"));
-		}
+		generic <typename T>
+		T GetValue(System::String ^section, System::String ^name, T defaultvalue);
+		System::String ^GetValue(System::String ^section, System::String ^name);
+		System::String ^GetValue(System::String ^section, System::String ^name, System::String ^defaultvalue);
+		array<System::String ^> ^GetAllValues(System::String ^section, System::String ^name);
+		generic <typename T>
+		void SetValue(System::String ^section, System::String ^name, T value);
+		void SetValue(System::String ^section, System::String ^name, System::String ^value);
 
-		return this->mConfig;
-	}
-	int Script::Interval::get()
-	{
-		return this->mInterval;
-	}
-	void Script::Interval::set(int value)
-	{
-		if (value > 0)
-		{
-			this->mInterval = value;
-			this->mNextTick = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, value);
-		}
-		else
-		{
-			this->mInterval = 0;
-			this->mNextTick = System::DateTime::MinValue;
-		}
-	}
-
-	void Script::Abort()
-	{
-		this->mScriptDomain->AbortScript(this);
-	}
-	bool Script::IsKeyPressed(System::Windows::Forms::Keys key)
-	{
-		return this->mScriptDomain->IsKeyPressed(key);
-	}
+	private:
+		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^mValues = gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>();
+	};
 }
