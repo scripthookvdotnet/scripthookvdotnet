@@ -20,6 +20,11 @@
 
 namespace GTA
 {
+	ref class Entity;
+	ref class Ped;
+	ref class Player;
+	ref class Vehicle;
+
 	namespace Native
 	{
 		public ref class InputArgument
@@ -31,6 +36,10 @@ namespace GTA
 			InputArgument(double value);
 			InputArgument(System::IntPtr value);
 			InputArgument(System::String ^value);
+			InputArgument(Entity ^object);
+			InputArgument(Ped ^object);
+			InputArgument(Player ^object);
+			InputArgument(Vehicle ^object);
 
 			static inline operator InputArgument ^ (bool value)
 			{
@@ -59,6 +68,22 @@ namespace GTA
 			static inline operator InputArgument ^ (System::String ^value)
 			{
 				return gcnew InputArgument(value);
+			}
+			static inline operator InputArgument ^ (Entity ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Ped ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Player ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Vehicle ^object)
+			{
+				return gcnew InputArgument(object);
 			}
 
 			virtual System::String ^ToString() override
