@@ -61,6 +61,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsPed
+		{
+			bool get();
+		}
 		property bool IsPlane
 		{
 			bool get();

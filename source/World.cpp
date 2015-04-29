@@ -1,5 +1,6 @@
 #include "World.hpp"
 #include "Native.hpp"
+#include "Ped.hpp"
 #include "Vehicle.hpp"
 
 namespace GTA
@@ -43,14 +44,44 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_GRAVITY_LEVEL, value);
 	}
 
+	Ped ^World::CreatePed(Model model, Math::Vector3 position)
+	{
+		return CreatePed(model, position, 0.0f);
+	}
+	Ped ^World::CreatePed(Model model, Math::Vector3 position, float heading)
+	{
+		if (!model.IsPed || !model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int id = Native::Function::Call<int>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+
+		if (id == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Ped(id);
+	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
 		return CreateVehicle(model, position, 0.0f);
 	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position, float heading)
 	{
-		model.Request(-1);
+		if (!model.IsVehicle || !model.Request(1000))
+		{
+			return nullptr;
+		}
 
-		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+		const int id = Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+
+		if (id == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Vehicle(id);
 	}
 }
