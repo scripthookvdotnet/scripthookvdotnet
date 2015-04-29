@@ -49,7 +49,7 @@ namespace GTA
 	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position, float heading)
 	{
-		model.Request(true);
+		model.Request(-1);
 
 		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 	}
