@@ -35,7 +35,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
 	}
-	void Game::RadarZoom::set(float value)
+	void Game::RadarZoom::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
 	}

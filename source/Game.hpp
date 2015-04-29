@@ -54,9 +54,9 @@ namespace GTA
 			GTA::RadioStation get();
 			void set(GTA::RadioStation value);
 		}
-		static property float RadarZoom
+		static property int RadarZoom
 		{
-			void set(float value);
+			void set(int value);
 		}
 		static property float TimeScale
 		{
