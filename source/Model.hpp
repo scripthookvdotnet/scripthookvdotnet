@@ -53,10 +53,13 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool HasLoaded
+		{
+			bool get();
+		}
 
 		void Request();
-		bool HasLoaded();
-		void BlockTillLoaded();
+		void Request(bool);
 
 	private:
 		int mHash;

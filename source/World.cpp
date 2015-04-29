@@ -1,5 +1,6 @@
 #include "World.hpp"
 #include "Native.hpp"
+#include "Vehicle.hpp"
 
 namespace GTA
 {
@@ -40,5 +41,11 @@ namespace GTA
 	void World::GravityLevel::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_GRAVITY_LEVEL, value);
+	}
+
+	Vehicle ^World::CreateVehicle(GTA::Model model, Math::Vector3 vec, float heading, bool networkHandle, bool vehHandle)
+	{
+		model.Request();
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, vec.X, vec.Y, vec.Z, heading, networkHandle, vehHandle));
 	}
 }

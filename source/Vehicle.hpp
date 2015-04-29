@@ -140,8 +140,6 @@ namespace GTA
 		void Explode();
 		bool SetOnGround();
 
-		static Vehicle ^Create(GTA::Model, Math::Vector3, float, bool, bool);
-
 	private:
 		int mID;
 	};

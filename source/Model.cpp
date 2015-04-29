@@ -56,19 +56,22 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_IN_CDIMAGE, this->mHash);
 	}
-
-	void Model::Request()
-	{
-		Native::Function::Call(Native::Hash::REQUEST_MODEL, this->mHash);
-	}
-
-	bool Model::HasLoaded()
+	bool Model::HasLoaded::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::HAS_MODEL_LOADED, this->mHash);
 	}
 
-	void Model::BlockTillLoaded()
+	void Model::Request()
 	{
-		while (!HasLoaded()) scriptWait(0);
+		return Request(true);
+	}
+	void Model::Request(bool blockUntilLoaded)
+	{
+		Native::Function::Call(Native::Hash::REQUEST_MODEL, this->mHash);
+		if (blockUntilLoaded)
+		{
+			while (!HasLoaded)
+				scriptWait(0);
+		}
 	}
 }

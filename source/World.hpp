@@ -1,4 +1,7 @@
 #pragma once
+#include "Model.hpp"
+#include "Vector.hpp"
+#include "Vehicle.hpp"
 
 namespace GTA
 {
@@ -41,5 +44,7 @@ namespace GTA
 		{
 			void set(int value);
 		}
+
+		static Vehicle ^CreateVehicle(GTA::Model, Math::Vector3, float, bool, bool);
 	};
 }
