@@ -19,6 +19,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_COORDS, this->ID, value.X, value.Y, value.Z, 0, 0, 0, 1);
 	}
+	float Entity::HeightAboveGround::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEIGHT_ABOVE_GROUND, this->ID);
+	}
 	float Entity::Heading::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEADING, this->ID);
@@ -30,6 +34,10 @@ namespace GTA
 	Math::Vector3 Entity::Rotation::get()
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_ROTATION, this->ID, 0);
+	}
+	Math::Vector3 Entity::ForwardVector::get()
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_FORWARD_VECTOR, this->ID);
 	}
 	Math::Vector3 Entity::Velocity::get()
 	{

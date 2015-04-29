@@ -19,12 +19,20 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property float HeightAboveGround
+		{
+			float get();
+		}
 		property float Heading
 		{
 			float get();
 			void set(float value);
 		}
 		property Math::Vector3 Rotation
+		{
+			Math::Vector3 get();
+		}
+		property Math::Vector3 ForwardVector
 		{
 			Math::Vector3 get();
 		}
