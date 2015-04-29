@@ -39,13 +39,25 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VELOCITY, this->ID, value.X, value.Y, value.Z);
 	}
+	void Entity::FreezePosition::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::FREEZE_ENTITY_POSITION, this->ID, value);
+	}
 	int Entity::Health::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, this->ID);
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, this->ID) - 100;
 	}
 	void Entity::Health::set(int value)
 	{
-		Native::Function::Call(Native::Hash::SET_ENTITY_HEALTH, this->ID, value);
+		Native::Function::Call(Native::Hash::SET_ENTITY_HEALTH, this->ID, value + 100);
+	}
+	int Entity::MaxHealth::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MAX_HEALTH, this->ID) - 100;
+	}
+	void Entity::MaxHealth::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_HEALTH, this->ID, value + 100);
 	}
 	GTA::Model Entity::Model::get()
 	{
@@ -99,17 +111,6 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ON_FIRE, this->ID);
 	}
-	void Entity::IsOnFire::set(bool value)
-	{
-		if (value)
-		{
-			Native::Function::Call(Native::Hash::START_ENTITY_FIRE, this->ID);
-		}
-		else
-		{
-			Native::Function::Call(Native::Hash::STOP_ENTITY_FIRE, this->ID);
-		}
-	}
 	bool Entity::IsRequiredForMission::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_MISSION_ENTITY, this->ID);
@@ -122,9 +123,26 @@ namespace GTA
 		}
 		else
 		{
-			int handle = this->ID;
-			Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+			int id = this->ID;
+			Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &id);
 		}
+	}
+
+	void Entity::ApplyForce(Math::Vector3 direction)
+	{
+		ApplyForce(direction, Math::Vector3::Zero);
+	}
+	void Entity::ApplyForce(Math::Vector3 direction, Math::Vector3 rotation)
+	{
+		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->ID, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
+	}
+	void Entity::ApplyForceRelative(Math::Vector3 direction)
+	{
+		ApplyForceRelative(direction, Math::Vector3::Zero);
+	}
+	void Entity::ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation)
+	{
+		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->ID, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
 
 	bool Entity::Exists()
@@ -133,6 +151,6 @@ namespace GTA
 	}
 	bool Entity::Exists(Entity ^entity)
 	{
-		return Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity->ID);
+		return !Object::ReferenceEquals(entity, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity->ID);
 	}
 }

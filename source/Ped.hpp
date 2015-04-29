@@ -6,6 +6,12 @@ namespace GTA
 {
 	ref class Vehicle;
 
+	public enum class Gender
+	{
+		Male,
+		Female
+	};
+
 	public ref class Ped sealed : public Entity
 	{
 	public:
@@ -15,6 +21,23 @@ namespace GTA
 		{
 			int get();
 			void set(int value);
+		}
+		property GTA::Gender Gender
+		{
+			GTA::Gender get();
+		}
+		property int Money
+		{
+			int get();
+			void set(int value);
+		}
+		property bool IsPlayer
+		{
+			bool get();
+		}
+		property bool IsHuman
+		{
+			bool get();
 		}
 		property bool IsIdle
 		{
@@ -111,5 +134,7 @@ namespace GTA
 		bool IsInVehicle(Vehicle ^vehicle);
 		bool IsSittingInVehicle();
 		bool IsSittingInVehicle(Vehicle ^vehicle);
+
+		void Kill();
 	};
 }

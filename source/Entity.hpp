@@ -33,7 +33,16 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property bool FreezePosition
+		{
+			void set(bool value);
+		}
 		property int Health
+		{
+			int get();
+			void set(int value);
+		}
+		property int MaxHealth
 		{
 			int get();
 			void set(int value);
@@ -86,13 +95,17 @@ namespace GTA
 		property bool IsOnFire
 		{
 			bool get();
-			void set(bool value);
 		}
 		property bool IsRequiredForMission
 		{
 			bool get();
 			void set(bool value);
 		}
+
+		void ApplyForce(Math::Vector3 direction);
+		void ApplyForce(Math::Vector3 direction, Math::Vector3 rotation);
+		void ApplyForceRelative(Math::Vector3 direction);
+		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
 		bool Exists();
 		static bool Exists(Entity ^entity);

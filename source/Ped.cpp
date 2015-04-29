@@ -16,6 +16,26 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_ACCURACY, this->ID, value);
 	}
+	GTA::Gender Ped::Gender::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_MALE, this->ID) ? GTA::Gender::Male : GTA::Gender::Female;
+	}
+	int Ped::Money::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_MONEY, this->ID);
+	}
+	void Ped::Money::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_MONEY, this->ID, value);
+	}
+	bool Ped::IsPlayer::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_A_PLAYER, this->ID);
+	}
+	bool Ped::IsHuman::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_HUMAN, this->ID);
+	}
 	bool Ped::IsIdle::get()
 	{
 		return !IsInjured && !IsRagdoll && !IsInAir && !IsOnFire && !IsDucking && !IsGettingIntoAVehicle && !IsInCombat && !IsInMeleeCombat && !(IsInVehicle() && !IsSittingInVehicle());
@@ -68,7 +88,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SWIMMING_UNDER_WATER, this->ID);
 	}
-
+	Vehicle ^Ped::CurrentVehicle::get()
+	{
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_USING, this->ID));
+	}
 	void Ped::IsEnemy::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_AS_ENEMY, this->ID, value);
@@ -105,10 +128,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_PLAY_GESTURE_ANIMS, this->ID, value);
 	}
-	Vehicle ^Ped::CurrentVehicle::get()
-	{
-		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_USING, this->ID));
-	}
 
 	bool Ped::IsInVehicle()
 	{
@@ -125,5 +144,10 @@ namespace GTA
 	bool Ped::IsSittingInVehicle(Vehicle ^vehicle)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SITTING_IN_VEHICLE, this->ID, vehicle->ID);
+	}
+
+	void Ped::Kill()
+	{
+		Health = -1;
 	}
 }
