@@ -14,7 +14,7 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Config.hpp"
+#include "Settings.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA
@@ -24,14 +24,14 @@ namespace GTA
 		Interval = 0;
 	}
 
-	GTA::Config ^Script::Config::get()
+	ScriptSettings ^Script::Settings::get()
 	{
-		if (Object::ReferenceEquals(this->mConfig, nullptr))
+		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			this->mConfig = GTA::Config::Load(System::IO::Path::ChangeExtension(this->mFilename, "ini"));
+			this->mSettings = ScriptSettings::Load(System::IO::Path::ChangeExtension(this->mFilename, "ini"));
 		}
 
-		return this->mConfig;
+		return this->mSettings;
 	}
 	int Script::Interval::get()
 	{

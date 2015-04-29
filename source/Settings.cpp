@@ -14,7 +14,7 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Config.hpp"
+#include "Settings.hpp"
 
 namespace GTA
 {
@@ -22,7 +22,7 @@ namespace GTA
 	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
-	Config ^Config::Load(String ^filename)
+	ScriptSettings ^ScriptSettings::Load(String ^filename)
 	{
 		if (!IO::File::Exists(filename))
 		{
@@ -42,7 +42,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Config ^result = gcnew Config();
+		ScriptSettings ^result = gcnew ScriptSettings();
 
 		try
 		{
@@ -98,7 +98,7 @@ namespace GTA
 	}
 
 	generic <typename T>
-	T Config::GetValue(String ^section, String ^name, T defaultvalue)
+	T ScriptSettings::GetValue(String ^section, String ^name, T defaultvalue)
 	{
 		T result;
 		bool parsed = false;
@@ -157,11 +157,11 @@ namespace GTA
 
 		return result;
 	}
-	String ^Config::GetValue(String ^section, String ^key)
+	String ^ScriptSettings::GetValue(String ^section, String ^key)
 	{
 		return GetValue(section, key, String::Empty);
 	}
-	String ^Config::GetValue(String ^section, String ^key, String ^value)
+	String ^ScriptSettings::GetValue(String ^section, String ^key, String ^value)
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
@@ -169,7 +169,7 @@ namespace GTA
 
 		return value;
 	}
-	array<System::String ^> ^Config::GetAllValues(String ^section, String ^key)
+	array<System::String ^> ^ScriptSettings::GetAllValues(String ^section, String ^key)
 	{
 		String ^value = nullptr;
 		List<String ^> ^values = gcnew List<String ^>();
@@ -189,11 +189,11 @@ namespace GTA
 		return values->ToArray();
 	}
 	generic <typename T>
-	void Config::SetValue(String ^section, String ^name, T value)
+	void ScriptSettings::SetValue(String ^section, String ^name, T value)
 	{
 		SetValue(section, name, reinterpret_cast<Object ^>(value)->ToString());
 	}
-	void Config::SetValue(String ^section, String ^key, String ^value)
+	void ScriptSettings::SetValue(String ^section, String ^key, String ^value)
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
