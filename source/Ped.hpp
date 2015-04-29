@@ -26,6 +26,11 @@ namespace GTA
 		{
 			GTA::Gender get();
 		}
+		property int Armor
+		{
+			int get();
+			void set(int value);
+		}
 		property int Money
 		{
 			int get();

@@ -20,6 +20,14 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_MALE, this->ID) ? GTA::Gender::Male : GTA::Gender::Female;
 	}
+	int Ped::Armor::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_ARMOUR, this->ID);
+	}
+	void Ped::Armor::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_ARMOUR, this->ID, value);
+	}
 	int Ped::Money::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_MONEY, this->ID);
