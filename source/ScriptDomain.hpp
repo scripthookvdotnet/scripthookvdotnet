@@ -55,6 +55,7 @@ namespace GTA
 		void Start();
 		void Abort();
 		static void AbortScript(Script ^script);
+		void Wait(int ms);
 		void DoTick();
 
 		bool IsKeyPressed(System::Windows::Forms::Keys key);

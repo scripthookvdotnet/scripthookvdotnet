@@ -26,6 +26,9 @@ namespace GTA
 	public:
 		Script();
 
+		static void Wait(int ms);
+		static bool IsKeyPressed(System::Windows::Forms::Keys key);
+
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
@@ -62,8 +65,6 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
-
-		bool IsKeyPressed(System::Windows::Forms::Keys key);
 
 	internal:
 		inline void RaiseTick(System::Object ^sender)

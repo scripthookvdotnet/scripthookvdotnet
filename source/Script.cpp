@@ -24,6 +24,15 @@ namespace GTA
 		Interval = 0;
 	}
 
+	void Script::Wait(int ms)
+	{
+		ScriptDomain::CurrentDomain->Wait(ms);
+	}
+	bool Script::IsKeyPressed(System::Windows::Forms::Keys key)
+	{
+		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
+	}
+
 	ScriptSettings ^Script::Settings::get()
 	{
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
@@ -54,9 +63,5 @@ namespace GTA
 	void Script::Abort()
 	{
 		this->mScriptDomain->AbortScript(this);
-	}
-	bool Script::IsKeyPressed(System::Windows::Forms::Keys key)
-	{
-		return this->mScriptDomain->IsKeyPressed(key);
 	}
 }
