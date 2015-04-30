@@ -127,9 +127,9 @@ namespace GTA
 			}
 			if (type == Player::typeid)
 			{
-				return gcnew Vehicle(*reinterpret_cast<int *>(value));
+				return gcnew Player(*reinterpret_cast<int *>(value));
 			}
-			if (type == Player::typeid)
+			if (type == Vehicle::typeid)
 			{
 				return gcnew Vehicle(*reinterpret_cast<int *>(value));
 			}
