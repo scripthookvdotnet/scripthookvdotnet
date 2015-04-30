@@ -174,6 +174,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_HAS_BEEN_OWNED_BY_PLAYER, this->ID, value);
 	}
+	System::String ^Vehicle::DisplayName::get()
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, this->Model.Hash);
+	}
 
 	void Vehicle::Repair()
 	{

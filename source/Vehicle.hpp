@@ -133,6 +133,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property System::String ^DisplayName
+		{
+			System::String ^get();
+		}
 
 		void Repair();
 		void Explode();
