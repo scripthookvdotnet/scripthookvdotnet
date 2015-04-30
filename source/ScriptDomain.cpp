@@ -16,6 +16,7 @@
 
 #include "NativeCaller.h"
 #include "ScriptDomain.hpp"
+#include "Log.hpp"
 
 #include <windows.h>
 
@@ -26,25 +27,6 @@ namespace GTA
 
 	namespace
 	{
-		void Log(... array<String ^> ^message)
-		{
-			String ^logpath = IO::Path::ChangeExtension(Reflection::Assembly::GetExecutingAssembly()->Location, ".log");
-			IO::FileStream ^fs = gcnew IO::FileStream(logpath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
-			IO::StreamWriter ^sw = gcnew IO::StreamWriter(fs);
-
-			sw->Write(String::Concat("[", DateTime::Now.ToString("HH:mm:ss"), "] "));
-
-			for each (String ^string in message)
-			{
-				sw->Write(string);
-			}
-
-			sw->WriteLine();
-
-			sw->Close();
-			fs->Close();
-		}
-
 		Reflection::Assembly ^ResolveHandler(Object ^sender, ResolveEventArgs ^args)
 		{
 			if (args->Name->ToLower()->Contains("scripthookvdotnet"))
@@ -58,11 +40,11 @@ namespace GTA
 		{
 			if (!args->IsTerminating)
 			{
-				Log("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+				Log::Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 			}
 			else
 			{
-				Log("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+				Log::Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 			}
 		}
 	}
@@ -74,13 +56,13 @@ namespace GTA
 		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&ResolveHandler);
 		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&UnhandledExceptionHandler);
 
-		Log("Created script domain '", this->mAppDomain->FriendlyName, "'.");
+		Log::Debug("Created script domain '", this->mAppDomain->FriendlyName, "'.");
 	}
 	ScriptDomain::~ScriptDomain()
 	{
 		CleanupStrings();
 
-		Log("Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
+		Log::Debug("Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
 	}
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
@@ -102,14 +84,14 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log("Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
+			Log::Error("Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
 
 			System::AppDomain::Unload(appdomain);
 
 			return nullptr;
 		}
 
-		Log("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
+		Log::Debug("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
 
 		List<String ^> ^filenameScripts = gcnew List<String ^>();
 		List<String ^> ^filenameAssemblies = gcnew List<String ^>();
@@ -122,7 +104,7 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log("Failed to reload scripts:", Environment::NewLine, ex->ToString());
+			Log::Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
 
 			System::AppDomain::Unload(appdomain);
 
@@ -189,7 +171,7 @@ namespace GTA
 				}
 			}
 
-			Log("Failed to compile '", IO::Path::GetFileName(filename), "' with ", compilerResult->Errors->Count.ToString(), " error(s):", Environment::NewLine, errors->ToString());
+			Log::Error("Failed to compile '", IO::Path::GetFileName(filename), "' with ", compilerResult->Errors->Count.ToString(), " error(s):", Environment::NewLine, errors->ToString());
 
 			return false;
 		}
@@ -204,7 +186,7 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log("Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
+			Log::Error("Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
 
 			return false;
 		}
@@ -226,13 +208,13 @@ namespace GTA
 			this->mScriptTypes->Add(filename, type);
 		}
 
-		Log("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
+		Log::Debug("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
 
 		return count != 0;
 	}
 	void ScriptDomain::Unload(ScriptDomain ^domain)
 	{
-		Log("Unloading script domain '", domain->Name, "' ...");
+		Log::Debug("Unloading script domain '", domain->Name, "' ...");
 
 		domain->Abort();
 
@@ -246,7 +228,7 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
+			Log::Error("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
 		}
 
 		GC::Collect();
@@ -258,7 +240,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log("Instantiating script '", scripttype->FullName, "' in script domain '", Name, "' ...");
+		Log::Debug("Instantiating script '", scripttype->FullName, "' in script domain '", Name, "' ...");
 
 		try
 		{
@@ -266,15 +248,15 @@ namespace GTA
 		}
 		catch (MissingMethodException ^)
 		{
-			Log("Failed to instantiate script '", scripttype->FullName, "' because no public default constructor was found.");
+			Log::Error("Failed to instantiate script '", scripttype->FullName, "' because no public default constructor was found.");
 		}
 		catch (Reflection::TargetInvocationException ^ex)
 		{
-			Log("Failed to instantiate script '", scripttype->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString());
+			Log::Error("Failed to instantiate script '", scripttype->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString());
 		}
 		catch (Exception ^ex)
 		{
-			Log("Failed to instantiate script '", scripttype->FullName, "':", Environment::NewLine, ex->ToString());
+			Log::Error("Failed to instantiate script '", scripttype->FullName, "':", Environment::NewLine, ex->ToString());
 		}
 
 		return nullptr;
@@ -287,7 +269,7 @@ namespace GTA
 			return;
 		}
 
-		Log("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
+		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
 		for each (KeyValuePair<String ^, Type ^> ^scripttype in this->mScriptTypes)
 		{
@@ -302,14 +284,14 @@ namespace GTA
 			script->mFilename = scripttype->Key;
 			script->mScriptDomain = this;
 
-			Log("Started script '", script->Name, "'.");
+			Log::Debug("Started script '", script->Name, "'.");
 
 			this->mRunningScripts->Add(script);
 		}
 	}
 	void ScriptDomain::Abort()
 	{
-		Log("Stopping ", this->mRunningScripts->Count.ToString(), " script(s) ...");
+		Log::Debug("Stopping ", this->mRunningScripts->Count.ToString(), " script(s) ...");
 
 		for each (Script ^script in this->mRunningScripts)
 		{
@@ -323,7 +305,7 @@ namespace GTA
 	{
 		script->mRunning = false;
 
-		Log("Aborted script '", script->Name, "'.");
+		Log::Debug("Aborted script '", script->Name, "'.");
 	}
 	void ScriptDomain::Wait(int ms)
 	{

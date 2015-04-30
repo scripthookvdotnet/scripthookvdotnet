@@ -60,6 +60,9 @@
     <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Log.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Log.hpp">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
