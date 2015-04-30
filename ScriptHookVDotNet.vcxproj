@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\Model.cpp" />
@@ -105,6 +106,7 @@
   <ItemGroup>
     <ClInclude Include="source\Entity.hpp" />
     <ClInclude Include="source\Game.hpp" />
+    <ClInclude Include="source\Log.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />
