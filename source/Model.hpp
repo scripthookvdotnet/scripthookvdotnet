@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "VehicleHashes.hpp"
+#include "PedHashes.hpp"
+#include "WeaponHashes.hpp"
 
 namespace GTA
 {
@@ -8,6 +11,9 @@ namespace GTA
 	{
 	public:
 		Model(int hash);
+		Model(Native::VehicleHash hash);
+		Model(Native::PedHash hash);
+		Model(Native::WeaponHash hash);
 		Model(System::String ^name);
 
 		static inline operator Model(int source)

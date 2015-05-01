@@ -116,5 +116,14 @@
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="source\VehicleHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\WeaponHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PedHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
