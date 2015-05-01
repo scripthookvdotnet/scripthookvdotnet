@@ -52,7 +52,7 @@ namespace GTA
 	{
 		const Math::Vector3 position = ped->Position;
 		System::Collections::Generic::List<Ped ^> ^result = gcnew System::Collections::Generic::List<Ped ^>();
-		int *handles = new int[maxAmount + 1];
+		int *handles = new int[maxAmount * 2 + 2];
 
 		try
 		{
@@ -62,7 +62,7 @@ namespace GTA
 
 			for (int i = 0; i < amount; ++i)
 			{
-				const int index = i + 1;
+				const int index = i * 2 + 2;
 
 				if (handles[index] != 0 && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handles[index]))
 				{
