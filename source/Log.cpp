@@ -21,7 +21,7 @@ namespace GTA
 		IO::FileStream ^fs = gcnew IO::FileStream(logpath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
 		IO::StreamWriter ^sw = gcnew IO::StreamWriter(fs);
 
-		sw->Write(String::Concat(logLevel, " [", DateTime::Now.ToString("HH:mm:ss"), "] "));
+		sw->Write(String::Concat("[", DateTime::Now.ToString("HH:mm:ss"), "] ", logLevel, " "));
 
 		for each (String ^string in message)
 		{
