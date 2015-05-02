@@ -73,6 +73,6 @@ namespace GTA
 		System::AppDomain ^mAppDomain;
 		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;
-		System::Collections::Generic::Dictionary<System::String ^, System::Type ^> ^mScriptTypes;
+		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
 	};
 }

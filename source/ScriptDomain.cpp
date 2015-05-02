@@ -49,7 +49,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
 	{
 		sCurrentDomain = this;
 
@@ -205,7 +205,7 @@ namespace GTA
 			}
 
 			count++;
-			this->mScriptTypes->Add(filename, type);
+			this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
 		}
 
 		Log::Debug("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
@@ -271,9 +271,9 @@ namespace GTA
 
 		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
-		for each (KeyValuePair<String ^, Type ^> ^scripttype in this->mScriptTypes)
+		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
 		{
-			Script ^script = InstantiateScript(scripttype->Value);
+			Script ^script = InstantiateScript(scripttype->Item2);
 
 			if (Object::ReferenceEquals(script, nullptr))
 			{
@@ -281,7 +281,7 @@ namespace GTA
 			}
 
 			script->mRunning = true;
-			script->mFilename = scripttype->Key;
+			script->mFilename = scripttype->Item1;
 			script->mScriptDomain = this;
 
 			Log::Debug("Started script '", script->Name, "'.");
