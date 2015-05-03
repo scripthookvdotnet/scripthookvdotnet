@@ -15,6 +15,7 @@
  */
 
 #include "Settings.hpp"
+#include "Native.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA

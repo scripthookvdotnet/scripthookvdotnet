@@ -17,32 +17,48 @@
 #include "NativeCaller.h"
 #include "ScriptDomain.hpp"
 
+ref struct ScriptGlobals
+{
+	static GTA::ScriptDomain ^Domain = nullptr;
+};
+
 void ScriptMain()
 {
 	while (true)
 	{
-		GTA::ScriptDomain ^domain = GTA::ScriptDomain::Load(System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
+		ScriptGlobals::Domain = GTA::ScriptDomain::Load(System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
 
-		if (System::Object::ReferenceEquals(domain, nullptr))
+		if (System::Object::ReferenceEquals(ScriptGlobals::Domain, nullptr))
 		{
 			return;
 		}
 
-		domain->Start();
+		ScriptGlobals::Domain->Start();
 
 		while (true)
 		{
 			if (GetAsyncKeyState(VK_INSERT) & 0x8000)
 			{
-				GTA::ScriptDomain::Unload(domain);
+				GTA::ScriptDomain::Unload(ScriptGlobals::Domain);
+
+				ScriptGlobals::Domain = nullptr;
 				break;
 			}
 
-			domain->DoTick();
+			ScriptGlobals::Domain->DoTick();
 
 			scriptWait(0);
 		}
 	}
+}
+void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+{
+	if (key >= 255 || ScriptGlobals::Domain == nullptr)
+	{
+		return;
+	}
+
+	ScriptGlobals::Domain->DoKeyboardMessage(static_cast<System::Windows::Forms::Keys>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_MENU) & 0x8000) != 0, isWithAlt != FALSE);
 }
 
 #pragma unmanaged
@@ -56,8 +72,11 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 		case DLL_PROCESS_ATTACH:
 			DisableThreadLibraryCalls(hModule);
 			scriptRegister(hModule, &ScriptMain);
+			keyboardHandlerRegister(&ScriptKeyboardMessage);
 			break;
 		case DLL_PROCESS_DETACH:
+			scriptUnregister(&ScriptMain);
+			keyboardHandlerUnregister(&ScriptKeyboardMessage);
 			break;
 	}
 

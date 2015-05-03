@@ -49,7 +49,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
 	{
 		sCurrentDomain = this;
 
@@ -313,44 +313,6 @@ namespace GTA
 	}
 	void ScriptDomain::DoTick()
 	{
-		// Update keyboard input
-		for (int key = 1; key < 255; ++key)
-		{
-			const bool status = (GetAsyncKeyState(key) & 0x8000) != 0;
-
-			if (status == this->mKeyboardState[key])
-			{
-				continue;
-			}
-
-			const bool ctrl = IsKeyPressed(Windows::Forms::Keys::ControlKey) || IsKeyPressed(Windows::Forms::Keys::LControlKey) || IsKeyPressed(Windows::Forms::Keys::RControlKey);
-			const bool shift = IsKeyPressed(Windows::Forms::Keys::ShiftKey) || IsKeyPressed(Windows::Forms::Keys::LShiftKey) || IsKeyPressed(Windows::Forms::Keys::RShiftKey);
-			const bool alt = IsKeyPressed(Windows::Forms::Keys::Menu) || IsKeyPressed(Windows::Forms::Keys::LMenu) || IsKeyPressed(Windows::Forms::Keys::RMenu);
-
-			Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(static_cast<Windows::Forms::Keys>(key) | (ctrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (shift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (alt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
-
-			for each (Script ^script in this->mRunningScripts)
-			{
-				try
-				{
-					if (!status)
-					{
-						script->RaiseKeyUp(this, args);
-					}
-					else
-					{
-						script->RaiseKeyDown(this, args);
-					}
-				}
-				catch (Exception ^ex)
-				{
-					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
-				}
-			}
-
-			this->mKeyboardState[key] = status;
-		}
-
 		// Update scripts
 		for each (Script ^script in this->mRunningScripts)
 		{
@@ -384,6 +346,32 @@ namespace GTA
 
 		// Clean up pinned strings
 		CleanupStrings();
+	}
+	void ScriptDomain::DoKeyboardMessage(Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
+	{
+		this->mKeyboardState[static_cast<int>(key)] = status;
+
+		Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(key | (statusCtrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (statusShift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (statusAlt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
+
+		// Update keyboard input
+		for each (Script ^script in this->mRunningScripts)
+		{
+			try
+			{
+				if (!status)
+				{
+					script->RaiseKeyUp(this, args);
+				}
+				else
+				{
+					script->RaiseKeyDown(this, args);
+				}
+			}
+			catch (Exception ^ex)
+			{
+				UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
+			}
+		}
 	}
 
 	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)

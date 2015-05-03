@@ -57,6 +57,7 @@ namespace GTA
 		static void AbortScript(Script ^script);
 		void Wait(int ms);
 		void DoTick();
+		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
 		bool IsKeyPressed(System::Windows::Forms::Keys key);
 		System::IntPtr PinString(System::String ^string);
