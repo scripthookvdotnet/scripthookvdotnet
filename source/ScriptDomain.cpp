@@ -407,4 +407,8 @@ namespace GTA
 
 		this->mPinnedStrings->Clear();
 	}
+	System::Object ^ScriptDomain::InitializeLifetimeService()
+	{
+		return nullptr;
+	}
 }

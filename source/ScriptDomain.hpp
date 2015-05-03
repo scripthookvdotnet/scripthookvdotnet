@@ -61,6 +61,7 @@ namespace GTA
 		bool IsKeyPressed(System::Windows::Forms::Keys key);
 		System::IntPtr PinString(System::String ^string);
 		void CleanupStrings();
+		System::Object ^InitializeLifetimeService() override;
 
 	private:
 		bool LoadScript(System::String ^filename);
