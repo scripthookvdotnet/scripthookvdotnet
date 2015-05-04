@@ -7,16 +7,16 @@ namespace GTA
 	Model::Model(int hash) : mHash(hash)
 	{
 	}
-	Model::Model(Native::VehicleHash hash) : mHash(static_cast<int>(hash))
+	Model::Model(System::String ^name) : mHash(Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, name))
 	{
 	}
 	Model::Model(Native::PedHash hash) : mHash(static_cast<int>(hash))
 	{
 	}
-	Model::Model(Native::WeaponHash hash) : mHash(static_cast<int>(hash))
+	Model::Model(Native::VehicleHash hash) : mHash(static_cast<int>(hash))
 	{
 	}
-	Model::Model(System::String ^name) : mHash(Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, name))
+	Model::Model(Native::WeaponHash hash) : mHash(static_cast<int>(hash))
 	{
 	}
 

@@ -107,23 +107,23 @@
     <ClInclude Include="source\Ped.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="source\PedHashes.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Player.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Vehicle.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\World.hpp">
+    <ClInclude Include="source\VehicleHashes.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\VehicleHashes.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="source\WeaponHashes.hpp">
-      <Filter>Core</Filter>
+      <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\PedHashes.hpp">
-      <Filter>Core</Filter>
+    <ClInclude Include="source\World.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

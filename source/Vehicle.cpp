@@ -56,7 +56,7 @@ namespace GTA
 		if (this->Model.IsTrain)
 		{
 			Native::Function::Call(Native::Hash::SET_TRAIN_SPEED, this->ID, value);
-				Native::Function::Call(Native::Hash::SET_TRAIN_CRUISE_SPEED, this->ID, value);
+			Native::Function::Call(Native::Hash::SET_TRAIN_CRUISE_SPEED, this->ID, value);
 		}
 		else
 		{

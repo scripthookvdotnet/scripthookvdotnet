@@ -53,7 +53,7 @@ void ScriptMain()
 }
 void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
-	if (key >= 255 || ScriptGlobals::Domain == nullptr)
+	if (key >= 255 || System::Object::ReferenceEquals(ScriptGlobals::Domain, nullptr))
 	{
 		return;
 	}

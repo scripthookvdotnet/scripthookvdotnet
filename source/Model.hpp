@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Vector3.hpp"
-#include "VehicleHashes.hpp"
 #include "PedHashes.hpp"
+#include "VehicleHashes.hpp"
 #include "WeaponHashes.hpp"
 
 namespace GTA
@@ -11,16 +11,28 @@ namespace GTA
 	{
 	public:
 		Model(int hash);
-		Model(Native::VehicleHash hash);
-		Model(Native::PedHash hash);
-		Model(Native::WeaponHash hash);
 		Model(System::String ^name);
+		Model(Native::PedHash hash);
+		Model(Native::VehicleHash hash);
+		Model(Native::WeaponHash hash);
 
 		static inline operator Model(int source)
 		{
 			return Model(source);
 		}
 		static inline operator Model(System::String ^source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(Native::PedHash source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(Native::VehicleHash source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(Native::WeaponHash source)
 		{
 			return Model(source);
 		}

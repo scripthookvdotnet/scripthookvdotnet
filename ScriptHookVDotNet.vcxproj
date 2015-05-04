@@ -109,11 +109,10 @@
     <ClInclude Include="source\Log.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Model.hpp" />
-    <ClInclude Include="source\PedHashes.hpp" />
-    <ClInclude Include="source\VehicleHashes.hpp" />
     <ClInclude Include="source\Native.hpp" />
     <ClInclude Include="source\NativeHashes.hpp" />
     <ClInclude Include="source\Ped.hpp" />
+    <ClInclude Include="source\PedHashes.hpp" />
     <ClInclude Include="source\Player.hpp" />
     <ClInclude Include="source\Quaternion.hpp" />
     <ClInclude Include="source\Script.hpp" />
@@ -122,6 +121,7 @@
     <ClInclude Include="source\Vector2.hpp" />
     <ClInclude Include="source\Vector3.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />
+    <ClInclude Include="source\VehicleHashes.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
   </ItemGroup>
