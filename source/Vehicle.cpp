@@ -191,8 +191,4 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
 	}
-	Vehicle ^Vehicle::GetClosestVehicle(Math::Vector3 position, float radius)
-	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_CLOSEST_VEHICLE, position.X, position.Y, position.Z, radius, 0, 70); // Last parameter still unknown.
-	}
 }

@@ -121,6 +121,11 @@ namespace GTA
 		return result->ToArray();
 	}
 
+	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
+	{
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_CLOSEST_VEHICLE, position.X, position.Y, position.Z, radius, 0, 70); // Last parameter still unknown.
+	}
+
 	Ped ^World::CreatePed(Model model, Math::Vector3 position)
 	{
 		return CreatePed(model, position, 0.0f);

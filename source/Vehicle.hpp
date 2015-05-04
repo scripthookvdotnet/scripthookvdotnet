@@ -141,7 +141,6 @@ namespace GTA
 		void Repair();
 		void Explode();
 		bool SetOnGround();
-		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 
 	private:
 		int mID;
