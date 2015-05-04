@@ -10,6 +10,9 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{921247d8-e2c0-463b-afc6-e0e43a621070}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripting\UI">
+      <UniqueIdentifier>{c904d3b3-468b-4503-a8b5-f0c64f4863eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Log.cpp">
@@ -62,6 +65,15 @@
     </ClCompile>
     <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UIContainer.cpp">
+      <Filter>Scripting\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UIRectangle.cpp">
+      <Filter>Scripting\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UIText.cpp">
+      <Filter>Scripting\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +136,21 @@
     </ClInclude>
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UI.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UIContainer.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UIElement.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UIRectangle.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UIText.hpp">
+      <Filter>Scripting\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
