@@ -98,6 +98,9 @@
     <ClCompile Include="source\Script.cpp" />
     <ClCompile Include="source\ScriptDomain.cpp" />
     <ClCompile Include="source\Settings.cpp" />
+    <ClCompile Include="source\UIContainer.cpp" />
+    <ClCompile Include="source\UIRectangle.cpp" />
+    <ClCompile Include="source\UIText.cpp" />
     <ClCompile Include="source\Vector2.cpp" />
     <ClCompile Include="source\Vector3.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
@@ -117,6 +120,11 @@
     <ClInclude Include="source\Script.hpp" />
     <ClInclude Include="source\ScriptDomain.hpp" />
     <ClInclude Include="source\Settings.hpp" />
+    <ClInclude Include="source\UI.h" />
+    <ClInclude Include="source\UIContainer.h" />
+    <ClInclude Include="source\UIElement.h" />
+    <ClInclude Include="source\UIRectangle.h" />
+    <ClInclude Include="source\UIText.h" />
     <ClInclude Include="source\Vector2.hpp" />
     <ClInclude Include="source\Vector3.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />
