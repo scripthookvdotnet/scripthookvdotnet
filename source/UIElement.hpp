@@ -9,21 +9,20 @@ namespace GTA
 		void Draw();
 		void Draw(int xMod, int yMod);
 
-		property System::Drawing::Color Color
-		{
-			void set(System::Drawing::Color value);
-			System::Drawing::Color get();
-		}
 		property bool Enabled
 		{
 			void set(bool value);
 			bool get();
 		}
-		
-		property System::Drawing::Point ^Loc
+		property System::Drawing::Color Color
 		{
-			void set(System::Drawing::Point ^value);
-			System::Drawing::Point ^get();
+			void set(System::Drawing::Color value);
+			System::Drawing::Color get();
+		}
+		property System::Drawing::Point Location
+		{
+			void set(System::Drawing::Point value);
+			System::Drawing::Point get();
 		}
 	};
 }

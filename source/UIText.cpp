@@ -3,72 +3,65 @@
 
 namespace GTA
 {
-	UIText::UIText(System::String ^text, System::Drawing::Point loc, float size, System::Drawing::Color color, int font, bool center)
+	UIText::UIText(System::String ^text, System::Drawing::Point location, float size, System::Drawing::Color color, int font, bool centered) : mEnabled(true), mColor(color), mLocation(location), mText(text), mFont(font), mSize(size), mCentered(centered)
 	{
-		this->text = text;
-		this->loc = loc;
-		this->size = size;
-		this->color = color;
-		this->font = font;
-		this->center = center;
-		this->enabled = true;
 	}
 
-	System::Drawing::Color UIText::Color::get()
-	{
-		return this->color;
-	}
-	void UIText::Color::set(System::Drawing::Color color)
-	{
-		this->color = color;
-	}
 	bool UIText::Enabled::get()
 	{
-		return this->enabled;
+		return this->mEnabled;
 	}
 	void UIText::Enabled::set(bool enabled)
 	{
-		this->enabled = enabled;
+		this->mEnabled = enabled;
 	}
-	System::Drawing::Point ^UIText::Loc::get()
+	System::Drawing::Color UIText::Color::get()
 	{
-		return this->loc;
+		return this->mColor;
 	}
-	void UIText::Loc::set(System::Drawing::Point ^loc)
+	void UIText::Color::set(System::Drawing::Color color)
 	{
-		this->loc = loc;
+		this->mColor = color;
+	}
+	System::Drawing::Point UIText::Location::get()
+	{
+		return this->mLocation;
+	}
+	void UIText::Location::set(System::Drawing::Point loc)
+	{
+		this->mLocation = loc;
 	}
 	System::String ^UIText::Text::get()
 	{
-		return this->text;
+		return this->mText;
 	}
 	void UIText::Text::set(System::String ^text)
 	{
-		this->text = text;
+		this->mText = text;
 	}
 	int UIText::Font::get()
 	{
-		return this->font;
+		return this->mFont;
 	}
 	void UIText::Font::set(int font)
 	{
-		this->font = font;
+		this->mFont = font;
 	}
 	float UIText::Size::get()
 	{
-		return this->size;
+		return this->mSize;
 	}
 	void UIText::Size::set(float size)
 	{
-		this->size = size;
+		this->mSize = size;
 	}
-	bool UIText::Center::get()
+	bool UIText::Centered::get()
 	{
-		return this->center;
+		return this->mCentered;
 	}
-	void UIText::Center::set(bool center)
+	void UIText::Centered::set(bool center)
 	{
-		this->center = center;
+		this->mCentered = center;
 	}
 
 	void UIText::Draw()
@@ -78,16 +71,19 @@ namespace GTA
 	void UIText::Draw(int xMod, int yMod)
 	{
 		if (!this->Enabled)
+		{
 			return;
-		float locX = (((float)loc->X + xMod) / UI::WIDTH);
-		float locY = (((float)loc->Y + yMod) / UI::HEIGHT);
+		}
 
-		Native::Function::Call(Native::Hash::SET_TEXT_FONT, font);
-		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, size, size);
-		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, color.R, color.G, color.B, color.A);
-		Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, center ? 1 : 0);
+		const float x = (static_cast<float>(this->mLocation.X) + xMod) / UI::WIDTH;
+		const float y = (static_cast<float>(this->mLocation.Y) + yMod) / UI::HEIGHT;
+
+		Native::Function::Call(Native::Hash::SET_TEXT_FONT, this->mFont);
+		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, this->mSize, this->mSize);
+		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, this->mColor.R, this->mColor.G, this->mColor.B, this->mColor.A);
+		Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, this->mCentered ? 1 : 0);
 		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, text);
-		Native::Function::Call(Native::Hash::_DRAW_TEXT, locX, locY);
+		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, this->mText);
+		Native::Function::Call(Native::Hash::_DRAW_TEXT, x, y);
 	}
 }

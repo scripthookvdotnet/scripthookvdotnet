@@ -8,22 +8,22 @@ namespace GTA
 	public ref class UIText : UIElement
 	{
 	public:
-		UIText(System::String ^text, System::Drawing::Point loc, float size, System::Drawing::Color color, int font, bool center);
+		UIText(System::String ^text, System::Drawing::Point location, float size, System::Drawing::Color color, int font, bool centered);
 
-		virtual property System::Drawing::Color Color
-		{
-			void set(System::Drawing::Color value);
-			System::Drawing::Color get();
-		}
 		virtual property bool Enabled
 		{
 			void set(bool value);
 			bool get();
 		}
-		virtual property System::Drawing::Point ^Loc
+		virtual property System::Drawing::Color Color
 		{
-			void set(System::Drawing::Point ^value);
-			System::Drawing::Point ^get();
+			void set(System::Drawing::Color value);
+			System::Drawing::Color get();
+		}
+		virtual property System::Drawing::Point Location
+		{
+			void set(System::Drawing::Point value);
+			System::Drawing::Point get();
 		}
 		property System::String ^Text
 		{
@@ -40,7 +40,7 @@ namespace GTA
 			void set(float value);
 			float get();
 		}
-		property bool Center
+		property bool Centered
 		{
 			void set(bool value);
 			bool get();
@@ -50,13 +50,12 @@ namespace GTA
 		virtual void Draw(int xMod, int yMod);
 
 	private:
-		System::String ^text;
-		int font;
-		float size;
-		bool center;
-
-		System::Drawing::Point ^loc;
-		System::Drawing::Color color;
-		bool enabled;
+		bool mEnabled;
+		System::Drawing::Color mColor;
+		System::Drawing::Point mLocation;
+		System::String ^mText;
+		int mFont;
+		float mSize;
+		bool mCentered;
 	};
 }

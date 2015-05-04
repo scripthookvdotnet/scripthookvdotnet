@@ -2,27 +2,23 @@
 
 namespace GTA
 {
-	UIContainer::UIContainer() : UIRectangle()
+	UIContainer::UIContainer() : UIRectangle(), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
 	{
-		this->items = gcnew System::Collections::Generic::List<UIElement ^>();
 	}
-
-	UIContainer::UIContainer(System::Drawing::Point loc, System::Drawing::Point scale) : UIRectangle(loc, scale)
+	UIContainer::UIContainer(System::Drawing::Point location, System::Drawing::Size size) : UIRectangle(location, size), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
 	{
-		this->items = gcnew System::Collections::Generic::List<UIElement ^>();
 	}
-	UIContainer::UIContainer(System::Drawing::Point loc, System::Drawing::Point scale, System::Drawing::Color color) : UIRectangle(loc, scale, color)
+	UIContainer::UIContainer(System::Drawing::Point location, System::Drawing::Size size, System::Drawing::Color color) : UIRectangle(location, size, color), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
 	{
-		this->items = gcnew System::Collections::Generic::List<UIElement ^>();
 	}
 
 	System::Collections::Generic::List<UIElement ^> ^UIContainer::Items::get()
 	{
-		return this->items;
+		return this->mItems;
 	}
 	void UIContainer::Items::set(System::Collections::Generic::List<UIElement ^> ^items)
 	{
-		this->items = items;
+		this->mItems = items;
 	}
 
 	void UIContainer::Draw()
@@ -32,9 +28,15 @@ namespace GTA
 	void UIContainer::Draw(int xMod, int yMod)
 	{
 		if (!this->Enabled)
+		{
 			return;
+		}
+
 		UIRectangle::Draw(xMod, yMod);
-		for each (UIElement ^elem in this->items)
-			elem->Draw(xMod + UIRectangle::Loc->X, yMod + UIRectangle::Loc->Y);
+
+		for each (UIElement ^item in this->mItems)
+		{
+			item->Draw(xMod + UIRectangle::Location.X, yMod + UIRectangle::Location.Y);
+		}
 	}
 }
