@@ -98,6 +98,11 @@ namespace GTA
 	}
 	Vehicle ^Ped::CurrentVehicle::get()
 	{
+		if (!IsInVehicle())
+		{
+			return nullptr;
+		}
+
 		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->ID, false));
 	}
 	void Ped::IsEnemy::set(bool value)
