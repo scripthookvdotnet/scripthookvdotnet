@@ -1,5 +1,3 @@
-#include "Native.hpp"
-#include "UI.h"
 #include "UIText.h"
 
 namespace GTA

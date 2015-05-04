@@ -36,6 +36,7 @@ namespace GTA
 			InputArgument(double value);
 			InputArgument(System::IntPtr value);
 			InputArgument(System::String ^value);
+			InputArgument(const char value[]);
 			InputArgument(Entity ^object);
 			InputArgument(Ped ^object);
 			InputArgument(Player ^object);
@@ -66,6 +67,10 @@ namespace GTA
 				return gcnew InputArgument(value);
 			}
 			static inline operator InputArgument ^ (System::String ^value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static inline operator InputArgument ^ (const char value[])
 			{
 				return gcnew InputArgument(value);
 			}

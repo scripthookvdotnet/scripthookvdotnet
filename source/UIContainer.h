@@ -13,11 +13,16 @@ namespace GTA
 		UIContainer(System::Drawing::Point loc, System::Drawing::Point size);
 		UIContainer(System::Drawing::Point loc, System::Drawing::Point size, System::Drawing::Color color);
 
-		void Add(UIElement ^elem);
+		property System::Collections::Generic::List<UIElement ^> ^Items
+		{
+			System::Collections::Generic::List<UIElement ^> ^get();
+			void set(System::Collections::Generic::List<UIElement ^> ^value);
+		}
+
 		virtual void Draw() override;
 		virtual void Draw(int xMod, int yMod) override;
 			
 	private:
-		System::Collections::Generic::List<UIElement ^> ^children;
+		System::Collections::Generic::List<UIElement ^> ^items;
 	};
 }

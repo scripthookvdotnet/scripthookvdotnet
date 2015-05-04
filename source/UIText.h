@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Vector3.hpp"
-#include "Vector2.hpp"
-#include "Ui.h"
-#include "UiElement.h"
+#include "UI.h"
+#include "UIElement.h"
+#include "Native.hpp"
 
 namespace GTA
 {

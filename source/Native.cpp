@@ -50,6 +50,9 @@ namespace GTA
 		InputArgument::InputArgument(String ^value) : mData(ScriptDomain::CurrentDomain->PinString(value).ToInt64())
 		{
 		}
+		InputArgument::InputArgument(const char value[]) : mData(ScriptDomain::CurrentDomain->PinString(gcnew String(value)).ToInt64())
+		{
+		}
 		InputArgument::InputArgument(Entity ^object) : mData(object->ID)
 		{
 		}
