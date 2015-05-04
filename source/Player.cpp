@@ -129,4 +129,14 @@ namespace GTA
 
 		return nullptr;
 	}
+
+	bool Player::Equals(Player ^player)
+	{
+		return !System::Object::ReferenceEquals(player, nullptr) && this->ID == player->ID;
+	}
+
+	int Player::GetHashCode()
+	{
+		return this->ID;
+	}
 }

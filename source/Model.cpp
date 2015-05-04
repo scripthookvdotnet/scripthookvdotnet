@@ -126,7 +126,15 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_MODEL_AS_NO_LONGER_NEEDED, this->mHash);
 	}
+	bool Model::Equals(Model model)
+	{
+		return this->mHash == model.mHash;
+	}
 
+	int Model::GetHashCode()
+	{
+		return this->mHash;
+	}
 	System::String ^Model::ToString()
 	{
 		return "0x" + this->mHash.ToString("X");

@@ -118,6 +118,22 @@ namespace GTA
 		bool Exists();
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
+		virtual bool Equals(Entity ^entity);
+
+		virtual int GetHashCode() override;
+		static inline bool operator ==(Entity ^left, Entity ^right)
+		{
+			if (Object::ReferenceEquals(left, nullptr))
+			{
+				return Object::ReferenceEquals(right, nullptr);
+			}
+
+			return left->Equals(right);
+		}
+		static inline bool operator !=(Entity ^left, Entity ^right)
+		{
+			return !operator ==(left, right);
+		}
 
 	private:
 		int mID;

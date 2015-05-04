@@ -165,4 +165,13 @@ namespace GTA
 		int id = this->ID;
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &id);
 	}
+	bool Entity::Equals(Entity ^entity)
+	{
+		return !System::Object::ReferenceEquals(entity, nullptr) && this->ID == entity->ID;
+	}
+
+	int Entity::GetHashCode()
+	{
+		return this->ID;
+	}
 }

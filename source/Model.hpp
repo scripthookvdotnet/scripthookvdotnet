@@ -16,27 +16,6 @@ namespace GTA
 		Model(Native::VehicleHash hash);
 		Model(Native::WeaponHash hash);
 
-		static inline operator Model(int source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(System::String ^source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::PedHash source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::VehicleHash source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::WeaponHash source)
-		{
-			return Model(source);
-		}
-
 		property int Hash
 		{
 			int get();
@@ -106,8 +85,38 @@ namespace GTA
 		void Request();
 		bool Request(int timeout);
 		void MarkAsNoLongerNeeded();
+		virtual bool Equals(Model model);
 
+		virtual int GetHashCode() override;
 		virtual System::String ^ToString() override;
+		static inline operator Model(int source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(System::String ^source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(Native::PedHash source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(Native::VehicleHash source)
+		{
+			return Model(source);
+		}
+		static inline operator Model(Native::WeaponHash source)
+		{
+			return Model(source);
+		}
+		static inline bool operator ==(Model left, Model right)
+		{
+			return left.Equals(right);
+		}
+		static inline bool operator !=(Model left, Model right)
+		{
+			return !operator ==(left, right);
+		}
 
 	private:
 		int mHash;
