@@ -37,24 +37,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_VEHICLE_DRIVE_WANDER, this->mPed->ID, vehicle->ID, speed, drivingstyle);
 	}
-	void Tasks::DriveTo(Math::Vector3 position, float radius, float speed, int drivingstyle)
+	void Tasks::DriveTo(Vehicle ^vehicle, Math::Vector3 position, float radius, float speed)
 	{
-		DriveTo(Vehicle::Any, position, radius, speed, drivingstyle);
+		DriveTo(vehicle, position, radius, speed, 0);
 	}
 	void Tasks::DriveTo(Vehicle ^vehicle, Math::Vector3 position, float radius, float speed, int drivingstyle)
 	{
 		Native::Function::Call(Native::Hash::TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, this->mPed->ID, vehicle->ID, position.X, position.Y, position.Z, speed, drivingstyle, radius);
-	}
-	void Tasks::DrivePointRoute(Vehicle ^vehicle, float speed, ... array<Math::Vector3> ^points)
-	{
-		Native::Function::Call(Native::Hash::TASK_FLUSH_ROUTE);
-
-		for each (Math::Vector3 point in points)
-		{
-			Native::Function::Call(Native::Hash::TASK_EXTEND_ROUTE, point.X, point.Y, point.Z);
-		}
-
-		Native::Function::Call(Native::Hash::TASK_FOLLOW_POINT_ROUTE, this->mPed->ID, vehicle->ID, speed);
 	}
 	void Tasks::EnterVehicle()
 	{
@@ -66,7 +55,7 @@ namespace GTA
 	}
 	void Tasks::EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout)
 	{
-		Native::Function::Call(Native::Hash::TASK_ENTER_VEHICLE, this->mPed->ID, vehicle->ID, timeout, static_cast<int>(seat), 0, 0, 0);
+		Native::Function::Call(Native::Hash::TASK_ENTER_VEHICLE, this->mPed->ID, vehicle->ID, timeout, static_cast<int>(seat), 0.0f, 0, 0);
 	}
 	void Tasks::EveryoneLeaveVehicle(Vehicle ^vehicle)
 	{
@@ -104,6 +93,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_SMART_FLEE_COORD, this->mPed->ID, position.X, position.Y, position.Z, 100.0f, duration, 0, 0);
 	}
+	void Tasks::FollowPointRoute(... array<Math::Vector3> ^points)
+	{
+		Native::Function::Call(Native::Hash::TASK_FLUSH_ROUTE);
+
+		for each (Math::Vector3 point in points)
+		{
+			Native::Function::Call(Native::Hash::TASK_EXTEND_ROUTE, point.X, point.Y, point.Z);
+		}
+
+		Native::Function::Call(Native::Hash::TASK_FOLLOW_POINT_ROUTE, this->mPed->ID, 1.0f, 0);
+	}
 	void Tasks::GoTo(Entity ^target)
 	{
 		GoTo(target, Math::Vector3::Zero, -1);
@@ -114,7 +114,7 @@ namespace GTA
 	}
 	void Tasks::GoTo(Entity ^target, Math::Vector3 offset, int timeout)
 	{
-		Native::Function::Call(Native::Hash::TASK_GOTO_ENTITY_OFFSET, this->mPed->ID, target->ID, timeout, offset.X, offset.Y, offset.Z, 0);
+		Native::Function::Call(Native::Hash::TASK_GOTO_ENTITY_OFFSET_XY, this->mPed->ID, target->ID, timeout, offset.X, offset.Y, offset.Z, 2.0f, true);
 	}
 	void Tasks::GoTo(Math::Vector3 position)
 	{
@@ -141,7 +141,7 @@ namespace GTA
 	}
 	void Tasks::HandsUp(int duration)
 	{
-		Native::Function::Call(Native::Hash::TASK_HANDS_UP, this->mPed->ID, duration, 0, 0, 0);
+		Native::Function::Call(Native::Hash::TASK_HANDS_UP, this->mPed->ID, duration, 0, -1, false);
 	}
 	void Tasks::LeaveVehicle()
 	{
@@ -183,9 +183,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_PARACHUTE, this->mPed->ID, false);
 	}
-	void Tasks::ReloadWeapon(Native::WeaponHash weapon)
+	void Tasks::ReloadWeapon()
 	{
-		Native::Function::Call(Native::Hash::TASK_RELOAD_WEAPON, this->mPed->ID, static_cast<int>(weapon));
+		Native::Function::Call(Native::Hash::TASK_RELOAD_WEAPON, this->mPed->ID, true);
 	}
 	void Tasks::RunTo(Math::Vector3 position)
 	{
@@ -230,9 +230,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_STAND_STILL, this->mPed->ID, duration);
 	}
-	void Tasks::SwapWeapon(Native::WeaponHash weapon)
+	void Tasks::SwapWeapon()
 	{
-		Native::Function::Call(Native::Hash::TASK_SWAP_WEAPON, this->mPed->ID, static_cast<int>(weapon));
+		Native::Function::Call(Native::Hash::TASK_SWAP_WEAPON, this->mPed->ID, false);
 	}
 	void Tasks::StartScenario(System::String ^name, Math::Vector3 position)
 	{

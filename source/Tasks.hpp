@@ -18,9 +18,8 @@ namespace GTA
 		void Climb();
 		void CruiseWithVehicle(Vehicle ^vehicle, float speed);
 		void CruiseWithVehicle(Vehicle ^vehicle, float speed, int drivingstyle);
-		void DriveTo(Math::Vector3 position, float radius, float speed, int drivingstyle);
+		void DriveTo(Vehicle ^vehicle, Math::Vector3 target, float radius, float speed);
 		void DriveTo(Vehicle ^vehicle, Math::Vector3 target, float radius, float speed, int drivingstyle);
-		void DrivePointRoute(Vehicle ^vehicle, float speed, ... array<Math::Vector3> ^points);
 		void EnterVehicle();
 		void EnterVehicle(Vehicle ^vehicle, VehicleSeat seat);
 		void EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout);
@@ -33,6 +32,7 @@ namespace GTA
 		void FleeFrom(Ped ^target, int duration);
 		void FleeFrom(Math::Vector3 position);
 		void FleeFrom(Math::Vector3 position, int duration);
+		void FollowPointRoute(... array<Math::Vector3> ^points);
 		void GoTo(Entity ^target);
 		void GoTo(Entity ^target, Math::Vector3 offset);
 		void GoTo(Entity ^target, Math::Vector3 offset, int timeout);
@@ -51,7 +51,7 @@ namespace GTA
 		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
-		void ReloadWeapon(Native::WeaponHash weapon);
+		void ReloadWeapon();
 		void RunTo(Math::Vector3 position);
 		void RunTo(Math::Vector3 position, bool ignorePaths);
 		void RunTo(Math::Vector3 position, bool ignorePaths, int timeout);
@@ -61,7 +61,7 @@ namespace GTA
 		void ShootAt(Math::Vector3 position, int duration);
 		void ShuffleToNextVehicleSeat(Vehicle ^vehicle);
 		void StandStill(int duration);
-		void SwapWeapon(Native::WeaponHash weapon);
+		void SwapWeapon();
 		void StartScenario(System::String ^name, Math::Vector3 position);
 		void TurnTo(Entity ^target);
 		void TurnTo(Entity ^target, int duration);
