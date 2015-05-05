@@ -7,6 +7,11 @@ namespace GTA
 	{
 	}
 
+	Vehicle ^Vehicle::Any::get()
+	{
+		return gcnew Vehicle(0);
+	}
+
 	bool Vehicle::HasRoof::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_VEHICLE_HAVE_ROOF, this->ID);

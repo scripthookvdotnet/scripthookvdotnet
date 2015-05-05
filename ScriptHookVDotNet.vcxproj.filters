@@ -75,6 +75,9 @@
     <ClCompile Include="source\UIText.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
+    <ClCompile Include="source\Tasks.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Tasks.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

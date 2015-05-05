@@ -1,11 +1,17 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Tasks.hpp"
 #include "Native.hpp"
 
 namespace GTA
 {
-	Ped::Ped(int id) : Entity(id)
+	Ped::Ped(int id) : Entity(id), mTasks(gcnew Tasks(this))
 	{
+	}
+
+	Ped ^Ped::Any::get()
+	{
+		return gcnew Ped(0);
 	}
 
 	int Ped::Accuracy::get()
@@ -15,6 +21,10 @@ namespace GTA
 	void Ped::Accuracy::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_ACCURACY, this->ID, value);
+	}
+	Tasks ^Ped::Task::get()
+	{
+		return this->mTasks;
 	}
 	GTA::Gender Ped::Gender::get()
 	{

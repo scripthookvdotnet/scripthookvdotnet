@@ -4,6 +4,17 @@
 
 namespace GTA
 {
+	public enum class VehicleSeat
+	{
+		None = -3,
+		Any = -2,
+		Driver = -1,
+		Passenger = 0,
+		LeftFront = Driver,
+		RightFront = Passenger,
+		LeftRear = 1,
+		RightRear = 2,
+	};
 	public enum class VehicleRoofState
 	{
 		Closed,
@@ -16,6 +27,11 @@ namespace GTA
 	{
 	public:
 		Vehicle(int id);
+
+		static property Vehicle ^Any
+		{
+			Vehicle ^get();
+		}
 
 		property bool HasRoof
 		{

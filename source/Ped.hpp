@@ -4,6 +4,7 @@
 
 namespace GTA
 {
+	ref class Tasks;
 	ref class Vehicle;
 
 	public enum class Gender
@@ -17,10 +18,19 @@ namespace GTA
 	public:
 		Ped(int id);
 
+		static property Ped ^Any
+		{
+			Ped ^get();
+		}
+
 		property int Accuracy
 		{
 			int get();
 			void set(int value);
+		}
+		property Tasks ^Task
+		{
+			Tasks ^get();
 		}
 		property GTA::Gender Gender
 		{
@@ -141,5 +151,8 @@ namespace GTA
 		bool IsSittingInVehicle(Vehicle ^vehicle);
 
 		void Kill();
+
+	private:
+		Tasks ^mTasks;
 	};
 }

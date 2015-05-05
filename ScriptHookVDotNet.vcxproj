@@ -98,6 +98,7 @@
     <ClCompile Include="source\Script.cpp" />
     <ClCompile Include="source\ScriptDomain.cpp" />
     <ClCompile Include="source\Settings.cpp" />
+    <ClCompile Include="source\Tasks.cpp" />
     <ClCompile Include="source\UIContainer.cpp" />
     <ClCompile Include="source\UIRectangle.cpp" />
     <ClCompile Include="source\UIText.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="source\Script.hpp" />
     <ClInclude Include="source\ScriptDomain.hpp" />
     <ClInclude Include="source\Settings.hpp" />
+    <ClInclude Include="source\Tasks.hpp" />
     <ClInclude Include="source\UI.hpp" />
     <ClInclude Include="source\UIContainer.hpp" />
     <ClInclude Include="source\UIElement.hpp" />
