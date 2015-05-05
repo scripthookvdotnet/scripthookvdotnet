@@ -98,6 +98,11 @@ namespace GTA
 		bool IsTargetting(Entity ^entity);
 		Entity ^GetTargetedEntity();
 
+		static void SetExplosiveAmmoThisFrame(Player player);
+		static void SetFireAmmoThisFrame(Player player);
+		static void SetExplosiveMeleeThisFrame(Player player);
+		static void SetSuperJumpThisFrame(Player player);
+
 	private:
 		int mID;
 		Ped ^mPed;

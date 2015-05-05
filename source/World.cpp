@@ -174,6 +174,6 @@ namespace GTA
 
 	void World::AddOwnedExplosion(Ped ped, Math::Vector3 position, ExplosionType explosionType, float radius, float cameraShake)
 	{
-		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped, position.X, position.Y, position.Z, explosionType, radius, true, false, cameraShake);
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped.ID, position.X, position.Y, position.Z, explosionType, radius, true, false, cameraShake);
 	}
 }

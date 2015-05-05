@@ -129,4 +129,21 @@ namespace GTA
 
 		return nullptr;
 	}
+
+	void Player::SetExplosiveAmmoThisFrame(Player player)
+	{
+		Native::Function::Call(Native::Hash::SET_EXPLOSIVE_AMMO_THIS_FRAME, player.ID);
+	}
+	void Player::SetFireAmmoThisFrame(Player player)
+	{
+		Native::Function::Call(Native::Hash::SET_FIRE_AMMO_THIS_FRAME, player.ID);
+	}
+	void Player::SetExplosiveMeleeThisFrame(Player player)
+	{
+		Native::Function::Call(Native::Hash::SET_EXPLOSIVE_MELEE_THIS_FRAME, player.ID);
+	}
+	void Player::SetSuperJumpThisFrame(Player player)
+	{
+		Native::Function::Call(Native::Hash::SET_SUPER_JUMP_THIS_FRAME, player.ID);
+	}
 }
