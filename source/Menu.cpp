@@ -2,9 +2,15 @@
 
 namespace GTA
 {
-	Menu::Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding, System::Drawing::Color bgColor, System::Drawing::Color headerColor, System::Drawing::Color footerColor)
-		: mBackgroundColor(bgColor), mHeaderColor(headerColor), mFooterColor(footerColor), mHeaderCaption(headerCaption), mOrigin(origin), mWidth(width), mHeaderHeight(headerHeight), mFooterHeight(footerHeight), mItemHeight(itemHeight), mItemPadding(itemPadding)
+	Menu::Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding, System::Drawing::Color headerColor, System::Drawing::Color footerColor, bool hasFooter)
+		: mHeaderColor(headerColor), mFooterColor(footerColor), mHeaderCaption(headerCaption), mOrigin(origin), mWidth(width), mHeaderHeight(headerHeight), mFooterHeight(footerHeight), mItemHeight(itemHeight), mItemPadding(itemPadding), mHasFooter(hasFooter)
 	{
+		// HACK
+
+		mHeaderColor = System::Drawing::Color::DeepPink;
+
+		// /HACK
+
 		int currentY = mHeaderHeight + mOrigin.Y;
 		System::Drawing::Size itemSize = System::Drawing::Size(mWidth - mItemPadding * 2, mItemHeight - mItemPadding * 2);
 		for each (MenuItem ^item in items)
@@ -17,21 +23,20 @@ namespace GTA
 		mItems[mSelectedIndex]->Select();
 
 		int itemsHeight = mItems->Count * mItemHeight;
-		mBackgroundRect = gcnew UIRectangle(origin, System::Drawing::Size(mWidth, mHeaderHeight + mFooterHeight + itemsHeight), mBackgroundColor);
 		mHeaderRect = gcnew UIRectangle(origin, System::Drawing::Size(mWidth, mHeaderHeight), mHeaderColor);
-		mFooterRect = gcnew UIRectangle(System::Drawing::Point(origin.X, origin.Y + mHeaderHeight + itemsHeight), System::Drawing::Size(mWidth, mFooterHeight), mFooterColor);
+		if(mHasFooter) mFooterRect = gcnew UIRectangle(System::Drawing::Point(origin.X, origin.Y + mHeaderHeight + itemsHeight), System::Drawing::Size(mWidth, mFooterHeight), mFooterColor);
 
 		//TODO: Custom text scale, color and font
 		mHeaderText = gcnew UIText(mHeaderCaption, mOrigin, 0.5f, System::Drawing::Color::White, 1, false);
-		mFooterText = gcnew UIText(mFooterDescription, System::Drawing::Point(origin.X, origin.Y + mHeaderHeight + itemsHeight), 0.3f, System::Drawing::Color::White, 0, false);
+		if(mHasFooter) mFooterText = gcnew UIText(mFooterDescription, System::Drawing::Point(origin.X, origin.Y + mHeaderHeight + itemsHeight), 0.3f, System::Drawing::Color::White, 0, false);
 	}
 
 	Menu::Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding)
-		: Menu(headerCaption, items, origin, width, headerHeight, footerHeight, itemHeight, itemPadding, System::Drawing::Color::Black, System::Drawing::Color::CornflowerBlue, System::Drawing::Color::DimGray)
+		: Menu(headerCaption, items, origin, width, headerHeight, footerHeight, itemHeight, itemPadding, System::Drawing::Color::CornflowerBlue, System::Drawing::Color::DimGray, false)
 	{}
 
 	Menu::Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin)
-		: Menu(headerCaption, items, origin, 200, 50, 60, 40, 3)
+		: Menu(headerCaption, items, origin, 200, 30, 50, 30, 0)
 	{}
 
 	Menu::Menu(System::String ^headerCaption, array<MenuItem ^> ^items)
@@ -40,10 +45,12 @@ namespace GTA
 
 	void Menu::Draw()
 	{
-		if (mBackgroundRect == nullptr || mHeaderRect == nullptr || mFooterRect == nullptr || mHeaderText == nullptr || mFooterText == nullptr) return;
-		mBackgroundRect->Draw();
-		mFooterRect->Draw();
-		mFooterText->Draw();
+		if (mHeaderRect == nullptr || mHeaderText == nullptr || (mHasFooter && (mFooterRect == nullptr || mFooterText == nullptr))) return;
+		if (mHasFooter)
+		{
+			mFooterRect->Draw();
+			mFooterText->Draw();
+		}
 		mHeaderRect->Draw();
 		mHeaderText->Draw();
 		for each (MenuItem ^item in mItems)

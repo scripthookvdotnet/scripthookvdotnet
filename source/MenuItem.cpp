@@ -7,6 +7,13 @@ namespace GTA
 	{
 	}
 
+	MenuButton::MenuButton(System::String ^caption, System::Action ^activationAction)
+		: MenuButton(caption, activationAction, System::Drawing::Color(), System::Drawing::Color(), System::Drawing::Color::Black)
+	{
+		mUnselectedColor = System::Drawing::Color::FromArgb(200, 105, 105, 105);
+		mSelectedColor = System::Drawing::Color::FromArgb(200, 255, 105, 180);
+	}
+
 	void MenuButton::Draw()
 	{
 		if (mButton == nullptr || mText == nullptr) return;
@@ -19,13 +26,13 @@ namespace GTA
 		if (mButton == nullptr) return;
 		mButton->Color = mSelectedColor;
 	}
-		
+
 	void MenuButton::Deselect()
 	{
 		if (mButton == nullptr) return;
 		mButton->Color = mUnselectedColor;
 	}
-		
+
 	void MenuButton::Activate()
 	{
 		mActivationAction->Invoke();
@@ -43,7 +50,7 @@ namespace GTA
 		this->mSize = size;
 		mButton = gcnew UIRectangle(mOrigin, mSize, mUnselectedColor);
 		//TODO: Text scale and font!
-		mText = gcnew UIText(mCaption, mOrigin, 0.4f, mTextColor, 0, false);
+		mText = gcnew UIText(mCaption, mOrigin, 0.35f, mTextColor, 0, false);
 	}
 
 	System::String ^MenuButton::GetDescription()

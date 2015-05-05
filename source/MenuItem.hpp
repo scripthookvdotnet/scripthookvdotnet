@@ -33,7 +33,7 @@ namespace GTA
 	public ref class MenuButton : MenuItem
 	{
 	public:
-		MenuButton(System::String ^caption, System::Action ^activationAction) : MenuButton(caption, activationAction, System::Drawing::Color::DarkGray, System::Drawing::Color::LightYellow, System::Drawing::Color::White) {}
+		MenuButton(System::String ^caption, System::Action ^activationAction);
 		MenuButton(System::String ^caption, System::Action ^activationAction, System::Drawing::Color unselectedColor, System::Drawing::Color selectedColor, System::Drawing::Color textColor);
 
 	public:
