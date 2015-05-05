@@ -2,11 +2,18 @@
 
 #include "UIRectangle.hpp"
 #include "UIText.hpp"
+#include "MenuItem.hpp"
 
 namespace GTA
 {
 	public ref class Menu
 	{
+	public:
+		Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding, System::Drawing::Color bgColor, System::Drawing::Color headerColor, System::Drawing::Color footerColor);
+		Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding);
+		Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin);
+		Menu(System::String ^headerCaption, array<MenuItem ^> ^items);
+
 	public:
 		/** Draws the menu */
 		virtual void Draw();
@@ -27,12 +34,16 @@ namespace GTA
 		virtual void OnChangeItem(bool right);
 
 	private:
-		System::Drawing::Color mBackgroundColor, mHeaderColor;
+		System::Drawing::Color mBackgroundColor, mHeaderColor, mFooterColor;
 		System::String ^mHeaderCaption;
 		System::Drawing::Point mOrigin;
 		int mWidth, mHeaderHeight, mFooterHeight, mItemHeight, mItemPadding;
 
-		UIRectangle ^mBackgroundRect, ^mHeaderRect, ^mFooterRect;
-		UIText ^mHeaderText, ^mFooterText;
+		UIRectangle ^mBackgroundRect = nullptr, ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
+		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
+
+		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
+		int mSelectedIndex = -1;
+		System::String ^mFooterDescription = "footer description";
 	};
 }

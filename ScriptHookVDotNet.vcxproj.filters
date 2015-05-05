@@ -78,10 +78,13 @@
     <ClCompile Include="source\Tasks.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="Viewport.cpp">
+    <ClCompile Include="source\MenuItem.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Menu.cpp">
+    <ClCompile Include="source\Viewport.cpp">
+      <Filter>Scripting\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Menu.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -164,10 +167,13 @@
     <ClInclude Include="source\Tasks.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="Viewport.hpp">
+    <ClInclude Include="source\MenuItem.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Menu.hpp">
+    <ClInclude Include="source\Viewport.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Menu.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
   </ItemGroup>
