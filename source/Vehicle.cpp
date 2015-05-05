@@ -125,7 +125,7 @@ namespace GTA
 	}
 	void Vehicle::EngineRunning::set(bool value)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_ON, this->ID, value, 0);
+		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_ON, this->ID, value, true);
 	}
 	void Vehicle::LightsOn::set(bool value)
 	{
