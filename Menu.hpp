@@ -1,5 +1,8 @@
 #pragma once
 
+#include "UIRectangle.hpp"
+#include "UIText.hpp"
+
 namespace GTA
 {
 	public ref class Menu
@@ -21,6 +24,15 @@ namespace GTA
 		virtual void OnChangeSelection(bool down);
 
 		/** Called when the user changes the current element (i.e. left and right) */
-		virtual void OnChangeElement(bool right);
+		virtual void OnChangeItem(bool right);
+
+	private:
+		System::Drawing::Color mBackgroundColor, mHeaderColor;
+		System::String ^mHeaderCaption;
+		System::Drawing::Point mOrigin;
+		int mWidth, mHeaderHeight, mFooterHeight, mItemHeight, mItemPadding;
+
+		UIRectangle ^mBackgroundRect, ^mHeaderRect, ^mFooterRect;
+		UIText ^mHeaderText, ^mFooterText;
 	};
 }

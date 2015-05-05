@@ -27,7 +27,7 @@ namespace GTA
 		//TODO
 	}
 
-	void Menu::OnChangeElement(bool right)
+	void Menu::OnChangeItem(bool right)
 	{
 		//TODO
 	}

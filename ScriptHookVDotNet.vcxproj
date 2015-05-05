@@ -85,6 +85,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\Log.cpp" />
@@ -106,8 +108,11 @@
     <ClCompile Include="source\Vector3.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
     <ClCompile Include="source\World.cpp" />
+    <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Menu.hpp" />
+    <ClInclude Include="MenuItem.hpp" />
     <ClInclude Include="source\Entity.hpp" />
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\Log.hpp" />
@@ -134,6 +139,7 @@
     <ClInclude Include="source\VehicleHashes.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
+    <ClInclude Include="Viewport.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

@@ -32,7 +32,7 @@ namespace GTA
 		static void HandleChangeSelection(bool down);
 
 		/** Handles when the user presses the left or right button (e.g. numpad-4 and 6 */
-		static void HandleChangeElement(bool right);
+		static void HandleChangeItem(bool right);
 
 	private:
 		//This is a list (or stack) of the active menus, the highest index is the one that's currently in focus

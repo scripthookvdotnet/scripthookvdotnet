@@ -56,9 +56,9 @@ namespace GTA
 		mMenuStack[mMenuStack->Count - 1]->OnChangeSelection(down);
 	}
 
-	void Viewport::HandleChangeElement(bool right)
+	void Viewport::HandleChangeItem(bool right)
 	{
 		if (mMenuStack->Count <= 0) return;
-		mMenuStack[mMenuStack->Count - 1]->OnChangeElement(right);
+		mMenuStack[mMenuStack->Count - 1]->OnChangeItem(right);
 	}
 }
