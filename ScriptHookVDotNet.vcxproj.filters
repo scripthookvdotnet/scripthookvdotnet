@@ -78,6 +78,12 @@
     <ClCompile Include="source\Tasks.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Scripting\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Scripting\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -157,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="source\Tasks.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.hpp">
+      <Filter>Scripting\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
