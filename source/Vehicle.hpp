@@ -4,6 +4,8 @@
 
 namespace GTA
 {
+	ref class Ped;
+
 	public enum class VehicleSeat
 	{
 		None = -3,
@@ -153,6 +155,8 @@ namespace GTA
 		{
 			System::String ^get();
 		}
+
+		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
 		void Explode();

@@ -1,3 +1,4 @@
+#include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Native.hpp"
 
@@ -182,6 +183,18 @@ namespace GTA
 	System::String ^Vehicle::DisplayName::get()
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, this->Model.Hash);
+	}
+
+	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Ped(handle);
 	}
 
 	void Vehicle::Repair()
