@@ -26,6 +26,12 @@ namespace GTA
 		Christmas,
 	};
 
+	public enum ExplosionType : System::Int32
+	{
+		Fire = 25,
+		BigFire = 9
+	};
+
 	public ref class World sealed abstract
 	{
 	public:
@@ -58,5 +64,8 @@ namespace GTA
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
+
+		static void AddExplosion(Math::Vector3 position, ExplosionType explosionType, float radius, float cameraShake);
+		static void AddOwnedExplosion(Ped ped, Math::Vector3 position, ExplosionType explosionType, float radius, float cameraShake);
 	};
 }
