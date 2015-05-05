@@ -72,7 +72,7 @@ namespace GTA
 
 		static ScriptDomain ^sCurrentDomain;
 		array<bool> ^mKeyboardState;
-		System::Collections::Generic::List<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
+		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		System::AppDomain ^mAppDomain;
 		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;

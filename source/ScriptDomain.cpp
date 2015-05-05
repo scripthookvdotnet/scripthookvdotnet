@@ -24,6 +24,7 @@ namespace GTA
 {
 	using namespace System;
 	using namespace System::Collections::Generic;
+	using namespace System::Collections::Concurrent;
 
 	namespace
 	{
@@ -49,7 +50,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mKeyboardEvents(gcnew List<Tuple<bool, Windows::Forms::KeyEventArgs ^> ^>()), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, Windows::Forms::KeyEventArgs ^> ^>()), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
 	{
 		sCurrentDomain = this;
 
@@ -313,15 +314,12 @@ namespace GTA
 	}
 	void ScriptDomain::DoTick()
 	{
-		// Update scripts
-		for each (Script ^script in this->mRunningScripts)
-		{
-			if (!script->mRunning)
-			{
-				continue;
-			}
+		Tuple<bool, Windows::Forms::KeyEventArgs ^> ^keyevent = nullptr;
 
-			for each (Tuple<bool, Windows::Forms::KeyEventArgs ^> ^keyevent in this->mKeyboardEvents)
+		// Process events
+		while (this->mKeyboardEvents->TryDequeue(keyevent))
+		{
+			for each (Script ^script in this->mRunningScripts)
 			{
 				try
 				{
@@ -339,8 +337,16 @@ namespace GTA
 					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
 				}
 			}
+		}
 
-			if (script->mInterval > 0)
+		// Update script loops
+		for each (Script ^script in this->mRunningScripts)
+		{
+			if (!script->mRunning)
+			{
+				continue;
+			}
+			else if (script->mInterval > 0)
 			{
 				if (script->mNextTick > DateTime::Now)
 				{
@@ -364,9 +370,7 @@ namespace GTA
 			}
 		}
 
-		this->mKeyboardEvents->Clear();
-
-		// Clean up pinned strings
+		// Delete pinned strings
 		CleanupStrings();
 	}
 	void ScriptDomain::DoKeyboardMessage(Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
@@ -375,7 +379,7 @@ namespace GTA
 
 		// Update keyboard input
 		this->mKeyboardState[static_cast<int>(key)] = status;
-		this->mKeyboardEvents->Add(gcnew Tuple<bool, Windows::Forms::KeyEventArgs ^>(status, args));
+		this->mKeyboardEvents->Enqueue(gcnew Tuple<bool, Windows::Forms::KeyEventArgs ^>(status, args));
 	}
 
 	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
