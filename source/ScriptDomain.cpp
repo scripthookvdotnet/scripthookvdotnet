@@ -49,7 +49,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mKeyboardEvents(gcnew List<Tuple<bool, Windows::Forms::KeyEventArgs ^> ^>()), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
 	{
 		sCurrentDomain = this;
 
@@ -320,7 +320,27 @@ namespace GTA
 			{
 				continue;
 			}
-			else if (script->mInterval > 0)
+
+			for each (Tuple<bool, Windows::Forms::KeyEventArgs ^> ^keyevent in this->mKeyboardEvents)
+			{
+				try
+				{
+					if (keyevent->Item1)
+					{
+						script->RaiseKeyDown(this, keyevent->Item2);
+					}
+					else
+					{
+						script->RaiseKeyUp(this, keyevent->Item2);
+					}
+				}
+				catch (Exception ^ex)
+				{
+					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
+				}
+			}
+
+			if (script->mInterval > 0)
 			{
 				if (script->mNextTick > DateTime::Now)
 				{
@@ -344,34 +364,18 @@ namespace GTA
 			}
 		}
 
+		this->mKeyboardEvents->Clear();
+
 		// Clean up pinned strings
 		CleanupStrings();
 	}
 	void ScriptDomain::DoKeyboardMessage(Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		this->mKeyboardState[static_cast<int>(key)] = status;
-
 		Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(key | (statusCtrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (statusShift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (statusAlt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
 
 		// Update keyboard input
-		for each (Script ^script in this->mRunningScripts)
-		{
-			try
-			{
-				if (!status)
-				{
-					script->RaiseKeyUp(this, args);
-				}
-				else
-				{
-					script->RaiseKeyDown(this, args);
-				}
-			}
-			catch (Exception ^ex)
-			{
-				UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
-			}
-		}
+		this->mKeyboardState[static_cast<int>(key)] = status;
+		this->mKeyboardEvents->Add(gcnew Tuple<bool, Windows::Forms::KeyEventArgs ^>(status, args));
 	}
 
 	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)

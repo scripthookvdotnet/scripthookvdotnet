@@ -41,7 +41,7 @@ namespace GTA
 		InputArgument::InputArgument(float value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(value), 0))
 		{
 		}
-		InputArgument::InputArgument(double value) : mData(BitConverter::ToUInt64(BitConverter::GetBytes(static_cast<float>(value)), 0))
+		InputArgument::InputArgument(double value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0))
 		{
 		}
 		InputArgument::InputArgument(IntPtr value) : mData(value.ToInt64())
