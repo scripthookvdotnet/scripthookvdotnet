@@ -25,6 +25,11 @@ namespace GTA
 		Snowlight,
 		Christmas,
 	};
+	public enum class ExplosionType
+	{
+		Fire = 25,
+		BigFire = 9,
+	};
 
 	public ref class World sealed abstract
 	{
@@ -58,5 +63,8 @@ namespace GTA
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
+
+		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 	};
 }

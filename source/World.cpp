@@ -120,7 +120,6 @@ namespace GTA
 
 		return result->ToArray();
 	}
-
 	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
 	{
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_CLOSEST_VEHICLE, position.X, position.Y, position.Z, radius, 0, 70); // Last parameter still unknown.
@@ -165,5 +164,14 @@ namespace GTA
 		}
 
 		return gcnew Vehicle(id);
+	}
+
+	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
+	{
+		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
+	{
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->ID, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
 }
