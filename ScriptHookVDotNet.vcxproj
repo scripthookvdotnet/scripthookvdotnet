@@ -99,6 +99,7 @@
     <ClCompile Include="source\ScriptDomain.cpp" />
     <ClCompile Include="source\Settings.cpp" />
     <ClCompile Include="source\Tasks.cpp" />
+    <ClCompile Include="source\UI.cpp" />
     <ClCompile Include="source\UIContainer.cpp" />
     <ClCompile Include="source\UIRectangle.cpp" />
     <ClCompile Include="source\UIText.cpp" />

@@ -60,11 +60,17 @@
     <ClCompile Include="source\Player.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Tasks.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Vehicle.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UI.cpp">
+      <Filter>Scripting\UI</Filter>
     </ClCompile>
     <ClCompile Include="source\UIContainer.cpp">
       <Filter>Scripting\UI</Filter>
@@ -74,9 +80,6 @@
     </ClCompile>
     <ClCompile Include="source\UIText.cpp">
       <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Tasks.cpp">
-      <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +131,9 @@
     <ClInclude Include="source\Player.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="source\Tasks.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Vehicle.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
@@ -154,9 +160,6 @@
     </ClInclude>
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Tasks.hpp">
-      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
