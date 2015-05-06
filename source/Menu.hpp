@@ -34,11 +34,13 @@ namespace GTA
 		virtual void OnChangeItem(bool right);
 
 	private:
-		System::Drawing::Color mHeaderColor, mFooterColor;
+		System::Drawing::Color mHeaderColor, mFooterColor, mSelectedItemColor, mUnselectedItemColor, mSelectedTextColor, mUnselectedTextColor;
 		System::String ^mHeaderCaption;
 		System::Drawing::Point mOrigin;
 		int mWidth, mHeaderHeight, mFooterHeight, mItemHeight, mItemPadding;
+		bool mHeaderCentered, mItemsCentered;
 		bool mHasFooter;
+
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 

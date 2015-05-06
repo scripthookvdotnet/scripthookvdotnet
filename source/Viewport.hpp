@@ -10,6 +10,10 @@ namespace GTA
 	public ref class Viewport abstract sealed
 	{
 	public:
+		static const int WIDTH = 1280;
+		static const int HEIGHT = 720;
+
+	public:
 		/** Add a menu to the stack of active menus and set it as focused */
 		static void AddMenu(Menu ^newMenu);
 
