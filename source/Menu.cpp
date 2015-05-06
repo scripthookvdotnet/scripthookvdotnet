@@ -57,6 +57,23 @@ namespace GTA
 		}
 	}
 
+	void Menu::Draw(System::Drawing::Point offset)
+	{
+		if (mHeaderRect == nullptr || mHeaderText == nullptr || (HasFooter && (mFooterRect == nullptr || mFooterText == nullptr))) return;
+		if (HasFooter)
+		{
+			mFooterRect->Draw(offset.X, offset.Y);
+			mFooterText->Draw(offset.X, offset.Y);
+		}
+		mHeaderRect->Draw(offset.X, offset.Y);
+		mHeaderText->Draw(offset.X, offset.Y);
+		for each (MenuItem ^item in mItems)
+		{
+			item->Draw(offset);
+		}
+		mOverlayRect->Draw(offset.X, offset.Y);
+	}
+
 	void Menu::Initialize()
 	{
 		int currentY = HeaderHeight + Position.Y;
@@ -89,6 +106,9 @@ namespace GTA
 			FooterTextColor,
 			FooterFont,
 			FooterCentered);
+
+		int overlayHeight = HasFooter ? FooterHeight + HeaderHeight + itemsHeight : HeaderHeight + itemsHeight;
+		mOverlayRect = gcnew UIRectangle(Position, System::Drawing::Size(Width, overlayHeight), System::Drawing::Color::FromArgb(220, 40, 40, 40));
 	}
 
 	void Menu::OnOpen()

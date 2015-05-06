@@ -14,6 +14,9 @@ namespace GTA
 		/** Called when the MenuItem should be drawn */
 		void Draw();
 
+		/** Called when the MenuItem should be drawn with an offset */
+		void Draw(System::Drawing::Point offset);
+
 		/** Called when the user selects this item */
 		void Select();
 		
@@ -45,6 +48,7 @@ namespace GTA
 
 	public:
 		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
 		virtual void Select();
 		virtual void Deselect();
 		virtual void Activate();

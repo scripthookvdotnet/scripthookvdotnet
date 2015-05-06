@@ -1,9 +1,22 @@
 #include "Viewport.hpp"
+#include "Game.hpp"
 
 namespace GTA
 {
+	Viewport::Viewport()
+	{
+		//Set property defaults
+		MenuPosition = System::Drawing::Point(100, 50);
+		MenuOffset = System::Drawing::Point(-35, 0);
+	}
+
 	void Viewport::AddMenu(MenuBase ^newMenu)
 	{
+		//Reset the ease time, so the back menus will nicely ease to the side
+		mEaseTime = 0.0f;
+		mEaseDirection = true;
+		mIsEasing = true;
+
 		//Add it to the top of the stack
 		//This should automatically put this menu in to focus, as it is the highest index in the list
 		mMenuStack->Add(newMenu);
@@ -14,6 +27,11 @@ namespace GTA
 	void Viewport::PopMenu()
 	{
 		if (mMenuStack->Count <= 0) return;
+
+		//Reset the ease time
+		mEaseTime = 0.0f;
+		mEaseDirection = false;
+		mIsEasing = true;
 
 		//Removes the highest menu
 		//This should automatically give control back to the menu behind this one
@@ -34,9 +52,69 @@ namespace GTA
 	{
 		//Menus should be drawn from lowest index to highest index
 		//This way the unfocused menus will be placed behind the current focused menu
-		for each (Menu ^menu in mMenuStack)
+		int menuCount = mMenuStack->Count;
+
+		//Calculate the easing
+		if (mIsEasing)
 		{
-			menu->Draw();
+			if (mEaseTime < 1.0f) mEaseTime += Game::LastFrameTime;
+			if (mEaseTime > 1.0f) {
+				mEaseTime = 1.0f;
+				mIsEasing = false;
+			}
+			float varOffsetX = EaseOut(mEaseTime, 1.0f, 0.0f, MenuOffset.X);
+			float varOffsetY = EaseOut(mEaseTime, 1.0f, 0.0f, MenuOffset.Y);
+			mEaseOffset = System::Drawing::Point(varOffsetX, varOffsetY);
+		}
+		else
+		{
+			mEaseTime = 1.0f;
+			mEaseDirection = false;
+			mEaseOffset = MenuOffset;
+		}
+
+		//The last index should be drawn without offset
+		//And the second-last with the offset generated from the easing function
+		//All the indices before that should be drawn a full offset from eachother
+		//This means that we can subtract
+		int i = 0;
+		for each (MenuBase ^menu in mMenuStack)
+		{
+			if (mIsEasing)
+			{
+				if (mEaseDirection)
+				{
+					float baseOffsetX = MenuOffset.X * (menuCount - i - 2);
+					float baseOffsetY = MenuOffset.Y * (menuCount - i - 2);
+
+					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX + mEaseOffset.X), (int)(baseOffsetY + mEaseOffset.Y));
+					menu->Draw(offset);
+				}
+				else
+				{
+					float baseOffsetX = MenuOffset.X * (menuCount - i);
+					float baseOffsetY = MenuOffset.Y * (menuCount - i);
+
+					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX - mEaseOffset.X), (int)(baseOffsetY - mEaseOffset.Y));
+					menu->Draw(offset);
+				}
+			}
+			else
+			{
+				if (i == menuCount)
+				{
+					menu->Draw();
+				}
+				else
+				{
+					float baseOffsetX = MenuOffset.X * (menuCount - i - 1);
+					float baseOffsetY = MenuOffset.Y * (menuCount - i - 1);
+
+					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX), (int)(baseOffsetY));
+					menu->Draw(offset);
+				}
+			}
+			i++;
 		}
 	}
 
@@ -61,5 +139,11 @@ namespace GTA
 	{
 		if (mMenuStack->Count <= 0) return;
 		mMenuStack[mMenuStack->Count - 1]->OnChangeItem(right);
+	}
+
+	float Viewport::EaseOut(float t, float d, float v0, float dv)
+	{
+		float s = 1.70158f;
+		return dv * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + v0;
 	}
 }

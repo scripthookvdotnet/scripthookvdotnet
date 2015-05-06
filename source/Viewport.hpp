@@ -7,13 +7,15 @@ namespace GTA
 	/**
 	 * Static class that handles the active UIs and menus
 	 */
-	public ref class Viewport
+	public ref class Viewport sealed
 	{
 	public:
 		static const int WIDTH = 1280;
 		static const int HEIGHT = 720;
 
 	public:
+		Viewport();
+
 		/** Add a menu to the stack of active menus and set it as focused */
 		void AddMenu(MenuBase ^newMenu);
 
@@ -38,9 +40,29 @@ namespace GTA
 		/** Handles when the user presses the left or right button (e.g. numpad-4 and 6 */
 		void HandleChangeItem(bool right);
 
+		/** The top left position of the current menu */
+		property System::Drawing::Point MenuPosition;
+
+		/** The offset each menu in the stack has from the one above it */
+		property System::Drawing::Point MenuOffset;
+
+	private:
+		//easeOutBack function
+		float EaseOut(float time, float duration, float value0, float deltaValue);
+
 	private:
 		//This is a list (or stack) of the active menus, the highest index is the one that's currently in focus
 		//The reason this is a List and not a Stack is because we need to be able to access and draw the unfocused windows too
 		System::Collections::Generic::List<MenuBase ^> ^mMenuStack = gcnew System::Collections::Generic::List<MenuBase ^>();
+
+		//The current time input for the ease function for the menu offset
+		//1f means that the offset is full;
+		float mEaseTime = 1.0f;
+		//Are we currently easing the menu offsets?
+		bool mIsEasing = false;
+		//Are we easing in (false) or out (true)
+		bool mEaseDirection = false;
+		//Current ease offset
+		System::Drawing::Point mEaseOffset = MenuOffset;
 	};
 }

@@ -13,6 +13,10 @@ namespace GTA
 		/** Draws the menu */
 		void Draw();
 
+		//Drawing with an offset implies that this menu is not the active one
+		/** Draws the menu with an offset */
+		void Draw(System::Drawing::Point offset);
+
 		/** Called when the menu is first added to the Viewport */
 		void Initialize();
 
@@ -57,6 +61,7 @@ namespace GTA
 
 	public:
 		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
 		virtual void Initialize();
 		virtual void OnOpen();
 		virtual void OnClose();
@@ -93,7 +98,7 @@ namespace GTA
 		property bool HasFooter;
 
 	private:
-		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
+		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr, ^mOverlayRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
 		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
