@@ -73,5 +73,7 @@ namespace GTA
 		static void ShowSaveMenu();
 		static void FadeScreenIn(int time);
 		static void FadeScreenOut(int time);
+		static System::String ^GetUserInput(int maxLength);
+		static System::String ^GetUserInput(System::String ^startText, int maxLength);
 	};
 }
