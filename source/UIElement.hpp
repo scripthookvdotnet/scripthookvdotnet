@@ -1,7 +1,5 @@
 #pragma once
 
-#include "UI.hpp"
-
 namespace GTA
 {
 	public interface class UIElement

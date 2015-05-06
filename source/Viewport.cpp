@@ -2,11 +2,12 @@
 
 namespace GTA
 {
-	void Viewport::AddMenu(Menu ^newMenu)
+	void Viewport::AddMenu(MenuBase ^newMenu)
 	{
 		//Add it to the top of the stack
 		//This should automatically put this menu in to focus, as it is the highest index in the list
 		mMenuStack->Add(newMenu);
+		newMenu->Initialize();
 		newMenu->OnOpen();
 	}
 
@@ -16,7 +17,7 @@ namespace GTA
 
 		//Removes the highest menu
 		//This should automatically give control back to the menu behind this one
-		Menu ^current = mMenuStack[mMenuStack->Count - 1];
+		MenuBase ^current = mMenuStack[mMenuStack->Count - 1];
 		current->OnClose();
 		mMenuStack->Remove(current);
 	}

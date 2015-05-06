@@ -2,9 +2,12 @@
 
 #include "UIRectangle.hpp"
 #include "UIText.hpp"
+#include "Menu.hpp"
 
 namespace GTA
 {
+	interface class MenuBase;
+
 	public interface class MenuItem
 	{
 	public:
@@ -26,34 +29,34 @@ namespace GTA
 		/** Called by the Menu to set this item's origin */
 		void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
-		/** Called by the menu to get the footer text */
-		System::String ^GetDescription();
+		/** Set by the parent so that the MenuItem can access its properties */
+		property MenuBase ^Parent;
+
+		property System::String ^Caption;
+
+		property System::String ^Description;
 	};
 
 	public ref class MenuButton : MenuItem
 	{
 	public:
+		MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction);
 		MenuButton(System::String ^caption, System::Action ^activationAction);
-		MenuButton(System::String ^caption, System::Action ^activationAction, System::Drawing::Color unselectedColor, System::Drawing::Color selectedColor, System::Drawing::Color textColor);
 
 	public:
 		virtual void Draw();
-
 		virtual void Select();
-		
 		virtual void Deselect();
-		
 		virtual void Activate();
-
 		virtual void Change(bool right);
-
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
-
 		virtual System::String ^GetDescription();
+		
+		virtual property MenuBase ^Parent;
+		virtual property System::String ^Caption;
+		virtual property System::String ^Description;
 
 	private:
-		System::Drawing::Color mUnselectedColor, mSelectedColor, mTextColor;
-		System::String ^mCaption;
 		System::Action ^mActivationAction;
 
 		UIRectangle ^mButton = nullptr;

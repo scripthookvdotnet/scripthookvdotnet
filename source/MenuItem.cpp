@@ -2,16 +2,16 @@
 
 namespace GTA
 {
-	MenuButton::MenuButton(System::String ^caption, System::Action ^activationAction, System::Drawing::Color unselected, System::Drawing::Color selected, System::Drawing::Color text)
-		: mUnselectedColor(unselected), mSelectedColor(selected), mTextColor(text), mCaption(caption), mActivationAction(activationAction)
+	MenuButton::MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction)
 	{
+		Caption = caption;
+		Description = description;
+		mActivationAction = activationAction;
 	}
 
 	MenuButton::MenuButton(System::String ^caption, System::Action ^activationAction)
-		: MenuButton(caption, activationAction, System::Drawing::Color(), System::Drawing::Color(), System::Drawing::Color::Black)
+		: MenuButton(caption, "", activationAction)
 	{
-		mUnselectedColor = System::Drawing::Color::FromArgb(200, 105, 105, 105);
-		mSelectedColor = System::Drawing::Color::FromArgb(200, 255, 105, 180);
 	}
 
 	void MenuButton::Draw()
@@ -24,13 +24,15 @@ namespace GTA
 	void MenuButton::Select()
 	{
 		if (mButton == nullptr) return;
-		mButton->Color = mSelectedColor;
+		mButton->Color = Parent->SelectedItemColor;
+		mText->Color = Parent->SelectedTextColor;
 	}
 
 	void MenuButton::Deselect()
 	{
 		if (mButton == nullptr) return;
-		mButton->Color = mUnselectedColor;
+		mButton->Color = Parent->UnselectedItemColor;
+		mText->Color = Parent->UnselectedTextColor;
 	}
 
 	void MenuButton::Activate()
@@ -48,9 +50,13 @@ namespace GTA
 	{
 		this->mOrigin = topLeftOrigin;
 		this->mSize = size;
-		mButton = gcnew UIRectangle(mOrigin, mSize, mUnselectedColor);
-		//TODO: Text scale and font!
-		mText = gcnew UIText(mCaption, mOrigin, 0.35f, mTextColor, 0, false);
+		mButton = gcnew UIRectangle(mOrigin, mSize, Parent->UnselectedItemColor);
+		mText = gcnew UIText(Caption,
+			Parent->ItemTextCentered ? System::Drawing::Point(mOrigin.X + mSize.Width / 2, mOrigin.Y) : mOrigin,
+			Parent->ItemTextScale,
+			Parent->UnselectedTextColor,
+			Parent->ItemFont,
+			Parent->ItemTextCentered);
 	}
 
 	System::String ^MenuButton::GetDescription()

@@ -6,41 +6,93 @@
 
 namespace GTA
 {
-	public ref class Menu
+	interface class MenuItem;
+
+	public interface class MenuBase
+	{
+		/** Draws the menu */
+		void Draw();
+
+		/** Called when the menu is first added to the Viewport */
+		void Initialize();
+
+		/** Called when the menu gains or regains focus */
+		void OnOpen();
+
+		/** Called when the user hits the back button or unfocuses from this menu */
+		void OnClose();
+
+		/** Called when the user hits the activate button */
+		void OnActivate();
+
+		/** Called when the user changes what element is selected (i.e. up and down) */
+		void OnChangeSelection(bool down);
+
+		/** Called when the user changes the current element (i.e. left and right) */
+		void OnChangeItem(bool right);
+
+		property System::Drawing::Color HeaderColor;
+		property System::Drawing::Color HeaderTextColor;
+		property int HeaderFont;
+		property float HeaderTextScale;
+		property bool HeaderCentered;
+		property System::Drawing::Color FooterColor;		
+		property System::Drawing::Color FooterTextColor;
+		property int FooterFont;
+		property float FooterTextScale;
+		property bool FooterCentered;
+		property System::Drawing::Color SelectedItemColor;
+		property System::Drawing::Color UnselectedItemColor;
+		property System::Drawing::Color SelectedTextColor;
+		property System::Drawing::Color UnselectedTextColor;
+		property int ItemFont;
+		property float ItemTextScale;
+		property bool ItemTextCentered;
+	};
+
+	public ref class Menu : MenuBase
 	{
 	public:
-		Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding, System::Drawing::Color headerColor, System::Drawing::Color footerColor, bool hasFooter);
-		Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin, int width, int headerHeight, int footerHeight, int itemHeight, int itemPadding);
-		Menu(System::String ^headerCaption, array<MenuItem ^> ^items, System::Drawing::Point origin);
 		Menu(System::String ^headerCaption, array<MenuItem ^> ^items);
 
 	public:
-		/** Draws the menu */
 		virtual void Draw();
-
-		/** Called when the menu is first added to the viewport */
+		virtual void Initialize();
 		virtual void OnOpen();
-
-		/** Called when the user hits the back button */
 		virtual void OnClose();
-
-		/** Called when the user hits the activate button */
 		virtual void OnActivate();
-
-		/** Called when the user changes what element is selected (i.e. up and down) */
 		virtual void OnChangeSelection(bool down);
-
-		/** Called when the user changes the current element (i.e. left and right) */
 		virtual void OnChangeItem(bool right);
 
-	private:
-		System::Drawing::Color mHeaderColor, mFooterColor, mSelectedItemColor, mUnselectedItemColor, mSelectedTextColor, mUnselectedTextColor;
-		System::String ^mHeaderCaption;
-		System::Drawing::Point mOrigin;
-		int mWidth, mHeaderHeight, mFooterHeight, mItemHeight, mItemPadding;
-		bool mHeaderCentered, mItemsCentered;
-		bool mHasFooter;
+	public:
+		virtual property System::Drawing::Color HeaderColor;
+		virtual property System::Drawing::Color HeaderTextColor;
+		virtual property int HeaderFont;
+		virtual property float HeaderTextScale;
+		virtual property bool HeaderCentered;
+		virtual property System::Drawing::Color FooterColor;		
+		virtual property System::Drawing::Color FooterTextColor;
+		virtual property int FooterFont;
+		virtual property float FooterTextScale;
+		virtual property bool FooterCentered;
+		virtual property System::Drawing::Color SelectedItemColor;
+		virtual property System::Drawing::Color UnselectedItemColor;
+		virtual property System::Drawing::Color SelectedTextColor;
+		virtual property System::Drawing::Color UnselectedTextColor;
+		virtual property int ItemFont;
+		virtual property float ItemTextScale;
+		virtual property bool ItemTextCentered;
 
+		property System::String ^Caption;
+		property System::Drawing::Point Position;
+
+		property int Width;
+		property int HeaderHeight;
+		property int FooterHeight;
+		property int ItemHeight;
+		property bool HasFooter;
+
+	private:
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 

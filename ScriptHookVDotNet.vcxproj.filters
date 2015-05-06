@@ -149,9 +149,6 @@
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\UI.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
     <ClInclude Include="source\UIContainer.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>

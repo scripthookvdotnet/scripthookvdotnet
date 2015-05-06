@@ -128,7 +128,6 @@
     <ClInclude Include="source\ScriptDomain.hpp" />
     <ClInclude Include="source\Settings.hpp" />
     <ClInclude Include="source\Tasks.hpp" />
-    <ClInclude Include="source\UI.hpp" />
     <ClInclude Include="source\UIContainer.hpp" />
     <ClInclude Include="source\UIElement.hpp" />
     <ClInclude Include="source\UIRectangle.hpp" />

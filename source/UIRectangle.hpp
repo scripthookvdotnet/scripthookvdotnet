@@ -1,6 +1,5 @@
 #pragma once
 
-#include "UI.hpp"
 #include "UIElement.hpp"
 
 namespace GTA
