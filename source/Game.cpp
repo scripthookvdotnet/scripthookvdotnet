@@ -1,11 +1,19 @@
 #include "Game.hpp"
 #include "Native.hpp"
 
+//TODO
+//enum for soundset
+//enum for soundfile
+
 namespace GTA
 {
 	Player ^GTA::Game::Player::get()
 	{
 		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+	}
+	int Game::ScreenResolution::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_SCREEN_RESOLUTION);
 	}
 	int Game::GameTime::get()
 	{
@@ -71,5 +79,9 @@ namespace GTA
 	void Game::FadeScreenOut(int time)
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_OUT, time);
+	}
+	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
+	{
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
 	}
 }

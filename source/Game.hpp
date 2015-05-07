@@ -66,12 +66,16 @@ namespace GTA
 		{
 			void set(float value);
 		}
-
+		static property int ScreenResolution
+		{
+			int get();
+		}
 		static void Pause();
 		static void Unpause();
 		static void DoAutoSave();
 		static void ShowSaveMenu();
 		static void FadeScreenIn(int time);
 		static void FadeScreenOut(int time);
+		static void PlaySound(System::String ^soundFile, System::String ^soundSet);
 	};
 }
