@@ -53,7 +53,7 @@ namespace GTA
 	{
 		return !IsDead;
 	}
-	bool Player::IsFreeAiming::get()
+	bool Player::IsAiming::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING, this->ID);
 	}

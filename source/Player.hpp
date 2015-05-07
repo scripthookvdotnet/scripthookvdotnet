@@ -48,7 +48,7 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsFreeAiming
+		property bool IsAiming
 		{
 			bool get();
 		}
