@@ -73,6 +73,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_OUT, time);
 	}
+	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
+	{
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
+	}
 	System::String ^Game::GetUserInput(int maxLength)
 	{
 		return GetUserInput("", maxLength);
