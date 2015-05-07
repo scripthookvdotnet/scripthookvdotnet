@@ -66,10 +66,7 @@ namespace GTA
 		{
 			void set(float value);
 		}
-		static property int ScreenResolution
-		{
-			int get();
-		}
+	
 		static void Pause();
 		static void Unpause();
 		static void DoAutoSave();

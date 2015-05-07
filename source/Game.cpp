@@ -1,19 +1,11 @@
 #include "Game.hpp"
 #include "Native.hpp"
 
-//TODO
-//enum for soundset
-//enum for soundfile
-
 namespace GTA
 {
 	Player ^GTA::Game::Player::get()
 	{
 		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
-	}
-	int Game::ScreenResolution::get()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_SCREEN_RESOLUTION);
 	}
 	int Game::GameTime::get()
 	{
@@ -55,7 +47,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_WANTED_LEVEL_MULTIPLIER, value);
 	}
-
 	void Game::Pause()
 	{
 		IsPaused = true;
