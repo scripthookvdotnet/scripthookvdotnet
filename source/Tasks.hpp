@@ -16,6 +16,7 @@ namespace GTA
 		void Arrest(Ped ^ped);
 		void ChatTo(Ped ^ped);
 		void Climb();
+		void Cower(int duration);
 		void CruiseWithVehicle(Vehicle ^vehicle, float speed);
 		void CruiseWithVehicle(Vehicle ^vehicle, float speed, int drivingstyle);
 		void DriveTo(Vehicle ^vehicle, Math::Vector3 target, float radius, float speed);

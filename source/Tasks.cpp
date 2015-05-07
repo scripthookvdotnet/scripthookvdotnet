@@ -3,6 +3,7 @@
 #include "Tasks.hpp"
 #include "Native.hpp"
 
+
 namespace GTA
 {
 	Tasks::Tasks(Ped ^ped) : mPed(ped)
@@ -21,6 +22,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_ARREST_PED, this->mPed->ID, ped->ID);
 	}
+
 	void Tasks::ChatTo(Ped ^ped)
 	{
 		Native::Function::Call(Native::Hash::TASK_CHAT_TO_PED, this->mPed->ID, ped->ID, 16, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -29,6 +31,12 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_CLIMB, this->mPed->ID, true);
 	}
+
+	void Tasks::Cower(int duration)
+	{
+		Native::Function::Call(Native::Hash::TASK_COWER, this->mPed->ID, duration);
+	}
+
 	void Tasks::CruiseWithVehicle(Vehicle ^vehicle, float speed)
 	{
 		CruiseWithVehicle(vehicle, speed, 0);
