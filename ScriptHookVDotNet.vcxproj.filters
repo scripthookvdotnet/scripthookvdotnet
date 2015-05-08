@@ -161,7 +161,7 @@
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
-    <ClInclude Include="source\VehicleColours.hpp">
+    <ClInclude Include="Source\VehicleColors.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>

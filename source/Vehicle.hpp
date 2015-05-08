@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
-#include "VehicleColours.hpp"
+#include "VehicleColors.hpp"
 
 namespace GTA
 {
@@ -185,8 +185,8 @@ namespace GTA
 		void Explode();
 		bool SetOnGround();
 		void SetMod(VehicleModName modType, int modIndex, bool variations);
-		void SetColours(Native::VehicleColours primaryColor, Native::VehicleColours secondaryColor);
-		void GetColours(Native::VehicleColours *primaryColor, Native::VehicleColours *secondaryColor);
+		void SetColors(Native::VehicleColors primaryColor, Native::VehicleColors secondaryColor);
+		void GetColors(Native::VehicleColors *primaryColor, Native::VehicleColors *secondaryColor);
 
 	private:
 		int mID;

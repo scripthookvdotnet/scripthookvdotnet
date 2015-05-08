@@ -4,7 +4,7 @@ namespace GTA
 {
 	namespace Native
 	{
-		public enum class VehicleColours : System::Int32
+		public enum class VehicleColors : System::Int32
 		{
 			MetallicBlack = 0,
 			MetallicGraphiteBlack,
