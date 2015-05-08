@@ -46,6 +46,9 @@ namespace GTA
 		/** The offset each menu in the stack has from the one above it */
 		property System::Drawing::Point MenuOffset;
 
+		/** Have more than one menu on the screen on the time and transition them */
+		property bool MenuTransitions;
+
 	private:
 		//easeOutBack function
 		float EaseOut(float time, float duration, float value0, float deltaValue);

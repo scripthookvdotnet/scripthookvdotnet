@@ -52,6 +52,8 @@ namespace GTA
 		property int ItemFont;
 		property float ItemTextScale;
 		property bool ItemTextCentered;
+		property System::Drawing::Point Position;
+		property System::String ^Caption;
 	};
 
 	public ref class Menu : MenuBase
@@ -88,8 +90,8 @@ namespace GTA
 		virtual property float ItemTextScale;
 		virtual property bool ItemTextCentered;
 
-		property System::String ^Caption;
-		property System::Drawing::Point Position;
+		virtual property System::String ^Caption;
+		virtual property System::Drawing::Point Position;
 
 		property int Width;
 		property int HeaderHeight;
@@ -98,11 +100,56 @@ namespace GTA
 		property bool HasFooter;
 
 	private:
-		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr, ^mOverlayRect = nullptr;
+		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
 		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
 		int mSelectedIndex = -1;
 		System::String ^mFooterDescription = "footer description";
+	};
+	
+	public ref class MessageBox : MenuBase {
+	public:
+		MessageBox(System::String ^headerCaption, System::Action ^yesAction, System::Action ^noAction);
+
+	public:
+		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
+		virtual void Initialize();
+		virtual void OnOpen();
+		virtual void OnClose();
+		virtual void OnActivate();
+		virtual void OnChangeSelection(bool down);
+		virtual void OnChangeItem(bool right);
+
+	public:
+		virtual property System::Drawing::Color HeaderColor;
+		virtual property System::Drawing::Color HeaderTextColor;
+		virtual property int HeaderFont;
+		virtual property float HeaderTextScale;
+		virtual property bool HeaderCentered;
+		virtual property System::Drawing::Color FooterColor;		
+		virtual property System::Drawing::Color FooterTextColor;
+		virtual property int FooterFont;
+		virtual property float FooterTextScale;
+		virtual property bool FooterCentered;
+		virtual property System::Drawing::Color SelectedItemColor;
+		virtual property System::Drawing::Color UnselectedItemColor;
+		virtual property System::Drawing::Color SelectedTextColor;
+		virtual property System::Drawing::Color UnselectedTextColor;
+		virtual property int ItemFont;
+		virtual property float ItemTextScale;
+		virtual property bool ItemTextCentered;
+		virtual property System::String ^Caption;
+		virtual property System::Drawing::Point Position;
+
+		property int Width;
+		property int Height;
+
+	private:
+		UIRectangle ^mBodyRect = nullptr, ^mYesRect = nullptr, ^mNoRect = nullptr;
+		UIText ^mText, ^mYesText, ^mNoText;
+		System::Action ^mYesAction = nullptr, ^mNoAction = nullptr;
+		bool mSelection = true;
 	};
 }

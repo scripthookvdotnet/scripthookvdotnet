@@ -30,9 +30,7 @@ namespace GTA
 		ItemFont = 0;
 		ItemTextScale = 0.4f;
 		ItemTextCentered = true;
-
 		Caption = headerCaption;
-		Position = System::Drawing::Point(40, 60);
 
 		Width = 200;
 		HeaderHeight = 30;
@@ -43,18 +41,7 @@ namespace GTA
 
 	void Menu::Draw()
 	{
-		if (mHeaderRect == nullptr || mHeaderText == nullptr || (HasFooter && (mFooterRect == nullptr || mFooterText == nullptr))) return;
-		if (HasFooter)
-		{
-			mFooterRect->Draw();
-			mFooterText->Draw();
-		}
-		mHeaderRect->Draw();
-		mHeaderText->Draw();
-		for each (MenuItem ^item in mItems)
-		{
-			item->Draw();
-		}
+		Draw(System::Drawing::Point());
 	}
 
 	void Menu::Draw(System::Drawing::Point offset)
@@ -71,7 +58,6 @@ namespace GTA
 		{
 			item->Draw(offset);
 		}
-		mOverlayRect->Draw(offset.X, offset.Y);
 	}
 
 	void Menu::Initialize()
@@ -106,9 +92,6 @@ namespace GTA
 			FooterTextColor,
 			FooterFont,
 			FooterCentered);
-
-		int overlayHeight = HasFooter ? FooterHeight + HeaderHeight + itemsHeight : HeaderHeight + itemsHeight;
-		mOverlayRect = gcnew UIRectangle(Position, System::Drawing::Size(Width, overlayHeight), System::Drawing::Color::FromArgb(220, 40, 40, 40));
 	}
 
 	void Menu::OnOpen()
@@ -149,5 +132,86 @@ namespace GTA
 	{
 		if (mSelectedIndex < 0 || mSelectedIndex >= mItems->Count) return;
 		mItems[mSelectedIndex]->Change(right);
+	}
+
+	MessageBox::MessageBox(System::String ^caption, System::Action ^yes, System::Action ^no)
+		: mYesAction(yes), mNoAction(no)
+	{
+		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
+		HeaderTextColor = System::Drawing::Color::White;
+		HeaderFont = 1;
+		HeaderTextScale = 0.5f;
+		HeaderCentered = true;
+		SelectedItemColor = System::Drawing::Color::FromArgb(200, 255, 105, 180);
+		UnselectedItemColor = System::Drawing::Color::FromArgb(200, 176, 196, 222);
+		SelectedTextColor = System::Drawing::Color::Black;
+		UnselectedTextColor = System::Drawing::Color::DarkSlateGray;
+		ItemFont = 0;
+		ItemTextScale = 0.4f;
+		ItemTextCentered = true;
+		Caption = caption;
+
+		Width = 200;
+		Height = 50;
+	}
+
+	void MessageBox::Draw()
+	{
+		Draw(System::Drawing::Point());
+	}
+
+	void MessageBox::Draw(System::Drawing::Point offset)
+	{
+		mBodyRect->Draw(offset.X, offset.Y);
+		mYesRect->Draw(offset.X, offset.Y);
+		mNoRect->Draw(offset.X, offset.Y);
+		mYesText->Draw(offset.X, offset.Y);
+		mNoRect->Draw(offset.X, offset.Y);
+	}
+
+	void MessageBox::Initialize()
+	{
+		mBodyRect = gcnew UIRectangle(Position, System::Drawing::Size(Width, Height), HeaderColor);
+		mYesRect = gcnew UIRectangle(System::Drawing::Point(Position.X, Height + Position.Y), System::Drawing::Size(Width / 2, Height), UnselectedItemColor);
+		mNoRect = gcnew UIRectangle(System::Drawing::Point(Position.X + Width / 2, Height + Position.Y), System::Drawing::Size(Width / 2, Height), UnselectedItemColor);
+		mYesText = gcnew UIText("Yes", System::Drawing::Point(Position.X + Width / 4, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+		mNoText = gcnew UIText("No", System::Drawing::Point(Position.X + Width / 4 * 3, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+	}
+
+	void MessageBox::OnOpen()
+	{
+	}
+
+	void MessageBox::OnClose()
+	{
+	}
+
+	void MessageBox::OnActivate()
+	{
+		if (mSelection) mYesAction->Invoke();
+		else mNoAction->Invoke();
+	}
+
+	void MessageBox::OnChangeSelection(bool _A)
+	{
+	}
+
+	void MessageBox::OnChangeItem(bool _A)
+	{
+		mSelection = !mSelection;
+		if (mSelection)
+		{
+			mYesRect->Color = SelectedItemColor;
+			mNoRect->Color = UnselectedItemColor;
+			mYesText->Color = SelectedTextColor;
+			mNoText->Color = UnselectedTextColor;
+		}
+		else
+		{
+			mNoRect->Color = SelectedItemColor;
+			mYesRect->Color = UnselectedItemColor;
+			mNoText->Color = SelectedTextColor;
+			mYesText->Color = UnselectedTextColor;
+		}
 	}
 }
