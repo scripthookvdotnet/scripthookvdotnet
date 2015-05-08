@@ -263,6 +263,18 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::_DOES_VEHICLE_HAVE_SECONDARY_COLOUR, this->ID);
 	}
+	void Vehicle::CustomSecondaryColor::set(System::Drawing::Color color)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->ID, color.R, color.G, color.B);
+	}
+	void Vehicle::ClearCustomSecondaryColor()
+	{
+		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->ID);
+	}
+	bool Vehicle::IsSecondaryColorCustom::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0x910A32E7AAD2656C, this->ID);
+	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));

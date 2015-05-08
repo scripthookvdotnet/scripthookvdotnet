@@ -392,12 +392,21 @@ namespace GTA
 		{
 			bool get();
 		}
+		property System::Drawing::Color CustomSecondaryColor
+		{
+			void set(System::Drawing::Color color);
+		}
+		property bool IsSecondaryColorCustom
+		{
+			bool get();
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
-		void ClearCustomPrimaryColor();		
+		void ClearCustomPrimaryColor();
+		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
