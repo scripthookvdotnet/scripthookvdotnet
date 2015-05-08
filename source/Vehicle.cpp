@@ -211,6 +211,17 @@ namespace GTA
 	}
 	void Vehicle::SetMod(VehicleModName modType, int modIndex, bool variations)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, (int)modType, modIndex, variations);
+		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, (int)modType, modIndex, variations);		
+	}
+	void Vehicle::SetColours(Native::VehicleColours primaryColor, Native::VehicleColours secondaryColor)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOURS, this->ID, (int)primaryColor, (int)secondaryColor);
+	}
+	void Vehicle::GetColours(Native::VehicleColours *primaryColor, Native::VehicleColours *secondaryColor)
+	{
+		int color1, color2;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_COLOURS, this->ID, &color1, &color2);
+		*primaryColor = static_cast<Native::VehicleColours>(color1);
+		*secondaryColor = static_cast<Native::VehicleColours>(color2);
 	}
 }
