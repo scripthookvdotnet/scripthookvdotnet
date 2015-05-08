@@ -174,7 +174,8 @@ namespace GTA
 	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
 		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->ID, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
-		
+	}
+
 	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
 	{
 		int id = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);

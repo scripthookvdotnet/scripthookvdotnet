@@ -104,9 +104,27 @@ namespace GTA
 
 		void Destroy();
 
+
+		static System::String ^GetShakeName(CameraShake shake);
+
 	private:
 		int mId;
 		CameraShake mShakeType;
 		float mShakeAmplitude;
+
+		static array<System::String ^> ^mShakeNames = gcnew array<System::String ^>
+		{
+			"HAND_SHAKE",
+				"SMALL_EXPLOSION_SHAKE",
+				"MEDIUM_EXPLOSION_SHAKE",
+				"LARGE_EXPLOSION_SHAKE",
+				"JOLT_SHAKE",
+				"VIBRATE_SHAKE",
+				"ROAD_VIBRATION_SHAKE",
+				"DRUNK_SHAKE",
+				"SKY_DIVING_SHAKE",
+				"FAMILY5_DRUG_TRIP_SHAKE",
+				"DEATH_FAIL_IN_EFFECT_SHAKE"
+		};
 	};
 }

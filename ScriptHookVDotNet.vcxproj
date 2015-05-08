@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Camera.cpp" />
-    <ClCompile Include="source\CameraShake.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameplayCamera.cpp" />

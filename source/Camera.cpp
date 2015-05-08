@@ -96,7 +96,7 @@ namespace GTA
 
 		if (this->IsShaking)
 		{
-			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, CameraShakeNames::GetShakeName(this->ShakeType), this->ShakeAmplitude);
+			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, Camera::GetShakeName(this->ShakeType), this->ShakeAmplitude);
 		}
 	}
 	float Camera::ShakeAmplitude::get()
@@ -116,7 +116,7 @@ namespace GTA
 	{
 		if (isShaking)
 		{
-			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, CameraShakeNames::GetShakeName(this->ShakeType), this->ShakeAmplitude);
+			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, Camera::GetShakeName(this->ShakeType), this->ShakeAmplitude);
 		}
 		else
 		{
@@ -170,5 +170,9 @@ namespace GTA
 	void Camera::StopPointing()
 	{
 		Native::Function::Call(Native::Hash::STOP_CAM_POINTING, this->ID);
+	}
+	System::String ^Camera::GetShakeName(CameraShake shake)
+	{
+		return Camera::mShakeNames[static_cast<int>(shake)];
 	}
 }

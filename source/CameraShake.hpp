@@ -16,13 +16,4 @@ namespace GTA
 		FamilyDrugTrip,
 		DeathFail
 	};
-
-	private class CameraShakeNames
-	{
-	public:
-		static const char *GetShakeName(CameraShake shake);
-
-	private:
-		static const char * const Names[];
-	};
 }
