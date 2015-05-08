@@ -387,6 +387,7 @@ namespace GTA
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
+		bool IsToggleModOn(VehicleToggleMod toggleMod);
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();

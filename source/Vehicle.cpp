@@ -241,6 +241,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TOGGLE_VEHICLE_MOD, this->ID, static_cast<int>(toggleMod), toggle);
 	}
+	bool Vehicle::IsToggleModOn(VehicleToggleMod toggleMod)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_TOGGLE_MOD_ON, this->ID, static_cast<int>(toggleMod));
+	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));
