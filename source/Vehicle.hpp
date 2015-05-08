@@ -385,7 +385,6 @@ namespace GTA
 		}
 		property System::Drawing::Color CustomPrimaryColor
 		{
-			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
 		property bool IsPrimaryColorCustom

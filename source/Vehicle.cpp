@@ -245,12 +245,6 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_TOGGLE_MOD_ON, this->ID, static_cast<int>(toggleMod));
 	}
-	System::Drawing::Color Vehicle::CustomPrimaryColor::get()
-	{
-		int r = 0, g = 0, b = 0;
-		Native::Function::Call(Native::Hash::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID, r, g, b);
-		return System::Drawing::Color::FromArgb(r, g, b);
-	}
 	void Vehicle::CustomPrimaryColor::set(System::Drawing::Color color)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID, color.R, color.G, color.B);
