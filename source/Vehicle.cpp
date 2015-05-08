@@ -184,6 +184,30 @@ namespace GTA
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, this->Model.Hash);
 	}
+	Native::VehicleColors Vehicle::PrimaryColor::get()
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		return primaryColor;
+	}
+	void Vehicle::PrimaryColor::set(Native::VehicleColors color)
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		this->SetColors(color, secondaryColor);
+	}
+	Native::VehicleColors Vehicle::SecondaryColor::get()
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		return secondaryColor;
+	}
+	void Vehicle::SecondaryColor::set(Native::VehicleColors color)
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		this->SetColors(primaryColor, color);
+	}
 
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
@@ -208,5 +232,24 @@ namespace GTA
 	bool Vehicle::SetOnGround()
 	{
 		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
+	}
+	void Vehicle::SetMod(VehicleModName modType, int modIndex, bool variations)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, (int)modType, modIndex, variations);		
+	}
+	int Vehicle::GetMod(VehicleModName modType)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_MOD, this->ID, (int)modType);
+	}
+	void Vehicle::SetColors(Native::VehicleColors primaryColor, Native::VehicleColors secondaryColor)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOURS, this->ID, (int)primaryColor, (int)secondaryColor);
+	}
+	void Vehicle::GetColors(Native::VehicleColors *primaryColor, Native::VehicleColors *secondaryColor)
+	{
+		int color1, color2;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_COLOURS, this->ID, &color1, &color2);
+		*primaryColor = static_cast<Native::VehicleColors>(color1);
+		*secondaryColor = static_cast<Native::VehicleColors>(color2);
 	}
 }

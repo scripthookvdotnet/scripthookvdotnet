@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "VehicleColors.hpp"
 
 namespace GTA
 {
@@ -23,6 +24,28 @@ namespace GTA
 		Opening,
 		Opened,
 		Closing,
+	};
+	public enum class VehicleModName
+	{
+		Spoilers = 0,
+		FrontBumber = 1,
+		RearBumper = 2,
+		SideSkirt = 3,
+		Exhaust = 4,
+		Frame = 5,
+		Grille = 6,
+		Hood = 7,
+		Fender = 8,
+		RightFender = 9,
+		Roof = 10,
+		Engine = 11,
+		Brakes = 12,
+		Transmission = 13,
+		Horns = 14,
+		Suspension = 15,
+		Armor = 16,
+		FrontWheels = 23,
+		BackWheels = 24 // only for motocycles
 	};
 
 	public ref class Vehicle sealed : public Entity
@@ -155,12 +178,26 @@ namespace GTA
 		{
 			System::String ^get();
 		}
+		property Native::VehicleColors PrimaryColor
+		{
+			Native::VehicleColors get();
+			void set(Native::VehicleColors color);
+		}
+		property Native::VehicleColors SecondaryColor
+		{
+			Native::VehicleColors get();
+			void set(Native::VehicleColors color);
+		}
 
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
 		void Explode();
 		bool SetOnGround();
+		void SetMod(VehicleModName modType, int modIndex, bool variations);
+		int GetMod(VehicleModName modType);
+		void SetColors(Native::VehicleColors primaryColor, Native::VehicleColors secondaryColor);
+		void GetColors(Native::VehicleColors *primaryColor, Native::VehicleColors *secondaryColor);
 
 	private:
 		int mID;
