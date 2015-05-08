@@ -209,4 +209,8 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
 	}
+	void Vehicle::SetMod(VehicleModName modType, int modIndex, bool variations)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, (int)modType, modIndex, variations);
+	}
 }

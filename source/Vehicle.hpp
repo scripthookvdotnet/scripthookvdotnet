@@ -24,6 +24,28 @@ namespace GTA
 		Opened,
 		Closing,
 	};
+	public enum class VehicleModName
+	{
+		Spoilers = 0,
+		FrontBumber,
+		RearBumper,
+		SideSkirt,
+		Exhaust,
+		Frame,
+		Grille,
+		Hood,
+		Fender,
+		RightFender,
+		Roof,
+		Engine,
+		Brakes,
+		Transmission,
+		Horns,
+		Suspension,
+		Armor,
+		FrontWheels,
+		BackWheels // only for motocycles
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -161,6 +183,7 @@ namespace GTA
 		void Repair();
 		void Explode();
 		bool SetOnGround();
+		void SetMod(VehicleModName modType, int modIndex, bool variations);
 
 	private:
 		int mID;
