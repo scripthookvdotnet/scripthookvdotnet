@@ -237,6 +237,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, (int)modType, modIndex, variations);		
 	}
+	int Vehicle::GetMod(VehicleModName modType)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_MOD, this->ID, (int)modType);
+	}
 	void Vehicle::SetColors(Native::VehicleColors primaryColor, Native::VehicleColors secondaryColor)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOURS, this->ID, (int)primaryColor, (int)secondaryColor);

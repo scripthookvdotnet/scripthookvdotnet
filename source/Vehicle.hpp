@@ -195,6 +195,7 @@ namespace GTA
 		void Explode();
 		bool SetOnGround();
 		void SetMod(VehicleModName modType, int modIndex, bool variations);
+		int GetMod(VehicleModName modType);
 		void SetColors(Native::VehicleColors primaryColor, Native::VehicleColors secondaryColor);
 		void GetColors(Native::VehicleColors *primaryColor, Native::VehicleColors *secondaryColor);
 
