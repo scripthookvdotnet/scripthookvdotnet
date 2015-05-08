@@ -227,7 +227,16 @@ namespace GTA
 	void Vehicle::WheelType::set(VehicleWheelType wheelType)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_WHEEL_TYPE, this->ID, static_cast<int>(wheelType));
-	}	
+	}
+	VehicleWindowTint Vehicle::WindowTint::get()
+	{
+		int windowTint = Native::Function::Call<int>(Native::Hash::GET_VEHICLE_WINDOW_TINT, this->ID);
+		return static_cast<VehicleWindowTint>(windowTint);
+	}
+	void Vehicle::WindowTint::set(VehicleWindowTint windowTint)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_WINDOW_TINT, this->ID, static_cast<int>(windowTint));
+	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));

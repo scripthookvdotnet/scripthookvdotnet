@@ -216,6 +216,16 @@ namespace GTA
 		BikeWheels = 6,
 		HighEnd = 7
 	};
+	public enum class VehicleWindowTint
+	{
+		None = 0,
+		PureBlack = 1,
+		DarkSmoke = 2,
+		LightSmoke = 3,
+		Stock = 4,
+		Limo = 5,
+		Green = 6
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -361,6 +371,11 @@ namespace GTA
 		{
 			VehicleWheelType get();
 			void set(VehicleWheelType wheelType);
+		}
+		property VehicleWindowTint WindowTint
+		{
+			VehicleWindowTint get();
+			void set(VehicleWindowTint windowTint);
 		}
 
 		int GetMod(VehicleMod modType);
