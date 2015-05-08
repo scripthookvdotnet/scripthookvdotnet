@@ -383,11 +383,21 @@ namespace GTA
 			VehicleWindowTint get();
 			void set(VehicleWindowTint windowTint);
 		}
+		property System::Drawing::Color CustomPrimaryColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color color);
+		}
+		/*property bool IsPrimaryColorCustom
+		{
+			bool get();
+		}*/
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
+		void ClearCustomPrimaryColor();		
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();

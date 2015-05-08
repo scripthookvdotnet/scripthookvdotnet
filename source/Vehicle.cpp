@@ -245,6 +245,24 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_TOGGLE_MOD_ON, this->ID, static_cast<int>(toggleMod));
 	}
+	System::Drawing::Color Vehicle::CustomPrimaryColor::get()
+	{
+		int r = 0, g = 0, b = 0;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this -> ID, r, g, b);
+		return System::Drawing::Color::FromArgb(r, g, b);
+	}
+	void Vehicle::CustomPrimaryColor::set(System::Drawing::Color color)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID, color.R, color.G, color.B);
+	}
+	void Vehicle::ClearCustomPrimaryColor()
+	{
+		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID);
+	}
+	/*bool Vehicle::IsPrimaryColorCustom::get()
+	{
+		return Native::Function::Call(Native::Hash::GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM,)
+	}*/
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));
