@@ -205,6 +205,17 @@ namespace GTA
 		LeftRear = 1,
 		RightRear = 2,
 	};
+	public enum class VehicleWheelType
+	{
+		Sport = 0,
+		Muscle = 1,
+		Lowrider = 2,
+		SUV = 3,
+		Offroad = 4,
+		Tuner = 5,
+		BikeWheels = 6,
+		HighEnd = 7
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -345,6 +356,11 @@ namespace GTA
 		property bool PreviouslyOwnedByPlayer
 		{
 			void set(bool value);
+		}
+		property VehicleWheelType WheelType
+		{
+			VehicleWheelType get();
+			void set(VehicleWheelType wheelType);
 		}
 
 		int GetMod(VehicleMod modType);

@@ -219,6 +219,15 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, static_cast<int>(modType), modIndex, variations);
 	}
+	VehicleWheelType Vehicle::WheelType::get()
+	{
+		int wheelType = Native::Function::Call<int>(Native::Hash::GET_VEHICLE_WHEEL_TYPE, this->ID);
+		return static_cast<VehicleWheelType>(wheelType);
+	}
+	void Vehicle::WheelType::set(VehicleWheelType wheelType)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_WHEEL_TYPE, this->ID, static_cast<int>(wheelType));
+	}	
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));
