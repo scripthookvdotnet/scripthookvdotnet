@@ -7,6 +7,7 @@ namespace GTA
 	value class Model;
 	ref class Ped;
 	ref class Vehicle;
+	ref class Camera;
 
 	public enum class Weather
 	{
@@ -66,5 +67,17 @@ namespace GTA
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+		
+		static Camera ^CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov);
+		static property Camera ^RenderingCamera
+		{
+			Camera ^get();
+		}
+		static property bool IsScriptCameraRendering
+		{
+			bool get();
+			void set(bool isScriptCameraRendering);
+		}
+		static void DestroyAllCameras();
 	};
 }
