@@ -226,6 +226,12 @@ namespace GTA
 		Limo = 5,
 		Green = 6
 	};
+	public enum class VehicleToggleMod
+	{
+		Turbo = 18,
+		TireSmoke = 20,
+		XenonHeadlights = 22
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -380,6 +386,7 @@ namespace GTA
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
+		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
