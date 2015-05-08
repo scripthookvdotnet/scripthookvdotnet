@@ -269,6 +269,14 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::_0x910A32E7AAD2656C, this->ID);
 	}
+	void Vehicle::OpenDoor(VehicleDoor door, bool loose, bool openInstantly)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_OPEN, this->ID, static_cast<int>(door), loose, openInstantly);
+	}
+	void Vehicle::CloseDoor(VehicleDoor door, bool closeInstantly)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_SHUT, this->ID, static_cast<int>(door), closeInstantly);
+	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));

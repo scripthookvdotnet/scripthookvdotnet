@@ -232,6 +232,16 @@ namespace GTA
 		TireSmoke = 20,
 		XenonHeadlights = 22
 	};
+	public enum class VehicleDoor
+	{
+		FrontRightDoor = 1,
+		FrontLeftDoor = 0,
+		BackRightDoor = 3,
+		BackLeftDoor = 2,
+		Hood = 4,
+		Trunk = 5,
+		Trunk2 = 6,
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -406,6 +416,8 @@ namespace GTA
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
 		void ClearCustomPrimaryColor();
 		void ClearCustomSecondaryColor();
+		void OpenDoor(VehicleDoor door, bool loose, bool openInstantly);
+		void CloseDoor(VehicleDoor door, bool closeInstantly);
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
