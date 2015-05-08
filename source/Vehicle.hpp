@@ -388,10 +388,10 @@ namespace GTA
 			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
-		/*property bool IsPrimaryColorCustom
+		property bool IsPrimaryColorCustom
 		{
 			bool get();
-		}*/
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);

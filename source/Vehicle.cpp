@@ -89,14 +89,14 @@ namespace GTA
 	{
 		switch (value)
 		{
-			case VehicleRoofState::Closed:
-			case VehicleRoofState::Closing:
-				Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, this->ID, 0);
-				break;
-			case VehicleRoofState::Opened:
-			case VehicleRoofState::Opening:
-				Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, this->ID, 0);
-				break;
+		case VehicleRoofState::Closed:
+		case VehicleRoofState::Closing:
+			Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, this->ID, 0);
+			break;
+		case VehicleRoofState::Opened:
+		case VehicleRoofState::Opening:
+			Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, this->ID, 0);
+			break;
 		}
 	}
 	float Vehicle::EngineHealth::get()
@@ -248,7 +248,7 @@ namespace GTA
 	System::Drawing::Color Vehicle::CustomPrimaryColor::get()
 	{
 		int r = 0, g = 0, b = 0;
-		Native::Function::Call(Native::Hash::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this -> ID, r, g, b);
+		Native::Function::Call(Native::Hash::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID, r, g, b);
 		return System::Drawing::Color::FromArgb(r, g, b);
 	}
 	void Vehicle::CustomPrimaryColor::set(System::Drawing::Color color)
@@ -259,10 +259,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID);
 	}
-	/*bool Vehicle::IsPrimaryColorCustom::get()
+	bool Vehicle::IsPrimaryColorCustom::get()
 	{
-		return Native::Function::Call(Native::Hash::GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM,)
-	}*/
+		return Native::Function::Call<bool>(Native::Hash::_DOES_VEHICLE_HAVE_SECONDARY_COLOUR, this->ID);
+	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));
