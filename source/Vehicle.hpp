@@ -28,24 +28,24 @@ namespace GTA
 	public enum class VehicleModName
 	{
 		Spoilers = 0,
-		FrontBumber,
-		RearBumper,
-		SideSkirt,
-		Exhaust,
-		Frame,
-		Grille,
-		Hood,
-		Fender,
-		RightFender,
-		Roof,
-		Engine,
-		Brakes,
-		Transmission,
-		Horns,
-		Suspension,
-		Armor,
-		FrontWheels,
-		BackWheels // only for motocycles
+		FrontBumber = 1,
+		RearBumper = 2,
+		SideSkirt = 3,
+		Exhaust = 4,
+		Frame = 5,
+		Grille = 6,
+		Hood = 7,
+		Fender = 8,
+		RightFender = 9,
+		Roof = 10,
+		Engine = 11,
+		Brakes = 12,
+		Transmission = 13,
+		Horns = 14,
+		Suspension = 15,
+		Armor = 16,
+		FrontWheels = 23,
+		BackWheels = 24 // only for motocycles
 	};
 
 	public ref class Vehicle sealed : public Entity
@@ -177,6 +177,16 @@ namespace GTA
 		property System::String ^DisplayName
 		{
 			System::String ^get();
+		}
+		property Native::VehicleColors PrimaryColor
+		{
+			Native::VehicleColors get();
+			void set(Native::VehicleColors color);
+		}
+		property Native::VehicleColors SecondaryColor
+		{
+			Native::VehicleColors get();
+			void set(Native::VehicleColors color);
 		}
 
 		Ped ^GetPedOnSeat(VehicleSeat seat);

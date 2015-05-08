@@ -184,6 +184,30 @@ namespace GTA
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, this->Model.Hash);
 	}
+	Native::VehicleColors Vehicle::PrimaryColor::get()
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		return primaryColor;
+	}
+	void Vehicle::PrimaryColor::set(Native::VehicleColors color)
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		this->SetColors(color, secondaryColor);
+	}
+	Native::VehicleColors Vehicle::SecondaryColor::get()
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		return secondaryColor;
+	}
+	void Vehicle::SecondaryColor::set(Native::VehicleColors color)
+	{
+		Native::VehicleColors primaryColor, secondaryColor;
+		this->GetColors(&primaryColor, &secondaryColor);
+		this->SetColors(primaryColor, color);
+	}
 
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
