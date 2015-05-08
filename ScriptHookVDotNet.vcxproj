@@ -135,7 +135,6 @@
     <ClInclude Include="source\VehicleHashes.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
-    <ClInclude Include="Source\VehicleColors.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

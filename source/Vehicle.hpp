@@ -1,31 +1,171 @@
 #pragma once
 
 #include "Entity.hpp"
-#include "VehicleColors.hpp"
 
 namespace GTA
 {
 	ref class Ped;
 
-	public enum class VehicleSeat
+	public enum class VehicleColor
 	{
-		None = -3,
-		Any = -2,
-		Driver = -1,
-		Passenger = 0,
-		LeftFront = Driver,
-		RightFront = Passenger,
-		LeftRear = 1,
-		RightRear = 2,
+		MetallicBlack = 0,
+		MetallicGraphiteBlack = 1,
+		MetallicBlackSteal = 2,
+		MetallicDarkSilver = 3,
+		MetallicSilver = 4,
+		MetallicBlueSilver = 5,
+		MetallicSteelGray = 6,
+		MetallicShadowSilver = 7,
+		MetallicStoneSilver = 8,
+		MetallicMidnightSilver = 9,
+		MetallicGunMetal = 10,
+		MetallicAnthraciteGrey = 11,
+		MatteBlack = 12,
+		MatteGray = 13,
+		MatteLightGrey = 14,
+		UtilBlack = 15,
+		UtilBlackPoly = 16,
+		UtilDarksilver = 17,
+		UtilSilver = 18,
+		UtilGunMetal = 19,
+		UtilShadowSilver = 20,
+		WornBlack = 21,
+		WornGraphite = 22,
+		WornSilverGrey = 23,
+		WornSilver = 24,
+		WornBlueSilver = 25,
+		WornShadowSilver = 26,
+		MetallicRed = 27,
+		MetallicTorinoRed = 28,
+		MetallicFormulaRed = 29,
+		MetallicBlazeRed = 30,
+		MetallicGracefulRed = 31,
+		MetallicGarnetRed = 32,
+		MetallicDesertRed = 33,
+		MetallicCabernetRed = 34,
+		MetallicCandyRed = 35,
+		MetallicSunriseOrange = 36,
+		MetallicClassicGold = 37,
+		MetallicOrange = 38,
+		MatteRed = 39,
+		MatteDarkRed = 40,
+		MatteOrange = 41,
+		MatteYellow = 42,
+		UtilRed = 43,
+		UtilBrightRed = 44,
+		UtilGarnetRed = 45,
+		WornRed = 46,
+		WornGoldenRed = 47,
+		WornDarkRed = 48,
+		MetallicDarkGreen = 49,
+		MetallicRacingGreen = 50,
+		MetallicSeaGreen = 51,
+		MetallicOliveGreen = 52,
+		MetallicGreen = 53,
+		MetallicGasolineBlueGreen = 54,
+		MatteLimeGreen = 55,
+		UtilDarkGreen = 56,
+		UtilGreen = 57,
+		WornDarkGreen = 58,
+		WornGreen = 59,
+		WornSeaWash = 60,
+		MetallicMidnightBlue = 61,
+		MetallicDarkBlue = 62,
+		MetallicSaxonyBlue = 63,
+		MetallicBlue = 64,
+		MetallicMarinerBlue = 65,
+		MetallicHarborBlue = 66,
+		MetallicDiamondBlue = 67,
+		MetallicSurfBlue = 68,
+		MetallicNauticalBlue = 69,
+		MetallicBrightBlue = 70,
+		MetallicPurpleBlue = 71,
+		MetallicSpinnakerBlue = 72,
+		MetallicUltraBlue = 73,
+		UtilDarkBlue = 75,
+		UtilMidnightBlue = 76,
+		UtilBlue = 77,
+		UtilSeaFoamBlue = 78,
+		UilLightningblue = 79,
+		UtilMauiBluePoly = 80,
+		UtilBrightBlue = 81,
+		MatteDarkBlue = 82,
+		MatteBlue = 83,
+		MatteMidnightBlue = 84,
+		WornDarkblue = 85,
+		WornBlue = 86,
+		WornLightblue = 87,
+		MetallicTaxiYellow = 88,
+		MetallicRaceYellow = 89,
+		MetallicBronze = 90,
+		MetallicYellowBird = 91,
+		MetallicLime = 92,
+		MetallicChampagne = 93,
+		MetallicPuebloBeige = 94,
+		MetallicDarkIvory = 95,
+		MetallicChocoBrown = 96,
+		MetallicGoldenBrown = 97,
+		MetallicLightBrown = 98,
+		MetallicStrawBeige = 99,
+		MetallicMossBrown = 100,
+		MetallicBistonBrown = 101,
+		MetallicBeechwood = 102,
+		MetallicDarkBeechwood = 103,
+		MetallicChocoOrange = 104,
+		MetallicBeachSand = 105,
+		MetallicSunBleechedSand = 106,
+		MetallicCream = 107,
+		UtilBrown = 108,
+		UtilMediumBrown = 109,
+		UtilLightBrown = 110,
+		MetallicWhite = 111,
+		MetallicFrostWhite = 112,
+		WornHoneyBeige = 113,
+		WornBrown = 114,
+		WornDarkBrown = 115,
+		Wornstrawbeige = 116,
+		BrushedSteel = 117,
+		BrushedBlacksteel = 118,
+		BrushedAluminium = 119,
+		Chrome = 120,
+		WornOffWhite = 121,
+		UtilOffWhite = 122,
+		WornOrange = 123,
+		WornLightOrange = 124,
+		MetallicSecuricorGreen = 125,
+		WornTaxiYellow = 126,
+		policecarblue = 127,
+		MatteGreen = 128,
+		MatteBrown = 129,
+		MatteWhite = 131,
+		WornWhite = 132,
+		WornOliveArmyGreen = 133,
+		PureWhite = 134,
+		HotPink = 135,
+		Salmonpink = 136,
+		MetallicVermillionPink = 137,
+		Orange = 138,
+		Green = 139,
+		Blue = 140,
+		MettalicBlackBlue = 141,
+		MetallicBlackPurple = 142,
+		MetallicBlackRed = 143,
+		huntergreen = 144,
+		MetallicPurple = 145,
+		MetaillicVDarkBlue = 146,
+		MODSHOPBLACK1 = 147,
+		MattePurple = 148,
+		MatteDarkPurple = 149,
+		MetallicLavaRed = 150,
+		MatteForestGreen = 151,
+		MatteOliveDrab = 152,
+		MatteDesertBrown = 153,
+		MatteDesertTan = 154,
+		MatteFoilageGreen = 155,
+		DEFAULTALLOYCOLOR = 156,
+		EpsilonBlue = 157,
 	};
-	public enum class VehicleRoofState
-	{
-		Closed,
-		Opening,
-		Opened,
-		Closing,
-	};
-	public enum class VehicleModName
+	public enum class VehicleMod
 	{
 		Spoilers = 0,
 		FrontBumber = 1,
@@ -47,6 +187,24 @@ namespace GTA
 		FrontWheels = 23,
 		BackWheels = 24 // only for motocycles
 	};
+	public enum class VehicleRoofState
+	{
+		Closed,
+		Opening,
+		Opened,
+		Closing,
+	};
+	public enum class VehicleSeat
+	{
+		None = -3,
+		Any = -2,
+		Driver = -1,
+		Passenger = 0,
+		LeftFront = Driver,
+		RightFront = Passenger,
+		LeftRear = 1,
+		RightRear = 2,
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -65,6 +223,10 @@ namespace GTA
 		property int PassengerSeats
 		{
 			int get();
+		}
+		property System::String ^DisplayName
+		{
+			System::String ^get();
 		}
 		property System::String ^NumberPlate
 		{
@@ -118,6 +280,16 @@ namespace GTA
 		{
 			bool get();
 			void set(bool value);
+		}
+		property VehicleColor PrimaryColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
+		property VehicleColor SecondaryColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
 		}
 
 		property bool IsWanted
@@ -174,30 +346,14 @@ namespace GTA
 		{
 			void set(bool value);
 		}
-		property System::String ^DisplayName
-		{
-			System::String ^get();
-		}
-		property Native::VehicleColors PrimaryColor
-		{
-			Native::VehicleColors get();
-			void set(Native::VehicleColors color);
-		}
-		property Native::VehicleColors SecondaryColor
-		{
-			Native::VehicleColors get();
-			void set(Native::VehicleColors color);
-		}
 
+		int GetMod(VehicleMod modType);
+		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
 		void Explode();
 		bool SetOnGround();
-		void SetMod(VehicleModName modType, int modIndex, bool variations);
-		int GetMod(VehicleModName modType);
-		void SetColors(Native::VehicleColors primaryColor, Native::VehicleColors secondaryColor);
-		void GetColors(Native::VehicleColors *primaryColor, Native::VehicleColors *secondaryColor);
 
 	private:
 		int mID;
