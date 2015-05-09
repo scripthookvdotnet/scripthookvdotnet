@@ -114,7 +114,7 @@ namespace GTA
 		{
 			return !operator ==(left, right);
 		}
-
+		
 	private:
 		int mID;
 		Ped ^mPed;

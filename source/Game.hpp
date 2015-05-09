@@ -66,7 +66,7 @@ namespace GTA
 		{
 			void set(float value);
 		}
-	
+
 		static void Pause();
 		static void Unpause();
 		static void DoAutoSave();
@@ -74,5 +74,8 @@ namespace GTA
 		static void FadeScreenIn(int time);
 		static void FadeScreenOut(int time);
 		static void PlaySound(System::String ^soundFile, System::String ^soundSet);
+		static void PlayMusic(System::String ^musicFile);
+		static void StopMusic(System::String ^musicFile); //add enum for musicFiles?
+		
 	};
 }

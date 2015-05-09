@@ -12,7 +12,6 @@ namespace GTA
 	{
 		return gcnew Vehicle(0);
 	}
-
 	bool Vehicle::HasRoof::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_VEHICLE_HAVE_ROOF, this->ID);
@@ -196,7 +195,6 @@ namespace GTA
 
 		return gcnew Ped(handle);
 	}
-
 	void Vehicle::Repair()
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_FIXED, this->ID);
@@ -208,5 +206,9 @@ namespace GTA
 	bool Vehicle::SetOnGround()
 	{
 		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
+	}
+	float Vehicle::GetDistanceTo(Math::Vector3 coordinate)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, this->Position.X, this->Position.Y, this->Position.Z, coordinate.X, coordinate.Y, coordinate.Z, 1);
 	}
 }

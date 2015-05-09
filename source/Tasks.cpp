@@ -131,7 +131,7 @@ namespace GTA
 	{
 		if (ignorePaths)
 		{
-			Native::Function::Call(Native::Hash::TASK_GO_STRAIGHT_TO_COORD, this->mPed->ID, position.X, position.Y, position.Z, 2.0f, timeout, 0.0f /* heading */, 0.0f);
+			Native::Function::Call(Native::Hash::TASK_GO_STRAIGHT_TO_COORD, this->mPed->ID, position.X, position.Y, position.Z, 2.0f, timeout, 0.0f /* heading */, 0.0f /* Radius */);
 		}
 		else
 		{

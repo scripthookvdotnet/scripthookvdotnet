@@ -162,6 +162,9 @@ namespace GTA
 		void Explode();
 		bool SetOnGround();
 
+		float GetDistanceTo(Math::Vector3 coordinate);
+		
+
 	private:
 		int mID;
 	};

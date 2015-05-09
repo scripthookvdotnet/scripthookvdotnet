@@ -26,7 +26,7 @@ namespace GTA
 	public:
 		Script();
 
-		static void Wait(int ms);
+	    static void Wait(int ms);
 		static bool IsKeyPressed(System::Windows::Forms::Keys key);
 
 		event System::EventHandler ^Tick;

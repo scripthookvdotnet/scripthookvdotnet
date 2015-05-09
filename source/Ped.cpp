@@ -13,7 +13,6 @@ namespace GTA
 	{
 		return gcnew Ped(0);
 	}
-
 	int Ped::Accuracy::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_ACCURACY, this->ID);
@@ -112,7 +111,6 @@ namespace GTA
 		{
 			return nullptr;
 		}
-
 		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->ID, false));
 	}
 	void Ped::IsEnemy::set(bool value)
@@ -151,7 +149,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_PLAY_GESTURE_ANIMS, this->ID, value);
 	}
-
 	bool Ped::IsInVehicle()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_VEHICLE, this->ID, 0);
@@ -168,9 +165,12 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SITTING_IN_VEHICLE, this->ID, vehicle->ID);
 	}
-
 	void Ped::Kill()
 	{
 		Health = -1;
+	}
+	float Ped::GetDistanceTo(Math::Vector3 coordinate)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, this->Position.X, this->Position.Y, this->Position.Z, coordinate.X, coordinate.Y, coordinate.Z, 1);
 	}
 }

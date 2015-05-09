@@ -107,7 +107,6 @@ namespace GTA
 		{
 			Vehicle ^get();
 		}
-
 		property bool IsEnemy
 		{
 			void set(bool value);
@@ -150,6 +149,7 @@ namespace GTA
 		bool IsSittingInVehicle();
 		bool IsSittingInVehicle(Vehicle ^vehicle);
 
+		float GetDistanceTo(Math::Vector3 coordinate);
 		void Kill();
 
 	private:
