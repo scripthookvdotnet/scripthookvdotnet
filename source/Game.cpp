@@ -77,6 +77,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
 	}
+	void Game::PlayMusic(System::String ^musicFile)
+	{
+		Native::Function::Call(Native::Hash::TRIGGER_MUSIC_EVENT, musicFile);
+	}
+	void Game::StopMusic(System::String ^musicFile)
+	{
+		Native::Function::Call(Native::Hash::CANCEL_MUSIC_EVENT, musicFile); //needs a general Game.StopMusic()
+	}
 	System::String ^Game::GetUserInput(int maxLength)
 	{
 		return GetUserInput("", maxLength);
