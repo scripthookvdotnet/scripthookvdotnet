@@ -165,6 +165,16 @@ namespace GTA
 		DEFAULTALLOYCOLOR = 156,
 		EpsilonBlue = 157,
 	};
+	public enum class VehicleDoor
+	{
+		FrontRightDoor = 1,
+		FrontLeftDoor = 0,
+		BackRightDoor = 3,
+		BackLeftDoor = 2,
+		Hood = 4,
+		Trunk = 5,
+		Trunk2 = 6,
+	};
 	public enum class VehicleMod
 	{
 		Spoilers = 0,
@@ -204,6 +214,40 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+	};
+	public enum class VehicleWheelType
+	{
+		Sport = 0,
+		Muscle = 1,
+		Lowrider = 2,
+		SUV = 3,
+		Offroad = 4,
+		Tuner = 5,
+		BikeWheels = 6,
+		HighEnd = 7
+	};
+	public enum class VehicleWindow
+	{
+		FrontRightWindow = 1,
+		FrontLeftWindow = 0,
+		BackRightWindow = 3,
+		BackLeftWindow = 2
+	};
+	public enum class VehicleWindowTint
+	{
+		None = 0,
+		PureBlack = 1,
+		DarkSmoke = 2,
+		LightSmoke = 3,
+		Stock = 4,
+		Limo = 5,
+		Green = 6
+	};
+	public enum class VehicleToggleMod
+	{
+		Turbo = 18,
+		TireSmoke = 20,
+		XenonHeadlights = 22
 	};
 
 	public ref class Vehicle sealed : public Entity
@@ -291,6 +335,24 @@ namespace GTA
 			VehicleColor get();
 			void set(VehicleColor value);
 		}
+		property VehicleWheelType WheelType
+		{
+			VehicleWheelType get();
+			void set(VehicleWheelType wheelType);
+		}
+		property VehicleWindowTint WindowTint
+		{
+			VehicleWindowTint get();
+			void set(VehicleWindowTint windowTint);
+		}
+		property bool IsPrimaryColorCustom
+		{
+			bool get();
+		}
+		property bool IsSecondaryColorCustom
+		{
+			bool get();
+		}
 
 		property bool IsWanted
 		{
@@ -346,14 +408,34 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property System::Drawing::Color CustomPrimaryColor
+		{
+			void set(System::Drawing::Color color);
+		}
+		property System::Drawing::Color CustomSecondaryColor
+		{
+			void set(System::Drawing::Color color);
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
+		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
+		bool IsToggleModOn(VehicleToggleMod toggleMod);
+		void ClearCustomPrimaryColor();
+		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
 		void Explode();
 		bool SetOnGround();
+		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
+		void CloseDoor(VehicleDoor door, bool instantly);
+		void FixWindow(VehicleWindow window);
+		void SmashWindow(VehicleWindow window);
+		void RollUpWindow(VehicleWindow window);
+		void RollDownWindow(VehicleWindow window);
+		void RollDownWindows();
+		void RemoveWindow(VehicleWindow window);
 
 	private:
 		int mID;

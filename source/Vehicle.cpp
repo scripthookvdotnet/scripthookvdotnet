@@ -89,14 +89,14 @@ namespace GTA
 	{
 		switch (value)
 		{
-			case VehicleRoofState::Closed:
-			case VehicleRoofState::Closing:
-				Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, this->ID, 0);
-				break;
-			case VehicleRoofState::Opened:
-			case VehicleRoofState::Opening:
-				Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, this->ID, 0);
-				break;
+		case VehicleRoofState::Closed:
+		case VehicleRoofState::Closing:
+			Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, this->ID, 0);
+			break;
+		case VehicleRoofState::Opened:
+		case VehicleRoofState::Opening:
+			Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, this->ID, 0);
+			break;
 		}
 	}
 	float Vehicle::EngineHealth::get()
@@ -148,6 +148,30 @@ namespace GTA
 		int color1, color2;
 		Native::Function::Call(Native::Hash::GET_VEHICLE_COLOURS, this->ID, &color1, &color2);
 		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOURS, this->ID, color1, static_cast<int>(value));
+	}
+	VehicleWheelType Vehicle::WheelType::get()
+	{
+		return static_cast<VehicleWheelType>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_WHEEL_TYPE, this->ID));
+	}
+	void Vehicle::WheelType::set(VehicleWheelType wheelType)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_WHEEL_TYPE, this->ID, static_cast<int>(wheelType));
+	}
+	VehicleWindowTint Vehicle::WindowTint::get()
+	{
+		return static_cast<VehicleWindowTint>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_WINDOW_TINT, this->ID));
+	}
+	void Vehicle::WindowTint::set(VehicleWindowTint windowTint)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_WINDOW_TINT, this->ID, static_cast<int>(windowTint));
+	}
+	bool Vehicle::IsPrimaryColorCustom::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_DOES_VEHICLE_HAVE_SECONDARY_COLOUR, this->ID);
+	}
+	bool Vehicle::IsSecondaryColorCustom::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0x910A32E7AAD2656C, this->ID);
 	}
 
 	void Vehicle::IsWanted::set(bool value)
@@ -210,6 +234,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_HAS_BEEN_OWNED_BY_PLAYER, this->ID, value);
 	}
+	void Vehicle::CustomPrimaryColor::set(System::Drawing::Color color)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID, color.R, color.G, color.B);
+	}
+	void Vehicle::CustomSecondaryColor::set(System::Drawing::Color color)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->ID, color.R, color.G, color.B);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
@@ -218,6 +250,22 @@ namespace GTA
 	void Vehicle::SetMod(VehicleMod modType, int modIndex, bool variations)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, this->ID, static_cast<int>(modType), modIndex, variations);
+	}
+	void Vehicle::ToggleMod(VehicleToggleMod toggleMod, bool toggle)
+	{
+		Native::Function::Call(Native::Hash::TOGGLE_VEHICLE_MOD, this->ID, static_cast<int>(toggleMod), toggle);
+	}
+	bool Vehicle::IsToggleModOn(VehicleToggleMod toggleMod)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_TOGGLE_MOD_ON, this->ID, static_cast<int>(toggleMod));
+	}
+	void Vehicle::ClearCustomPrimaryColor()
+	{
+		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->ID);
+	}
+	void Vehicle::ClearCustomSecondaryColor()
+	{
+		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->ID);
 	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
@@ -242,5 +290,37 @@ namespace GTA
 	bool Vehicle::SetOnGround()
 	{
 		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->ID);
+	}
+	void Vehicle::OpenDoor(VehicleDoor door, bool loose, bool instantly)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_OPEN, this->ID, static_cast<int>(door), loose, instantly);
+	}
+	void Vehicle::CloseDoor(VehicleDoor door, bool instantly)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_SHUT, this->ID, static_cast<int>(door), instantly);
+	}
+	void Vehicle::FixWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::FIX_VEHICLE_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::SmashWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::SMASH_VEHICLE_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::RollUpWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::ROLL_UP_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::RollDownWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::ROLL_DOWN_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::RollDownWindows()
+	{
+		Native::Function::Call(Native::Hash::ROLL_DOWN_WINDOWS, this->ID);
+	}
+	void Vehicle::RemoveWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->ID, static_cast<int>(window));
 	}
 }
