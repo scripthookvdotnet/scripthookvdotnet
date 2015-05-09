@@ -80,5 +80,8 @@ namespace GTA
 			void set(bool isScriptCameraRendering);
 		}
 		static void DestroyAllCameras();
+
+	internal:
+		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
 	};
 }

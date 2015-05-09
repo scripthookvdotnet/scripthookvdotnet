@@ -1,7 +1,6 @@
+#include "Camera.hpp"
 #include "GameplayCamera.hpp"
 #include "Native.hpp"
-#include "CameraShake.hpp"
-#include "Camera.hpp"
 
 namespace GTA
 {
@@ -51,7 +50,7 @@ namespace GTA
 	}
 	void GameplayCamera::Shake(CameraShake shakeType, float amplitude)
 	{
-		Native::Function::Call(Native::Hash::SHAKE_GAMEPLAY_CAM, Camera::GetShakeName(shakeType), amplitude);
+		Native::Function::Call(Native::Hash::SHAKE_GAMEPLAY_CAM, Camera::sShakeNames[static_cast<int>(shakeType)], amplitude);
 	}
 	bool GameplayCamera::IsShaking::get()
 	{

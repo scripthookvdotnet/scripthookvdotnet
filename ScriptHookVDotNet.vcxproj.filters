@@ -119,10 +119,16 @@
     <ClInclude Include="source\Vector3.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="source\Camera.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Entity.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Game.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GameplayCamera.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Model.hpp">
@@ -166,15 +172,6 @@
     </ClInclude>
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Camera.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\CameraShake.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\GameplayCamera.hpp">
-      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -112,7 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Camera.hpp" />
-    <ClInclude Include="source\CameraShake.hpp" />
     <ClInclude Include="source\Entity.hpp" />
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\GameplayCamera.hpp" />

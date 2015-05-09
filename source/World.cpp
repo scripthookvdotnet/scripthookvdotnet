@@ -8,9 +8,7 @@ namespace GTA
 {
 	void World::Weather::set(GTA::Weather value)
 	{
-		array<System::String ^> ^names = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
-
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, names[static_cast<int>(value)]);
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
 	System::DateTime World::CurrentDate::get()
 	{
@@ -183,10 +181,12 @@ namespace GTA
 	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
 	{
 		int id = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+
 		if (id <= 0)
 		{
 			return nullptr;
 		}
+
 		return gcnew Camera(id);
 	}
 	Camera ^World::RenderingCamera::get()
