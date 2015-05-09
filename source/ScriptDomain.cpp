@@ -74,7 +74,7 @@ namespace GTA
 		setup->ApplicationBase = path;
 		Security::PermissionSet ^permissions = gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted);
 
-		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + path->GetHashCode().ToString("X"), nullptr, setup, permissions);
+		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (path->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, permissions);
 		appdomain->InitializeLifetimeService();
 
 		ScriptDomain ^scriptdomain = nullptr;
@@ -94,31 +94,38 @@ namespace GTA
 
 		Log::Debug("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
 
-		List<String ^> ^filenameScripts = gcnew List<String ^>();
-		List<String ^> ^filenameAssemblies = gcnew List<String ^>();
-
-		try
+		if (IO::Directory::Exists(path))
 		{
-			filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb"));
-			filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs"));
-			filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll"));
+			List<String ^> ^filenameScripts = gcnew List<String ^>();
+			List<String ^> ^filenameAssemblies = gcnew List<String ^>();
+
+			try
+			{
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb"));
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs"));
+				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll"));
+			}
+			catch (Exception ^ex)
+			{
+				Log::Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
+
+				System::AppDomain::Unload(appdomain);
+
+				return nullptr;
+			}
+
+			for each (String ^filename in filenameScripts)
+			{
+				scriptdomain->LoadScript(filename);
+			}
+			for each (String ^filename in filenameAssemblies)
+			{
+				scriptdomain->LoadAssembly(filename);
+			}
 		}
-		catch (Exception ^ex)
+		else
 		{
-			Log::Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
-
-			System::AppDomain::Unload(appdomain);
-
-			return nullptr;
-		}
-
-		for each (String ^filename in filenameScripts)
-		{
-			scriptdomain->LoadScript(filename);
-		}
-		for each (String ^filename in filenameAssemblies)
-		{
-			scriptdomain->LoadAssembly(filename);
+			Log::Error("Failed to reload scripts because directory is missing.");
 		}
 
 		return scriptdomain;
@@ -153,6 +160,8 @@ namespace GTA
 
 		if (!compilerResult->Errors->HasErrors)
 		{
+			Log::Error("Successfully compiled '", IO::Path::GetFileName(filename), "'.");
+
 			return LoadAssembly(filename, compilerResult->CompiledAssembly);
 		}
 		else
@@ -198,22 +207,31 @@ namespace GTA
 	{
 		unsigned int count = 0;
 
-		for each (Type ^type in assembly->GetTypes())
+		try
 		{
-			if (!type->IsSubclassOf(Script::typeid))
+			for each (Type ^type in assembly->GetTypes())
 			{
-				continue;
-			}
+				if (!type->IsSubclassOf(Script::typeid))
+				{
+					continue;
+				}
 
-			count++;
-			this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
+				count++;
+				this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
+			}
+		}
+		catch (Reflection::ReflectionTypeLoadException ^ex)
+		{
+			Log::Error("Failed to list assembly types:", Environment::NewLine, ex->ToString());
+
+			return false;
 		}
 
 		Log::Debug("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
 
 		return count != 0;
 	}
-	void ScriptDomain::Unload(ScriptDomain ^domain)
+	void ScriptDomain::Unload(ScriptDomain ^%domain)
 	{
 		Log::Debug("Unloading script domain '", domain->Name, "' ...");
 
@@ -231,6 +249,8 @@ namespace GTA
 		{
 			Log::Error("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
 		}
+
+		domain = nullptr;
 
 		GC::Collect();
 	}
