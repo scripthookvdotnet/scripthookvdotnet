@@ -19,6 +19,8 @@
 #include "ScriptDomain.hpp"
 
 #include "Entity.hpp"
+#include "Prop.hpp"
+#include "Blip.hpp"
 #include "Ped.hpp"
 #include "Player.hpp"
 #include "Vector2.hpp"
@@ -63,6 +65,12 @@ namespace GTA
 		{
 		}
 		InputArgument::InputArgument(Vehicle ^object) : mData(object->ID)
+		{
+		}
+		InputArgument::InputArgument(Blip ^object) : mData(object->ID)
+		{
+		}
+		InputArgument::InputArgument(Prop ^object) : mData(object->ID)
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))
@@ -135,6 +143,14 @@ namespace GTA
 			if (type == Vehicle::typeid)
 			{
 				return gcnew Vehicle(*reinterpret_cast<int *>(value));
+			}
+			if (type == Blip::typeid)
+			{
+				return gcnew Blip(*reinterpret_cast<int *>(value));
+			}
+			if (type == Prop::typeid)
+			{
+				return gcnew Prop(*reinterpret_cast<int *>(value));
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));

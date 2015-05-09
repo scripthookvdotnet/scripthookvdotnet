@@ -2,6 +2,7 @@
 
 #include "Model.hpp"
 #include "Vector3.hpp"
+#include "Blip.hpp"
 
 namespace GTA
 {
@@ -119,6 +120,7 @@ namespace GTA
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
 		virtual bool Equals(Entity ^entity);
+		Blip ^AddBlip();
 
 		virtual int GetHashCode() override;
 		static inline bool operator ==(Entity ^left, Entity ^right)

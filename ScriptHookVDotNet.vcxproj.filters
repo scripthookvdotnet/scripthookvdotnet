@@ -87,6 +87,12 @@
     <ClCompile Include="source\GameplayCamera.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Blip.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Prop.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -172,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Blip.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Prop.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
