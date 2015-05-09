@@ -78,6 +78,7 @@ namespace GTA
 		void WarpOutOfVehicle(Vehicle ^vehicle);
 		void SkyDive();
 		void ReactAndFlee(Ped ^target);
+		void PlayAnimation(System::String ^animSet, System::String ^animationName, float speed, int loop, bool lastAnimation, float playbackRate);
 
 		void ClearAll();
 		void ClearAllImmediately();
