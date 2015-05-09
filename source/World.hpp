@@ -73,11 +73,7 @@ namespace GTA
 		static property Camera ^RenderingCamera
 		{
 			Camera ^get();
-		}
-		static property bool IsScriptCameraRendering
-		{
-			bool get();
-			void set(bool isScriptCameraRendering);
+			void set(Camera ^renderingCamera);
 		}
 		static void DestroyAllCameras();
 

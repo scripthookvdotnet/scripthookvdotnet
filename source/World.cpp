@@ -200,13 +200,17 @@ namespace GTA
 
 		return gcnew Camera(id);
 	}
-	bool World::IsScriptCameraRendering::get()
+	void World::RenderingCamera::set(Camera ^renderingCamera)
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM) > 0;
-	}
-	void World::IsScriptCameraRendering::set(bool isScriptCameraRendering)
-	{
-		Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, isScriptCameraRendering, 0, 3000, 1, 0);
+		if (renderingCamera == nullptr)
+		{
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
+		}
+		else
+		{
+			renderingCamera->IsActive = true;
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
+		}
 	}
 	void World::DestroyAllCameras()
 	{
