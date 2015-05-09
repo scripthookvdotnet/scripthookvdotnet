@@ -277,6 +277,30 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_SHUT, this->ID, static_cast<int>(door), closeInstantly);
 	}
+	void Vehicle::FixWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::FIX_VEHICLE_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::SmashWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::SMASH_VEHICLE_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::RollUpWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::ROLL_UP_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::RollDownWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::ROLL_DOWN_WINDOW, this->ID, static_cast<int>(window));
+	}
+	void Vehicle::RollDownWindows()
+	{
+		Native::Function::Call(Native::Hash::ROLL_DOWN_WINDOWS, this->ID);
+	}
+	void Vehicle::RemoveWindow(VehicleWindow window)
+	{
+		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->ID, static_cast<int>(window));
+	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->ID, static_cast<int>(seat));

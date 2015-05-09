@@ -242,6 +242,13 @@ namespace GTA
 		Trunk = 5,
 		Trunk2 = 6,
 	};
+	public enum class VehicleWindow
+	{
+		FrontRightWindow = 1,
+		FrontLeftWindow = 0,
+		BackRightWindow = 3,
+		BackLeftWindow = 2
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -418,6 +425,12 @@ namespace GTA
 		void ClearCustomSecondaryColor();
 		void OpenDoor(VehicleDoor door, bool loose, bool openInstantly);
 		void CloseDoor(VehicleDoor door, bool closeInstantly);
+		void FixWindow(VehicleWindow window);
+		void SmashWindow(VehicleWindow window);
+		void RollUpWindow(VehicleWindow window);
+		void RollDownWindow(VehicleWindow window);
+		void RollDownWindows();
+		void RemoveWindow(VehicleWindow window);
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 
 		void Repair();
