@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: Build No. {build}
 configuration: Release
 platform: x64
 install:
@@ -18,7 +18,8 @@ artifacts:
   name: ScriptHookVDotNet
 deploy:
 - provider: GitHub
-  release: ScriptHookVDotNet v$(appveyor_build_version)
+  tag: $(appveyor_repo_tag_name)
+  release: ScriptHookVDotNet $(appveyor_repo_tag_name)
   auth_token:
     secure: yXWwz+eBEafzOqCBMb7z/gvhR9eZ5YZuCgwtvZ6UiCyA8tWabAEjQadromc7f7vM
   artifact: ScriptHookVDotNet
