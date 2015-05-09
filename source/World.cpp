@@ -2,6 +2,7 @@
 #include "Native.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Camera.hpp"
 
 namespace GTA
 {
@@ -177,5 +178,38 @@ namespace GTA
 	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
 		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->ID, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+
+	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
+	{
+		int id = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+		if (id <= 0)
+		{
+			return nullptr;
+		}
+		return gcnew Camera(id);
+	}
+	Camera ^World::RenderingCamera::get()
+	{
+		int id = Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM);
+
+		if (id <= 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Camera(id);
+	}
+	bool World::IsScriptCameraRendering::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM) > 0;
+	}
+	void World::IsScriptCameraRendering::set(bool isScriptCameraRendering)
+	{
+		Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, isScriptCameraRendering, 0, 3000, 1, 0);
+	}
+	void World::DestroyAllCameras()
+	{
+		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
 	}
 }
