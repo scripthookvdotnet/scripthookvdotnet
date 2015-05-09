@@ -310,4 +310,8 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_SKY_DIVE, this->mPed->ID);
 	}
+	void Tasks::ReactAndFlee(Ped ^target)
+	{
+		Native::Function::Call(Native::Hash::TASK_REACT_AND_FLEE_PED, this->mPed->ID, target->ID);
+	}
 }

@@ -77,6 +77,7 @@ namespace GTA
 		void WarpIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 		void WarpOutOfVehicle(Vehicle ^vehicle);
 		void SkyDive();
+		void ReactAndFlee(Ped ^target);
 
 		void ClearAll();
 		void ClearAllImmediately();
