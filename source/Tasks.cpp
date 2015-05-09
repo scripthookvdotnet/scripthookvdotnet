@@ -306,4 +306,8 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_SECONDARY_TASK, this->mPed->ID);
 	}
+	void Tasks::SkyDive()
+	{
+		Native::Function::Call(Native::Hash::TASK_SKY_DIVE, this->mPed->ID);
+	}
 }

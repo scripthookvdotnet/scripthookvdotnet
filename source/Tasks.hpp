@@ -76,6 +76,7 @@ namespace GTA
 		void WanderAround(Math::Vector3 position, float radius);
 		void WarpIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 		void WarpOutOfVehicle(Vehicle ^vehicle);
+		void SkyDive();
 
 		void ClearAll();
 		void ClearAllImmediately();
