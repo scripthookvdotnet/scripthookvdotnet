@@ -73,10 +73,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_OUT, time);
 	}
-	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
-	{
-		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
-	}
 	System::String ^Game::GetUserInput(int maxLength)
 	{
 		return GetUserInput("", maxLength);
@@ -87,5 +83,17 @@ namespace GTA
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 			Script::Wait(0);
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
+	}
+	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
+	{
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
+	}
+	void Game::PlayMusic(System::String ^musicFile)
+	{
+		Native::Function::Call(Native::Hash::TRIGGER_MUSIC_EVENT, musicFile);
+	}
+	void Game::StopMusic(System::String ^musicFile)
+	{
+		Native::Function::Call(Native::Hash::CANCEL_MUSIC_EVENT, musicFile); //needs a general Game.StopMusic()
 	}
 }

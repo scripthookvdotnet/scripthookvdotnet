@@ -169,7 +169,10 @@ namespace GTA
 	{
 		return !System::Object::ReferenceEquals(entity, nullptr) && this->ID == entity->ID;
 	}
-
+	float Entity::GetDistanceTo(Math::Vector3 coordinate)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, this->Position.X, this->Position.Y, this->Position.Z, coordinate.X, coordinate.Y, coordinate.Z, 1);
+	}
 	int Entity::GetHashCode()
 	{
 		return this->ID;

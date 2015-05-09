@@ -173,4 +173,8 @@ namespace GTA
 	{
 		Health = -1;
 	}
+	float Ped::GetDistanceTo(Math::Vector3 coordinate)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, this->Position.X, this->Position.Y, this->Position.Z, coordinate.X, coordinate.Y, coordinate.Z, 1);
+	}
 }

@@ -150,6 +150,8 @@ namespace GTA
 		bool IsSittingInVehicle();
 		bool IsSittingInVehicle(Vehicle ^vehicle);
 
+		float GetDistanceTo(Math::Vector3 coordinate);
+
 		void Kill();
 
 	private:

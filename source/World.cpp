@@ -174,4 +174,8 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->ID, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
+	float World::GetDistance(Math::Vector3 origin, Math::Vector3 destination)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
+	}
 }

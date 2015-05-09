@@ -66,5 +66,7 @@ namespace GTA
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+
+		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 	};
 }
