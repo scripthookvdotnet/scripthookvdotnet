@@ -13,8 +13,5 @@ namespace GTA
 		{
 			Prop ^get();
 		}
-
-	private:
-		int mID;
 	};
 }
