@@ -36,7 +36,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ScriptHookVDotNetExample.cs" />
+    <Compile Include="DrawMenu.cs" />
+    <Compile Include="ExitVehicle.cs" />
+    <Compile Include="IndicatorControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ScriptHookVDotNet.vcxproj">

@@ -60,11 +60,17 @@
     <ClCompile Include="source\Player.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Tasks.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Vehicle.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UI.cpp">
+      <Filter>Scripting\UI</Filter>
     </ClCompile>
     <ClCompile Include="source\UIContainer.cpp">
       <Filter>Scripting\UI</Filter>
@@ -75,7 +81,10 @@
     <ClCompile Include="source\UIText.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
-    <ClCompile Include="source\Tasks.cpp">
+    <ClCompile Include="source\Camera.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameplayCamera.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\MenuItem.cpp">
@@ -122,10 +131,16 @@
     <ClInclude Include="source\Vector3.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="source\Camera.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Entity.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Game.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GameplayCamera.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Model.hpp">
@@ -138,6 +153,9 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Player.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Tasks.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Vehicle.hpp">
@@ -163,9 +181,6 @@
     </ClInclude>
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Tasks.hpp">
-      <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\MenuItem.hpp">
       <Filter>Scripting\UI</Filter>

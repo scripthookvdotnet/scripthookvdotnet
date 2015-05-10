@@ -1,10 +1,10 @@
 #include "UIRectangle.hpp"
 #include "Native.hpp"
-#include "Viewport.hpp"
+#include "UI.hpp"
 
 namespace GTA
 {
-	UIRectangle::UIRectangle() : mEnabled(true), mColor(System::Drawing::Color::Transparent), mLocation(0, 0), mSize(Viewport::WIDTH, Viewport::HEIGHT)
+	UIRectangle::UIRectangle() : mEnabled(true), mColor(System::Drawing::Color::Transparent), mLocation(0, 0), mSize(UI::WIDTH, UI::HEIGHT)
 	{
 	}
 	UIRectangle::UIRectangle(System::Drawing::Point location, System::Drawing::Size size) : mEnabled(true), mColor(System::Drawing::Color::Transparent), mLocation(location), mSize(size)
@@ -58,10 +58,10 @@ namespace GTA
 			return;
 		}
 
-		const float w = static_cast<float>(this->mSize.Width) / Viewport::WIDTH;
-		const float h = static_cast<float>(this->mSize.Height) / Viewport::HEIGHT;
-		const float x = ((static_cast<float>(this->mLocation.X) + xMod) / Viewport::WIDTH) + w * 0.5f;
-		const float y = ((static_cast<float>(this->mLocation.Y) + yMod) / Viewport::HEIGHT) + h * 0.5f;
+		const float w = static_cast<float>(this->mSize.Width) / UI::WIDTH;
+		const float h = static_cast<float>(this->mSize.Height) / UI::HEIGHT;
+		const float x = ((static_cast<float>(this->mLocation.X) + xMod) / UI::WIDTH) + w * 0.5f;
+		const float y = ((static_cast<float>(this->mLocation.Y) + yMod) / UI::HEIGHT) + h * 0.5f;
 
 		Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, this->mColor.R, this->mColor.G, this->mColor.B, this->mColor.A);
 	}

@@ -2,14 +2,13 @@
 #include "Native.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Camera.hpp"
 
 namespace GTA
 {
 	void World::Weather::set(GTA::Weather value)
 	{
-		array<System::String ^> ^names = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
-
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, names[static_cast<int>(value)]);
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
 	System::DateTime World::CurrentDate::get()
 	{
@@ -120,10 +119,13 @@ namespace GTA
 
 		return result->ToArray();
 	}
-
 	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
 	{
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_CLOSEST_VEHICLE, position.X, position.Y, position.Z, radius, 0, 70); // Last parameter still unknown.
+	}
+	float World::GetDistance(Math::Vector3 origin, Math::Vector3 destination)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 	}
 
 	Ped ^World::CreatePed(Model model, Math::Vector3 position)
@@ -165,5 +167,53 @@ namespace GTA
 		}
 
 		return gcnew Vehicle(id);
+	}
+
+	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
+	{
+		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
+	{
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->ID, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+
+	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
+	{
+		int id = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+
+		if (id <= 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Camera(id);
+	}
+	Camera ^World::RenderingCamera::get()
+	{
+		int id = Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM);
+
+		if (id <= 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Camera(id);
+	}
+	void World::RenderingCamera::set(Camera ^renderingCamera)
+	{
+		if (renderingCamera == nullptr)
+		{
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
+		}
+		else
+		{
+			renderingCamera->IsActive = true;
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
+		}
+	}
+	void World::DestroyAllCameras()
+	{
+		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
 	}
 }

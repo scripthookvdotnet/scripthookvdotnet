@@ -35,7 +35,7 @@ namespace GTA
 		}
 
 		static ScriptDomain ^Load(System::String ^path);
-		static void Unload(ScriptDomain ^domain);
+		static void Unload(ScriptDomain ^%domain);
 
 		property System::String ^Name
 		{

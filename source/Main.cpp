@@ -14,56 +14,73 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "NativeCaller.h"
+#include "Main.h"
 #include "ScriptDomain.hpp"
 
-ref struct ScriptGlobals
+ref struct ScriptHook
 {
 	static GTA::ScriptDomain ^Domain = nullptr;
 };
 
-void ScriptMain()
+bool ManagedInit()
 {
-	while (true)
+	if (!System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
-		ScriptGlobals::Domain = GTA::ScriptDomain::Load(System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
+		GTA::ScriptDomain::Unload(ScriptHook::Domain);
+	}
 
-		if (System::Object::ReferenceEquals(ScriptGlobals::Domain, nullptr))
+	ScriptHook::Domain = GTA::ScriptDomain::Load(System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
+
+	if (!System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	{
+		ScriptHook::Domain->Start();
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+bool ManagedTick()
+{
+	if (GetAsyncKeyState(VK_INSERT) & 0x8000)
+	{
+		return false;
+	}
+
+	ScriptHook::Domain->DoTick();
+
+	return true;
+}
+void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
+{
+	if (System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	{
+		return;
+	}
+
+	ScriptHook::Domain->DoKeyboardMessage(static_cast<System::Windows::Forms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
+}
+
+#pragma unmanaged
+
+#include <Windows.h>
+
+void ScriptMainLoop()
+{
+	while (ManagedInit())
+	{
+		while (ManagedTick())
 		{
-			return;
-		}
-
-		ScriptGlobals::Domain->Start();
-
-		while (true)
-		{
-			if (GetAsyncKeyState(VK_INSERT) & 0x8000)
-			{
-				GTA::ScriptDomain::Unload(ScriptGlobals::Domain);
-
-				ScriptGlobals::Domain = nullptr;
-				break;
-			}
-
-			ScriptGlobals::Domain->DoTick();
-
 			scriptWait(0);
 		}
 	}
 }
 void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
-	if (key >= 255 || System::Object::ReferenceEquals(ScriptGlobals::Domain, nullptr))
-	{
-		return;
-	}
-
-	ScriptGlobals::Domain->DoKeyboardMessage(static_cast<System::Windows::Forms::Keys>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_MENU) & 0x8000) != 0, isWithAlt != FALSE);
+	ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_MENU) & 0x8000) != 0, isWithAlt != FALSE);
 }
-
-#pragma unmanaged
-
-#include <Windows.h>
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 {
@@ -71,11 +88,11 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	{
 		case DLL_PROCESS_ATTACH:
 			DisableThreadLibraryCalls(hModule);
-			scriptRegister(hModule, &ScriptMain);
+			scriptRegister(hModule, &ScriptMainLoop);
 			keyboardHandlerRegister(&ScriptKeyboardMessage);
 			break;
 		case DLL_PROCESS_DETACH:
-			scriptUnregister(&ScriptMain);
+			scriptUnregister(&ScriptMainLoop);
 			keyboardHandlerUnregister(&ScriptKeyboardMessage);
 			break;
 	}

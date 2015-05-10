@@ -48,6 +48,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsAiming
+		{
+			bool get();
+		}
 		property bool IsOnMission
 		{
 			bool get();

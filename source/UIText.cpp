@@ -1,6 +1,6 @@
 #include "UIText.hpp"
 #include "Native.hpp"
-#include "Viewport.hpp"
+#include "UI.hpp"
 
 namespace GTA
 {
@@ -76,8 +76,8 @@ namespace GTA
 			return;
 		}
 
-		const float x = (static_cast<float>(this->mLocation.X) + xMod) / Viewport::WIDTH;
-		const float y = (static_cast<float>(this->mLocation.Y) + yMod) / Viewport::HEIGHT;
+		const float x = (static_cast<float>(this->mLocation.X) + xMod) / UI::WIDTH;
+		const float y = (static_cast<float>(this->mLocation.Y) + yMod) / UI::HEIGHT;
 
 		Native::Function::Call(Native::Hash::SET_TEXT_FONT, this->mFont);
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, this->mSize, this->mSize);
