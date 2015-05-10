@@ -92,16 +92,16 @@ namespace GTA
 			{
 				if (mEaseDirection)
 				{
-					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 2));
-					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 2));
+					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 2) + MenuPosition.X);
+					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 2) + MenuPosition.Y);
 
 					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX + mEaseOffset.X), (int)(baseOffsetY + mEaseOffset.Y));
 					menu->Draw(offset);
 				}
 				else
 				{
-					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i));
-					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i));
+					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i) + MenuPosition.X);
+					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i) + MenuPosition.Y);
 
 					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX - mEaseOffset.X), (int)(baseOffsetY - mEaseOffset.Y));
 					menu->Draw(offset);
@@ -115,8 +115,8 @@ namespace GTA
 				}
 				else
 				{
-					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 1));
-					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 1));
+					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 1) + MenuPosition.X);
+					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 1) + MenuPosition.Y);
 
 					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX), (int)(baseOffsetY));
 					menu->Draw(offset);

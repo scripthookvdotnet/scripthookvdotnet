@@ -62,11 +62,11 @@ namespace GTA
 
 	void Menu::Initialize()
 	{
-		int currentY = HeaderHeight + Position.Y;
+		int currentY = HeaderHeight;
 		System::Drawing::Size itemSize = System::Drawing::Size(Width, ItemHeight);
 		for each (MenuItem ^item in mItems)
 		{
-			item->SetOriginAndSize(System::Drawing::Point(Position.X, currentY), itemSize);
+			item->SetOriginAndSize(System::Drawing::Point(0, currentY), itemSize);
 			currentY += ItemHeight;
 		}
 		mSelectedIndex = 0;
@@ -74,20 +74,20 @@ namespace GTA
 		mItems[mSelectedIndex]->Select();
 
 		int itemsHeight = mItems->Count * ItemHeight;
-		mHeaderRect = gcnew UIRectangle(Position,
+		mHeaderRect = gcnew UIRectangle(System::Drawing::Point(),
 			System::Drawing::Size(Width, HeaderHeight), HeaderColor);
-		if (HasFooter) mFooterRect = gcnew UIRectangle(System::Drawing::Point(Position.X, Position.Y + HeaderHeight + itemsHeight),
+		if (HasFooter) mFooterRect = gcnew UIRectangle(System::Drawing::Point(0, HeaderHeight + itemsHeight),
 			System::Drawing::Size(Width, FooterHeight), FooterColor);
 
 		mHeaderText = gcnew UIText(Caption,
-			HeaderCentered ? System::Drawing::Point(Position.X + Width / 2, Position.Y) : Position,
+			HeaderCentered ? System::Drawing::Point(Width / 2, 0) : System::Drawing::Point(),
 			HeaderTextScale,
 			HeaderTextColor,
 			HeaderFont,
 			HeaderCentered);
 
 		if (HasFooter) mFooterText = gcnew UIText(mFooterDescription,
-			FooterCentered ? System::Drawing::Point(Position.X + Width / 2, Position.Y + HeaderHeight + itemsHeight) : System::Drawing::Point(Position.X, Position.Y + HeaderHeight + itemsHeight),
+			FooterCentered ? System::Drawing::Point(Width / 2, HeaderHeight + itemsHeight) : System::Drawing::Point(0, HeaderHeight + itemsHeight),
 			FooterTextScale,
 			FooterTextColor,
 			FooterFont,
@@ -121,7 +121,7 @@ namespace GTA
 		//Update footer
 		int itemsHeight = mItems->Count * ItemHeight;
 		if (HasFooter) mFooterText = gcnew UIText(mFooterDescription,
-			FooterCentered ? System::Drawing::Point(Position.X + Width / 2, Position.Y + HeaderHeight + itemsHeight) : System::Drawing::Point(Position.X, Position.Y + HeaderHeight + itemsHeight),
+			FooterCentered ? System::Drawing::Point(Width / 2, HeaderHeight + itemsHeight) : System::Drawing::Point(0, HeaderHeight + itemsHeight),
 			FooterTextScale,
 			FooterTextColor,
 			FooterFont,

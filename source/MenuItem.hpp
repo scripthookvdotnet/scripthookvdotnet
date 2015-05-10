@@ -54,14 +54,45 @@ namespace GTA
 		virtual void Activate();
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
-		virtual System::String ^GetDescription();
-		
+
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
 
 	private:
 		System::Action ^mActivationAction;
+
+		UIRectangle ^mButton = nullptr;
+		UIText ^mText = nullptr;
+
+		System::Drawing::Point mOrigin = System::Drawing::Point();
+		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
+	};
+
+	public ref class MenuToggle : MenuItem {
+	public:
+		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction);
+
+	public:
+		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
+		virtual void Select();
+		virtual void Deselect();
+		virtual void Activate();
+		virtual void Change(bool right);
+		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
+
+		virtual property MenuBase ^Parent;
+		virtual property System::String ^Caption;
+		virtual property System::String ^Description;
+
+	private:
+		System::Action ^mActivationAction;
+		System::Action ^mDeactivationAction;
+
+		bool mToggleSelection = false;
+
+		void ChangeSelection();
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
