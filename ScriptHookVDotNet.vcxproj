@@ -109,6 +109,7 @@
     <ClCompile Include="source\Vector3.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
     <ClCompile Include="source\World.cpp" />
+    <ClCompile Include="source\Streaming.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Camera.hpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="source\VehicleHashes.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
+    <ClInclude Include="source\Streaming.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
