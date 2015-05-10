@@ -10,35 +10,36 @@ namespace GTA
 	interface class MenuItem;
 	ref class Viewport;
 
-	public interface class MenuBase
+	public ref class MenuBase
 	{
+	public:
 		/** Draws the menu */
-		void Draw();
+		virtual void Draw() { }
 
 		//Drawing with an offset implies that this menu is not the active one
 		/** Draws the menu with an offset */
-		void Draw(System::Drawing::Point offset);
+		virtual void Draw(System::Drawing::Point offset) { }
 
 		/** Called when the menu is first added to the Viewport */
-		void Initialize();
+		virtual void Initialize() { }
 
 		/** Called when the menu gains or regains focus */
-		void OnOpen();
+		virtual void OnOpen() { }
 
 		/** Called when the user hits the back button or unfocuses from this menu */
-		void OnClose();
+		virtual void OnClose() { }
 
 		/** Called when the user hits the activate button */
-		void OnActivate();
+		virtual void OnActivate() { }
 
 		/** Called when the user changes what element is selected (i.e. up and down) */
-		void OnChangeSelection(bool down);
+		virtual void OnChangeSelection(bool down) { }
 
 		/** Called when the user changes the current element (i.e. left and right) */
-		void OnChangeItem(bool right);
+		virtual void OnChangeItem(bool right) { }
 
+	public:
 		property Viewport ^Parent;
-
 		property System::Drawing::Color HeaderColor;
 		property System::Drawing::Color HeaderTextColor;
 		property int HeaderFont;
@@ -66,39 +67,16 @@ namespace GTA
 		Menu(System::String ^headerCaption, array<MenuItem ^> ^items);
 
 	public:
-		virtual void Draw();
-		virtual void Draw(System::Drawing::Point offset);
-		virtual void Initialize();
-		virtual void OnOpen();
-		virtual void OnClose();
-		virtual void OnActivate();
-		virtual void OnChangeSelection(bool down);
-		virtual void OnChangeItem(bool right);
+		virtual void Draw() override;
+		virtual void Draw(System::Drawing::Point offset) override;
+		virtual void Initialize() override;
+		virtual void OnOpen() override;
+		virtual void OnClose() override;
+		virtual void OnActivate() override;
+		virtual void OnChangeSelection(bool down) override;
+		virtual void OnChangeItem(bool right) override;
 
 	public:
-		virtual property Viewport ^Parent;
-
-		virtual property System::Drawing::Color HeaderColor;
-		virtual property System::Drawing::Color HeaderTextColor;
-		virtual property int HeaderFont;
-		virtual property float HeaderTextScale;
-		virtual property bool HeaderCentered;
-		virtual property System::Drawing::Color FooterColor;		
-		virtual property System::Drawing::Color FooterTextColor;
-		virtual property int FooterFont;
-		virtual property float FooterTextScale;
-		virtual property bool FooterCentered;
-		virtual property System::Drawing::Color SelectedItemColor;
-		virtual property System::Drawing::Color UnselectedItemColor;
-		virtual property System::Drawing::Color SelectedTextColor;
-		virtual property System::Drawing::Color UnselectedTextColor;
-		virtual property int ItemFont;
-		virtual property float ItemTextScale;
-		virtual property bool ItemTextCentered;
-
-		virtual property System::String ^Caption;
-		virtual property System::Drawing::Point Position;
-
 		property int Width;
 		property int HeaderHeight;
 		property int FooterHeight;
@@ -119,38 +97,16 @@ namespace GTA
 		MessageBox(System::String ^headerCaption, System::Action ^yesAction, System::Action ^noAction);
 
 	public:
-		virtual void Draw();
-		virtual void Draw(System::Drawing::Point offset);
-		virtual void Initialize();
-		virtual void OnOpen();
-		virtual void OnClose();
-		virtual void OnActivate();
-		virtual void OnChangeSelection(bool down);
-		virtual void OnChangeItem(bool right);
+		virtual void Draw() override;
+		virtual void Draw(System::Drawing::Point offset) override;
+		virtual void Initialize() override;
+		virtual void OnOpen() override;
+		virtual void OnClose() override;
+		virtual void OnActivate() override;
+		virtual void OnChangeSelection(bool down) override;
+		virtual void OnChangeItem(bool right) override;
 
 	public:
-		virtual property Viewport ^Parent;
-
-		virtual property System::Drawing::Color HeaderColor;
-		virtual property System::Drawing::Color HeaderTextColor;
-		virtual property int HeaderFont;
-		virtual property float HeaderTextScale;
-		virtual property bool HeaderCentered;
-		virtual property System::Drawing::Color FooterColor;		
-		virtual property System::Drawing::Color FooterTextColor;
-		virtual property int FooterFont;
-		virtual property float FooterTextScale;
-		virtual property bool FooterCentered;
-		virtual property System::Drawing::Color SelectedItemColor;
-		virtual property System::Drawing::Color UnselectedItemColor;
-		virtual property System::Drawing::Color SelectedTextColor;
-		virtual property System::Drawing::Color UnselectedTextColor;
-		virtual property int ItemFont;
-		virtual property float ItemTextScale;
-		virtual property bool ItemTextCentered;
-		virtual property System::String ^Caption;
-		virtual property System::Drawing::Point Position;
-
 		property int Width;
 		property int Height;
 		property int ButtonHeight;

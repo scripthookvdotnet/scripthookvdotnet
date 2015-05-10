@@ -2,7 +2,7 @@
 
 namespace GTA
 {
-	interface class MenuBase;
+	ref class MenuBase;
 
 	/**
 	 * Static class that handles the active UIs and menus

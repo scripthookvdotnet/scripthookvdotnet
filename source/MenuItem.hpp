@@ -6,7 +6,7 @@
 
 namespace GTA
 {
-	interface class MenuBase;
+	ref class MenuBase;
 
 	public interface class MenuItem
 	{
