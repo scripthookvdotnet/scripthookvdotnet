@@ -22,7 +22,8 @@ public class MenuScripts : Script
                 }),
                 new MenuButton("Frobnicate biscuits", "Frobnicates at least \n2 biscuits", () => {}),
                 new MenuToggle("Webscale", "Cool things", () => {}, () => {}),
-                new MenuNumericScroller("Scroller", "Scrolls", (d) => {}, (d) => {}, -10, 10, 0.5)
+                new MenuNumericScroller("Scroller", "Scrolls", (d) => {}, (d) => {}, -10, 10, 0.5),
+                new MenuEnumScroller("Difficulty", "The difficulty of \n the game", (i) => {}, (i) => {}, new string[] {"Easy", "Normal", "Hard", "Demon"})
             });
 
         KeyDown += OnKeyDown;

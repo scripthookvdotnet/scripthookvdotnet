@@ -1,3 +1,5 @@
+//Modeled after Nacorpio's GUI library
+
 #pragma once
 
 #include "UIRectangle.hpp"
@@ -69,7 +71,8 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuToggle : MenuItem {
+	public ref class MenuToggle : MenuItem
+	{
 	public:
 		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction);
 
@@ -101,7 +104,8 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 	
-	public ref class MenuNumericScroller : MenuItem {
+	public ref class MenuNumericScroller : MenuItem
+	{
 	public:
 		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc);
 
@@ -128,6 +132,40 @@ namespace GTA
 		System::Action<double> ^mActivateAction;
 
 		property int TimesIncrement;
+
+		void UpdateText();
+
+		UIRectangle ^mButton = nullptr;
+		UIText ^mText = nullptr;
+
+		System::Drawing::Point mOrigin = System::Drawing::Point();
+		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
+	};
+
+	public ref class MenuEnumScroller : MenuItem
+	{
+	public:
+		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries);
+
+	public:
+		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
+		virtual void Select();
+		virtual void Deselect();
+		virtual void Activate();
+		virtual void Change(bool right);
+		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
+
+		virtual property MenuBase ^Parent;
+		virtual property System::String ^Caption;
+		virtual property System::String ^Description;
+
+	private:
+		System::Action<int> ^mChangeAction;
+		System::Action<int> ^mActivateAction;
+
+		int mSelectedIndex;
+		array<System::String ^> ^mEntries;
 
 		void UpdateText();
 

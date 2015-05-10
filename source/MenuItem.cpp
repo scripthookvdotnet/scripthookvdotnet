@@ -1,3 +1,5 @@
+//Modeled after Nacorpio's GUI library
+
 #include "MenuItem.hpp"
 
 namespace GTA
@@ -198,5 +200,67 @@ namespace GTA
 		else if (DecimalFigures == 0) NumberString = ((int)Number).ToString();
 		else NumberString = Number.ToString("F" + DecimalFigures);
 		mText->Text = Caption + " <" + NumberString + ">";
+	}
+
+	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries)
+	{
+		this->Caption = caption;
+		this->Description = description;
+		this->mChangeAction = changeAction;
+		this->mActivateAction = activateAction;
+		mSelectedIndex = 0;
+		mEntries = entries;
+	}
+
+	void MenuEnumScroller::Draw()
+	{
+		Draw(System::Drawing::Point());
+	}
+
+	void MenuEnumScroller::Draw(System::Drawing::Point offset)
+	{
+		if (mButton == nullptr || mText == nullptr) return;
+		mButton->Draw(offset.X, offset.Y);
+		mText->Draw(offset.X, offset.Y);
+	}
+	
+	void MenuEnumScroller::Select()
+	{
+		if (mButton == nullptr) return;
+		mButton->Color = Parent->SelectedItemColor;
+		mText->Color = Parent->SelectedTextColor;
+	}
+
+	void MenuEnumScroller::Deselect()
+	{
+		if (mButton == nullptr) return;
+		mButton->Color = Parent->UnselectedItemColor;
+		mText->Color = Parent->UnselectedTextColor;
+	}
+
+	void MenuEnumScroller::Activate()
+	{
+		mActivateAction(mSelectedIndex);
+	}
+
+	void MenuEnumScroller::Change(bool right)
+	{
+		if (right) mSelectedIndex++;
+		else mSelectedIndex--;
+		mSelectedIndex %= mEntries->Length;
+		mChangeAction(mSelectedIndex);
+		UpdateText();
+	}
+
+	void MenuEnumScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
+	{
+		mButton = gcnew UIRectangle(origin, size, Parent->UnselectedItemColor);
+		mText = gcnew UIText("", Parent->ItemTextCentered ? System::Drawing::Point(origin.X + size.Width / 2, origin.Y) : origin, Parent->ItemTextScale, Parent->UnselectedTextColor, Parent->ItemFont, Parent->ItemTextCentered);
+		UpdateText();
+	}
+
+	void MenuEnumScroller::UpdateText()
+	{
+		mText->Text = Caption + " <" + mEntries[mSelectedIndex] + ">";
 	}
 }
