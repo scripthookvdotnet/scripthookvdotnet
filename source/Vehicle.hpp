@@ -86,7 +86,7 @@ namespace GTA
 		UtilMidnightBlue = 76,
 		UtilBlue = 77,
 		UtilSeaFoamBlue = 78,
-		UilLightningBlue = 79,
+		UtilLightningBlue = 79,
 		UtilMauiBluePoly = 80,
 		UtilBrightBlue = 81,
 		MatteDarkBlue = 82,
