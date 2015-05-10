@@ -76,7 +76,11 @@ namespace GTA
 		{
 			Vehicle ^get();
 		}
-
+		property int Money
+		{
+			int get();
+			void set(int value);
+		}
 		property bool IgnoredByEveryone
 		{
 			void set(bool value);
@@ -101,6 +105,7 @@ namespace GTA
 		}
 		bool IsTargetting(Entity ^entity);
 		Entity ^GetTargetedEntity();
+
 
 		virtual bool Equals(Player ^player);
 
