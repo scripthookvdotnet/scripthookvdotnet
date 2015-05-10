@@ -153,6 +153,10 @@ namespace GTA
 
 		property int Width;
 		property int Height;
+		property int ButtonHeight;
+
+		/** Use Ok and Cancel instead of Yes and No */
+		property bool OkCancel;
 
 	private:
 		UIRectangle ^mBodyRect = nullptr, ^mYesRect = nullptr, ^mNoRect = nullptr;

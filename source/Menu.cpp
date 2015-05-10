@@ -153,6 +153,8 @@ namespace GTA
 
 		Width = 200;
 		Height = 50;
+		ButtonHeight = 30;
+		OkCancel = false;
 	}
 
 	void MessageBox::Draw()
@@ -174,10 +176,10 @@ namespace GTA
 	{
 		mBodyRect = gcnew UIRectangle(Position, System::Drawing::Size(Width, Height), HeaderColor);
 		mText = gcnew UIText(Caption, HeaderCentered ? System::Drawing::Point(Position.X + Width / 2, Position.Y) : Position, HeaderTextScale, HeaderTextColor, HeaderFont, HeaderCentered);
-		mYesRect = gcnew UIRectangle(System::Drawing::Point(Position.X, Height + Position.Y), System::Drawing::Size(Width / 2, Height), UnselectedItemColor);
-		mNoRect = gcnew UIRectangle(System::Drawing::Point(Position.X + Width / 2, Height + Position.Y), System::Drawing::Size(Width / 2, Height), UnselectedItemColor);
-		mYesText = gcnew UIText("Yes", System::Drawing::Point(Position.X + Width / 4, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
-		mNoText = gcnew UIText("No", System::Drawing::Point(Position.X + Width / 4 * 3, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+		mYesRect = gcnew UIRectangle(System::Drawing::Point(Position.X, Height + Position.Y), System::Drawing::Size(Width / 2, ButtonHeight), UnselectedItemColor);
+		mNoRect = gcnew UIRectangle(System::Drawing::Point(Position.X + Width / 2, Height + Position.Y), System::Drawing::Size(Width / 2, ButtonHeight), UnselectedItemColor);
+		mYesText = gcnew UIText(OkCancel ? "OK" : "Yes", System::Drawing::Point(Position.X + Width / 4, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+		mNoText = gcnew UIText(OkCancel ? "Cancel" : "No", System::Drawing::Point(Position.X + Width / 4 * 3, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
 	}
 
 	void MessageBox::OnOpen()
