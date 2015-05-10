@@ -130,4 +130,73 @@ namespace GTA
 			mDeactivationAction->Invoke();
 		}
 	}
+	
+	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc)
+	{
+		this->Caption = caption;
+		this->Description = description;
+		this->mChangeAction = changeAction;
+		this->mActivateAction = activateAction;
+		Min = min;
+		Max = max;
+		Increment = inc;
+		DecimalFigures = -1;
+	}
+
+	void MenuNumericScroller::Draw()
+	{
+		Draw(System::Drawing::Point());
+	}
+
+	void MenuNumericScroller::Draw(System::Drawing::Point offset)
+	{
+		if (mButton == nullptr || mText == nullptr) return;
+		mButton->Draw(offset.X, offset.Y);
+		mText->Draw(offset.X, offset.Y);
+	}
+	
+	void MenuNumericScroller::Select()
+	{
+		if (mButton == nullptr) return;
+		mButton->Color = Parent->SelectedItemColor;
+		mText->Color = Parent->SelectedTextColor;
+	}
+
+	void MenuNumericScroller::Deselect()
+	{
+		if (mButton == nullptr) return;
+		mButton->Color = Parent->UnselectedItemColor;
+		mText->Color = Parent->UnselectedTextColor;
+	}
+
+	void MenuNumericScroller::Activate()
+	{
+		mActivateAction(Min + Increment * (double)TimesIncrement);
+	}
+
+	void MenuNumericScroller::Change(bool right)
+	{
+		if (right) TimesIncrement++;
+		else TimesIncrement--;
+		if (TimesIncrement < 0) TimesIncrement = 0;
+		if (TimesIncrement > (int)((Max - Min) / Increment)) TimesIncrement = (int)((Max - Min) / Increment);
+		UpdateText();
+	}
+
+	void MenuNumericScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
+	{
+		mButton = gcnew UIRectangle(origin, size, Parent->UnselectedItemColor);
+		mText = gcnew UIText("", Parent->ItemTextCentered ? System::Drawing::Point(origin.X + size.Width / 2, origin.Y) : origin, Parent->ItemTextScale, Parent->UnselectedTextColor, Parent->ItemFont, Parent->ItemTextCentered);
+		UpdateText();
+	}
+
+	void MenuNumericScroller::UpdateText()
+	{
+		double Number = Min + Increment * (double)TimesIncrement;
+		System::String ^NumberString = "";
+		if (DecimalFigures == -1) NumberString = Number.ToString();
+		else if (DecimalFigures == 0) NumberString = ((int)Number).ToString();
+		else NumberString = Number.ToString("F" + DecimalFigures);
+		mText->Text = Caption + " <" + NumberString + ">";
+	}
 }

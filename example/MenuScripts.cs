@@ -21,8 +21,8 @@ public class MenuScripts : Script
                     }));
                 }),
                 new MenuButton("Frobnicate biscuits", "Frobnicates at least \n2 biscuits", () => {}),
-                new MenuButton("Something", "I don't know", () => {}),
-                new MenuToggle("Webscale", "Cool things", () => {}, () => {})
+                new MenuToggle("Webscale", "Cool things", () => {}, () => {}),
+                new MenuNumericScroller("Scroller", "Scrolls", (d) => {}, (d) => {}, -10, 10, 0.5)
             });
 
         KeyDown += OnKeyDown;

@@ -192,9 +192,9 @@ namespace GTA
 
 	void MessageBox::OnActivate()
 	{
-		Parent->PopMenu();
 		if (mSelection) mYesAction->Invoke();
 		else mNoAction->Invoke();
+		Parent->PopMenu();
 	}
 
 	void MessageBox::OnChangeSelection(bool _A)

@@ -100,4 +100,41 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
+	
+	public ref class MenuNumericScroller : MenuItem {
+	public:
+		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc);
+
+	public:
+		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
+		virtual void Select();
+		virtual void Deselect();
+		virtual void Activate();
+		virtual void Change(bool right);
+		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
+
+		virtual property MenuBase ^Parent;
+		virtual property System::String ^Caption;
+		virtual property System::String ^Description;
+		
+		property double Min;
+		property double Max;
+		property double Increment;
+		property int DecimalFigures;
+
+	private:
+		System::Action<double> ^mChangeAction;
+		System::Action<double> ^mActivateAction;
+
+		property int TimesIncrement;
+
+		void UpdateText();
+
+		UIRectangle ^mButton = nullptr;
+		UIText ^mText = nullptr;
+
+		System::Drawing::Point mOrigin = System::Drawing::Point();
+		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
+	};
 }
