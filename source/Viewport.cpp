@@ -70,9 +70,9 @@ namespace GTA
 				mEaseTime = 1.0f;
 				mIsEasing = false;
 			}
-			float varOffsetX = EaseOut(mEaseTime, 1.0f, 0.0f, MenuOffset.X);
-			float varOffsetY = EaseOut(mEaseTime, 1.0f, 0.0f, MenuOffset.Y);
-			mEaseOffset = System::Drawing::Point(varOffsetX, varOffsetY);
+			float varOffsetX = EaseOut(mEaseTime, 1.0f, 0.0f, (float)MenuOffset.X);
+			float varOffsetY = EaseOut(mEaseTime, 1.0f, 0.0f, (float)MenuOffset.Y);
+			mEaseOffset = System::Drawing::Point((int)varOffsetX, (int)varOffsetY);
 		}
 		else
 		{
@@ -92,16 +92,16 @@ namespace GTA
 			{
 				if (mEaseDirection)
 				{
-					float baseOffsetX = MenuOffset.X * (menuCount - i - 2);
-					float baseOffsetY = MenuOffset.Y * (menuCount - i - 2);
+					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 2));
+					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 2));
 
 					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX + mEaseOffset.X), (int)(baseOffsetY + mEaseOffset.Y));
 					menu->Draw(offset);
 				}
 				else
 				{
-					float baseOffsetX = MenuOffset.X * (menuCount - i);
-					float baseOffsetY = MenuOffset.Y * (menuCount - i);
+					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i));
+					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i));
 
 					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX - mEaseOffset.X), (int)(baseOffsetY - mEaseOffset.Y));
 					menu->Draw(offset);
@@ -115,8 +115,8 @@ namespace GTA
 				}
 				else
 				{
-					float baseOffsetX = MenuOffset.X * (menuCount - i - 1);
-					float baseOffsetY = MenuOffset.Y * (menuCount - i - 1);
+					float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 1));
+					float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 1));
 
 					System::Drawing::Point offset = System::Drawing::Point((int)(baseOffsetX), (int)(baseOffsetY));
 					menu->Draw(offset);
