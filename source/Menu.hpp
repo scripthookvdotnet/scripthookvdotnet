@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Viewport.hpp"
 #include "UIRectangle.hpp"
 #include "UIText.hpp"
 #include "MenuItem.hpp"
@@ -7,6 +8,7 @@
 namespace GTA
 {
 	interface class MenuItem;
+	ref class Viewport;
 
 	public interface class MenuBase
 	{
@@ -34,6 +36,8 @@ namespace GTA
 
 		/** Called when the user changes the current element (i.e. left and right) */
 		void OnChangeItem(bool right);
+
+		property Viewport ^Parent;
 
 		property System::Drawing::Color HeaderColor;
 		property System::Drawing::Color HeaderTextColor;
@@ -72,6 +76,8 @@ namespace GTA
 		virtual void OnChangeItem(bool right);
 
 	public:
+		virtual property Viewport ^Parent;
+
 		virtual property System::Drawing::Color HeaderColor;
 		virtual property System::Drawing::Color HeaderTextColor;
 		virtual property int HeaderFont;
@@ -123,6 +129,8 @@ namespace GTA
 		virtual void OnChangeItem(bool right);
 
 	public:
+		virtual property Viewport ^Parent;
+
 		virtual property System::Drawing::Color HeaderColor;
 		virtual property System::Drawing::Color HeaderTextColor;
 		virtual property int HeaderFont;

@@ -1,5 +1,6 @@
 #include "Viewport.hpp"
 #include "Game.hpp"
+#include "Menu.hpp"
 
 namespace GTA
 {

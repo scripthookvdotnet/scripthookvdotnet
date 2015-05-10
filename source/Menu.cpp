@@ -163,15 +163,17 @@ namespace GTA
 	void MessageBox::Draw(System::Drawing::Point offset)
 	{
 		mBodyRect->Draw(offset.X, offset.Y);
+		mText->Draw(offset.X, offset.Y);
 		mYesRect->Draw(offset.X, offset.Y);
 		mNoRect->Draw(offset.X, offset.Y);
 		mYesText->Draw(offset.X, offset.Y);
-		mNoRect->Draw(offset.X, offset.Y);
+		mNoText->Draw(offset.X, offset.Y);
 	}
 
 	void MessageBox::Initialize()
 	{
 		mBodyRect = gcnew UIRectangle(Position, System::Drawing::Size(Width, Height), HeaderColor);
+		mText = gcnew UIText(Caption, HeaderCentered ? System::Drawing::Point(Position.X + Width / 2, Position.Y) : Position, HeaderTextScale, HeaderTextColor, HeaderFont, HeaderCentered);
 		mYesRect = gcnew UIRectangle(System::Drawing::Point(Position.X, Height + Position.Y), System::Drawing::Size(Width / 2, Height), UnselectedItemColor);
 		mNoRect = gcnew UIRectangle(System::Drawing::Point(Position.X + Width / 2, Height + Position.Y), System::Drawing::Size(Width / 2, Height), UnselectedItemColor);
 		mYesText = gcnew UIText("Yes", System::Drawing::Point(Position.X + Width / 4, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
@@ -188,6 +190,7 @@ namespace GTA
 
 	void MessageBox::OnActivate()
 	{
+		Parent->PopMenu();
 		if (mSelection) mYesAction->Invoke();
 		else mNoAction->Invoke();
 	}

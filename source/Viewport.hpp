@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Menu.hpp"
-
 namespace GTA
 {
+	interface class MenuBase;
+
 	/**
 	 * Static class that handles the active UIs and menus
 	 */
