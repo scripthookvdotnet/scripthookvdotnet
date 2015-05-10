@@ -306,4 +306,16 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_SECONDARY_TASK, this->mPed->ID);
 	}
+	void Tasks::SkyDive()
+	{
+		Native::Function::Call(Native::Hash::TASK_SKY_DIVE, this->mPed->ID);
+	}
+	void Tasks::ReactAndFlee(Ped ^target)
+	{
+		Native::Function::Call(Native::Hash::TASK_REACT_AND_FLEE_PED, this->mPed->ID, target->ID);
+	}
+	void Tasks::PlayAnimation(System::String ^animSet, System::String ^animationName, float speed, int loop, bool lastAnimation, float playbackRate)
+	{
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, this->mPed->ID, animSet, animationName, speed, -8.0f, loop, lastAnimation, playbackRate, 0, 0, 0);
+	}
 }

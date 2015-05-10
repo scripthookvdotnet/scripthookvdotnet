@@ -151,6 +151,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_PLAY_GESTURE_ANIMS, this->ID, value);
 	}
+	bool Ped::IsWalking::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_WALKING, this->ID);
+	}
+	bool Ped::IsRunning::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_RUNNING, this->ID);
+	}
+	bool Ped::IsSprinting::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_SPRINTING, this->ID);
+	}
 
 	bool Ped::IsInVehicle()
 	{

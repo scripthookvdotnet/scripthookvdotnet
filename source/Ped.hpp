@@ -144,6 +144,18 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool IsWalking
+		{
+			bool get();
+		}
+		property bool IsRunning
+		{
+			bool get();
+		}
+		property bool IsSprinting
+		{
+			bool get();
+		}
 
 		bool IsInVehicle();
 		bool IsInVehicle(Vehicle ^vehicle);

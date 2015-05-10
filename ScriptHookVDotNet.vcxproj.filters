@@ -102,7 +102,9 @@
     <ClCompile Include="source\Viewport.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
-  </ItemGroup>
+    <ClCompile Include="source\Streaming.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
       <Filter>Core</Filter>
@@ -202,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="source\Viewport.hpp">
       <Filter>Scripting\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Streaming.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
