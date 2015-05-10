@@ -94,7 +94,6 @@
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\Menu.cpp" />
     <ClCompile Include="source\MenuItem.cpp" />
-    <ClCompile Include="source\MenuScript.cpp" />
     <ClCompile Include="source\Model.cpp" />
     <ClCompile Include="source\Native.cpp" />
     <ClCompile Include="source\Ped.cpp" />
@@ -123,7 +122,6 @@
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Menu.hpp" />
     <ClInclude Include="source\MenuItem.hpp" />
-    <ClInclude Include="source\MenuScript.hpp" />
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />
     <ClInclude Include="source\NativeHashes.hpp" />

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "Viewport.hpp"
+
 namespace GTA
 {
 	ref class ScriptDomain;
@@ -32,6 +34,15 @@ namespace GTA
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
+
+		System::Windows::Forms::Keys ActivateKey = System::Windows::Forms::Keys::NumPad5;
+		System::Windows::Forms::Keys BackKey = System::Windows::Forms::Keys::NumPad0;
+		System::Windows::Forms::Keys LeftKey = System::Windows::Forms::Keys::NumPad4;
+		System::Windows::Forms::Keys RightKey = System::Windows::Forms::Keys::NumPad6;
+		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
+		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
+
+		Viewport ^View;
 
 		property System::String ^Name
 		{
@@ -67,6 +78,9 @@ namespace GTA
 		}
 
 	internal:
+		void UpdateViewport(Object ^Sender, System::EventArgs ^Args);
+		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
+
 		inline void RaiseTick(System::Object ^sender)
 		{
 			Tick(sender, System::EventArgs::Empty);

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using GTA;
 using GTA.Native;
 
-public class MenuScripts : MenuScript
+public class MenuScripts : Script
 {
     GTA.Menu MyReallyCoolMenu;
 

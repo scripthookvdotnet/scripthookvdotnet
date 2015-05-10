@@ -23,6 +23,9 @@ namespace GTA
 	Script::Script()
 	{
 		Interval = 0;
+		View = gcnew Viewport();
+		Tick += gcnew System::EventHandler(this, &GTA::Script::UpdateViewport);
+		KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &GTA::Script::HandleViewportInput);
 	}
 
 	void Script::Wait(int ms)
@@ -64,5 +67,21 @@ namespace GTA
 	void Script::Abort()
 	{
 		this->mScriptDomain->AbortScript(this);
+	}
+	
+	void Script::UpdateViewport(Object ^sender, System::EventArgs ^e)
+	{
+		View->Draw();
+	}
+	
+	void Script::HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e)
+	{
+		if (e->KeyCode == ActivateKey) View->HandleActivate();
+		else if (e->KeyCode == BackKey) View->HandleBack();
+		else if (e->KeyCode == LeftKey) View->HandleChangeItem(false);
+		else if (e->KeyCode == RightKey) View->HandleChangeItem(true);
+		else if (e->KeyCode == UpKey) View->HandleChangeSelection(false);
+		else if (e->KeyCode == DownKey) View->HandleChangeSelection(true);
+		}
 	}
 }
