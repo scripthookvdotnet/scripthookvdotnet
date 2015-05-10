@@ -93,6 +93,8 @@
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
+    <ClCompile Include="source\Menu.cpp" />
+    <ClCompile Include="source\MenuItem.cpp" />
     <ClCompile Include="source\Model.cpp" />
     <ClCompile Include="source\Native.cpp" />
     <ClCompile Include="source\Ped.cpp" />
@@ -110,6 +112,7 @@
     <ClCompile Include="source\Vector2.cpp" />
     <ClCompile Include="source\Vector3.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
+    <ClCompile Include="source\Viewport.cpp" />
     <ClCompile Include="source\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +123,8 @@
     <ClInclude Include="source\GameplayCamera.hpp" />
     <ClInclude Include="source\Log.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
+    <ClInclude Include="source\Menu.hpp" />
+    <ClInclude Include="source\MenuItem.hpp" />
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />
     <ClInclude Include="source\NativeHashes.hpp" />
@@ -141,6 +146,7 @@
     <ClInclude Include="source\Vector3.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />
     <ClInclude Include="source\VehicleHashes.hpp" />
+    <ClInclude Include="source\Viewport.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
   </ItemGroup>
