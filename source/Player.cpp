@@ -81,7 +81,21 @@ namespace GTA
 	{
 		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_PLAYERS_LAST_VEHICLE));
 	}
-
+	int Player::Money::get()
+	{
+		int hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP0_TOTAL_CASH");
+		int val;
+		Native::Function::Call(Native::Hash::STAT_GET_INT, hash, &val, -1);
+		return val;
+	}
+	void Player::Money::set(int value)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			int hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP" + i + "_TOTAL_CASH");
+			Native::Function::Call(Native::Hash::STAT_SET_INT, hash, value, 1);
+		}
+	}
 	void Player::IgnoredByEveryone::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_EVERYONE_IGNORE_PLAYER, this->ID, value);
@@ -133,12 +147,10 @@ namespace GTA
 
 		return nullptr;
 	}
-
 	bool Player::Equals(Player ^player)
 	{
 		return !System::Object::ReferenceEquals(player, nullptr) && this->ID == player->ID;
 	}
-
 	int Player::GetHashCode()
 	{
 		return this->ID;

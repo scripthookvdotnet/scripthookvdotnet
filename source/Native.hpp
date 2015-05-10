@@ -24,6 +24,8 @@ namespace GTA
 	ref class Ped;
 	ref class Player;
 	ref class Vehicle;
+	ref class Blip;
+	ref class Prop;
 
 	namespace Native
 	{
@@ -41,6 +43,8 @@ namespace GTA
 			InputArgument(Ped ^object);
 			InputArgument(Player ^object);
 			InputArgument(Vehicle ^object);
+			InputArgument(Blip ^object);
+			InputArgument(Prop ^object);
 
 			static inline operator InputArgument ^ (bool value)
 			{
@@ -87,6 +91,14 @@ namespace GTA
 				return gcnew InputArgument(object);
 			}
 			static inline operator InputArgument ^ (Vehicle ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Blip ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Prop ^object)
 			{
 				return gcnew InputArgument(object);
 			}
