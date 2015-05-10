@@ -82,6 +82,5 @@ namespace GTA
 		else if (e->KeyCode == RightKey) View->HandleChangeItem(true);
 		else if (e->KeyCode == UpKey) View->HandleChangeSelection(false);
 		else if (e->KeyCode == DownKey) View->HandleChangeSelection(true);
-		}
 	}
 }
