@@ -73,12 +73,11 @@ namespace GTA
 		static property Camera ^RenderingCamera
 		{
 			Camera ^get();
-		}
-		static property bool IsScriptCameraRendering
-		{
-			bool get();
-			void set(bool isScriptCameraRendering);
+			void set(Camera ^renderingCamera);
 		}
 		static void DestroyAllCameras();
+
+	internal:
+		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
 	};
 }

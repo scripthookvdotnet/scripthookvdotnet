@@ -8,9 +8,7 @@ namespace GTA
 {
 	void World::Weather::set(GTA::Weather value)
 	{
-		array<System::String ^> ^names = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
-
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, names[static_cast<int>(value)]);
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
 	System::DateTime World::CurrentDate::get()
 	{
@@ -183,10 +181,12 @@ namespace GTA
 	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
 	{
 		int id = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+
 		if (id <= 0)
 		{
 			return nullptr;
 		}
+
 		return gcnew Camera(id);
 	}
 	Camera ^World::RenderingCamera::get()
@@ -200,13 +200,17 @@ namespace GTA
 
 		return gcnew Camera(id);
 	}
-	bool World::IsScriptCameraRendering::get()
+	void World::RenderingCamera::set(Camera ^renderingCamera)
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM) > 0;
-	}
-	void World::IsScriptCameraRendering::set(bool isScriptCameraRendering)
-	{
-		Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, isScriptCameraRendering, 0, 3000, 1, 0);
+		if (renderingCamera == nullptr)
+		{
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
+		}
+		else
+		{
+			renderingCamera->IsActive = true;
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
+		}
 	}
 	void World::DestroyAllCameras()
 	{

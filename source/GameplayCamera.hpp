@@ -61,6 +61,5 @@ namespace GTA
 
 		static void ClampYaw(float min, float max);
 		static void ClampPitch(float min, float max);
-
 	};
 }

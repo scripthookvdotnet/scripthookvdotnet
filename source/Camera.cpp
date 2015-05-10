@@ -1,7 +1,6 @@
 #include "Camera.hpp"
-#include "Native.hpp"
 #include "Ped.hpp"
-#include "CameraShake.hpp"
+#include "Native.hpp"
 
 namespace GTA
 {
@@ -96,7 +95,7 @@ namespace GTA
 
 		if (this->IsShaking)
 		{
-			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, Camera::GetShakeName(this->ShakeType), this->ShakeAmplitude);
+			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, sShakeNames[static_cast<int>(this->ShakeType)], this->ShakeAmplitude);
 		}
 	}
 	float Camera::ShakeAmplitude::get()
@@ -116,7 +115,7 @@ namespace GTA
 	{
 		if (isShaking)
 		{
-			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, Camera::GetShakeName(this->ShakeType), this->ShakeAmplitude);
+			Native::Function::Call(Native::Hash::SHAKE_CAM, this->ID, sShakeNames[static_cast<int>(this->ShakeType)], this->ShakeAmplitude);
 		}
 		else
 		{
@@ -159,20 +158,16 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::POINT_CAM_AT_ENTITY, this->ID, target->ID, offset.X, offset.Y, offset.Z, true);
 	}
-	void Camera::PointAt(Ped^ target, int boneIndex)
+	void Camera::PointAt(Ped ^target, int boneIndex)
 	{
 		Native::Function::Call(Native::Hash::POINT_CAM_AT_PED_BONE, this->ID, target->ID, boneIndex, 0.0f, 0.0f, 0.0f, true);
 	}
-	void Camera::PointAt(Ped^ target, int boneIndex, Math::Vector3 offset)
+	void Camera::PointAt(Ped ^target, int boneIndex, Math::Vector3 offset)
 	{
 		Native::Function::Call(Native::Hash::POINT_CAM_AT_PED_BONE, this->ID, target->ID, boneIndex, offset.X, offset.Y, offset.Z, true);
 	}
 	void Camera::StopPointing()
 	{
 		Native::Function::Call(Native::Hash::STOP_CAM_POINTING, this->ID);
-	}
-	System::String ^Camera::GetShakeName(CameraShake shake)
-	{
-		return Camera::mShakeNames[static_cast<int>(shake)];
 	}
 }

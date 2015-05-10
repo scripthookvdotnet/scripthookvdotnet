@@ -174,4 +174,9 @@ namespace GTA
 	{
 		return this->ID;
 	}
+
+	Blip ^Entity::AddBlip()
+	{
+		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->ID));
+	}
 }

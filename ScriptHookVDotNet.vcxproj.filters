@@ -87,10 +87,15 @@
     <ClCompile Include="source\GameplayCamera.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\Streaming.cpp">
+    <ClCompile Include="source\Blip.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-  </ItemGroup>
+    <ClCompile Include="source\Prop.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Streaming.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
       <Filter>Core</Filter>
@@ -122,10 +127,16 @@
     <ClInclude Include="source\Vector3.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="source\Camera.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Entity.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Game.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GameplayCamera.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Model.hpp">
@@ -170,13 +181,10 @@
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
-    <ClInclude Include="source\Camera.hpp">
+    <ClInclude Include="source\Blip.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\CameraShake.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\GameplayCamera.hpp">
+    <ClInclude Include="source\Prop.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Streaming.hpp">
