@@ -153,7 +153,7 @@ namespace GTA
 		HunterGreen = 144,
 		MetallicPurple = 145,
 		MetaillicVDarkBlue = 146,
-		MODSHOPBLACK1 = 147,
+		ModshopBlack1 = 147,
 		MattePurple = 148,
 		MatteDarkPurple = 149,
 		MetallicLavaRed = 150,
@@ -162,7 +162,7 @@ namespace GTA
 		MatteDesertBrown = 153,
 		MatteDesertTan = 154,
 		MatteFoliageGreen = 155,
-		DEFAULTALLOYCOLOR = 156,
+		DefaultAlloyColor = 156,
 		EpsilonBlue = 157,
 	};
 	public enum class VehicleDoor
