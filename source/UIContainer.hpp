@@ -1,29 +1,20 @@
 #pragma once
 
-#include "UI.hpp"
 #include "UIElement.hpp"
 #include "UIRectangle.hpp"
 
 namespace GTA
 {
-	public ref class UIContainer : UIElement, UIRectangle
+	public ref class UIContainer : public UIRectangle
 	{
-
 	public:
 		UIContainer();
-		UIContainer(System::Drawing::Point location, System::Drawing::Size size);
-		UIContainer(System::Drawing::Point location, System::Drawing::Size size, System::Drawing::Color color);
+		UIContainer(System::Drawing::Point position, System::Drawing::Size size);
+		UIContainer(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color);
 
-		property System::Collections::Generic::List<UIElement ^> ^Items
-		{
-			System::Collections::Generic::List<UIElement ^> ^get();
-			void set(System::Collections::Generic::List<UIElement ^> ^value);
-		}
+		property System::Collections::Generic::List<UIElement ^> ^Items;
 
 		virtual void Draw() override;
-		virtual void Draw(int xMod, int yMod) override;
-			
-	private:
-		System::Collections::Generic::List<UIElement ^> ^mItems;
+		virtual void Draw(System::Drawing::Size offset) override;
 	};
 }

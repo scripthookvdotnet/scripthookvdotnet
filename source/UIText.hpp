@@ -1,61 +1,25 @@
 #pragma once
 
-#include "UI.hpp"
 #include "UIElement.hpp"
 
 namespace GTA
 {
-	public ref class UIText : UIElement
+	public ref class UIText : public UIElement
 	{
 	public:
-		UIText(System::String ^text, System::Drawing::Point location, float size, System::Drawing::Color color, int font, bool centered);
+		UIText(System::String ^caption, System::Drawing::Point position, float scale);
+		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color);
+		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, int font, bool centered);
 
-		virtual property bool Enabled
-		{
-			void set(bool value);
-			bool get();
-		}
-		virtual property System::Drawing::Color Color
-		{
-			void set(System::Drawing::Color value);
-			System::Drawing::Color get();
-		}
-		virtual property System::Drawing::Point Location
-		{
-			void set(System::Drawing::Point value);
-			System::Drawing::Point get();
-		}
-		property System::String ^Text
-		{
-			void set(System::String ^value);
-			System::String ^get();
-		}
-		property int Font
-		{
-			void set(int value);
-			int get();
-		}
-		property float Size
-		{
-			void set(float value);
-			float get();
-		}
-		property bool Centered
-		{
-			void set(bool value);
-			bool get();
-		}
+		virtual property bool Enabled;
+		virtual property System::Drawing::Point Position;
+		virtual property System::Drawing::Color Color;
+		property System::String ^Caption;
+		property int Font;
+		property float Scale;
+		property bool Centered;
 
 		virtual void Draw();
-		virtual void Draw(int xMod, int yMod);
-
-	private:
-		bool mEnabled;
-		System::Drawing::Color mColor;
-		System::Drawing::Point mLocation;
-		System::String ^mText;
-		int mFont;
-		float mSize;
-		bool mCentered;
+		virtual void Draw(System::Drawing::Size offset);
 	};
 }

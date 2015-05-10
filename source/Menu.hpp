@@ -18,7 +18,7 @@ namespace GTA
 
 		//Drawing with an offset implies that this menu is not the active one
 		/** Draws the menu with an offset */
-		virtual void Draw(System::Drawing::Point offset) { }
+		virtual void Draw(System::Drawing::Size offset) { }
 
 		/** Called when the menu is first added to the Viewport */
 		virtual void Initialize() { }
@@ -68,7 +68,7 @@ namespace GTA
 
 	public:
 		virtual void Draw() override;
-		virtual void Draw(System::Drawing::Point offset) override;
+		virtual void Draw(System::Drawing::Size offset) override;
 		virtual void Initialize() override;
 		virtual void OnOpen() override;
 		virtual void OnClose() override;
@@ -98,7 +98,7 @@ namespace GTA
 
 	public:
 		virtual void Draw() override;
-		virtual void Draw(System::Drawing::Point offset) override;
+		virtual void Draw(System::Drawing::Size offset) override;
 		virtual void Initialize() override;
 		virtual void OnOpen() override;
 		virtual void OnClose() override;
