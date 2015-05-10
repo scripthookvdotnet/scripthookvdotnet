@@ -216,4 +216,27 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
 	}
+
+	Blip ^World::CreateBlip(Math::Vector3 position)
+	{
+		const int id = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
+
+		if (id == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Blip(id);
+	}
+	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
+	{
+		const int id = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
+
+		if (id == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Blip(id);
+	}
 }

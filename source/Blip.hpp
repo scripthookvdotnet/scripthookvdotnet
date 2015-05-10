@@ -4,6 +4,15 @@
 
 namespace GTA
 {
+	public enum class BlipColor
+	{
+		White = 0,
+		Red = 1,
+		Green = 2,
+		Blue = 3,
+		Yellow = 66,
+	};
+
 	public ref class Blip sealed
 	{
 	public:
@@ -17,6 +26,25 @@ namespace GTA
 		{
 			Math::Vector3 get(); // Vector3 GET_BLIP_INFO_ID_COORD(Any p0) // 0xB7374A66
 			void set(Math::Vector3 value); // void SET_BLIP_COORDS(Any p0, Any p1, Any p2, Any p3) // 0x680A34D4
+		}
+		property float Scale
+		{
+			void set(float scale); // void SET_BLIP_SCALE(int BlipID, float Scale) // 0x1E6EC434
+		}
+		property bool IsFlashing
+		{
+			bool get(); // void SET_BLIP_FLASHES(Any p0, Any p1) // 0xC0047F15
+			void set(bool value); // BOOL IS_BLIP_FLASHING(Any p0) // 0x52E111D7
+		}
+		property BlipColor Color
+		{
+			BlipColor get(); // Any GET_BLIP_COLOUR(Any p0) // 0xDD6A1E54
+			void set(BlipColor color); // void SET_BLIP_COLOUR(int BlipID, int Color) // 0xBB3C5A41
+		}
+		property int Alpha
+		{
+			int get(); // Any GET_BLIP_ALPHA(Any p0) // 0x297AF6C8
+			void set(int alpha); // void SET_BLIP_ALPHA(Any p0, Any p1) // 0xA791FCCD
 		}
 
 		bool Exists(); // BOOL DOES_BLIP_EXIST(Any p0) // 0xAE92DD96
@@ -45,8 +73,6 @@ namespace GTA
 		// Any ADD_BLIP_FOR_COORD(float x, float y, float z) // 0xC6F43D0E
 		// void SET_BLIP_SPRITE(Object blip, int spriteId) // 0x8DBBB0B9
 		// Any GET_BLIP_SPRITE(Any p0) // 0x72FF2E73
-		// void SET_BLIP_ALPHA(Any p0, Any p1) // 0xA791FCCD
-		// Any GET_BLIP_ALPHA(Any p0) // 0x297AF6C8
 		// BOOL DOES_PED_HAVE_AI_BLIP(Any p0) // 0x3BE1257F
 	private:
 		int mID;
