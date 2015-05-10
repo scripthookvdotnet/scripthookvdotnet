@@ -8,6 +8,7 @@ namespace GTA
 	ref class Ped;
 	ref class Vehicle;
 	ref class Camera;
+	ref class Blip;
 
 	public enum class Weather
 	{
@@ -76,6 +77,9 @@ namespace GTA
 			void set(Camera ^renderingCamera);
 		}
 		static void DestroyAllCameras();
+
+		static Blip ^CreateBlip(Math::Vector3 position);
+		static Blip ^CreateBlip(Math::Vector3 position, float radius);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
