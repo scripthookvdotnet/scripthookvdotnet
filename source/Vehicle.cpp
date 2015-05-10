@@ -184,7 +184,7 @@ namespace GTA
 	}
 	void Vehicle::LightsOn::set(bool value)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHTS, this->ID, value);
+		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHTS, this->ID, value ? 3 : 4);
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{
