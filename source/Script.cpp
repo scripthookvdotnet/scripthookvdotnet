@@ -44,7 +44,16 @@ namespace GTA
 	{
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			this->mSettings = ScriptSettings::Load(System::IO::Path::ChangeExtension(this->mFilename, "ini"));
+			System::String ^path = System::IO::Path::ChangeExtension(this->mFilename, "ini");
+
+			if (System::IO::File::Exists(path))
+			{
+				this->mSettings = ScriptSettings::Load(path);
+			}
+			else
+			{
+				this->mSettings = gcnew ScriptSettings();
+			}
 		}
 
 		return this->mSettings;
