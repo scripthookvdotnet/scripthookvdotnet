@@ -7,16 +7,6 @@ namespace GTA
 
 	public ref class TaskSequence sealed
 	{
-	private:
-		int seqHandle;
-		int tasksCount = 0;
-		bool hasNullPed = false;
-		bool isClosed = false;
-
-
-		void CreateNullPed();
-		static Ped ^nullPed;
-
 	public:
 		TaskSequence();
 		TaskSequence(int handle);
@@ -26,19 +16,24 @@ namespace GTA
 		{
 			int get();
 		}
-		property Tasks ^AddTask
+		property int Count
 		{
-			Tasks ^get();
+			int get();
 		}
 		property bool IsClosed
 		{
 			bool get();
 		}
-		property int TasksCount
+		property Tasks ^AddTask
 		{
-			int get();
+			Tasks ^get();
 		}
 
-		void CloseSequence();
+		void Close();
+
+	private:
+		static Ped ^sNullPed;
+		int mHandle, mCount;
+		bool mIsClosed;
 	};
 }

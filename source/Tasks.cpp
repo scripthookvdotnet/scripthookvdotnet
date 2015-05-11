@@ -180,6 +180,19 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_VEHICLE_PARK, this->mPed->ID, vehicle->ID, position.X, position.Y, position.Z, heading, 1, 0.0f, false);
 	}
+	void Tasks::PerformSequence(TaskSequence ^sequence)
+	{
+		if (!sequence->IsClosed)
+		{
+			sequence->Close();
+		}
+
+		ClearAll();
+
+		this->mPed->BlockPermanentEvents = true;
+
+		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, this->mPed->ID, sequence->Handle);
+	}
 	void Tasks::PutAwayMobilePhone()
 	{
 		Native::Function::Call(Native::Hash::TASK_USE_MOBILE_PHONE, this->mPed->ID, false);
@@ -187,6 +200,10 @@ namespace GTA
 	void Tasks::PutAwayParachute()
 	{
 		Native::Function::Call(Native::Hash::TASK_PARACHUTE, this->mPed->ID, false);
+	}
+	void Tasks::ReactAndFlee(Ped ^target)
+	{
+		Native::Function::Call(Native::Hash::TASK_REACT_AND_FLEE_PED, this->mPed->ID, target->ID);
 	}
 	void Tasks::ReloadWeapon()
 	{
@@ -230,6 +247,10 @@ namespace GTA
 	void Tasks::ShuffleToNextVehicleSeat(Vehicle ^vehicle)
 	{
 		Native::Function::Call(Native::Hash::TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, this->mPed->ID, vehicle->ID);
+	}
+	void Tasks::Skydive()
+	{
+		Native::Function::Call(Native::Hash::TASK_SKY_DIVE, this->mPed->ID);
 	}
 	void Tasks::StandStill(int duration)
 	{
@@ -306,23 +327,5 @@ namespace GTA
 	void Tasks::ClearSecondary()
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_SECONDARY_TASK, this->mPed->ID);
-	}
-	void Tasks::SkyDive()
-	{
-		Native::Function::Call(Native::Hash::TASK_SKY_DIVE, this->mPed->ID);
-	}
-	void Tasks::ReactAndFlee(Ped ^target)
-	{
-		Native::Function::Call(Native::Hash::TASK_REACT_AND_FLEE_PED, this->mPed->ID, target->ID);
-	}
-	void Tasks::PerformSequence(TaskSequence ^sequence)
-	{
-		if (!sequence->IsClosed)
-		{
-			sequence->CloseSequence();
-		}
-		Native::Function::Call(Native::Hash::CLEAR_PED_TASKS, this->mPed->ID);
-		this->mPed->BlockPermanentEvents = true;
-		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, this->mPed->ID, sequence->Handle);
 	}
 }

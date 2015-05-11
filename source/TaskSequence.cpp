@@ -1,66 +1,63 @@
 #include "TaskSequence.hpp"
-#include "Native.hpp"
 #include "Ped.hpp"
+#include "Native.hpp"
 
 namespace GTA
 {
-	TaskSequence::TaskSequence()
+	TaskSequence::TaskSequence() : mHandle(0), mCount(0), mIsClosed(false)
 	{
-		int task = 0;
-		Native::Function::Call(Native::Hash::OPEN_SEQUENCE_TASK, &task);
-		this->seqHandle = task;
-		this->CreateNullPed();
+		Native::Function::Call(Native::Hash::OPEN_SEQUENCE_TASK, &this->mHandle);
+
+		if (System::Object::ReferenceEquals(sNullPed, nullptr))
+		{
+			sNullPed = gcnew Ped(0);
+		}
 	}
-	TaskSequence::TaskSequence(int handle)
+	TaskSequence::TaskSequence(int handle) : mHandle(handle), mCount(0), mIsClosed(false)
 	{
-		this->seqHandle = handle;
-		this->CreateNullPed();
+		if (System::Object::ReferenceEquals(sNullPed, nullptr))
+		{
+			sNullPed = gcnew Ped(0);
+		}
 	}
 	TaskSequence::~TaskSequence()
 	{
-		Native::Function::Call(Native::Hash::CLEAR_SEQUENCE_TASK, this->seqHandle);
-	}
-
-	void TaskSequence::CreateNullPed()
-	{
-		if (hasNullPed)
-		{
-			return;
-		}
-		hasNullPed = true;
-		nullPed = gcnew Ped(0);
+		Native::Function::Call(Native::Hash::CLEAR_SEQUENCE_TASK, this->mHandle);
 	}
 
 	int TaskSequence::Handle::get()
 	{
-		return this->seqHandle;
+		return this->mHandle;
 	}
-
-	Tasks ^TaskSequence::AddTask::get()
+	int TaskSequence::Count::get()
 	{
-		if (this->isClosed)
-		{
-			throw gcnew System::Exception("You can't add tasks to a closed sequence!");
-			return nullptr;
-		}
-		this->tasksCount++;
-		return this->nullPed->Task;
+		return this->mCount;
 	}
 	bool TaskSequence::IsClosed::get()
 	{
-		return this->isClosed;
+		return this->mIsClosed;
 	}
-	int TaskSequence::TasksCount::get()
+	Tasks ^TaskSequence::AddTask::get()
 	{
-		return this->tasksCount;
+		if (this->mIsClosed)
+		{
+			throw gcnew System::Exception("You can't add tasks to a closed sequence!");
+		}
+
+		this->mCount++;
+
+		return this->sNullPed->Task;
 	}
 
-	void TaskSequence::CloseSequence()
+	void TaskSequence::Close()
 	{
-		if (!this->isClosed)
+		if (this->mIsClosed)
 		{
-			this->isClosed = true;
-			Native::Function::Call(Native::Hash::CLOSE_SEQUENCE_TASK, this->seqHandle);
+			return;
 		}
+
+		Native::Function::Call(Native::Hash::CLOSE_SEQUENCE_TASK, this->mHandle);
+
+		this->mIsClosed = true;
 	}
 }

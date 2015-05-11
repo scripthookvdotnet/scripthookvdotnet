@@ -51,8 +51,10 @@ namespace GTA
 		void LookAt(Math::Vector3 position, int duration);
 		void ParachuteTo(Math::Vector3 position);
 		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading);
+		void PerformSequence(TaskSequence ^sequence);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
+		void ReactAndFlee(Ped ^target);
 		void ReloadWeapon();
 		void RunTo(Math::Vector3 position);
 		void RunTo(Math::Vector3 position, bool ignorePaths);
@@ -62,6 +64,7 @@ namespace GTA
 		void ShootAt(Math::Vector3 position);
 		void ShootAt(Math::Vector3 position, int duration);
 		void ShuffleToNextVehicleSeat(Vehicle ^vehicle);
+		void Skydive();
 		void StandStill(int duration);
 		void SwapWeapon();
 		void StartScenario(System::String ^name, Math::Vector3 position);
@@ -77,9 +80,6 @@ namespace GTA
 		void WanderAround(Math::Vector3 position, float radius);
 		void WarpIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 		void WarpOutOfVehicle(Vehicle ^vehicle);
-		void SkyDive();
-		void ReactAndFlee(Ped ^target);
-		void PerformSequence(TaskSequence ^sequence);
 
 		void ClearAll();
 		void ClearAllImmediately();
