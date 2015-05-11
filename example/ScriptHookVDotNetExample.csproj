@@ -39,7 +39,7 @@
     <Compile Include="DrawMenu.cs" />
     <Compile Include="ExitVehicle.cs" />
     <Compile Include="IndicatorControl.cs" />
-    <Compile Include="MenuScripts.cs" />
+    <Compile Include="SimpleTrainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ScriptHookVDotNet.vcxproj">
