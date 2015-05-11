@@ -83,18 +83,48 @@ namespace GTA
 	}
 	int Player::Money::get()
 	{
-		int hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP0_TOTAL_CASH");
-		int val;
-		Native::Function::Call(Native::Hash::STAT_GET_INT, hash, &val, -1);
-		return val;
+		int hash = 0;
+
+		switch (static_cast<Native::PedHash>(this->Character->Model.Hash))
+		{
+			case Native::PedHash::Michael:
+				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP0_TOTAL_CASH");
+				break;
+			case Native::PedHash::Franklin:
+				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP1_TOTAL_CASH");
+				break;
+			case Native::PedHash::Trevor:
+				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP2_TOTAL_CASH");
+				break;
+			default:
+				return 0;
+		}
+
+		int value = 0;
+		Native::Function::Call(Native::Hash::STAT_GET_INT, hash, &value, -1);
+
+		return value;
 	}
 	void Player::Money::set(int value)
 	{
-		for (int i = 0; i < 3; i++)
+		int hash = 0;
+
+		switch (static_cast<Native::PedHash>(this->Character->Model.Hash))
 		{
-			int hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP" + i + "_TOTAL_CASH");
-			Native::Function::Call(Native::Hash::STAT_SET_INT, hash, value, 1);
+			case Native::PedHash::Michael:
+				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP0_TOTAL_CASH");
+				break;
+			case Native::PedHash::Franklin:
+				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP1_TOTAL_CASH");
+				break;
+			case Native::PedHash::Trevor:
+				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP2_TOTAL_CASH");
+				break;
+			default:
+				return;
 		}
+
+		Native::Function::Call(Native::Hash::STAT_SET_INT, hash, value, 1);
 	}
 	void Player::IgnoredByEveryone::set(bool value)
 	{
