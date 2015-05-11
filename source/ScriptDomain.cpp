@@ -317,16 +317,23 @@ namespace GTA
 		for each (Script ^script in this->mRunningScripts)
 		{
 			AbortScript(script);
+
+			delete script;
 		}
 
 		this->mScriptTypes->Clear();
 		this->mRunningScripts->Clear();
+
+		GC::Collect();
 	}
 	void ScriptDomain::AbortScript(Script ^script)
 	{
-		script->mRunning = false;
+		if (script->mRunning)
+		{
+			script->mRunning = false;
 
-		Log::Debug("Aborted script '", script->Name, "'.");
+			Log::Debug("Aborted script '", script->Name, "'.");
+		}
 	}
 	void ScriptDomain::Wait(int ms)
 	{

@@ -27,6 +27,9 @@ namespace GTA
 		Tick += gcnew System::EventHandler(this, &GTA::Script::UpdateViewport);
 		KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &GTA::Script::HandleViewportInput);
 	}
+	Script::~Script()
+	{
+	}
 
 	void Script::Wait(int ms)
 	{
