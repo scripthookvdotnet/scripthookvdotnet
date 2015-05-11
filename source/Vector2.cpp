@@ -48,6 +48,10 @@ namespace GTA
 			X *= num;
 			Y *= num;
 		}
+		float Vector2::DistanceTo(Vector2 position)
+		{
+			return (position - *this).Length();
+		}
 
 		Vector2 Vector2::Add(Vector2 left, Vector2 right)
 		{

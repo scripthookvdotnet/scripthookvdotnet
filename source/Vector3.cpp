@@ -50,6 +50,10 @@ namespace GTA
 			Y *= num;
 			Z *= num;
 		}
+		float Vector3::DistanceTo(Vector3 position)
+		{
+			return (position - *this).Length();
+		}
 
 		Vector3 Vector3::Add(Vector3 left, Vector3 right)
 		{
