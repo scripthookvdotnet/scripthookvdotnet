@@ -205,5 +205,9 @@ namespace GTA
 		{
 			return (value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z);
 		}
+
+		float Vector3::DistanceTo(Vector3 position) {
+			return (position - Vector3(X, Y, Z)).Length();
+		}
 	}
 }
