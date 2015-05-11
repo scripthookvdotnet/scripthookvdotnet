@@ -9,6 +9,7 @@ namespace GTA
 	{
 	private:
 		int seqHandle;
+		int tasksCount = 0;
 		bool hasNullPed = false;
 		bool isClosed = false;
 
@@ -32,6 +33,10 @@ namespace GTA
 		property bool IsClosed
 		{
 			bool get();
+		}
+		property int TasksCount
+		{
+			int get();
 		}
 
 		void CloseSequence();

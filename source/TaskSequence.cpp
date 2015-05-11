@@ -43,11 +43,16 @@ namespace GTA
 			throw gcnew System::Exception("You can't add tasks to a closed sequence!");
 			return nullptr;
 		}
+		this->tasksCount++;
 		return this->nullPed->Task;
 	}
 	bool TaskSequence::IsClosed::get()
 	{
 		return this->isClosed;
+	}
+	int TaskSequence::TasksCount::get()
+	{
+		return this->tasksCount;
 	}
 
 	void TaskSequence::CloseSequence()

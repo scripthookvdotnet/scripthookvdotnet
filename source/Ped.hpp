@@ -167,6 +167,10 @@ namespace GTA
 			int get();
 			void set(int group);
 		}
+		property int SequenceProgress
+		{
+			int get();
+		}
 
 		bool IsInVehicle();
 		bool IsInVehicle(Vehicle ^vehicle);

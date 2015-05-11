@@ -193,6 +193,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SITTING_IN_VEHICLE, this->ID, vehicle->ID);
 	}
+	int Ped::SequenceProgress::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_SEQUENCE_PROGRESS, this->ID);
+	}
 
 	void Ped::Kill()
 	{
