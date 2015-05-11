@@ -11,10 +11,19 @@ namespace GTA
 	public:
 		Player(int handle);
 
+		[System::ObsoleteAttribute("ID is deprecated, please use Handle instead.")]
+		property int ID
+		{
+			int get()
+			{
+				return Handle;
+			}
+		}
 		property int Handle
 		{
 			int get();
 		}
+
 		property System::String ^Name
 		{
 			System::String ^get();
