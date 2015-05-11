@@ -36,6 +36,11 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_ROTATION, this->Handle, 0);
 	}
+	void Entity::Rotation::set(Math::Vector3 value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ROTATION, this->Handle, value.X, value.Y, value.Z, 2, 1);
+	}
+	
 	Math::Vector3 Entity::ForwardVector::get()
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_FORWARD_VECTOR, this->Handle);

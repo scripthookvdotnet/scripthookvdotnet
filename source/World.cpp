@@ -2,6 +2,7 @@
 #include "Native.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Prop.hpp"
 #include "Camera.hpp"
 
 namespace GTA
@@ -167,6 +168,31 @@ namespace GTA
 		}
 
 		return gcnew Vehicle(id);
+	}
+	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
+	{
+		if (placeOnGround)
+		{
+			float groundZ;
+			Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &groundZ);
+			position.Z = groundZ;
+		}
+
+		const int id = Native::Function::Call<int>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+
+		if (id == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Prop(id);
+	}
+	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)
+	{
+		Prop^ p = World::CreateProp(model, position, dynamic, placeOnGround);
+		p->Rotation = rotation;
+
+		return p;
 	}
 
 	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)

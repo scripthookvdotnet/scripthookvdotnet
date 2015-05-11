@@ -9,6 +9,7 @@ namespace GTA
 	ref class Vehicle;
 	ref class Camera;
 	ref class Blip;
+	ref class Prop;
 
 	public enum class Weather
 	{
@@ -75,6 +76,8 @@ namespace GTA
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
+		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
+		static Prop ^CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround);
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);

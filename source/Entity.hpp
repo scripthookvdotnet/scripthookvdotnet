@@ -41,6 +41,7 @@ namespace GTA
 		property Math::Vector3 Rotation
 		{
 			Math::Vector3 get();
+			void set(Math::Vector3 value);
 		}
 		property Math::Vector3 ForwardVector
 		{
