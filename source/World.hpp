@@ -32,6 +32,14 @@ namespace GTA
 		Fire = 25,
 		BigFire = 9,
 	};
+	public enum class Relationship {
+		Hate = 5,
+		Dislike = 4,
+		Neutral = 3,
+		Like = 2,
+		Respect = 1,
+		Companion = 0,
+	};
 
 	public ref class World sealed abstract
 	{
@@ -80,6 +88,12 @@ namespace GTA
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
+
+		static int AddRelationShipGroup(System::String ^groupName);
+		static void RemoveRelationShipGroup(int group);
+		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
+		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
+		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
