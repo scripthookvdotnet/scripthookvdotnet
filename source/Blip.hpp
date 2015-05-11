@@ -16,9 +16,9 @@ namespace GTA
 	public ref class Blip sealed
 	{
 	public:
-		Blip(int id);
+		Blip(int handle);
 
-		property int ID
+		property int Handle
 		{
 			int get();
 		}
@@ -75,6 +75,6 @@ namespace GTA
 		// Any GET_BLIP_SPRITE(Any p0) // 0x72FF2E73
 		// BOOL DOES_PED_HAVE_AI_BLIP(Any p0) // 0x3BE1257F
 	private:
-		int mID;
+		int mHandle;
 	};
 }

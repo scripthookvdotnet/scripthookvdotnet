@@ -9,9 +9,9 @@ namespace GTA
 	public ref class Player sealed
 	{
 	public:
-		Player(int id);
+		Player(int handle);
 
-		property int ID
+		property int Handle
 		{
 			int get();
 		}
@@ -125,7 +125,7 @@ namespace GTA
 		}
 
 	private:
-		int mID;
+		int mHandle;
 		Ped ^mPed;
 	};
 }

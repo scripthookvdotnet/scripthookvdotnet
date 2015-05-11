@@ -18,12 +18,7 @@ namespace GTA
 	public ref class Ped sealed : public Entity
 	{
 	public:
-		Ped(int id);
-
-		static property Ped ^Any
-		{
-			Ped ^get();
-		}
+		Ped(int handle);
 
 		property int Accuracy
 		{
@@ -33,6 +28,10 @@ namespace GTA
 		property Tasks ^Task
 		{
 			Tasks ^get();
+		}
+		property int TaskSequenceProgress
+		{
+			int get();
 		}
 		property GTA::Animation ^Animation
 		{
@@ -167,19 +166,14 @@ namespace GTA
 			int get();
 			void set(int group);
 		}
-		property int SequenceProgress
-		{
-			int get();
-		}
 
 		bool IsInVehicle();
 		bool IsInVehicle(Vehicle ^vehicle);
 		bool IsSittingInVehicle();
 		bool IsSittingInVehicle(Vehicle ^vehicle);
+		Relationship GetRelationshipWithPed(Ped ^ped);
 
 		void Kill();
-
-		Relationship GetRelationshipWithPed(Ped ^ped);
 
 	private:
 		Tasks ^mTasks;

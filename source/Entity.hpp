@@ -9,9 +9,9 @@ namespace GTA
 	public ref class Entity abstract
 	{
 	public:
-		Entity(int id);
+		Entity(int handle);
 
-		property int ID
+		property int Handle
 		{
 			int get();
 		}
@@ -138,6 +138,6 @@ namespace GTA
 		}
 
 	private:
-		int mID;
+		int mHandle;
 	};
 }

@@ -11,7 +11,7 @@ namespace GTA
 
 	bool Animation::IsPlaying(System::String ^animSet, System::String ^animName)
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_PLAYING_ANIM, this->mPed->ID, animSet, animName, 3);
+		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_PLAYING_ANIM, this->mPed->Handle, animSet, animName, 3);
 	}
 
 	void Animation::Play(System::String ^animSet, System::String ^animName, float speed, int loop, bool lastAnimation, float playbackRate)
@@ -30,10 +30,10 @@ namespace GTA
 			}
 		}
 
-		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, this->mPed->ID, animSet, animName, speed, -8.0f, loop, lastAnimation, playbackRate, 0, 0, 0);
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, this->mPed->Handle, animSet, animName, speed, -8.0f, loop, lastAnimation, playbackRate, 0, 0, 0);
 	}
 	void Animation::Stop(System::String ^animSet, System::String ^animName)
 	{
-		Native::Function::Call(Native::Hash::STOP_ANIM_TASK, this->mPed->ID, animSet, animName, -4.0f);
+		Native::Function::Call(Native::Hash::STOP_ANIM_TASK, this->mPed->Handle, animSet, animName, -4.0f);
 	}
 }

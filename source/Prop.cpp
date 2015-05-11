@@ -1,14 +1,9 @@
-#include "Native.hpp"
 #include "Prop.hpp"
+#include "Native.hpp"
 
 namespace GTA
 {
-	Prop::Prop(int id) : Entity(id)
+	Prop::Prop(int handle) : Entity(handle)
 	{
-	}
-
-	Prop ^Prop::Any::get()
-	{
-		return gcnew Prop(0);
 	}
 }

@@ -4,9 +4,12 @@
 
 namespace GTA
 {
-	TaskSequence::TaskSequence() : mHandle(0), mCount(0), mIsClosed(false)
+	TaskSequence::TaskSequence() : mCount(0), mIsClosed(false)
 	{
-		Native::Function::Call(Native::Hash::OPEN_SEQUENCE_TASK, &this->mHandle);
+		int handle = 0;
+		Native::Function::Call(Native::Hash::OPEN_SEQUENCE_TASK, &handle);
+
+		this->mHandle = handle;
 
 		if (System::Object::ReferenceEquals(sNullPed, nullptr))
 		{

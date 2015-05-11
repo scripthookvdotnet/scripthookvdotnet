@@ -30,8 +30,8 @@ namespace GTA
 		void FightAgainst(Ped ^target, int duration);
 		void FightAgainstHatedTargets(float radius);
 		void FightAgainstHatedTargets(float radius, int duration);
-		void FleeFrom(Ped ^target);
-		void FleeFrom(Ped ^target, int duration);
+		void FleeFrom(Ped ^ped);
+		void FleeFrom(Ped ^ped, int duration);
 		void FleeFrom(Math::Vector3 position);
 		void FleeFrom(Math::Vector3 position, int duration);
 		void FollowPointRoute(... array<Math::Vector3> ^points);
@@ -54,7 +54,7 @@ namespace GTA
 		void PerformSequence(TaskSequence ^sequence);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
-		void ReactAndFlee(Ped ^target);
+		void ReactAndFlee(Ped ^ped);
 		void ReloadWeapon();
 		void RunTo(Math::Vector3 position);
 		void RunTo(Math::Vector3 position, bool ignorePaths);

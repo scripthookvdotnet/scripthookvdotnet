@@ -57,7 +57,7 @@ namespace GTA
 		{
 			handles[0] = maxAmount;
 
-			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_PEDS, ped->ID, handles, -1);
+			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_PEDS, ped->Handle, handles, -1);
 
 			for (int i = 0; i < amount; ++i)
 			{
@@ -95,7 +95,7 @@ namespace GTA
 		{
 			handles[0] = maxAmount;
 
-			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_VEHICLES, ped->ID, handles, -1);
+			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_VEHICLES, ped->Handle, handles, -1);
 
 			for (int i = 0; i < amount; ++i)
 			{
@@ -175,30 +175,30 @@ namespace GTA
 	}
 	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
-		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->ID, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
 
 	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
 	{
-		int id = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
 
-		if (id <= 0)
+		if (handle == 0)
 		{
 			return nullptr;
 		}
 
-		return gcnew Camera(id);
+		return gcnew Camera(handle);
 	}
 	Camera ^World::RenderingCamera::get()
 	{
-		int id = Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM);
+		int handle = Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM);
 
-		if (id <= 0)
+		if (handle == 0)
 		{
 			return nullptr;
 		}
 
-		return gcnew Camera(id);
+		return gcnew Camera(handle);
 	}
 	void World::RenderingCamera::set(Camera ^renderingCamera)
 	{
@@ -209,6 +209,7 @@ namespace GTA
 		else
 		{
 			renderingCamera->IsActive = true;
+
 			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
 		}
 	}
@@ -219,31 +220,32 @@ namespace GTA
 
 	Blip ^World::CreateBlip(Math::Vector3 position)
 	{
-		const int id = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
+		const int handle = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
 
-		if (id == 0)
+		if (handle == 0)
 		{
 			return nullptr;
 		}
 
-		return gcnew Blip(id);
+		return gcnew Blip(handle);
 	}
 	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
 	{
-		const int id = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
+		const int handle = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
 
-		if (id == 0)
+		if (handle == 0)
 		{
 			return nullptr;
 		}
 
-		return gcnew Blip(id);
+		return gcnew Blip(handle);
 	}
 
 	int World::AddRelationShipGroup(System::String ^groupName)
 	{
 		int handle = 0;
 		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &handle);
+
 		return handle;
 	}
 	void World::RemoveRelationShipGroup(int group)
@@ -262,7 +264,6 @@ namespace GTA
 	}
 	Relationship World::GetRelationshipBetweenGroups(int group1, int group2)
 	{
-		int relation = Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2);
-		return static_cast<Relationship>(relation);
+		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
 	}
 }

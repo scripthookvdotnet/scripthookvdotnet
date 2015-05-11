@@ -55,22 +55,22 @@ namespace GTA
 		InputArgument::InputArgument(const char value[]) : mData(ScriptDomain::CurrentDomain->PinString(gcnew String(value)).ToInt64())
 		{
 		}
-		InputArgument::InputArgument(Entity ^object) : mData(object->ID)
+		InputArgument::InputArgument(Entity ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Ped ^object) : mData(object->ID)
+		InputArgument::InputArgument(Ped ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Player ^object) : mData(object->ID)
+		InputArgument::InputArgument(Player ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Vehicle ^object) : mData(object->ID)
+		InputArgument::InputArgument(Vehicle ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Blip ^object) : mData(object->ID)
+		InputArgument::InputArgument(Blip ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Prop ^object) : mData(object->ID)
+		InputArgument::InputArgument(Prop ^object) : mData(object->Handle)
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))

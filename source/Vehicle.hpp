@@ -253,12 +253,7 @@ namespace GTA
 	public ref class Vehicle sealed : public Entity
 	{
 	public:
-		Vehicle(int id);
-
-		static property Vehicle ^Any
-		{
-			Vehicle ^get();
-		}
+		Vehicle(int handle);
 
 		property bool HasRoof
 		{
