@@ -29,7 +29,11 @@ namespace GTA
 		{
 			Tasks ^get();
 		}
+		property bool IsClosed
+		{
+			bool get();
+		}
 
-		void Perform(Ped ^targetPed);
+		void CloseSequence();
 	};
 }

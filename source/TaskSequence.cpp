@@ -45,16 +45,17 @@ namespace GTA
 		}
 		return this->nullPed->Task;
 	}
+	bool TaskSequence::IsClosed::get()
+	{
+		return this->isClosed;
+	}
 
-	void TaskSequence::Perform(Ped ^targetPed)
+	void TaskSequence::CloseSequence()
 	{
 		if (!this->isClosed)
 		{
 			this->isClosed = true;
 			Native::Function::Call(Native::Hash::CLOSE_SEQUENCE_TASK, this->seqHandle);
 		}
-		Native::Function::Call(Native::Hash::CLEAR_PED_TASKS, targetPed->ID);
-		targetPed->BlockPermanentEvents = true;
-		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, targetPed->ID, this->seqHandle);
 	}
 }
