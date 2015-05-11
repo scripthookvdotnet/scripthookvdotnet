@@ -115,6 +115,7 @@
     <ClCompile Include="source\Vehicle.cpp" />
     <ClCompile Include="source\Viewport.cpp" />
     <ClCompile Include="source\World.cpp" />
+    <ClCompile Include="source\TaskSequence.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Animation.hpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="source\Viewport.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
+    <ClInclude Include="source\TaskSequence.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

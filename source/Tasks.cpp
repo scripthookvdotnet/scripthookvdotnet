@@ -2,6 +2,7 @@
 #include "Vehicle.hpp"
 #include "Tasks.hpp"
 #include "Native.hpp"
+#include "TaskSequence.hpp"
 
 namespace GTA
 {
@@ -313,5 +314,15 @@ namespace GTA
 	void Tasks::ReactAndFlee(Ped ^target)
 	{
 		Native::Function::Call(Native::Hash::TASK_REACT_AND_FLEE_PED, this->mPed->ID, target->ID);
+	}
+	void Tasks::PerformSequence(TaskSequence ^sequence)
+	{
+		if (!sequence->IsClosed)
+		{
+			sequence->CloseSequence();
+		}
+		Native::Function::Call(Native::Hash::CLEAR_PED_TASKS, this->mPed->ID);
+		this->mPed->BlockPermanentEvents = true;
+		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, this->mPed->ID, sequence->Handle);
 	}
 }

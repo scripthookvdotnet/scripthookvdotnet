@@ -7,6 +7,7 @@ namespace GTA
 	ref class Ped;
 	ref class Vehicle;
 	enum class VehicleSeat;
+	ref class TaskSequence;
 
 	public ref class Tasks
 	{
@@ -78,6 +79,7 @@ namespace GTA
 		void WarpOutOfVehicle(Vehicle ^vehicle);
 		void SkyDive();
 		void ReactAndFlee(Ped ^target);
+		void PerformSequence(TaskSequence ^sequence);
 
 		void ClearAll();
 		void ClearAllImmediately();
