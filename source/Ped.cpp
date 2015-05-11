@@ -1,12 +1,11 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Tasks.hpp"
-#include "Animation.hpp"
 #include "Native.hpp"
 
 namespace GTA
 {
-	Ped::Ped(int handle) : Entity(handle), mTasks(gcnew Tasks(this)), mAnimation(gcnew GTA::Animation(this))
+	Ped::Ped(int handle) : Entity(handle), mTasks(gcnew Tasks(this))
 	{
 	}
 
@@ -25,10 +24,6 @@ namespace GTA
 	int Ped::TaskSequenceProgress::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_SEQUENCE_PROGRESS, this->Handle);
-	}
-	GTA::Animation ^Ped::Animation::get()
-	{
-		return this->mAnimation;
 	}
 	GTA::Gender Ped::Gender::get()
 	{

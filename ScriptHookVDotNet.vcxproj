@@ -85,7 +85,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Animation.cpp" />
     <ClCompile Include="source\Blip.cpp" />
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\Entity.cpp" />
@@ -118,7 +117,6 @@
     <ClCompile Include="source\TaskSequence.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Animation.hpp" />
     <ClInclude Include="source\Blip.hpp" />
     <ClInclude Include="source\Camera.hpp" />
     <ClInclude Include="source\Entity.hpp" />

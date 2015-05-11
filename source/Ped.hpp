@@ -6,7 +6,6 @@
 namespace GTA
 {
 	ref class Tasks;
-	ref class Animation;
 	ref class Vehicle;
 
 	public enum class Gender
@@ -32,10 +31,6 @@ namespace GTA
 		property int TaskSequenceProgress
 		{
 			int get();
-		}
-		property GTA::Animation ^Animation
-		{
-			GTA::Animation ^get();
 		}
 		property GTA::Gender Gender
 		{
@@ -177,6 +172,5 @@ namespace GTA
 
 	private:
 		Tasks ^mTasks;
-		GTA::Animation ^mAnimation;
 	};
 }

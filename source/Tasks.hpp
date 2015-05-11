@@ -52,6 +52,7 @@ namespace GTA
 		void ParachuteTo(Math::Vector3 position);
 		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading);
 		void PerformSequence(TaskSequence ^sequence);
+		void PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int loop, bool lastAnimation, float playbackRate);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
 		void ReactAndFlee(Ped ^ped);
@@ -85,6 +86,7 @@ namespace GTA
 		void ClearAllImmediately();
 		void ClearLookAt();
 		void ClearSecondary();
+		void ClearAnimation(System::String ^animSet, System::String ^animName);
 
 	internal:
 		Tasks(Ped ^ped);

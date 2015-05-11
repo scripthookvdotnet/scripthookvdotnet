@@ -45,9 +45,6 @@
     <ClCompile Include="source\Vector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="source\Animation.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="source\Blip.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
@@ -139,9 +136,6 @@
     </ClInclude>
     <ClInclude Include="source\Vector3.hpp">
       <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Animation.hpp">
-      <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Blip.hpp">
       <Filter>Scripting</Filter>

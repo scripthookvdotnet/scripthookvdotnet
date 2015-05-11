@@ -1,8 +1,9 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Tasks.hpp"
-#include "Native.hpp"
 #include "TaskSequence.hpp"
+#include "Native.hpp"
+#include "Script.hpp"
 
 namespace GTA
 {
@@ -193,6 +194,24 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, this->mPed->Handle, sequence->Handle);
 	}
+	void Tasks::PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int loop, bool lastAnimation, float playbackRate)
+	{
+		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animSet);
+
+		const System::DateTime endtime = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, 1000);
+
+		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animSet))
+		{
+			Script::Wait(0);
+
+			if (System::DateTime::Now >= endtime)
+			{
+				return;
+			}
+		}
+
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, this->mPed->Handle, animSet, animName, speed, -8.0f, loop, lastAnimation, playbackRate, 0, 0, 0);
+	}
 	void Tasks::PutAwayMobilePhone()
 	{
 		Native::Function::Call(Native::Hash::TASK_USE_MOBILE_PHONE, this->mPed->Handle, false);
@@ -312,6 +331,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_LEAVE_VEHICLE, this->mPed->Handle, vehicle->Handle, 16);
 	}
+
 	void Tasks::ClearAll()
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_TASKS, this->mPed->Handle);
@@ -327,5 +347,9 @@ namespace GTA
 	void Tasks::ClearSecondary()
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_SECONDARY_TASK, this->mPed->Handle);
+	}
+	void Tasks::ClearAnimation(System::String ^animSet, System::String ^animName)
+	{
+		Native::Function::Call(Native::Hash::STOP_ANIM_TASK, this->mPed->Handle, animSet, animName, -4.0f);
 	}
 }
