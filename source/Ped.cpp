@@ -168,6 +168,14 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SPRINTING, this->ID);
 	}
+	int Ped::RelationshipGroup::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_RELATIONSHIP_GROUP_HASH, this->ID);
+	}
+	void Ped::RelationshipGroup::set(int group)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_RELATIONSHIP_GROUP_HASH, this->ID, group);
+	}
 
 	bool Ped::IsInVehicle()
 	{
@@ -189,5 +197,11 @@ namespace GTA
 	void Ped::Kill()
 	{
 		Health = -1;
+	}
+
+	Relationship Ped::GetRelationshipWithPed(Ped ^ped)
+	{
+		int relation = Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_PEDS, this->ID, ped->ID);
+		return static_cast<Relationship>(relation);
 	}
 }

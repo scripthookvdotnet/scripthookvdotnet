@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "World.hpp"
 
 namespace GTA
 {
@@ -161,6 +162,11 @@ namespace GTA
 		{
 			bool get();
 		}
+		property int RelationshipGroup
+		{
+			int get();
+			void set(int group);
+		}
 
 		bool IsInVehicle();
 		bool IsInVehicle(Vehicle ^vehicle);
@@ -168,6 +174,8 @@ namespace GTA
 		bool IsSittingInVehicle(Vehicle ^vehicle);
 
 		void Kill();
+
+		Relationship GetRelationshipWithPed(Ped ^ped);
 
 	private:
 		Tasks ^mTasks;
