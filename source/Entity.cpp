@@ -183,8 +183,9 @@ namespace GTA
 
 	void Entity::DeleteEntity()
 	{
-		int id = this->ID;
-		Native::Function::Call(Native::Hash::DELETE_ENTITY, &id);
+		int handle = this->Handle;
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, false);
+		Native::Function::Call(Native::Hash::DELETE_ENTITY, &handle);
 	}
 
 	Blip ^Entity::AddBlip()
