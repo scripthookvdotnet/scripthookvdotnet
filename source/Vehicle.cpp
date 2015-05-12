@@ -327,9 +327,17 @@ namespace GTA
 	{
 		float nX, nY, nZ, nH;
 		Math::Vector3 pos = this->Position;
-		Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, pos.X, pos.Y, pos.Z, 0, &nX, &nY, &nZ, &nH);
-		this->Position = Math::Vector3(nX, nY, nZ);
-		this->Heading = nH;
-		this->PlaceOnGround();
+		for (int i = 0; i < 50; i++)
+		{
+			Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, pos.X, pos.Y, pos.Z, 0, &nX, &nY, &nZ, &nH);
+			if (!Native::Function::Call<bool>(Native::Hash::IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, nX, nY, nZ, 5.0f, 5.0f, 5.0f))
+			{
+				this->Position = Math::Vector3(nX, nY, nZ);
+				this->Heading = nH;
+				this->PlaceOnGround();
+				break;
+			}
+		}
+
 	}
 }
