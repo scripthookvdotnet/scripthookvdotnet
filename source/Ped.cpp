@@ -132,7 +132,7 @@ namespace GTA
 	}
 	void Ped::CanRagdoll::set(bool value)
 	{
-		Native::Function::Call(Native::Hash::CAN_PED_RAGDOLL, this->Handle, value);
+		Native::Function::Call(Native::Hash::SET_PED_CAN_RAGDOLL, this->Handle, value);
 	}
 	void Ped::CanSwitchWeapons::set(bool value)
 	{
