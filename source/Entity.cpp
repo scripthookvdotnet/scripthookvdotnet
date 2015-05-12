@@ -181,6 +181,12 @@ namespace GTA
 		return this->Handle;
 	}
 
+	void Entity::DeleteEntity()
+	{
+		int id = this->ID;
+		Native::Function::Call(Native::Hash::DELETE_ENTITY, &id);
+	}
+
 	Blip ^Entity::AddBlip()
 	{
 		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle));
