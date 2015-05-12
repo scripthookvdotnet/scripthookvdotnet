@@ -4,7 +4,6 @@
 #include "PedHashes.hpp"
 #include "VehicleHashes.hpp"
 #include "WeaponHashes.hpp"
-#include "PropHashes.hpp"
 
 namespace GTA
 {
@@ -16,7 +15,6 @@ namespace GTA
 		Model(Native::PedHash hash);
 		Model(Native::VehicleHash hash);
 		Model(Native::WeaponHash hash);
-		Model(Native::PropHash hash);
 
 		property int Hash
 		{
@@ -108,10 +106,6 @@ namespace GTA
 			return Model(source);
 		}
 		static inline operator Model(Native::WeaponHash source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::PropHash source)
 		{
 			return Model(source);
 		}

@@ -209,6 +209,5 @@
     <ClInclude Include="source\TaskSequence.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\PropHashes.hpp" />
   </ItemGroup>
 </Project>

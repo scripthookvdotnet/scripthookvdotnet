@@ -133,7 +133,6 @@
     <ClInclude Include="source\PedHashes.hpp" />
     <ClInclude Include="source\Player.hpp" />
     <ClInclude Include="source\Prop.hpp" />
-    <ClInclude Include="source\PropHashes.hpp" />
     <ClInclude Include="source\Quaternion.hpp" />
     <ClInclude Include="source\Script.hpp" />
     <ClInclude Include="source\ScriptDomain.hpp" />

@@ -19,9 +19,6 @@ namespace GTA
 	Model::Model(Native::WeaponHash hash) : mHash(static_cast<int>(hash))
 	{
 	}
-	Model::Model(Native::PropHash hash) : mHash(static_cast<int>(hash))
-	{
-	}
 
 	int Model::Hash::get()
 	{
