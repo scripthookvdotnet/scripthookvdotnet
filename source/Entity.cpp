@@ -181,7 +181,7 @@ namespace GTA
 		return this->Handle;
 	}
 
-	void Entity::DeleteEntity()
+	void Entity::Delete()
 	{
 		int handle = this->Handle;
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, true, false);

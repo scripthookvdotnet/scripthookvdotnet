@@ -126,7 +126,7 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
-		void DeleteEntity();
+		void Delete();
 		bool Exists();
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
