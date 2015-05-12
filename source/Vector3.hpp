@@ -427,6 +427,9 @@ namespace GTA
 			/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
 			/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
 			static bool Equals(Vector3 %value1, Vector3 %value2);
+
+			Vector3 Around(float distance);
+			static Vector3 GetRandomXY();
 		};
 	}
 }
