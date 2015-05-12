@@ -1,6 +1,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Native.hpp"
+#include "Vector3.hpp"
 
 namespace GTA
 {
@@ -317,5 +318,18 @@ namespace GTA
 	void Vehicle::RemoveWindow(VehicleWindow window)
 	{
 		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->Handle, static_cast<int>(window));
+	}
+	void Vehicle::PlaceOnGround()
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->Handle);
+	}
+	void Vehicle::PlaceOnNextStreet()
+	{
+		float nX, nY, nZ, nH;
+		Math::Vector3 pos = this->Position;
+		Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, pos.X, pos.Y, pos.Z, 0, &nX, &nY, &nZ, &nH);
+		this->Position = Math::Vector3(nX, nY, nZ);
+		this->Heading = nH;
+		this->PlaceOnGround();
 	}
 }

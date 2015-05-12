@@ -5,6 +5,7 @@
 namespace GTA
 {
 	ref class Ped;
+	value class Model;
 
 	public enum class VehicleColor
 	{
@@ -431,6 +432,8 @@ namespace GTA
 		void RollDownWindow(VehicleWindow window);
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
+		void PlaceOnGround();
+		void PlaceOnNextStreet();
 
 	private:
 		int mID;
