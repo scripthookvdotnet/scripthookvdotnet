@@ -126,6 +126,7 @@ namespace GTA
 		}
 		property bool CanRagdoll
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool CanSwitchWeapons

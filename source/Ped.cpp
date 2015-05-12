@@ -130,6 +130,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, this->Handle, value);
 	}
+	bool Ped::CanRagdoll::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::CAN_PED_RAGDOLL, this->Handle);
+	}
 	void Ped::CanRagdoll::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_RAGDOLL, this->Handle, value);
