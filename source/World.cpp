@@ -2,6 +2,7 @@
 #include "Native.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Prop.hpp"
 #include "Camera.hpp"
 
 namespace GTA
@@ -139,14 +140,14 @@ namespace GTA
 			return nullptr;
 		}
 
-		const int id = Native::Function::Call<int>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
 
-		if (id == 0)
+		if (handle == 0)
 		{
 			return nullptr;
 		}
 
-		return gcnew Ped(id);
+		return gcnew Ped(handle);
 	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
@@ -159,14 +160,45 @@ namespace GTA
 			return nullptr;
 		}
 
-		const int id = Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
 
-		if (id == 0)
+		if (handle == 0)
 		{
 			return nullptr;
 		}
 
-		return gcnew Vehicle(id);
+		return gcnew Vehicle(handle);
+	}
+	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
+	{
+		if (placeOnGround)
+		{
+			float groundZ;
+			Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &groundZ);
+			position.Z = groundZ;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Prop(handle);
+	}
+	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)
+	{
+		Prop ^p = World::CreateProp(model, position, dynamic, placeOnGround);
+		
+		if (System::Object::ReferenceEquals(p, nullptr))
+		{
+			return nullptr;
+		}
+
+		p->Rotation = rotation;
+
+		return p;
 	}
 
 	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
