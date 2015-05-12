@@ -158,6 +158,12 @@ namespace GTA
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
 
+	void Entity::Delete()
+	{
+		int handle = this->Handle;
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, true, false);
+		Native::Function::Call(Native::Hash::DELETE_ENTITY, &handle);
+	}
 	bool Entity::Exists()
 	{
 		return Exists(this);
