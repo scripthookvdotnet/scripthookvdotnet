@@ -125,13 +125,21 @@ namespace GTA
 		void ApplyForce(Math::Vector3 direction, Math::Vector3 rotation);
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
+		Blip ^AddBlip();
+		
+		bool IsNearEntity(Entity^ entity, float distanceX, float distanceY, float distanceZ);
+		bool IsInRangeOf(Math::Vector3 position, float range);
+		bool IsAttached();
+		void AttachTo(Entity^ entity, int boneIndex);
+		void AttachTo(Entity^ entity, int boneIndex, float x, float y, float z, float rot_x, float rot_y, float rot_z);
+		Math::Vector3 GetOffsetInWorldCoords(float x, float y, float z);
+		void Detach();
 
 		void Delete();
 		bool Exists();
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
 		virtual bool Equals(Entity ^entity);
-		Blip ^AddBlip();
 
 		virtual int GetHashCode() override;
 		static inline bool operator ==(Entity ^left, Entity ^right)
