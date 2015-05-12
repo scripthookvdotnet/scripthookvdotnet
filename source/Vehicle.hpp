@@ -432,7 +432,6 @@ namespace GTA
 		void RollDownWindow(VehicleWindow window);
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
-		void PlaceOnGround();
 		void PlaceOnNextStreet();
 
 	private:

@@ -319,10 +319,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->Handle, static_cast<int>(window));
 	}
-	void Vehicle::PlaceOnGround()
-	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->Handle);
-	}
 	void Vehicle::PlaceOnNextStreet()
 	{
 		float nX, nY, nZ, nH;
@@ -334,7 +330,7 @@ namespace GTA
 			{
 				this->Position = Math::Vector3(nX, nY, nZ);
 				this->Heading = nH;
-				this->PlaceOnGround();
+				this->SetOnGround();
 				break;
 			}
 		}
