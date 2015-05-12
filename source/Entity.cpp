@@ -184,7 +184,7 @@ namespace GTA
 	void Entity::DeleteEntity()
 	{
 		int handle = this->Handle;
-		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, false);
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, true, false);
 		Native::Function::Call(Native::Hash::DELETE_ENTITY, &handle);
 	}
 
