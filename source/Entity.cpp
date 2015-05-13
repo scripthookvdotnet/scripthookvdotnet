@@ -115,7 +115,7 @@ namespace GTA
 	}
 	bool Entity::IsInAir::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_GETTING_INTO_A_VEHICLE, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_IN_AIR, this->Handle);
 	}
 	bool Entity::IsInWater::get()
 	{
