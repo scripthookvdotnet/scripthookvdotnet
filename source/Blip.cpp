@@ -64,4 +64,12 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_AS_FRIENDLY, this->Handle, 0);
 	}
+	void Blip::ShowRoute()
+	{
+		Native::Function::Call(Native::Hash::SET_BLIP_ROUTE, this->Handle, 1);
+	}
+	void Blip::HideRoute()
+	{
+		Native::Function::Call(Native::Hash::SET_BLIP_ROUTE, this->Handle, 0);
+	}
 }
