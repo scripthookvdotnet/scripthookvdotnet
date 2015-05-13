@@ -162,6 +162,18 @@ namespace GTA
 			int get();
 			void set(int group);
 		}
+		property float DrivingSpeed 
+		{
+			void set(float value);
+		}
+		property float MaxDrivingSpeed
+		{
+			void set(float value);
+		}
+		property int DrivingStyle
+		{
+			void set(int value);
+		}
 
 		bool IsInVehicle();
 		bool IsInVehicle(Vehicle ^vehicle);
