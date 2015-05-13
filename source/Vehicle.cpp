@@ -319,7 +319,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->Handle, static_cast<int>(window));
 	}
-	void Vehicle::PlaceOnStreet()
+	void Vehicle::PlaceOnRoad()
 	{
 		Math::Vector3 pos = this->Position;
 		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();

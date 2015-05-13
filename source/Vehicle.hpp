@@ -432,7 +432,7 @@ namespace GTA
 		void RollDownWindow(VehicleWindow window);
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
-		void PlaceOnStreet();
+		void PlaceOnRoad();
 		Ped ^CreatePed(VehicleSeat seat, GTA::Model model);
 
 	private:
