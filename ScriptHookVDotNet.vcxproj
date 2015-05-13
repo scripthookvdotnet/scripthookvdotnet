@@ -115,6 +115,8 @@
     <ClCompile Include="source\Viewport.cpp" />
     <ClCompile Include="source\World.cpp" />
     <ClCompile Include="source\TaskSequence.cpp" />
+    <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Blip.hpp" />
@@ -151,6 +153,8 @@
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
     <ClInclude Include="source\TaskSequence.hpp" />
+    <ClInclude Include="Weapon.hpp" />
+    <ClInclude Include="WeaponCollection.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

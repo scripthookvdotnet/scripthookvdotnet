@@ -105,6 +105,12 @@
     <ClCompile Include="source\TaskSequence.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponCollection.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -207,6 +213,12 @@
       <Filter>Scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\TaskSequence.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponCollection.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
