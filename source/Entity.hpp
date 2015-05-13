@@ -127,12 +127,12 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 		Blip ^AddBlip();
 		
-		bool IsNearEntity(Entity^ entity, float distanceX, float distanceY, float distanceZ);
+		bool IsNearEntity(Entity^ entity, Math::Vector3 distance);
 		bool IsInRangeOf(Math::Vector3 position, float range);
 		bool IsAttached();
 		void AttachTo(Entity^ entity, int boneIndex);
-		void AttachTo(Entity^ entity, int boneIndex, float x, float y, float z, float rot_x, float rot_y, float rot_z);
-		Math::Vector3 GetOffsetInWorldCoords(float x, float y, float z);
+		void AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation);
+		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
 		void Detach();
 
 		void Delete();
