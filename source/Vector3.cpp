@@ -18,7 +18,6 @@
  */
 
 #include "Vector3.hpp"
-#include "Helper.hpp"
 
 namespace GTA
 {
@@ -182,21 +181,6 @@ namespace GTA
 		bool Vector3::operator != (Vector3 left, Vector3 right)
 		{
 			return !Vector3::Equals(left, right);
-		}
-
-		Vector3 Vector3::Around(float distance)
-		{
-			return Vector3(this->X, this->Y, this->Z) + Vector3::GetRandomXY() * distance;
-		}
-
-		Vector3 Vector3::GetRandomXY()
-		{
-			Vector3 v;
-			v.X = (float)(Helper::Random->NextDouble() - 0.5);
-			v.Y = (float)(Helper::Random->NextDouble() - 0.5);
-			v.Z = 0.0f;
-			v.Normalize();
-			return v;
 		}
 
 		String ^Vector3::ToString()

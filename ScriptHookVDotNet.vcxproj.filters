@@ -105,9 +105,6 @@
     <ClCompile Include="source\TaskSequence.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\Helper.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -210,9 +207,6 @@
       <Filter>Scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\TaskSequence.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Helper.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
