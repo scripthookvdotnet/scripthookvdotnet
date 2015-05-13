@@ -54,6 +54,21 @@ namespace GTA
 		{
 			return (position - *this).Length();
 		}
+		Vector3 Vector3::Around(float distance)
+		{
+			return *this + Vector3::RandomXY() * distance;
+		}
+
+		Vector3 Vector3::RandomXY()
+		{
+			Vector3 v;
+			Random ^rand = gcnew Random();
+			v.X = (float)(rand->NextDouble() - 0.5);
+			v.Y = (float)(rand->NextDouble() - 0.5);
+			v.Z = 0.0f;
+			v.Normalize();
+			return v;
+		}
 
 		Vector3 Vector3::Add(Vector3 left, Vector3 right)
 		{
