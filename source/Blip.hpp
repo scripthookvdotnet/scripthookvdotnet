@@ -46,12 +46,14 @@ namespace GTA
 			int get(); // Any GET_BLIP_ALPHA(Any p0) // 0x297AF6C8
 			void set(int alpha); // void SET_BLIP_ALPHA(Any p0, Any p1) // 0xA791FCCD
 		}
+		property bool ShowRoute
+		{
+			void set(bool value); // void SET_BLIP_ROUTE(Object blip, BOOL enabled) // 0x3E160C90
+		}
 
 		bool Exists(); // BOOL DOES_BLIP_EXIST(Any p0) // 0xAE92DD96
 		void SetAsFriendly(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
 		void SetAsHostile(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
-		void ShowRoute(); // void SET_BLIP_ROUTE(Object blip, BOOL enabled) // 0x3E160C90
-		void HideRoute(); // void SET_BLIP_ROUTE(Object blip, BOOL enabled) // 0x3E160C90
 		void Remove(); // void REMOVE_BLIP(int BlipID) // 0xD8C3C1CD
 		
 		

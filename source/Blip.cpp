@@ -47,6 +47,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_ALPHA, this->Handle, alpha);
 	}
+	void Blip::ShowRoute::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_BLIP_ROUTE, this->Handle, value);
+	}
 	bool Blip::Exists()
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, this->Handle);
@@ -63,13 +67,5 @@ namespace GTA
 	void Blip::SetAsHostile()
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_AS_FRIENDLY, this->Handle, 0);
-	}
-	void Blip::ShowRoute()
-	{
-		Native::Function::Call(Native::Hash::SET_BLIP_ROUTE, this->Handle, 1);
-	}
-	void Blip::HideRoute()
-	{
-		Native::Function::Call(Native::Hash::SET_BLIP_ROUTE, this->Handle, 0);
 	}
 }
