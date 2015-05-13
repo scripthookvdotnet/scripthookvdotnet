@@ -105,10 +105,10 @@
     <ClCompile Include="source\TaskSequence.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="Weapon.cpp">
+    <ClCompile Include="source\Weapon.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponCollection.cpp">
+    <ClCompile Include="source\WeaponCollection.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,10 +215,10 @@
     <ClInclude Include="source\TaskSequence.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="Weapon.hpp">
+    <ClInclude Include="source\Weapon.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponCollection.hpp">
+    <ClInclude Include="source\WeaponCollection.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
