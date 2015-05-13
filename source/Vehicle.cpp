@@ -335,7 +335,7 @@ namespace GTA
 			}
 		}
 	}
-	Ped ^Vehicle::CreatePedInVehicle(VehicleSeat seat, GTA::Model model)
+	Ped ^Vehicle::CreatePed(VehicleSeat seat, GTA::Model model)
 	{
 		Ped ^ped = World::CreatePed(model, this->Position);
 		ped->BlockPermanentEvents = true;
