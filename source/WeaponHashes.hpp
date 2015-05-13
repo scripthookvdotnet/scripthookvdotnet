@@ -57,7 +57,8 @@ namespace GTA
 			HeavyShotgun = 0x3AABBBAA,
 			Gusenberg = 0x61012683,
 			Hatchet = 0xF9DCBF2D,
-			Railgun = 0x6D544C99
+			Railgun = 0x6D544C99,
+			Unarmed = 0xA2719263
 		};
 	}
 }
