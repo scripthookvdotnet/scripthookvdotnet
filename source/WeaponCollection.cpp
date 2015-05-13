@@ -7,6 +7,7 @@ namespace GTA
 	WeaponCollection::WeaponCollection(Ped ^owner)
 	{
 		this->pOwner = owner;
+		this->weapons = gcnew System::Collections::Generic::Dictionary<Native::WeaponHash, Weapon^>();
 	}
 
 	Weapon ^WeaponCollection::Current::get()
@@ -21,6 +22,11 @@ namespace GTA
 		if (this->weapons->TryGetValue(hash, weapon))
 		{
 			return weapon;
+		}
+		bool present = Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, this->pOwner->Handle, static_cast<int>(hash));
+		if (present)
+		{
+			return gcnew Weapon(this->pOwner, (Native::WeaponHash)hash);
 		}
 		return nullptr;
 	}

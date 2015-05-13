@@ -8,7 +8,7 @@ namespace GTA
 		this->pOwner = owner;
 		this->hash = hash;
 	}
-	
+
 	int Weapon::Ammo::get()
 	{
 		if (this->hash == Native::WeaponHash::Unarmed)
@@ -102,8 +102,9 @@ namespace GTA
 		{
 			Native::Function::Call(Native::Hash::SET_CURRENT_PED_WEAPON, this->pOwner->Handle, static_cast<int>(this->hash), true);
 		}
-		else{
-			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, this->pOwner->Handle, static_cast<int>(this->hash), this->MaxAmmoInClip, true, true);
+		else
+		{
+			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, this->pOwner->Handle, static_cast<int>(this->hash), this->MaxAmmo, true, true);
 		}
 	}
 	void Weapon::Remove()
