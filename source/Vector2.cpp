@@ -53,6 +53,16 @@ namespace GTA
 			return (position - *this).Length();
 		}
 
+		Vector2 Vector2::RandomXY()
+		{
+			Vector2 v;
+			Random ^rand = gcnew Random();
+			v.X = (float)(rand->NextDouble() - 0.5);
+			v.Y = (float)(rand->NextDouble() - 0.5);
+			v.Normalize();
+			return v;
+		}
+
 		Vector2 Vector2::Add(Vector2 left, Vector2 right)
 		{
 			return Vector2(left.X + right.X, left.Y + right.Y);

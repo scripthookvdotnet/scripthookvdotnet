@@ -222,6 +222,11 @@ namespace GTA
 			static Vector3 RandomXY();
 
 			/// <summary>
+			/// Returns a new normalized vector with random X, Y and Z components.
+			/// </summary>
+			static Vector3 RandomXYZ();
+
+			/// <summary>
 			/// Adds two vectors.
 			/// </summary>
 			/// <param name="left">The first vector to add.</param>

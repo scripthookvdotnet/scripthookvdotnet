@@ -69,6 +69,16 @@ namespace GTA
 			v.Normalize();
 			return v;
 		}
+		Vector3 Vector3::RandomXYZ()
+		{
+			Vector3 v;
+			Random ^rand = gcnew Random();
+			v.X = (float)(rand->NextDouble() - 0.5);
+			v.Y = (float)(rand->NextDouble() - 0.5);
+			v.Z = (float)(rand->NextDouble() - 0.5);
+			v.Normalize();
+			return v;
+		}
 
 		Vector3 Vector3::Add(Vector3 left, Vector3 right)
 		{

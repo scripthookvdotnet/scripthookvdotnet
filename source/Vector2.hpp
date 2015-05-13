@@ -124,6 +124,11 @@ namespace GTA
 			float DistanceTo(Vector2 position);
 
 			/// <summary>
+			/// Returns a new normalized vector with random X and Y components.
+			/// </summary>
+			static Vector2 RandomXY();
+
+			/// <summary>
 			/// Adds two vectors.
 			/// </summary>
 			/// <param name="left">The first vector to add.</param>
