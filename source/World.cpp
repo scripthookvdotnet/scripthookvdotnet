@@ -128,6 +128,12 @@ namespace GTA
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 	}
+	float World::GetGroundZ(Math::Vector3 position)
+	{
+		float ground_z;
+		Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &ground_z);
+		return ground_z;
+	}
 
 	Ped ^World::CreatePed(Model model, Math::Vector3 position)
 	{
@@ -172,19 +178,13 @@ namespace GTA
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
 	{
 		if (placeOnGround)
-		{
-			float groundZ;
-			Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &groundZ);
-			position.Z = groundZ;
-		}
+			position.Z = World::GetGroundZ(position);
 
 		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
 
 		if (handle == 0)
-		{
 			return nullptr;
-		}
-
+		
 		return gcnew Prop(handle);
 	}
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)

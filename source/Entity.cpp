@@ -158,6 +158,40 @@ namespace GTA
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
 
+	Blip ^Entity::AddBlip()
+	{
+		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle));
+	}
+
+	bool Entity::IsNearEntity(Entity^ entity, Math::Vector3 distance)
+	{
+		return (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AT_ENTITY, this->Handle, entity->Handle, distance.X, distance.Y, distance.Z, 0, 1, 0));
+	}
+	bool Entity::IsInRangeOf(Math::Vector3 position, float distance)
+	{
+		return ((Math::Vector3::Subtract(this->Position, position).Length()) < distance);
+	}
+	bool Entity::IsAttached()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ATTACHED, this->Handle);
+	}
+	void Entity::Detach()
+	{
+		Native::Function::Call(Native::Hash::DETACH_ENTITY, this->Handle, 1, 1);
+	}
+	void Entity::AttachTo(Entity^ entity, int boneIndex)
+	{
+		this->AttachTo(entity, boneIndex, Math::Vector3::Zero, Math::Vector3::Zero);
+	}
+	void Entity::AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation)
+	{
+		Native::Function::Call(Native::Hash::ATTACH_ENTITY_TO_ENTITY, this, entity, boneIndex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
+	}
+	Math::Vector3 Entity::GetOffsetInWorldCoords(Math::Vector3 offset)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, this->Handle, offset.X, offset.Y, offset.Z);
+	}
+
 	void Entity::Delete()
 	{
 		int handle = this->Handle;
@@ -185,10 +219,5 @@ namespace GTA
 	int Entity::GetHashCode()
 	{
 		return this->Handle;
-	}
-
-	Blip ^Entity::AddBlip()
-	{
-		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle));
 	}
 }
