@@ -185,7 +185,7 @@ namespace GTA
 	}
 	void Ped::DrivingStyle::set(GTA::DrivingStyle value)
 	{
-		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, this->Handle, value);
+		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, this->Handle, static_cast<int>(value));
 	}
 
 	bool Ped::IsInVehicle()
