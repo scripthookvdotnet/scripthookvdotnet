@@ -5,6 +5,7 @@
 namespace GTA
 {
 	ref class Ped;
+	value class Model;
 
 	public enum class VehicleColor
 	{
@@ -422,7 +423,8 @@ namespace GTA
 
 		void Repair();
 		void Explode();
-		bool SetOnGround();
+		bool PlaceOnGround();
+		void PlaceOnNextStreet();
 		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
 		void CloseDoor(VehicleDoor door, bool instantly);
 		void FixWindow(VehicleWindow window);
@@ -431,6 +433,8 @@ namespace GTA
 		void RollDownWindow(VehicleWindow window);
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
+
+		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 
 	private:
 		int mID;

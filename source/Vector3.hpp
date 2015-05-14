@@ -212,6 +212,21 @@ namespace GTA
 			float DistanceTo(Vector3 position);
 
 			/// <summary>
+			/// Creates a random vector inside the circle around this position.
+			/// </summary>
+			Vector3 Around(float distance);
+
+			/// <summary>
+			/// Returns a new normalized vector with random X and Y components.
+			/// </summary>
+			static Vector3 RandomXY();
+
+			/// <summary>
+			/// Returns a new normalized vector with random X, Y and Z components.
+			/// </summary>
+			static Vector3 RandomXYZ();
+
+			/// <summary>
 			/// Adds two vectors.
 			/// </summary>
 			/// <param name="left">The first vector to add.</param>

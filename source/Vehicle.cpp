@@ -282,9 +282,27 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::EXPLODE_VEHICLE, this->Handle, true, false);
 	}
-	bool Vehicle::SetOnGround()
+	bool Vehicle::PlaceOnGround()
 	{
 		return Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_ON_GROUND_PROPERLY, this->Handle);
+	}
+	void Vehicle::PlaceOnNextStreet()
+	{
+		const Math::Vector3 pos = this->Position;
+		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();
+
+		for (int i = 1; i < 40; i++)
+		{
+			Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, pos.X, pos.Y, pos.Z, i, outPos, 1, 0x40400000, 0);
+			const Math::Vector3 newPos = outPos->GetResult<Math::Vector3>();
+
+			if (!Native::Function::Call<bool>(Native::Hash::IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPos.X, newPos.Y, newPos.Z, 5.0f, 5.0f, 5.0f, 0))
+			{
+				this->Position = newPos;
+				this->PlaceOnGround();
+				break;
+			}
+		}
 	}
 	void Vehicle::OpenDoor(VehicleDoor door, bool loose, bool instantly)
 	{
@@ -317,5 +335,15 @@ namespace GTA
 	void Vehicle::RemoveWindow(VehicleWindow window)
 	{
 		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->Handle, static_cast<int>(window));
+	}
+
+	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
+	{
+		Ped ^ped = World::CreatePed(model, this->Position);
+		ped->BlockPermanentEvents = true;
+		ped->IsInvincible = true;
+		Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, this->Handle, static_cast<int>(seat));
+		ped->IsInvincible = false;
+		return ped;
 	}
 }
