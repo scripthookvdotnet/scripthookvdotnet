@@ -15,8 +15,8 @@
  */
 
 #include "Native.hpp"
-#include "NativeCaller.h"
 #include "ScriptDomain.hpp"
+#include "NativeCaller.h"
 
 #include "Entity.hpp"
 #include "Prop.hpp"

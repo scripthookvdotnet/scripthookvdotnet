@@ -16,8 +16,7 @@
 
 #pragma once
 
-#undef Yield
-
+#include "Game.hpp"
 #include "Viewport.hpp"
 
 namespace GTA
@@ -29,6 +28,12 @@ namespace GTA
 	{
 	public:
 		Script();
+
+		[System::ObsoleteAttribute("Script.IsKeyPressed is obsolete, please use Game.IsKeyPressed instead.")]
+		static bool IsKeyPressed(System::Windows::Forms::Keys key)
+		{
+			return Game::IsKeyPressed(key);
+		}
 
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;

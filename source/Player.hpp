@@ -11,7 +11,7 @@ namespace GTA
 	public:
 		Player(int handle);
 
-		[System::ObsoleteAttribute("ID is deprecated, please use Handle instead.")]
+		[System::ObsoleteAttribute("Player.ID is obsolete, please use Player.Handle instead.")]
 		property int ID
 		{
 			int get()

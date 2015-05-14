@@ -14,7 +14,6 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Main.h"
 #include "ScriptDomain.hpp"
 
 ref struct ScriptHook
@@ -44,7 +43,7 @@ bool ManagedInit()
 }
 bool ManagedTick()
 {
-	if (GetAsyncKeyState(VK_INSERT) & 0x8000)
+	if (ScriptHook::Domain->IsKeyPressed(System::Windows::Forms::Keys::Insert))
 	{
 		return false;
 	}
@@ -66,6 +65,7 @@ void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusSh
 #pragma unmanaged
 #pragma warning(disable: 4793)
 
+#include "Main.h"
 #include <Windows.h>
 
 bool sGameReloaded = false;
