@@ -15,6 +15,16 @@ namespace GTA
 		Female
 	};
 
+	public enum class DrivingStyle
+	{
+		Normal = 0xC00AB,
+		IgnoreLights = 0x2C0025,
+		SometimesOvertakeTraffic = 5,
+		Rushed = 0x400C0025,
+		AvoidTraffic = 0xC0024,
+		AvoidTrafficExtremely = 6,
+	};
+
 	public ref class Ped sealed : public Entity
 	{
 	public:
@@ -162,6 +172,18 @@ namespace GTA
 		{
 			int get();
 			void set(int group);
+		}
+		property float DrivingSpeed 
+		{
+			void set(float value);
+		}
+		property float MaxDrivingSpeed
+		{
+			void set(float value);
+		}
+		property DrivingStyle DrivingStyle
+		{
+			void set(GTA::DrivingStyle value);
 		}
 
 		property WeaponCollection ^Weapons

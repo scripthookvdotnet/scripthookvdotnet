@@ -175,6 +175,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_RELATIONSHIP_GROUP_HASH, this->Handle, group);
 	}
+	void Ped::DrivingSpeed::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_CRUISE_SPEED, this->Handle, value);
+	}
+	void Ped::MaxDrivingSpeed::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_MAX_CRUISE_SPEED, this->Handle, value);
+	}
+	void Ped::DrivingStyle::set(GTA::DrivingStyle value)
+	{
+		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, this->Handle, static_cast<int>(value));
+	}
 
 	bool Ped::IsInVehicle()
 	{
