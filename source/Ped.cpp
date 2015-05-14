@@ -183,7 +183,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_MAX_CRUISE_SPEED, this->Handle, value);
 	}
-	void Ped::DrivingStyle::set(int value)
+	void Ped::DrivingStyle::set(GTA::DrivingStyle value)
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, this->Handle, value);
 	}
