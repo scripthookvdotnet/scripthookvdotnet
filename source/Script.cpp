@@ -35,10 +35,6 @@ namespace GTA
 	{
 		ScriptDomain::CurrentDomain->Wait(ms);
 	}
-	bool Script::IsKeyPressed(System::Windows::Forms::Keys key)
-	{
-		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
-	}
 
 	ScriptSettings ^Script::Settings::get()
 	{

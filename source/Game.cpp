@@ -1,6 +1,6 @@
 #include "Game.hpp"
 #include "Native.hpp"
-#include "Script.hpp"
+#include "ScriptDomain.hpp"
 
 namespace GTA
 {
@@ -47,6 +47,11 @@ namespace GTA
 	void Game::WantedMultiplier::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_WANTED_LEVEL_MULTIPLIER, value);
+	}
+
+	bool Game::IsKeyPressed(System::Windows::Forms::Keys key)
+	{
+		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
 	}
 
 	void Game::Pause()
