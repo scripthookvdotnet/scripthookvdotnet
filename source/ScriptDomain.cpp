@@ -14,20 +14,28 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "NativeCaller.h"
-#include "ScriptDomain.hpp"
 #include "Log.hpp"
+#include "ScriptDomain.hpp"
 
-#include <windows.h>
+#include <gcroot.h>
+#include <Windows.h>
 
 namespace GTA
 {
 	using namespace System;
+	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 	using namespace System::Collections::Concurrent;
 
 	namespace
 	{
+		void CALLBACK FiberScriptStart(gcroot<GTA::Script ^> *scripthandle)
+		{
+			GTA::Script ^script = *scripthandle;
+			delete scripthandle;
+
+			script->MainLoop();
+		}
 		Reflection::Assembly ^ResolveHandler(Object ^sender, ResolveEventArgs ^args)
 		{
 			if (args->Name->ToLower()->Contains("scripthookvdotnet"))
@@ -50,7 +58,7 @@ namespace GTA
 		}
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, Windows::Forms::KeyEventArgs ^> ^>()), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mFiberHandle(GetCurrentFiber()), mKeyboardState(gcnew array<bool>(255)), mPinnedStrings(gcnew List<IntPtr>()), mExecutingScript(nullptr), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
 	{
 		sCurrentDomain = this;
 
@@ -64,6 +72,20 @@ namespace GTA
 		CleanupStrings();
 
 		Log::Debug("Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
+	}
+
+	Script ^ScriptDomain::ExecutingScript::get()
+	{
+		if (Object::ReferenceEquals(sCurrentDomain, nullptr))
+		{
+			return nullptr;
+		}
+
+		return sCurrentDomain->mExecutingScript;
+	}
+	ScriptDomain ^ScriptDomain::CurrentDomain::get()
+	{
+		return sCurrentDomain;
 	}
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
@@ -304,6 +326,7 @@ namespace GTA
 			script->mRunning = true;
 			script->mFilename = scripttype->Item1;
 			script->mScriptDomain = this;
+			script->mFiberHandle = CreateFiber(0, reinterpret_cast<LPFIBER_START_ROUTINE>(&FiberScriptStart), new gcroot<Script ^>(script));
 
 			Log::Debug("Started script '", script->Name, "'.");
 
@@ -317,6 +340,7 @@ namespace GTA
 		for each (Script ^script in this->mRunningScripts)
 		{
 			AbortScript(script);
+			DeleteFiber(script->mFiberHandle);
 
 			delete script;
 		}
@@ -335,87 +359,53 @@ namespace GTA
 			Log::Debug("Aborted script '", script->Name, "'.");
 		}
 	}
-	void ScriptDomain::Wait(int ms)
+	void ScriptDomain::YieldScript(Script ^script)
 	{
-		scriptWait(ms);
+		if (script != this->mExecutingScript)
+		{
+			return;
+		}
+
+		while (DateTime::Now <= script->mNextTick)
+		{
+			SwitchToFiber(this->mFiberHandle);
+		}
 	}
 	void ScriptDomain::DoTick()
 	{
-		Tuple<bool, Windows::Forms::KeyEventArgs ^> ^keyevent = nullptr;
-
-		// Process events
-		while (this->mKeyboardEvents->TryDequeue(keyevent))
-		{
-			for each (Script ^script in this->mRunningScripts)
-			{
-				try
-				{
-					if (keyevent->Item1)
-					{
-						script->RaiseKeyDown(this, keyevent->Item2);
-					}
-					else
-					{
-						script->RaiseKeyUp(this, keyevent->Item2);
-					}
-				}
-				catch (Exception ^ex)
-				{
-					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
-				}
-			}
-		}
-
-		// Update script loops
+		// Run script loops
 		for each (Script ^script in this->mRunningScripts)
 		{
-			if (!script->mRunning)
-			{
-				continue;
-			}
-			else if (script->mInterval > 0)
-			{
-				if (script->mNextTick > DateTime::Now)
-				{
-					continue;
-				}
-				else
-				{
-					script->mNextTick = DateTime::Now + TimeSpan(0, 0, 0, 0, script->mInterval);
-				}
-			}
+			this->mExecutingScript = script;
 
-			try
-			{
-				script->RaiseTick(this);
-			}
-			catch (Exception ^ex)
-			{
-				UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
+			SwitchToFiber(script->mFiberHandle);
 
-				AbortScript(script);
-			}
+			this->mExecutingScript = nullptr;
 		}
 
 		// Delete pinned strings
 		CleanupStrings();
 	}
-	void ScriptDomain::DoKeyboardMessage(Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
+	void ScriptDomain::DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(key | (statusCtrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (statusShift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (statusAlt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
+		KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
 
 		// Update keyboard input
 		this->mKeyboardState[static_cast<int>(key)] = status;
-		this->mKeyboardEvents->Enqueue(gcnew Tuple<bool, Windows::Forms::KeyEventArgs ^>(status, args));
+
+		for each (Script ^script in this->mRunningScripts)
+		{
+			script->mKeyboardEvents->Enqueue(gcnew Tuple<bool, KeyEventArgs ^>(status, args));
+		}
 	}
 
-	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
+	bool ScriptDomain::IsKeyPressed(Keys key)
 	{
 		return this->mKeyboardState[static_cast<int>(key)];
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
 	{
-		IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
+		const IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
 
 		this->mPinnedStrings->Add(handle);
 
@@ -430,7 +420,7 @@ namespace GTA
 
 		this->mPinnedStrings->Clear();
 	}
-	System::Object ^ScriptDomain::InitializeLifetimeService()
+	Object ^ScriptDomain::InitializeLifetimeService()
 	{
 		return nullptr;
 	}

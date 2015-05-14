@@ -1,6 +1,6 @@
 #include "Model.hpp"
 #include "Native.hpp"
-#include "Script.hpp"
+#include "ScriptDomain.hpp"
 
 namespace GTA
 {
@@ -112,7 +112,7 @@ namespace GTA
 
 		while (!IsLoaded)
 		{
-			Script::Wait(0);
+			ScriptDomain::ExecutingScript->Yield();
 
 			if (System::DateTime::Now >= endtime)
 			{

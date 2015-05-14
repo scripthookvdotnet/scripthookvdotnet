@@ -16,6 +16,8 @@
 
 #pragma once
 
+#undef Yield
+
 #include "Viewport.hpp"
 
 namespace GTA
@@ -27,8 +29,6 @@ namespace GTA
 	{
 	public:
 		Script();
-
-		static void Wait(int ms);
 
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
@@ -69,36 +69,29 @@ namespace GTA
 			return Name;
 		}
 
-	protected:
+	public protected:
 		property int Interval
 		{
 			int get();
 			void set(int value);
 		}
 
+		void Wait(int ms);
+		void Yield();
+
 	internal:
 		~Script();
 
+		void MainLoop();
 		void UpdateViewport(Object ^Sender, System::EventArgs ^Args);
 		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
-		inline void RaiseTick(System::Object ^sender)
-		{
-			Tick(sender, System::EventArgs::Empty);
-		}
-		inline void RaiseKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
-		{
-			KeyUp(sender, args);
-		}
-		inline void RaiseKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
-		{
-			KeyDown(sender, args);
-		}
-
 		int mInterval;
 		bool mRunning;
+		void *mFiberHandle;
 		System::DateTime mNextTick;
 		ScriptDomain ^mScriptDomain;
+		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		ScriptSettings ^mSettings;
 		System::String ^mFilename;
 	};

@@ -98,7 +98,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, startText, "", "", "", "", "", maxLength);
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
-			Script::Wait(0);
+			ScriptDomain::ExecutingScript->Yield();
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
 }

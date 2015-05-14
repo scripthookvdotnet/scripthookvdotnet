@@ -14,35 +14,36 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
+#include "Log.hpp"
 #include "Settings.hpp"
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA
 {
-	Script::Script()
+	using namespace System;
+	using namespace System::Windows::Forms;
+	using namespace System::Collections::Concurrent;
+
+	Script::Script() : mFiberHandle(nullptr), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
 		Interval = 0;
+
 		View = gcnew Viewport();
-		Tick += gcnew System::EventHandler(this, &GTA::Script::UpdateViewport);
-		KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &GTA::Script::HandleViewportInput);
+		Tick += gcnew EventHandler(this, &Script::UpdateViewport);
+		KeyUp += gcnew KeyEventHandler(this, &Script::HandleViewportInput);
 	}
 	Script::~Script()
 	{
-	}
-
-	void Script::Wait(int ms)
-	{
-		ScriptDomain::CurrentDomain->Wait(ms);
 	}
 
 	ScriptSettings ^Script::Settings::get()
 	{
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			System::String ^path = System::IO::Path::ChangeExtension(this->mFilename, "ini");
+			String ^path = IO::Path::ChangeExtension(this->mFilename, "ini");
 
-			if (System::IO::File::Exists(path))
+			if (IO::File::Exists(path))
 			{
 				this->mSettings = ScriptSettings::Load(path);
 			}
@@ -60,29 +61,84 @@ namespace GTA
 	}
 	void Script::Interval::set(int value)
 	{
-		if (value > 0)
+		if (value < 0)
 		{
-			this->mInterval = value;
-			this->mNextTick = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, value);
+			value = 0;
 		}
-		else
-		{
-			this->mInterval = 0;
-			this->mNextTick = System::DateTime::MinValue;
-		}
+
+		this->mInterval = value;
+		this->mNextTick = DateTime::Now + TimeSpan(0, 0, 0, 0, value);
 	}
 
 	void Script::Abort()
 	{
 		this->mScriptDomain->AbortScript(this);
 	}
-	
-	void Script::UpdateViewport(Object ^sender, System::EventArgs ^e)
+	void Script::Wait(int ms)
+	{
+		if (!this->mRunning)
+		{
+			throw gcnew InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
+		}
+
+		this->mNextTick = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, ms);
+
+		this->mScriptDomain->YieldScript(this);
+	}
+	void Script::Yield()
+	{
+		Wait(0);
+	}
+
+	void Script::MainLoop()
+	{
+		Tuple<bool, KeyEventArgs ^> ^keyevent = nullptr;
+
+		while (this->mRunning)
+		{
+			// Process events
+			while (this->mKeyboardEvents->TryDequeue(keyevent))
+			{
+				try
+				{
+					if (keyevent->Item1)
+					{
+						KeyDown(this, keyevent->Item2);
+					}
+					else
+					{
+						KeyUp(this, keyevent->Item2);
+					}
+				}
+				catch (Exception ^ex)
+				{
+					Log::Error("Caught unhandled exception:", Environment::NewLine, ex->ToString());
+					break;
+				}
+			}
+
+			// Fire tick event
+			try
+			{
+				Tick(this, EventArgs::Empty);
+			}
+			catch (Exception ^ex)
+			{
+				Log::Error("Caught unhandled exception:", Environment::NewLine, ex->ToString());
+
+				Abort();
+				break;
+			}
+
+			// Yield execution to next tick
+			Wait(this->mInterval);
+		}
+	}
+	void Script::UpdateViewport(Object ^sender, EventArgs ^e)
 	{
 		View->Draw();
 	}
-	
-	void Script::HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e)
+	void Script::HandleViewportInput(Object ^sender, KeyEventArgs ^e)
 	{
 		if (e->KeyCode == ActivateKey) View->HandleActivate();
 		else if (e->KeyCode == BackKey) View->HandleBack();

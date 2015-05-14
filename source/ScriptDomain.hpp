@@ -26,12 +26,13 @@ namespace GTA
 		ScriptDomain();
 		~ScriptDomain();
 
+		static property Script ^ExecutingScript
+		{
+			Script ^get();
+		}
 		static property ScriptDomain ^CurrentDomain
 		{
-			ScriptDomain ^get()
-			{
-				return sCurrentDomain;
-			}
+			ScriptDomain ^get();
 		}
 
 		static ScriptDomain ^Load(System::String ^path);
@@ -55,7 +56,7 @@ namespace GTA
 		void Start();
 		void Abort();
 		static void AbortScript(Script ^script);
-		void Wait(int ms);
+		void YieldScript(Script ^script);
 		void DoTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
@@ -72,9 +73,10 @@ namespace GTA
 
 		static ScriptDomain ^sCurrentDomain;
 		array<bool> ^mKeyboardState;
-		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		System::AppDomain ^mAppDomain;
+		void *mFiberHandle;
 		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
+		Script ^mExecutingScript;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;
 		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
 	};
