@@ -33,9 +33,10 @@ namespace GTA
 		{
 			bool get();
 		}
-
-		void Select();
-		void Remove();
+		property Native::WeaponHash Hash
+		{
+			Native::WeaponHash get();
+		}
 
 	internal:
 		Weapon(Ped ^owner, Native::WeaponHash hash);

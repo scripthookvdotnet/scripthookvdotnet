@@ -19,7 +19,10 @@ namespace GTA
 			Weapon ^get(Native::WeaponHash hash);
 		}
 
-		Weapon ^Give(Native::WeaponHash hash);
+		Weapon ^Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded);
+		bool Select(Weapon ^weapon);
+		void Remove(Weapon ^weapon);
+		void RemoveAll();
 
 	internal:
 		WeaponCollection(Ped ^owner);

@@ -14,7 +14,14 @@ namespace GTA
 	{
 		int hash = 0;
 		Native::Function::Call(Native::Hash::GET_CURRENT_PED_WEAPON, this->pOwner->Handle, &hash, true);
-		return gcnew Weapon(this->pOwner, (Native::WeaponHash)hash);
+		Native::WeaponHash wHash = (Native::WeaponHash)hash;
+		if (this->weapons->ContainsKey(wHash))
+		{
+			return this->weapons->default[wHash];
+		}
+		Weapon ^weapon = gcnew Weapon(this->pOwner, (Native::WeaponHash)hash);
+		this->weapons->Add(wHash, weapon);
+		return weapon;
 	}
 	Weapon ^WeaponCollection::default::get(Native::WeaponHash hash)
 	{
@@ -26,18 +33,50 @@ namespace GTA
 		bool present = Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, this->pOwner->Handle, static_cast<int>(hash));
 		if (present)
 		{
-			return gcnew Weapon(this->pOwner, (Native::WeaponHash)hash);
+			weapon = gcnew Weapon(this->pOwner, (Native::WeaponHash)hash);
+			this->weapons->Add(hash, weapon);
+			return weapon;
 		}
 		return nullptr;
 	}
-	Weapon ^WeaponCollection::Give(Native::WeaponHash hash)
+	Weapon ^WeaponCollection::Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded)
 	{
 		Weapon ^weapon;
 		if (!this->weapons->TryGetValue(hash, weapon))
 		{
 			weapon = gcnew Weapon(this->pOwner, hash);
+			this->weapons->Add(hash, weapon);
 		}
-		weapon->Select();
+		if (weapon->IsPresent)
+		{
+			this->Select(weapon);
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, this->pOwner->Handle, static_cast<int>(weapon->Hash), ammoCount, equipNow, isAmmoLoaded);
+		}
 		return weapon;
+	}
+	bool WeaponCollection::Select(Weapon ^weapon)
+	{
+		if (weapon->IsPresent)
+		{
+			Native::Function::Call(Native::Hash::SET_CURRENT_PED_WEAPON, this->pOwner->Handle, static_cast<int>(weapon->Hash), true);
+			return true;
+		}
+		return false;
+	}
+	void WeaponCollection::Remove(Weapon ^weapon)
+	{
+		if (this->weapons->ContainsKey(weapon->Hash))
+		{
+			this->weapons->Remove(weapon->Hash);
+		}
+		Native::Function::Call(Native::Hash::REMOVE_WEAPON_FROM_PED, this->pOwner->Handle, static_cast<int>(weapon->Hash));
+	}
+	void WeaponCollection::RemoveAll()
+	{
+		Native::Function::Call(Native::Hash::REMOVE_ALL_PED_WEAPONS, this->pOwner->Handle, true);
+		this->weapons->Clear();
 	}
 }

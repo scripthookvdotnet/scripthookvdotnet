@@ -95,20 +95,8 @@ namespace GTA
 		}
 		return Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, this->pOwner->Handle, static_cast<int>(this->hash));
 	}
-
-	void Weapon::Select()
+	Native::WeaponHash Weapon::Hash::get()
 	{
-		if (this->IsPresent)
-		{
-			Native::Function::Call(Native::Hash::SET_CURRENT_PED_WEAPON, this->pOwner->Handle, static_cast<int>(this->hash), true);
-		}
-		else
-		{
-			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, this->pOwner->Handle, static_cast<int>(this->hash), this->MaxAmmo, true, true);
-		}
-	}
-	void Weapon::Remove()
-	{
-		Native::Function::Call(Native::Hash::REMOVE_WEAPON_FROM_PED, this->pOwner->Handle, static_cast<int>(this->hash));
+		return this->hash;
 	}
 }
