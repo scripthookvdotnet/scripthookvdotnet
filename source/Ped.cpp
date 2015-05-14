@@ -2,6 +2,7 @@
 #include "Vehicle.hpp"
 #include "Tasks.hpp"
 #include "Native.hpp"
+#include "WeaponCollection.hpp"
 
 namespace GTA
 {
@@ -206,6 +207,15 @@ namespace GTA
 	Relationship Ped::GetRelationshipWithPed(Ped ^ped)
 	{
 		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_PEDS, this->Handle, ped->Handle));
+	}
+
+	WeaponCollection ^Ped::Weapons::get()
+	{
+		if (this->pWeapons == nullptr)
+		{
+			this->pWeapons = gcnew WeaponCollection(this);
+		}
+		return this->pWeapons;
 	}
 
 	void Ped::Kill()

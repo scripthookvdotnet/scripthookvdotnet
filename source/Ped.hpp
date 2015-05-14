@@ -7,6 +7,7 @@ namespace GTA
 {
 	ref class Tasks;
 	ref class Vehicle;
+	ref class WeaponCollection;
 
 	public enum class Gender
 	{
@@ -175,6 +176,11 @@ namespace GTA
 			void set(int value);
 		}
 
+		property WeaponCollection ^Weapons
+		{
+			WeaponCollection ^get();
+		}
+
 		bool IsInVehicle();
 		bool IsInVehicle(Vehicle ^vehicle);
 		bool IsSittingInVehicle();
@@ -185,5 +191,6 @@ namespace GTA
 
 	private:
 		Tasks ^mTasks;
+		WeaponCollection ^pWeapons;
 	};
 }
