@@ -26,8 +26,11 @@ public class SimpleTrainer : Script
     void OpenTrainerMenu()
     {
         View.AddMenu(new GTA.Menu("Simple Trainer", new GTA.MenuItem[] {
-            new MenuButton("Player", "Opens the menu with \n player commands", OpenPlayerMenu),
-            new MenuButton("Weapons", "Opens the menu with \n weapon commands", OpenWeaponMenu)
+            new MenuLabel("Categories", true),
+            new MenuButton("Player", "Opens the menu with \nplayer commands", OpenPlayerMenu),
+            new MenuButton("Weapons", "Opens the menu with \nweapon commands", OpenWeaponMenu),
+            new MenuLabel("Settings", true),
+            new MenuButton("Open Settings", "Opens the trainer \nsettings menu", OpenSettingsMenu)
         }));
     }
 
@@ -46,6 +49,10 @@ public class SimpleTrainer : Script
             new MenuToggle("Unlimited ammo", "You never run out \nof ammo", ActivateUnlimitedAmmo, DeactivateUnlimitedAmmo),
             new MenuButton("Unlock all", "Unlocks all weapons", UnlockAllWeapons)
         }));
+    }
+
+    void OpenSettingsMenu()
+    {
     }
 
     void UnlockAllWeapons()

@@ -263,4 +263,73 @@ namespace GTA
 	{
 		mText->Text = Caption + " <" + mEntries[mSelectedIndex] + ">";
 	}
+	
+	MenuLabel::MenuLabel(System::String ^caption, bool underlined)
+	{
+		Caption = caption;
+		Description = "";
+		Underlined = underlined;
+	}
+
+	MenuLabel::MenuLabel(System::String ^caption)
+		: MenuLabel(caption, false)
+	{
+	}
+
+	void MenuLabel::Draw()
+	{
+		if (mButton == nullptr || mText == nullptr) return;
+		mButton->Draw();
+		mText->Draw();
+		if (Underlined && mUnderline != nullptr) mUnderline->Draw();
+	}
+
+	void MenuLabel::Draw(System::Drawing::Point offset)
+	{
+		if (mButton == nullptr || mText == nullptr) return;
+		mButton->Draw(offset.X, offset.Y);
+		mText->Draw(offset.X, offset.Y);
+		if (Underlined && mUnderline != nullptr) mUnderline->Draw(offset.X, offset.Y);
+	}
+
+	void MenuLabel::Select()
+	{
+		if (mButton == nullptr) return;
+		mButton->Color = Parent->SelectedItemColor;
+		mText->Color = Parent->SelectedTextColor;
+	}
+
+	void MenuLabel::Deselect()
+	{
+		if (mButton == nullptr) return;
+		mButton->Color = Parent->UnselectedItemColor;
+		mText->Color = Parent->UnselectedTextColor;
+	}
+
+	void MenuLabel::Activate()
+	{
+		return;
+	}
+
+	void MenuLabel::Change(bool right)
+	{
+		return;
+	}
+	
+	void MenuLabel::SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size)
+	{
+		this->mOrigin = topLeftOrigin;
+		this->mSize = size;
+		mButton = gcnew UIRectangle(mOrigin, mSize, Parent->UnselectedItemColor);
+		mText = gcnew UIText(Caption,
+			Parent->ItemTextCentered ? System::Drawing::Point(mOrigin.X + mSize.Width / 2, mOrigin.Y) : mOrigin,
+			Parent->ItemTextScale,
+			Parent->UnselectedTextColor,
+			Parent->ItemFont,
+			Parent->ItemTextCentered);
+		if (Underlined)
+		{
+			mUnderline = gcnew UIRectangle(System::Drawing::Point(mOrigin.X, mOrigin.Y + mSize.Height - 2), System::Drawing::Size(mSize.Width, 2), System::Drawing::Color::Black);
+		}
+	}
 }

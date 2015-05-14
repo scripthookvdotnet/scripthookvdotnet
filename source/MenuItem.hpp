@@ -175,4 +175,32 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
+
+	public ref class MenuLabel : MenuItem
+	{
+	public:
+		MenuLabel(System::String ^caption, bool underlined);
+		MenuLabel(System::String ^caption);
+
+	public:
+		virtual void Draw();
+		virtual void Draw(System::Drawing::Point offset);
+		virtual void Select();
+		virtual void Deselect();
+		virtual void Activate();
+		virtual void Change(bool right);
+		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
+
+		virtual property MenuBase ^Parent;
+		virtual property System::String ^Caption;
+		virtual property System::String ^Description;
+		property bool Underlined;
+
+	private:
+		UIRectangle ^mButton = nullptr, ^mUnderline = nullptr;
+		UIText ^mText = nullptr;
+
+		System::Drawing::Point mOrigin = System::Drawing::Point();
+		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
+	};
 }
