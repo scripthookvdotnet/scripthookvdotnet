@@ -103,11 +103,11 @@ void ScriptMainSetup()
 
 	while (true)
 	{
-		// Switch to our fiber and wait for it to switch back
-		SwitchToFiber(sScriptFib);
-
-		// Yield execution and switch fiber back to Script Hook
+		// Yield execution
 		scriptWait(0);
+
+		// Switch to our own fiber and wait for it to switch back
+		SwitchToFiber(sScriptFib);
 	}
 }
 void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)

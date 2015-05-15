@@ -17,10 +17,10 @@
 #pragma once
 
 #include "Game.hpp"
-#include "Viewport.hpp"
 
 namespace GTA
 {
+	ref class Viewport;
 	ref class ScriptDomain;
 	ref class ScriptSettings;
 
@@ -46,8 +46,6 @@ namespace GTA
 		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
 		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
 
-		Viewport ^View;
-
 		property System::String ^Name
 		{
 			System::String ^get()
@@ -61,6 +59,10 @@ namespace GTA
 			{
 				return this->mFilename;
 			}
+		}
+		property Viewport ^View
+		{
+			Viewport ^get();
 		}
 		property ScriptSettings ^Settings
 		{
@@ -93,11 +95,13 @@ namespace GTA
 
 		int mInterval;
 		bool mRunning;
-		void *mFiberHandle;
-		System::DateTime mNextTick;
-		ScriptDomain ^mScriptDomain;
-		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
-		ScriptSettings ^mSettings;
 		System::String ^mFilename;
+		ScriptDomain ^mScriptDomain;
+		System::Threading::Thread ^mThread;
+		System::Threading::AutoResetEvent ^mWaitEvent;
+		System::Threading::AutoResetEvent ^mContinueEvent;
+		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
+		Viewport ^mViewport;
+		ScriptSettings ^mSettings;
 	};
 }
