@@ -3,7 +3,7 @@
 #include "Tasks.hpp"
 #include "TaskSequence.hpp"
 #include "Native.hpp"
-#include "ScriptDomain.hpp"
+#include "Script.hpp"
 
 namespace GTA
 {
@@ -202,7 +202,7 @@ namespace GTA
 
 		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animSet))
 		{
-			ScriptDomain::ExecutingScript->Yield();
+			Script::Yield();
 
 			if (System::DateTime::Now >= endtime)
 			{

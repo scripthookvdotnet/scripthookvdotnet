@@ -29,6 +29,8 @@ namespace GTA
 	public:
 		Script();
 
+		static void Wait(int ms);
+		static void Yield();
 		[System::ObsoleteAttribute("Script.IsKeyPressed is obsolete, please use Game.IsKeyPressed instead.")]
 		static bool IsKeyPressed(System::Windows::Forms::Keys key)
 		{
@@ -76,15 +78,12 @@ namespace GTA
 			return Name;
 		}
 
-	public protected:
+	protected:
 		property int Interval
 		{
 			int get();
 			void set(int value);
 		}
-
-		void Wait(int ms);
-		void Yield();
 
 	internal:
 		~Script();

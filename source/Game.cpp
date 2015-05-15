@@ -97,8 +97,12 @@ namespace GTA
 	System::String ^Game::GetUserInput(System::String ^startText, int maxLength)
 	{
 		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, startText, "", "", "", "", "", maxLength);
+
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
-			ScriptDomain::ExecutingScript->Yield();
+		{
+			Script::Yield();
+		}
+
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
 }

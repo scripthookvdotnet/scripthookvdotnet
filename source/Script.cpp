@@ -86,7 +86,9 @@ namespace GTA
 	}
 	void Script::Wait(int ms)
 	{
-		if (!this->mRunning)
+		Script ^script = ScriptDomain::ExecutingScript;
+
+		if (Object::ReferenceEquals(script, nullptr) || !script->mRunning)
 		{
 			throw gcnew InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
 		}
@@ -95,8 +97,8 @@ namespace GTA
 
 		do
 		{
-			this->mWaitEvent->Set();
-			this->mContinueEvent->WaitOne();
+			script->mWaitEvent->Set();
+			script->mContinueEvent->WaitOne();
 		}
 		while (DateTime::Now < resume);
 	}
