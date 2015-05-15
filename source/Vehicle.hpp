@@ -250,6 +250,13 @@ namespace GTA
 		TireSmoke = 20,
 		XenonHeadlights = 22
 	};
+	public enum class VehicleNeonLight
+	{
+		Left = 0,
+		Right = 1,
+		Front = 2,
+		Back = 3,
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
@@ -412,6 +419,10 @@ namespace GTA
 		{
 			void set(System::Drawing::Color color);
 		}
+		property System::Drawing::Color NeonLightsColor
+		{
+			void set(System::Drawing::Color color);
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
@@ -433,6 +444,7 @@ namespace GTA
 		void RollDownWindow(VehicleWindow window);
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
+		void SetNeonLightsOn(VehicleNeonLight light, bool on);
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 
