@@ -34,6 +34,25 @@ namespace GTA
 		using namespace System;
 		using namespace System::Collections::Generic;
 
+		private ref struct NativeTask : public IScriptTask
+		{
+			virtual void Run()
+			{
+				nativeInit(this->Hash);
+
+				for each (InputArgument ^argument in this->Arguments)
+				{
+					nativePush64(argument->mData);
+				}
+
+				this->Result = nativeCall();
+			}
+
+			UINT64 Hash;
+			PUINT64 Result;
+			array<InputArgument ^> ^Arguments;
+		};
+
 		InputArgument::InputArgument(bool value) : mData(value ? 1 : 0)
 		{
 		}
@@ -173,21 +192,13 @@ namespace GTA
 		generic <typename T>
 		T Function::Call(UInt64 hash, ... array<InputArgument ^> ^arguments)
 		{
-			if (hash == 0)
-			{
-				throw gcnew ArgumentException("Missing hash to native function call.", "hash");
-			}
+			NativeTask ^task = gcnew NativeTask();
+			task->Hash = hash;
+			task->Arguments = arguments;
 
-			nativeInit(hash);
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
-			for each (InputArgument ^argument in arguments)
-			{
-				nativePush64(argument->mData);
-			}
-
-			const PUINT64 result = nativeCall();
-
-			return static_cast<T>(GetResult(T::typeid, result));
+			return static_cast<T>(GetResult(T::typeid, task->Result));
 		}
 	}
 }
