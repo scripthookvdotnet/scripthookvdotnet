@@ -237,6 +237,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->Handle, color.R, color.G, color.B);
 	}
+	void Vehicle::NeonLightsColor::set(System::Drawing::Color color)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, color.R, color.G, color.B);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
@@ -335,6 +339,10 @@ namespace GTA
 	void Vehicle::RemoveWindow(VehicleWindow window)
 	{
 		Native::Function::Call(Native::Hash::REMOVE_VEHICLE_WINDOW, this->Handle, static_cast<int>(window));
+	}
+	void Vehicle::SetNeonLightsOn(VehicleNeonLight light, bool on)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_ON, this->Handle, static_cast<int>(light), on);
 	}
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
