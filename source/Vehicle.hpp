@@ -421,6 +421,7 @@ namespace GTA
 		}
 		property System::Drawing::Color NeonLightsColor
 		{
+			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
 
@@ -445,6 +446,7 @@ namespace GTA
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
 		void SetNeonLightsOn(VehicleNeonLight light, bool on);
+		bool IsNeonLightsOn(VehicleNeonLight light);
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 

@@ -237,6 +237,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->Handle, color.R, color.G, color.B);
 	}
+	System::Drawing::Color Vehicle::NeonLightsColor::get()
+	{
+		int r, g, b;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, &r, &g, &b);
+
+		return System::Drawing::Color::FromArgb(r, g, b);
+	}
 	void Vehicle::NeonLightsColor::set(System::Drawing::Color color)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, color.R, color.G, color.B);
@@ -343,6 +350,10 @@ namespace GTA
 	void Vehicle::SetNeonLightsOn(VehicleNeonLight light, bool on)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_ON, this->Handle, static_cast<int>(light), on);
+	}
+	bool Vehicle::IsNeonLightsOn(VehicleNeonLight light)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_NEON_LIGHT_ON, this->Handle, static_cast<int>(light));
 	}
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
