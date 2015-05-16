@@ -55,7 +55,7 @@ namespace GTA
 		return toWaitOn->WaitOne(timeout);
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
 	{
 		sCurrentDomain = this;
 
@@ -395,9 +395,16 @@ namespace GTA
 
 	void ScriptDomain::ExecuteTask(IScriptTask ^task)
 	{
-		this->mTaskQueue->Enqueue(task);
+		if (Thread::CurrentThread->ManagedThreadId == this->mExecutingThreadId)
+		{
+			task->Run();
+		}
+		else
+		{
+			this->mTaskQueue->Enqueue(task);
 
-		SignalAndWait(ExecutingScript->mWaitEvent, ExecutingScript->mContinueEvent);
+			SignalAndWait(ExecutingScript->mWaitEvent, ExecutingScript->mContinueEvent);
+		}
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
 	{

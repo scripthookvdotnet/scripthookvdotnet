@@ -92,6 +92,7 @@ namespace GTA
 
 		static ScriptDomain ^sCurrentDomain;
 		System::AppDomain ^mAppDomain;
+		int mExecutingThreadId;
 		Script ^mExecutingScript;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;
 		System::Collections::Generic::Queue<IScriptTask ^> ^mTaskQueue;
