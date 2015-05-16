@@ -185,6 +185,10 @@ namespace GTA
 		{
 			void set(GTA::DrivingStyle value);
 		}
+		property float WetnessHeight
+		{
+			void set(float value);
+		}
 
 		property WeaponCollection ^Weapons
 		{
@@ -198,6 +202,8 @@ namespace GTA
 		Relationship GetRelationshipWithPed(Ped ^ped);
 
 		void Kill();
+		void ResetVisibleDamage();
+		void ClearBloodDamage();
 
 	private:
 		Tasks ^mTasks;
