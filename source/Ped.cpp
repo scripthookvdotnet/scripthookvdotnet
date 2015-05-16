@@ -208,6 +208,10 @@ namespace GTA
 	{
 		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_PEDS, this->Handle, ped->Handle));
 	}
+	void Ped::WetnessHeight::set(float value)
+	{
+		Native::Function::Call<float>(Native::Hash::SET_PED_WETNESS_HEIGHT, this->Handle, value);
+	}
 
 	WeaponCollection ^Ped::Weapons::get()
 	{
@@ -221,5 +225,13 @@ namespace GTA
 	void Ped::Kill()
 	{
 		Health = -1;
+	}
+	void Ped::ResetVisibleDamage()
+	{
+		Native::Function::Call(Native::Hash::RESET_PED_VISIBLE_DAMAGE, this->Handle);
+	}
+	void Ped::ClearBloodDamage()
+	{
+		Native::Function::Call(Native::Hash::CLEAR_PED_BLOOD_DAMAGE, this->Handle);
 	}
 }
