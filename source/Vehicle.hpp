@@ -447,6 +447,11 @@ namespace GTA
 		void RemoveWindow(VehicleWindow window);
 		void SetNeonLightsOn(VehicleNeonLight light, bool on);
 		bool IsNeonLightsOn(VehicleNeonLight light);
+		void SoundHorn(int duration);
+
+		bool IsTireBurst(int wheel);
+		void BurstTire(int wheel);
+		void FixTire(int wheel);
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 
