@@ -141,6 +141,9 @@ namespace GTA
 		void MarkAsNoLongerNeeded();
 		virtual bool Equals(Entity ^entity);
 
+		bool IsTouching(Entity ^entity);
+		bool HasBeenDamagedBy(Entity ^entity);
+
 		virtual int GetHashCode() override;
 		static inline bool operator ==(Entity ^left, Entity ^right)
 		{

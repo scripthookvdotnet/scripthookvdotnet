@@ -192,6 +192,15 @@ namespace GTA
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, this->Handle, offset.X, offset.Y, offset.Z);
 	}
 
+	bool Entity::IsTouching(Entity ^entity)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_TOUCHING_ENTITY, this->Handle, entity->Handle);
+	}
+	bool Entity::HasBeenDamagedBy(Entity ^entity)
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, this->Handle, entity->Handle, 1);
+	}
+
 	void Entity::Delete()
 	{
 		int handle = this->Handle;
