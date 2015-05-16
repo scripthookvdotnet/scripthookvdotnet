@@ -356,6 +356,25 @@ namespace GTA
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_NEON_LIGHT_ON, this->Handle, static_cast<int>(light));
 	}
 
+	void Vehicle::SoundHorn(int duration)
+	{
+		int heldDownHash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "HELDDOWN");
+		Native::Function::Call(Native::Hash::START_VEHICLE_HORN, this->ID, duration, heldDownHash, 0);
+	}
+
+	bool Vehicle::IsTireBurst(int wheel)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_TYRE_BURST, this->Handle, wheel, false);
+	}
+	void Vehicle::BurstTire(int wheel)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRE_BURST, this->Handle, wheel, 1, 1000.0f);
+	}
+	void Vehicle::FixTire(int wheel)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRE_FIXED, this->Handle, wheel);
+	}
+
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
 	{
 		Ped ^ped = World::CreatePed(model, this->Position);
