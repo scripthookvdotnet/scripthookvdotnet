@@ -82,13 +82,13 @@ namespace GTA
 		property int FooterHeight;
 		property int ItemHeight;
 		property bool HasFooter;
+		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
+		int mSelectedIndex = -1;
 
 	private:
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
-		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
-		int mSelectedIndex = -1;
 		System::String ^mFooterDescription = "footer description";
 	};
 
@@ -114,8 +114,8 @@ namespace GTA
 		void Remove(int Index);
 		void Remove(System::String ^Caption);
 
-		property int SelectedIndex 
-		{ 
+		property int SelectedIndex
+		{
 			int get() { return mSelectedIndex; }
 			void set(int NewIndex)
 			{
