@@ -424,6 +424,11 @@ namespace GTA
 			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
+		property System::Drawing::Color TireSmokeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color color);
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);

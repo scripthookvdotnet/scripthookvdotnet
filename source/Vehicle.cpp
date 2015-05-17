@@ -248,6 +248,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, color.R, color.G, color.B);
 	}
+	System::Drawing::Color Vehicle::TireSmokeColor::get()
+	{
+		int r, g, b;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_TYRE_SMOKE_COLOR, this->Handle, &r, &g, &b);
+
+		return System::Drawing::Color::FromArgb(r, g, b);
+	}
+	void Vehicle::TireSmokeColor::set(System::Drawing::Color color)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRE_SMOKE_COLOR, this->Handle, color.R, color.G, color.B);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
