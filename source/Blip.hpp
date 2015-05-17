@@ -55,6 +55,10 @@ namespace GTA
 			int get();
 			void set(int sprite);
 		}
+		property int Type
+		{
+			int get();
+		}
 
 		bool Exists(); // BOOL DOES_BLIP_EXIST(Any p0) // 0xAE92DD96
 		void SetAsFriendly(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8

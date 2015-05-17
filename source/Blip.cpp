@@ -59,6 +59,11 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_SPRITE, this->Handle, value);
 	}
+	int Blip::Type::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, this->Handle);
+	}
+
 	void Blip::ShowNumber(int number)
 	{
 		Native::Function::Call(Native::Hash::SHOW_NUMBER_ON_BLIP, this->Handle, number);
@@ -67,7 +72,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::HIDE_NUMBER_ON_BLIP, this->Handle);
 	}
-
 	bool Blip::Exists()
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, this->Handle);
