@@ -60,6 +60,8 @@ namespace GTA
 		void SetAsFriendly(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
 		void SetAsHostile(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
 		void Remove(); // void REMOVE_BLIP(int BlipID) // 0xD8C3C1CD
+		void ShowNumber(int number);
+		void HideNumber();
 		
 		
 		// BOOL IS_BLIP_ON_MINIMAP(Any p0) // 0x258CBA3A
