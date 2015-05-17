@@ -15,7 +15,7 @@ namespace GTA
 		/** Add a menu to the stack of active menus and set it as focused */
 		void AddMenu(MenuBase ^newMenu);
 
-		/** Add a menu from the stack of active menus */
+		/** Remove a menu from the stack of active menus */
 		void RemoveMenu(MenuBase ^menu);
 
 		/** Remove the active menu from the stack, this will focus the next highest menu */
