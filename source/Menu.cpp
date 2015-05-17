@@ -113,6 +113,10 @@ namespace GTA
 		int newIndex = down ? mSelectedIndex + 1 : mSelectedIndex - 1;
 		if (newIndex < 0) newIndex = 0;
 		if (newIndex >= mItems->Count) newIndex = mItems->Count - 1;
+		OnChangeSelection(newIndex);
+	}
+
+	void Menu::OnChangeSelection(int newIndex){
 		mItems[mSelectedIndex]->Deselect();
 		mSelectedIndex = newIndex;
 		mFooterDescription = mItems[mSelectedIndex]->Description;
@@ -133,7 +137,7 @@ namespace GTA
 		if (mSelectedIndex < 0 || mSelectedIndex >= mItems->Count) return;
 		mItems[mSelectedIndex]->Change(right);
 	}
-	
+
 	ListMenu::ListMenu(System::String ^headerCaption, System::Action<ListMenu ^> ^activationAction)
 	{
 		mItems = gcnew System::Collections::Generic::List<System::Tuple<System::String ^, System::String ^> ^>();
