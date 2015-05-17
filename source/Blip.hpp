@@ -50,11 +50,22 @@ namespace GTA
 		{
 			void set(bool value); // void SET_BLIP_ROUTE(Object blip, BOOL enabled) // 0x3E160C90
 		}
+		property int Sprite
+		{
+			int get();
+			void set(int sprite);
+		}
+		property int Type
+		{
+			int get();
+		}
 
 		bool Exists(); // BOOL DOES_BLIP_EXIST(Any p0) // 0xAE92DD96
 		void SetAsFriendly(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
 		void SetAsHostile(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
 		void Remove(); // void REMOVE_BLIP(int BlipID) // 0xD8C3C1CD
+		void ShowNumber(int number);
+		void HideNumber();
 		
 		
 		// BOOL IS_BLIP_ON_MINIMAP(Any p0) // 0x258CBA3A

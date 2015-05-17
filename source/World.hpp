@@ -65,6 +65,10 @@ namespace GTA
 		{
 			void set(int value);
 		}
+		static property array<Blip ^> ^ActiveBlips
+		{
+			array<Blip ^> ^get();
+		}
 
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
