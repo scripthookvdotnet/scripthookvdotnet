@@ -27,6 +27,16 @@ namespace GTA
 		newMenu->OnOpen();
 	}
 
+	void Viewport::RemoveMenu(MenuBase ^menu){
+		//Reset the ease time
+		mEaseTime = 0.0f;
+		mEaseDirection = true;
+		mIsEasing = true;
+
+		menu->OnClose();
+		mMenuStack->Remove(menu);
+	}
+
 	void Viewport::PopMenu()
 	{
 		if (mMenuStack->Count <= 0) return;
