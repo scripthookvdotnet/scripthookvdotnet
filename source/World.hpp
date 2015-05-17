@@ -33,7 +33,8 @@ namespace GTA
 		Fire = 25,
 		BigFire = 9,
 	};
-	public enum class Relationship {
+	public enum class Relationship
+	{
 		Hate = 5,
 		Dislike = 4,
 		Neutral = 3,
@@ -69,6 +70,7 @@ namespace GTA
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius, int maxAmount);
+		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float GetGroundZ(Math::Vector3 position);
