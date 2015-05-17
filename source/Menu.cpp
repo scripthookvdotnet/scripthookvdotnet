@@ -136,6 +136,8 @@ namespace GTA
 	
 	ListMenu::ListMenu(System::String ^headerCaption, System::Action<ListMenu ^> ^activationAction)
 	{
+		mItems = gcnew System::Collections::Generic::List<System::Tuple<System::String ^, System::String ^> ^>();
+		mUIEntries = gcnew System::Collections::Generic::List<System::Tuple<UIRectangle ^, UIText ^> ^>();
 		//Set defaults for the properties
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
@@ -164,8 +166,10 @@ namespace GTA
 		HasFooter = true;
 	}
 
+	void Nil(ListMenu ^ _menu) {}
+
 	ListMenu::ListMenu(System::String ^headerCaption)
-		: ListMenu(headerCaption, nullptr)
+		: ListMenu(headerCaption, gcnew System::Action<ListMenu ^>(Nil))
 	{
 	}
 
@@ -184,11 +188,17 @@ namespace GTA
 			System::Drawing::Color BoxColor = Selected ? SelectedItemColor : UnselectedItemColor;
 			UIRectangle ^Box = gcnew UIRectangle(Origin, Bounds, BoxColor);
 			System::Drawing::Color TextColor = Selected ? SelectedTextColor : UnselectedTextColor;
-			System::Drawing::Point TextOrigin = ItemTextCentered ? System::Drawing::Point(Width / 2, ItemHeight * i) : Origin;
+			System::Drawing::Point TextOrigin = ItemTextCentered ? System::Drawing::Point(Width / 2, HeaderHeight + ItemHeight * i) : Origin;
 			UIText ^Text = gcnew UIText(Caption, TextOrigin, ItemTextScale, TextColor, ItemFont, ItemTextCentered);
 			System::Tuple<UIRectangle ^, UIText ^> ^EntryTuple = System::Tuple::Create<UIRectangle ^, UIText ^>(Box, Text);
 			mUIEntries->Add(EntryTuple);
 			i++;
+		}
+		if (HasFooter && mFooterRect != nullptr && mFooterText != nullptr)
+		{
+			mFooterRect->Position = System::Drawing::Point(0, HeaderHeight + i * ItemHeight);
+			mFooterText->Position = FooterCentered ? System::Drawing::Point(Width / 2, HeaderHeight + i * ItemHeight)
+				: System::Drawing::Point(0, HeaderHeight + i * ItemHeight);
 		}
 	}
 
@@ -210,23 +220,23 @@ namespace GTA
 
 	void ListMenu::Draw()
 	{
-		Draw(System::Drawing::Point());
+		Draw(System::Drawing::Size());
 	}
 
-	void ListMenu::Draw(System::Drawing::Point offset)
+	void ListMenu::Draw(System::Drawing::Size offset)
 	{
-		if (mHeaderRect == nullptr || mHeaderText == nullptr || (HasFooter && (mFooterRect == nullptr || mFooterText == nullptr))) return;
-		if (HasFooter)
+		if (mHeaderRect == nullptr || mHeaderText == nullptr) return;
+		mHeaderRect->Draw(offset);
+		mHeaderText->Draw(offset);
+		if (HasFooter && mFooterRect != nullptr && mFooterText != nullptr)
 		{
-			mFooterRect->Draw(offset.X, offset.Y);
-			mFooterText->Draw(offset.X, offset.Y);
+			mFooterRect->Draw(offset);
+			mFooterText->Draw(offset);
 		}
-		mHeaderRect->Draw(offset.X, offset.Y);
-		mHeaderText->Draw(offset.X, offset.Y);
 		for each (System::Tuple<UIRectangle ^, UIText ^> ^EntryTuple in mUIEntries)
 		{
-			EntryTuple->Item1->Draw(offset.X, offset.Y);
-			EntryTuple->Item2->Draw(offset.X, offset.Y);
+			EntryTuple->Item1->Draw(offset);
+			EntryTuple->Item2->Draw(offset);
 		}
 	}
 
@@ -276,6 +286,7 @@ namespace GTA
 		int newIndex = down ? mSelectedIndex + 1 : mSelectedIndex - 1;
 		mSelectedIndex = newIndex;
 		UpdateHighlight();
+		mFooterDescription = mItems[mSelectedIndex]->Item2;
 
 		//Update footer
 		int itemsHeight = mItems->Count * ItemHeight;
@@ -363,12 +374,13 @@ namespace GTA
 
 	void MessageBox::Initialize()
 	{
-		mBodyRect = gcnew UIRectangle(Position, System::Drawing::Size(Width, Height), HeaderColor);
-		mText = gcnew UIText(Caption, HeaderCentered ? System::Drawing::Point(Position.X + Width / 2, Position.Y) : Position, HeaderTextScale, HeaderTextColor, HeaderFont, HeaderCentered);
-		mYesRect = gcnew UIRectangle(System::Drawing::Point(Position.X, Height + Position.Y), System::Drawing::Size(Width / 2, ButtonHeight), UnselectedItemColor);
-		mNoRect = gcnew UIRectangle(System::Drawing::Point(Position.X + Width / 2, Height + Position.Y), System::Drawing::Size(Width / 2, ButtonHeight), UnselectedItemColor);
-		mYesText = gcnew UIText(OkCancel ? "OK" : "Yes", System::Drawing::Point(Position.X + Width / 4, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
-		mNoText = gcnew UIText(OkCancel ? "Cancel" : "No", System::Drawing::Point(Position.X + Width / 4 * 3, Position.Y + Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+		mBodyRect = gcnew UIRectangle(System::Drawing::Point(), System::Drawing::Size(Width, Height), HeaderColor);
+		mText = gcnew UIText(Caption, HeaderCentered ? System::Drawing::Point(Width / 2, 0) : System::Drawing::Point(), HeaderTextScale, HeaderTextColor, HeaderFont, HeaderCentered);
+		mYesRect = gcnew UIRectangle(System::Drawing::Point(0, Height), System::Drawing::Size(Width / 2, ButtonHeight), UnselectedItemColor);
+		mNoRect = gcnew UIRectangle(System::Drawing::Point(Width / 2, Height), System::Drawing::Size(Width / 2, ButtonHeight), UnselectedItemColor);
+		mYesText = gcnew UIText(OkCancel ? "OK" : "Yes", System::Drawing::Point(Width / 4, Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+		mNoText = gcnew UIText(OkCancel ? "Cancel" : "No", System::Drawing::Point(Width / 4 * 3, Height), ItemTextScale, UnselectedTextColor, ItemFont, ItemTextCentered);
+		OnChangeItem(false);
 	}
 
 	void MessageBox::OnOpen()

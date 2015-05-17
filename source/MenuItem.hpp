@@ -78,7 +78,7 @@ namespace GTA
 
 	public:
 		virtual void Draw();
-		virtual void Draw(System::Drawing::Point offset);
+		virtual void Draw(System::Drawing::Size offset);
 		virtual void Select();
 		virtual void Deselect();
 		virtual void Activate();
@@ -111,7 +111,7 @@ namespace GTA
 
 	public:
 		virtual void Draw();
-		virtual void Draw(System::Drawing::Point offset);
+		virtual void Draw(System::Drawing::Size offset);
 		virtual void Select();
 		virtual void Deselect();
 		virtual void Activate();
@@ -149,7 +149,7 @@ namespace GTA
 
 	public:
 		virtual void Draw();
-		virtual void Draw(System::Drawing::Point offset);
+		virtual void Draw(System::Drawing::Size offset);
 		virtual void Select();
 		virtual void Deselect();
 		virtual void Activate();
@@ -184,7 +184,7 @@ namespace GTA
 
 	public:
 		virtual void Draw();
-		virtual void Draw(System::Drawing::Point offset);
+		virtual void Draw(System::Drawing::Size offset);
 		virtual void Select();
 		virtual void Deselect();
 		virtual void Activate();
@@ -194,10 +194,14 @@ namespace GTA
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
-		property bool Underlined;
+
+		property bool UnderlinedBelow;
+		property bool UnderlinedAbove;
+		property System::Drawing::Color UnderlineColor;
+		property int UnderlineHeight;
 
 	private:
-		UIRectangle ^mButton = nullptr, ^mUnderline = nullptr;
+		UIRectangle ^mButton = nullptr, ^mUnderlineBelow = nullptr, ^mUnderlineAbove = nullptr;
 		UIText ^mText = nullptr;
 
 		System::Drawing::Point mOrigin = System::Drawing::Point();

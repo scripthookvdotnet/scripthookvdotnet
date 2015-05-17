@@ -65,8 +65,8 @@ void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusSh
 #pragma unmanaged
 #pragma warning(disable: 4793)
 
-#include "Main.h"
 #include <Windows.h>
+#include "main.h"
 
 bool sGameReloaded = false;
 PVOID sMainFib = nullptr;

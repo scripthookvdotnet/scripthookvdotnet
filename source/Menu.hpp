@@ -100,7 +100,7 @@ namespace GTA
 
 	public:
 		virtual void Draw() override;
-		virtual void Draw(System::Drawing::Point offset) override;
+		virtual void Draw(System::Drawing::Size offset) override;
 		virtual void Initialize() override;
 		virtual void OnOpen() override;
 		virtual void OnClose() override;

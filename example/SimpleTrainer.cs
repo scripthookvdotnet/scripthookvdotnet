@@ -1,12 +1,13 @@
-﻿using System;
+﻿﻿//This isn't a full fledged trainer
+//It's just a trainer menu to show how to use the Menu API
+
+using System;
 using System.Windows.Forms;
 using GTA;
 using GTA.Native;
 
 public class SimpleTrainer : Script
 {
-    GTA.Menu TrainerMenu;
-
     public SimpleTrainer()
     {
         //Use some fancy transitions
@@ -18,7 +19,10 @@ public class SimpleTrainer : Script
     void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (e.KeyCode == Keys.F8)
-            OpenTrainerMenu();
+        {
+            if (View.ActiveMenus == 0)
+                OpenTrainerMenu();
+        }
     }
 
     #region Menu
@@ -29,6 +33,7 @@ public class SimpleTrainer : Script
             new MenuLabel("Categories", true),
             new MenuButton("Player", "Opens the menu with \nplayer commands", OpenPlayerMenu),
             new MenuButton("Weapons", "Opens the menu with \nweapon commands", OpenWeaponMenu),
+            new MenuButton("Spawn Vehicle", "Opens the menu with\nvehicles to spawn", OpenVehicleSpawnMenu),
             new MenuLabel("Settings", true),
             new MenuButton("Open Settings", "Opens the trainer \nsettings menu", OpenSettingsMenu)
         }));
@@ -49,6 +54,16 @@ public class SimpleTrainer : Script
             new MenuToggle("Unlimited ammo", "You never run out \nof ammo", ActivateUnlimitedAmmo, DeactivateUnlimitedAmmo),
             new MenuButton("Unlock all", "Unlocks all weapons", UnlockAllWeapons)
         }));
+    }
+
+    void OpenVehicleSpawnMenu()
+    {
+        ListMenu VehicleMenu = new ListMenu("Spawn Vehicle");
+        VehicleMenu.Add("Infernus", "A fast car");
+        VehicleMenu.Add("LAZER", "A military jet");
+        VehicleMenu.Add("BMX", "A bike");
+        VehicleMenu.Add("Jetpack", "CLASSIFIED");
+        View.AddMenu(VehicleMenu);
     }
 
     void OpenSettingsMenu()

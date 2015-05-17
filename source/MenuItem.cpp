@@ -78,14 +78,14 @@ namespace GTA
 
 	void MenuToggle::Draw()
 	{
-		Draw(System::Drawing::Point());
+		Draw(System::Drawing::Size());
 	}
 
-	void MenuToggle::Draw(System::Drawing::Point offset)
+	void MenuToggle::Draw(System::Drawing::Size offset)
 	{
 		if (mButton == nullptr || mText == nullptr) return;
-		mButton->Draw(offset.X, offset.Y);
-		mText->Draw(offset.X, offset.Y);
+		mButton->Draw(offset);
+		mText->Draw(offset);
 	}
 	
 	void MenuToggle::Select()
@@ -123,12 +123,12 @@ namespace GTA
 		mToggleSelection = !mToggleSelection;
 		if (mToggleSelection)
 		{
-			mText->Text = Caption + " <ON>";
+			mText->Caption = Caption + " <ON>";
 			mActivationAction->Invoke();
 		}
 		else
 		{
-			mText->Text = Caption + " <OFF>";
+			mText->Caption = Caption + " <OFF>";
 			mDeactivationAction->Invoke();
 		}
 	}
@@ -147,14 +147,14 @@ namespace GTA
 
 	void MenuNumericScroller::Draw()
 	{
-		Draw(System::Drawing::Point());
+		Draw(System::Drawing::Size());
 	}
 
-	void MenuNumericScroller::Draw(System::Drawing::Point offset)
+	void MenuNumericScroller::Draw(System::Drawing::Size offset)
 	{
 		if (mButton == nullptr || mText == nullptr) return;
-		mButton->Draw(offset.X, offset.Y);
-		mText->Draw(offset.X, offset.Y);
+		mButton->Draw(offset);
+		mText->Draw(offset);
 	}
 	
 	void MenuNumericScroller::Select()
@@ -199,7 +199,7 @@ namespace GTA
 		if (DecimalFigures == -1) NumberString = Number.ToString();
 		else if (DecimalFigures == 0) NumberString = ((int)Number).ToString();
 		else NumberString = Number.ToString("F" + DecimalFigures);
-		mText->Text = Caption + " <" + NumberString + ">";
+		mText->Caption = Caption + " <" + NumberString + ">";
 	}
 
 	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries)
@@ -214,14 +214,14 @@ namespace GTA
 
 	void MenuEnumScroller::Draw()
 	{
-		Draw(System::Drawing::Point());
+		Draw(System::Drawing::Size());
 	}
 
-	void MenuEnumScroller::Draw(System::Drawing::Point offset)
+	void MenuEnumScroller::Draw(System::Drawing::Size offset)
 	{
 		if (mButton == nullptr || mText == nullptr) return;
-		mButton->Draw(offset.X, offset.Y);
-		mText->Draw(offset.X, offset.Y);
+		mButton->Draw(offset);
+		mText->Draw(offset);
 	}
 	
 	void MenuEnumScroller::Select()
@@ -261,14 +261,17 @@ namespace GTA
 
 	void MenuEnumScroller::UpdateText()
 	{
-		mText->Text = Caption + " <" + mEntries[mSelectedIndex] + ">";
+		mText->Caption = Caption + " <" + mEntries[mSelectedIndex] + ">";
 	}
 	
 	MenuLabel::MenuLabel(System::String ^caption, bool underlined)
 	{
 		Caption = caption;
 		Description = "";
-		Underlined = underlined;
+		UnderlinedBelow = underlined;
+		UnderlinedAbove = false;
+		UnderlineColor = System::Drawing::Color::Black;
+		UnderlineHeight = 2;
 	}
 
 	MenuLabel::MenuLabel(System::String ^caption)
@@ -281,15 +284,17 @@ namespace GTA
 		if (mButton == nullptr || mText == nullptr) return;
 		mButton->Draw();
 		mText->Draw();
-		if (Underlined && mUnderline != nullptr) mUnderline->Draw();
+		if (UnderlinedAbove && mUnderlineAbove != nullptr) mUnderlineAbove->Draw();
+		if (UnderlinedBelow && mUnderlineBelow != nullptr) mUnderlineBelow->Draw();
 	}
 
-	void MenuLabel::Draw(System::Drawing::Point offset)
+	void MenuLabel::Draw(System::Drawing::Size offset)
 	{
 		if (mButton == nullptr || mText == nullptr) return;
-		mButton->Draw(offset.X, offset.Y);
-		mText->Draw(offset.X, offset.Y);
-		if (Underlined && mUnderline != nullptr) mUnderline->Draw(offset.X, offset.Y);
+		mButton->Draw(offset);
+		mText->Draw(offset);
+		if (UnderlinedAbove && mUnderlineAbove != nullptr) mUnderlineAbove->Draw(offset);
+		if (UnderlinedBelow && mUnderlineBelow != nullptr) mUnderlineBelow->Draw(offset);
 	}
 
 	void MenuLabel::Select()
@@ -327,9 +332,13 @@ namespace GTA
 			Parent->UnselectedTextColor,
 			Parent->ItemFont,
 			Parent->ItemTextCentered);
-		if (Underlined)
+		if (UnderlinedBelow)
 		{
-			mUnderline = gcnew UIRectangle(System::Drawing::Point(mOrigin.X, mOrigin.Y + mSize.Height - 2), System::Drawing::Size(mSize.Width, 2), System::Drawing::Color::Black);
+			mUnderlineBelow = gcnew UIRectangle(System::Drawing::Point(mOrigin.X, mOrigin.Y + mSize.Height - UnderlineHeight), System::Drawing::Size(mSize.Width, 2), UnderlineColor);
+		}
+		if (UnderlinedAbove)
+		{
+			mUnderlineAbove = gcnew UIRectangle(System::Drawing::Point(mOrigin.X, mOrigin.Y), System::Drawing::Size(mSize.Width, UnderlineHeight), UnderlineColor);
 		}
 	}
 }

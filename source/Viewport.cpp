@@ -21,6 +21,7 @@ namespace GTA
 		//Add it to the top of the stack
 		//This should automatically put this menu in to focus, as it is the highest index in the list
 		mMenuStack->Add(newMenu);
+		newMenu->Parent = this;
 		newMenu->Position = MenuPosition;
 		newMenu->Initialize();
 		newMenu->OnOpen();
@@ -37,9 +38,8 @@ namespace GTA
 
 		//Removes the highest menu
 		//This should automatically give control back to the menu behind this one
-		MenuBase ^current = mMenuStack[mMenuStack->Count - 1];
-		current->OnClose();
-		mMenuStack->Remove(current);
+		mMenuStack[mMenuStack->Count - 1]->OnClose();
+		mMenuStack->RemoveAt(mMenuStack->Count - 1);
 	}
 
 	void Viewport::CloseAllMenus()
@@ -58,7 +58,10 @@ namespace GTA
 
 		if (!MenuTransitions) {
 			if (mMenuStack->Count != 0)
-				mMenuStack[mMenuStack->Count - 1]->Draw();
+			{
+				System::Drawing::Size offset = System::Drawing::Size(MenuPosition.X, MenuPosition.Y);
+				mMenuStack[mMenuStack->Count - 1]->Draw(offset);
+			}
 			return;
 		}
 
