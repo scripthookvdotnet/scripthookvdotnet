@@ -9,10 +9,10 @@ public class IndicatorControl : Script
 		Tick += OnTick;
 		Interval = 100;
 	}
-	
+
 	private bool mLeftActive = false, mRightActive = false;
 	private DateTime mTimeLeftSwitchOff, mTimeRightSwitchOff;
-	
+
 	void OnTick(object sender, EventArgs e)
 	{
 		Ped player = Game.Player.Character;
@@ -20,8 +20,8 @@ public class IndicatorControl : Script
 		if (player.IsInVehicle())
 		{
 			Vehicle vehicle = player.CurrentVehicle;
-			
-			if (IsKeyPressed(Keys.A))
+
+			if (Game.IsKeyPressed(Keys.A))
 			{
 				if (vehicle.Speed < 10.0f)
 				{
@@ -34,8 +34,8 @@ public class IndicatorControl : Script
 			{
 				vehicle.LeftIndicatorLightOn = this.mLeftActive = false;
 			}
-			
-			if (IsKeyPressed(Keys.D))
+
+			if (Game.IsKeyPressed(Keys.D))
 			{
 				if (vehicle.Speed < 10.0f)
 				{

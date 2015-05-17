@@ -67,6 +67,8 @@ namespace GTA
 			void set(float value);
 		}
 
+		static bool IsKeyPressed(System::Windows::Forms::Keys key);
+
 		static void Pause();
 		static void Unpause();
 		static void DoAutoSave();

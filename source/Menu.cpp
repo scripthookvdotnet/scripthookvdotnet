@@ -41,19 +41,19 @@ namespace GTA
 
 	void Menu::Draw()
 	{
-		Draw(System::Drawing::Point());
+		Draw(System::Drawing::Size());
 	}
 
-	void Menu::Draw(System::Drawing::Point offset)
+	void Menu::Draw(System::Drawing::Size offset)
 	{
 		if (mHeaderRect == nullptr || mHeaderText == nullptr || (HasFooter && (mFooterRect == nullptr || mFooterText == nullptr))) return;
 		if (HasFooter)
 		{
-			mFooterRect->Draw(offset.X, offset.Y);
-			mFooterText->Draw(offset.X, offset.Y);
+			mFooterRect->Draw(offset);
+			mFooterText->Draw(offset);
 		}
-		mHeaderRect->Draw(offset.X, offset.Y);
-		mHeaderText->Draw(offset.X, offset.Y);
+		mHeaderRect->Draw(offset);
+		mHeaderText->Draw(offset);
 		for each (MenuItem ^item in mItems)
 		{
 			item->Draw(offset);
@@ -348,17 +348,17 @@ namespace GTA
 
 	void MessageBox::Draw()
 	{
-		Draw(System::Drawing::Point());
+		Draw(System::Drawing::Size());
 	}
 
-	void MessageBox::Draw(System::Drawing::Point offset)
+	void MessageBox::Draw(System::Drawing::Size offset)
 	{
-		mBodyRect->Draw(offset.X, offset.Y);
-		mText->Draw(offset.X, offset.Y);
-		mYesRect->Draw(offset.X, offset.Y);
-		mNoRect->Draw(offset.X, offset.Y);
-		mYesText->Draw(offset.X, offset.Y);
-		mNoText->Draw(offset.X, offset.Y);
+		mBodyRect->Draw(offset);
+		mText->Draw(offset);
+		mYesRect->Draw(offset);
+		mNoRect->Draw(offset);
+		mYesText->Draw(offset);
+		mNoText->Draw(offset);
 	}
 
 	void MessageBox::Initialize()

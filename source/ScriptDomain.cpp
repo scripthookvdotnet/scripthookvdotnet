@@ -14,48 +14,53 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "NativeCaller.h"
-#include "ScriptDomain.hpp"
 #include "Log.hpp"
-
-#include <windows.h>
+#include "ScriptDomain.hpp"
 
 namespace GTA
 {
 	using namespace System;
+	using namespace System::Threading;
+	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
-	using namespace System::Collections::Concurrent;
 
-	namespace
+	Reflection::Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
 	{
-		Reflection::Assembly ^ResolveHandler(Object ^sender, ResolveEventArgs ^args)
+		if (args->Name->ToLower()->Contains("scripthookvdotnet"))
 		{
-			if (args->Name->ToLower()->Contains("scripthookvdotnet"))
-			{
-				return Reflection::Assembly::GetAssembly(GTA::Script::typeid);
-			}
-
-			return nullptr;
+			return Reflection::Assembly::GetAssembly(GTA::Script::typeid);
 		}
-		void UnhandledExceptionHandler(Object ^sender, UnhandledExceptionEventArgs ^args)
+
+		return nullptr;
+	}
+	void HandleUnhandledException(Object ^sender, UnhandledExceptionEventArgs ^args)
+	{
+		if (!args->IsTerminating)
 		{
-			if (!args->IsTerminating)
-			{
-				Log::Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
-			}
-			else
-			{
-				Log::Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
-			}
+			Log::Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+		}
+		else
+		{
+			Log::Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
 	}
+	inline void SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn)
+	{
+		toSignal->Set();
+		toWaitOn->WaitOne();
+	}
+	inline bool SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn, int timeout)
+	{
+		toSignal->Set();
+		return toWaitOn->WaitOne(timeout);
+	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(255)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, Windows::Forms::KeyEventArgs ^> ^>()), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
 	{
 		sCurrentDomain = this;
 
-		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&ResolveHandler);
-		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&UnhandledExceptionHandler);
+		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
+		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
 		Log::Debug("Created script domain '", this->mAppDomain->FriendlyName, "'.");
 	}
@@ -151,6 +156,7 @@ namespace GTA
 		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
 		compilerOptions->CompilerOptions = "/optimize";
 		compilerOptions->GenerateInMemory = true;
+		compilerOptions->IncludeDebugInformation = true;
 		compilerOptions->ReferencedAssemblies->Add("System.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
@@ -304,6 +310,9 @@ namespace GTA
 			script->mRunning = true;
 			script->mFilename = scripttype->Item1;
 			script->mScriptDomain = this;
+			script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
+
+			script->mThread->Start();
 
 			Log::Debug("Started script '", script->Name, "'.");
 
@@ -317,98 +326,89 @@ namespace GTA
 		for each (Script ^script in this->mRunningScripts)
 		{
 			AbortScript(script);
+
+			delete script;
 		}
 
 		this->mScriptTypes->Clear();
 		this->mRunningScripts->Clear();
+
+		GC::Collect();
 	}
 	void ScriptDomain::AbortScript(Script ^script)
 	{
+		if (Object::ReferenceEquals(script->mThread, nullptr))
+		{
+			return;
+		}
+
 		script->mRunning = false;
+
+		script->mThread->Abort();
+		script->mThread = nullptr;
 
 		Log::Debug("Aborted script '", script->Name, "'.");
 	}
-	void ScriptDomain::Wait(int ms)
-	{
-		scriptWait(ms);
-	}
 	void ScriptDomain::DoTick()
 	{
-		Tuple<bool, Windows::Forms::KeyEventArgs ^> ^keyevent = nullptr;
-
-		// Process events
-		while (this->mKeyboardEvents->TryDequeue(keyevent))
-		{
-			for each (Script ^script in this->mRunningScripts)
-			{
-				try
-				{
-					if (keyevent->Item1)
-					{
-						script->RaiseKeyDown(this, keyevent->Item2);
-					}
-					else
-					{
-						script->RaiseKeyUp(this, keyevent->Item2);
-					}
-				}
-				catch (Exception ^ex)
-				{
-					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
-				}
-			}
-		}
-
-		// Update script loops
+		// Execute scripts
 		for each (Script ^script in this->mRunningScripts)
 		{
 			if (!script->mRunning)
 			{
 				continue;
 			}
-			else if (script->mInterval > 0)
+
+			this->mExecutingScript = script;
+
+			while ((script->mRunning = SignalAndWait(script->mContinueEvent, script->mWaitEvent, 5000)) && this->mTaskQueue->Count > 0)
 			{
-				if (script->mNextTick > DateTime::Now)
-				{
-					continue;
-				}
-				else
-				{
-					script->mNextTick = DateTime::Now + TimeSpan(0, 0, 0, 0, script->mInterval);
-				}
+				this->mTaskQueue->Dequeue()->Run();
 			}
 
-			try
+			this->mExecutingScript = nullptr;
+
+			if (!script->mRunning)
 			{
-				script->RaiseTick(this);
-			}
-			catch (Exception ^ex)
-			{
-				UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
+				Log::Error("Script '", script->Name, "' is not responding! Aborting ...");
 
 				AbortScript(script);
+				continue;
 			}
 		}
 
-		// Delete pinned strings
+		// Clean up pinned strings
 		CleanupStrings();
 	}
-	void ScriptDomain::DoKeyboardMessage(Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
+	void ScriptDomain::DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(key | (statusCtrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (statusShift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (statusAlt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
-
-		// Update keyboard input
 		this->mKeyboardState[static_cast<int>(key)] = status;
-		this->mKeyboardEvents->Enqueue(gcnew Tuple<bool, Windows::Forms::KeyEventArgs ^>(status, args));
+
+		KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
+		Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
+
+		for each (Script ^script in this->mRunningScripts)
+		{
+			script->mKeyboardEvents->Enqueue(eventinfo);
+		}
 	}
 
-	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
+	void ScriptDomain::ExecuteTask(IScriptTask ^task)
 	{
-		return this->mKeyboardState[static_cast<int>(key)];
+		if (Thread::CurrentThread->ManagedThreadId == this->mExecutingThreadId)
+		{
+			task->Run();
+		}
+		else
+		{
+			this->mTaskQueue->Enqueue(task);
+
+			SignalAndWait(ExecutingScript->mWaitEvent, ExecutingScript->mContinueEvent);
+		}
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
 	{
-		IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
+		const IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
 
 		this->mPinnedStrings->Add(handle);
 
@@ -423,7 +423,7 @@ namespace GTA
 
 		this->mPinnedStrings->Clear();
 	}
-	System::Object ^ScriptDomain::InitializeLifetimeService()
+	Object ^ScriptDomain::InitializeLifetimeService()
 	{
 		return nullptr;
 	}

@@ -8,6 +8,8 @@ namespace GTA
 	ref class Ped;
 	ref class Vehicle;
 	ref class Camera;
+	ref class Blip;
+	ref class Prop;
 
 	public enum class Weather
 	{
@@ -30,6 +32,16 @@ namespace GTA
 	{
 		Fire = 25,
 		BigFire = 9,
+	};
+	public enum class Relationship
+	{
+		Hate = 5,
+		Dislike = 4,
+		Neutral = 3,
+		Like = 2,
+		Respect = 1,
+		Companion = 0,
+		Pedestrians = 255 // or neutral
 	};
 
 	public ref class World sealed abstract
@@ -58,13 +70,17 @@ namespace GTA
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius, int maxAmount);
+		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
+		static float GetGroundZ(Math::Vector3 position);
 
 		static Ped ^CreatePed(Model model, Math::Vector3 position);
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
+		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
+		static Prop ^CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround);
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
@@ -76,6 +92,15 @@ namespace GTA
 			void set(Camera ^renderingCamera);
 		}
 		static void DestroyAllCameras();
+
+		static Blip ^CreateBlip(Math::Vector3 position);
+		static Blip ^CreateBlip(Math::Vector3 position, float radius);
+
+		static int AddRelationShipGroup(System::String ^groupName);
+		static void RemoveRelationShipGroup(int group);
+		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
+		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
+		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

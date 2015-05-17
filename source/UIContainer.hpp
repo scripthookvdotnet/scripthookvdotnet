@@ -5,13 +5,12 @@
 
 namespace GTA
 {
-	public ref class UIContainer : UIElement, UIRectangle
+	public ref class UIContainer : public UIRectangle
 	{
-
 	public:
 		UIContainer();
-		UIContainer(System::Drawing::Point location, System::Drawing::Size size);
-		UIContainer(System::Drawing::Point location, System::Drawing::Size size, System::Drawing::Color color);
+		UIContainer(System::Drawing::Point position, System::Drawing::Size size);
+		UIContainer(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color);
 
 		property System::Collections::Generic::List<UIElement ^> ^Items
 		{
@@ -20,8 +19,8 @@ namespace GTA
 		}
 
 		virtual void Draw() override;
-		virtual void Draw(int xMod, int yMod) override;
-			
+		virtual void Draw(System::Drawing::Size offset) override;
+
 	private:
 		System::Collections::Generic::List<UIElement ^> ^mItems;
 	};

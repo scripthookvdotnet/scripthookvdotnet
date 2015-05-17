@@ -23,11 +23,11 @@ namespace GTA
 		mText->Draw();
 	}
 
-	void MenuButton::Draw(System::Drawing::Point offset)
+	void MenuButton::Draw(System::Drawing::Size offset)
 	{
 		if (mButton == nullptr || mText == nullptr) return;
-		mButton->Draw(offset.X, offset.Y);
-		mText->Draw(offset.X, offset.Y);
+		mButton->Draw(offset);
+		mText->Draw(offset);
 	}
 
 	void MenuButton::Select()

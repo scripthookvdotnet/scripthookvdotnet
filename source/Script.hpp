@@ -16,10 +16,11 @@
 
 #pragma once
 
-#include "Viewport.hpp"
+#include "Game.hpp"
 
 namespace GTA
 {
+	ref class Viewport;
 	ref class ScriptDomain;
 	ref class ScriptSettings;
 
@@ -29,7 +30,12 @@ namespace GTA
 		Script();
 
 		static void Wait(int ms);
-		static bool IsKeyPressed(System::Windows::Forms::Keys key);
+		static void Yield();
+		[System::ObsoleteAttribute("Script.IsKeyPressed is obsolete, please use Game.IsKeyPressed instead.")]
+		static bool IsKeyPressed(System::Windows::Forms::Keys key)
+		{
+			return Game::IsKeyPressed(key);
+		}
 
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
@@ -41,8 +47,6 @@ namespace GTA
 		System::Windows::Forms::Keys RightKey = System::Windows::Forms::Keys::NumPad6;
 		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
 		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
-
-		Viewport ^View;
 
 		property System::String ^Name
 		{
@@ -57,6 +61,10 @@ namespace GTA
 			{
 				return this->mFilename;
 			}
+		}
+		property Viewport ^View
+		{
+			Viewport ^get();
 		}
 		property ScriptSettings ^Settings
 		{
@@ -78,27 +86,21 @@ namespace GTA
 		}
 
 	internal:
+		~Script();
+
+		void MainLoop();
 		void UpdateViewport(Object ^Sender, System::EventArgs ^Args);
 		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
-		inline void RaiseTick(System::Object ^sender)
-		{
-			Tick(sender, System::EventArgs::Empty);
-		}
-		inline void RaiseKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
-		{
-			KeyUp(sender, args);
-		}
-		inline void RaiseKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^args)
-		{
-			KeyDown(sender, args);
-		}
-
 		int mInterval;
 		bool mRunning;
-		System::DateTime mNextTick;
-		ScriptDomain ^mScriptDomain;
-		ScriptSettings ^mSettings;
 		System::String ^mFilename;
+		ScriptDomain ^mScriptDomain;
+		System::Threading::Thread ^mThread;
+		System::Threading::AutoResetEvent ^mWaitEvent;
+		System::Threading::AutoResetEvent ^mContinueEvent;
+		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
+		Viewport ^mViewport;
+		ScriptSettings ^mSettings;
 	};
 }

@@ -23,9 +23,9 @@ namespace GTA
 	public ref class Camera sealed
 	{
 	public:
-		Camera(int id);
+		Camera(int handle);
 
-		property int ID
+		property int Handle
 		{
 			int get();
 		}
@@ -119,7 +119,7 @@ namespace GTA
 		static initonly array<System::String ^> ^sShakeNames = { "HAND_SHAKE", "SMALL_EXPLOSION_SHAKE", "MEDIUM_EXPLOSION_SHAKE", "LARGE_EXPLOSION_SHAKE", "JOLT_SHAKE", "VIBRATE_SHAKE", "ROAD_VIBRATION_SHAKE", "DRUNK_SHAKE", "SKY_DIVING_SHAKE", "FAMILY5_DRUG_TRIP_SHAKE", "DEATH_FAIL_IN_EFFECT_SHAKE" };
 
 	private:
-		int mId;
+		int mHandle;
 		CameraShake mShakeType;
 		float mShakeAmplitude;
 	};

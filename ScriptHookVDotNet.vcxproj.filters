@@ -45,10 +45,19 @@
     <ClCompile Include="source\Vector3.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="source\Blip.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Camera.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Entity.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\Game.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameplayCamera.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\Model.cpp">
@@ -58,6 +67,9 @@
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\Player.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Prop.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\Tasks.cpp">
@@ -81,11 +93,8 @@
     <ClCompile Include="source\UIText.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
-    <ClCompile Include="source\Camera.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="source\GameplayCamera.cpp">
-      <Filter>Scripting</Filter>
+    <ClCompile Include="source\Menu.cpp">
+      <Filter>Scripting\UI</Filter>
     </ClCompile>
     <ClCompile Include="source\MenuItem.cpp">
       <Filter>Scripting\UI</Filter>
@@ -93,8 +102,14 @@
     <ClCompile Include="source\Viewport.cpp">
       <Filter>Scripting\UI</Filter>
     </ClCompile>
-    <ClCompile Include="source\Menu.cpp">
-      <Filter>Scripting\UI</Filter>
+    <ClCompile Include="source\TaskSequence.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Weapon.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\WeaponCollection.cpp">
+      <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +143,9 @@
     <ClInclude Include="source\Vector3.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="source\Blip.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Camera.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
@@ -152,6 +170,9 @@
     <ClInclude Include="source\Player.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="source\Prop.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Tasks.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
@@ -167,6 +188,9 @@
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="source\UI.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
     <ClInclude Include="source\UIContainer.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
@@ -179,14 +203,23 @@
     <ClInclude Include="source\UIText.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
+    <ClInclude Include="source\Menu.hpp">
+      <Filter>Scripting\UI</Filter>
+    </ClInclude>
     <ClInclude Include="source\MenuItem.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\Viewport.hpp">
       <Filter>Scripting\UI</Filter>
     </ClInclude>
-    <ClInclude Include="source\Menu.hpp">
-      <Filter>Scripting\UI</Filter>
+    <ClInclude Include="source\TaskSequence.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Weapon.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\WeaponCollection.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,12 +9,21 @@ namespace GTA
 	public ref class Player sealed
 	{
 	public:
-		Player(int id);
+		Player(int handle);
 
+		[System::ObsoleteAttribute("Player.ID is obsolete, please use Player.Handle instead.")]
 		property int ID
+		{
+			int get()
+			{
+				return Handle;
+			}
+		}
+		property int Handle
 		{
 			int get();
 		}
+
 		property System::String ^Name
 		{
 			System::String ^get();
@@ -76,7 +85,11 @@ namespace GTA
 		{
 			Vehicle ^get();
 		}
-
+		property int Money
+		{
+			int get();
+			void set(int value);
+		}
 		property bool IgnoredByEveryone
 		{
 			void set(bool value);
@@ -102,6 +115,7 @@ namespace GTA
 		bool IsTargetting(Entity ^entity);
 		Entity ^GetTargetedEntity();
 
+
 		virtual bool Equals(Player ^player);
 
 		virtual int GetHashCode() override;
@@ -120,7 +134,7 @@ namespace GTA
 		}
 
 	private:
-		int mID;
+		int mHandle;
 		Ped ^mPed;
 	};
 }

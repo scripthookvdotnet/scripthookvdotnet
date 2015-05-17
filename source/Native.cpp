@@ -15,10 +15,12 @@
  */
 
 #include "Native.hpp"
-#include "NativeCaller.h"
 #include "ScriptDomain.hpp"
+#include "NativeCaller.h"
 
 #include "Entity.hpp"
+#include "Prop.hpp"
+#include "Blip.hpp"
 #include "Ped.hpp"
 #include "Player.hpp"
 #include "Vector2.hpp"
@@ -31,6 +33,25 @@ namespace GTA
 	{
 		using namespace System;
 		using namespace System::Collections::Generic;
+
+		private ref struct NativeTask : public IScriptTask
+		{
+			virtual void Run()
+			{
+				nativeInit(this->Hash);
+
+				for each (InputArgument ^argument in this->Arguments)
+				{
+					nativePush64(argument->mData);
+				}
+
+				this->Result = nativeCall();
+			}
+
+			UINT64 Hash;
+			PUINT64 Result;
+			array<InputArgument ^> ^Arguments;
+		};
 
 		InputArgument::InputArgument(bool value) : mData(value ? 1 : 0)
 		{
@@ -53,16 +74,22 @@ namespace GTA
 		InputArgument::InputArgument(const char value[]) : mData(ScriptDomain::CurrentDomain->PinString(gcnew String(value)).ToInt64())
 		{
 		}
-		InputArgument::InputArgument(Entity ^object) : mData(object->ID)
+		InputArgument::InputArgument(Entity ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Ped ^object) : mData(object->ID)
+		InputArgument::InputArgument(Ped ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Player ^object) : mData(object->ID)
+		InputArgument::InputArgument(Player ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Vehicle ^object) : mData(object->ID)
+		InputArgument::InputArgument(Vehicle ^object) : mData(object->Handle)
+		{
+		}
+		InputArgument::InputArgument(Blip ^object) : mData(object->Handle)
+		{
+		}
+		InputArgument::InputArgument(Prop ^object) : mData(object->Handle)
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))
@@ -136,6 +163,14 @@ namespace GTA
 			{
 				return gcnew Vehicle(*reinterpret_cast<int *>(value));
 			}
+			if (type == Blip::typeid)
+			{
+				return gcnew Blip(*reinterpret_cast<int *>(value));
+			}
+			if (type == Prop::typeid)
+			{
+				return gcnew Prop(*reinterpret_cast<int *>(value));
+			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
@@ -157,21 +192,13 @@ namespace GTA
 		generic <typename T>
 		T Function::Call(UInt64 hash, ... array<InputArgument ^> ^arguments)
 		{
-			if (hash == 0)
-			{
-				throw gcnew ArgumentException("Missing hash to native function call.", "hash");
-			}
+			NativeTask ^task = gcnew NativeTask();
+			task->Hash = hash;
+			task->Arguments = arguments;
 
-			nativeInit(hash);
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
-			for each (InputArgument ^argument in arguments)
-			{
-				nativePush64(argument->mData);
-			}
-
-			const PUINT64 result = nativeCall();
-
-			return static_cast<T>(GetResult(T::typeid, result));
+			return static_cast<T>(GetResult(T::typeid, task->Result));
 		}
 	}
 }

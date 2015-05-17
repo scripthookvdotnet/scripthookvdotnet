@@ -23,7 +23,7 @@ public class ExitVehicle : Script
 			Vehicle vehicle = player.CurrentVehicle;
 			bool isDriver = Function.Call<Ped>(Hash.GET_PED_IN_VEHICLE_SEAT, vehicle, (int)VehicleSeat.Driver) == player;
 
-			if (IsKeyPressed(Keys.F))
+			if (Game.IsKeyPressed(Keys.F))
 			{
 				player.Task.LeaveVehicle(vehicle, true);
 			}

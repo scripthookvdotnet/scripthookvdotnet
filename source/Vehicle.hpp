@@ -5,12 +5,13 @@
 namespace GTA
 {
 	ref class Ped;
+	value class Model;
 
 	public enum class VehicleColor
 	{
 		MetallicBlack = 0,
 		MetallicGraphiteBlack = 1,
-		MetallicBlackSteal = 2,
+		MetallicBlackSteel = 2,
 		MetallicDarkSilver = 3,
 		MetallicSilver = 4,
 		MetallicBlueSilver = 5,
@@ -19,10 +20,10 @@ namespace GTA
 		MetallicStoneSilver = 8,
 		MetallicMidnightSilver = 9,
 		MetallicGunMetal = 10,
-		MetallicAnthraciteGrey = 11,
+		MetallicAnthraciteGray = 11,
 		MatteBlack = 12,
 		MatteGray = 13,
-		MatteLightGrey = 14,
+		MatteLightGray = 14,
 		UtilBlack = 15,
 		UtilBlackPoly = 16,
 		UtilDarksilver = 17,
@@ -31,7 +32,7 @@ namespace GTA
 		UtilShadowSilver = 20,
 		WornBlack = 21,
 		WornGraphite = 22,
-		WornSilverGrey = 23,
+		WornSilverGray = 23,
 		WornSilver = 24,
 		WornBlueSilver = 25,
 		WornShadowSilver = 26,
@@ -86,15 +87,15 @@ namespace GTA
 		UtilMidnightBlue = 76,
 		UtilBlue = 77,
 		UtilSeaFoamBlue = 78,
-		UilLightningblue = 79,
+		UtilLightningBlue = 79,
 		UtilMauiBluePoly = 80,
 		UtilBrightBlue = 81,
 		MatteDarkBlue = 82,
 		MatteBlue = 83,
 		MatteMidnightBlue = 84,
-		WornDarkblue = 85,
+		WornDarkBlue = 85,
 		WornBlue = 86,
-		WornLightblue = 87,
+		WornLightBlue = 87,
 		MetallicTaxiYellow = 88,
 		MetallicRaceYellow = 89,
 		MetallicBronze = 90,
@@ -123,9 +124,9 @@ namespace GTA
 		WornHoneyBeige = 113,
 		WornBrown = 114,
 		WornDarkBrown = 115,
-		Wornstrawbeige = 116,
+		WornStrawBeige = 116,
 		BrushedSteel = 117,
-		BrushedBlacksteel = 118,
+		BrushedBlackSteel = 118,
 		BrushedAluminium = 119,
 		Chrome = 120,
 		WornOffWhite = 121,
@@ -134,7 +135,7 @@ namespace GTA
 		WornLightOrange = 124,
 		MetallicSecuricorGreen = 125,
 		WornTaxiYellow = 126,
-		policecarblue = 127,
+		PoliceCarBlue = 127,
 		MatteGreen = 128,
 		MatteBrown = 129,
 		MatteWhite = 131,
@@ -150,10 +151,10 @@ namespace GTA
 		MettalicBlackBlue = 141,
 		MetallicBlackPurple = 142,
 		MetallicBlackRed = 143,
-		huntergreen = 144,
+		HunterGreen = 144,
 		MetallicPurple = 145,
 		MetaillicVDarkBlue = 146,
-		MODSHOPBLACK1 = 147,
+		ModshopBlack1 = 147,
 		MattePurple = 148,
 		MatteDarkPurple = 149,
 		MetallicLavaRed = 150,
@@ -161,8 +162,8 @@ namespace GTA
 		MatteOliveDrab = 152,
 		MatteDesertBrown = 153,
 		MatteDesertTan = 154,
-		MatteFoilageGreen = 155,
-		DEFAULTALLOYCOLOR = 156,
+		MatteFoliageGreen = 155,
+		DefaultAlloyColor = 156,
 		EpsilonBlue = 157,
 	};
 	public enum class VehicleDoor
@@ -178,7 +179,7 @@ namespace GTA
 	public enum class VehicleMod
 	{
 		Spoilers = 0,
-		FrontBumber = 1,
+		FrontBumper = 1,
 		RearBumper = 2,
 		SideSkirt = 3,
 		Exhaust = 4,
@@ -249,16 +250,18 @@ namespace GTA
 		TireSmoke = 20,
 		XenonHeadlights = 22
 	};
+	public enum class VehicleNeonLight
+	{
+		Left = 0,
+		Right = 1,
+		Front = 2,
+		Back = 3,
+	};
 
 	public ref class Vehicle sealed : public Entity
 	{
 	public:
-		Vehicle(int id);
-
-		static property Vehicle ^Any
-		{
-			Vehicle ^get();
-		}
+		Vehicle(int handle);
 
 		property bool HasRoof
 		{
@@ -416,6 +419,16 @@ namespace GTA
 		{
 			void set(System::Drawing::Color color);
 		}
+		property System::Drawing::Color NeonLightsColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color color);
+		}
+		property System::Drawing::Color TireSmokeColor
+		{
+			System::Drawing::Color get();
+			void set(System::Drawing::Color color);
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
@@ -427,7 +440,8 @@ namespace GTA
 
 		void Repair();
 		void Explode();
-		bool SetOnGround();
+		bool PlaceOnGround();
+		void PlaceOnNextStreet();
 		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
 		void CloseDoor(VehicleDoor door, bool instantly);
 		void FixWindow(VehicleWindow window);
@@ -436,6 +450,15 @@ namespace GTA
 		void RollDownWindow(VehicleWindow window);
 		void RollDownWindows();
 		void RemoveWindow(VehicleWindow window);
+		void SetNeonLightsOn(VehicleNeonLight light, bool on);
+		bool IsNeonLightsOn(VehicleNeonLight light);
+		void SoundHorn(int duration);
+
+		bool IsTireBurst(int wheel);
+		void BurstTire(int wheel);
+		void FixTire(int wheel);
+
+		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 
 	private:
 		int mID;

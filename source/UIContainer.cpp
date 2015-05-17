@@ -5,10 +5,10 @@ namespace GTA
 	UIContainer::UIContainer() : UIRectangle(), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
 	{
 	}
-	UIContainer::UIContainer(System::Drawing::Point location, System::Drawing::Size size) : UIRectangle(location, size), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
+	UIContainer::UIContainer(System::Drawing::Point position, System::Drawing::Size size) : UIRectangle(position, size), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
 	{
 	}
-	UIContainer::UIContainer(System::Drawing::Point location, System::Drawing::Size size, System::Drawing::Color color) : UIRectangle(location, size, color), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
+	UIContainer::UIContainer(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color) : UIRectangle(position, size, color), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
 	{
 	}
 
@@ -16,27 +16,27 @@ namespace GTA
 	{
 		return this->mItems;
 	}
-	void UIContainer::Items::set(System::Collections::Generic::List<UIElement ^> ^items)
+	void UIContainer::Items::set(System::Collections::Generic::List<UIElement ^> ^value)
 	{
-		this->mItems = items;
+		this->mItems = value;
 	}
 
 	void UIContainer::Draw()
 	{
-		this->Draw(0, 0);
+		Draw(System::Drawing::Size());
 	}
-	void UIContainer::Draw(int xMod, int yMod)
+	void UIContainer::Draw(System::Drawing::Size offset)
 	{
 		if (!this->Enabled)
 		{
 			return;
 		}
 
-		UIRectangle::Draw(xMod, yMod);
+		UIRectangle::Draw(offset);
 
-		for each (UIElement ^item in this->mItems)
+		for each (UIElement ^item in this->Items)
 		{
-			item->Draw(xMod + UIRectangle::Location.X, yMod + UIRectangle::Location.Y);
+			item->Draw(static_cast<System::Drawing::Size>(UIRectangle::Position + offset));
 		}
 	}
 }

@@ -14,7 +14,6 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Main.h"
 #include "ScriptDomain.hpp"
 
 ref struct ScriptHook
@@ -44,7 +43,7 @@ bool ManagedInit()
 }
 bool ManagedTick()
 {
-	if (GetAsyncKeyState(VK_INSERT) & 0x8000)
+	if (ScriptHook::Domain->IsKeyPressed(System::Windows::Forms::Keys::Insert))
 	{
 		return false;
 	}
@@ -64,17 +63,51 @@ void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusSh
 }
 
 #pragma unmanaged
+#pragma warning(disable: 4793)
 
+#include "Main.h"
 #include <Windows.h>
 
-void ScriptMainLoop()
+bool sGameReloaded = false;
+PVOID sMainFib = nullptr;
+PVOID sScriptFib = nullptr;
+
+void ScriptYield()
+{
+	// Switch back to main script fiber used by Script Hook
+	SwitchToFiber(sMainFib);
+}
+void CALLBACK ScriptMainLoop()
 {
 	while (ManagedInit())
 	{
-		while (ManagedTick())
+		sGameReloaded = false;
+
+		// Run main loop
+		while (!sGameReloaded && ManagedTick())
 		{
-			scriptWait(0);
+			ScriptYield();
 		}
+	}
+}
+void ScriptMainSetup()
+{
+	sGameReloaded = true;
+	sMainFib = GetCurrentFiber();
+
+	if (sScriptFib == nullptr)
+	{
+		// Create our own fiber for the common language runtime once
+		sScriptFib = CreateFiber(0, reinterpret_cast<LPFIBER_START_ROUTINE>(&ScriptMainLoop), nullptr);
+	}
+
+	while (true)
+	{
+		// Yield execution
+		scriptWait(0);
+
+		// Switch to our own fiber and wait for it to switch back
+		SwitchToFiber(sScriptFib);
 	}
 }
 void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
@@ -88,11 +121,12 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	{
 		case DLL_PROCESS_ATTACH:
 			DisableThreadLibraryCalls(hModule);
-			scriptRegister(hModule, &ScriptMainLoop);
+			scriptRegister(hModule, &ScriptMainSetup);
 			keyboardHandlerRegister(&ScriptKeyboardMessage);
 			break;
 		case DLL_PROCESS_DETACH:
-			scriptUnregister(&ScriptMainLoop);
+			DeleteFiber(sScriptFib);
+			scriptUnregister(&ScriptMainSetup);
 			keyboardHandlerUnregister(&ScriptKeyboardMessage);
 			break;
 	}
