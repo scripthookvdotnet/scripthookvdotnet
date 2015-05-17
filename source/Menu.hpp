@@ -45,7 +45,7 @@ namespace GTA
 		property int HeaderFont;
 		property float HeaderTextScale;
 		property bool HeaderCentered;
-		property System::Drawing::Color FooterColor;		
+		property System::Drawing::Color FooterColor;
 		property System::Drawing::Color FooterTextColor;
 		property int FooterFont;
 		property float FooterTextScale;
@@ -91,7 +91,63 @@ namespace GTA
 		int mSelectedIndex = -1;
 		System::String ^mFooterDescription = "footer description";
 	};
-	
+
+	public ref class ListMenu : MenuBase
+	{
+	public:
+		ListMenu(System::String ^headerCaption, System::Action<ListMenu ^> ^activationAction);
+		ListMenu(System::String ^headerCaption);
+
+	public:
+		virtual void Draw() override;
+		virtual void Draw(System::Drawing::Size offset) override;
+		virtual void Initialize() override;
+		virtual void OnOpen() override;
+		virtual void OnClose() override;
+		virtual void OnActivate() override;
+		virtual void OnChangeSelection(bool down) override;
+		virtual void OnChangeItem(bool right) override;
+
+	public:
+		void Add(System::String ^Caption, System::String ^Description);
+		void Add(System::String ^Caption);
+		void Remove(int Index);
+		void Remove(System::String ^Caption);
+
+		property int SelectedIndex 
+		{ 
+			int get() { return mSelectedIndex; }
+			void set(int NewIndex)
+			{
+				mSelectedIndex = NewIndex;
+				UpdateHighlight();
+			}
+		}
+
+	private:
+		void UpdateEntries();
+		void UpdateHighlight();
+
+	public:
+		property int Width;
+		property int HeaderHeight;
+		property int FooterHeight;
+		property int ItemHeight;
+		property bool HasFooter;
+
+	private:
+		System::Action<ListMenu ^> ^mActivateAction;
+
+		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
+		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
+
+		System::Collections::Generic::List<System::Tuple<System::String ^, System::String ^> ^> ^mItems;
+		System::Collections::Generic::List<System::Tuple<UIRectangle ^, UIText ^> ^> ^mUIEntries;
+		int mEntriesHeight = -1;
+		int mSelectedIndex = -1;
+		System::String ^mFooterDescription = "footer description";
+	};
+
 	public ref class MessageBox : MenuBase {
 	public:
 		MessageBox(System::String ^headerCaption, System::Action ^yesAction, System::Action ^noAction);

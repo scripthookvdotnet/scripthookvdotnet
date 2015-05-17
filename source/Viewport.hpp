@@ -44,6 +44,14 @@ namespace GTA
 
 		/** Have more than one menu on the screen on the time and transition them */
 		property bool MenuTransitions;
+		
+		property int ActiveMenus
+		{
+			int get()
+			{
+				return mMenuStack->Count;
+			}
+		}
 
 	private:
 		//easeOutBack function
