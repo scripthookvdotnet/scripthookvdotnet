@@ -21,7 +21,7 @@ namespace GTA
 
 		/** Called when the user selects this item */
 		void Select();
-		
+
 		/** Called when the user deselects this item */
 		void Deselect();
 
@@ -57,6 +57,8 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
+		void UpdateText();
+
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
@@ -85,6 +87,8 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
+		void UpdateText();
+
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
@@ -103,7 +107,7 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
-	
+
 	public ref class MenuNumericScroller : MenuItem
 	{
 	public:
@@ -118,10 +122,12 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
+		void UpdateText();
+
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
-		
+
 		property double Min;
 		property double Max;
 		property double Increment;
@@ -132,8 +138,6 @@ namespace GTA
 		System::Action<double> ^mActivateAction;
 
 		property int TimesIncrement;
-
-		void UpdateText();
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
@@ -156,6 +160,8 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
+		void UpdateText();
+
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
@@ -166,8 +172,6 @@ namespace GTA
 
 		int mSelectedIndex;
 		array<System::String ^> ^mEntries;
-
-		void UpdateText();
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
@@ -190,6 +194,8 @@ namespace GTA
 		virtual void Activate();
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
+
+		void UpdateText();
 
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;

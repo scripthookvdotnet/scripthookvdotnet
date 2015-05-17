@@ -68,7 +68,11 @@ namespace GTA
 			Parent->ItemTextCentered);
 	}
 
-	MenuToggle::MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction) 
+	void MenuButton::UpdateText(){
+		mText->Caption = Caption;
+	}
+
+	MenuToggle::MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction)
 	{
 		this->Caption = caption;
 		this->Description = description;
@@ -87,7 +91,7 @@ namespace GTA
 		mButton->Draw(offset);
 		mText->Draw(offset);
 	}
-	
+
 	void MenuToggle::Select()
 	{
 		if (mButton == nullptr) return;
@@ -132,7 +136,16 @@ namespace GTA
 			mDeactivationAction->Invoke();
 		}
 	}
-	
+
+	void MenuToggle::UpdateText(){
+		if (mToggleSelection){
+			mText->Caption = Caption + " <ON>";
+		}
+		else{
+			mText->Caption = Caption + " <OFF>";
+		}
+	}
+
 	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc)
 	{
 		this->Caption = caption;
@@ -156,7 +169,7 @@ namespace GTA
 		mButton->Draw(offset);
 		mText->Draw(offset);
 	}
-	
+
 	void MenuNumericScroller::Select()
 	{
 		if (mButton == nullptr) return;
@@ -223,7 +236,7 @@ namespace GTA
 		mButton->Draw(offset);
 		mText->Draw(offset);
 	}
-	
+
 	void MenuEnumScroller::Select()
 	{
 		if (mButton == nullptr) return;
@@ -263,7 +276,7 @@ namespace GTA
 	{
 		mText->Caption = Caption + " <" + mEntries[mSelectedIndex] + ">";
 	}
-	
+
 	MenuLabel::MenuLabel(System::String ^caption, bool underlined)
 	{
 		Caption = caption;
@@ -320,7 +333,7 @@ namespace GTA
 	{
 		return;
 	}
-	
+
 	void MenuLabel::SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size)
 	{
 		this->mOrigin = topLeftOrigin;
@@ -340,5 +353,9 @@ namespace GTA
 		{
 			mUnderlineAbove = gcnew UIRectangle(System::Drawing::Point(mOrigin.X, mOrigin.Y), System::Drawing::Size(mSize.Width, UnderlineHeight), UnderlineColor);
 		}
+	}
+
+	void MenuLabel::UpdateText(){
+		mText->Caption = Caption;
 	}
 }
