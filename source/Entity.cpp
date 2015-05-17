@@ -140,6 +140,11 @@ namespace GTA
 			MarkAsNoLongerNeeded();
 		}
 	}
+	Blip ^Entity::CurrentBlip::get()
+	{
+		int blipHandle = Native::Function::Call<int>(Native::Hash::GET_BLIP_FROM_ENTITY, this->Handle);
+		return blipHandle == 0 ? nullptr : gcnew Blip(blipHandle);
+	}
 
 	void Entity::ApplyForce(Math::Vector3 direction)
 	{

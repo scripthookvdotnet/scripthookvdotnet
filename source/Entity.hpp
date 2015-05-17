@@ -120,6 +120,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property Blip ^CurrentBlip
+		{
+			Blip ^get();
+		}
 
 		void ApplyForce(Math::Vector3 direction);
 		void ApplyForce(Math::Vector3 direction, Math::Vector3 rotation);
