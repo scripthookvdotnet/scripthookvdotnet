@@ -77,6 +77,8 @@ namespace GTA
 
 		AppDomainSetup ^setup = gcnew AppDomainSetup();
 		setup->ApplicationBase = path;
+		setup->ShadowCopyFiles = "true";
+		setup->ShadowCopyDirectories = path;
 		Security::PermissionSet ^permissions = gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted);
 
 		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (path->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, permissions);
@@ -198,7 +200,7 @@ namespace GTA
 
 		try
 		{
-			assembly = Reflection::Assembly::Load(IO::File::ReadAllBytes(filename));
+			assembly = Reflection::Assembly::LoadFrom(filename);
 		}
 		catch (Exception ^ex)
 		{
