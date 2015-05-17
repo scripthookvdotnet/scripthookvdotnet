@@ -15,6 +15,9 @@ namespace GTA
 		/** Add a menu to the stack of active menus and set it as focused */
 		void AddMenu(MenuBase ^newMenu);
 
+		/** Remove a menu from the stack of active menus */
+		void RemoveMenu(MenuBase ^menu);
+
 		/** Remove the active menu from the stack, this will focus the next highest menu */
 		void PopMenu();
 
@@ -44,7 +47,7 @@ namespace GTA
 
 		/** Have more than one menu on the screen on the time and transition them */
 		property bool MenuTransitions;
-		
+
 		property int ActiveMenus
 		{
 			int get()

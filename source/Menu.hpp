@@ -74,6 +74,7 @@ namespace GTA
 		virtual void OnClose() override;
 		virtual void OnActivate() override;
 		virtual void OnChangeSelection(bool down) override;
+		virtual void OnChangeSelection(int newIndex);
 		virtual void OnChangeItem(bool right) override;
 
 	public:
@@ -82,6 +83,21 @@ namespace GTA
 		property int FooterHeight;
 		property int ItemHeight;
 		property bool HasFooter;
+		property System::Collections::Generic::List<MenuItem ^> ^Items
+		{
+			System::Collections::Generic::List<MenuItem ^> ^get() { return mItems; }
+			void set(System::Collections::Generic::List<MenuItem ^> ^items){
+				mItems = items;
+			}
+		}
+		property int SelectedIndex
+		{
+			int get() { return mSelectedIndex; }
+			void set(int newIndex)
+			{
+				OnChangeSelection(newIndex);
+			}
+		}
 
 	private:
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
@@ -89,6 +105,7 @@ namespace GTA
 
 		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
 		int mSelectedIndex = -1;
+
 		System::String ^mFooterDescription = "footer description";
 	};
 
@@ -114,8 +131,8 @@ namespace GTA
 		void Remove(int Index);
 		void Remove(System::String ^Caption);
 
-		property int SelectedIndex 
-		{ 
+		property int SelectedIndex
+		{
 			int get() { return mSelectedIndex; }
 			void set(int NewIndex)
 			{
