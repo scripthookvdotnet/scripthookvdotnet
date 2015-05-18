@@ -3,6 +3,8 @@
 
 namespace GTA
 {
+	using namespace System::Windows::Forms;
+
 	public ref class Console
 	{
 	public:
@@ -14,11 +16,14 @@ namespace GTA
 		virtual void Initialize();
 		virtual void Show();
 		virtual void Hide();
-		virtual void Log(System::String ^msg);
+		virtual void Toggle();
+		virtual void Log(System::String ^logLevel, System::String ^msg);
+		virtual void HandleInput(KeyEventArgs ^args);
+		virtual void SubmitInput();
 		virtual void OnOpen();
 		virtual void OnClose();
 
-	public:
+		property bool Enabled;
 		property int Width;
 		property int Height;
 		property int Font;
@@ -29,5 +34,7 @@ namespace GTA
 	private:
 		UIRectangle ^mConsoleRect = nullptr, ^mInputRect = nullptr;
 		UIText ^mConsoleText = nullptr, ^mInputText = nullptr;
+		System::String ^mConsole;
+		System::String ^mInput;
 	};
 }

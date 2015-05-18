@@ -7,20 +7,20 @@ namespace GTA
 
 	void Log::Debug(... array<String ^> ^message)
 	{
-		LogToFile(Reflection::Assembly::GetExecutingAssembly(), "[DEBUG]", message);
+		LogToFile(Reflection::Assembly::GetExecutingAssembly(), "DEBUG", message);
 	}
 	void Log::Error(... array<String ^> ^message)
 	{
-		LogToFile(Reflection::Assembly::GetExecutingAssembly(), "[ERROR]", message);
+		LogToFile(Reflection::Assembly::GetExecutingAssembly(), "ERROR", message);
 	}
 
 	void Log::Debug(Reflection::Assembly ^assembly, ... array<String ^> ^message)
 	{
-		LogToFile(assembly, "[DEBUG]", message);
+		LogToFile(assembly, "DEBUG", message);
 	}
 	void Log::Error(Reflection::Assembly ^assembly, ... array<String ^> ^message)
 	{
-		LogToFile(assembly, "[ERROR]", message);
+		LogToFile(assembly, "ERROR", message);
 	}
 
 	void Log::LogToFile(String ^logLevel, ... array<String ^> ^message)
@@ -39,7 +39,7 @@ namespace GTA
 
 			try
 			{
-				sw->Write(String::Concat("[", DateTime::Now.ToString("HH:mm:ss"), "] ", logLevel, " "));
+				sw->Write(String::Concat("[", DateTime::Now.ToString("HH:mm:ss"), "] [", logLevel, "] "));
 
 				for each (String ^string in message)
 				{

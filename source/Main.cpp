@@ -15,12 +15,11 @@
  */
 
 #include "ScriptDomain.hpp"
-#include "Console.hpp"
+#include "UI.hpp"
 
 ref struct ScriptHook
 {
 	static GTA::ScriptDomain ^Domain = nullptr;
-	static GTA::Console ^Console = nullptr;
 };
 
 bool ManagedInit()
@@ -34,9 +33,6 @@ bool ManagedInit()
 
 	if (!System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
-		ScriptHook::Console = gcnew GTA::Console();
-		ScriptHook::Console->Initialize();
-
 		ScriptHook::Domain->Start();
 
 		return true;
@@ -53,7 +49,6 @@ bool ManagedTick()
 		return false;
 	}
 
-	ScriptHook::Console->Draw();
 	ScriptHook::Domain->DoTick();
 
 	return true;

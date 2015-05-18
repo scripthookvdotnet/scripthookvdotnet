@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Script.hpp"
+#include "Console.hpp"
 
 namespace GTA
 {
@@ -82,6 +83,8 @@ namespace GTA
 			return this->mKeyboardState[static_cast<int>(key)];
 		}
 		System::Object ^InitializeLifetimeService() override;
+
+		Console ^mConsole;
 
 	private:
 		bool LoadScript(System::String ^filename);

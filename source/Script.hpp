@@ -36,6 +36,7 @@ namespace GTA
 		{
 			return Game::IsKeyPressed(key);
 		}
+		void Log(bool showInConsole, System::String ^logLevel, System::String ^msg);
 
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
