@@ -15,10 +15,12 @@
  */
 
 #include "ScriptDomain.hpp"
+#include "Console.hpp"
 
 ref struct ScriptHook
 {
 	static GTA::ScriptDomain ^Domain = nullptr;
+	static GTA::Console ^Console = nullptr;
 };
 
 bool ManagedInit()
@@ -32,6 +34,9 @@ bool ManagedInit()
 
 	if (!System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
+		ScriptHook::Console = gcnew GTA::Console();
+		ScriptHook::Console->Initialize();
+
 		ScriptHook::Domain->Start();
 
 		return true;
@@ -48,6 +53,7 @@ bool ManagedTick()
 		return false;
 	}
 
+	ScriptHook::Console->Draw();
 	ScriptHook::Domain->DoTick();
 
 	return true;
@@ -119,16 +125,16 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 {
 	switch (fdwReason)
 	{
-		case DLL_PROCESS_ATTACH:
-			DisableThreadLibraryCalls(hModule);
-			scriptRegister(hModule, &ScriptMainSetup);
-			keyboardHandlerRegister(&ScriptKeyboardMessage);
-			break;
-		case DLL_PROCESS_DETACH:
-			DeleteFiber(sScriptFib);
-			scriptUnregister(&ScriptMainSetup);
-			keyboardHandlerUnregister(&ScriptKeyboardMessage);
-			break;
+	case DLL_PROCESS_ATTACH:
+		DisableThreadLibraryCalls(hModule);
+		scriptRegister(hModule, &ScriptMainSetup);
+		keyboardHandlerRegister(&ScriptKeyboardMessage);
+		break;
+	case DLL_PROCESS_DETACH:
+		DeleteFiber(sScriptFib);
+		scriptUnregister(&ScriptMainSetup);
+		keyboardHandlerUnregister(&ScriptKeyboardMessage);
+		break;
 	}
 
 	return TRUE;

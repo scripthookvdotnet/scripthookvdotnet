@@ -111,6 +111,9 @@
     <ClCompile Include="source\WeaponCollection.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Console.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="source\WeaponCollection.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Console.hpp">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
