@@ -43,18 +43,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_GRAVITY_LEVEL, value);
 	}
-	array<Blip ^> ^World::ActiveBlips::get()
-	{
-		System::Collections::Generic::List<Blip ^> ^res = gcnew System::Collections::Generic::List<Blip ^>();
-		int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
-		int blipHandle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator);
-		while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, blipHandle))
-		{
-			res->Add(gcnew Blip(blipHandle));
-			blipHandle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator);
-		}
-		return res->ToArray();
-	}
 
 	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
@@ -294,6 +282,18 @@ namespace GTA
 		}
 
 		return gcnew Blip(handle);
+	}
+	array<Blip ^> ^World::GetActiveBlips()
+	{
+		System::Collections::Generic::List<Blip ^> ^res = gcnew System::Collections::Generic::List<Blip ^>();
+		int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
+		int blipHandle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator);
+		while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, blipHandle))
+		{
+			res->Add(gcnew Blip(blipHandle));
+			blipHandle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator);
+		}
+		return res->ToArray();
 	}
 
 	int World::AddRelationShipGroup(System::String ^groupName)

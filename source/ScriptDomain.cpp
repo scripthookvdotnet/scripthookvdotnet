@@ -200,7 +200,6 @@ namespace GTA
 
 		try
 		{
-			//assembly = Reflection::Assembly::Load(IO::File::ReadAllBytes(filename));
 			assembly = Reflection::Assembly::LoadFrom(filename);
 		}
 		catch (Exception ^ex)

@@ -65,10 +65,6 @@ namespace GTA
 		{
 			void set(int value);
 		}
-		static property array<Blip ^> ^ActiveBlips
-		{
-			array<Blip ^> ^get();
-		}
 
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
@@ -88,7 +84,7 @@ namespace GTA
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
-		
+
 		static Camera ^CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov);
 		static property Camera ^RenderingCamera
 		{
@@ -99,6 +95,7 @@ namespace GTA
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
+		static array<Blip ^> ^GetActiveBlips();
 
 		static int AddRelationShipGroup(System::String ^groupName);
 		static void RemoveRelationShipGroup(int group);
