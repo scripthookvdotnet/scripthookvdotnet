@@ -437,6 +437,7 @@ namespace GTA
 		void ClearCustomPrimaryColor();
 		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
+		bool IsSeatFree(VehicleSeat seat);
 
 		void Repair();
 		void Explode();
@@ -459,6 +460,7 @@ namespace GTA
 		void FixTire(int wheel);
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
+		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);
 
 	private:
 		int mID;
