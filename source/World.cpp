@@ -166,6 +166,17 @@ namespace GTA
 
 		return gcnew Ped(handle);
 	}
+	Ped ^World::CreateRandomPed(Math::Vector3 position)
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_RANDOM_PED, position.X, position.Y, position.Z);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Ped(handle);
+	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
 		return CreateVehicle(model, position, 0.0f);
