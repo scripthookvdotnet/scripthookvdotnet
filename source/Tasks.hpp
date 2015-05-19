@@ -63,10 +63,11 @@ namespace GTA
 		void ShootAt(Ped ^target);
 		void ShootAt(Ped ^target, int duration);
 		void ShootAt(Math::Vector3 position);
-		void ShootAt(Math::Vector3 position, int duration);
+		void ShootAt(Math::Vector3 position, int duration);		
 		void ShuffleToNextVehicleSeat(Vehicle ^vehicle);
 		void Skydive();
 		void StandStill(int duration);
+		void SlideToCoord(Math::Vector3 coord, float heading);
 		void SwapWeapon();
 		void StartScenario(System::String ^name, Math::Vector3 position);
 		void TurnTo(Entity ^target);

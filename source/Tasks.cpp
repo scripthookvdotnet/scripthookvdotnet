@@ -275,6 +275,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_STAND_STILL, this->mPed->Handle, duration);
 	}
+	void Tasks::SlideToCoord(Math::Vector3 coord, float heading)
+	{
+		Native::Function::Call(Native::Hash::TASK_PED_SLIDE_TO_COORD, this->mPed->Handle, coord.X, coord.Y, coord.Z, heading, 0.7f);
+	}
 	void Tasks::SwapWeapon()
 	{
 		Native::Function::Call(Native::Hash::TASK_SWAP_WEAPON, this->mPed->Handle, false);
