@@ -7,30 +7,16 @@ namespace GTA
 
 	void Log::Debug(... array<String ^> ^message)
 	{
-		LogToFile(Reflection::Assembly::GetExecutingAssembly(), "DEBUG", message);
+		LogToFile("DEBUG", message);
 	}
 	void Log::Error(... array<String ^> ^message)
 	{
-		LogToFile(Reflection::Assembly::GetExecutingAssembly(), "ERROR", message);
-	}
-
-	void Log::Debug(Reflection::Assembly ^assembly, ... array<String ^> ^message)
-	{
-		LogToFile(assembly, "DEBUG", message);
-	}
-	void Log::Error(Reflection::Assembly ^assembly, ... array<String ^> ^message)
-	{
-		LogToFile(assembly, "ERROR", message);
+		LogToFile("ERROR", message);
 	}
 
 	void Log::LogToFile(String ^logLevel, ... array<String ^> ^message)
 	{
-		LogToFile(Reflection::Assembly::GetExecutingAssembly(), logLevel, message);
-	}
-
-	void Log::LogToFile(Reflection::Assembly ^assembly, String ^logLevel, ... array<String ^> ^message)
-	{
-		String ^logpath = IO::Path::ChangeExtension(assembly->CodeBase->Replace("file:///", "")->Replace("/", "\\"), ".log");
+		String ^logpath = IO::Path::ChangeExtension(Reflection::Assembly::GetExecutingAssembly()->CodeBase->Replace("file:///", "")->Replace("/", "\\"), ".log");
 
 		try
 		{
