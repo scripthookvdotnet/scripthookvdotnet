@@ -19,6 +19,8 @@ namespace GTA
 		virtual void Toggle();
 		virtual void Log(System::String ^logLevel, System::String ^msg);
 		virtual void HandleInput(KeyEventArgs ^args);
+		virtual bool CheckInput(KeyEventArgs ^args);
+		virtual System::String^ GetContent();
 		virtual void SubmitInput();
 		virtual void OnOpen();
 		virtual void OnClose();
@@ -32,9 +34,12 @@ namespace GTA
 		property System::Drawing::Color RectColor;
 
 	private:
-		UIRectangle ^mConsoleRect = nullptr, ^mInputRect = nullptr;
-		UIText ^mConsoleText = nullptr, ^mInputText = nullptr;
-		System::String ^mConsole;
+		UIRectangle ^mContentRect = nullptr, ^mInputRect = nullptr;
+		UIText ^mContentText = nullptr, ^mInputText = nullptr;
+		System::String ^mContent;
 		System::String ^mInput;
+		System::String ^mSeperator;
+		int mTotalLines;
+		int mScrollIndex;
 	};
 }

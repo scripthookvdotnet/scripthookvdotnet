@@ -84,7 +84,7 @@ namespace GTA
 		}
 		System::Object ^InitializeLifetimeService() override;
 
-		Console ^mConsole;
+		static Console ^mConsole;
 
 	private:
 		bool LoadScript(System::String ^filename);
