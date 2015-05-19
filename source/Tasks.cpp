@@ -194,7 +194,7 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, this->mPed->Handle, sequence->Handle);
 	}
-	void Tasks::PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int loop, bool lastAnimation, float playbackRate)
+	void Tasks::PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate)
 	{
 		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animSet);
 
@@ -210,7 +210,7 @@ namespace GTA
 			}
 		}
 
-		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, this->mPed->Handle, animSet, animName, speed, -8.0f, loop, lastAnimation, playbackRate, 0, 0, 0);
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, this->mPed->Handle, animSet, animName, speed, -8.0f, duration, lastAnimation, playbackRate, 0, 0, 0);
 	}
 	void Tasks::PutAwayMobilePhone()
 	{
