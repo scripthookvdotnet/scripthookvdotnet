@@ -52,7 +52,7 @@ namespace GTA
 		void ParachuteTo(Math::Vector3 position);
 		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading);
 		void PerformSequence(TaskSequence ^sequence);
-		void PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int loop, bool lastAnimation, float playbackRate);
+		void PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
 		void ReactAndFlee(Ped ^ped);
@@ -66,6 +66,7 @@ namespace GTA
 		void ShootAt(Math::Vector3 position, int duration);
 		void ShuffleToNextVehicleSeat(Vehicle ^vehicle);
 		void Skydive();
+		void SlideToCoord(Math::Vector3 coord, float heading);
 		void StandStill(int duration);
 		void SwapWeapon();
 		void StartScenario(System::String ^name, Math::Vector3 position);
