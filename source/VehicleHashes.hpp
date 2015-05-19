@@ -291,6 +291,8 @@ namespace GTA
 			TR4 = 0x7CAB34D0,
 			TRFlat = 0xAF62F6B2,
 			TrailerSmall = 0x2A72BEAB,
+			FreightTrailer = 0xD1ABB666,
+			DockTrailer = 0x806EFBEE,
 			Velum = 0x9C429B6A,
 			Adder = 0xB779A091,
 			Voltic = 0x9F4B77BE,
