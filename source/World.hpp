@@ -10,6 +10,7 @@ namespace GTA
 	ref class Camera;
 	ref class Blip;
 	ref class Prop;
+	ref class Rope;
 
 	public enum class Weather
 	{
@@ -85,6 +86,7 @@ namespace GTA
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double lenght, int type, double maxLenght, double minLenght, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
 
 		static Camera ^CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov);
 		static property Camera ^RenderingCamera
