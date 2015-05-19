@@ -168,7 +168,7 @@ namespace GTA
 
 		if (!compilerResult->Errors->HasErrors)
 		{
-			Log::Error("Successfully compiled '", IO::Path::GetFileName(filename), "'.");
+			Log::Debug("Successfully compiled '", IO::Path::GetFileName(filename), "'.");
 
 			return LoadAssembly(filename, compilerResult->CompiledAssembly);
 		}

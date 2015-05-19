@@ -295,6 +295,10 @@ namespace GTA
 
 		return gcnew Ped(handle);
 	}
+	bool Vehicle::IsSeatFree(VehicleSeat seat)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_SEAT_FREE, this->Handle, static_cast<int>(seat));
+	}
 
 	void Vehicle::Repair()
 	{
@@ -389,6 +393,15 @@ namespace GTA
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
 	{
 		Ped ^ped = World::CreatePed(model, this->Position);
+		ped->BlockPermanentEvents = true;
+		ped->IsInvincible = true;
+		Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, this->Handle, static_cast<int>(seat));
+		ped->IsInvincible = false;
+		return ped;
+	}
+	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
+	{
+		Ped ^ped = World::CreateRandomPed(this->Position);
 		ped->BlockPermanentEvents = true;
 		ped->IsInvincible = true;
 		Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, this->Handle, static_cast<int>(seat));

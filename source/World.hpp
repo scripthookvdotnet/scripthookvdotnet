@@ -77,6 +77,7 @@ namespace GTA
 
 		static Ped ^CreatePed(Model model, Math::Vector3 position);
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
+		static Ped ^CreateRandomPed(Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
