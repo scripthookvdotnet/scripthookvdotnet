@@ -93,42 +93,12 @@ namespace GTA
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
 	{
-		int maxAmount = 10000;
-		
 		Ped ^ped = World::CreateRandomPed(position);
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
+		array<Ped ^> ^result = GetNearbyVehicles(ped, radius);
+		ped->Delete();
 		
-		System::Collections::Generic::List<Vehicle ^> ^result = gcnew System::Collections::Generic::List<Vehicle ^>();
-		int *handles = new int[maxAmount * 2 + 2];
-
-		try
-		{
-			handles[0] = maxAmount;
-
-			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_VEHICLES, ped->Handle, handles, -1);
-
-			for (int i = 0; i < amount; ++i)
-			{
-				const int index = i * 2 + 2;
-
-				if (handles[index] != 0 && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handles[index]))
-				{
-					Vehicle ^vehicle = gcnew Vehicle(handles[index]);
-
-					if (Math::Vector3::Subtract(position, vehicle->Position).LengthSquared() < radius * radius)
-					{
-						result->Add(vehicle);
-					}
-				}
-			}
-		}
-		finally
-		{
-			delete[] handles;
-			ped->Delete();
-		}
-
-		return result->ToArray();
+		return result;
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
