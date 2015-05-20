@@ -299,7 +299,6 @@ namespace GTA
 		}
 
 		mConsole = gcnew Console();
-		mConsole->Initialize();
 
 		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
@@ -393,7 +392,7 @@ namespace GTA
 
 		KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
 
-		mConsole->HandleInput(args);
+		mConsole->HandleInput(status, args);
 
 		Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
 

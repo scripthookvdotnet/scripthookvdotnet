@@ -13,12 +13,11 @@ namespace GTA
 	public:
 		virtual void Draw();
 		virtual void Draw(System::Drawing::Size offset);
-		virtual void Initialize();
 		virtual void Show();
 		virtual void Hide();
 		virtual void Toggle();
 		virtual void Log(System::String ^logLevel, System::String ^msg);
-		virtual void HandleInput(KeyEventArgs ^args);
+		virtual void HandleInput(bool status, KeyEventArgs ^args);
 		virtual bool CheckInput(KeyEventArgs ^args);
 		virtual System::String^ GetContent();
 		virtual void SubmitInput();

@@ -17,6 +17,11 @@ namespace GTA
 		mSeperator = "\n";
 		mTotalLines = 8;
 		mScrollIndex = 0;
+
+		mContentRect = gcnew UIRectangle(System::Drawing::Point(), System::Drawing::Size(Width, Height / 100 * 80), RectColor);
+		mInputRect = gcnew UIRectangle(System::Drawing::Point(0, Height / 100 * 80), System::Drawing::Size(Width, Height / 100 * 20), RectColor);
+		mContentText = gcnew UIText("", System::Drawing::Point(), TextScale, TextColor);
+		mInputText = gcnew UIText("", System::Drawing::Point(0, (Height / 100 * 80) + 5), TextScale, TextColor);
 	}
 
 	void Console::Draw()
@@ -37,13 +42,6 @@ namespace GTA
 			mInputText->Caption = mInput;
 			mInputText->Draw(offset);
 		}
-	}
-
-	void Console::Initialize(){
-		mContentRect = gcnew UIRectangle(System::Drawing::Point(), System::Drawing::Size(Width, Height / 100 * 80), RectColor);
-		mInputRect = gcnew UIRectangle(System::Drawing::Point(0, Height / 100 * 80), System::Drawing::Size(Width, Height / 100 * 20), RectColor);
-		mContentText = gcnew UIText("", System::Drawing::Point(), TextScale, TextColor);
-		mInputText = gcnew UIText("", System::Drawing::Point(0, (Height / 100 * 80) + 5), TextScale, TextColor);
 	}
 
 	void Console::Show(){
@@ -69,8 +67,11 @@ namespace GTA
 		mContent += "[" + DateTime::Now.ToString("HH:mm:ss") + "] [" + logLevel + "] " + msg + mSeperator;
 	}
 
-	void Console::HandleInput(KeyEventArgs ^args){
-		if (args->KeyCode == Keys::Oemtilde){
+	void Console::HandleInput(bool status, KeyEventArgs ^args){
+		if (!status){
+			return;
+		}
+		if (args->KeyCode == Keys::F10){
 			Toggle();
 			return;
 		}
