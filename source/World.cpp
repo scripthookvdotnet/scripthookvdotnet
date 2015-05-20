@@ -46,42 +46,12 @@ namespace GTA
 	
 	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
 	{
-		int maxAmount = 10000;
-		
 		Ped ^ped = World::CreateRandomPed(position);
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
+		array<Ped ^> ^result = GetNearbyPeds(ped, radius);
+		ped->Delete();
 		
-		System::Collections::Generic::List<Ped ^> ^result = gcnew System::Collections::Generic::List<Ped ^>();
-		int *handles = new int[maxAmount * 2 + 2];
-
-		try
-		{
-			handles[0] = maxAmount;
-
-			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_PEDS, ped->Handle, handles, -1);
-
-			for (int i = 0; i < amount; ++i)
-			{
-				const int index = i * 2 + 2;
-
-				if (handles[index] != 0 && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handles[index]))
-				{
-					Ped ^currped = gcnew Ped(handles[index]);
-
-					if (Math::Vector3::Subtract(position, currped->Position).LengthSquared() < radius * radius)
-					{
-						result->Add(currped);
-					}
-				}
-			}
-		}
-		finally
-		{
-			delete[] handles;
-			ped->Delete();
-		}
-
-	        return result->ToArray();
+		return result;
 	}
         array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
