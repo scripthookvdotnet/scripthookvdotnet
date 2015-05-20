@@ -95,7 +95,7 @@ namespace GTA
 	{
 		Ped ^ped = World::CreateRandomPed(position);
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
-		array<Ped ^> ^result = GetNearbyVehicles(ped, radius);
+		array<Vehicle ^> ^result = GetNearbyVehicles(ped, radius);
 		ped->Delete();
 		
 		return result;
