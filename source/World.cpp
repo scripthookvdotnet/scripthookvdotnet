@@ -48,8 +48,7 @@ namespace GTA
 	{
 		int maxAmount = 10000;
 		
-		Ped ped = World.CreatePed();
-		ped.Position = position;
+		Ped ^ped = World::CreateRandomPed(position);
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
 		
 		System::Collections::Generic::List<Ped ^> ^result = gcnew System::Collections::Generic::List<Ped ^>();
@@ -79,12 +78,12 @@ namespace GTA
 		finally
 		{
 			delete[] handles;
+			ped->Delete();
 		}
 
-		return result->ToArray();
+	        return result->ToArray();
 	}
-
-	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
+        array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
 		return GetNearbyPeds(ped, radius, 10000);
 	}
@@ -126,8 +125,7 @@ namespace GTA
 	{
 		int maxAmount = 10000;
 		
-		Ped ped = World.CreatePed();
-		ped.Position = position;
+		Ped ^ped = World::CreateRandomPed(position);
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
 		
 		System::Collections::Generic::List<Vehicle ^> ^result = gcnew System::Collections::Generic::List<Vehicle ^>();
@@ -157,6 +155,7 @@ namespace GTA
 		finally
 		{
 			delete[] handles;
+			ped->Delete();
 		}
 
 		return result->ToArray();
