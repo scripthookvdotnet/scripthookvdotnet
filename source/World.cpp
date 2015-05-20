@@ -48,7 +48,7 @@ namespace GTA
 	{
 		int maxAmount = 10000;
 		
-		Ped ped = World::CreatePed();
+		Ped ped = World.CreatePed();
 		ped.Position = position;
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
 		
@@ -126,7 +126,7 @@ namespace GTA
 	{
 		int maxAmount = 10000;
 		
-		Ped ped = new Ped(rand() % 1000000);
+		Ped ped = World.CreatePed();
 		ped.Position = position;
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
 		
