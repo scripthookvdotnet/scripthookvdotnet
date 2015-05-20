@@ -65,7 +65,8 @@ namespace GTA
 		{
 			void set(int value);
 		}
-
+                
+                static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
