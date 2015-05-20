@@ -48,6 +48,9 @@ namespace GTA
 	{
 		int maxAmount = 10000;
 		
+		Ped ped = new Ped(rand() % 1000000);
+		ped.Position = position;
+		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
 		
 		System::Collections::Generic::List<Ped ^> ^result = gcnew System::Collections::Generic::List<Ped ^>();
 		int *handles = new int[maxAmount * 2 + 2];
@@ -122,6 +125,10 @@ namespace GTA
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
 	{
 		int maxAmount = 10000;
+		
+		Ped ped = new Ped(rand() % 1000000);
+		ped.Position = position;
+		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
 		
 		System::Collections::Generic::List<Vehicle ^> ^result = gcnew System::Collections::Generic::List<Vehicle ^>();
 		int *handles = new int[maxAmount * 2 + 2];
