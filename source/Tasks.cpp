@@ -315,6 +315,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_PARACHUTE, this->mPed->Handle, true);
 	}
+	void Tasks::VehicleChase(Ped ^target)
+	{
+		Native::Function::Call(Native::Hash::TASK_VEHICLE_CHASE, this->mPed->Handle, target->Handle);
+	}
+	void Tasks::VehicleShootAtPed(Ped ^target)
+	{
+		Native::Function::Call(Native::Hash::TASK_VEHICLE_SHOOT_AT_PED, this->mPed->Handle, target->Handle, 20.0f);
+	}
 	void Tasks::Wait(int duration)
 	{
 		Native::Function::Call(Native::Hash::TASK_PAUSE, this->mPed->Handle, duration);
