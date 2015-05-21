@@ -15,6 +15,7 @@
  */
 
 #include "ScriptDomain.hpp"
+#include "UI.hpp"
 
 ref struct ScriptHook
 {
@@ -119,16 +120,16 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 {
 	switch (fdwReason)
 	{
-		case DLL_PROCESS_ATTACH:
-			DisableThreadLibraryCalls(hModule);
-			scriptRegister(hModule, &ScriptMainSetup);
-			keyboardHandlerRegister(&ScriptKeyboardMessage);
-			break;
-		case DLL_PROCESS_DETACH:
-			DeleteFiber(sScriptFib);
-			scriptUnregister(&ScriptMainSetup);
-			keyboardHandlerUnregister(&ScriptKeyboardMessage);
-			break;
+	case DLL_PROCESS_ATTACH:
+		DisableThreadLibraryCalls(hModule);
+		scriptRegister(hModule, &ScriptMainSetup);
+		keyboardHandlerRegister(&ScriptKeyboardMessage);
+		break;
+	case DLL_PROCESS_DETACH:
+		DeleteFiber(sScriptFib);
+		scriptUnregister(&ScriptMainSetup);
+		keyboardHandlerUnregister(&ScriptKeyboardMessage);
+		break;
 	}
 
 	return TRUE;

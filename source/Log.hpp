@@ -7,8 +7,8 @@ namespace GTA
 	public:
 		static void Debug(... array<System::String ^> ^message);
 		static void Error(... array<System::String ^> ^message);
+		static void LogToFile(System::String ^logLevel, ... array<System::String ^> ^message);
 
 	private:
-		static void LogToFile(System::String ^logLevel, ... array<System::String ^> ^message);
 	};
 }

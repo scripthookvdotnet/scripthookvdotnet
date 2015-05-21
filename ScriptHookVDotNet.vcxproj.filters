@@ -30,6 +30,9 @@
     <ClCompile Include="source\ScriptDomain.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+	<ClCompile Include="source\Console.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="source\Settings.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -129,6 +132,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\ScriptDomain.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+	<ClInclude Include="source\Console.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\Settings.hpp">
