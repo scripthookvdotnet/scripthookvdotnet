@@ -78,6 +78,7 @@ namespace GTA
 		void UseMobilePhone(int duration);
 		void UseParachute();
 		void VehicleChase(Ped ^target);
+		void VehicleShootAtPed(Ped ^target);
 		void Wait(int duration);
 		void WanderAround();
 		void WanderAround(Math::Vector3 position, float radius);
