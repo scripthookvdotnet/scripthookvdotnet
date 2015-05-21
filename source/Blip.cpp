@@ -64,6 +64,11 @@ namespace GTA
 		return Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, this->Handle);
 	}
 
+	bool Blip::IsOnMinimap::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_BLIP_ON_MINIMAP, this->Handle);
+	}
+
 	void Blip::ShowNumber(int number)
 	{
 		Native::Function::Call(Native::Hash::SHOW_NUMBER_ON_BLIP, this->Handle, number);
