@@ -185,6 +185,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_BRAKE_LIGHTS, this->Handle, value);
 	}
+	void Vehicle::HandbrakeOn::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_HANDBRAKE, this->Handle, value);
+	}
 	void Vehicle::LeftIndicatorLightOn::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_INDICATOR_LIGHTS, this->Handle, true, value);
