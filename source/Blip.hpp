@@ -22,7 +22,7 @@ namespace GTA
 		{
 			int get();
 		}
-		property Math::Vector3 Position 
+		property Math::Vector3 Position
 		{
 			Math::Vector3 get(); // Vector3 GET_BLIP_INFO_ID_COORD(Any p0) // 0xB7374A66
 			void set(Math::Vector3 value); // void SET_BLIP_COORDS(Any p0, Any p1, Any p2, Any p3) // 0x680A34D4
@@ -59,6 +59,9 @@ namespace GTA
 		{
 			int get();
 		}
+		property bool IsOnMinimap{
+			bool get();
+		}
 
 		bool Exists(); // BOOL DOES_BLIP_EXIST(Any p0) // 0xAE92DD96
 		void SetAsFriendly(); // void SET_BLIP_AS_FRIENDLY(int BlipID, BOOL toggle) // 0xF290CFD8
@@ -66,10 +69,9 @@ namespace GTA
 		void Remove(); // void REMOVE_BLIP(int BlipID) // 0xD8C3C1CD
 		void ShowNumber(int number);
 		void HideNumber();
-		
-		
+
 		// BOOL IS_BLIP_ON_MINIMAP(Any p0) // 0x258CBA3A
-		// void SET_BLIP_AS_SHORT_RANGE(Any p0, Any p1) // 0x5C67725E 
+		// void SET_BLIP_AS_SHORT_RANGE(Any p0, Any p1) // 0x5C67725E
 		// Vector3 GET_BLIP_COORDS(Any p0) // 0xEF6FF47B
 		// void SHOW_NUMBER_ON_BLIP(Any p0, Any p1) // 0x7BFC66C6
 		// void HIDE_NUMBER_ON_BLIP(Any p0) // 0x0B6D610D
@@ -81,7 +83,7 @@ namespace GTA
 		// void BLIP_SIREN(Any p0) // 0xC0EB6924
 		// Any GET_NUMBER_OF_ACTIVE_BLIPS() // 0x144020FA
 		// Any GET_NEXT_BLIP_INFO_ID(Any p0) // 0x9356E92F
-		// Any GET_FIRST_BLIP_INFO_ID(Any p0) // 0x64C0273D 
+		// Any GET_FIRST_BLIP_INFO_ID(Any p0) // 0x64C0273D
 		// Object GET_BLIP_FROM_ENTITY(Entity entity) // 0x005A2A47
 		//  Any ADD_BLIP_FOR_ENTITY(Entity entity) // 0x30822554
 		// Any ADD_BLIP_FOR_COORD(float x, float y, float z) // 0xC6F43D0E
