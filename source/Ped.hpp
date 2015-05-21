@@ -52,6 +52,10 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
+		property bool AlwaysKeepTask
+		{
+			void set(bool value);
+		}
 		property int Money
 		{
 			int get();
