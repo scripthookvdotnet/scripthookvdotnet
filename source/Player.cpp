@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Prop.hpp"
 #include "Native.hpp"
 
 namespace GTA
@@ -173,6 +174,10 @@ namespace GTA
 			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entity))
 			{
 				return gcnew Vehicle(entity);
+			}
+			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entity))
+			{
+				return gcnew Prop(entity);
 			}
 		}
 
