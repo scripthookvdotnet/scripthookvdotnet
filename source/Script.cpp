@@ -17,6 +17,7 @@
 #include "Viewport.hpp"
 #include "Settings.hpp"
 #include "ScriptDomain.hpp"
+#include "Log.hpp"
 
 namespace GTA
 {
@@ -99,8 +100,7 @@ namespace GTA
 		{
 			script->mWaitEvent->Set();
 			script->mContinueEvent->WaitOne();
-		}
-		while (DateTime::Now < resume);
+		} while (DateTime::Now < resume);
 	}
 	void Script::Yield()
 	{
@@ -166,5 +166,11 @@ namespace GTA
 		else if (e->KeyCode == RightKey) this->mViewport->HandleChangeItem(true);
 		else if (e->KeyCode == UpKey) this->mViewport->HandleChangeSelection(false);
 		else if (e->KeyCode == DownKey) this->mViewport->HandleChangeSelection(true);
+	}
+	void Script::Log(bool showInConsole, System::String ^logLevel, System::String ^msg){
+		if (showInConsole){
+			mScriptDomain->mConsole->Log(logLevel, msg);
+		}
+		Log::LogToFile(logLevel, msg);
 	}
 }
