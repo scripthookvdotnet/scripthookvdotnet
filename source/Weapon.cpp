@@ -95,6 +95,14 @@ namespace GTA
 		}
 		return Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, this->pOwner->Handle, static_cast<int>(this->hash));
 	}
+	void Weapon::InfiniteAmmo::set(bool value)
+	{
+		if (this->hash == Native::WeaponHash::Unarmed)
+		{
+			return;
+		}
+		Native::Function::Call(Native::Hash::SET_PED_INFINITE_AMMO, this->pOwner->Handle, value, static_cast<int>(this->hash));
+	}
 	Native::WeaponHash Weapon::Hash::get()
 	{
 		return this->hash;

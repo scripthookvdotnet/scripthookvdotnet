@@ -33,6 +33,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool InfiniteAmmo
+		{
+			void set(bool value);
+		}
 		property Native::WeaponHash Hash
 		{
 			Native::WeaponHash get();
