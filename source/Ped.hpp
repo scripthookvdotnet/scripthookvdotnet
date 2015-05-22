@@ -52,15 +52,15 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
-		property bool AlwaysKeepTask
-		{
-			void set(bool value);
-		}
 		property int Money
 		{
 			int get();
 			void set(int value);
 		}
+		property bool AlwaysKeepTask
+-		{
+-			void set(bool value);
+-		}
 		property bool IsPlayer
 		{
 			bool get();
@@ -119,6 +119,10 @@ namespace GTA
 			bool get();
 		}
 		property Vehicle ^CurrentVehicle
+		{
+			Vehicle ^get();
+		}
+		property Vehicle ^LastVehicle
 		{
 			Vehicle ^get();
 		}
