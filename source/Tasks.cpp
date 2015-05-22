@@ -120,7 +120,7 @@ namespace GTA
 	}
 	void Tasks::GoTo(Entity ^target, Math::Vector3 offset, int timeout)
 	{
-		Native::Function::Call(Native::Hash::TASK_GOTO_ENTITY_OFFSET_XY, this->mPed->Handle, target->Handle, timeout, offset.X, offset.Y, offset.Z, 2.0f, true);
+		Native::Function::Call(Native::Hash::TASK_GOTO_ENTITY_OFFSET_XY, this->mPed->Handle, target->Handle, timeout, offset.X, offset.Y, offset.Z, 1.0f, true);
 	}
 	void Tasks::GoTo(Math::Vector3 position)
 	{
@@ -134,11 +134,11 @@ namespace GTA
 	{
 		if (ignorePaths)
 		{
-			Native::Function::Call(Native::Hash::TASK_GO_STRAIGHT_TO_COORD, this->mPed->Handle, position.X, position.Y, position.Z, 2.0f, timeout, 0.0f /* heading */, 0.0f);
+			Native::Function::Call(Native::Hash::TASK_GO_STRAIGHT_TO_COORD, this->mPed->Handle, position.X, position.Y, position.Z, 1.0f, timeout, 0.0f /* heading */, 0.0f);
 		}
 		else
 		{
-			Native::Function::Call(Native::Hash::TASK_FOLLOW_NAV_MESH_TO_COORD, this->mPed->Handle, position.X, position.Y, position.Z, 2.0f, timeout, 0.0f, 0, 0.0f);
+			Native::Function::Call(Native::Hash::TASK_FOLLOW_NAV_MESH_TO_COORD, this->mPed->Handle, position.X, position.Y, position.Z, 1.0f, timeout, 0.0f, 0, 0.0f);
 		}
 	}
 	void Tasks::GuardCurrentPosition()
