@@ -433,6 +433,15 @@ namespace GTA
 			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
+		property int Livery
+		{
+			int get();
+			void set(int liveryIndex);
+		}
+		property int LiveryCount
+		{
+			int get();
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
