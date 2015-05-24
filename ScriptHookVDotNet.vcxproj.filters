@@ -72,10 +72,22 @@
     <ClCompile Include="source\Prop.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Rope.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Tasks.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\TaskSequence.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Vehicle.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Weapon.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\WeaponCollection.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\World.cpp">
@@ -101,15 +113,6 @@
     </ClCompile>
     <ClCompile Include="source\Viewport.cpp">
       <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\TaskSequence.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Weapon.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="source\WeaponCollection.cpp">
-      <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,13 +176,25 @@
     <ClInclude Include="source\Prop.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="source\Rope.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Tasks.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TaskSequence.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Vehicle.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\VehicleHashes.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Weapon.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\WeaponCollection.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\WeaponHashes.hpp">
@@ -211,15 +226,6 @@
     </ClInclude>
     <ClInclude Include="source\Viewport.hpp">
       <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TaskSequence.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Weapon.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\WeaponCollection.hpp">
-      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

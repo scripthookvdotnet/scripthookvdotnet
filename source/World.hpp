@@ -10,6 +10,7 @@ namespace GTA
 	ref class Camera;
 	ref class Blip;
 	ref class Prop;
+	ref class Rope;
 
 	public enum class Weather
 	{
@@ -30,8 +31,40 @@ namespace GTA
 	};
 	public enum class ExplosionType
 	{
-		Fire = 25,
-		BigFire = 9,
+		SmallExplosion1 = 1,
+		SmallExplosion2 = 2,
+		Molotov1 = 3,
+		SmallExplosionWithFire1 = 4,
+		SmallExplosion3 = 5,
+		SmallExplosionWithFire2 = 6,
+		SmallExplosion4 = 7,
+		ExplosionWithFire1 = 8,
+		ExplosionWithFire2 = 9,
+		SmallExplosionWithFire3 = 10,
+		ValveAir1 = 11,
+		ValveFire1 = 12,
+		ValveWater1 = 13,
+		ValveFire2 = 14,
+		ExplosionWithFire3 = 15,
+		ExplosionWithFire4 = 16,
+		Explosion1 = 17,
+		SmallExplosion5 = 18,
+		Smoke1 = 19,
+		Gas1 = 20,
+		Gas2 = 21,
+		SignalFire = 22,
+		ExplosionWithFire5 = 23,
+		ValveAir2 = 24,
+		SmallExplosion6 = 25,
+		Explosion2 = 26,
+		ExplosionWithFire6 = 27,
+		Explosion3 = 28,
+		BigExplosion1 = 29,
+		ValveFire3 = 30,
+		Explosion4 = 31,
+		Explosion5 = 32,
+		SmallExplosion7 = 33,
+		Explosion6 = 34
 	};
 	public enum class Relationship
 	{
@@ -85,6 +118,7 @@ namespace GTA
 
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double lenght, int type, double maxLenght, double minLenght, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
 
 		static Camera ^CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov);
 		static property Camera ^RenderingCamera

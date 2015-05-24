@@ -373,6 +373,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool HandbrakeOn
+		{
+			void set(bool value);
+		}
 		property bool LeftIndicatorLightOn
 		{
 			void set(bool value);

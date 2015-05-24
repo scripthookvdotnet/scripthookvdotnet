@@ -101,6 +101,7 @@
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Prop.cpp" />
     <ClCompile Include="source\Quaternion.cpp" />
+    <ClCompile Include="source\Rope.cpp" />
     <ClCompile Include="source\Script.cpp" />
     <ClCompile Include="source\ScriptDomain.cpp" />
     <ClCompile Include="source\Settings.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="source\Player.hpp" />
     <ClInclude Include="source\Prop.hpp" />
     <ClInclude Include="source\Quaternion.hpp" />
+    <ClInclude Include="source\Rope.hpp" />
     <ClInclude Include="source\Script.hpp" />
     <ClInclude Include="source\ScriptDomain.hpp" />
     <ClInclude Include="source\Settings.hpp" />

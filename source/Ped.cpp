@@ -18,6 +18,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_ACCURACY, this->Handle, value);
 	}
+	void Ped::AlwaysKeepTask::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_KEEP_TASK, this->Handle, value);
+	}
 	Tasks ^Ped::Task::get()
 	{
 		return this->mTasks;
