@@ -15,6 +15,7 @@ namespace GTA
 		mContent = "";
 		mInput = "";
 		mSeperator = "\n";
+		mSpace = " ";
 		mTotalLines = 8;
 		mScrollIndex = 0;
 
@@ -64,7 +65,12 @@ namespace GTA
 	}
 
 	void Console::Log(System::String ^logLevel, System::String ^msg){
-		mContent += "[" + DateTime::Now.ToString("HH:mm:ss") + "] [" + logLevel + "] " + msg + mSeperator;
+		AddToContent("[" + DateTime::Now.ToString("HH:mm:ss") + "] [" + logLevel + "] " + msg);
+	}
+
+	void Console::AddToContent(System::String ^content)
+	{
+		mContent += content + mSeperator;
 	}
 
 	void Console::HandleInput(bool status, KeyEventArgs ^args){
@@ -138,9 +144,9 @@ namespace GTA
 	}
 
 	void Console::SubmitInput(){
-		mContent += mInput + mSeperator;
+		AddToContent(mInput);
 		mScrollIndex = mContent->Split(mSeperator->ToCharArray())->Length;
-		// HANDLE COMMAND
+		RunInput(mInput);
 		mInput = "";
 	}
 
@@ -148,5 +154,38 @@ namespace GTA
 	}
 
 	void Console::OnClose(){
+	}
+
+	void Console::AddCommand(System::String ^script, System::String ^name, System::String ^description, System::Func<array<System::String^>^, System::String^> ^callback){
+		AddCommand(script, gcnew ConsoleCommand(name, description, callback));
+	}
+
+	void Console::AddCommand(System::String ^script, ConsoleCommand ^command){
+		if (!Commands->ContainsKey(script)){
+			Commands->Add(script, gcnew Dictionary<System::String^, ConsoleCommand^>());
+		}
+		Commands[script]->Add(command->Name, command);
+	}
+
+	void Console::RunInput(System::String ^input){
+		array<System::String^>^ args = input->Split(mSpace->ToCharArray());
+		if (Commands->ContainsKey(args[0])){
+			Dictionary<System::String^, ConsoleCommand^>^ scriptCommands = Commands[args[0]];
+			if (scriptCommands->ContainsKey(args[1])){
+				AddToContent(scriptCommands[args[1]]->Callback->Invoke(args));
+			}
+		}
+		else{
+			Dictionary<System::String^, ConsoleCommand^>^ scriptCommands = Commands["scripthookvdotnet"];
+			if (scriptCommands->ContainsKey(args[0])){
+				AddToContent(scriptCommands[args[0]]->Callback->Invoke(args));
+			}
+		}
+	}
+
+	ConsoleCommand::ConsoleCommand(System::String ^name, System::String ^description, System::Func<array<System::String^>^, System::String^> ^callback){
+		mName = name;
+		mDescription = description;
+		mCallback = callback;
 	}
 }
