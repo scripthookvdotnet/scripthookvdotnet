@@ -353,7 +353,24 @@ namespace GTA
 			Lectro = 0x26321E67,
 			SlamVan = 0x2B7F9DE3,
 			SlamVan2 = 0x31ADBBFC,
-			RatLoader2 = 0xDCE1D9F7
+			RatLoader2 = 0xDCE1D9F7,
+			freight = 0x3D6AAA9B,
+			freightcar = 0x0AFD22A6,
+			freightcont1 = 0x36DCFF98,
+			freightcont2 = 0x0E512E79,
+			freightgrain = 0x264D9262,
+			tankercar = 0x22EDDC30,
+			utillitruck = 0x1ED0A534,
+			utillitruck2 = 0x34E6BF6B,
+			utillitruck3 = 0x7F2153DF,
+			mule3 = 0x85A5B471,
+			tanker2 = 0x74998082,
+			boxville4 = 0x1A79847A,
+			gburrito2 = 0x11AA0E14,
+			dinghy3 = 0x1E5E54EA,
+			trash2 = 0xB527915C,
+			barracks3 = 0x2592B5CF,
+			blimp2 = 0xDB6B4924,
 		};
 	}
 }
