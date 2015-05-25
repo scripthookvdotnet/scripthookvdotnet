@@ -419,6 +419,10 @@ namespace GTA
 			return nullptr;
 		}
 		int pedHandle = Native::Function::Call<int>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, this->Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
+		if (pedHandle == 0)
+		{
+			return nullptr;
+		}
 		return gcnew Ped(pedHandle);
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
