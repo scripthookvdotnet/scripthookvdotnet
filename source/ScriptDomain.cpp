@@ -298,6 +298,8 @@ namespace GTA
 			return;
 		}
 
+		mConsole = gcnew Console();
+
 		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
 		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
@@ -379,6 +381,8 @@ namespace GTA
 			}
 		}
 
+		mConsole->Draw();
+
 		// Clean up pinned strings
 		CleanupStrings();
 	}
@@ -387,6 +391,9 @@ namespace GTA
 		this->mKeyboardState[static_cast<int>(key)] = status;
 
 		KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
+
+		mConsole->HandleInput(status, args);
+
 		Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
 
 		for each (Script ^script in this->mRunningScripts)

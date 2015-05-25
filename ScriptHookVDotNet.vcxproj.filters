@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Console.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="source\Log.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -116,6 +119,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Console.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="source\Log.hpp">
       <Filter>Core</Filter>
     </ClInclude>

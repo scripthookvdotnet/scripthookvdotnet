@@ -7,16 +7,16 @@ namespace GTA
 
 	void Log::Debug(... array<String ^> ^message)
 	{
-		LogToFile("[DEBUG]", message);
+		LogToFile("DEBUG", message);
 	}
 	void Log::Error(... array<String ^> ^message)
 	{
-		LogToFile("[ERROR]", message);
+		LogToFile("ERROR", message);
 	}
 
 	void Log::LogToFile(String ^logLevel, ... array<String ^> ^message)
 	{
-		String ^logpath = IO::Path::ChangeExtension(Reflection::Assembly::GetExecutingAssembly()->Location, ".log");
+		String ^logpath = IO::Path::ChangeExtension(Reflection::Assembly::GetExecutingAssembly()->CodeBase->Replace("file:///", "")->Replace("/", "\\"), ".log");
 
 		try
 		{
@@ -25,7 +25,7 @@ namespace GTA
 
 			try
 			{
-				sw->Write(String::Concat("[", DateTime::Now.ToString("HH:mm:ss"), "] ", logLevel, " "));
+				sw->Write(String::Concat("[", DateTime::Now.ToString("HH:mm:ss"), "] [", logLevel, "] "));
 
 				for each (String ^string in message)
 				{
