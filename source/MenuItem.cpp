@@ -6,7 +6,7 @@ namespace GTA
 {
 	MenuButton::MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction)
 	{
-		Caption = caption;
+		mCaption = caption;
 		Description = description;
 		mActivationAction = activationAction;
 	}
@@ -309,7 +309,7 @@ namespace GTA
 
 	MenuLabel::MenuLabel(System::String ^caption, bool underlined)
 	{
-		Caption = caption;
+		mCaption = caption;
 		Description = "";
 		UnderlinedBelow = underlined;
 		UnderlinedAbove = false;

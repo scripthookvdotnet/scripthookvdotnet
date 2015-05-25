@@ -60,11 +60,21 @@ namespace GTA
 		void UpdateText();
 
 		virtual property MenuBase ^Parent;
-		virtual property System::String ^Caption;
+		virtual property System::String ^Caption {
+			System::String ^get(){
+				return mCaption;
+			}
+			void set(System::String ^value){
+				mCaption = value;
+				UpdateText();
+			}
+		}
 		virtual property System::String ^Description;
 
 	private:
 		System::Action ^mActivationAction;
+
+		System::String ^mCaption;
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
@@ -235,7 +245,15 @@ namespace GTA
 		void UpdateText();
 
 		virtual property MenuBase ^Parent;
-		virtual property System::String ^Caption;
+		virtual property System::String ^Caption {
+			System::String ^get(){
+				return mCaption;
+			}
+			void set(System::String ^value){
+				mCaption = value;
+				UpdateText();
+			}
+		}
 		virtual property System::String ^Description;
 
 		property bool UnderlinedBelow;
@@ -246,6 +264,8 @@ namespace GTA
 	private:
 		UIRectangle ^mButton = nullptr, ^mUnderlineBelow = nullptr, ^mUnderlineAbove = nullptr;
 		UIText ^mText = nullptr;
+
+		System::String ^mCaption;
 
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
