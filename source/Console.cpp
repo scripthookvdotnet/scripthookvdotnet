@@ -146,7 +146,7 @@ namespace GTA
 	void Console::SubmitInput(){
 		AddToContent(mInput);
 		mScrollIndex = mContent->Split(mSeperator->ToCharArray())->Length;
-		RunInput(mInput);
+		AddToContent(RunInput(mInput));
 		mInput = "";
 	}
 
@@ -167,20 +167,21 @@ namespace GTA
 		Commands[script]->Add(command->Name, command);
 	}
 
-	void Console::RunInput(System::String ^input){
+	System::String^ Console::RunInput(System::String ^input){
 		array<System::String^>^ args = input->Split(mSpace->ToCharArray());
 		if (Commands->ContainsKey(args[0])){
 			Dictionary<System::String^, ConsoleCommand^>^ scriptCommands = Commands[args[0]];
 			if (scriptCommands->ContainsKey(args[1])){
-				AddToContent(scriptCommands[args[1]]->Callback->Invoke(args));
+				return scriptCommands[args[1]]->Callback->Invoke(args);
 			}
 		}
 		else{
 			Dictionary<System::String^, ConsoleCommand^>^ scriptCommands = Commands["scripthookvdotnet"];
 			if (scriptCommands->ContainsKey(args[0])){
-				AddToContent(scriptCommands[args[0]]->Callback->Invoke(args));
+				return scriptCommands[args[0]]->Callback->Invoke(args);
 			}
 		}
+		return "Command not found";
 	}
 
 	ConsoleCommand::ConsoleCommand(System::String ^name, System::String ^description, System::Func<array<System::String^>^, System::String^> ^callback){
