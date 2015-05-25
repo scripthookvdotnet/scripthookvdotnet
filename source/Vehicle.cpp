@@ -423,6 +423,8 @@ namespace GTA
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
 	{
-		return this->CreatePedOnSeat(seat, Random::Instance->Next(0, System::Enum::GetNames(Native::PedHash::typeid)->Length));
+		System::Array ^modelValues = System::Enum::GetValues(Native::PedHash::typeid);
+		GTA::Model model = *gcnew GTA::Model(static_cast<Native::PedHash>(modelValues->GetValue(Random::Instance->Next(modelValues->Length))));
+		return this->CreatePedOnSeat(seat, model);
 	}
 }
