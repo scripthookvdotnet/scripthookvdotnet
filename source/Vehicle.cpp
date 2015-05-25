@@ -263,6 +263,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRE_SMOKE_COLOR, this->Handle, color.R, color.G, color.B);
 	}
+	int Vehicle::Livery::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY, this->Handle);
+	}
+	void Vehicle::Livery::set(int liveryIndex)
+	{
+		return Native::Function::Call(Native::Hash::SET_VEHICLE_LIVERY, this->Handle, liveryIndex);
+	}
+	int Vehicle::LiveryCount::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY_COUNT, this->Handle);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
