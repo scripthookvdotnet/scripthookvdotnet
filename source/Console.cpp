@@ -172,12 +172,14 @@ namespace GTA
 		if (Commands->ContainsKey(args[0])){
 			Dictionary<System::String^, ConsoleCommand^>^ scriptCommands = Commands[args[0]];
 			if (scriptCommands->ContainsKey(args[1])){
+				args->Resize<System::String^>(args, args->Length - 2);
 				return scriptCommands[args[1]]->Callback->Invoke(args);
 			}
 		}
 		else{
 			Dictionary<System::String^, ConsoleCommand^>^ scriptCommands = Commands["scripthookvdotnet"];
 			if (scriptCommands->ContainsKey(args[0])){
+				args->Resize<System::String^>(args, args->Length - 1);
 				return scriptCommands[args[0]]->Callback->Invoke(args);
 			}
 		}
