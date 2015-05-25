@@ -77,6 +77,7 @@ namespace GTA
 	{
 	public:
 		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction);
+		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction, bool value);
 
 	public:
 		virtual void Draw();
@@ -92,12 +93,21 @@ namespace GTA
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
+		virtual property bool Value {
+			bool get(){
+				return mToggleSelection;
+			}
+			void set(bool value){
+				mToggleSelection = value;
+				UpdateText();
+			}
+		}
 
 	private:
 		System::Action ^mActivationAction;
 		System::Action ^mDeactivationAction;
 
-		bool mToggleSelection = false;
+		bool mToggleSelection;
 
 		void ChangeSelection();
 
@@ -112,6 +122,7 @@ namespace GTA
 	{
 	public:
 		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc);
+		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc, int timesIncremented);
 
 	public:
 		virtual void Draw();
@@ -133,11 +144,27 @@ namespace GTA
 		property double Increment;
 		property int DecimalFigures;
 
+		property int TimesIncremented {
+			int get(){
+				return mTimesIncrement;
+			}
+			void set(int value){
+				mTimesIncrement = value;
+				UpdateText();
+			}
+		}
+
+		property double Value {
+			double get(){
+				return (double)TimesIncremented*Increment;
+			}
+		}
+
 	private:
 		System::Action<double> ^mChangeAction;
 		System::Action<double> ^mActivateAction;
 
-		property int TimesIncrement;
+		int mTimesIncrement;
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
@@ -150,6 +177,7 @@ namespace GTA
 	{
 	public:
 		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries);
+		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries, int value);
 
 	public:
 		virtual void Draw();
@@ -165,6 +193,15 @@ namespace GTA
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
+		virtual property int Value {
+			int get(){
+				return mSelectedIndex;
+			}
+			void set(int value){
+				mSelectedIndex = value;
+				UpdateText();
+			}
+		}
 
 	private:
 		System::Action<int> ^mChangeAction;
