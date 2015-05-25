@@ -57,8 +57,6 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
-		void UpdateText();
-
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption {
 			System::String ^get(){
@@ -75,6 +73,8 @@ namespace GTA
 		System::Action ^mActivationAction;
 
 		System::String ^mCaption;
+
+		void UpdateText();
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
@@ -98,8 +98,6 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
-		void UpdateText();
-
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
@@ -118,6 +116,8 @@ namespace GTA
 		System::Action ^mDeactivationAction;
 
 		bool mToggleSelection;
+
+		void UpdateText();
 
 		void ChangeSelection();
 
@@ -142,8 +142,6 @@ namespace GTA
 		virtual void Activate();
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
-
-		void UpdateText();
 
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
@@ -176,6 +174,8 @@ namespace GTA
 
 		int mTimesIncrement;
 
+		void UpdateText();
+
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
 
@@ -198,8 +198,6 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
-		void UpdateText();
-
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
@@ -219,6 +217,8 @@ namespace GTA
 
 		int mSelectedIndex;
 		array<System::String ^> ^mEntries;
+
+		void UpdateText();
 
 		UIRectangle ^mButton = nullptr;
 		UIText ^mText = nullptr;
@@ -242,8 +242,6 @@ namespace GTA
 		virtual void Change(bool right);
 		virtual void SetOriginAndSize(System::Drawing::Point topLeftOrigin, System::Drawing::Size size);
 
-		void UpdateText();
-
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption {
 			System::String ^get(){
@@ -266,6 +264,8 @@ namespace GTA
 		UIText ^mText = nullptr;
 
 		System::String ^mCaption;
+
+		void UpdateText();
 
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
