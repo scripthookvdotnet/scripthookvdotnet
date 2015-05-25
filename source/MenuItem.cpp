@@ -134,15 +134,13 @@ namespace GTA
 
 	void MenuToggle::ChangeSelection()
 	{
-		mToggleSelection = !mToggleSelection;
+		Value = !mToggleSelection;
 		if (mToggleSelection)
 		{
-			mText->Caption = Caption + " <ON>";
 			mActivationAction->Invoke();
 		}
 		else
 		{
-			mText->Caption = Caption + " <OFF>";
 			mDeactivationAction->Invoke();
 		}
 	}
@@ -219,7 +217,6 @@ namespace GTA
 		else TimesIncremented--;
 		if (TimesIncremented < 0) TimesIncremented = 0;
 		if (TimesIncremented > (int)((Max - Min) / Increment)) TimesIncremented = (int)((Max - Min) / Increment);
-		UpdateText();
 	}
 
 	void MenuNumericScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
@@ -292,11 +289,10 @@ namespace GTA
 
 	void MenuEnumScroller::Change(bool right)
 	{
-		if (right) mSelectedIndex++;
-		else mSelectedIndex--;
-		mSelectedIndex %= mEntries->Length;
-		mChangeAction(mSelectedIndex);
-		UpdateText();
+		if (right) Value++;
+		else Value--;
+		Value %= mEntries->Length;
+		mChangeAction(Value);
 	}
 
 	void MenuEnumScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
