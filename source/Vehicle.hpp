@@ -373,6 +373,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool HandbrakeOn
+		{
+			void set(bool value);
+		}
 		property bool LeftIndicatorLightOn
 		{
 			void set(bool value);
@@ -428,6 +432,15 @@ namespace GTA
 		{
 			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
+		}
+		property int Livery
+		{
+			int get();
+			void set(int liveryIndex);
+		}
+		property int LiveryCount
+		{
+			int get();
 		}
 
 		int GetMod(VehicleMod modType);
