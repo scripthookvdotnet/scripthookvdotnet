@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 #include "World.hpp"
+#include "Vehicle.hpp"
 
 namespace GTA
 {
@@ -204,6 +205,7 @@ namespace GTA
 		bool IsSittingInVehicle();
 		bool IsSittingInVehicle(Vehicle ^vehicle);
 		Relationship GetRelationshipWithPed(Ped ^ped);
+		void SetIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 
 		void Kill();
 		void ResetVisibleDamage();

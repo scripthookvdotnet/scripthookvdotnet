@@ -275,6 +275,10 @@ namespace GTA
 		{
 			System::String ^get();
 		}
+		property System::String ^FriendlyName
+		{
+			System::String ^get();
+		}
 		property System::String ^NumberPlate
 		{
 			System::String ^get();
@@ -432,6 +436,15 @@ namespace GTA
 		{
 			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
+		}
+		property int Livery
+		{
+			int get();
+			void set(int liveryIndex);
+		}
+		property int LiveryCount
+		{
+			int get();
 		}
 
 		int GetMod(VehicleMod modType);
