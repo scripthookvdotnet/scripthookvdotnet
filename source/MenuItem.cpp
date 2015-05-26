@@ -6,7 +6,7 @@ namespace GTA
 {
 	MenuButton::MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction)
 	{
-		Caption = caption;
+		mCaption = caption;
 		Description = description;
 		mActivationAction = activationAction;
 	}
@@ -78,6 +78,16 @@ namespace GTA
 		this->Description = description;
 		this->mActivationAction = activationAction;
 		this->mDeactivationAction = deactivationAction;
+		mToggleSelection = false;
+	}
+
+	MenuToggle::MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction, bool value)
+	{
+		this->Caption = caption;
+		this->Description = description;
+		this->mActivationAction = activationAction;
+		this->mDeactivationAction = deactivationAction;
+		mToggleSelection = value;
 	}
 
 	void MenuToggle::Draw()
@@ -124,15 +134,13 @@ namespace GTA
 
 	void MenuToggle::ChangeSelection()
 	{
-		mToggleSelection = !mToggleSelection;
+		Value = !mToggleSelection;
 		if (mToggleSelection)
 		{
-			mText->Caption = Caption + " <ON>";
 			mActivationAction->Invoke();
 		}
 		else
 		{
-			mText->Caption = Caption + " <OFF>";
 			mDeactivationAction->Invoke();
 		}
 	}
@@ -156,6 +164,20 @@ namespace GTA
 		Max = max;
 		Increment = inc;
 		DecimalFigures = -1;
+		mTimesIncrement = 0;
+	}
+
+	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc, int timesIncremented)
+	{
+		this->Caption = caption;
+		this->Description = description;
+		this->mChangeAction = changeAction;
+		this->mActivateAction = activateAction;
+		Min = min;
+		Max = max;
+		Increment = inc;
+		DecimalFigures = -1;
+		mTimesIncrement = timesIncremented;
 	}
 
 	void MenuNumericScroller::Draw()
@@ -186,16 +208,16 @@ namespace GTA
 
 	void MenuNumericScroller::Activate()
 	{
-		mActivateAction(Min + Increment * (double)TimesIncrement);
+		mActivateAction(Min + Increment * (double)TimesIncremented);
 	}
 
 	void MenuNumericScroller::Change(bool right)
 	{
-		if (right) TimesIncrement++;
-		else TimesIncrement--;
-		if (TimesIncrement < 0) TimesIncrement = 0;
-		if (TimesIncrement > (int)((Max - Min) / Increment)) TimesIncrement = (int)((Max - Min) / Increment);
-		UpdateText();
+		if (right) TimesIncremented++;
+		else TimesIncremented--;
+		if (TimesIncremented < 0) TimesIncremented = 0;
+		if (TimesIncremented > (int)((Max - Min) / Increment)) TimesIncremented = (int)((Max - Min) / Increment);
+		mChangeAction(Value);
 	}
 
 	void MenuNumericScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
@@ -207,7 +229,7 @@ namespace GTA
 
 	void MenuNumericScroller::UpdateText()
 	{
-		double Number = Min + Increment * (double)TimesIncrement;
+		double Number = Min + Increment * (double)TimesIncremented;
 		System::String ^NumberString = "";
 		if (DecimalFigures == -1) NumberString = Number.ToString();
 		else if (DecimalFigures == 0) NumberString = ((int)Number).ToString();
@@ -221,8 +243,18 @@ namespace GTA
 		this->Description = description;
 		this->mChangeAction = changeAction;
 		this->mActivateAction = activateAction;
-		mSelectedIndex = 0;
 		mEntries = entries;
+		mSelectedIndex = 0;
+	}
+
+	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries, int value)
+	{
+		this->Caption = caption;
+		this->Description = description;
+		this->mChangeAction = changeAction;
+		this->mActivateAction = activateAction;
+		mEntries = entries;
+		mSelectedIndex = value;
 	}
 
 	void MenuEnumScroller::Draw()
@@ -258,11 +290,10 @@ namespace GTA
 
 	void MenuEnumScroller::Change(bool right)
 	{
-		if (right) mSelectedIndex++;
-		else mSelectedIndex--;
-		mSelectedIndex %= mEntries->Length;
-		mChangeAction(mSelectedIndex);
-		UpdateText();
+		if (right) Value++;
+		else Value--;
+		Value %= mEntries->Length;
+		mChangeAction(Value);
 	}
 
 	void MenuEnumScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
@@ -279,7 +310,7 @@ namespace GTA
 
 	MenuLabel::MenuLabel(System::String ^caption, bool underlined)
 	{
-		Caption = caption;
+		mCaption = caption;
 		Description = "";
 		UnderlinedBelow = underlined;
 		UnderlinedAbove = false;
