@@ -5,6 +5,12 @@
 
 namespace GTA
 {
+	ref class Random
+	{
+	public:
+		static System::Random ^Instance = gcnew System::Random();
+	};
+
 	Vehicle::Vehicle(int handle) : Entity(handle)
 	{
 	}
@@ -413,20 +419,21 @@ namespace GTA
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
 	{
-		Ped ^ped = World::CreatePed(model, this->Position);
-		ped->BlockPermanentEvents = true;
-		ped->IsInvincible = true;
-		Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, this->Handle, static_cast<int>(seat));
-		ped->IsInvincible = false;
-		return ped;
+		if (!model.IsPed || !model.Request(1000))
+		{
+			return nullptr;
+		}
+		int pedHandle = Native::Function::Call<int>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, this->Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
+		if (pedHandle == 0)
+		{
+			return nullptr;
+		}
+		return gcnew Ped(pedHandle);
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
 	{
-		Ped ^ped = World::CreateRandomPed(this->Position);
-		ped->BlockPermanentEvents = true;
-		ped->IsInvincible = true;
-		Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, this->Handle, static_cast<int>(seat));
-		ped->IsInvincible = false;
-		return ped;
+		System::Array ^modelValues = System::Enum::GetValues(Native::PedHash::typeid);
+		GTA::Model model = *gcnew GTA::Model(static_cast<Native::PedHash>(modelValues->GetValue(Random::Instance->Next(modelValues->Length))));
+		return this->CreatePedOnSeat(seat, model);
 	}
 }
