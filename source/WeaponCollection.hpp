@@ -19,6 +19,7 @@ namespace GTA
 			Weapon ^get(Native::WeaponHash hash);
 		}
 
+		void Drop();
 		Weapon ^Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded);
 		bool Select(Weapon ^weapon);
 		void Remove(Weapon ^weapon);

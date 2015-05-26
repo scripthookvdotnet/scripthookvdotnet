@@ -39,6 +39,11 @@ namespace GTA
 		}
 		return nullptr;
 	}
+
+	void WeaponCollection::Drop()
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPON, this->pOwner);
+	}
 	Weapon ^WeaponCollection::Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded)
 	{
 		Weapon ^weapon;
