@@ -107,6 +107,6 @@ namespace GTA
 	}
 	System::String ^Game::GetGXTEntry(System::String ^entry)
 	{
-		return Native::Function::Call<System::String ^>((Native::Hash)0x7B5280EBA9840C72, entry);
+		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
 	}
 }
