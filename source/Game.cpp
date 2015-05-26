@@ -105,4 +105,8 @@ namespace GTA
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
+	System::String ^Game::GetGXTEntry(System::String ^entry)
+	{
+		return Native::Function::Call<System::String ^>((Native::Hash)0x7B5280EBA9840C72, entry);
+	}
 }
