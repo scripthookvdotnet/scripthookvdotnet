@@ -217,6 +217,7 @@ namespace GTA
 		else TimesIncremented--;
 		if (TimesIncremented < 0) TimesIncremented = 0;
 		if (TimesIncremented > (int)((Max - Min) / Increment)) TimesIncremented = (int)((Max - Min) / Increment);
+		mChangeAction(Value);
 	}
 
 	void MenuNumericScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
