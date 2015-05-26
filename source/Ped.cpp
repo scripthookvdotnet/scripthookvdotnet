@@ -212,6 +212,10 @@ namespace GTA
 	{
 		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_PEDS, this->Handle, ped->Handle));
 	}
+	void Ped::SetIntoVehicle(Vehicle ^vehicle, VehicleSeat seat)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, this->Handle, vehicle->Handle, static_cast<int>(seat));
+	}
 	void Ped::WetnessHeight::set(float value)
 	{
 		Native::Function::Call<float>(Native::Hash::SET_PED_WETNESS_HEIGHT, this->Handle, value);

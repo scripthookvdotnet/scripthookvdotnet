@@ -59,8 +59,14 @@ namespace GTA
 		{
 			int get();
 		}
-		property bool IsOnMinimap{
+		property bool IsOnMinimap
+		{
 			bool get();
+		}
+		property bool IsShortRange
+		{
+			bool get();
+			void set(bool value);
 		}
 
 		bool Exists(); // BOOL DOES_BLIP_EXIST(Any p0) // 0xAE92DD96
