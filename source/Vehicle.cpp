@@ -1,6 +1,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Native.hpp"
+#include "Game.hpp"
 
 namespace GTA
 {
@@ -19,6 +20,10 @@ namespace GTA
 	System::String ^Vehicle::DisplayName::get()
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, this->Model.Hash);
+	}
+	System::String ^Vehicle::FriendlyName::get()
+	{
+		return GTA::Game::GetGXTEntry(DisplayName);
 	}
 	System::String ^Vehicle::NumberPlate::get()
 	{

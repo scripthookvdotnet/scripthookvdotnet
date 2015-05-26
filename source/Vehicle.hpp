@@ -275,6 +275,10 @@ namespace GTA
 		{
 			System::String ^get();
 		}
+		property System::String ^FriendlyName
+		{
+			System::String ^get();
+		}
 		property System::String ^NumberPlate
 		{
 			System::String ^get();
