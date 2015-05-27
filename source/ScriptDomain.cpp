@@ -108,9 +108,9 @@ namespace GTA
 
 			try
 			{
-				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb"));
-				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs"));
-				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll"));
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs", IO::SearchOption::AllDirectories));
+				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll", IO::SearchOption::AllDirectories));
 			}
 			catch (Exception ^ex)
 			{
