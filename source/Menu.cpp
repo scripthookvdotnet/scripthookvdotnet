@@ -111,8 +111,8 @@ namespace GTA
 	void Menu::OnChangeSelection(bool down)
 	{
 		int newIndex = down ? mSelectedIndex + 1 : mSelectedIndex - 1;
-		if (newIndex < 0) newIndex = 0;
-		if (newIndex >= mItems->Count) newIndex = mItems->Count - 1;
+		if (newIndex >= mItems->Count) newIndex = 0;
+		if (newIndex < 0) newIndex = mItems->Count - 1;
 		OnChangeSelection(newIndex);
 	}
 
