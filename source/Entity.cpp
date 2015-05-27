@@ -45,6 +45,14 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_FORWARD_VECTOR, this->Handle);
 	}
+	Math::Vector3 Entity::RightVector::get()
+	{
+		return Math::Vector3::Cross(ForwardVector, Math::Vector3(0, 0, 1));
+	}
+	Math::Vector3 Entity::UpVector::get()
+	{
+		return Math::Vector3::Cross(RightVector, ForwardVector);
+	}
 	Math::Vector3 Entity::Velocity::get()
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_VELOCITY, this->Handle);

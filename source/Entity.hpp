@@ -47,6 +47,14 @@ namespace GTA
 		{
 			Math::Vector3 get();
 		}
+		property Math::Vector3 RightVector
+		{
+			Math::Vector3 get();
+		}
+		property Math::Vector3 UpVector
+		{
+			Math::Vector3 get();
+		}
 		property Math::Vector3 Velocity
 		{
 			Math::Vector3 get();
