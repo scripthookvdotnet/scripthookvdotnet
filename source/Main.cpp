@@ -43,8 +43,7 @@ bool ManagedInit()
 }
 bool ManagedTick()
 {
-
-	if (ScriptHook::Domain->IsKeyPressed(System::Windows::Forms::Keys::Back))
+	if (ScriptHook::Domain->IsKeyPressed(System::Windows::Forms::Keys::Insert))
 	{
 		return false;
 	}
