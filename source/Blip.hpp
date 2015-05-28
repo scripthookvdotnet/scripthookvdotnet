@@ -265,10 +265,10 @@ namespace GTA
 		{
 			void set(bool value); // void SET_BLIP_ROUTE(Object blip, BOOL enabled) // 0x3E160C90
 		}
-		property int Sprite
+		property BlipSprite Sprite
 		{
-			int get();
-			void set(int sprite);
+			BlipSprite get();
+			void set(BlipSprite sprite);
 		}
 		property int Type
 		{

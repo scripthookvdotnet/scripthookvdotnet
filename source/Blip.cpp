@@ -51,13 +51,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_ROUTE, this->Handle, value);
 	}
-	int Blip::Sprite::get()
+	BlipSprite Blip::Sprite::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_BLIP_SPRITE, this->Handle);
+		return BlipSprite(Native::Function::Call<int>(Native::Hash::GET_BLIP_SPRITE, this->Handle));
 	}
-	void Blip::Sprite::set(int value)
+	void Blip::Sprite::set(BlipSprite sprite)
 	{
-		Native::Function::Call(Native::Hash::SET_BLIP_SPRITE, this->Handle, value);
+		Native::Function::Call(Native::Hash::SET_BLIP_SPRITE, this->Handle, (int)sprite);
 	}
 	int Blip::Type::get()
 	{
