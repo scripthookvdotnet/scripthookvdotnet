@@ -80,5 +80,6 @@ namespace GTA
 		static void StopMusic(System::String ^musicFile); //add enum for musicFiles?
 		static System::String ^GetUserInput(int maxLength);
 		static System::String ^GetUserInput(System::String ^startText, int maxLength);
+		static System::String ^GetGXTEntry(System::String ^entry);
 	};
 }

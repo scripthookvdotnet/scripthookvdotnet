@@ -68,6 +68,14 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_BLIP_ON_MINIMAP, this->Handle);
 	}
+	bool Blip::IsShortRange::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_BLIP_SHORT_RANGE, this->Handle);
+	}
+	void Blip::IsShortRange::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_BLIP_AS_SHORT_RANGE, this->Handle, value);
+	}
 
 	void Blip::ShowNumber(int number)
 	{

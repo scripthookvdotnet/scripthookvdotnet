@@ -58,6 +58,7 @@ namespace GTA
 		property float ItemTextScale;
 		property bool ItemTextCentered;
 		property System::Drawing::Point Position;
+		property System::Drawing::Point TextOffset;
 		property System::String ^Caption;
 	};
 
