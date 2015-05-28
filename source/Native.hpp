@@ -123,10 +123,36 @@ namespace GTA
 			generic <typename T>
 			T GetResult();
 
-		private:
+		protected:
 			!OutputArgument();
 
 			unsigned char *mStorage;
+		};
+
+		public ref class InOutArgument : public OutputArgument
+		{
+		public:
+
+			InOutArgument(bool value);
+			InOutArgument(int value);
+			InOutArgument(float value);
+			InOutArgument(double value);
+			InOutArgument(Entity ^object);
+			InOutArgument(Ped ^object);
+			InOutArgument(Player ^object);
+			InOutArgument(Vehicle ^object);
+			InOutArgument(Blip ^object);
+			InOutArgument(Prop ^object);
+
+			~InOutArgument()
+			{
+				this->!InOutArgument();
+			}
+
+		private:
+			!InOutArgument();
+
+
 		};
 
 		public ref class Function abstract sealed

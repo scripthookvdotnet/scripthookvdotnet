@@ -100,6 +100,52 @@ namespace GTA
 			delete[] this->mStorage;
 		}
 
+		InOutArgument::InOutArgument(bool value) : OutputArgument()
+		{
+			*reinterpret_cast<bool *>(mStorage) = value;
+		}
+		InOutArgument::InOutArgument(int value) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = value;
+		}
+		InOutArgument::InOutArgument(float value) : OutputArgument()
+		{
+			*reinterpret_cast<float *>(mStorage) = value;
+		}
+		InOutArgument::InOutArgument(double value) : OutputArgument()
+		{
+			*reinterpret_cast<float *>(mStorage) = static_cast<float>(value);
+		}
+		InOutArgument::InOutArgument(Entity ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Ped ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Player ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Vehicle ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Blip ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Prop ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::!InOutArgument()
+		{
+			delete[] this->mStorage;
+		}
+
+
 		Object ^GetResult(Type ^type, PUINT64 value)
 		{
 			if (type == Boolean::typeid)
