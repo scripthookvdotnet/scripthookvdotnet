@@ -201,7 +201,12 @@ namespace GTA
 		virtual property MenuBase ^Parent;
 		virtual property System::String ^Caption;
 		virtual property System::String ^Description;
-		virtual property int Value {
+		virtual property System::String^ Value{
+			System::String^ get(){
+				return mEntries[Index];
+			}
+		}
+		virtual property int Index {
 			int get(){
 				return mSelectedIndex;
 			}
