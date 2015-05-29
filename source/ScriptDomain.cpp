@@ -141,10 +141,11 @@ namespace GTA
 	{
 		String ^extension = IO::Path::GetExtension(filename);
 		CodeDom::Compiler::CodeDomProvider ^compiler = nullptr;
-
+		bool csharp = false;
 		if (extension->Equals(".cs", StringComparison::InvariantCultureIgnoreCase))
 		{
 			compiler = gcnew Microsoft::CSharp::CSharpCodeProvider();
+			csharp = true;
 		}
 		else if (extension->Equals(".vb", StringComparison::InvariantCultureIgnoreCase))
 		{
@@ -156,7 +157,7 @@ namespace GTA
 		}
 
 		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
-		compilerOptions->CompilerOptions = "/optimize";
+		compilerOptions->CompilerOptions = "/optimize" + csharp ? " /unsafe" : "";
 		compilerOptions->GenerateInMemory = true;
 		compilerOptions->IncludeDebugInformation = true;
 		compilerOptions->ReferencedAssemblies->Add("System.dll");
