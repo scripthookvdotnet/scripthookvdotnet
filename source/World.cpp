@@ -44,8 +44,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_GRAVITY_LEVEL, value);
 	}
-
-	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
+	
+	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
+	{
+		Ped ^ped = World::CreateRandomPed(position);
+		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
+		array<Ped ^> ^result = GetNearbyPeds(ped, radius);
+		ped->Delete();
+		
+		return result;
+	}
+        array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
 		return GetNearbyPeds(ped, radius, 10000);
 	}
@@ -82,6 +91,15 @@ namespace GTA
 		}
 
 		return result->ToArray();
+	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
+	{
+		Ped ^ped = World::CreateRandomPed(position);
+		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, ped->Handle, 0);
+		array<Vehicle ^> ^result = GetNearbyVehicles(ped, radius);
+		ped->Delete();
+		
+		return result;
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
