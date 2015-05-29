@@ -3,18 +3,6 @@
 
 namespace GTA
 {
-	int UI::WIDTH::get()
-	{
-		int w, h;
-		Native::Function::Call(Native::Hash::GET_SCREEN_RESOLUTION, &w, &h);
-		return w;
-	}
-	int UI::HEIGHT::get()
-	{
-		int w, h;
-		Native::Function::Call(Native::Hash::GET_SCREEN_RESOLUTION, &w, &h);
-		return h;
-	}
 	int UI::Notify(System::String ^msg)
 	{
 		Native::Function::Call(Native::Hash::_0x202709F4C58A0424, "STRING");
