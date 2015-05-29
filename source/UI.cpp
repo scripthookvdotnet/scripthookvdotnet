@@ -3,11 +3,27 @@
 
 namespace GTA
 {
-	void UI::Notify(System::String ^msg)
+	int UI::WIDTH::get()
+	{
+		int w, h;
+		Native::Function::Call(Native::Hash::GET_SCREEN_RESOLUTION, &w, &h);
+		return w;
+	}
+	int UI::HEIGHT::get()
+	{
+		int w, h;
+		Native::Function::Call(Native::Hash::GET_SCREEN_RESOLUTION, &w, &h);
+		return h;
+	}
+	int UI::Notify(System::String ^msg)
 	{
 		Native::Function::Call(Native::Hash::_0x202709F4C58A0424, "STRING");
 		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, msg);
-		Native::Function::Call(Native::Hash::_0x2ED7843F8F801023, 0, 1);
+		return Native::Function::Call<int>(Native::Hash::_0x2ED7843F8F801023, 0, 1);
+	}
+	void UI::RemoveNotification(int notification)
+	{
+		Native::Function::Call(Native::Hash::_0xBE4390CB40B3E627, notification);
 	}
 	void UI::ShowSubtitle(System::String ^msg)
 	{
