@@ -61,7 +61,7 @@ namespace GTA
 		this->mSize = size;
 		mButton = gcnew UIRectangle(mOrigin, mSize, Parent->UnselectedItemColor);
 		mText = gcnew UIText(Caption,
-			Parent->ItemTextCentered ? System::Drawing::Point(mOrigin.X + mSize.Width / 2 + Parent->TextOffset.X, mOrigin.Y + Parent->TextOffset.Y) : System::Drawing::Point(mOrigin.X +Parent->TextOffset.X , mOrigin.Y + Parent->TextOffset.Y),
+			Parent->ItemTextCentered ? System::Drawing::Point(mOrigin.X + mSize.Width / 2 + Parent->TextOffset.X, mOrigin.Y + Parent->TextOffset.Y) : System::Drawing::Point(mOrigin.X + Parent->TextOffset.X, mOrigin.Y + Parent->TextOffset.Y),
 			Parent->ItemTextScale,
 			Parent->UnselectedTextColor,
 			Parent->ItemFont,
@@ -129,7 +129,8 @@ namespace GTA
 	void MenuToggle::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
 	{
 		mButton = gcnew UIRectangle(origin, size, Parent->UnselectedItemColor);
-		mText = gcnew UIText(Caption + " <OFF>", Parent->ItemTextCentered ? System::Drawing::Point(origin.X + size.Width / 2 + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y) : System::Drawing::Point(origin.X + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y), Parent->ItemTextScale, Parent->UnselectedTextColor, Parent->ItemFont, Parent->ItemTextCentered);
+		mText = gcnew UIText("", Parent->ItemTextCentered ? System::Drawing::Point(origin.X + size.Width / 2 + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y) : System::Drawing::Point(origin.X + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y), Parent->ItemTextScale, Parent->UnselectedTextColor, Parent->ItemFont, Parent->ItemTextCentered);
+		UpdateText();
 	}
 
 	void MenuToggle::ChangeSelection()
@@ -213,10 +214,28 @@ namespace GTA
 
 	void MenuNumericScroller::Change(bool right)
 	{
-		if (right) TimesIncremented++;
-		else TimesIncremented--;
-		if (TimesIncremented < 0) TimesIncremented = 0;
-		if (TimesIncremented > (int)((Max - Min) / Increment)) TimesIncremented = (int)((Max - Min) / Increment);
+		if (right)
+		{
+			if (TimesIncremented + 1 > (int)((Max - Min) / Increment))
+			{
+				TimesIncremented = 0;
+			}
+			else
+			{
+				TimesIncremented++;
+			}
+		}
+		else
+		{
+			if (TimesIncremented - 1 < 0)
+			{
+				TimesIncremented = (int)((Max - Min) / Increment);
+			}
+			else
+			{
+				TimesIncremented--;
+			}
+		}
 		mChangeAction(Value);
 	}
 
@@ -290,16 +309,35 @@ namespace GTA
 
 	void MenuEnumScroller::Change(bool right)
 	{
-		if (right) Value++;
-		else Value--;
-		Value %= mEntries->Length;
-		mChangeAction(Value);
+		if (right)
+		{
+			if (Index + 1 > mEntries->Length - 1)
+			{
+				Index = 0;
+			}
+			else
+			{
+				Index++;
+			}
+		}
+		else
+		{
+			if (Index - 1 < 0)
+			{
+				Index = mEntries->Length - 1;
+			}
+			else
+			{
+				Index--;
+			}
+		}
+		mChangeAction(Index);
 	}
 
 	void MenuEnumScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
 	{
 		mButton = gcnew UIRectangle(origin, size, Parent->UnselectedItemColor);
-		mText = gcnew UIText("", Parent->ItemTextCentered ? System::Drawing::Point(origin.X + size.Width / 2 + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y): System::Drawing::Point(origin.X + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y) , Parent->ItemTextScale, Parent->UnselectedTextColor, Parent->ItemFont, Parent->ItemTextCentered);
+		mText = gcnew UIText("", Parent->ItemTextCentered ? System::Drawing::Point(origin.X + size.Width / 2 + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y) : System::Drawing::Point(origin.X + Parent->TextOffset.X, origin.Y + Parent->TextOffset.Y), Parent->ItemTextScale, Parent->UnselectedTextColor, Parent->ItemFont, Parent->ItemTextCentered);
 		UpdateText();
 	}
 
