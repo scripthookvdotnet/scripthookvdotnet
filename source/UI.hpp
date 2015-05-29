@@ -8,8 +8,8 @@ namespace GTA
 	{
 	public:
 
-		const int WIDTH = 1280;
-		const int HEIGHT = 720;
+		static const int WIDTH = 1280;
+		static const int HEIGHT = 720;
 
 		static int Notify(System::String ^msg);
 		static void RemoveNotification(int notification);
