@@ -3,13 +3,16 @@
 
 namespace GTA
 {
-	UI::Notification::Notification(System::String ^Message, bool Blinking)
+	Notification::Notification(int Handle) : mHandle(Handle)
+	{
+	}
+	Notification ^Notification::Show(System::String ^Message, bool Blinking)
 	{
 		Native::Function::Call(Native::Hash::_0x202709F4C58A0424, "STRING");
 		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, Message);
-		this->mHandle = Native::Function::Call<int>(Native::Hash::_0x2ED7843F8F801023, Blinking, 1);
+		return gcnew Notification(Native::Function::Call<int>(Native::Hash::_0x2ED7843F8F801023, Blinking, 1));
 	}
-	void UI::Notification::Hide()
+	void Notification::Hide()
 	{
 		Native::Function::Call(Native::Hash::_0xBE4390CB40B3E627, this->mHandle);
 	}

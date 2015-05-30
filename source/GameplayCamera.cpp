@@ -10,7 +10,7 @@ namespace GTA
 	}
 	Math::Vector3 GameplayCamera::Rotation::get()
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_GAMEPLAY_CAM_ROT);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_GAMEPLAY_CAM_ROT, 2);
 	}
 	float GameplayCamera::FOV::get()
 	{ 

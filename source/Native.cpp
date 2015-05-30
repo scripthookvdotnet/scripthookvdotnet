@@ -92,7 +92,7 @@ namespace GTA
 		InputArgument::InputArgument(Prop ^object) : mData(object->Handle)
 		{
 		}
-		OutputArgument::OutputArgument() : mStorage(new unsigned char[16]()), InputArgument(IntPtr(this->mStorage))
+		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
 		{
 		}
 		OutputArgument::!OutputArgument()
