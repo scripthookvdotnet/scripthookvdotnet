@@ -141,6 +141,10 @@ namespace GTA
 
 		return gcnew Ped(id);
 	}
+	void World::ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash,int damage)
+	{
+		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, position.X, position.Y, position.Z, pos2.X, pos2.Y, pos2.Z, damage, 1, hash.Hash, Owner->Handle, 1, 0, -1);
+	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
 		return CreateVehicle(model, position, 0.0f);
