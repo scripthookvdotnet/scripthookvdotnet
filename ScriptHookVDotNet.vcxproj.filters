@@ -233,8 +233,5 @@
     <ClInclude Include="source\Scaleform.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\Font.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

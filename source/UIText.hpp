@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UIElement.hpp"
-#include "Font.hpp"
 
 namespace GTA
 {
