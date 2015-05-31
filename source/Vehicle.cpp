@@ -232,6 +232,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED, this->Handle, value);
 	}
+	bool Vehicle::CanTiresBurst::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_VEHICLE_TYRES_CAN_BURST, this->Handle);
+	}
 	void Vehicle::CanTiresBurst::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRES_CAN_BURST, this->Handle, value);
