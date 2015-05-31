@@ -1,4 +1,4 @@
-#include "Ray.hpp"
+#include "Raycast.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
@@ -6,7 +6,7 @@
 
 namespace GTA
 {
-	Ray::Ray(int Handle)
+	RayCastResult::RayCastResult(int Handle)
 	{
 		this->mHandle = Handle;
 		int hitsomething, enthandle;
@@ -33,35 +33,31 @@ namespace GTA
 		}
 
 	}
-	Ray ^Ray::Cast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^entity)
-	{
-		return gcnew Ray(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
-	}
-	int Ray::Handle::get()
+	int RayCastResult::Handle::get()
 	{
 		return this->mHandle;
 	}
-	bool Ray::DidHitEntity::get()
+	bool RayCastResult::DidHitEntity::get()
 	{
 		return !ReferenceEquals(this->mHit, nullptr);
 	}
-	Entity ^Ray::HitEntity::get()
+	Entity ^RayCastResult::HitEntity::get()
 	{
 		return this->mHit;
 	}
-	Vector3 Ray::HitCoords::get()
+	Vector3 RayCastResult::HitCoords::get()
 	{
 		return this->mHitCoord;
 	}
-	Vector3 Ray::UnkVec::get()
+	Vector3 RayCastResult::UnkVec::get()
 	{
 		return this->mUnk;
 	}
-	int Ray::Result::get()
+	int RayCastResult::Result::get()
 	{
 		return this->mStatus;
 	}
-	int Ray::Intersected::get()
+	int RayCastResult::Intersected::get()
 	{
 		return this->mIntersected;
 	}

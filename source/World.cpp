@@ -355,4 +355,16 @@ namespace GTA
 	{
 		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
 	}
+	RayCastResult ^World::RayCast(Vector3 source, Vector3 target, IntersectOptions options)
+	{
+		return RayCast(source, target, options, 7, nullptr);
+	}
+	RayCastResult ^World::RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags)
+	{
+		return RayCast(source, target, options, UnkFlags, nullptr);
+	}
+	RayCastResult ^World::RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^entity)
+	{
+		return gcnew RayCastResult(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
+	}
 }

@@ -101,7 +101,7 @@
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Prop.cpp" />
     <ClCompile Include="source\Quaternion.cpp" />
-    <ClCompile Include="source\Ray.cpp" />
+    <ClCompile Include="source\Raycast.cpp" />
     <ClCompile Include="source\Rope.cpp" />
     <ClCompile Include="source\Scaleform.cpp" />
     <ClCompile Include="source\Script.cpp" />
@@ -139,7 +139,7 @@
     <ClInclude Include="source\Player.hpp" />
     <ClInclude Include="source\Prop.hpp" />
     <ClInclude Include="source\Quaternion.hpp" />
-    <ClInclude Include="source\Ray.hpp" />
+    <ClInclude Include="source\Raycast.hpp" />
     <ClInclude Include="source\Rope.hpp" />
     <ClInclude Include="source\Scaleform.hpp" />
     <ClInclude Include="source\Script.hpp" />
