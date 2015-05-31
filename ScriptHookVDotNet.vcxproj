@@ -121,6 +121,7 @@
     <ClCompile Include="source\WeaponCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Font.hpp" />
     <ClInclude Include="source\Blip.hpp" />
     <ClInclude Include="source\Camera.hpp" />
     <ClInclude Include="source\Entity.hpp" />

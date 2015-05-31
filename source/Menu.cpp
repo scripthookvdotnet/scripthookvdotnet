@@ -15,19 +15,19 @@ namespace GTA
 		//Set defaults for the properties
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
-		HeaderFont = 1;
+		HeaderFont = Font::HouseScript;
 		HeaderTextScale = 0.5f;
 		HeaderCentered = true;
 		FooterColor = System::Drawing::Color::FromArgb(200, 255, 182, 193);
 		FooterTextColor = System::Drawing::Color::Black;
-		FooterFont = 0;
+		FooterFont = Font::Arial;
 		FooterTextScale = 0.4f;
 		FooterCentered = false;
 		SelectedItemColor = System::Drawing::Color::FromArgb(200, 255, 105, 180);
 		UnselectedItemColor = System::Drawing::Color::FromArgb(200, 176, 196, 222);
 		SelectedTextColor = System::Drawing::Color::Black;
 		UnselectedTextColor = System::Drawing::Color::DarkSlateGray;
-		ItemFont = 0;
+		ItemFont = Font::Arial;
 		ItemTextScale = 0.4f;
 		ItemTextCentered = true;
 		Caption = headerCaption;
@@ -145,19 +145,19 @@ namespace GTA
 		//Set defaults for the properties
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
-		HeaderFont = 1;
+		HeaderFont = GTA::Font::HouseScript;
 		HeaderTextScale = 0.5f;
 		HeaderCentered = true;
 		FooterColor = System::Drawing::Color::FromArgb(200, 255, 182, 193);
 		FooterTextColor = System::Drawing::Color::Black;
-		FooterFont = 0;
+		FooterFont = GTA::Font::Arial;
 		FooterTextScale = 0.4f;
 		FooterCentered = false;
 		SelectedItemColor = System::Drawing::Color::FromArgb(200, 255, 105, 180);
 		UnselectedItemColor = System::Drawing::Color::FromArgb(200, 176, 196, 222);
 		SelectedTextColor = System::Drawing::Color::Black;
 		UnselectedTextColor = System::Drawing::Color::DarkSlateGray;
-		ItemFont = 0;
+		ItemFont = GTA::Font::Arial;
 		ItemTextScale = 0.4f;
 		ItemTextCentered = true;
 		Caption = headerCaption;
@@ -343,14 +343,14 @@ namespace GTA
 	{
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
-		HeaderFont = 1;
+		HeaderFont = GTA::Font::HouseScript;
 		HeaderTextScale = 0.5f;
 		HeaderCentered = true;
 		SelectedItemColor = System::Drawing::Color::FromArgb(200, 255, 105, 180);
 		UnselectedItemColor = System::Drawing::Color::FromArgb(200, 176, 196, 222);
 		SelectedTextColor = System::Drawing::Color::Black;
 		UnselectedTextColor = System::Drawing::Color::DarkSlateGray;
-		ItemFont = 0;
+		ItemFont = GTA::Font::Arial;
 		ItemTextScale = 0.4f;
 		ItemTextCentered = true;
 		Caption = caption;
