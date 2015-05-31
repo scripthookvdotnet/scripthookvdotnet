@@ -27,13 +27,6 @@ namespace GTA
 		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential, Pack = 4)]
 		public value class Vector3
 		{
-		internal:
-			/// <summary>
-			/// Calculates the squared length of the vector.
-			/// </summary>
-			/// <returns>The squared length of the vector.</returns>
-			float LengthSquared();
-
 		public:
 			/// <summary>
 			/// Gets or sets the X component of the vector.
@@ -201,9 +194,37 @@ namespace GTA
 			float Length();
 
 			/// <summary>
+			/// Calculates the squared length of the vector.
+			/// </summary>
+			/// <returns>The squared length of the vector.</returns>
+			float LengthSquared();
+
+			/// <summary>
 			/// Converts the vector into a unit vector.
 			/// </summary>
 			void Normalize();
+
+			/// <summary>
+			/// Calculates the distance between two vectors.
+			/// </summary>
+			/// <param name="position">The second vector to calculate the distance to.</param>
+			/// <returns>The distance to the other vector.</returns>
+			float DistanceTo(Vector3 position);
+
+			/// <summary>
+			/// Creates a random vector inside the circle around this position.
+			/// </summary>
+			Vector3 Around(float distance);
+
+			/// <summary>
+			/// Returns a new normalized vector with random X and Y components.
+			/// </summary>
+			static Vector3 RandomXY();
+
+			/// <summary>
+			/// Returns a new normalized vector with random X, Y and Z components.
+			/// </summary>
+			static Vector3 RandomXYZ();
 
 			/// <summary>
 			/// Adds two vectors.

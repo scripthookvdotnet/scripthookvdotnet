@@ -2,7 +2,7 @@
 
 namespace GTA
 {
-	public ref class Log sealed abstract
+	private ref class Log sealed abstract
 	{
 	public:
 		static void Debug(... array<System::String ^> ^message);

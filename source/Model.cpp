@@ -10,6 +10,15 @@ namespace GTA
 	Model::Model(System::String ^name) : mHash(Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, name))
 	{
 	}
+	Model::Model(Native::PedHash hash) : mHash(static_cast<int>(hash))
+	{
+	}
+	Model::Model(Native::VehicleHash hash) : mHash(static_cast<int>(hash))
+	{
+	}
+	Model::Model(Native::WeaponHash hash) : mHash(static_cast<int>(hash))
+	{
+	}
 
 	int Model::Hash::get()
 	{
@@ -103,7 +112,7 @@ namespace GTA
 
 		while (!IsLoaded)
 		{
-			Script::Wait(0);
+			Script::Yield();
 
 			if (System::DateTime::Now >= endtime)
 			{
@@ -117,7 +126,15 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_MODEL_AS_NO_LONGER_NEEDED, this->mHash);
 	}
+	bool Model::Equals(Model model)
+	{
+		return this->mHash == model.mHash;
+	}
 
+	int Model::GetHashCode()
+	{
+		return this->mHash;
+	}
 	System::String ^Model::ToString()
 	{
 		return "0x" + this->mHash.ToString("X");

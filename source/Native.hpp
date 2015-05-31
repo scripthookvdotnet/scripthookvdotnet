@@ -24,6 +24,8 @@ namespace GTA
 	ref class Ped;
 	ref class Player;
 	ref class Vehicle;
+	ref class Blip;
+	ref class Prop;
 
 	namespace Native
 	{
@@ -36,10 +38,13 @@ namespace GTA
 			InputArgument(double value);
 			InputArgument(System::IntPtr value);
 			InputArgument(System::String ^value);
+			InputArgument(const char value[]);
 			InputArgument(Entity ^object);
 			InputArgument(Ped ^object);
 			InputArgument(Player ^object);
 			InputArgument(Vehicle ^object);
+			InputArgument(Blip ^object);
+			InputArgument(Prop ^object);
 
 			static inline operator InputArgument ^ (bool value)
 			{
@@ -69,6 +74,10 @@ namespace GTA
 			{
 				return gcnew InputArgument(value);
 			}
+			static inline operator InputArgument ^ (const char value[])
+			{
+				return gcnew InputArgument(value);
+			}
 			static inline operator InputArgument ^ (Entity ^object)
 			{
 				return gcnew InputArgument(object);
@@ -82,6 +91,14 @@ namespace GTA
 				return gcnew InputArgument(object);
 			}
 			static inline operator InputArgument ^ (Vehicle ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Blip ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Prop ^object)
 			{
 				return gcnew InputArgument(object);
 			}
@@ -106,10 +123,36 @@ namespace GTA
 			generic <typename T>
 			T GetResult();
 
-		private:
+		protected:
 			!OutputArgument();
 
 			unsigned char *mStorage;
+		};
+
+		public ref class InOutArgument : public OutputArgument
+		{
+		public:
+
+			InOutArgument(bool value);
+			InOutArgument(int value);
+			InOutArgument(float value);
+			InOutArgument(double value);
+			InOutArgument(Entity ^object);
+			InOutArgument(Ped ^object);
+			InOutArgument(Player ^object);
+			InOutArgument(Vehicle ^object);
+			InOutArgument(Blip ^object);
+			InOutArgument(Prop ^object);
+
+			~InOutArgument()
+			{
+				this->!InOutArgument();
+			}
+
+		private:
+			!InOutArgument();
+
+
 		};
 
 		public ref class Function abstract sealed

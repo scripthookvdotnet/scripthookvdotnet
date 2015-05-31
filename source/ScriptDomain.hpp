@@ -20,33 +20,50 @@
 
 namespace GTA
 {
+	private interface class IScriptTask
+	{
+		void Run();
+	};
+
 	private ref class ScriptDomain sealed : public System::MarshalByRefObject
 	{
 	public:
 		ScriptDomain();
 		~ScriptDomain();
 
+		static property Script ^ExecutingScript
+		{
+			Script ^get()
+			{
+				if (System::Object::ReferenceEquals(sCurrentDomain, nullptr))
+				{
+					return nullptr;
+				}
+
+				return sCurrentDomain->mExecutingScript;
+			}
+		}
 		static property ScriptDomain ^CurrentDomain
 		{
-			ScriptDomain ^get()
+			inline ScriptDomain ^get()
 			{
 				return sCurrentDomain;
 			}
 		}
 
 		static ScriptDomain ^Load(System::String ^path);
-		static void Unload(ScriptDomain ^domain);
+		static void Unload(ScriptDomain ^%domain);
 
 		property System::String ^Name
 		{
-			System::String ^get()
+			inline System::String ^get()
 			{
 				return this->mAppDomain->FriendlyName;
 			}
 		}
 		property System::AppDomain ^AppDomain
 		{
-			System::AppDomain ^get()
+			inline System::AppDomain ^get()
 			{
 				return this->mAppDomain;
 			}
@@ -55,24 +72,32 @@ namespace GTA
 		void Start();
 		void Abort();
 		static void AbortScript(Script ^script);
-		void Wait(int ms);
 		void DoTick();
+		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
-		bool IsKeyPressed(System::Windows::Forms::Keys key);
+		void ExecuteTask(IScriptTask ^task);
 		System::IntPtr PinString(System::String ^string);
-		void CleanupStrings();
+		inline bool IsKeyPressed(System::Windows::Forms::Keys key)
+		{
+			return this->mKeyboardState[static_cast<int>(key)];
+		}
+		System::Object ^InitializeLifetimeService() override;
 
 	private:
 		bool LoadScript(System::String ^filename);
 		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
 		Script ^InstantiateScript(System::Type ^scripttype);
+		void CleanupStrings();
 
 		static ScriptDomain ^sCurrentDomain;
-		array<bool> ^mKeyboardState;
 		System::AppDomain ^mAppDomain;
-		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
+		int mExecutingThreadId;
+		Script ^mExecutingScript;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;
-		System::Collections::Generic::Dictionary<System::String ^, System::Type ^> ^mScriptTypes;
+		System::Collections::Generic::Queue<IScriptTask ^> ^mTaskQueue;
+		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
+		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
+		array<bool> ^mKeyboardState;
 	};
 }

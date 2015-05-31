@@ -14,47 +14,53 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "NativeCaller.h"
-#include "ScriptDomain.hpp"
 #include "Log.hpp"
-
-#include <windows.h>
+#include "ScriptDomain.hpp"
 
 namespace GTA
 {
 	using namespace System;
+	using namespace System::Threading;
+	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
-	namespace
+	Reflection::Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
 	{
-		Reflection::Assembly ^ResolveHandler(Object ^sender, ResolveEventArgs ^args)
+		if (args->Name->ToLower()->Contains("scripthookvdotnet"))
 		{
-			if (args->Name->ToLower()->Contains("scripthookvdotnet"))
-			{
-				return Reflection::Assembly::GetAssembly(GTA::Script::typeid);
-			}
-
-			return nullptr;
+			return Reflection::Assembly::GetAssembly(GTA::Script::typeid);
 		}
-		void UnhandledExceptionHandler(Object ^sender, UnhandledExceptionEventArgs ^args)
+
+		return nullptr;
+	}
+	void HandleUnhandledException(Object ^sender, UnhandledExceptionEventArgs ^args)
+	{
+		if (!args->IsTerminating)
 		{
-			if (!args->IsTerminating)
-			{
-				Log::Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
-			}
-			else
-			{
-				Log::Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
-			}
+			Log::Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+		}
+		else
+		{
+			Log::Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
 	}
+	inline void SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn)
+	{
+		toSignal->Set();
+		toWaitOn->WaitOne();
+	}
+	inline bool SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn, int timeout)
+	{
+		toSignal->Set();
+		return toWaitOn->WaitOne(timeout);
+	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mKeyboardState(gcnew array<bool>(256)), mPinnedStrings(gcnew List<IntPtr>()), mRunningScripts(gcnew List<Script ^>()), mScriptTypes(gcnew Dictionary<String ^, Type ^>())
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
 	{
 		sCurrentDomain = this;
 
-		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&ResolveHandler);
-		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&UnhandledExceptionHandler);
+		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
+		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
 		Log::Debug("Created script domain '", this->mAppDomain->FriendlyName, "'.");
 	}
@@ -71,9 +77,11 @@ namespace GTA
 
 		AppDomainSetup ^setup = gcnew AppDomainSetup();
 		setup->ApplicationBase = path;
+		setup->ShadowCopyFiles = "true";
+		setup->ShadowCopyDirectories = path;
 		Security::PermissionSet ^permissions = gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted);
 
-		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + path->GetHashCode().ToString("X"), nullptr, setup, permissions);
+		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (path->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, permissions);
 		appdomain->InitializeLifetimeService();
 
 		ScriptDomain ^scriptdomain = nullptr;
@@ -93,31 +101,38 @@ namespace GTA
 
 		Log::Debug("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
 
-		List<String ^> ^filenameScripts = gcnew List<String ^>();
-		List<String ^> ^filenameAssemblies = gcnew List<String ^>();
-
-		try
+		if (IO::Directory::Exists(path))
 		{
-			filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb"));
-			filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs"));
-			filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll"));
+			List<String ^> ^filenameScripts = gcnew List<String ^>();
+			List<String ^> ^filenameAssemblies = gcnew List<String ^>();
+
+			try
+			{
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs", IO::SearchOption::AllDirectories));
+				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll", IO::SearchOption::AllDirectories));
+			}
+			catch (Exception ^ex)
+			{
+				Log::Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
+
+				System::AppDomain::Unload(appdomain);
+
+				return nullptr;
+			}
+
+			for each (String ^filename in filenameScripts)
+			{
+				scriptdomain->LoadScript(filename);
+			}
+			for each (String ^filename in filenameAssemblies)
+			{
+				scriptdomain->LoadAssembly(filename);
+			}
 		}
-		catch (Exception ^ex)
+		else
 		{
-			Log::Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
-
-			System::AppDomain::Unload(appdomain);
-
-			return nullptr;
-		}
-
-		for each (String ^filename in filenameScripts)
-		{
-			scriptdomain->LoadScript(filename);
-		}
-		for each (String ^filename in filenameAssemblies)
-		{
-			scriptdomain->LoadAssembly(filename);
+			Log::Error("Failed to reload scripts because directory is missing.");
 		}
 
 		return scriptdomain;
@@ -143,6 +158,7 @@ namespace GTA
 		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
 		compilerOptions->CompilerOptions = "/optimize";
 		compilerOptions->GenerateInMemory = true;
+		compilerOptions->IncludeDebugInformation = true;
 		compilerOptions->ReferencedAssemblies->Add("System.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
@@ -152,6 +168,8 @@ namespace GTA
 
 		if (!compilerResult->Errors->HasErrors)
 		{
+			Log::Debug("Successfully compiled '", IO::Path::GetFileName(filename), "'.");
+
 			return LoadAssembly(filename, compilerResult->CompiledAssembly);
 		}
 		else
@@ -182,7 +200,7 @@ namespace GTA
 
 		try
 		{
-			assembly = Reflection::Assembly::Load(IO::File::ReadAllBytes(filename));
+			assembly = Reflection::Assembly::LoadFrom(filename);
 		}
 		catch (Exception ^ex)
 		{
@@ -197,22 +215,31 @@ namespace GTA
 	{
 		unsigned int count = 0;
 
-		for each (Type ^type in assembly->GetTypes())
+		try
 		{
-			if (!type->IsSubclassOf(Script::typeid))
+			for each (Type ^type in assembly->GetTypes())
 			{
-				continue;
-			}
+				if (!type->IsSubclassOf(Script::typeid))
+				{
+					continue;
+				}
 
-			count++;
-			this->mScriptTypes->Add(filename, type);
+				count++;
+				this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
+			}
+		}
+		catch (Reflection::ReflectionTypeLoadException ^ex)
+		{
+			Log::Error("Failed to list assembly types:", Environment::NewLine, ex->ToString());
+
+			return false;
 		}
 
 		Log::Debug("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
 
 		return count != 0;
 	}
-	void ScriptDomain::Unload(ScriptDomain ^domain)
+	void ScriptDomain::Unload(ScriptDomain ^%domain)
 	{
 		Log::Debug("Unloading script domain '", domain->Name, "' ...");
 
@@ -230,6 +257,8 @@ namespace GTA
 		{
 			Log::Error("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
 		}
+
+		domain = nullptr;
 
 		GC::Collect();
 	}
@@ -271,9 +300,9 @@ namespace GTA
 
 		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
-		for each (KeyValuePair<String ^, Type ^> ^scripttype in this->mScriptTypes)
+		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
 		{
-			Script ^script = InstantiateScript(scripttype->Value);
+			Script ^script = InstantiateScript(scripttype->Item2);
 
 			if (Object::ReferenceEquals(script, nullptr))
 			{
@@ -281,8 +310,11 @@ namespace GTA
 			}
 
 			script->mRunning = true;
-			script->mFilename = scripttype->Key;
+			script->mFilename = scripttype->Item1;
 			script->mScriptDomain = this;
+			script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
+
+			script->mThread->Start();
 
 			Log::Debug("Started script '", script->Name, "'.");
 
@@ -296,103 +328,89 @@ namespace GTA
 		for each (Script ^script in this->mRunningScripts)
 		{
 			AbortScript(script);
+
+			delete script;
 		}
 
 		this->mScriptTypes->Clear();
 		this->mRunningScripts->Clear();
+
+		GC::Collect();
 	}
 	void ScriptDomain::AbortScript(Script ^script)
 	{
+		if (Object::ReferenceEquals(script->mThread, nullptr))
+		{
+			return;
+		}
+
 		script->mRunning = false;
+
+		script->mThread->Abort();
+		script->mThread = nullptr;
 
 		Log::Debug("Aborted script '", script->Name, "'.");
 	}
-	void ScriptDomain::Wait(int ms)
-	{
-		scriptWait(ms);
-	}
 	void ScriptDomain::DoTick()
 	{
-		// Update keyboard input
-		for (int key = 1; key < 255; ++key)
-		{
-			const bool status = (GetAsyncKeyState(key) & 0x8000) != 0;
-
-			if (status == this->mKeyboardState[key])
-			{
-				continue;
-			}
-
-			const bool ctrl = IsKeyPressed(Windows::Forms::Keys::ControlKey) || IsKeyPressed(Windows::Forms::Keys::LControlKey) || IsKeyPressed(Windows::Forms::Keys::RControlKey);
-			const bool shift = IsKeyPressed(Windows::Forms::Keys::ShiftKey) || IsKeyPressed(Windows::Forms::Keys::LShiftKey) || IsKeyPressed(Windows::Forms::Keys::RShiftKey);
-			const bool alt = IsKeyPressed(Windows::Forms::Keys::Menu) || IsKeyPressed(Windows::Forms::Keys::LMenu) || IsKeyPressed(Windows::Forms::Keys::RMenu);
-
-			Windows::Forms::KeyEventArgs ^args = gcnew Windows::Forms::KeyEventArgs(static_cast<Windows::Forms::Keys>(key) | (ctrl ? Windows::Forms::Keys::Control : Windows::Forms::Keys::None) | (shift ? Windows::Forms::Keys::Shift : Windows::Forms::Keys::None) | (alt ? Windows::Forms::Keys::Alt : Windows::Forms::Keys::None));
-
-			for each (Script ^script in this->mRunningScripts)
-			{
-				try
-				{
-					if (!status)
-					{
-						script->RaiseKeyUp(this, args);
-					}
-					else
-					{
-						script->RaiseKeyDown(this, args);
-					}
-				}
-				catch (Exception ^ex)
-				{
-					UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
-				}
-			}
-
-			this->mKeyboardState[key] = status;
-		}
-
-		// Update scripts
+		// Execute scripts
 		for each (Script ^script in this->mRunningScripts)
 		{
 			if (!script->mRunning)
 			{
 				continue;
 			}
-			else if (script->mInterval > 0)
+
+			this->mExecutingScript = script;
+
+			while ((script->mRunning = SignalAndWait(script->mContinueEvent, script->mWaitEvent, 5000)) && this->mTaskQueue->Count > 0)
 			{
-				if (script->mNextTick > DateTime::Now)
-				{
-					continue;
-				}
-				else
-				{
-					script->mNextTick = DateTime::Now + TimeSpan(0, 0, 0, 0, script->mInterval);
-				}
+				this->mTaskQueue->Dequeue()->Run();
 			}
 
-			try
+			this->mExecutingScript = nullptr;
+
+			if (!script->mRunning)
 			{
-				script->RaiseTick(this);
-			}
-			catch (Exception ^ex)
-			{
-				UnhandledExceptionHandler(this, gcnew UnhandledExceptionEventArgs(ex, false));
+				Log::Error("Script '", script->Name, "' is not responding! Aborting ...");
 
 				AbortScript(script);
+				continue;
 			}
 		}
 
 		// Clean up pinned strings
 		CleanupStrings();
 	}
-
-	bool ScriptDomain::IsKeyPressed(Windows::Forms::Keys key)
+	void ScriptDomain::DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		return this->mKeyboardState[static_cast<int>(key)];
+		this->mKeyboardState[static_cast<int>(key)] = status;
+
+		KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
+		Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
+
+		for each (Script ^script in this->mRunningScripts)
+		{
+			script->mKeyboardEvents->Enqueue(eventinfo);
+		}
+	}
+
+	void ScriptDomain::ExecuteTask(IScriptTask ^task)
+	{
+		if (Thread::CurrentThread->ManagedThreadId == this->mExecutingThreadId)
+		{
+			task->Run();
+		}
+		else
+		{
+			this->mTaskQueue->Enqueue(task);
+
+			SignalAndWait(ExecutingScript->mWaitEvent, ExecutingScript->mContinueEvent);
+		}
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
 	{
-		IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
+		const IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
 
 		this->mPinnedStrings->Add(handle);
 
@@ -406,5 +424,9 @@ namespace GTA
 		}
 
 		this->mPinnedStrings->Clear();
+	}
+	Object ^ScriptDomain::InitializeLifetimeService()
+	{
+		return nullptr;
 	}
 }

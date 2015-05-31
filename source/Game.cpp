@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Native.hpp"
+#include "ScriptDomain.hpp"
 
 namespace GTA
 {
@@ -48,6 +49,11 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_WANTED_LEVEL_MULTIPLIER, value);
 	}
 
+	bool Game::IsKeyPressed(System::Windows::Forms::Keys key)
+	{
+		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
+	}
+
 	void Game::Pause()
 	{
 		IsPaused = true;
@@ -71,5 +77,36 @@ namespace GTA
 	void Game::FadeScreenOut(int time)
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_OUT, time);
+	}
+	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
+	{
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
+	}
+	void Game::PlayMusic(System::String ^musicFile)
+	{
+		Native::Function::Call(Native::Hash::TRIGGER_MUSIC_EVENT, musicFile);
+	}
+	void Game::StopMusic(System::String ^musicFile)
+	{
+		Native::Function::Call(Native::Hash::CANCEL_MUSIC_EVENT, musicFile); //needs a general Game.StopMusic()
+	}
+	System::String ^Game::GetUserInput(int maxLength)
+	{
+		return GetUserInput("", maxLength);
+	}
+	System::String ^Game::GetUserInput(System::String ^startText, int maxLength)
+	{
+		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, startText, "", "", "", "", "", maxLength);
+
+		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
+		{
+			Script::Yield();
+		}
+
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
+	}
+	System::String ^Game::GetGXTEntry(System::String ^entry)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
 	}
 }

@@ -14,30 +14,52 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
+#include "Viewport.hpp"
 #include "Settings.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA
 {
-	Script::Script()
+	using namespace System;
+	using namespace System::Threading;
+	using namespace System::Windows::Forms;
+	using namespace System::Collections::Concurrent;
+
+	extern void HandleUnhandledException(Object ^sender, UnhandledExceptionEventArgs ^args);
+
+	Script::Script() : mInterval(0), mRunning(false), mWaitEvent(gcnew AutoResetEvent(false)), mContinueEvent(gcnew AutoResetEvent(false)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
-		Interval = 0;
+	}
+	Script::~Script()
+	{
 	}
 
-	void Script::Wait(int ms)
+	Viewport ^Script::View::get()
 	{
-		ScriptDomain::CurrentDomain->Wait(ms);
-	}
-	bool Script::IsKeyPressed(System::Windows::Forms::Keys key)
-	{
-		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
-	}
+		if (Object::ReferenceEquals(this->mViewport, nullptr))
+		{
+			this->mViewport = gcnew GTA::Viewport();
 
+			Tick += gcnew EventHandler(this, &Script::UpdateViewport);
+			KeyUp += gcnew KeyEventHandler(this, &Script::HandleViewportInput);
+		}
+
+		return this->mViewport;
+	}
 	ScriptSettings ^Script::Settings::get()
 	{
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			this->mSettings = ScriptSettings::Load(System::IO::Path::ChangeExtension(this->mFilename, "ini"));
+			String ^path = IO::Path::ChangeExtension(this->mFilename, "ini");
+
+			if (IO::File::Exists(path))
+			{
+				this->mSettings = ScriptSettings::Load(path);
+			}
+			else
+			{
+				this->mSettings = gcnew ScriptSettings();
+			}
 		}
 
 		return this->mSettings;
@@ -48,20 +70,101 @@ namespace GTA
 	}
 	void Script::Interval::set(int value)
 	{
-		if (value > 0)
+		if (value < 0)
 		{
-			this->mInterval = value;
-			this->mNextTick = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, value);
+			value = 0;
 		}
-		else
-		{
-			this->mInterval = 0;
-			this->mNextTick = System::DateTime::MinValue;
-		}
+
+		this->mInterval = value;
 	}
 
 	void Script::Abort()
 	{
+		this->mWaitEvent->Set();
+
 		this->mScriptDomain->AbortScript(this);
+	}
+	void Script::Wait(int ms)
+	{
+		Script ^script = ScriptDomain::ExecutingScript;
+
+		if (Object::ReferenceEquals(script, nullptr) || !script->mRunning)
+		{
+			throw gcnew InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
+		}
+
+		const DateTime resume = DateTime::Now + TimeSpan::FromMilliseconds(ms);
+
+		do
+		{
+			script->mWaitEvent->Set();
+			script->mContinueEvent->WaitOne();
+		}
+		while (DateTime::Now < resume);
+	}
+	void Script::Yield()
+	{
+		Wait(0);
+	}
+
+	void Script::MainLoop()
+	{
+		// Wait for domain to run scripts
+		this->mContinueEvent->WaitOne();
+
+		// Run main loop
+		while (this->mRunning)
+		{
+			Tuple<bool, KeyEventArgs ^> ^keyevent = nullptr;
+
+			// Process events
+			while (this->mKeyboardEvents->TryDequeue(keyevent))
+			{
+				try
+				{
+					if (keyevent->Item1)
+					{
+						KeyDown(this, keyevent->Item2);
+					}
+					else
+					{
+						KeyUp(this, keyevent->Item2);
+					}
+				}
+				catch (Exception ^ex)
+				{
+					HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, false));
+					break;
+				}
+			}
+
+			try
+			{
+				Tick(this, EventArgs::Empty);
+			}
+			catch (Exception ^ex)
+			{
+				HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, true));
+
+				Abort();
+				break;
+			}
+
+			// Yield execution to next tick
+			Wait(this->mInterval);
+		}
+	}
+	void Script::UpdateViewport(Object ^sender, EventArgs ^e)
+	{
+		this->mViewport->Draw();
+	}
+	void Script::HandleViewportInput(Object ^sender, KeyEventArgs ^e)
+	{
+		if (e->KeyCode == ActivateKey) this->mViewport->HandleActivate();
+		else if (e->KeyCode == BackKey) this->mViewport->HandleBack();
+		else if (e->KeyCode == LeftKey) this->mViewport->HandleChangeItem(false);
+		else if (e->KeyCode == RightKey) this->mViewport->HandleChangeItem(true);
+		else if (e->KeyCode == UpKey) this->mViewport->HandleChangeSelection(false);
+		else if (e->KeyCode == DownKey) this->mViewport->HandleChangeSelection(true);
 	}
 }

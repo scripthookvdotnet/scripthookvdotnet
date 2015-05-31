@@ -26,6 +26,12 @@ namespace GTA
 		using namespace System;
 		using namespace System::Globalization;
 
+		ref class Random
+		{
+		public:
+			static System::Random ^Instance = gcnew System::Random();
+		};
+
 		Vector3::Vector3(float x, float y, float z)
 		{
 			X = x;
@@ -49,6 +55,33 @@ namespace GTA
 			X *= num;
 			Y *= num;
 			Z *= num;
+		}
+		float Vector3::DistanceTo(Vector3 position)
+		{
+			return (position - *this).Length();
+		}
+		Vector3 Vector3::Around(float distance)
+		{
+			return *this + Vector3::RandomXY() * distance;
+		}
+
+		Vector3 Vector3::RandomXY()
+		{
+			Vector3 v;
+			v.X = (float)(Random::Instance->NextDouble() - 0.5);
+			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
+			v.Z = 0.0f;
+			v.Normalize();
+			return v;
+		}
+		Vector3 Vector3::RandomXYZ()
+		{
+			Vector3 v;
+			v.X = (float)(Random::Instance->NextDouble() - 0.5);
+			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
+			v.Z = (float)(Random::Instance->NextDouble() - 0.5);
+			v.Normalize();
+			return v;
 		}
 
 		Vector3 Vector3::Add(Vector3 left, Vector3 right)
