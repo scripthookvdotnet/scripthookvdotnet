@@ -72,6 +72,9 @@
     <ClCompile Include="source\Prop.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+	<ClCompile Include="source\Ray.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Rope.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
@@ -177,6 +180,9 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Prop.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+	<ClInclude Include="source\Ray.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Rope.hpp">
