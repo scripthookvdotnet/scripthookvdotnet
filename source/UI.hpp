@@ -20,7 +20,7 @@ namespace GTA
 		static const int WIDTH = 1280;
 		static const int HEIGHT = 720;
 
-		[System::ObsoleteAttribute("UI.NOtify is obsolete, please use Notification.Show instead.")]
+		[System::ObsoleteAttribute("UI.Notify is obsolete, please use Notification.Show instead.")]
 		static void Notify(System::String ^msg);
 
 		static void ShowSubtitle(System::String ^msg);
