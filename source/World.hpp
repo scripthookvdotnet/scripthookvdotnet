@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Raycast.hpp"
 
 namespace GTA
 {
@@ -76,6 +77,19 @@ namespace GTA
 		Companion = 0,
 		Pedestrians = 255 // or neutral
 	};
+	public enum class IntersectOptions
+	{
+		Everything = -1,
+		Map = 1,
+		Mission_Entities = 2,
+		Peds1 = 12,//4 and 8 both seem to be peds
+		Objects = 16,
+		Unk1 = 32,
+		Unk2 = 64,
+		Unk3 = 128,
+		Vegetation = 256,
+		Unk4 = 512
+	};
 
 	public ref class World sealed abstract
 	{
@@ -137,6 +151,9 @@ namespace GTA
 		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
 		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
 		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
+		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options);
+		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags);
+		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
