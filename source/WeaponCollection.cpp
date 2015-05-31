@@ -30,7 +30,7 @@ namespace GTA
 		{
 			return weapon;
 		}
-		bool present = Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, this->pOwner->Handle, static_cast<int>(hash));
+		bool present = Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, this->pOwner->Handle, static_cast<int>(hash), 0);
 		if (present)
 		{
 			weapon = gcnew Weapon(this->pOwner, (Native::WeaponHash)hash);
