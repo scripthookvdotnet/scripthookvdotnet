@@ -242,4 +242,16 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_BLOOD_DAMAGE, this->Handle);
 	}
+	Math::Vector3 Ped::GetBoneCoord(Bone BoneID)
+	{
+		return GetBoneCoord(BoneID, Math::Vector3::Zero);
+	}
+	Math::Vector3 Ped::GetBoneCoord(Bone BoneID, Math::Vector3 Offset)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_PED_BONE_COORDS, this->Handle, (int)BoneID, Offset.X, Offset.Y, Offset.Z);
+	}
+	int Ped::GetBoneIndex(Bone BoneID)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, this->Handle, (int)BoneID);
+	}
 }
