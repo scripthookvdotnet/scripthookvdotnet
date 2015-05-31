@@ -57,6 +57,5 @@ namespace GTA
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
-		static void ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash,int damage);
 	};
 }
