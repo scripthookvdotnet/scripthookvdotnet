@@ -9,13 +9,13 @@ namespace GTA
 	public:
 		UIText(System::String ^caption, System::Drawing::Point position, float scale);
 		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color);
-		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, int font, bool centered);
+		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, Font font, bool centered);
 
 		virtual property bool Enabled;
 		virtual property System::Drawing::Point Position;
 		virtual property System::Drawing::Color Color;
 		property System::String ^Caption;
-		property int Font;
+		property Font Font;
 		property float Scale;
 		property bool Centered;
 
