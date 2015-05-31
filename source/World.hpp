@@ -113,6 +113,7 @@ namespace GTA
 		static Ped ^CreateRandomPed(Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
+		static void ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash,int damage);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround);
 
