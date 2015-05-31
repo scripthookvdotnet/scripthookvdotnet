@@ -409,6 +409,7 @@ namespace GTA
 		}
 		property bool CanTiresBurst
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool CanBeVisiblyDamaged
