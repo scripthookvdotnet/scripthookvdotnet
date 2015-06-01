@@ -220,6 +220,7 @@ namespace GTA
 			EntryTuple->Item2->Color = TextColor;
 			i++;
 		}
+		this->SelectedIndexChanged(this, gcnew SelectedIndexChangedArgs(this->mSelectedIndex));
 	}
 
 	void ListMenu::Draw()

@@ -10,6 +10,23 @@ namespace GTA
 	interface class MenuItem;
 	ref class Viewport;
 
+	public ref class SelectedIndexChangedArgs :System::EventArgs
+	{
+	private:
+		int mSelectedIndex;
+
+	public:
+		SelectedIndexChangedArgs(int selectedIndex)
+		{
+			this->mSelectedIndex = selectedIndex;
+		}
+
+		property int SelectedIndex
+		{
+			int get(){ return this->mSelectedIndex; }
+		}
+	};
+
 	public ref class MenuBase
 	{
 	public:
@@ -132,6 +149,15 @@ namespace GTA
 		void Remove(int Index);
 		void Remove(System::String ^Caption);
 
+		property System::Tuple<System::String ^, System::String ^> ^default[int]
+		{
+			System::Tuple<System::String ^, System::String ^> ^get(int index) { return mItems[index]; }
+			void set(int index, System::Tuple<System::String ^, System::String ^> ^item)
+			{
+				mItems[index] = item;
+				this->UpdateEntries();
+			}
+		}
 		property int SelectedIndex
 		{
 			int get() { return mSelectedIndex; }
@@ -152,6 +178,9 @@ namespace GTA
 		property int FooterHeight;
 		property int ItemHeight;
 		property bool HasFooter;
+
+	public:
+		event System::EventHandler<SelectedIndexChangedArgs^> ^SelectedIndexChanged;
 
 	private:
 		System::Action<ListMenu ^> ^mActivateAction;
