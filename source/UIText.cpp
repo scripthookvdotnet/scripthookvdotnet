@@ -10,7 +10,7 @@ namespace GTA
 		this->Position = position;
 		this->Scale = scale;
 		this->Color = System::Drawing::Color::WhiteSmoke;
-		this->Font = 0;
+		this->Font = GTA::Font::Arial;
 		this->Centered = false;
 	}
 	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color)
@@ -20,10 +20,10 @@ namespace GTA
 		this->Position = position;
 		this->Scale = scale;
 		this->Color = color;
-		this->Font = 0;
+		this->Font = GTA::Font::Arial;
 		this->Centered = false;
 	}
-	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, int font, bool centered)
+	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, GTA::Font font, bool centered)
 	{
 		this->Enabled = true;
 		this->Caption = caption;
@@ -48,7 +48,7 @@ namespace GTA
 		const float x = (static_cast<float>(this->Position.X) + offset.Width) / UI::WIDTH;
 		const float y = (static_cast<float>(this->Position.Y) + offset.Height) / UI::HEIGHT;
 
-		Native::Function::Call(Native::Hash::SET_TEXT_FONT, this->Font);
+		Native::Function::Call(Native::Hash::SET_TEXT_FONT, (int)this->Font);
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, this->Scale, this->Scale);
 		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, this->Color.R, this->Color.G, this->Color.B, this->Color.A);
 		Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, this->Centered ? 1 : 0);
