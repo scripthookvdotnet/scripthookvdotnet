@@ -10,7 +10,7 @@ namespace GTA
 		this->Position = position;
 		this->Scale = scale;
 		this->Color = System::Drawing::Color::WhiteSmoke;
-		this->Font = GTA::Font::Arial;
+		this->Font = GTA::Font::ChaletLondon;
 		this->Centered = false;
 	}
 	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color)
@@ -20,7 +20,7 @@ namespace GTA
 		this->Position = position;
 		this->Scale = scale;
 		this->Color = color;
-		this->Font = GTA::Font::Arial;
+		this->Font = GTA::Font::ChaletLondon;
 		this->Centered = false;
 	}
 	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, GTA::Font font, bool centered)
