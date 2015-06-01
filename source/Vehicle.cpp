@@ -252,9 +252,21 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->Handle, color.R, color.G, color.B);
 	}
+	System::Drawing::Color Vehicle::CustomPrimaryColor::get()
+	{
+		int r, g, b;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->Handle, &r, &g, &b);
+		return System::Drawing::Color::FromArgb(r, g, b);
+	}
 	void Vehicle::CustomSecondaryColor::set(System::Drawing::Color color)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->Handle, color.R, color.G, color.B);
+	}
+	System::Drawing::Color Vehicle::CustomSecondaryColor::get()
+	{
+		int r, g, b;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_CUSTOM_SECONDARY_COLOUR, this->Handle, &r, &g, &b);
+		return System::Drawing::Color::FromArgb(r, g, b);
 	}
 	System::Drawing::Color Vehicle::NeonLightsColor::get()
 	{
