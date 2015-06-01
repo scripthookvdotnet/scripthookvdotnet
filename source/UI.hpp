@@ -6,11 +6,10 @@ namespace GTA
 {
 	public enum class Font
 	{
-		Chalet = 0,
+		ChaletLondon = 0,
 		HouseScript = 1,
 		Monospace = 2,
-		ChaletComprime = 4,
-		ChaletComprime2 = 6,
+		ChaletComprimeCologne = 4,
 		Pricedown = 7
 	};
 
