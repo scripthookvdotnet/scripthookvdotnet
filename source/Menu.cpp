@@ -130,6 +130,7 @@ namespace GTA
 			FooterTextColor,
 			FooterFont,
 			FooterCentered);
+		this->SelectedIndexChanged(this, gcnew SelectedIndexChangedArgs(this->mSelectedIndex));
 	}
 
 	void Menu::OnChangeItem(bool right)

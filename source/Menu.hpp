@@ -101,6 +101,7 @@ namespace GTA
 		property int FooterHeight;
 		property int ItemHeight;
 		property bool HasFooter;
+
 		property System::Collections::Generic::List<MenuItem ^> ^Items
 		{
 			System::Collections::Generic::List<MenuItem ^> ^get() { return mItems; }
@@ -116,6 +117,9 @@ namespace GTA
 				OnChangeSelection(newIndex);
 			}
 		}
+
+	public:
+		event System::EventHandler<SelectedIndexChangedArgs^> ^SelectedIndexChanged;
 
 	private:
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
