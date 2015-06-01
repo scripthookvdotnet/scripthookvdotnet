@@ -422,10 +422,12 @@ namespace GTA
 		}
 		property System::Drawing::Color CustomPrimaryColor
 		{
+			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
 		property System::Drawing::Color CustomSecondaryColor
 		{
+			System::Drawing::Color get();
 			void set(System::Drawing::Color color);
 		}
 		property System::Drawing::Color NeonLightsColor
