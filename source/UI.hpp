@@ -12,7 +12,16 @@ namespace GTA
 		ChaletComprimeCologne = 4,
 		Pricedown = 7
 	};
-
+	public ref class Notification
+	{
+	public:
+		static Notification ^Show(System::String ^Message){ return Show(Message, false); }
+		static Notification ^Show(System::String ^Message, bool Blinking);
+		void Hide();
+	private:
+		Notification(int Handle);
+		int mHandle;
+	};
 	public ref class UI sealed abstract
 	{
 	public:
