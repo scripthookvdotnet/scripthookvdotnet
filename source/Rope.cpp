@@ -33,24 +33,29 @@ namespace GTA
 	}
 	void Rope::AttachEntities(Entity ^entityOne, Entity ^entityTwo, float length)
 	{
-		AttachEntities(entityOne, Math::Vector3(), entityTwo, Math::Vector3(), length);
+		this->AttachEntities(entityOne, Math::Vector3(), entityTwo, Math::Vector3(), length);
 	}
-	void Rope::AttachEntities(Entity ^entityOne, Math::Vector3 offsetOne, Entity ^entityTwo, Math::Vector3 offsetTwo, float length)
+	void Rope::AttachEntities(Entity ^entityOne, Math::Vector3 positionOne, Entity ^entityTwo, Math::Vector3 positionTwo, float length)
 	{
 		int tmpOne;
 		int tmpTwo;
-		Native::Function::Call(Native::Hash::ATTACH_ENTITIES_TO_ROPE, this->Handle, entityOne, entityTwo, offsetOne.X, offsetOne.Y, offsetOne.Z, offsetTwo.X, offsetTwo.Y, offsetTwo.Z, length, 0, 0, &tmpOne, &tmpTwo);
+		Native::Function::Call(Native::Hash::ATTACH_ENTITIES_TO_ROPE, this->Handle, entityOne, entityTwo, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, &tmpOne, &tmpTwo);
 	}
 	void Rope::AttachEntity(Entity ^entity)
 	{
 		this->AttachEntity(entity, Math::Vector3());
 	}
-	void Rope::AttachEntity(Entity^ entity, Math::Vector3 offset)
+	void Rope::AttachEntity(Entity^ entity, Math::Vector3 position)
 	{
-		Native::Function::Call(Native::Hash::ATTACH_ROPE_TO_ENTITY, this->Handle, entity, offset.X, offset.Y, offset.Z, 0);
+		Native::Function::Call(Native::Hash::ATTACH_ROPE_TO_ENTITY, this->Handle, entity, position.X, position.Y, position.Z, 0);
 	}
 	void Rope::DetachEntity(Entity^ entity)
 	{
 		Native::Function::Call(Native::Hash::DETACH_ROPE_FROM_ENTITY, this->Handle, entity);
+	}
+
+	void Rope::LoadTextures()
+	{
+		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 	}
 }

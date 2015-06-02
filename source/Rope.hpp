@@ -21,10 +21,12 @@ namespace GTA
 		void ResetLength(bool reset);
 		void ForceLength(float length);
 		void AttachEntities(Entity ^entityOne, Entity ^entityTwo, float length);
-		void AttachEntities(Entity ^entityOne, Math::Vector3 offsetOne, Entity ^entityTwo, Math::Vector3 offsetTwo, float length);
+		void AttachEntities(Entity ^entityOne, Math::Vector3 positionOne, Entity ^entityTwo, Math::Vector3 positionTwo, float length);
 		void AttachEntity(Entity ^entity);
-		void AttachEntity(Entity ^entity, Math::Vector3 offset);
+		void AttachEntity(Entity ^entity, Math::Vector3 position);
 		void DetachEntity(Entity ^entity);
+
+		static void LoadTextures();
 
 	private:
 		int mHandle;
