@@ -367,11 +367,11 @@ namespace GTA
 	{
 		return gcnew RayCastResult(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
 	}
-	void World::Draw_Marker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour)
+	void World::DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour)
 	{
-		Draw_Marker(type, pos, dir, rot, scale, Colour, false, false, 2, false, nullptr, nullptr, false);
+		DrawMarker(type, pos, dir, rot, scale, Colour, false, false, 2, false, nullptr, nullptr, false);
 	}
-	void World::Draw_Marker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour, bool BobUpAndDown, bool FaceCam_Y, int UNK_2, bool Rotate_Y, System::String ^TextueDict, System::String ^TextureName, bool DrawOnEnt)
+	void World::DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour, bool BobUpAndDown, bool FaceCam_Y, int UNK_2, bool Rotate_Y, System::String ^TextueDict, System::String ^TextureName, bool DrawOnEnt)
 	{
 		Native::InputArgument^ Dict = gcnew Native::InputArgument(0),^ Name = gcnew Native::InputArgument(0);
 		if (TextueDict != nullptr && TextureName != nullptr)
