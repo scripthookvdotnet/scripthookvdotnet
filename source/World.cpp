@@ -367,4 +367,22 @@ namespace GTA
 	{
 		return gcnew RayCastResult(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
 	}
+	void World::Draw_Marker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour)
+	{
+		Draw_Marker(type, pos, dir, rot, scale, Colour, false, false, 2, false, nullptr, nullptr, false);
+	}
+	void World::Draw_Marker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour, bool BobUpAndDown, bool FaceCam_Y, int UNK_2, bool Rotate_Y, System::String ^TextueDict, System::String ^TextureName, bool DrawOnEnt)
+	{
+		Native::InputArgument^ Dict = gcnew Native::InputArgument(0),^ Name = gcnew Native::InputArgument(0);
+		if (TextueDict != nullptr && TextureName != nullptr)
+		{
+			if (TextueDict->Length > 0 && TextureName->Length > 0)
+			{
+				Dict = gcnew Native::InputArgument(TextueDict);
+				Name = gcnew Native::InputArgument(TextureName);
+			}
+		}
+		Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, Colour.R, Colour.G, Colour.B, Colour.A, BobUpAndDown, FaceCam_Y, UNK_2, Rotate_Y, Dict, Name, DrawOnEnt);
+
+	}
 }
