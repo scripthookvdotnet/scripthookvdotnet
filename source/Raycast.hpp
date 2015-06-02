@@ -10,7 +10,6 @@ namespace GTA
 	public ref class RayCastResult
 	{
 	public:
-		RayCastResult(int Handle);
 
 		property int Handle
 		{
@@ -40,6 +39,8 @@ namespace GTA
 		{
 			int get();
 		}
+	internal:
+		RayCastResult(int Handle);
 	private:
 		int mHandle;
 		int mStatus;
