@@ -15,6 +15,32 @@ namespace GTA
 	{
 	}
 
+	VehicleColor Vehicle::RimColor::get() 
+	{
+		int pearlescentColor, rimColor;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS,this->Handle, &pearlescentColor, &rimColor);
+		return static_cast<VehicleColor>(rimColor);
+	}
+
+	void Vehicle::RimColor::set(VehicleColor value)
+	{
+		int pearlescentColor = this->PearlescentColor;
+		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, this->Handle, pearlescentColor, static_cast<int>(value));
+	}
+
+	int Vehicle::PearlescentColor::get()
+	{
+		int pearlescentColor, rimColor;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS, this->Handle, &pearlescentColor, &rimColor);
+		return pearlescentColor;
+	}
+
+	void Vehicle::PearlescentColor::set(int value) 
+	{
+		VehicleColor rimColor;
+		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, this->Handle, value, static_cast<int>(rimColor));
+	}
+
 	bool Vehicle::HasRoof::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_VEHICLE_HAVE_ROOF, this->Handle);
