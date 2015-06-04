@@ -67,6 +67,38 @@ namespace GTA
 		SmallExplosion7 = 33,
 		Explosion6 = 34
 	};
+	public enum class MarkerTypes
+	{
+		UpsideDownCone = 0,
+		VerticalCylinder = 1,
+		ThickChevronUp = 2,
+		ThinChevronUp = 3,
+		CheckeredFlagRect = 4,
+		CheckeredFlagCircle = 5,
+		VerticleCircle = 6,
+		PlaneModel = 7,
+		LostMCDark = 8,
+		LostMCLight = 9,
+		Number0 = 10,
+		Number1 = 11,
+		Number2 = 12,
+		Number3 = 13,
+		Number4 = 14,
+		Number5 = 15,
+		Number6 = 16,
+		Number7 = 17,
+		Number8 = 18,
+		Number9 = 19,
+		ChevronUpx1 = 20,
+		ChevronUpx2 = 21,
+		ChevronUpx3 = 22,
+		HorizontalCircleFat = 23,
+		ReplayIcon = 24,
+		HorizontalCircleSkinny = 25,
+		HorizontalCircleSkinny_Arrow = 26,
+		HorizontalSplitArrowCircle = 27,
+		DebugSphere = 28
+	};
 	public enum class Relationship
 	{
 		Hate = 5,
@@ -155,6 +187,8 @@ namespace GTA
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
+		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color);
+		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

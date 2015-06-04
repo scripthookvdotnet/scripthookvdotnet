@@ -17,6 +17,7 @@
 #pragma once
 
 #include "NativeHashes.hpp"
+#include "Model.hpp"
 
 namespace GTA
 {
@@ -45,6 +46,7 @@ namespace GTA
 			InputArgument(Vehicle ^object);
 			InputArgument(Blip ^object);
 			InputArgument(Prop ^object);
+			InputArgument(Model model);
 
 			static inline operator InputArgument ^ (bool value)
 			{
@@ -102,6 +104,10 @@ namespace GTA
 			{
 				return gcnew InputArgument(object);
 			}
+			static inline operator InputArgument ^ (Model model)
+			{
+				return gcnew InputArgument(model);
+			}
 
 			virtual System::String ^ToString() override
 			{
@@ -143,6 +149,7 @@ namespace GTA
 			InOutArgument(Vehicle ^object);
 			InOutArgument(Blip ^object);
 			InOutArgument(Prop ^object);
+			InOutArgument(Model model);
 
 			~InOutArgument()
 			{

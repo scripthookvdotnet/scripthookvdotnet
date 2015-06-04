@@ -92,6 +92,9 @@ namespace GTA
 		InputArgument::InputArgument(Prop ^object) : mData(object->Handle)
 		{
 		}
+		InputArgument::InputArgument(Model model) : mData(model.Hash)
+		{
+		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
 		{
 		}
@@ -139,6 +142,10 @@ namespace GTA
 		InOutArgument::InOutArgument(Prop ^object) : OutputArgument()
 		{
 			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Model model) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = model.Hash;
 		}
 		InOutArgument::!InOutArgument()
 		{
