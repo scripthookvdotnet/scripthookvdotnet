@@ -187,8 +187,8 @@ namespace GTA
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
-		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour);
-		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Colour, bool BobUpAndDown, bool FaceCam_Y, int UNK_2, bool Rotate_Y, System::String ^TextueDict, System::String ^Texture_name, bool DrawOnEnt);
+		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Color);
+		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Color, bool BobUpAndDown, bool FaceCam_Y, int UNK_2, bool Rotate_Y, System::String ^TextueDict, System::String ^Texture_name, bool DrawOnEnt);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
