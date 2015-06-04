@@ -263,6 +263,18 @@ namespace GTA
 	public:
 		Vehicle(int handle);
 
+		property VehicleColor RimColor 
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
+
+		property int PearlescentColor 
+		{
+			int get();
+			void set(int value);
+		}
+
 		property bool HasRoof
 		{
 			bool get();
