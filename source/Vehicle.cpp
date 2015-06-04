@@ -192,6 +192,22 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHTS, this->Handle, value ? 3 : 4);
 	}
+	bool Vehicle::LightsOn::get()
+	{
+		int lightState1, lightState2;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_LIGHTS_STATE, this->Handle, &lightState1, &lightState2);
+		return lightState1 == 1;
+	}
+	bool Vehicle::HighBeamsOn::get()
+	{
+		int lightState1, lightState2;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_LIGHTS_STATE, this->Handle, &lightState1, &lightState2);
+		return lightState2 == 1;
+	}
+	void Vehicle::LightsMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
+	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_BRAKE_LIGHTS, this->Handle, value);
@@ -431,6 +447,10 @@ namespace GTA
 	void Vehicle::FixTire(int wheel)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRE_FIXED, this->Handle, wheel);
+	}
+	bool Vehicle::IsInBurnout()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_IN_BURNOUT, this->Handle);
 	}
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
