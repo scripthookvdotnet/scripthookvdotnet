@@ -15,11 +15,10 @@ namespace GTA
 	public ref class Notification
 	{
 	public:
-		static Notification ^Show(System::String ^Message){ return Show(Message, false); }
-		static Notification ^Show(System::String ^Message, bool Blinking);
 		void Hide();
-	private:
+	internal:
 		Notification(int Handle);
+	private:
 		int mHandle;
 	};
 	public ref class UI sealed abstract
@@ -28,7 +27,8 @@ namespace GTA
 		static const int WIDTH = 1280;
 		static const int HEIGHT = 720;
 
-		static void Notify(System::String ^msg);
+		static Notification ^Notify(System::String ^msg){ return Notify(msg, false); }
+		static Notification ^Notify(System::String ^msg, bool Blinking);
 
 		static void ShowSubtitle(System::String ^msg);
 		static void ShowSubtitle(System::String ^msg, int duration);
