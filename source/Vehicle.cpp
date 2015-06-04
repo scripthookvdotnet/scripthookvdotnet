@@ -155,6 +155,36 @@ namespace GTA
 		Native::Function::Call(Native::Hash::GET_VEHICLE_COLOURS, this->Handle, &color1, &color2);
 		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOURS, this->Handle, color1, static_cast<int>(value));
 	}
+	VehicleColor Vehicle::RimColor::get()
+	{
+		int pearlescentColor, rimColor;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS, this->Handle, &pearlescentColor, &rimColor);
+		return static_cast<VehicleColor>(rimColor);
+	}
+	void Vehicle::RimColor::set(VehicleColor value)
+	{
+		Native::Function::Call(
+			Native::Hash::SET_VEHICLE_EXTRA_COLOURS, 
+			this->Handle, 
+			static_cast<int>(this->PearlescentColor),
+			static_cast<int>(value)
+		);
+	}
+	VehicleColor Vehicle::PearlescentColor::get()
+	{
+		int pearlescentColor, rimColor;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS, this->Handle, &pearlescentColor, &rimColor);
+		return static_cast<VehicleColor>(pearlescentColor);
+	}
+	void Vehicle::PearlescentColor::set(VehicleColor value)
+	{
+		Native::Function::Call(
+			Native::Hash::SET_VEHICLE_EXTRA_COLOURS, 
+			this->Handle, 
+			static_cast<int>(value), 
+			static_cast<int>(this->RimColor)
+		);
+	}
 	VehicleWheelType Vehicle::WheelType::get()
 	{
 		return static_cast<VehicleWheelType>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_WHEEL_TYPE, this->Handle));
