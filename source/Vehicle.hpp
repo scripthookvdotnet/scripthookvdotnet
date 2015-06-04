@@ -342,6 +342,16 @@ namespace GTA
 			VehicleColor get();
 			void set(VehicleColor value);
 		}
+		property VehicleColor RimColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
+		property VehicleColor PearlescentColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
 		property VehicleWheelType WheelType
 		{
 			VehicleWheelType get();
@@ -372,6 +382,15 @@ namespace GTA
 		property bool LightsOn
 		{
 			void set(bool value);
+			bool get();
+		}
+		property bool HighBeamsOn
+		{
+			bool get();
+		}
+		property float LightsMultiplier
+		{
+			void set(float value);
 		}
 		property bool BrakeLightsOn
 		{
@@ -478,6 +497,7 @@ namespace GTA
 		bool IsTireBurst(int wheel);
 		void BurstTire(int wheel);
 		void FixTire(int wheel);
+		bool IsInBurnout();
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);

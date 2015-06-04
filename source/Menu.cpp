@@ -130,6 +130,7 @@ namespace GTA
 			FooterTextColor,
 			FooterFont,
 			FooterCentered);
+		this->SelectedIndexChanged(this, gcnew SelectedIndexChangedArgs(this->mSelectedIndex));
 	}
 
 	void Menu::OnChangeItem(bool right)
@@ -220,6 +221,7 @@ namespace GTA
 			EntryTuple->Item2->Color = TextColor;
 			i++;
 		}
+		this->SelectedIndexChanged(this, gcnew SelectedIndexChangedArgs(this->mSelectedIndex));
 	}
 
 	void ListMenu::Draw()

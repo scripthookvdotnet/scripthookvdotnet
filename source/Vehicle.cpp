@@ -155,6 +155,36 @@ namespace GTA
 		Native::Function::Call(Native::Hash::GET_VEHICLE_COLOURS, this->Handle, &color1, &color2);
 		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOURS, this->Handle, color1, static_cast<int>(value));
 	}
+	VehicleColor Vehicle::RimColor::get()
+	{
+		int pearlescentColor, rimColor;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS, this->Handle, &pearlescentColor, &rimColor);
+		return static_cast<VehicleColor>(rimColor);
+	}
+	void Vehicle::RimColor::set(VehicleColor value)
+	{
+		Native::Function::Call(
+			Native::Hash::SET_VEHICLE_EXTRA_COLOURS, 
+			this->Handle, 
+			static_cast<int>(this->PearlescentColor),
+			static_cast<int>(value)
+		);
+	}
+	VehicleColor Vehicle::PearlescentColor::get()
+	{
+		int pearlescentColor, rimColor;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS, this->Handle, &pearlescentColor, &rimColor);
+		return static_cast<VehicleColor>(pearlescentColor);
+	}
+	void Vehicle::PearlescentColor::set(VehicleColor value)
+	{
+		Native::Function::Call(
+			Native::Hash::SET_VEHICLE_EXTRA_COLOURS, 
+			this->Handle, 
+			static_cast<int>(value), 
+			static_cast<int>(this->RimColor)
+		);
+	}
 	VehicleWheelType Vehicle::WheelType::get()
 	{
 		return static_cast<VehicleWheelType>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_WHEEL_TYPE, this->Handle));
@@ -191,6 +221,22 @@ namespace GTA
 	void Vehicle::LightsOn::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHTS, this->Handle, value ? 3 : 4);
+	}
+	bool Vehicle::LightsOn::get()
+	{
+		int lightState1, lightState2;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_LIGHTS_STATE, this->Handle, &lightState1, &lightState2);
+		return lightState1 == 1;
+	}
+	bool Vehicle::HighBeamsOn::get()
+	{
+		int lightState1, lightState2;
+		Native::Function::Call(Native::Hash::GET_VEHICLE_LIGHTS_STATE, this->Handle, &lightState1, &lightState2);
+		return lightState2 == 1;
+	}
+	void Vehicle::LightsMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{
@@ -431,6 +477,10 @@ namespace GTA
 	void Vehicle::FixTire(int wheel)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRE_FIXED, this->Handle, wheel);
+	}
+	bool Vehicle::IsInBurnout()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_IN_BURNOUT, this->Handle);
 	}
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
