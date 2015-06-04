@@ -67,7 +67,7 @@ namespace GTA
 		SmallExplosion7 = 33,
 		Explosion6 = 34
 	};
-	public enum class MarkerTypes
+	public enum class MarkerType
 	{
 		UpsideDownCone = 0,
 		VerticalCylinder = 1,
@@ -159,7 +159,7 @@ namespace GTA
 		static Ped ^CreateRandomPed(Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
-		static void ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash,int damage);
+		static void ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash, int damage);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround);
 
@@ -187,8 +187,8 @@ namespace GTA
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
-		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color);
-		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
+		static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color);
+		static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
