@@ -163,17 +163,27 @@ namespace GTA
 	}
 	void Vehicle::RimColor::set(VehicleColor value)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, this->Handle, this->PearlescentColor, static_cast<int>(value));
+		Native::Function::Call(
+			Native::Hash::SET_VEHICLE_EXTRA_COLOURS, 
+			this->Handle, 
+			static_cast<int>(this->PearlescentColor),
+			static_cast<int>(value)
+		);
 	}
-	int Vehicle::PearlescentColor::get()
+	VehicleColor Vehicle::PearlescentColor::get()
 	{
 		int pearlescentColor, rimColor;
 		Native::Function::Call(Native::Hash::GET_VEHICLE_EXTRA_COLOURS, this->Handle, &pearlescentColor, &rimColor);
-		return pearlescentColor;
+		return static_cast<VehicleColor>(pearlescentColor);
 	}
-	void Vehicle::PearlescentColor::set(int value)
+	void Vehicle::PearlescentColor::set(VehicleColor value)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, this->Handle, value, static_cast<int>(this->RimColor));
+		Native::Function::Call(
+			Native::Hash::SET_VEHICLE_EXTRA_COLOURS, 
+			this->Handle, 
+			static_cast<int>(value), 
+			static_cast<int>(this->RimColor)
+		);
 	}
 	VehicleWheelType Vehicle::WheelType::get()
 	{

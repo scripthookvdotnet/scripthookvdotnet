@@ -347,10 +347,10 @@ namespace GTA
 			VehicleColor get();
 			void set(VehicleColor value);
 		}
-		property int PearlescentColor
+		property VehicleColor PearlescentColor
 		{
-			int get();
-			void set(int value);
+			VehicleColor get();
+			void set(VehicleColor value);
 		}
 		property VehicleWheelType WheelType
 		{
