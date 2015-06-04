@@ -30,13 +30,13 @@ namespace GTA
 		/** Handles when the activate button is pressed (e.g. numpad-5) */
 		void HandleActivate();
 
-		/** Handles when the back button is pressed (e.g. numpad-0) */
+		/** Handles when the back button is pressed (e.g. backspace) */
 		void HandleBack();
 
 		/** Handles when the user presses the up or down button (e.g. numpad-2 and 8) */
 		void HandleChangeSelection(bool down);
 
-		/** Handles when the user presses the left or right button (e.g. numpad-4 and 6 */
+		/** Handles when the user presses the left or right button (e.g. numpad-4 and 6) */
 		void HandleChangeItem(bool right);
 
 		/** The top left position of the current menu */
