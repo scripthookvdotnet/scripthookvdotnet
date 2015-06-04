@@ -71,33 +71,33 @@ namespace GTA
 	{
 		UpsideDownCone = 0,
 		VerticalCylinder = 1,
-		Thick_Chevron_Up = 2,
-		Thin_Chevron_Up = 3,
-		Checkered_Flag_Rect = 4,
-		Checkered_Flag_Circle = 5,
-		Verticle_Circle = 6,
-		Plane_Model = 7,
-		Lost_MC_Dark = 8,
-		Lost_MC_Light = 9,
-		Number_0 = 10,
-		Number_1 = 11,
-		Number_2 = 12,
-		Number_3 = 13,
-		Number_4 = 14,
-		Number_5 = 15,
-		Number_6 = 16,
-		Number_7 = 17,
-		Number_8 = 18,
-		Number_9 = 19,
-		Chevron_Up_x1 = 20,
-		Chevron_Up_x2 = 21,
-		Chevron_Up_x3 = 22,
-		Horizontal_Circle_Fat = 23,
-		Replay_Icon = 24,
-		Horizontal_Circle_Skinny = 25,
-		Horizontal_Circle_Skinny_Arrow = 26,
-		Horizontal_Split_Arrow_Circle = 27,
-		Debug_Sphere = 28
+		ThickChevronUp = 2,
+		ThinChevronUp = 3,
+		CheckeredFlagRect = 4,
+		CheckeredFlagCircle = 5,
+		VerticleCircle = 6,
+		PlaneModel = 7,
+		LostMCDark = 8,
+		LostMCLight = 9,
+		Number0 = 10,
+		Number1 = 11,
+		Number2 = 12,
+		Number3 = 13,
+		Number4 = 14,
+		Number5 = 15,
+		Number6 = 16,
+		Number7 = 17,
+		Number8 = 18,
+		Number9 = 19,
+		ChevronUpx1 = 20,
+		ChevronUpx2 = 21,
+		ChevronUpx3 = 22,
+		HorizontalCircleFat = 23,
+		ReplayIcon = 24,
+		HorizontalCircleSkinny = 25,
+		HorizontalCircleSkinny_Arrow = 26,
+		HorizontalSplitArrowCircle = 27,
+		DebugSphere = 28
 	};
 	public enum class Relationship
 	{
@@ -187,8 +187,8 @@ namespace GTA
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags);
 		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
-		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Color);
-		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color Color, bool BobUpAndDown, bool FaceCam_Y, int UNK_2, bool Rotate_Y, System::String ^TextueDict, System::String ^Texture_name, bool DrawOnEnt);
+		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color);
+		static void DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
