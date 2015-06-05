@@ -214,6 +214,10 @@ namespace GTA
 		virtual void OnChangeItem(bool right) override;
 
 	public:
+		event System::EventHandler<System::EventArgs ^> ^Yes;
+		event System::EventHandler<System::EventArgs ^> ^No;
+
+	public:
 		property int Width;
 		property int Height;
 		property int ButtonHeight;
