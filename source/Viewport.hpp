@@ -36,7 +36,7 @@ namespace GTA
 		/** Handles when the user presses the up or down button (e.g. numpad-2 and 8) */
 		void HandleChangeSelection(bool down);
 
-		/** Handles when the user presses the left or right button (e.g. numpad-4 and 6 */
+		/** Handles when the user presses the left or right button (e.g. numpad-4 and 6) */
 		void HandleChangeItem(bool right);
 
 		/** The top left position of the current menu */

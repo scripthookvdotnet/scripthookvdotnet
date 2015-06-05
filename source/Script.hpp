@@ -78,6 +78,8 @@ namespace GTA
 			return Name;
 		}
 
+		virtual void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
+
 	protected:
 		property int Interval
 		{
@@ -90,7 +92,6 @@ namespace GTA
 
 		void MainLoop();
 		void UpdateViewport(Object ^Sender, System::EventArgs ^Args);
-		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
 		int mInterval;
 		bool mRunning;
