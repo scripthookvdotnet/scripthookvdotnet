@@ -45,8 +45,8 @@ namespace GTA
 	public ref class MenuButton : IMenuItem
 	{
 	public:
-		MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction);
-		MenuButton(System::String ^caption, System::Action ^activationAction);
+		MenuButton(System::String ^caption, System::String ^description);
+		MenuButton(System::String ^caption);
 
 	public:
 		virtual void Draw();
@@ -70,8 +70,6 @@ namespace GTA
 		virtual property System::String ^Description;
 
 	private:
-		System::Action ^mActivationAction;
-
 		System::String ^mCaption;
 
 		void UpdateText();
@@ -86,8 +84,8 @@ namespace GTA
 	public ref class MenuToggle : IMenuItem
 	{
 	public:
-		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction);
-		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction, bool value);
+		MenuToggle(System::String ^caption, System::String ^description);
+		MenuToggle(System::String ^caption, System::String ^description, bool value);
 
 	public:
 		virtual void Draw();
@@ -112,9 +110,6 @@ namespace GTA
 		}
 
 	private:
-		System::Action ^mActivationAction;
-		System::Action ^mDeactivationAction;
-
 		bool mToggleSelection;
 
 		void UpdateText();
@@ -131,8 +126,8 @@ namespace GTA
 	public ref class MenuNumericScroller : IMenuItem
 	{
 	public:
-		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc);
-		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc, int timesIncremented);
+		MenuNumericScroller(System::String ^caption, System::String ^description, double min, double max, double inc);
+		MenuNumericScroller(System::String ^caption, System::String ^description, double min, double max, double inc, int timesIncremented);
 
 	public:
 		virtual void Draw();
@@ -169,9 +164,6 @@ namespace GTA
 		}
 
 	private:
-		System::Action<double> ^mChangeAction;
-		System::Action<double> ^mActivateAction;
-
 		int mTimesIncrement;
 
 		void UpdateText();
@@ -186,8 +178,8 @@ namespace GTA
 	public ref class MenuEnumScroller : IMenuItem
 	{
 	public:
-		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries);
-		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries, int value);
+		MenuEnumScroller(System::String ^caption, System::String ^description, array<System::String ^> ^entries);
+		MenuEnumScroller(System::String ^caption, System::String ^description, array<System::String ^> ^entries, int value);
 
 	public:
 		virtual void Draw();
@@ -217,9 +209,6 @@ namespace GTA
 		}
 
 	private:
-		System::Action<int> ^mChangeAction;
-		System::Action<int> ^mActivateAction;
-
 		int mSelectedIndex;
 		array<System::String ^> ^mEntries;
 

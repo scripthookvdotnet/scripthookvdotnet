@@ -4,15 +4,14 @@
 
 namespace GTA
 {
-	MenuButton::MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction)
+	MenuButton::MenuButton(System::String ^caption, System::String ^description)
 	{
 		mCaption = caption;
 		Description = description;
-		mActivationAction = activationAction;
 	}
 
-	MenuButton::MenuButton(System::String ^caption, System::Action ^activationAction)
-		: MenuButton(caption, "", activationAction)
+	MenuButton::MenuButton(System::String ^caption)
+		: MenuButton(caption, "")
 	{
 	}
 
@@ -46,7 +45,6 @@ namespace GTA
 
 	void MenuButton::Activate()
 	{
-		mActivationAction->Invoke();
 	}
 
 	void MenuButton::Change(bool right)
@@ -72,21 +70,17 @@ namespace GTA
 		mText->Caption = Caption;
 	}
 
-	MenuToggle::MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction)
+	MenuToggle::MenuToggle(System::String ^caption, System::String ^description)
 	{
 		this->Caption = caption;
 		this->Description = description;
-		this->mActivationAction = activationAction;
-		this->mDeactivationAction = deactivationAction;
 		mToggleSelection = false;
 	}
 
-	MenuToggle::MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction, bool value)
+	MenuToggle::MenuToggle(System::String ^caption, System::String ^description, bool value)
 	{
 		this->Caption = caption;
 		this->Description = description;
-		this->mActivationAction = activationAction;
-		this->mDeactivationAction = deactivationAction;
 		mToggleSelection = value;
 	}
 
@@ -136,14 +130,6 @@ namespace GTA
 	void MenuToggle::ChangeSelection()
 	{
 		Value = !mToggleSelection;
-		if (mToggleSelection)
-		{
-			mActivationAction->Invoke();
-		}
-		else
-		{
-			mDeactivationAction->Invoke();
-		}
 	}
 
 	void MenuToggle::UpdateText(){
@@ -155,12 +141,10 @@ namespace GTA
 		}
 	}
 
-	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc)
+	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, double min, double max, double inc)
 	{
 		this->Caption = caption;
 		this->Description = description;
-		this->mChangeAction = changeAction;
-		this->mActivateAction = activateAction;
 		Min = min;
 		Max = max;
 		Increment = inc;
@@ -168,12 +152,10 @@ namespace GTA
 		mTimesIncrement = 0;
 	}
 
-	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc, int timesIncremented)
+	MenuNumericScroller::MenuNumericScroller(System::String ^caption, System::String ^description, double min, double max, double inc, int timesIncremented)
 	{
 		this->Caption = caption;
 		this->Description = description;
-		this->mChangeAction = changeAction;
-		this->mActivateAction = activateAction;
 		Min = min;
 		Max = max;
 		Increment = inc;
@@ -209,7 +191,6 @@ namespace GTA
 
 	void MenuNumericScroller::Activate()
 	{
-		mActivateAction(Min + Increment * (double)TimesIncremented);
 	}
 
 	void MenuNumericScroller::Change(bool right)
@@ -236,7 +217,6 @@ namespace GTA
 				TimesIncremented--;
 			}
 		}
-		mChangeAction(Value);
 	}
 
 	void MenuNumericScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
@@ -256,22 +236,18 @@ namespace GTA
 		mText->Caption = Caption + " <" + NumberString + ">";
 	}
 
-	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries)
+	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, array<System::String ^> ^entries)
 	{
 		this->Caption = caption;
 		this->Description = description;
-		this->mChangeAction = changeAction;
-		this->mActivateAction = activateAction;
 		mEntries = entries;
 		mSelectedIndex = 0;
 	}
 
-	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries, int value)
+	MenuEnumScroller::MenuEnumScroller(System::String ^caption, System::String ^description, array<System::String ^> ^entries, int value)
 	{
 		this->Caption = caption;
 		this->Description = description;
-		this->mChangeAction = changeAction;
-		this->mActivateAction = activateAction;
 		mEntries = entries;
 		mSelectedIndex = value;
 	}
@@ -304,7 +280,6 @@ namespace GTA
 
 	void MenuEnumScroller::Activate()
 	{
-		mActivateAction(mSelectedIndex);
 	}
 
 	void MenuEnumScroller::Change(bool right)
@@ -331,7 +306,6 @@ namespace GTA
 				Index--;
 			}
 		}
-		mChangeAction(Index);
 	}
 
 	void MenuEnumScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)

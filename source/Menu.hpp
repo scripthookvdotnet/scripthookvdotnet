@@ -134,7 +134,6 @@ namespace GTA
 	public ref class ListMenu : MenuBase
 	{
 	public:
-		ListMenu(System::String ^headerCaption, System::Action<ListMenu ^> ^activationAction);
 		ListMenu(System::String ^headerCaption);
 
 	public:
@@ -187,8 +186,6 @@ namespace GTA
 		event System::EventHandler<SelectedIndexChangedArgs^> ^SelectedIndexChanged;
 
 	private:
-		System::Action<ListMenu ^> ^mActivateAction;
-
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
@@ -201,7 +198,7 @@ namespace GTA
 
 	public ref class MessageBox : MenuBase {
 	public:
-		MessageBox(System::String ^headerCaption, System::Action ^yesAction, System::Action ^noAction);
+		MessageBox(System::String ^headerCaption);
 
 	public:
 		virtual void Draw() override;
@@ -228,7 +225,6 @@ namespace GTA
 	private:
 		UIRectangle ^mBodyRect = nullptr, ^mYesRect = nullptr, ^mNoRect = nullptr;
 		UIText ^mText, ^mYesText, ^mNoText;
-		System::Action ^mYesAction = nullptr, ^mNoAction = nullptr;
 		bool mSelection = true;
 	};
 }

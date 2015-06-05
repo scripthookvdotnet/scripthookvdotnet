@@ -139,7 +139,7 @@ namespace GTA
 		mItems[mSelectedIndex]->Change(right);
 	}
 
-	ListMenu::ListMenu(System::String ^headerCaption, System::Action<ListMenu ^> ^activationAction)
+	ListMenu::ListMenu(System::String ^headerCaption)
 	{
 		mItems = gcnew System::Collections::Generic::List<System::Tuple<System::String ^, System::String ^> ^>();
 		mUIEntries = gcnew System::Collections::Generic::List<System::Tuple<UIRectangle ^, UIText ^> ^>();
@@ -162,7 +162,6 @@ namespace GTA
 		ItemTextScale = 0.4f;
 		ItemTextCentered = true;
 		Caption = headerCaption;
-		mActivateAction = activationAction;
 
 		Width = 200;
 		HeaderHeight = 30;
@@ -172,11 +171,6 @@ namespace GTA
 	}
 
 	void Nil(ListMenu ^ _menu) {}
-
-	ListMenu::ListMenu(System::String ^headerCaption)
-		: ListMenu(headerCaption, gcnew System::Action<ListMenu ^>(Nil))
-	{
-	}
 
 	void ListMenu::UpdateEntries()
 	{
@@ -284,7 +278,6 @@ namespace GTA
 
 	void ListMenu::OnActivate()
 	{
-		if (mActivateAction != nullptr) mActivateAction(this);
 	}
 
 	void ListMenu::OnChangeSelection(bool down)
@@ -340,8 +333,7 @@ namespace GTA
 		UpdateEntries();
 	}
 
-	MessageBox::MessageBox(System::String ^caption, System::Action ^yes, System::Action ^no)
-		: mYesAction(yes), mNoAction(no)
+	MessageBox::MessageBox(System::String ^caption)
 	{
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
@@ -401,12 +393,10 @@ namespace GTA
 	{
 		if (mSelection)
 		{
-			mYesAction->Invoke();
 			this->Yes(this, System::EventArgs::Empty);
 		}
 		else
 		{
-			mNoAction->Invoke();
 			this->No(this, System::EventArgs::Empty);
 		}
 		Parent->PopMenu();
