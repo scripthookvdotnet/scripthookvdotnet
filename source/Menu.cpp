@@ -2,11 +2,11 @@
 
 namespace GTA
 {
-	Menu::Menu(System::String ^headerCaption, array<MenuItem ^> ^items)
+	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items)
 	{
 		//Put the items in the item stack
 		//The menu itself will be initialized when it gets added to the viewport
-		for each (MenuItem ^item in items)
+		for each (IMenuItem ^item in items)
 		{
 			mItems->Add(item);
 			item->Parent = this;
@@ -54,7 +54,7 @@ namespace GTA
 		}
 		mHeaderRect->Draw(offset);
 		mHeaderText->Draw(offset);
-		for each (MenuItem ^item in mItems)
+		for each (IMenuItem ^item in mItems)
 		{
 			item->Draw(offset);
 		}
@@ -64,7 +64,7 @@ namespace GTA
 	{
 		int currentY = HeaderHeight;
 		System::Drawing::Size itemSize = System::Drawing::Size(Width, ItemHeight);
-		for each (MenuItem ^item in mItems)
+		for each (IMenuItem ^item in mItems)
 		{
 			item->SetOriginAndSize(System::Drawing::Point(0, currentY), itemSize);
 			currentY += ItemHeight;

@@ -10,7 +10,7 @@ namespace GTA
 {
 	ref class MenuBase;
 
-	public interface class MenuItem
+	public interface class IMenuItem
 	{
 	public:
 		/** Called when the MenuItem should be drawn */
@@ -42,7 +42,7 @@ namespace GTA
 		property System::String ^Description;
 	};
 
-	public ref class MenuButton : MenuItem
+	public ref class MenuButton : IMenuItem
 	{
 	public:
 		MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction);
@@ -83,7 +83,7 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuToggle : MenuItem
+	public ref class MenuToggle : IMenuItem
 	{
 	public:
 		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction);
@@ -128,7 +128,7 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuNumericScroller : MenuItem
+	public ref class MenuNumericScroller : IMenuItem
 	{
 	public:
 		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc);
@@ -183,7 +183,7 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuEnumScroller : MenuItem
+	public ref class MenuEnumScroller : IMenuItem
 	{
 	public:
 		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries);
@@ -232,7 +232,7 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuLabel : MenuItem
+	public ref class MenuLabel : IMenuItem
 	{
 	public:
 		MenuLabel(System::String ^caption, bool underlined);

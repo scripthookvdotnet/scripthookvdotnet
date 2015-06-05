@@ -7,7 +7,7 @@
 
 namespace GTA
 {
-	interface class MenuItem;
+	interface class IMenuItem;
 	ref class Viewport;
 
 	public ref class SelectedIndexChangedArgs :System::EventArgs
@@ -82,7 +82,7 @@ namespace GTA
 	public ref class Menu : MenuBase
 	{
 	public:
-		Menu(System::String ^headerCaption, array<MenuItem ^> ^items);
+		Menu(System::String ^headerCaption, array<IMenuItem ^> ^items);
 
 	public:
 		virtual void Draw() override;
@@ -102,10 +102,10 @@ namespace GTA
 		property int ItemHeight;
 		property bool HasFooter;
 
-		property System::Collections::Generic::List<MenuItem ^> ^Items
+		property System::Collections::Generic::List<IMenuItem ^> ^Items
 		{
-			System::Collections::Generic::List<MenuItem ^> ^get() { return mItems; }
-			void set(System::Collections::Generic::List<MenuItem ^> ^items){
+			System::Collections::Generic::List<IMenuItem ^> ^get() { return mItems; }
+			void set(System::Collections::Generic::List<IMenuItem ^> ^items){
 				mItems = items;
 			}
 		}
@@ -125,7 +125,7 @@ namespace GTA
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
-		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
+		System::Collections::Generic::List<IMenuItem ^> ^mItems = gcnew System::Collections::Generic::List<IMenuItem ^>();
 		int mSelectedIndex = -1;
 
 		System::String ^mFooterDescription = "footer description";
