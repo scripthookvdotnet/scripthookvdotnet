@@ -30,7 +30,7 @@ namespace GTA
 		/** Handles when the activate button is pressed (e.g. numpad-5) */
 		void HandleActivate();
 
-		/** Handles when the back button is pressed (e.g. backspace) */
+		/** Handles when the back button is pressed (e.g. numpad-0) */
 		void HandleBack();
 
 		/** Handles when the user presses the up or down button (e.g. numpad-2 and 8) */
