@@ -165,6 +165,8 @@ namespace GTA
 		MatteFoliageGreen = 155,
 		DefaultAlloyColor = 156,
 		EpsilonBlue = 157,
+		PureGold = 158,
+		BrushedGold = 159,
 	};
 	public enum class VehicleDoor
 	{
@@ -473,6 +475,9 @@ namespace GTA
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
+		System::String ^GetModTypeName(VehicleMod modType);
+		System::String ^GetToggleModTypeName(VehicleToggleMod toggleModType);
+		System::String ^GetModName(VehicleMod modType, int modValue);
 		void ClearCustomPrimaryColor();
 		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
