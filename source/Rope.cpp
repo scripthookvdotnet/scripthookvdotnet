@@ -13,6 +13,14 @@ namespace GTA
 	{
 		return this->mHandle;
 	}
+	float Rope::Length::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::_0x73040398DFF9A4A6, this->mHandle);
+	}
+	void Rope::Length::set(float value)
+	{
+		Native::Function::Call(Native::Hash::ROPE_FORCE_LENGTH, this->mHandle, value);
+	}
 
 	void Rope::Delete()
 	{
@@ -26,10 +34,6 @@ namespace GTA
 	void Rope::ResetLength(bool reset)
 	{
 		Native::Function::Call(Native::Hash::ROPE_RESET_LENGTH, this->Handle, reset);
-	}
-	void Rope::ForceLength(float length)
-	{
-		Native::Function::Call(Native::Hash::ROPE_FORCE_LENGTH, this->Handle, length);
 	}
 	void Rope::AttachEntities(Entity ^entityOne, Entity ^entityTwo, float length)
 	{
