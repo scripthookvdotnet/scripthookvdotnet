@@ -178,7 +178,7 @@ namespace GTA
 
 		return gcnew Ped(handle);
 	}
-	void World::ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash,int damage)
+	void World::ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash, int damage)
 	{
 		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, position.X, position.Y, position.Z, pos2.X, pos2.Y, pos2.Z, damage, 1, hash.Hash, Owner->Handle, 1, 0, -1);
 	}
@@ -211,13 +211,13 @@ namespace GTA
 
 		if (handle == 0)
 			return nullptr;
-		
+
 		return gcnew Prop(handle);
 	}
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)
 	{
 		Prop ^p = World::CreateProp(model, position, dynamic, placeOnGround);
-		
+
 		if (System::Object::ReferenceEquals(p, nullptr))
 		{
 			return nullptr;
@@ -243,6 +243,7 @@ namespace GTA
 			type = 1;
 		}
 
+		Rope::LoadTextures();
 		int tmp;
 
 		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, lenght, type, maxLenght, minLenght, p10, p11, p12, p13, p14, breakable, &tmp);
@@ -367,13 +368,13 @@ namespace GTA
 	{
 		return gcnew RayCastResult(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
 	}
-	void World::DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color)
+	void World::DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color)
 	{
 		DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, nullptr, nullptr, false);
 	}
-	void World::DrawMarker(MarkerTypes type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt)
+	void World::DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt)
 	{
-		Native::InputArgument^ dict = gcnew Native::InputArgument(0),^ name = gcnew Native::InputArgument(0);
+		Native::InputArgument^ dict = gcnew Native::InputArgument(0), ^ name = gcnew Native::InputArgument(0);
 		if (textueDict != nullptr && textureName != nullptr)
 		{
 			if (textueDict->Length > 0 && textureName->Length > 0)
@@ -383,6 +384,5 @@ namespace GTA
 			}
 		}
 		Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
-
 	}
 }
