@@ -103,6 +103,10 @@ namespace GTA
 		}
 		Native::Function::Call(Native::Hash::SET_PED_INFINITE_AMMO, this->pOwner->Handle, value, static_cast<int>(this->hash));
 	}
+	void Weapon::InfiniteAmmoClip::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_INFINITE_AMMO_CLIP, this->pOwner->Handle, value);
+	}
 	Native::WeaponHash Weapon::Hash::get()
 	{
 		return this->hash;

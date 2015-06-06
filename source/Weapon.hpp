@@ -37,6 +37,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool InfiniteAmmoClip
+		{
+			void set(bool value);
+		}
 		property Native::WeaponHash Hash
 		{
 			Native::WeaponHash get();

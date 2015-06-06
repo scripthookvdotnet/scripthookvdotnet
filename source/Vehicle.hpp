@@ -317,6 +317,11 @@ namespace GTA
 			VehicleRoofState get();
 			void set(VehicleRoofState value);
 		}
+		property float BodyHealth
+		{
+			float get();
+			void set(float value);
+		}
 		property float EngineHealth
 		{
 			float get();
@@ -468,6 +473,14 @@ namespace GTA
 		{
 			int get();
 		}
+		property bool HasAlarm
+		{
+			void set(bool value);
+		}
+		property bool AlarmActive
+		{
+			bool get();
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
@@ -484,6 +497,9 @@ namespace GTA
 		void PlaceOnNextStreet();
 		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
 		void CloseDoor(VehicleDoor door, bool instantly);
+		void BreakDoor(VehicleDoor door);
+		bool IsDoorBroken(VehicleDoor door);
+		void SetDoorBreakable(VehicleDoor door, bool isBreakable);
 		void FixWindow(VehicleWindow window);
 		void SmashWindow(VehicleWindow window);
 		void RollUpWindow(VehicleWindow window);
@@ -498,6 +514,8 @@ namespace GTA
 		void BurstTire(int wheel);
 		void FixTire(int wheel);
 		bool IsInBurnout();
+		void StartAlarm();
+
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);
