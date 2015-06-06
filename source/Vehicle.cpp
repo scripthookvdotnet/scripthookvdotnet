@@ -381,6 +381,18 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_TOGGLE_MOD_ON, this->Handle, static_cast<int>(toggleMod));
 	}
+	System::String ^Vehicle::GetModTypeName(VehicleMod modType)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_MOD_SLOT_NAME, this->Handle, static_cast<int>(modType));
+	}
+	System::String ^Vehicle::GetToggleModTypeName(VehicleToggleMod toggleModType)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_MOD_SLOT_NAME, this->Handle, static_cast<int>(toggleModType));
+	}
+	System::String ^Vehicle::GetModName(VehicleMod modType, int modValue)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_MOD_TEXT_LABEL, this->Handle, static_cast<int>(modType), modValue);
+	}
 	void Vehicle::ClearCustomPrimaryColor()
 	{
 		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, this->Handle);

@@ -165,6 +165,8 @@ namespace GTA
 		MatteFoliageGreen = 155,
 		DefaultAlloyColor = 156,
 		EpsilonBlue = 157,
+		PureGold = 158,
+		BrushedGold = 159,
 	};
 	public enum class VehicleDoor
 	{
@@ -346,7 +348,7 @@ namespace GTA
 		{
 			VehicleColor get();
 			void set(VehicleColor value);
-		}
+		}				
 		property VehicleColor RimColor
 		{
 			VehicleColor get();
