@@ -11,7 +11,7 @@ namespace GTA
 		static void DeleteOldLogs();
 
 	private:
-		static void LogToFile(System::String ^logLevel, ... array<System::String ^> ^message);
+		static void LogToFile(System::String ^logLevel, bool showTimeStamp, ... array<System::String ^> ^message);
 
 		static int maxLogAge = 10;
 	};
