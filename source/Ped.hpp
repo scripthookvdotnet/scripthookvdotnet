@@ -127,7 +127,7 @@ namespace GTA
 		RB_Neck_1 = 0x8b93,
 		IK_Root = 0xdd1c
 	};
-	public enum class FiringPattern
+	public enum class FiringPattern : System::UInt32
 	{
 		FullAuto = 0xC6EE6B4C,
 		BurstFire = 0xD6FF6D61,
@@ -142,7 +142,7 @@ namespace GTA
 		BurstFireMG = 0xB573C5B4,
 		BurstFirePumpShotGun = 0x00BAC39B,
 		BurstFireHeli = 0x914E786F,
-		BurstFireMicro = 1122960381,
+		BurstFireMicro = 0x42EF03FD,
 		BurstFireBursts = 0x42EF03FD,
 		BurstFireTank = 0xE2CA3A71
 	};

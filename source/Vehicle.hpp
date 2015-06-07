@@ -488,6 +488,9 @@ namespace GTA
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
+		System::String ^GetModTypeName(VehicleMod modType);
+		System::String ^GetToggleModTypeName(VehicleToggleMod toggleModType);
+		System::String ^GetModName(VehicleMod modType, int modValue);
 		void ClearCustomPrimaryColor();
 		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
