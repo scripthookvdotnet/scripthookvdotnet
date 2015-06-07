@@ -299,6 +299,10 @@ namespace GTA
 			return;
 		}
 
+		Log::DeleteOldLogs();
+
+		Log::OnStart();
+
 		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
 		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
