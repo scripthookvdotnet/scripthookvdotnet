@@ -1,6 +1,6 @@
 #include "Scaleform.hpp"
 #include "Native.hpp"
-#include "Log.hpp"
+#include "Logger.hpp"
 
 namespace GTA
 {
@@ -60,7 +60,7 @@ namespace GTA
 			}
 			else
 			{
-				Log::Error(System::String::Format("Unknown argument type {0} passed", o->GetType()->Name));
+				Logger().Error(System::String::Format("Unknown argument type {0} passed", o->GetType()->Name));
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace GTA
 
 	void Scaleform::Render3D(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale)
 	{
-		Native::Function::Call(Native::Hash::_0x1CE592FDC749D6F5, mHandle, 
+		Native::Function::Call(Native::Hash::_0x1CE592FDC749D6F5, mHandle,
 			position.X, position.Y, position.Z,
 			rotation.X, rotation.Y, rotation.Z,
 			2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);

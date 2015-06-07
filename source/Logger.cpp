@@ -1,28 +1,38 @@
-#include "Log.hpp"
+#include "Logger.hpp"
 
 namespace GTA
 {
 	using namespace System;
 	using namespace System::Collections::Generic;
 
-	void Log::OnStart()
+	Logger::Logger()
+	{
+		this->assembly = Reflection::Assembly::GetExecutingAssembly();
+	}
+
+	Logger::Logger(Reflection::Assembly ^assembly)
+	{
+		this->assembly = assembly;
+	}
+
+	void Logger::OnStart()
 	{
 		LogToFile("", "##########\n\n\n\n##########");
 	}
 
-	void Log::Debug(... array<String ^> ^message)
+	void Logger::Debug(... array<String ^> ^message)
 	{
 		LogToFile("[DEBUG]", message);
 	}
-	void Log::Error(... array<String ^> ^message)
+	void Logger::Error(... array<String ^> ^message)
 	{
 		LogToFile("[ERROR]", message);
 	}
 
-	void Log::DeleteOldLogs()
+	void Logger::DeleteOldLogs()
 	{
 		DateTime now = DateTime::Now;
-		for each(System::String^ path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(Reflection::Assembly::GetExecutingAssembly()->Location), "*.log"))
+		for each(System::String^ path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(GetAssemblyPath()), "*.log"))
 		{
 			DateTime logDate = DateTime::Parse(path->Substring(path->IndexOf("-") + 1, path->IndexOf(".log") - (path->IndexOf("-") + 1)));
 			if ((now - logDate).Days >= maxLogAge){
@@ -31,10 +41,10 @@ namespace GTA
 		}
 	}
 
-	void Log::LogToFile(String ^logLevel, ... array<String ^> ^message)
+	void Logger::LogToFile(String ^logLevel, ... array<String ^> ^message)
 	{
 		DateTime now = DateTime::Now;
-		String ^logpath = IO::Path::ChangeExtension(Reflection::Assembly::GetExecutingAssembly()->Location, ".log");
+		String ^logpath = IO::Path::ChangeExtension(GetAssemblyPath(), ".log");
 
 		logpath = logpath->Insert(logpath->IndexOf(".log"), "-" + now.ToString("yyyy-MM-dd"));
 
@@ -64,5 +74,10 @@ namespace GTA
 		{
 			return;
 		}
+	}
+
+	System::String^ Logger::GetAssemblyPath()
+	{
+		return assembly->CodeBase->Replace("file:///", "")->Replace("/", "\\");
 	}
 }

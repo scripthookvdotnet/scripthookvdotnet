@@ -14,7 +14,7 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Log.hpp"
+#include "Logger.hpp"
 #include "ScriptDomain.hpp"
 
 namespace GTA
@@ -37,11 +37,11 @@ namespace GTA
 	{
 		if (!args->IsTerminating)
 		{
-			Log::Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+			Logger().Error("Caught unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
 		else
 		{
-			Log::Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
+			Logger().Error("Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
 	}
 	inline void SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn)
@@ -62,13 +62,13 @@ namespace GTA
 		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
 		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
-		Log::Debug("Created script domain '", this->mAppDomain->FriendlyName, "'.");
+		Logger().Debug("Created script domain '", this->mAppDomain->FriendlyName, "'.");
 	}
 	ScriptDomain::~ScriptDomain()
 	{
 		CleanupStrings();
 
-		Log::Debug("Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
+		Logger().Debug("Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
 	}
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
@@ -92,14 +92,14 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log::Error("Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
+			Logger().Error("Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
 
 			System::AppDomain::Unload(appdomain);
 
 			return nullptr;
 		}
 
-		Log::Debug("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
+		Logger().Debug("Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
 
 		if (IO::Directory::Exists(path))
 		{
@@ -114,7 +114,7 @@ namespace GTA
 			}
 			catch (Exception ^ex)
 			{
-				Log::Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
+				Logger().Error("Failed to reload scripts:", Environment::NewLine, ex->ToString());
 
 				System::AppDomain::Unload(appdomain);
 
@@ -132,7 +132,7 @@ namespace GTA
 		}
 		else
 		{
-			Log::Error("Failed to reload scripts because directory is missing.");
+			Logger().Error("Failed to reload scripts because directory is missing.");
 		}
 
 		return scriptdomain;
@@ -169,7 +169,7 @@ namespace GTA
 
 		if (!compilerResult->Errors->HasErrors)
 		{
-			Log::Debug("Successfully compiled '", IO::Path::GetFileName(filename), "'.");
+			Logger().Debug("Successfully compiled '", IO::Path::GetFileName(filename), "'.");
 
 			return LoadAssembly(filename, compilerResult->CompiledAssembly);
 		}
@@ -190,7 +190,7 @@ namespace GTA
 				}
 			}
 
-			Log::Error("Failed to compile '", IO::Path::GetFileName(filename), "' with ", compilerResult->Errors->Count.ToString(), " error(s):", Environment::NewLine, errors->ToString());
+			Logger().Error("Failed to compile '", IO::Path::GetFileName(filename), "' with ", compilerResult->Errors->Count.ToString(), " error(s):", Environment::NewLine, errors->ToString());
 
 			return false;
 		}
@@ -205,7 +205,7 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log::Error("Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
+			Logger().Error("Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
 
 			return false;
 		}
@@ -231,18 +231,18 @@ namespace GTA
 		}
 		catch (Reflection::ReflectionTypeLoadException ^ex)
 		{
-			Log::Error("Failed to list assembly types:", Environment::NewLine, ex->ToString());
+			Logger().Error("Failed to list assembly types:", Environment::NewLine, ex->ToString());
 
 			return false;
 		}
 
-		Log::Debug("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
+		Logger().Debug("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
 
 		return count != 0;
 	}
 	void ScriptDomain::Unload(ScriptDomain ^%domain)
 	{
-		Log::Debug("Unloading script domain '", domain->Name, "' ...");
+		Logger().Debug("Unloading script domain '", domain->Name, "' ...");
 
 		domain->Abort();
 
@@ -256,7 +256,7 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log::Error("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
+			Logger().Error("Failed to unload deleted script domain:", Environment::NewLine, ex->ToString());
 		}
 
 		domain = nullptr;
@@ -270,7 +270,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log::Debug("Instantiating script '", scripttype->FullName, "' in script domain '", Name, "' ...");
+		Logger().Debug("Instantiating script '", scripttype->FullName, "' in script domain '", Name, "' ...");
 
 		try
 		{
@@ -278,15 +278,15 @@ namespace GTA
 		}
 		catch (MissingMethodException ^)
 		{
-			Log::Error("Failed to instantiate script '", scripttype->FullName, "' because no public default constructor was found.");
+			Logger().Error("Failed to instantiate script '", scripttype->FullName, "' because no public default constructor was found.");
 		}
 		catch (Reflection::TargetInvocationException ^ex)
 		{
-			Log::Error("Failed to instantiate script '", scripttype->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString());
+			Logger().Error("Failed to instantiate script '", scripttype->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString());
 		}
 		catch (Exception ^ex)
 		{
-			Log::Error("Failed to instantiate script '", scripttype->FullName, "':", Environment::NewLine, ex->ToString());
+			Logger().Error("Failed to instantiate script '", scripttype->FullName, "':", Environment::NewLine, ex->ToString());
 		}
 
 		return nullptr;
@@ -299,11 +299,11 @@ namespace GTA
 			return;
 		}
 
-		Log::DeleteOldLogs();
+		Logger().DeleteOldLogs();
 
-		Log::OnStart();
+		Logger().OnStart();
 
-		Log::Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
+		Logger().Debug("Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
 		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
 		{
@@ -321,14 +321,14 @@ namespace GTA
 
 			script->mThread->Start();
 
-			Log::Debug("Started script '", script->Name, "'.");
+			Logger().Debug("Started script '", script->Name, "'.");
 
 			this->mRunningScripts->Add(script);
 		}
 	}
 	void ScriptDomain::Abort()
 	{
-		Log::Debug("Stopping ", this->mRunningScripts->Count.ToString(), " script(s) ...");
+		Logger().Debug("Stopping ", this->mRunningScripts->Count.ToString(), " script(s) ...");
 
 		for each (Script ^script in this->mRunningScripts)
 		{
@@ -354,7 +354,7 @@ namespace GTA
 		script->mThread->Abort();
 		script->mThread = nullptr;
 
-		Log::Debug("Aborted script '", script->Name, "'.");
+		Logger().Debug("Aborted script '", script->Name, "'.");
 	}
 	void ScriptDomain::DoTick()
 	{
@@ -377,7 +377,7 @@ namespace GTA
 
 			if (!script->mRunning)
 			{
-				Log::Error("Script '", script->Name, "' is not responding! Aborting ...");
+				Logger().Error("Script '", script->Name, "' is not responding! Aborting ...");
 
 				AbortScript(script);
 				continue;
