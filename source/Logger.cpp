@@ -17,16 +17,16 @@ namespace GTA
 
 	void Logger::OnStart()
 	{
-		LogToFile("", "##########\n\n\n\n##########");
+		LogToFile("", false, "##########\n\n\n\n##########");
 	}
 
 	void Logger::Debug(... array<String ^> ^message)
 	{
-		LogToFile("[DEBUG]", message);
+		LogToFile("[DEBUG]", true, message);
 	}
 	void Logger::Error(... array<String ^> ^message)
 	{
-		LogToFile("[ERROR]", message);
+		LogToFile("[ERROR]", true, message);
 	}
 
 	void Logger::DeleteOldLogs()
@@ -34,14 +34,16 @@ namespace GTA
 		DateTime now = DateTime::Now;
 		for each(System::String^ path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(GetAssemblyPath()), "*.log"))
 		{
-			DateTime logDate = DateTime::Parse(path->Substring(path->IndexOf("-") + 1, path->IndexOf(".log") - (path->IndexOf("-") + 1)));
-			if ((now - logDate).Days >= maxLogAge){
-				IO::File::Delete(path);
+			if (path->Contains(IO::Path::GetFileNameWithoutExtension(GetAssemblyPath()))){
+				DateTime logDate = DateTime::Parse(path->Substring(path->IndexOf("-") + 1, path->IndexOf(".log") - (path->IndexOf("-") + 1)));
+				if ((now - logDate).Days >= maxLogAge){
+					IO::File::Delete(path);
+				}
 			}
 		}
 	}
 
-	void Logger::LogToFile(String ^logLevel, ... array<String ^> ^message)
+	void Logger::LogToFile(String ^logLevel, bool showTimeStamp, ... array<String ^> ^message)
 	{
 		DateTime now = DateTime::Now;
 		String ^logpath = IO::Path::ChangeExtension(GetAssemblyPath(), ".log");
@@ -55,7 +57,14 @@ namespace GTA
 
 			try
 			{
-				sw->Write(String::Concat("[", now.ToString("HH:mm:ss"), "] ", logLevel, " "));
+				if (showTimeStamp)
+				{
+					sw->Write(String::Concat("[", now.ToString("HH:mm:ss"), "] ", logLevel, " "));
+				}
+				else
+				{
+					sw->Write(String::Concat(logLevel, " "));
+				}
 
 				for each (String ^string in message)
 				{

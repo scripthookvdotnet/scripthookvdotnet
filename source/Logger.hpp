@@ -14,7 +14,7 @@ namespace GTA
 		void DeleteOldLogs();
 
 	private:
-		void LogToFile(System::String ^logLevel, ... array<System::String ^> ^message);
+		void LogToFile(System::String ^logLevel, bool showTimeStamp, ... array<System::String ^> ^message);
 		System::String^ GetAssemblyPath();
 
 		System::Reflection::Assembly ^assembly;
