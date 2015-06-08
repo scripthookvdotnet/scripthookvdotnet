@@ -205,12 +205,21 @@ namespace GTA
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
 	{
 		if (placeOnGround)
+		{
 			position.Z = World::GetGroundZ(position);
+		}
+
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
 
 		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
 
 		if (handle == 0)
+		{
 			return nullptr;
+		}
 
 		return gcnew Prop(handle);
 	}
