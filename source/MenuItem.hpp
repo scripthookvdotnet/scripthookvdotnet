@@ -69,6 +69,9 @@ namespace GTA
 		}
 		virtual property System::String ^Description;
 
+	public:
+		event System::EventHandler<System::EventArgs ^> ^Activated;
+
 	private:
 		System::String ^mCaption;
 

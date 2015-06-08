@@ -45,6 +45,7 @@ namespace GTA
 
 	void MenuButton::Activate()
 	{
+		this->Activated(this, System::EventArgs::Empty);
 	}
 
 	void MenuButton::Change(bool right)
