@@ -66,6 +66,11 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		static property bool Nightvision
+		{
+			bool get();
+			void set(bool value);
+		}
 
 		static bool IsKeyPressed(System::Windows::Forms::Keys key);
 

@@ -241,7 +241,7 @@ namespace GTA
 
 	Entity ^Ped::GetKiller()
 	{
-		int killedBy = Native::Function::Call<int>(Native::Hash::_0x93C8B64DEB84728C, this->Handle);
+		int killedBy = Native::Function::Call<int>(Native::Hash::_GET_PED_KILLER, this->Handle);
 		if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, killedBy))
 		{
 			return nullptr;
