@@ -399,18 +399,15 @@ namespace GTA
 		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
 	}
 
-	RayCastResult ^World::RayCast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options)
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options)
 	{
-		return RayCast(source, target, options, 7, nullptr);
+		return Raycast(source, target, options, nullptr);
 	}
-	RayCastResult ^World::RayCast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, int UnkFlags)
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^entity)
 	{
-		return RayCast(source, target, options, UnkFlags, nullptr);
+		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, 7));
 	}
-	RayCastResult ^World::RayCast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, int UnkFlags, Entity ^entity)
-	{
-		return gcnew RayCastResult(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
-	}
+
 	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color)
 	{
 		DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, nullptr, nullptr, false);

@@ -6,7 +6,7 @@
 namespace GTA
 {
 	value class Model;
-	ref class RayCastResult;
+	value class RaycastResult;
 	ref class Blip;
 	ref class Camera;
 	ref class Ped;
@@ -198,9 +198,8 @@ namespace GTA
 		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
 		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
 
-		static RayCastResult ^RayCast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options);
-		static RayCastResult ^RayCast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, int UnkFlags);
-		static RayCastResult ^RayCast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options);
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^entity);
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color);
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
 
