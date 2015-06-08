@@ -308,6 +308,7 @@ namespace GTA
 				Index--;
 			}
 		}
+		this->Changed(this, gcnew MenuItemIndexArgs(this->Index));
 	}
 
 	void MenuEnumScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)

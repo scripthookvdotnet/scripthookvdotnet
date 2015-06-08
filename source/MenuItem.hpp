@@ -230,6 +230,7 @@ namespace GTA
 
 	public:
 		event System::EventHandler<MenuItemIndexArgs ^> ^Activated;
+		event System::EventHandler<MenuItemIndexArgs ^> ^Changed;
 
 	private:
 		int mSelectedIndex;
