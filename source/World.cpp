@@ -142,8 +142,9 @@ namespace GTA
 	}
 	float World::GetGroundZ(Math::Vector3 position)
 	{
-		float ground_z;
-		Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &ground_z);
+		float ground_z = 0.0f;
+		Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000.0f, &ground_z);
+
 		return ground_z;
 	}
 
