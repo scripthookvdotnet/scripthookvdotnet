@@ -184,6 +184,14 @@ namespace GTA
 	{
 		return ((Math::Vector3::Subtract(this->Position, position).Length()) < distance);
 	}
+	bool Entity::IsInArea(Math::Vector3 pos1, Math::Vector3 pos2)
+	{
+		return Entity::IsInArea(pos1, pos2, 0);
+	}
+	bool Entity::IsInArea(Math::Vector3 pos1, Math::Vector3 pos2, float angle)
+	{
+		return (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_IN_ANGLED_AREA, this->Handle, pos1.X, pos1.Y, pos1.Z, pos2.X, pos2.Y, pos2.Z, angle, true, true, true));
+	}
 	bool Entity::IsAttached()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ATTACHED, this->Handle);
