@@ -27,6 +27,23 @@ namespace GTA
 		}
 	};
 
+	public ref class MenuItemDoubleValueArgs :System::EventArgs
+	{
+	private:
+		double mValue;
+
+	public:
+		MenuItemDoubleValueArgs(double value)
+		{
+			this->mValue = value;
+		}
+
+		property double Index
+		{
+			double get(){ return this->mValue; }
+		}
+	};
+
 	public interface class IMenuItem
 	{
 	public:
@@ -182,6 +199,10 @@ namespace GTA
 				return (double)TimesIncremented*Increment;
 			}
 		}
+
+	public:
+		event System::EventHandler<MenuItemDoubleValueArgs ^> ^Activated;
+		event System::EventHandler<MenuItemDoubleValueArgs ^> ^Changed;
 
 	private:
 		int mTimesIncrement;

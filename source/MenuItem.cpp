@@ -192,6 +192,7 @@ namespace GTA
 
 	void MenuNumericScroller::Activate()
 	{
+		this->Activated(this, gcnew MenuItemDoubleValueArgs(this->Value));
 	}
 
 	void MenuNumericScroller::Change(bool right)
@@ -218,6 +219,7 @@ namespace GTA
 				TimesIncremented--;
 			}
 		}
+		this->Changed(this, gcnew MenuItemDoubleValueArgs(this->Value));
 	}
 
 	void MenuNumericScroller::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
