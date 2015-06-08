@@ -281,6 +281,7 @@ namespace GTA
 
 	void MenuEnumScroller::Activate()
 	{
+		this->Activated(this, gcnew MenuItemIndexArgs(this->Index));
 	}
 
 	void MenuEnumScroller::Change(bool right)

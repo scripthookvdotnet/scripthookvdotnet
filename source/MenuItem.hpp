@@ -10,6 +10,23 @@ namespace GTA
 {
 	ref class MenuBase;
 
+	public ref class MenuItemIndexArgs :System::EventArgs
+	{
+	private:
+		int mIndex;
+
+	public:
+		MenuItemIndexArgs(int index)
+		{
+			this->mIndex = index;
+		}
+
+		property int Index
+		{
+			int get(){ return this->mIndex; }
+		}
+	};
+
 	public interface class IMenuItem
 	{
 	public:
@@ -210,6 +227,9 @@ namespace GTA
 				UpdateText();
 			}
 		}
+
+	public:
+		event System::EventHandler<MenuItemIndexArgs ^> ^Activated;
 
 	private:
 		int mSelectedIndex;
