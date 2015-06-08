@@ -146,6 +146,10 @@ namespace GTA
 			}
 		}
 
+	public:
+		event System::EventHandler<System::EventArgs ^> ^Activated;
+		event System::EventHandler<System::EventArgs ^> ^Changed;
+
 	private:
 		bool mToggleSelection;
 
