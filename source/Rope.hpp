@@ -30,6 +30,7 @@ namespace GTA
 		void AttachEntity(Entity ^entity, Math::Vector3 position);
 		void DetachEntity(Entity ^entity);
 
+		[System::ObsoleteAttribute("Rope.LoadTextures is obsolete, please do no longer use it, as it's called by World.AddRope automatically")]
 		static void LoadTextures();
 
 	private:
