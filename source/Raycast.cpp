@@ -6,60 +6,51 @@
 
 namespace GTA
 {
-	RayCastResult::RayCastResult(int Handle)
+	RaycastResult::RaycastResult(int handle)
 	{
-		this->mHandle = Handle;
-		int hitsomething, enthandle;
-		Native::OutputArgument ^Hit = gcnew Native::OutputArgument(), ^UnkVec = gcnew Native::OutputArgument();
-		this->mStatus = Native::Function::Call<int>(Native::Hash::_0x3D87450E15D98694, this->mHandle, &hitsomething, Hit, UnkVec, &enthandle);
-		this->mHitCoord = Hit->GetResult<Vector3>();
-		this->mUnk = UnkVec->GetResult<Vector3>();
-		this->mIntersected = hitsomething;
+		int hitsomething = 0, enthandle = 0;
+		Native::OutputArgument ^hitCoords = gcnew Native::OutputArgument(), ^unkVec = gcnew Native::OutputArgument();
+		this->mResult = Native::Function::Call<int>(Native::Hash::_GET_RAYCAST_RESULT, handle, &hitsomething, hitCoords, unkVec, &enthandle);
+
+		this->mDidHit = hitsomething != 0;
+		this->mHitCoords = hitCoords->GetResult<Math::Vector3>();
+
 		if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, enthandle))
 		{
-			this->mHit = nullptr;
+			this->mHitEntity = nullptr;
 		}
 		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, enthandle))
 		{
-			this->mHit = gcnew Ped(enthandle);
+			this->mHitEntity = gcnew Ped(enthandle);
 		}
 		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, enthandle))
 		{
-			this->mHit = gcnew Vehicle(enthandle);
+			this->mHitEntity = gcnew Vehicle(enthandle);
 		}
 		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, enthandle))
 		{
-			this->mHit = gcnew Prop(enthandle);
+			this->mHitEntity = gcnew Prop(enthandle);
 		}
-
-	}
-	int RayCastResult::Handle::get()
-	{
-		return this->mHandle;
-	}
-	bool RayCastResult::DidHitEntity::get()
-	{
-		return !ReferenceEquals(this->mHit, nullptr);
-	}
-	Entity ^RayCastResult::HitEntity::get()
-	{
-		return this->mHit;
-	}
-	Vector3 RayCastResult::HitCoords::get()
-	{
-		return this->mHitCoord;
-	}
-	Vector3 RayCastResult::UnkVec::get()
-	{
-		return this->mUnk;
-	}
-	int RayCastResult::Result::get()
-	{
-		return this->mStatus;
-	}
-	int RayCastResult::Intersected::get()
-	{
-		return this->mIntersected;
 	}
 
+	int RaycastResult::Result::get()
+	{
+		return this->mResult;
+	}
+	bool RaycastResult::DitHitEntity::get()
+	{
+		return !ReferenceEquals(this->mHitEntity, nullptr);
+	}
+	bool RaycastResult::DitHitAnything::get()
+	{
+		return this->mDidHit;
+	}
+	Entity ^RaycastResult::HitEntity::get()
+	{
+		return this->mHitEntity;
+	}
+	Math::Vector3 RaycastResult::HitCoords::get()
+	{
+		return this->mHitCoords;
+	}
 }

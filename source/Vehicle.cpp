@@ -105,6 +105,14 @@ namespace GTA
 			break;
 		}
 	}
+	float Vehicle::BodyHealth::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_HEALTH, this->Handle);
+	}
+	void Vehicle::BodyHealth::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_HEALTH, this->Handle, value);
+	}
 	float Vehicle::EngineHealth::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_ENGINE_HEALTH, this->Handle);
@@ -348,6 +356,14 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY_COUNT, this->Handle);
 	}
+	void Vehicle::HasAlarm::set(bool value)
+	{
+		return Native::Function::Call(Native::Hash::SET_VEHICLE_ALARM, this->Handle, value);
+	}
+	bool Vehicle::AlarmActive::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, this->Handle);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
@@ -439,6 +455,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_SHUT, this->Handle, static_cast<int>(door), instantly);
 	}
+	void Vehicle::BreakDoor(VehicleDoor door)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_BROKEN, this->Handle, static_cast<int>(door));
+	}
+	bool Vehicle::IsDoorBroken(VehicleDoor door)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_DOOR_DAMAGED, this->Handle, static_cast<int>(door));
+	}
+	void Vehicle::SetDoorBreakable(VehicleDoor door, bool isBreakable)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_BREAKABLE, this->Handle, static_cast<int>(door), isBreakable);
+	}
 	void Vehicle::FixWindow(VehicleWindow window)
 	{
 		Native::Function::Call(Native::Hash::FIX_VEHICLE_WINDOW, this->Handle, static_cast<int>(window));
@@ -475,7 +503,7 @@ namespace GTA
 	void Vehicle::SoundHorn(int duration)
 	{
 		int heldDownHash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "HELDDOWN");
-		Native::Function::Call(Native::Hash::START_VEHICLE_HORN, this->ID, duration, heldDownHash, 0);
+		Native::Function::Call(Native::Hash::START_VEHICLE_HORN, this->Handle, duration, heldDownHash, 0);
 	}
 
 	bool Vehicle::IsTireBurst(int wheel)
@@ -493,6 +521,10 @@ namespace GTA
 	bool Vehicle::IsInBurnout()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_IN_BURNOUT, this->Handle);
+	}
+	void Vehicle::StartAlarm()
+	{
+		Native::Function::Call(Native::Hash::START_VEHICLE_ALARM, this->Handle);
 	}
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)

@@ -5,6 +5,7 @@
 #include "Prop.hpp"
 #include "Rope.hpp"
 #include "Camera.hpp"
+#include "Raycast.hpp"
 
 namespace GTA
 {
@@ -44,7 +45,47 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_GRAVITY_LEVEL, value);
 	}
+	Camera ^World::RenderingCamera::get()
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM);
 
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Camera(handle);
+	}
+	void World::RenderingCamera::set(Camera ^renderingCamera)
+	{
+		if (renderingCamera == nullptr)
+		{
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
+		}
+		else
+		{
+			renderingCamera->IsActive = true;
+
+			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
+		}
+	}
+
+	array<Blip ^> ^World::GetActiveBlips()
+	{
+		System::Collections::Generic::List<Blip ^> ^res = gcnew System::Collections::Generic::List<Blip ^>();
+
+		int it = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
+		int handle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, it);
+
+		while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, handle))
+		{
+			res->Add(gcnew Blip(handle));
+
+			handle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, it);
+		}
+
+		return res->ToArray();
+	}
 	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
 		return GetNearbyPeds(ped, radius, 10000);
@@ -142,11 +183,53 @@ namespace GTA
 	}
 	float World::GetGroundZ(Math::Vector3 position)
 	{
-		float ground_z;
-		Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &ground_z);
-		return ground_z;
+		return GetGroundHeight(position);
+	}
+	float World::GetGroundHeight(Math::Vector2 position)
+	{
+		float height = 0.0f;
+		Native::Function::Call(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000.0f, &height);
+
+		return height;
+	}
+	float World::GetGroundHeight(Math::Vector3 position)
+	{
+		return GetGroundHeight(Math::Vector2(position.X, position.Y));
 	}
 
+	Blip ^World::CreateBlip(Math::Vector3 position)
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Blip(handle);
+	}
+	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Blip(handle);
+	}
+	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Camera(handle);
+	}
 	Ped ^World::CreatePed(Model model, Math::Vector3 position)
 	{
 		return CreatePed(model, position, 0.0f);
@@ -178,10 +261,6 @@ namespace GTA
 
 		return gcnew Ped(handle);
 	}
-	void World::ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash, int damage)
-	{
-		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, position.X, position.Y, position.Z, pos2.X, pos2.Y, pos2.Z, damage, 1, hash.Hash, Owner->Handle, 1, 0, -1);
-	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
 		return CreateVehicle(model, position, 0.0f);
@@ -205,12 +284,21 @@ namespace GTA
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
 	{
 		if (placeOnGround)
-			position.Z = World::GetGroundZ(position);
+		{
+			position.Z = World::GetGroundHeight(position);
+		}
+
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
 
 		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
 
 		if (handle == 0)
+		{
 			return nullptr;
+		}
 
 		return gcnew Prop(handle);
 	}
@@ -228,6 +316,10 @@ namespace GTA
 		return p;
 	}
 
+	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)
+	{
+		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, -1);
+	}
 	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
 		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
@@ -236,7 +328,20 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
-	Rope ^World::AddRope(Math::Vector3 position, Math::Vector3 rotation, double lenght, int type, double maxLenght, double minLenght, double p10, bool p11, bool p12, bool p13, double p14, bool breakable)
+	Rope ^World::AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable)
+	{
+		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
+
+		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, nullptr);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Rope(handle);
+	}
+	Rope ^World::AddRope(Math::Vector3 position, Math::Vector3 rotation, double length, int type, double maxLength, double minLength, double p10, bool p11, bool p12, bool p13, double p14, bool breakable)
 	{
 		if ((type < 1) || (type > 6))
 		{
@@ -246,7 +351,7 @@ namespace GTA
 		Rope::LoadTextures();
 		int tmp;
 
-		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, lenght, type, maxLenght, minLenght, p10, p11, p12, p13, p14, breakable, &tmp);
+		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, maxLength, minLength, p10, p11, p12, p13, p14, breakable, &tmp);
 
 		if (handle == 0)
 		{
@@ -255,83 +360,16 @@ namespace GTA
 
 		return gcnew Rope(handle);
 	}
-
-	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
-	{
-		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Camera(handle);
-	}
-	Camera ^World::RenderingCamera::get()
-	{
-		int handle = Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Camera(handle);
-	}
-	void World::RenderingCamera::set(Camera ^renderingCamera)
-	{
-		if (renderingCamera == nullptr)
-		{
-			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
-		}
-		else
-		{
-			renderingCamera->IsActive = true;
-
-			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
-		}
-	}
 	void World::DestroyAllCameras()
 	{
 		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
 	}
 
-	Blip ^World::CreateBlip(Math::Vector3 position)
-	{
-		const int handle = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Blip(handle);
-	}
-	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
-	{
-		const int handle = Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Blip(handle);
-	}
-	array<Blip ^> ^World::GetActiveBlips()
-	{
-		System::Collections::Generic::List<Blip ^> ^res = gcnew System::Collections::Generic::List<Blip ^>();
-		int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
-		int blipHandle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator);
-		while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, blipHandle))
-		{
-			res->Add(gcnew Blip(blipHandle));
-			blipHandle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator);
-		}
-		return res->ToArray();
-	}
-
 	int World::AddRelationShipGroup(System::String ^groupName)
+	{
+		return AddRelationshipGroup(groupName);
+	}
+	int World::AddRelationshipGroup(System::String ^groupName)
 	{
 		int handle = 0;
 		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &handle);
@@ -340,7 +378,15 @@ namespace GTA
 	}
 	void World::RemoveRelationShipGroup(int group)
 	{
+		RemoveRelationshipGroup(group);
+	}
+	void World::RemoveRelationshipGroup(int group)
+	{
 		Native::Function::Call(Native::Hash::REMOVE_RELATIONSHIP_GROUP, group);
+	}
+	Relationship World::GetRelationshipBetweenGroups(int group1, int group2)
+	{
+		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
 	}
 	void World::SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
 	{
@@ -352,27 +398,21 @@ namespace GTA
 		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
 		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
 	}
-	Relationship World::GetRelationshipBetweenGroups(int group1, int group2)
+
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options)
 	{
-		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
+		return Raycast(source, target, options, nullptr);
 	}
-	RayCastResult ^World::RayCast(Vector3 source, Vector3 target, IntersectOptions options)
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^entity)
 	{
-		return RayCast(source, target, options, 7, nullptr);
+		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, 7));
 	}
-	RayCastResult ^World::RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags)
-	{
-		return RayCast(source, target, options, UnkFlags, nullptr);
-	}
-	RayCastResult ^World::RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^entity)
-	{
-		return gcnew RayCastResult(Native::Function::Call<int>(Native::Hash::_0x377906D8A31E5586, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), entity == nullptr ? 0 : entity->Handle, UnkFlags));
-	}
-	void World::DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color)
+
+	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color)
 	{
 		DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, nullptr, nullptr, false);
 	}
-	void World::DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt)
+	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt)
 	{
 		Native::InputArgument^ dict = gcnew Native::InputArgument(0), ^ name = gcnew Native::InputArgument(0);
 		if (textueDict != nullptr && textureName != nullptr)
