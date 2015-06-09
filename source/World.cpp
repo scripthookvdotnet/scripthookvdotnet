@@ -366,7 +366,7 @@ namespace GTA
 	}
 	void World::SetBlackout(bool enable)
 	{
-		Native::Function::Call(Native::Hash::SET_BLACKOUT, enable);
+		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
 	}
 
 	int World::AddRelationShipGroup(System::String ^groupName)
