@@ -1,113 +1,196 @@
-﻿﻿//This isn't a full fledged trainer
-//It's just a trainer menu to show how to use the Menu API
+﻿// This isn't a full fledged trainer
+// It's just a trainer menu to show how to use the Menu API
+
+#region Using
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GTA;
 using GTA.Native;
+using Menu = GTA.Menu;
+
+#endregion
 
 public class SimpleTrainer : Script
 {
     public SimpleTrainer()
     {
         //Use some fancy transitions
-        View.MenuTransitions = true;
+        this.View.MenuTransitions = true;
 
-        KeyDown += OnKeyDown;
+        this.KeyDown += this.OnKeyDown;
     }
 
-    void OnKeyDown(object sender, KeyEventArgs e)
+    private void OnKeyDown( object sender, KeyEventArgs e )
     {
-        if (e.KeyCode == Keys.F8)
+        if ( e.KeyCode == Keys.F8 )
         {
-            if (View.ActiveMenus == 0)
-                OpenTrainerMenu();
+            if ( this.View.ActiveMenus == 0 )
+            {
+                this.OpenTrainerMenu();
+            }
         }
     }
 
     #region Menu
 
-    void OpenTrainerMenu()
+    private void OpenTrainerMenu()
     {
-        View.AddMenu(new GTA.Menu("Simple Trainer", new GTA.MenuItem[] {
-            new MenuLabel("Categories", true),
-            new MenuButton("Player", "Opens the menu with \nplayer commands", OpenPlayerMenu),
-            new MenuButton("Weapons", "Opens the menu with \nweapon commands", OpenWeaponMenu),
-            new MenuButton("Spawn Vehicle", "Opens the menu with\nvehicles to spawn", OpenVehicleSpawnMenu),
-            new MenuLabel("Settings", true),
-            new MenuButton("Open Settings", "Opens the trainer \nsettings menu", OpenSettingsMenu)
-        }));
+        var menuItems = new List<IMenuItem> { new MenuLabel( "Categories", true ) };
+
+        var button = new MenuButton( "Player", "Opens the menu with \nplayer commands" );
+        button.Activated += ( sender, args ) => this.OpenPlayerMenu();
+        menuItems.Add( button );
+
+        button = new MenuButton( "Weapons", "Opens the menu with \nweapon commands" );
+        button.Activated += ( sender, args ) => this.OpenWeaponMenu();
+        menuItems.Add( button );
+
+        button = new MenuButton( "Spawn Vehicle", "Opens the menu with\nvehicles to spawn" );
+        button.Activated += ( sender, args ) => this.OpenVehicleSpawnMenu();
+        menuItems.Add( button );
+
+        menuItems.Add( new MenuLabel( "Settings", true ) );
+
+        button = new MenuButton( "Open Settings", "Opens the trainer \nsettings menu" );
+        button.Activated += ( sender, args ) => this.OpenSettingsMenu();
+        menuItems.Add( button );
+
+        this.View.AddMenu( new Menu( "Simple Trainer", menuItems.ToArray() ) );
     }
 
-    void OpenPlayerMenu()
+    private void OpenPlayerMenu()
     {
-        View.AddMenu(new GTA.Menu("Player Menu", new GTA.MenuItem[] {
-            new MenuToggle("Invincible", "Makes the player \ninvincible", ActivateInvincibility, DeactivateInvincibility),
-            new MenuButton("Heal fully", "Gives the player \n100% health", HealPlayer),
-            new MenuToggle("Never wanted", "Makes it so you can't \nget a wanted level", ActivateNeverWanted, DeactivateNeverWanted)
-        }));
+        var menuItems = new List<IMenuItem>();
+
+        var toggle = new MenuToggle( "Invincible", "Makes the player \ninvincible" );
+        toggle.Changed += ( sender, args ) =>
+        {
+            var tg = sender as MenuToggle;
+            if ( tg == null )
+            {
+                return;
+            }
+            if ( tg.Value )
+            {
+                this.ActivateInvincibility();
+            }
+            else
+            {
+                this.DeactivateInvincibility();
+            }
+        };
+        menuItems.Add( toggle );
+
+        var button = new MenuButton( "Heal fully", "Gives the player \n100% health" );
+        button.Activated += ( sender, args ) => this.HealPlayer();
+        menuItems.Add( button );
+
+        toggle = new MenuToggle( "Never wanted", "Makes it so you can't \nget a wanted level" );
+        toggle.Changed += ( sender, args ) =>
+        {
+            var tg = sender as MenuToggle;
+            if ( tg == null )
+            {
+                return;
+            }
+            if ( tg.Value )
+            {
+                this.ActivateNeverWanted();
+            }
+            else
+            {
+                this.DeactivateNeverWanted();
+            }
+        };
+        menuItems.Add( toggle );
+
+        this.View.AddMenu( new Menu( "Player Menu", menuItems.ToArray() ) );
     }
 
-    void OpenWeaponMenu()
+    private void OpenWeaponMenu()
     {
-        View.AddMenu(new GTA.Menu("Weapon Menu", new GTA.MenuItem[] {
-            new MenuToggle("Unlimited ammo", "You never run out \nof ammo", ActivateUnlimitedAmmo, DeactivateUnlimitedAmmo),
-            new MenuButton("Unlock all", "Unlocks all weapons", UnlockAllWeapons)
-        }));
+        var menuItems = new List<IMenuItem>();
+
+        var toggle = new MenuToggle( "Unlimited ammo", "You never run out \nof ammo" );
+        toggle.Changed += ( sender, args ) =>
+        {
+            var tg = sender as MenuToggle;
+            if ( tg == null )
+            {
+                return;
+            }
+            if ( tg.Value )
+            {
+                this.ActivateUnlimitedAmmo();
+            }
+            else
+            {
+                this.DeactivateUnlimitedAmmo();
+            }
+        };
+        menuItems.Add( toggle );
+
+        var button = new MenuButton( "Unlock all", "Unlocks all weapons" );
+        button.Activated += ( sender, args ) => this.UnlockAllWeapons();
+        menuItems.Add( button );
+
+        this.View.AddMenu( new Menu( "Weapon Menu", menuItems.ToArray() ) );
     }
 
-    void OpenVehicleSpawnMenu()
+    private void OpenVehicleSpawnMenu()
     {
-        ListMenu VehicleMenu = new ListMenu("Spawn Vehicle");
-        VehicleMenu.Add("Infernus", "A fast car");
-        VehicleMenu.Add("LAZER", "A military jet");
-        VehicleMenu.Add("BMX", "A bike");
-        VehicleMenu.Add("Jetpack", "CLASSIFIED");
-        View.AddMenu(VehicleMenu);
+        // add first 4 vehicles names to Menu
+        this.View.AddMenu( new Menu( "Spawn Vehicle",
+            Enum.GetNames( typeof( VehicleHash ) ).Take( 4 ).Select( vehName => new MenuButton( vehName ) ).ToArray() ) );
     }
 
-    void OpenSettingsMenu()
+    private void OpenSettingsMenu()
     {
     }
 
-    void UnlockAllWeapons()
+    private void UnlockAllWeapons()
     {
-        View.AddMenu(new GTA.MessageBox("Are you sure you want to \nunlock all weapons?", DoUnlockAllWeapons, () => { }));
+        var msgBox = new GTA.MessageBox( "Are you sure you want to \nunlock all weapons?" );
+        msgBox.Yes += ( sender, args ) => this.DoUnlockAllWeapons();
+        this.View.AddMenu( msgBox );
     }
 
     #endregion
 
     #region Commands
 
-    void ActivateInvincibility()
+    private void ActivateInvincibility()
     {
     }
 
-    void DeactivateInvincibility()
+    private void DeactivateInvincibility()
     {
     }
 
-    void HealPlayer()
+    private void HealPlayer()
     {
     }
 
-    void ActivateNeverWanted()
+    private void ActivateNeverWanted()
     {
     }
 
-    void DeactivateNeverWanted()
+    private void DeactivateNeverWanted()
     {
     }
 
-    void ActivateUnlimitedAmmo()
+    private void ActivateUnlimitedAmmo()
     {
     }
 
-    void DeactivateUnlimitedAmmo()
+    private void DeactivateUnlimitedAmmo()
     {
     }
 
-    void DoUnlockAllWeapons()
+    private void DoUnlockAllWeapons()
     {
     }
 
