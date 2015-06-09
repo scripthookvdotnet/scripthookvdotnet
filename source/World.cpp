@@ -348,7 +348,7 @@ namespace GTA
 			type = 1;
 		}
 
-		Rope::LoadTextures();
+		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 		int tmp;
 
 		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, maxLength, minLength, p10, p11, p12, p13, p14, breakable, &tmp);

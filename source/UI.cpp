@@ -24,6 +24,6 @@ namespace GTA
 		float pointX, pointY;
 		if (!Native::Function::Call<bool>(Native::Hash::_0x34E82F05DF2974F5, position.X, position.Y, position.Z, &pointX, &pointY))
 			return System::Drawing::Point();
-		return System::Drawing::Point(pointX * UI::WIDTH, pointY * UI::HEIGHT);
+		return System::Drawing::Point((int)pointX * UI::WIDTH, (int)pointY * UI::HEIGHT);
 	}
 }
