@@ -364,6 +364,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
 	}
+	void World::SetBlackout(bool enable)
+	{
+		Native::Function::Call(Native::Hash::SET_BLACKOUT, enable);
+	}
 
 	int World::AddRelationShipGroup(System::String ^groupName)
 	{

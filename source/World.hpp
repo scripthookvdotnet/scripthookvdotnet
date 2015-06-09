@@ -187,6 +187,7 @@ namespace GTA
 		[System::ObsoleteAttribute("This World.AddRope overload is obsolete, please use the other one")]
 		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double length, int type, double maxLength, double minLength, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
 		static void DestroyAllCameras();
+		static void SetBlackout(bool enable);
 
 		[System::ObsoleteAttribute("World.AddRelationShipGroup is obsolete, please use World.AddRelationshipGroup instead")]
 		static int AddRelationShipGroup(System::String ^groupName);
