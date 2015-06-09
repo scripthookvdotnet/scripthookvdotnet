@@ -77,8 +77,4 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 	}
-	void Rope::UnloadTextures()
-	{
-		Native::Function::Call(Native::Hash::ROPE_UNLOAD_TEXTURES);
-	}
 }
