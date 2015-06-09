@@ -6,7 +6,7 @@ namespace GTA
 	{
 	public:
 		Logger();
-		Logger(System::Reflection::Assembly ^assembly);
+		Logger(System::String^ name);
 
 		void OnStart();
 		void Debug(... array<System::String ^> ^message);
@@ -15,9 +15,9 @@ namespace GTA
 
 	private:
 		void LogToFile(System::String ^logLevel, bool showTimeStamp, ... array<System::String ^> ^message);
-		System::String^ GetAssemblyPath();
 
-		System::Reflection::Assembly ^assembly;
+		System::String^ defaultPath;
+		System::String^ path;
 		int maxLogAge = 10;
 	};
 }
