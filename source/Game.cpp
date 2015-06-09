@@ -48,6 +48,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_WANTED_LEVEL_MULTIPLIER, value);
 	}
+	bool Game::Nightvision::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_ACTIVE);
+	}
+	void Game::Nightvision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
+	}
 
 	bool Game::IsKeyPressed(System::Windows::Forms::Keys key)
 	{

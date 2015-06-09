@@ -336,6 +336,7 @@ namespace GTA
 		Relationship GetRelationshipWithPed(Ped ^ped);
 		void SetIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 
+		Entity ^GetKiller();
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();
