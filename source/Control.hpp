@@ -343,17 +343,4 @@ namespace GTA
 		INPUT_VEH_SLOWMO_DOWN_ONLY = 336,
 		INPUT_MAP_POI = 337,
 	};
-
-	public ref class Controls sealed abstract
-	{
-		public:
-			static bool IsControlEnabled(int index, Control control);
-			static bool IsControlPressed(int index, Control control);
-			static bool IsControlReleased(int index, Control control);
-			static bool IsControlJustPressed(int index, Control control);
-			static bool IsControlJustReleased(int index, Control control);
-			static bool IsDisabledControlPressed(int index, Control control);
-			static bool IsDisabledControlJustPressed(int index, Control control);
-			static bool IsDisabledControlJustReleased(int index, Control control);
-	};
 }

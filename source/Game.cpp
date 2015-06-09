@@ -54,6 +54,39 @@ namespace GTA
 		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
 	}
 
+	bool Game::IsControlEnabled(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_ENABLED, index, static_cast<int>(control));
+	}
+	bool Game::IsControlPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsControlReleased(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_RELEASED, index, static_cast<int>(control));
+	}
+	bool Game::IsControlJustPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_JUST_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsControlJustReleased(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
+	}
+	bool Game::IsDisabledControlPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsDisabledControlJustPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsDisabledControlJustReleased(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
+	}
+
 	void Game::Pause()
 	{
 		IsPaused = true;

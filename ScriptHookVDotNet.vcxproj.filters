@@ -120,8 +120,6 @@
     <ClCompile Include="source\Scaleform.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\Controls.cpp">
-      <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +240,7 @@
     <ClInclude Include="source\Scaleform.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\Controls.hpp">
+    <ClInclude Include="source\Control.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
