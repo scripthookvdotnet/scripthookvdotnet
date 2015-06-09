@@ -141,6 +141,8 @@ namespace GTA
 		
 		bool IsNearEntity(Entity^ entity, Math::Vector3 distance);
 		bool IsInRangeOf(Math::Vector3 position, float range);
+		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2);
+		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2, float angle);
 		bool IsAttached();
 		void AttachTo(Entity^ entity, int boneIndex);
 		void AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation);
