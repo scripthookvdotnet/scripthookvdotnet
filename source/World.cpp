@@ -6,9 +6,12 @@
 #include "Rope.hpp"
 #include "Camera.hpp"
 #include "Raycast.hpp"
+#include "MemoryAccess.hpp"
 
 namespace GTA
 {
+	using namespace System::Collections::Generic;
+
 	void World::Weather::set(GTA::Weather value)
 	{
 		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
@@ -124,6 +127,22 @@ namespace GTA
 
 		return result->ToArray();
 	}
+	array<Ped ^> ^World::GetAllPeds()
+	{
+		List<Ped ^> ^peds = gcnew List<Ped ^>();
+		array<int> ^entities = MemoryAccess::GetEtityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entities[i]) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Ped^ ped = gcnew Ped(entities[i]);
+				peds->Add(ped);
+			}
+		}
+
+		return peds->ToArray();
+	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
 		return GetNearbyVehicles(ped, radius, 10000);
@@ -161,6 +180,38 @@ namespace GTA
 		}
 
 		return result->ToArray();
+	}
+	array<Vehicle ^> ^World::GetAllVehicles()
+	{
+		List<Vehicle ^> ^vehs = gcnew List<Vehicle ^>();
+		array<int> ^entities = MemoryAccess::GetEtityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entities[i]) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Vehicle^ veh = gcnew Vehicle(entities[i]);
+				vehs->Add(veh);
+			}
+		}
+
+		return vehs->ToArray();
+	}
+	array<Prop ^> ^World::GetAllProps()
+	{
+		List<Prop ^> ^props = gcnew List<Prop ^>();
+		array<int> ^entities = MemoryAccess::GetEtityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Prop^ prop = gcnew Prop(entities[i]);
+				props->Add(prop);
+			}
+		}
+
+		return props->ToArray();
 	}
 	Ped ^World::GetClosestPed(Math::Vector3 position, float radius)
 	{

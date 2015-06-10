@@ -1,12 +1,22 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
+#include "MemoryAccess.hpp"
 
 namespace GTA
 {
 	Player ^GTA::Game::Player::get()
 	{
 		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+	}
+	GameVersion Game::Version::get()
+	{
+		if (gVersion != GameVersion::UnknownVersion)
+			return gVersion;
+
+		gVersion = MemoryAccess::GetGameVersion();
+
+		return gVersion;
 	}
 	int Game::GameTime::get()
 	{

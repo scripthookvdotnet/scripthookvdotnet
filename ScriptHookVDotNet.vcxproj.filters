@@ -120,6 +120,9 @@
     <ClCompile Include="source\Scaleform.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\MemoryAccess.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Log.hpp">
@@ -241,6 +244,8 @@
     </ClInclude>
     <ClInclude Include="source\Control.hpp">
       <Filter>Scripting</Filter>
+    <ClInclude Include="source\MemoryAccess.hpp">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

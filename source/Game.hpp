@@ -26,12 +26,27 @@ namespace GTA
 		VinewoodBoulevardRadio,
 	};
 
+	public enum class GameVersion
+	{
+		UnknownVersion = 0,
+		v1_0_335_2_STEAM,
+		v1_0_335_2_NOSTEAM,
+		v1_0_350_1_STEAM,
+		v1_0_350_2_NOSTEAM,
+	};
+
 	public ref class Game sealed abstract
 	{
+	private:
+		static GTA::GameVersion gVersion; // maybe come up with a better name
 	public:
 		static property GTA::Player ^Player
 		{
 			GTA::Player ^get();
+		}
+		static property GTA::GameVersion Version
+		{
+			GTA::GameVersion get();
 		}
 		static property int GameTime
 		{
