@@ -114,7 +114,7 @@ namespace GTA
 	void MenuToggle::Activate()
 	{
 		ChangeSelection();
-		this->Activated(this, System::EventArgs::Empty);
+		this->Changed(this, System::EventArgs::Empty);
 	}
 
 	void MenuToggle::Change(bool _r)
