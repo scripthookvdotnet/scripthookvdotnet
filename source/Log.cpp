@@ -24,11 +24,16 @@ namespace GTA
 		DateTime now = DateTime::Now;
 		for each(System::String^ path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(Reflection::Assembly::GetExecutingAssembly()->Location), "*.log"))
 		{
-			if (path->Contains(IO::Path::GetFileNameWithoutExtension(Reflection::Assembly::GetExecutingAssembly()->Location))){
-				DateTime logDate = DateTime::Parse(path->Substring(path->IndexOf("-") + 1, path->IndexOf(".log") - (path->IndexOf("-") + 1)));
-				if ((now - logDate).Days >= maxLogAge){
-					IO::File::Delete(path);
+			try {
+				if (path->Contains(IO::Path::GetFileNameWithoutExtension(Reflection::Assembly::GetExecutingAssembly()->Location))){
+					DateTime logDate = DateTime::Parse(path->Substring(path->IndexOf("-") + 1, path->IndexOf(".log") - (path->IndexOf("-") + 1)));
+					if ((now - logDate).Days >= maxLogAge){
+						IO::File::Delete(path);
+					}
 				}
+			}
+			catch (...)
+			{
 			}
 		}
 	}
