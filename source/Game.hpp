@@ -72,6 +72,11 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		static property bool MissionFlag
+		{
+			bool get();
+			void set(bool value);
+		}
 
 		static bool IsKeyPressed(System::Windows::Forms::Keys key);
 
