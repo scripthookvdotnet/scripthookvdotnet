@@ -1,7 +1,6 @@
 using System;
 using System.Windows.Forms;
 using GTA;
-using GTA.Native;
 
 public class ExitVehicle : Script
 {
@@ -21,7 +20,7 @@ public class ExitVehicle : Script
 			Wait(250);
 
 			Vehicle vehicle = player.CurrentVehicle;
-			bool isDriver = Function.Call<Ped>(Hash.GET_PED_IN_VEHICLE_SEAT, vehicle, (int)VehicleSeat.Driver) == player;
+            bool isDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
 
 			if (Game.IsKeyPressed(Keys.F))
 			{
