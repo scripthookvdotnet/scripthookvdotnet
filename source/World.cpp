@@ -130,7 +130,7 @@ namespace GTA
 	array<Ped ^> ^World::GetAllPeds()
 	{
 		List<Ped ^> ^peds = gcnew List<Ped ^>();
-		array<int> ^entities = MemoryAccess::GetEtityHandleList();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
@@ -184,7 +184,7 @@ namespace GTA
 	array<Vehicle ^> ^World::GetAllVehicles()
 	{
 		List<Vehicle ^> ^vehs = gcnew List<Vehicle ^>();
-		array<int> ^entities = MemoryAccess::GetEtityHandleList();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
@@ -200,11 +200,11 @@ namespace GTA
 	array<Prop ^> ^World::GetAllProps()
 	{
 		List<Prop ^> ^props = gcnew List<Prop ^>();
-		array<int> ^entities = MemoryAccess::GetEtityHandleList();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entities[i]))
 			{
 				Prop^ prop = gcnew Prop(entities[i]);
 				props->Add(prop);
@@ -223,6 +223,22 @@ namespace GTA
 		}
 
 		return gcnew Ped(handle);
+	}
+	array<Entity ^> ^World::GetAllEntities()
+	{
+		List<Entity ^> ^ents = gcnew List<Entity ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Entity^ ent = (Entity ^)gcnew Prop(entities[i]);
+				ents->Add(ent);
+			}
+		}
+
+		return ents->ToArray();
 	}
 	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
 	{

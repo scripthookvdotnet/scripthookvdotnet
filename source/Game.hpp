@@ -2,6 +2,7 @@
 
 #include "Player.hpp"
 #include "Control.hpp"
+#include "MemoryAccess.hpp"
 
 namespace GTA
 {
@@ -24,15 +25,6 @@ namespace GTA
 		RadioMirrorPark,
 		Space,
 		VinewoodBoulevardRadio,
-	};
-
-	public enum class GameVersion
-	{
-		UnknownVersion = 0,
-		v1_0_335_2_STEAM,
-		v1_0_335_2_NOSTEAM,
-		v1_0_350_1_STEAM,
-		v1_0_350_2_NOSTEAM,
 	};
 
 	public ref class Game sealed abstract

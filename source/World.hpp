@@ -166,6 +166,7 @@ namespace GTA
 		static array<Prop ^> ^GetAllProps();
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
+		static array<Entity ^> ^GetAllEntities();
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 		[System::ObsoleteAttribute("World.GetGroundZ is obsolete, please use World.GetGroundHeight instead.")]
 		static float GetGroundZ(Math::Vector3 position);

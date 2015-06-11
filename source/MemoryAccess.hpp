@@ -1,15 +1,33 @@
 #pragma once
 
-#include "Game.hpp"
 #include <inttypes.h>
 
 
 namespace GTA
 {
+	public enum class GameVersion
+	{
+		UnknownVersion = 0,
+		v1_0_335_2_STEAM,
+		v1_0_335_2_NOSTEAM,
+		v1_0_350_1_STEAM,
+		v1_0_350_2_NOSTEAM,
+		v1_0_372_2_STEAM,
+		v1_0_372_2_NOSTEAM, // is that the right name for a version?
+	};
+
+	private struct Pool
+	{
+		intptr_t ListAddr;
+		char* BoolAdr;
+		int MaxCount;
+		int ItemSize;
+	};
+
 	private ref class MemoryAccess sealed
 	{
 	private:
-		static intptr_t ADDRESS_ENTITYPOOL;
+		static Pool** ADDRESS_ENTITYPOOL;
 	public:
 
 		static MemoryAccess();
@@ -18,12 +36,12 @@ namespace GTA
 
 		static int HandleToIndex(int Handle);
 
-		static intptr_t GetAddressOfItemInPool(intptr_t PoolAddress, int Handle);
-		static array<int>^ GetListOfHandlesInPool(intptr_t PoolAddress);
+		static intptr_t GetAddressOfItemInPool(Pool* PoolAddress, int Handle);
+		static array<int>^ GetListOfHandlesInPool(Pool* PoolAddress);
 
 		static intptr_t GetAddressOfEntity(int Handle);
 
-		static array<int>^ GetEtityHandleList();
+		static array<int>^ GetEntityHandleList();
 	};
 }
 
