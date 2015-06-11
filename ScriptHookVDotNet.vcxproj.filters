@@ -236,6 +236,9 @@
     <ClInclude Include="source\Scaleform.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
+	    <ClInclude Include="source\Control.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\Logger.hpp">
       <Filter>Core</Filter>
     </ClInclude>

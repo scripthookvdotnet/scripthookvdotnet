@@ -5,17 +5,18 @@
 
 namespace GTA
 {
-	using namespace GTA::Math;
-
-	public ref class RayCastResult
+	public value class RaycastResult
 	{
 	public:
-
-		property int Handle
+		property int Result
 		{
 			int get();
 		}
-		property bool DidHitEntity
+		property bool DitHitEntity
+		{
+			bool get();
+		}
+		property bool DitHitAnything
 		{
 			bool get();
 		}
@@ -23,32 +24,19 @@ namespace GTA
 		{
 			Entity ^get();
 		}
-		property Vector3 HitCoords
+		property Math::Vector3 HitCoords
 		{
-			Vector3 get();
+			Math::Vector3 get();
 		}
-		property Vector3 UnkVec
-		{
-			Vector3 get();
-		}
-		property int Result
-		{
-			int get();
-		}
-		property int Intersected
-		{
-			int get();
-		}
-	internal:
-		RayCastResult(int Handle);
-	private:
-		int mHandle;
-		int mStatus;
-		int mIntersected;
-		Entity ^mHit;
-		Vector3 mHitCoord;
-		Vector3 mUnk;
 
+	internal:
+		RaycastResult(int handle);
+
+	private:
+		int mResult;
+		bool mDidHit;
+		Entity ^mHitEntity;
+		Math::Vector3 mHitCoords;
 	};
 }
 

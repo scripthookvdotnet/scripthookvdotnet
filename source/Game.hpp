@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.hpp"
+#include "Control.hpp"
 
 namespace GTA
 {
@@ -66,8 +67,17 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		static property bool Nightvision
+		{
+			bool get();
+			void set(bool value);
+		}
 
 		static bool IsKeyPressed(System::Windows::Forms::Keys key);
+
+		static bool IsControlPressed(int index, Control control);
+		static bool IsControlJustPressed(int index, Control control);
+		static bool IsControlJustReleased(int index, Control control);
 
 		static void Pause();
 		static void Unpause();

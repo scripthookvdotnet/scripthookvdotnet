@@ -7,7 +7,7 @@
 
 namespace GTA
 {
-	interface class MenuItem;
+	interface class IMenuItem;
 	ref class Viewport;
 
 	public ref class SelectedIndexChangedArgs :System::EventArgs
@@ -82,7 +82,7 @@ namespace GTA
 	public ref class Menu : MenuBase
 	{
 	public:
-		Menu(System::String ^headerCaption, array<MenuItem ^> ^items);
+		Menu(System::String ^headerCaption, array<IMenuItem ^> ^items);
 
 	public:
 		virtual void Draw() override;
@@ -102,10 +102,10 @@ namespace GTA
 		property int ItemHeight;
 		property bool HasFooter;
 
-		property System::Collections::Generic::List<MenuItem ^> ^Items
+		property System::Collections::Generic::List<IMenuItem ^> ^Items
 		{
-			System::Collections::Generic::List<MenuItem ^> ^get() { return mItems; }
-			void set(System::Collections::Generic::List<MenuItem ^> ^items){
+			System::Collections::Generic::List<IMenuItem ^> ^get() { return mItems; }
+			void set(System::Collections::Generic::List<IMenuItem ^> ^items){
 				mItems = items;
 			}
 		}
@@ -125,83 +125,15 @@ namespace GTA
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
-		System::Collections::Generic::List<MenuItem ^> ^mItems = gcnew System::Collections::Generic::List<MenuItem ^>();
+		System::Collections::Generic::List<IMenuItem ^> ^mItems = gcnew System::Collections::Generic::List<IMenuItem ^>();
 		int mSelectedIndex = -1;
 
-		System::String ^mFooterDescription = "footer description";
-	};
-
-	public ref class ListMenu : MenuBase
-	{
-	public:
-		ListMenu(System::String ^headerCaption, System::Action<ListMenu ^> ^activationAction);
-		ListMenu(System::String ^headerCaption);
-
-	public:
-		virtual void Draw() override;
-		virtual void Draw(System::Drawing::Size offset) override;
-		virtual void Initialize() override;
-		virtual void OnOpen() override;
-		virtual void OnClose() override;
-		virtual void OnActivate() override;
-		virtual void OnChangeSelection(bool down) override;
-		virtual void OnChangeItem(bool right) override;
-
-	public:
-		void Add(System::String ^Caption, System::String ^Description);
-		void Add(System::String ^Caption);
-		void Remove(int Index);
-		void Remove(System::String ^Caption);
-
-		property System::Tuple<System::String ^, System::String ^> ^default[int]
-		{
-			System::Tuple<System::String ^, System::String ^> ^get(int index) { return mItems[index]; }
-			void set(int index, System::Tuple<System::String ^, System::String ^> ^item)
-			{
-				mItems[index] = item;
-				this->UpdateEntries();
-			}
-		}
-		property int SelectedIndex
-		{
-			int get() { return mSelectedIndex; }
-			void set(int NewIndex)
-			{
-				mSelectedIndex = NewIndex;
-				UpdateHighlight();
-			}
-		}
-
-	private:
-		void UpdateEntries();
-		void UpdateHighlight();
-
-	public:
-		property int Width;
-		property int HeaderHeight;
-		property int FooterHeight;
-		property int ItemHeight;
-		property bool HasFooter;
-
-	public:
-		event System::EventHandler<SelectedIndexChangedArgs^> ^SelectedIndexChanged;
-
-	private:
-		System::Action<ListMenu ^> ^mActivateAction;
-
-		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
-		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
-
-		System::Collections::Generic::List<System::Tuple<System::String ^, System::String ^> ^> ^mItems;
-		System::Collections::Generic::List<System::Tuple<UIRectangle ^, UIText ^> ^> ^mUIEntries;
-		int mEntriesHeight = -1;
-		int mSelectedIndex = -1;
 		System::String ^mFooterDescription = "footer description";
 	};
 
 	public ref class MessageBox : MenuBase {
 	public:
-		MessageBox(System::String ^headerCaption, System::Action ^yesAction, System::Action ^noAction);
+		MessageBox(System::String ^headerCaption);
 
 	public:
 		virtual void Draw() override;
@@ -212,6 +144,10 @@ namespace GTA
 		virtual void OnActivate() override;
 		virtual void OnChangeSelection(bool down) override;
 		virtual void OnChangeItem(bool right) override;
+
+	public:
+		event System::EventHandler<System::EventArgs ^> ^Yes;
+		event System::EventHandler<System::EventArgs ^> ^No;
 
 	public:
 		property int Width;
@@ -224,7 +160,6 @@ namespace GTA
 	private:
 		UIRectangle ^mBodyRect = nullptr, ^mYesRect = nullptr, ^mNoRect = nullptr;
 		UIText ^mText, ^mYesText, ^mNoText;
-		System::Action ^mYesAction = nullptr, ^mNoAction = nullptr;
 		bool mSelection = true;
 	};
 }
