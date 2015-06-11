@@ -61,7 +61,7 @@ namespace GTA
 	}
 	bool Player::CanStartMission::get()
 	{
-		return !Native::Function::Call<bool>(Native::Hash::CAN_PLAYER_START_MISSION, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::CAN_PLAYER_START_MISSION, this->Handle);
 	}
 	bool Player::IsPlaying::get()
 	{
