@@ -61,7 +61,7 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsOnMission
+		property bool CanStartMission
 		{
 			bool get();
 		}

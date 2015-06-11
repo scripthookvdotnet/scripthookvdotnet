@@ -59,7 +59,7 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING, this->Handle);
 	}
-	bool Player::IsOnMission::get()
+	bool Player::CanStartMission::get()
 	{
 		return !Native::Function::Call<bool>(Native::Hash::CAN_PLAYER_START_MISSION, this->Handle);
 	}
