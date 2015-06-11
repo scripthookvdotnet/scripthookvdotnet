@@ -7,7 +7,7 @@ namespace GTA
 
 	void Log::OnStart()
 	{
-		LogToFile("", false, "##########\n\n\n\n##########");
+		LogToFile("", false, "########################################");
 	}
 
 	void Log::Debug(... array<String ^> ^message)
