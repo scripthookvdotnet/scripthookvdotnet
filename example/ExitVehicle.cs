@@ -4,41 +4,47 @@ using GTA;
 
 public class ExitVehicle : Script
 {
-	public ExitVehicle()
-	{
-		KeyDown += OnKeyDown;
-	}
+    public ExitVehicle()
+    {
+        Tick += OnTick;
+    }
 
-	DateTime mLastExit;
+    const float _HOLD_THRESHOLD = 0.25f;
+    float holdTime = 0;
 
-	void OnKeyDown(object sender, KeyEventArgs e)
-	{
-		Ped player = Game.Player.Character;
+    void OnTick(object sender, EventArgs e)
+    {
+        Ped player = Game.Player.Character;
 
-		if (e.KeyCode == Keys.F && DateTime.Now > this.mLastExit && player.IsInVehicle())
-		{
-			Wait(250);
-
-			Vehicle vehicle = player.CurrentVehicle;
-            bool isDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
-
-			if (Game.IsKeyPressed(Keys.F))
-			{
-				player.Task.LeaveVehicle(vehicle, true);
-			}
-			else
-			{
-				player.Task.LeaveVehicle(vehicle, false);
-
-				Wait(0);
-
-				if (isDriver)
-				{
-					vehicle.EngineRunning = true;
-				}
-			}
-
-			this.mLastExit = DateTime.Now + TimeSpan.FromMilliseconds(2000);
-		}
-	}
+        if (player.IsAlive && player.IsInVehicle())
+        {
+            if (Game.IsControlPressed(2, GTA.Control.INPUT_VEH_EXIT))
+            {
+                holdTime += Game.LastFrameTime;
+            }
+            else if (holdTime > 0)
+            {
+                Vehicle vehicle = player.CurrentVehicle;
+                if (holdTime >= _HOLD_THRESHOLD)
+                {
+                    // Exit vehicle, turn off engine
+                    player.Task.LeaveVehicle(vehicle, true);
+                }
+                else
+                {
+                    // Exit vehicle, leave engine running (if player is driver)
+                    player.Task.LeaveVehicle(vehicle, false);
+                    bool isDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
+                    if (isDriver)
+                    {
+                        vehicle.EngineRunning = true;
+                    }
+                }
+            }
+        }
+        else
+        {
+            holdTime = 0;
+        }
+    }
 }
