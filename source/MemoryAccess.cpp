@@ -1,28 +1,44 @@
 #include "MemoryAccess.hpp"
 #include "Log.hpp"
 #include "Main.h"
+#include <Psapi.h>
 
 namespace GTA
 {
 	using namespace System::Collections::Generic;
 
+	uintptr_t MemoryAccess::FindPattern(char pattern[], char mask[])
+	{
+		MODULEINFO modInfo = { 0 };
+
+		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(L"GTA5.exe"), &modInfo, sizeof(MODULEINFO));
+
+		char* start_offset = reinterpret_cast<char*>(modInfo.lpBaseOfDll);
+		uintptr_t size = static_cast<uintptr_t>(modInfo.SizeOfImage);
+
+		intptr_t pos = 0;
+		uintptr_t searchLen = static_cast<uintptr_t>(strlen(mask) - 1);
+
+		for (char* retAddress = start_offset; retAddress < start_offset + size; retAddress++)
+		{
+			if (*retAddress == pattern[pos] || mask[pos] == '?'){
+				if (mask[pos + 1] == '\0')
+					return (reinterpret_cast<uintptr_t>(retAddress)-searchLen);
+				pos++;
+			}
+			else
+				pos = 0;
+		}
+
+		return NULL;
+	}
+
 	static MemoryAccess::MemoryAccess()
 	{
-		intptr_t baseAddr = reinterpret_cast<intptr_t>(GetModuleHandle(L"GTA5.exe"));
-		GameVersion gameVersion = GetGameVersion();
+		uintptr_t patternAddress = FindPattern(EntityPoolOpcodePattern, EntityPoolOpcodeMask);
 
-		switch (gameVersion)
-		{
-		case GameVersion::v1_0_350_1_STEAM:
-			ADDRESS_ENTITYPOOL = reinterpret_cast<Pool **>(baseAddr + 0x2994C00);
-			break;
-		case GameVersion::v1_0_350_2_NOSTEAM:
-			ADDRESS_ENTITYPOOL = reinterpret_cast<Pool **>(baseAddr + 0x29A1920);		// need to add addresses for older and newer versions
-			break;
-		default:
-			ADDRESS_ENTITYPOOL = nullptr;
-			break;
-		}
+		uintptr_t adr = *reinterpret_cast<int *>(patternAddress + 3) + patternAddress + 7; // 3 bytes are opcode and its first argument, so we add it to get relative address to patternAddress. 7 bytes are length of opcode and its parameters.
+		ADDRESS_ENTITYPOOL = reinterpret_cast<Pool **>(adr);
 	}
 
 	GameVersion MemoryAccess::GetGameVersion()
@@ -35,15 +51,9 @@ namespace GTA
 		return Handle >> 8; // == Handle / 256
 	}
 
-	intptr_t MemoryAccess::GetAddressOfItemInPool(Pool* PoolAddress, int Handle)
+	uintptr_t MemoryAccess::GetAddressOfItemInPool(Pool* PoolAddress, int Handle)
 	{
-		if (PoolAddress == 0) return 0;
-
-		//Pool* pool = reinterpret_cast<Pool *>(PoolAddress);
-		//intptr_t listadr = *reinterpret_cast<intptr_t*>(PoolAddress);
-		//intptr_t booladr = *reinterpret_cast<intptr_t*>(PoolAddress + 8);
-		//int maxcount = *reinterpret_cast<int*>(PoolAddress + 16); // don't forget what these are 4 bytes
-		//int itemsize = *reinterpret_cast<int*>(PoolAddress + 20);
+		if (PoolAddress == NULL) return 0;
 
 		int index = HandleToIndex(Handle);
 
@@ -55,15 +65,9 @@ namespace GTA
 	}
 	array<int>^ MemoryAccess::GetListOfHandlesInPool(Pool* PoolAddress)
 	{
-		if (PoolAddress == 0) return nullptr;
+		if (PoolAddress == NULL) return nullptr;
 
 		List<int> ^handles = gcnew List<int>();
-
-		//Pool* pool = reinterpret_cast<Pool *>(PoolAddress);
-		/*intptr_t listadr = *reinterpret_cast<intptr_t*>(PoolAddress);
-		intptr_t booladr = *reinterpret_cast<intptr_t*>(PoolAddress + 8);
-		int maxcount = *reinterpret_cast<int*>(PoolAddress + 16);
-		int itemsize = *reinterpret_cast<int*>(PoolAddress + 20);*/
 
 		for (int i = 0; i < PoolAddress->MaxCount; i++)
 		{
@@ -78,9 +82,9 @@ namespace GTA
 
 		return handles->ToArray();
 	}
-	intptr_t MemoryAccess::GetAddressOfEntity(int Handle)
+	uintptr_t MemoryAccess::GetAddressOfEntity(int Handle)
 	{
-		return *reinterpret_cast<intptr_t*>(GetAddressOfItemInPool(*ADDRESS_ENTITYPOOL, Handle) + 8);
+		return *reinterpret_cast<uintptr_t*>(GetAddressOfItemInPool(*ADDRESS_ENTITYPOOL, Handle) + 8);
 	}
 
 	array<int> ^MemoryAccess::GetEntityHandleList()

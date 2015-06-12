@@ -2,7 +2,6 @@
 
 #include <inttypes.h>
 
-
 namespace GTA
 {
 	public enum class GameVersion
@@ -18,7 +17,7 @@ namespace GTA
 
 	private struct Pool
 	{
-		intptr_t ListAddr;
+		uintptr_t ListAddr;
 		char* BoolAdr;
 		int MaxCount;
 		int ItemSize;
@@ -27,7 +26,12 @@ namespace GTA
 	private ref class MemoryAccess sealed
 	{
 	private:
+		static char* EntityPoolOpcodePattern = "\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08";
+		static char* EntityPoolOpcodeMask = "xxx????xxxxxxx";
+
 		static Pool** ADDRESS_ENTITYPOOL;
+
+		static uintptr_t FindPattern(char pattern[], char mask[]);
 	public:
 
 		static MemoryAccess();
@@ -36,10 +40,10 @@ namespace GTA
 
 		static int HandleToIndex(int Handle);
 
-		static intptr_t GetAddressOfItemInPool(Pool* PoolAddress, int Handle);
+		static uintptr_t GetAddressOfItemInPool(Pool* PoolAddress, int Handle);
 		static array<int>^ GetListOfHandlesInPool(Pool* PoolAddress);
 
-		static intptr_t GetAddressOfEntity(int Handle);
+		static uintptr_t GetAddressOfEntity(int Handle);
 
 		static array<int>^ GetEntityHandleList();
 	};
