@@ -244,6 +244,7 @@
     </ClInclude>
     <ClInclude Include="source\Control.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="source\MemoryAccess.hpp">
       <Filter>Core</Filter>
     </ClInclude>
