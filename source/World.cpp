@@ -9,11 +9,60 @@
 
 namespace GTA
 {
+	/*
+		GTADate-class
+	*/
+	Date::Date(int year, int month, int day, int hour, int minute, int second)
+	{
+		this->mYear = year;
+		this->mMonth = month;
+		this->mDay = day;
+		this->mHour = hour;
+		this->mMinute = minute;
+		this->mSecond = second;
+	}
+
+	bool Date::Equals(System::Object ^object)
+	{
+		if (object->GetType() != Date::typeid)
+			return false;
+		Date ^date = static_cast<Date ^>(object);
+		return date->Year == this->mYear && date->Month == this->mMonth && date->Day == this->mDay && date->Hour == this->mHour && date->Minute == this->mMinute;
+	}
+
+	int Date::CompareTo(System::Object ^object)
+	{
+		if (object->GetType() != Date::typeid)
+			throw gcnew System::ArgumentException();
+		Date ^date = static_cast<Date ^>(object);
+		if (this->mYear == date->Year)
+		{
+			if (this->mMonth == date->Month)
+			{
+				if (this->mDay == date->Day)
+				{
+					if (this->mHour == date->Hour)
+					{
+						return this->mMinute.CompareTo(date->Minute);
+					}
+					return this->mHour.CompareTo(date->Hour);
+				}
+				return this->mDay.CompareTo(date->Day);
+			}
+			return this->mMonth.CompareTo(date->Month);
+		}
+		return this->mYear.CompareTo(date->Year);
+
+	}
+
+	/*
+		World-Class
+	*/
 	void World::Weather::set(GTA::Weather value)
 	{
 		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
-	System::DateTime World::CurrentDate::get()
+	GTA::Date ^World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
 		int month = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MONTH);
@@ -22,12 +71,12 @@ namespace GTA
 		int minute = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MINUTES);
 		int second = Native::Function::Call<int>(Native::Hash::GET_CLOCK_SECONDS);
 
-		return System::DateTime(year, month, day, hour, minute, second);
+		return gcnew GTA::Date(year, month, day, hour, minute, second);
 	}
-	void World::CurrentDate::set(System::DateTime value)
+	void World::CurrentDate::set(GTA::Date ^value)
 	{
-		Native::Function::Call(Native::Hash::SET_CLOCK_DATE, value.Year, value.Month, value.Day);
-		Native::Function::Call(Native::Hash::SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
+		Native::Function::Call(Native::Hash::SET_CLOCK_DATE, value->Year, value->Month, value->Day);
+		Native::Function::Call(Native::Hash::SET_CLOCK_TIME, value->Hour, value->Minute, value->Second);
 	}
 	System::TimeSpan World::CurrentDayTime::get()
 	{

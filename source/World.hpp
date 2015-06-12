@@ -129,6 +129,83 @@ namespace GTA
 		Normal = 4,
 	};
 
+	public ref class Date : System::IComparable
+	{
+	public:
+		Date(int year, int month, int day, int hour, int minute, int second);
+
+		property int Year
+		{
+			int get(){ return mYear; };
+			void set(int value) { mYear = value; };
+		}
+		property int Month
+		{
+			int get(){ return mMonth; };
+			void set(int value) { mMonth = value; };
+		}
+		property int Day
+		{
+			int get(){ return mDay; };
+			void set(int value) { mDay = value; };
+		}
+		property int Hour
+		{
+			int get(){ return mHour; };
+			void set(int value) { mHour = value; };
+		}
+		property int Minute
+		{
+			int get(){ return mMinute; };
+			void set(int value) { mMinute = value; };
+		}
+		property int Second
+		{
+			int get(){ return mSecond; };
+			void set(int value) { mSecond = value; };
+		}
+
+		virtual int CompareTo(Object ^object);
+		bool Equals(Object ^object) override;
+
+		static inline bool operator ==(Date ^left, Date ^right)
+		{
+			if (Object::ReferenceEquals(left, nullptr))
+			{
+				return Object::ReferenceEquals(right, nullptr);
+			}
+			return left->Equals(right);
+		}
+		static inline bool operator !=(Date ^left, Date ^right)
+		{
+			return !operator ==(left, right);
+		}
+		static inline bool operator >(Date ^left, Date ^right)
+		{
+			return left->CompareTo(right) > 0;
+		}
+		static inline bool operator <(Date ^left, Date ^right)
+		{
+			return left->CompareTo(right) < 0;
+		}
+		static inline bool operator >=(Date ^left, Date ^right)
+		{
+			return left == right || left > right;
+		}
+		static inline bool operator <=(Date ^left, Date ^right)
+		{
+			return left == right || left < right;
+		}
+
+	private:
+		int mYear;
+		int mMonth;
+		int mDay;
+		int mHour;
+		int mMinute;
+		int mSecond;
+	};
+
 	public ref class World sealed abstract
 	{
 	public:
@@ -136,10 +213,10 @@ namespace GTA
 		{
 			void set(GTA::Weather value);
 		}
-		static property System::DateTime CurrentDate
+		static property GTA::Date ^CurrentDate
 		{
-			System::DateTime get();
-			void set(System::DateTime value);
+			Date ^get();
+			void set(Date ^value);
 		}
 		static property System::TimeSpan CurrentDayTime
 		{
