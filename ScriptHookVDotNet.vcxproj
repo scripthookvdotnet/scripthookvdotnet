@@ -90,7 +90,7 @@
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameplayCamera.cpp" />
-    <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\Logger.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\Menu.cpp" />
@@ -128,7 +128,7 @@
     <ClInclude Include="source\Entity.hpp" />
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\GameplayCamera.hpp" />
-    <ClInclude Include="source\Log.hpp" />
+    <ClInclude Include="source\Logger.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Menu.hpp" />
     <ClInclude Include="source\MenuItem.hpp" />
