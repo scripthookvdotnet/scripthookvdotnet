@@ -27,7 +27,7 @@ namespace GTA
 		if (object->GetType() != Date::typeid)
 			return false;
 		Date ^date = static_cast<Date ^>(object);
-		return date->Year == this->mYear && date->Month == this->mMonth && date->Day == this->mDay && date->Hour == this->mHour && date->Minute == this->mMinute;
+		return date->Year == this->mYear && date->Month == this->mMonth && date->Day == this->mDay && date->Hour == this->mHour && date->Minute == this->mMinute && date->Second == this->mSecond;
 	}
 
 	int Date::CompareTo(System::Object ^object)
@@ -43,6 +43,10 @@ namespace GTA
 				{
 					if (this->mHour == date->Hour)
 					{
+						if (this->mMinute == date->Minute)
+						{
+							return this->mSecond.CompareTo(date->Second);
+						}
 						return this->mMinute.CompareTo(date->Minute);
 					}
 					return this->mHour.CompareTo(date->Hour);
