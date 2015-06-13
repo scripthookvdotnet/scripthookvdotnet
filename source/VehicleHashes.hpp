@@ -371,6 +371,13 @@ namespace GTA
 			Zion = 0xBD1B39C3,
 			Zion2 = 0xB8E2AE18,
 			Ztype = 0x2D3BD401,
+			Feltzer3=0xA29D6D10,
+			Luxor2=0xB79F589E,
+			Osiris=0x767164D6,
+			Swift=0xEBC24DF2,
+			Swift2=0x4019CB4C,
+			Virgo=0xE2504942,
+			Windsor=0x5E4327C8,
 		};
 	}
 }

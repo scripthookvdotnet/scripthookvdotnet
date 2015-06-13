@@ -19,6 +19,7 @@ namespace GTA
 			MicroSMG = 0x13532244,
 			SMG = 0x2BE6766B,
 			AssaultSMG = 0xEFE7E2DF,
+			CombatPDW = 0x0A3D4D34,
 			AssaultRifle = 0xBFEFFF6D,
 			CarbineRifle = 0x83BF0278,
 			AdvancedRifle = 0xAF113F99,

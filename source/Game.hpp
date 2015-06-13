@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.hpp"
+#include "Control.hpp"
 
 namespace GTA
 {
@@ -73,6 +74,10 @@ namespace GTA
 		}
 
 		static bool IsKeyPressed(System::Windows::Forms::Keys key);
+
+		static bool IsControlPressed(int index, Control control);
+		static bool IsControlJustPressed(int index, Control control);
+		static bool IsControlJustReleased(int index, Control control);
 
 		static void Pause();
 		static void Unpause();
