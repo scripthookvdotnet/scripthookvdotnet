@@ -29,41 +29,41 @@ namespace GTA
 
 	void Scaleform::CallFunction(System::String ^function, ... array<Object^> ^arguments)
 	{
-		Native::Function::Call(Native::Hash::_0xF6E48914C7A8694E, mHandle, function); // Begin scaleform function
+		Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION, mHandle, function); // Begin scaleform function
 
 		for each(Object ^o in arguments)
 		{
 			if (o->GetType() == int::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0xC3D0841A0CC546A6, (int)o); // _PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, (int)o);
 			}
 			else if (o->GetType() == System::String::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0x80338406F3475E55, "STRING"); // _BEGIN_TEXT_COMPONENT
+				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "STRING");
 				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, (System::String^)o);
-				Native::Function::Call(Native::Hash::_0x362E2D3FE93A9959); // _END_TEXT_COMPONENT
+				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
 			else if (o->GetType() == char::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0x80338406F3475E55, "STRING"); // _BEGIN_TEXT_COMPONENT
+				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "STRING");
 				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, ((char)o).ToString());
-				Native::Function::Call(Native::Hash::_0x362E2D3FE93A9959); // _END_TEXT_COMPONENT
+				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
 			else if (o->GetType() == float::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0xD69736AAE04DB51A, (float)o); // _PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, (float)o);
 			}
 			else if (o->GetType() == double::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0xD69736AAE04DB51A, (float)((double)o)); // _PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, (float)((double)o));
 			}
 			else if (o->GetType() == bool::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0xC58424BA936EB458, (bool)o); // _PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, (bool)o);
 			}
 			else if (o->GetType() == ScaleformArgumentTXD::typeid)
 			{
-				Native::Function::Call(Native::Hash::_0xBA7148484BD90365, ((ScaleformArgumentTXD^)o)->txd); // Pass a TXD
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, ((ScaleformArgumentTXD^)o)->txd); // Pass a TXD
 			}
 			else
 			{
@@ -71,7 +71,7 @@ namespace GTA
 			}
 		}
 
-		Native::Function::Call(Native::Hash::_0xC6796A8FFA375E53); // End and call function
+		Native::Function::Call(Native::Hash::_POP_SCALEFORM_MOVIE_FUNCTION_VOID); // End and call function
 	}
 
 	void Scaleform::Render2D()

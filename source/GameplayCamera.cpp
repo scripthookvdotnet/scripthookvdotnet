@@ -67,10 +67,10 @@ namespace GTA
 
 	void GameplayCamera::ClampYaw(float min, float max)
 	{
-		Native::Function::Call(Native::Hash::CLAMP_GAMEPLAY_CAM_YAW, min, max);
+		Native::Function::Call(Native::Hash::_CLAMP_GAMEPLAY_CAM_YAW, min, max);
 	}
 	void GameplayCamera::ClampPitch(float min, float max)
 	{
-		Native::Function::Call(Native::Hash::CLAMP_GAMEPLAY_CAM_PITCH, min, max);
+		Native::Function::Call(Native::Hash::_CLAMP_GAMEPLAY_CAM_PITCH, min, max);
 	}
 }

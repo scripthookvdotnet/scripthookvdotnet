@@ -16,7 +16,7 @@ namespace GTA
 
 	float Rope::Length::get()
 	{
-		return Native::Function::Call<float>(Native::Hash::_0x73040398DFF9A4A6, this->mHandle);
+		return Native::Function::Call<float>(Native::Hash::_GET_ROPE_LENGTH, this->mHandle);
 	}
 	void Rope::Length::set(float value)
 	{

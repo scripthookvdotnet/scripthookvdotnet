@@ -34,7 +34,7 @@ namespace GTA
 	}
 	bool Game::Nightvision::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_ACTIVE);
+		return !Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_INACTIVE);
 	}
 	void Game::Nightvision::set(bool value)
 	{
@@ -108,7 +108,7 @@ namespace GTA
 	}
 	System::String ^Game::GetGXTEntry(System::String ^entry)
 	{
-		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
+		return Native::Function::Call<System::String ^>(Native::Hash::_GET_LABEL_TEXT, entry);
 	}
 
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
