@@ -493,6 +493,7 @@ namespace GTA
 		static void PlaySoundFromEntity(int id, System::String ^sound, Entity ^entity, System::String ^set);
 		static void PlaySoundFrontEnd(System::String ^sound);
 		static void PlaySoundFrontEnd(System::String ^sound, System::String ^set);
+		static void PlaySoundFrontEnd(int id, System::String ^sound);
 		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set);
 		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set, int i_1);
 		static void ReleaseSoundId(int id);
