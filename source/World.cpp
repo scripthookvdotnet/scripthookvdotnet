@@ -7,9 +7,12 @@
 #include "Rope.hpp"
 #include "Camera.hpp"
 #include "Raycast.hpp"
+#include "MemoryAccess.hpp"
 
 namespace GTA
 {
+	using namespace System::Collections::Generic;
+
 	System::DateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
@@ -125,6 +128,35 @@ namespace GTA
 
 		return result->ToArray();
 	}
+	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
+	{
+		auto handles = GetAllPeds();
+		auto resultHandles = gcnew List<Ped ^>();
+
+		for (int i = 0; i < handles->Length; i++)
+		{
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
+		}
+
+		return resultHandles->ToArray();
+	}
+	array<Ped ^> ^World::GetAllPeds()
+	{
+		List<Ped ^> ^peds = gcnew List<Ped ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entities[i]) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Ped^ ped = gcnew Ped(entities[i]);
+				peds->Add(ped);
+			}
+		}
+
+		return peds->ToArray();
+	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
 		return GetNearbyVehicles(ped, radius, 10000);
@@ -163,6 +195,51 @@ namespace GTA
 
 		return result->ToArray();
 	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
+	{
+		auto handles = GetAllVehicles();
+		auto resultHandles = gcnew List<Vehicle ^>();
+
+		for (int i = 0; i < handles->Length; i++)
+		{
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
+		}
+
+		return resultHandles->ToArray();
+	}
+	array<Vehicle ^> ^World::GetAllVehicles()
+	{
+		List<Vehicle ^> ^vehs = gcnew List<Vehicle ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entities[i]) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Vehicle^ veh = gcnew Vehicle(entities[i]);
+				vehs->Add(veh);
+			}
+		}
+
+		return vehs->ToArray();
+	}
+	array<Prop ^> ^World::GetAllProps()
+	{
+		List<Prop ^> ^props = gcnew List<Prop ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entities[i]))
+			{
+				Prop^ prop = gcnew Prop(entities[i]);
+				props->Add(prop);
+			}
+		}
+
+		return props->ToArray();
+	}
 	Ped ^World::GetClosestPed(Math::Vector3 position, float radius)
 	{
 		int handle = 0;
@@ -173,6 +250,22 @@ namespace GTA
 		}
 
 		return gcnew Ped(handle);
+	}
+	array<Entity ^> ^World::GetAllEntities()
+	{
+		List<Entity ^> ^ents = gcnew List<Entity ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				Entity^ ent = (Entity ^)gcnew Prop(entities[i]);
+				ents->Add(ent);
+			}
+		}
+
+		return ents->ToArray();
 	}
 	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
 	{

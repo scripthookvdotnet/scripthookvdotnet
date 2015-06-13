@@ -93,6 +93,7 @@
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
+    <ClCompile Include="source\MemoryAccess.cpp" />
     <ClCompile Include="source\Menu.cpp" />
     <ClCompile Include="source\MenuItem.cpp" />
     <ClCompile Include="source\Model.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="source\GameplayCamera.hpp" />
     <ClInclude Include="source\Log.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
+    <ClInclude Include="source\MemoryAccess.hpp" />
     <ClInclude Include="source\Menu.hpp" />
     <ClInclude Include="source\MenuItem.hpp" />
     <ClInclude Include="source\Model.hpp" />
