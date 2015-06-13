@@ -1,9 +1,10 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
-#include "Tasks.hpp"
 #include "Prop.hpp"
-#include "Native.hpp"
+#include "Tasks.hpp"
 #include "WeaponCollection.hpp"
+#include "World.hpp"
+#include "Native.hpp"
 
 namespace GTA
 {

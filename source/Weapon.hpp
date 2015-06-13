@@ -1,7 +1,6 @@
 #pragma once
 
 #include "WeaponHashes.hpp"
-#include "Ped.hpp"
 
 namespace GTA
 {
@@ -10,7 +9,10 @@ namespace GTA
 	public ref class Weapon sealed
 	{
 	public:	
-
+		property Native::WeaponHash Hash
+		{
+			Native::WeaponHash get();
+		}
 		property int Ammo
 		{
 			int get();
@@ -21,18 +23,6 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
-		property int MaxAmmo
-		{
-			int get();
-		}
-		property int MaxAmmoInClip
-		{
-			int get();
-		}
-		property bool IsPresent
-		{
-			bool get();
-		}
 		property bool InfiniteAmmo
 		{
 			void set(bool value);
@@ -41,17 +31,25 @@ namespace GTA
 		{
 			void set(bool value);
 		}
-		property Native::WeaponHash Hash
+		property bool IsPresent
 		{
-			Native::WeaponHash get();
+			bool get();
+		}
+		property int MaxAmmo
+		{
+			int get();
+		}
+		property int MaxAmmoInClip
+		{
+			int get();
 		}
 
 	internal:
-		Weapon(Ped ^owner, Native::WeaponHash hash);
 		Weapon() { }
+		Weapon(Ped ^owner, Native::WeaponHash hash);
 
 	private:
-		Ped ^pOwner;
-		Native::WeaponHash hash;
+		Ped ^mOwner;
+		Native::WeaponHash mHash;
 	};
 }

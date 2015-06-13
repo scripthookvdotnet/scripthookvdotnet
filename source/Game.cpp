@@ -5,9 +5,9 @@
 
 namespace GTA
 {
-	Player ^GTA::Game::Player::get()
+	float Game::FPS::get()
 	{
-		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+		return (1.0f / LastFrameTime);
 	}
 	GameVersion Game::Version::get()
 	{
@@ -22,14 +22,6 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_GAME_TIMER);
 	}
-	float Game::LastFrameTime::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_FRAME_TIME);
-	}
-	float Game::FPS::get()
-	{
-		return (1.0f / LastFrameTime);
-	}
 	bool Game::IsPaused::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PAUSE_MENU_ACTIVE);
@@ -38,33 +30,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
-	GTA::RadioStation Game::RadioStation::get()
+	float Game::LastFrameTime::get()
 	{
-		return static_cast<GTA::RadioStation>(Native::Function::Call<int>(Native::Hash::GET_PLAYER_RADIO_STATION_INDEX));
-	}
-	void Game::RadioStation::set(GTA::RadioStation value)
-	{
-		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
-	}
-	void Game::RadarZoom::set(int value)
-	{
-		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
-	}
-	void Game::TimeScale::set(float value)
-	{
-		Native::Function::Call(Native::Hash::SET_TIME_SCALE, value);
-	}
-	void Game::WantedMultiplier::set(float value)
-	{
-		Native::Function::Call(Native::Hash::SET_WANTED_LEVEL_MULTIPLIER, value);
-	}
-	bool Game::Nightvision::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_ACTIVE);
-	}
-	void Game::Nightvision::set(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
+		return Native::Function::Call<float>(Native::Hash::GET_FRAME_TIME);
 	}
 	bool Game::MissionFlag::get()
 	{
@@ -74,12 +42,43 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_MISSION_FLAG, value);
 	}
+	bool Game::Nightvision::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_ACTIVE);
+	}
+	void Game::Nightvision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
+	}
+	Player ^GTA::Game::Player::get()
+	{
+		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+	}
+	void Game::RadarZoom::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
+	}
+	GTA::RadioStation Game::RadioStation::get()
+	{
+		return static_cast<GTA::RadioStation>(Native::Function::Call<int>(Native::Hash::GET_PLAYER_RADIO_STATION_INDEX));
+	}
+	void Game::RadioStation::set(GTA::RadioStation value)
+	{
+		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
+	}
+	void Game::TimeScale::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_TIME_SCALE, value);
+	}
+	void Game::WantedMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_WANTED_LEVEL_MULTIPLIER, value);
+	}
 
 	bool Game::IsKeyPressed(System::Windows::Forms::Keys key)
 	{
 		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
 	}
-
 	bool Game::IsControlPressed(int index, Control control)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_PRESSED, index, static_cast<int>(control));
@@ -117,6 +116,11 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_OUT, time);
 	}
+	System::String ^Game::GetGXTEntry(System::String ^entry)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
+	}
+
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
 	{
 		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
@@ -129,6 +133,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CANCEL_MUSIC_EVENT, musicFile); //needs a general Game.StopMusic()
 	}
+
 	System::String ^Game::GetUserInput(int maxLength)
 	{
 		return GetUserInput("", maxLength);
@@ -143,9 +148,5 @@ namespace GTA
 		}
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
-	}
-	System::String ^Game::GetGXTEntry(System::String ^entry)
-	{
-		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
 	}
 }

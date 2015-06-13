@@ -4,6 +4,13 @@
 
 namespace GTA
 {
+	Scaleform::Scaleform()
+	{
+	}
+	Scaleform::Scaleform(int handle) : mHandle(handle)
+	{
+	}
+
 	int Scaleform::Handle::get()
 	{
 		return this->mHandle;
@@ -71,7 +78,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_0xCF537FDE4FBD4CE5, mHandle, 255, 255, 255, 255);
 	}
-
 	void Scaleform::Render2DScreenSpace(System::Drawing::PointF location, System::Drawing::PointF size)
 	{
 		float x = location.X / 1280.0f;
@@ -81,19 +87,12 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::DRAW_SCALEFORM_MOVIE, mHandle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
 	}
-
 	void Scaleform::Render3D(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale)
 	{
-		Native::Function::Call(Native::Hash::_0x1CE592FDC749D6F5, mHandle, 
-			position.X, position.Y, position.Z,
-			rotation.X, rotation.Y, rotation.Z,
-			2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
+		Native::Function::Call(Native::Hash::_0x1CE592FDC749D6F5, mHandle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 	}
 	void Scaleform::Render3DAdditive(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale)
 	{
-		Native::Function::Call(Native::Hash::_0x87D51D72255D4E78, mHandle,
-			position.X, position.Y, position.Z,
-			rotation.X, rotation.Y, rotation.Z,
-			2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
+		Native::Function::Call(Native::Hash::_0x87D51D72255D4E78, mHandle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 	}
 }

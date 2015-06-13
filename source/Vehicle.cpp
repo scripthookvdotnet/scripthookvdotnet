@@ -1,7 +1,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
-#include "Native.hpp"
 #include "Game.hpp"
+#include "Native.hpp"
 
 namespace GTA
 {

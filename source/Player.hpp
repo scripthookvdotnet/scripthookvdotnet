@@ -23,33 +23,36 @@ namespace GTA
 		{
 			int get();
 		}
-
-		property System::String ^Name
+		property bool CanControlCharacter
 		{
-			System::String ^get();
+			bool get();
+			void set(bool value);
 		}
-		property System::Drawing::Color Color
+		property bool CanControlRagdoll
 		{
-			System::Drawing::Color get();
+			void set(bool value);
+		}
+		property bool CanStartMission
+		{
+			bool get();
+		}
+		property bool CanUseCover
+		{
+			void set(bool value);
 		}
 		property Ped ^Character
 		{
 			Ped ^get();
 		}
-		property int WantedLevel
+		property System::Drawing::Color Color
 		{
-			int get();
-			void set(int value);
+			System::Drawing::Color get();
 		}
-		property int RemainingSprintTime
+		property bool IgnoredByEveryone
 		{
-			int get();
+			void set(bool value);
 		}
-		property int RemainingUnderwaterTime
-		{
-			int get();
-		}
-		property bool IsDead
+		property bool IsAiming
 		{
 			bool get();
 		}
@@ -57,7 +60,11 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsAiming
+		property bool IsClimbing
+		{
+			bool get();
+		}
+		property bool IsDead
 		{
 			bool get();
 		}
@@ -68,10 +75,6 @@ namespace GTA
 			{
 				return !CanStartMission;
 			}
-		}
-		property bool CanStartMission
-		{
-			bool get();
 		}
 		property bool IsPlaying
 		{
@@ -85,7 +88,7 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsClimbing
+		property bool IsTargettingAnything
 		{
 			bool get();
 		}
@@ -98,31 +101,26 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
-		property bool IgnoredByEveryone
+		property System::String ^Name
 		{
-			void set(bool value);
+			System::String ^get();
 		}
-		property bool CanUseCover
+		property int RemainingSprintTime
 		{
-			void set(bool value);
+			int get();
 		}
-		property bool CanControlRagdoll
+		property int RemainingUnderwaterTime
 		{
-			void set(bool value);
+			int get();
 		}
-		property bool CanControlCharacter
+		property int WantedLevel
 		{
-			bool get();
-			void set(bool value);
+			int get();
+			void set(int value);
 		}
 
-		property bool IsTargettingAnything
-		{
-			bool get();
-		}
 		bool IsTargetting(Entity ^entity);
 		Entity ^GetTargetedEntity();
-
 
 		virtual bool Equals(Player ^player);
 
