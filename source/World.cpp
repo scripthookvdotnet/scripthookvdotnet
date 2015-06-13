@@ -128,6 +128,19 @@ namespace GTA
 
 		return result->ToArray();
 	}
+	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
+	{
+		auto handles = GetAllPeds();
+		auto resultHandles = gcnew List<Ped ^>();
+
+		for (int i = 0; i < handles->Length; i++)
+		{
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
+		}
+
+		return resultHandles->ToArray();
+	}
 	array<Ped ^> ^World::GetAllPeds()
 	{
 		List<Ped ^> ^peds = gcnew List<Ped ^>();
@@ -181,6 +194,19 @@ namespace GTA
 		}
 
 		return result->ToArray();
+	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
+	{
+		auto handles = GetAllVehicles();
+		auto resultHandles = gcnew List<Vehicle ^>();
+
+		for (int i = 0; i < handles->Length; i++)
+		{
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
+		}
+
+		return resultHandles->ToArray();
 	}
 	array<Vehicle ^> ^World::GetAllVehicles()
 	{
