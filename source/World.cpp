@@ -12,7 +12,7 @@ namespace GTA
 	/*
 		GTADate-class
 	*/
-	Date::Date(int year, int month, int day, int hour, int minute, int second)
+	GTADateTime::GTADateTime(int year, int month, int day, int hour, int minute, int second)
 	{
 		this->mYear = year;
 		this->mMonth = month;
@@ -22,40 +22,40 @@ namespace GTA
 		this->mSecond = second;
 	}
 
-	bool Date::Equals(System::Object ^object)
+	bool GTADateTime::Equals(System::Object ^object)
 	{
-		if (object->GetType() != Date::typeid)
+		if (object->GetType() != GTADateTime::typeid)
 			return false;
-		Date ^date = static_cast<Date ^>(object);
-		return date->Year == this->mYear && date->Month == this->mMonth && date->Day == this->mDay && date->Hour == this->mHour && date->Minute == this->mMinute && date->Second == this->mSecond;
+		GTADateTime date = static_cast<GTADateTime>(object);
+		return date.Year == this->mYear && date.Month == this->mMonth && date.Day == this->mDay && date.Hour == this->mHour && date.Minute == this->mMinute && date.Second == this->mSecond;
 	}
 
-	int Date::CompareTo(System::Object ^object)
+	int GTADateTime::CompareTo(System::Object ^object)
 	{
-		if (object->GetType() != Date::typeid)
+		if (object->GetType() != GTADateTime::typeid)
 			throw gcnew System::ArgumentException();
-		Date ^date = static_cast<Date ^>(object);
-		if (this->mYear == date->Year)
+		GTADateTime date = static_cast<GTADateTime>(object);
+		if (this->mYear == date.Year)
 		{
-			if (this->mMonth == date->Month)
+			if (this->mMonth == date.Month)
 			{
-				if (this->mDay == date->Day)
+				if (this->mDay == date.Day)
 				{
-					if (this->mHour == date->Hour)
+					if (this->mHour == date.Hour)
 					{
-						if (this->mMinute == date->Minute)
+						if (this->mMinute == date.Minute)
 						{
-							return this->mSecond.CompareTo(date->Second);
+							return this->mSecond.CompareTo(date.Second);
 						}
-						return this->mMinute.CompareTo(date->Minute);
+						return this->mMinute.CompareTo(date.Minute);
 					}
-					return this->mHour.CompareTo(date->Hour);
+					return this->mHour.CompareTo(date.Hour);
 				}
-				return this->mDay.CompareTo(date->Day);
+				return this->mDay.CompareTo(date.Day);
 			}
-			return this->mMonth.CompareTo(date->Month);
+			return this->mMonth.CompareTo(date.Month);
 		}
-		return this->mYear.CompareTo(date->Year);
+		return this->mYear.CompareTo(date.Year);
 
 	}
 
@@ -66,7 +66,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
-	GTA::Date ^World::CurrentDate::get()
+	GTA::GTADateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
 		int month = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MONTH);
@@ -75,12 +75,12 @@ namespace GTA
 		int minute = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MINUTES);
 		int second = Native::Function::Call<int>(Native::Hash::GET_CLOCK_SECONDS);
 
-		return gcnew GTA::Date(year, month, day, hour, minute, second);
+		return GTA::GTADateTime(year, month, day, hour, minute, second);
 	}
-	void World::CurrentDate::set(GTA::Date ^value)
+	void World::CurrentDate::set(GTA::GTADateTime value)
 	{
-		Native::Function::Call(Native::Hash::SET_CLOCK_DATE, value->Year, value->Month, value->Day);
-		Native::Function::Call(Native::Hash::SET_CLOCK_TIME, value->Hour, value->Minute, value->Second);
+		Native::Function::Call(Native::Hash::SET_CLOCK_DATE, value.Year, value.Month, value.Day);
+		Native::Function::Call(Native::Hash::SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
 	}
 	System::TimeSpan World::CurrentDayTime::get()
 	{

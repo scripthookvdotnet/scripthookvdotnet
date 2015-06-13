@@ -129,10 +129,10 @@ namespace GTA
 		Normal = 4,
 	};
 
-	public ref class Date : System::IComparable
+	public value class GTADateTime : System::IComparable
 	{
 	public:
-		Date(int year, int month, int day, int hour, int minute, int second);
+		GTADateTime(int year, int month, int day, int hour, int minute, int second);
 
 		property int Year
 		{
@@ -168,31 +168,31 @@ namespace GTA
 		virtual int CompareTo(Object ^object);
 		bool Equals(Object ^object) override;
 
-		static inline bool operator ==(Date ^left, Date ^right)
+		static inline bool operator ==(GTADateTime left, GTADateTime right)
 		{
 			if (Object::ReferenceEquals(left, nullptr))
 			{
 				return Object::ReferenceEquals(right, nullptr);
 			}
-			return left->Equals(right);
+			return left.Equals(right);
 		}
-		static inline bool operator !=(Date ^left, Date ^right)
+		static inline bool operator !=(GTADateTime left, GTADateTime right)
 		{
 			return !operator ==(left, right);
 		}
-		static inline bool operator >(Date ^left, Date ^right)
+		static inline bool operator >(GTADateTime left, GTADateTime right)
 		{
-			return left->CompareTo(right) > 0;
+			return left.CompareTo(right) > 0;
 		}
-		static inline bool operator <(Date ^left, Date ^right)
+		static inline bool operator <(GTADateTime left, GTADateTime right)
 		{
-			return left->CompareTo(right) < 0;
+			return left.CompareTo(right) < 0;
 		}
-		static inline bool operator >=(Date ^left, Date ^right)
+		static inline bool operator >=(GTADateTime left, GTADateTime right)
 		{
 			return left == right || left > right;
 		}
-		static inline bool operator <=(Date ^left, Date ^right)
+		static inline bool operator <=(GTADateTime left, GTADateTime right)
 		{
 			return left == right || left < right;
 		}
@@ -213,10 +213,10 @@ namespace GTA
 		{
 			void set(GTA::Weather value);
 		}
-		static property GTA::Date ^CurrentDate
+		static property GTA::GTADateTime CurrentDate
 		{
-			Date ^get();
-			void set(Date ^value);
+			GTADateTime get();
+			void set(GTADateTime value);
 		}
 		static property System::TimeSpan CurrentDayTime
 		{
