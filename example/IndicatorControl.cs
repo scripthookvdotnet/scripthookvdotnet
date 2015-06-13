@@ -21,7 +21,7 @@ public class IndicatorControl : Script
 		{
 			Vehicle vehicle = player.CurrentVehicle;
 
-			if (Game.IsKeyPressed(Keys.A))
+			if (Game.IsControlPressed(2, GTA.Control.INPUT_VEH_MOVE_LEFT_ONLY))
 			{
 				if (vehicle.Speed < 10.0f)
 				{
@@ -35,7 +35,7 @@ public class IndicatorControl : Script
 				vehicle.LeftIndicatorLightOn = this.mLeftActive = false;
 			}
 
-			if (Game.IsKeyPressed(Keys.D))
+			if (Game.IsControlPressed(2, GTA.Control.INPUT_VEH_MOVE_RIGHT_ONLY))
 			{
 				if (vehicle.Speed < 10.0f)
 				{

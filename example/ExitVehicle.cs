@@ -1,45 +1,44 @@
 using System;
 using System.Windows.Forms;
 using GTA;
-using GTA.Native;
 
 public class ExitVehicle : Script
 {
-	public ExitVehicle()
-	{
-		KeyDown += OnKeyDown;
-	}
+    public ExitVehicle()
+    {
+        Tick += OnTick;
+    }
 
-	DateTime mLastExit;
+    DateTime mLastExit;
 
-	void OnKeyDown(object sender, KeyEventArgs e)
-	{
-		Ped player = Game.Player.Character;
+    void OnTick(object sender, EventArgs e)
+    {
+        Ped player = Game.Player.Character;
 
-		if (e.KeyCode == Keys.F && DateTime.Now > this.mLastExit && player.IsInVehicle())
-		{
-			Wait(250);
+        if (Game.IsControlPressed(2, GTA.Control.INPUT_VEH_EXIT) && DateTime.Now > this.mLastExit && player.IsInVehicle())
+        {
+            Wait(250);
 
-			Vehicle vehicle = player.CurrentVehicle;
-			bool isDriver = Function.Call<Ped>(Hash.GET_PED_IN_VEHICLE_SEAT, vehicle, (int)VehicleSeat.Driver) == player;
+            Vehicle vehicle = player.CurrentVehicle;
+            bool isDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
 
-			if (Game.IsKeyPressed(Keys.F))
-			{
-				player.Task.LeaveVehicle(vehicle, true);
-			}
-			else
-			{
-				player.Task.LeaveVehicle(vehicle, false);
+            if (Game.IsControlPressed(2, GTA.Control.INPUT_VEH_EXIT))
+            {
+                player.Task.LeaveVehicle(vehicle, true);
+            }
+            else
+            {
+                player.Task.LeaveVehicle(vehicle, false);
 
-				Wait(0);
+                Wait(0);
 
-				if (isDriver)
-				{
-					vehicle.EngineRunning = true;
-				}
-			}
+                if (isDriver)
+                {
+                    vehicle.EngineRunning = true;
+                }
+            }
 
-			this.mLastExit = DateTime.Now + TimeSpan.FromMilliseconds(2000);
-		}
-	}
+            this.mLastExit = DateTime.Now + TimeSpan.FromMilliseconds(2000);
+        }
+    }
 }
