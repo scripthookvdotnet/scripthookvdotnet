@@ -114,13 +114,11 @@ namespace GTA
 	void MenuToggle::Activate()
 	{
 		ChangeSelection();
-		this->Activated(this, System::EventArgs::Empty);
 	}
 
 	void MenuToggle::Change(bool _r)
 	{
 		ChangeSelection();
-		this->Changed(this, System::EventArgs::Empty);
 	}
 
 	void MenuToggle::SetOriginAndSize(System::Drawing::Point origin, System::Drawing::Size size)
@@ -133,6 +131,7 @@ namespace GTA
 	void MenuToggle::ChangeSelection()
 	{
 		Value = !mToggleSelection;
+		this->Changed(this, System::EventArgs::Empty);
 	}
 
 	void MenuToggle::UpdateText(){
