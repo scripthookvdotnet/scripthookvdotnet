@@ -7,6 +7,7 @@ namespace GTA
 	ref class Ped;
 	ref class Vehicle;
 	enum class VehicleSeat;
+	ref class Entity;
 	ref class TaskSequence;
 
 	public ref class Tasks
@@ -68,8 +69,8 @@ namespace GTA
 		void Skydive();
 		void SlideToCoord(Math::Vector3 coord, float heading);
 		void StandStill(int duration);
-		void SwapWeapon();
 		void StartScenario(System::String ^name, Math::Vector3 position);
+		void SwapWeapon();
 		void TurnTo(Entity ^target);
 		void TurnTo(Entity ^target, int duration);
 		void TurnTo(Math::Vector3 position);

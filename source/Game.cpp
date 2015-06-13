@@ -4,21 +4,13 @@
 
 namespace GTA
 {
-	Player ^GTA::Game::Player::get()
+	float Game::FPS::get()
 	{
-		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+		return (1.0f / LastFrameTime);
 	}
 	int Game::GameTime::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_GAME_TIMER);
-	}
-	float Game::LastFrameTime::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_FRAME_TIME);
-	}
-	float Game::FPS::get()
-	{
-		return (1.0f / LastFrameTime);
 	}
 	bool Game::IsPaused::get()
 	{
@@ -28,6 +20,34 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
+	float Game::LastFrameTime::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_FRAME_TIME);
+	}
+	bool Game::MissionFlag::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_MISSION_FLAG);
+	}
+	void Game::MissionFlag::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_MISSION_FLAG, value);
+	}
+	bool Game::Nightvision::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_ACTIVE);
+	}
+	void Game::Nightvision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
+	}
+	Player ^GTA::Game::Player::get()
+	{
+		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+	}
+	void Game::RadarZoom::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
+	}
 	GTA::RadioStation Game::RadioStation::get()
 	{
 		return static_cast<GTA::RadioStation>(Native::Function::Call<int>(Native::Hash::GET_PLAYER_RADIO_STATION_INDEX));
@@ -35,10 +55,6 @@ namespace GTA
 	void Game::RadioStation::set(GTA::RadioStation value)
 	{
 		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
-	}
-	void Game::RadarZoom::set(int value)
-	{
-		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
 	}
 	void Game::TimeScale::set(float value)
 	{
@@ -52,6 +68,18 @@ namespace GTA
 	bool Game::IsKeyPressed(System::Windows::Forms::Keys key)
 	{
 		return ScriptDomain::CurrentDomain->IsKeyPressed(key);
+	}
+	bool Game::IsControlPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsControlJustPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsControlJustReleased(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
 	}
 
 	void Game::Pause()
@@ -78,6 +106,11 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_OUT, time);
 	}
+	System::String ^Game::GetGXTEntry(System::String ^entry)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
+	}
+
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
 	{
 		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
@@ -90,6 +123,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CANCEL_MUSIC_EVENT, musicFile); //needs a general Game.StopMusic()
 	}
+
 	System::String ^Game::GetUserInput(int maxLength)
 	{
 		return GetUserInput("", maxLength);
@@ -104,9 +138,5 @@ namespace GTA
 		}
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
-	}
-	System::String ^Game::GetGXTEntry(System::String ^entry)
-	{
-		return Native::Function::Call<System::String ^>(Native::Hash::_0x7B5280EBA9840C72, entry);
 	}
 }

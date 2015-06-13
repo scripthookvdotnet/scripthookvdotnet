@@ -13,6 +13,7 @@ namespace GTA
 	{
 		return this->mHandle;
 	}
+
 	float Rope::Length::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::_0x73040398DFF9A4A6, this->mHandle);
@@ -21,12 +22,11 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ROPE_FORCE_LENGTH, this->mHandle, value);
 	}
-
-	void Rope::Delete()
+	int Rope::VertexCount::get()
 	{
-		int handle = this->Handle;
-		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
+		return Native::Function::Call<int>(Native::Hash::GET_ROPE_VERTEX_COUNT, this->Handle);
 	}
+
 	void Rope::ActivatePhysics()
 	{
 		Native::Function::Call(Native::Hash::ACTIVATE_PHYSICS, this->Handle);
@@ -57,9 +57,26 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DETACH_ROPE_FROM_ENTITY, this->Handle, entity);
 	}
-
+	void Rope::PinVertex(int vertex, Math::Vector3 position)
+	{
+		Native::Function::Call(Native::Hash::PIN_ROPE_VERTEX, this->Handle, vertex, position.X, position.Y, position.Z);
+	}
+	void Rope::UnpinVertex(int vertex)
+	{
+		Native::Function::Call(Native::Hash::UNPIN_ROPE_VERTEX, this->Handle, vertex);
+	}
+	Math::Vector3 Rope::GetVertexCoord(int vertex)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, this->Handle, vertex);
+	}
 	void Rope::LoadTextures()
 	{
 		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
+	}
+
+	void Rope::Delete()
+	{
+		int handle = this->Handle;
+		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
 	}
 }

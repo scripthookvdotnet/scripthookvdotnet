@@ -3,6 +3,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
+#include "Blip.hpp"
 #include "Rope.hpp"
 #include "Camera.hpp"
 #include "Raycast.hpp"
@@ -62,10 +63,6 @@ namespace GTA
 	/*
 		World-Class
 	*/
-	void World::Weather::set(GTA::Weather value)
-	{
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
-	}
 	GTA::GTADateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
@@ -121,6 +118,10 @@ namespace GTA
 
 			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
 		}
+	}
+	void World::Weather::set(GTA::Weather value)
+	{
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
 
 	array<Blip ^> ^World::GetActiveBlips()
@@ -401,7 +402,7 @@ namespace GTA
 			type = 1;
 		}
 
-		Rope::LoadTextures();
+		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 		int tmp;
 
 		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, maxLength, minLength, p10, p11, p12, p13, p14, breakable, &tmp);
@@ -416,6 +417,10 @@ namespace GTA
 	void World::DestroyAllCameras()
 	{
 		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
+	}
+	void World::SetBlackout(bool enable)
+	{
+		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
 	}
 
 	int World::AddRelationShipGroup(System::String ^groupName)

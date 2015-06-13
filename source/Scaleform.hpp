@@ -4,8 +4,6 @@
 
 namespace GTA
 {
-	using namespace System::Collections::Generic;
-
 	public ref class ScaleformArgumentTXD sealed
 	{
 	public:
@@ -19,13 +17,7 @@ namespace GTA
 	public ref class Scaleform sealed
 	{
 	public:
-		Scaleform::Scaleform(int handle) : mHandle(handle)
-		{
-		}
-
-		Scaleform::Scaleform()
-		{
-		}
+		Scaleform(int handle);
 
 		property int Handle
 		{
@@ -33,13 +25,16 @@ namespace GTA
 		}
 
 		bool Load(System::String ^scaleformID);
+
 		void CallFunction(System::String ^function, ... array<Object^> ^arguments);
 
 		void Render2D();
 		void Render2DScreenSpace(System::Drawing::PointF location, System::Drawing::PointF size);
-
 		void Render3D(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale);
 		void Render3DAdditive(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale);
+
+	internal:
+		Scaleform();
 
 	private:
 		int mHandle;
