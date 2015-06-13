@@ -61,7 +61,15 @@ namespace GTA
 		{
 			bool get();
 		}
+		[System::ObsoleteAttribute("Player.IsOnMission is deprecated, please use Player.CanStartMission instead")]
 		property bool IsOnMission
+		{
+			bool get()
+			{
+				return !CanStartMission;
+			}
+		}
+		property bool CanStartMission
 		{
 			bool get();
 		}

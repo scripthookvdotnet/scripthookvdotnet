@@ -242,7 +242,7 @@
     <ClInclude Include="source\Scaleform.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\Control.hpp">
+    <ClInclude Include="source\Controls.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\MemoryAccess.hpp">

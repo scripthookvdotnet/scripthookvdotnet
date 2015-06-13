@@ -1,29 +1,27 @@
 using System;
-using System.Windows.Forms;
 using GTA;
-using GTA.Native;
 
 public class ExitVehicle : Script
 {
 	public ExitVehicle()
 	{
-		KeyDown += OnKeyDown;
+		Tick += OnTick;
 	}
 
 	DateTime mLastExit;
 
-	void OnKeyDown(object sender, KeyEventArgs e)
+	void OnTick(object sender, EventArgs e)
 	{
 		Ped player = Game.Player.Character;
 
-		if (e.KeyCode == Keys.F && DateTime.Now > this.mLastExit && player.IsInVehicle())
+		if (Game.IsControlPressed(2, Control.VehicleExit) && DateTime.Now > this.mLastExit && player.IsInVehicle())
 		{
 			Wait(250);
 
 			Vehicle vehicle = player.CurrentVehicle;
-			bool isDriver = Function.Call<Ped>(Hash.GET_PED_IN_VEHICLE_SEAT, vehicle, (int)VehicleSeat.Driver) == player;
+			bool isDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
 
-			if (Game.IsKeyPressed(Keys.F))
+			if (Game.IsControlPressed(2, Control.VehicleExit))
 			{
 				player.Task.LeaveVehicle(vehicle, true);
 			}

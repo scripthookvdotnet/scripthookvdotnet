@@ -66,6 +66,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
 	}
+	bool Game::MissionFlag::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_MISSION_FLAG);
+	}
+	void Game::MissionFlag::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_MISSION_FLAG, value);
+	}
 
 	bool Game::IsKeyPressed(System::Windows::Forms::Keys key)
 	{

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Player.hpp"
-#include "Control.hpp"
 #include "MemoryAccess.hpp"
+#include "Controls.hpp"
 
 namespace GTA
 {
@@ -75,6 +75,11 @@ namespace GTA
 			void set(float value);
 		}
 		static property bool Nightvision
+		{
+			bool get();
+			void set(bool value);
+		}
+		static property bool MissionFlag
 		{
 			bool get();
 			void set(bool value);
