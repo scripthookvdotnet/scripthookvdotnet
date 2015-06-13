@@ -52,6 +52,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, sound, set, 0);
 	}
+	void Audio::PlaySoundFrontEnd(int id, System::String ^sound)
+	{
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, id, sound, 0, 0);
+	}
 	void Audio::PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set)
 	{
 		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, id, sound, set, 0);
