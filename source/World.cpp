@@ -3,16 +3,13 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
+#include "Blip.hpp"
 #include "Rope.hpp"
 #include "Camera.hpp"
 #include "Raycast.hpp"
 
 namespace GTA
 {
-	void World::Weather::set(GTA::Weather value)
-	{
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
-	}
 	System::DateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
@@ -68,6 +65,10 @@ namespace GTA
 
 			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
 		}
+	}
+	void World::Weather::set(GTA::Weather value)
+	{
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
 	}
 
 	array<Blip ^> ^World::GetActiveBlips()

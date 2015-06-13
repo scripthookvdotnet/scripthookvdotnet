@@ -15,9 +15,29 @@ namespace GTA
 		return this->mHandle;
 	}
 
-	System::String ^Player::Name::get()
+	bool Player::CanControlCharacter::get()
 	{
-		return Native::Function::Call<System::String ^>(Native::Hash::GET_PLAYER_NAME, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_CONTROL_ON, this->Handle);
+	}
+	void Player::CanControlCharacter::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_CONTROL, this->Handle, value, 0);
+	}
+	void Player::CanControlRagdoll::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::GIVE_PLAYER_RAGDOLL_CONTROL, this->Handle, value);
+	}
+	bool Player::CanStartMission::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::CAN_PLAYER_START_MISSION, this->Handle);
+	}
+	void Player::CanUseCover::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_CAN_USE_COVER, this->Handle, value);
+	}
+	Ped ^Player::Character::get()
+	{
+		return this->mPed;
 	}
 	System::Drawing::Color Player::Color::get()
 	{
@@ -26,42 +46,25 @@ namespace GTA
 
 		return System::Drawing::Color::FromArgb(r, g, b);
 	}
-	Ped ^Player::Character::get()
+	void Player::IgnoredByEveryone::set(bool value)
 	{
-		return this->mPed;
-	}
-	int Player::WantedLevel::get()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_WANTED_LEVEL, this->Handle);
-	}
-	void Player::WantedLevel::set(int value)
-	{
-		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL, this->Handle, value, false);
-		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL_NOW, this->Handle, false);
-	}
-	int Player::RemainingSprintTime::get()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_SPRINT_TIME_REMAINING, this->Handle);
-	}
-	int Player::RemainingUnderwaterTime::get()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_UNDERWATER_TIME_REMAINING, this->Handle);
-	}
-	bool Player::IsDead::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_DEAD, this->Handle);
-	}
-	bool Player::IsAlive::get()
-	{
-		return !IsDead;
+		Native::Function::Call(Native::Hash::SET_EVERYONE_IGNORE_PLAYER, this->Handle, value);
 	}
 	bool Player::IsAiming::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING, this->Handle);
 	}
-	bool Player::CanStartMission::get()
+	bool Player::IsAlive::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::CAN_PLAYER_START_MISSION, this->Handle);
+		return !IsDead;
+	}
+	bool Player::IsClimbing::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_CLIMBING, this->Handle);
+	}
+	bool Player::IsDead::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_DEAD, this->Handle);
 	}
 	bool Player::IsPlaying::get()
 	{
@@ -75,9 +78,9 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_RIDING_TRAIN, this->Handle);
 	}
-	bool Player::IsClimbing::get()
+	bool Player::IsTargettingAnything::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_CLIMBING, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_TARGETTING_ANYTHING, this->Handle);
 	}
 	Vehicle ^Player::LastVehicle::get()
 	{
@@ -128,31 +131,28 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::STAT_SET_INT, hash, value, 1);
 	}
-	void Player::IgnoredByEveryone::set(bool value)
+	System::String ^Player::Name::get()
 	{
-		Native::Function::Call(Native::Hash::SET_EVERYONE_IGNORE_PLAYER, this->Handle, value);
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_PLAYER_NAME, this->Handle);
 	}
-	void Player::CanUseCover::set(bool value)
+	int Player::RemainingSprintTime::get()
 	{
-		Native::Function::Call(Native::Hash::SET_PLAYER_CAN_USE_COVER, this->Handle, value);
+		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_SPRINT_TIME_REMAINING, this->Handle);
 	}
-	void Player::CanControlRagdoll::set(bool value)
+	int Player::RemainingUnderwaterTime::get()
 	{
-		Native::Function::Call(Native::Hash::GIVE_PLAYER_RAGDOLL_CONTROL, this->Handle, value);
+		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_UNDERWATER_TIME_REMAINING, this->Handle);
 	}
-	bool Player::CanControlCharacter::get()
+	int Player::WantedLevel::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_CONTROL_ON, this->Handle);
+		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_WANTED_LEVEL, this->Handle);
 	}
-	void Player::CanControlCharacter::set(bool value)
+	void Player::WantedLevel::set(int value)
 	{
-		Native::Function::Call(Native::Hash::SET_PLAYER_CONTROL, this->Handle, value, 0);
+		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL, this->Handle, value, false);
+		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL_NOW, this->Handle, false);
 	}
 
-	bool Player::IsTargettingAnything::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_TARGETTING_ANYTHING, this->Handle);
-	}
 	bool Player::IsTargetting(Entity ^entity)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING_AT_ENTITY, this->Handle, entity->Handle);
@@ -183,6 +183,7 @@ namespace GTA
 
 		return nullptr;
 	}
+
 	bool Player::Equals(Player ^player)
 	{
 		return !System::Object::ReferenceEquals(player, nullptr) && this->Handle == player->Handle;

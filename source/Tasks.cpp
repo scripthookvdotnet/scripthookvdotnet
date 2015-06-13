@@ -1,9 +1,9 @@
+#include "Tasks.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
-#include "Tasks.hpp"
-#include "TaskSequence.hpp"
 #include "Native.hpp"
 #include "Script.hpp"
+#include "TaskSequence.hpp"
 
 namespace GTA
 {
@@ -279,13 +279,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_STAND_STILL, this->mPed->Handle, duration);
 	}
-	void Tasks::SwapWeapon()
-	{
-		Native::Function::Call(Native::Hash::TASK_SWAP_WEAPON, this->mPed->Handle, false);
-	}
 	void Tasks::StartScenario(System::String ^name, Math::Vector3 position)
 	{
 		Native::Function::Call(Native::Hash::TASK_START_SCENARIO_AT_POSITION, this->mPed->Handle, name, position.X, position.Y, position.Z, 0.0f, 0, 0, 1);
+	}
+	void Tasks::SwapWeapon()
+	{
+		Native::Function::Call(Native::Hash::TASK_SWAP_WEAPON, this->mPed->Handle, false);
 	}
 	void Tasks::TurnTo(Entity ^target)
 	{

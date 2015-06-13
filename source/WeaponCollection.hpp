@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Ped.hpp"
+#include "Weapon.hpp"
 
 namespace GTA
 {
 	ref class Ped;
-	ref class Weapon;
 
 	public ref class WeaponCollection sealed
 	{
@@ -14,6 +13,7 @@ namespace GTA
 		{
 			Weapon ^get();
 		}
+
 		property Weapon ^default[Native::WeaponHash]
 		{
 			Weapon ^get(Native::WeaponHash hash);
@@ -29,7 +29,7 @@ namespace GTA
 		WeaponCollection(Ped ^owner);
 
 	private:
-		Ped ^pOwner;
-		System::Collections::Generic::Dictionary<Native::WeaponHash, Weapon^> ^weapons;
+		Ped ^mOwner;
+		System::Collections::Generic::Dictionary<Native::WeaponHash, Weapon^> ^mWeapons;
 	};
 }

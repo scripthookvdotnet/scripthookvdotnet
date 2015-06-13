@@ -200,6 +200,13 @@ namespace GTA
 		FrontWheels = 23,
 		BackWheels = 24 // only for motocycles
 	};
+	public enum class VehicleNeonLight
+	{
+		Left = 0,
+		Right = 1,
+		Front = 2,
+		Back = 3,
+	};
 	public enum class VehicleRoofState
 	{
 		Closed,
@@ -217,6 +224,12 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+	};
+	public enum class VehicleToggleMod
+	{
+		Turbo = 18,
+		TireSmoke = 20,
+		XenonHeadlights = 22
 	};
 	public enum class VehicleWheelType
 	{
@@ -245,19 +258,6 @@ namespace GTA
 		Stock = 4,
 		Limo = 5,
 		Green = 6
-	};
-	public enum class VehicleToggleMod
-	{
-		Turbo = 18,
-		TireSmoke = 20,
-		XenonHeadlights = 22
-	};
-	public enum class VehicleNeonLight
-	{
-		Left = 0,
-		Right = 1,
-		Front = 2,
-		Back = 3,
 	};
 
 	public ref class Vehicle sealed : public Entity
@@ -520,7 +520,6 @@ namespace GTA
 		void FixTire(int wheel);
 		bool IsInBurnout();
 		void StartAlarm();
-
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);

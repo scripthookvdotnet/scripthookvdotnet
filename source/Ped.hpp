@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Entity.hpp"
-#include "World.hpp"
-#include "Vehicle.hpp"
-#include "Vector3.hpp"
 
 namespace GTA
 {
 	ref class Tasks;
 	ref class Vehicle;
 	ref class WeaponCollection;
+	value class Model;
+	enum class VehicleSeat;
+	enum class Relationship;
 
 	public enum class Gender
 	{
