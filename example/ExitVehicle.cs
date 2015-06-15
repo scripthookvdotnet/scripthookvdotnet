@@ -1,5 +1,6 @@
 using System;
 using GTA;
+using DateTime = System.DateTime;
 
 public class ExitVehicle : Script
 {

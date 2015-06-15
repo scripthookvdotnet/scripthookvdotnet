@@ -129,13 +129,90 @@ namespace GTA
 		Christmas,
 	};
 
+	public value class DateTime : System::IComparable
+	{
+	public:
+		DateTime(int year, int month, int day, int hour, int minute, int second);
+
+		property int Year
+		{
+			int get(){ return mYear; };
+			void set(int value) { mYear = value; };
+		}
+		property int Month
+		{
+			int get(){ return mMonth; };
+			void set(int value) { mMonth = value; };
+		}
+		property int Day
+		{
+			int get(){ return mDay; };
+			void set(int value) { mDay = value; };
+		}
+		property int Hour
+		{
+			int get(){ return mHour; };
+			void set(int value) { mHour = value; };
+		}
+		property int Minute
+		{
+			int get(){ return mMinute; };
+			void set(int value) { mMinute = value; };
+		}
+		property int Second
+		{
+			int get(){ return mSecond; };
+			void set(int value) { mSecond = value; };
+		}
+
+		virtual int CompareTo(Object ^object);
+		bool Equals(Object ^object) override;
+
+		static inline bool operator ==(DateTime left, DateTime right)
+		{
+			if (Object::ReferenceEquals(left, nullptr))
+			{
+				return Object::ReferenceEquals(right, nullptr);
+			}
+			return left.Equals(right);
+		}
+		static inline bool operator !=(DateTime left, DateTime right)
+		{
+			return !operator ==(left, right);
+		}
+		static inline bool operator >(DateTime left, DateTime right)
+		{
+			return left.CompareTo(right) > 0;
+		}
+		static inline bool operator <(DateTime left, DateTime right)
+		{
+			return left.CompareTo(right) < 0;
+		}
+		static inline bool operator >=(DateTime left, DateTime right)
+		{
+			return left == right || left > right;
+		}
+		static inline bool operator <=(DateTime left, DateTime right)
+		{
+			return left == right || left < right;
+		}
+
+	private:
+		int mYear;
+		int mMonth;
+		int mDay;
+		int mHour;
+		int mMinute;
+		int mSecond;
+	};
+
 	public ref class World sealed abstract
 	{
 	public:
-		static property System::DateTime CurrentDate
+		static property GTA::DateTime CurrentDate
 		{
-			System::DateTime get();
-			void set(System::DateTime value);
+			GTA::DateTime get();
+			void set(GTA::DateTime value);
 		}
 		static property System::TimeSpan CurrentDayTime
 		{
