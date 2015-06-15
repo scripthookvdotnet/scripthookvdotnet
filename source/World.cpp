@@ -13,7 +13,7 @@ namespace GTA
 	/*
 		GTADate-class
 	*/
-	GTADateTime::GTADateTime(int year, int month, int day, int hour, int minute, int second)
+	DateTime::DateTime(int year, int month, int day, int hour, int minute, int second)
 	{
 		this->mYear = year;
 		this->mMonth = month;
@@ -23,19 +23,19 @@ namespace GTA
 		this->mSecond = second;
 	}
 
-	bool GTADateTime::Equals(System::Object ^object)
+	bool DateTime::Equals(System::Object ^object)
 	{
-		if (object->GetType() != GTADateTime::typeid)
+		if (object->GetType() != DateTime::typeid)
 			return false;
-		GTADateTime date = static_cast<GTADateTime>(object);
+		DateTime date = static_cast<DateTime>(object);
 		return date.Year == this->mYear && date.Month == this->mMonth && date.Day == this->mDay && date.Hour == this->mHour && date.Minute == this->mMinute && date.Second == this->mSecond;
 	}
 
-	int GTADateTime::CompareTo(System::Object ^object)
+	int DateTime::CompareTo(System::Object ^object)
 	{
-		if (object->GetType() != GTADateTime::typeid)
+		if (object->GetType() != DateTime::typeid)
 			throw gcnew System::ArgumentException();
-		GTADateTime date = static_cast<GTADateTime>(object);
+		DateTime date = static_cast<DateTime>(object);
 		if (this->mYear == date.Year)
 		{
 			if (this->mMonth == date.Month)
@@ -63,7 +63,7 @@ namespace GTA
 	/*
 		World-Class
 	*/
-	GTA::GTADateTime World::CurrentDate::get()
+	GTA::DateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
 		int month = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MONTH);
@@ -72,9 +72,9 @@ namespace GTA
 		int minute = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MINUTES);
 		int second = Native::Function::Call<int>(Native::Hash::GET_CLOCK_SECONDS);
 
-		return GTA::GTADateTime(year, month, day, hour, minute, second);
+		return GTA::DateTime(year, month, day, hour, minute, second);
 	}
-	void World::CurrentDate::set(GTA::GTADateTime value)
+	void World::CurrentDate::set(GTA::DateTime value)
 	{
 		Native::Function::Call(Native::Hash::SET_CLOCK_DATE, value.Year, value.Month, value.Day);
 		Native::Function::Call(Native::Hash::SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);

@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 using GTA;
+using DateTime = System.DateTime;
 
 public class IndicatorControl : Script
 {

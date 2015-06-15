@@ -129,10 +129,10 @@ namespace GTA
 		Christmas,
 	};
 
-	public value class GTADateTime : System::IComparable
+	public value class DateTime : System::IComparable
 	{
 	public:
-		GTADateTime(int year, int month, int day, int hour, int minute, int second);
+		DateTime(int year, int month, int day, int hour, int minute, int second);
 
 		property int Year
 		{
@@ -168,7 +168,7 @@ namespace GTA
 		virtual int CompareTo(Object ^object);
 		bool Equals(Object ^object) override;
 
-		static inline bool operator ==(GTADateTime left, GTADateTime right)
+		static inline bool operator ==(DateTime left, DateTime right)
 		{
 			if (Object::ReferenceEquals(left, nullptr))
 			{
@@ -176,23 +176,23 @@ namespace GTA
 			}
 			return left.Equals(right);
 		}
-		static inline bool operator !=(GTADateTime left, GTADateTime right)
+		static inline bool operator !=(DateTime left, DateTime right)
 		{
 			return !operator ==(left, right);
 		}
-		static inline bool operator >(GTADateTime left, GTADateTime right)
+		static inline bool operator >(DateTime left, DateTime right)
 		{
 			return left.CompareTo(right) > 0;
 		}
-		static inline bool operator <(GTADateTime left, GTADateTime right)
+		static inline bool operator <(DateTime left, DateTime right)
 		{
 			return left.CompareTo(right) < 0;
 		}
-		static inline bool operator >=(GTADateTime left, GTADateTime right)
+		static inline bool operator >=(DateTime left, DateTime right)
 		{
 			return left == right || left > right;
 		}
-		static inline bool operator <=(GTADateTime left, GTADateTime right)
+		static inline bool operator <=(DateTime left, DateTime right)
 		{
 			return left == right || left < right;
 		}
@@ -209,10 +209,10 @@ namespace GTA
 	public ref class World sealed abstract
 	{
 	public:
-		static property GTA::GTADateTime CurrentDate
+		static property GTA::DateTime CurrentDate
 		{
-			GTADateTime get();
-			void set(GTADateTime value);
+			GTA::DateTime get();
+			void set(GTA::DateTime value);
 		}
 		static property System::TimeSpan CurrentDayTime
 		{
