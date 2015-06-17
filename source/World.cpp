@@ -3,6 +3,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
+#include "Pickup.hpp"
 #include "Blip.hpp"
 #include "Rope.hpp"
 #include "Camera.hpp"
@@ -315,6 +316,54 @@ namespace GTA
 		p->Rotation = rotation;
 
 		return p;
+	}
+	Pickup ^World::CreatePickup(int type, Math::Vector3 position, Model model, int value)
+	{
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Pickup(handle);
+	}
+	Pickup ^World::CreatePickup(int type, Math::Vector3 position, Math::Vector3 rotation, Model model, int value)
+	{
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, 0, value, 2, true, model.Hash);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Pickup(handle);
+	}
+	Pickup ^World::CreateAmbientPickup(int type, Math::Vector3 position, Model model, int value)
+	{
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Pickup(handle);
 	}
 
 	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)

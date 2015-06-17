@@ -12,6 +12,7 @@ namespace GTA
 	ref class Prop;
 	ref class Entity;
 	ref class Rope;
+	ref class Pickup;
 	value class Model;
 	value class RaycastResult;
 
@@ -179,6 +180,9 @@ namespace GTA
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround);
+		static Pickup ^CreatePickup(int type, Math::Vector3 position, Model model, int value);
+		static Pickup ^CreatePickup(int type, Math::Vector3 position, Math::Vector3 rotation, Model model, int value);
+		static Pickup ^CreateAmbientPickup(int type, Math::Vector3 position, Model model, int value);
 
 		static void ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage);
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
