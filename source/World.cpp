@@ -340,7 +340,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP_ROTATE, static_cast<int>(type), position.X, position.Y, position.Z, rotation.X, rotation.Y, 0, value, 2, true, model.Hash);
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP_ROTATE, static_cast<int>(type), position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
 
 		if (handle == 0)
 		{
@@ -349,7 +349,7 @@ namespace GTA
 
 		return gcnew Pickup(handle);
 	}
-	Pickup ^World::CreateAmbientPickup(PickupType type, Math::Vector3 position, Model model, int value)
+	Prop ^World::CreateAmbientPickup(PickupType type, Math::Vector3 position, Model model, int value)
 	{
 		if (!model.Request(1000))
 		{
@@ -363,7 +363,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		return gcnew Pickup(handle);
+		return gcnew Prop(handle);
 	}
 
 	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)
