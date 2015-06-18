@@ -168,6 +168,7 @@ namespace GTA
 		static float GetGroundZ(Math::Vector3 position);
 		static float GetGroundHeight(Math::Vector2 position);
 		static float GetGroundHeight(Math::Vector3 position);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
