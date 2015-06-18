@@ -197,6 +197,22 @@ namespace GTA
 	{
 		return GetGroundHeight(Math::Vector2(position.X, position.Y));
 	}
+	Math::Vector3 World::GetNextPositionOnStreet(Math::Vector3 position)
+	{
+		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();
+
+		for (int i = 1; i < 40; i++)
+		{
+			Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, outPos, 1, 0x40400000, 0);
+			const Math::Vector3 newPos = outPos->GetResult<Math::Vector3>();
+
+			if (!Native::Function::Call<bool>(Native::Hash::IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPos.X, newPos.Y, newPos.Z, 5.0f, 5.0f, 5.0f, 0))
+			{
+				return newPos;
+			}
+		}
+		return Math::Vector3();
+	}
 
 	Blip ^World::CreateBlip(Math::Vector3 position)
 	{
