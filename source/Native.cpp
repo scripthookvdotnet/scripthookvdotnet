@@ -224,6 +224,20 @@ namespace GTA
 			{
 				return gcnew Prop(*reinterpret_cast<int *>(value));
 			}
+			if (type == Entity::typeid)
+			{
+				int handle = *reinterpret_cast<int *>(value);
+				if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handle))
+				{
+					switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, handle))
+					{
+					case 1: return gcnew Ped(handle);
+					case 2: return gcnew Vehicle(handle);
+					case 3: return gcnew Prop(handle);
+					}
+				}
+				return nullptr;
+			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
