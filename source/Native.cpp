@@ -231,9 +231,12 @@ namespace GTA
 				{
 					switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, handle))
 					{
-					case 1: return gcnew Ped(handle);
-					case 2: return gcnew Vehicle(handle);
-					case 3: return gcnew Prop(handle);
+					case 1: 
+						return gcnew Ped(handle);
+					case 2: 
+						return gcnew Vehicle(handle);
+					case 3: 
+						return gcnew Prop(handle);
 					}
 				}
 				return nullptr;
