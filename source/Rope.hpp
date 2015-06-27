@@ -20,8 +20,11 @@ namespace GTA
 			float get();
 			void set(float value);
 		}
+		property int VertexCount
+		{
+			int get();
+		}
 
-		void Delete();
 		void ActivatePhysics();
 		void ResetLength(bool reset);
 		void AttachEntities(Entity ^entityOne, Entity ^entityTwo, float length);
@@ -29,7 +32,13 @@ namespace GTA
 		void AttachEntity(Entity ^entity);
 		void AttachEntity(Entity ^entity, Math::Vector3 position);
 		void DetachEntity(Entity ^entity);
+		void PinVertex(int vertex, Math::Vector3 position);
+		void UnpinVertex(int vertex);
+		Math::Vector3 GetVertexCoord(int vertex);
 
+		void Delete();
+
+		[System::ObsoleteAttribute("Rope.LoadTextures is obsolete, please do no longer use it, as it's called by World.AddRope automatically")]
 		static void LoadTextures();
 
 	private:

@@ -10,7 +10,41 @@ namespace GTA
 {
 	ref class MenuBase;
 
-	public interface class MenuItem
+	public ref class MenuItemIndexArgs :System::EventArgs
+	{
+	private:
+		int mIndex;
+
+	public:
+		MenuItemIndexArgs(int index)
+		{
+			this->mIndex = index;
+		}
+
+		property int Index
+		{
+			int get(){ return this->mIndex; }
+		}
+	};
+
+	public ref class MenuItemDoubleValueArgs :System::EventArgs
+	{
+	private:
+		double mValue;
+
+	public:
+		MenuItemDoubleValueArgs(double value)
+		{
+			this->mValue = value;
+		}
+
+		property double Index
+		{
+			double get(){ return this->mValue; }
+		}
+	};
+
+	public interface class IMenuItem
 	{
 	public:
 		/** Called when the MenuItem should be drawn */
@@ -42,11 +76,11 @@ namespace GTA
 		property System::String ^Description;
 	};
 
-	public ref class MenuButton : MenuItem
+	public ref class MenuButton : IMenuItem
 	{
 	public:
-		MenuButton(System::String ^caption, System::String ^description, System::Action ^activationAction);
-		MenuButton(System::String ^caption, System::Action ^activationAction);
+		MenuButton(System::String ^caption, System::String ^description);
+		MenuButton(System::String ^caption);
 
 	public:
 		virtual void Draw();
@@ -69,9 +103,10 @@ namespace GTA
 		}
 		virtual property System::String ^Description;
 
-	private:
-		System::Action ^mActivationAction;
+	public:
+		event System::EventHandler<System::EventArgs ^> ^Activated;
 
+	private:
 		System::String ^mCaption;
 
 		void UpdateText();
@@ -83,11 +118,11 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuToggle : MenuItem
+	public ref class MenuToggle : IMenuItem
 	{
 	public:
-		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction);
-		MenuToggle(System::String ^caption, System::String ^description, System::Action ^activationAction, System::Action ^deactivationAction, bool value);
+		MenuToggle(System::String ^caption, System::String ^description);
+		MenuToggle(System::String ^caption, System::String ^description, bool value);
 
 	public:
 		virtual void Draw();
@@ -111,10 +146,10 @@ namespace GTA
 			}
 		}
 
-	private:
-		System::Action ^mActivationAction;
-		System::Action ^mDeactivationAction;
+	public:
+		event System::EventHandler<System::EventArgs ^> ^Changed;
 
+	private:
 		bool mToggleSelection;
 
 		void UpdateText();
@@ -128,11 +163,11 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuNumericScroller : MenuItem
+	public ref class MenuNumericScroller : IMenuItem
 	{
 	public:
-		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc);
-		MenuNumericScroller(System::String ^caption, System::String ^description, System::Action<double> ^changeAction, System::Action<double> ^activateAction, double min, double max, double inc, int timesIncremented);
+		MenuNumericScroller(System::String ^caption, System::String ^description, double min, double max, double inc);
+		MenuNumericScroller(System::String ^caption, System::String ^description, double min, double max, double inc, int timesIncremented);
 
 	public:
 		virtual void Draw();
@@ -168,10 +203,11 @@ namespace GTA
 			}
 		}
 
-	private:
-		System::Action<double> ^mChangeAction;
-		System::Action<double> ^mActivateAction;
+	public:
+		event System::EventHandler<MenuItemDoubleValueArgs ^> ^Activated;
+		event System::EventHandler<MenuItemDoubleValueArgs ^> ^Changed;
 
+	private:
 		int mTimesIncrement;
 
 		void UpdateText();
@@ -183,11 +219,11 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuEnumScroller : MenuItem
+	public ref class MenuEnumScroller : IMenuItem
 	{
 	public:
-		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries);
-		MenuEnumScroller(System::String ^caption, System::String ^description, System::Action<int> ^changeAction, System::Action<int> ^activateAction, array<System::String ^> ^entries, int value);
+		MenuEnumScroller(System::String ^caption, System::String ^description, array<System::String ^> ^entries);
+		MenuEnumScroller(System::String ^caption, System::String ^description, array<System::String ^> ^entries, int value);
 
 	public:
 		virtual void Draw();
@@ -216,10 +252,11 @@ namespace GTA
 			}
 		}
 
-	private:
-		System::Action<int> ^mChangeAction;
-		System::Action<int> ^mActivateAction;
+	public:
+		event System::EventHandler<MenuItemIndexArgs ^> ^Activated;
+		event System::EventHandler<MenuItemIndexArgs ^> ^Changed;
 
+	private:
 		int mSelectedIndex;
 		array<System::String ^> ^mEntries;
 
@@ -232,7 +269,7 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	public ref class MenuLabel : MenuItem
+	public ref class MenuLabel : IMenuItem
 	{
 	public:
 		MenuLabel(System::String ^caption, bool underlined);

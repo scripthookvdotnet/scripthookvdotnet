@@ -200,6 +200,13 @@ namespace GTA
 		FrontWheels = 23,
 		BackWheels = 24 // only for motocycles
 	};
+	public enum class VehicleNeonLight
+	{
+		Left = 0,
+		Right = 1,
+		Front = 2,
+		Back = 3,
+	};
 	public enum class VehicleRoofState
 	{
 		Closed,
@@ -217,6 +224,12 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+	};
+	public enum class VehicleToggleMod
+	{
+		Turbo = 18,
+		TireSmoke = 20,
+		XenonHeadlights = 22
 	};
 	public enum class VehicleWheelType
 	{
@@ -245,19 +258,6 @@ namespace GTA
 		Stock = 4,
 		Limo = 5,
 		Green = 6
-	};
-	public enum class VehicleToggleMod
-	{
-		Turbo = 18,
-		TireSmoke = 20,
-		XenonHeadlights = 22
-	};
-	public enum class VehicleNeonLight
-	{
-		Left = 0,
-		Right = 1,
-		Front = 2,
-		Back = 3,
 	};
 
 	public ref class Vehicle sealed : public Entity
@@ -319,6 +319,11 @@ namespace GTA
 			VehicleRoofState get();
 			void set(VehicleRoofState value);
 		}
+		property float BodyHealth
+		{
+			float get();
+			void set(float value);
+		}
 		property float EngineHealth
 		{
 			float get();
@@ -343,7 +348,7 @@ namespace GTA
 		{
 			VehicleColor get();
 			void set(VehicleColor value);
-		}
+		}				
 		property VehicleColor RimColor
 		{
 			VehicleColor get();
@@ -470,6 +475,14 @@ namespace GTA
 		{
 			int get();
 		}
+		property bool HasAlarm
+		{
+			void set(bool value);
+		}
+		property bool AlarmActive
+		{
+			bool get();
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
@@ -489,6 +502,9 @@ namespace GTA
 		void PlaceOnNextStreet();
 		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
 		void CloseDoor(VehicleDoor door, bool instantly);
+		void BreakDoor(VehicleDoor door);
+		bool IsDoorBroken(VehicleDoor door);
+		void SetDoorBreakable(VehicleDoor door, bool isBreakable);
 		void FixWindow(VehicleWindow window);
 		void SmashWindow(VehicleWindow window);
 		void RollUpWindow(VehicleWindow window);
@@ -503,6 +519,7 @@ namespace GTA
 		void BurstTire(int wheel);
 		void FixTire(int wheel);
 		bool IsInBurnout();
+		void StartAlarm();
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);

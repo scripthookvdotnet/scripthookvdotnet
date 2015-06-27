@@ -1,35 +1,20 @@
 #pragma once
 
+#include "Vector2.hpp"
 #include "Vector3.hpp"
-#include "Raycast.hpp"
 
 namespace GTA
 {
-	value class Model;
+	ref class Blip;
+	ref class Camera;
 	ref class Ped;
 	ref class Vehicle;
-	ref class Camera;
-	ref class Blip;
 	ref class Prop;
+	ref class Entity;
 	ref class Rope;
+	value class Model;
+	value class RaycastResult;
 
-	public enum class Weather
-	{
-		ExtraSunny,
-		Clear,
-		Clouds,
-		Smog,
-		Foggy,
-		Overcast,
-		Raining,
-		ThunderStorm,
-		Clearing,
-		Neutral,
-		Snowing,
-		Blizzard,
-		Snowlight,
-		Christmas,
-	};
 	public enum class ExplosionType
 	{
 		SmallExplosion1 = 1,
@@ -66,6 +51,19 @@ namespace GTA
 		Explosion5 = 32,
 		SmallExplosion7 = 33,
 		Explosion6 = 34
+	};
+	public enum class IntersectOptions
+	{
+		Everything = -1,
+		Map = 1,
+		Mission_Entities = 2,
+		Peds1 = 12,//4 and 8 both seem to be peds
+		Objects = 16,
+		Unk1 = 32,
+		Unk2 = 64,
+		Unk3 = 128,
+		Vegetation = 256,
+		Unk4 = 512
 	};
 	public enum class MarkerType
 	{
@@ -109,27 +107,31 @@ namespace GTA
 		Companion = 0,
 		Pedestrians = 255 // or neutral
 	};
-	public enum class IntersectOptions
+	public enum class RopeType
 	{
-		Everything = -1,
-		Map = 1,
-		Mission_Entities = 2,
-		Peds1 = 12,//4 and 8 both seem to be peds
-		Objects = 16,
-		Unk1 = 32,
-		Unk2 = 64,
-		Unk3 = 128,
-		Vegetation = 256,
-		Unk4 = 512
+		Normal = 4,
+	};
+	public enum class Weather
+	{
+		ExtraSunny,
+		Clear,
+		Clouds,
+		Smog,
+		Foggy,
+		Overcast,
+		Raining,
+		ThunderStorm,
+		Clearing,
+		Neutral,
+		Snowing,
+		Blizzard,
+		Snowlight,
+		Christmas,
 	};
 
 	public ref class World sealed abstract
 	{
 	public:
-		static property GTA::Weather Weather
-		{
-			void set(GTA::Weather value);
-		}
 		static property System::DateTime CurrentDate
 		{
 			System::DateTime get();
@@ -144,7 +146,17 @@ namespace GTA
 		{
 			void set(int value);
 		}
+		static property Camera ^RenderingCamera
+		{
+			Camera ^get();
+			void set(Camera ^renderingCamera);
+		}
+		static property GTA::Weather Weather
+		{
+			void set(GTA::Weather value);
+		}
 
+		static array<Blip ^> ^GetActiveBlips();
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
@@ -152,43 +164,47 @@ namespace GTA
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
+		[System::ObsoleteAttribute("World.GetGroundZ is obsolete, please use World.GetGroundHeight instead.")]
 		static float GetGroundZ(Math::Vector3 position);
+		static float GetGroundHeight(Math::Vector2 position);
+		static float GetGroundHeight(Math::Vector3 position);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
 
+		static Blip ^CreateBlip(Math::Vector3 position);
+		static Blip ^CreateBlip(Math::Vector3 position, float radius);
+		static Camera ^CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov);
 		static Ped ^CreatePed(Model model, Math::Vector3 position);
 		static Ped ^CreatePed(Model model, Math::Vector3 position, float heading);
 		static Ped ^CreateRandomPed(Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position);
 		static Vehicle ^CreateVehicle(Model model, Math::Vector3 position, float heading);
-		static void ShootBullet(Math::Vector3 position, Math::Vector3 pos2, Ped ^Owner, Model hash, int damage);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround);
 		static Prop ^CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround);
 
+		static void ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage);
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
-		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double lenght, int type, double maxLenght, double minLenght, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
-
-		static Camera ^CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov);
-		static property Camera ^RenderingCamera
-		{
-			Camera ^get();
-			void set(Camera ^renderingCamera);
-		}
+		static Rope ^AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable);
+		[System::ObsoleteAttribute("This World.AddRope overload is obsolete, please use the other one")]
+		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double length, int type, double maxLength, double minLength, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
 		static void DestroyAllCameras();
+		static void SetBlackout(bool enable);
 
-		static Blip ^CreateBlip(Math::Vector3 position);
-		static Blip ^CreateBlip(Math::Vector3 position, float radius);
-		static array<Blip ^> ^GetActiveBlips();
-
+		[System::ObsoleteAttribute("World.AddRelationShipGroup is obsolete, please use World.AddRelationshipGroup instead")]
 		static int AddRelationShipGroup(System::String ^groupName);
+		static int AddRelationshipGroup(System::String ^groupName);
+		[System::ObsoleteAttribute("World.RemoveRelationShipGroup is obsolete, please use World.RemoveRelationshipGroup instead")]
 		static void RemoveRelationShipGroup(int group);
+		static void RemoveRelationshipGroup(int group);
+		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
 		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
 		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
-		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
-		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options);
-		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags);
-		static RayCastResult ^RayCast(Vector3 source, Vector3 target, IntersectOptions options, int UnkFlags, Entity ^E);
-		static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color);
-		static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
+
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options);
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^entity);
+
+		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color);
+		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

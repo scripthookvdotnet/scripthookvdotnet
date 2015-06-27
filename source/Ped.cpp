@@ -1,8 +1,10 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
+#include "Prop.hpp"
 #include "Tasks.hpp"
-#include "Native.hpp"
 #include "WeaponCollection.hpp"
+#include "World.hpp"
+#include "Native.hpp"
 
 namespace GTA
 {
@@ -93,6 +95,10 @@ namespace GTA
 	bool Ped::IsShooting::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SHOOTING, this->Handle);
+	}
+	bool Ped::IsReloading::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_RELOADING, this->Handle);
 	}
 	bool Ped::IsInCombat::get()
 	{
@@ -191,6 +197,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, this->Handle, static_cast<int>(value));
 	}
+	void Ped::FiringPattern::set(GTA::FiringPattern value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_FIRING_PATTERN, this->Handle, static_cast<int>(value));
+	}
 
 	bool Ped::IsInVehicle()
 	{
@@ -228,6 +238,29 @@ namespace GTA
 			this->pWeapons = gcnew WeaponCollection(this);
 		}
 		return this->pWeapons;
+	}
+
+	Entity ^Ped::GetKiller()
+	{
+		int killedBy = Native::Function::Call<int>(Native::Hash::_GET_PED_KILLER, this->Handle);
+		if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, killedBy))
+		{
+			return nullptr;
+		}
+		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, killedBy))
+		{
+			return gcnew Ped(killedBy);
+		}
+		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, killedBy))
+		{
+			return gcnew Vehicle(killedBy);
+		}
+		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, killedBy))
+		{
+			return gcnew Prop(killedBy);
+		}
+		
+		return nullptr;
 	}
 
 	void Ped::Kill()

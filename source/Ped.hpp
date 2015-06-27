@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Entity.hpp"
-#include "World.hpp"
-#include "Vehicle.hpp"
-#include "Vector3.hpp"
 
 namespace GTA
 {
 	ref class Tasks;
 	ref class Vehicle;
 	ref class WeaponCollection;
+	value class Model;
+	enum class VehicleSeat;
+	enum class Relationship;
 
 	public enum class Gender
 	{
@@ -127,6 +127,25 @@ namespace GTA
 		RB_Neck_1 = 0x8b93,
 		IK_Root = 0xdd1c
 	};
+	public enum class FiringPattern : System::UInt32
+	{
+		FullAuto = 0xC6EE6B4C,
+		BurstFire = 0xD6FF6D61,
+		BurstInCover = 0x026321F1,
+		BurstFireDriveby = 0xD31265F2,
+		FromGround = 0x2264E5D6,
+		DelayFireByOneSec = 0x7A845691,
+		SingleShot = 0x5D60E4E0,
+		BurstFirePistol = 0xA018DB8A,
+		BurstFireSMG = 0xD10DADEE,
+		BurstFireRifle = 0x9C74B406,
+		BurstFireMG = 0xB573C5B4,
+		BurstFirePumpShotGun = 0x00BAC39B,
+		BurstFireHeli = 0x914E786F,
+		BurstFireMicro = 0x42EF03FD,
+		BurstFireBursts = 0x42EF03FD,
+		BurstFireTank = 0xE2CA3A71
+	};
 
 	public ref class Ped sealed : public Entity
 	{
@@ -202,6 +221,10 @@ namespace GTA
 			bool get();
 		}
 		property bool IsShooting
+		{
+			bool get();
+		}
+		property bool IsReloading
 		{
 			bool get();
 		}
@@ -296,6 +319,10 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		property FiringPattern FiringPattern
+		{
+			void set(GTA::FiringPattern value);
+		}
 
 		property WeaponCollection ^Weapons
 		{
@@ -309,6 +336,7 @@ namespace GTA
 		Relationship GetRelationshipWithPed(Ped ^ped);
 		void SetIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 
+		Entity ^GetKiller();
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();
