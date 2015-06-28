@@ -4,7 +4,6 @@
 
 namespace GTA
 {
-	ref class Player;
 	ref class Tasks;
 	ref class Vehicle;
 	ref class WeaponCollection;
