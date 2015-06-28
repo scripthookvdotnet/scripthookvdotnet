@@ -153,6 +153,11 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
+		unsigned char GetAlpha();
+		void SetAlpha(unsigned char alpha);
+		void SetAlpha(unsigned char alpha, bool invisibleClothes);
+		void ResetAlpha();
+
 		void Delete();
 		bool Exists();
 		static bool Exists(Entity ^entity);

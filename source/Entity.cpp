@@ -223,6 +223,23 @@ namespace GTA
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
 
+	unsigned char Entity::GetAlpha()
+	{
+		return Native::Function::Call<unsigned char>(Native::Hash::GET_ENTITY_ALPHA, this->Handle);
+	}
+	void Entity::SetAlpha(unsigned char alpha)
+	{
+		SetAlpha(alpha, false);
+	}
+	void Entity::SetAlpha(unsigned char alpha, bool invisibleClothes)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ALPHA, this->Handle, alpha, invisibleClothes);
+	}
+	void Entity::ResetAlpha()
+	{
+		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, this->Handle);
+	}
+
 	void Entity::Delete()
 	{
 		int handle = this->Handle;
