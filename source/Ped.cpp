@@ -328,7 +328,7 @@ namespace GTA
 	}
 	bool Ped::IsInCover()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COVER, this->Handle, false);
+		return IsInCover(false);
 	}
 	bool Ped::IsInCover(bool expectUseWeapon)
 	{
