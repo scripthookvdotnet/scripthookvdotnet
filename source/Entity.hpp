@@ -153,9 +153,9 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
-		System::Byte GetAlpha();
-		void SetAlpha(System::Byte alpha);
-		void SetAlpha(System::Byte alpha, bool invisibleClothes);
+		int GetAlpha();
+		void SetAlpha(int alpha);
+		void SetAlpha(int alpha, bool invisibleClothes);
 		void ResetAlpha();
 
 		void Delete();
