@@ -132,6 +132,11 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property int Alpha
+		{
+			int get();
+			void set(int value);
+		}
 
 		bool IsInRangeOf(Math::Vector3 position, float range);
 		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2);
@@ -153,9 +158,6 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
-		int GetAlpha();
-		void SetAlpha(int alpha);
-		void SetAlpha(int alpha, bool invisibleClothes);
 		void ResetAlpha();
 
 		void Delete();

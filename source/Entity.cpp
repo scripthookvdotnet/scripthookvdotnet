@@ -154,6 +154,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VELOCITY, this->Handle, value.X, value.Y, value.Z);
 	}
+	int Entity::Alpha::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_ALPHA, this->Handle);
+	}
+	void Entity::Alpha::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ALPHA, this->Handle, value, false);
+	}
 
 	bool Entity::IsInRangeOf(Math::Vector3 position, float distance)
 	{
@@ -223,18 +231,6 @@ namespace GTA
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
 
-	int Entity::GetAlpha()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_ALPHA, this->Handle);
-	}
-	void Entity::SetAlpha(int alpha)
-	{
-		SetAlpha(alpha, false);
-	}
-	void Entity::SetAlpha(int alpha, bool invisibleClothes)
-	{
-		Native::Function::Call(Native::Hash::SET_ENTITY_ALPHA, this->Handle, alpha, invisibleClothes);
-	}
 	void Entity::ResetAlpha()
 	{
 		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, this->Handle);
