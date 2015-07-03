@@ -9,12 +9,12 @@ namespace GTA
 	{
 		Unknown = 0,
 
-		v1_0_335_2_STEAM,
-		v1_0_335_2_NOSTEAM,
-		v1_0_350_1_STEAM,
-		v1_0_350_2_NOSTEAM,
-		v1_0_372_2_STEAM,
-		v1_0_372_2_NOSTEAM,
+		VER_1_0_335_2_STEAM,
+		VER_1_0_335_2_NOSTEAM,
+		VER_1_0_350_1_STEAM,
+		VER_1_0_350_2_NOSTEAM,
+		VER_1_0_372_2_STEAM,
+		VER_1_0_372_2_NOSTEAM,
 	};
 	public enum class RadioStation
 	{
