@@ -1,22 +1,16 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
-#include "MemoryAccess.hpp"
+
+#include <Main.h>
+
+#undef Yield
 
 namespace GTA
 {
 	float Game::FPS::get()
 	{
 		return (1.0f / LastFrameTime);
-	}
-	GameVersion Game::Version::get()
-	{
-		if (gVersion != GameVersion::UnknownVersion)
-			return gVersion;
-
-		gVersion = MemoryAccess::GetGameVersion();
-
-		return gVersion;
 	}
 	int Game::GameTime::get()
 	{
@@ -69,6 +63,15 @@ namespace GTA
 	void Game::TimeScale::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_TIME_SCALE, value);
+	}
+	GameVersion Game::Version::get()
+	{
+		if (sGameVersion == GameVersion::Unknown)
+		{
+			sGameVersion = static_cast<GameVersion>(getGameVersion() + 1);
+		}
+
+		return sGameVersion;
 	}
 	void Game::WantedMultiplier::set(float value)
 	{

@@ -1,11 +1,21 @@
 #pragma once
 
 #include "Player.hpp"
-#include "MemoryAccess.hpp"
 #include "Controls.hpp"
 
 namespace GTA
 {
+	public enum class GameVersion
+	{
+		Unknown = 0,
+
+		v1_0_335_2_STEAM,
+		v1_0_335_2_NOSTEAM,
+		v1_0_350_1_STEAM,
+		v1_0_350_2_NOSTEAM,
+		v1_0_372_2_STEAM,
+		v1_0_372_2_NOSTEAM,
+	};
 	public enum class RadioStation
 	{
 		LosSantosRockRadio,
@@ -29,16 +39,10 @@ namespace GTA
 
 	public ref class Game sealed abstract
 	{
-	private:
-		static GTA::GameVersion gVersion; // maybe come up with a better name
 	public:
 		static property float FPS
 		{
 			float get();
-		}
-		static property GTA::GameVersion Version
-		{
-			GTA::GameVersion get();
 		}
 		static property int GameTime
 		{
@@ -80,6 +84,10 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		static property GameVersion Version
+		{
+			GameVersion get();
+		}
 		static property float WantedMultiplier
 		{
 			void set(float value);
@@ -104,5 +112,8 @@ namespace GTA
 
 		static System::String ^GetUserInput(int maxLength);
 		static System::String ^GetUserInput(System::String ^startText, int maxLength);
+
+	private:
+		static GameVersion sGameVersion = GameVersion::Unknown;
 	};
 }

@@ -157,18 +157,18 @@ namespace GTA
 		}
 
 		static array<Blip ^> ^GetActiveBlips();
+		static array<Ped ^> ^GetAllPeds();
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
-		static array<Ped ^> ^GetAllPeds();
+		static array<Vehicle ^> ^GetAllVehicles();
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius, int maxAmount);
 		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius);
-		static array<Vehicle ^> ^GetAllVehicles();
-		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
-		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static array<Prop ^> ^GetAllProps();
 		static array<Entity ^> ^GetAllEntities();
+		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
+		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 		[System::ObsoleteAttribute("World.GetGroundZ is obsolete, please use World.GetGroundHeight instead.")]
 		static float GetGroundZ(Math::Vector3 position);

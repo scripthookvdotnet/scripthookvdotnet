@@ -1,5 +1,6 @@
 #include "World.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
@@ -7,7 +8,6 @@
 #include "Rope.hpp"
 #include "Camera.hpp"
 #include "Raycast.hpp"
-#include "MemoryAccess.hpp"
 
 namespace GTA
 {
@@ -90,6 +90,21 @@ namespace GTA
 
 		return res->ToArray();
 	}
+	array<Ped ^> ^World::GetAllPeds()
+	{
+		List<Ped ^> ^list = gcnew List<Ped ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entities[i]))
+			{
+				list->Add(gcnew Ped(entities[i]));
+			}
+		}
+
+		return list->ToArray();
+	}
 	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
 		return GetNearbyPeds(ped, radius, 10000);
@@ -141,21 +156,20 @@ namespace GTA
 
 		return resultHandles->ToArray();
 	}
-	array<Ped ^> ^World::GetAllPeds()
+	array<Vehicle ^> ^World::GetAllVehicles()
 	{
-		List<Ped ^> ^peds = gcnew List<Ped ^>();
+		List<Vehicle ^> ^list = gcnew List<Vehicle ^>();
 		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entities[i]) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entities[i]))
 			{
-				Ped^ ped = gcnew Ped(entities[i]);
-				peds->Add(ped);
+				list->Add(gcnew Vehicle(entities[i]));
 			}
 		}
 
-		return peds->ToArray();
+		return list->ToArray();
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
@@ -208,37 +222,35 @@ namespace GTA
 
 		return resultHandles->ToArray();
 	}
-	array<Vehicle ^> ^World::GetAllVehicles()
-	{
-		List<Vehicle ^> ^vehs = gcnew List<Vehicle ^>();
-		array<int> ^entities = MemoryAccess::GetEntityHandleList();
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entities[i]) && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
-			{
-				Vehicle^ veh = gcnew Vehicle(entities[i]);
-				vehs->Add(veh);
-			}
-		}
-
-		return vehs->ToArray();
-	}
 	array<Prop ^> ^World::GetAllProps()
 	{
-		List<Prop ^> ^props = gcnew List<Prop ^>();
+		List<Prop ^> ^list = gcnew List<Prop ^>();
 		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entities[i]))
 			{
-				Prop^ prop = gcnew Prop(entities[i]);
-				props->Add(prop);
+				list->Add(gcnew Prop(entities[i]));
 			}
 		}
 
-		return props->ToArray();
+		return list->ToArray();
+	}
+	array<Entity ^> ^World::GetAllEntities()
+	{
+		List<Entity ^> ^list = gcnew List<Entity ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				list->Add(gcnew Prop(entities[i]));
+			}
+		}
+
+		return list->ToArray();
 	}
 	Ped ^World::GetClosestPed(Math::Vector3 position, float radius)
 	{
@@ -250,22 +262,6 @@ namespace GTA
 		}
 
 		return gcnew Ped(handle);
-	}
-	array<Entity ^> ^World::GetAllEntities()
-	{
-		List<Entity ^> ^ents = gcnew List<Entity ^>();
-		array<int> ^entities = MemoryAccess::GetEntityHandleList();
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
-			{
-				Entity^ ent = (Entity ^)gcnew Prop(entities[i]);
-				ents->Add(ent);
-			}
-		}
-
-		return ents->ToArray();
 	}
 	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
 	{

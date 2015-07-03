@@ -21,6 +21,9 @@
     <ClCompile Include="source\Native.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="source\NativeMemory.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="source\Script.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -117,15 +120,15 @@
     <ClCompile Include="source\Scaleform.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\MemoryAccess.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\NativeHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\NativeMemory.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\Script.hpp">
@@ -238,9 +241,6 @@
     </ClInclude>
     <ClInclude Include="source\Controls.hpp">
       <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\MemoryAccess.hpp">
-      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
