@@ -12,30 +12,23 @@ namespace GTA
 		ChaletComprimeCologne = 4,
 		Pricedown = 7
 	};
+
 	public ref class Notification
 	{
 	public:
 		void Hide();
+
 	internal:
 		Notification(int Handle);
+
 	private:
 		int mHandle;
 	};
+
 	public ref class UI sealed abstract
 	{
 	public:
-		static property int Width
-		{
-			int get();
-		}
-		static property int Height
-		{
-			int get();
-		}
-
-		[System::ObsoleteAttribute("UI.WIDTH is obsolete, please use UI.Width instead.")]
 		static const int WIDTH = 1280;
-		[System::ObsoleteAttribute("UI.HEIGHT is obsolete, please use UI.Height instead.")]
 		static const int HEIGHT = 720;
 
 		static Notification ^Notify(System::String ^msg){ return Notify(msg, false); }

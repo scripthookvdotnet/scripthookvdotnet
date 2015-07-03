@@ -45,8 +45,8 @@ namespace GTA
 			return;
 		}
 
-		const float x = (static_cast<float>(this->Position.X) + offset.Width) / UI::Width;
-		const float y = (static_cast<float>(this->Position.Y) + offset.Height) / UI::Height;
+		const float x = (static_cast<float>(this->Position.X) + offset.Width) / UI::WIDTH;
+		const float y = (static_cast<float>(this->Position.Y) + offset.Height) / UI::HEIGHT;
 
 		Native::Function::Call(Native::Hash::SET_TEXT_FONT, (int)this->Font);
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, this->Scale, this->Scale);

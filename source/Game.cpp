@@ -60,6 +60,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
 	}
+	System::Drawing::Size Game::ScreenResolution::get()
+	{
+		int w, h;
+		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
+
+		return System::Drawing::Size(w, h);
+	}
 	void Game::TimeScale::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_TIME_SCALE, value);

@@ -80,6 +80,10 @@ namespace GTA
 			GTA::RadioStation get();
 			void set(GTA::RadioStation value);
 		}
+		static property System::Drawing::Size ScreenResolution
+		{
+			System::Drawing::Size get();
+		}
 		static property float TimeScale
 		{
 			void set(float value);
