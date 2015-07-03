@@ -59,6 +59,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_UNDRIVEABLE, this->Handle, !value);
 	}
+	bool Vehicle::IsStopped::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_STOPPED, this->Handle);
+	}
 	bool Vehicle::IsOnAllWheels::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ON_ALL_WHEELS, this->Handle);
@@ -222,9 +226,21 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_IS_WANTED, this->Handle, value);
 	}
+	bool Vehicle::EngineRunning::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xAE31E7DF9B5B132E, this->Handle);
+	}
 	void Vehicle::EngineRunning::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_ON, this->Handle, value, true);
+	}
+	void Vehicle::EnginePowerMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER, this->Handle, value);
+	}
+	void Vehicle::EngineTorqueMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER, this->Handle, value);
 	}
 	void Vehicle::LightsOn::set(bool value)
 	{
@@ -245,6 +261,14 @@ namespace GTA
 	void Vehicle::LightsMultiplier::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
+	}
+	bool Vehicle::IsLeftHeadLightBroken::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0x5EF77C9ADD3B11A3, this->Handle);
+	}
+	bool Vehicle::IsRightHeadLightBroken::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xA7ECB73355EB2F20, this->Handle);
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{

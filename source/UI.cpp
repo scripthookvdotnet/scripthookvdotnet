@@ -7,6 +7,18 @@ namespace GTA
 	{
 	}
 
+	int UI::Width::get()
+	{
+		int w, h;
+		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
+		return w;
+	}
+	int UI::Height::get()
+	{
+		int w, h;
+		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
+		return h;
+	}
 	void Notification::Hide()
 	{
 		Native::Function::Call(Native::Hash::_REMOVE_NOTIFICATION, this->mHandle);
@@ -32,6 +44,6 @@ namespace GTA
 		float pointX, pointY;
 		if (!Native::Function::Call<bool>(Native::Hash::_WORLD3D_TO_SCREEN2D, position.X, position.Y, position.Z, &pointX, &pointY))
 			return System::Drawing::Point();
-		return System::Drawing::Point((int)pointX * UI::WIDTH, (int)pointY * UI::HEIGHT);
+		return System::Drawing::Point((int)pointX * UI::Width, (int)pointY * UI::Height);
 	}
 }

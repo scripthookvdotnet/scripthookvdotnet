@@ -132,6 +132,11 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property int Alpha
+		{
+			int get();
+			void set(int value);
+		}
 
 		bool IsInRangeOf(Math::Vector3 position, float range);
 		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2);
@@ -152,6 +157,8 @@ namespace GTA
 		void ApplyForce(Math::Vector3 direction, Math::Vector3 rotation);
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
+
+		void ResetAlpha();
 
 		void Delete();
 		bool Exists();

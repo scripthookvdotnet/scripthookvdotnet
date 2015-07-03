@@ -300,6 +300,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property bool IsStopped
+		{
+			bool get();
+		}
 		property bool IsOnAllWheels
 		{
 			bool get();
@@ -384,7 +388,16 @@ namespace GTA
 		}
 		property bool EngineRunning
 		{
+			bool get();
 			void set(bool value);
+		}
+		property float EnginePowerMultiplier
+		{
+			void set(float value);
+		}
+		property float EngineTorqueMultiplier
+		{
+			void set(float value);
 		}
 		property bool LightsOn
 		{
@@ -398,6 +411,14 @@ namespace GTA
 		property float LightsMultiplier
 		{
 			void set(float value);
+		}
+		property bool IsLeftHeadLightBroken
+		{
+			bool get();
+		}
+		property bool IsRightHeadLightBroken
+		{
+			bool get();
 		}
 		property bool BrakeLightsOn
 		{
