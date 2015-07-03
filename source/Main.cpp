@@ -126,7 +126,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 			break;
 		case DLL_PROCESS_DETACH:
 			DeleteFiber(sScriptFib);
-			scriptUnregister(&ScriptMainSetup);
+			scriptUnregister(hModule);
 			keyboardHandlerUnregister(&ScriptKeyboardMessage);
 			break;
 	}
