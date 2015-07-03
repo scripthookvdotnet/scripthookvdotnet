@@ -1,12 +1,22 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
+#include "MemoryAccess.hpp"
 
 namespace GTA
 {
 	float Game::FPS::get()
 	{
 		return (1.0f / LastFrameTime);
+	}
+	GameVersion Game::Version::get()
+	{
+		if (gVersion != GameVersion::UnknownVersion)
+			return gVersion;
+
+		gVersion = MemoryAccess::GetGameVersion();
+
+		return gVersion;
 	}
 	int Game::GameTime::get()
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.hpp"
+#include "MemoryAccess.hpp"
 #include "Controls.hpp"
 
 namespace GTA
@@ -28,10 +29,16 @@ namespace GTA
 
 	public ref class Game sealed abstract
 	{
+	private:
+		static GTA::GameVersion gVersion; // maybe come up with a better name
 	public:
 		static property float FPS
 		{
 			float get();
+		}
+		static property GTA::GameVersion Version
+		{
+			GTA::GameVersion get();
 		}
 		static property int GameTime
 		{
