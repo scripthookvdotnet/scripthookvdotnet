@@ -20,8 +20,10 @@ namespace GTA
 
 		static uintptr_t GetAddressOfEntity(int Handle);
 		static array<int> ^GetEntityHandleList();
+		
 		static float GetVehicleRPM(int handle);
 		static float GetVehicleAcceleration(int handle);
+		static float GetVehicleSteering(int handle);
 
 	private:
 		static uintptr_t FindPattern(const char *pattern, const char *mask);

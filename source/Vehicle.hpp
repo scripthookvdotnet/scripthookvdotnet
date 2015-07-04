@@ -512,6 +512,10 @@ namespace GTA
 		{
 			float get();
 		}
+		property float Steering
+		{
+			float get();
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);

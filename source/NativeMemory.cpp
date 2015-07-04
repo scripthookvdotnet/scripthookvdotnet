@@ -46,6 +46,15 @@ namespace GTA
 		}
 		return *(float*)(addr + 2020);
 	}
+	float MemoryAccess::GetVehicleSteering(int handle)
+	{
+		uintptr_t addr = GetAddressOfEntity(handle);
+		if (addr == 0)
+		{
+			return 0.0f;
+		}
+		return *(float*)(addr + 2212);
+	}
 
 	uintptr_t MemoryAccess::FindPattern(const char *pattern, const char *mask)
 	{

@@ -397,6 +397,10 @@ namespace GTA
 	{
 		return MemoryAccess::GetVehicleAcceleration(this->Handle);
 	}
+	float Vehicle::Steering::get()
+	{
+		return MemoryAccess::GetVehicleSteering(this->Handle);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
