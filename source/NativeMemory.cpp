@@ -28,6 +28,15 @@ namespace GTA
 	{
 		return GetListOfHandlesInPool(*sAddressEntityPool);
 	}
+	float MemoryAccess::GetVehicleRPM(int handle)
+	{
+		uintptr_t addr = GetAddressOfEntity(handle);
+		if (addr == 0)
+		{
+			return 0.0f;
+		}
+		return *(float*)(addr + 2004);
+	}
 
 	uintptr_t MemoryAccess::FindPattern(const char *pattern, const char *mask)
 	{

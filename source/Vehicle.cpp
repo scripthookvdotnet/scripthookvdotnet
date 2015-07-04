@@ -2,6 +2,7 @@
 #include "Vehicle.hpp"
 #include "Game.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -387,6 +388,10 @@ namespace GTA
 	bool Vehicle::AlarmActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, this->Handle);
+	}
+	float Vehicle::CurrentRPM::get()
+	{
+		return MemoryAccess::GetVehicleRPM(this->Handle);
 	}
 
 	int Vehicle::GetMod(VehicleMod modType)
