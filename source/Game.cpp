@@ -152,6 +152,11 @@ namespace GTA
 	{
 		return GetUserInput(windowTitle, "", maxLength);
 	}
+	[System::ObsoleteAttribute("This Game.GetUserInput overload is obsolete, please use the other ones")]
+	System::String ^Game::GetUserInput(System::String^ windowTitle, int maxLength)
+	{
+		return GetUserInput(maxLength);
+	}
 	System::String ^Game::GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength)
 	{
 		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength);
