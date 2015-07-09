@@ -143,6 +143,7 @@ namespace GTA
 
 		static System::String ^GetUserInput(int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
+		[System::ObsoleteAttribute("This Game.GetUserInput overload is obsolete, please use the other ones")]
 		static System::String ^GetUserInput(System::String^ windowTitle, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 

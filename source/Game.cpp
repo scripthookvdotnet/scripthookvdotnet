@@ -152,7 +152,6 @@ namespace GTA
 	{
 		return GetUserInput(windowTitle, "", maxLength);
 	}
-	[System::ObsoleteAttribute("This Game.GetUserInput overload is obsolete, please use the other ones")]
 	System::String ^Game::GetUserInput(System::String^ windowTitle, int maxLength)
 	{
 		return GetUserInput(maxLength);
