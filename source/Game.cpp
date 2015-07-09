@@ -146,11 +146,15 @@ namespace GTA
 
 	System::String ^Game::GetUserInput(int maxLength)
 	{
-		return GetUserInput(WindowTitle::FMMC_KEY_TIP8, maxLength);
+		return GetUserInput(WindowTitle::FMMC_KEY_TIP8, "", maxLength);
 	}
 	System::String ^Game::GetUserInput(WindowTitle windowTitle, int maxLength)
 	{
-		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", "", "", "", "", maxLength);
+		return GetUserInput(windowTitle, "", maxLength);
+	}
+	System::String ^Game::GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength)
+	{
+		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength);
 
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 		{

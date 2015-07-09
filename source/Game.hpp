@@ -143,6 +143,7 @@ namespace GTA
 
 		static System::String ^GetUserInput(int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
+		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;
