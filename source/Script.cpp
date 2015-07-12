@@ -78,8 +78,14 @@ namespace GTA
 		this->mInterval = value;
 	}
 
+	virtual void Script::OnAbort() {
+		
+	}
+	
 	void Script::Abort()
 	{
+		this->OnAbort();
+		
 		this->mWaitEvent->Set();
 
 		this->mScriptDomain->AbortScript(this);
