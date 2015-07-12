@@ -84,15 +84,6 @@ namespace GTA
 	
 	void Script::Abort()
 	{
-		try
-		{
-			this->OnAbort();
-		}
-		catch (Exception ^ex)
-		{
-			HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, true));
-		}
-		
 		this->mWaitEvent->Set();
 
 		this->mScriptDomain->AbortScript(this);

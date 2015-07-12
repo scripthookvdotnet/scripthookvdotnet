@@ -399,6 +399,15 @@ namespace GTA
 	}
 	void ScriptDomain::AbortScript(Script ^script)
 	{
+		try
+		{
+			script->OnAbort();
+		}
+		catch (Exception ^ex)
+		{
+			HandleUnhandledException(script, gcnew UnhandledExceptionEventArgs(ex, true));
+		}
+
 		if (Object::ReferenceEquals(script->mThread, nullptr))
 		{
 			return;
