@@ -71,6 +71,8 @@ namespace GTA
 			ScriptSettings ^get();
 		}
 
+		virtual void OnAbort();
+
 		void Abort();
 
 		virtual System::String ^ToString() override

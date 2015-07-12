@@ -78,6 +78,10 @@ namespace GTA
 		this->mInterval = value;
 	}
 
+	void Script::OnAbort() {
+		
+	}
+	
 	void Script::Abort()
 	{
 		this->mWaitEvent->Set();
