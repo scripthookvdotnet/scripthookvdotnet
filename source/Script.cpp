@@ -78,13 +78,20 @@ namespace GTA
 		this->mInterval = value;
 	}
 
-	virtual void Script::OnAbort() {
+	void Script::OnAbort() {
 		
 	}
 	
 	void Script::Abort()
 	{
-		this->OnAbort();
+		try
+		{
+			Tick(this, EventArgs::Empty);
+		}
+		catch (Exception ^ex)
+		{
+			HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, true));
+		}
 		
 		this->mWaitEvent->Set();
 
