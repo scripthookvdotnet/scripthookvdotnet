@@ -86,7 +86,7 @@ namespace GTA
 	{
 		try
 		{
-			Tick(this, EventArgs::Empty);
+			this->OnAbort();
 		}
 		catch (Exception ^ex)
 		{
