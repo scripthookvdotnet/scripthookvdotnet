@@ -13,9 +13,10 @@ namespace GTA
 	{
 		return this->mHandle;
 	}
+
 	float Rope::Length::get()
 	{
-		return Native::Function::Call<float>(Native::Hash::_0x73040398DFF9A4A6, this->mHandle);
+		return Native::Function::Call<float>(Native::Hash::_GET_ROPE_LENGTH, this->mHandle);
 	}
 	void Rope::Length::set(float value)
 	{
@@ -26,11 +27,6 @@ namespace GTA
 		return Native::Function::Call<int>(Native::Hash::GET_ROPE_VERTEX_COUNT, this->Handle);
 	}
 
-	void Rope::Delete()
-	{
-		int handle = this->Handle;
-		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
-	}
 	void Rope::ActivatePhysics()
 	{
 		Native::Function::Call(Native::Hash::ACTIVATE_PHYSICS, this->Handle);
@@ -76,5 +72,11 @@ namespace GTA
 	void Rope::LoadTextures()
 	{
 		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
+	}
+
+	void Rope::Delete()
+	{
+		int handle = this->Handle;
+		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
 	}
 }

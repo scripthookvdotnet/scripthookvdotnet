@@ -5,8 +5,6 @@
 
 namespace GTA
 {
-	value class Model;
-	value class RaycastResult;
 	ref class Blip;
 	ref class Camera;
 	ref class Ped;
@@ -14,24 +12,9 @@ namespace GTA
 	ref class Prop;
 	ref class Entity;
 	ref class Rope;
+	value class Model;
+	value class RaycastResult;
 
-	public enum class Weather
-	{
-		ExtraSunny,
-		Clear,
-		Clouds,
-		Smog,
-		Foggy,
-		Overcast,
-		Raining,
-		ThunderStorm,
-		Clearing,
-		Neutral,
-		Snowing,
-		Blizzard,
-		Snowlight,
-		Christmas,
-	};
 	public enum class ExplosionType
 	{
 		SmallExplosion1 = 1,
@@ -68,6 +51,19 @@ namespace GTA
 		Explosion5 = 32,
 		SmallExplosion7 = 33,
 		Explosion6 = 34
+	};
+	public enum class IntersectOptions
+	{
+		Everything = -1,
+		Map = 1,
+		Mission_Entities = 2,
+		Peds1 = 12,//4 and 8 both seem to be peds
+		Objects = 16,
+		Unk1 = 32,
+		Unk2 = 64,
+		Unk3 = 128,
+		Vegetation = 256,
+		Unk4 = 512
 	};
 	public enum class MarkerType
 	{
@@ -111,31 +107,31 @@ namespace GTA
 		Companion = 0,
 		Pedestrians = 255 // or neutral
 	};
-	public enum class IntersectOptions
-	{
-		Everything = -1,
-		Map = 1,
-		Mission_Entities = 2,
-		Peds1 = 12,//4 and 8 both seem to be peds
-		Objects = 16,
-		Unk1 = 32,
-		Unk2 = 64,
-		Unk3 = 128,
-		Vegetation = 256,
-		Unk4 = 512
-	};
 	public enum class RopeType
 	{
 		Normal = 4,
+	};
+	public enum class Weather
+	{
+		ExtraSunny,
+		Clear,
+		Clouds,
+		Smog,
+		Foggy,
+		Overcast,
+		Raining,
+		ThunderStorm,
+		Clearing,
+		Neutral,
+		Snowing,
+		Blizzard,
+		Snowlight,
+		Christmas,
 	};
 
 	public ref class World sealed abstract
 	{
 	public:
-		static property GTA::Weather Weather
-		{
-			void set(GTA::Weather value);
-		}
 		static property System::DateTime CurrentDate
 		{
 			System::DateTime get();
@@ -155,12 +151,22 @@ namespace GTA
 			Camera ^get();
 			void set(Camera ^renderingCamera);
 		}
+		static property GTA::Weather Weather
+		{
+			void set(GTA::Weather value);
+		}
 
 		static array<Blip ^> ^GetActiveBlips();
+		static array<Ped ^> ^GetAllPeds();
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
+		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
+		static array<Vehicle ^> ^GetAllVehicles();
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius, int maxAmount);
+		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius);
+		static array<Prop ^> ^GetAllProps();
+		static array<Entity ^> ^GetAllEntities();
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
@@ -168,6 +174,7 @@ namespace GTA
 		static float GetGroundZ(Math::Vector3 position);
 		static float GetGroundHeight(Math::Vector2 position);
 		static float GetGroundHeight(Math::Vector3 position);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
@@ -187,6 +194,7 @@ namespace GTA
 		[System::ObsoleteAttribute("This World.AddRope overload is obsolete, please use the other one")]
 		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double length, int type, double maxLength, double minLength, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
 		static void DestroyAllCameras();
+		static void SetBlackout(bool enable);
 
 		[System::ObsoleteAttribute("World.AddRelationShipGroup is obsolete, please use World.AddRelationshipGroup instead")]
 		static int AddRelationShipGroup(System::String ^groupName);
@@ -200,8 +208,13 @@ namespace GTA
 
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options);
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^entity);
+
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color);
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
+
+		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
+		static void DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
+		static void DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

@@ -3,11 +3,11 @@ configuration: Release
 platform: x64
 install:
 - cd sdk/
-- 'echo Downloading ScriptHook [Version: 1.0.350.2]'
-- appveyor DownloadFile http://dl.johnnycrazy.de/scripthook/ScriptHookV_SDK_1.0.350.2.zip -FileName sdk.zip
-- echo Download completed. Extracting...
+- 'echo Downloading C++ ScriptHook ...'
+- appveyor DownloadFile http://reshade.me/downloads/ScriptHookV_SDK_1.0.372.2a.zip -FileName sdk.zip
+- echo Download completed. Extracting ...
 - 7z x sdk.zip
-- echo Extraction complete
+- echo Extraction completed. Compiling ...
 - cd ../
 build:
   project: ScriptHookVDotNet.sln

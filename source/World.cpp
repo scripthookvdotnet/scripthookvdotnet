@@ -1,18 +1,18 @@
 #include "World.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
+#include "Blip.hpp"
 #include "Rope.hpp"
 #include "Camera.hpp"
 #include "Raycast.hpp"
 
 namespace GTA
 {
-	void World::Weather::set(GTA::Weather value)
-	{
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
-	}
+	using namespace System::Collections::Generic;
+
 	System::DateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
@@ -69,6 +69,10 @@ namespace GTA
 			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
 		}
 	}
+	void World::Weather::set(GTA::Weather value)
+	{
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
+	}
 
 	array<Blip ^> ^World::GetActiveBlips()
 	{
@@ -85,6 +89,21 @@ namespace GTA
 		}
 
 		return res->ToArray();
+	}
+	array<Ped ^> ^World::GetAllPeds()
+	{
+		List<Ped ^> ^list = gcnew List<Ped ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entities[i]))
+			{
+				list->Add(gcnew Ped(entities[i]));
+			}
+		}
+
+		return list->ToArray();
 	}
 	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
@@ -124,6 +143,34 @@ namespace GTA
 
 		return result->ToArray();
 	}
+	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
+	{
+		auto handles = GetAllPeds();
+		auto resultHandles = gcnew List<Ped ^>();
+
+		for (int i = 0; i < handles->Length; i++)
+		{
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
+		}
+
+		return resultHandles->ToArray();
+	}
+	array<Vehicle ^> ^World::GetAllVehicles()
+	{
+		List<Vehicle ^> ^list = gcnew List<Vehicle ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entities[i]))
+			{
+				list->Add(gcnew Vehicle(entities[i]));
+			}
+		}
+
+		return list->ToArray();
+	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
 		return GetNearbyVehicles(ped, radius, 10000);
@@ -162,6 +209,49 @@ namespace GTA
 
 		return result->ToArray();
 	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
+	{
+		auto handles = GetAllVehicles();
+		auto resultHandles = gcnew List<Vehicle ^>();
+
+		for (int i = 0; i < handles->Length; i++)
+		{
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
+		}
+
+		return resultHandles->ToArray();
+	}
+	array<Prop ^> ^World::GetAllProps()
+	{
+		List<Prop ^> ^list = gcnew List<Prop ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entities[i]))
+			{
+				list->Add(gcnew Prop(entities[i]));
+			}
+		}
+
+		return list->ToArray();
+	}
+	array<Entity ^> ^World::GetAllEntities()
+	{
+		List<Entity ^> ^list = gcnew List<Entity ^>();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			{
+				list->Add(gcnew Prop(entities[i]));
+			}
+		}
+
+		return list->ToArray();
+	}
 	Ped ^World::GetClosestPed(Math::Vector3 position, float radius)
 	{
 		int handle = 0;
@@ -195,6 +285,22 @@ namespace GTA
 	float World::GetGroundHeight(Math::Vector3 position)
 	{
 		return GetGroundHeight(Math::Vector2(position.X, position.Y));
+	}
+	Math::Vector3 World::GetNextPositionOnStreet(Math::Vector3 position)
+	{
+		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();
+
+		for (int i = 1; i < 40; i++)
+		{
+			Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, outPos, 1, 0x40400000, 0);
+			const Math::Vector3 newPos = outPos->GetResult<Math::Vector3>();
+
+			if (!Native::Function::Call<bool>(Native::Hash::IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPos.X, newPos.Y, newPos.Z, 5.0f, 5.0f, 5.0f, 0))
+			{
+				return newPos;
+			}
+		}
+		return Math::Vector3();
 	}
 
 	Blip ^World::CreateBlip(Math::Vector3 position)
@@ -364,6 +470,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
 	}
+	void World::SetBlackout(bool enable)
+	{
+		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
+	}
 
 	int World::AddRelationShipGroup(System::String ^groupName)
 	{
@@ -424,5 +534,18 @@ namespace GTA
 			}
 		}
 		Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
+	}
+
+	void World::DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity)
+	{
+		Native::Function::Call(Native::Hash::DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
+	}
+	void World::DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+	{
+		Native::Function::Call(Native::Hash::DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+	}
+	void World::DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+	{
+		Native::Function::Call(Native::Hash::_0x5BCA583A583194DB, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
 	}
 }

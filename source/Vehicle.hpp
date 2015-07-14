@@ -200,6 +200,13 @@ namespace GTA
 		FrontWheels = 23,
 		BackWheels = 24 // only for motocycles
 	};
+	public enum class VehicleNeonLight
+	{
+		Left = 0,
+		Right = 1,
+		Front = 2,
+		Back = 3,
+	};
 	public enum class VehicleRoofState
 	{
 		Closed,
@@ -217,6 +224,12 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+	};
+	public enum class VehicleToggleMod
+	{
+		Turbo = 18,
+		TireSmoke = 20,
+		XenonHeadlights = 22
 	};
 	public enum class VehicleWheelType
 	{
@@ -245,19 +258,6 @@ namespace GTA
 		Stock = 4,
 		Limo = 5,
 		Green = 6
-	};
-	public enum class VehicleToggleMod
-	{
-		Turbo = 18,
-		TireSmoke = 20,
-		XenonHeadlights = 22
-	};
-	public enum class VehicleNeonLight
-	{
-		Left = 0,
-		Right = 1,
-		Front = 2,
-		Back = 3,
 	};
 
 	public ref class Vehicle sealed : public Entity
@@ -299,6 +299,10 @@ namespace GTA
 		{
 			bool get();
 			void set(bool value);
+		}
+		property bool IsStopped
+		{
+			bool get();
 		}
 		property bool IsOnAllWheels
 		{
@@ -384,7 +388,16 @@ namespace GTA
 		}
 		property bool EngineRunning
 		{
+			bool get();
 			void set(bool value);
+		}
+		property float EnginePowerMultiplier
+		{
+			void set(float value);
+		}
+		property float EngineTorqueMultiplier
+		{
+			void set(float value);
 		}
 		property bool LightsOn
 		{
@@ -398,6 +411,14 @@ namespace GTA
 		property float LightsMultiplier
 		{
 			void set(float value);
+		}
+		property bool IsLeftHeadLightBroken
+		{
+			bool get();
+		}
+		property bool IsRightHeadLightBroken
+		{
+			bool get();
 		}
 		property bool BrakeLightsOn
 		{
@@ -483,6 +504,18 @@ namespace GTA
 		{
 			bool get();
 		}
+		property float CurrentRPM
+		{
+			float get();
+		}
+		property float Acceleration
+		{
+			float get();
+		}
+		property float Steering
+		{
+			float get();
+		}
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
@@ -520,7 +553,6 @@ namespace GTA
 		void FixTire(int wheel);
 		bool IsInBurnout();
 		void StartAlarm();
-
 
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);

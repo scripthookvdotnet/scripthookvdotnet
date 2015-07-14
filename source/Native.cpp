@@ -16,7 +16,6 @@
 
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
-#include "NativeCaller.h"
 
 #include "Entity.hpp"
 #include "Prop.hpp"
@@ -26,6 +25,8 @@
 #include "Vector2.hpp"
 #include "Vector3.hpp"
 #include "Vehicle.hpp"
+
+#include <NativeCaller.h>
 
 namespace GTA
 {

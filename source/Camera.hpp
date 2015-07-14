@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Ped.hpp"
 #include "Vector3.hpp"
 
 namespace GTA
 {
+	ref class Ped;
+	ref class Entity;
+
 	public enum class CameraShake
 	{
 		Hand = 0,
@@ -29,14 +31,91 @@ namespace GTA
 		{
 			int get();
 		}
-		property bool Exists
+		property float DepthOfFieldStrength
 		{
-			bool get();
+			void set(float strength);
+		}
+		[System::ObsoleteAttribute("Camera.DOFStrength is obsolete, please use Camera.DepthOfFieldStrength instead")]
+		property float DOFStrength
+		{
+			void set(float strength)
+			{
+				DepthOfFieldStrength = strength;
+			}
+		}
+		property float FieldOfView
+		{
+			float get();
+			void set(float fov);
+		}
+		[System::ObsoleteAttribute("Camera.FOV is obsolete, please use Camera.FieldOfView instead")]
+		property float FOV
+		{
+			float get()
+			{
+				return FieldOfView;
+			}
+			void set(float fov)
+			{
+				FieldOfView = fov;
+			}
+		}
+		property float FarClip
+		{
+			float get();
+			void set(float farClip);
+		}
+		property float FarDepthOfField
+		{
+			float get();
+			void set(float farDOF);
+		}
+		[System::ObsoleteAttribute("Camera.FarDOF is obsolete, please use Camera.FarDepthOfField instead")]
+		property float FarDOF
+		{
+			float get()
+			{
+				return FarDepthOfField;
+			}
+			void set(float farDOF)
+			{
+				FarDepthOfField = farDOF;
+			}
 		}
 		property bool IsActive
 		{
 			bool get();
 			void set(bool isActive);
+		}
+		property bool IsInterpolating
+		{
+			bool get();
+		}
+		property bool IsShaking
+		{
+			bool get();
+			void set(bool isShaking);
+		}
+		property float MotionBlurStrength
+		{
+			void set(float strength);
+		}
+		property float NearClip
+		{
+			float get();
+			void set(float nearClip);
+		}
+		property float NearDepthOfField
+		{
+			void set(float nearDOF);
+		}
+		[System::ObsoleteAttribute("Camera.NearDOF is obsolete, please use Camera.NearDepthOfField instead")]
+		property float NearDOF
+		{
+			void set(float nearDOF)
+			{
+				NearDepthOfField = nearDOF;
+			}
 		}
 		property Math::Vector3 Position
 		{
@@ -48,63 +127,22 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 rotation);
 		}
-		property float FOV
+		property float ShakeAmplitude
 		{
 			float get();
-			void set(float fov);
-		}
-		property float NearClip
-		{
-			float get();
-			void set(float nearClip);
-		}
-		property float FarClip
-		{
-			float get();
-			void set(float farClip);
-		}
-		property float NearDOF
-		{
-			void set(float nearDOF);
-		}
-		property float FarDOF
-		{
-			float get();
-			void set(float farDOF);
-		}
-		property float DOFStrength
-		{
-			void set(float strength);
-		}
-		property float MotionBlurStrength
-		{
-			void set(float strength);
-		}
-		property bool IsInterpolating
-		{
-			bool get();
+			void set(float amplitude);
 		}
 		property CameraShake ShakeType
 		{
 			CameraShake get();
 			void set(CameraShake shakeType);
 		}
-		property float ShakeAmplitude
-		{
-			float get();
-			void set(float amplitude);
-		}
-		property bool IsShaking
-		{
-			bool get();
-			void set(bool isShaking);
-		}
-
-		void InterpTo(Camera ^to, int duration, bool easePosition, bool easeRotation);
 
 		void AttachTo(Entity ^entity, Math::Vector3 offset);
 		void AttachTo(Ped ^entity, int boneIndex, Math::Vector3 offset);
 		void Detach();
+
+		void InterpTo(Camera ^to, int duration, bool easePosition, bool easeRotation);
 
 		void PointAt(Math::Vector3 target);
 		void PointAt(Entity ^target);
@@ -113,6 +151,7 @@ namespace GTA
 		void PointAt(Ped ^target, int boneIndex, Math::Vector3 offset);
 		void StopPointing();
 
+		bool Exists();
 		void Destroy();
 
 	internal:
@@ -120,7 +159,7 @@ namespace GTA
 
 	private:
 		int mHandle;
-		CameraShake mShakeType;
 		float mShakeAmplitude;
+		CameraShake mShakeType;
 	};
 }

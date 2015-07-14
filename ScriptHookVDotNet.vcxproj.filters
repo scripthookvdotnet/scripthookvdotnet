@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Log.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="source\Main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="source\Native.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\NativeMemory.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="source\Script.cpp">
@@ -122,13 +122,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Log.hpp">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="source\Native.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\NativeHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\NativeMemory.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\Script.hpp">
@@ -237,6 +237,9 @@
       <Filter>Scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\Scaleform.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Controls.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>

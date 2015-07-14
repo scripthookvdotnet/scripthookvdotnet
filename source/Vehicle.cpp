@@ -1,7 +1,8 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
-#include "Native.hpp"
 #include "Game.hpp"
+#include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -59,6 +60,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_UNDRIVEABLE, this->Handle, !value);
 	}
+	bool Vehicle::IsStopped::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_STOPPED, this->Handle);
+	}
 	bool Vehicle::IsOnAllWheels::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ON_ALL_WHEELS, this->Handle);
@@ -107,11 +112,11 @@ namespace GTA
 	}
 	float Vehicle::BodyHealth::get()
 	{
-		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_HEALTH, this->Handle);
+		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_BODY_HEALTH, this->Handle);
 	}
 	void Vehicle::BodyHealth::set(float value)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_HEALTH, this->Handle, value);
+		Native::Function::Call(Native::Hash::SET_VEHICLE_BODY_HEALTH, this->Handle, value);
 	}
 	float Vehicle::EngineHealth::get()
 	{
@@ -211,20 +216,32 @@ namespace GTA
 	}
 	bool Vehicle::IsPrimaryColorCustom::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_DOES_VEHICLE_HAVE_SECONDARY_COLOUR, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM, this->Handle);
 	}
 	bool Vehicle::IsSecondaryColorCustom::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_0x910A32E7AAD2656C, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::GET_IS_VEHICLE_SECONDARY_COLOUR_CUSTOM, this->Handle);
 	}
 
 	void Vehicle::IsWanted::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_IS_WANTED, this->Handle, value);
 	}
+	bool Vehicle::EngineRunning::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xAE31E7DF9B5B132E, this->Handle);
+	}
 	void Vehicle::EngineRunning::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_ON, this->Handle, value, true);
+	}
+	void Vehicle::EnginePowerMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER, this->Handle, value);
+	}
+	void Vehicle::EngineTorqueMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER, this->Handle, value);
 	}
 	void Vehicle::LightsOn::set(bool value)
 	{
@@ -245,6 +262,14 @@ namespace GTA
 	void Vehicle::LightsMultiplier::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
+	}
+	bool Vehicle::IsLeftHeadLightBroken::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0x5EF77C9ADD3B11A3, this->Handle);
+	}
+	bool Vehicle::IsRightHeadLightBroken::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xA7ECB73355EB2F20, this->Handle);
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{
@@ -325,13 +350,13 @@ namespace GTA
 	System::Drawing::Color Vehicle::NeonLightsColor::get()
 	{
 		int r, g, b;
-		Native::Function::Call(Native::Hash::GET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, &r, &g, &b);
+		Native::Function::Call(Native::Hash::_GET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, &r, &g, &b);
 
 		return System::Drawing::Color::FromArgb(r, g, b);
 	}
 	void Vehicle::NeonLightsColor::set(System::Drawing::Color color)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, color.R, color.G, color.B);
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_NEON_LIGHTS_COLOUR, this->Handle, color.R, color.G, color.B);
 	}
 	System::Drawing::Color Vehicle::TireSmokeColor::get()
 	{
@@ -363,6 +388,18 @@ namespace GTA
 	bool Vehicle::AlarmActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, this->Handle);
+	}
+	float Vehicle::CurrentRPM::get()
+	{
+		return MemoryAccess::GetVehicleRPM(this->Handle);
+	}
+	float Vehicle::Acceleration::get()
+	{
+		return MemoryAccess::GetVehicleAcceleration(this->Handle);
+	}
+	float Vehicle::Steering::get()
+	{
+		return MemoryAccess::GetVehicleSteering(this->Handle);
 	}
 
 	int Vehicle::GetMod(VehicleMod modType)
@@ -436,13 +473,16 @@ namespace GTA
 
 		for (int i = 1; i < 40; i++)
 		{
-			Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE, pos.X, pos.Y, pos.Z, i, outPos, 1, 0x40400000, 0);
+			float heading;
+			float val;
+			Native::Function::Call(Native::Hash::GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, pos.X, pos.Y, pos.Z, i, outPos, &heading, &val, 1, 0x40400000, 0);
 			const Math::Vector3 newPos = outPos->GetResult<Math::Vector3>();
 
 			if (!Native::Function::Call<bool>(Native::Hash::IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPos.X, newPos.Y, newPos.Z, 5.0f, 5.0f, 5.0f, 0))
 			{
 				this->Position = newPos;
 				this->PlaceOnGround();
+				this->Heading = heading;
 				break;
 			}
 		}
@@ -465,7 +505,7 @@ namespace GTA
 	}
 	void Vehicle::SetDoorBreakable(VehicleDoor door, bool isBreakable)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_BREAKABLE, this->Handle, static_cast<int>(door), isBreakable);
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_DOOR_BREAKABLE, this->Handle, static_cast<int>(door), isBreakable);
 	}
 	void Vehicle::FixWindow(VehicleWindow window)
 	{
@@ -493,11 +533,11 @@ namespace GTA
 	}
 	void Vehicle::SetNeonLightsOn(VehicleNeonLight light, bool on)
 	{
-		Native::Function::Call(Native::Hash::SET_VEHICLE_NEON_LIGHTS_ON, this->Handle, static_cast<int>(light), on);
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_NEON_LIGHT_ENABLED, this->Handle, static_cast<int>(light), on);
 	}
 	bool Vehicle::IsNeonLightsOn(VehicleNeonLight light)
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_NEON_LIGHT_ON, this->Handle, static_cast<int>(light));
+		return Native::Function::Call<bool>(Native::Hash::_IS_VEHICLE_NEON_LIGHT_ENABLED, this->Handle, static_cast<int>(light));
 	}
 
 	void Vehicle::SoundHorn(int duration)
