@@ -246,7 +246,15 @@ namespace GTA
 		{
 			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
 			{
-				list->Add(gcnew Prop(entities[i]));
+				switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
+				{
+				case 1:
+					list->Add(gcnew Ped(entities[i]));
+				case 2:
+					list->Add(gcnew Vehicle(entities[i]));
+				case 3:
+					list->Add(gcnew Prop(entities[i]));
+				}
 			}
 		}
 
