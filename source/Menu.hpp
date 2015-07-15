@@ -122,11 +122,47 @@ namespace GTA
 		event System::EventHandler<SelectedIndexChangedArgs^> ^SelectedIndexChanged;
 
 	private:
+		void UpdateItemPositions();
+		void DrawScrollArrows(bool up, bool down, System::Drawing::Size offset);
+		property int mMaxScrollOffset
+		{
+			int get()
+			{
+				return mItems->Count < mItemDrawCount ? 0 : mItems->Count - mItemDrawCount;
+			}
+		}
+		property int scrollOffset
+		{
+			int get()
+			{
+				return mScrollOffset;
+			}
+			void set(int value)
+			{
+				if (value > mMaxScrollOffset)
+					mScrollOffset = mMaxScrollOffset;
+				else if (value < 0)
+					mScrollOffset = 0;
+				else
+					mScrollOffset = value;
+				UpdateItemPositions();
+			}
+		}
+		property int mItemDrawCount
+		{
+			int get()
+			{
+				return mItems->Count < mMaxDrawLimit ? mItems->Count : mMaxDrawLimit;
+			}
+		}
 		UIRectangle ^mHeaderRect = nullptr, ^mFooterRect = nullptr;
 		UIText ^mHeaderText = nullptr, ^mFooterText = nullptr;
 
 		System::Collections::Generic::List<IMenuItem ^> ^mItems = gcnew System::Collections::Generic::List<IMenuItem ^>();
 		int mSelectedIndex = -1;
+		int mScrollOffset = 0;
+		int mMaxDrawLimit = 10;
+
 
 		System::String ^mFooterDescription = "footer description";
 	};
