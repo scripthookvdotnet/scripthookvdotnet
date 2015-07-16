@@ -48,6 +48,8 @@ namespace GTA
 		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
 		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
 
+		virtual void OnLoaded(){}
+
 		property System::String ^Name
 		{
 			System::String ^get()

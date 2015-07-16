@@ -373,7 +373,7 @@ namespace GTA
 			script->mFilename = scripttype->Item1;
 			script->mScriptDomain = this;
 			script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
-
+			script->OnLoaded();
 			script->mThread->Start();
 
 			Log("[DEBUG]", "Started script '", script->Name, "'.");

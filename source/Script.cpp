@@ -48,9 +48,11 @@ namespace GTA
 	}
 	ScriptSettings ^Script::Settings::get()
 	{
+		if (this->mFilename == nullptr)
+			return nullptr;
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			String ^path = IO::Path::ChangeExtension(this->mFilename, "ini");
+			String ^path = IO::Path::ChangeExtension(this->mFilename, ".ini");
 
 			if (IO::File::Exists(path))
 			{
@@ -58,7 +60,7 @@ namespace GTA
 			}
 			else
 			{
-				this->mSettings = gcnew ScriptSettings();
+				this->mSettings = gcnew ScriptSettings(path);
 			}
 		}
 
