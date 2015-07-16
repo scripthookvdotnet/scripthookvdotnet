@@ -202,8 +202,6 @@ namespace GTA
 	}
 	void ScriptSettings::Save()
 	{
-		if (mFileName == nullptr)
-			throw gcnew Exception("The file name is still fucking null when saving");
 		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^IniData = gcnew	Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
 
 		for each(KeyValuePair<String ^, String ^> IniLine in mValues)
