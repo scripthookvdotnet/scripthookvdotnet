@@ -195,8 +195,6 @@ namespace GTA
 	void ScriptSettings::SetValue(String ^section, String ^key, String ^value)
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
-
-		this->mValues->default[lookup] = value;
 		if (!this->mValues->ContainsKey(lookup))
 			this->mValues->Add(lookup, value);
 		else
