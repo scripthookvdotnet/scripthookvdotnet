@@ -120,6 +120,9 @@
     <ClCompile Include="source\Scaleform.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="source\Controls.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.hpp">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -34,6 +34,18 @@ namespace GTA
 	{
 	}
 
+	[AttributeUsage(AttributeTargets::Class, AllowMultiple = true)]
+	public ref class DependsOn : Attribute{
+	public:
+		property String ^Depends {
+			void set(String ^value) { depend = value; }
+			String get() { return depend; }
+		}
+
+	protected:
+		String ^depend;
+	};
+
 	Viewport ^Script::View::get()
 	{
 		if (Object::ReferenceEquals(this->mViewport, nullptr))

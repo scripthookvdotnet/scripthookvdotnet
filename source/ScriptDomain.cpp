@@ -88,7 +88,7 @@ namespace GTA
 		return toWaitOn->WaitOne(timeout);
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(std::map<String ^, Type ^>, mKeyboardState(gcnew array<bool>(255))
 	{
 		sCurrentDomain = this;
 
@@ -251,6 +251,7 @@ namespace GTA
 
 		try
 		{
+			
 			for each (Type ^type in assembly->GetTypes())
 			{
 				if (!type->IsSubclassOf(Script::typeid))
@@ -259,7 +260,7 @@ namespace GTA
 				}
 
 				count++;
-				this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
+				this->mScriptTypes[filename] = type;
 			}
 		}
 		catch (Reflection::ReflectionTypeLoadException ^ex)
@@ -327,7 +328,7 @@ namespace GTA
 
 	void ScriptDomain::Start()
 	{
-		if (this->mRunningScripts->Count != 0 || this->mScriptTypes->Count == 0)
+		if (this->mRunningScripts->Count != 0 || this->mScriptTypes->count == 0)
 		{
 			return;
 		}
@@ -358,11 +359,30 @@ namespace GTA
 			}
 		}
 
-		Log("[DEBUG]", "Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
+		Log("[DEBUG]", "Starting ", this->mScriptTypes->count.ToString(), " script(s) ...");
 
-		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
+
+		Graph g;
+		std::map<string, Vertex> verts;
+		for (auto it = mScriptTypes.begin(); it != mScriptTypes.end(); it++)
 		{
-			Script ^script = InstantiateScript(scripttype->Item2);
+			verts[it->first] = Vertex{ it->first };
+		}
+
+		for (auto it = mScriptTypes.begin(); it != mScriptTypes.end(); it++)
+		{
+			MemberInfo ^ inf = it->second->GetType();
+			array <Object ^ > ^ attr = inf->GetCustomAttributes(false);
+
+			for (int i = 0; i < attr->Length; i++)
+				string dep = static_cast<DependsOn^>(attr[i])->Depends);
+				g.addEdge(&verts[it->first], &verts[dep]);
+			}
+		}
+
+	for (Vertex* v : g.topoSort())
+		{
+			Script ^script = InstantiateScript(mScryptTypes[v->name()]);
 
 			if (Object::ReferenceEquals(script, nullptr))
 			{
@@ -379,7 +399,7 @@ namespace GTA
 			Log("[DEBUG]", "Started script '", script->Name, "'.");
 
 			this->mRunningScripts->Add(script);
-		}
+		}*/
 	}
 	void ScriptDomain::Abort()
 	{
@@ -392,8 +412,8 @@ namespace GTA
 			delete script;
 		}
 
-		this->mScriptTypes->Clear();
-		this->mRunningScripts->Clear();
+		this->mScriptTypes->clear();
+		this->mRunningScripts->clear();
 
 		GC::Collect();
 	}

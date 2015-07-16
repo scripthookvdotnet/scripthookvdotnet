@@ -85,6 +85,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="source\Blip.cpp" />
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\Entity.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="source\WeaponCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graph.hpp" />
     <ClInclude Include="source\Controls.hpp" />
     <ClInclude Include="source\Blip.hpp" />
     <ClInclude Include="source\Camera.hpp" />
