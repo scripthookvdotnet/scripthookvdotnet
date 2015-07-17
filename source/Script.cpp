@@ -48,12 +48,9 @@ namespace GTA
 	}
 	ScriptSettings ^Script::Settings::get()
 	{
-		if (this->mFilename == nullptr)
-			return nullptr;
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			String ^path = IO::Path::ChangeExtension(this->mFilename, ".ini");
-
+			String ^path = System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts", this->GetType()->Assembly->GetName()->Name + ".ini");
 			if (IO::File::Exists(path))
 			{
 				this->mSettings = ScriptSettings::Load(path);

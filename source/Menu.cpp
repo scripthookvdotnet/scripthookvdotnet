@@ -4,7 +4,8 @@
 
 namespace GTA
 {
-	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items)
+	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items) : Menu(headerCaption, items, 10){}
+	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items, int MaxItemsToDraw)
 	{
 		//Put the items in the item stack
 		//The menu itself will be initialized when it gets added to the viewport
@@ -14,6 +15,7 @@ namespace GTA
 			item->Parent = this;
 		}
 
+		MaxDrawLimit = MaxItemsToDraw;
 		//Set defaults for the properties
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
@@ -199,6 +201,20 @@ namespace GTA
 	{
 		if (mSelectedIndex < 0 || mSelectedIndex >= mItems->Count) return;
 		mItems[mSelectedIndex]->Change(right);
+	}
+	void Menu::OnChangeDrawLimit()
+	{
+		if (scrollOffset > mMaxScrollOffset)
+		{
+			mScrollOffset = mMaxScrollOffset;
+		}
+		if (SelectedIndex < scrollOffset)
+			scrollOffset = SelectedIndex - 3;
+		else if (SelectedIndex >scrollOffset + mItemDrawCount)
+			scrollOffset = SelectedIndex + 3 - mItemDrawCount;
+		UpdateItemPositions();
+		if (SelectedIndex >= 0 && SelectedIndex < mItems->Count)
+			mItems[SelectedIndex]->Select();
 	}
 
 	MessageBox::MessageBox(System::String ^caption)

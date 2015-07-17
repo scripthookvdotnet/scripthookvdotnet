@@ -83,6 +83,7 @@ namespace GTA
 	{
 	public:
 		Menu(System::String ^headerCaption, array<IMenuItem ^> ^items);
+		Menu(System::String ^headerCaption, array<IMenuItem ^> ^items, int MaxItemsToDraw);
 
 	public:
 		virtual void Draw() override;
@@ -117,11 +118,23 @@ namespace GTA
 				OnChangeSelection(newIndex);
 			}
 		}
+		property int MaxDrawLimit
+		{
+			int get(){ return mMaxDrawLimit; }
+			void set(int limit)
+			{
+				if (limit < 6 || limit > 20)
+					throw gcnew System::ArgumentOutOfRangeException("MaxDrawLimit", "MaxDrawLimit must be between 6 and 20");
+				mMaxDrawLimit = limit;
+				OnChangeDrawLimit();
+			}
+		}
 
 	public:
 		event System::EventHandler<SelectedIndexChangedArgs^> ^SelectedIndexChanged;
 
 	private:
+		void OnChangeDrawLimit();
 		void UpdateItemPositions();
 		void DrawScrollArrows(bool up, bool down, System::Drawing::Size offset);
 		property int mMaxScrollOffset
