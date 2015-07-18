@@ -30,21 +30,10 @@ namespace GTA
 	Script::Script() : mInterval(0), mRunning(false), mWaitEvent(gcnew AutoResetEvent(false)), mContinueEvent(gcnew AutoResetEvent(false)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
 	}
+
 	Script::~Script()
 	{
 	}
-
-	[AttributeUsage(AttributeTargets::Class, AllowMultiple = true)]
-	public ref class DependsOn : Attribute{
-	public:
-		property String ^Depends {
-			void set(String ^value) { depend = value; }
-			String get() { return depend; }
-		}
-
-	protected:
-		String ^depend;
-	};
 
 	Viewport ^Script::View::get()
 	{
