@@ -85,7 +85,7 @@ namespace GTA
 
 	private:
 		bool LoadScript(System::String ^filename);
-		bool LoadAssembly(System::String ^filenam);
+		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
 		Script ^InstantiateScript(System::Type ^scripttype);
 		void CleanupStrings();
