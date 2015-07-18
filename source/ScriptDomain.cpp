@@ -17,7 +17,6 @@
 #include "ScriptDomain.hpp"
 #include "Script.hpp"
 #include "DependencyGraph.hpp"
-#include <map>
 
 namespace GTA
 {
@@ -412,7 +411,7 @@ namespace GTA
 					}
 
 					script->mRunning = true;
-					script->mFilename = dep->Name;
+					script->mFilename = file;
 					script->mScriptDomain = this;
 					script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
 
