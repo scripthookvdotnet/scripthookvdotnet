@@ -54,20 +54,20 @@ namespace GTA
 		ref class DependsOn : Attribute
 		{
 			public:
-				DependsOn(String^ dependency)
+				DependsOn(...array<String^>^ dependencies)
 				{
-					this->mDepends = dependency;
+					this->mDependencies = dependencies;
 				};
 
-				property String ^Depends
+				property array<String^> ^Dependencies
 				{
-					String ^get()
+					array<String^> ^get()
 					{
-						return this->mDepends;
+						return this->mDependencies;
 					}
 				}
 			private:
-				String^ mDepends;
+				array<String^> ^mDependencies;
 		};
 
 		property String ^Name
