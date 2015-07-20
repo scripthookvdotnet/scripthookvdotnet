@@ -15,10 +15,13 @@
  */
 
 #include "ScriptDomain.hpp"
+#include "Script.hpp"
+#include "DependencyGraph.hpp"
 
 namespace GTA
 {
 	using namespace System;
+	using namespace System::Reflection;
 	using namespace System::Threading;
 	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
@@ -88,7 +91,7 @@ namespace GTA
 		return toWaitOn->WaitOne(timeout);
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew Dictionary<String ^, List<Type^>^>()), mScriptTypeFiles(gcnew Dictionary<String ^, List<String^>^>()), mKeyboardState(gcnew array<bool>(255))
 	{
 		sCurrentDomain = this;
 
@@ -106,15 +109,15 @@ namespace GTA
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
 	{
-		path = IO::Path::GetFullPath(path);
+		mScriptPath = IO::Path::GetFullPath(path);
 
 		AppDomainSetup ^setup = gcnew AppDomainSetup();
-		setup->ApplicationBase = path;
+		setup->ApplicationBase = mScriptPath;
 		setup->ShadowCopyFiles = "true";
-		setup->ShadowCopyDirectories = path;
+		setup->ShadowCopyDirectories = mScriptPath;
 		Security::PermissionSet ^permissions = gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted);
 
-		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (path->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, permissions);
+		System::AppDomain ^appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (mScriptPath->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, permissions);
 		appdomain->InitializeLifetimeService();
 
 		ScriptDomain ^scriptdomain = nullptr;
@@ -132,18 +135,18 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log("[DEBUG]", "Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
+		Log("[DEBUG]", "Loading scripts from '", mScriptPath, "' into script domain '", appdomain->FriendlyName, "' ...");
 
-		if (IO::Directory::Exists(path))
+		if (IO::Directory::Exists(mScriptPath))
 		{
 			List<String ^> ^filenameScripts = gcnew List<String ^>();
 			List<String ^> ^filenameAssemblies = gcnew List<String ^>();
 
 			try
 			{
-				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb", IO::SearchOption::AllDirectories));
-				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs", IO::SearchOption::AllDirectories));
-				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(mScriptPath, "*.vb", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(mScriptPath, "*.cs", IO::SearchOption::AllDirectories));
+				filenameAssemblies->AddRange(IO::Directory::GetFiles(mScriptPath, "*.dll", IO::SearchOption::AllDirectories));
 			}
 			catch (Exception ^ex)
 			{
@@ -251,6 +254,7 @@ namespace GTA
 
 		try
 		{
+			
 			for each (Type ^type in assembly->GetTypes())
 			{
 				if (!type->IsSubclassOf(Script::typeid))
@@ -259,7 +263,12 @@ namespace GTA
 				}
 
 				count++;
-				this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
+
+				if (!this->mScriptTypeFiles->ContainsKey(type->FullName)) mScriptTypeFiles->Add(type->FullName, gcnew List<String^>());
+				this->mScriptTypeFiles[type->FullName]->Add(filename);
+
+				if (!this->mScriptTypes->ContainsKey(filename)) this->mScriptTypes->Add(filename, gcnew List<Type^>);
+				this->mScriptTypes[filename]->Add(type);
 			}
 		}
 		catch (Reflection::ReflectionTypeLoadException ^ex)
@@ -360,25 +369,61 @@ namespace GTA
 
 		Log("[DEBUG]", "Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
 
-		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
+
+		DependencyGraph^ g = gcnew DependencyGraph();
+
+		for each(KeyValuePair<String ^, List<Type ^>^>^ kvp in mScriptTypes)
 		{
-			Script ^script = InstantiateScript(scripttype->Item2);
+			for each(Type^ type in kvp->Value) {
+				bool fufilled = true;
 
-			if (Object::ReferenceEquals(script, nullptr))
-			{
-				continue;
+				MemberInfo ^ inf = type;
+				for each (Script::DependsOn ^attr in inf->GetCustomAttributes(Script::DependsOn::typeid, true)) {
+					for each(Type^ dep in attr->Dependencies) {
+						if (!mScriptTypeFiles->ContainsKey(dep->FullName))
+						{
+							Log("[ERROR]", "Could not fufill dependency '", dep->FullName, "' for '", type->FullName, "'.");
+							fufilled = false;
+							break;
+						}
+
+						g->LinkDependency(type->FullName, dep->FullName);
+					}
+
+					if (!fufilled) continue;
+					g->AddScript(type->FullName);
+				}
 			}
+		}
 
-			script->mRunning = true;
-			script->mFilename = scripttype->Item1;
-			script->mScriptDomain = this;
-			script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
+		List<Type ^>^ started = gcnew List<Type ^>();
 
-			script->mThread->Start();
+		for each (DependencyGraph::Dependency^ dep in g->SortDependencies())
+		{
+			for each(String ^file in mScriptTypeFiles[dep->Name]) {
+				for each(Type ^type in mScriptTypes[file]) {
+					if (started->Contains(type)) continue;
+					started->Add(type);
 
-			Log("[DEBUG]", "Started script '", script->Name, "'.");
+					Script ^script = InstantiateScript(type);
 
-			this->mRunningScripts->Add(script);
+					if (Object::ReferenceEquals(script, nullptr))
+					{
+						continue;
+					}
+
+					script->mRunning = true;
+					script->mFilename = file;
+					script->mScriptDomain = this;
+					script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
+
+					script->mThread->Start();
+
+					Log("[DEBUG]", "Started script '", script->Name, "'.");
+
+					this->mRunningScripts->Add(script);
+				}
+			}
 		}
 	}
 	void ScriptDomain::Abort()
@@ -392,6 +437,7 @@ namespace GTA
 			delete script;
 		}
 
+		this->mScriptTypeFiles->Clear();
 		this->mScriptTypes->Clear();
 		this->mRunningScripts->Clear();
 

@@ -30,6 +30,7 @@ namespace GTA
 	Script::Script() : mInterval(0), mRunning(false), mWaitEvent(gcnew AutoResetEvent(false)), mContinueEvent(gcnew AutoResetEvent(false)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
 	}
+
 	Script::~Script()
 	{
 	}

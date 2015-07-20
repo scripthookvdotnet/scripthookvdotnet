@@ -24,6 +24,8 @@ namespace GTA
 	ref class ScriptDomain;
 	ref class ScriptSettings;
 
+	using namespace System;
+
 	public ref class Script abstract
 	{
 	public:
@@ -31,33 +33,53 @@ namespace GTA
 
 		static void Wait(int ms);
 		static void Yield();
-		[System::ObsoleteAttribute("Script.IsKeyPressed is obsolete, please use Game.IsKeyPressed instead.")]
-		static bool IsKeyPressed(System::Windows::Forms::Keys key)
+		[ObsoleteAttribute("Script.IsKeyPressed is obsolete, please use Game.IsKeyPressed instead.")]
+		static bool IsKeyPressed(Windows::Forms::Keys key)
 		{
 			return Game::IsKeyPressed(key);
 		}
 
-		event System::EventHandler ^Tick;
-		event System::Windows::Forms::KeyEventHandler ^KeyUp;
-		event System::Windows::Forms::KeyEventHandler ^KeyDown;
+		event EventHandler ^Tick;
+		event Windows::Forms::KeyEventHandler ^KeyUp;
+		event Windows::Forms::KeyEventHandler ^KeyDown;
 
-		System::Windows::Forms::Keys ActivateKey = System::Windows::Forms::Keys::NumPad5;
-		System::Windows::Forms::Keys BackKey = System::Windows::Forms::Keys::NumPad0;
-		System::Windows::Forms::Keys LeftKey = System::Windows::Forms::Keys::NumPad4;
-		System::Windows::Forms::Keys RightKey = System::Windows::Forms::Keys::NumPad6;
-		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
-		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
+		Windows::Forms::Keys ActivateKey = Windows::Forms::Keys::NumPad5;
+		Windows::Forms::Keys BackKey = Windows::Forms::Keys::NumPad0;
+		Windows::Forms::Keys LeftKey = Windows::Forms::Keys::NumPad4;
+		Windows::Forms::Keys RightKey = Windows::Forms::Keys::NumPad6;
+		Windows::Forms::Keys UpKey = Windows::Forms::Keys::NumPad8;
+		Windows::Forms::Keys DownKey = Windows::Forms::Keys::NumPad2;
 
-		property System::String ^Name
+		[AttributeUsage(AttributeTargets::Class, AllowMultiple = true)]
+		ref class DependsOn : Attribute
 		{
-			System::String ^get()
+			public:
+				DependsOn(...array<Type^>^ dependencies)
+				{
+					this->mDependencies = dependencies;
+				};
+
+				property array<Type^> ^Dependencies
+				{
+					array<Type^> ^get()
+					{
+						return this->mDependencies;
+					}
+				}
+			private:
+				array<Type^> ^mDependencies;
+		};
+
+		property String ^Name
+		{
+			String ^get()
 			{
 				return GetType()->FullName;
 			}
 		}
-		property System::String ^Filename
+		property String ^Filename
 		{
-			System::String ^get()
+			String ^get()
 			{
 				return this->mFilename;
 			}
@@ -73,12 +95,12 @@ namespace GTA
 
 		void Abort();
 
-		virtual System::String ^ToString() override
+		virtual String ^ToString() override
 		{
 			return Name;
 		}
 
-		virtual void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
+		virtual void HandleViewportInput(Object ^sender, Windows::Forms::KeyEventArgs ^e);
 
 	protected:
 		property int Interval
@@ -91,16 +113,16 @@ namespace GTA
 		~Script();
 
 		void MainLoop();
-		void UpdateViewport(Object ^Sender, System::EventArgs ^Args);
+		void UpdateViewport(Object ^Sender, EventArgs ^Args);
 
 		int mInterval;
 		bool mRunning;
-		System::String ^mFilename;
+		String ^mFilename;
 		ScriptDomain ^mScriptDomain;
-		System::Threading::Thread ^mThread;
-		System::Threading::AutoResetEvent ^mWaitEvent;
-		System::Threading::AutoResetEvent ^mContinueEvent;
-		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
+		Threading::Thread ^mThread;
+		Threading::AutoResetEvent ^mWaitEvent;
+		Threading::AutoResetEvent ^mContinueEvent;
+		Collections::Concurrent::ConcurrentQueue<Tuple<bool, Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		Viewport ^mViewport;
 		ScriptSettings ^mSettings;
 	};

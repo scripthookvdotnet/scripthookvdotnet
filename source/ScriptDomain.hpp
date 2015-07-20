@@ -91,13 +91,15 @@ namespace GTA
 		void CleanupStrings();
 
 		static ScriptDomain ^sCurrentDomain;
+		static String ^mScriptPath;
 		System::AppDomain ^mAppDomain;
 		int mExecutingThreadId;
 		Script ^mExecutingScript;
 		System::Collections::Generic::List<Script ^> ^mRunningScripts;
 		System::Collections::Generic::Queue<IScriptTask ^> ^mTaskQueue;
 		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
-		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
+		System::Collections::Generic::Dictionary<String ^, System::Collections::Generic::List<Type^>^> ^mScriptTypes;
+		System::Collections::Generic::Dictionary<String ^, System::Collections::Generic::List<String^>^> ^mScriptTypeFiles;
 		array<bool> ^mKeyboardState;
 	};
 }
