@@ -379,15 +379,15 @@ namespace GTA
 
 				MemberInfo ^ inf = type;
 				for each (Script::DependsOn ^attr in inf->GetCustomAttributes(Script::DependsOn::typeid, true)) {
-					for each(String^ dep in attr->Dependencies) {
-						if (!mScriptTypeFiles->ContainsKey(dep))
+					for each(Type^ dep in attr->Dependencies) {
+						if (!mScriptTypeFiles->ContainsKey(dep->FullName))
 						{
-							Log("[ERROR]", "Could not fufill dependency '", dep, "' for '", type->FullName, "'.");
+							Log("[ERROR]", "Could not fufill dependency '", dep->FullName, "' for '", type->FullName, "'.");
 							fufilled = false;
 							break;
 						}
 
-						g->LinkDependency(type->FullName, dep);
+						g->LinkDependency(type->FullName, dep->FullName);
 					}
 
 					if (!fufilled) continue;
