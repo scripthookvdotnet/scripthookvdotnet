@@ -24,6 +24,18 @@ namespace GTA
 	ref class ScriptDomain;
 	ref class ScriptSettings;
 
+	[System::AttributeUsage(System::AttributeTargets::Class, AllowMultiple = true)]
+	public ref class RequireScript : System::Attribute
+	{
+	public:
+		RequireScript(System::Type ^dependency) : mDependency(dependency)
+		{
+		}
+
+	internal:
+		System::Type ^mDependency;
+	};
+
 	public ref class Script abstract
 	{
 	public:
@@ -91,7 +103,7 @@ namespace GTA
 		~Script();
 
 		void MainLoop();
-		void UpdateViewport(Object ^Sender, System::EventArgs ^Args);
+		void UpdateViewport(System::Object ^Sender, System::EventArgs ^Args);
 
 		int mInterval;
 		bool mRunning;
