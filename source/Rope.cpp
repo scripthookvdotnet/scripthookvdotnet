@@ -70,6 +70,10 @@ namespace GTA
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, this->Handle, vertex);
 	}
 
+	bool Rope::Exists()
+	{
+		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, this->Handle);
+	}
 	void Rope::Delete()
 	{
 		int handle = this->Handle;

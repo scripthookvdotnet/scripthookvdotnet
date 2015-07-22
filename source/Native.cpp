@@ -56,9 +56,9 @@ namespace GTA
 			array<InputArgument ^> ^Arguments;
 		};
 
-		UINT64 ObjectToNative(Object ^value)
+		UINT64 ObjectToNative(System::Object ^value)
 		{
-			Type ^type = value->GetType();
+			System::Type ^type = value->GetType();
 
 			// Fundamental types
 			if (type == Boolean::typeid)
@@ -127,7 +127,7 @@ namespace GTA
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 		}
-		Object ^ObjectFromNative(Type ^type, PUINT64 value)
+		System::Object ^ObjectFromNative(System::Type ^type, PUINT64 value)
 		{
 			// Fundamental types
 			if (type == Boolean::typeid)
@@ -185,25 +185,15 @@ namespace GTA
 			// Scripting types
 			if (type == Blip::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_BLIP_EXIST, handle))
-				{
-					return gcnew Blip(handle);
-				}
-
-				return nullptr;
+				return gcnew Blip(handle);
 			}
 			if (type == Camera::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_CAM_EXIST, handle))
-				{
-					return gcnew Camera(handle);
-				}
-
-				return nullptr;
+				return gcnew Camera(handle);
 			}
 			if (type == Entity::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+				if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
 				{
 					switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
 					{
@@ -220,12 +210,7 @@ namespace GTA
 			}
 			if (type == Ped::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
-				{
-					return gcnew Ped(handle);
-				}
-
-				return nullptr;
+				return gcnew Ped(handle);
 			}
 			if (type == Player::typeid)
 			{
@@ -233,42 +218,27 @@ namespace GTA
 			}
 			if (type == Prop::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
-				{
-					return gcnew Prop(handle);
-				}
-
-				return nullptr;
+				return gcnew Prop(handle);
 			}
 			if (type == Rope::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_ROPE_EXIST, handle))
-				{
-					return gcnew Rope(handle);
-				}
-
-				return nullptr;
+				return gcnew Rope(handle);
 			}
 			if (type == Vehicle::typeid)
 			{
-				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
-				{
-					return gcnew Vehicle(handle);
-				}
-
-				return nullptr;
+				return gcnew Vehicle(handle);
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
 
-		InputArgument::InputArgument(Object ^value) : mData(ObjectToNative(value))
+		InputArgument::InputArgument(System::Object ^value) : mData(ObjectToNative(value))
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
 		{
 		}
-		OutputArgument::OutputArgument(Object ^value) : OutputArgument()
+		OutputArgument::OutputArgument(System::Object ^value) : OutputArgument()
 		{
 			*reinterpret_cast<UINT64 *>(mStorage) = ObjectToNative(value);
 		}

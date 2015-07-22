@@ -36,6 +36,7 @@ namespace GTA
 		void UnpinVertex(int vertex);
 		Math::Vector3 GetVertexCoord(int vertex);
 
+		bool Exists();
 		void Delete();
 
 	private:
