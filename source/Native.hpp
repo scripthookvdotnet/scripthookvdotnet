@@ -21,12 +21,13 @@
 
 namespace GTA
 {
+	ref class Blip;
 	ref class Entity;
+	value class Model;
 	ref class Ped;
 	ref class Player;
-	ref class Vehicle;
-	ref class Blip;
 	ref class Prop;
+	ref class Vehicle;
 
 	namespace Native
 	{
@@ -134,11 +135,9 @@ namespace GTA
 
 			unsigned char *mStorage;
 		};
-
 		public ref class InOutArgument : public OutputArgument
 		{
 		public:
-
 			InOutArgument(bool value);
 			InOutArgument(int value);
 			InOutArgument(float value);
@@ -150,16 +149,13 @@ namespace GTA
 			InOutArgument(Blip ^object);
 			InOutArgument(Prop ^object);
 			InOutArgument(Model model);
-
 			~InOutArgument()
 			{
 				this->!InOutArgument();
 			}
 
-		private:
+		protected:
 			!InOutArgument();
-
-
 		};
 
 		public ref class Function abstract sealed

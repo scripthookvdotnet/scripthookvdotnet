@@ -17,11 +17,11 @@
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
 
-#include "Entity.hpp"
-#include "Prop.hpp"
 #include "Blip.hpp"
+#include "Entity.hpp"
 #include "Ped.hpp"
 #include "Player.hpp"
+#include "Prop.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
 #include "Vehicle.hpp"
@@ -153,7 +153,6 @@ namespace GTA
 			delete[] this->mStorage;
 		}
 
-
 		Object ^GetResult(Type ^type, PUINT64 value)
 		{
 			if (type == Boolean::typeid)
@@ -205,6 +204,29 @@ namespace GTA
 				return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
 			}
 
+			if (type == Blip::typeid)
+			{
+				return gcnew Blip(*reinterpret_cast<int *>(value));
+			}
+			if (type == Entity::typeid)
+			{
+				const int handle = *reinterpret_cast<int *>(value);
+
+				if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+				{
+					switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
+					{
+						case 1:
+							return gcnew Ped(handle);
+						case 2:
+							return gcnew Vehicle(handle);
+						case 3:
+							return gcnew Prop(handle);
+					}
+				}
+
+				return nullptr;
+			}
 			if (type == Ped::typeid)
 			{
 				return gcnew Ped(*reinterpret_cast<int *>(value));
@@ -213,34 +235,13 @@ namespace GTA
 			{
 				return gcnew Player(*reinterpret_cast<int *>(value));
 			}
-			if (type == Vehicle::typeid)
-			{
-				return gcnew Vehicle(*reinterpret_cast<int *>(value));
-			}
-			if (type == Blip::typeid)
-			{
-				return gcnew Blip(*reinterpret_cast<int *>(value));
-			}
 			if (type == Prop::typeid)
 			{
 				return gcnew Prop(*reinterpret_cast<int *>(value));
 			}
-			if (type == Entity::typeid)
+			if (type == Vehicle::typeid)
 			{
-				int handle = *reinterpret_cast<int *>(value);
-				if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handle))
-				{
-					switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, handle))
-					{
-					case 1: 
-						return gcnew Ped(handle);
-					case 2: 
-						return gcnew Vehicle(handle);
-					case 3: 
-						return gcnew Prop(handle);
-					}
-				}
-				return nullptr;
+				return gcnew Vehicle(*reinterpret_cast<int *>(value));
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));

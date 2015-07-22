@@ -6,8 +6,8 @@ namespace GTA
 {
 	private struct MemoryPool
 	{
-		uintptr_t ListAddr;
-		char *BoolAdr;
+		uintptr_t ListAddress;
+		char *BoolAddress;
 		int MaxCount;
 		int ItemSize;
 	};
@@ -16,9 +16,9 @@ namespace GTA
 	public:
 		static MemoryAccess();
 
-		static int HandleToIndex(int Handle);
+		static int HandleToIndex(int handle);
 
-		static uintptr_t GetAddressOfEntity(int Handle);
+		static uintptr_t GetAddressOfEntity(int handle);
 		static array<int> ^GetEntityHandleList();
 		
 		static float GetVehicleRPM(int handle);

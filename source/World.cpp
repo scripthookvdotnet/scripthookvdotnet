@@ -279,10 +279,6 @@ namespace GTA
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 	}
-	float World::GetGroundZ(Math::Vector3 position)
-	{
-		return GetGroundHeight(position);
-	}
 	float World::GetGroundHeight(Math::Vector2 position)
 	{
 		float height = 0.0f;
@@ -455,25 +451,6 @@ namespace GTA
 
 		return gcnew Rope(handle);
 	}
-	Rope ^World::AddRope(Math::Vector3 position, Math::Vector3 rotation, double length, int type, double maxLength, double minLength, double p10, bool p11, bool p12, bool p13, double p14, bool breakable)
-	{
-		if ((type < 1) || (type > 6))
-		{
-			type = 1;
-		}
-
-		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
-		int tmp;
-
-		const int handle = Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, maxLength, minLength, p10, p11, p12, p13, p14, breakable, &tmp);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Rope(handle);
-	}
 	void World::DestroyAllCameras()
 	{
 		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
@@ -483,20 +460,12 @@ namespace GTA
 		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
 	}
 
-	int World::AddRelationShipGroup(System::String ^groupName)
-	{
-		return AddRelationshipGroup(groupName);
-	}
 	int World::AddRelationshipGroup(System::String ^groupName)
 	{
 		int handle = 0;
 		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &handle);
 
 		return handle;
-	}
-	void World::RemoveRelationShipGroup(int group)
-	{
-		RemoveRelationshipGroup(group);
 	}
 	void World::RemoveRelationshipGroup(int group)
 	{

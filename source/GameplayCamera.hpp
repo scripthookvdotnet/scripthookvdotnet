@@ -11,14 +11,6 @@ namespace GTA
 		{
 			float get();
 		}
-		[System::ObsoleteAttribute("GameplayCamera.FOV is obsolete, please use GameplayCamera.FieldOfView instead")]
-		static property float FOV
-		{
-			float get()
-			{
-				return FieldOfView;
-			}
-		}
 		static property bool IsAimCamActive
 		{
 			bool get();

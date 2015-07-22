@@ -170,8 +170,6 @@ namespace GTA
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
-		[System::ObsoleteAttribute("World.GetGroundZ is obsolete, please use World.GetGroundHeight instead.")]
-		static float GetGroundZ(Math::Vector3 position);
 		static float GetGroundHeight(Math::Vector2 position);
 		static float GetGroundHeight(Math::Vector3 position);
 		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
@@ -191,16 +189,10 @@ namespace GTA
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
 		static Rope ^AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable);
-		[System::ObsoleteAttribute("This World.AddRope overload is obsolete, please use the other one")]
-		static Rope ^AddRope(Math::Vector3 position, Math::Vector3 rotation, double length, int type, double maxLength, double minLength, double p10, bool p11, bool p12, bool p13, double p14, bool breakable);
 		static void DestroyAllCameras();
 		static void SetBlackout(bool enable);
 
-		[System::ObsoleteAttribute("World.AddRelationShipGroup is obsolete, please use World.AddRelationshipGroup instead")]
-		static int AddRelationShipGroup(System::String ^groupName);
 		static int AddRelationshipGroup(System::String ^groupName);
-		[System::ObsoleteAttribute("World.RemoveRelationShipGroup is obsolete, please use World.RemoveRelationshipGroup instead")]
-		static void RemoveRelationShipGroup(int group);
 		static void RemoveRelationshipGroup(int group);
 		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
 		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);

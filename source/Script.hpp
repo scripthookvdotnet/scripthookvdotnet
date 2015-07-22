@@ -43,11 +43,6 @@ namespace GTA
 
 		static void Wait(int ms);
 		static void Yield();
-		[System::ObsoleteAttribute("Script.IsKeyPressed is obsolete, please use Game.IsKeyPressed instead.")]
-		static bool IsKeyPressed(System::Windows::Forms::Keys key)
-		{
-			return Game::IsKeyPressed(key);
-		}
 
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
