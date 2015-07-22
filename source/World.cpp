@@ -248,12 +248,15 @@ namespace GTA
 			{
 				switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
 				{
-				case 1:
-					list->Add(gcnew Ped(entities[i]));
-				case 2:
-					list->Add(gcnew Vehicle(entities[i]));
-				case 3:
-					list->Add(gcnew Prop(entities[i]));
+					case 1:
+						list->Add(gcnew Ped(entities[i]));
+						break;
+					case 2:
+						list->Add(gcnew Vehicle(entities[i]));
+						break;
+					case 3:
+						list->Add(gcnew Prop(entities[i]));
+						break;
 				}
 			}
 		}
