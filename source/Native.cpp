@@ -58,6 +58,11 @@ namespace GTA
 
 		UINT64 ObjectToNative(System::Object ^value)
 		{
+			if (System::Object::ReferenceEquals(value, nullptr))
+			{
+				return 0;
+			}
+
 			System::Type ^type = value->GetType();
 
 			// Fundamental types
