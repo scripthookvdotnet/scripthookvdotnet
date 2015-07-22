@@ -15,6 +15,8 @@ namespace GTA
 		VER_1_0_350_2_NOSTEAM,
 		VER_1_0_372_2_STEAM,
 		VER_1_0_372_2_NOSTEAM,
+		VER_1_0_393_2_STEAM,
+		VER_1_0_393_2_NOSTEAM,
 	};
 	public enum class RadioStation
 	{
