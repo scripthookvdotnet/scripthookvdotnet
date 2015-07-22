@@ -42,7 +42,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		ScriptSettings ^result = gcnew ScriptSettings();
+		ScriptSettings ^result = gcnew ScriptSettings(filename);
 
 		try
 		{
@@ -93,7 +93,6 @@ namespace GTA
 		{
 			reader->Close();
 		}
-
 		return result;
 	}
 
@@ -196,7 +195,58 @@ namespace GTA
 	void ScriptSettings::SetValue(String ^section, String ^key, String ^value)
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
+		if (!this->mValues->ContainsKey(lookup))
+			this->mValues->Add(lookup, value);
+		else
+			this->mValues->default[lookup] = value;
+	}
+	void ScriptSettings::Save()
+	{
+		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^IniData = gcnew	Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
 
-		this->mValues->default[lookup] = value;
+		for each(KeyValuePair<String ^, String ^> IniLine in mValues)
+		{
+			String ^Section = IniLine.Key->Remove(IniLine.Key->IndexOf("]"))->Substring(1);
+			String ^Key = IniLine.Key->Substring(IniLine.Key->IndexOf("]") + 1);
+			String ^Value = IniLine.Value;
+			if (!IniData->ContainsKey(Section))
+			{
+				List < Tuple<String ^, String ^> ^> ^Item = gcnew List < Tuple<String ^, String ^>^>();
+				Item->Add(gcnew Tuple<String ^, String ^>(Key, Value));
+				IniData->Add(Section, Item);
+			}
+			else
+			{
+				IniData[Section]->Add(gcnew Tuple<String ^, String ^>(Key, Value));
+			}
+		}
+		try
+		{
+			IO::StreamWriter ^Writer = IO::File::CreateText(this->mFileName);
+			for each (KeyValuePair<String ^, List<Tuple<String ^, String ^> ^> ^> IniLine in IniData)
+			{
+				Writer->WriteLine("[" + IniLine.Key + "]");
+				for each (Tuple<String ^, String ^> ^IniValue in IniLine.Value)
+				{
+					Writer->WriteLine(IniValue->Item1 + "=" + IniValue->Item2);
+				}
+				Writer->WriteLine();
+			}
+			Writer->Close();
+		}
+		catch (IO::IOException ^EX)
+		{
+			if (this->mFileName == nullptr)
+			{
+				throw gcnew IO::IOException("Error saving file, file name fucked up", EX);
+			}
+			else
+			throw gcnew IO::IOException("Error saving file", EX);
+		}
+		catch (Exception ^Ex)
+		{
+			throw Ex;
+		}
+		
 	}
 }

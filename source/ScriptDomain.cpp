@@ -191,6 +191,7 @@ namespace GTA
 		}
 
 		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
+		compilerOptions->OutputAssembly = IO::Path::Combine(IO::Path::GetTempPath(), IO::Path::GetFileNameWithoutExtension(filename) + ".dll");
 		compilerOptions->CompilerOptions = "/optimize" + csharp ? " /unsafe" : "";
 		compilerOptions->GenerateInMemory = true;
 		compilerOptions->IncludeDebugInformation = true;
@@ -198,9 +199,7 @@ namespace GTA
 		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
 		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
-
 		CodeDom::Compiler::CompilerResults ^compilerResult = compiler->CompileAssemblyFromFile(compilerOptions, filename);
-
 		if (!compilerResult->Errors->HasErrors)
 		{
 			Log("[DEBUG]", "Successfully compiled '", IO::Path::GetFileName(filename), "'.");
