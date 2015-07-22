@@ -44,9 +44,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
 	}
-	Player ^GTA::Game::Player::get()
+	GTA::Player ^GTA::Game::Player::get()
 	{
-		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
 	}
 	void Game::RadarZoom::set(int value)
 	{

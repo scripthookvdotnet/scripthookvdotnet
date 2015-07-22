@@ -22,12 +22,11 @@
 namespace GTA
 {
 	ref class Blip;
+	ref class Camera;
 	ref class Entity;
-	value class Model;
-	ref class Ped;
 	ref class Player;
-	ref class Prop;
-	ref class Vehicle;
+	ref class Rope;
+	value class Model;
 
 	namespace Native
 	{
@@ -41,13 +40,12 @@ namespace GTA
 			InputArgument(System::IntPtr value);
 			InputArgument(System::String ^value);
 			InputArgument(const char value[]);
-			InputArgument(Entity ^object);
-			InputArgument(Ped ^object);
-			InputArgument(Player ^object);
-			InputArgument(Vehicle ^object);
-			InputArgument(Blip ^object);
-			InputArgument(Prop ^object);
 			InputArgument(Model model);
+			InputArgument(Blip ^object);
+			InputArgument(Camera ^object);
+			InputArgument(Entity ^object);
+			InputArgument(Player ^object);
+			InputArgument(Rope ^object);
 
 			static inline operator InputArgument ^ (bool value)
 			{
@@ -81,11 +79,19 @@ namespace GTA
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^ (Entity ^object)
+			static inline operator InputArgument ^ (Model model)
+			{
+				return gcnew InputArgument(model);
+			}
+			static inline operator InputArgument ^ (Blip ^object)
 			{
 				return gcnew InputArgument(object);
 			}
-			static inline operator InputArgument ^ (Ped ^object)
+			static inline operator InputArgument ^ (Camera ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Entity ^object)
 			{
 				return gcnew InputArgument(object);
 			}
@@ -93,21 +99,9 @@ namespace GTA
 			{
 				return gcnew InputArgument(object);
 			}
-			static inline operator InputArgument ^ (Vehicle ^object)
+			static inline operator InputArgument ^ (Rope ^object)
 			{
 				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^ (Blip ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^ (Prop ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^ (Model model)
-			{
-				return gcnew InputArgument(model);
 			}
 
 			virtual System::String ^ToString() override
@@ -142,13 +136,12 @@ namespace GTA
 			InOutArgument(int value);
 			InOutArgument(float value);
 			InOutArgument(double value);
-			InOutArgument(Entity ^object);
-			InOutArgument(Ped ^object);
-			InOutArgument(Player ^object);
-			InOutArgument(Vehicle ^object);
-			InOutArgument(Blip ^object);
-			InOutArgument(Prop ^object);
 			InOutArgument(Model model);
+			InOutArgument(Blip ^object);
+			InOutArgument(Entity ^object);
+			InOutArgument(Camera ^object);
+			InOutArgument(Player ^object);
+			InOutArgument(Rope ^object);
 			~InOutArgument()
 			{
 				this->!InOutArgument();

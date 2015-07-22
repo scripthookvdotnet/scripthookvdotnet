@@ -7,11 +7,11 @@ namespace GTA
 {
 	ref class Blip;
 	ref class Camera;
-	ref class Ped;
-	ref class Vehicle;
-	ref class Prop;
 	ref class Entity;
+	ref class Ped;
+	ref class Prop;
 	ref class Rope;
+	ref class Vehicle;
 	value class Model;
 	value class RaycastResult;
 

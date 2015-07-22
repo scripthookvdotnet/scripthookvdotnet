@@ -440,14 +440,7 @@ namespace GTA
 	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
-		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->Handle, static_cast<int>(seat));
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Ped(handle);
+		return Native::Function::Call<Ped ^>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->Handle, static_cast<int>(seat));
 	}
 	bool Vehicle::IsSeatFree(VehicleSeat seat)
 	{
@@ -573,12 +566,8 @@ namespace GTA
 		{
 			return nullptr;
 		}
-		int pedHandle = Native::Function::Call<int>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, this->Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
-		if (pedHandle == 0)
-		{
-			return nullptr;
-		}
-		return gcnew Ped(pedHandle);
+
+		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, this->Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
 	{

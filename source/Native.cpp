@@ -18,10 +18,12 @@
 #include "ScriptDomain.hpp"
 
 #include "Blip.hpp"
+#include "Camera.hpp"
 #include "Entity.hpp"
 #include "Ped.hpp"
 #include "Player.hpp"
 #include "Prop.hpp"
+#include "Rope.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
 #include "Vehicle.hpp"
@@ -75,25 +77,22 @@ namespace GTA
 		InputArgument::InputArgument(const char value[]) : mData(ScriptDomain::CurrentDomain->PinString(gcnew String(value)).ToInt64())
 		{
 		}
-		InputArgument::InputArgument(Entity ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Ped ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Player ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Vehicle ^object) : mData(object->Handle)
+		InputArgument::InputArgument(Model model) : mData(model.Hash)
 		{
 		}
 		InputArgument::InputArgument(Blip ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Prop ^object) : mData(object->Handle)
+		InputArgument::InputArgument(Camera ^object) : mData(object->Handle)
 		{
 		}
-		InputArgument::InputArgument(Model model) : mData(model.Hash)
+		InputArgument::InputArgument(Entity ^object) : mData(object->Handle)
+		{
+		}
+		InputArgument::InputArgument(Player ^object) : mData(object->Handle)
+		{
+		}
+		InputArgument::InputArgument(Rope ^object) : mData(object->Handle)
 		{
 		}
 		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
@@ -120,11 +119,19 @@ namespace GTA
 		{
 			*reinterpret_cast<float *>(mStorage) = static_cast<float>(value);
 		}
-		InOutArgument::InOutArgument(Entity ^object) : OutputArgument()
+		InOutArgument::InOutArgument(Model model) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = model.Hash;
+		}
+		InOutArgument::InOutArgument(Blip ^object) : OutputArgument()
 		{
 			*reinterpret_cast<int *>(mStorage) = object->Handle;
 		}
-		InOutArgument::InOutArgument(Ped ^object) : OutputArgument()
+		InOutArgument::InOutArgument(Camera ^object) : OutputArgument()
+		{
+			*reinterpret_cast<int *>(mStorage) = object->Handle;
+		}
+		InOutArgument::InOutArgument(Entity ^object) : OutputArgument()
 		{
 			*reinterpret_cast<int *>(mStorage) = object->Handle;
 		}
@@ -132,21 +139,9 @@ namespace GTA
 		{
 			*reinterpret_cast<int *>(mStorage) = object->Handle;
 		}
-		InOutArgument::InOutArgument(Vehicle ^object) : OutputArgument()
+		InOutArgument::InOutArgument(Rope ^object) : OutputArgument()
 		{
 			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Blip ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Prop ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Model model) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = model.Hash;
 		}
 		InOutArgument::!InOutArgument()
 		{
@@ -204,15 +199,29 @@ namespace GTA
 				return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
 			}
 
+			const int handle = *reinterpret_cast<int *>(value);
+
 			if (type == Blip::typeid)
 			{
-				return gcnew Blip(*reinterpret_cast<int *>(value));
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_BLIP_EXIST, handle))
+				{
+					return gcnew Blip(handle);
+				}
+
+				return nullptr;
+			}
+			if (type == Camera::typeid)
+			{
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_CAM_EXIST, handle))
+				{
+					return gcnew Camera(handle);
+				}
+
+				return nullptr;
 			}
 			if (type == Entity::typeid)
 			{
-				const int handle = *reinterpret_cast<int *>(value);
-
-				if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
 				{
 					switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
 					{
@@ -229,19 +238,43 @@ namespace GTA
 			}
 			if (type == Ped::typeid)
 			{
-				return gcnew Ped(*reinterpret_cast<int *>(value));
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+				{
+					return gcnew Ped(handle);
+				}
+
+				return nullptr;
 			}
 			if (type == Player::typeid)
 			{
-				return gcnew Player(*reinterpret_cast<int *>(value));
+				return gcnew Player(handle);
 			}
 			if (type == Prop::typeid)
 			{
-				return gcnew Prop(*reinterpret_cast<int *>(value));
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+				{
+					return gcnew Prop(handle);
+				}
+
+				return nullptr;
+			}
+			if (type == Rope::typeid)
+			{
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_ROPE_EXIST, handle))
+				{
+					return gcnew Rope(handle);
+				}
+
+				return nullptr;
 			}
 			if (type == Vehicle::typeid)
 			{
-				return gcnew Vehicle(*reinterpret_cast<int *>(value));
+				if (handle != 0 && Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+				{
+					return gcnew Vehicle(handle);
+				}
+
+				return nullptr;
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
