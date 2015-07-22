@@ -24,8 +24,11 @@ namespace GTA
 	ref class Blip;
 	ref class Camera;
 	ref class Entity;
+	ref class Ped;
 	ref class Player;
+	ref class Prop;
 	ref class Rope;
+	ref class Vehicle;
 	value class Model;
 
 	namespace Native
@@ -33,19 +36,49 @@ namespace GTA
 		public ref class InputArgument
 		{
 		public:
-			InputArgument(bool value);
-			InputArgument(int value);
-			InputArgument(float value);
-			InputArgument(double value);
-			InputArgument(System::IntPtr value);
-			InputArgument(System::String ^value);
-			InputArgument(const char value[]);
-			InputArgument(Model model);
-			InputArgument(Blip ^object);
-			InputArgument(Camera ^object);
-			InputArgument(Entity ^object);
-			InputArgument(Player ^object);
-			InputArgument(Rope ^object);
+			InputArgument(System::Object ^value);
+			inline InputArgument(bool value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(int value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(float value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(double value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Model value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Entity ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Ped ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Player ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Prop ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Vehicle ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(Rope ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
 
 			static inline operator InputArgument ^ (bool value)
 			{
@@ -77,7 +110,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^ (const char value[])
 			{
-				return gcnew InputArgument(value);
+				return gcnew InputArgument(gcnew System::String(value));
 			}
 			static inline operator InputArgument ^ (Model model)
 			{
@@ -95,7 +128,19 @@ namespace GTA
 			{
 				return gcnew InputArgument(object);
 			}
+			static inline operator InputArgument ^ (Ped ^object)
+			{
+				return gcnew InputArgument(object);
+			}
 			static inline operator InputArgument ^ (Player ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Prop ^object)
+			{
+				return gcnew InputArgument(object);
+			}
+			static inline operator InputArgument ^ (Vehicle ^object)
 			{
 				return gcnew InputArgument(object);
 			}
@@ -116,6 +161,49 @@ namespace GTA
 		{
 		public:
 			OutputArgument();
+			OutputArgument(System::Object ^initvalue);
+			inline OutputArgument(bool initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(int initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(float initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(double initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(System::String ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Model initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Blip ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Camera ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Entity ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Ped ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Player ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Prop ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Vehicle ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(Rope ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
 			~OutputArgument()
 			{
 				this->!OutputArgument();
@@ -128,27 +216,6 @@ namespace GTA
 			!OutputArgument();
 
 			unsigned char *mStorage;
-		};
-		public ref class InOutArgument : public OutputArgument
-		{
-		public:
-			InOutArgument(bool value);
-			InOutArgument(int value);
-			InOutArgument(float value);
-			InOutArgument(double value);
-			InOutArgument(Model model);
-			InOutArgument(Blip ^object);
-			InOutArgument(Entity ^object);
-			InOutArgument(Camera ^object);
-			InOutArgument(Player ^object);
-			InOutArgument(Rope ^object);
-			~InOutArgument()
-			{
-				this->!InOutArgument();
-			}
-
-		protected:
-			!InOutArgument();
 		};
 
 		public ref class Function abstract sealed
