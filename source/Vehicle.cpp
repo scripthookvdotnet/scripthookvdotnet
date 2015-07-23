@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
+#define byte unsigned char
 
 namespace GTA
 {
@@ -263,13 +264,47 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
 	}
-	bool Vehicle::IsLeftHeadLightBroken::get()
+	bool Vehicle::LeftHeadLightBroken::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::_0x5EF77C9ADD3B11A3, this->Handle);
 	}
-	bool Vehicle::IsRightHeadLightBroken::get()
+	void Vehicle::LeftHeadLightBroken::set(bool value)
+	{
+		uintptr_t addr = MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (addr == 0)
+		{
+			return;
+		}
+		byte mask = 1 << 0;
+		if (value)
+		{
+			*(byte *)(addr + 1916) |= mask;
+		}
+		else
+		{
+			*(byte *)(addr + 1916) &= ~mask;
+		}
+	}
+	bool Vehicle::RightHeadLightBroken::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::_0xA7ECB73355EB2F20, this->Handle);
+	}
+	void Vehicle::RightHeadLightBroken::set(bool value)
+	{
+		uintptr_t addr = MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (addr == 0)
+		{
+			return;
+		}
+		byte mask = 1 << 1;
+		if (value)
+		{
+			*(byte *)(addr + 1916) |= mask;
+		}
+		else
+		{
+			*(byte *)(addr + 1916) &= ~mask;
+		}
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{

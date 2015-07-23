@@ -412,13 +412,15 @@ namespace GTA
 		{
 			void set(float value);
 		}
-		property bool IsLeftHeadLightBroken
+		property bool LeftHeadLightBroken
 		{
 			bool get();
+			void set(bool value);
 		}
-		property bool IsRightHeadLightBroken
+		property bool RightHeadLightBroken
 		{
 			bool get();
+			void set(bool value);
 		}
 		property bool BrakeLightsOn
 		{
