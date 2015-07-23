@@ -22,6 +22,10 @@ namespace GTA
 	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
+	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename)
+	{
+	}
+
 	ScriptSettings ^ScriptSettings::Load(String ^filename)
 	{
 		if (!IO::File::Exists(filename))
@@ -93,7 +97,66 @@ namespace GTA
 		{
 			reader->Close();
 		}
+
 		return result;
+	}
+	bool ScriptSettings::Save()
+	{
+		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^result = gcnew Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
+
+		for each (KeyValuePair<String ^, String ^> data in this->mValues)
+		{
+			String ^key = data.Key->Substring(data.Key->IndexOf("]") + 1);
+			String ^section = data.Key->Remove(data.Key->IndexOf("]"))->Substring(1);
+
+			if (!result->ContainsKey(section))
+			{
+				List<Tuple<String ^, String ^> ^> ^values = gcnew List<Tuple<String ^, String ^> ^>();
+				values->Add(gcnew Tuple<String ^, String ^>(key, data.Value));
+
+				result->Add(section, values);
+			}
+			else
+			{
+				result->default[section]->Add(gcnew Tuple<String ^, String ^>(key, data.Value));
+			}
+		}
+
+		IO::StreamWriter ^writer = nullptr;
+
+		try
+		{
+			writer = IO::File::CreateText(this->mFileName);
+		}
+		catch (IO::IOException ^)
+		{
+			return false;
+		}
+
+		try
+		{
+			for each (KeyValuePair<String ^, List<Tuple<String ^, String ^> ^> ^> section in result)
+			{
+				writer->WriteLine("[" + section.Key + "]");
+
+				for each (Tuple<String ^, String ^> ^value in section.Value)
+				{
+					writer->WriteLine(value->Item1 + " = " + value->Item2);
+				}
+
+				writer->WriteLine();
+			}
+		}
+		catch (IO::IOException ^)
+		{
+			return false;
+		}
+		finally
+		{
+			writer->Close();
+		}
+
+		return true;
 	}
 
 	generic <typename T>
@@ -195,58 +258,14 @@ namespace GTA
 	void ScriptSettings::SetValue(String ^section, String ^key, String ^value)
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
-		if (!this->mValues->ContainsKey(lookup))
-			this->mValues->Add(lookup, value);
-		else
-			this->mValues->default[lookup] = value;
-	}
-	void ScriptSettings::Save()
-	{
-		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^IniData = gcnew	Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
 
-		for each(KeyValuePair<String ^, String ^> IniLine in mValues)
+		if (!this->mValues->ContainsKey(lookup))
 		{
-			String ^Section = IniLine.Key->Remove(IniLine.Key->IndexOf("]"))->Substring(1);
-			String ^Key = IniLine.Key->Substring(IniLine.Key->IndexOf("]") + 1);
-			String ^Value = IniLine.Value;
-			if (!IniData->ContainsKey(Section))
-			{
-				List < Tuple<String ^, String ^> ^> ^Item = gcnew List < Tuple<String ^, String ^>^>();
-				Item->Add(gcnew Tuple<String ^, String ^>(Key, Value));
-				IniData->Add(Section, Item);
-			}
-			else
-			{
-				IniData[Section]->Add(gcnew Tuple<String ^, String ^>(Key, Value));
-			}
+			this->mValues->Add(lookup, value);
 		}
-		try
+		else
 		{
-			IO::StreamWriter ^Writer = IO::File::CreateText(this->mFileName);
-			for each (KeyValuePair<String ^, List<Tuple<String ^, String ^> ^> ^> IniLine in IniData)
-			{
-				Writer->WriteLine("[" + IniLine.Key + "]");
-				for each (Tuple<String ^, String ^> ^IniValue in IniLine.Value)
-				{
-					Writer->WriteLine(IniValue->Item1 + "=" + IniValue->Item2);
-				}
-				Writer->WriteLine();
-			}
-			Writer->Close();
+			this->mValues->default[lookup] = value;
 		}
-		catch (IO::IOException ^EX)
-		{
-			if (this->mFileName == nullptr)
-			{
-				throw gcnew IO::IOException("Error saving file, file name fucked up", EX);
-			}
-			else
-			throw gcnew IO::IOException("Error saving file", EX);
-		}
-		catch (Exception ^Ex)
-		{
-			throw Ex;
-		}
-		
 	}
 }
