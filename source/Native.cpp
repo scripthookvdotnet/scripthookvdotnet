@@ -17,11 +17,13 @@
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
 
-#include "Entity.hpp"
-#include "Prop.hpp"
 #include "Blip.hpp"
+#include "Camera.hpp"
+#include "Entity.hpp"
 #include "Ped.hpp"
 #include "Player.hpp"
+#include "Prop.hpp"
+#include "Rope.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
 #include "Vehicle.hpp"
@@ -54,108 +56,85 @@ namespace GTA
 			array<InputArgument ^> ^Arguments;
 		};
 
-		InputArgument::InputArgument(bool value) : mData(value ? 1 : 0)
+		UINT64 ObjectToNative(System::Object ^value)
 		{
-		}
-		InputArgument::InputArgument(int value) : mData(value)
-		{
-		}
-		InputArgument::InputArgument(float value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(value), 0))
-		{
-		}
-		InputArgument::InputArgument(double value) : mData(BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0))
-		{
-		}
-		InputArgument::InputArgument(IntPtr value) : mData(value.ToInt64())
-		{
-		}
-		InputArgument::InputArgument(String ^value) : mData(ScriptDomain::CurrentDomain->PinString(value).ToInt64())
-		{
-		}
-		InputArgument::InputArgument(const char value[]) : mData(ScriptDomain::CurrentDomain->PinString(gcnew String(value)).ToInt64())
-		{
-		}
-		InputArgument::InputArgument(Entity ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Ped ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Player ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Vehicle ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Blip ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Prop ^object) : mData(object->Handle)
-		{
-		}
-		InputArgument::InputArgument(Model model) : mData(model.Hash)
-		{
-		}
-		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
-		{
-		}
-		OutputArgument::!OutputArgument()
-		{
-			delete[] this->mStorage;
-		}
+			if (System::Object::ReferenceEquals(value, nullptr))
+			{
+				return 0;
+			}
 
-		InOutArgument::InOutArgument(bool value) : OutputArgument()
-		{
-			*reinterpret_cast<bool *>(mStorage) = value;
-		}
-		InOutArgument::InOutArgument(int value) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = value;
-		}
-		InOutArgument::InOutArgument(float value) : OutputArgument()
-		{
-			*reinterpret_cast<float *>(mStorage) = value;
-		}
-		InOutArgument::InOutArgument(double value) : OutputArgument()
-		{
-			*reinterpret_cast<float *>(mStorage) = static_cast<float>(value);
-		}
-		InOutArgument::InOutArgument(Entity ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Ped ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Player ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Vehicle ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Blip ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Prop ^object) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = object->Handle;
-		}
-		InOutArgument::InOutArgument(Model model) : OutputArgument()
-		{
-			*reinterpret_cast<int *>(mStorage) = model.Hash;
-		}
-		InOutArgument::!InOutArgument()
-		{
-			delete[] this->mStorage;
-		}
+			System::Type ^type = value->GetType();
 
+			// Fundamental types
+			if (type == Boolean::typeid)
+			{
+				return static_cast<bool>(value) ? 1 : 0;
+			}
+			if (type == Int32::typeid || type == UInt32::typeid)
+			{
+				return static_cast<int>(value);
+			}
+			if (type == Single::typeid)
+			{
+				return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
+			}
+			if (type == Double::typeid)
+			{
+				return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
+			}
+			if (type == IntPtr::typeid)
+			{
+				return static_cast<IntPtr>(value).ToInt64();
+			}
+			if (type == String::typeid)
+			{
+				return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
+			}
 
-		Object ^GetResult(Type ^type, PUINT64 value)
+			// Scripting types
+			if (type == Model::typeid)
+			{
+				return static_cast<Model>(value).Hash;
+			}
+
+			if (type == Blip::typeid)
+			{
+				return static_cast<Blip ^>(value)->Handle;
+			}
+			if (type == Camera::typeid)
+			{
+				return static_cast<Camera ^>(value)->Handle;
+			}
+			if (type == Entity::typeid)
+			{
+				return static_cast<Entity ^>(value)->Handle;
+			}
+			if (type == Ped::typeid)
+			{
+				return static_cast<Ped ^>(value)->Handle;
+			}
+			if (type == Player::typeid)
+			{
+				return static_cast<Player ^>(value)->Handle;
+			}
+			if (type == Prop::typeid)
+			{
+				return static_cast<Prop ^>(value)->Handle;
+			}
+			if (type == Rope::typeid)
+			{
+				return static_cast<Rope ^>(value)->Handle;
+			}
+			if (type == Vehicle::typeid)
+			{
+				return static_cast<Vehicle ^>(value)->Handle;
+			}
+
+			throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
+		}
+		System::Object ^ObjectFromNative(System::Type ^type, PUINT64 value)
 		{
+			// Fundamental types
 			if (type == Boolean::typeid)
 			{
 				return *reinterpret_cast<int *>(value) != 0;
@@ -196,6 +175,7 @@ namespace GTA
 			};
 			#pragma pack(pop)
 
+			// Math types
 			if (type == Math::Vector2::typeid)
 			{
 				return gcnew Math::Vector2(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y);
@@ -205,50 +185,77 @@ namespace GTA
 				return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
 			}
 
-			if (type == Ped::typeid)
-			{
-				return gcnew Ped(*reinterpret_cast<int *>(value));
-			}
-			if (type == Player::typeid)
-			{
-				return gcnew Player(*reinterpret_cast<int *>(value));
-			}
-			if (type == Vehicle::typeid)
-			{
-				return gcnew Vehicle(*reinterpret_cast<int *>(value));
-			}
+			const int handle = *reinterpret_cast<int *>(value);
+
+			// Scripting types
 			if (type == Blip::typeid)
 			{
-				return gcnew Blip(*reinterpret_cast<int *>(value));
+				return gcnew Blip(handle);
 			}
-			if (type == Prop::typeid)
+			if (type == Camera::typeid)
 			{
-				return gcnew Prop(*reinterpret_cast<int *>(value));
+				return gcnew Camera(handle);
 			}
 			if (type == Entity::typeid)
 			{
-				int handle = *reinterpret_cast<int *>(value);
-				if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handle))
+				if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
 				{
-					switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, handle))
+					switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
 					{
-					case 1: 
-						return gcnew Ped(handle);
-					case 2: 
-						return gcnew Vehicle(handle);
-					case 3: 
-						return gcnew Prop(handle);
+						case 1:
+							return gcnew Ped(handle);
+						case 2:
+							return gcnew Vehicle(handle);
+						case 3:
+							return gcnew Prop(handle);
 					}
 				}
+
 				return nullptr;
+			}
+			if (type == Ped::typeid)
+			{
+				return gcnew Ped(handle);
+			}
+			if (type == Player::typeid)
+			{
+				return gcnew Player(handle);
+			}
+			if (type == Prop::typeid)
+			{
+				return gcnew Prop(handle);
+			}
+			if (type == Rope::typeid)
+			{
+				return gcnew Rope(handle);
+			}
+			if (type == Vehicle::typeid)
+			{
+				return gcnew Vehicle(handle);
 			}
 
 			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
+
+		InputArgument::InputArgument(System::Object ^value) : mData(ObjectToNative(value))
+		{
+		}
+		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
+		{
+		}
+		OutputArgument::OutputArgument(System::Object ^value) : OutputArgument()
+		{
+			*reinterpret_cast<UINT64 *>(mStorage) = ObjectToNative(value);
+		}
+		OutputArgument::!OutputArgument()
+		{
+			delete[] this->mStorage;
+		}
+
 		generic <typename T>
 		T OutputArgument::GetResult()
 		{
-			return static_cast<T>(Native::GetResult(T::typeid, reinterpret_cast<PUINT64>(this->mData)));
+			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<PUINT64>(this->mData)));
 		}
 
 		generic <typename T>
@@ -269,7 +276,7 @@ namespace GTA
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
-			return static_cast<T>(GetResult(T::typeid, task->Result));
+			return static_cast<T>(ObjectFromNative(T::typeid, task->Result));
 		}
 	}
 }

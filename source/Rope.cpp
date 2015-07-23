@@ -69,11 +69,11 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, this->Handle, vertex);
 	}
-	void Rope::LoadTextures()
-	{
-		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
-	}
 
+	bool Rope::Exists()
+	{
+		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, this->Handle);
+	}
 	void Rope::Delete()
 	{
 		int handle = this->Handle;

@@ -19,13 +19,15 @@ namespace GTA
 
 	bool Scaleform::Load(System::String ^scaleformID)
 	{
-		this->mHandle = Native::Function::Call<int>(Native::Hash::REQUEST_SCALEFORM_MOVIE, scaleformID);
-		this->mScaleformID = scaleformID;
+		const int handle = Native::Function::Call<int>(Native::Hash::REQUEST_SCALEFORM_MOVIE, scaleformID);
 
-		if (this->mHandle == 0)
+		if (handle == 0)
 		{
 			return false;
 		}
+
+		this->mHandle = handle;
+		this->mScaleformID = scaleformID;
 
 		return true;
 	}

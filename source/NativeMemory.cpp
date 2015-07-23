@@ -5,6 +5,7 @@
 
 namespace GTA
 {
+	using namespace System;
 	using namespace System::Collections::Generic;
 
 	static MemoryAccess::MemoryAccess()
@@ -15,14 +16,14 @@ namespace GTA
 		sAddressEntityPool = reinterpret_cast<MemoryPool **>(*reinterpret_cast<int *>(patternAddress + 3) + patternAddress + 7);
 	}
 
-	int MemoryAccess::HandleToIndex(int Handle)
+	int MemoryAccess::HandleToIndex(int handle)
 	{
-		return Handle >> 8; // == Handle / 256
+		return handle >> 8; // == handle / 256
 	}
 
-	uintptr_t MemoryAccess::GetAddressOfEntity(int Handle)
+	uintptr_t MemoryAccess::GetAddressOfEntity(int handle)
 	{
-		return *reinterpret_cast<uintptr_t*>(GetAddressOfItemInPool(*sAddressEntityPool, Handle) + 8);
+		return *reinterpret_cast<const uintptr_t *>(GetAddressOfItemInPool(*sAddressEntityPool, handle) + 8);
 	}
 	array<int> ^MemoryAccess::GetEntityHandleList()
 	{
@@ -30,30 +31,21 @@ namespace GTA
 	}
 	float MemoryAccess::GetVehicleRPM(int handle)
 	{
-		uintptr_t addr = GetAddressOfEntity(handle);
-		if (addr == 0)
-		{
-			return 0.0f;
-		}
-		return *(float*)(addr + 2004);
+		const uintptr_t address = GetAddressOfEntity(handle);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2004);
 	}
 	float MemoryAccess::GetVehicleAcceleration(int handle)
 	{
-		uintptr_t addr = GetAddressOfEntity(handle);
-		if (addr == 0)
-		{
-			return 0.0f;
-		}
-		return *(float*)(addr + 2020);
+		const uintptr_t address = GetAddressOfEntity(handle);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2020);
 	}
 	float MemoryAccess::GetVehicleSteering(int handle)
 	{
-		uintptr_t addr = GetAddressOfEntity(handle);
-		if (addr == 0)
-		{
-			return 0.0f;
-		}
-		return *(float*)(addr + 2212);
+		const uintptr_t address = GetAddressOfEntity(handle);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2212);
 	}
 
 	uintptr_t MemoryAccess::FindPattern(const char *pattern, const char *mask)
@@ -62,10 +54,10 @@ namespace GTA
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &modInfo, sizeof(MODULEINFO));
 
 		const char *start_offset = reinterpret_cast<const char *>(modInfo.lpBaseOfDll);
-		const uintptr_t size = static_cast<uintptr_t>(modInfo.SizeOfImage);
+		const size_t size = static_cast<size_t>(modInfo.SizeOfImage);
 
 		intptr_t pos = 0;
-		const uintptr_t searchLen = static_cast<uintptr_t>(strlen(mask) - 1);
+		const size_t searchLen = static_cast<size_t>(strlen(mask) - 1);
 
 		for (const char *retAddress = start_offset; retAddress < start_offset + size; retAddress++)
 		{
@@ -73,7 +65,7 @@ namespace GTA
 			{
 				if (mask[pos + 1] == '\0')
 				{
-					return (reinterpret_cast<uintptr_t>(retAddress) - searchLen);
+					return reinterpret_cast<uintptr_t>(retAddress) - searchLen;
 				}
 
 				pos++;
@@ -94,16 +86,17 @@ namespace GTA
 			return 0;
 		}
 
-		const int index = HandleToIndex(Handle);
-		const int flag = PoolAddress->BoolAdr[index]; // flag should be equal to 2 if everything is ok
+		const int idx = HandleToIndex(Handle);
+		// Flag should be equal to 2 if everything is ok
+		const int flag = static_cast<int>(PoolAddress->BoolAddress[idx]);
 
-		// parity check? (taken from ScriptHookDotNet for IV
+		// Parity check (taken from ScriptHookDotNet for GTAIV)
 		if (flag & 0x80 || flag != (Handle & 0xFF))
 		{
 			return 0;
 		}
 
-		return (PoolAddress->ListAddr + index * PoolAddress->ItemSize);
+		return PoolAddress->ListAddress + idx * PoolAddress->ItemSize;
 	}
 	array<int> ^MemoryAccess::GetListOfHandlesInPool(MemoryPool *PoolAddress)
 	{
@@ -116,11 +109,12 @@ namespace GTA
 
 		for (int i = 0; i < PoolAddress->MaxCount; i++)
 		{
-			int val = static_cast<int>(PoolAddress->BoolAdr[i]); // parity value, important to cast it to int
+			int val = static_cast<int>(PoolAddress->BoolAddress[i]);
 
 			if ((val & 0x80) == 0)
 			{
 				val = (i << 8) | val;
+
 				handles->Add(val);
 			}
 		}

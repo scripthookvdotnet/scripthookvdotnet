@@ -289,16 +289,6 @@ namespace GTA
 
 		void HideNumber();
 		void ShowNumber(int number);
-		[System::ObsoleteAttribute("Blip.SetAsFriendly is obsolete, please use Blip.IsFriendly instead")]
-		void SetAsFriendly()
-		{
-			IsFriendly = true;
-		}
-		[System::ObsoleteAttribute("Blip.SetAsHostile is obsolete, please use Blip.IsFriendly instead")]
-		void SetAsHostile()
-		{
-			IsFriendly = false;
-		}
 
 		bool Exists();
 		void Remove();

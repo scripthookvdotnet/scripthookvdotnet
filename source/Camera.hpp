@@ -35,30 +35,10 @@ namespace GTA
 		{
 			void set(float strength);
 		}
-		[System::ObsoleteAttribute("Camera.DOFStrength is obsolete, please use Camera.DepthOfFieldStrength instead")]
-		property float DOFStrength
-		{
-			void set(float strength)
-			{
-				DepthOfFieldStrength = strength;
-			}
-		}
 		property float FieldOfView
 		{
 			float get();
 			void set(float fov);
-		}
-		[System::ObsoleteAttribute("Camera.FOV is obsolete, please use Camera.FieldOfView instead")]
-		property float FOV
-		{
-			float get()
-			{
-				return FieldOfView;
-			}
-			void set(float fov)
-			{
-				FieldOfView = fov;
-			}
 		}
 		property float FarClip
 		{
@@ -69,18 +49,6 @@ namespace GTA
 		{
 			float get();
 			void set(float farDOF);
-		}
-		[System::ObsoleteAttribute("Camera.FarDOF is obsolete, please use Camera.FarDepthOfField instead")]
-		property float FarDOF
-		{
-			float get()
-			{
-				return FarDepthOfField;
-			}
-			void set(float farDOF)
-			{
-				FarDepthOfField = farDOF;
-			}
 		}
 		property bool IsActive
 		{
@@ -108,14 +76,6 @@ namespace GTA
 		property float NearDepthOfField
 		{
 			void set(float nearDOF);
-		}
-		[System::ObsoleteAttribute("Camera.NearDOF is obsolete, please use Camera.NearDepthOfField instead")]
-		property float NearDOF
-		{
-			void set(float nearDOF)
-			{
-				NearDepthOfField = nearDOF;
-			}
 		}
 		property Math::Vector3 Position
 		{

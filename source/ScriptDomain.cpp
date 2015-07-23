@@ -20,6 +20,7 @@ namespace GTA
 {
 	using namespace System;
 	using namespace System::Threading;
+	using namespace System::Reflection;
 	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
@@ -172,13 +173,22 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadScript(String ^filename)
 	{
-		String ^extension = IO::Path::GetExtension(filename);
 		CodeDom::Compiler::CodeDomProvider ^compiler = nullptr;
-		bool csharp = false;
+		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
+		compilerOptions->CompilerOptions = "/optimize";
+		compilerOptions->GenerateInMemory = true;
+		compilerOptions->IncludeDebugInformation = true;
+		compilerOptions->ReferencedAssemblies->Add("System.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
+		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
+
+		String ^extension = IO::Path::GetExtension(filename);
+
 		if (extension->Equals(".cs", StringComparison::InvariantCultureIgnoreCase))
 		{
 			compiler = gcnew Microsoft::CSharp::CSharpCodeProvider();
-			csharp = true;
+			compilerOptions->CompilerOptions += " /unsafe";
 		}
 		else if (extension->Equals(".vb", StringComparison::InvariantCultureIgnoreCase))
 		{
@@ -189,16 +199,8 @@ namespace GTA
 			return false;
 		}
 
-		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
-		compilerOptions->OutputAssembly = IO::Path::Combine(IO::Path::GetTempPath(), IO::Path::GetFileNameWithoutExtension(filename) + ".dll");
-		compilerOptions->CompilerOptions = "/optimize" + csharp ? " /unsafe" : "";
-		compilerOptions->GenerateInMemory = true;
-		compilerOptions->IncludeDebugInformation = true;
-		compilerOptions->ReferencedAssemblies->Add("System.dll");
-		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
-		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
-		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
 		CodeDom::Compiler::CompilerResults ^compilerResult = compiler->CompileAssemblyFromFile(compilerOptions, filename);
+
 		if (!compilerResult->Errors->HasErrors)
 		{
 			Log("[DEBUG]", "Successfully compiled '", IO::Path::GetFileName(filename), "'.");
@@ -324,6 +326,56 @@ namespace GTA
 		return nullptr;
 	}
 
+	bool SortScripts(List<Tuple<String ^, Type ^> ^> ^%scripttypes)
+	{
+		Dictionary<Tuple<String ^, Type ^> ^, List<Type ^> ^> ^graph = gcnew Dictionary<Tuple<String ^, Type ^> ^, List<Type ^> ^>();
+
+		for each (auto scripttype in scripttypes)
+		{
+			List<Type ^> ^dependencies = gcnew List<Type ^>();
+
+			for each (RequireScript ^attribute in static_cast<MemberInfo ^>(scripttype->Item2)->GetCustomAttributes(RequireScript::typeid, true))
+			{
+				dependencies->Add(attribute->mDependency);
+			}
+
+			graph->Add(scripttype, dependencies);
+		}
+
+		List<Tuple<String ^, Type ^> ^> ^result = gcnew List<Tuple<String ^, Type ^> ^>(graph->Count);
+
+		while (graph->Count > 0)
+		{
+			Tuple<String ^, Type ^> ^scriptype = nullptr;
+
+			for each (auto item in graph)
+			{
+				if (item.Value->Count == 0)
+				{
+					scriptype = item.Key;
+					break;
+				}
+			}
+
+			if (scriptype == nullptr)
+			{
+				Log("[ERROR]", "Detected a circular script dependency. Aborting ...");
+				return false;
+			}
+
+			result->Add(scriptype);
+			graph->Remove(scriptype);
+
+			for each (auto item in graph)
+			{
+				item.Value->Remove(scriptype->Item2);
+			}
+		}
+
+		scripttypes = result;
+
+		return true;
+	}
 	void ScriptDomain::Start()
 	{
 		if (this->mRunningScripts->Count != 0 || this->mScriptTypes->Count == 0)
@@ -358,6 +410,11 @@ namespace GTA
 		}
 
 		Log("[DEBUG]", "Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
+
+		if (!SortScripts(this->mScriptTypes))
+		{
+			return;
+		}
 
 		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
 		{
@@ -483,6 +540,18 @@ namespace GTA
 		}
 
 		this->mPinnedStrings->Clear();
+	}
+	String ^ScriptDomain::LookupScriptFilename(Type ^type)
+	{
+		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
+		{
+			if (scripttype->Item2 == type)
+			{
+				return scripttype->Item1;
+			}
+		}
+
+		return String::Empty;
 	}
 	Object ^ScriptDomain::InitializeLifetimeService()
 	{

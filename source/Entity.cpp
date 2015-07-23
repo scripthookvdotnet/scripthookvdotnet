@@ -15,9 +15,7 @@ namespace GTA
 
 	Blip ^Entity::CurrentBlip::get()
 	{
-		int blipHandle = Native::Function::Call<int>(Native::Hash::GET_BLIP_FROM_ENTITY, this->Handle);
-
-		return blipHandle == 0 ? nullptr : gcnew Blip(blipHandle);
+		return Native::Function::Call<Blip ^>(Native::Hash::GET_BLIP_FROM_ENTITY, this->Handle);
 	}
 	Math::Vector3 Entity::ForwardVector::get()
 	{
@@ -211,7 +209,7 @@ namespace GTA
 
 	Blip ^Entity::AddBlip()
 	{
-		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle));
+		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle);
 	}
 
 	void Entity::ApplyForce(Math::Vector3 direction)

@@ -36,10 +36,8 @@ namespace GTA
 		void UnpinVertex(int vertex);
 		Math::Vector3 GetVertexCoord(int vertex);
 
+		bool Exists();
 		void Delete();
-
-		[System::ObsoleteAttribute("Rope.LoadTextures is obsolete, please do no longer use it, as it's called by World.AddRope automatically")]
-		static void LoadTextures();
 
 	private:
 		int mHandle;

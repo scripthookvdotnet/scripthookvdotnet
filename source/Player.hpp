@@ -11,14 +11,6 @@ namespace GTA
 	public:
 		Player(int handle);
 
-		[System::ObsoleteAttribute("Player.ID is obsolete, please use Player.Handle instead.")]
-		property int ID
-		{
-			int get()
-			{
-				return Handle;
-			}
-		}
 		property int Handle
 		{
 			int get();
@@ -67,14 +59,6 @@ namespace GTA
 		property bool IsDead
 		{
 			bool get();
-		}
-		[System::ObsoleteAttribute("Player.IsOnMission is deprecated, please use Player.CanStartMission instead")]
-		property bool IsOnMission
-		{
-			bool get()
-			{
-				return !CanStartMission;
-			}
 		}
 		property bool IsPlaying
 		{

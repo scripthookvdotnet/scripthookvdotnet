@@ -195,7 +195,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->Handle, false));
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->Handle, false);
 	}
 	void Ped::IsEnemy::set(bool value)
 	{
@@ -346,25 +346,7 @@ namespace GTA
 
 	Entity ^Ped::GetKiller()
 	{
-		int killedBy = Native::Function::Call<int>(Native::Hash::_GET_PED_KILLER, this->Handle);
-		if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, killedBy))
-		{
-			return nullptr;
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, killedBy))
-		{
-			return gcnew Ped(killedBy);
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, killedBy))
-		{
-			return gcnew Vehicle(killedBy);
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, killedBy))
-		{
-			return gcnew Prop(killedBy);
-		}
-		
-		return nullptr;
+		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, this->Handle);
 	}
 
 	void Ped::Kill()

@@ -6,7 +6,7 @@
 
 namespace GTA
 {
-	RaycastResult::RaycastResult(int handle)
+	RaycastResult::RaycastResult(int handle) : mHitEntity(nullptr)
 	{
 		int hitsomething = 0, enthandle = 0;
 		Native::OutputArgument ^hitCoords = gcnew Native::OutputArgument(), ^unkVec = gcnew Native::OutputArgument();
@@ -15,21 +15,20 @@ namespace GTA
 		this->mDidHit = hitsomething != 0;
 		this->mHitCoords = hitCoords->GetResult<Math::Vector3>();
 
-		if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, enthandle))
+		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, enthandle))
 		{
-			this->mHitEntity = nullptr;
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, enthandle))
-		{
-			this->mHitEntity = gcnew Ped(enthandle);
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, enthandle))
-		{
-			this->mHitEntity = gcnew Vehicle(enthandle);
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, enthandle))
-		{
-			this->mHitEntity = gcnew Prop(enthandle);
+			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, enthandle))
+			{
+				case 1:
+					this->mHitEntity = gcnew Ped(enthandle);
+					break;
+				case 2:
+					this->mHitEntity = gcnew Vehicle(enthandle);
+					break;
+				case 3:
+					this->mHitEntity = gcnew Prop(enthandle);
+					break;
+			}
 		}
 	}
 

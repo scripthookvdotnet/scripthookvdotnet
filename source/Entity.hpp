@@ -12,14 +12,6 @@ namespace GTA
 	public:
 		Entity(int handle);
 
-		[System::ObsoleteAttribute("Entity.ID is obsolete, please use Entity.Handle instead.")]
-		property int ID
-		{
-			int get()
-			{
-				return Handle;
-			}
-		}
 		property int Handle
 		{
 			int get();
