@@ -173,13 +173,22 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadScript(String ^filename)
 	{
-		String ^extension = IO::Path::GetExtension(filename);
 		CodeDom::Compiler::CodeDomProvider ^compiler = nullptr;
-		bool csharp = false;
+		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
+		compilerOptions->CompilerOptions = "/optimize";
+		compilerOptions->GenerateInMemory = true;
+		compilerOptions->IncludeDebugInformation = true;
+		compilerOptions->ReferencedAssemblies->Add("System.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
+		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
+
+		String ^extension = IO::Path::GetExtension(filename);
+
 		if (extension->Equals(".cs", StringComparison::InvariantCultureIgnoreCase))
 		{
 			compiler = gcnew Microsoft::CSharp::CSharpCodeProvider();
-			csharp = true;
+			compilerOptions->CompilerOptions += " /unsafe";
 		}
 		else if (extension->Equals(".vb", StringComparison::InvariantCultureIgnoreCase))
 		{
@@ -190,16 +199,8 @@ namespace GTA
 			return false;
 		}
 
-		CodeDom::Compiler::CompilerParameters ^compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
-		compilerOptions->OutputAssembly = IO::Path::Combine(IO::Path::GetTempPath(), IO::Path::GetFileNameWithoutExtension(filename) + ".dll");
-		compilerOptions->CompilerOptions = "/optimize" + csharp ? " /unsafe" : "";
-		compilerOptions->GenerateInMemory = true;
-		compilerOptions->IncludeDebugInformation = true;
-		compilerOptions->ReferencedAssemblies->Add("System.dll");
-		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
-		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
-		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
 		CodeDom::Compiler::CompilerResults ^compilerResult = compiler->CompileAssemblyFromFile(compilerOptions, filename);
+
 		if (!compilerResult->Errors->HasErrors)
 		{
 			Log("[DEBUG]", "Successfully compiled '", IO::Path::GetFileName(filename), "'.");
@@ -539,6 +540,18 @@ namespace GTA
 		}
 
 		this->mPinnedStrings->Clear();
+	}
+	String ^ScriptDomain::LookupScriptFilename(Type ^type)
+	{
+		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
+		{
+			if (scripttype->Item2 == type)
+			{
+				return scripttype->Item1;
+			}
+		}
+
+		return String::Empty;
 	}
 	Object ^ScriptDomain::InitializeLifetimeService()
 	{

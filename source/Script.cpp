@@ -14,9 +14,10 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Viewport.hpp"
-#include "Settings.hpp"
 #include "ScriptDomain.hpp"
+
+#include "Settings.hpp"
+#include "Viewport.hpp"
 
 namespace GTA
 {
@@ -27,7 +28,7 @@ namespace GTA
 
 	extern void HandleUnhandledException(Object ^sender, UnhandledExceptionEventArgs ^args);
 
-	Script::Script() : mInterval(0), mRunning(false), mWaitEvent(gcnew AutoResetEvent(false)), mContinueEvent(gcnew AutoResetEvent(false)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
+	Script::Script() : mInterval(0), mRunning(false), mFilename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), mScriptDomain(ScriptDomain::CurrentDomain), mWaitEvent(gcnew AutoResetEvent(false)), mContinueEvent(gcnew AutoResetEvent(false)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
 	}
 	Script::~Script()
@@ -50,7 +51,8 @@ namespace GTA
 	{
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
 		{
-			String ^path = System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts", this->GetType()->Assembly->GetName()->Name + ".ini");
+			String ^path = IO::Path::ChangeExtension(this->mFilename, ".ini");
+
 			if (IO::File::Exists(path))
 			{
 				this->mSettings = ScriptSettings::Load(path);
