@@ -47,7 +47,7 @@ namespace GTA
 			return System::Drawing::Point();
 		}
 
-		return System::Drawing::Point((int)pointX * UI::WIDTH, (int)pointY * UI::HEIGHT);
+		return System::Drawing::Point((int)(pointX * UI::WIDTH), (int)(pointY * UI::HEIGHT));
 	}
 
 	void UI::DrawTexture(System::String ^filename, int index, int level, int time, System::Drawing::Point pos, System::Drawing::Size size)
