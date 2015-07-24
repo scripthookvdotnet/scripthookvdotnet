@@ -526,7 +526,10 @@ namespace GTA
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
 	{
-		const IntPtr handle = Runtime::InteropServices::Marshal::StringToHGlobalAnsi(string);
+		const int size = Text::Encoding::UTF8->GetByteCount(string);
+		IntPtr handle(new unsigned char[size + 1]());
+
+		Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(string), 0, handle, size);
 
 		this->mPinnedStrings->Add(handle);
 
@@ -536,7 +539,7 @@ namespace GTA
 	{
 		for each (IntPtr handle in this->mPinnedStrings)
 		{
-			Runtime::InteropServices::Marshal::FreeHGlobal(handle);
+			delete[] handle.ToPointer();
 		}
 
 		this->mPinnedStrings->Clear();
