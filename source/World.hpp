@@ -280,10 +280,8 @@ namespace GTA
 		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position);
 		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk);
 		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags);
-		static Math::Vector3 GetSafeCoordForPed(float x, float y, float z, bool sidewalk, int flags);
 		static Street GetStreetAtCoord(Math::Vector2 position);
 		static Street GetStreetAtCoord(Math::Vector3 position);
-		static Street GetStreetAtCoord(float x, float y, float z);
 		static Zone GetZone(System::String ^code);
 		static Zone GetZone(Math::Vector2 position);
 		static Zone GetZone(Math::Vector3 position);

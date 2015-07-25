@@ -339,21 +339,17 @@ namespace GTA
 	}
 	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position)
 	{
-		return World::GetSafeCoordForPed(position.X, position.Y, position.Z, true, 0);
+		return World::GetSafeCoordForPed(Math::Vector3(position.X, position.Y, position.Z), true, 0);
 	}
 	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position, bool sidewalk)
 	{
-		return World::GetSafeCoordForPed(position.X, position.Y, position.Z, sidewalk, 0);
+		return World::GetSafeCoordForPed(position, sidewalk, 0);
 	}
 	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags)
 	{
-		return World::GetSafeCoordForPed(position.X, position.Y, position.Z, sidewalk, flags);
-	}
-	Math::Vector3 World::GetSafeCoordForPed(float x, float y, float z, bool sidewalk, int flags)
-	{
 		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();
 
-		if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, x, y, z, sidewalk, outPos, flags))
+		if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, outPos, flags))
 		{
 			return outPos->GetResult<Math::Vector3>();
 		}
@@ -361,18 +357,14 @@ namespace GTA
 	}
 	Street World::GetStreetAtCoord(Math::Vector2 position)
 	{
-		return World::GetStreetAtCoord(position.X, position.Y, 0);
+		return World::GetStreetAtCoord(Math::Vector3(position.X, position.Y, 0));
 	}
 	Street World::GetStreetAtCoord(Math::Vector3 position)
-	{
-		return World::GetStreetAtCoord(position.X, position.Y, position.Z);
-	}
-	Street World::GetStreetAtCoord(float x, float y, float z)
 	{
 		Native::OutputArgument ^streetHash = gcnew Native::OutputArgument();
 		Native::OutputArgument ^crossingHash = gcnew Native::OutputArgument();
 
-		Native::Function::Call(Native::Hash::GET_STREET_NAME_AT_COORD, x, y, z, streetHash, crossingHash);
+		Native::Function::Call(Native::Hash::GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, streetHash, crossingHash);
 
 		System::String ^name = Native::Function::Call<System::String ^>(Native::Hash::GET_STREET_NAME_FROM_HASH_KEY, streetHash->GetResult<int>());
 		System::String ^crossing = Native::Function::Call<System::String ^>(Native::Hash::GET_STREET_NAME_FROM_HASH_KEY, crossingHash->GetResult<int>());
