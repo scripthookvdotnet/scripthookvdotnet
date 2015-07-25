@@ -8,6 +8,7 @@ namespace GTA
 		this->Enabled = true;
 		this->Position = System::Drawing::Point();
 		this->Size = System::Drawing::Size(UI::WIDTH, UI::HEIGHT);
+
 		this->Color = System::Drawing::Color::Transparent;
 	}
 	UIRectangle::UIRectangle(System::Drawing::Point position, System::Drawing::Size size)

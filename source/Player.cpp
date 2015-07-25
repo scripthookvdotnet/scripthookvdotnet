@@ -6,7 +6,7 @@
 
 namespace GTA
 {
-	Player::Player(int handle) : mHandle(handle), mPed(gcnew Ped(Native::Function::Call<int>(Native::Hash::GET_PLAYER_PED, handle)))
+	Player::Player(int handle) : mHandle(handle), mPed(Native::Function::Call<Ped ^>(Native::Hash::GET_PLAYER_PED, handle))
 	{
 	}
 
@@ -84,7 +84,7 @@ namespace GTA
 	}
 	Vehicle ^Player::LastVehicle::get()
 	{
-		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_PLAYERS_LAST_VEHICLE));
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_PLAYERS_LAST_VEHICLE);
 	}
 	int Player::Money::get()
 	{

@@ -15,9 +15,7 @@ namespace GTA
 
 	Blip ^Entity::CurrentBlip::get()
 	{
-		int blipHandle = Native::Function::Call<int>(Native::Hash::GET_BLIP_FROM_ENTITY, this->Handle);
-
-		return blipHandle == 0 ? nullptr : gcnew Blip(blipHandle);
+		return Native::Function::Call<Blip ^>(Native::Hash::GET_BLIP_FROM_ENTITY, this->Handle);
 	}
 	Math::Vector3 Entity::ForwardVector::get()
 	{
@@ -154,6 +152,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VELOCITY, this->Handle, value.X, value.Y, value.Z);
 	}
+	int Entity::Alpha::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_ALPHA, this->Handle);
+	}
+	void Entity::Alpha::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ALPHA, this->Handle, value, false);
+	}
 
 	bool Entity::IsInRangeOf(Math::Vector3 position, float distance)
 	{
@@ -203,7 +209,7 @@ namespace GTA
 
 	Blip ^Entity::AddBlip()
 	{
-		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle));
+		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_ENTITY, this->Handle);
 	}
 
 	void Entity::ApplyForce(Math::Vector3 direction)
@@ -221,6 +227,11 @@ namespace GTA
 	void Entity::ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation)
 	{
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+	}
+
+	void Entity::ResetAlpha()
+	{
+		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, this->Handle);
 	}
 
 	void Entity::Delete()

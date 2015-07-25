@@ -22,6 +22,10 @@ namespace GTA
 	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
+	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename)
+	{
+	}
+
 	ScriptSettings ^ScriptSettings::Load(String ^filename)
 	{
 		if (!IO::File::Exists(filename))
@@ -42,7 +46,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		ScriptSettings ^result = gcnew ScriptSettings();
+		ScriptSettings ^result = gcnew ScriptSettings(filename);
 
 		try
 		{
@@ -95,6 +99,64 @@ namespace GTA
 		}
 
 		return result;
+	}
+	bool ScriptSettings::Save()
+	{
+		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^result = gcnew Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
+
+		for each (KeyValuePair<String ^, String ^> data in this->mValues)
+		{
+			String ^key = data.Key->Substring(data.Key->IndexOf("]") + 1);
+			String ^section = data.Key->Remove(data.Key->IndexOf("]"))->Substring(1);
+
+			if (!result->ContainsKey(section))
+			{
+				List<Tuple<String ^, String ^> ^> ^values = gcnew List<Tuple<String ^, String ^> ^>();
+				values->Add(gcnew Tuple<String ^, String ^>(key, data.Value));
+
+				result->Add(section, values);
+			}
+			else
+			{
+				result->default[section]->Add(gcnew Tuple<String ^, String ^>(key, data.Value));
+			}
+		}
+
+		IO::StreamWriter ^writer = nullptr;
+
+		try
+		{
+			writer = IO::File::CreateText(this->mFileName);
+		}
+		catch (IO::IOException ^)
+		{
+			return false;
+		}
+
+		try
+		{
+			for each (KeyValuePair<String ^, List<Tuple<String ^, String ^> ^> ^> section in result)
+			{
+				writer->WriteLine("[" + section.Key + "]");
+
+				for each (Tuple<String ^, String ^> ^value in section.Value)
+				{
+					writer->WriteLine(value->Item1 + " = " + value->Item2);
+				}
+
+				writer->WriteLine();
+			}
+		}
+		catch (IO::IOException ^)
+		{
+			return false;
+		}
+		finally
+		{
+			writer->Close();
+		}
+
+		return true;
 	}
 
 	generic <typename T>
@@ -197,6 +259,13 @@ namespace GTA
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
-		this->mValues->default[lookup] = value;
+		if (!this->mValues->ContainsKey(lookup))
+		{
+			this->mValues->Add(lookup, value);
+		}
+		else
+		{
+			this->mValues->default[lookup] = value;
+		}
 	}
 }

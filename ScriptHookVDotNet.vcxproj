@@ -52,7 +52,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;_DEBUG;%(PreprocessorDefinitions);NOSOUND;NOMINMAX</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>source;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -67,7 +67,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions);NOSOUND;NOMINMAX</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>source;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -96,6 +96,7 @@
     <ClCompile Include="source\MenuItem.cpp" />
     <ClCompile Include="source\Model.cpp" />
     <ClCompile Include="source\Native.cpp" />
+    <ClCompile Include="source\NativeMemory.cpp" />
     <ClCompile Include="source\Ped.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Prop.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />
     <ClInclude Include="source\NativeHashes.hpp" />
+    <ClInclude Include="source\NativeMemory.hpp" />
     <ClInclude Include="source\Ped.hpp" />
     <ClInclude Include="source\PedHashes.hpp" />
     <ClInclude Include="source\Player.hpp" />

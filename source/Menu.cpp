@@ -1,8 +1,11 @@
 #include "Menu.hpp"
+#include "Native.hpp"
+#include "Vector2.hpp"
 
 namespace GTA
 {
-	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items)
+	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items) : Menu(headerCaption, items, 10){}
+	Menu::Menu(System::String ^headerCaption, array<IMenuItem ^> ^items, int MaxItemsToDraw)
 	{
 		//Put the items in the item stack
 		//The menu itself will be initialized when it gets added to the viewport
@@ -12,6 +15,7 @@ namespace GTA
 			item->Parent = this;
 		}
 
+		MaxDrawLimit = MaxItemsToDraw;
 		//Set defaults for the properties
 		HeaderColor = System::Drawing::Color::FromArgb(200, 255, 20, 147);
 		HeaderTextColor = System::Drawing::Color::White;
@@ -54,9 +58,40 @@ namespace GTA
 		}
 		mHeaderRect->Draw(offset);
 		mHeaderText->Draw(offset);
-		for each (IMenuItem ^item in mItems)
+		for (int i = 0; i<mItemDrawCount; i++)
 		{
-			item->Draw(offset);
+			Items[i + scrollOffset]->Draw(offset);
+		}
+		DrawScrollArrows(scrollOffset > 0, scrollOffset < mMaxScrollOffset, offset);
+	}
+
+	void Menu::DrawScrollArrows(bool up, bool down, System::Drawing::Size offset)
+	{
+		if (!up && !down)
+			return;
+		if (Native::Function::Call<bool>(Native::Hash::HAS_STREAMED_TEXTURE_DICT_LOADED, "CommonMenu"))
+		{
+			Math::Vector2 Resolution = Native::Function::Call<Math::Vector2>(Native::Hash::GET_TEXTURE_RESOLUTION, "CommonMenu", "arrowright");
+			if (up)
+			{
+				float xscale = Resolution.X / (float)UI::WIDTH;
+				float yscale = Resolution.Y / (float)UI::HEIGHT;
+				float xpos = ((float)(Width + offset.Width)) / (float)UI::WIDTH - xscale * 0.5f;
+				float ypos = ((float)(HeaderHeight + offset.Height + ItemHeight / 2)) / (float)UI::HEIGHT;
+				Native::Function::Call(Native::Hash::DRAW_SPRITE, "CommonMenu", "arrowright", xpos, ypos, xscale, yscale, -90.0f, 255, 255, 255, 255);
+			}
+			if (down)
+			{
+				float xscale = Resolution.X / (float)UI::WIDTH;
+				float yscale = Resolution.Y / (float)UI::HEIGHT;
+				float xpos = ((float)(Width + offset.Width)) / (float)UI::WIDTH - xscale * 0.5f;
+				float ypos = ((float)(HeaderHeight + offset.Height + ItemHeight * mItemDrawCount - ItemHeight / 2)) / (float)UI::HEIGHT;
+				Native::Function::Call(Native::Hash::DRAW_SPRITE, "CommonMenu", "arrowright", xpos, ypos, xscale, yscale, 90.0f, 255, 255, 255, 255);
+			}
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, "CommonMenu", 0);
 		}
 	}
 
@@ -64,16 +99,16 @@ namespace GTA
 	{
 		int currentY = HeaderHeight;
 		System::Drawing::Size itemSize = System::Drawing::Size(Width, ItemHeight);
-		for each (IMenuItem ^item in mItems)
+		for (int i = 0; i<mItemDrawCount; i++)
 		{
-			item->SetOriginAndSize(System::Drawing::Point(0, currentY), itemSize);
+			Items[i + scrollOffset]->SetOriginAndSize(System::Drawing::Point(0, currentY), itemSize);
 			currentY += ItemHeight;
 		}
 		mSelectedIndex = 0;
 		mFooterDescription = mItems[mSelectedIndex]->Description;
 		mItems[mSelectedIndex]->Select();
 
-		int itemsHeight = mItems->Count * ItemHeight;
+		int itemsHeight = mItemDrawCount * ItemHeight;
 		mHeaderRect = gcnew UIRectangle(System::Drawing::Point(),
 			System::Drawing::Size(Width, HeaderHeight), HeaderColor);
 		if (HasFooter) mFooterRect = gcnew UIRectangle(System::Drawing::Point(0, HeaderHeight + itemsHeight),
@@ -113,10 +148,28 @@ namespace GTA
 		int newIndex = down ? mSelectedIndex + 1 : mSelectedIndex - 1;
 		if (newIndex >= mItems->Count) newIndex = 0;
 		if (newIndex < 0) newIndex = mItems->Count - 1;
+		if (down)
+		{
+			if (newIndex - scrollOffset > mItemDrawCount - 3)
+			{
+				scrollOffset++;
+			}
+		}
+		else
+		{
+			if (newIndex - scrollOffset < 2)
+			{
+				scrollOffset--;
+			}
+		}
 		OnChangeSelection(newIndex);
 	}
 
 	void Menu::OnChangeSelection(int newIndex){
+		if (newIndex < scrollOffset)
+			scrollOffset = newIndex - 3;
+		else if (newIndex >scrollOffset + mItemDrawCount)
+			scrollOffset = newIndex + 3 - mItemDrawCount;
 		mItems[mSelectedIndex]->Deselect();
 		mSelectedIndex = newIndex;
 		mFooterDescription = mItems[mSelectedIndex]->Description;
@@ -133,10 +186,35 @@ namespace GTA
 		this->SelectedIndexChanged(this, gcnew SelectedIndexChangedArgs(this->mSelectedIndex));
 	}
 
+	void Menu::UpdateItemPositions()
+	{
+		int currentY = HeaderHeight;
+		System::Drawing::Size itemSize = System::Drawing::Size(Width, ItemHeight);
+		for (int i = 0; i<mItemDrawCount; i++)
+		{
+			Items[i+scrollOffset]->SetOriginAndSize(System::Drawing::Point(0, currentY), itemSize);
+			currentY += ItemHeight;
+		}
+	}
+
 	void Menu::OnChangeItem(bool right)
 	{
 		if (mSelectedIndex < 0 || mSelectedIndex >= mItems->Count) return;
 		mItems[mSelectedIndex]->Change(right);
+	}
+	void Menu::OnChangeDrawLimit()
+	{
+		if (scrollOffset > mMaxScrollOffset)
+		{
+			mScrollOffset = mMaxScrollOffset;
+		}
+		if (SelectedIndex < scrollOffset)
+			scrollOffset = SelectedIndex - 3;
+		else if (SelectedIndex >scrollOffset + mItemDrawCount)
+			scrollOffset = SelectedIndex + 3 - mItemDrawCount;
+		UpdateItemPositions();
+		if (SelectedIndex >= 0 && SelectedIndex < mItems->Count)
+			mItems[SelectedIndex]->Select();
 	}
 
 	MessageBox::MessageBox(System::String ^caption)

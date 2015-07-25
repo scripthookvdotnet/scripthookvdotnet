@@ -81,6 +81,11 @@ namespace GTA
 		{
 			return this->mKeyboardState[static_cast<int>(key)];
 		}
+		inline System::String ^LookupScriptFilename(Script ^script)
+		{
+			return LookupScriptFilename(script->GetType());
+		}
+		System::String ^LookupScriptFilename(System::Type ^scripttype);
 		System::Object ^InitializeLifetimeService() override;
 
 	private:

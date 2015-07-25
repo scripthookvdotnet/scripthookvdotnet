@@ -212,11 +212,39 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsTryingToEnterALockedVehicle
+		{
+			bool get();
+		}
 		property bool IsRagdoll
 		{
 			bool get();
 		}
 		property bool IsInjured
+		{
+			bool get();
+		}
+		property bool IsJacking
+		{
+			bool get();
+		}
+		property bool IsBeingJacked
+		{
+			bool get();
+		}
+		property bool IsBeingStunned
+		{
+			bool get();
+		}
+		property bool IsBeingStealthKilled
+		{
+			bool get();
+		}
+		property bool WasKilledByStealth
+		{
+			bool get();
+		}
+		property bool WasKilledByTakedown
 		{
 			bool get();
 		}
@@ -236,11 +264,55 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsAimingFromCover
+		{
+			bool get();
+		}
+		property bool IsDoingDriveBy
+		{
+			bool get();
+		}
 		property bool IsSwimming
 		{
 			bool get();
 		}
 		property bool IsSwimmingUnderWater
+		{
+			bool get();
+		}
+		property bool IsOnFoot
+		{
+			bool get();
+		}
+		property bool IsOnBike
+		{
+			bool get();
+		}
+		property bool IsInBoat
+		{
+			bool get();
+		}
+		property bool IsInSub
+		{
+			bool get();
+		}
+		property bool IsInHeli
+		{
+			bool get();
+		}
+		property bool IsInPlane
+		{
+			bool get();
+		}
+		property bool IsInTrain
+		{
+			bool get();
+		}
+		property bool IsInFlyingVehicle
+		{
+			bool get();
+		}
+		property bool IsInPoliceVehicle
 		{
 			bool get();
 		}
@@ -274,6 +346,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool CanSufferCriticalHits
+		{
+			void set(bool value);
+		}
 		property bool CanBeKnockedOffBike
 		{
 			void set(bool value);
@@ -282,9 +358,17 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool CanBeTargetted
+		{
+			void set(bool value);
+		}
 		property bool CanPlayGestures
 		{
 			void set(bool value);
+		}
+		property bool IsStopped
+		{
+			bool get();
 		}
 		property bool IsWalking
 		{
@@ -323,6 +407,18 @@ namespace GTA
 		{
 			void set(GTA::FiringPattern value);
 		}
+		property bool DiesInstantlyInWater
+		{
+			void set(bool value);
+		}
+		property bool DrownsInWater
+		{
+			void set(bool value);
+		}
+		property bool DrownsInSinkingVehicle
+		{
+			void set(bool value);
+		}
 
 		property WeaponCollection ^Weapons
 		{
@@ -335,6 +431,8 @@ namespace GTA
 		bool IsSittingInVehicle(Vehicle ^vehicle);
 		Relationship GetRelationshipWithPed(Ped ^ped);
 		void SetIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
+		bool IsInCover();
+		bool IsInCover(bool expectUseWeapon);
 
 		Entity ^GetKiller();
 		void Kill();

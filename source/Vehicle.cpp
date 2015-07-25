@@ -2,6 +2,7 @@
 #include "Vehicle.hpp"
 #include "Game.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -58,6 +59,10 @@ namespace GTA
 	void Vehicle::IsDriveable::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_UNDRIVEABLE, this->Handle, !value);
+	}
+	bool Vehicle::IsStopped::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_STOPPED, this->Handle);
 	}
 	bool Vehicle::IsOnAllWheels::get()
 	{
@@ -222,9 +227,21 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_IS_WANTED, this->Handle, value);
 	}
+	bool Vehicle::EngineRunning::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xAE31E7DF9B5B132E, this->Handle);
+	}
 	void Vehicle::EngineRunning::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_ON, this->Handle, value, true);
+	}
+	void Vehicle::EnginePowerMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_POWER_MULTIPLIER, this->Handle, value);
+	}
+	void Vehicle::EngineTorqueMultiplier::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER, this->Handle, value);
 	}
 	void Vehicle::LightsOn::set(bool value)
 	{
@@ -245,6 +262,14 @@ namespace GTA
 	void Vehicle::LightsMultiplier::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
+	}
+	bool Vehicle::IsLeftHeadLightBroken::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0x5EF77C9ADD3B11A3, this->Handle);
+	}
+	bool Vehicle::IsRightHeadLightBroken::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xA7ECB73355EB2F20, this->Handle);
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{
@@ -364,6 +389,18 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, this->Handle);
 	}
+	float Vehicle::CurrentRPM::get()
+	{
+		return MemoryAccess::GetVehicleRPM(this->Handle);
+	}
+	float Vehicle::Acceleration::get()
+	{
+		return MemoryAccess::GetVehicleAcceleration(this->Handle);
+	}
+	float Vehicle::Steering::get()
+	{
+		return MemoryAccess::GetVehicleSteering(this->Handle);
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
@@ -403,14 +440,7 @@ namespace GTA
 	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
-		const int handle = Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->Handle, static_cast<int>(seat));
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Ped(handle);
+		return Native::Function::Call<Ped ^>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, this->Handle, static_cast<int>(seat));
 	}
 	bool Vehicle::IsSeatFree(VehicleSeat seat)
 	{
@@ -536,12 +566,8 @@ namespace GTA
 		{
 			return nullptr;
 		}
-		int pedHandle = Native::Function::Call<int>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, this->Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
-		if (pedHandle == 0)
-		{
-			return nullptr;
-		}
-		return gcnew Ped(pedHandle);
+
+		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, this->Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
 	{

@@ -21,6 +21,9 @@
     <ClCompile Include="source\Native.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="source\NativeMemory.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="source\Script.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -123,6 +126,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\NativeHashes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\NativeMemory.hpp">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="source\Script.hpp">

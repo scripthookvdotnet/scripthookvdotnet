@@ -22,6 +22,7 @@ namespace GTA
 	{
 	public:
 		static ScriptSettings ^Load(System::String ^filename);
+		bool Save();
 
 		generic <typename T>
 		T GetValue(System::String ^section, System::String ^name, T defaultvalue);
@@ -32,7 +33,11 @@ namespace GTA
 		void SetValue(System::String ^section, System::String ^name, T value);
 		void SetValue(System::String ^section, System::String ^name, System::String ^value);
 
+	internal:
+		ScriptSettings(System::String ^filename);
+		
 	private:
+		System::String ^mFileName;
 		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^mValues = gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>();
 	};
 }

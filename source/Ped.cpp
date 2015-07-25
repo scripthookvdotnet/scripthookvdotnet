@@ -84,6 +84,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GETTING_INTO_A_VEHICLE, this->Handle);
 	}
+	bool Ped::IsTryingToEnterALockedVehicle::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, this->Handle);
+	}
 	bool Ped::IsRagdoll::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_RAGDOLL, this->Handle);
@@ -91,6 +95,30 @@ namespace GTA
 	bool Ped::IsInjured::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_INJURED, this->Handle);
+	}
+	bool Ped::IsJacking::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_JACKING, this->Handle);
+	}
+	bool Ped::IsBeingJacked::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_JACKED, this->Handle);
+	}
+	bool Ped::IsBeingStunned::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_STUNNED, this->Handle);
+	}
+	bool Ped::IsBeingStealthKilled::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_STEALTH_KILLED, this->Handle);
+	}
+	bool Ped::WasKilledByStealth::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::WAS_PED_KILLED_BY_STEALTH, this->Handle);
+	}
+	bool Ped::WasKilledByTakedown::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::WAS_PED_KILLED_BY_TAKEDOWN, this->Handle);
 	}
 	bool Ped::IsShooting::get()
 	{
@@ -108,6 +136,14 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_MELEE_COMBAT, this->Handle);
 	}
+	bool Ped::IsAimingFromCover::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_AIMING_FROM_COVER, this->Handle);
+	}
+	bool Ped::IsDoingDriveBy::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_DOING_DRIVEBY, this->Handle);
+	}
 	bool Ped::IsSwimming::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SWIMMING, this->Handle);
@@ -116,6 +152,42 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SWIMMING_UNDER_WATER, this->Handle);
 	}
+	bool Ped::IsOnFoot::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_ON_FOOT, this->Handle);
+	}
+	bool Ped::IsOnBike::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_ON_ANY_BIKE, this->Handle);
+	}
+	bool Ped::IsInBoat::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_BOAT, this->Handle);
+	}
+	bool Ped::IsInSub::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_SUB, this->Handle);
+	}
+	bool Ped::IsInHeli::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_HELI, this->Handle);
+	}
+	bool Ped::IsInPlane::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_PLANE, this->Handle);
+	}
+	bool Ped::IsInTrain::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_TRAIN, this->Handle);
+	}
+	bool Ped::IsInFlyingVehicle::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_FLYING_VEHICLE, this->Handle);
+	}
+	bool Ped::IsInPoliceVehicle::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_POLICE_VEHICLE, this->Handle);
+	}
 	Vehicle ^Ped::CurrentVehicle::get()
 	{
 		if (!IsInVehicle())
@@ -123,7 +195,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->Handle, false));
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->Handle, false);
 	}
 	void Ped::IsEnemy::set(bool value)
 	{
@@ -153,6 +225,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_SWITCH_WEAPON, this->Handle, value);
 	}
+	void Ped::CanSufferCriticalHits::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_SUFFERS_CRITICAL_HITS, this->Handle, value);
+	}
 	void Ped::CanBeKnockedOffBike::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, this->Handle, value);
@@ -161,9 +237,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_DRAGGED_OUT, this->Handle, value);
 	}
+	void Ped::CanBeTargetted::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_TARGETTED, this->Handle, value);
+	}
 	void Ped::CanPlayGestures::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_PLAY_GESTURE_ANIMS, this->Handle, value);
+	}
+	bool Ped::IsStopped::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_STOPPED, this->Handle);
 	}
 	bool Ped::IsWalking::get()
 	{
@@ -201,6 +285,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_FIRING_PATTERN, this->Handle, static_cast<int>(value));
 	}
+	void Ped::DiesInstantlyInWater::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DIES_INSTANTLY_IN_WATER, this->Handle, value);
+	}
+	void Ped::DrownsInWater::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DIES_IN_WATER, this->Handle, value);
+	}
+	void Ped::DrownsInSinkingVehicle::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DIES_IN_SINKING_VEHICLE, this->Handle, value);
+	}
 
 	bool Ped::IsInVehicle()
 	{
@@ -230,6 +326,14 @@ namespace GTA
 	{
 		Native::Function::Call<float>(Native::Hash::SET_PED_WETNESS_HEIGHT, this->Handle, value);
 	}
+	bool Ped::IsInCover()
+	{
+		return IsInCover(false);
+	}
+	bool Ped::IsInCover(bool expectUseWeapon)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COVER, this->Handle, expectUseWeapon);
+	}
 
 	WeaponCollection ^Ped::Weapons::get()
 	{
@@ -242,25 +346,7 @@ namespace GTA
 
 	Entity ^Ped::GetKiller()
 	{
-		int killedBy = Native::Function::Call<int>(Native::Hash::_GET_PED_KILLER, this->Handle);
-		if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, killedBy))
-		{
-			return nullptr;
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, killedBy))
-		{
-			return gcnew Ped(killedBy);
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, killedBy))
-		{
-			return gcnew Vehicle(killedBy);
-		}
-		else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, killedBy))
-		{
-			return gcnew Prop(killedBy);
-		}
-		
-		return nullptr;
+		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, this->Handle);
 	}
 
 	void Ped::Kill()

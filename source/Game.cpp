@@ -2,6 +2,10 @@
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
 
+#include <Main.h>
+
+#undef Yield
+
 namespace GTA
 {
 	float Game::FPS::get()
@@ -40,9 +44,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
 	}
-	Player ^GTA::Game::Player::get()
+	GTA::Player ^GTA::Game::Player::get()
 	{
-		return gcnew GTA::Player(Native::Function::Call<int>(Native::Hash::PLAYER_ID));
+		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
 	}
 	void Game::RadarZoom::set(int value)
 	{
@@ -56,9 +60,25 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
 	}
+	System::Drawing::Size Game::ScreenResolution::get()
+	{
+		int w, h;
+		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
+
+		return System::Drawing::Size(w, h);
+	}
 	void Game::TimeScale::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_TIME_SCALE, value);
+	}
+	GameVersion Game::Version::get()
+	{
+		if (sGameVersion == GameVersion::Unknown)
+		{
+			sGameVersion = static_cast<GameVersion>(getGameVersion() + 1);
+		}
+
+		return sGameVersion;
 	}
 	void Game::WantedMultiplier::set(float value)
 	{
@@ -126,11 +146,19 @@ namespace GTA
 
 	System::String ^Game::GetUserInput(int maxLength)
 	{
-		return GetUserInput("", maxLength);
+		return GetUserInput(WindowTitle::FMMC_KEY_TIP8, "", maxLength);
 	}
-	System::String ^Game::GetUserInput(System::String ^startText, int maxLength)
+	System::String ^Game::GetUserInput(WindowTitle windowTitle, int maxLength)
 	{
-		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, startText, "", "", "", "", "", maxLength);
+		return GetUserInput(windowTitle, "", maxLength);
+	}
+	System::String ^Game::GetUserInput(System::String^ defaultText, int maxLength)
+	{
+		return GetUserInput(WindowTitle::FMMC_KEY_TIP8, defaultText, maxLength);
+	}
+	System::String ^Game::GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength)
+	{
+		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength);
 
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 		{
