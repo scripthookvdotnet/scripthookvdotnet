@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vector3.hpp"
+
 namespace GTA
 {
 	ref class Ped;
@@ -40,6 +42,7 @@ namespace GTA
 		{
 			System::Drawing::Color get();
 		}
+		Math::Vector3 GetWaypointPosition();
 		property bool IgnoredByEveryone
 		{
 			void set(bool value);
@@ -60,6 +63,11 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsInvincible
+		{
+			bool get();
+			void set(bool value);
+		}
 		property bool IsPlaying
 		{
 			bool get();
@@ -73,6 +81,10 @@ namespace GTA
 			bool get();
 		}
 		property bool IsTargettingAnything
+		{
+			bool get();
+		}
+		property bool IsWaypointActive
 		{
 			bool get();
 		}
@@ -97,6 +109,8 @@ namespace GTA
 		{
 			int get();
 		}
+		void SetMaxWantedLevel(int level);
+		void SetPoliceIgnore(bool ignore);
 		property int WantedLevel
 		{
 			int get();
