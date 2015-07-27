@@ -42,8 +42,11 @@ namespace GTA
 		{
 			System::Drawing::Color get();
 		}
-		Math::Vector3 GetWaypointPosition();
 		property bool IgnoredByEveryone
+		{
+			void set(bool value);
+		}
+		property bool IgnoredByPolice
 		{
 			void set(bool value);
 		}
@@ -84,13 +87,14 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsWaypointActive
-		{
-			bool get();
-		}
 		property Vehicle ^LastVehicle
 		{
 			Vehicle ^get();
+		}
+		property int MaxWantedLevel
+		{
+			int get();
+			void set(int value);
 		}
 		property int Money
 		{
@@ -109,8 +113,8 @@ namespace GTA
 		{
 			int get();
 		}
-		void SetMaxWantedLevel(int level);
-		void SetPoliceIgnore(bool ignore);
+		//void SetMaxWantedLevel(int level);
+		//void SetPoliceIgnore(bool ignore);
 		property int WantedLevel
 		{
 			int get();

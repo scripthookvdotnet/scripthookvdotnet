@@ -147,6 +147,16 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
+		
+		static Math::Vector3 GetWaypointPosition();
+		static property bool IsWaypointActive
+		{
+			bool get();
+		}
+		static property bool PauseClock
+		{
+			void set(bool value);
+		}
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;

@@ -15,7 +15,7 @@ namespace GTA
 	{
 		return this->mHandle;
 	}
-	
+
 	bool Player::CanControlCharacter::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_CONTROL_ON, this->Handle);
@@ -47,46 +47,13 @@ namespace GTA
 
 		return System::Drawing::Color::FromArgb(r, g, b);
 	}
-	Math::Vector3 Player::GetWaypointPosition()
-	{
-		Math::Vector3 position;
-		if (IsWaypointActive)
-		{
-			bool blipFound = false;
-			int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
-			for (int i = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator); Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, i) != 0; i = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator))
-			{
-				if (Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, i) == 4)
-				{
-					position = Native::Function::Call<Math::Vector3>(Native::Hash::GET_BLIP_INFO_ID_COORD, i);
-					blipFound = true;
-					break;
-				}
-				if (blipFound)
-				{
-					bool groundFound = false;
-					float height = 0.0f;
-					for (int i = 800; i >= 0; i -= 50){
-						if (Native::Function::Call<bool>(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, (float)i, &height))
-						{
-							groundFound = true;
-							position.Z = height;
-							break;
-						}
-						Script::Wait(100);
-					}
-					if (!groundFound)
-					{
-						position.Z = 1000.0f;
-					}
-				}
-			}
-		}
-		return position;
-	}
 	void Player::IgnoredByEveryone::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_EVERYONE_IGNORE_PLAYER, this->Handle, value);
+	}
+	void Player::IgnoredByPolice::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
 	}
 	bool Player::IsAiming::get()
 	{
@@ -128,13 +95,19 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_TARGETTING_ANYTHING, this->Handle);
 	}
-	bool Player::IsWaypointActive::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
-	}
 	Vehicle ^Player::LastVehicle::get()
 	{
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_PLAYERS_LAST_VEHICLE);
+	}
+	int Player::MaxWantedLevel::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_MAX_WANTED_LEVEL);
+	}
+	void Player::MaxWantedLevel::set(int value)
+	{
+		if (value < 0) value = 0;
+		if (value > 5) value = 5;
+		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, value);
 	}
 	int Player::Money::get()
 	{
@@ -193,16 +166,18 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_UNDERWATER_TIME_REMAINING, this->Handle);
 	}
+	/*
 	void Player::SetMaxWantedLevel(int level)
 	{
 		if (level < 0) level = 0;
 		if (level > 5) level = 5;
 		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, level);
 	}
-	void Player::SetPoliceIgnore(bool ignore)
+	void Player::SetPoliceIgnore(bool value)
 	{
-		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, ignore);
+		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
 	}
+	*/
 	int Player::WantedLevel::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_WANTED_LEVEL, this->Handle);
