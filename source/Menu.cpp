@@ -150,14 +150,14 @@ namespace GTA
 		if (newIndex < 0) newIndex = mItems->Count - 1;
 		if (down)
 		{
-			if (newIndex - scrollOffset > mItemDrawCount - 3)
+			if (newIndex - scrollOffset > mItemDrawCount - mStartScrollOffset - 1)
 			{
 				scrollOffset++;
 			}
 		}
 		else
 		{
-			if (newIndex - scrollOffset < 2)
+			if (newIndex - scrollOffset < mStartScrollOffset)
 			{
 				scrollOffset--;
 			}
@@ -167,9 +167,9 @@ namespace GTA
 
 	void Menu::OnChangeSelection(int newIndex){
 		if (newIndex < scrollOffset)
-			scrollOffset = newIndex - 3;
+			scrollOffset = newIndex - mStartScrollOffset - 1;
 		else if (newIndex >scrollOffset + mItemDrawCount)
-			scrollOffset = newIndex + 3 - mItemDrawCount;
+			scrollOffset = newIndex + mStartScrollOffset + 1 - mItemDrawCount;
 		mItems[mSelectedIndex]->Deselect();
 		mSelectedIndex = newIndex;
 		mFooterDescription = mItems[mSelectedIndex]->Description;
@@ -209,9 +209,9 @@ namespace GTA
 			mScrollOffset = mMaxScrollOffset;
 		}
 		if (SelectedIndex < scrollOffset)
-			scrollOffset = SelectedIndex - 3;
+			scrollOffset = SelectedIndex - mStartScrollOffset - 1;
 		else if (SelectedIndex >scrollOffset + mItemDrawCount)
-			scrollOffset = SelectedIndex + 3 - mItemDrawCount;
+			scrollOffset = SelectedIndex + mStartScrollOffset + 1 - mItemDrawCount;
 		UpdateItemPositions();
 		if (SelectedIndex >= 0 && SelectedIndex < mItems->Count)
 			mItems[SelectedIndex]->Select();
