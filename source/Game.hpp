@@ -52,6 +52,8 @@ namespace GTA
 		RadioMirrorPark,
 		Space,
 		VinewoodBoulevardRadio,
+		SelfRadio,
+		RadioOff = 255,
 	};
 	public enum class WindowTitle
 	{
