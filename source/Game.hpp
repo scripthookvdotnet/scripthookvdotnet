@@ -18,6 +18,21 @@ namespace GTA
 		VER_1_0_393_2_STEAM,
 		VER_1_0_393_2_NOSTEAM,
 	};
+	public enum class Language
+	{
+		American,
+		French,
+		German,
+		Italian,
+		Spanish,
+		Portuguese,
+		Polish,
+		Russian,
+		Korean,
+		Chinese,
+		Japanese,
+		Mexican,
+	};
 	public enum class RadioStation
 	{
 		LosSantosRockRadio,
@@ -81,6 +96,10 @@ namespace GTA
 		{
 			bool get();
 			void set(bool value);
+		}
+		static property GTA::Language Language
+		{
+			GTA::Language get();
 		}
 		static property float LastFrameTime
 		{
