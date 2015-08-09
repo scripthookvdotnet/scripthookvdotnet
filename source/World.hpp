@@ -232,6 +232,9 @@ namespace GTA
 	public ref class World sealed abstract
 	{
 	public:
+
+		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
+
 		static property System::DateTime CurrentDate
 		{
 			System::DateTime get();
