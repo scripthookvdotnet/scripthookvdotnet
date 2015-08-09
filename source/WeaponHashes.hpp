@@ -16,6 +16,7 @@ namespace GTA
 			CombatPistol = 0x5EF9FEC4,
 			APPistol = 0x22D8FE39,
 			Pistol50 = 0x99AEEB3B,
+			MarksmanPistol = 0xDC4DB296,
 			MicroSMG = 0x13532244,
 			SMG = 0x2BE6766B,
 			AssaultSMG = 0xEFE7E2DF,
@@ -59,7 +60,8 @@ namespace GTA
 			Gusenberg = 0x61012683,
 			Hatchet = 0xF9DCBF2D,
 			Railgun = 0x6D544C99,
-			Unarmed = 0xA2719263
+			Unarmed = 0xA2719263,
+			KnuckleDuster = 0xD8DF3C3C
 		};
 	}
 }
