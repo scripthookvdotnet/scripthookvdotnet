@@ -47,7 +47,7 @@ namespace GTA
 			return System::Drawing::Point();
 		}
 
-		return System::Drawing::Point((int)pointX * UI::WIDTH, (int)pointY * UI::HEIGHT);
+		return System::Drawing::Point((int)(pointX * UI::WIDTH), (int)(pointY * UI::HEIGHT));
 	}
 
 	void UI::DrawTexture(System::String ^filename, int index, int level, int time, System::Drawing::Point pos, System::Drawing::Size size)
@@ -70,13 +70,12 @@ namespace GTA
 		}
 
 		System::Drawing::Size resolution = Game::ScreenResolution;
-		float screenHeightScaleFactor = static_cast<float>(resolution.Width) / static_cast<float>(resolution.Height);
-
+		
 		const float x = static_cast<float>(pos.X) / UI::WIDTH;
 		const float y = static_cast<float>(pos.Y) / UI::HEIGHT;
 		const float w = static_cast<float>(size.Width) / UI::WIDTH;
 		const float h = static_cast<float>(size.Height) / UI::HEIGHT;
 
-		drawTexture(id, index, level, time, w, h, 0.0f, 0.0f, x, y, rotation, screenHeightScaleFactor, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
+		drawTexture(id, index, level, time, w, h, 0.0f, 0.0f, x, y, rotation, 1.0f, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 	}
 }

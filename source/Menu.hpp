@@ -126,7 +126,21 @@ namespace GTA
 				if (limit < 6 || limit > 20)
 					throw gcnew System::ArgumentOutOfRangeException("MaxDrawLimit", "MaxDrawLimit must be between 6 and 20");
 				mMaxDrawLimit = limit;
+				StartScrollOffset = StartScrollOffset;//make sure value still falls in correct range
 				OnChangeDrawLimit();
+			}
+		}
+		property int StartScrollOffset
+		{
+			int get(){ return mStartScrollOffset; }
+			void set(int offset)
+			{
+				if (offset < 0)
+					mStartScrollOffset = 0;
+				else if (offset > MaxDrawLimit / 2 - 1)
+					mStartScrollOffset = MaxDrawLimit / 2 - 1;
+				else
+					mStartScrollOffset = offset;
 			}
 		}
 
@@ -175,6 +189,7 @@ namespace GTA
 		int mSelectedIndex = -1;
 		int mScrollOffset = 0;
 		int mMaxDrawLimit = 10;
+		int mStartScrollOffset = 2;
 
 
 		System::String ^mFooterDescription = "footer description";

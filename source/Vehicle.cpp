@@ -263,13 +263,53 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHT_MULTIPLIER, this->Handle, value);
 	}
-	bool Vehicle::IsLeftHeadLightBroken::get()
+	bool Vehicle::LeftHeadLightBroken::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::_0x5EF77C9ADD3B11A3, this->Handle);
 	}
-	bool Vehicle::IsRightHeadLightBroken::get()
+	void Vehicle::LeftHeadLightBroken::set(bool value)
+	{
+		unsigned char *const address = reinterpret_cast<unsigned char *>(MemoryAccess::GetAddressOfEntity(this->Handle));
+
+		if (address == nullptr)
+		{
+			return;
+		}
+
+		const unsigned char mask = 1 << 0;
+
+		if (value)
+		{
+			*(address + 1916) |= mask;
+		}
+		else
+		{
+			*(address + 1916) &= ~mask;
+		}
+	}
+	bool Vehicle::RightHeadLightBroken::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::_0xA7ECB73355EB2F20, this->Handle);
+	}
+	void Vehicle::RightHeadLightBroken::set(bool value)
+	{
+		unsigned char *const address = reinterpret_cast<unsigned char *>(MemoryAccess::GetAddressOfEntity(this->Handle));
+
+		if (address == nullptr)
+		{
+			return;
+		}
+
+		const unsigned char mask = 1 << 1;
+
+		if (value)
+		{
+			*(address + 1916) |= mask;
+		}
+		else
+		{
+			*(address + 1916) &= ~mask;
+		}
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
 	{

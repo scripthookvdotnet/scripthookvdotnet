@@ -24,6 +24,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
+	GTA::Language Game::Language::get()
+	{
+		return static_cast<GTA::Language>(Native::Function::Call<int>(Native::Hash::_GET_UI_LANGUAGE_ID));
+	}
 	float Game::LastFrameTime::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_FRAME_TIME);
