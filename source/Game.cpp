@@ -171,4 +171,60 @@ namespace GTA
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
+
+	Math::Vector3 Game::GetWaypointPosition()
+	{
+		Math::Vector3 position;
+		if (IsWaypointActive)
+		{
+			bool blipFound = false;
+			int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
+			for (int i = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator); Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, i) != 0; i = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator))
+			{
+				if (Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, i) == 4)
+				{
+					position = Native::Function::Call<Math::Vector3>(Native::Hash::GET_BLIP_INFO_ID_COORD, i);
+					blipFound = true;
+					break;
+				}
+				if (blipFound)
+				{
+					bool groundFound = false;
+					float height = 0.0f;
+					for (int i = 800; i >= 0; i -= 50){
+						if (Native::Function::Call<bool>(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, (float)i, &height))
+						{
+							groundFound = true;
+							position.Z = height;
+							break;
+						}
+						Script::Wait(100);
+					}
+					if (!groundFound)
+					{
+						position.Z = 1000.0f;
+					}
+				}
+			}
+		}
+		return position;
+	}
+	bool Game::IsWaypointActive::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
+	}
+	int Game::MaxWantedLevel::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_MAX_WANTED_LEVEL);
+	}
+	void Game::MaxWantedLevel::set(int value)
+	{
+		if (value < 0) value = 0;
+		if (value > 5) value = 5;
+		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, value);
+	}
+	void Game::PauseClock(bool value)
+	{
+		Native::Function::Call(Native::Hash::PAUSE_CLOCK, value);
+	}
 }

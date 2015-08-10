@@ -2,6 +2,7 @@
 
 #include "Player.hpp"
 #include "Controls.hpp"
+#include "Vector3.hpp"
 
 namespace GTA
 {
@@ -168,6 +169,18 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
+
+		static Math::Vector3 GetWaypointPosition();
+		static property bool IsWaypointActive
+		{
+			bool get();
+		}
+		static property int MaxWantedLevel
+		{
+			int get();
+			void set(int value);
+		}
+		static void PauseClock(bool value);
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;

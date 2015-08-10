@@ -123,6 +123,16 @@ namespace GTA
 			return !operator ==(left, right);
 		}
 
+		property bool IgnoredByPolice
+		{
+			void set(bool value);
+		}
+		property bool IsInvincible
+		{
+			bool get();
+			void set(bool value);
+		}
+
 	private:
 		int mHandle;
 		Ped ^mPed;

@@ -192,4 +192,17 @@ namespace GTA
 	{
 		return this->Handle;
 	}
+
+	void Player::IgnoredByPolice::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
+	}
+	bool Player::IsInvincible::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_PLAYER_INVINCIBLE, this->Handle);
+	}
+	void Player::IsInvincible::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_INVINCIBLE, this->Handle, value);
+	}
 }
