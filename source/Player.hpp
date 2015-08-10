@@ -44,6 +44,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool IgnoredByPolice
+		{
+			void set(bool value);
+		}
 		property bool IsAiming
 		{
 			bool get();
@@ -59,6 +63,11 @@ namespace GTA
 		property bool IsDead
 		{
 			bool get();
+		}
+		property bool IsInvincible
+		{
+			bool get();
+			void set(bool value);
 		}
 		property bool IsPlaying
 		{
@@ -121,16 +130,6 @@ namespace GTA
 		static inline bool operator !=(Player ^left, Player ^right)
 		{
 			return !operator ==(left, right);
-		}
-
-		property bool IgnoredByPolice
-		{
-			void set(bool value);
-		}
-		property bool IsInvincible
-		{
-			bool get();
-			void set(bool value);
 		}
 
 	private:

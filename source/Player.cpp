@@ -50,6 +50,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_EVERYONE_IGNORE_PLAYER, this->Handle, value);
 	}
+	void Player::IgnoredByPolice::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
+	}
 	bool Player::IsAiming::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING, this->Handle);
@@ -65,6 +69,14 @@ namespace GTA
 	bool Player::IsDead::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_DEAD, this->Handle);
+	}
+	bool Player::IsInvincible::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_PLAYER_INVINCIBLE, this->Handle);
+	}
+	void Player::IsInvincible::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_INVINCIBLE, this->Handle, value);
 	}
 	bool Player::IsPlaying::get()
 	{
@@ -191,18 +203,5 @@ namespace GTA
 	int Player::GetHashCode()
 	{
 		return this->Handle;
-	}
-
-	void Player::IgnoredByPolice::set(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
-	}
-	bool Player::IsInvincible::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::GET_PLAYER_INVINCIBLE, this->Handle);
-	}
-	void Player::IsInvincible::set(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_PLAYER_INVINCIBLE, this->Handle, value);
 	}
 }

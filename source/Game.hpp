@@ -100,6 +100,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		static property bool IsWaypointActive
+		{
+			bool get();
+		}
 		static property GTA::Language Language
 		{
 			GTA::Language get();
@@ -107,6 +111,11 @@ namespace GTA
 		static property float LastFrameTime
 		{
 			float get();
+		}
+		static property int MaxWantedLevel
+		{
+			int get();
+			void set(int value);
 		}
 		static property bool MissionFlag
 		{
@@ -153,8 +162,8 @@ namespace GTA
 		static bool IsControlJustPressed(int index, Control control);
 		static bool IsControlJustReleased(int index, Control control);
 
-		static void Pause();
-		static void Unpause();
+		static void Pause(bool value);
+		static void PauseClock(bool value);
 		static void DoAutoSave();
 		static void ShowSaveMenu();
 		static void FadeScreenIn(int time);
@@ -171,16 +180,6 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 
 		static Math::Vector3 GetWaypointPosition();
-		static property bool IsWaypointActive
-		{
-			bool get();
-		}
-		static property int MaxWantedLevel
-		{
-			int get();
-			void set(int value);
-		}
-		static void PauseClock(bool value);
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;
