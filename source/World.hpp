@@ -232,9 +232,6 @@ namespace GTA
 	public ref class World sealed abstract
 	{
 	public:
-
-		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
-
 		static property System::DateTime CurrentDate
 		{
 			System::DateTime get();
@@ -275,21 +272,6 @@ namespace GTA
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float GetGroundHeight(Math::Vector2 position);
 		static float GetGroundHeight(Math::Vector3 position);
-		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector2 position);
-		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector3 position);
-		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
-		static Math::Vector3 GetNextPositionOnStreet(Math::Vector2 position, bool unoccupied);
-		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position, bool unoccupied);
-		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position);
-		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk);
-		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags);
-		static Street GetStreetAtCoord(Math::Vector2 position);
-		static Street GetStreetAtCoord(Math::Vector3 position);
-		static Zone GetZone(System::String ^code);
-		static Zone GetZone(Math::Vector2 position);
-		static Zone GetZone(Math::Vector3 position);
-		static System::String ^GetZoneName(Math::Vector2 position);
-		static System::String ^GetZoneName(Math::Vector3 position);
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
@@ -324,6 +306,23 @@ namespace GTA
 		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
 		static void DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
 		static void DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
+
+		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
+		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector2 position);
+		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector3 position);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector2 position, bool unoccupied);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position, bool unoccupied);
+		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position);
+		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk);
+		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags);
+		static Street GetStreetAtCoord(Math::Vector2 position);
+		static Street GetStreetAtCoord(Math::Vector3 position);
+		static Zone GetZone(System::String ^code);
+		static Zone GetZone(Math::Vector2 position);
+		static Zone GetZone(Math::Vector3 position);
+		static System::String ^GetZoneName(Math::Vector2 position);
+		static System::String ^GetZoneName(Math::Vector3 position);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

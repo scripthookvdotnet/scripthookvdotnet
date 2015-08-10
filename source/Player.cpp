@@ -3,7 +3,6 @@
 #include "Vehicle.hpp"
 #include "Prop.hpp"
 #include "Native.hpp"
-#include "Script.hpp"
 
 namespace GTA
 {
@@ -51,10 +50,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_EVERYONE_IGNORE_PLAYER, this->Handle, value);
 	}
-	void Player::IgnoredByPolice::set(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
-	}
 	bool Player::IsAiming::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING, this->Handle);
@@ -70,14 +65,6 @@ namespace GTA
 	bool Player::IsDead::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_DEAD, this->Handle);
-	}
-	bool Player::IsInvincible::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::GET_PLAYER_INVINCIBLE, this->Handle);
-	}
-	void Player::IsInvincible::set(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_PLAYER_INVINCIBLE, this->Handle, value);
 	}
 	bool Player::IsPlaying::get()
 	{
@@ -98,16 +85,6 @@ namespace GTA
 	Vehicle ^Player::LastVehicle::get()
 	{
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_PLAYERS_LAST_VEHICLE);
-	}
-	int Player::MaxWantedLevel::get()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_MAX_WANTED_LEVEL);
-	}
-	void Player::MaxWantedLevel::set(int value)
-	{
-		if (value < 0) value = 0;
-		if (value > 5) value = 5;
-		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, value);
 	}
 	int Player::Money::get()
 	{
@@ -166,18 +143,6 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_UNDERWATER_TIME_REMAINING, this->Handle);
 	}
-	/*
-	void Player::SetMaxWantedLevel(int level)
-	{
-		if (level < 0) level = 0;
-		if (level > 5) level = 5;
-		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, level);
-	}
-	void Player::SetPoliceIgnore(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
-	}
-	*/
 	int Player::WantedLevel::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_WANTED_LEVEL, this->Handle);
@@ -226,5 +191,18 @@ namespace GTA
 	int Player::GetHashCode()
 	{
 		return this->Handle;
+	}
+
+	void Player::IgnoredByPolice::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_POLICE_IGNORE_PLAYER, this->Handle, value);
+	}
+	bool Player::IsInvincible::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_PLAYER_INVINCIBLE, this->Handle);
+	}
+	void Player::IsInvincible::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_INVINCIBLE, this->Handle, value);
 	}
 }

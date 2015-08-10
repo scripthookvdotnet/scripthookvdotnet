@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Vector3.hpp"
-
 namespace GTA
 {
 	ref class Ped;
@@ -46,10 +44,6 @@ namespace GTA
 		{
 			void set(bool value);
 		}
-		property bool IgnoredByPolice
-		{
-			void set(bool value);
-		}
 		property bool IsAiming
 		{
 			bool get();
@@ -65,11 +59,6 @@ namespace GTA
 		property bool IsDead
 		{
 			bool get();
-		}
-		property bool IsInvincible
-		{
-			bool get();
-			void set(bool value);
 		}
 		property bool IsPlaying
 		{
@@ -91,11 +80,6 @@ namespace GTA
 		{
 			Vehicle ^get();
 		}
-		property int MaxWantedLevel
-		{
-			int get();
-			void set(int value);
-		}
 		property int Money
 		{
 			int get();
@@ -113,8 +97,6 @@ namespace GTA
 		{
 			int get();
 		}
-		//void SetMaxWantedLevel(int level);
-		//void SetPoliceIgnore(bool ignore);
 		property int WantedLevel
 		{
 			int get();
@@ -139,6 +121,16 @@ namespace GTA
 		static inline bool operator !=(Player ^left, Player ^right)
 		{
 			return !operator ==(left, right);
+		}
+
+		property bool IgnoredByPolice
+		{
+			void set(bool value);
+		}
+		property bool IsInvincible
+		{
+			bool get();
+			void set(bool value);
 		}
 
 	private:

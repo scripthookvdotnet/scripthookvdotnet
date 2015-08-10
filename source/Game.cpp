@@ -171,7 +171,7 @@ namespace GTA
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
-	
+
 	Math::Vector3 Game::GetWaypointPosition()
 	{
 		Math::Vector3 position;
@@ -213,7 +213,17 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
 	}
-	void Game::PauseClock::set(bool value)
+	int Game::MaxWantedLevel::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_MAX_WANTED_LEVEL);
+	}
+	void Game::MaxWantedLevel::set(int value)
+	{
+		if (value < 0) value = 0;
+		if (value > 5) value = 5;
+		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, value);
+	}
+	void Game::PauseClock(bool value)
 	{
 		Native::Function::Call(Native::Hash::PAUSE_CLOCK, value);
 	}
