@@ -98,7 +98,7 @@ namespace GTA
 		HorizontalSplitArrowCircle = 27,
 		DebugSphere = 28
 	};
-	public enum class PickupType
+	public enum class PickupType : System::UInt32
 	{
 		CustomScript = 0x2C014CA6,
 		VehicleCustomScript = 0xA5B8CAA9,
