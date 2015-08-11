@@ -6,6 +6,45 @@ namespace GTA
 {
 	ref class Entity;
 
+	public enum class AudioFlag
+	{
+		ActivateSwitchWheelAudio,
+		AllowCutsceneOverScreenFade,
+		AllowForceRadioAfterRetune,
+		AllowPainAndAmbientSpeechToPlayDuringCutscene,
+		AllowPlayerAIOnMission,
+		AllowPoliceScannerWhenPlayerHasNoControl,
+		AllowRadioDuringSwitch,
+		AllowRadioOverScreenFade,
+		AllowScoreAndRadio,
+		AllowScriptedSpeechInSlowMo,
+		AvoidMissionCompleteDelay,
+		DisableAbortConversationForDeathAndInjury,
+		DisableAbortConversationForRagdoll,
+		DisableBarks,
+		DisableFlightMusic,
+		DisableReplayScriptStreamRecording,
+		EnableHeadsetBeep,
+		ForceConversationInterrupt,
+		ForceSeamlessRadioSwitch,
+		ForceSniperAudio,
+		FrontendRadioDisabled,
+		HoldMissionCompleteWhenPrepared,
+		IsDirectorModeActive,
+		IsPlayerOnMissionForSpeech,
+		ListenerReverbDisabled,
+		LoadMPData,
+		MobileRadioInGame,
+		OnlyAllowScriptTriggerPoliceScanner,
+		PlayMenuMusic,
+		PoliceScannerDisabled,
+		ScriptedConvListenerMaySpeak,
+		SpeechDucksScore,
+		SuppressPlayerScubaBreathing,
+		WantedMusicDisabled,
+		WantedMusicOnMission
+	};
+
 	public ref class Audio sealed abstract {
 	public:
 		
@@ -37,6 +76,47 @@ namespace GTA
 		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set);
 		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set, int i_1);
 		static void ReleaseSoundId(int id);
+		static void SetAudioFlag(AudioFlag flag, bool toggle);
+		static void SetAudioFlag(System::String ^flag, bool toggle);
 		static void StopSound(int id);
+
+	internal:
+		static initonly array<System::String ^> ^sAudioFlags = { 
+			"ActivateSwitchWheelAudio",
+			"AllowCutsceneOverScreenFade",
+			"AllowForceRadioAfterRetune",
+			"AllowPainAndAmbientSpeechToPlayDuringCutscene",
+			"AllowPlayerAIOnMission",
+			"AllowPoliceScannerWhenPlayerHasNoControl",
+			"AllowRadioDuringSwitch",
+			"AllowRadioOverScreenFade",
+			"AllowScoreAndRadio",
+			"AllowScriptedSpeechInSlowMo",
+			"AvoidMissionCompleteDelay",
+			"DisableAbortConversationForDeathAndInjury",
+			"DisableAbortConversationForRagdoll",
+			"DisableBarks",
+			"DisableFlightMusic",
+			"DisableReplayScriptStreamRecording",
+			"EnableHeadsetBeep",
+			"ForceConversationInterrupt",
+			"ForceSeamlessRadioSwitch",
+			"ForceSniperAudio",
+			"FrontendRadioDisabled",
+			"HoldMissionCompleteWhenPrepared",
+			"IsDirectorModeActive",
+			"IsPlayerOnMissionForSpeech",
+			"ListenerReverbDisabled",
+			"LoadMPData",
+			"MobileRadioInGame",
+			"OnlyAllowScriptTriggerPoliceScanner",
+			"PlayMenuMusic",
+			"PoliceScannerDisabled",
+			"ScriptedConvListenerMaySpeak",
+			"SpeechDucksScore",
+			"SuppressPlayerScubaBreathing",
+			"WantedMusicDisabled",
+			"WantedMusicOnMission"
+		};
 	};
 }

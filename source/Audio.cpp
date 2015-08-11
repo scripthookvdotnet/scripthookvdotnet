@@ -68,6 +68,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::RELEASE_SOUND_ID, id);
 	}
+	void Audio::SetAudioFlag(AudioFlag flag, bool toggle)
+	{
+		SetAudioFlag(sAudioFlags[static_cast<int>(flag)], toggle);
+	}
+	void Audio::SetAudioFlag(System::String ^flag, bool toggle)
+	{
+		Native::Function::Call(Native::Hash::SET_AUDIO_FLAG, flag, toggle);
+	}
 	void Audio::StopSound(int id)
 	{
 		Native::Function::Call(Native::Hash::STOP_SOUND, id);
