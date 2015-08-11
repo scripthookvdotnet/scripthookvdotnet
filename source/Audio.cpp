@@ -68,4 +68,8 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::RELEASE_SOUND_ID, id);
 	}
+	void Audio::StopSound(int id)
+	{
+		Native::Function::Call(Native::Hash::STOP_SOUND, id);
+	}
 }

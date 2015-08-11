@@ -19,7 +19,6 @@ namespace GTA
 		static bool RequestMissionAudioBank();
 		static bool RequestScriptAudioBank();
 		static void StopPedSpeaking();
-		static void StopSound();
 		*/
 
 		static int GetSoundID();
@@ -38,5 +37,6 @@ namespace GTA
 		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set);
 		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set, int i_1);
 		static void ReleaseSoundId(int id);
+		static void StopSound(int id);
 	};
 }
