@@ -70,11 +70,11 @@ namespace GTA
 		static void PlaySoundFromEntity(System::String ^sound, Entity ^entity, System::String ^set);
 		static void PlaySoundFromEntity(int id, System::String ^sound, Entity ^entity);
 		static void PlaySoundFromEntity(int id, System::String ^sound, Entity ^entity, System::String ^set);
-		static void PlaySoundFrontEnd(System::String ^sound);
-		static void PlaySoundFrontEnd(System::String ^sound, System::String ^set);
-		static void PlaySoundFrontEnd(int id, System::String ^sound);
-		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set);
-		static void PlaySoundFrontEnd(int id, System::String ^sound, System::String ^set, int i_1);
+		static void PlaySoundFrontend(System::String ^sound);
+		static void PlaySoundFrontend(System::String ^sound, System::String ^set);
+		static void PlaySoundFrontend(int id, System::String ^sound);
+		static void PlaySoundFrontend(int id, System::String ^sound, System::String ^set);
+		static void PlaySoundFrontend(int id, System::String ^sound, System::String ^set, int i_1);
 		static void ReleaseSoundId(int id);
 		static void SetAudioFlag(AudioFlag flag, bool toggle);
 		static void SetAudioFlag(System::String ^flag, bool toggle);
