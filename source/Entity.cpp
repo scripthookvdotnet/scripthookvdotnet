@@ -128,6 +128,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_COORDS, this->Handle, value.X, value.Y, value.Z, 0, 0, 0, 1);
 	}
+	void Entity::PositionNoOffset::set(Math::Vector3 value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_COORDS_NO_OFFSET, this->Handle, value.X, value.Y, value.Z, 1, 1, 1);
+	}
 	Math::Vector3 Entity::RightVector::get()
 	{
 		return Math::Vector3::Cross(ForwardVector, Math::Vector3(0, 0, 1));
@@ -140,6 +144,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_ROTATION, this->Handle, value.X, value.Y, value.Z, 2, 1);
 	}
+	Math::Quaternion Entity::Quaternion::get()
+	{
+		float x, y, z, w;
+		Native::Function::Call(Native::Hash::GET_ENTITY_QUATERNION, this->Handle, &x, &y, &z, &w);
+		return Math::Quaternion(x, y, z, w);
+	}
+	void Entity::Quaternion::set(Math::Quaternion value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_QUATERNION, this->Handle, value.X, value.Y, value.Z, value.W);
+	}
+
 	Math::Vector3 Entity::UpVector::get()
 	{
 		return Math::Vector3::Cross(RightVector, ForwardVector);
