@@ -165,7 +165,7 @@ namespace GTA
 
 	System::String ^Game::GetUserInput(int maxLength)
 	{
-		return GetUserInput(WindowTitle::FMMC_KEY_TIP8, "", maxLength);
+		return GetUserInput(WindowTitle::FMMC_KEY_TIP8, "", maxLength++);
 	}
 	System::String ^Game::GetUserInput(WindowTitle windowTitle, int maxLength)
 	{
