@@ -35,7 +35,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_2, "STRING");
 		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, msg);
-		Native::Function::Call(Native::Hash::_0x9D77056A530643F6, duration, 1);
+		Native::Function::Call(Native::Hash::_TIME_TO_DISPLAY, duration, 1);
 	}
 
 	System::Drawing::Point UI::WorldToScreen(Math::Vector3 position)
