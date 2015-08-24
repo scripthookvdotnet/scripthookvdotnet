@@ -2,6 +2,7 @@
 
 #include "Player.hpp"
 #include "Controls.hpp"
+#include "Vector3.hpp"
 
 namespace GTA
 {
@@ -17,6 +18,21 @@ namespace GTA
 		VER_1_0_372_2_NOSTEAM,
 		VER_1_0_393_2_STEAM,
 		VER_1_0_393_2_NOSTEAM,
+	};
+	public enum class Language
+	{
+		American,
+		French,
+		German,
+		Italian,
+		Spanish,
+		Portuguese,
+		Polish,
+		Russian,
+		Korean,
+		Chinese,
+		Japanese,
+		Mexican,
 	};
 	public enum class RadioStation
 	{
@@ -37,6 +53,8 @@ namespace GTA
 		RadioMirrorPark,
 		Space,
 		VinewoodBoulevardRadio,
+		SelfRadio,
+		RadioOff = 255,
 	};
 	public enum class WindowTitle
 	{
@@ -82,9 +100,22 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		static property bool IsWaypointActive
+		{
+			bool get();
+		}
+		static property GTA::Language Language
+		{
+			GTA::Language get();
+		}
 		static property float LastFrameTime
 		{
 			float get();
+		}
+		static property int MaxWantedLevel
+		{
+			int get();
+			void set(int value);
 		}
 		static property bool MissionFlag
 		{
@@ -131,8 +162,8 @@ namespace GTA
 		static bool IsControlJustPressed(int index, Control control);
 		static bool IsControlJustReleased(int index, Control control);
 
-		static void Pause();
-		static void Unpause();
+		static void Pause(bool value);
+		static void PauseClock(bool value);
 		static void DoAutoSave();
 		static void ShowSaveMenu();
 		static void FadeScreenIn(int time);
@@ -147,6 +178,8 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
+
+		static Math::Vector3 GetWaypointPosition();
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;

@@ -24,9 +24,28 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
+	bool Game::IsWaypointActive::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
+	}
+	GTA::Language Game::Language::get()
+	{
+		return static_cast<GTA::Language>(Native::Function::Call<int>(Native::Hash::_GET_UI_LANGUAGE_ID));
+	}
 	float Game::LastFrameTime::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_FRAME_TIME);
+	}
+	int Game::MaxWantedLevel::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_MAX_WANTED_LEVEL);
+	}
+	void Game::MaxWantedLevel::set(int value)
+	{
+		if (value < 0) value = 0;
+		if (value > 5) value = 5;
+
+		Native::Function::Call(Native::Hash::SET_MAX_WANTED_LEVEL, value);
 	}
 	bool Game::MissionFlag::get()
 	{
@@ -102,13 +121,13 @@ namespace GTA
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
 	}
 
-	void Game::Pause()
+	void Game::Pause(bool value)
 	{
-		IsPaused = true;
+		IsPaused = value;
 	}
-	void Game::Unpause()
+	void Game::PauseClock(bool value)
 	{
-		IsPaused = false;
+		Native::Function::Call(Native::Hash::PAUSE_CLOCK, value);
 	}
 	void Game::DoAutoSave()
 	{
@@ -166,5 +185,52 @@ namespace GTA
 		}
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
+	}
+
+	Math::Vector3 Game::GetWaypointPosition()
+	{
+		if (!IsWaypointActive)
+		{
+			return Math::Vector3::Zero;
+		}
+
+		Math::Vector3 position;
+		bool blipFound = false;
+		int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
+
+		for (int i = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator); Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, i) != 0; i = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator))
+		{
+			if (Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, i) == 4)
+			{
+				position = Native::Function::Call<Math::Vector3>(Native::Hash::GET_BLIP_INFO_ID_COORD, i);
+				blipFound = true;
+				break;
+			}
+
+			if (blipFound)
+			{
+				bool groundFound = false;
+				float height = 0.0f;
+
+				for (int i = 800; i >= 0; i -= 50)
+				{
+					if (Native::Function::Call<bool>(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, static_cast<float>(i), &height))
+					{
+						groundFound = true;
+						position.Z = height;
+						break;
+					}
+
+					Script::Wait(100);
+				}
+
+				if (!groundFound)
+				{
+					position.Z = 1000.0f;
+				}
+			}
+		}
+
+		return position;
 	}
 }

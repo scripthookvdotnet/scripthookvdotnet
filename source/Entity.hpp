@@ -2,6 +2,7 @@
 
 #include "Model.hpp"
 #include "Vector3.hpp"
+#include "Quaternion.hpp"
 
 namespace GTA
 {
@@ -106,6 +107,10 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property Math::Vector3 PositionNoOffset
+		{
+			void set(Math::Vector3 value);
+		}
 		property Math::Vector3 RightVector
 		{
 			Math::Vector3 get();
@@ -114,6 +119,11 @@ namespace GTA
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
+		}
+		property Math::Quaternion Quaternion
+		{
+			Math::Quaternion get();
+			void set(Math::Quaternion value);
 		}
 		property Math::Vector3 UpVector
 		{

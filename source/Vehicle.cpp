@@ -3,7 +3,6 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
-#define byte unsigned char
 
 namespace GTA
 {
@@ -270,19 +269,22 @@ namespace GTA
 	}
 	void Vehicle::LeftHeadLightBroken::set(bool value)
 	{
-		uintptr_t addr = MemoryAccess::GetAddressOfEntity(this->Handle);
-		if (addr == 0)
+		unsigned char *const address = reinterpret_cast<unsigned char *>(MemoryAccess::GetAddressOfEntity(this->Handle));
+
+		if (address == nullptr)
 		{
 			return;
 		}
-		byte mask = 1 << 0;
+
+		const unsigned char mask = 1 << 0;
+
 		if (value)
 		{
-			*(byte *)(addr + 1916) |= mask;
+			*(address + 1916) |= mask;
 		}
 		else
 		{
-			*(byte *)(addr + 1916) &= ~mask;
+			*(address + 1916) &= ~mask;
 		}
 	}
 	bool Vehicle::RightHeadLightBroken::get()
@@ -291,19 +293,22 @@ namespace GTA
 	}
 	void Vehicle::RightHeadLightBroken::set(bool value)
 	{
-		uintptr_t addr = MemoryAccess::GetAddressOfEntity(this->Handle);
-		if (addr == 0)
+		unsigned char *const address = reinterpret_cast<unsigned char *>(MemoryAccess::GetAddressOfEntity(this->Handle));
+
+		if (address == nullptr)
 		{
 			return;
 		}
-		byte mask = 1 << 1;
+
+		const unsigned char mask = 1 << 1;
+
 		if (value)
 		{
-			*(byte *)(addr + 1916) |= mask;
+			*(address + 1916) |= mask;
 		}
 		else
 		{
-			*(byte *)(addr + 1916) &= ~mask;
+			*(address + 1916) &= ~mask;
 		}
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)

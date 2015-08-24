@@ -4,11 +4,16 @@ Community Script Hook V .NET
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/crosire/scripthookvdotnet?branch=master&svg=true)](https://ci.appveyor.com/project/crosire/scripthookvdotnet)
 [![Slack Invite](http://scripthookvdotnet.johnnycrazy.de/badge.svg)](http://scripthookvdotnet.johnnycrazy.de)
 
-This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language ingame.
+This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language in-game.
+
+## Requirements
+
+* [C++ ScriptHook by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
+* .NET Framework ≥ 4.5
 
 ## Downloads
 
-Prebuilt binaries can be found on the [releases](https://github.com/crosire/scripthookvdotnet/releases) page.
+Pre-built binaries can be found on the [releases](https://github.com/crosire/scripthookvdotnet/releases) page.
 
 ## Contributing
 
