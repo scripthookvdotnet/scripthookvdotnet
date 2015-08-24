@@ -4,7 +4,7 @@ platform: x64
 install:
 - cd sdk/
 - 'echo Downloading C++ ScriptHook ...'
-- appveyor DownloadFile http://reshade.me/downloads/ScriptHookV_SDK_1.0.393.2.zip -FileName sdk.zip
+- appveyor DownloadFile http://reshade.me/downloads/ScriptHookV_SDK_1.0.393.4a.zip -FileName sdk.zip
 - echo Download completed. Extracting ...
 - 7z x sdk.zip
 - echo Extraction completed. Compiling ...
