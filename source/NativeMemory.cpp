@@ -74,15 +74,22 @@ namespace GTA
 
 	static MemoryAccess::MemoryAccess()
 	{
-		const uintptr_t patternAddress = FindPattern(EntityAddressPattern, EntityAddressMask);
+		uintptr_t patternAddress = FindPattern(EntityAddressPattern, EntityAddressMask);
 		// 3 bytes are opcode and its first argument, so we add it to get relative address to patternAddress. 7 bytes are length of opcode and its parameters.
 		EntityAddress = *reinterpret_cast<int *>(patternAddress + 3) + patternAddress + 7;
+		patternAddress = FindPattern(PlayerAddressPattern, PlayerAddressMask);
+		// 3 bytes are opcode and its first argument, so we add it to get relative address to patternAddress. 7 bytes are length of opcode and its parameters.
+		PlayerAddress = *reinterpret_cast<int *>(patternAddress + 3) + patternAddress + 7;
 
 	}
 
 	uintptr_t MemoryAccess::GetAddressOfEntity(int handle)
 	{
 		return ((uintptr_t(*)(int))EntityAddress)(handle);
+	}
+	uintptr_t MemoryAccess::GetAddressOfPlayer(int handle)
+	{
+		return ((uintptr_t(*)(int))PlayerAddress)(handle);
 	}
 	float MemoryAccess::GetVehicleRPM(int handle)
 	{
