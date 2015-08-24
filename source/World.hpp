@@ -341,15 +341,19 @@ namespace GTA
 
 		static array<Blip ^> ^GetActiveBlips();
 		static array<Ped ^> ^GetAllPeds();
-		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
-		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius, int maxAmount);
+		static array<Ped ^> ^GetAllPeds(Model model);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
+		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius, Model model);
 		static array<Vehicle ^> ^GetAllVehicles();
-		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
-		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius, int maxAmount);
+		static array<Vehicle ^> ^GetAllVehicles(Model model);
 		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius);
+		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius, Model model);
 		static array<Prop ^> ^GetAllProps();
+		static array<Prop ^> ^GetAllProps(Model model);
+		static array<Prop ^> ^GetNearbyProps(Math::Vector3 position, float radius);
+		static array<Prop ^> ^GetNearbyProps(Math::Vector3 position, float radius, Model model);
 		static array<Entity ^> ^GetAllEntities();
+		static array<Entity ^> ^GetNearbyEntities(Math::Vector3 position, float radius);
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
