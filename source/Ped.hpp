@@ -442,6 +442,10 @@ namespace GTA
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);
 		int GetBoneIndex(Bone BoneID);
 
+		int CreateGroup(int Unused);
+		void SetPedAsGroupLeader(int GroupID);
+		void SetPedAsGroupMember(int GroupID);
+		void RemovePedFromGroup();
 	private:
 		Tasks ^mTasks;
 		WeaponCollection ^pWeapons;

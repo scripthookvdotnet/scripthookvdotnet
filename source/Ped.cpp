@@ -373,4 +373,18 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, this->Handle, (int)BoneID);
 	}
+	int Ped::CreateGroup(int Unused)
+	{
+		return Native::Function::Call<int>(Native::Hash::CREATE_GROUP, this->Handle, Unused);
+	}
+	void Ped::SetPedAsGroupLeader(int GroupID)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_LEADER, this, GroupID);
+	}
+	void Ped::SetPedAsGroupMember(int GroupID) {
+		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_MEMBER, this, GroupID);
+	}
+	void Ped::RemovePedFromGroup() {
+		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, this);
+	}
 }
