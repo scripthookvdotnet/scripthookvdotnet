@@ -88,11 +88,11 @@ namespace GTA
 	array<Ped ^> ^World::GetAllPeds()
 	{
 		List<Ped ^> ^list = gcnew List<Ped ^>();
-		array<int> ^entities = MemoryAccess::GetAllPedHandles();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entities[i]))
 			{
 				list->Add(gcnew Ped(entities[i]));
 			}
@@ -100,61 +100,65 @@ namespace GTA
 
 		return list->ToArray();
 	}
-	array<Ped ^> ^World::GetAllPeds(Model model)
+	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
-		List<Ped ^> ^list = gcnew List<Ped ^>();
-		array<int> ^entities = MemoryAccess::GetAllPedHandles();
+		return GetNearbyPeds(ped, radius, 10000);
+	}
+	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius, int maxAmount)
+	{
+		const Math::Vector3 position = ped->Position;
+		Collections::Generic::List<Ped ^> ^result = gcnew Collections::Generic::List<Ped ^>();
+		int *handles = new int[maxAmount * 2 + 2];
 
-		for (int i = 0; i < entities->Length; i++)
+		try
 		{
-			if (Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, entities[i]) == model.Hash)
+			handles[0] = maxAmount;
+
+			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_PEDS, ped->Handle, handles, -1);
+
+			for (int i = 0; i < amount; ++i)
 			{
-				list->Add(gcnew Ped(entities[i]));
+				const int index = i * 2 + 2;
+
+				if (handles[index] != 0 && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handles[index]))
+				{
+					Ped ^currped = gcnew Ped(handles[index]);
+
+					if (Math::Vector3::Subtract(position, currped->Position).LengthSquared() < radius * radius)
+					{
+						result->Add(currped);
+					}
+				}
 			}
 		}
+		finally
+		{
+			delete[] handles;
+		}
 
-		return list->ToArray();
+		return result->ToArray();
 	}
 	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
 	{
+		auto handles = GetAllPeds();
 		auto resultHandles = gcnew List<Ped ^>();
-		float r2 = radius * radius;
-		array<int> ^entities = MemoryAccess::GetAllPedHandles();
 
-		for (int i = 0; i < entities->Length; i++)
+		for (int i = 0; i < handles->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
-			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
-					resultHandles->Add(gcnew Ped(entities[i]));
-			}
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
 		}
-		return resultHandles->ToArray();
-	}
-	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius, Model model)
-	{
-		auto resultHandles = gcnew List<Ped ^>();
-		float r2 = radius * radius;
-		array<int> ^entities = MemoryAccess::GetAllPedHandles();
 
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, entities[i]) == model.Hash)
-			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
-					resultHandles->Add(gcnew Ped(entities[i]));
-			}
-		}
 		return resultHandles->ToArray();
 	}
 	array<Vehicle ^> ^World::GetAllVehicles()
 	{
 		List<Vehicle ^> ^list = gcnew List<Vehicle ^>();
-		array<int> ^entities = MemoryAccess::GetAllVehicleHandles();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entities[i]))
 			{
 				list->Add(gcnew Vehicle(entities[i]));
 			}
@@ -162,150 +166,83 @@ namespace GTA
 
 		return list->ToArray();
 	}
-	array<Vehicle ^> ^World::GetAllVehicles(Model model)
+	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
 	{
-		List<Vehicle ^> ^list = gcnew List<Vehicle ^>();
-		array<int> ^entities = MemoryAccess::GetAllVehicleHandles();
+		return GetNearbyVehicles(ped, radius, 10000);
+	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius, int maxAmount)
+	{
+		const Math::Vector3 position = ped->Position;
+		Collections::Generic::List<Vehicle ^> ^result = gcnew Collections::Generic::List<Vehicle ^>();
+		int *handles = new int[maxAmount * 2 + 2];
 
-		for (int i = 0; i < entities->Length; i++)
+		try
 		{
-			if (Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, entities[i]) == model.Hash)
+			handles[0] = maxAmount;
+
+			const int amount = Native::Function::Call<int>(Native::Hash::GET_PED_NEARBY_VEHICLES, ped->Handle, handles, -1);
+
+			for (int i = 0; i < amount; ++i)
 			{
-				list->Add(gcnew Vehicle(entities[i]));
+				const int index = i * 2 + 2;
+
+				if (handles[index] != 0 && Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, handles[index]))
+				{
+					Vehicle ^vehicle = gcnew Vehicle(handles[index]);
+
+					if (Math::Vector3::Subtract(position, vehicle->Position).LengthSquared() < radius * radius)
+					{
+						result->Add(vehicle);
+					}
+				}
 			}
 		}
+		finally
+		{
+			delete[] handles;
+		}
 
-		return list->ToArray();
+		return result->ToArray();
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
 	{
+		auto handles = GetAllVehicles();
 		auto resultHandles = gcnew List<Vehicle ^>();
-		float r2 = radius * radius;
-		array<int> ^entities = MemoryAccess::GetAllVehicleHandles();
 
-		for (int i = 0; i < entities->Length; i++)
+		for (int i = 0; i < handles->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
-			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
-					resultHandles->Add(gcnew Vehicle(entities[i]));
-			}
+			if (handles[i]->Position.DistanceTo(position) <= radius)
+				resultHandles->Add(handles[i]);
 		}
-		return resultHandles->ToArray();
-	}
-	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius, Model model)
-	{
-		auto resultHandles = gcnew List<Vehicle ^>();
-		float r2 = radius * radius;
-		array<int> ^entities = MemoryAccess::GetAllVehicleHandles();
 
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, entities[i]) == model.Hash)
-			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
-					resultHandles->Add(gcnew Vehicle(entities[i]));
-			}
-		}
 		return resultHandles->ToArray();
 	}
 	array<Prop ^> ^World::GetAllProps()
 	{
 		List<Prop ^> ^list = gcnew List<Prop ^>();
-		array<int> ^entities = MemoryAccess::GetAllObjectHandles();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]) && Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entities[i]))
 			{
 				list->Add(gcnew Prop(entities[i]));
 			}
 		}
 
 		return list->ToArray();
-	}
-	array<Prop ^> ^World::GetAllProps(Model model)
-	{
-		List<Prop ^> ^list = gcnew List<Prop ^>();
-		array<int> ^entities = MemoryAccess::GetAllObjectHandles();
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, entities[i]) == model.Hash)
-			{
-				list->Add(gcnew Prop(entities[i]));
-			}
-		}
-
-		return list->ToArray();
-	}
-	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius)
-	{
-		auto resultHandles = gcnew List<Prop ^>();
-		float r2 = radius * radius;
-		array<int> ^entities = MemoryAccess::GetAllObjectHandles();
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
-			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
-					resultHandles->Add(gcnew Prop(entities[i]));
-			}
-		}
-		return resultHandles->ToArray();
-	}
-	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius, Model model)
-	{
-		auto resultHandles = gcnew List<Prop ^>();
-		float r2 = radius * radius;
-		array<int> ^entities = MemoryAccess::GetAllObjectHandles();
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			if (Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, entities[i]) == model.Hash)
-			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
-					resultHandles->Add(gcnew Prop(entities[i]));
-			}
-		}
-		return resultHandles->ToArray();
 	}
 	array<Entity ^> ^World::GetAllEntities()
 	{
 		List<Entity ^> ^list = gcnew List<Entity ^>();
-		array<int> ^entities = MemoryAccess::GetAllEntityHandles();
+		array<int> ^entities = MemoryAccess::GetEntityHandleList();
 
-		for (int i = 0; i < entities->Length; i++)
-		{
-			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
-			{
-			case 1:
-				list->Add(gcnew Ped(entities[i]));
-				break;
-			case 2:
-				list->Add(gcnew Vehicle(entities[i]));
-				break;
-			case 3:
-				list->Add(gcnew Prop(entities[i]));
-			}
-		}
-
-		return list->ToArray();
-	}
-	array<Entity ^> ^World::GetNearbyEntities(Math::Vector3 position, float radius)
-	{
-		List<Entity ^> ^list = gcnew List<Entity ^>();
-		array<int> ^entities = MemoryAccess::GetAllEntityHandles();
-		float r2 = radius * radius;
 		for (int i = 0; i < entities->Length; i++)
 		{
 			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entities[i]))
 			{
-				if (Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared() < r2)
+				switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
 				{
-					switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
-					{
 					case 1:
 						list->Add(gcnew Ped(entities[i]));
 						break;
@@ -314,7 +251,7 @@ namespace GTA
 						break;
 					case 3:
 						list->Add(gcnew Prop(entities[i]));
-					}
+						break;
 				}
 			}
 		}
@@ -444,19 +381,11 @@ namespace GTA
 	}
 	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
-		AddExplosion(position, type, radius, cameraShake, true, false);
-	}
-	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool isAudible, bool isInvisible)
-	{
-		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, isAudible, isInvisible, cameraShake);
+		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
 	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
-		AddOwnedExplosion(ped, position, type, radius, cameraShake, true, false);
-	}
-	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool isAudible, bool isInvisible)
-	{
-		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, isAudible, isInvisible, cameraShake);
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
 	Rope ^World::AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable)
 	{
