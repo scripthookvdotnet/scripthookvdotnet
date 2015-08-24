@@ -19,11 +19,14 @@ namespace GTA
 		static int HandleToIndex(int handle);
 
 		static uintptr_t GetAddressOfEntity(int handle);
-		static array<int> ^GetEntityHandleList();
 		
 		static float GetVehicleRPM(int handle);
 		static float GetVehicleAcceleration(int handle);
 		static float GetVehicleSteering(int handle);
+		static array<int> ^GetAllVehicleHandles();
+		static array<int> ^GetAllPedHandles();
+		static array<int> ^GetAllObjectHandles();
+		static array<int> ^GetAllEntityHandles();
 
 	private:
 		static uintptr_t FindPattern(const char *pattern, const char *mask);
