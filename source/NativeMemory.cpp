@@ -74,15 +74,20 @@ namespace GTA
 
 	static MemoryAccess::MemoryAccess()
 	{
-		const uintptr_t patternAddress = FindPattern(EntityAddressPattern, EntityAddressMask);
+		const uintptr_t patternAddress = FindPattern(EntityPoolOpcodePattern, EntityPoolOpcodeMask);
+
 		// 3 bytes are opcode and its first argument, so we add it to get relative address to patternAddress. 7 bytes are length of opcode and its parameters.
-		EntityAddress = *reinterpret_cast<int *>(patternAddress + 3) + patternAddress + 7;
-		
+		sAddressEntityPool = reinterpret_cast<MemoryPool **>(*reinterpret_cast<int *>(patternAddress + 3) + patternAddress + 7);
+	}
+
+	int MemoryAccess::HandleToIndex(int handle)
+	{
+		return handle >> 8; // == handle / 256
 	}
 
 	uintptr_t MemoryAccess::GetAddressOfEntity(int handle)
 	{
-		return ((uintptr_t(*)(int))EntityAddress)(handle);
+		return *reinterpret_cast<const uintptr_t *>(GetAddressOfItemInPool(*sAddressEntityPool, handle) + 8);
 	}
 	float MemoryAccess::GetVehicleRPM(int handle)
 	{
@@ -152,5 +157,48 @@ namespace GTA
 		}
 
 		return 0;
+	}
+
+	uintptr_t MemoryAccess::GetAddressOfItemInPool(MemoryPool *PoolAddress, int Handle)
+	{
+		if (PoolAddress == nullptr)
+		{
+			return 0;
+		}
+
+		const int idx = HandleToIndex(Handle);
+		// Flag should be equal to 2 if everything is ok
+		const int flag = static_cast<int>(PoolAddress->BoolAddress[idx]);
+
+		// Parity check (taken from ScriptHookDotNet for GTAIV)
+		if (flag & 0x80 || flag != (Handle & 0xFF))
+		{
+			return 0;
+		}
+
+		return PoolAddress->ListAddress + idx * PoolAddress->ItemSize;
+	}
+	array<int> ^MemoryAccess::GetListOfHandlesInPool(MemoryPool *PoolAddress)
+	{
+		if (PoolAddress == nullptr)
+		{
+			return nullptr;
+		}
+
+		List<int> ^handles = gcnew List<int>();
+
+		for (int i = 0; i < PoolAddress->MaxCount; i++)
+		{
+			int val = static_cast<int>(PoolAddress->BoolAddress[i]);
+
+			if ((val & 0x80) == 0)
+			{
+				val = (i << 8) | val;
+
+				handles->Add(val);
+			}
+		}
+
+		return handles->ToArray();
 	}
 }
