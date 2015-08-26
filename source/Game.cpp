@@ -228,14 +228,17 @@ namespace GTA
 	}
 	System::String ^Game::GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength)
 	{
-		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength);
+		ScriptDomain::PauseKeyEvents();
+		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength + 1);
 
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 		{
 			Script::Yield();
 		}
-
-		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
+		ScriptDomain::ResumeKeyEvents();
+		if (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 1)
+			return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
+		return System::String::Empty;
 	}
 
 	Math::Vector3 Game::GetWaypointPosition()
