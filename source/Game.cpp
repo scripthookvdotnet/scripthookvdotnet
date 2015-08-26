@@ -55,6 +55,10 @@ namespace GTA
 	{
 		return Global(index);
 	}
+	void GlobalCollection::default::set(int index, Global value)
+	{
+		*getGlobalPtr(index) = *value.Address;
+	}
 	float Game::FPS::get()
 	{
 		return (1.0f / LastFrameTime);

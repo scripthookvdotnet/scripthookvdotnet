@@ -97,7 +97,6 @@ namespace GTA
 		Math::Vector3 GetVector3();
 	internal:
 		Global(int index);
-	private:
 		unsigned long long* Address;
 	};
 
@@ -107,6 +106,7 @@ namespace GTA
 		property Global default[int]
 		{
 			Global get(int index);
+		void set(int index, Global value);
 		}
 	internal:
 		GlobalCollection(){}
