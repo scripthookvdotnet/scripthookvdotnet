@@ -60,6 +60,9 @@
     <ClCompile Include="source\GameplayCamera.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="source\Helper.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="source\Model.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
@@ -168,6 +171,9 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\GameplayCamera.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Helper.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Model.hpp">

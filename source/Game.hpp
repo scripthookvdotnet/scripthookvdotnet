@@ -6,6 +6,7 @@
 
 namespace GTA
 {
+	value class RaycastResult;
 	public enum class GameVersion
 	{
 		Unknown = 0,
@@ -82,6 +83,33 @@ namespace GTA
 		FMMC_KEY_TIP9F,
 		FMMC_KEY_TIP9N,
 		PM_NAME_CHALL,
+	};
+	public value class Global
+	{
+	public:
+		void SetInteger(int value);
+		void SetFloat(float value);
+		void SetString(System::String ^value);
+		void SetVector3(Math::Vector3 Value);
+		int GetInteger();
+		float GetFloat();
+		System::String ^GetString();
+		Math::Vector3 GetVector3();
+	internal:
+		Global(int index);
+	private:
+		unsigned long long* Address;
+	};
+
+	public ref class GlobalCollection
+	{
+	public:
+		property Global default[int]
+		{
+			Global get(int index);
+		}
+	internal:
+		GlobalCollection(){}
 	};
 
 	public ref class Game sealed abstract
@@ -181,7 +209,14 @@ namespace GTA
 
 		static Math::Vector3 GetWaypointPosition();
 
+		static property GlobalCollection ^Globals
+		{
+			GlobalCollection ^get();
+		}
+		static RaycastResult GetCrosshairCoordinates();
+
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;
+		static GlobalCollection ^_globals;
 	};
 }

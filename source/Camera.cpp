@@ -1,6 +1,7 @@
 #include "Camera.hpp"
 #include "Ped.hpp"
 #include "Native.hpp"
+#include "Helper.hpp"
 
 namespace GTA
 {
@@ -122,7 +123,14 @@ namespace GTA
 			Native::Function::Call(Native::Hash::SHAKE_CAM, this->Handle, sShakeNames[static_cast<int>(this->ShakeType)], this->ShakeAmplitude);
 		}
 	}
-
+	Math::Vector3 Camera::Direction::get()
+	{
+		return Helper::RotationToDirection(Rotation);
+	}
+	void Camera::Direction::set(Math::Vector3 value)
+	{
+		Rotation = Helper::DirectionToRotation(value);
+	}
 	void Camera::AttachTo(Entity ^entity, Math::Vector3 offset)
 	{
 		Native::Function::Call(Native::Hash::ATTACH_CAM_TO_ENTITY, this->Handle, entity->Handle, offset.X, offset.Y, offset.Z, true);

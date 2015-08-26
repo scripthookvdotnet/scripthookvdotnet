@@ -9,12 +9,12 @@ namespace GTA
 	RaycastResult::RaycastResult(int handle) : mHitEntity(nullptr)
 	{
 		int hitsomething = 0, enthandle = 0;
-		Native::OutputArgument ^hitCoords = gcnew Native::OutputArgument(), ^unkVec = gcnew Native::OutputArgument();
-		this->mResult = Native::Function::Call<int>(Native::Hash::_GET_RAYCAST_RESULT, handle, &hitsomething, hitCoords, unkVec, &enthandle);
+		Native::OutputArgument ^hitCoords = gcnew Native::OutputArgument(), ^surfaceNormal = gcnew Native::OutputArgument();
+		this->mResult = Native::Function::Call<int>(Native::Hash::_GET_RAYCAST_RESULT, handle, &hitsomething, hitCoords, surfaceNormal, &enthandle);
 
 		this->mDidHit = hitsomething != 0;
 		this->mHitCoords = hitCoords->GetResult<Math::Vector3>();
-
+		this->mSurfaceNormal = surfaceNormal->GetResult<Math::Vector3>();
 		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, enthandle))
 		{
 			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, enthandle))
@@ -31,7 +31,6 @@ namespace GTA
 			}
 		}
 	}
-
 	int RaycastResult::Result::get()
 	{
 		return this->mResult;
@@ -51,5 +50,9 @@ namespace GTA
 	Math::Vector3 RaycastResult::HitCoords::get()
 	{
 		return this->mHitCoords;
+	}
+	Math::Vector3 RaycastResult::SurfaceNormal::get()
+	{
+		return this->mSurfaceNormal;
 	}
 }

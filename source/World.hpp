@@ -345,6 +345,7 @@ namespace GTA
 		}
 
 		static array<Blip ^> ^GetActiveBlips();
+		static array<Ped ^> ^GetNearbyPeds(Ped ped, float radius);
 		static array<Ped ^> ^GetAllPeds();
 		static array<Ped ^> ^GetAllPeds(Model model);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
@@ -393,7 +394,9 @@ namespace GTA
 		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
 
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options);
-		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^entity);
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^ignoreEntity);
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options);
+		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options, Entity ^ignoreEntity);
 
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color);
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);

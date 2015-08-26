@@ -53,6 +53,10 @@ namespace GTA
 		{
 			void set(float amplitude);
 		}
+		static property Math::Vector3 Direction
+		{
+			Math::Vector3 get();
+		}
 
 		static void Shake(CameraShake shakeType, float amplitude);
 		static void StopShaking();
