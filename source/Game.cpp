@@ -236,9 +236,7 @@ namespace GTA
 			Script::Yield();
 		}
 		ScriptDomain::ResumeKeyEvents();
-		if (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 1)
-			return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
-		return System::String::Empty;
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
 
 	Math::Vector3 Game::GetWaypointPosition()
