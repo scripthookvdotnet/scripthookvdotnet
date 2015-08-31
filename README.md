@@ -9,7 +9,7 @@ This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Ale
 ## Requirements
 
 * [C++ ScriptHook by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
-* .NET Framework ≥ 4.5
+* .NET Framework ≥ 4.5.2
 
 ## Downloads
 
