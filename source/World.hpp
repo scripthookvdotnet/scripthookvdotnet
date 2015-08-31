@@ -345,9 +345,9 @@ namespace GTA
 		}
 
 		static array<Blip ^> ^GetActiveBlips();
-		static array<Ped ^> ^GetNearbyPeds(Ped ped, float radius);
 		static array<Ped ^> ^GetAllPeds();
 		static array<Ped ^> ^GetAllPeds(Model model);
+		static array<Ped ^> ^GetNearbyPeds(Ped ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius, Model model);
 		static array<Vehicle ^> ^GetAllVehicles();
@@ -363,8 +363,26 @@ namespace GTA
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
+		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float GetGroundHeight(Math::Vector2 position);
 		static float GetGroundHeight(Math::Vector3 position);
+		static Math::Vector3 GetWaypointPosition();
+		static RaycastResult GetCrosshairCoordinates();
+		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position);
+		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk);
+		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector2 position, bool unoccupied);
+		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position, bool unoccupied);
+		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector2 position);
+		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector3 position);
+		static Street GetStreetAtCoord(Math::Vector2 position);
+		static Street GetStreetAtCoord(Math::Vector3 position);
+		static Zone GetZone(System::String ^code);
+		static Zone GetZone(Math::Vector2 position);
+		static Zone GetZone(Math::Vector3 position);
+		static System::String ^GetZoneName(Math::Vector2 position);
+		static System::String ^GetZoneName(Math::Vector3 position);
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
@@ -400,27 +418,9 @@ namespace GTA
 
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color);
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
-
 		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
 		static void DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
 		static void DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
-
-		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
-		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector2 position);
-		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector3 position);
-		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position);
-		static Math::Vector3 GetNextPositionOnStreet(Math::Vector2 position, bool unoccupied);
-		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position, bool unoccupied);
-		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position);
-		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk);
-		static Math::Vector3 GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags);
-		static Street GetStreetAtCoord(Math::Vector2 position);
-		static Street GetStreetAtCoord(Math::Vector3 position);
-		static Zone GetZone(System::String ^code);
-		static Zone GetZone(Math::Vector2 position);
-		static Zone GetZone(Math::Vector3 position);
-		static System::String ^GetZoneName(Math::Vector2 position);
-		static System::String ^GetZoneName(Math::Vector3 position);
 
 	internal:
 		static initonly array<System::String ^> ^sWeatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

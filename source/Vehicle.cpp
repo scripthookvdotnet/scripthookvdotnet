@@ -269,7 +269,7 @@ namespace GTA
 	}
 	void Vehicle::LeftHeadLightBroken::set(bool value)
 	{
-		unsigned char *const address = reinterpret_cast<unsigned char *>(MemoryAccess::GetAddressOfEntity(this->Handle));
+		unsigned char *const address = reinterpret_cast<unsigned char *>(Native::MemoryAccess::GetAddressOfEntity(this->Handle));
 
 		if (address == nullptr)
 		{
@@ -293,7 +293,7 @@ namespace GTA
 	}
 	void Vehicle::RightHeadLightBroken::set(bool value)
 	{
-		unsigned char *const address = reinterpret_cast<unsigned char *>(MemoryAccess::GetAddressOfEntity(this->Handle));
+		unsigned char *const address = reinterpret_cast<unsigned char *>(Native::MemoryAccess::GetAddressOfEntity(this->Handle));
 
 		if (address == nullptr)
 		{
@@ -431,15 +431,15 @@ namespace GTA
 	}
 	float Vehicle::CurrentRPM::get()
 	{
-		return MemoryAccess::GetVehicleRPM(this->Handle);
+		return Native::MemoryAccess::GetVehicleRPM(this->Handle);
 	}
 	float Vehicle::Acceleration::get()
 	{
-		return MemoryAccess::GetVehicleAcceleration(this->Handle);
+		return Native::MemoryAccess::GetVehicleAcceleration(this->Handle);
 	}
 	float Vehicle::Steering::get()
 	{
-		return MemoryAccess::GetVehicleSteering(this->Handle);
+		return Native::MemoryAccess::GetVehicleSteering(this->Handle);
 	}
 
 	int Vehicle::GetMod(VehicleMod modType)

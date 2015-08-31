@@ -75,6 +75,7 @@ namespace GTA
 		void DoTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
+		void PauseKeyboardEvents(bool pause);
 		void ExecuteTask(IScriptTask ^task);
 		System::IntPtr PinString(System::String ^string);
 		inline bool IsKeyPressed(System::Windows::Forms::Keys key)
@@ -87,15 +88,14 @@ namespace GTA
 		}
 		System::String ^LookupScriptFilename(System::Type ^scripttype);
 		System::Object ^InitializeLifetimeService() override;
-		static void PauseKeyEvents();
-		static void ResumeKeyEvents();
+
 	private:
-		static bool mRecordKeyEvents = true;
 		bool LoadScript(System::String ^filename);
 		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
 		Script ^InstantiateScript(System::Type ^scripttype);
 		void CleanupStrings();
+
 		static ScriptDomain ^sCurrentDomain;
 		System::AppDomain ^mAppDomain;
 		int mExecutingThreadId;
@@ -104,6 +104,7 @@ namespace GTA
 		System::Collections::Generic::Queue<IScriptTask ^> ^mTaskQueue;
 		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
 		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
+		bool mRecordKeyboardEvents;
 		array<bool> ^mKeyboardState;
 	};
 }

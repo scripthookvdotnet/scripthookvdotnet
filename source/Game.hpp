@@ -6,7 +6,6 @@
 
 namespace GTA
 {
-	value class RaycastResult;
 	public enum class GameVersion
 	{
 		Unknown = 0,
@@ -86,32 +85,35 @@ namespace GTA
 		FMMC_KEY_TIP9N,
 		PM_NAME_CHALL,
 	};
+
 	public value class Global
 	{
 	public:
-		void SetInteger(int value);
+		void SetInt(int value);
 		void SetFloat(float value);
 		void SetString(System::String ^value);
 		void SetVector3(Math::Vector3 Value);
-		int GetInteger();
+		int GetInt();
 		float GetFloat();
 		System::String ^GetString();
 		Math::Vector3 GetVector3();
+
 	internal:
 		Global(int index);
-		unsigned long long* Address;
-	};
 
+		System::UInt64 *mAddress;
+	};
 	public ref class GlobalCollection
 	{
 	public:
 		property Global default[int]
 		{
 			Global get(int index);
-		void set(int index, Global value);
+			void set(int index, Global value);
 		}
+
 	internal:
-		GlobalCollection(){}
+		GlobalCollection() {}
 	};
 
 	public ref class Game sealed abstract
@@ -124,6 +126,10 @@ namespace GTA
 		static property int GameTime
 		{
 			int get();
+		}
+		static property GlobalCollection ^Globals
+		{
+			GlobalCollection ^get();
 		}
 		static property bool IsPaused
 		{
@@ -209,16 +215,8 @@ namespace GTA
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 
-		static Math::Vector3 GetWaypointPosition();
-
-		static property GlobalCollection ^Globals
-		{
-			GlobalCollection ^get();
-		}
-		static RaycastResult GetCrosshairCoordinates();
-
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;
-		static GlobalCollection ^_globals;
+		static GlobalCollection ^sGlobals = nullptr;
 	};
 }

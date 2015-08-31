@@ -15,6 +15,7 @@ namespace GTA
 		this->mDidHit = hitsomething != 0;
 		this->mHitCoords = hitCoords->GetResult<Math::Vector3>();
 		this->mSurfaceNormal = surfaceNormal->GetResult<Math::Vector3>();
+
 		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, enthandle))
 		{
 			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, enthandle))

@@ -1,7 +1,6 @@
 #include "Camera.hpp"
 #include "Ped.hpp"
 #include "Native.hpp"
-#include "Helper.hpp"
 
 namespace GTA
 {
@@ -17,6 +16,23 @@ namespace GTA
 	void Camera::DepthOfFieldStrength::set(float strength)
 	{
 		Native::Function::Call(Native::Hash::SET_CAM_DOF_STRENGTH, this->Handle, strength);
+	}
+	Math::Vector3 Camera::Direction::get()
+	{
+		Math::Vector3 rot = Rotation;
+		double rotX = rot.X / 57.295779513082320876798154814105;
+		double rotZ = rot.Z / 57.295779513082320876798154814105;
+		double multXY = System::Math::Abs(System::Math::Cos(rotX));
+
+		return Math::Vector3(static_cast<float>(-System::Math::Sin(rotZ) * multXY), static_cast<float>(System::Math::Cos(rotZ) * multXY), static_cast<float>(System::Math::Sin(rotX)));
+	}
+	void Camera::Direction::set(Math::Vector3 value)
+	{
+		value.Normalize();
+
+		Math::Vector3 v1 = Math::Vector3::Normalize(Math::Vector3(value.Z, Math::Vector3(value.X, value.Y, 0.0f).Length(), 0.0f));
+
+		Rotation = Math::Vector3(static_cast<float>(System::Math::Atan2(v1.X, v1.Y) * 57.295779513082320876798154814105), 0.0f, static_cast<float>(-System::Math::Atan2(value.X, value.Y) * 57.295779513082320876798154814105));
 	}
 	float Camera::FieldOfView::get()
 	{
@@ -123,14 +139,7 @@ namespace GTA
 			Native::Function::Call(Native::Hash::SHAKE_CAM, this->Handle, sShakeNames[static_cast<int>(this->ShakeType)], this->ShakeAmplitude);
 		}
 	}
-	Math::Vector3 Camera::Direction::get()
-	{
-		return Helper::RotationToDirection(Rotation);
-	}
-	void Camera::Direction::set(Math::Vector3 value)
-	{
-		Rotation = Helper::DirectionToRotation(value);
-	}
+
 	void Camera::AttachTo(Entity ^entity, Math::Vector3 offset)
 	{
 		Native::Function::Call(Native::Hash::ATTACH_CAM_TO_ENTITY, this->Handle, entity->Handle, offset.X, offset.Y, offset.Z, true);

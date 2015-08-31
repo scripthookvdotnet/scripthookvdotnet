@@ -89,7 +89,7 @@ namespace GTA
 		return toWaitOn->WaitOne(timeout);
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mKeyboardState(gcnew array<bool>(255))
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mRecordKeyboardEvents(true), mKeyboardState(gcnew array<bool>(255))
 	{
 		sCurrentDomain = this;
 
@@ -501,7 +501,8 @@ namespace GTA
 	void ScriptDomain::DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
 		this->mKeyboardState[static_cast<int>(key)] = status;
-		if (mRecordKeyEvents)
+
+		if (this->mRecordKeyboardEvents)
 		{
 			KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
 			Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
@@ -513,6 +514,10 @@ namespace GTA
 		}
 	}
 
+	void ScriptDomain::PauseKeyboardEvents(bool pause)
+	{
+		this->mRecordKeyboardEvents = !pause;
+	}
 	void ScriptDomain::ExecuteTask(IScriptTask ^task)
 	{
 		if (Thread::CurrentThread->ManagedThreadId == this->mExecutingThreadId)
@@ -561,11 +566,5 @@ namespace GTA
 	Object ^ScriptDomain::InitializeLifetimeService()
 	{
 		return nullptr;
-	}
-	void ScriptDomain::PauseKeyEvents() {
-		mRecordKeyEvents = false;
-	}
-	void ScriptDomain::ResumeKeyEvents() {
-		mRecordKeyEvents = true;
 	}
 }

@@ -35,6 +35,11 @@ namespace GTA
 		{
 			void set(float strength);
 		}
+		property Math::Vector3 Direction
+		{
+			Math::Vector3 get();
+			void set(Math::Vector3 value);
+		}
 		property float FieldOfView
 		{
 			float get();
@@ -96,11 +101,6 @@ namespace GTA
 		{
 			CameraShake get();
 			void set(CameraShake shakeType);
-		}
-		property Math::Vector3 Direction
-		{
-			Math::Vector3 get();
-			void set(Math::Vector3 value);
 		}
 
 		void AttachTo(Entity ^entity, Math::Vector3 offset);

@@ -1,64 +1,68 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
-#include "GameplayCamera.hpp"
+
 #include "World.hpp"
 #include "Raycast.hpp"
+
 #include <Main.h>
 
 #undef Yield
 
 namespace GTA
 {
-	void Global::SetInteger(int value)
+	Global::Global(int index) : mAddress(getGlobalPtr(index))
 	{
-		*(int*)Address = value;
+	}
+
+	void Global::SetInt(int value)
+	{
+		*reinterpret_cast<int *>(this->mAddress) = value;
 	}
 	void Global::SetFloat(float value)
 	{
-		*(float*)Address = value;
+		*reinterpret_cast<float *>(this->mAddress) = value;
 	}
 	void Global::SetString(System::String ^value)
 	{
 		const int size = System::Text::Encoding::UTF8->GetByteCount(value);
 
-		System::Runtime::InteropServices::Marshal::Copy(System::Text::Encoding::UTF8->GetBytes(value), 0, System::IntPtr(Address), size);
-		*(char *)((char*)Address + size) = '\0';
+		System::Runtime::InteropServices::Marshal::Copy(System::Text::Encoding::UTF8->GetBytes(value), 0, static_cast<System::IntPtr>(this->mAddress), size);
+
+		*(reinterpret_cast<char *>(this->mAddress) + size) = '\0';
 	}
 	void Global::SetVector3(Math::Vector3 value)
 	{
-		*(float*)Address = value.X;
-		*(float*)(Address + 1) = value.Y;
-		*(float*)(Address + 2) = value.Z;
+		*(reinterpret_cast<float *>(this->mAddress) + 0) = value.X;
+		*(reinterpret_cast<float *>(this->mAddress) + 1) = value.Y;
+		*(reinterpret_cast<float *>(this->mAddress) + 2) = value.Z;
 	}
-	int Global::GetInteger()
+	int Global::GetInt()
 	{
-		return *(int*)Address;
+		return *reinterpret_cast<int *>(this->mAddress);
 	}
 	float Global::GetFloat()
 	{
-		return *(float*)Address;
+		return *reinterpret_cast<float *>(this->mAddress);
 	}
 	System::String ^Global::GetString()
 	{
-		return gcnew System::String((char*)Address);
+		return gcnew System::String(reinterpret_cast<char *>(this->mAddress));
 	}
 	Math::Vector3 Global::GetVector3()
 	{
-		return Math::Vector3(*(float*)Address, *(float*)(Address + 1), *(float*)(Address + 2));
+		return Math::Vector3(*(reinterpret_cast<float *>(this->mAddress) + 0), *(reinterpret_cast<float *>(this->mAddress) + 1), *(reinterpret_cast<float *>(this->mAddress) + 2));
 	}
-	Global::Global(int index)
-	{
-		Address = getGlobalPtr(index);
-	}
+
 	Global GlobalCollection::default::get(int index)
 	{
 		return Global(index);
 	}
 	void GlobalCollection::default::set(int index, Global value)
 	{
-		*getGlobalPtr(index) = *value.Address;
+		*getGlobalPtr(index) = *value.mAddress;
 	}
+
 	float Game::FPS::get()
 	{
 		return (1.0f / LastFrameTime);
@@ -66,6 +70,15 @@ namespace GTA
 	int Game::GameTime::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_GAME_TIMER);
+	}
+	GlobalCollection ^Game::Globals::get()
+	{
+		if (sGlobals == nullptr)
+		{
+			sGlobals = gcnew GlobalCollection();
+		}
+
+		return sGlobals;
 	}
 	bool Game::IsPaused::get()
 	{
@@ -228,73 +241,17 @@ namespace GTA
 	}
 	System::String ^Game::GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength)
 	{
-		ScriptDomain::PauseKeyEvents();
+		ScriptDomain::CurrentDomain->PauseKeyboardEvents(true);
+
 		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength + 1);
 
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 		{
 			Script::Yield();
 		}
-		ScriptDomain::ResumeKeyEvents();
+
+		ScriptDomain::CurrentDomain->PauseKeyboardEvents(false);
+
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
-	}
-
-	Math::Vector3 Game::GetWaypointPosition()
-	{
-		if (!IsWaypointActive)
-		{
-			return Math::Vector3::Zero;
-		}
-
-		Math::Vector3 position;
-		bool blipFound = false;
-		int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
-
-		for (int i = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator); Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, i) != 0; i = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator))
-		{
-			if (Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, i) == 4)
-			{
-				position = Native::Function::Call<Math::Vector3>(Native::Hash::GET_BLIP_INFO_ID_COORD, i);
-				blipFound = true;
-				break;
-			}
-
-			if (blipFound)
-			{
-				bool groundFound = false;
-				float height = 0.0f;
-
-				for (int i = 800; i >= 0; i -= 50)
-				{
-					if (Native::Function::Call<bool>(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, static_cast<float>(i), &height))
-					{
-						groundFound = true;
-						position.Z = height;
-						break;
-					}
-
-					Script::Wait(100);
-				}
-
-				if (!groundFound)
-				{
-					position.Z = 1000.0f;
-				}
-			}
-		}
-
-		return position;
-	}
-	RaycastResult Game::GetCrosshairCoordinates()
-	{
-		return World::Raycast(GameplayCamera::Position, GameplayCamera::Direction, 1000.0f, IntersectOptions::Everything);
-	}
-	GlobalCollection ^Game::Globals::get()
-	{
-		if (_globals == nullptr)
-		{
-			_globals = gcnew GlobalCollection();
-		}
-		return _globals;
 	}
 }

@@ -7,6 +7,10 @@ namespace GTA
 	public ref class GameplayCamera sealed abstract
 	{
 	public:
+		static property Math::Vector3 Direction
+		{
+			Math::Vector3 get();
+		}
 		static property float FieldOfView
 		{
 			float get();
@@ -52,10 +56,6 @@ namespace GTA
 		static property float ShakeAmplitude
 		{
 			void set(float amplitude);
-		}
-		static property Math::Vector3 Direction
-		{
-			Math::Vector3 get();
 		}
 
 		static void Shake(CameraShake shakeType, float amplitude);

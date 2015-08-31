@@ -10,6 +10,7 @@
 #include "Raycast.hpp"
 #include "Rope.hpp"
 #include "Vehicle.hpp"
+#include "GameplayCamera.hpp"
 
 namespace GTA
 {
@@ -86,169 +87,185 @@ namespace GTA
 
 		return res->ToArray();
 	}
+	array<Ped ^> ^World::GetAllPeds()
+	{
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles();
+		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			resultHandles[i] = gcnew Ped(entities[i]);
+		}
+
+		return resultHandles;
+	}
+	array<Ped ^> ^World::GetAllPeds(Model model)
+	{
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles(model.Hash);
+		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			resultHandles[i] = gcnew Ped(entities[i]);
+		}
+
+		return resultHandles;
+	}
 	array<Ped ^> ^World::GetNearbyPeds(Ped ped, float radius)
 	{
 		List<Ped ^> ^resultHandles = gcnew List<Ped ^>();
-		array<int> ^entities = MemoryPools::GetPedHandles(ped.Position, radius);
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles(ped.Position, radius);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			if (entities[i] == ped.Handle)
+			{
 				continue;
+			}
+
 			resultHandles->Add(gcnew Ped(entities[i]));
 		}
 
 		return resultHandles->ToArray();
 	}
-	array<Ped ^> ^World::GetAllPeds()
-	{
-		array<int> ^entities = MemoryPools::GetPedHandles();
-		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Ped(entities[i]);
-		}
-		return resultHandles;
-	}
-	array<Ped ^> ^World::GetAllPeds(Model model)
-	{
-		array<int> ^entities = MemoryPools::GetPedHandles(model.Hash);
-		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Ped(entities[i]);
-		}
-		return resultHandles;
-	}
 	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
 	{
-		array<int> ^entities = MemoryPools::GetPedHandles(position, radius);
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles(position, radius);
 		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Ped(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius, Model model)
-	{;
-		array<int> ^entities = MemoryPools::GetPedHandles(position, radius, model.Hash);
+	{
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles(position, radius, model.Hash);
 		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Ped(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Vehicle ^> ^World::GetAllVehicles()
 	{
-		array<int> ^entities = MemoryPools::GetVehicleHandles();
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles();
 		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Vehicle(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Vehicle ^> ^World::GetAllVehicles(Model model)
 	{
-		array<int> ^entities = MemoryPools::GetVehicleHandles(model.Hash);
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(model.Hash);
 		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Vehicle(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
 	{
-		array<int> ^entities = MemoryPools::GetVehicleHandles(position, radius);
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius);
 		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Vehicle(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius, Model model)
 	{
-		array<int> ^entities = MemoryPools::GetVehicleHandles(position, radius, model.Hash);
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius, model.Hash);
 		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Vehicle(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Prop ^> ^World::GetAllProps()
 	{
-		array<int> ^entities = MemoryPools::GetPropHandles();
+		array<int> ^entities = Native::MemoryAccess::GetPropHandles();
 		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Prop(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Prop ^> ^World::GetAllProps(Model model)
 	{
-		array<int> ^entities = MemoryPools::GetPropHandles(model.Hash);
+		array<int> ^entities = Native::MemoryAccess::GetPropHandles(model.Hash);
 		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Prop(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius)
 	{
-		array<int> ^entities = MemoryPools::GetPropHandles(position, radius);
+		array<int> ^entities = Native::MemoryAccess::GetPropHandles(position, radius);
 		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Prop(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius, Model model)
 	{
-		array<int> ^entities = MemoryPools::GetPropHandles(position, radius, model.Hash);
+		array<int> ^entities = Native::MemoryAccess::GetPropHandles(position, radius, model.Hash);
 		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Prop(entities[i]);
 		}
+
 		return resultHandles;
 	}
 	array<Entity ^> ^World::GetAllEntities()
 	{
 		List<Entity ^> ^resultHandles = gcnew List<Entity ^>();
-		array<int> ^entities = MemoryPools::GetEntityHandles();
+		array<int> ^entities = Native::MemoryAccess::GetEntityHandles();
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
 			{
-			case 1:
-				resultHandles->Add(gcnew Ped(entities[i]));
-				break;
-			case 2:
-				resultHandles->Add(gcnew Vehicle(entities[i]));
-				break;
-			case 3:
-				resultHandles->Add(gcnew Prop(entities[i]));
+				case 1:
+					resultHandles->Add(gcnew Ped(entities[i]));
+					break;
+				case 2:
+					resultHandles->Add(gcnew Vehicle(entities[i]));
+					break;
+				case 3:
+					resultHandles->Add(gcnew Prop(entities[i]));
+					break;
 			}
 		}
 
@@ -257,20 +274,21 @@ namespace GTA
 	array<Entity ^> ^World::GetNearbyEntities(Math::Vector3 position, float radius)
 	{
 		List<Entity ^> ^resultHandles = gcnew List<Entity ^>();
-		array<int> ^entities = MemoryPools::GetEntityHandles(position, radius);
+		array<int> ^entities = Native::MemoryAccess::GetEntityHandles(position, radius);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
 			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
 			{
-			case 1:
-				resultHandles->Add(gcnew Ped(entities[i]));
-				break;
-			case 2:
-				resultHandles->Add(gcnew Vehicle(entities[i]));
-				break;
-			case 3:
-				resultHandles->Add(gcnew Prop(entities[i]));
+				case 1:
+					resultHandles->Add(gcnew Ped(entities[i]));
+					break;
+				case 2:
+					resultHandles->Add(gcnew Vehicle(entities[i]));
+					break;
+				case 3:
+					resultHandles->Add(gcnew Prop(entities[i]));
+					break;
 			}
 		}
 
@@ -295,6 +313,10 @@ namespace GTA
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 	}
+	float World::CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination)
+	{
+		return Native::Function::Call<float>(Native::Hash::CALCULATE_TRAVEL_DISTANCE_BETWEEN_POINTS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z);
+	}
 	float World::GetGroundHeight(Math::Vector2 position)
 	{
 		float height = 0.0f;
@@ -306,259 +328,82 @@ namespace GTA
 	{
 		return GetGroundHeight(Math::Vector2(position.X, position.Y));
 	}
-
-	Blip ^World::CreateBlip(Math::Vector3 position)
+	Math::Vector3 World::GetWaypointPosition()
 	{
-		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
-	}
-	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
-	{
-		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
-	}
-	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
-	{
-		return Native::Function::Call<Camera ^>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
-	}
-	Ped ^World::CreatePed(Model model, Math::Vector3 position)
-	{
-		return CreatePed(model, position, 0.0f);
-	}
-	Ped ^World::CreatePed(Model model, Math::Vector3 position, float heading)
-	{
-		if (!model.IsPed || !model.Request(1000))
+		if (!Game::IsWaypointActive)
 		{
-			return nullptr;
+			return Math::Vector3::Zero;
 		}
 
-		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
-	}
-	Ped ^World::CreateRandomPed(Math::Vector3 position)
-	{
-		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED, position.X, position.Y, position.Z);
-	}
-	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
-	{
-		return CreateVehicle(model, position, 0.0f);
-	}
-	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position, float heading)
-	{
-		if (!model.IsVehicle || !model.Request(1000))
+		Math::Vector3 position;
+		bool blipFound = false;
+		int blipIterator = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
+
+		for (int i = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, blipIterator); Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, i) != 0; i = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, blipIterator))
 		{
-			return nullptr;
-		}
-
-		return Native::Function::Call<Vehicle ^>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
-	}
-	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
-	{
-		if (placeOnGround)
-		{
-			position.Z = World::GetGroundHeight(position);
-		}
-
-		if (!model.Request(1000))
-		{
-			return nullptr;
-		}
-
-		return Native::Function::Call<Prop ^>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
-	}
-	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)
-	{
-		Prop ^p = World::CreateProp(model, position, dynamic, placeOnGround);
-
-		if (Object::ReferenceEquals(p, nullptr))
-		{
-			return nullptr;
-		}
-
-		p->Rotation = rotation;
-
-		return p;
-	}
-	Pickup ^World::CreatePickup(PickupType type, Math::Vector3 position, Model model, int value)
-	{
-		if (!model.Request(1000))
-		{
-			return nullptr;
-		}
-
-		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP, static_cast<int>(type), position.X, position.Y, position.Z, 0, value, true, model.Hash);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Pickup(handle);
-	}
-	Pickup ^World::CreatePickup(PickupType type, Math::Vector3 position, Math::Vector3 rotation, Model model, int value)
-	{
-		if (!model.Request(1000))
-		{
-			return nullptr;
-		}
-
-		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP_ROTATE, static_cast<int>(type), position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Pickup(handle);
-	}
-	Prop ^World::CreateAmbientPickup(PickupType type, Math::Vector3 position, Model model, int value)
-	{
-		if (!model.Request(1000))
-		{
-			return nullptr;
-		}
-
-		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_AMBIENT_PICKUP, static_cast<int>(type), position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
-
-		if (handle == 0)
-		{
-			return nullptr;
-		}
-
-		return gcnew Prop(handle);
-	}
-
-	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)
-	{
-		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, -1);
-	}
-	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
-	{
-		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
-	}
-	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
-	{
-		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
-	}
-	Rope ^World::AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable)
-	{
-		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
-
-		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, nullptr);
-	}
-	void World::DestroyAllCameras()
-	{
-		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
-	}
-	void World::SetBlackout(bool enable)
-	{
-		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
-	}
-
-	int World::AddRelationshipGroup(String ^groupName)
-	{
-		int handle = 0;
-		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &handle);
-
-		return handle;
-	}
-	void World::RemoveRelationshipGroup(int group)
-	{
-		Native::Function::Call(Native::Hash::REMOVE_RELATIONSHIP_GROUP, group);
-	}
-	Relationship World::GetRelationshipBetweenGroups(int group1, int group2)
-	{
-		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
-	}
-	void World::SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-	{
-		Native::Function::Call(Native::Hash::SET_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
-		Native::Function::Call(Native::Hash::SET_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
-	}
-	void World::ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-	{
-		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
-		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
-	}
-
-	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options)
-	{
-		return Raycast(source, target, options, nullptr);
-	}
-
-	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^ignoreEntity)
-	{
-		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
-	}
-	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options)
-	{
-		return Raycast(source, direction, maxDistance, options, nullptr);
-	}
-	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options, Entity ^ignoreEntity)
-	{
-		Math::Vector3 target = source + (direction * maxDistance);
-		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
-	}
-
-	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, Drawing::Color color)
-	{
-		DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, nullptr, nullptr, false);
-	}
-	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, String ^textueDict, String ^textureName, bool drawOnEnt)
-	{
-		Native::InputArgument^ dict = gcnew Native::InputArgument(0), ^ name = gcnew Native::InputArgument(0);
-
-		if (textueDict != nullptr && textureName != nullptr)
-		{
-			if (textueDict->Length > 0 && textureName->Length > 0)
+			if (Native::Function::Call<int>(Native::Hash::GET_BLIP_INFO_ID_TYPE, i) == 4)
 			{
-				dict = gcnew Native::InputArgument(textueDict);
-				name = gcnew Native::InputArgument(textureName);
+				position = Native::Function::Call<Math::Vector3>(Native::Hash::GET_BLIP_INFO_ID_COORD, i);
+				blipFound = true;
+				break;
+			}
+
+			if (blipFound)
+			{
+				bool groundFound = false;
+				float height = 0.0f;
+
+				for (int i = 800; i >= 0; i -= 50)
+				{
+					if (Native::Function::Call<bool>(Native::Hash::GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, static_cast<float>(i), &height))
+					{
+						groundFound = true;
+						position.Z = height;
+						break;
+					}
+
+					Script::Wait(100);
+				}
+
+				if (!groundFound)
+				{
+					position.Z = 1000.0f;
+				}
 			}
 		}
 
-		Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
+		return position;
 	}
-
-	void World::DrawLightWithRange(Math::Vector3 position, Drawing::Color color, float range, float intensity)
+	RaycastResult World::GetCrosshairCoordinates()
 	{
-		Native::Function::Call(Native::Hash::DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
+		return Raycast(GameplayCamera::Position, GameplayCamera::Direction, 1000.0f, IntersectOptions::Everything);
 	}
-	void World::DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position)
 	{
-		Native::Function::Call(Native::Hash::DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+		return GetSafeCoordForPed(Math::Vector3(position.X, position.Y, position.Z), true, 0);
 	}
-	void World::DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position, bool sidewalk)
 	{
-		Native::Function::Call(Native::Hash::_0x5BCA583A583194DB, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+		return GetSafeCoordForPed(position, sidewalk, 0);
 	}
-
-	float World::CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination)
-	{
-		return Native::Function::Call<float>(Native::Hash::CALCULATE_TRAVEL_DISTANCE_BETWEEN_POINTS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z);
-	}
-	Math::Vector3 World::GetNextPositionOnSidewalk(Math::Vector2 position)
-	{
-		return World::GetNextPositionOnSidewalk(Math::Vector3(position.X, position.Y, 0));
-	}
-	Math::Vector3 World::GetNextPositionOnSidewalk(Math::Vector3 position)
+	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags)
 	{
 		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();
 
-		if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, outPos, 0))
+		if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, outPos, flags))
 		{
 			return outPos->GetResult<Math::Vector3>();
 		}
-		else if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, outPos, 0))
-		{
-			return outPos->GetResult<Math::Vector3>();
-		}
-		else return Math::Vector3::Zero;
+
+		return Math::Vector3::Zero;
 	}
 	Math::Vector3 World::GetNextPositionOnStreet(Math::Vector3 position)
 	{
-		return World::GetNextPositionOnStreet(position, false);
+		return GetNextPositionOnStreet(position, false);
 	}
 	Math::Vector3 World::GetNextPositionOnStreet(Math::Vector2 position, bool unoccupied)
 	{
-		return World::GetNextPositionOnStreet(Math::Vector3(position.X, position.Y, 0), unoccupied);
+		return GetNextPositionOnStreet(Math::Vector3(position.X, position.Y, 0), unoccupied);
 	}
 	Math::Vector3 World::GetNextPositionOnStreet(Math::Vector3 position, bool unoccupied)
 	{
@@ -581,29 +426,33 @@ namespace GTA
 		{
 			return outPos->GetResult<Math::Vector3>();
 		}
-		return Math::Vector3();
+
+		return Math::Vector3::Zero;
 	}
-	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position)
+	Math::Vector3 World::GetNextPositionOnSidewalk(Math::Vector2 position)
 	{
-		return World::GetSafeCoordForPed(Math::Vector3(position.X, position.Y, position.Z), true, 0);
+		return GetNextPositionOnSidewalk(Math::Vector3(position.X, position.Y, 0));
 	}
-	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position, bool sidewalk)
-	{
-		return World::GetSafeCoordForPed(position, sidewalk, 0);
-	}
-	Math::Vector3 World::GetSafeCoordForPed(Math::Vector3 position, bool sidewalk, int flags)
+	Math::Vector3 World::GetNextPositionOnSidewalk(Math::Vector3 position)
 	{
 		Native::OutputArgument ^outPos = gcnew Native::OutputArgument();
 
-		if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, outPos, flags))
+		if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, outPos, 0))
 		{
 			return outPos->GetResult<Math::Vector3>();
 		}
-		return Math::Vector3::Zero;
+		else if (Native::Function::Call<bool>(Native::Hash::GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, outPos, 0))
+		{
+			return outPos->GetResult<Math::Vector3>();
+		}
+		else
+		{
+			return Math::Vector3::Zero;
+		}
 	}
 	Street World::GetStreetAtCoord(Math::Vector2 position)
 	{
-		return World::GetStreetAtCoord(Math::Vector3(position.X, position.Y, 0));
+		return GetStreetAtCoord(Math::Vector3(position.X, position.Y, 0));
 	}
 	Street World::GetStreetAtCoord(Math::Vector3 position)
 	{
@@ -916,5 +765,226 @@ namespace GTA
 	System::String ^World::GetZoneName(Math::Vector3 position)
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_NAME_OF_ZONE, position.X, position.Y, position.Z);
+	}
+
+	Blip ^World::CreateBlip(Math::Vector3 position)
+	{
+		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
+	}
+	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
+	{
+		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
+	}
+	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
+	{
+		return Native::Function::Call<Camera ^>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+	}
+	Ped ^World::CreatePed(Model model, Math::Vector3 position)
+	{
+		return CreatePed(model, position, 0.0f);
+	}
+	Ped ^World::CreatePed(Model model, Math::Vector3 position, float heading)
+	{
+		if (!model.IsPed || !model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+	}
+	Ped ^World::CreateRandomPed(Math::Vector3 position)
+	{
+		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED, position.X, position.Y, position.Z);
+	}
+	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
+	{
+		return CreateVehicle(model, position, 0.0f);
+	}
+	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position, float heading)
+	{
+		if (!model.IsVehicle || !model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		return Native::Function::Call<Vehicle ^>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+	}
+	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
+	{
+		if (placeOnGround)
+		{
+			position.Z = World::GetGroundHeight(position);
+		}
+
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		return Native::Function::Call<Prop ^>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+	}
+	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)
+	{
+		Prop ^p = World::CreateProp(model, position, dynamic, placeOnGround);
+
+		if (Object::ReferenceEquals(p, nullptr))
+		{
+			return nullptr;
+		}
+
+		p->Rotation = rotation;
+
+		return p;
+	}
+	Pickup ^World::CreatePickup(PickupType type, Math::Vector3 position, Model model, int value)
+	{
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP, static_cast<int>(type), position.X, position.Y, position.Z, 0, value, true, model.Hash);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Pickup(handle);
+	}
+	Pickup ^World::CreatePickup(PickupType type, Math::Vector3 position, Math::Vector3 rotation, Model model, int value)
+	{
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_PICKUP_ROTATE, static_cast<int>(type), position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Pickup(handle);
+	}
+	Prop ^World::CreateAmbientPickup(PickupType type, Math::Vector3 position, Model model, int value)
+	{
+		if (!model.Request(1000))
+		{
+			return nullptr;
+		}
+
+		const int handle = Native::Function::Call<int>(Native::Hash::CREATE_AMBIENT_PICKUP, static_cast<int>(type), position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+
+		if (handle == 0)
+		{
+			return nullptr;
+		}
+
+		return gcnew Prop(handle);
+	}
+
+	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)
+	{
+		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, -1);
+	}
+	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
+	{
+		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
+	{
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+	Rope ^World::AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable)
+	{
+		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
+
+		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, nullptr);
+	}
+	void World::DestroyAllCameras()
+	{
+		Native::Function::Call(Native::Hash::DESTROY_ALL_CAMS, 0);
+	}
+	void World::SetBlackout(bool enable)
+	{
+		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
+	}
+
+	int World::AddRelationshipGroup(String ^groupName)
+	{
+		int handle = 0;
+		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &handle);
+
+		return handle;
+	}
+	void World::RemoveRelationshipGroup(int group)
+	{
+		Native::Function::Call(Native::Hash::REMOVE_RELATIONSHIP_GROUP, group);
+	}
+	Relationship World::GetRelationshipBetweenGroups(int group1, int group2)
+	{
+		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
+	}
+	void World::SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
+	{
+		Native::Function::Call(Native::Hash::SET_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
+		Native::Function::Call(Native::Hash::SET_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
+	}
+	void World::ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
+	{
+		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
+		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
+	}
+
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options)
+	{
+		return Raycast(source, target, options, nullptr);
+	}
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^ignoreEntity)
+	{
+		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
+	}
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options)
+	{
+		return Raycast(source, direction, maxDistance, options, nullptr);
+	}
+	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options, Entity ^ignoreEntity)
+	{
+		Math::Vector3 target = source + (direction * maxDistance);
+		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
+	}
+
+	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, Drawing::Color color)
+	{
+		DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, nullptr, nullptr, false);
+	}
+	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, String ^textueDict, String ^textureName, bool drawOnEnt)
+	{
+		Native::InputArgument^ dict = gcnew Native::InputArgument(0), ^ name = gcnew Native::InputArgument(0);
+
+		if (textueDict != nullptr && textureName != nullptr)
+		{
+			if (textueDict->Length > 0 && textureName->Length > 0)
+			{
+				dict = gcnew Native::InputArgument(textueDict);
+				name = gcnew Native::InputArgument(textureName);
+			}
+		}
+
+		Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
+	}
+	void World::DrawLightWithRange(Math::Vector3 position, Drawing::Color color, float range, float intensity)
+	{
+		Native::Function::Call(Native::Hash::DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
+	}
+	void World::DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+	{
+		Native::Function::Call(Native::Hash::DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+	}
+	void World::DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+	{
+		Native::Function::Call(Native::Hash::_0x5BCA583A583194DB, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
 	}
 }

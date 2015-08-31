@@ -90,7 +90,6 @@
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\GameplayCamera.cpp" />
-    <ClCompile Include="source\Helper.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\Model.cpp" />
@@ -124,7 +123,6 @@
     <ClInclude Include="source\Entity.hpp" />
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\GameplayCamera.hpp" />
-    <ClInclude Include="source\Helper.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />

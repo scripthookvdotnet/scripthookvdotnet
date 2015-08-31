@@ -37,7 +37,7 @@ namespace GTA
 		using namespace System;
 		using namespace System::Collections::Generic;
 
-		private ref struct NativeTask : public IScriptTask
+		private ref struct NativeTask : IScriptTask
 		{
 			virtual void Run()
 			{

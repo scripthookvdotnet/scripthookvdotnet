@@ -1,8 +1,17 @@
 #include "GameplayCamera.hpp"
 #include "Native.hpp"
-#include "Helper.hpp"
+
 namespace GTA
 {
+	Math::Vector3 GameplayCamera::Direction::get()
+	{
+		Math::Vector3 rot = Rotation;
+		double rotX = rot.X / 57.295779513082320876798154814105;
+		double rotZ = rot.Z / 57.295779513082320876798154814105;
+		double multXY = System::Math::Abs(System::Math::Cos(rotX));
+
+		return Math::Vector3(static_cast<float>(-System::Math::Sin(rotZ) * multXY), static_cast<float>(System::Math::Cos(rotZ) * multXY), static_cast<float>(System::Math::Sin(rotX)));
+	}
 	float GameplayCamera::FieldOfView::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_FOV);
@@ -54,10 +63,6 @@ namespace GTA
 	void GameplayCamera::ShakeAmplitude::set(float amplitude)
 	{
 		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_SHAKE_AMPLITUDE, amplitude);
-	}
-	Math::Vector3 GameplayCamera::Direction::get()
-	{
-		return Helper::RotationToDirection(Rotation);
 	}
 
 	void GameplayCamera::Shake(CameraShake shakeType, float amplitude)
