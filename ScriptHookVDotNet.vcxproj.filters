@@ -103,6 +103,9 @@
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\AssemblyInfo.cpp" />
+    <ClCompile Include="source\UIElement.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -205,6 +208,9 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\UI.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UIElement.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
