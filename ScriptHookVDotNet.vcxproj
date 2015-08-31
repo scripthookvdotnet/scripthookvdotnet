@@ -92,8 +92,6 @@
     <ClCompile Include="source\GameplayCamera.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
-    <ClCompile Include="source\Menu.cpp" />
-    <ClCompile Include="source\MenuItem.cpp" />
     <ClCompile Include="source\Model.cpp" />
     <ClCompile Include="source\Native.cpp" />
     <ClCompile Include="source\NativeMemory.cpp" />
@@ -110,13 +108,9 @@
     <ClCompile Include="source\Settings.cpp" />
     <ClCompile Include="source\Tasks.cpp" />
     <ClCompile Include="source\UI.cpp" />
-    <ClCompile Include="source\UIContainer.cpp" />
-    <ClCompile Include="source\UIRectangle.cpp" />
-    <ClCompile Include="source\UIText.cpp" />
     <ClCompile Include="source\Vector2.cpp" />
     <ClCompile Include="source\Vector3.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
-    <ClCompile Include="source\Viewport.cpp" />
     <ClCompile Include="source\World.cpp" />
     <ClCompile Include="source\TaskSequence.cpp" />
     <ClCompile Include="source\Weapon.cpp" />
@@ -130,8 +124,6 @@
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\GameplayCamera.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
-    <ClInclude Include="source\Menu.hpp" />
-    <ClInclude Include="source\MenuItem.hpp" />
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />
     <ClInclude Include="source\NativeHashes.hpp" />
@@ -150,15 +142,10 @@
     <ClInclude Include="source\Settings.hpp" />
     <ClInclude Include="source\Tasks.hpp" />
     <ClInclude Include="source\UI.hpp" />
-    <ClInclude Include="source\UIContainer.hpp" />
-    <ClInclude Include="source\UIElement.hpp" />
-    <ClInclude Include="source\UIRectangle.hpp" />
-    <ClInclude Include="source\UIText.hpp" />
     <ClInclude Include="source\Vector2.hpp" />
     <ClInclude Include="source\Vector3.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />
     <ClInclude Include="source\VehicleHashes.hpp" />
-    <ClInclude Include="source\Viewport.hpp" />
     <ClInclude Include="source\WeaponHashes.hpp" />
     <ClInclude Include="source\World.hpp" />
     <ClInclude Include="source\TaskSequence.hpp" />

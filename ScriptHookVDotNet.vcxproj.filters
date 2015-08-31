@@ -10,9 +10,6 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{921247d8-e2c0-463b-afc6-e0e43a621070}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting\UI">
-      <UniqueIdentifier>{c904d3b3-468b-4503-a8b5-f0c64f4863eb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -96,31 +93,13 @@
     <ClCompile Include="source\World.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\UI.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\UIContainer.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\UIRectangle.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\UIText.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Menu.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\MenuItem.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Viewport.cpp">
-      <Filter>Scripting\UI</Filter>
-    </ClCompile>
     <ClCompile Include="source\Scaleform.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\Pickup.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UI.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
@@ -215,30 +194,6 @@
     <ClInclude Include="source\World.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\UI.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\UIContainer.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\UIElement.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\UIRectangle.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\UIText.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Menu.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\MenuItem.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Viewport.hpp">
-      <Filter>Scripting\UI</Filter>
-    </ClInclude>
     <ClInclude Include="source\Scaleform.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
@@ -246,6 +201,9 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Pickup.hpp">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UI.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>

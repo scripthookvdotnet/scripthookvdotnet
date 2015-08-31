@@ -20,7 +20,6 @@
 
 namespace GTA
 {
-	ref class Viewport;
 	ref class ScriptDomain;
 	ref class ScriptSettings;
 
@@ -48,13 +47,6 @@ namespace GTA
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
 
-		System::Windows::Forms::Keys ActivateKey = System::Windows::Forms::Keys::NumPad5;
-		System::Windows::Forms::Keys BackKey = System::Windows::Forms::Keys::NumPad0;
-		System::Windows::Forms::Keys LeftKey = System::Windows::Forms::Keys::NumPad4;
-		System::Windows::Forms::Keys RightKey = System::Windows::Forms::Keys::NumPad6;
-		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
-		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
-
 		property System::String ^Name
 		{
 			System::String ^get()
@@ -69,10 +61,6 @@ namespace GTA
 				return this->mFilename;
 			}
 		}
-		property Viewport ^View
-		{
-			Viewport ^get();
-		}
 		property ScriptSettings ^Settings
 		{
 			ScriptSettings ^get();
@@ -85,8 +73,6 @@ namespace GTA
 			return Name;
 		}
 
-		virtual void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
-
 	protected:
 		property int Interval
 		{
@@ -98,7 +84,6 @@ namespace GTA
 		~Script();
 
 		void MainLoop();
-		void UpdateViewport(System::Object ^Sender, System::EventArgs ^Args);
 
 		int mInterval;
 		bool mRunning;
@@ -108,7 +93,6 @@ namespace GTA
 		System::Threading::AutoResetEvent ^mWaitEvent;
 		System::Threading::AutoResetEvent ^mContinueEvent;
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
-		Viewport ^mViewport;
 		ScriptSettings ^mSettings;
 	};
 }
