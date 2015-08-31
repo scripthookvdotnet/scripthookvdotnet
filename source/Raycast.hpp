@@ -28,6 +28,10 @@ namespace GTA
 		{
 			Math::Vector3 get();
 		}
+		property Math::Vector3 SurfaceNormal
+		{
+			Math::Vector3 get();
+		}
 
 	internal:
 		RaycastResult(int handle);
@@ -37,6 +41,7 @@ namespace GTA
 		bool mDidHit;
 		Entity ^mHitEntity;
 		Math::Vector3 mHitCoords;
+		Math::Vector3 mSurfaceNormal;
 	};
 }
 

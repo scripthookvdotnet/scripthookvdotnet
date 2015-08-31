@@ -1,13 +1,64 @@
 #include "Game.hpp"
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
-
+#include "GameplayCamera.hpp"
+#include "World.hpp"
+#include "Raycast.hpp"
 #include <Main.h>
 
 #undef Yield
 
 namespace GTA
 {
+	void Global::SetInteger(int value)
+	{
+		*(int*)Address = value;
+	}
+	void Global::SetFloat(float value)
+	{
+		*(float*)Address = value;
+	}
+	void Global::SetString(System::String ^value)
+	{
+		const int size = System::Text::Encoding::UTF8->GetByteCount(value);
+
+		System::Runtime::InteropServices::Marshal::Copy(System::Text::Encoding::UTF8->GetBytes(value), 0, System::IntPtr(Address), size);
+		*(char *)((char*)Address + size) = '\0';
+	}
+	void Global::SetVector3(Math::Vector3 value)
+	{
+		*(float*)Address = value.X;
+		*(float*)(Address + 1) = value.Y;
+		*(float*)(Address + 2) = value.Z;
+	}
+	int Global::GetInteger()
+	{
+		return *(int*)Address;
+	}
+	float Global::GetFloat()
+	{
+		return *(float*)Address;
+	}
+	System::String ^Global::GetString()
+	{
+		return gcnew System::String((char*)Address);
+	}
+	Math::Vector3 Global::GetVector3()
+	{
+		return Math::Vector3(*(float*)Address, *(float*)(Address + 1), *(float*)(Address + 2));
+	}
+	Global::Global(int index)
+	{
+		Address = getGlobalPtr(index);
+	}
+	Global GlobalCollection::default::get(int index)
+	{
+		return Global(index);
+	}
+	void GlobalCollection::default::set(int index, Global value)
+	{
+		*getGlobalPtr(index) = *value.Address;
+	}
 	float Game::FPS::get()
 	{
 		return (1.0f / LastFrameTime);
@@ -177,13 +228,14 @@ namespace GTA
 	}
 	System::String ^Game::GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength)
 	{
-		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength);
+		ScriptDomain::PauseKeyEvents();
+		Native::Function::Call(Native::Hash::DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength + 1);
 
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 		{
 			Script::Yield();
 		}
-
+		ScriptDomain::ResumeKeyEvents();
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
 
@@ -232,5 +284,17 @@ namespace GTA
 		}
 
 		return position;
+	}
+	RaycastResult Game::GetCrosshairCoordinates()
+	{
+		return World::Raycast(GameplayCamera::Position, GameplayCamera::Direction, 1000.0f, IntersectOptions::Everything);
+	}
+	GlobalCollection ^Game::Globals::get()
+	{
+		if (_globals == nullptr)
+		{
+			_globals = gcnew GlobalCollection();
+		}
+		return _globals;
 	}
 }

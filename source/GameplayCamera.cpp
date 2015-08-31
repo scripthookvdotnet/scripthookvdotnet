@@ -1,6 +1,6 @@
 #include "GameplayCamera.hpp"
 #include "Native.hpp"
-
+#include "Helper.hpp"
 namespace GTA
 {
 	float GameplayCamera::FieldOfView::get()
@@ -54,6 +54,10 @@ namespace GTA
 	void GameplayCamera::ShakeAmplitude::set(float amplitude)
 	{
 		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_SHAKE_AMPLITUDE, amplitude);
+	}
+	Math::Vector3 GameplayCamera::Direction::get()
+	{
+		return Helper::RotationToDirection(Rotation);
 	}
 
 	void GameplayCamera::Shake(CameraShake shakeType, float amplitude)

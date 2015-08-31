@@ -30,7 +30,7 @@ namespace GTA
 	public:
 		ScriptDomain();
 		~ScriptDomain();
-
+		
 		static property Script ^ExecutingScript
 		{
 			Script ^get()
@@ -87,14 +87,15 @@ namespace GTA
 		}
 		System::String ^LookupScriptFilename(System::Type ^scripttype);
 		System::Object ^InitializeLifetimeService() override;
-
+		static void PauseKeyEvents();
+		static void ResumeKeyEvents();
 	private:
+		static bool mRecordKeyEvents = true;
 		bool LoadScript(System::String ^filename);
 		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
 		Script ^InstantiateScript(System::Type ^scripttype);
 		void CleanupStrings();
-
 		static ScriptDomain ^sCurrentDomain;
 		System::AppDomain ^mAppDomain;
 		int mExecutingThreadId;

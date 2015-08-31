@@ -501,13 +501,15 @@ namespace GTA
 	void ScriptDomain::DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
 		this->mKeyboardState[static_cast<int>(key)] = status;
-
-		KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
-		Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
-
-		for each (Script ^script in this->mRunningScripts)
+		if (mRecordKeyEvents)
 		{
-			script->mKeyboardEvents->Enqueue(eventinfo);
+			KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
+			Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
+
+			for each (Script ^script in this->mRunningScripts)
+			{
+				script->mKeyboardEvents->Enqueue(eventinfo);
+			}
 		}
 	}
 
@@ -559,5 +561,11 @@ namespace GTA
 	Object ^ScriptDomain::InitializeLifetimeService()
 	{
 		return nullptr;
+	}
+	void ScriptDomain::PauseKeyEvents() {
+		mRecordKeyEvents = false;
+	}
+	void ScriptDomain::ResumeKeyEvents() {
+		mRecordKeyEvents = true;
 	}
 }
