@@ -209,9 +209,17 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ATTACHED, this->Handle);
 	}
+	bool Entity::IsAttachedTo(Entity ^entity)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ATTACHED_TO_ENTITY, this->Handle, entity->Handle);
+	}
 	void Entity::Detach()
 	{
 		Native::Function::Call(Native::Hash::DETACH_ENTITY, this->Handle, 1, 1);
+	}
+	Entity ^Entity::GetEntityAttachedTo()
+	{
+		return Native::Function::Call<Entity^>(Native::Hash::GET_ENTITY_ATTACHED_TO, this->Handle);
 	}
 	void Entity::AttachTo(Entity^ entity, int boneIndex)
 	{

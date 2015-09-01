@@ -184,6 +184,14 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
 	}
+	void Game::DisableControl(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
+	void Game::Enablecontrol(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
 
 	void Game::Pause(bool value)
 	{
