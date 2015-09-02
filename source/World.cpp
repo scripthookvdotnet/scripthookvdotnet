@@ -30,6 +30,98 @@ namespace GTA
 				return 31;
 			}
 		};
+		private enum class ZoneID
+		{
+			AIRP,
+			ALAMO,
+			ALTA,
+			ARMYB,
+			BANHAMC,
+			BANNING,
+			BEACH,
+			BHAMCA,
+			BRADP,
+			BRADT,
+			BURTON,
+			CALAFB,
+			CANNY,
+			CCREAK,
+			CHAMH,
+			CHIL,
+			CHU,
+			CMSW,
+			CYPRE,
+			DAVIS,
+			DELBE,
+			DELPE,
+			DELSOL,
+			DESRT,
+			DOWNT,
+			DTVINE,
+			EAST_V,
+			EBURO,
+			ELGORL,
+			ELYSIAN,
+			GALFISH,
+			golf,
+			GRAPES,
+			GREATC,
+			HARMO,
+			HAWICK,
+			HORS,
+			HUMLAB,
+			JAIL,
+			KOREAT,
+			LACT,
+			LAGO,
+			LDAM,
+			LEGSQU,
+			LMESA,
+			LOSPUER,
+			MIRR,
+			MORN,
+			MOVIE,
+			MTCHIL,
+			MTGORDO,
+			MTJOSE,
+			MURRI,
+			NCHU,
+			NOOSE,
+			OCEANA,
+			PALCOV,
+			PALETO,
+			PALFOR,
+			PALHIGH,
+			PALMPOW,
+			PBLUFF,
+			PBOX,
+			PROCOB,
+			RANCHO,
+			RGLEN,
+			RICHM,
+			ROCKF,
+			RTRAK,
+			SanAnd,
+			SANCHIA,
+			SANDY,
+			SKID,
+			SLAB,
+			STAD,
+			STRAW,
+			TATAMO,
+			TERMINA,
+			TEXTI,
+			TONGVAH,
+			TONGVAV,
+			VCANA,
+			VESP,
+			VINE,
+			WINDF,
+			WVINE,
+			ZANCUDO,
+			ZP_ORT,
+			ZQ_UAR
+		};
 	}
 
 	DateTime World::CurrentDate::get()
@@ -465,321 +557,213 @@ namespace GTA
 			return Math::Vector3::Zero;
 		}
 	}
-	Street World::GetStreetAtCoord(Math::Vector2 position)
-	{
-		return GetStreetAtCoord(Math::Vector3(position.X, position.Y, 0));
-	}
-	Street World::GetStreetAtCoord(Math::Vector3 position)
-	{
-		Native::OutputArgument ^streetHash = gcnew Native::OutputArgument();
-		Native::OutputArgument ^crossingHash = gcnew Native::OutputArgument();
-
-		Native::Function::Call(Native::Hash::GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, streetHash, crossingHash);
-
-		System::String ^name = Native::Function::Call<System::String ^>(Native::Hash::GET_STREET_NAME_FROM_HASH_KEY, streetHash->GetResult<int>());
-		System::String ^crossing = Native::Function::Call<System::String ^>(Native::Hash::GET_STREET_NAME_FROM_HASH_KEY, crossingHash->GetResult<int>());
-
-		Street street = { name, crossing };
-
-		return street;
-	}
-	Zone World::GetZone(System::String ^code)
-	{
-		System::String ^name;
-		if (System::Enum::IsDefined(ZoneID::typeid, code))
-		{
-			switch ((ZoneID)System::Enum::Parse(ZoneID::typeid, code))
-			{
-			case ZoneID::AIRP:
-				name = "Los Santos International Airport";
-				break;
-			case ZoneID::ALAMO:
-				name = "Alamo Sea";
-				break;
-			case ZoneID::ALTA:
-				name = "Alta";
-				break;
-			case ZoneID::ARMYB:
-				name = "Fort Zancudo";
-				break;
-			case ZoneID::BANHAMC:
-				name = "Banham Canyon"; // Banham Canyon Dr
-				break;
-			case ZoneID::BANNING:
-				name = "Banning";
-				break;
-			case ZoneID::BEACH:
-				name = "Vespucci Beach";
-				break;
-			case ZoneID::BHAMCA:
-				name = "Banham Canyon";
-				break;
-			case ZoneID::BRADP:
-				name = "Braddock Pass";
-				break;
-			case ZoneID::BRADT:
-				name = "Braddock Tunnel";
-				break;
-			case ZoneID::BURTON:
-				name = "Burton";
-				break;
-			case ZoneID::CALAFB:
-				name = "Calafia Bridge";
-				break;
-			case ZoneID::CANNY:
-				name = "Raton Canyon";
-				break;
-			case ZoneID::CCREAK:
-				name = "Cassidy Creek";
-				break;
-			case ZoneID::CHAMH:
-				name = "Chamberlain Hills";
-				break;
-			case ZoneID::CHIL:
-				name = "Vinewood Hills";
-				break;
-			case ZoneID::CHU:
-				name = "Chumash";
-				break;
-			case ZoneID::CMSW:
-				name = "Chiliad Mountain State Wilderness";
-				break;
-			case ZoneID::CYPRE:
-				name = "Cypress Flats";
-				break;
-			case ZoneID::DAVIS:
-				name = "Davis";
-				break;
-			case ZoneID::DELBE:
-				name = "Del Perro Beach";
-				break;
-			case ZoneID::DELPE:
-				name = "Del Perro";
-				break;
-			case ZoneID::DELSOL:
-				name = "Puerto Del Sol";
-				break;
-			case ZoneID::DESRT:
-				name = "Grand Senora Desert";
-				break;
-			case ZoneID::DOWNT:
-				name = "Downtown";
-				break;
-			case ZoneID::DTVINE:
-				name = "Downtown Vinewood";
-				break;
-			case ZoneID::EAST_V:
-				name = "East Vinewood";
-				break;
-			case ZoneID::EBURO:
-				name = "El Burro Heights";
-				break;
-			case ZoneID::ELGORL:
-				name = "El Gordo Lighthouse";
-				break;
-			case ZoneID::ELYSIAN:
-				name = "Elysian Island";
-				break;
-			case ZoneID::GALFISH:
-				name = "Galilee";
-				break;
-			case ZoneID::golf:
-				name = "GWC and Golfing Society";
-				break;
-			case ZoneID::GRAPES:
-				name = "Grapeseed";
-				break;
-			case ZoneID::GREATC:
-				name = "Great Chaparral";
-				break;
-			case ZoneID::HARMO:
-				name = "Harmony";
-				break;
-			case ZoneID::HAWICK:
-				name = "Hawick";
-				break;
-			case ZoneID::HORS:
-				name = "Vinewood Racetrack";
-				break;
-			case ZoneID::HUMLAB:
-				name = "Humane Labs and Research";
-				break;
-			case ZoneID::JAIL:
-				name = "Bolingbroke Penitentiary";
-				break;
-			case ZoneID::KOREAT:
-				name = "Little Seoul";
-				break;
-			case ZoneID::LACT:
-				name = "Land Act Reservoir";
-				break;
-			case ZoneID::LAGO:
-				name = "Lago Zancudo";
-				break;
-			case ZoneID::LDAM:
-				name = "Land Act Dam";
-				break;
-			case ZoneID::LEGSQU:
-				name = "Legion Square";
-				break;
-			case ZoneID::LMESA:
-				name = "La Mesa";
-				break;
-			case ZoneID::LOSPUER:
-				name = "La Puerta";
-				break;
-			case ZoneID::MIRR:
-				name = "Mirror Park";
-				break;
-			case ZoneID::MORN:
-				name = "Morningwood";
-				break;
-			case ZoneID::MOVIE:
-				name = "Richards Majestic";
-				break;
-			case ZoneID::MTCHIL:
-				name = "Mount Chiliad";
-				break;
-			case ZoneID::MTGORDO:
-				name = "Mount Gordo";
-				break;
-			case ZoneID::MTJOSE:
-				name = "Mount Josiah";
-				break;
-			case ZoneID::MURRI:
-				name = "Murrieta Heights";
-				break;
-			case ZoneID::NCHU:
-				name = "North Chumash";
-				break;
-			case ZoneID::NOOSE:
-				name = "N.O.O.S.E.";
-				break;
-			case ZoneID::OCEANA:
-				name = "Pacific Ocean";
-				break;
-			case ZoneID::PALCOV:
-				name = "Paleto Cove";
-				break;
-			case ZoneID::PALETO:
-				name = "Paleto Bay";
-				break;
-			case ZoneID::PALFOR:
-				name = "Paleto Forest";
-				break;
-			case ZoneID::PALHIGH:
-				name = "Palomino Highlands";
-				break;
-			case ZoneID::PALMPOW:
-				name = "Palmer-Taylor Power Station";
-				break;
-			case ZoneID::PBLUFF:
-				name = "Pacific Bluffs";
-				break;
-			case ZoneID::PBOX:
-				name = "Pillbox Hill";
-				break;
-			case ZoneID::PROCOB:
-				name = "Procopio Beach";
-				break;
-			case ZoneID::RANCHO:
-				name = "Rancho";
-				break;
-			case ZoneID::RGLEN:
-				name = "Richman Glen";
-				break;
-			case ZoneID::RICHM:
-				name = "Richman";
-				break;
-			case ZoneID::ROCKF:
-				name = "Rockford Hills";
-				break;
-			case ZoneID::RTRAK:
-				name = "Redwood Lights Track";
-				break;
-			case ZoneID::SanAnd:
-				name = "San Andreas";
-				break;
-			case ZoneID::SANCHIA:
-				name = "San Chianski Mountain Range";
-				break;
-			case ZoneID::SANDY:
-				name = "Sandy Shores";
-				break;
-			case ZoneID::SKID:
-				name = "Mission Row";
-				break;
-			case ZoneID::SLAB:
-				name = "Stab City";
-				break;
-			case ZoneID::STAD:
-				name = "Maze Bank Arena";
-				break;
-			case ZoneID::STRAW:
-				name = "Strawberry";
-				break;
-			case ZoneID::TATAMO:
-				name = "Tataviam Mountains";
-				break;
-			case ZoneID::TERMINA:
-				name = "Terminal";
-				break;
-			case ZoneID::TEXTI:
-				name = "Textile City";
-				break;
-			case ZoneID::TONGVAH:
-				name = "Tongva Hills";
-				break;
-			case ZoneID::TONGVAV:
-				name = "Tongva Valley";
-				break;
-			case ZoneID::VCANA:
-				name = "Vespucci Canals";
-				break;
-			case ZoneID::VESP:
-				name = "Vespucci";
-				break;
-			case ZoneID::VINE:
-				name = "Vinewood";
-				break;
-			case ZoneID::WINDF:
-				name = "RON Alternates Wind Farm";
-				break;
-			case ZoneID::WVINE:
-				name = "West Vinewood";
-				break;
-			case ZoneID::ZANCUDO:
-				name = "Zancudo River";
-				break;
-			case ZoneID::ZP_ORT:
-				name = "Port of South Los Santos";
-				break;
-			case ZoneID::ZQ_UAR:
-				name = "Davis Quartz";
-				break;
-			default:
-				name = "Unknown";
-			}
-		}
-		Zone zone = { code, name };
-		return zone;
-	}
-	Zone World::GetZone(Math::Vector2 position)
-	{
-		return GetZone(Math::Vector3(position.X, position.Y, 0));
-	}
-	Zone World::GetZone(Math::Vector3 position)
-	{
-		System::String ^code = GetZoneName(position);
-		return World::GetZone(code);
-	}
 	System::String ^World::GetZoneName(Math::Vector2 position)
 	{
 		return GetZoneName(Math::Vector3(position.X, position.Y, 0));
 	}
 	System::String ^World::GetZoneName(Math::Vector3 position)
 	{
-		return Native::Function::Call<System::String ^>(Native::Hash::GET_NAME_OF_ZONE, position.X, position.Y, position.Z);
+		System::String ^code = Native::Function::Call<System::String ^>(Native::Hash::GET_NAME_OF_ZONE, position.X, position.Y, position.Z);
+
+		ZoneID id;
+
+		if (System::Enum::TryParse(code, id))
+		{
+			switch (id)
+			{
+				case ZoneID::AIRP:
+					return "Los Santos International Airport";
+				case ZoneID::ALAMO:
+					return "Alamo Sea";
+				case ZoneID::ALTA:
+					return "Alta";
+				case ZoneID::ARMYB:
+					return "Fort Zancudo";
+				case ZoneID::BANHAMC:
+					return "Banham Canyon";
+				case ZoneID::BANNING:
+					return "Banning";
+				case ZoneID::BEACH:
+					return "Vespucci Beach";
+				case ZoneID::BHAMCA:
+					return "Banham Canyon";
+				case ZoneID::BRADP:
+					return "Braddock Pass";
+				case ZoneID::BRADT:
+					return "Braddock Tunnel";
+				case ZoneID::BURTON:
+					return "Burton";
+				case ZoneID::CALAFB:
+					return "Calafia Bridge";
+				case ZoneID::CANNY:
+					return "Raton Canyon";
+				case ZoneID::CCREAK:
+					return "Cassidy Creek";
+				case ZoneID::CHAMH:
+					return "Chamberlain Hills";
+				case ZoneID::CHIL:
+					return "Vinewood Hills";
+				case ZoneID::CHU:
+					return "Chumash";
+				case ZoneID::CMSW:
+					return "Chiliad Mountain State Wilderness";
+				case ZoneID::CYPRE:
+					return "Cypress Flats";
+				case ZoneID::DAVIS:
+					return "Davis";
+				case ZoneID::DELBE:
+					return "Del Perro Beach";
+				case ZoneID::DELPE:
+					return "Del Perro";
+				case ZoneID::DELSOL:
+					return "Puerto Del Sol";
+				case ZoneID::DESRT:
+					return "Grand Senora Desert";
+				case ZoneID::DOWNT:
+					return "Downtown";
+				case ZoneID::DTVINE:
+					return "Downtown Vinewood";
+				case ZoneID::EAST_V:
+					return "East Vinewood";
+				case ZoneID::EBURO:
+					return "El Burro Heights";
+				case ZoneID::ELGORL:
+					return "El Gordo Lighthouse";
+				case ZoneID::ELYSIAN:
+					return "Elysian Island";
+				case ZoneID::GALFISH:
+					return "Galilee";
+				case ZoneID::golf:
+					return "GWC and Golfing Society";
+				case ZoneID::GRAPES:
+					return "Grapeseed";
+				case ZoneID::GREATC:
+					return "Great Chaparral";
+				case ZoneID::HARMO:
+					return "Harmony";
+				case ZoneID::HAWICK:
+					return "Hawick";
+				case ZoneID::HORS:
+					return "Vinewood Racetrack";
+				case ZoneID::HUMLAB:
+					return "Humane Labs and Research";
+				case ZoneID::JAIL:
+					return "Bolingbroke Penitentiary";
+				case ZoneID::KOREAT:
+					return "Little Seoul";
+				case ZoneID::LACT:
+					return "Land Act Reservoir";
+				case ZoneID::LAGO:
+					return "Lago Zancudo";
+				case ZoneID::LDAM:
+					return "Land Act Dam";
+				case ZoneID::LEGSQU:
+					return "Legion Square";
+				case ZoneID::LMESA:
+					return "La Mesa";
+				case ZoneID::LOSPUER:
+					return "La Puerta";
+				case ZoneID::MIRR:
+					return "Mirror Park";
+				case ZoneID::MORN:
+					return "Morningwood";
+				case ZoneID::MOVIE:
+					return "Richards Majestic";
+				case ZoneID::MTCHIL:
+					return "Mount Chiliad";
+				case ZoneID::MTGORDO:
+					return "Mount Gordo";
+				case ZoneID::MTJOSE:
+					return "Mount Josiah";
+				case ZoneID::MURRI:
+					return "Murrieta Heights";
+				case ZoneID::NCHU:
+					return "North Chumash";
+				case ZoneID::NOOSE:
+					return "N.O.O.S.E.";
+				case ZoneID::OCEANA:
+					return "Pacific Ocean";
+				case ZoneID::PALCOV:
+					return "Paleto Cove";
+				case ZoneID::PALETO:
+					return "Paleto Bay";
+				case ZoneID::PALFOR:
+					return "Paleto Forest";
+				case ZoneID::PALHIGH:
+					return "Palomino Highlands";
+				case ZoneID::PALMPOW:
+					return "Palmer-Taylor Power Station";
+				case ZoneID::PBLUFF:
+					return "Pacific Bluffs";
+				case ZoneID::PBOX:
+					return "Pillbox Hill";
+				case ZoneID::PROCOB:
+					return "Procopio Beach";
+				case ZoneID::RANCHO:
+					return "Rancho";
+				case ZoneID::RGLEN:
+					return "Richman Glen";
+				case ZoneID::RICHM:
+					return "Richman";
+				case ZoneID::ROCKF:
+					return "Rockford Hills";
+				case ZoneID::RTRAK:
+					return "Redwood Lights Track";
+				case ZoneID::SanAnd:
+					return "San Andreas";
+				case ZoneID::SANCHIA:
+					return "San Chianski Mountain Range";
+				case ZoneID::SANDY:
+					return "Sandy Shores";
+				case ZoneID::SKID:
+					return "Mission Row";
+				case ZoneID::SLAB:
+					return "Stab City";
+				case ZoneID::STAD:
+					return "Maze Bank Arena";
+				case ZoneID::STRAW:
+					return "Strawberry";
+				case ZoneID::TATAMO:
+					return "Tataviam Mountains";
+				case ZoneID::TERMINA:
+					return "Terminal";
+				case ZoneID::TEXTI:
+					return "Textile City";
+				case ZoneID::TONGVAH:
+					return "Tongva Hills";
+				case ZoneID::TONGVAV:
+					return "Tongva Valley";
+				case ZoneID::VCANA:
+					return "Vespucci Canals";
+				case ZoneID::VESP:
+					return "Vespucci";
+				case ZoneID::VINE:
+					return "Vinewood";
+				case ZoneID::WINDF:
+					return "RON Alternates Wind Farm";
+				case ZoneID::WVINE:
+					return "West Vinewood";
+				case ZoneID::ZANCUDO:
+					return "Zancudo River";
+				case ZoneID::ZP_ORT:
+					return "Port of South Los Santos";
+				case ZoneID::ZQ_UAR:
+					return "Davis Quartz";
+			}
+		}
+
+		return System::String::Empty;
+	}
+	System::String ^World::GetStreetName(Math::Vector2 position)
+	{
+		return GetStreetName(Math::Vector3(position.X, position.Y, 0));
+	}
+	System::String ^World::GetStreetName(Math::Vector3 position)
+	{
+		int streetHash = 0, crossingHash = 0;
+		Native::Function::Call(Native::Hash::GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, &streetHash, &crossingHash);
+
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_STREET_NAME_FROM_HASH_KEY, streetHash);
 	}
 
 	Blip ^World::CreateBlip(Math::Vector3 position)

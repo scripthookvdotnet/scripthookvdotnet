@@ -214,109 +214,6 @@ namespace GTA
 		Christmas,
 	};
 
-	public value struct Street
-	{
-		System::String ^Name;
-		System::String ^Crossing;
-	};
-	public value struct Zone
-	{
-		System::String ^Code;
-		System::String ^Name;
-	};
-	public enum class ZoneID
-	{
-		AIRP,
-		ALAMO,
-		ALTA,
-		ARMYB,
-		BANHAMC,
-		BANNING,
-		BEACH,
-		BHAMCA,
-		BRADP,
-		BRADT,
-		BURTON,
-		CALAFB,
-		CANNY,
-		CCREAK,
-		CHAMH,
-		CHIL,
-		CHU,
-		CMSW,
-		CYPRE,
-		DAVIS,
-		DELBE,
-		DELPE,
-		DELSOL,
-		DESRT,
-		DOWNT,
-		DTVINE,
-		EAST_V,
-		EBURO,
-		ELGORL,
-		ELYSIAN,
-		GALFISH,
-		golf,
-		GRAPES,
-		GREATC,
-		HARMO,
-		HAWICK,
-		HORS,
-		HUMLAB,
-		JAIL,
-		KOREAT,
-		LACT,
-		LAGO,
-		LDAM,
-		LEGSQU,
-		LMESA,
-		LOSPUER,
-		MIRR,
-		MORN,
-		MOVIE,
-		MTCHIL,
-		MTGORDO,
-		MTJOSE,
-		MURRI,
-		NCHU,
-		NOOSE,
-		OCEANA,
-		PALCOV,
-		PALETO,
-		PALFOR,
-		PALHIGH,
-		PALMPOW,
-		PBLUFF,
-		PBOX,
-		PROCOB,
-		RANCHO,
-		RGLEN,
-		RICHM,
-		ROCKF,
-		RTRAK,
-		SanAnd,
-		SANCHIA,
-		SANDY,
-		SKID,
-		SLAB,
-		STAD,
-		STRAW,
-		TATAMO,
-		TERMINA,
-		TEXTI,
-		TONGVAH,
-		TONGVAV,
-		VCANA,
-		VESP,
-		VINE,
-		WINDF,
-		WVINE,
-		ZANCUDO,
-		ZP_ORT,
-		ZQ_UAR
-	};
-
 	public ref class World sealed abstract
 	{
 	public:
@@ -376,13 +273,10 @@ namespace GTA
 		static Math::Vector3 GetNextPositionOnStreet(Math::Vector3 position, bool unoccupied);
 		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector2 position);
 		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector3 position);
-		static Street GetStreetAtCoord(Math::Vector2 position);
-		static Street GetStreetAtCoord(Math::Vector3 position);
-		static Zone GetZone(System::String ^code);
-		static Zone GetZone(Math::Vector2 position);
-		static Zone GetZone(Math::Vector3 position);
 		static System::String ^GetZoneName(Math::Vector2 position);
 		static System::String ^GetZoneName(Math::Vector3 position);
+		static System::String ^GetStreetName(Math::Vector2 position);
+		static System::String ^GetStreetName(Math::Vector3 position);
 
 		static Blip ^CreateBlip(Math::Vector3 position);
 		static Blip ^CreateBlip(Math::Vector3 position, float radius);
