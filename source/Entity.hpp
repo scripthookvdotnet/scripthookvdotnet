@@ -149,9 +149,11 @@ namespace GTA
 		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
 
 		bool IsAttached();
+		bool IsAttachedTo(Entity ^entity);
 		void AttachTo(Entity^ entity, int boneIndex);
 		void AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation);
 		void Detach();
+		Entity ^GetEntityAttachedTo();
 
 		Blip ^AddBlip();
 
@@ -182,6 +184,7 @@ namespace GTA
 		{
 			return !operator ==(left, right);
 		}
+		
 
 	private:
 		int mHandle;

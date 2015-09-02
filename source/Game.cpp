@@ -127,6 +127,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
 	}
+	bool Game::ThermalVision::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_SEETHROUGH_IS_ACTIVE);
+	}
+	void Game::ThermalVision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_SEETHROUGH, value);
+	}
 	GTA::Player ^GTA::Game::Player::get()
 	{
 		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
@@ -183,6 +191,14 @@ namespace GTA
 	bool Game::IsControlJustReleased(int index, Control control)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
+	}
+	void Game::DisableControl(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
+	void Game::Enablecontrol(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
 	}
 
 	void Game::Pause(bool value)

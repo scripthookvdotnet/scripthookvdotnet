@@ -218,14 +218,14 @@ namespace GTA
 
 		return resultHandles;
 	}
-	array<Ped ^> ^World::GetNearbyPeds(Ped ped, float radius)
+	array<Ped ^> ^World::GetNearbyPeds(Ped ^ped, float radius)
 	{
 		List<Ped ^> ^resultHandles = gcnew List<Ped ^>();
-		array<int> ^entities = Native::MemoryAccess::GetPedHandles(ped.Position, radius);
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles(ped->Position, radius);
 
 		for (int i = 0; i < entities->Length; i++)
 		{
-			if (entities[i] == ped.Handle)
+			if (entities[i] == ped->Handle)
 			{
 				continue;
 			}

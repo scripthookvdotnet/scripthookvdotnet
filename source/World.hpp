@@ -244,7 +244,7 @@ namespace GTA
 		static array<Blip ^> ^GetActiveBlips();
 		static array<Ped ^> ^GetAllPeds();
 		static array<Ped ^> ^GetAllPeds(Model model);
-		static array<Ped ^> ^GetNearbyPeds(Ped ped, float radius);
+		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius, Model model);
 		static array<Vehicle ^> ^GetAllVehicles();
