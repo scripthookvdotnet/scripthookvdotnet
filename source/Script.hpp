@@ -83,6 +83,8 @@ namespace GTA
 	internal:
 		~Script();
 
+		void MainLoop();
+
 		int mInterval;
 		bool mRunning;
 		System::String ^mFilename;
@@ -92,8 +94,5 @@ namespace GTA
 		System::Threading::AutoResetEvent ^mContinueEvent;
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		ScriptSettings ^mSettings;
-
-	private:
-		void MainLoop();
 	};
 }
