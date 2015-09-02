@@ -85,6 +85,11 @@ namespace GTA
 		FMMC_KEY_TIP9N,
 		PM_NAME_CHALL,
 	};
+	public enum class InputMode
+	{
+		MouseAndKeyboard,
+		GamePad
+	};
 
 	public value class Global
 	{
@@ -221,6 +226,11 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
+
+		static property InputMode CurrentInputMode
+		{
+			InputMode get();
+		}
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;
