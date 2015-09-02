@@ -121,7 +121,7 @@ namespace GTA
 	}
 	bool Game::Nightvision::get()
 	{
-		return !Native::Function::Call<bool>(Native::Hash::_GET_IS_NIGHTVISION_INACTIVE);
+		return !Native::Function::Call<bool>(Native::Hash::_IS_NIGHTVISION_INACTIVE);
 	}
 	void Game::Nightvision::set(bool value)
 	{
@@ -152,7 +152,7 @@ namespace GTA
 	}
 	bool Game::ThermalVision::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_GET_SEETHROUGH_IS_ACTIVE);
+		return Native::Function::Call<bool>(Native::Hash::_IS_SEETHROUGH_ACTIVE);
 	}
 	void Game::ThermalVision::set(bool value)
 	{

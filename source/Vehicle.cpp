@@ -223,7 +223,7 @@ namespace GTA
 	}
 	bool Vehicle::EngineRunning::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_0xAE31E7DF9B5B132E, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::_IS_VEHICLE_ENGINE_ON, this->Handle);
 	}
 	void Vehicle::EngineRunning::set(bool value)
 	{
@@ -259,7 +259,7 @@ namespace GTA
 	}
 	bool Vehicle::LeftHeadLightBroken::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_0x5EF77C9ADD3B11A3, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::_IS_HEADLIGHT_L_BROKEN, this->Handle);
 	}
 	void Vehicle::LeftHeadLightBroken::set(bool value)
 	{
@@ -283,7 +283,7 @@ namespace GTA
 	}
 	bool Vehicle::RightHeadLightBroken::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_0xA7ECB73355EB2F20, this->Handle);
+		return Native::Function::Call<bool>(Native::Hash::_IS_HEADLIGHT_R_BROKEN, this->Handle);
 	}
 	void Vehicle::RightHeadLightBroken::set(bool value)
 	{
