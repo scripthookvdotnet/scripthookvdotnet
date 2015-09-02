@@ -17,6 +17,22 @@ namespace GTA
 	using namespace System;
 	using namespace System::Collections::Generic;
 
+	namespace
+	{
+		private ref class GTACalender : System::Globalization::GregorianCalendar
+		{
+		public:
+			int GetDaysInYear(int, int) override
+			{
+				return 31 * 12;
+			}
+			int GetDaysInMonth(int, int, int) override
+			{
+				return 31;
+			}
+		};
+	}
+
 	DateTime World::CurrentDate::get()
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
@@ -26,7 +42,7 @@ namespace GTA
 		int minute = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MINUTES);
 		int second = Native::Function::Call<int>(Native::Hash::GET_CLOCK_SECONDS);
 
-		return DateTime(year, month, day, hour, minute, second);
+		return DateTime(year, month, day, hour, minute, second, gcnew GTACalender());
 	}
 	void World::CurrentDate::set(DateTime value)
 	{
