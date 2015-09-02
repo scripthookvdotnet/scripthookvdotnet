@@ -2,7 +2,7 @@
 #include "Vehicle.hpp"
 #include "Prop.hpp"
 #include "Tasks.hpp"
-#include "WeaponCollection.hpp"
+#include "Weapon.hpp"
 #include "World.hpp"
 #include "Native.hpp"
 

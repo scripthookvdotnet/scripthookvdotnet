@@ -10,7 +10,6 @@
 #include "Raycast.hpp"
 #include "Rope.hpp"
 #include "Vehicle.hpp"
-#include "GameplayCamera.hpp"
 
 namespace GTA
 {

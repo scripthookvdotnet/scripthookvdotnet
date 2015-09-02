@@ -54,9 +54,6 @@
     <ClCompile Include="source\Game.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\GameplayCamera.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="source\Model.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
@@ -78,16 +75,10 @@
     <ClCompile Include="source\Tasks.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\TaskSequence.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="source\Vehicle.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\Weapon.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="source\WeaponCollection.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
     <ClCompile Include="source\World.cpp">
@@ -150,9 +141,6 @@
     <ClInclude Include="source\Game.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\GameplayCamera.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="source\Model.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
@@ -177,9 +165,6 @@
     <ClInclude Include="source\Tasks.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="source\TaskSequence.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="source\Vehicle.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
@@ -187,9 +172,6 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\Weapon.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\WeaponCollection.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\WeaponHashes.hpp">
