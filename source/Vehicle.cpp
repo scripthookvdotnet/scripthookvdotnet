@@ -6,12 +6,6 @@
 
 namespace GTA
 {
-	ref class Random
-	{
-	public:
-		static System::Random ^Instance = gcnew System::Random();
-	};
-
 	Vehicle::Vehicle(int handle) : Entity(handle)
 	{
 	}
@@ -611,8 +605,15 @@ namespace GTA
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
 	{
-		System::Array ^modelValues = System::Enum::GetValues(Native::PedHash::typeid);
-		GTA::Model model = *gcnew GTA::Model(static_cast<Native::PedHash>(modelValues->GetValue(Random::Instance->Next(modelValues->Length))));
-		return this->CreatePedOnSeat(seat, model);
+		if (seat == VehicleSeat::Driver)
+		{
+			return Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED_AS_DRIVER, this->Handle, true);
+		}
+		else
+		{
+			Ped ^ped = Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
+			Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, this->Handle, static_cast<int>(seat));
+			return ped;
+		}
 	}
 }
