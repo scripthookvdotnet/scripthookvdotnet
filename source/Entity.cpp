@@ -13,6 +13,14 @@ namespace GTA
 		return this->mHandle;
 	}
 
+	int Entity::Alpha::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_ALPHA, this->Handle);
+	}
+	void Entity::Alpha::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ALPHA, this->Handle, value, false);
+	}
 	Blip ^Entity::CurrentBlip::get()
 	{
 		return Native::Function::Call<Blip ^>(Native::Hash::GET_BLIP_FROM_ENTITY, this->Handle);
@@ -132,6 +140,16 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_COORDS_NO_OFFSET, this->Handle, value.X, value.Y, value.Z, 1, 1, 1);
 	}
+	Math::Quaternion Entity::Quaternion::get()
+	{
+		float x, y, z, w;
+		Native::Function::Call(Native::Hash::GET_ENTITY_QUATERNION, this->Handle, &x, &y, &z, &w);
+		return Math::Quaternion(x, y, z, w);
+	}
+	void Entity::Quaternion::set(Math::Quaternion value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_QUATERNION, this->Handle, value.X, value.Y, value.Z, value.W);
+	}
 	Math::Vector3 Entity::RightVector::get()
 	{
 		return Math::Vector3::Cross(ForwardVector, Math::Vector3(0, 0, 1));
@@ -144,17 +162,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_ROTATION, this->Handle, value.X, value.Y, value.Z, 2, 1);
 	}
-	Math::Quaternion Entity::Quaternion::get()
-	{
-		float x, y, z, w;
-		Native::Function::Call(Native::Hash::GET_ENTITY_QUATERNION, this->Handle, &x, &y, &z, &w);
-		return Math::Quaternion(x, y, z, w);
-	}
-	void Entity::Quaternion::set(Math::Quaternion value)
-	{
-		Native::Function::Call(Native::Hash::SET_ENTITY_QUATERNION, this->Handle, value.X, value.Y, value.Z, value.W);
-	}
-
 	Math::Vector3 Entity::UpVector::get()
 	{
 		return Math::Vector3::Cross(RightVector, ForwardVector);
@@ -166,14 +173,6 @@ namespace GTA
 	void Entity::Velocity::set(Math::Vector3 value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VELOCITY, this->Handle, value.X, value.Y, value.Z);
-	}
-	int Entity::Alpha::get()
-	{
-		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_ALPHA, this->Handle);
-	}
-	void Entity::Alpha::set(int value)
-	{
-		Native::Function::Call(Native::Hash::SET_ENTITY_ALPHA, this->Handle, value, false);
 	}
 
 	bool Entity::IsInRangeOf(Math::Vector3 position, float distance)
@@ -213,13 +212,13 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ATTACHED_TO_ENTITY, this->Handle, entity->Handle);
 	}
-	void Entity::Detach()
-	{
-		Native::Function::Call(Native::Hash::DETACH_ENTITY, this->Handle, 1, 1);
-	}
 	Entity ^Entity::GetEntityAttachedTo()
 	{
 		return Native::Function::Call<Entity^>(Native::Hash::GET_ENTITY_ATTACHED_TO, this->Handle);
+	}
+	void Entity::Detach()
+	{
+		Native::Function::Call(Native::Hash::DETACH_ENTITY, this->Handle, 1, 1);
 	}
 	void Entity::AttachTo(Entity^ entity, int boneIndex)
 	{

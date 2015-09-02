@@ -127,14 +127,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
 	}
-	bool Game::ThermalVision::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::_GET_SEETHROUGH_IS_ACTIVE);
-	}
-	void Game::ThermalVision::set(bool value)
-	{
-		Native::Function::Call(Native::Hash::SET_SEETHROUGH, value);
-	}
 	GTA::Player ^GTA::Game::Player::get()
 	{
 		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
@@ -157,6 +149,14 @@ namespace GTA
 		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
 
 		return System::Drawing::Size(w, h);
+	}
+	bool Game::ThermalVision::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_SEETHROUGH_IS_ACTIVE);
+	}
+	void Game::ThermalVision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_SEETHROUGH, value);
 	}
 	void Game::TimeScale::set(float value)
 	{
@@ -192,18 +192,18 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
 	}
+	void Game::EnableControl(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
 	void Game::DisableControl(int index, Control control)
 	{
 		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
 	}
-	void Game::Enablecontrol(int index, Control control)
-	{
-		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
-	}
 
 	void Game::Pause(bool value)
 	{
-		IsPaused = value;
+		Native::Function::Call(Native::Hash::SET_GAME_PAUSED, value);
 	}
 	void Game::PauseClock(bool value)
 	{

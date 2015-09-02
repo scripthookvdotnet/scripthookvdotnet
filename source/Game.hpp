@@ -163,11 +163,6 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
-		static property bool ThermalVision
-		{
-			bool get();
-			void set(bool value);
-		}
 		static property GTA::Player ^Player
 		{
 			GTA::Player ^get();
@@ -184,6 +179,11 @@ namespace GTA
 		static property System::Drawing::Size ScreenResolution
 		{
 			System::Drawing::Size get();
+		}
+		static property bool ThermalVision
+		{
+			bool get();
+			void set(bool value);
 		}
 		static property float TimeScale
 		{
@@ -202,8 +202,8 @@ namespace GTA
 		static bool IsControlPressed(int index, Control control);
 		static bool IsControlJustPressed(int index, Control control);
 		static bool IsControlJustReleased(int index, Control control);
+		static void EnableControl(int index, Control control);
 		static void DisableControl(int index, Control control);
-		static void Enablecontrol(int index, Control control);
 
 		static void Pause(bool value);
 		static void PauseClock(bool value);

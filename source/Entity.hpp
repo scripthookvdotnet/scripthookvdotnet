@@ -17,6 +17,11 @@ namespace GTA
 		{
 			int get();
 		}
+		property int Alpha
+		{
+			int get();
+			void set(int value);
+		}
 		property Blip ^CurrentBlip
 		{
 			Blip ^get();
@@ -111,6 +116,11 @@ namespace GTA
 		{
 			void set(Math::Vector3 value);
 		}
+		property Math::Quaternion Quaternion
+		{
+			Math::Quaternion get();
+			void set(Math::Quaternion value);
+		}
 		property Math::Vector3 RightVector
 		{
 			Math::Vector3 get();
@@ -120,11 +130,6 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
-		property Math::Quaternion Quaternion
-		{
-			Math::Quaternion get();
-			void set(Math::Quaternion value);
-		}
 		property Math::Vector3 UpVector
 		{
 			Math::Vector3 get();
@@ -133,11 +138,6 @@ namespace GTA
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
-		}
-		property int Alpha
-		{
-			int get();
-			void set(int value);
 		}
 
 		bool IsInRangeOf(Math::Vector3 position, float range);
@@ -150,10 +150,10 @@ namespace GTA
 
 		bool IsAttached();
 		bool IsAttachedTo(Entity ^entity);
+		Entity ^GetEntityAttachedTo();
 		void AttachTo(Entity^ entity, int boneIndex);
 		void AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation);
 		void Detach();
-		Entity ^GetEntityAttachedTo();
 
 		Blip ^AddBlip();
 
@@ -185,7 +185,6 @@ namespace GTA
 			return !operator ==(left, right);
 		}
 		
-
 	private:
 		int mHandle;
 	};
