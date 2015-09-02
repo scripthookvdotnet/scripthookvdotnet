@@ -16,11 +16,12 @@
 
 #pragma once
 
-#include "NativeHashes.hpp"
 #include "Model.hpp"
+#include "NativeHashes.hpp"
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Blip;
 	ref class Camera;
 	ref class Entity;
@@ -30,6 +31,7 @@ namespace GTA
 	ref class Rope;
 	ref class Vehicle;
 	value class Model;
+	#pragma endregion
 
 	namespace Native
 	{

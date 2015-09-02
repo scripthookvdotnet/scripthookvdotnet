@@ -37,204 +37,207 @@ namespace GTA
 		using namespace System;
 		using namespace System::Collections::Generic;
 
-		private ref struct NativeTask : IScriptTask
+		namespace
 		{
-			virtual void Run()
+			private ref struct NativeTask : IScriptTask
 			{
-				nativeInit(this->Hash);
-
-				for each (InputArgument ^argument in this->Arguments)
+				virtual void Run()
 				{
-					nativePush64(argument->mData);
-				}
+					nativeInit(this->Hash);
 
-				this->Result = nativeCall();
-			}
-
-			UINT64 Hash;
-			PUINT64 Result;
-			array<InputArgument ^> ^Arguments;
-		};
-
-		UINT64 ObjectToNative(System::Object ^value)
-		{
-			if (System::Object::ReferenceEquals(value, nullptr))
-			{
-				return 0;
-			}
-
-			System::Type ^type = value->GetType();
-
-			// Fundamental types
-			if (type == Boolean::typeid)
-			{
-				return static_cast<bool>(value) ? 1 : 0;
-			}
-			if (type == Int32::typeid || type == UInt32::typeid)
-			{
-				return static_cast<int>(value);
-			}
-			if (type == Single::typeid)
-			{
-				return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
-			}
-			if (type == Double::typeid)
-			{
-				return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
-			}
-			if (type == IntPtr::typeid)
-			{
-				return static_cast<IntPtr>(value).ToInt64();
-			}
-			if (type == String::typeid)
-			{
-				return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
-			}
-
-			// Scripting types
-			if (type == Model::typeid)
-			{
-				return static_cast<Model>(value).Hash;
-			}
-
-			if (type == Blip::typeid)
-			{
-				return static_cast<Blip ^>(value)->Handle;
-			}
-			if (type == Camera::typeid)
-			{
-				return static_cast<Camera ^>(value)->Handle;
-			}
-			if (type == Entity::typeid)
-			{
-				return static_cast<Entity ^>(value)->Handle;
-			}
-			if (type == Ped::typeid)
-			{
-				return static_cast<Ped ^>(value)->Handle;
-			}
-			if (type == Player::typeid)
-			{
-				return static_cast<Player ^>(value)->Handle;
-			}
-			if (type == Prop::typeid)
-			{
-				return static_cast<Prop ^>(value)->Handle;
-			}
-			if (type == Rope::typeid)
-			{
-				return static_cast<Rope ^>(value)->Handle;
-			}
-			if (type == Vehicle::typeid)
-			{
-				return static_cast<Vehicle ^>(value)->Handle;
-			}
-
-			throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
-		}
-		System::Object ^ObjectFromNative(System::Type ^type, PUINT64 value)
-		{
-			// Fundamental types
-			if (type == Boolean::typeid)
-			{
-				return *reinterpret_cast<int *>(value) != 0;
-			}
-			if (type == Int32::typeid || type == UInt32::typeid)
-			{
-				return *reinterpret_cast<int *>(value);
-			}
-			if (type == Single::typeid)
-			{
-				return *reinterpret_cast<float *>(value);
-			}
-			if (type == Double::typeid)
-			{
-				return static_cast<double>(*reinterpret_cast<float *>(value));
-			}
-			if (type == String::typeid)
-			{
-				if (*value != 0)
-				{
-					return gcnew String(reinterpret_cast<const char *>(*value));
-				}
-				else
-				{
-					return String::Empty;
-				}
-			}
-
-			#pragma pack(push, 1)
-			struct NativeVector3
-			{
-				float x;
-				DWORD _paddingx;
-				float y;
-				DWORD _paddingy;
-				float z;
-				DWORD _paddingz;
-			};
-			#pragma pack(pop)
-
-			// Math types
-			if (type == Math::Vector2::typeid)
-			{
-				return gcnew Math::Vector2(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y);
-			}
-			if (type == Math::Vector3::typeid)
-			{
-				return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
-			}
-
-			const int handle = *reinterpret_cast<int *>(value);
-
-			// Scripting types
-			if (type == Blip::typeid)
-			{
-				return gcnew Blip(handle);
-			}
-			if (type == Camera::typeid)
-			{
-				return gcnew Camera(handle);
-			}
-			if (type == Entity::typeid)
-			{
-				if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
-				{
-					switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
+					for each (InputArgument ^argument in this->Arguments)
 					{
+						nativePush64(argument->mData);
+					}
+
+					this->Result = nativeCall();
+				}
+
+				UINT64 Hash;
+				PUINT64 Result;
+				array<InputArgument ^> ^Arguments;
+			};
+
+			UINT64 ObjectToNative(System::Object ^value)
+			{
+				if (System::Object::ReferenceEquals(value, nullptr))
+				{
+					return 0;
+				}
+
+				System::Type ^type = value->GetType();
+
+				// Fundamental types
+				if (type == Boolean::typeid)
+				{
+					return static_cast<bool>(value) ? 1 : 0;
+				}
+				if (type == Int32::typeid || type == UInt32::typeid)
+				{
+					return static_cast<int>(value);
+				}
+				if (type == Single::typeid)
+				{
+					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
+				}
+				if (type == Double::typeid)
+				{
+					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
+				}
+				if (type == IntPtr::typeid)
+				{
+					return static_cast<IntPtr>(value).ToInt64();
+				}
+				if (type == String::typeid)
+				{
+					return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
+				}
+
+				// Scripting types
+				if (type == Model::typeid)
+				{
+					return static_cast<Model>(value).Hash;
+				}
+
+				if (type == Blip::typeid)
+				{
+					return static_cast<Blip ^>(value)->Handle;
+				}
+				if (type == Camera::typeid)
+				{
+					return static_cast<Camera ^>(value)->Handle;
+				}
+				if (type == Entity::typeid)
+				{
+					return static_cast<Entity ^>(value)->Handle;
+				}
+				if (type == Ped::typeid)
+				{
+					return static_cast<Ped ^>(value)->Handle;
+				}
+				if (type == Player::typeid)
+				{
+					return static_cast<Player ^>(value)->Handle;
+				}
+				if (type == Prop::typeid)
+				{
+					return static_cast<Prop ^>(value)->Handle;
+				}
+				if (type == Rope::typeid)
+				{
+					return static_cast<Rope ^>(value)->Handle;
+				}
+				if (type == Vehicle::typeid)
+				{
+					return static_cast<Vehicle ^>(value)->Handle;
+				}
+
+				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
+			}
+			System::Object ^ObjectFromNative(System::Type ^type, PUINT64 value)
+			{
+				// Fundamental types
+				if (type == Boolean::typeid)
+				{
+					return *reinterpret_cast<int *>(value) != 0;
+				}
+				if (type == Int32::typeid || type == UInt32::typeid)
+				{
+					return *reinterpret_cast<int *>(value);
+				}
+				if (type == Single::typeid)
+				{
+					return *reinterpret_cast<float *>(value);
+				}
+				if (type == Double::typeid)
+				{
+					return static_cast<double>(*reinterpret_cast<float *>(value));
+				}
+				if (type == String::typeid)
+				{
+					if (*value != 0)
+					{
+						return gcnew String(reinterpret_cast<const char *>(*value));
+					}
+					else
+					{
+						return String::Empty;
+					}
+				}
+
+#pragma pack(push, 1)
+				struct NativeVector3
+				{
+					float x;
+					DWORD _paddingx;
+					float y;
+					DWORD _paddingy;
+					float z;
+					DWORD _paddingz;
+				};
+#pragma pack(pop)
+
+				// Math types
+				if (type == Math::Vector2::typeid)
+				{
+					return gcnew Math::Vector2(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y);
+				}
+				if (type == Math::Vector3::typeid)
+				{
+					return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
+				}
+
+				const int handle = *reinterpret_cast<int *>(value);
+
+				// Scripting types
+				if (type == Blip::typeid)
+				{
+					return gcnew Blip(handle);
+				}
+				if (type == Camera::typeid)
+				{
+					return gcnew Camera(handle);
+				}
+				if (type == Entity::typeid)
+				{
+					if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
+					{
+						switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
+						{
 						case 1:
 							return gcnew Ped(handle);
 						case 2:
 							return gcnew Vehicle(handle);
 						case 3:
 							return gcnew Prop(handle);
+						}
 					}
+
+					return nullptr;
+				}
+				if (type == Ped::typeid)
+				{
+					return gcnew Ped(handle);
+				}
+				if (type == Player::typeid)
+				{
+					return gcnew Player(handle);
+				}
+				if (type == Prop::typeid)
+				{
+					return gcnew Prop(handle);
+				}
+				if (type == Rope::typeid)
+				{
+					return gcnew Rope(handle);
+				}
+				if (type == Vehicle::typeid)
+				{
+					return gcnew Vehicle(handle);
 				}
 
-				return nullptr;
+				throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 			}
-			if (type == Ped::typeid)
-			{
-				return gcnew Ped(handle);
-			}
-			if (type == Player::typeid)
-			{
-				return gcnew Player(handle);
-			}
-			if (type == Prop::typeid)
-			{
-				return gcnew Prop(handle);
-			}
-			if (type == Rope::typeid)
-			{
-				return gcnew Rope(handle);
-			}
-			if (type == Vehicle::typeid)
-			{
-				return gcnew Vehicle(handle);
-			}
-
-			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
 
 		InputArgument::InputArgument(System::Object ^value) : mData(ObjectToNative(value))
