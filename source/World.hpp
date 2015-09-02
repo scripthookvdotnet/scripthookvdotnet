@@ -310,6 +310,11 @@ namespace GTA
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options);
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options, Entity ^ignoreEntity);
 
+		static RaycastResult Raycast3D(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options);
+		static RaycastResult Raycast3D(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options, Entity ^ignoreEntity);
+		static RaycastResult Raycast3D(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options);
+		static RaycastResult Raycast3D(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ^ignoreEntity);
+
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color);
 		static void DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, System::Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, System::String ^textueDict, System::String ^textureName, bool drawOnEnt);
 		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);

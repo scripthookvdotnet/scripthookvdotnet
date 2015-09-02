@@ -593,6 +593,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::START_VEHICLE_ALARM, this->Handle);
 	}
+	void Vehicle::ApplyDamage(Math::Vector3 loc, float damageAmount, float radius)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DAMAGE, loc.X, loc.Y, loc.Z, damageAmount, radius, true);
+	}
 
 	Ped ^Vehicle::CreatePedOnSeat(VehicleSeat seat, GTA::Model model)
 	{

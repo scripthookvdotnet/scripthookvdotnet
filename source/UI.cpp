@@ -80,4 +80,16 @@ namespace GTA
 
 		drawTexture(id, index, level, time, w, h, center.X, center.Y, x, y, rotation, 1.0f, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 	}
+	void UI::HideHudComponentThisFrame(HudComponent component)
+	{
+		Native::Function::Call(Native::Hash::HIDE_HUD_COMPONENT_THIS_FRAME, static_cast<int>(component));
+	}
+	void UI::ShowHudComponentThisFrame(HudComponent component)
+	{
+		Native::Function::Call(Native::Hash::SHOW_HUD_COMPONENT_THIS_FRAME, static_cast<int>(component));
+	}
+	bool UI::IsHudComponentActive(HudComponent component)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_HUD_COMPONENT_ACTIVE, static_cast<int>(component));
+	}
 }

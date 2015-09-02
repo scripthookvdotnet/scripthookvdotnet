@@ -5,6 +5,7 @@
 namespace GTA
 {
 	ref class Ped;
+	ref class Prop;
 
 	public ref class Weapon sealed
 	{
@@ -71,6 +72,10 @@ namespace GTA
 		bool Select(Weapon ^weapon);
 		void Remove(Weapon ^weapon);
 		void RemoveAll();
+		property Prop ^CurrentWeaponObject
+		{
+			Prop ^get();
+		}
 
 	internal:
 		WeaponCollection(Ped ^owner);
