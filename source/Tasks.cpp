@@ -271,9 +271,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_SKY_DIVE, this->mPed->Handle);
 	}
-	void Tasks::SlideToCoord(Math::Vector3 coord, float heading)
+	void Tasks::SlideTo(Math::Vector3 position, float heading)
 	{
-		Native::Function::Call(Native::Hash::TASK_PED_SLIDE_TO_COORD, this->mPed->Handle, coord.X, coord.Y, coord.Z, heading, 0.7f);
+		Native::Function::Call(Native::Hash::TASK_PED_SLIDE_TO_COORD, this->mPed->Handle, position.X, position.Y, position.Z, heading, 0.7f);
 	}
 	void Tasks::StandStill(int duration)
 	{

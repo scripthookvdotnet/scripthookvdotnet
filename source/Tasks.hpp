@@ -67,7 +67,7 @@ namespace GTA
 		void ShootAt(Math::Vector3 position, int duration);
 		void ShuffleToNextVehicleSeat(Vehicle ^vehicle);
 		void Skydive();
-		void SlideToCoord(Math::Vector3 coord, float heading);
+		void SlideTo(Math::Vector3 position, float heading);
 		void StandStill(int duration);
 		void StartScenario(System::String ^name, Math::Vector3 position);
 		void SwapWeapon();
