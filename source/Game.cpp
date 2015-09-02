@@ -270,4 +270,8 @@ namespace GTA
 
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_ONSCREEN_KEYBOARD_RESULT);
 	}
+	InputMode Game::CurrentInputMode::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_LAST_INPUT_METHOD, 2) ? InputMode::MouseAndKeyboard : InputMode::GamePad;
+	}
 }
