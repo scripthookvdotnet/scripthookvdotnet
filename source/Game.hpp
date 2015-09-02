@@ -163,6 +163,11 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		static property bool ThermalVision
+		{
+			bool get();
+			void set(bool value);
+		}
 		static property GTA::Player ^Player
 		{
 			GTA::Player ^get();

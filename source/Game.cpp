@@ -127,6 +127,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_NIGHTVISION, value);
 	}
+	bool Game::ThermalVision::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_GET_SEETHROUGH_IS_ACTIVE);
+	}
+	void Game::ThermalVision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_SEETHROUGH, value);
+	}
 	GTA::Player ^GTA::Game::Player::get()
 	{
 		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
