@@ -1007,19 +1007,19 @@ namespace GTA
 		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
 	}
 
-	RaycastResult World::Raycast3D(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options)
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options)
 	{
-		return Raycast3D(source, target, radius, options, nullptr);
+		return RaycastCapsule(source, target, radius, options, nullptr);
 	}
-	RaycastResult World::Raycast3D(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options, Entity ^ignoreEntity)
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options, Entity ^ignoreEntity)
 	{
 		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
 	}
-	RaycastResult World::Raycast3D(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options)
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options)
 	{
-		return Raycast3D(source, direction, maxDistance, radius, options, nullptr);
+		return RaycastCapsule(source, direction, maxDistance, radius, options, nullptr);
 	}
-	RaycastResult World::Raycast3D(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ^ignoreEntity)
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ^ignoreEntity)
 	{
 		Math::Vector3 target = source + (direction * maxDistance);
 		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
