@@ -203,6 +203,10 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, this->Handle, offset.X, offset.Y, offset.Z);
 	}
+	Math::Vector3 Entity::GetOffsetFromWorldCoords(Math::Vector3 offset)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, this->Handle, offset.X, offset.Y, offset.Z);
+	}
 
 	bool Entity::IsAttached()
 	{
