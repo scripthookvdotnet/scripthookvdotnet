@@ -952,7 +952,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 
-		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, nullptr);
+		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0);
 	}
 	void World::DestroyAllCameras()
 	{
