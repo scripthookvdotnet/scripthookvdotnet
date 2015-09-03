@@ -147,6 +147,13 @@ namespace GTA
 			{
 				bool get();
 			}
+			/// <summary>
+			/// Gets a value indicating whether this instance has an inverse matrix.
+			/// </summary>
+			property bool HasInverse
+			{
+				bool get();
+			}
 
 			/// <summary>
 			/// Converts the matrix to an array of floats.
@@ -213,6 +220,12 @@ namespace GTA
 			/// <param name="matrix">The matrix to be negated.</param>
 			/// <returns>The negated matrix.</returns>
 			static Matrix Negate(Matrix matrix);
+
+			/// <summary>
+			/// Calculates the inverse of a matrix if it exists.
+			/// </summary>
+			/// <returns>The inverse of the matrix.</returns>
+			static Matrix Inverse(Matrix matrix);
 
 			/// <summary>
 			/// Performs a linear interpolation between two matricies.

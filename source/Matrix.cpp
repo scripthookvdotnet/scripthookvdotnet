@@ -103,6 +103,10 @@ namespace GTA
 
 			return true;
 		}
+		bool Matrix::HasInverse::get()
+		{
+			return Determinant() != 0.0f;
+		}
 
 		array<float> ^Matrix::ToArray()
 		{
@@ -200,6 +204,37 @@ namespace GTA
 			result.M42 = -matrix.M42;
 			result.M43 = -matrix.M43;
 			result.M44 = -matrix.M44;
+			return result;
+		}
+		float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
+		{
+			return M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
+		}
+		Matrix Matrix::Inverse(Matrix matrix)
+		{
+			float Det = matrix.Determinant();
+			if (Det == 0.0f)
+				return matrix;
+			Matrix result;
+			result.M11 = Det3x3(matrix.M22, matrix.M23, matrix.M24, matrix.M32, matrix.M33, matrix.M34, matrix.M42, matrix.M43, matrix.M44) / Det;
+			result.M21 = -Det3x3(matrix.M21, matrix.M23, matrix.M24, matrix.M31, matrix.M33, matrix.M34, matrix.M41, matrix.M43, matrix.M44) / Det;
+			result.M31 = Det3x3(matrix.M21, matrix.M22, matrix.M24, matrix.M31, matrix.M32, matrix.M34, matrix.M41, matrix.M42, matrix.M44) / Det;
+			result.M41 = -Det3x3(matrix.M21, matrix.M22, matrix.M23, matrix.M31, matrix.M32, matrix.M33, matrix.M41, matrix.M42, matrix.M43) / Det;
+
+			result.M12 = -Det3x3(matrix.M12, matrix.M13, matrix.M14, matrix.M32, matrix.M33, matrix.M34, matrix.M42, matrix.M43, matrix.M44) / Det;
+			result.M22 = Det3x3(matrix.M11, matrix.M13, matrix.M14, matrix.M31, matrix.M33, matrix.M34, matrix.M41, matrix.M43, matrix.M44) / Det;
+			result.M32 = -Det3x3(matrix.M11, matrix.M12, matrix.M14, matrix.M31, matrix.M32, matrix.M34, matrix.M41, matrix.M42, matrix.M44) / Det;
+			result.M42 = Det3x3(matrix.M11, matrix.M12, matrix.M13, matrix.M31, matrix.M32, matrix.M33, matrix.M41, matrix.M42, matrix.M43) / Det;
+
+			result.M13 = Det3x3(matrix.M12, matrix.M13, matrix.M14, matrix.M22, matrix.M23, matrix.M24, matrix.M42, matrix.M43, matrix.M44) / Det;
+			result.M23 = -Det3x3(matrix.M11, matrix.M13, matrix.M14, matrix.M21, matrix.M23, matrix.M24, matrix.M41, matrix.M43, matrix.M44) / Det;
+			result.M33 = Det3x3(matrix.M11, matrix.M12, matrix.M14, matrix.M21, matrix.M22, matrix.M24, matrix.M41, matrix.M42, matrix.M44) / Det;
+			result.M43 = -Det3x3(matrix.M11, matrix.M12, matrix.M13, matrix.M21, matrix.M22, matrix.M23, matrix.M41, matrix.M42, matrix.M43) / Det;
+
+			result.M14 = -Det3x3(matrix.M12, matrix.M13, matrix.M14, matrix.M22, matrix.M23, matrix.M24, matrix.M32, matrix.M33, matrix.M34) / Det;
+			result.M24 = Det3x3(matrix.M11, matrix.M13, matrix.M14, matrix.M21, matrix.M23, matrix.M24, matrix.M31, matrix.M33, matrix.M34) / Det;
+			result.M34 = -Det3x3(matrix.M11, matrix.M12, matrix.M14, matrix.M21, matrix.M22, matrix.M24, matrix.M31, matrix.M32, matrix.M34) / Det;
+			result.M44 = Det3x3(matrix.M11, matrix.M12, matrix.M13, matrix.M21, matrix.M22, matrix.M23, matrix.M31, matrix.M32, matrix.M33) / Det;
 			return result;
 		}
 		Matrix Matrix::Multiply(Matrix left, Matrix right)
