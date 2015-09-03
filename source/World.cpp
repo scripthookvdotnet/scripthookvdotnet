@@ -283,6 +283,31 @@ namespace GTA
 
 		return resultHandles;
 	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
+	{
+		List<Vehicle ^> ^resultHandles = gcnew List<Vehicle ^>();
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(ped->Position, radius);
+		bool inVehicle = false;
+		int vehicleHandle = 0;
+		if (ped->IsInVehicle())
+		{
+			inVehicle = true;
+			vehicleHandle = ped->CurrentVehicle->Handle;
+		}
+
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (inVehicle && entities[i] == vehicleHandle)
+			{
+				continue;
+			}
+
+			resultHandles->Add(gcnew Vehicle(entities[i]));
+		}
+
+		return resultHandles->ToArray();
+	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
 	{
 		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius);

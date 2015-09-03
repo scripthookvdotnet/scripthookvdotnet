@@ -249,6 +249,7 @@ namespace GTA
 		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius, Model model);
 		static array<Vehicle ^> ^GetAllVehicles();
 		static array<Vehicle ^> ^GetAllVehicles(Model model);
+		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
 		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius);
 		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius, Model model);
 		static array<Prop ^> ^GetAllProps();
