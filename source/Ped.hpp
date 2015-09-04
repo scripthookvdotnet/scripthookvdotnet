@@ -144,7 +144,8 @@ namespace GTA
 		BurstFireHeli = 0x914E786F,
 		BurstFireMicro = 0x42EF03FD,
 		BurstFireBursts = 0x42EF03FD,
-		BurstFireTank = 0xE2CA3A71
+		BurstFireTank = 0xE2CA3A71,
+		Default = 0
 	};
 
 	public ref class Ped sealed : public Entity

@@ -9,7 +9,7 @@ namespace GTA
 	enum class VehicleSeat;
 	ref class Entity;
 	ref class TaskSequence;
-
+	enum class FiringPattern:System::UInt32;
 	public ref class Tasks
 	{
 	public:
@@ -63,8 +63,10 @@ namespace GTA
 		void RunTo(Math::Vector3 position, bool ignorePaths, int timeout);
 		void ShootAt(Ped ^target);
 		void ShootAt(Ped ^target, int duration);
+		void ShootAt(Ped ^target, int duration, FiringPattern pattern);
 		void ShootAt(Math::Vector3 position);
 		void ShootAt(Math::Vector3 position, int duration);
+		void ShootAt(Math::Vector3 position, int duration, FiringPattern pattern);
 		void ShuffleToNextVehicleSeat(Vehicle ^vehicle);
 		void Skydive();
 		void SlideTo(Math::Vector3 position, float heading);

@@ -248,19 +248,27 @@ namespace GTA
 	}
 	void Tasks::ShootAt(Ped ^target)
 	{
-		ShootAt(target, -1);
+		ShootAt(target, -1, FiringPattern::Default);
 	}
 	void Tasks::ShootAt(Ped ^target, int duration)
 	{
-		Native::Function::Call(Native::Hash::TASK_SHOOT_AT_ENTITY, this->mPed->Handle, target->Handle, duration, 0);
+		ShootAt(target, duration, FiringPattern::Default);
+	}
+	void Tasks::ShootAt(Ped ^target, int duration, FiringPattern pattern)
+	{
+		Native::Function::Call(Native::Hash::TASK_SHOOT_AT_ENTITY, this->mPed->Handle, target->Handle, duration, static_cast<int>(pattern));
 	}
 	void Tasks::ShootAt(Math::Vector3 position)
 	{
-		ShootAt(position, -1);
+		ShootAt(position, -1, FiringPattern::Default);
 	}
 	void Tasks::ShootAt(Math::Vector3 position, int duration)
 	{
-		Native::Function::Call(Native::Hash::TASK_SHOOT_AT_COORD, this->mPed->Handle, position.X, position.Y, position.Z, duration, 0);
+		ShootAt(position, duration, FiringPattern::Default);
+	}
+	void Tasks::ShootAt(Math::Vector3 position, int duration, FiringPattern pattern)
+	{
+		Native::Function::Call(Native::Hash::TASK_SHOOT_AT_COORD, this->mPed->Handle, position.X, position.Y, position.Z, duration, static_cast<int>(pattern));
 	}
 	void Tasks::ShuffleToNextVehicleSeat(Vehicle ^vehicle)
 	{
