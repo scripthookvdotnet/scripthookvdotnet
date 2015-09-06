@@ -109,7 +109,6 @@
     <ClCompile Include="source\Tasks.cpp" />
     <ClCompile Include="source\UI.cpp" />
     <ClCompile Include="source\UIElement.cpp" />
-    <ClCompile Include="source\UIMenu.cpp" />
     <ClCompile Include="source\Vector2.cpp" />
     <ClCompile Include="source\Vector3.cpp" />
     <ClCompile Include="source\Vehicle.cpp" />
@@ -142,7 +141,6 @@
     <ClInclude Include="source\Tasks.hpp" />
     <ClInclude Include="source\UI.hpp" />
     <ClInclude Include="source\UIElement.hpp" />
-    <ClInclude Include="source\UIMenu.hpp" />
     <ClInclude Include="source\Vector2.hpp" />
     <ClInclude Include="source\Vector3.hpp" />
     <ClInclude Include="source\Vehicle.hpp" />

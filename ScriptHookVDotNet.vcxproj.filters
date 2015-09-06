@@ -97,9 +97,6 @@
     <ClCompile Include="source\UIElement.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\UIMenu.cpp">
-      <Filter>Scripting</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -196,9 +193,6 @@
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\UIElement.hpp">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\UIMenu.hpp">
       <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>

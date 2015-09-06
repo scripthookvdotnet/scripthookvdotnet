@@ -21,7 +21,6 @@
 namespace GTA
 {
 	#pragma region Forward Declarations
-	ref class Viewport;
 	ref class ScriptDomain;
 	ref class ScriptSettings;
 	#pragma endregion
@@ -64,11 +63,6 @@ namespace GTA
 				return this->mFilename;
 			}
 		}
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
-		property Viewport ^View
-		{
-			Viewport ^get();
-		}
 		property ScriptSettings ^Settings
 		{
 			ScriptSettings ^get();
@@ -92,8 +86,6 @@ namespace GTA
 		~Script();
 
 		void MainLoop();
-		void HandleViewportDraw(System::Object ^sender, System::EventArgs ^e);
-		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
 		int mInterval;
 		bool mRunning;
@@ -103,7 +95,6 @@ namespace GTA
 		System::Threading::AutoResetEvent ^mWaitEvent;
 		System::Threading::AutoResetEvent ^mContinueEvent;
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
-		Viewport ^mViewport;
 		ScriptSettings ^mSettings;
 	};
 }
