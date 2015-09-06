@@ -17,6 +17,7 @@
 #include "ScriptDomain.hpp"
 
 #include "Settings.hpp"
+#include "UIMenu.hpp"
 
 namespace GTA
 {
@@ -34,6 +35,18 @@ namespace GTA
 	{
 	}
 
+	Viewport ^Script::View::get()
+	{
+		if (Object::ReferenceEquals(this->mViewport, nullptr))
+		{
+			this->mViewport = gcnew GTA::Viewport();
+
+			Tick += gcnew EventHandler(this, &Script::HandleViewportDraw);
+			KeyUp += gcnew KeyEventHandler(this, &Script::HandleViewportInput);
+		}
+
+		return this->mViewport;
+	}
 	ScriptSettings ^Script::Settings::get()
 	{
 		if (Object::ReferenceEquals(this->mSettings, nullptr))
@@ -140,6 +153,34 @@ namespace GTA
 
 			// Yield execution to next tick
 			Wait(this->mInterval);
+		}
+	}
+	void Script::HandleViewportDraw(Object ^sender, EventArgs ^e)
+	{
+		this->mViewport->Draw();
+	}
+	void Script::HandleViewportInput(Object ^sender, KeyEventArgs ^e)
+	{
+		switch (e->KeyCode)
+		{
+			case Keys::NumPad5:
+				this->mViewport->HandleActivate();
+				break;
+			case Keys::NumPad0:
+				this->mViewport->HandleBack();
+				break;
+			case Keys::NumPad4:
+				this->mViewport->HandleChangeItem(false);
+				break;
+			case Keys::NumPad6:
+				this->mViewport->HandleChangeItem(true);
+				break;
+			case Keys::NumPad8:
+				this->mViewport->HandleChangeSelection(false);
+				break;
+			case Keys::NumPad2:
+				this->mViewport->HandleChangeSelection(true);
+				break;
 		}
 	}
 }
