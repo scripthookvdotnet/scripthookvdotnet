@@ -555,7 +555,7 @@ namespace GTA
 		void FixTire(int wheel);
 		bool IsInBurnout();
 		void StartAlarm();
-
+		void ApplyDamage(Math::Vector3 loc, float damageAmount, float radius);
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);
 

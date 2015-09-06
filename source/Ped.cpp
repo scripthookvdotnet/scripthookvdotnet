@@ -361,6 +361,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_BLOOD_DAMAGE, this->Handle);
 	}
+	void Ped::ApplyDamage(int damageAmount)
+	{
+		Native::Function::Call(Native::Hash::APPLY_DAMAGE_TO_PED, this->Handle, damageAmount, true);
+	}
 	Math::Vector3 Ped::GetBoneCoord(Bone BoneID)
 	{
 		return GetBoneCoord(BoneID, Math::Vector3::Zero);

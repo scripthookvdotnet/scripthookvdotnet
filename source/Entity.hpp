@@ -147,7 +147,7 @@ namespace GTA
 		bool IsTouching(Entity ^entity);
 		bool HasBeenDamagedBy(Entity ^entity);
 		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
-
+		Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 offset);
 		bool IsAttached();
 		bool IsAttachedTo(Entity ^entity);
 		Entity ^GetEntityAttachedTo();

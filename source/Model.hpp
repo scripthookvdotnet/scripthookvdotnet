@@ -79,7 +79,7 @@ namespace GTA
 			bool get();
 		}
 
-		void GetDimensions(Math::Vector3 %minimum, Math::Vector3 %maximum);
+		void GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum);
 		Math::Vector3 GetDimensions();
 
 		void Request();

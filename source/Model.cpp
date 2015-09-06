@@ -83,7 +83,7 @@ namespace GTA
 		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, this->mHash);
 	}
 
-	void Model::GetDimensions(Math::Vector3 %minimum, Math::Vector3 %maximum)
+	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute]Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
 	{
 		Native::OutputArgument ^outmin = gcnew Native::OutputArgument();
 		Native::OutputArgument ^outmax = gcnew Native::OutputArgument();

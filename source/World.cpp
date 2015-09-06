@@ -283,6 +283,31 @@ namespace GTA
 
 		return resultHandles;
 	}
+	array<Vehicle ^> ^World::GetNearbyVehicles(Ped ^ped, float radius)
+	{
+		List<Vehicle ^> ^resultHandles = gcnew List<Vehicle ^>();
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(ped->Position, radius);
+		bool inVehicle = false;
+		int vehicleHandle = 0;
+		if (ped->IsInVehicle())
+		{
+			inVehicle = true;
+			vehicleHandle = ped->CurrentVehicle->Handle;
+		}
+
+
+		for (int i = 0; i < entities->Length; i++)
+		{
+			if (inVehicle && entities[i] == vehicleHandle)
+			{
+				continue;
+			}
+
+			resultHandles->Add(gcnew Vehicle(entities[i]));
+		}
+
+		return resultHandles->ToArray();
+	}
 	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
 	{
 		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius);
@@ -403,18 +428,45 @@ namespace GTA
 	}
 	Ped ^World::GetClosestPed(Math::Vector3 position, float radius)
 	{
-		int handle = 0;
-
-		if (!Native::Function::Call<bool>(Native::Hash::GET_CLOSEST_PED, position.X, position.Y, position.Z, radius, true, true, &handle, false, false, -1))
+		array<int> ^entities = Native::MemoryAccess::GetPedHandles(position, radius);
+		float closestDist2 = radius * radius;
+		int closestHandle = 0;
+		for (int i = 0; i < entities->Length; i++)
 		{
-			return nullptr;
-		}
+			float dist2 = Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared();
+			if (dist2 <= closestDist2)
+			{
+				closestHandle = entities[i];
+				closestDist2 = dist2;
+			}
 
-		return gcnew Ped(handle);
+		}
+		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, closestHandle))
+		{
+			return gcnew Ped(closestHandle);
+		}
+		return nullptr;
 	}
 	Vehicle ^World::GetClosestVehicle(Math::Vector3 position, float radius)
 	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_CLOSEST_VEHICLE, position.X, position.Y, position.Z, radius, 0, 70); // Last parameter still unknown.
+		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius);
+		float closestDist2 = radius * radius;
+		int closestHandle = 0;
+		for (int i = 0; i < entities->Length; i++)
+		{
+			float dist2 = Math::Vector3::Subtract(Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_COORDS, entities[i], 0), position).LengthSquared();
+			if (dist2 <= closestDist2)
+			{
+				closestHandle = entities[i];
+				closestDist2 = dist2;
+			}
+
+		}
+		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, closestHandle))
+		{
+			return gcnew Vehicle(closestHandle);
+		}
+		return nullptr;
 	}
 	float World::GetDistance(Math::Vector3 origin, Math::Vector3 destination)
 	{
@@ -900,7 +952,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 
-		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, nullptr);
+		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0);
 	}
 	void World::DestroyAllCameras()
 	{
@@ -953,6 +1005,24 @@ namespace GTA
 	{
 		Math::Vector3 target = source + (direction * maxDistance);
 		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
+	}
+
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options)
+	{
+		return RaycastCapsule(source, target, radius, options, nullptr);
+	}
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options, Entity ^ignoreEntity)
+	{
+		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
+	}
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options)
+	{
+		return RaycastCapsule(source, direction, maxDistance, radius, options, nullptr);
+	}
+	RaycastResult World::RaycastCapsule(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ^ignoreEntity)
+	{
+		Math::Vector3 target = source + (direction * maxDistance);
+		return RaycastResult(Native::Function::Call<int>(Native::Hash::_CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, static_cast<int>(options), ignoreEntity == nullptr ? 0 : ignoreEntity->Handle, 7));
 	}
 
 	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, Drawing::Color color)

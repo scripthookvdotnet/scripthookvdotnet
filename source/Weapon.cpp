@@ -1,5 +1,6 @@
 #include "Weapon.hpp"
 #include "Ped.hpp"
+#include "Prop.hpp"
 #include "Native.hpp"
 
 namespace GTA
@@ -213,5 +214,11 @@ namespace GTA
 		Native::Function::Call(Native::Hash::REMOVE_ALL_PED_WEAPONS, this->mOwner->Handle, true);
 
 		this->mWeapons->Clear();
+	}
+	Prop ^WeaponCollection::CurrentWeaponObject::get()
+	{
+		if (Current->Hash != Native::WeaponHash::Unarmed)
+			return Native::Function::Call<Prop^>(Native::Hash::_0x3B390A939AF0B5FC, this->mOwner->Handle);
+		return nullptr;
 	}
 }
