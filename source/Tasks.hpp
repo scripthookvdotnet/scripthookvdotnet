@@ -4,12 +4,15 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Ped;
 	ref class Vehicle;
 	enum class VehicleSeat;
 	ref class Entity;
 	ref class TaskSequence;
-	enum class FiringPattern:System::UInt32;
+	enum class FiringPattern : System::UInt32;
+	#pragma endregion
+
 	public ref class Tasks
 	{
 	public:

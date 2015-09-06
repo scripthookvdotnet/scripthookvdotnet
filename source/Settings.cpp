@@ -22,7 +22,7 @@ namespace GTA
 	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
-	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename)
+	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename), mValues(gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>())
 	{
 	}
 

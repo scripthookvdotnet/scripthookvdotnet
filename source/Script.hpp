@@ -20,8 +20,10 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class ScriptDomain;
 	ref class ScriptSettings;
+	#pragma endregion
 
 	[System::AttributeUsage(System::AttributeTargets::Class, AllowMultiple = true)]
 	public ref class RequireScript : System::Attribute

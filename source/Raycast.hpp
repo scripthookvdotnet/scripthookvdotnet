@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Vector3.hpp"
-#include "Entity.hpp"
 
 namespace GTA
 {
+	#pragma region Forward Declarations
+	ref class Entity;
+	#pragma endregion
+
 	public value class RaycastResult
 	{
 	public:

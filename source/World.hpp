@@ -5,6 +5,7 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Blip;
 	ref class Camera;
 	ref class Entity;
@@ -15,6 +16,7 @@ namespace GTA
 	ref class Pickup;
 	value class Model;
 	value class RaycastResult;
+	#pragma endregion
 
 	public enum class ExplosionType
 	{
@@ -310,7 +312,6 @@ namespace GTA
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^ignoreEntity);
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options);
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 direction, float maxDistance, IntersectOptions options, Entity ^ignoreEntity);
-
 		static RaycastResult RaycastCapsule(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options);
 		static RaycastResult RaycastCapsule(Math::Vector3 source, Math::Vector3 target, float radius, IntersectOptions options, Entity ^ignoreEntity);
 		static RaycastResult RaycastCapsule(Math::Vector3 source, Math::Vector3 direction, float maxDistance, float radius, IntersectOptions options);

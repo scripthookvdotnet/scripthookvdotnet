@@ -4,19 +4,20 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Tasks;
 	ref class Vehicle;
 	ref class WeaponCollection;
 	value class Model;
 	enum class VehicleSeat;
 	enum class Relationship;
+	#pragma endregion
 
 	public enum class Gender
 	{
 		Male,
 		Female
 	};
-
 	public enum class DrivingStyle
 	{
 		Normal = 0xC00AB,

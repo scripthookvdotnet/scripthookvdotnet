@@ -5,6 +5,9 @@
 
 namespace GTA
 {
+	Weapon::Weapon() : mHash(Native::WeaponHash::Unarmed)
+	{
+	}
 	Weapon::Weapon(Ped ^owner, Native::WeaponHash hash) : mOwner(owner), mHash(hash)
 	{
 	}
@@ -144,6 +147,15 @@ namespace GTA
 
 		return weapon;
 	}
+	Prop ^WeaponCollection::CurrentWeaponObject::get()
+	{
+		if (Current->Hash != Native::WeaponHash::Unarmed)
+		{
+			return Native::Function::Call<Prop^>(Native::Hash::_0x3B390A939AF0B5FC, this->mOwner->Handle);
+		}
+
+		return nullptr;
+	}
 	Weapon ^WeaponCollection::default::get(Native::WeaponHash hash)
 	{
 		Weapon ^weapon;
@@ -214,11 +226,5 @@ namespace GTA
 		Native::Function::Call(Native::Hash::REMOVE_ALL_PED_WEAPONS, this->mOwner->Handle, true);
 
 		this->mWeapons->Clear();
-	}
-	Prop ^WeaponCollection::CurrentWeaponObject::get()
-	{
-		if (Current->Hash != Native::WeaponHash::Unarmed)
-			return Native::Function::Call<Prop^>(Native::Hash::_0x3B390A939AF0B5FC, this->mOwner->Handle);
-		return nullptr;
 	}
 }

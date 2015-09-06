@@ -4,7 +4,9 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Entity;
+	#pragma endregion
 
 	public ref class Rope sealed
 	{

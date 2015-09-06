@@ -165,7 +165,7 @@ namespace GTA
 					}
 				}
 
-#pragma pack(push, 1)
+				#pragma pack(push, 1)
 				struct NativeVector3
 				{
 					float x;
@@ -175,7 +175,7 @@ namespace GTA
 					float z;
 					DWORD _paddingz;
 				};
-#pragma pack(pop)
+				#pragma pack(pop)
 
 				// Math types
 				if (type == Math::Vector2::typeid)
@@ -204,12 +204,12 @@ namespace GTA
 					{
 						switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
 						{
-						case 1:
-							return gcnew Ped(handle);
-						case 2:
-							return gcnew Vehicle(handle);
-						case 3:
-							return gcnew Prop(handle);
+							case 1:
+								return gcnew Ped(handle);
+							case 2:
+								return gcnew Vehicle(handle);
+							case 3:
+								return gcnew Prop(handle);
 						}
 					}
 

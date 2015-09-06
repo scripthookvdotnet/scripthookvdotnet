@@ -2,9 +2,11 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Ped;
 	ref class Vehicle;
 	ref class Entity;
+	#pragma endregion
 
 	public ref class Player sealed
 	{

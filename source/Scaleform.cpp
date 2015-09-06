@@ -32,11 +32,11 @@ namespace GTA
 		return true;
 	}
 
-	void Scaleform::CallFunction(System::String ^function, ... array<Object^> ^arguments)
+	void Scaleform::CallFunction(System::String ^function, ... array<System::Object ^> ^arguments)
 	{
 		Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION, mHandle, function);
 
-		for each(Object ^o in arguments)
+		for each(System::Object ^o in arguments)
 		{
 			if (o->GetType() == int::typeid)
 			{

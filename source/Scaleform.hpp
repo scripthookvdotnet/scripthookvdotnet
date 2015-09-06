@@ -26,7 +26,7 @@ namespace GTA
 
 		bool Load(System::String ^scaleformID);
 
-		void CallFunction(System::String ^function, ... array<Object^> ^arguments);
+		void CallFunction(System::String ^function, ... array<Object ^> ^arguments);
 
 		void Render2D();
 		void Render2DScreenSpace(System::Drawing::PointF location, System::Drawing::PointF size);

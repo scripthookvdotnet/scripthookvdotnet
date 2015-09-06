@@ -4,8 +4,10 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Ped;
 	value class Model;
+	#pragma endregion
 
 	public enum class VehicleColor
 	{

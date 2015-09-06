@@ -124,6 +124,10 @@ namespace GTA
 	public ref class Game sealed abstract
 	{
 	public:
+		static property InputMode CurrentInputMode
+		{
+			InputMode get();
+		}
 		static property float FPS
 		{
 			float get();
@@ -226,11 +230,6 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, int maxLength);
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
-
-		static property InputMode CurrentInputMode
-		{
-			InputMode get();
-		}
 
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;

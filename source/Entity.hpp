@@ -6,7 +6,9 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Blip;
+	#pragma endregion
 
 	public ref class Entity abstract
 	{

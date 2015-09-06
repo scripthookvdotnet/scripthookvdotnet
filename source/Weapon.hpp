@@ -4,8 +4,10 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Ped;
 	ref class Prop;
+	#pragma endregion
 
 	public ref class Weapon sealed
 	{
@@ -46,7 +48,7 @@ namespace GTA
 		}
 
 	internal:
-		Weapon() { }
+		Weapon();
 		Weapon(Ped ^owner, Native::WeaponHash hash);
 
 	private:
@@ -61,7 +63,10 @@ namespace GTA
 		{
 			Weapon ^get();
 		}
-
+		property Prop ^CurrentWeaponObject
+		{
+			Prop ^get();
+		}
 		property Weapon ^default[Native::WeaponHash]
 		{
 			Weapon ^get(Native::WeaponHash hash);
@@ -72,10 +77,6 @@ namespace GTA
 		bool Select(Weapon ^weapon);
 		void Remove(Weapon ^weapon);
 		void RemoveAll();
-		property Prop ^CurrentWeaponObject
-		{
-			Prop ^get();
-		}
 
 	internal:
 		WeaponCollection(Ped ^owner);
