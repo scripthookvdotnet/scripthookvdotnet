@@ -4,7 +4,7 @@
 
 namespace GTA
 {
-	Camera::Camera(int handle) : mHandle(handle), mShakeType(CameraShake::Hand), mShakeAmplitude(1.0f)
+	Camera::Camera(int handle) : mHandle(handle)
 	{
 	}
 
@@ -26,6 +26,15 @@ namespace GTA
 
 		return Math::Vector3(static_cast<float>(-System::Math::Sin(rotZ) * multXY), static_cast<float>(System::Math::Cos(rotZ) * multXY), static_cast<float>(System::Math::Sin(rotX)));
 	}
+	Math::Vector3 GameplayCamera::Direction::get()
+	{
+		Math::Vector3 rot = Rotation;
+		double rotX = rot.X / 57.295779513082320876798154814105;
+		double rotZ = rot.Z / 57.295779513082320876798154814105;
+		double multXY = System::Math::Abs(System::Math::Cos(rotX));
+
+		return Math::Vector3(static_cast<float>(-System::Math::Sin(rotZ) * multXY), static_cast<float>(System::Math::Cos(rotZ) * multXY), static_cast<float>(System::Math::Sin(rotX)));
+	}
 	void Camera::Direction::set(Math::Vector3 value)
 	{
 		value.Normalize();
@@ -37,6 +46,10 @@ namespace GTA
 	float Camera::FieldOfView::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_CAM_FOV, this->Handle);
+	}
+	float GameplayCamera::FieldOfView::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_FOV);
 	}
 	void Camera::FieldOfView::set(float fov)
 	{
@@ -66,24 +79,33 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_CAM_ACTIVE, this->Handle, isActive);
 	}
+	bool GameplayCamera::IsAimCamActive::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_AIM_CAM_ACTIVE);
+	}
+	bool GameplayCamera::IsFirstPersonAimCamActive::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_FIRST_PERSON_AIM_CAM_ACTIVE);
+	}
 	bool Camera::IsInterpolating::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_CAM_INTERPOLATING, this->Handle);
+	}
+	bool GameplayCamera::IsLookingBehind::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_GAMEPLAY_CAM_LOOKING_BEHIND);
+	}
+	bool GameplayCamera::IsRendering::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_GAMEPLAY_CAM_RENDERING);
 	}
 	bool Camera::IsShaking::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_CAM_SHAKING, this->Handle);
 	}
-	void Camera::IsShaking::set(bool isShaking)
+	bool GameplayCamera::IsShaking::get()
 	{
-		if (isShaking)
-		{
-			Native::Function::Call(Native::Hash::SHAKE_CAM, this->Handle, sShakeNames[static_cast<int>(this->ShakeType)], this->ShakeAmplitude);
-		}
-		else
-		{
-			Native::Function::Call(Native::Hash::STOP_CAM_SHAKING, this->Handle, true);
-		}
+		return Native::Function::Call<bool>(Native::Hash::IS_GAMEPLAY_CAM_SHAKING);
 	}
 	void Camera::MotionBlurStrength::set(float strength)
 	{
@@ -105,39 +127,66 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_CAM_COORD, this->Handle);
 	}
+	Math::Vector3 GameplayCamera::Position::get()
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_GAMEPLAY_CAM_COORD);
+	}
 	void Camera::Position::set(Math::Vector3 position)
 	{
 		Native::Function::Call(Native::Hash::SET_CAM_COORD, this->Handle, position.X, position.Y, position.Z);
+	}
+	float GameplayCamera::RelativeHeading::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_RELATIVE_HEADING);
+	}
+	void GameplayCamera::RelativeHeading::set(float relativeHeading)
+	{
+		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_RELATIVE_HEADING, relativeHeading);
+	}
+	float GameplayCamera::RelativePitch::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_RELATIVE_PITCH);
+	}
+	void GameplayCamera::RelativePitch::set(float relativePitch)
+	{
+		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_RELATIVE_PITCH, relativePitch);
 	}
 	Math::Vector3 Camera::Rotation::get()
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_CAM_ROT, this->Handle);
 	}
+	Math::Vector3 GameplayCamera::Rotation::get()
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_GAMEPLAY_CAM_ROT, 2);
+	}
 	void Camera::Rotation::set(Math::Vector3 rotation)
 	{
 		Native::Function::Call(Native::Hash::SET_CAM_ROT, this->Handle, rotation.X, rotation.Y, rotation.Z);
 	}
-	float Camera::ShakeAmplitude::get()
-	{
-		return this->mShakeAmplitude;
-	}
 	void Camera::ShakeAmplitude::set(float amplitude)
 	{
-		this->mShakeAmplitude = amplitude;
 		Native::Function::Call(Native::Hash::SET_CAM_SHAKE_AMPLITUDE, this->Handle, amplitude);
 	}
-	CameraShake Camera::ShakeType::get()
+	void GameplayCamera::ShakeAmplitude::set(float amplitude)
 	{
-		return this->mShakeType;
+		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_SHAKE_AMPLITUDE, amplitude);
 	}
-	void Camera::ShakeType::set(CameraShake shakeType)
-	{
-		this->mShakeType = shakeType;
 
-		if (this->IsShaking)
-		{
-			Native::Function::Call(Native::Hash::SHAKE_CAM, this->Handle, sShakeNames[static_cast<int>(this->ShakeType)], this->ShakeAmplitude);
-		}
+	void Camera::Shake(CameraShake shakeType, float amplitude)
+	{
+		Native::Function::Call(Native::Hash::SHAKE_CAM, this->Handle, sShakeNames[static_cast<int>(shakeType)], amplitude);
+	}
+	void GameplayCamera::Shake(CameraShake shakeType, float amplitude)
+	{
+		Native::Function::Call(Native::Hash::SHAKE_GAMEPLAY_CAM, Camera::sShakeNames[static_cast<int>(shakeType)], amplitude);
+	}
+	void Camera::StopShaking()
+	{
+		Native::Function::Call(Native::Hash::STOP_CAM_SHAKING, this->Handle, true);
+	}
+	void GameplayCamera::StopShaking()
+	{
+		Native::Function::Call(Native::Hash::STOP_GAMEPLAY_CAM_SHAKING, true);
 	}
 
 	void Camera::AttachTo(Entity ^entity, Math::Vector3 offset)
@@ -190,77 +239,6 @@ namespace GTA
 	void Camera::Destroy()
 	{
 		Native::Function::Call(Native::Hash::DESTROY_CAM, this->Handle, 0);
-	}
-
-	Math::Vector3 GameplayCamera::Direction::get()
-	{
-		Math::Vector3 rot = Rotation;
-		double rotX = rot.X / 57.295779513082320876798154814105;
-		double rotZ = rot.Z / 57.295779513082320876798154814105;
-		double multXY = System::Math::Abs(System::Math::Cos(rotX));
-
-		return Math::Vector3(static_cast<float>(-System::Math::Sin(rotZ) * multXY), static_cast<float>(System::Math::Cos(rotZ) * multXY), static_cast<float>(System::Math::Sin(rotX)));
-	}
-	float GameplayCamera::FieldOfView::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_FOV);
-	}
-	bool GameplayCamera::IsAimCamActive::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_AIM_CAM_ACTIVE);
-	}
-	bool GameplayCamera::IsFirstPersonAimCamActive::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_FIRST_PERSON_AIM_CAM_ACTIVE);
-	}
-	bool GameplayCamera::IsLookingBehind::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_GAMEPLAY_CAM_LOOKING_BEHIND);
-	}
-	bool GameplayCamera::IsRendering::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_GAMEPLAY_CAM_RENDERING);
-	}
-	bool GameplayCamera::IsShaking::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_GAMEPLAY_CAM_SHAKING);
-	}
-	Math::Vector3 GameplayCamera::Position::get()
-	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_GAMEPLAY_CAM_COORD);
-	}
-	float GameplayCamera::RelativeHeading::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_RELATIVE_HEADING);
-	}
-	void GameplayCamera::RelativeHeading::set(float relativeHeading)
-	{
-		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_RELATIVE_HEADING, relativeHeading);
-	}
-	float GameplayCamera::RelativePitch::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_GAMEPLAY_CAM_RELATIVE_PITCH);
-	}
-	void GameplayCamera::RelativePitch::set(float relativePitch)
-	{
-		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_RELATIVE_PITCH, relativePitch);
-	}
-	Math::Vector3 GameplayCamera::Rotation::get()
-	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_GAMEPLAY_CAM_ROT, 2);
-	}
-	void GameplayCamera::ShakeAmplitude::set(float amplitude)
-	{
-		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_SHAKE_AMPLITUDE, amplitude);
-	}
-
-	void GameplayCamera::Shake(CameraShake shakeType, float amplitude)
-	{
-		Native::Function::Call(Native::Hash::SHAKE_GAMEPLAY_CAM, Camera::sShakeNames[static_cast<int>(shakeType)], amplitude);
-	}
-	void GameplayCamera::StopShaking()
-	{
-		Native::Function::Call(Native::Hash::STOP_GAMEPLAY_CAM_SHAKING, true);
 	}
 
 	void GameplayCamera::ClampYaw(float min, float max)

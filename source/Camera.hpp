@@ -4,8 +4,10 @@
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Ped;
 	ref class Entity;
+	#pragma endregion
 
 	public enum class CameraShake
 	{
@@ -67,7 +69,6 @@ namespace GTA
 		property bool IsShaking
 		{
 			bool get();
-			void set(bool isShaking);
 		}
 		property float MotionBlurStrength
 		{
@@ -94,14 +95,11 @@ namespace GTA
 		}
 		property float ShakeAmplitude
 		{
-			float get();
 			void set(float amplitude);
 		}
-		property CameraShake ShakeType
-		{
-			CameraShake get();
-			void set(CameraShake shakeType);
-		}
+
+		void Shake(CameraShake shakeType, float amplitude);
+		void StopShaking();
 
 		void AttachTo(Entity ^entity, Math::Vector3 offset);
 		void AttachTo(Ped ^entity, int boneIndex, Math::Vector3 offset);
@@ -124,8 +122,6 @@ namespace GTA
 
 	private:
 		int mHandle;
-		float mShakeAmplitude;
-		CameraShake mShakeType;
 	};
 	public ref class GameplayCamera sealed abstract
 	{
