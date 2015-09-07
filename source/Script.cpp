@@ -161,26 +161,11 @@ namespace GTA
 	}
 	void Script::HandleViewportInput(Object ^sender, KeyEventArgs ^e)
 	{
-		switch (e->KeyCode)
-		{
-			case Keys::NumPad5:
-				this->mViewport->HandleActivate();
-				break;
-			case Keys::NumPad0:
-				this->mViewport->HandleBack();
-				break;
-			case Keys::NumPad4:
-				this->mViewport->HandleChangeItem(false);
-				break;
-			case Keys::NumPad6:
-				this->mViewport->HandleChangeItem(true);
-				break;
-			case Keys::NumPad8:
-				this->mViewport->HandleChangeSelection(false);
-				break;
-			case Keys::NumPad2:
-				this->mViewport->HandleChangeSelection(true);
-				break;
-		}
+		if (e->KeyCode == ActivateKey) this->mViewport->HandleActivate();
+		else if (e->KeyCode == BackKey) this->mViewport->HandleBack();
+		else if (e->KeyCode == LeftKey) this->mViewport->HandleChangeItem(false);
+		else if (e->KeyCode == RightKey) this->mViewport->HandleChangeItem(true);
+		else if (e->KeyCode == UpKey) this->mViewport->HandleChangeSelection(false);
+		else if (e->KeyCode == DownKey) this->mViewport->HandleChangeSelection(true);
 	}
 }

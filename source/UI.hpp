@@ -12,7 +12,6 @@ namespace GTA
 		ChaletComprimeCologne = 4,
 		Pricedown = 7
 	};
-
 	public enum class HudComponent
 	{
 		WantedStars = 1,
@@ -92,14 +91,15 @@ namespace GTA
 		static void ShowSubtitle(System::String ^msg);
 		static void ShowSubtitle(System::String ^msg, int duration);
 
+		static bool IsHudComponentActive(HudComponent component);
+		static void ShowHudComponentThisFrame(HudComponent component);
+		static void HideHudComponentThisFrame(HudComponent component);
+
 		static System::Drawing::Point WorldToScreen(Math::Vector3 position);
 
 		static void DrawTexture(System::String ^filename, int index, int level, int time, System::Drawing::Point pos, System::Drawing::Size size);
 		static void DrawTexture(System::String ^filename, int index, int level, int time, System::Drawing::Point pos, System::Drawing::Size size, float rotation, System::Drawing::Color color);
 		static void DrawTexture(System::String ^filename, int index, int level, int time, System::Drawing::Point pos, System::Drawing::PointF center, System::Drawing::Size size, float rotation, System::Drawing::Color color);
-		static void HideHudComponentThisFrame(HudComponent component);
-		static void ShowHudComponentThisFrame(HudComponent component);
-		static bool IsHudComponentActive(HudComponent component);
 
 	internal:
 		static System::Collections::Generic::Dictionary<System::String ^, int> ^sTextures = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
