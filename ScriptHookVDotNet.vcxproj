@@ -89,7 +89,6 @@
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\Game.cpp" />
-    <ClCompile Include="source\AssemblyInfo.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\Model.cpp" />
