@@ -72,7 +72,8 @@ namespace GTA
 
 	bool Rope::Exists()
 	{
-		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, this->Handle);
+		int handle = this->Handle;
+		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
 	}
 	void Rope::Delete()
 	{
