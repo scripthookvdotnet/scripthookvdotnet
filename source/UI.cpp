@@ -68,13 +68,17 @@ namespace GTA
 
 	void UI::DrawTexture(String ^filename, int index, int level, int time, Point pos, Size size)
 	{
-		DrawTexture(filename, index, level, time, pos, PointF(0.0f, 0.0f), size, 0.0f, Color::White);
+		DrawTexture(filename, index, level, time, pos, PointF(0.0f, 0.0f), size, 0.0f, Color::White, 1.0f);
 	}
 	void UI::DrawTexture(String ^filename, int index, int level, int time, Point pos, Size size, float rotation, Color color)
 	{
-		DrawTexture(filename, index, level, time, pos, PointF(0.0f, 0.0f), size, rotation, color);
+		DrawTexture(filename, index, level, time, pos, PointF(0.0f, 0.0f), size, rotation, color, 1.0f);
 	}
 	void UI::DrawTexture(String ^filename, int index, int level, int time, Point pos, PointF center, Size size, float rotation, Color color)
+	{
+		DrawTexture(filename, index, level, time, pos, center, size, rotation, color, 1.0f);
+	}
+	void UI::DrawTexture(String ^filename, int index, int level, int time, Point pos, PointF center, Size size, float rotation, Color color, float aspectRatio)
 	{
 		int id;
 
@@ -94,6 +98,6 @@ namespace GTA
 		const float w = static_cast<float>(size.Width) / UI::WIDTH;
 		const float h = static_cast<float>(size.Height) / UI::HEIGHT;
 
-		drawTexture(id, index, level, time, w, h, center.X, center.Y, x, y, rotation, 1.0f, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
+		drawTexture(id, index, level, time, w, h, center.X, center.Y, x, y, rotation, aspectRatio, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 	}
 }
