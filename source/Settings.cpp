@@ -207,9 +207,17 @@ namespace GTA
 		{
 			parsed = Double::TryParse(value, reinterpret_cast<Double %>(result));
 		}
-		else if (T::typeid == Keys::typeid)
+		else if (static_cast<System::Type ^>(T::typeid)->IsEnum)
 		{
-			parsed = Enum::TryParse<Keys>(value, reinterpret_cast<Keys %>(result));
+			try
+			{
+				result = static_cast<T>(Enum::Parse(static_cast<System::Type ^>(T::typeid), value, true));
+				parsed = true;
+			}
+			catch (...)
+			{
+				parsed = false;
+			}
 		}
 
 		if (!parsed)
@@ -219,6 +227,7 @@ namespace GTA
 
 		return result;
 	}
+
 	String ^ScriptSettings::GetValue(String ^section, String ^key)
 	{
 		return GetValue(section, key, String::Empty);

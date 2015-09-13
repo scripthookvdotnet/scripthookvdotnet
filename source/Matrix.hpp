@@ -161,10 +161,20 @@ namespace GTA
 			array<float> ^ToArray();
 
 			/// <summary>
+			/// Converts the matrix to an array of floats.
+			/// </summary>
+			static Matrix FromArray(array<float> ^floatArray);
+
+			/// <summary>
 			/// Calculates the determinant of the matrix.
 			/// </summary>
 			/// <returns>The determinant of the matrix.</returns>
 			float Determinant();
+
+			/// <summary>
+			/// Calculates the inverse of the matrix if it exists.
+			/// </summary>
+			void Inverse();
 
 			/// <summary>
 			/// Determines the sum of two matrices.
