@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "Blip.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -254,6 +255,92 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
+	bool Entity::BulletProof::get()
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		return IsBitSet(Address,4);
+	}
+	void Entity::BulletProof::set(bool value)
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		if (value)
+			SetBit(Address,4);
+		else
+			ResetBit(Address,4);
+	}
+	bool Entity::FireProof::get()
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		return IsBitSet(Address,5);
+	}
+	void Entity::FireProof::set(bool value)
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		if (value)
+			SetBit(Address,5);
+		else
+			ResetBit(Address, 5);
+	}
+	bool Entity::ExplosionProof::get()
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		return IsBitSet(Address, 10);
+	}
+	void Entity::ExplosionProof::set(bool value)
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		if (value)
+			SetBit(Address, 10);
+		else
+			ResetBit(Address, 10);
+	}
+	bool Entity::CollisionProof::get()
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		return IsBitSet(Address, 6);
+	}
+	void Entity::CollisionProof::set(bool value)
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		if (value)
+			SetBit(Address, 6);
+		else
+			ResetBit(Address, 6);
+	}
+	bool Entity::MeleeProof::get()
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		return IsBitSet(Address, 7);
+	}
+	void Entity::MeleeProof::set(bool value)
+	{
+		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (Address != 0)
+			Address += 392;
+		if (value)
+			SetBit(Address, 7);
+		else
+			ResetBit(Address, 7);
+	}
+
 
 	void Entity::ResetAlpha()
 	{

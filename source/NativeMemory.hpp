@@ -3,6 +3,17 @@
 #include "Vector3.hpp"
 #include "ScriptDomain.hpp"
 
+
+inline bool IsBitSet(System::UInt64 Address, int index) {
+	return  (Address != 0 ? (*(int*)Address & (1 << index)) != 0 : false);
+}
+inline void SetBit(System::UInt64 Address, int index) {
+	if (Address != 0) *(int*)Address |= 1 << index;
+}
+inline void ResetBit(System::UInt64 Address, int index) {
+	if (Address != 0) *(int*)Address &= ~(1 << index);
+}
+
 namespace GTA
 {
 	namespace Native
