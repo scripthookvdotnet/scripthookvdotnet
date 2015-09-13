@@ -33,6 +33,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::FREEZE_ENTITY_POSITION, this->Handle, value);
 	}
+	void Entity::HasCollision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_COLLISION, this->Handle, value, false);
+	}
 	float Entity::Heading::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEADING, this->Handle);
@@ -123,6 +127,10 @@ namespace GTA
 	void Entity::MaxHealth::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_HEALTH, this->Handle, value + 100);
+	}
+	void Entity::MaxSpeed::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_SPEED, this->Handle, value);
 	}
 	GTA::Model Entity::Model::get()
 	{
@@ -258,6 +266,11 @@ namespace GTA
 	void Entity::ResetAlpha()
 	{
 		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, this->Handle);
+	}
+
+	void Entity::SetProofs(bool bulletProof, bool fireProof, bool explosionProof, bool collisionProof, bool meleeProof)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_PROOFS, this->Handle, bulletProof, fireProof, explosionProof, collisionProof, meleeProof, false, false, false);
 	}
 
 	void Entity::Delete()
