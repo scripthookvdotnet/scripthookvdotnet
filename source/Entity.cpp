@@ -38,6 +38,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_COLLISION, this->Handle, value, false);
 	}
+	void Entity::HasGravity::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_GRAVITY, this->Handle, value);
+	}
 	float Entity::Heading::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEADING, this->Handle);
@@ -299,6 +303,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, this->Handle, value);
 	}
+	int Entity::LodDistance::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::_GET_ENTITY_LOD_DIST, this->Handle);
+	}
+	void Entity::LodDistance::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_LOD_DIST, this->Handle, value);
+	}
 	int Entity::MaxHealth::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MAX_HEALTH, this->Handle) - 100;
@@ -314,6 +326,22 @@ namespace GTA
 	GTA::Model Entity::Model::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, this->Handle);
+	}
+	bool Entity::OnlyDamagedByPlayer::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 9)) != 0;
+	}
+	void Entity::OnlyDamagedByPlayer::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, this->Handle, value);
 	}
 	Math::Vector3 Entity::Position::get()
 	{
