@@ -58,9 +58,29 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsBulletProof
+		{
+			bool get();
+			void set(bool value);
+		}
+		property bool IsCollisionProof
+		{
+			bool get();
+			void set(bool value);
+		}
 		property bool IsDead
 		{
 			bool get();
+		}
+		property bool IsExplosionProof
+		{
+			bool get();
+			void set(bool value);
+		}
+		property bool IsFireProof
+		{
+			bool get();
+			void set(bool value);
 		}
 		property bool IsInAir
 		{
@@ -72,6 +92,11 @@ namespace GTA
 		}
 		property bool IsInvincible
 		{
+			void set(bool value);
+		}
+		property bool IsMeleeProof
+		{
+			bool get();
 			void set(bool value);
 		}
 		property bool IsOccluded
@@ -173,8 +198,6 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
 		void ResetAlpha();
-
-		void SetProofs(bool bulletProof, bool fireProof, bool explosionProof, bool collisionProof, bool meleeProof);
 
 		void Delete();
 		bool Exists();

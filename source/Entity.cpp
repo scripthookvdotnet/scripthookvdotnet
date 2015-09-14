@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "Blip.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -61,9 +62,141 @@ namespace GTA
 	{
 		return !IsDead;
 	}
+	bool Entity::IsBulletProof::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 4)) != 0;
+	}
+	void Entity::IsBulletProof::set(bool value)
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		address += 392;
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address) |= (1 << 4);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address) &= ~(1 << 4);
+		}
+	}
+	bool Entity::IsCollisionProof::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 6)) != 0;
+	}
+	void Entity::IsCollisionProof::set(bool value)
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		address += 392;
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address) |= (1 << 6);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address) &= ~(1 << 6);
+		}
+	}
 	bool Entity::IsDead::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_DEAD, this->Handle);
+	}
+	bool Entity::IsExplosionProof::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 10)) != 0;
+	}
+	void Entity::IsExplosionProof::set(bool value)
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		address += 392;
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address) |= (1 << 10);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address) &= ~(1 << 10);
+		}
+	}
+	bool Entity::IsFireProof::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 5)) != 0;
+	}
+	void Entity::IsFireProof::set(bool value)
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		address += 392;
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address) |= (1 << 5);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address) &= ~(1 << 5);
+		}
 	}
 	bool Entity::IsInAir::get()
 	{
@@ -76,6 +209,39 @@ namespace GTA
 	void Entity::IsInvincible::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_INVINCIBLE, this->Handle, value);
+	}
+	bool Entity::IsMeleeProof::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 7)) != 0;
+	}
+	void Entity::IsMeleeProof::set(bool value)
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		address += 392;
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address) |= (1 << 7);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address) &= ~(1 << 7);
+		}
 	}
 	bool Entity::IsOccluded::get()
 	{
@@ -266,11 +432,6 @@ namespace GTA
 	void Entity::ResetAlpha()
 	{
 		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, this->Handle);
-	}
-
-	void Entity::SetProofs(bool bulletProof, bool fireProof, bool explosionProof, bool collisionProof, bool meleeProof)
-	{
-		Native::Function::Call(Native::Hash::SET_ENTITY_PROOFS, this->Handle, bulletProof, fireProof, explosionProof, collisionProof, meleeProof, false, false, false);
 	}
 
 	void Entity::Delete()
