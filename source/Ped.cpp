@@ -303,7 +303,7 @@ namespace GTA
 	}
 	void Ped::ShootRate::set(int value)
 	{
-		Native::Function::Call(Native::Hash::SET_PED_FIRING_PATTERN, this->Handle, value);
+		Native::Function::Call(Native::Hash::SET_PED_SHOOT_RATE, this->Handle, value);
 	}
 	void Ped::DiesInstantlyInWater::set(bool value)
 	{
