@@ -92,6 +92,7 @@ namespace GTA
 		}
 		property bool IsInvincible
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool IsMeleeProof

@@ -206,6 +206,19 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_IN_WATER, this->Handle);
 	}
+	bool Entity::IsInvincible::get()
+	{
+		unsigned long long address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return false;
+		}
+
+		address += 392;
+
+		return (*reinterpret_cast<int *>(address) & (1 << 8)) != 0;
+	}
 	void Entity::IsInvincible::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_INVINCIBLE, this->Handle, value);
