@@ -255,14 +255,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, this->Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
-	bool Entity::BulletProof::get()
+	bool Entity::IsBulletProof::get()
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
 			Address += 392;
 		return IsBitSet(Address,4);
 	}
-	void Entity::BulletProof::set(bool value)
+	void Entity::IsBulletProof::set(bool value)
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
@@ -272,14 +272,14 @@ namespace GTA
 		else
 			ResetBit(Address,4);
 	}
-	bool Entity::FireProof::get()
+	bool Entity::IsFireProof::get()
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
 			Address += 392;
 		return IsBitSet(Address,5);
 	}
-	void Entity::FireProof::set(bool value)
+	void Entity::IsFireProof::set(bool value)
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
@@ -289,14 +289,14 @@ namespace GTA
 		else
 			ResetBit(Address, 5);
 	}
-	bool Entity::ExplosionProof::get()
+	bool Entity::IsExplosionProof::get()
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
 			Address += 392;
 		return IsBitSet(Address, 10);
 	}
-	void Entity::ExplosionProof::set(bool value)
+	void Entity::IsExplosionProof::set(bool value)
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
@@ -306,14 +306,14 @@ namespace GTA
 		else
 			ResetBit(Address, 10);
 	}
-	bool Entity::CollisionProof::get()
+	bool Entity::IsCollisionProof::get()
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
 			Address += 392;
 		return IsBitSet(Address, 6);
 	}
-	void Entity::CollisionProof::set(bool value)
+	void Entity::IsCollisionProof::set(bool value)
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
@@ -323,14 +323,14 @@ namespace GTA
 		else
 			ResetBit(Address, 6);
 	}
-	bool Entity::MeleeProof::get()
+	bool Entity::IsMeleeProof::get()
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)
 			Address += 392;
 		return IsBitSet(Address, 7);
 	}
-	void Entity::MeleeProof::set(bool value)
+	void Entity::IsMeleeProof::set(bool value)
 	{
 		unsigned long long Address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 		if (Address != 0)

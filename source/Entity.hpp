@@ -164,27 +164,27 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
-		property bool BulletProof
+		property bool IsBulletProof
 		{
 			bool get();
 			void set(bool value);
 		}
-		property bool FireProof
+		property bool IsFireProof
 		{
 			bool get();
 			void set(bool value);
 		}
-		property bool ExplosionProof
+		property bool IsExplosionProof
 		{
 			bool get();
 			void set(bool value);
 		}
-		property bool CollisionProof
+		property bool IsCollisionProof
 		{
 			bool get();
 			void set(bool value);
 		}
-		property bool MeleeProof
+		property bool IsMeleeProof
 		{
 			bool get();
 			void set(bool value);
