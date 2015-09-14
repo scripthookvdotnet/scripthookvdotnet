@@ -36,6 +36,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool HasCollision
+		{
+			void set(bool value);
+		}
 		property float Heading
 		{
 			float get();
@@ -105,6 +109,10 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
+		property float MaxSpeed
+		{
+			void set(float value);
+		}
 		property GTA::Model Model
 		{
 			GTA::Model get();
@@ -165,6 +173,8 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
 		void ResetAlpha();
+
+		void SetProofs(bool bulletProof, bool fireProof, bool explosionProof, bool collisionProof, bool meleeProof);
 
 		void Delete();
 		bool Exists();
