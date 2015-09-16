@@ -551,6 +551,7 @@ namespace GTA
 		void SetNeonLightsOn(VehicleNeonLight light, bool on);
 		bool IsNeonLightsOn(VehicleNeonLight light);
 		void SoundHorn(int duration);
+		void EveryoneLeave();
 
 		bool IsTireBurst(int wheel);
 		void BurstTire(int wheel);

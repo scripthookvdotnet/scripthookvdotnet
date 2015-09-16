@@ -214,24 +214,6 @@ namespace GTA
 			return reinterpret_cast<UINT64(*)(int)>(PlayerAddressFunc)(handle);
 		}
 
-		float MemoryAccess::GetVehicleRPM(int handle)
-		{
-			const UINT64 address = GetAddressOfEntity(handle);
-
-			return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2004);
-		}
-		float MemoryAccess::GetVehicleAcceleration(int handle)
-		{
-			const UINT64 address = GetAddressOfEntity(handle);
-
-			return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2020);
-		}
-		float MemoryAccess::GetVehicleSteering(int handle)
-		{
-			const UINT64 address = GetAddressOfEntity(handle);
-
-			return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2212);
-		}
 		array<int> ^MemoryAccess::GetVehicleHandles()
 		{
 			PoolTask ^pool = gcnew PoolTask(PoolTask::Type::Vehicle);

@@ -229,6 +229,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_SUFFERS_CRITICAL_HITS, this->Handle, value);
 	}
+	bool Ped::CanFlyThroughWindscreen::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_PED_CONFIG_FLAG, this->Handle, 32, true);
+	}
+	void Ped::CanFlyThroughWindscreen::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_CONFIG_FLAG, this->Handle, 32, value);
+	}
 	void Ped::CanBeKnockedOffBike::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, this->Handle, value);
