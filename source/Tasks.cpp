@@ -425,25 +425,18 @@ namespace GTA
 		return this->sNullPed->Task;
 	}
 
-	void TaskSequence::SetRepeatAndClose()
-	{
-		if (this->mIsClosed)
-		{
-			return;
-		}
-
-		Native::Function::Call(Native::Hash::SET_SEQUENCE_TO_REPEAT, this->Handle, true);
-		Native::Function::Call(Native::Hash::CLOSE_SEQUENCE_TASK, this->mHandle);
-
-		this->mIsClosed = true;
-	}
 	void TaskSequence::Close()
 	{
+		Close(false);
+	}
+	void TaskSequence::Close(bool repeat)
+	{
 		if (this->mIsClosed)
 		{
 			return;
 		}
 
+		Native::Function::Call(Native::Hash::SET_SEQUENCE_TO_REPEAT, this->Handle, repeat);
 		Native::Function::Call(Native::Hash::CLOSE_SEQUENCE_TASK, this->mHandle);
 
 		this->mIsClosed = true;

@@ -129,8 +129,8 @@ namespace GTA
 			Tasks ^get();
 		}
 
-		void SetRepeatAndClose();
 		void Close();
+		void Close(bool repeat);
 
 	private:
 		static Ped ^sNullPed;
