@@ -108,25 +108,30 @@ namespace GTA
 			return Determinant() != 0.0f;
 		}
 
-		array<float> ^Matrix::ToArray()
+		Matrix Matrix::FromArray(array<float> ^floatArray)
 		{
-			array<float> ^result = gcnew array<float>(16);
-			result[0] = M11;
-			result[1] = M12;
-			result[2] = M13;
-			result[3] = M14;
-			result[4] = M21;
-			result[5] = M22;
-			result[6] = M23;
-			result[7] = M24;
-			result[8] = M31;
-			result[9] = M32;
-			result[10] = M33;
-			result[11] = M34;
-			result[12] = M41;
-			result[13] = M42;
-			result[14] = M43;
-			result[15] = M44;
+			if (floatArray->Length != 16)
+				throw gcnew Exception("Array must contain 16 items to be converted to a 4*4 Matrix");
+			Matrix result;
+			result.M11 = floatArray[0];
+			result.M12 = floatArray[1];
+			result.M13 = floatArray[2];
+			result.M14 = floatArray[3];
+
+			result.M21 = floatArray[4];
+			result.M22 = floatArray[5];
+			result.M23 = floatArray[6];
+			result.M24 = floatArray[7];
+
+			result.M31 = floatArray[8];
+			result.M32 = floatArray[9];
+			result.M33 = floatArray[10];
+			result.M34 = floatArray[11];
+
+			result.M41 = floatArray[12];
+			result.M42 = floatArray[13];
+			result.M43 = floatArray[14];
+			result.M44 = floatArray[15];
 
 			return result;
 		}
@@ -141,6 +146,56 @@ namespace GTA
 			float temp6 = (M31 * M42) - (M32 * M41);
 
 			return ((((M11 * (((M22 * temp1) - (M23 * temp2)) + (M24 * temp3))) - (M12 * (((M21 * temp1) - (M23 * temp4)) + (M24 * temp5)))) + (M13 * (((M21 * temp2) - (M22 * temp4)) + (M24 * temp6)))) - (M14 * (((M21 * temp3) - (M22 * temp5)) + (M23 * temp6))));
+		}
+		float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
+		{
+			return M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
+		}
+
+		void Matrix::Inverse()
+		{
+			float Det = Determinant();
+			if (Det == 0.0f)
+				return;
+			float tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) / Det;
+			float tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) / Det;
+			float tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) / Det;
+			float tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) / Det;
+
+			float tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) / Det;
+			float tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) / Det;
+			float tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) / Det;
+			float tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) / Det;
+
+			float tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) / Det;
+			float tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) / Det;
+			float tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) / Det;
+			float tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) / Det;
+
+			float tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) / Det;
+			float tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) / Det;
+			float tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) / Det;
+			float tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) / Det;
+
+			M11 = tM11;
+			M12 = tM12;
+			M13 = tM13;
+			M14 = tM14;
+
+			M21 = tM21;
+			M22 = tM22;
+			M23 = tM23;
+			M24 = tM24;
+
+			M31 = tM31;
+			M32 = tM32;
+			M33 = tM33;
+			M34 = tM34;
+
+			M41 = tM41;
+			M42 = tM42;
+			M43 = tM43;
+			M44 = tM44;
 		}
 
 		Matrix Matrix::Add(Matrix left, Matrix right)
@@ -206,36 +261,11 @@ namespace GTA
 			result.M44 = -matrix.M44;
 			return result;
 		}
-		float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
-		{
-			return M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
-		}
+
 		Matrix Matrix::Inverse(Matrix matrix)
 		{
-			float Det = matrix.Determinant();
-			if (Det == 0.0f)
-				return matrix;
-			Matrix result;
-			result.M11 = Det3x3(matrix.M22, matrix.M23, matrix.M24, matrix.M32, matrix.M33, matrix.M34, matrix.M42, matrix.M43, matrix.M44) / Det;
-			result.M21 = -Det3x3(matrix.M21, matrix.M23, matrix.M24, matrix.M31, matrix.M33, matrix.M34, matrix.M41, matrix.M43, matrix.M44) / Det;
-			result.M31 = Det3x3(matrix.M21, matrix.M22, matrix.M24, matrix.M31, matrix.M32, matrix.M34, matrix.M41, matrix.M42, matrix.M44) / Det;
-			result.M41 = -Det3x3(matrix.M21, matrix.M22, matrix.M23, matrix.M31, matrix.M32, matrix.M33, matrix.M41, matrix.M42, matrix.M43) / Det;
-
-			result.M12 = -Det3x3(matrix.M12, matrix.M13, matrix.M14, matrix.M32, matrix.M33, matrix.M34, matrix.M42, matrix.M43, matrix.M44) / Det;
-			result.M22 = Det3x3(matrix.M11, matrix.M13, matrix.M14, matrix.M31, matrix.M33, matrix.M34, matrix.M41, matrix.M43, matrix.M44) / Det;
-			result.M32 = -Det3x3(matrix.M11, matrix.M12, matrix.M14, matrix.M31, matrix.M32, matrix.M34, matrix.M41, matrix.M42, matrix.M44) / Det;
-			result.M42 = Det3x3(matrix.M11, matrix.M12, matrix.M13, matrix.M31, matrix.M32, matrix.M33, matrix.M41, matrix.M42, matrix.M43) / Det;
-
-			result.M13 = Det3x3(matrix.M12, matrix.M13, matrix.M14, matrix.M22, matrix.M23, matrix.M24, matrix.M42, matrix.M43, matrix.M44) / Det;
-			result.M23 = -Det3x3(matrix.M11, matrix.M13, matrix.M14, matrix.M21, matrix.M23, matrix.M24, matrix.M41, matrix.M43, matrix.M44) / Det;
-			result.M33 = Det3x3(matrix.M11, matrix.M12, matrix.M14, matrix.M21, matrix.M22, matrix.M24, matrix.M41, matrix.M42, matrix.M44) / Det;
-			result.M43 = -Det3x3(matrix.M11, matrix.M12, matrix.M13, matrix.M21, matrix.M22, matrix.M23, matrix.M41, matrix.M42, matrix.M43) / Det;
-
-			result.M14 = -Det3x3(matrix.M12, matrix.M13, matrix.M14, matrix.M22, matrix.M23, matrix.M24, matrix.M32, matrix.M33, matrix.M34) / Det;
-			result.M24 = Det3x3(matrix.M11, matrix.M13, matrix.M14, matrix.M21, matrix.M23, matrix.M24, matrix.M31, matrix.M33, matrix.M34) / Det;
-			result.M34 = -Det3x3(matrix.M11, matrix.M12, matrix.M14, matrix.M21, matrix.M22, matrix.M24, matrix.M31, matrix.M32, matrix.M34) / Det;
-			result.M44 = Det3x3(matrix.M11, matrix.M12, matrix.M13, matrix.M21, matrix.M22, matrix.M23, matrix.M31, matrix.M32, matrix.M33) / Det;
-			return result;
+			matrix.Inverse();
+			return matrix;
 		}
 		Matrix Matrix::Multiply(Matrix left, Matrix right)
 		{
@@ -759,6 +789,28 @@ namespace GTA
 			return !Matrix::Equals(left, right);
 		}
 
+		array<float> ^Matrix::ToArray()
+		{
+			array<float> ^result = gcnew array<float>(16);
+			result[0] = M11;
+			result[1] = M12;
+			result[2] = M13;
+			result[3] = M14;
+			result[4] = M21;
+			result[5] = M22;
+			result[6] = M23;
+			result[7] = M24;
+			result[8] = M31;
+			result[9] = M32;
+			result[10] = M33;
+			result[11] = M34;
+			result[12] = M41;
+			result[13] = M42;
+			result[14] = M43;
+			result[15] = M44;
+
+			return result;
+		}
 		String ^Matrix::ToString()
 		{
 			return String::Format(CultureInfo::CurrentCulture, "[[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]]",

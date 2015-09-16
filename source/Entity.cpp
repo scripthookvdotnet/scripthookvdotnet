@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "Blip.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -33,6 +34,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::FREEZE_ENTITY_POSITION, this->Handle, value);
 	}
+	void Entity::HasCollision::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_COLLISION, this->Handle, value, false);
+	}
 	float Entity::Heading::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEADING, this->Handle);
@@ -57,9 +62,105 @@ namespace GTA
 	{
 		return !IsDead;
 	}
+	bool Entity::IsBulletProof::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 4)) != 0;
+	}
+	void Entity::IsBulletProof::set(bool value)
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address + 392) |= (1 << 4);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 4);
+		}
+	}
+	bool Entity::IsCollisionProof::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 6)) != 0;
+	}
+	void Entity::IsCollisionProof::set(bool value)
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address + 392) |= (1 << 6);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 6);
+		}
+	}
 	bool Entity::IsDead::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_DEAD, this->Handle);
+	}
+	bool Entity::IsExplosionProof::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 10)) != 0;
+	}
+	void Entity::IsExplosionProof::set(bool value)
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address + 392) |= (1 << 10);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 10);
+		}
+	}
+	bool Entity::IsFireProof::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 5)) != 0;
+	}
+	void Entity::IsFireProof::set(bool value)
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address + 392) |= (1 << 5);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 5);
+		}
 	}
 	bool Entity::IsInAir::get()
 	{
@@ -69,9 +170,39 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_IN_WATER, this->Handle);
 	}
+	bool Entity::IsInvincible::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 8)) != 0;
+	}
 	void Entity::IsInvincible::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_INVINCIBLE, this->Handle, value);
+	}
+	bool Entity::IsMeleeProof::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 7)) != 0;
+	}
+	void Entity::IsMeleeProof::set(bool value)
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		if (value)
+		{
+			*reinterpret_cast<int *>(address + 392) |= (1 << 7);
+		}
+		else
+		{
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 7);
+		}
 	}
 	bool Entity::IsOccluded::get()
 	{
@@ -123,6 +254,10 @@ namespace GTA
 	void Entity::MaxHealth::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_HEALTH, this->Handle, value + 100);
+	}
+	void Entity::MaxSpeed::set(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_SPEED, this->Handle, value);
 	}
 	GTA::Model Entity::Model::get()
 	{

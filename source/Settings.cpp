@@ -162,62 +162,23 @@ namespace GTA
 	generic <typename T>
 	T ScriptSettings::GetValue(String ^section, String ^name, T defaultvalue)
 	{
-		T result;
-		bool parsed = false;
 		String ^value = GetValue(section, name);
 
-		if (T::typeid == String::typeid)
+		try
 		{
-			parsed = true;
-			result = reinterpret_cast<T>(value);
+			if (T::typeid->IsEnum)
+			{
+				return static_cast<T>(Enum::Parse(T::typeid, value, true));
+			}
+			else
+			{
+				return static_cast<T>(Convert::ChangeType(value, T::typeid));
+			}
 		}
-		else if (T::typeid == Boolean::typeid)
-		{
-			parsed = Boolean::TryParse(value, reinterpret_cast<Boolean %>(result));
-		}
-		else if (T::typeid == Int16::typeid)
-		{
-			parsed = Int16::TryParse(value, reinterpret_cast<Int16 %>(result));
-		}
-		else if (T::typeid == UInt16::typeid)
-		{
-			parsed = UInt16::TryParse(value, reinterpret_cast<UInt16 %>(result));
-		}
-		else if (T::typeid == Int32::typeid)
-		{
-			parsed = Int32::TryParse(value, reinterpret_cast<Int32 %>(result));
-		}
-		else if (T::typeid == UInt32::typeid)
-		{
-			parsed = UInt32::TryParse(value, reinterpret_cast<UInt32 %>(result));
-		}
-		else if (T::typeid == Int64::typeid)
-		{
-			parsed = Int64::TryParse(value, reinterpret_cast<Int64 %>(result));
-		}
-		else if (T::typeid == UInt64::typeid)
-		{
-			parsed = UInt64::TryParse(value, reinterpret_cast<UInt64 %>(result));
-		}
-		else if (T::typeid == Single::typeid)
-		{
-			parsed = Single::TryParse(value, reinterpret_cast<Single %>(result));
-		}
-		else if (T::typeid == Double::typeid)
-		{
-			parsed = Double::TryParse(value, reinterpret_cast<Double %>(result));
-		}
-		else if (T::typeid == Keys::typeid)
-		{
-			parsed = Enum::TryParse<Keys>(value, reinterpret_cast<Keys %>(result));
-		}
-
-		if (!parsed)
+		catch (...)
 		{
 			return defaultvalue;
 		}
-
-		return result;
 	}
 	String ^ScriptSettings::GetValue(String ^section, String ^key)
 	{

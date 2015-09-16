@@ -36,6 +36,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool HasCollision
+		{
+			void set(bool value);
+		}
 		property float Heading
 		{
 			float get();
@@ -54,9 +58,29 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsBulletProof
+		{
+			bool get();
+			void set(bool value);
+		}
+		property bool IsCollisionProof
+		{
+			bool get();
+			void set(bool value);
+		}
 		property bool IsDead
 		{
 			bool get();
+		}
+		property bool IsExplosionProof
+		{
+			bool get();
+			void set(bool value);
+		}
+		property bool IsFireProof
+		{
+			bool get();
+			void set(bool value);
 		}
 		property bool IsInAir
 		{
@@ -68,6 +92,12 @@ namespace GTA
 		}
 		property bool IsInvincible
 		{
+			bool get();
+			void set(bool value);
+		}
+		property bool IsMeleeProof
+		{
+			bool get();
 			void set(bool value);
 		}
 		property bool IsOccluded
@@ -104,6 +134,10 @@ namespace GTA
 		{
 			int get();
 			void set(int value);
+		}
+		property float MaxSpeed
+		{
+			void set(float value);
 		}
 		property GTA::Model Model
 		{

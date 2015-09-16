@@ -158,13 +158,18 @@ namespace GTA
 			/// <summary>
 			/// Converts the matrix to an array of floats.
 			/// </summary>
-			array<float> ^ToArray();
+			static Matrix FromArray(array<float> ^floatArray);
 
 			/// <summary>
 			/// Calculates the determinant of the matrix.
 			/// </summary>
 			/// <returns>The determinant of the matrix.</returns>
 			float Determinant();
+
+			/// <summary>
+			/// Calculates the inverse of the matrix if it exists.
+			/// </summary>
+			void Inverse();
 
 			/// <summary>
 			/// Determines the sum of two matrices.
@@ -404,6 +409,10 @@ namespace GTA
 			/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 			static bool operator != (Matrix left, Matrix right);
 
+			/// <summary>
+			/// Converts the matrix to an array of floats.
+			/// </summary>
+			array<float> ^ToArray();
 			/// <summary>
 			/// Converts the value of the object to its equivalent string representation.
 			/// </summary>

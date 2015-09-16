@@ -47,6 +47,7 @@ namespace GTA
 		void GoTo(Math::Vector3 position, bool ignorePaths, int timeout);
 		void GuardCurrentPosition();
 		void HandsUp(int duration);
+		void Jump();
 		void LeaveVehicle();
 		void LeaveVehicle(Vehicle ^vehicle, bool closeDoor);
 		void LookAt(Entity ^target);
@@ -129,6 +130,7 @@ namespace GTA
 		}
 
 		void Close();
+		void Close(bool repeat);
 
 	private:
 		static Ped ^sNullPed;

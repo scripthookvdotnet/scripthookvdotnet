@@ -93,7 +93,6 @@
     <ClCompile Include="source\UI.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="source\AssemblyInfo.cpp" />
     <ClCompile Include="source\UIElement.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
