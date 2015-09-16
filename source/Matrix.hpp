@@ -158,11 +158,6 @@ namespace GTA
 			/// <summary>
 			/// Converts the matrix to an array of floats.
 			/// </summary>
-			array<float> ^ToArray();
-
-			/// <summary>
-			/// Converts the matrix to an array of floats.
-			/// </summary>
 			static Matrix FromArray(array<float> ^floatArray);
 
 			/// <summary>
@@ -414,6 +409,10 @@ namespace GTA
 			/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 			static bool operator != (Matrix left, Matrix right);
 
+			/// <summary>
+			/// Converts the matrix to an array of floats.
+			/// </summary>
+			array<float> ^ToArray();
 			/// <summary>
 			/// Converts the value of the object to its equivalent string representation.
 			/// </summary>

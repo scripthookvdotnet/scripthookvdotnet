@@ -108,29 +108,6 @@ namespace GTA
 			return Determinant() != 0.0f;
 		}
 
-		array<float> ^Matrix::ToArray()
-		{
-			array<float> ^result = gcnew array<float>(16);
-			result[0] = M11;
-			result[1] = M12;
-			result[2] = M13;
-			result[3] = M14;
-			result[4] = M21;
-			result[5] = M22;
-			result[6] = M23;
-			result[7] = M24;
-			result[8] = M31;
-			result[9] = M32;
-			result[10] = M33;
-			result[11] = M34;
-			result[12] = M41;
-			result[13] = M42;
-			result[14] = M43;
-			result[15] = M44;
-
-			return result;
-		}
-
 		Matrix Matrix::FromArray(array<float> ^floatArray)
 		{
 			if (floatArray->Length != 16)
@@ -155,6 +132,8 @@ namespace GTA
 			result.M42 = floatArray[13];
 			result.M43 = floatArray[14];
 			result.M44 = floatArray[15];
+
+			return result;
 		}
 
 		float Matrix::Determinant()
@@ -810,6 +789,28 @@ namespace GTA
 			return !Matrix::Equals(left, right);
 		}
 
+		array<float> ^Matrix::ToArray()
+		{
+			array<float> ^result = gcnew array<float>(16);
+			result[0] = M11;
+			result[1] = M12;
+			result[2] = M13;
+			result[3] = M14;
+			result[4] = M21;
+			result[5] = M22;
+			result[6] = M23;
+			result[7] = M24;
+			result[8] = M31;
+			result[9] = M32;
+			result[10] = M33;
+			result[11] = M34;
+			result[12] = M41;
+			result[13] = M42;
+			result[14] = M43;
+			result[15] = M44;
+
+			return result;
+		}
 		String ^Matrix::ToString()
 		{
 			return String::Format(CultureInfo::CurrentCulture, "[[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]]",
