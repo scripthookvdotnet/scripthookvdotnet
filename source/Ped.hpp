@@ -352,6 +352,11 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool CanFlyThroughWindscreen
+		{
+			bool get();
+			void set(bool value);
+		}
 		property bool CanBeKnockedOffBike
 		{
 			void set(bool value);

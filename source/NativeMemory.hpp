@@ -15,9 +15,6 @@ namespace GTA
 			static System::UInt64 GetAddressOfEntity(int handle);
 			static System::UInt64 GetAddressOfPlayer(int handle);
 
-			static float GetVehicleRPM(int handle);
-			static float GetVehicleAcceleration(int handle);
-			static float GetVehicleSteering(int handle);
 			static array<int> ^GetVehicleHandles();
 			static array<int> ^GetVehicleHandles(int modelhash);
 			static array<int> ^GetVehicleHandles(Math::Vector3 position, float radius);

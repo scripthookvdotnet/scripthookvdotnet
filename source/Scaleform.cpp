@@ -81,7 +81,7 @@ namespace GTA
 
 	void Scaleform::Render2D()
 	{
-		Native::Function::Call(Native::Hash::_0xCF537FDE4FBD4CE5, this->mHandle, 255, 255, 255, 255);
+		Native::Function::Call(Native::Hash::_0x0DF606929C105BE1, this->mHandle, 255, 255, 255, 255, 0);
 	}
 	void Scaleform::Render2DScreenSpace(System::Drawing::PointF location, System::Drawing::PointF size)
 	{

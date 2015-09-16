@@ -20,6 +20,8 @@ namespace GTA
 		VER_1_0_393_2_NOSTEAM,
 		VER_1_0_393_4_STEAM,
 		VER_1_0_393_4_NOSTEAM,
+		VER_1_0_463_1_STEAM,
+		VER_1_0_463_1_NOSTEAM,
 	};
 	public enum class Language
 	{

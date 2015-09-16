@@ -425,15 +425,21 @@ namespace GTA
 	}
 	float Vehicle::CurrentRPM::get()
 	{
-		return Native::MemoryAccess::GetVehicleRPM(this->Handle);
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2004);
 	}
 	float Vehicle::Acceleration::get()
 	{
-		return Native::MemoryAccess::GetVehicleAcceleration(this->Handle);
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2020);
 	}
 	float Vehicle::Steering::get()
 	{
-		return Native::MemoryAccess::GetVehicleSteering(this->Handle);
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2212);
 	}
 
 	int Vehicle::GetMod(VehicleMod modType)

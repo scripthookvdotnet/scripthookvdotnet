@@ -148,6 +148,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::TASK_HANDS_UP, this->mPed->Handle, duration, 0, -1, false);
 	}
+	void Tasks::Jump()
+	{
+		Native::Function::Call(Native::Hash::TASK_JUMP, this->mPed->Handle, true);
+	}
 	void Tasks::LeaveVehicle()
 	{
 		Native::Function::Call(Native::Hash::TASK_LEAVE_ANY_VEHICLE, this->mPed->Handle, 0, 0 /* flags */);
@@ -393,7 +397,8 @@ namespace GTA
 	}
 	TaskSequence::~TaskSequence()
 	{
-		Native::Function::Call(Native::Hash::CLEAR_SEQUENCE_TASK, this->mHandle);
+		int handle = this->mHandle;
+		Native::Function::Call(Native::Hash::CLEAR_SEQUENCE_TASK, &handle);
 	}
 
 	int TaskSequence::Handle::get()
@@ -420,6 +425,18 @@ namespace GTA
 		return this->sNullPed->Task;
 	}
 
+	void TaskSequence::SetRepeatAndClose()
+	{
+		if (this->mIsClosed)
+		{
+			return;
+		}
+
+		Native::Function::Call(Native::Hash::SET_SEQUENCE_TO_REPEAT, this->Handle, true);
+		Native::Function::Call(Native::Hash::CLOSE_SEQUENCE_TASK, this->mHandle);
+
+		this->mIsClosed = true;
+	}
 	void TaskSequence::Close()
 	{
 		if (this->mIsClosed)
