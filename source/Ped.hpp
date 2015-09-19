@@ -242,6 +242,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsPerformingStealthKill
+		{
+			bool get();
+		}
 		property bool WasKilledByStealth
 		{
 			bool get();
@@ -267,6 +271,14 @@ namespace GTA
 			bool get();
 		}
 		property bool IsAimingFromCover
+		{
+			bool get();
+		}
+		property bool IsInCoverFacingLeft
+		{
+			bool get();
+		}
+		property bool IsGoingIntoCover
 		{
 			bool get();
 		}
@@ -389,6 +401,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool NeverLeavesGroup
+		{
+			void set(bool value);
+		}
 		property int RelationshipGroup
 		{
 			int get();
@@ -413,6 +429,10 @@ namespace GTA
 		property FiringPattern FiringPattern
 		{
 			void set(GTA::FiringPattern value);
+		}
+		property int ShootRate
+		{
+			void set(int value);
 		}
 		property bool DiesInstantlyInWater
 		{
@@ -441,6 +461,8 @@ namespace GTA
 		bool IsInCover();
 		bool IsInCover(bool expectUseWeapon);
 
+		Ped ^GetJacker();
+		Ped ^GetJackTarget();
 		Entity ^GetKiller();
 		void Kill();
 		void ResetVisibleDamage();
@@ -453,7 +475,11 @@ namespace GTA
 		int CreateGroup(int Unused);
 		void SetPedAsGroupLeader(int GroupID);
 		void SetPedAsGroupMember(int GroupID);
+		bool IsPedInGroup();
+		bool IsPedGroupMember(int GroupID);
 		void RemovePedFromGroup();
+		void RemoveGroup(int GroupID);
+
 	private:
 		Tasks ^mTasks;
 		WeaponCollection ^pWeapons;

@@ -108,6 +108,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_STUNNED, this->Handle);
 	}
+	bool Ped::IsPerformingStealthKill::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_PERFORMING_STEALTH_KILL, this->Handle);
+	}
 	bool Ped::IsBeingStealthKilled::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_STEALTH_KILLED, this->Handle);
@@ -139,6 +143,14 @@ namespace GTA
 	bool Ped::IsAimingFromCover::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_AIMING_FROM_COVER, this->Handle);
+	}
+	bool Ped::IsInCoverFacingLeft::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COVER_FACING_LEFT, this->Handle);
+	}
+	bool Ped::IsGoingIntoCover::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_GOING_INTO_COVER, this->Handle);
 	}
 	bool Ped::IsDoingDriveBy::get()
 	{
@@ -269,6 +281,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SPRINTING, this->Handle);
 	}
+	void Ped::NeverLeavesGroup::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_NEVER_LEAVES_GROUP, this->Handle, value);
+	}
 	int Ped::RelationshipGroup::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_RELATIONSHIP_GROUP_HASH, this->Handle);
@@ -292,6 +308,10 @@ namespace GTA
 	void Ped::FiringPattern::set(GTA::FiringPattern value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_FIRING_PATTERN, this->Handle, static_cast<int>(value));
+	}
+	void Ped::ShootRate::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_SHOOT_RATE, this->Handle, value);
 	}
 	void Ped::DiesInstantlyInWater::set(bool value)
 	{
@@ -352,6 +372,14 @@ namespace GTA
 		return this->pWeapons;
 	}
 
+	Ped ^Ped::GetJacker()
+	{
+		return Native::Function::Call<Ped ^>(Native::Hash::GET_PEDS_JACKER, this->Handle);
+	}
+	Ped ^Ped::GetJackTarget()
+	{
+		return Native::Function::Call<Ped ^>(Native::Hash::GET_JACK_TARGET, this->Handle);
+	}
 	Entity ^Ped::GetKiller()
 	{
 		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, this->Handle);
@@ -385,18 +413,33 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, this->Handle, (int)BoneID);
 	}
+
 	int Ped::CreateGroup(int Unused)
 	{
 		return Native::Function::Call<int>(Native::Hash::CREATE_GROUP, this->Handle, Unused);
 	}
 	void Ped::SetPedAsGroupLeader(int GroupID)
 	{
-		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_LEADER, this, GroupID);
+		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_LEADER, this->Handle, GroupID);
 	}
-	void Ped::SetPedAsGroupMember(int GroupID) {
-		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_MEMBER, this, GroupID);
+	void Ped::SetPedAsGroupMember(int GroupID)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_MEMBER, this->Handle, GroupID);
 	}
-	void Ped::RemovePedFromGroup() {
-		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, this);
+	bool Ped::IsPedInGroup()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_GROUP, this->Handle);
+	}
+	bool Ped::IsPedGroupMember(int GroupID)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, this->Handle, GroupID);
+	}
+	void Ped::RemovePedFromGroup()
+	{
+		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, this->Handle);
+	}
+	void Ped::RemoveGroup(int GroupID)
+	{
+		Native::Function::Call(Native::Hash::REMOVE_GROUP, GroupID);
 	}
 }

@@ -237,6 +237,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER, this->Handle, value);
 	}
+	void Vehicle::EngineCanDegrade::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_CAN_DEGRADE, this->Handle, value);
+	}
 	void Vehicle::LightsOn::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHTS, this->Handle, value ? 3 : 4);
