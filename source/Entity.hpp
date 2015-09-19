@@ -40,6 +40,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool HasGravity
+		{
+			void set(bool value);
+		}
 		property float Heading
 		{
 			float get();
@@ -108,6 +112,11 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsOnlyDamagedByPlayer
+		{
+			bool get();
+			void set(bool value);
+		}
 		property bool IsOnScreen
 		{
 			bool get();
@@ -129,6 +138,11 @@ namespace GTA
 		{
 			bool get();
 			void set(bool value);
+		}
+		property int LodDistance
+		{
+			int get();
+			void set(int value);
 		}
 		property int MaxHealth
 		{

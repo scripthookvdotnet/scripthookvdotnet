@@ -38,6 +38,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_COLLISION, this->Handle, value, false);
 	}
+	void Entity::HasGravity::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_GRAVITY, this->Handle, value);
+	}
 	float Entity::Heading::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEADING, this->Handle);
@@ -212,6 +216,16 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ON_FIRE, this->Handle);
 	}
+	bool Entity::IsOnlyDamagedByPlayer::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 9)) != 0;
+	}
+	void Entity::IsOnlyDamagedByPlayer::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, this->Handle, value);
+	}
 	bool Entity::IsOnScreen::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_ON_SCREEN, this->Handle);
@@ -246,6 +260,14 @@ namespace GTA
 	void Entity::IsVisible::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_VISIBLE, this->Handle, value);
+	}
+	int Entity::LodDistance::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::_GET_ENTITY_LOD_DIST, this->Handle);
+	}
+	void Entity::LodDistance::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_LOD_DIST, this->Handle, value);
 	}
 	int Entity::MaxHealth::get()
 	{
