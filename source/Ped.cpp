@@ -156,6 +156,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_DOING_DRIVEBY, this->Handle);
 	}
+	bool Ped::IsInGroup::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_GROUP, this->Handle);
+	}
 	bool Ped::IsSwimming::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SWIMMING, this->Handle);
@@ -414,32 +418,43 @@ namespace GTA
 		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, this->Handle, (int)BoneID);
 	}
 
-	int Ped::CreateGroup(int Unused)
+	PedGroup::PedGroup() : mHandle(Native::Function::Call<int>(Native::Hash::CREATE_GROUP, 0))
 	{
-		return Native::Function::Call<int>(Native::Hash::CREATE_GROUP, this->Handle, Unused);
 	}
-	void Ped::SetPedAsGroupLeader(int GroupID)
+	PedGroup::PedGroup(int handle) : mHandle(handle)
 	{
-		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_LEADER, this->Handle, GroupID);
 	}
-	void Ped::SetPedAsGroupMember(int GroupID)
+	PedGroup::~PedGroup()
 	{
-		Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_MEMBER, this->Handle, GroupID);
+		Native::Function::Call(Native::Hash::REMOVE_GROUP, this->Handle);
 	}
-	bool Ped::IsPedInGroup()
+
+	int PedGroup::Handle::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_GROUP, this->Handle);
+		return this->mHandle;
 	}
-	bool Ped::IsPedGroupMember(int GroupID)
+	void PedGroup::SeparationRange::set(float value)
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, this->Handle, GroupID);
+		Native::Function::Call(Native::Hash::SET_GROUP_SEPARATION_RANGE, this->Handle, value);
 	}
-	void Ped::RemovePedFromGroup()
+
+	void PedGroup::Add(Ped ^ped, bool leader)
 	{
-		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, this->Handle);
+		if (leader)
+		{
+			Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_LEADER, ped->Handle, this->mHandle);
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::SET_PED_AS_GROUP_MEMBER, ped->Handle, this->Handle);
+		}
 	}
-	void Ped::RemoveGroup(int GroupID)
+	void PedGroup::Remove(Ped ^ped)
 	{
-		Native::Function::Call(Native::Hash::REMOVE_GROUP, GroupID);
+		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, ped->Handle);
+	}
+	bool PedGroup::Contains(Ped ^ped)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, this->Handle);
 	}
 }

@@ -130,6 +130,7 @@ namespace GTA
 	};
 	public enum class FiringPattern : System::UInt32
 	{
+		Default = 0,
 		FullAuto = 0xC6EE6B4C,
 		BurstFire = 0xD6FF6D61,
 		BurstInCover = 0x026321F1,
@@ -146,7 +147,6 @@ namespace GTA
 		BurstFireMicro = 0x42EF03FD,
 		BurstFireBursts = 0x42EF03FD,
 		BurstFireTank = 0xE2CA3A71,
-		Default = 0
 	};
 
 	public ref class Ped sealed : public Entity
@@ -283,6 +283,10 @@ namespace GTA
 			bool get();
 		}
 		property bool IsDoingDriveBy
+		{
+			bool get();
+		}
+		property bool IsInGroup
 		{
 			bool get();
 		}
@@ -472,16 +476,32 @@ namespace GTA
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);
 		int GetBoneIndex(Bone BoneID);
 
-		int CreateGroup(int Unused);
-		void SetPedAsGroupLeader(int GroupID);
-		void SetPedAsGroupMember(int GroupID);
-		bool IsPedInGroup();
-		bool IsPedGroupMember(int GroupID);
-		void RemovePedFromGroup();
-		void RemoveGroup(int GroupID);
-
 	private:
 		Tasks ^mTasks;
 		WeaponCollection ^pWeapons;
+	};
+
+	public ref class PedGroup
+	{
+	public:
+		PedGroup();
+		PedGroup(int handle);
+		~PedGroup();
+
+		property int Handle
+		{
+			int get();
+		}
+		property float SeparationRange
+		{
+			void set(float value);
+		}
+
+		void Add(Ped ^ped, bool leader);
+		void Remove(Ped ^ped);
+		bool Contains(Ped ^ped);
+
+	private:
+		int mHandle;
 	};
 }
