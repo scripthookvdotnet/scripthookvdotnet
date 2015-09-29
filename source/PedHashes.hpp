@@ -255,12 +255,18 @@ namespace GTA
 			MountainLion = 0x1250D7BA,
 			Pig = 0xB11BAB56,
 			Pigeon = 0x6A20728,
+			Poodle = 0x431D501C,
+			Pug = 0x6D362854,
+			Rabbit = 0xDFB55C81,
 			Rat = 0xC3B52966,
 			Retriever = 0x349F33E1,
 			Rhesus = 0xC2D06F53,
+			Rottweiler = 0x9563221D,
 			Seagull = 0xD3939DFD,
 			Shepherd = 0x431FC24C,
+			Stingray = 0x4148614D,
 			TigerShark = 0x6C3F072,
+			Westy = 0xAD7844B,
 
 			// Unique Pedestrians
 

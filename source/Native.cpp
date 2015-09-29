@@ -157,7 +157,12 @@ namespace GTA
 				{
 					if (*value != 0)
 					{
-						return gcnew String(reinterpret_cast<const char *>(*value));
+						const int size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
+						array<Byte> ^bytes = gcnew array<Byte>(size);
+
+						Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(static_cast<Int64>(*value)), bytes, 0, size);
+
+						return Text::Encoding::UTF8->GetString(bytes);
 					}
 					else
 					{

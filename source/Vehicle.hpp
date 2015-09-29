@@ -401,6 +401,10 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		property bool EngineCanDegrade
+		{
+			void set(bool value);
+		}
 		property bool LightsOn
 		{
 			void set(bool value);
