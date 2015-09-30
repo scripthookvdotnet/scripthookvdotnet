@@ -505,6 +505,10 @@ namespace GTA
 		{
 			int get();
 		}
+		property Ped ^Leader
+		{
+			Ped ^get();
+		}
 		property int MemberCount
 		{
 			int get();
@@ -521,8 +525,11 @@ namespace GTA
 		void Add(Ped ^ped, bool leader);
 		void Remove(Ped ^ped);
 		bool Exists();
+		Ped ^GetMember(int index);
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
+		array<Ped ^> ^ToArray(bool includingLeader);
+		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 	private:
 		int mHandle;
