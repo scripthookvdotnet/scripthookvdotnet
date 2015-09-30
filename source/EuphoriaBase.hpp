@@ -17,6 +17,7 @@ namespace GTA
 			BaseMessage(String ^Message);
 			void pApplyTo(GTA::Ped ^TargetPed);
 			void pApplyTo(GTA::Ped ^TargetPed, int duration);
+			void pAbortTo(GTA::Ped ^TargetPed);
 			void iSetArgument(System::String ^message, bool value);
 			void iSetArgument(System::String ^message, int value);
 			void iSetArgument(System::String ^message, float value);
@@ -26,13 +27,11 @@ namespace GTA
 			String ^_message;
 			void GiveMessage(GTA::Ped ^TargetPed);
 		private:
-			void SetArguments();
 			Dictionary<String ^, bool> ^lBool;
 			Dictionary<String ^, int> ^lInt;
 			Dictionary<String ^, float> ^lFloat;
 			Dictionary<String ^, String ^> ^lString;
 			Dictionary<String ^, Math::Vector3> ^lVec;
-			__int64 *_address;
 		};
 
 		public ref class BaseHelper abstract : public BaseMessage {
