@@ -213,6 +213,15 @@ namespace GTA
 
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->Handle, false);
 	}
+	PedGroup ^Ped::CurrentPedGroup::get()
+	{
+		if (!IsInGroup)
+		{
+			return nullptr;
+		}
+
+		return Native::Function::Call<PedGroup ^>(Native::Hash::GET_PED_GROUP_INDEX, this->Handle, false);
+	}
 	void Ped::IsEnemy::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_AS_ENEMY, this->Handle, value);
@@ -433,9 +442,19 @@ namespace GTA
 	{
 		return this->mHandle;
 	}
+	int PedGroup::MemberCount::get()
+	{
+		int count, val1;
+		Native::Function::Call(Native::Hash::SET_GROUP_SEPARATION_RANGE, this->Handle, &val1, &count);
+		return count;
+	}
 	void PedGroup::SeparationRange::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_GROUP_SEPARATION_RANGE, this->Handle, value);
+	}
+	void PedGroup::FormationType::set(GTA::FormationType value)
+	{
+		Native::Function::Call(Native::Hash::SET_GROUP_FORMATION, this->Handle, static_cast<int>(value));
 	}
 
 	void PedGroup::Add(Ped ^ped, bool leader)
@@ -452,6 +471,14 @@ namespace GTA
 	void PedGroup::Remove(Ped ^ped)
 	{
 		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, ped->Handle);
+	}
+	bool PedGroup::Exists()
+	{
+		return Exists(this);
+	}
+	bool PedGroup::Exists(PedGroup ^pedGroup)
+	{
+		return !Object::ReferenceEquals(pedGroup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, pedGroup->Handle);
 	}
 	bool PedGroup::Contains(Ped ^ped)
 	{
