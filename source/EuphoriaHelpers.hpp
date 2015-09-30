@@ -181,6 +181,47 @@ namespace GTA
 			}
 		};
 
+		public ref class HipsLeanToPositionHelper : CustomHelper {
+
+		public:
+			HipsLeanToPositionHelper(GTA::Ped^ Ped)
+				:CustomHelper(Ped, "hipsLeanToPosition") {
+			}
+			property float LeanAmount {
+				void set(float value) {
+					iSetArgument("leanAmount", value);
+				}
+			}
+			property Math::Vector3 Position {
+				void set(Math::Vector3 value) {
+					iSetArgument("pos", value);
+				}
+			}
+		};
+
+		public ref class ForceLeanToPositionHelper : CustomHelper {
+
+		public:
+			ForceLeanToPositionHelper(GTA::Ped^ Ped)
+				:CustomHelper(Ped, "forceLeanToPosition") {
+			}
+			property float LeanAmount {
+				void set(float value) {
+					iSetArgument("leanAmount", value);
+				}
+			}
+			property Math::Vector3 Position {
+				void set(Math::Vector3 value) {
+					iSetArgument("pos", value);
+				}
+			}
+			property int BodyPart {
+				void set(int value) {
+					iSetArgument("bodyPart", value);
+				}
+			}
+		};
+
 		public ref class PedalLegsHelper : public CustomHelper {
 
 		public:

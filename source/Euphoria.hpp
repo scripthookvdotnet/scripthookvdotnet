@@ -64,6 +64,18 @@ namespace GTA
 				}
 			}
 
+			property GTA::NaturalMotion::HipsLeanToPositionHelper^ LeanToPositionHips {
+				GTA::NaturalMotion::HipsLeanToPositionHelper^ get() {
+					return GetHelper<GTA::NaturalMotion::HipsLeanToPositionHelper^>("hipsLeanToPosition");
+				}
+			}
+
+			property GTA::NaturalMotion::ForceLeanToPositionHelper^ LeanToPositionForce {
+				GTA::NaturalMotion::ForceLeanToPositionHelper^ get() {
+					return GetHelper<GTA::NaturalMotion::ForceLeanToPositionHelper^>("forceLeanToPosition");
+				}
+			}
+
 			property GTA::NaturalMotion::PedalLegsHelper^ PedalLegs {
 				GTA::NaturalMotion::PedalLegsHelper^ get() {
 					return GetHelper<GTA::NaturalMotion::PedalLegsHelper^>("pedalLegs");
