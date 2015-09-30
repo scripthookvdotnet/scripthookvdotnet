@@ -431,7 +431,9 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(this->Handle);
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2004);
+		int offset = (static_cast<int>(Game::Version) > 3 ? 2004 : 1988);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	float Vehicle::Acceleration::get()
 	{
