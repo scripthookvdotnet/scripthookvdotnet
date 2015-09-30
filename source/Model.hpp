@@ -78,6 +78,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsCargobob
+		{
+			bool get();
+		}
 
 		void GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum);
 		Math::Vector3 GetDimensions();

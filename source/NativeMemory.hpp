@@ -35,6 +35,7 @@ namespace GTA
 			static System::UInt64 EntityPoolAddress, VehiclePoolAddress, PedPoolAddress, ObjPoolAddress;
 			static System::UInt64 EntityCoordsAddress, EntityModelAddress1, EntityModelAddress2;
 			static System::UInt64 AddEntToPoolAddress;
+			static System::UInt64 SetNmIntAddress, SetNmFloatAddress, SetNmBoolAddress, SetNmStringAddress, SetNmVec3Address, CreateNmMessageFunc, GiveNmMessageFunc, ScriptNmStructPtrAddress;
 
 		private:
 			static System::UInt64 FindPattern(const char *pattern, const char *mask);

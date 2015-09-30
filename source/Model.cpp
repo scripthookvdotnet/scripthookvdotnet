@@ -82,6 +82,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, this->mHash);
 	}
+	bool Model::IsCargobob::get()
+	{
+		return this->mHash == static_cast<int>(Native::VehicleHash::Cargobob) || this->mHash == static_cast<int>(Native::VehicleHash::Cargobob2) || this->mHash == static_cast<int>(Native::VehicleHash::Cargobob3);
+	}
 
 	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute]Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
 	{

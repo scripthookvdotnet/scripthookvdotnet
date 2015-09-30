@@ -129,7 +129,16 @@ namespace GTA
 	}
 	GTA::Player ^GTA::Game::Player::get()
 	{
-		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
+		GTA::Player ^player = Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
+		if (ReferenceEquals(sPlayer, nullptr))
+		{
+			sPlayer = player;
+		}
+		else if (player->Handle == sPlayer->Handle)
+			return sPlayer;
+		else
+			sPlayer = player;
+		return sPlayer;
 	}
 	void Game::RadarZoom::set(int value)
 	{

@@ -12,6 +12,15 @@ namespace GTA
 	{
 	}
 
+	NaturalMotion::Euphoria ^Ped::Euphoria::get()
+	{
+		if (ReferenceEquals(pEuphoria, nullptr))
+		{
+			pEuphoria = gcnew NaturalMotion::Euphoria(this);
+		}
+		return pEuphoria;
+	}
+
 	int Ped::Accuracy::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_ACCURACY, this->Handle);

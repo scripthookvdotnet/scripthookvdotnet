@@ -583,6 +583,68 @@ namespace GTA
 		Native::Function::Call(Native::Hash::START_VEHICLE_HORN, this->Handle, duration, heldDownHash, 0);
 	}
 
+	void Vehicle::SetHeliYawPitchRollMult(float mult)
+	{
+
+		if (Model.IsHelicopter)
+		{
+			if (mult >= 0.0f && mult <= 1.0f)
+			{
+				Native::Function::Call(Native::Hash::_0x6E0859B530A365CC, this->Handle, mult);
+			}
+		}
+	}
+	void Vehicle::DropCargobobHook(CargobobHook hookType)
+	{
+		if (Model.IsCargobob)
+		{
+			Native::Function::Call(Native::Hash::_0x7BEB0C7A235F6F3B, this->Handle, static_cast<int>(hookType));
+		}
+	}
+	bool Vehicle::IsCargobobHookActive()
+	{
+		if (Model.IsCargobob)
+		{
+			return Native::Function::Call<bool>(Native::Hash::_0x1821D91AD4B56108, this->Handle) || Native::Function::Call<bool>(Native::Hash::_0x6E08BF5B3722BAC9, this->Handle);
+		}
+		return false;
+	}
+	bool Vehicle::IsCargobobHookActive(CargobobHook hookType)
+	{
+		if (Model.IsCargobob)
+		{
+			switch (hookType)
+			{
+			case CargobobHook::Hook:
+				return Native::Function::Call<bool>(Native::Hash::_0x1821D91AD4B56108, this->Handle);
+			case CargobobHook::Magnet:
+				return Native::Function::Call<bool>(Native::Hash::_0x6E08BF5B3722BAC9, this->Handle);
+			}
+		}
+		return false;
+	}
+	void Vehicle::RemoveCargobobHook()
+	{
+		if (Model.IsCargobob)
+		{
+			Native::Function::Call(Native::Hash::_0x9768CF648F54C804, this->Handle);
+		}
+	}
+	void Vehicle::CargoBobMagnetGrabVehicle()
+	{
+		if (IsCargobobHookActive(CargobobHook::Magnet))
+		{
+			Native::Function::Call(Native::Hash::_0x9A665550F8DA349B, this->Handle, true);
+		}
+	}
+	void Vehicle::CargoBobMagnetReleaseVehicle()
+	{
+		if (IsCargobobHookActive(CargobobHook::Magnet))
+		{
+			Native::Function::Call(Native::Hash::_0x9A665550F8DA349B, this->Handle, false);
+		}
+	}
+
 	bool Vehicle::IsTireBurst(int wheel)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_TYRE_BURST, this->Handle, wheel, false);

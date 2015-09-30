@@ -10,6 +10,9 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{921247d8-e2c0-463b-afc6-e0e43a621070}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripting\Euphoria">
+      <UniqueIdentifier>{8470f2e0-bf3f-4b0f-a268-46eaacf0d41a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -95,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="source\UIElement.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EuphoriaBase.cpp">
+      <Filter>Scripting\Euphoria</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Euphoria.cpp">
+      <Filter>Scripting\Euphoria</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +202,15 @@
     </ClInclude>
     <ClInclude Include="source\UIElement.hpp">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EuphoriaBase.hpp">
+      <Filter>Scripting\Euphoria</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Euphoria.hpp">
+      <Filter>Scripting\Euphoria</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EuphoriaHelpers.hpp">
+      <Filter>Scripting\Euphoria</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
