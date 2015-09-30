@@ -2,6 +2,7 @@
 #include "EuphoriaBase.hpp"
 namespace GTA
 {
+
 	namespace NaturalMotion
 	{
 		public ref class ArmsWindmillHelper : public CustomHelper {
@@ -135,6 +136,47 @@ namespace GTA
 			}
 		};
 
+		public ref class HipsLeanInDirectionHelper : CustomHelper {
+
+		public:
+			HipsLeanInDirectionHelper(GTA::Ped^ Ped)
+				:CustomHelper(Ped, "hipsLeanInDirection") {
+			}
+			property float LeanAmount {
+				void set(float value) {
+					iSetArgument("leanAmount", value);
+				}
+			}
+			property Math::Vector3 Direction {
+				void set(Math::Vector3 value) {
+					iSetArgument("dir", value);
+				}
+			}
+		};
+
+		public ref class ForceLeanInDirectionHelper : CustomHelper {
+
+		public:
+			ForceLeanInDirectionHelper(GTA::Ped^ Ped)
+				:CustomHelper(Ped, "forceLeanInDirection") {
+			}
+			property float LeanAmount {
+				void set(float value) {
+					iSetArgument("leanAmount", value);
+				}
+			}
+			property Math::Vector3 Direction {
+				void set(Math::Vector3 value) {
+					iSetArgument("dir", value);
+				}
+			}
+			property int BodyPart {
+				void set(int value) {
+					iSetArgument("bodyPart", value);
+				}
+			}
+		};
+
 		public ref class LeanRandomHelper : CustomHelper {
 
 		public:
@@ -159,6 +201,67 @@ namespace GTA
 			property float ChangeTimeMax {
 				void set(float value) {
 					iSetArgument("changeTimeMax", value);
+				}
+			}
+		};
+
+		public ref class HipsLeanRandomHelper : CustomHelper {
+
+		public:
+			HipsLeanRandomHelper(GTA::Ped^ Ped)
+				:CustomHelper(Ped, "hipsLeanRandom") {
+			}
+			property float LeanAmountMin {
+				void set(float value) {
+					iSetArgument("leanAmountMin", value);
+				}
+			}
+			property float LeanAmountMax {
+				void set(float value) {
+					iSetArgument("leanAmountMax", value);
+				}
+			}
+			property float ChangeTimeMin {
+				void set(float value) {
+					iSetArgument("changeTimeMin", value);
+				}
+			}
+			property float ChangeTimeMax {
+				void set(float value) {
+					iSetArgument("changeTimeMax", value);
+				}
+			}
+		};
+
+		public ref class ForceLeanRandomHelper : CustomHelper {
+
+		public:
+			ForceLeanRandomHelper(GTA::Ped^ Ped)
+				:CustomHelper(Ped, "forceLeanRandom") {
+			}
+			property float LeanAmountMin {
+				void set(float value) {
+					iSetArgument("leanAmountMin", value);
+				}
+			}
+			property float LeanAmountMax {
+				void set(float value) {
+					iSetArgument("leanAmountMax", value);
+				}
+			}
+			property float ChangeTimeMin {
+				void set(float value) {
+					iSetArgument("changeTimeMin", value);
+				}
+			}
+			property float ChangeTimeMax {
+				void set(float value) {
+					iSetArgument("changeTimeMax", value);
+				}
+			}
+			property int BodyPart {
+				void set(int value) {
+					iSetArgument("bodyPart", value);
 				}
 			}
 		};

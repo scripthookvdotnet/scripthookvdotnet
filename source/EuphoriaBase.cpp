@@ -80,13 +80,14 @@ namespace GTA
 		}
 		void BaseMessage::GiveMessage(GTA::Ped ^TargetPed)
 		{
+#pragma region InitMessage
 			__int64 NativeFunc = Native::MemoryAccess::CreateNmMessageFunc;
-			__int64 TempAddr = reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(NativeFunc + 0x22) + NativeFunc + 0x26)(4632);
-			__int64 MessageAddress = 0;
-			if (TempAddr)
+			__int64 MessageAddress = reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(NativeFunc + 0x22) + NativeFunc + 0x26)(4632);
+			if (MessageAddress)
 			{
-				reinterpret_cast<__int64(*)(__int64, __int64, int)>(*reinterpret_cast<int*>(NativeFunc + 0x3C) + NativeFunc + 0x40)(TempAddr, TempAddr + 24, 64);
-				MessageAddress = TempAddr;
+				reinterpret_cast<__int64(*)(__int64, __int64, int)>(*reinterpret_cast<int*>(NativeFunc + 0x3C) + NativeFunc + 0x40)(MessageAddress, MessageAddress + 24, 64);
+#pragma endregion
+#pragma region Argument Setting
 				if (lBool != nullptr)
 				{
 					if (lBool->ContainsKey("start"))
@@ -148,6 +149,7 @@ namespace GTA
 					lVec->Clear();
 					lVec = nullptr;
 				}
+#pragma endregion
 				__int64 BaseFunc = Native::MemoryAccess::GiveNmMessageFunc;
 				__int64 ByteAddr = *reinterpret_cast<int*>(BaseFunc + 0xBC) + BaseFunc + 0xC0;
 				__int64 UnkStrAddr = *reinterpret_cast<int*>(BaseFunc + 0xCE) + BaseFunc + 0xD2;
@@ -164,57 +166,47 @@ namespace GTA
 				PedNmAddress = *reinterpret_cast<__int64*>(_PedAddress + 5016);
 				if (*reinterpret_cast<__int64*>(_PedAddress + 48) == PedNmAddress && *reinterpret_cast<float*>(_PedAddress + 5232) <= *reinterpret_cast<float*>(_PedAddress + 640))
 				{
-					if (MessageAddress)
+					if ((*reinterpret_cast<int(**)(__int64)> (*reinterpret_cast<__int64*>(PedNmAddress) + 152))(PedNmAddress) != -1)
 					{
-						if ((*reinterpret_cast<int(**)(__int64)> (*reinterpret_cast<__int64*>(PedNmAddress) + 152i64))(PedNmAddress) != -1)
+						if (*(short *)(reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xA2) + BaseFunc + 0xA6)(*(__int64 *)(*(__int64 *)(_PedAddress + 4208) + 864)) + 52) == 401)
 						{
-							if (*(short *)(reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xA2) + BaseFunc + 0xA6)(*(__int64 *)(*(__int64 *)(_PedAddress + 4208) + 864i64)) + 52) == 401)
+							v5 = true;
+						}
+						else
+						{
+							v7 = *(__int8*)ByteAddr;
+							if (v7)
 							{
-								v5 = true;
-							}
-							else
-							{
+								reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xD3) + BaseFunc + 0xD7)(UnkStrAddr);
 								v7 = *(__int8*)ByteAddr;
-								if (v7)
+							}
+							int count = *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 1064);
+							if (v7)
+							{
+								reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xF0) + BaseFunc + 0xF4)(UnkStrAddr);
+							}
+							for (int i = 0; i < count; i++)
+							{
+								v11 = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 8 * ((i + *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 1060) + 1) % 16) + 928);
+								if (v11)
 								{
-									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xD3) + BaseFunc + 0xD7)(UnkStrAddr);
-									v7 = *(__int8*)ByteAddr;
-								}
-								int count = *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 1064);
-								if (v7)
-								{
-									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xF0) + BaseFunc + 0xF4)(UnkStrAddr);
-								}
-								for (int i = 0; i < count; i++)
-								{
-									v11 = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 8i64 * ((i + *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 1060i64) + 1) % 16) + 928);
-									if (v11)
+									if ((*(int(__fastcall **)(__int64))(*reinterpret_cast<__int64*>(v11) + 24))(v11) == 132)
 									{
-										if ((*(int(__fastcall **)(__int64))(*reinterpret_cast<__int64*>(v11) + 24i64))(v11) == 132)
+										v12 = *reinterpret_cast<__int64*>(v11 + 40);
+										if (v12)
 										{
-											v12 = *reinterpret_cast<__int64*>(v11 + 40);
-											if (v12)
-											{
-												if (*reinterpret_cast<short*>(v12 + 52) == 401)
-													v5 = true;
-											}
+											if (*reinterpret_cast<short*>(v12 + 52) == 401)
+												v5 = true;
 										}
 									}
 								}
 							}
-							if (MessageAddress)
-							{
-								if (v5 && (*reinterpret_cast<int(**)(__int64)>(**reinterpret_cast<__int64**>(_PedAddress + 5016) + 152i64))(*reinterpret_cast<__int64*>(_PedAddress + 5016)) != -1)
-								{
-									reinterpret_cast<void(*)(__int64, __int64, __int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)(*reinterpret_cast<__int64*>(_PedAddress + 5016), ScriptDomain::CurrentDomain->PinString(_message).ToInt64(), MessageAddress);
-								}
-								if (MessageAddress)
-								{
-									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)(MessageAddress);
-								}
-							}
-							MessageAddress = 0;
 						}
+						if (v5 && (*reinterpret_cast<int(**)(__int64)>(*reinterpret_cast<__int64*>(PedNmAddress) + 152))(PedNmAddress) != -1)
+						{
+							reinterpret_cast<void(*)(__int64, __int64, __int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)(PedNmAddress, ScriptDomain::CurrentDomain->PinString(_message).ToInt64(), MessageAddress);//Send Message To Ped
+						}
+						reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)(MessageAddress);//Free Message Memory
 					}
 				}
 

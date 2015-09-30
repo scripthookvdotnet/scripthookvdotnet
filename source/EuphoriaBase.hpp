@@ -21,6 +21,7 @@ namespace GTA
 			void iSetArgument(System::String ^message, bool value);
 			void iSetArgument(System::String ^message, int value);
 			void iSetArgument(System::String ^message, float value);
+			void iSetArgument(System::String ^message, double value) { iSetArgument(message, static_cast<float>(value)); }
 			void iSetArgument(System::String ^message, System::String ^value);
 			void iSetArgument(System::String ^message, Math::Vector3 value);
 		internal:
@@ -64,6 +65,7 @@ namespace GTA
 			void SetArgument(System::String ^message, bool value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, int value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, float value) { iSetArgument(message, value); }
+			void SetArgument(System::String ^message, double value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, System::String ^value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, Math::Vector3 value) { iSetArgument(message, value); }
 
@@ -80,6 +82,7 @@ namespace GTA
 			void SetArgument(System::String ^message, bool value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, int value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, float value) { iSetArgument(message, value); }
+			void SetArgument(System::String ^message, double value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, System::String ^value) { iSetArgument(message, value); }
 			void SetArgument(System::String ^message, Math::Vector3 value) { iSetArgument(message, value); }
 

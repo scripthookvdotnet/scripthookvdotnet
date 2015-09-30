@@ -52,9 +52,33 @@ namespace GTA
 				}
 			}
 
+			property GTA::NaturalMotion::HipsLeanInDirectionHelper^ HipsLeanInDirection {
+				GTA::NaturalMotion::HipsLeanInDirectionHelper^ get() {
+					return GetHelper<GTA::NaturalMotion::HipsLeanInDirectionHelper^>("hipsLeanInDirection");
+				}
+			}
+
+			property GTA::NaturalMotion::ForceLeanInDirectionHelper^ ForceLeanInDirection {
+				GTA::NaturalMotion::ForceLeanInDirectionHelper^ get() {
+					return GetHelper<GTA::NaturalMotion::ForceLeanInDirectionHelper^>("forceLeanInDirection");
+				}
+			}
+
 			property GTA::NaturalMotion::LeanRandomHelper^ LeanRandom {
 				GTA::NaturalMotion::LeanRandomHelper^ get() {
 					return GetHelper<GTA::NaturalMotion::LeanRandomHelper^>("leanRandom");
+				}
+			}
+
+			property GTA::NaturalMotion::HipsLeanRandomHelper^ HipsLeanRandom {
+				GTA::NaturalMotion::HipsLeanRandomHelper^ get() {
+					return GetHelper<GTA::NaturalMotion::HipsLeanRandomHelper^>("hipsLeanRandom");
+				}
+			}
+
+			property GTA::NaturalMotion::ForceLeanRandomHelper^ ForceLeanRandom {
+				GTA::NaturalMotion::ForceLeanRandomHelper^ get() {
+					return GetHelper<GTA::NaturalMotion::ForceLeanRandomHelper^>("forceLeanRandom");
 				}
 			}
 
@@ -64,13 +88,13 @@ namespace GTA
 				}
 			}
 
-			property GTA::NaturalMotion::HipsLeanToPositionHelper^ LeanToPositionHips {
+			property GTA::NaturalMotion::HipsLeanToPositionHelper^ HipsLeanToPosition {
 				GTA::NaturalMotion::HipsLeanToPositionHelper^ get() {
 					return GetHelper<GTA::NaturalMotion::HipsLeanToPositionHelper^>("hipsLeanToPosition");
 				}
 			}
 
-			property GTA::NaturalMotion::ForceLeanToPositionHelper^ LeanToPositionForce {
+			property GTA::NaturalMotion::ForceLeanToPositionHelper^ ForceLeanToPosition {
 				GTA::NaturalMotion::ForceLeanToPositionHelper^ get() {
 					return GetHelper<GTA::NaturalMotion::ForceLeanToPositionHelper^>("forceLeanToPosition");
 				}
