@@ -445,7 +445,7 @@ namespace GTA
 	int PedGroup::MemberCount::get()
 	{
 		int count, val1;
-		Native::Function::Call(Native::Hash::SET_GROUP_SEPARATION_RANGE, this->Handle, &val1, &count);
+		Native::Function::Call(Native::Hash::GET_GROUP_SIZE, this->Handle, &val1, &count);
 		return count;
 	}
 	void PedGroup::SeparationRange::set(float value)
