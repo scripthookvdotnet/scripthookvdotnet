@@ -3,6 +3,9 @@
 #include "Native.hpp"
 #include "Ped.hpp"
 #include "ScriptDomain.hpp"
+#define ISNULL(x) ReferenceEquals(x, nullptr)
+#define NULLDICT(x) x->Clear(); x=nullptr
+#define NULLDICTCHECK(x) if (!ISNULL(x)) {NULLDICT(x);} else {}
 namespace GTA
 {
 	namespace NaturalMotion
@@ -15,7 +18,7 @@ namespace GTA
 			}
 			virtual void Run()
 			{
-				_nmMessage->GiveMessage(_targetPed);
+				_nmMessage->pGiveMessage(_targetPed);
 			}
 		private:
 			BaseMessage ^_nmMessage;
@@ -23,36 +26,36 @@ namespace GTA
 		};
 
 
-		BaseMessage::BaseMessage(String ^Message) : _message(Message)
+		BaseMessage::BaseMessage(String ^Message) : pMessage(Message)
 		{
 		}
-		void BaseMessage::iSetArgument(System::String ^message, bool value)
+		void BaseMessage::pSetArgument(System::String ^message, bool value)
 		{
-			if (lBool == nullptr)
+			if (ISNULL(lBool))
 				lBool = gcnew Dictionary<String ^, bool>();
 			lBool->default[message] = value;
 		}
-		void BaseMessage::iSetArgument(System::String ^message, int value)
+		void BaseMessage::pSetArgument(System::String ^message, int value)
 		{
-			if (lInt == nullptr)
+			if (ISNULL(lInt))
 				lInt = gcnew Dictionary<String ^, int>();
 			lInt->default[message] = value;
 		}
-		void BaseMessage::iSetArgument(System::String ^message, float value)
+		void BaseMessage::pSetArgument(System::String ^message, float value)
 		{
-			if (lFloat == nullptr)
+			if (ISNULL(lFloat))
 				lFloat = gcnew Dictionary<String ^, float>();
 			lFloat->default[message] = value;
 		}
-		void BaseMessage::iSetArgument(System::String ^message, System::String ^value)
+		void BaseMessage::pSetArgument(System::String ^message, System::String ^value)
 		{
-			if (lString == nullptr)
+			if (ISNULL(lString))
 				lString = gcnew Dictionary<String ^, String ^>();
 			lString->default[message] = value;
 		}
-		void BaseMessage::iSetArgument(System::String ^message, Math::Vector3 value)
+		void BaseMessage::pSetArgument(System::String ^message, Math::Vector3 value)
 		{
-			if (lVec == nullptr)
+			if (ISNULL(lVec))
 				lVec = gcnew Dictionary<String ^, Math::Vector3>();
 			lVec->default[message] = value;
 		}
@@ -65,7 +68,7 @@ namespace GTA
 		}
 		void BaseMessage::pAbortTo(GTA::Ped ^TargetPed)
 		{
-			iSetArgument("start", false);
+			pSetArgument("start", false);
 			ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, TargetPed));
 		}
 		void BaseMessage::pApplyTo(GTA::Ped ^TargetPed)
@@ -78,7 +81,7 @@ namespace GTA
 			}
 			ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, TargetPed));
 		}
-		void BaseMessage::GiveMessage(GTA::Ped ^TargetPed)
+		void BaseMessage::pGiveMessage(GTA::Ped ^TargetPed)
 		{
 #pragma region InitMessage
 			__int64 NativeFunc = Native::MemoryAccess::CreateNmMessageFunc;
@@ -88,11 +91,11 @@ namespace GTA
 				reinterpret_cast<__int64(*)(__int64, __int64, int)>(*reinterpret_cast<int*>(NativeFunc + 0x3C) + NativeFunc + 0x40)(MessageAddress, MessageAddress + 24, 64);
 #pragma endregion
 #pragma region Argument Setting
-				if (lBool != nullptr)
+				if (!ISNULL(lBool))
 				{
 					if (lBool->ContainsKey("start"))
 					{
-						if (lBool["start"])
+						if (lBool["start"])//The start argument initialises to false, so no need to manually set it false
 						{
 							reinterpret_cast<unsigned char(*)(__int64, __int64, unsigned char)>(Native::MemoryAccess::SetNmBoolAddress)(MessageAddress, ScriptDomain::CurrentDomain->PinString("start").ToInt64(), 1);
 						}
@@ -106,48 +109,43 @@ namespace GTA
 					{
 						reinterpret_cast<unsigned char(*)(__int64, __int64, unsigned char)>(Native::MemoryAccess::SetNmBoolAddress)(MessageAddress, ScriptDomain::CurrentDomain->PinString(Arg->Key).ToInt64(), Arg->Value ? 1 : 0);
 					}
-					lBool->Clear();
-					lBool = nullptr;
+					NULLDICT(lBool);
 				}
 				else
 				{
 					reinterpret_cast<unsigned char(*)(__int64, __int64, unsigned char)>(Native::MemoryAccess::SetNmBoolAddress)(MessageAddress, ScriptDomain::CurrentDomain->PinString("start").ToInt64(), 1);
 				}
-				if (lInt != nullptr)
+				if (!ISNULL(lInt))
 				{
 					for each(KeyValuePair<String^, int> ^Arg in lInt)
 					{
 						reinterpret_cast<unsigned char(*)(__int64, __int64, int)>(Native::MemoryAccess::SetNmIntAddress)(MessageAddress, ScriptDomain::CurrentDomain->PinString(Arg->Key).ToInt64(), Arg->Value);
 					}
-					lInt->Clear();
-					lInt = nullptr;
+					NULLDICT(lInt);
 				}
-				if (lFloat != nullptr)
+				if (!ISNULL(lFloat))
 				{
 					for each(KeyValuePair<String^, float> ^Arg in lFloat)
 					{
 						reinterpret_cast<unsigned char(*)(__int64, __int64, float)>(Native::MemoryAccess::SetNmFloatAddress)(MessageAddress, ScriptDomain::CurrentDomain->PinString(Arg->Key).ToInt64(), Arg->Value);
 					}
-					lFloat->Clear();
-					lFloat = nullptr;
+					NULLDICT(lFloat);
 				}
-				if (lString != nullptr)
+				if (!ISNULL(lString))
 				{
 					for each(KeyValuePair<String^, String^> ^Arg in lString)
 					{
 						reinterpret_cast<unsigned char(*)(__int64, __int64, __int64)>(Native::MemoryAccess::SetNmStringAddress)(MessageAddress, ScriptDomain::CurrentDomain->PinString(Arg->Key).ToInt64(), ScriptDomain::CurrentDomain->PinString(Arg->Value).ToInt64());
 					}
-					lString->Clear();
-					lString = nullptr;
+					NULLDICT(lString);
 				}
-				if (lVec != nullptr)
+				if (!ISNULL(lVec))
 				{
 					for each(KeyValuePair<String^, Math::Vector3> ^Arg in lVec)
 					{
 						reinterpret_cast<unsigned char(*)(__int64, __int64, float, float, float)>(Native::MemoryAccess::SetNmVec3Address)(MessageAddress, ScriptDomain::CurrentDomain->PinString(Arg->Key).ToInt64(), Arg->Value.X, Arg->Value.Y, Arg->Value.Z);
 					}
-					lVec->Clear();
-					lVec = nullptr;
+					NULLDICT(lVec);
 				}
 #pragma endregion
 				__int64 BaseFunc = Native::MemoryAccess::GiveNmMessageFunc;
@@ -204,7 +202,7 @@ namespace GTA
 						}
 						if (v5 && (*reinterpret_cast<int(**)(__int64)>(*reinterpret_cast<__int64*>(PedNmAddress) + 152))(PedNmAddress) != -1)
 						{
-							reinterpret_cast<void(*)(__int64, __int64, __int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)(PedNmAddress, ScriptDomain::CurrentDomain->PinString(_message).ToInt64(), MessageAddress);//Send Message To Ped
+							reinterpret_cast<void(*)(__int64, __int64, __int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)(PedNmAddress, ScriptDomain::CurrentDomain->PinString(pMessage).ToInt64(), MessageAddress);//Send Message To Ped
 						}
 						reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)(MessageAddress);//Free Message Memory
 					}
@@ -213,6 +211,15 @@ namespace GTA
 			}
 		}
 
+		void BaseMessage::pResetArguments()
+		{
+			NULLDICTCHECK(lBool);
+			NULLDICTCHECK(lInt);
+			NULLDICTCHECK(lFloat);
+			NULLDICTCHECK(lString);
+			NULLDICTCHECK(lVec);
+		}
+		
 		BaseHelper::BaseHelper(GTA::Ped^ Ped, String ^Message) : BaseMessage(Message), pPed(Ped)
 		{
 		}
@@ -235,7 +242,7 @@ namespace GTA
 
 		String ^CustomMessage::Message::get()
 		{
-			return _message;
+			return pMessage;
 		}
 		void CustomMessage::SendTo(GTA::Ped^ TargetPed, int Duration)
 		{

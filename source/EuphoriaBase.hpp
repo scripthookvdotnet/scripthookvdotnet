@@ -18,15 +18,15 @@ namespace GTA
 			void pApplyTo(GTA::Ped ^TargetPed);
 			void pApplyTo(GTA::Ped ^TargetPed, int duration);
 			void pAbortTo(GTA::Ped ^TargetPed);
-			void iSetArgument(System::String ^message, bool value);
-			void iSetArgument(System::String ^message, int value);
-			void iSetArgument(System::String ^message, float value);
-			void iSetArgument(System::String ^message, double value) { iSetArgument(message, static_cast<float>(value)); }
-			void iSetArgument(System::String ^message, System::String ^value);
-			void iSetArgument(System::String ^message, Math::Vector3 value);
-		internal:
-			String ^_message;
-			void GiveMessage(GTA::Ped ^TargetPed);
+			void pSetArgument(System::String ^message, bool value);
+			void pSetArgument(System::String ^message, int value);
+			void pSetArgument(System::String ^message, float value);
+			void pSetArgument(System::String ^message, double value) { pSetArgument(message, static_cast<float>(value)); }
+			void pSetArgument(System::String ^message, System::String ^value);
+			void pSetArgument(System::String ^message, Math::Vector3 value);
+			String ^pMessage;
+			void pGiveMessage(GTA::Ped ^TargetPed);
+			void pResetArguments();
 		private:
 			Dictionary<String ^, bool> ^lBool;
 			Dictionary<String ^, int> ^lInt;
@@ -62,12 +62,12 @@ namespace GTA
 
 			void Abort(GTA::Ped^ TargetPed);
 
-			void SetArgument(System::String ^message, bool value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, int value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, float value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, double value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, System::String ^value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, Math::Vector3 value) { iSetArgument(message, value); }
+			void SetArgument(System::String ^message, bool value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, int value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, float value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, double value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, System::String ^value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, Math::Vector3 value) { pSetArgument(message, value); }
 
 		};
 
@@ -79,12 +79,13 @@ namespace GTA
 			void Start(int Duration);
 			void Start();
 
-			void SetArgument(System::String ^message, bool value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, int value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, float value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, double value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, System::String ^value) { iSetArgument(message, value); }
-			void SetArgument(System::String ^message, Math::Vector3 value) { iSetArgument(message, value); }
+			void SetArgument(System::String ^message, bool value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, int value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, float value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, double value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, System::String ^value) { pSetArgument(message, value); }
+			void SetArgument(System::String ^message, Math::Vector3 value) { pSetArgument(message, value); }
+			void ResetArguments() { pResetArguments(); }
 
 		};
 	}
