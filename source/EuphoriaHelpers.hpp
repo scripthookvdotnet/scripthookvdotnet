@@ -1,9 +1,7 @@
 #pragma once
 #include "EuphoriaBase.hpp"
-
 namespace GTA
 {
-
 	namespace NaturalMotion
 	{
 		public enum class ArmDirections
@@ -12,7 +10,7 @@ namespace GTA
 			Adaptive = 0,
 			Forwards = 1
 		};
-		public ref class ActivePoseHelper : public CustomHelper {
+		public ref class ActivePoseHelper sealed : public CustomHelper {
 
 		public:
 			ActivePoseHelper(GTA::Ped^ Ped)
@@ -37,8 +35,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ApplyImpulseHelper : public CustomHelper {
+		public ref class ApplyImpulseHelper sealed : public CustomHelper {
 
 		public:
 			ApplyImpulseHelper(GTA::Ped^ Ped)
@@ -87,8 +86,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ApplyBulletImpulseHelper : public CustomHelper {
+		public ref class ApplyBulletImpulseHelper sealed : public CustomHelper {
 
 		public:
 			ApplyBulletImpulseHelper(GTA::Ped^ Ped)
@@ -131,8 +131,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BodyRelaxHelper : public CustomHelper {
+		public ref class BodyRelaxHelper sealed : public CustomHelper {
 
 		public:
 			BodyRelaxHelper(GTA::Ped^ Ped)
@@ -169,8 +170,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureBalanceHelper : public CustomHelper {
+		public ref class ConfigureBalanceHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureBalanceHelper(GTA::Ped^ Ped)
@@ -561,16 +563,18 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureBalanceResetHelper : public CustomHelper {
+		public ref class ConfigureBalanceResetHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureBalanceResetHelper(GTA::Ped^ Ped)
 				:CustomHelper(Ped, "configureBalanceReset") {
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureSelfAvoidanceHelper : public CustomHelper {
+		public ref class ConfigureSelfAvoidanceHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureSelfAvoidanceHelper(GTA::Ped^ Ped)
@@ -631,8 +635,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureBulletsHelper : public CustomHelper {
+		public ref class ConfigureBulletsHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureBulletsHelper(GTA::Ped^ Ped)
@@ -993,8 +998,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureBulletsExtraHelper : public CustomHelper {
+		public ref class ConfigureBulletsExtraHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureBulletsExtraHelper(GTA::Ped^ Ped)
@@ -1331,8 +1337,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureLimitsHelper : public CustomHelper {
+		public ref class ConfigureLimitsHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureLimitsHelper(GTA::Ped^ Ped)
@@ -1399,8 +1406,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureSoftLimitHelper : public CustomHelper {
+		public ref class ConfigureSoftLimitHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureSoftLimitHelper(GTA::Ped^ Ped)
@@ -1443,8 +1451,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureShotInjuredArmHelper : public CustomHelper {
+		public ref class ConfigureShotInjuredArmHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureShotInjuredArmHelper(GTA::Ped^ Ped)
@@ -1517,8 +1526,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureShotInjuredLegHelper : public CustomHelper {
+		public ref class ConfigureShotInjuredLegHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureShotInjuredLegHelper(GTA::Ped^ Ped)
@@ -1585,8 +1595,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class DefineAttachedObjectHelper : public CustomHelper {
+		public ref class DefineAttachedObjectHelper sealed : public CustomHelper {
 
 		public:
 			DefineAttachedObjectHelper(GTA::Ped^ Ped)
@@ -1611,8 +1622,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ForceToBodyPartHelper : public CustomHelper {
+		public ref class ForceToBodyPartHelper sealed : public CustomHelper {
 
 		public:
 			ForceToBodyPartHelper(GTA::Ped^ Ped)
@@ -1637,8 +1649,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class LeanInDirectionHelper : public CustomHelper {
+		public ref class LeanInDirectionHelper sealed : public CustomHelper {
 
 		public:
 			LeanInDirectionHelper(GTA::Ped^ Ped)
@@ -1657,8 +1670,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class LeanRandomHelper : public CustomHelper {
+		public ref class LeanRandomHelper sealed : public CustomHelper {
 
 		public:
 			LeanRandomHelper(GTA::Ped^ Ped)
@@ -1689,8 +1703,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class LeanToPositionHelper : public CustomHelper {
+		public ref class LeanToPositionHelper sealed : public CustomHelper {
 
 		public:
 			LeanToPositionHelper(GTA::Ped^ Ped)
@@ -1709,8 +1724,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class LeanTowardsObjectHelper : public CustomHelper {
+		public ref class LeanTowardsObjectHelper sealed : public CustomHelper {
 
 		public:
 			LeanTowardsObjectHelper(GTA::Ped^ Ped)
@@ -1741,8 +1757,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class HipsLeanInDirectionHelper : public CustomHelper {
+		public ref class HipsLeanInDirectionHelper sealed : public CustomHelper {
 
 		public:
 			HipsLeanInDirectionHelper(GTA::Ped^ Ped)
@@ -1761,8 +1778,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class HipsLeanRandomHelper : public CustomHelper {
+		public ref class HipsLeanRandomHelper sealed : public CustomHelper {
 
 		public:
 			HipsLeanRandomHelper(GTA::Ped^ Ped)
@@ -1793,8 +1811,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class HipsLeanToPositionHelper : public CustomHelper {
+		public ref class HipsLeanToPositionHelper sealed : public CustomHelper {
 
 		public:
 			HipsLeanToPositionHelper(GTA::Ped^ Ped)
@@ -1813,8 +1832,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class HipsLeanTowardsObjectHelper : public CustomHelper {
+		public ref class HipsLeanTowardsObjectHelper sealed : public CustomHelper {
 
 		public:
 			HipsLeanTowardsObjectHelper(GTA::Ped^ Ped)
@@ -1845,8 +1865,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ForceLeanInDirectionHelper : public CustomHelper {
+		public ref class ForceLeanInDirectionHelper sealed : public CustomHelper {
 
 		public:
 			ForceLeanInDirectionHelper(GTA::Ped^ Ped)
@@ -1871,8 +1892,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ForceLeanRandomHelper : public CustomHelper {
+		public ref class ForceLeanRandomHelper sealed : public CustomHelper {
 
 		public:
 			ForceLeanRandomHelper(GTA::Ped^ Ped)
@@ -1909,8 +1931,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ForceLeanToPositionHelper : public CustomHelper {
+		public ref class ForceLeanToPositionHelper sealed : public CustomHelper {
 
 		public:
 			ForceLeanToPositionHelper(GTA::Ped^ Ped)
@@ -1935,8 +1958,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ForceLeanTowardsObjectHelper : public CustomHelper {
+		public ref class ForceLeanTowardsObjectHelper sealed : public CustomHelper {
 
 		public:
 			ForceLeanTowardsObjectHelper(GTA::Ped^ Ped)
@@ -1973,8 +1997,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetStiffnessHelper : public CustomHelper {
+		public ref class SetStiffnessHelper sealed : public CustomHelper {
 
 		public:
 			SetStiffnessHelper(GTA::Ped^ Ped)
@@ -1999,8 +2024,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetMuscleStiffnessHelper : public CustomHelper {
+		public ref class SetMuscleStiffnessHelper sealed : public CustomHelper {
 
 		public:
 			SetMuscleStiffnessHelper(GTA::Ped^ Ped)
@@ -2019,8 +2045,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetWeaponModeHelper : public CustomHelper {
+		public ref class SetWeaponModeHelper sealed : public CustomHelper {
 
 		public:
 			SetWeaponModeHelper(GTA::Ped^ Ped)
@@ -2033,8 +2060,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class RegisterWeaponHelper : public CustomHelper {
+		public ref class RegisterWeaponHelper sealed : public CustomHelper {
 
 		public:
 			RegisterWeaponHelper(GTA::Ped^ Ped)
@@ -2095,8 +2123,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotRelaxHelper : public CustomHelper {
+		public ref class ShotRelaxHelper sealed : public CustomHelper {
 
 		public:
 			ShotRelaxHelper(GTA::Ped^ Ped)
@@ -2115,8 +2144,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class FireWeaponHelper : public CustomHelper {
+		public ref class FireWeaponHelper sealed : public CustomHelper {
 
 		public:
 			FireWeaponHelper(GTA::Ped^ Ped)
@@ -2159,8 +2189,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ConfigureConstraintsHelper : public CustomHelper {
+		public ref class ConfigureConstraintsHelper sealed : public CustomHelper {
 
 		public:
 			ConfigureConstraintsHelper(GTA::Ped^ Ped)
@@ -2209,8 +2240,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class StayUprightHelper : public CustomHelper {
+		public ref class StayUprightHelper sealed : public CustomHelper {
 
 		public:
 			StayUprightHelper(GTA::Ped^ Ped)
@@ -2385,16 +2417,18 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class StopAllBehavioursHelper : public CustomHelper {
+		public ref class StopAllBehavioursHelper sealed : public CustomHelper {
 
 		public:
 			StopAllBehavioursHelper(GTA::Ped^ Ped)
 				:CustomHelper(Ped, "stopAllBehaviours") {
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetCharacterStrengthHelper : public CustomHelper {
+		public ref class SetCharacterStrengthHelper sealed : public CustomHelper {
 
 		public:
 			SetCharacterStrengthHelper(GTA::Ped^ Ped)
@@ -2407,8 +2441,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetCharacterHealthHelper : public CustomHelper {
+		public ref class SetCharacterHealthHelper sealed : public CustomHelper {
 
 		public:
 			SetCharacterHealthHelper(GTA::Ped^ Ped)
@@ -2421,8 +2456,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetFallingReactionHelper : public CustomHelper {
+		public ref class SetFallingReactionHelper sealed : public CustomHelper {
 
 		public:
 			SetFallingReactionHelper(GTA::Ped^ Ped)
@@ -2555,8 +2591,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetCharacterUnderwaterHelper : public CustomHelper {
+		public ref class SetCharacterUnderwaterHelper sealed : public CustomHelper {
 
 		public:
 			SetCharacterUnderwaterHelper(GTA::Ped^ Ped)
@@ -2593,8 +2630,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetCharacterCollisionsHelper : public CustomHelper {
+		public ref class SetCharacterCollisionsHelper sealed : public CustomHelper {
 
 		public:
 			SetCharacterCollisionsHelper(GTA::Ped^ Ped)
@@ -2655,8 +2693,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetCharacterDampingHelper : public CustomHelper {
+		public ref class SetCharacterDampingHelper sealed : public CustomHelper {
 
 		public:
 			SetCharacterDampingHelper(GTA::Ped^ Ped)
@@ -2699,8 +2738,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SetFrictionScaleHelper : public CustomHelper {
+		public ref class SetFrictionScaleHelper sealed : public CustomHelper {
 
 		public:
 			SetFrictionScaleHelper(GTA::Ped^ Ped)
@@ -2731,8 +2771,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class AnimPoseHelper : public CustomHelper {
+		public ref class AnimPoseHelper sealed : public CustomHelper {
 
 		public:
 			AnimPoseHelper(GTA::Ped^ Ped)
@@ -2949,8 +2990,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ArmsWindmillHelper : public CustomHelper {
+		public ref class ArmsWindmillHelper sealed : public CustomHelper {
 
 		public:
 			ArmsWindmillHelper(GTA::Ped^ Ped)
@@ -3131,8 +3173,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ArmsWindmillAdaptiveHelper : public CustomHelper {
+		public ref class ArmsWindmillAdaptiveHelper sealed : public CustomHelper {
 
 		public:
 			ArmsWindmillAdaptiveHelper(GTA::Ped^ Ped)
@@ -3241,8 +3284,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BalancerCollisionsReactionHelper : public CustomHelper {
+		public ref class BalancerCollisionsReactionHelper sealed : public CustomHelper {
 
 		public:
 			BalancerCollisionsReactionHelper(GTA::Ped^ Ped)
@@ -3525,8 +3569,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BodyBalanceHelper : public CustomHelper {
+		public ref class BodyBalanceHelper sealed : public CustomHelper {
 
 		public:
 			BodyBalanceHelper(GTA::Ped^ Ped)
@@ -3845,8 +3890,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BodyFoetalHelper : public CustomHelper {
+		public ref class BodyFoetalHelper sealed : public CustomHelper {
 
 		public:
 			BodyFoetalHelper(GTA::Ped^ Ped)
@@ -3889,8 +3935,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BodyRollUpHelper : public CustomHelper {
+		public ref class BodyRollUpHelper sealed : public CustomHelper {
 
 		public:
 			BodyRollUpHelper(GTA::Ped^ Ped)
@@ -3969,8 +4016,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BodyWritheHelper : public CustomHelper {
+		public ref class BodyWritheHelper sealed : public CustomHelper {
 
 		public:
 			BodyWritheHelper(GTA::Ped^ Ped)
@@ -4145,8 +4193,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BraceForImpactHelper : public CustomHelper {
+		public ref class BraceForImpactHelper sealed : public CustomHelper {
 
 		public:
 			BraceForImpactHelper(GTA::Ped^ Ped)
@@ -4435,8 +4484,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class BuoyancyHelper : public CustomHelper {
+		public ref class BuoyancyHelper sealed : public CustomHelper {
 
 		public:
 			BuoyancyHelper(GTA::Ped^ Ped)
@@ -4491,8 +4541,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class CatchFallHelper : public CustomHelper {
+		public ref class CatchFallHelper sealed : public CustomHelper {
 
 		public:
 			CatchFallHelper(GTA::Ped^ Ped)
@@ -4553,8 +4604,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ElectrocuteHelper : public CustomHelper {
+		public ref class ElectrocuteHelper sealed : public CustomHelper {
 
 		public:
 			ElectrocuteHelper(GTA::Ped^ Ped)
@@ -4687,8 +4739,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class FallOverWallHelper : public CustomHelper {
+		public ref class FallOverWallHelper sealed : public CustomHelper {
 
 		public:
 			FallOverWallHelper(GTA::Ped^ Ped)
@@ -4863,8 +4916,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class GrabHelper : public CustomHelper {
+		public ref class GrabHelper sealed : public CustomHelper {
 
 		public:
 			GrabHelper(GTA::Ped^ Ped)
@@ -5111,8 +5165,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class HeadLookHelper : public CustomHelper {
+		public ref class HeadLookHelper sealed : public CustomHelper {
 
 		public:
 			HeadLookHelper(GTA::Ped^ Ped)
@@ -5179,8 +5234,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class HighFallHelper : public CustomHelper {
+		public ref class HighFallHelper sealed : public CustomHelper {
 
 		public:
 			HighFallHelper(GTA::Ped^ Ped)
@@ -5409,16 +5465,18 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class IncomingTransformsHelper : public CustomHelper {
+		public ref class IncomingTransformsHelper sealed : public CustomHelper {
 
 		public:
 			IncomingTransformsHelper(GTA::Ped^ Ped)
 				:CustomHelper(Ped, "incomingTransforms") {
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class InjuredOnGroundHelper : public CustomHelper {
+		public ref class InjuredOnGroundHelper sealed : public CustomHelper {
 
 		public:
 			InjuredOnGroundHelper(GTA::Ped^ Ped)
@@ -5491,16 +5549,18 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class CarriedHelper : public CustomHelper {
+		public ref class CarriedHelper sealed : public CustomHelper {
 
 		public:
 			CarriedHelper(GTA::Ped^ Ped)
 				:CustomHelper(Ped, "carried") {
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class DangleHelper : public CustomHelper {
+		public ref class DangleHelper sealed : public CustomHelper {
 
 		public:
 			DangleHelper(GTA::Ped^ Ped)
@@ -5519,8 +5579,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class OnFireHelper : public CustomHelper {
+		public ref class OnFireHelper sealed : public CustomHelper {
 
 		public:
 			OnFireHelper(GTA::Ped^ Ped)
@@ -5617,8 +5678,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class PedalLegsHelper : public CustomHelper {
+		public ref class PedalLegsHelper sealed : public CustomHelper {
 
 		public:
 			PedalLegsHelper(GTA::Ped^ Ped)
@@ -5745,8 +5807,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class PointArmHelper : public CustomHelper {
+		public ref class PointArmHelper sealed : public CustomHelper {
 
 		public:
 			PointArmHelper(GTA::Ped^ Ped)
@@ -5861,8 +5924,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class PointGunHelper : public CustomHelper {
+		public ref class PointGunHelper sealed : public CustomHelper {
 
 		public:
 			PointGunHelper(GTA::Ped^ Ped)
@@ -6271,8 +6335,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class PointGunExtraHelper : public CustomHelper {
+		public ref class PointGunExtraHelper sealed : public CustomHelper {
 
 		public:
 			PointGunExtraHelper(GTA::Ped^ Ped)
@@ -6333,8 +6398,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class RollDownStairsHelper : public CustomHelper {
+		public ref class RollDownStairsHelper sealed : public CustomHelper {
 
 		public:
 			RollDownStairsHelper(GTA::Ped^ Ped)
@@ -6545,8 +6611,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotHelper : public CustomHelper {
+		public ref class ShotHelper sealed : public CustomHelper {
 
 		public:
 			ShotHelper(GTA::Ped^ Ped)
@@ -6895,8 +6962,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotNewBulletHelper : public CustomHelper {
+		public ref class ShotNewBulletHelper sealed : public CustomHelper {
 
 		public:
 			ShotNewBulletHelper(GTA::Ped^ Ped)
@@ -6933,8 +7001,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotSnapHelper : public CustomHelper {
+		public ref class ShotSnapHelper sealed : public CustomHelper {
 
 		public:
 			ShotSnapHelper(GTA::Ped^ Ped)
@@ -7061,8 +7130,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotShockSpinHelper : public CustomHelper {
+		public ref class ShotShockSpinHelper sealed : public CustomHelper {
 
 		public:
 			ShotShockSpinHelper(GTA::Ped^ Ped)
@@ -7153,8 +7223,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotFallToKneesHelper : public CustomHelper {
+		public ref class ShotFallToKneesHelper sealed : public CustomHelper {
 
 		public:
 			ShotFallToKneesHelper(GTA::Ped^ Ped)
@@ -7311,8 +7382,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotFromBehindHelper : public CustomHelper {
+		public ref class ShotFromBehindHelper sealed : public CustomHelper {
 
 		public:
 			ShotFromBehindHelper(GTA::Ped^ Ped)
@@ -7385,8 +7457,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotInGutsHelper : public CustomHelper {
+		public ref class ShotInGutsHelper sealed : public CustomHelper {
 
 		public:
 			ShotInGutsHelper(GTA::Ped^ Ped)
@@ -7441,8 +7514,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotHeadLookHelper : public CustomHelper {
+		public ref class ShotHeadLookHelper sealed : public CustomHelper {
 
 		public:
 			ShotHeadLookHelper(GTA::Ped^ Ped)
@@ -7485,8 +7559,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class ShotConfigureArmsHelper : public CustomHelper {
+		public ref class ShotConfigureArmsHelper sealed : public CustomHelper {
 
 		public:
 			ShotConfigureArmsHelper(GTA::Ped^ Ped)
@@ -7715,8 +7790,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class SmartFallHelper : public CustomHelper {
+		public ref class SmartFallHelper sealed : public CustomHelper {
 
 		public:
 			SmartFallHelper(GTA::Ped^ Ped)
@@ -8059,8 +8135,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class StaggerFallHelper : public CustomHelper {
+		public ref class StaggerFallHelper sealed : public CustomHelper {
 
 		public:
 			StaggerFallHelper(GTA::Ped^ Ped)
@@ -8319,8 +8396,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class TeeterHelper : public CustomHelper {
+		public ref class TeeterHelper sealed : public CustomHelper {
 
 		public:
 			TeeterHelper(GTA::Ped^ Ped)
@@ -8387,8 +8465,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class UpperBodyFlinchHelper : public CustomHelper {
+		public ref class UpperBodyFlinchHelper sealed : public CustomHelper {
 
 		public:
 			UpperBodyFlinchHelper(GTA::Ped^ Ped)
@@ -8497,8 +8576,9 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
-		public ref class YankedHelper : public CustomHelper {
+		public ref class YankedHelper sealed : public CustomHelper {
 
 		public:
 			YankedHelper(GTA::Ped^ Ped)
@@ -8745,6 +8825,7 @@ namespace GTA
 				}
 			}
 
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
 	}
 }

@@ -13,6 +13,8 @@ namespace GTA
 
 		public ref class BaseMessage abstract
 		{
+		public:
+			virtual String^ ToString() override;
 		internal:
 			BaseMessage(String ^Message);
 			void pApplyTo(GTA::Ped ^TargetPed);
@@ -47,6 +49,7 @@ namespace GTA
 			void pStart();
 		public:
 			void Stop();
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
 		public ref class CustomMessage : public BaseMessage 
 		{
@@ -68,7 +71,7 @@ namespace GTA
 			void SetArgument(System::String ^message, double value) { pSetArgument(message, value); }
 			void SetArgument(System::String ^message, System::String ^value) { pSetArgument(message, value); }
 			void SetArgument(System::String ^message, Math::Vector3 value) { pSetArgument(message, value); }
-
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
 
 		public ref class CustomHelper : public BaseHelper {
@@ -86,7 +89,8 @@ namespace GTA
 			void SetArgument(System::String ^message, System::String ^value) { pSetArgument(message, value); }
 			void SetArgument(System::String ^message, Math::Vector3 value) { pSetArgument(message, value); }
 			void ResetArguments() { pResetArguments(); }
-
+			
+			virtual String^ ToString() override { return BaseMessage::ToString(); }
 		};
 	}
 }

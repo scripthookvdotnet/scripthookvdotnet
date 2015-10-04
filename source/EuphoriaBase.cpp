@@ -29,6 +29,11 @@ namespace GTA
 		BaseMessage::BaseMessage(String ^Message) : pMessage(Message)
 		{
 		}
+
+		String^ BaseMessage::ToString()
+		{
+			return pMessage;
+		}
 		void BaseMessage::pSetArgument(System::String ^message, bool value)
 		{
 			if (ISNULL(lBool))
