@@ -156,211 +156,23 @@ namespace GTA
 	public:
 		Ped(int handle);
 
-		property NaturalMotion::Euphoria ^Euphoria
-		{
-			NaturalMotion::Euphoria ^get();
-		}
-
 		property int Accuracy
 		{
 			int get();
 			void set(int value);
 		}
-		property Tasks ^Task
+		property bool AlwaysDiesOnLowHealth
 		{
-			Tasks ^get();
-		}
-		property int TaskSequenceProgress
-		{
-			int get();
-		}
-		property GTA::Gender Gender
-		{
-			GTA::Gender get();
-		}
-		property int Armor
-		{
-			int get();
-			void set(int value);
+			void set(bool value);
 		}
 		property bool AlwaysKeepTask
 		{
 			void set(bool value);
 		}
-		property int Money
+		property int Armor
 		{
 			int get();
 			void set(int value);
-		}
-		property bool IsPlayer
-		{
-			bool get();
-		}
-		property bool IsHuman
-		{
-			bool get();
-		}
-		property bool IsIdle
-		{
-			bool get();
-		}
-		property bool IsProne
-		{
-			bool get();
-		}
-		property bool IsDucking
-		{
-			bool get();
-			void set(bool value);
-		}
-		property bool IsGettingUp
-		{
-			bool get();
-		}
-		property bool IsGettingIntoAVehicle
-		{
-			bool get();
-		}
-		property bool IsTryingToEnterALockedVehicle
-		{
-			bool get();
-		}
-		property bool IsRagdoll
-		{
-			bool get();
-		}
-		property bool IsInjured
-		{
-			bool get();
-		}
-		property bool IsJacking
-		{
-			bool get();
-		}
-		property bool IsBeingJacked
-		{
-			bool get();
-		}
-		property bool IsBeingStunned
-		{
-			bool get();
-		}
-		property bool IsBeingStealthKilled
-		{
-			bool get();
-		}
-		property bool IsPerformingStealthKill
-		{
-			bool get();
-		}
-		property bool WasKilledByStealth
-		{
-			bool get();
-		}
-		property bool WasKilledByTakedown
-		{
-			bool get();
-		}
-		property bool IsShooting
-		{
-			bool get();
-		}
-		property bool IsReloading
-		{
-			bool get();
-		}
-		property bool IsInCombat
-		{
-			bool get();
-		}
-		property bool IsInMeleeCombat
-		{
-			bool get();
-		}
-		property bool IsAimingFromCover
-		{
-			bool get();
-		}
-		property bool IsInCoverFacingLeft
-		{
-			bool get();
-		}
-		property bool IsGoingIntoCover
-		{
-			bool get();
-		}
-		property bool IsDoingDriveBy
-		{
-			bool get();
-		}
-		property bool IsInGroup
-		{
-			bool get();
-		}
-		property bool IsSwimming
-		{
-			bool get();
-		}
-		property bool IsSwimmingUnderWater
-		{
-			bool get();
-		}
-		property bool IsOnFoot
-		{
-			bool get();
-		}
-		property bool IsOnBike
-		{
-			bool get();
-		}
-		property bool IsInBoat
-		{
-			bool get();
-		}
-		property bool IsInSub
-		{
-			bool get();
-		}
-		property bool IsInHeli
-		{
-			bool get();
-		}
-		property bool IsInPlane
-		{
-			bool get();
-		}
-		property bool IsInTrain
-		{
-			bool get();
-		}
-		property bool IsInFlyingVehicle
-		{
-			bool get();
-		}
-		property bool IsInPoliceVehicle
-		{
-			bool get();
-		}
-		property Vehicle ^CurrentVehicle
-		{
-			Vehicle ^get();
-		}
-		property PedGroup ^CurrentPedGroup
-		{
-			PedGroup ^get();
-		}
-
-		property bool IsEnemy
-		{
-			void set(bool value);
-		}
-		property bool IsPriorityTargetForEnemies
-		{
-			void set(bool value);
-		}
-		property bool AlwaysDiesOnLowHealth
-		{
-			void set(bool value);
 		}
 		property bool BlockPermanentEvents
 		{
@@ -400,11 +212,176 @@ namespace GTA
 		{
 			void set(bool value);
 		}
-		property bool IsStopped
+		property PedGroup ^CurrentPedGroup
+		{
+			PedGroup ^get();
+		}
+		property Vehicle ^CurrentVehicle
+		{
+			Vehicle ^get();
+		}
+		property bool DiesInstantlyInWater
+		{
+			void set(bool value);
+		}
+		property float DrivingSpeed
+		{
+			void set(float value);
+		}
+		property DrivingStyle DrivingStyle
+		{
+			void set(GTA::DrivingStyle value);
+		}
+		property bool DrownsInWater
+		{
+			void set(bool value);
+		}
+		property bool DrownsInSinkingVehicle
+		{
+			void set(bool value);
+		}
+		property NaturalMotion::Euphoria ^Euphoria
+		{
+			NaturalMotion::Euphoria ^get();
+		}
+		property FiringPattern FiringPattern
+		{
+			void set(GTA::FiringPattern value);
+		}
+		property GTA::Gender Gender
+		{
+			GTA::Gender get();
+		}
+		property bool IsAimingFromCover
 		{
 			bool get();
 		}
-		property bool IsWalking
+		property bool IsBeingJacked
+		{
+			bool get();
+		}
+		property bool IsBeingStealthKilled
+		{
+			bool get();
+		}
+		property bool IsBeingStunned
+		{
+			bool get();
+		}
+		property bool IsDoingDriveBy
+		{
+			bool get();
+		}
+		property bool IsDucking
+		{
+			bool get();
+			void set(bool value);
+		}
+		property bool IsEnemy
+		{
+			void set(bool value);
+		}
+		property bool IsHuman
+		{
+			bool get();
+		}
+		property bool IsIdle
+		{
+			bool get();
+		}
+		property bool IsProne
+		{
+			bool get();
+		}
+		property bool IsGettingUp
+		{
+			bool get();
+		}
+		property bool IsGettingIntoAVehicle
+		{
+			bool get();
+		}
+		property bool IsGoingIntoCover
+		{
+			bool get();
+		}
+		property bool IsInjured
+		{
+			bool get();
+		}
+		property bool IsInBoat
+		{
+			bool get();
+		}
+		property bool IsInCombat
+		{
+			bool get();
+		}
+		property bool IsInCoverFacingLeft
+		{
+			bool get();
+		}
+		property bool IsInGroup
+		{
+			bool get();
+		}
+		property bool IsInFlyingVehicle
+		{
+			bool get();
+		}
+		property bool IsInHeli
+		{
+			bool get();
+		}
+		property bool IsInMeleeCombat
+		{
+			bool get();
+		}
+		property bool IsInPlane
+		{
+			bool get();
+		}
+		property bool IsInPoliceVehicle
+		{
+			bool get();
+		}
+		property bool IsInSub
+		{
+			bool get();
+		}
+		property bool IsInTrain
+		{
+			bool get();
+		}
+		property bool IsJacking
+		{
+			bool get();
+		}
+		property bool IsOnFoot
+		{
+			bool get();
+		}
+		property bool IsOnBike
+		{
+			bool get();
+		}
+		property bool IsPerformingStealthKill
+		{
+			bool get();
+		}
+		property bool IsPlayer
+		{
+			bool get();
+		}
+		property bool IsPriorityTargetForEnemies
+		{
+			void set(bool value);
+		}
+		property bool IsRagdoll
+		{
+			bool get();
+		}
+		property bool IsReloading
 		{
 			bool get();
 		}
@@ -412,9 +389,42 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsShooting
+		{
+			bool get();
+		}
 		property bool IsSprinting
 		{
 			bool get();
+		}
+		property bool IsStopped
+		{
+			bool get();
+		}
+		property bool IsSwimming
+		{
+			bool get();
+		}
+		property bool IsSwimmingUnderWater
+		{
+			bool get();
+		}
+		property bool IsTryingToEnterALockedVehicle
+		{
+			bool get();
+		}
+		property bool IsWalking
+		{
+			bool get();
+		}
+		property float MaxDrivingSpeed
+		{
+			void set(float value);
+		}
+		property int Money
+		{
+			int get();
+			void set(int value);
 		}
 		property bool NeverLeavesGroup
 		{
@@ -425,46 +435,33 @@ namespace GTA
 			int get();
 			void set(int group);
 		}
-		property float DrivingSpeed 
-		{
-			void set(float value);
-		}
-		property float MaxDrivingSpeed
-		{
-			void set(float value);
-		}
-		property DrivingStyle DrivingStyle
-		{
-			void set(GTA::DrivingStyle value);
-		}
-		property float WetnessHeight
-		{
-			void set(float value);
-		}
-		property FiringPattern FiringPattern
-		{
-			void set(GTA::FiringPattern value);
-		}
 		property int ShootRate
 		{
 			void set(int value);
 		}
-		property bool DiesInstantlyInWater
+		property Tasks ^Task
 		{
-			void set(bool value);
+			Tasks ^get();
 		}
-		property bool DrownsInWater
+		property int TaskSequenceProgress
 		{
-			void set(bool value);
+			int get();
 		}
-		property bool DrownsInSinkingVehicle
+		property bool WasKilledByStealth
 		{
-			void set(bool value);
+			bool get();
 		}
-
+		property bool WasKilledByTakedown
+		{
+			bool get();
+		}
 		property WeaponCollection ^Weapons
 		{
 			WeaponCollection ^get();
+		}
+		property float WetnessHeight
+		{
+			void set(float value);
 		}
 
 		bool IsInVehicle();
@@ -488,9 +485,9 @@ namespace GTA
 		int GetBoneIndex(Bone BoneID);
 
 	private:
-		Tasks ^mTasks;
-		WeaponCollection ^pWeapons;
-		NaturalMotion::Euphoria ^pEuphoria;
+		Tasks ^_tasks;
+		NaturalMotion::Euphoria ^_euphoria;
+		WeaponCollection ^_weapons;
 	};
 
 	public enum class FormationType
@@ -535,10 +532,11 @@ namespace GTA
 		Ped ^GetMember(int index);
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
+
 		array<Ped ^> ^ToArray(bool includingLeader);
 		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 	private:
-		int mHandle;
+		int _handle;
 	};
 }

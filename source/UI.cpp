@@ -9,35 +9,35 @@ namespace GTA
 	using namespace System;
 	using namespace System::Drawing;
 
-	Notification::Notification(int Handle) : mHandle(Handle)
+	Notification::Notification(int handle) : _handle(handle)
 	{
 	}
 
 	void Notification::Hide()
 	{
-		Native::Function::Call(Native::Hash::_REMOVE_NOTIFICATION, this->mHandle);
+		Native::Function::Call(Native::Hash::_REMOVE_NOTIFICATION, _handle);
 	}
 
-	Notification ^UI::Notify(String ^msg)
+	Notification ^UI::Notify(String ^message)
 	{
-		return Notify(msg, false);
+		return Notify(message, false);
 	}
-	Notification ^UI::Notify(String ^msg, bool blinking)
+	Notification ^UI::Notify(String ^message, bool blinking)
 	{
 		Native::Function::Call(Native::Hash::_SET_NOTIFICATION_TEXT_ENTRY, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, msg);
+		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, message);
 
 		return gcnew Notification(Native::Function::Call<int>(Native::Hash::_DRAW_NOTIFICATION, blinking, 1));
 	}
 
-	void UI::ShowSubtitle(String ^msg)
+	void UI::ShowSubtitle(String ^message)
 	{
-		ShowSubtitle(msg, 2500);
+		ShowSubtitle(message, 2500);
 	}
-	void UI::ShowSubtitle(String ^msg, int duration)
+	void UI::ShowSubtitle(String ^message, int duration)
 	{
 		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_2, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, msg);
+		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, message);
 		Native::Function::Call(Native::Hash::_DRAW_SUBTITLE_TIMED, duration, 1);
 	}
 
@@ -82,15 +82,15 @@ namespace GTA
 	{
 		int id;
 
-		if (sTextures->ContainsKey(filename))
+		if (_textures->ContainsKey(filename))
 		{
-			id = sTextures->default[filename];
+			id = _textures->default[filename];
 		}
 		else
 		{
 			id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
 
-			sTextures->Add(filename, id);
+			_textures->Add(filename, id);
 		}
 
 		const float x = static_cast<float>(pos.X) / UI::WIDTH;

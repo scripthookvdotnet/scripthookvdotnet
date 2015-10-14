@@ -220,22 +220,25 @@ namespace GTA
 		void MarkAsNoLongerNeeded();
 		virtual bool Equals(Entity ^entity);
 
-		virtual int GetHashCode() override;
-		static inline bool operator ==(Entity ^left, Entity ^right)
+		virtual inline int GetHashCode() override
 		{
-			if (Object::ReferenceEquals(left, nullptr))
+			return Handle;
+		}
+		static inline bool operator==(Entity ^left, Entity ^right)
+		{
+			if (ReferenceEquals(left, nullptr))
 			{
-				return Object::ReferenceEquals(right, nullptr);
+				return ReferenceEquals(right, nullptr);
 			}
 
 			return left->Equals(right);
 		}
-		static inline bool operator !=(Entity ^left, Entity ^right)
+		static inline bool operator!=(Entity ^left, Entity ^right)
 		{
-			return !operator ==(left, right);
+			return !operator==(left, right);
 		}
 		
 	private:
-		int mHandle;
+		int _handle;
 	};
 }

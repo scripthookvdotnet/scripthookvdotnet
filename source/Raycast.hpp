@@ -40,11 +40,11 @@ namespace GTA
 		RaycastResult(int handle);
 
 	private:
-		int mResult;
-		bool mDidHit;
-		Entity ^mHitEntity;
-		Math::Vector3 mHitCoords;
-		Math::Vector3 mSurfaceNormal;
+		int _result;
+		bool _didHit;
+		Entity ^_hitEntity;
+		Math::Vector3 _hitCoords;
+		Math::Vector3 _surfaceNormal;
 	};
 }
 

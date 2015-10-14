@@ -4,26 +4,35 @@ namespace GTA
 {
 	namespace NaturalMotion
 	{
-		Euphoria::Euphoria(Ped^ ped)
+		using namespace System;
+		using namespace System::Collections::Generic;
+
+		Euphoria::Euphoria(Ped ^ped) : _ped(ped)
 		{
-			this->ped = ped;
 		}
 
-		generic <typename HelperType> where HelperType: BaseHelper
-			HelperType Euphoria::GetHelper(String ^MessageID)
+		generic <typename T> where T : BaseHelper
+		T Euphoria::GetHelper(String ^MessageID)
 		{
-			BaseHelper^ h;
-			if (ReferenceEquals(pHelperCache, nullptr))
+			BaseHelper ^h;
+
+			if (ReferenceEquals(_helperCache, nullptr))
 			{
-				pHelperCache = gcnew Dictionary<String ^, BaseHelper^>();
+				_helperCache = gcnew Dictionary<String ^, BaseHelper ^>();
 			}
 			else
 			{
-				if (pHelperCache->TryGetValue(MessageID, h)) return (HelperType)h;
+				if (_helperCache->TryGetValue(MessageID, h))
+				{
+					return static_cast<T>(h);
+				}
 			}
-			h = (BaseHelper^)System::Activator::CreateInstance(HelperType::typeid, ped);
-			pHelperCache->Add(MessageID, h);
-			return (HelperType)h;
+
+			h = static_cast<BaseHelper ^>(Activator::CreateInstance(T::typeid, _ped));
+
+			_helperCache->Add(MessageID, h);
+
+			return static_cast<T>(h);
 		}
 	}
 }

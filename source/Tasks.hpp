@@ -102,7 +102,7 @@ namespace GTA
 		Tasks(Ped ^ped);
 
 	private:
-		Ped ^mPed;
+		Ped ^_ped;
 	};
 
 	public ref class TaskSequence sealed
@@ -133,8 +133,8 @@ namespace GTA
 		void Close(bool repeat);
 
 	private:
-		static Ped ^sNullPed;
-		int mHandle, mCount;
-		bool mIsClosed;
+		static Ped ^_nullPed;
+		int _handle, _count;
+		bool _isClosed;
 	};
 }

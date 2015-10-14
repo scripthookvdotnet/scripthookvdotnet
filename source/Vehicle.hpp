@@ -576,8 +576,5 @@ namespace GTA
 		void ApplyDamage(Math::Vector3 loc, float damageAmount, float radius);
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);
-
-	private:
-		int mID;
 	};
 }

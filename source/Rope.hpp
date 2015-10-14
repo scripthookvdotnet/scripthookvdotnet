@@ -42,6 +42,6 @@ namespace GTA
 		void Delete();
 
 	private:
-		int mHandle;
+		int _handle;
 	};
 }

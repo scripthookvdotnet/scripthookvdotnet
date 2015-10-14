@@ -5,79 +5,77 @@
 
 namespace GTA
 {
-	Rope::Rope(int handle) : mHandle(handle)
+	Rope::Rope(int handle) : _handle(handle)
 	{
 	}
 
 	int Rope::Handle::get()
 	{
-		return this->mHandle;
+		return _handle;
 	}
-
 	float Rope::Length::get()
 	{
-		return Native::Function::Call<float>(Native::Hash::_GET_ROPE_LENGTH, this->mHandle);
+		return Native::Function::Call<float>(Native::Hash::_GET_ROPE_LENGTH, Handle);
 	}
 	void Rope::Length::set(float value)
 	{
-		Native::Function::Call(Native::Hash::ROPE_FORCE_LENGTH, this->mHandle, value);
+		Native::Function::Call(Native::Hash::ROPE_FORCE_LENGTH, Handle, value);
 	}
 	int Rope::VertexCount::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_ROPE_VERTEX_COUNT, this->Handle);
+		return Native::Function::Call<int>(Native::Hash::GET_ROPE_VERTEX_COUNT, Handle);
 	}
 
 	void Rope::ActivatePhysics()
 	{
-		Native::Function::Call(Native::Hash::ACTIVATE_PHYSICS, this->Handle);
+		Native::Function::Call(Native::Hash::ACTIVATE_PHYSICS, Handle);
 	}
 	void Rope::ResetLength(bool reset)
 	{
-		Native::Function::Call(Native::Hash::ROPE_RESET_LENGTH, this->Handle, reset);
+		Native::Function::Call(Native::Hash::ROPE_RESET_LENGTH, Handle, reset);
 	}
 	void Rope::AttachEntities(Entity ^entityOne, Entity ^entityTwo, float length)
 	{
-		this->AttachEntities(entityOne, Math::Vector3(), entityTwo, Math::Vector3(), length);
+		AttachEntities(entityOne, Math::Vector3(), entityTwo, Math::Vector3(), length);
 	}
 	void Rope::AttachEntities(Entity ^entityOne, Math::Vector3 positionOne, Entity ^entityTwo, Math::Vector3 positionTwo, float length)
 	{
-		int tmpOne;
-		int tmpTwo;
-		Native::Function::Call(Native::Hash::ATTACH_ENTITIES_TO_ROPE, this->Handle, entityOne, entityTwo, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, &tmpOne, &tmpTwo);
+		int tmpOne, tmpTwo;
+		Native::Function::Call(Native::Hash::ATTACH_ENTITIES_TO_ROPE, Handle, entityOne, entityTwo, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, &tmpOne, &tmpTwo);
 	}
 	void Rope::AttachEntity(Entity ^entity)
 	{
-		this->AttachEntity(entity, Math::Vector3());
+		AttachEntity(entity, Math::Vector3());
 	}
 	void Rope::AttachEntity(Entity^ entity, Math::Vector3 position)
 	{
-		Native::Function::Call(Native::Hash::ATTACH_ROPE_TO_ENTITY, this->Handle, entity, position.X, position.Y, position.Z, 0);
+		Native::Function::Call(Native::Hash::ATTACH_ROPE_TO_ENTITY, Handle, entity, position.X, position.Y, position.Z, 0);
 	}
 	void Rope::DetachEntity(Entity^ entity)
 	{
-		Native::Function::Call(Native::Hash::DETACH_ROPE_FROM_ENTITY, this->Handle, entity);
+		Native::Function::Call(Native::Hash::DETACH_ROPE_FROM_ENTITY, Handle, entity);
 	}
 	void Rope::PinVertex(int vertex, Math::Vector3 position)
 	{
-		Native::Function::Call(Native::Hash::PIN_ROPE_VERTEX, this->Handle, vertex, position.X, position.Y, position.Z);
+		Native::Function::Call(Native::Hash::PIN_ROPE_VERTEX, Handle, vertex, position.X, position.Y, position.Z);
 	}
 	void Rope::UnpinVertex(int vertex)
 	{
-		Native::Function::Call(Native::Hash::UNPIN_ROPE_VERTEX, this->Handle, vertex);
+		Native::Function::Call(Native::Hash::UNPIN_ROPE_VERTEX, Handle, vertex);
 	}
 	Math::Vector3 Rope::GetVertexCoord(int vertex)
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, this->Handle, vertex);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, Handle, vertex);
 	}
 
 	bool Rope::Exists()
 	{
-		int handle = this->Handle;
+		int handle = Handle;
 		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
 	}
 	void Rope::Delete()
 	{
-		int handle = this->Handle;
+		int handle = Handle;
 		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
 	}
 }

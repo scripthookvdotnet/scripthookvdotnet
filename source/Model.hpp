@@ -20,7 +20,6 @@ namespace GTA
 		{
 			int get();
 		}
-
 		property bool IsValid
 		{
 			bool get();
@@ -37,7 +36,6 @@ namespace GTA
 		{
 			bool get();
 		}
-
 		property bool IsBicycle
 		{
 			bool get();
@@ -91,8 +89,14 @@ namespace GTA
 		void MarkAsNoLongerNeeded();
 		virtual bool Equals(Model model);
 
-		virtual int GetHashCode() override;
-		virtual System::String ^ToString() override;
+		virtual inline int GetHashCode() override
+		{
+			return Hash;
+		}
+		virtual inline System::String ^ToString() override
+		{
+			return "0x" + Hash.ToString("X");
+		}
 		static inline operator Model(int source)
 		{
 			return Model(source);
@@ -113,16 +117,16 @@ namespace GTA
 		{
 			return Model(source);
 		}
-		static inline bool operator ==(Model left, Model right)
+		static inline bool operator==(Model left, Model right)
 		{
 			return left.Equals(right);
 		}
-		static inline bool operator !=(Model left, Model right)
+		static inline bool operator!=(Model left, Model right)
 		{
-			return !operator ==(left, right);
+			return !operator==(left, right);
 		}
 
 	private:
-		int mHash;
+		int _hash;
 	};
 }

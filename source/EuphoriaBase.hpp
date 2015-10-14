@@ -1,96 +1,93 @@
 #pragma once
-#include "Vector3.hpp"
 
+#include "Vector3.hpp"
 
 namespace GTA
 {
+	#pragma region Forward Declarations
 	ref class Ped;
+	#pragma endregion
+
 	namespace NaturalMotion
 	{
-		using namespace System;
-		using namespace System::Collections::Generic;
-
-
 		public ref class BaseMessage abstract
 		{
 		public:
-			virtual String^ ToString() override;
+			virtual System::String ^ToString() override;
+
 		internal:
-			BaseMessage(String ^Message);
-			void pApplyTo(GTA::Ped ^TargetPed);
-			void pApplyTo(GTA::Ped ^TargetPed, int duration);
-			void pAbortTo(GTA::Ped ^TargetPed);
-			void pSetArgument(System::String ^message, bool value);
-			void pSetArgument(System::String ^message, int value);
-			void pSetArgument(System::String ^message, float value);
-			void pSetArgument(System::String ^message, double value) { pSetArgument(message, static_cast<float>(value)); }
-			void pSetArgument(System::String ^message, System::String ^value);
-			void pSetArgument(System::String ^message, Math::Vector3 value);
-			String ^pMessage;
-			void pGiveMessage(GTA::Ped ^TargetPed);
-			void pResetArguments();
-		private:
-			Dictionary<String ^, bool> ^lBool;
-			Dictionary<String ^, int> ^lInt;
-			Dictionary<String ^, float> ^lFloat;
-			Dictionary<String ^, String ^> ^lString;
-			Dictionary<String ^, Math::Vector3> ^lVec;
+			BaseMessage(System::String ^Message);
+
+			void Abort(Ped ^target);
+			void SendTo(Ped ^target);
+			void SendTo(Ped ^target, int duration);
+
+			void SetArgument(System::String ^message, bool value);
+			void SetArgument(System::String ^message, int value);
+			void SetArgument(System::String ^message, float value);
+			void SetArgument(System::String ^message, double value);
+			void SetArgument(System::String ^message, System::String ^value);
+			void SetArgument(System::String ^message, Math::Vector3 value);
+			void ResetArguments();
+
+			System::String ^_message;
+			System::Collections::Generic::Dictionary<System::String ^, bool> ^lBool;
+			System::Collections::Generic::Dictionary<System::String ^, int> ^lInt;
+			System::Collections::Generic::Dictionary<System::String ^, float> ^lFloat;
+			System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^lString;
+			System::Collections::Generic::Dictionary<System::String ^, Math::Vector3> ^lVec;
 		};
 
-		public ref class BaseHelper abstract : public BaseMessage {
-
-		protected:
-
-			GTA::Ped^ pPed;
-		internal:
-
-			BaseHelper(GTA::Ped^ Ped, String ^Message);
-			void pStart(int Duration);
-			void pStart();
-		public:
-			void Stop();
-			virtual String^ ToString() override { return BaseMessage::ToString(); }
-		};
-		public ref class CustomMessage : public BaseMessage 
+		public ref class BaseHelper abstract : public BaseMessage
 		{
 		public:
-			CustomMessage(String ^Message);
+			void Stop();
 
-			property String ^Message {
-				String ^get();
+		internal:
+			BaseHelper(Ped ^ped, System::String ^message);
+
+			void Start();
+			void Start(int duration);
+
+		protected:
+			Ped ^_ped;
+		};
+		public ref class CustomHelper : public BaseHelper
+		{
+		public:
+			CustomHelper(Ped ^ped, System::String ^message);
+
+			void Start();
+			void Start(int duration);
+
+			void SetArgument(System::String ^message, bool value);
+			void SetArgument(System::String ^message, int value);
+			void SetArgument(System::String ^message, float value);
+			void SetArgument(System::String ^message, double value);
+			void SetArgument(System::String ^message, System::String ^value);
+			void SetArgument(System::String ^message, Math::Vector3 value);
+			void ResetArguments();
+		};
+		public ref class CustomMessage : public BaseMessage
+		{
+		public:
+			CustomMessage(System::String ^message);
+
+			property System::String ^Message
+			{
+				System::String ^get();
 			}
 
-			void SendTo(GTA::Ped^ TargetPed, int Duration);
-			void SendTo(GTA::Ped^ TargetPed);
+			void Abort(Ped ^target);
+			void SendTo(Ped ^target);
+			void SendTo(Ped ^target, int duration);
 
-			void Abort(GTA::Ped^ TargetPed);
-
-			void SetArgument(System::String ^message, bool value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, int value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, float value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, double value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, System::String ^value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, Math::Vector3 value) { pSetArgument(message, value); }
-			virtual String^ ToString() override { return BaseMessage::ToString(); }
-		};
-
-		public ref class CustomHelper : public BaseHelper {
-
-		public:
-
-			CustomHelper(GTA::Ped^ Ped, String ^Message);
-			void Start(int Duration);
-			void Start();
-
-			void SetArgument(System::String ^message, bool value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, int value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, float value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, double value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, System::String ^value) { pSetArgument(message, value); }
-			void SetArgument(System::String ^message, Math::Vector3 value) { pSetArgument(message, value); }
-			void ResetArguments() { pResetArguments(); }
-			
-			virtual String^ ToString() override { return BaseMessage::ToString(); }
+			void SetArgument(System::String ^message, bool value);
+			void SetArgument(System::String ^message, int value);
+			void SetArgument(System::String ^message, float value);
+			void SetArgument(System::String ^message, double value);
+			void SetArgument(System::String ^message, System::String ^value);
+			void SetArgument(System::String ^message, Math::Vector3 value);
 		};
 	}
 }

@@ -119,8 +119,11 @@ namespace GTA
 
 		virtual bool Equals(Player ^player);
 
-		virtual int GetHashCode() override;
-		static inline bool operator ==(Player ^left, Player ^right)
+		virtual inline int GetHashCode() override
+		{
+			return Handle;
+		}
+		static inline bool operator==(Player ^left, Player ^right)
 		{
 			if (Object::ReferenceEquals(left, nullptr))
 			{
@@ -129,13 +132,13 @@ namespace GTA
 
 			return left->Equals(right);
 		}
-		static inline bool operator !=(Player ^left, Player ^right)
+		static inline bool operator!=(Player ^left, Player ^right)
 		{
-			return !operator ==(left, right);
+			return !operator==(left, right);
 		}
 
 	private:
-		int mHandle;
-		Ped ^mPed;
+		int _handle;
+		Ped ^_ped;
 	};
 }

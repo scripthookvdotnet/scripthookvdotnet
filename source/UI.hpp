@@ -73,10 +73,10 @@ namespace GTA
 		void Hide();
 
 	internal:
-		Notification(int Handle);
+		Notification(int handle);
 
 	private:
-		int mHandle;
+		int _handle;
 	};
 
 	public ref class UI sealed abstract
@@ -85,11 +85,11 @@ namespace GTA
 		static const int WIDTH = 1280;
 		static const int HEIGHT = 720;
 
-		static Notification ^Notify(System::String ^msg);
-		static Notification ^Notify(System::String ^msg, bool blinking);
+		static Notification ^Notify(System::String ^message);
+		static Notification ^Notify(System::String ^message, bool blinking);
 
-		static void ShowSubtitle(System::String ^msg);
-		static void ShowSubtitle(System::String ^msg, int duration);
+		static void ShowSubtitle(System::String ^message);
+		static void ShowSubtitle(System::String ^message, int duration);
 
 		static bool IsHudComponentActive(HudComponent component);
 		static void ShowHudComponentThisFrame(HudComponent component);
@@ -103,6 +103,6 @@ namespace GTA
 		static void DrawTexture(System::String ^filename, int index, int level, int time, System::Drawing::Point pos, System::Drawing::PointF center, System::Drawing::Size size, float rotation, System::Drawing::Color color, float aspectRatio);
 
 	internal:
-		static System::Collections::Generic::Dictionary<System::String ^, int> ^sTextures = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
+		static System::Collections::Generic::Dictionary<System::String ^, int> ^_textures = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
 	};
 }

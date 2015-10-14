@@ -19,10 +19,9 @@
 namespace GTA
 {
 	using namespace System;
-	using namespace System::Windows::Forms;
 	using namespace System::Collections::Generic;
 
-	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename), mValues(gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>())
+	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename), mValues(gcnew Dictionary<String ^, String ^>())
 	{
 	}
 
@@ -50,7 +49,7 @@ namespace GTA
 
 		try
 		{
-			while (!Object::ReferenceEquals(line = reader->ReadLine(), nullptr))
+			while (!ReferenceEquals(line = reader->ReadLine(), nullptr))
 			{
 				line = line->Trim();
 
@@ -104,7 +103,7 @@ namespace GTA
 	{
 		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^result = gcnew Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
 
-		for each (KeyValuePair<String ^, String ^> data in this->mValues)
+		for each (KeyValuePair<String ^, String ^> data in mValues)
 		{
 			String ^key = data.Key->Substring(data.Key->IndexOf("]") + 1);
 			String ^section = data.Key->Remove(data.Key->IndexOf("]"))->Substring(1);
@@ -126,7 +125,7 @@ namespace GTA
 
 		try
 		{
-			writer = IO::File::CreateText(this->mFileName);
+			writer = IO::File::CreateText(mFileName);
 		}
 		catch (IO::IOException ^)
 		{
@@ -175,7 +174,7 @@ namespace GTA
 				return static_cast<T>(Convert::ChangeType(value, T::typeid));
 			}
 		}
-		catch (...)
+		catch (Exception ^)
 		{
 			return defaultvalue;
 		}
@@ -188,22 +187,22 @@ namespace GTA
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
-		this->mValues->TryGetValue(lookup, value);
+		mValues->TryGetValue(lookup, value);
 
 		return value;
 	}
-	array<System::String ^> ^ScriptSettings::GetAllValues(String ^section, String ^key)
+	array<String ^> ^ScriptSettings::GetAllValues(String ^section, String ^key)
 	{
 		String ^value = nullptr;
 		List<String ^> ^values = gcnew List<String ^>();
 
-		value = GetValue(section, key, nullptr);
+		value = GetValue(section, key, static_cast<String ^>(nullptr));
 
-		if (!Object::ReferenceEquals(value, nullptr))
+		if (!ReferenceEquals(value, nullptr))
 		{
 			values->Add(value);
 
-			for (int i = 1; this->mValues->TryGetValue(String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper(), value); ++i)
+			for (int i = 1; mValues->TryGetValue(String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper(), value); ++i)
 			{
 				values->Add(value);
 			}
@@ -220,13 +219,13 @@ namespace GTA
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
-		if (!this->mValues->ContainsKey(lookup))
+		if (!mValues->ContainsKey(lookup))
 		{
-			this->mValues->Add(lookup, value);
+			mValues->Add(lookup, value);
 		}
 		else
 		{
-			this->mValues->default[lookup] = value;
+			mValues->default[lookup] = value;
 		}
 	}
 }

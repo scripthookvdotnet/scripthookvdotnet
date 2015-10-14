@@ -1,4 +1,5 @@
 #pragma once
+
 #include "EuphoriaBase.hpp"
 #include "EuphoriaHelpers.hpp"
 
@@ -6,521 +7,600 @@ namespace GTA
 {
 	namespace NaturalMotion
 	{
-		using namespace System;
-		using namespace System::Collections::Generic;
-		public ref class Euphoria sealed {
-
+		public ref class Euphoria sealed
+		{
 		private:
-			Ped^ ped;
-			Dictionary<String ^, BaseHelper^>^ pHelperCache;
+			Ped ^_ped;
+			System::Collections::Generic::Dictionary<System::String ^, BaseHelper ^> ^_helperCache;
 
-			generic <typename HelperType> where HelperType: BaseHelper
-				HelperType GetHelper(String ^MessageID);
+			generic <typename T> where T : BaseHelper
+			T GetHelper(System::String ^MessageID);
 
 		internal:
-			Euphoria(Ped^ ped);
+			Euphoria(Ped ^ped);
 
 		public:
-
-			property GTA::NaturalMotion::ActivePoseHelper^ ActivePose {
-				GTA::NaturalMotion::ActivePoseHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ActivePoseHelper^>("activePose");
+			property ActivePoseHelper ^ActivePose
+			{
+				ActivePoseHelper ^get()
+				{
+					return GetHelper<ActivePoseHelper^>("activePose");
 				}
 			}
-
-			property GTA::NaturalMotion::ApplyImpulseHelper^ ApplyImpulse {
-				GTA::NaturalMotion::ApplyImpulseHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ApplyImpulseHelper^>("applyImpulse");
+			property ApplyImpulseHelper ^ApplyImpulse
+			{
+				ApplyImpulseHelper ^get()
+				{
+					return GetHelper<ApplyImpulseHelper^>("applyImpulse");
 				}
 			}
-
-			property GTA::NaturalMotion::ApplyBulletImpulseHelper^ ApplyBulletImpulse {
-				GTA::NaturalMotion::ApplyBulletImpulseHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ApplyBulletImpulseHelper^>("applyBulletImpulse");
+			property ApplyBulletImpulseHelper ^ApplyBulletImpulse
+			{
+				ApplyBulletImpulseHelper ^get()
+				{
+					return GetHelper<ApplyBulletImpulseHelper^>("applyBulletImpulse");
 				}
 			}
-
-			property GTA::NaturalMotion::BodyRelaxHelper^ BodyRelax {
-				GTA::NaturalMotion::BodyRelaxHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BodyRelaxHelper^>("bodyRelax");
+			property BodyRelaxHelper ^BodyRelax
+			{
+				BodyRelaxHelper ^get()
+				{
+					return GetHelper<BodyRelaxHelper^>("bodyRelax");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureBalanceHelper^ ConfigureBalance {
-				GTA::NaturalMotion::ConfigureBalanceHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureBalanceHelper^>("configureBalance");
+			property ConfigureBalanceHelper ^ConfigureBalance
+			{
+				ConfigureBalanceHelper ^get()
+				{
+					return GetHelper<ConfigureBalanceHelper^>("configureBalance");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureBalanceResetHelper^ ConfigureBalanceReset {
-				GTA::NaturalMotion::ConfigureBalanceResetHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureBalanceResetHelper^>("configureBalanceReset");
+			property ConfigureBalanceResetHelper ^ConfigureBalanceReset
+			{
+				ConfigureBalanceResetHelper ^get()
+				{
+					return GetHelper<ConfigureBalanceResetHelper^>("configureBalanceReset");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureSelfAvoidanceHelper^ ConfigureSelfAvoidance {
-				GTA::NaturalMotion::ConfigureSelfAvoidanceHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureSelfAvoidanceHelper^>("configureSelfAvoidance");
+			property ConfigureSelfAvoidanceHelper ^ConfigureSelfAvoidance
+			{
+				ConfigureSelfAvoidanceHelper ^get()
+				{
+					return GetHelper<ConfigureSelfAvoidanceHelper^>("configureSelfAvoidance");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureBulletsHelper^ ConfigureBullets {
-				GTA::NaturalMotion::ConfigureBulletsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureBulletsHelper^>("configureBullets");
+			property ConfigureBulletsHelper ^ConfigureBullets
+			{
+				ConfigureBulletsHelper ^get()
+				{
+					return GetHelper<ConfigureBulletsHelper^>("configureBullets");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureBulletsExtraHelper^ ConfigureBulletsExtra {
-				GTA::NaturalMotion::ConfigureBulletsExtraHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureBulletsExtraHelper^>("configureBulletsExtra");
+			property ConfigureBulletsExtraHelper ^ConfigureBulletsExtra
+			{
+				ConfigureBulletsExtraHelper ^get()
+				{
+					return GetHelper<ConfigureBulletsExtraHelper^>("configureBulletsExtra");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureLimitsHelper^ ConfigureLimits {
-				GTA::NaturalMotion::ConfigureLimitsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureLimitsHelper^>("configureLimits");
+			property ConfigureLimitsHelper ^ConfigureLimits
+			{
+				ConfigureLimitsHelper ^get()
+				{
+					return GetHelper<ConfigureLimitsHelper^>("configureLimits");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureSoftLimitHelper^ ConfigureSoftLimit {
-				GTA::NaturalMotion::ConfigureSoftLimitHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureSoftLimitHelper^>("configureSoftLimit");
+			property ConfigureSoftLimitHelper ^ConfigureSoftLimit
+			{
+				ConfigureSoftLimitHelper ^get()
+				{
+					return GetHelper<ConfigureSoftLimitHelper^>("configureSoftLimit");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureShotInjuredArmHelper^ ConfigureShotInjuredArm {
-				GTA::NaturalMotion::ConfigureShotInjuredArmHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureShotInjuredArmHelper^>("configureShotInjuredArm");
+			property ConfigureShotInjuredArmHelper ^ConfigureShotInjuredArm
+			{
+				ConfigureShotInjuredArmHelper ^get()
+				{
+					return GetHelper<ConfigureShotInjuredArmHelper^>("configureShotInjuredArm");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureShotInjuredLegHelper^ ConfigureShotInjuredLeg {
-				GTA::NaturalMotion::ConfigureShotInjuredLegHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureShotInjuredLegHelper^>("configureShotInjuredLeg");
+			property ConfigureShotInjuredLegHelper ^ConfigureShotInjuredLeg
+			{
+				ConfigureShotInjuredLegHelper ^get()
+				{
+					return GetHelper<ConfigureShotInjuredLegHelper^>("configureShotInjuredLeg");
 				}
 			}
-
-			property GTA::NaturalMotion::DefineAttachedObjectHelper^ DefineAttachedObject {
-				GTA::NaturalMotion::DefineAttachedObjectHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::DefineAttachedObjectHelper^>("defineAttachedObject");
+			property DefineAttachedObjectHelper ^DefineAttachedObject
+			{
+				DefineAttachedObjectHelper ^get()
+				{
+					return GetHelper<DefineAttachedObjectHelper^>("defineAttachedObject");
 				}
 			}
-
-			property GTA::NaturalMotion::ForceToBodyPartHelper^ ForceToBodyPart {
-				GTA::NaturalMotion::ForceToBodyPartHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ForceToBodyPartHelper^>("forceToBodyPart");
+			property ForceToBodyPartHelper ^ForceToBodyPart
+			{
+				ForceToBodyPartHelper ^get()
+				{
+					return GetHelper<ForceToBodyPartHelper^>("forceToBodyPart");
 				}
 			}
-
-			property GTA::NaturalMotion::LeanInDirectionHelper^ LeanInDirection {
-				GTA::NaturalMotion::LeanInDirectionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::LeanInDirectionHelper^>("leanInDirection");
+			property LeanInDirectionHelper ^LeanInDirection
+			{
+				LeanInDirectionHelper ^get()
+				{
+					return GetHelper<LeanInDirectionHelper^>("leanInDirection");
 				}
 			}
-
-			property GTA::NaturalMotion::LeanRandomHelper^ LeanRandom {
-				GTA::NaturalMotion::LeanRandomHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::LeanRandomHelper^>("leanRandom");
+			property LeanRandomHelper ^LeanRandom
+			{
+				LeanRandomHelper ^get()
+				{
+					return GetHelper<LeanRandomHelper^>("leanRandom");
 				}
 			}
-
-			property GTA::NaturalMotion::LeanToPositionHelper^ LeanToPosition {
-				GTA::NaturalMotion::LeanToPositionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::LeanToPositionHelper^>("leanToPosition");
+			property LeanToPositionHelper ^LeanToPosition
+			{
+				LeanToPositionHelper ^get()
+				{
+					return GetHelper<LeanToPositionHelper^>("leanToPosition");
 				}
 			}
-
-			property GTA::NaturalMotion::LeanTowardsObjectHelper^ LeanTowardsObject {
-				GTA::NaturalMotion::LeanTowardsObjectHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::LeanTowardsObjectHelper^>("leanTowardsObject");
+			property LeanTowardsObjectHelper ^LeanTowardsObject
+			{
+				LeanTowardsObjectHelper ^get()
+				{
+					return GetHelper<LeanTowardsObjectHelper^>("leanTowardsObject");
 				}
 			}
-
-			property GTA::NaturalMotion::HipsLeanInDirectionHelper^ HipsLeanInDirection {
-				GTA::NaturalMotion::HipsLeanInDirectionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::HipsLeanInDirectionHelper^>("hipsLeanInDirection");
+			property HipsLeanInDirectionHelper ^HipsLeanInDirection
+			{
+				HipsLeanInDirectionHelper ^get()
+				{
+					return GetHelper<HipsLeanInDirectionHelper^>("hipsLeanInDirection");
 				}
 			}
-
-			property GTA::NaturalMotion::HipsLeanRandomHelper^ HipsLeanRandom {
-				GTA::NaturalMotion::HipsLeanRandomHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::HipsLeanRandomHelper^>("hipsLeanRandom");
+			property HipsLeanRandomHelper ^HipsLeanRandom
+			{
+				HipsLeanRandomHelper ^get()
+				{
+					return GetHelper<HipsLeanRandomHelper^>("hipsLeanRandom");
 				}
 			}
-
-			property GTA::NaturalMotion::HipsLeanToPositionHelper^ HipsLeanToPosition {
-				GTA::NaturalMotion::HipsLeanToPositionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::HipsLeanToPositionHelper^>("hipsLeanToPosition");
+			property HipsLeanToPositionHelper ^HipsLeanToPosition
+			{
+				HipsLeanToPositionHelper ^get()
+				{
+					return GetHelper<HipsLeanToPositionHelper^>("hipsLeanToPosition");
 				}
 			}
-
-			property GTA::NaturalMotion::HipsLeanTowardsObjectHelper^ HipsLeanTowardsObject {
-				GTA::NaturalMotion::HipsLeanTowardsObjectHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::HipsLeanTowardsObjectHelper^>("hipsLeanTowardsObject");
+			property HipsLeanTowardsObjectHelper ^HipsLeanTowardsObject
+			{
+				HipsLeanTowardsObjectHelper ^get()
+				{
+					return GetHelper<HipsLeanTowardsObjectHelper^>("hipsLeanTowardsObject");
 				}
 			}
-
-			property GTA::NaturalMotion::ForceLeanInDirectionHelper^ ForceLeanInDirection {
-				GTA::NaturalMotion::ForceLeanInDirectionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ForceLeanInDirectionHelper^>("forceLeanInDirection");
+			property ForceLeanInDirectionHelper ^ForceLeanInDirection
+			{
+				ForceLeanInDirectionHelper ^get()
+				{
+					return GetHelper<ForceLeanInDirectionHelper^>("forceLeanInDirection");
 				}
 			}
-
-			property GTA::NaturalMotion::ForceLeanRandomHelper^ ForceLeanRandom {
-				GTA::NaturalMotion::ForceLeanRandomHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ForceLeanRandomHelper^>("forceLeanRandom");
+			property ForceLeanRandomHelper ^ForceLeanRandom
+			{
+				ForceLeanRandomHelper ^get()
+				{
+					return GetHelper<ForceLeanRandomHelper^>("forceLeanRandom");
 				}
 			}
-
-			property GTA::NaturalMotion::ForceLeanToPositionHelper^ ForceLeanToPosition {
-				GTA::NaturalMotion::ForceLeanToPositionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ForceLeanToPositionHelper^>("forceLeanToPosition");
+			property ForceLeanToPositionHelper ^ForceLeanToPosition
+			{
+				ForceLeanToPositionHelper ^get()
+				{
+					return GetHelper<ForceLeanToPositionHelper^>("forceLeanToPosition");
 				}
 			}
-
-			property GTA::NaturalMotion::ForceLeanTowardsObjectHelper^ ForceLeanTowardsObject {
-				GTA::NaturalMotion::ForceLeanTowardsObjectHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ForceLeanTowardsObjectHelper^>("forceLeanTowardsObject");
+			property ForceLeanTowardsObjectHelper ^ForceLeanTowardsObject
+			{
+				ForceLeanTowardsObjectHelper ^get()
+				{
+					return GetHelper<ForceLeanTowardsObjectHelper^>("forceLeanTowardsObject");
 				}
 			}
-
-			property GTA::NaturalMotion::SetStiffnessHelper^ SetStiffness {
-				GTA::NaturalMotion::SetStiffnessHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetStiffnessHelper^>("setStiffness");
+			property SetStiffnessHelper ^SetStiffness
+			{
+				SetStiffnessHelper ^get()
+				{
+					return GetHelper<SetStiffnessHelper^>("setStiffness");
 				}
 			}
-
-			property GTA::NaturalMotion::SetMuscleStiffnessHelper^ SetMuscleStiffness {
-				GTA::NaturalMotion::SetMuscleStiffnessHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetMuscleStiffnessHelper^>("setMuscleStiffness");
+			property SetMuscleStiffnessHelper ^SetMuscleStiffness
+			{
+				SetMuscleStiffnessHelper ^get()
+				{
+					return GetHelper<SetMuscleStiffnessHelper^>("setMuscleStiffness");
 				}
 			}
-
-			property GTA::NaturalMotion::SetWeaponModeHelper^ SetWeaponMode {
-				GTA::NaturalMotion::SetWeaponModeHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetWeaponModeHelper^>("setWeaponMode");
+			property SetWeaponModeHelper ^SetWeaponMode
+			{
+				SetWeaponModeHelper ^get()
+				{
+					return GetHelper<SetWeaponModeHelper^>("setWeaponMode");
 				}
 			}
-
-			property GTA::NaturalMotion::RegisterWeaponHelper^ RegisterWeapon {
-				GTA::NaturalMotion::RegisterWeaponHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::RegisterWeaponHelper^>("registerWeapon");
+			property RegisterWeaponHelper ^RegisterWeapon
+			{
+				RegisterWeaponHelper ^get()
+				{
+					return GetHelper<RegisterWeaponHelper^>("registerWeapon");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotRelaxHelper^ ShotRelax {
-				GTA::NaturalMotion::ShotRelaxHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotRelaxHelper^>("shotRelax");
+			property ShotRelaxHelper ^ShotRelax
+			{
+				ShotRelaxHelper ^get()
+				{
+					return GetHelper<ShotRelaxHelper^>("shotRelax");
 				}
 			}
-
-			property GTA::NaturalMotion::FireWeaponHelper^ FireWeapon {
-				GTA::NaturalMotion::FireWeaponHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::FireWeaponHelper^>("fireWeapon");
+			property FireWeaponHelper ^FireWeapon
+			{
+				FireWeaponHelper ^get()
+				{
+					return GetHelper<FireWeaponHelper^>("fireWeapon");
 				}
 			}
-
-			property GTA::NaturalMotion::ConfigureConstraintsHelper^ ConfigureConstraints {
-				GTA::NaturalMotion::ConfigureConstraintsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ConfigureConstraintsHelper^>("configureConstraints");
+			property ConfigureConstraintsHelper ^ConfigureConstraints
+			{
+				ConfigureConstraintsHelper ^get()
+				{
+					return GetHelper<ConfigureConstraintsHelper^>("configureConstraints");
 				}
 			}
-
-			property GTA::NaturalMotion::StayUprightHelper^ StayUpright {
-				GTA::NaturalMotion::StayUprightHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::StayUprightHelper^>("stayUpright");
+			property StayUprightHelper ^StayUpright
+			{
+				StayUprightHelper ^get()
+				{
+					return GetHelper<StayUprightHelper^>("stayUpright");
 				}
 			}
-
-			property GTA::NaturalMotion::StopAllBehavioursHelper^ StopAllBehaviours {
-				GTA::NaturalMotion::StopAllBehavioursHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::StopAllBehavioursHelper^>("stopAllBehaviours");
+			property StopAllBehavioursHelper ^StopAllBehaviours
+			{
+				StopAllBehavioursHelper ^get()
+				{
+					return GetHelper<StopAllBehavioursHelper^>("stopAllBehaviours");
 				}
 			}
-
-			property GTA::NaturalMotion::SetCharacterStrengthHelper^ SetCharacterStrength {
-				GTA::NaturalMotion::SetCharacterStrengthHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetCharacterStrengthHelper^>("setCharacterStrength");
+			property SetCharacterStrengthHelper ^SetCharacterStrength
+			{
+				SetCharacterStrengthHelper ^get()
+				{
+					return GetHelper<SetCharacterStrengthHelper^>("setCharacterStrength");
 				}
 			}
-
-			property GTA::NaturalMotion::SetCharacterHealthHelper^ SetCharacterHealth {
-				GTA::NaturalMotion::SetCharacterHealthHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetCharacterHealthHelper^>("setCharacterHealth");
+			property SetCharacterHealthHelper ^SetCharacterHealth
+			{
+				SetCharacterHealthHelper ^get()
+				{
+					return GetHelper<SetCharacterHealthHelper^>("setCharacterHealth");
 				}
 			}
-
-			property GTA::NaturalMotion::SetFallingReactionHelper^ SetFallingReaction {
-				GTA::NaturalMotion::SetFallingReactionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetFallingReactionHelper^>("setFallingReaction");
+			property SetFallingReactionHelper ^SetFallingReaction
+			{
+				SetFallingReactionHelper ^get()
+				{
+					return GetHelper<SetFallingReactionHelper^>("setFallingReaction");
 				}
 			}
-
-			property GTA::NaturalMotion::SetCharacterUnderwaterHelper^ SetCharacterUnderwater {
-				GTA::NaturalMotion::SetCharacterUnderwaterHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetCharacterUnderwaterHelper^>("setCharacterUnderwater");
+			property SetCharacterUnderwaterHelper ^SetCharacterUnderwater
+			{
+				SetCharacterUnderwaterHelper ^get()
+				{
+					return GetHelper<SetCharacterUnderwaterHelper^>("setCharacterUnderwater");
 				}
 			}
-
-			property GTA::NaturalMotion::SetCharacterCollisionsHelper^ SetCharacterCollisions {
-				GTA::NaturalMotion::SetCharacterCollisionsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetCharacterCollisionsHelper^>("setCharacterCollisions");
+			property SetCharacterCollisionsHelper ^SetCharacterCollisions
+			{
+				SetCharacterCollisionsHelper ^get()
+				{
+					return GetHelper<SetCharacterCollisionsHelper^>("setCharacterCollisions");
 				}
 			}
-
-			property GTA::NaturalMotion::SetCharacterDampingHelper^ SetCharacterDamping {
-				GTA::NaturalMotion::SetCharacterDampingHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetCharacterDampingHelper^>("setCharacterDamping");
+			property SetCharacterDampingHelper ^SetCharacterDamping
+			{
+				SetCharacterDampingHelper ^get()
+				{
+					return GetHelper<SetCharacterDampingHelper^>("setCharacterDamping");
 				}
 			}
-
-			property GTA::NaturalMotion::SetFrictionScaleHelper^ SetFrictionScale {
-				GTA::NaturalMotion::SetFrictionScaleHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SetFrictionScaleHelper^>("setFrictionScale");
+			property SetFrictionScaleHelper ^SetFrictionScale
+			{
+				SetFrictionScaleHelper ^get()
+				{
+					return GetHelper<SetFrictionScaleHelper^>("setFrictionScale");
 				}
 			}
-
-			property GTA::NaturalMotion::AnimPoseHelper^ AnimPose {
-				GTA::NaturalMotion::AnimPoseHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::AnimPoseHelper^>("animPose");
+			property AnimPoseHelper ^AnimPose
+			{
+				AnimPoseHelper ^get()
+				{
+					return GetHelper<AnimPoseHelper^>("animPose");
 				}
 			}
-
-			property GTA::NaturalMotion::ArmsWindmillHelper^ ArmsWindmill {
-				GTA::NaturalMotion::ArmsWindmillHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ArmsWindmillHelper^>("armsWindmill");
+			property ArmsWindmillHelper ^ArmsWindmill
+			{
+				ArmsWindmillHelper ^get()
+				{
+					return GetHelper<ArmsWindmillHelper^>("armsWindmill");
 				}
 			}
-
-			property GTA::NaturalMotion::ArmsWindmillAdaptiveHelper^ ArmsWindmillAdaptive {
-				GTA::NaturalMotion::ArmsWindmillAdaptiveHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ArmsWindmillAdaptiveHelper^>("armsWindmillAdaptive");
+			property ArmsWindmillAdaptiveHelper ^ArmsWindmillAdaptive
+			{
+				ArmsWindmillAdaptiveHelper ^get()
+				{
+					return GetHelper<ArmsWindmillAdaptiveHelper^>("armsWindmillAdaptive");
 				}
 			}
-
-			property GTA::NaturalMotion::BalancerCollisionsReactionHelper^ BalancerCollisionsReaction {
-				GTA::NaturalMotion::BalancerCollisionsReactionHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BalancerCollisionsReactionHelper^>("balancerCollisionsReaction");
+			property BalancerCollisionsReactionHelper ^BalancerCollisionsReaction
+			{
+				BalancerCollisionsReactionHelper ^get()
+				{
+					return GetHelper<BalancerCollisionsReactionHelper^>("balancerCollisionsReaction");
 				}
 			}
-
-			property GTA::NaturalMotion::BodyBalanceHelper^ BodyBalance {
-				GTA::NaturalMotion::BodyBalanceHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BodyBalanceHelper^>("bodyBalance");
+			property BodyBalanceHelper ^BodyBalance
+			{
+				BodyBalanceHelper ^get()
+				{
+					return GetHelper<BodyBalanceHelper^>("bodyBalance");
 				}
 			}
-
-			property GTA::NaturalMotion::BodyFoetalHelper^ BodyFoetal {
-				GTA::NaturalMotion::BodyFoetalHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BodyFoetalHelper^>("bodyFoetal");
+			property BodyFoetalHelper ^BodyFoetal
+			{
+				BodyFoetalHelper ^get()
+				{
+					return GetHelper<BodyFoetalHelper^>("bodyFoetal");
 				}
 			}
-
-			property GTA::NaturalMotion::BodyRollUpHelper^ BodyRollUp {
-				GTA::NaturalMotion::BodyRollUpHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BodyRollUpHelper^>("bodyRollUp");
+			property BodyRollUpHelper ^BodyRollUp
+			{
+				BodyRollUpHelper ^get()
+				{
+					return GetHelper<BodyRollUpHelper^>("bodyRollUp");
 				}
 			}
-
-			property GTA::NaturalMotion::BodyWritheHelper^ BodyWrithe {
-				GTA::NaturalMotion::BodyWritheHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BodyWritheHelper^>("bodyWrithe");
+			property BodyWritheHelper ^BodyWrithe
+			{
+				BodyWritheHelper ^get()
+				{
+					return GetHelper<BodyWritheHelper^>("bodyWrithe");
 				}
 			}
-
-			property GTA::NaturalMotion::BraceForImpactHelper^ BraceForImpact {
-				GTA::NaturalMotion::BraceForImpactHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BraceForImpactHelper^>("braceForImpact");
+			property BraceForImpactHelper ^BraceForImpact
+			{
+				BraceForImpactHelper ^get()
+				{
+					return GetHelper<BraceForImpactHelper^>("braceForImpact");
 				}
 			}
-
-			property GTA::NaturalMotion::BuoyancyHelper^ Buoyancy {
-				GTA::NaturalMotion::BuoyancyHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::BuoyancyHelper^>("buoyancy");
+			property BuoyancyHelper ^Buoyancy
+			{
+				BuoyancyHelper ^get()
+				{
+					return GetHelper<BuoyancyHelper^>("buoyancy");
 				}
 			}
-
-			property GTA::NaturalMotion::CatchFallHelper^ CatchFall {
-				GTA::NaturalMotion::CatchFallHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::CatchFallHelper^>("catchFall");
+			property CatchFallHelper ^CatchFall
+			{
+				CatchFallHelper ^get()
+				{
+					return GetHelper<CatchFallHelper^>("catchFall");
 				}
 			}
-
-			property GTA::NaturalMotion::ElectrocuteHelper^ Electrocute {
-				GTA::NaturalMotion::ElectrocuteHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ElectrocuteHelper^>("electrocute");
+			property ElectrocuteHelper ^Electrocute
+			{
+				ElectrocuteHelper ^get()
+				{
+					return GetHelper<ElectrocuteHelper^>("electrocute");
 				}
 			}
-
-			property GTA::NaturalMotion::FallOverWallHelper^ FallOverWall {
-				GTA::NaturalMotion::FallOverWallHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::FallOverWallHelper^>("fallOverWall");
+			property FallOverWallHelper ^FallOverWall
+			{
+				FallOverWallHelper ^get()
+				{
+					return GetHelper<FallOverWallHelper^>("fallOverWall");
 				}
 			}
-
-			property GTA::NaturalMotion::GrabHelper^ Grab {
-				GTA::NaturalMotion::GrabHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::GrabHelper^>("grab");
+			property GrabHelper ^Grab
+			{
+				GrabHelper ^get()
+				{
+					return GetHelper<GrabHelper^>("grab");
 				}
 			}
-
-			property GTA::NaturalMotion::HeadLookHelper^ HeadLook {
-				GTA::NaturalMotion::HeadLookHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::HeadLookHelper^>("headLook");
+			property HeadLookHelper ^HeadLook
+			{
+				HeadLookHelper ^get()
+				{
+					return GetHelper<HeadLookHelper^>("headLook");
 				}
 			}
-
-			property GTA::NaturalMotion::HighFallHelper^ HighFall {
-				GTA::NaturalMotion::HighFallHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::HighFallHelper^>("highFall");
+			property HighFallHelper ^HighFall
+			{
+				HighFallHelper ^get()
+				{
+					return GetHelper<HighFallHelper^>("highFall");
 				}
 			}
-
-			property GTA::NaturalMotion::IncomingTransformsHelper^ IncomingTransforms {
-				GTA::NaturalMotion::IncomingTransformsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::IncomingTransformsHelper^>("incomingTransforms");
+			property IncomingTransformsHelper ^IncomingTransforms
+			{
+				IncomingTransformsHelper ^get()
+				{
+					return GetHelper<IncomingTransformsHelper^>("incomingTransforms");
 				}
 			}
-
-			property GTA::NaturalMotion::InjuredOnGroundHelper^ InjuredOnGround {
-				GTA::NaturalMotion::InjuredOnGroundHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::InjuredOnGroundHelper^>("injuredOnGround");
+			property InjuredOnGroundHelper ^InjuredOnGround
+			{
+				InjuredOnGroundHelper ^get()
+				{
+					return GetHelper<InjuredOnGroundHelper^>("injuredOnGround");
 				}
 			}
-
-			property GTA::NaturalMotion::CarriedHelper^ Carried {
-				GTA::NaturalMotion::CarriedHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::CarriedHelper^>("carried");
+			property CarriedHelper ^Carried
+			{
+				CarriedHelper ^get()
+				{
+					return GetHelper<CarriedHelper^>("carried");
 				}
 			}
-
-			property GTA::NaturalMotion::DangleHelper^ Dangle {
-				GTA::NaturalMotion::DangleHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::DangleHelper^>("dangle");
+			property DangleHelper ^Dangle
+			{
+				DangleHelper ^get()
+				{
+					return GetHelper<DangleHelper^>("dangle");
 				}
 			}
-
-			property GTA::NaturalMotion::OnFireHelper^ OnFire {
-				GTA::NaturalMotion::OnFireHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::OnFireHelper^>("onFire");
+			property OnFireHelper ^OnFire
+			{
+				OnFireHelper ^get()
+				{
+					return GetHelper<OnFireHelper^>("onFire");
 				}
 			}
-
-			property GTA::NaturalMotion::PedalLegsHelper^ PedalLegs {
-				GTA::NaturalMotion::PedalLegsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::PedalLegsHelper^>("pedalLegs");
+			property PedalLegsHelper ^PedalLegs
+			{
+				PedalLegsHelper ^get()
+				{
+					return GetHelper<PedalLegsHelper^>("pedalLegs");
 				}
 			}
-
-			property GTA::NaturalMotion::PointArmHelper^ PointArm {
-				GTA::NaturalMotion::PointArmHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::PointArmHelper^>("pointArm");
+			property PointArmHelper ^PointArm
+			{
+				PointArmHelper ^get()
+				{
+					return GetHelper<PointArmHelper^>("pointArm");
 				}
 			}
-
-			property GTA::NaturalMotion::PointGunHelper^ PointGun {
-				GTA::NaturalMotion::PointGunHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::PointGunHelper^>("pointGun");
+			property PointGunHelper ^PointGun
+			{
+				PointGunHelper ^get()
+				{
+					return GetHelper<PointGunHelper^>("pointGun");
 				}
 			}
-
-			property GTA::NaturalMotion::PointGunExtraHelper^ PointGunExtra {
-				GTA::NaturalMotion::PointGunExtraHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::PointGunExtraHelper^>("pointGunExtra");
+			property PointGunExtraHelper ^PointGunExtra
+			{
+				PointGunExtraHelper ^get()
+				{
+					return GetHelper<PointGunExtraHelper^>("pointGunExtra");
 				}
 			}
-
-			property GTA::NaturalMotion::RollDownStairsHelper^ RollDownStairs {
-				GTA::NaturalMotion::RollDownStairsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::RollDownStairsHelper^>("rollDownStairs");
+			property RollDownStairsHelper ^RollDownStairs
+			{
+				RollDownStairsHelper ^get()
+				{
+					return GetHelper<RollDownStairsHelper^>("rollDownStairs");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotHelper^ Shot {
-				GTA::NaturalMotion::ShotHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotHelper^>("shot");
+			property ShotHelper ^Shot
+			{
+				ShotHelper ^get()
+				{
+					return GetHelper<ShotHelper^>("shot");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotNewBulletHelper^ ShotNewBullet {
-				GTA::NaturalMotion::ShotNewBulletHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotNewBulletHelper^>("shotNewBullet");
+			property ShotNewBulletHelper ^ShotNewBullet
+			{
+				ShotNewBulletHelper ^get()
+				{
+					return GetHelper<ShotNewBulletHelper^>("shotNewBullet");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotSnapHelper^ ShotSnap {
-				GTA::NaturalMotion::ShotSnapHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotSnapHelper^>("shotSnap");
+			property ShotSnapHelper ^ShotSnap
+			{
+				ShotSnapHelper ^get()
+				{
+					return GetHelper<ShotSnapHelper^>("shotSnap");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotShockSpinHelper^ ShotShockSpin {
-				GTA::NaturalMotion::ShotShockSpinHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotShockSpinHelper^>("shotShockSpin");
+			property ShotShockSpinHelper ^ShotShockSpin
+			{
+				ShotShockSpinHelper ^get()
+				{
+					return GetHelper<ShotShockSpinHelper^>("shotShockSpin");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotFallToKneesHelper^ ShotFallToKnees {
-				GTA::NaturalMotion::ShotFallToKneesHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotFallToKneesHelper^>("shotFallToKnees");
+			property ShotFallToKneesHelper ^ShotFallToKnees
+			{
+				ShotFallToKneesHelper ^get()
+				{
+					return GetHelper<ShotFallToKneesHelper^>("shotFallToKnees");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotFromBehindHelper^ ShotFromBehind {
-				GTA::NaturalMotion::ShotFromBehindHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotFromBehindHelper^>("shotFromBehind");
+			property ShotFromBehindHelper ^ShotFromBehind
+			{
+				ShotFromBehindHelper ^get()
+				{
+					return GetHelper<ShotFromBehindHelper^>("shotFromBehind");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotInGutsHelper^ ShotInGuts {
-				GTA::NaturalMotion::ShotInGutsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotInGutsHelper^>("shotInGuts");
+			property ShotInGutsHelper ^ShotInGuts
+			{
+				ShotInGutsHelper ^get()
+				{
+					return GetHelper<ShotInGutsHelper^>("shotInGuts");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotHeadLookHelper^ ShotHeadLook {
-				GTA::NaturalMotion::ShotHeadLookHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotHeadLookHelper^>("shotHeadLook");
+			property ShotHeadLookHelper ^ShotHeadLook
+			{
+				ShotHeadLookHelper ^get()
+				{
+					return GetHelper<ShotHeadLookHelper^>("shotHeadLook");
 				}
 			}
-
-			property GTA::NaturalMotion::ShotConfigureArmsHelper^ ShotConfigureArms {
-				GTA::NaturalMotion::ShotConfigureArmsHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::ShotConfigureArmsHelper^>("shotConfigureArms");
+			property ShotConfigureArmsHelper ^ShotConfigureArms
+			{
+				ShotConfigureArmsHelper ^get()
+				{
+					return GetHelper<ShotConfigureArmsHelper^>("shotConfigureArms");
 				}
 			}
-
-			property GTA::NaturalMotion::SmartFallHelper^ SmartFall {
-				GTA::NaturalMotion::SmartFallHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::SmartFallHelper^>("smartFall");
+			property SmartFallHelper ^SmartFall
+			{
+				SmartFallHelper ^get()
+				{
+					return GetHelper<SmartFallHelper^>("smartFall");
 				}
 			}
-
-			property GTA::NaturalMotion::StaggerFallHelper^ StaggerFall {
-				GTA::NaturalMotion::StaggerFallHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::StaggerFallHelper^>("staggerFall");
+			property StaggerFallHelper ^StaggerFall
+			{
+				StaggerFallHelper ^get()
+				{
+					return GetHelper<StaggerFallHelper^>("staggerFall");
 				}
 			}
-
-			property GTA::NaturalMotion::TeeterHelper^ Teeter {
-				GTA::NaturalMotion::TeeterHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::TeeterHelper^>("teeter");
+			property TeeterHelper ^Teeter
+			{
+				TeeterHelper ^get()
+				{
+					return GetHelper<TeeterHelper^>("teeter");
 				}
 			}
-
-			property GTA::NaturalMotion::UpperBodyFlinchHelper^ UpperBodyFlinch {
-				GTA::NaturalMotion::UpperBodyFlinchHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::UpperBodyFlinchHelper^>("upperBodyFlinch");
+			property UpperBodyFlinchHelper ^UpperBodyFlinch
+			{
+				UpperBodyFlinchHelper ^get()
+				{
+					return GetHelper<UpperBodyFlinchHelper^>("upperBodyFlinch");
 				}
 			}
-
-			property GTA::NaturalMotion::YankedHelper^ Yanked {
-				GTA::NaturalMotion::YankedHelper^ get() {
-					return GetHelper<GTA::NaturalMotion::YankedHelper^>("yanked");
+			property YankedHelper ^Yanked
+			{
+				YankedHelper ^get()
+				{
+					return GetHelper<YankedHelper^>("yanked");
 				}
 			}
-
-
 		};
 	}
 }

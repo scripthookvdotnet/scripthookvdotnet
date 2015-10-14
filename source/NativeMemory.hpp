@@ -9,7 +9,7 @@ namespace GTA
 	{
 		private ref class MemoryAccess abstract sealed
 		{
-		public:
+		internal:
 			static MemoryAccess();
 
 			static System::UInt64 GetAddressOfEntity(int handle);
@@ -30,7 +30,6 @@ namespace GTA
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
 
-		internal:
 			static System::UInt64 EntityAddressFunc, PlayerAddressFunc;
 			static System::UInt64 EntityPoolAddress, VehiclePoolAddress, PedPoolAddress, ObjPoolAddress;
 			static System::UInt64 EntityCoordsAddress, EntityModelAddress1, EntityModelAddress2;

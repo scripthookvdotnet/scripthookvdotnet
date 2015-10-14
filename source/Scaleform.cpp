@@ -1,23 +1,26 @@
 #include "Scaleform.hpp"
+#include "UI.hpp"
 #include "Native.hpp"
 
 namespace GTA
 {
-	extern void Log(System::String ^logLevel, ... array<System::String ^> ^message);
+	using namespace System;
+
+	extern void Log(String ^logLevel, ... array<String ^> ^message);
 
 	Scaleform::Scaleform()
 	{
 	}
-	Scaleform::Scaleform(int handle) : mHandle(handle)
+	Scaleform::Scaleform(int handle) : _handle(handle)
 	{
 	}
 
 	int Scaleform::Handle::get()
 	{
-		return this->mHandle;
+		return _handle;
 	}
 
-	bool Scaleform::Load(System::String ^scaleformID)
+	bool Scaleform::Load(String ^scaleformID)
 	{
 		const int handle = Native::Function::Call<int>(Native::Hash::REQUEST_SCALEFORM_MOVIE, scaleformID);
 
@@ -26,53 +29,53 @@ namespace GTA
 			return false;
 		}
 
-		this->mHandle = handle;
-		this->mScaleformID = scaleformID;
+		_handle = handle;
+		_scaleformID = scaleformID;
 
 		return true;
 	}
 
-	void Scaleform::CallFunction(System::String ^function, ... array<System::Object ^> ^arguments)
+	void Scaleform::CallFunction(String ^function, ... array<Object ^> ^arguments)
 	{
-		Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION, mHandle, function);
+		Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION, Handle, function);
 
-		for each(System::Object ^o in arguments)
+		for each (Object ^argument in arguments)
 		{
-			if (o->GetType() == int::typeid)
+			if (argument->GetType() == Int32::typeid)
 			{
-				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, static_cast<int>(o));
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, static_cast<int>(argument));
 			}
-			else if (o->GetType() == System::String::typeid)
+			else if (argument->GetType() == String::typeid)
 			{
 				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "STRING");
-				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, static_cast<System::String ^>(o));
+				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, static_cast<String ^>(argument));
 				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
-			else if (o->GetType() == System::Char::typeid)
+			else if (argument->GetType() == Char::typeid)
 			{
 				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "STRING");
-				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, static_cast<char>(o).ToString());
+				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, static_cast<char>(argument).ToString());
 				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
-			else if (o->GetType() == System::Single::typeid)
+			else if (argument->GetType() == Single::typeid)
 			{
-				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, static_cast<float>(o));
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, static_cast<float>(argument));
 			}
-			else if (o->GetType() == System::Double::typeid)
+			else if (argument->GetType() == Double::typeid)
 			{
-				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, static_cast<float>(static_cast<double>(o)));
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, static_cast<float>(static_cast<double>(argument)));
 			}
-			else if (o->GetType() == System::Boolean::typeid)
+			else if (argument->GetType() == Boolean::typeid)
 			{
-				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, static_cast<bool>(o));
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, static_cast<bool>(argument));
 			}
-			else if (o->GetType() == ScaleformArgumentTXD::typeid)
+			else if (argument->GetType() == ScaleformArgumentTXD::typeid)
 			{
-				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, static_cast<ScaleformArgumentTXD ^>(o)->txd);
+				Native::Function::Call(Native::Hash::_PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, static_cast<ScaleformArgumentTXD ^>(argument)->_txd);
 			}
 			else
 			{
-				Log("[ERROR]", System::String::Format("Unknown argument type {0} passed to scaleform with handle {1}.", o->GetType()->Name, this->mHandle));
+				Log("[ERROR]", String::Format("Unknown argument type {0} passed to scaleform with handle {1}.", argument->GetType()->Name, Handle));
 			}
 		}
 
@@ -81,23 +84,23 @@ namespace GTA
 
 	void Scaleform::Render2D()
 	{
-		Native::Function::Call(Native::Hash::_0x0DF606929C105BE1, this->mHandle, 255, 255, 255, 255, 0);
+		Native::Function::Call(Native::Hash::_0x0DF606929C105BE1, Handle, 255, 255, 255, 255, 0);
 	}
-	void Scaleform::Render2DScreenSpace(System::Drawing::PointF location, System::Drawing::PointF size)
+	void Scaleform::Render2DScreenSpace(Drawing::PointF location, Drawing::PointF size)
 	{
-		float x = location.X / 1280.0f;
-		float y = location.Y / 720.0f;
-		float width = size.X / 1280.0f;
-		float height = size.Y / 720.0f;
+		float x = location.X / UI::WIDTH;
+		float y = location.Y / UI::HEIGHT;
+		float width = size.X / UI::WIDTH;
+		float height = size.Y / UI::HEIGHT;
 
-		Native::Function::Call(Native::Hash::DRAW_SCALEFORM_MOVIE, this->mHandle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
+		Native::Function::Call(Native::Hash::DRAW_SCALEFORM_MOVIE, Handle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
 	}
-	void Scaleform::Render3D(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale)
+	void Scaleform::Render3D(Math::Vector3 position, Math::Vector3 rotation, Math::Vector3 scale)
 	{
-		Native::Function::Call(Native::Hash::_0x1CE592FDC749D6F5, this->mHandle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
+		Native::Function::Call(Native::Hash::_0x1CE592FDC749D6F5, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 	}
-	void Scaleform::Render3DAdditive(GTA::Math::Vector3 position, GTA::Math::Vector3 rotation, GTA::Math::Vector3 scale)
+	void Scaleform::Render3DAdditive(Math::Vector3 position, Math::Vector3 rotation, Math::Vector3 scale)
 	{
-		Native::Function::Call(Native::Hash::_0x87D51D72255D4E78, this->mHandle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
+		Native::Function::Call(Native::Hash::_0x87D51D72255D4E78, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 	}
 }

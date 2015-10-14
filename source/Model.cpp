@@ -4,63 +4,61 @@
 
 namespace GTA
 {
-	Model::Model(int hash) : mHash(hash)
+	Model::Model(int hash) : _hash(hash)
 	{
 	}
-	Model::Model(System::String ^name) : mHash(Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, name))
+	Model::Model(System::String ^name) : _hash(Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, name))
 	{
 	}
-	Model::Model(Native::PedHash hash) : mHash(static_cast<int>(hash))
+	Model::Model(Native::PedHash hash) : _hash(static_cast<int>(hash))
 	{
 	}
-	Model::Model(Native::VehicleHash hash) : mHash(static_cast<int>(hash))
+	Model::Model(Native::VehicleHash hash) : _hash(static_cast<int>(hash))
 	{
 	}
-	Model::Model(Native::WeaponHash hash) : mHash(static_cast<int>(hash))
+	Model::Model(Native::WeaponHash hash) : _hash(static_cast<int>(hash))
 	{
 	}
 
 	int Model::Hash::get()
 	{
-		return this->mHash;
+		return _hash;
 	}
-
 	bool Model::IsValid::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_VALID, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_VALID, Hash);
 	}
 	bool Model::IsInCdImage::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_IN_CDIMAGE, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_IN_CDIMAGE, Hash);
 	}
 	bool Model::IsLoaded::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::HAS_MODEL_LOADED, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::HAS_MODEL_LOADED, Hash);
 	}
 	bool Model::IsCollisionLoaded::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::HAS_COLLISION_FOR_MODEL_LOADED, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::HAS_COLLISION_FOR_MODEL_LOADED, Hash);
 	}
-
 	bool Model::IsBicycle::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_BICYCLE, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_BICYCLE, Hash);
 	}
 	bool Model::IsBike::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_BIKE, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_BIKE, Hash);
 	}
 	bool Model::IsBoat::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_BOAT, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_BOAT, Hash);
 	}
 	bool Model::IsCar::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_CAR, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_CAR, Hash);
 	}
 	bool Model::IsHelicopter::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_HELI, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_HELI, Hash);
 	}
 	bool Model::IsPed::get()
 	{
@@ -68,30 +66,30 @@ namespace GTA
 	}
 	bool Model::IsPlane::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_PLANE, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_PLANE, Hash);
 	}
 	bool Model::IsQuadbike::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_QUADBIKE, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_QUADBIKE, Hash);
 	}
 	bool Model::IsTrain::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_TRAIN, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_THIS_MODEL_A_TRAIN, Hash);
 	}
 	bool Model::IsVehicle::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, this->mHash);
+		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_A_VEHICLE, Hash);
 	}
 	bool Model::IsCargobob::get()
 	{
-		return this->mHash == static_cast<int>(Native::VehicleHash::Cargobob) || this->mHash == static_cast<int>(Native::VehicleHash::Cargobob2) || this->mHash == static_cast<int>(Native::VehicleHash::Cargobob3);
+		return Hash == static_cast<int>(Native::VehicleHash::Cargobob) || Hash == static_cast<int>(Native::VehicleHash::Cargobob2) || Hash == static_cast<int>(Native::VehicleHash::Cargobob3);
 	}
 
-	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute]Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
+	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
 	{
 		Native::OutputArgument ^outmin = gcnew Native::OutputArgument();
 		Native::OutputArgument ^outmax = gcnew Native::OutputArgument();
-		Native::Function::Call(Native::Hash::GET_MODEL_DIMENSIONS, this->mHash, outmin, outmax);
+		Native::Function::Call(Native::Hash::GET_MODEL_DIMENSIONS, Hash, outmin, outmax);
 
 		minimum = outmin->GetResult<Math::Vector3>();
 		maximum = outmax->GetResult<Math::Vector3>();
@@ -106,7 +104,7 @@ namespace GTA
 
 	void Model::Request()
 	{
-		Native::Function::Call(Native::Hash::REQUEST_MODEL, this->mHash);
+		Native::Function::Call(Native::Hash::REQUEST_MODEL, Hash);
 	}
 	bool Model::Request(int timeout)
 	{
@@ -128,19 +126,10 @@ namespace GTA
 	}
 	void Model::MarkAsNoLongerNeeded()
 	{
-		Native::Function::Call(Native::Hash::SET_MODEL_AS_NO_LONGER_NEEDED, this->mHash);
+		Native::Function::Call(Native::Hash::SET_MODEL_AS_NO_LONGER_NEEDED, Hash);
 	}
 	bool Model::Equals(Model model)
 	{
-		return this->mHash == model.mHash;
-	}
-
-	int Model::GetHashCode()
-	{
-		return this->mHash;
-	}
-	System::String ^Model::ToString()
-	{
-		return "0x" + this->mHash.ToString("X");
+		return Hash == model.Hash;
 	}
 }
