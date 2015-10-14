@@ -76,6 +76,6 @@ namespace GTA
 		virtual void Draw(System::Drawing::Size offset) override;
 
 	private:
-		System::Collections::Generic::List<UIElement ^> ^mItems;
+		System::Collections::Generic::List<UIElement ^> ^_items;
 	};
 }

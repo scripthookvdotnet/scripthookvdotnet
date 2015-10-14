@@ -16,8 +16,8 @@
 
 #include "ScriptDomain.hpp"
 
+#include "Menu.hpp"
 #include "Settings.hpp"
-#include "UIMenu.hpp"
 
 namespace GTA
 {

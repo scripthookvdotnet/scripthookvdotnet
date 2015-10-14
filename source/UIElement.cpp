@@ -3,137 +3,139 @@
 
 namespace GTA
 {
-	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale)
+	using namespace System;
+	using namespace System::Collections::Generic;
+
+	UIText::UIText(String ^caption, Drawing::Point position, float scale)
 	{
-		this->Enabled = true;
-		this->Caption = caption;
-		this->Position = position;
-		this->Scale = scale;
-		this->Color = System::Drawing::Color::WhiteSmoke;
-		this->Font = GTA::Font::ChaletLondon;
-		this->Centered = false;
+		Enabled = true;
+		Caption = caption;
+		Position = position;
+		Scale = scale;
+		Color = Drawing::Color::WhiteSmoke;
+		Font = GTA::Font::ChaletLondon;
+		Centered = false;
 	}
-	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color)
+	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color)
 	{
-		this->Enabled = true;
-		this->Caption = caption;
-		this->Position = position;
-		this->Scale = scale;
-		this->Color = color;
-		this->Font = GTA::Font::ChaletLondon;
-		this->Centered = false;
+		Enabled = true;
+		Caption = caption;
+		Position = position;
+		Scale = scale;
+		Color = color;
+		Font = GTA::Font::ChaletLondon;
+		Centered = false;
 	}
-	UIText::UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, GTA::Font font, bool centered)
+	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color, GTA::Font font, bool centered)
 	{
-		this->Enabled = true;
-		this->Caption = caption;
-		this->Position = position;
-		this->Scale = scale;
-		this->Color = color;
-		this->Font = font;
-		this->Centered = centered;
+		Enabled = true;
+		Caption = caption;
+		Position = position;
+		Scale = scale;
+		Color = color;
+		Font = font;
+		Centered = centered;
 	}
 
 	void UIText::Draw()
 	{
-		Draw(System::Drawing::Size());
+		Draw(Drawing::Size());
 	}
-	void UIText::Draw(System::Drawing::Size offset)
+	void UIText::Draw(Drawing::Size offset)
 	{
-		if (!this->Enabled)
+		if (!Enabled)
 		{
 			return;
 		}
 
-		const float x = (static_cast<float>(this->Position.X) + offset.Width) / UI::WIDTH;
-		const float y = (static_cast<float>(this->Position.Y) + offset.Height) / UI::HEIGHT;
+		const float x = (static_cast<float>(Position.X) + offset.Width) / UI::WIDTH;
+		const float y = (static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT;
 
-		Native::Function::Call(Native::Hash::SET_TEXT_FONT, (int)this->Font);
-		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, this->Scale, this->Scale);
-		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, this->Color.R, this->Color.G, this->Color.B, this->Color.A);
-		Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, this->Centered ? 1 : 0);
+		Native::Function::Call(Native::Hash::SET_TEXT_FONT, static_cast<int>(Font));
+		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, Scale, Scale);
+		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
+		Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, Centered ? 1 : 0);
 		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, this->Caption);
+		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, Caption);
 		Native::Function::Call(Native::Hash::_DRAW_TEXT, x, y);
 	}
 
 	UIRectangle::UIRectangle()
 	{
-		this->Enabled = true;
-		this->Position = System::Drawing::Point();
-		this->Size = System::Drawing::Size(UI::WIDTH, UI::HEIGHT);
-
-		this->Color = System::Drawing::Color::Transparent;
+		Enabled = true;
+		Position = Drawing::Point();
+		Size = Drawing::Size(UI::WIDTH, UI::HEIGHT);
+		Color = Drawing::Color::Transparent;
 	}
-	UIRectangle::UIRectangle(System::Drawing::Point position, System::Drawing::Size size)
+	UIRectangle::UIRectangle(Drawing::Point position, Drawing::Size size)
 	{
-		this->Enabled = true;
-		this->Position = position;
-		this->Size = size;
-		this->Color = System::Drawing::Color::Transparent;
+		Enabled = true;
+		Position = position;
+		Size = size;
+		Color = Drawing::Color::Transparent;
 	}
-	UIRectangle::UIRectangle(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color)
+	UIRectangle::UIRectangle(Drawing::Point position, Drawing::Size size, Drawing::Color color)
 	{
-		this->Enabled = true;
-		this->Position = position;
-		this->Size = size;
-		this->Color = color;
+		Enabled = true;
+		Position = position;
+		Size = size;
+		Color = color;
 	}
 
 	void UIRectangle::Draw()
 	{
-		Draw(System::Drawing::Size());
+		Draw(Drawing::Size());
 	}
-	void UIRectangle::Draw(System::Drawing::Size offset)
+	void UIRectangle::Draw(Drawing::Size offset)
 	{
-		if (!this->Enabled)
+		if (!Enabled)
 		{
 			return;
 		}
 
-		const float w = static_cast<float>(this->Size.Width) / UI::WIDTH;
-		const float h = static_cast<float>(this->Size.Height) / UI::HEIGHT;
-		const float x = ((static_cast<float>(this->Position.X) + offset.Width) / UI::WIDTH) + w * 0.5f;
-		const float y = ((static_cast<float>(this->Position.Y) + offset.Height) / UI::HEIGHT) + h * 0.5f;
+		const float w = static_cast<float>(Size.Width) / UI::WIDTH;
+		const float h = static_cast<float>(Size.Height) / UI::HEIGHT;
+		const float x = ((static_cast<float>(Position.X) + offset.Width) / UI::WIDTH) + w * 0.5f;
+		const float y = ((static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT) + h * 0.5f;
 
-		Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, this->Color.R, this->Color.G, this->Color.B, this->Color.A);
-	}
-
-	UIContainer::UIContainer() : UIRectangle(), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
-	{
-	}
-	UIContainer::UIContainer(System::Drawing::Point position, System::Drawing::Size size) : UIRectangle(position, size), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
-	{
-	}
-	UIContainer::UIContainer(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color) : UIRectangle(position, size, color), mItems(gcnew System::Collections::Generic::List<UIElement ^>())
-	{
+		Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 	}
 
-	System::Collections::Generic::List<UIElement ^> ^UIContainer::Items::get()
+	UIContainer::UIContainer() : UIRectangle(), _items(gcnew List<UIElement ^>())
 	{
-		return this->mItems;
 	}
-	void UIContainer::Items::set(System::Collections::Generic::List<UIElement ^> ^value)
+	UIContainer::UIContainer(Drawing::Point position, Drawing::Size size) : UIRectangle(position, size), _items(gcnew List<UIElement ^>())
 	{
-		this->mItems = value;
+	}
+	UIContainer::UIContainer(Drawing::Point position, Drawing::Size size, Drawing::Color color) : UIRectangle(position, size, color), _items(gcnew List<UIElement ^>())
+	{
+	}
+
+	List<UIElement ^> ^UIContainer::Items::get()
+	{
+		return _items;
+	}
+	void UIContainer::Items::set(List<UIElement ^> ^value)
+	{
+		_items = value;
 	}
 
 	void UIContainer::Draw()
 	{
-		Draw(System::Drawing::Size());
+		Draw(Drawing::Size());
 	}
-	void UIContainer::Draw(System::Drawing::Size offset)
+	void UIContainer::Draw(Drawing::Size offset)
 	{
-		if (!this->Enabled)
+		if (!Enabled)
 		{
 			return;
 		}
 
 		UIRectangle::Draw(offset);
 
-		for each (UIElement ^item in this->Items)
+		for each (UIElement ^item in Items)
 		{
-			item->Draw(static_cast<System::Drawing::Size>(UIRectangle::Position + offset));
+			item->Draw(static_cast<Drawing::Size>(UIRectangle::Position + offset));
 		}
 	}
 }

@@ -26,6 +26,7 @@ namespace GTA
 	ref class Camera;
 	ref class Entity;
 	ref class Ped;
+	ref class PedGroup;
 	ref class Player;
 	ref class Prop;
 	ref class Rope;
@@ -67,6 +68,9 @@ namespace GTA
 			{
 			}
 			inline InputArgument(Ped ^value) : InputArgument(static_cast<System::Object ^>(value))
+			{
+			}
+			inline InputArgument(PedGroup ^value) : InputArgument(static_cast<System::Object ^>(value))
 			{
 			}
 			inline InputArgument(Player ^value) : InputArgument(static_cast<System::Object ^>(value))
@@ -134,6 +138,10 @@ namespace GTA
 			{
 				return gcnew InputArgument(object);
 			}
+			static inline operator InputArgument ^ (PedGroup ^object)
+			{
+				return gcnew InputArgument(object);
+			}
 			static inline operator InputArgument ^ (Player ^object)
 			{
 				return gcnew InputArgument(object);
@@ -192,6 +200,9 @@ namespace GTA
 			{
 			}
 			inline OutputArgument(Ped ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(PedGroup ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
 			{
 			}
 			inline OutputArgument(Player ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))

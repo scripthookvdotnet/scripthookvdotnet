@@ -261,7 +261,11 @@ namespace GTA
 		Limo = 5,
 		Green = 6
 	};
-
+	public enum class CargobobHook
+	{
+		Hook = 0,
+		Magnet = 1,
+	};
 	public ref class Vehicle sealed : public Entity
 	{
 	public:
@@ -555,6 +559,14 @@ namespace GTA
 		void SetNeonLightsOn(VehicleNeonLight light, bool on);
 		bool IsNeonLightsOn(VehicleNeonLight light);
 		void SoundHorn(int duration);
+		void SetHeliYawPitchRollMult(float mult);
+
+		void DropCargobobHook(CargobobHook hook);
+		bool IsCargobobHookActive();
+		bool IsCargobobHookActive(CargobobHook hook);
+		void RemoveCargobobHook();
+		void CargoBobMagnetGrabVehicle();
+		void CargoBobMagnetReleaseVehicle();
 
 		bool IsTireBurst(int wheel);
 		void BurstTire(int wheel);
@@ -564,8 +576,5 @@ namespace GTA
 		void ApplyDamage(Math::Vector3 loc, float damageAmount, float radius);
 		Ped ^CreatePedOnSeat(VehicleSeat seat, GTA::Model model);
 		Ped ^CreateRandomPedOnSeat(VehicleSeat seat);
-
-	private:
-		int mID;
 	};
 }

@@ -234,7 +234,8 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 
 	private:
-		static GameVersion sGameVersion = GameVersion::Unknown;
-		static GlobalCollection ^sGlobals = nullptr;
+		static GameVersion _gameVersion = GameVersion::Unknown;
+		static GlobalCollection ^_globals = nullptr;
+		static GTA::Player ^_cachedPlayer = nullptr;
 	};
 }

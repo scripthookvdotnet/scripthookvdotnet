@@ -73,12 +73,12 @@ namespace GTA
 	}
 	GlobalCollection ^Game::Globals::get()
 	{
-		if (sGlobals == nullptr)
+		if (ReferenceEquals(_globals, nullptr))
 		{
-			sGlobals = gcnew GlobalCollection();
+			_globals = gcnew GlobalCollection();
 		}
 
-		return sGlobals;
+		return _globals;
 	}
 	bool Game::IsPaused::get()
 	{
@@ -129,7 +129,14 @@ namespace GTA
 	}
 	GTA::Player ^GTA::Game::Player::get()
 	{
-		return Native::Function::Call<GTA::Player ^>(Native::Hash::PLAYER_ID);
+		int playerHandle = Native::Function::Call<int>(Native::Hash::PLAYER_ID);
+
+		if (ReferenceEquals(_cachedPlayer, nullptr) || playerHandle != _cachedPlayer->Handle)
+		{
+			_cachedPlayer = gcnew GTA::Player(playerHandle);
+		}
+
+		return _cachedPlayer;
 	}
 	void Game::RadarZoom::set(int value)
 	{
@@ -164,12 +171,12 @@ namespace GTA
 	}
 	GameVersion Game::Version::get()
 	{
-		if (sGameVersion == GameVersion::Unknown)
+		if (_gameVersion == GameVersion::Unknown)
 		{
-			sGameVersion = static_cast<GameVersion>(getGameVersion() + 1);
+			_gameVersion = static_cast<GameVersion>(getGameVersion() + 1);
 		}
 
-		return sGameVersion;
+		return _gameVersion;
 	}
 	void Game::WantedMultiplier::set(float value)
 	{

@@ -7,11 +7,12 @@ namespace GTA
 	public ref class ScaleformArgumentTXD sealed
 	{
 	public:
-		ScaleformArgumentTXD(System::String ^s) : txd(s)
+		ScaleformArgumentTXD(System::String ^s) : _txd(s)
 		{
 		}
 
-		System::String ^txd;
+	internal:
+		System::String ^_txd;
 	};
 
 	public ref class Scaleform sealed
@@ -26,7 +27,7 @@ namespace GTA
 
 		bool Load(System::String ^scaleformID);
 
-		void CallFunction(System::String ^function, ... array<Object ^> ^arguments);
+		void CallFunction(System::String ^function, ... array<System::Object ^> ^arguments);
 
 		void Render2D();
 		void Render2DScreenSpace(System::Drawing::PointF location, System::Drawing::PointF size);
@@ -37,7 +38,7 @@ namespace GTA
 		Scaleform();
 
 	private:
-		int mHandle;
-		System::String ^mScaleformID;
+		int _handle;
+		System::String ^_scaleformID;
 	};
 }

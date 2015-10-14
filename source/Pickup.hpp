@@ -13,13 +13,13 @@ namespace GTA
 		{
 			int get();
 		}
-		property Math::Vector3 Position
-		{
-			Math::Vector3 get();
-		}
 		property bool IsCollected
 		{
 			bool get();
+		}
+		property Math::Vector3 Position
+		{
+			Math::Vector3 get();
 		}
 
 		bool Exists();
@@ -27,6 +27,6 @@ namespace GTA
 		void Delete();
 
 	private:
-		int mHandle;
+		int _handle;
 	};
 }

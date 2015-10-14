@@ -294,6 +294,6 @@ namespace GTA
 		void Remove();
 
 	private:
-		int mHandle;
+		int _handle;
 	};
 }

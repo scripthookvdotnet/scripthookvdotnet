@@ -52,8 +52,8 @@ namespace GTA
 		Weapon(Ped ^owner, Native::WeaponHash hash);
 
 	private:
-		Ped ^mOwner;
-		Native::WeaponHash mHash;
+		Ped ^_owner;
+		Native::WeaponHash _hash;
 	};
 
 	public ref class WeaponCollection sealed
@@ -82,7 +82,7 @@ namespace GTA
 		WeaponCollection(Ped ^owner);
 
 	private:
-		Ped ^mOwner;
-		System::Collections::Generic::Dictionary<Native::WeaponHash, Weapon^> ^mWeapons;
+		Ped ^_owner;
+		System::Collections::Generic::Dictionary<Native::WeaponHash, Weapon ^> ^_weapons;
 	};
 }

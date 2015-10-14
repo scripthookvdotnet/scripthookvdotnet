@@ -175,7 +175,7 @@ namespace GTA
 	}
 	void World::Weather::set(GTA::Weather value)
 	{
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, sWeatherNames[static_cast<int>(value)]);
+		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, _weatherNames[static_cast<int>(value)]);
 	}
 
 	array<Blip ^> ^World::GetActiveBlips()
