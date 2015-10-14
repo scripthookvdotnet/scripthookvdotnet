@@ -8,6 +8,8 @@
 
 namespace GTA
 {
+	using namespace System::Collections::Generic;
+
 	Ped::Ped(int handle) : Entity(handle), _tasks(gcnew Tasks(this)), _euphoria(gcnew NaturalMotion::Euphoria(this))
 	{
 	}
@@ -490,27 +492,37 @@ namespace GTA
 	}
 	bool PedGroup::Exists(PedGroup ^pedGroup)
 	{
-		return !Object::ReferenceEquals(pedGroup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, pedGroup->Handle);
+		return !ReferenceEquals(pedGroup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, pedGroup->Handle);
 	}
 	bool PedGroup::Contains(Ped ^ped)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, Handle);
 	}
 
-	array<Ped^>^ PedGroup::ToArray(bool includingLeader) {
-		return ToList(includingLeader)->ToArray();
-	}
-	System::Collections::Generic::List<Ped ^> ^PedGroup::ToList(bool includingLeader) {
-		Ped^ ped;
-		System::Collections::Generic::List<Ped ^> ^list = gcnew System::Collections::Generic::List<Ped ^>();
-		if (includingLeader) {
-			ped = Leader;
-			if (!Object::ReferenceEquals(ped, nullptr) && ped->Exists()) list->Add(ped);
+	System::Collections::Generic::List<Ped ^> ^PedGroup::ToList(bool includingLeader)
+	{
+		List<Ped ^> ^list = gcnew List<Ped ^>();
+
+		if (includingLeader)
+		{
+			Ped ^leader = Leader;
+
+			if (!ReferenceEquals(leader, nullptr) && leader->Exists())
+			{
+				list->Add(leader);
+			}
 		}
-		for (int i = 0; i<MemberCount; i++) {
-			ped = GetMember(i);
-			if (!Object::ReferenceEquals(ped, nullptr) && ped->Exists()) list->Add(ped);
+
+		for (int i = 0; i < MemberCount; i++)
+		{
+			Ped ^ped = GetMember(i);
+
+			if (!Object::ReferenceEquals(ped, nullptr) && ped->Exists())
+			{
+				list->Add(ped);
+			}
 		}
+
 		return list;
 	}
 }

@@ -533,7 +533,6 @@ namespace GTA
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
 
-		array<Ped ^> ^ToArray(bool includingLeader);
 		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 	private:
