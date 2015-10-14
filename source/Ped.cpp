@@ -222,6 +222,15 @@ namespace GTA
 
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, this->Handle, false);
 	}
+	PedGroup ^Ped::CurrentPedGroup::get()
+	{
+		if (!IsInGroup)
+		{
+			return nullptr;
+		}
+
+		return Native::Function::Call<PedGroup ^>(Native::Hash::GET_PED_GROUP_INDEX, this->Handle, false);
+	}
 	void Ped::IsEnemy::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_AS_ENEMY, this->Handle, value);
@@ -442,9 +451,23 @@ namespace GTA
 	{
 		return this->mHandle;
 	}
+	Ped ^PedGroup::Leader::get()
+	{
+		return Native::Function::Call<Ped ^>(Native::Hash::_0x5CCE68DBD5FE93EC, this->Handle);
+	}
+	int PedGroup::MemberCount::get()
+	{
+		int count, val1;
+		Native::Function::Call(Native::Hash::GET_GROUP_SIZE, this->Handle, &val1, &count);
+		return count;
+	}
 	void PedGroup::SeparationRange::set(float value)
 	{
 		Native::Function::Call(Native::Hash::SET_GROUP_SEPARATION_RANGE, this->Handle, value);
+	}
+	void PedGroup::FormationType::set(GTA::FormationType value)
+	{
+		Native::Function::Call(Native::Hash::SET_GROUP_FORMATION, this->Handle, static_cast<int>(value));
 	}
 
 	void PedGroup::Add(Ped ^ped, bool leader)
@@ -462,8 +485,36 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, ped->Handle);
 	}
+	Ped ^PedGroup::GetMember(int index)
+	{
+		return Native::Function::Call<Ped ^>(Native::Hash::GET_PED_AS_GROUP_MEMBER, this->Handle, index);
+	}
+	bool PedGroup::Exists()
+	{
+		return Exists(this);
+	}
+	bool PedGroup::Exists(PedGroup ^pedGroup)
+	{
+		return !Object::ReferenceEquals(pedGroup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, pedGroup->Handle);
+	}
 	bool PedGroup::Contains(Ped ^ped)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, this->Handle);
+	}
+	array<Ped^>^ PedGroup::ToArray(bool includingLeader) {
+		return ToList(includingLeader)->ToArray();
+	}
+	System::Collections::Generic::List<Ped ^> ^PedGroup::ToList(bool includingLeader) {
+		Ped^ ped;
+		System::Collections::Generic::List<Ped ^> ^list = gcnew System::Collections::Generic::List<Ped ^>();
+		if (includingLeader) {
+			ped = Leader;
+			if (!Object::ReferenceEquals(ped, nullptr) && ped->Exists()) list->Add(ped);
+		}
+		for (int i = 0; i<MemberCount; i++) {
+			ped = GetMember(i);
+			if (!Object::ReferenceEquals(ped, nullptr) && ped->Exists()) list->Add(ped);
+		}
+		return list;
 	}
 }

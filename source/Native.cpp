@@ -115,6 +115,10 @@ namespace GTA
 				{
 					return static_cast<Ped ^>(value)->Handle;
 				}
+				if (type == PedGroup::typeid)
+				{
+					return static_cast<PedGroup ^>(value)->Handle;
+				}
 				if (type == Player::typeid)
 				{
 					return static_cast<Player ^>(value)->Handle;
@@ -223,6 +227,10 @@ namespace GTA
 				if (type == Ped::typeid)
 				{
 					return gcnew Ped(handle);
+				}
+				if (type == PedGroup::typeid)
+				{
+					return gcnew PedGroup(handle);
 				}
 				if (type == Player::typeid)
 				{

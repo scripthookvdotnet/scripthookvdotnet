@@ -7,6 +7,7 @@ namespace GTA
 {
 	#pragma region Forward Declarations
 	ref class Tasks;
+	ref class PedGroup;
 	ref class Vehicle;
 	ref class WeaponCollection;
 	value class Model;
@@ -344,6 +345,10 @@ namespace GTA
 		{
 			Vehicle ^get();
 		}
+		property PedGroup ^CurrentPedGroup
+		{
+			PedGroup ^get();
+		}
 
 		property bool IsEnemy
 		{
@@ -488,6 +493,14 @@ namespace GTA
 		NaturalMotion::Euphoria ^pEuphoria;
 	};
 
+	public enum class FormationType
+	{
+		Default = 0,
+		Circle1 = 1,
+		Circle2 = 2,
+		Line = 3
+	};
+
 	public ref class PedGroup
 	{
 	public:
@@ -499,14 +512,31 @@ namespace GTA
 		{
 			int get();
 		}
+		property Ped ^Leader
+		{
+			Ped ^get();
+		}
+		property int MemberCount
+		{
+			int get();
+		}
 		property float SeparationRange
 		{
 			void set(float value);
 		}
+		property FormationType FormationType
+		{
+			void set(GTA::FormationType value);
+		}
 
 		void Add(Ped ^ped, bool leader);
 		void Remove(Ped ^ped);
+		bool Exists();
+		Ped ^GetMember(int index);
+		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
+		array<Ped ^> ^ToArray(bool includingLeader);
+		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 	private:
 		int mHandle;
