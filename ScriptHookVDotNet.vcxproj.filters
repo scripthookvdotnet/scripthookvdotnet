@@ -1,222 +1,222 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
+    <Filter Include="core">
       <UniqueIdentifier>{eb0c107f-5b5a-4c80-9efa-0647cdf29f6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting">
+    <Filter Include="scripting">
       <UniqueIdentifier>{921247d8-e2c0-463b-afc6-e0e43a621070}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting\UI">
+    <Filter Include="scripting\UI">
       <UniqueIdentifier>{51ccc92a-d3bd-4c42-b9d7-afc6f95e520a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting\Math">
+    <Filter Include="scripting\Math">
       <UniqueIdentifier>{56aa5d32-293c-45fc-ac7e-2fc6fd6d805b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting\World">
+    <Filter Include="scripting\World">
       <UniqueIdentifier>{428354b5-57e3-464b-bb2a-76121f7d78f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting\Game">
+    <Filter Include="scripting\Game">
       <UniqueIdentifier>{bac85dbf-8d0b-4740-816d-1bd0c1542fdd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="source\Native.cpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="source\NativeMemory.cpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="source\Script.cpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="source\ScriptDomain.cpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="source\Settings.cpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="source\Quaternion.cpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\Matrix.cpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\Vector2.cpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\Vector3.cpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\UI.cpp">
-      <Filter>Scripting\UI</Filter>
+      <Filter>scripting\UI</Filter>
     </ClCompile>
     <ClCompile Include="source\UIElement.cpp">
-      <Filter>Scripting\UI</Filter>
+      <Filter>scripting\UI</Filter>
     </ClCompile>
     <ClCompile Include="source\Pickup.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Camera.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Blip.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Raycast.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\World.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Scaleform.cpp">
-      <Filter>Scripting\UI</Filter>
+      <Filter>scripting\UI</Filter>
     </ClCompile>
     <ClCompile Include="source\Rope.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Tasks.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Weapon.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Game.cpp">
-      <Filter>Scripting\Game</Filter>
+      <Filter>scripting\Game</Filter>
     </ClCompile>
     <ClCompile Include="source\Entity.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Model.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Ped.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Player.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Prop.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Vehicle.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\Euphoria.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\EuphoriaBase.cpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\NativeHashes.hpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\NativeMemory.hpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\Script.hpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\ScriptDomain.hpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\Settings.hpp">
-      <Filter>Core</Filter>
+      <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="source\Quaternion.hpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClInclude>
     <ClInclude Include="source\Matrix.hpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClInclude>
     <ClInclude Include="source\Vector2.hpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClInclude>
     <ClInclude Include="source\Vector3.hpp">
-      <Filter>Scripting\Math</Filter>
+      <Filter>scripting\Math</Filter>
     </ClInclude>
     <ClInclude Include="source\UIElement.hpp">
-      <Filter>Scripting\UI</Filter>
+      <Filter>scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\UI.hpp">
-      <Filter>Scripting\UI</Filter>
+      <Filter>scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\Pickup.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Camera.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Blip.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Raycast.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\World.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Scaleform.hpp">
-      <Filter>Scripting\UI</Filter>
+      <Filter>scripting\UI</Filter>
     </ClInclude>
     <ClInclude Include="source\Rope.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Tasks.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Weapon.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Game.hpp">
-      <Filter>Scripting\Game</Filter>
+      <Filter>scripting\Game</Filter>
     </ClInclude>
     <ClInclude Include="source\Controls.hpp">
-      <Filter>Scripting\Game</Filter>
+      <Filter>scripting\Game</Filter>
     </ClInclude>
     <ClInclude Include="source\Entity.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Model.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Ped.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\PedHashes.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Player.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Prop.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Vehicle.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\VehicleHashes.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\WeaponHashes.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\Euphoria.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\EuphoriaBase.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\EuphoriaHelpers.hpp">
-      <Filter>Scripting\World</Filter>
+      <Filter>scripting\World</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
