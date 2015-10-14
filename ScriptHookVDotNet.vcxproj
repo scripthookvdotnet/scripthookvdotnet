@@ -55,6 +55,8 @@
     <ClCompile Include="source\Blip.cpp" />
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\EuphoriaBase.cpp" />
+    <ClCompile Include="source\Euphoria.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
@@ -86,6 +88,9 @@
     <ClInclude Include="source\Blip.hpp" />
     <ClInclude Include="source\Camera.hpp" />
     <ClInclude Include="source\Entity.hpp" />
+    <ClInclude Include="source\EuphoriaBase.hpp" />
+    <ClInclude Include="source\Euphoria.hpp" />
+    <ClInclude Include="source\EuphoriaHelpers.hpp" />
     <ClInclude Include="source\Game.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Model.hpp" />

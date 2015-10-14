@@ -105,6 +105,12 @@
     <ClCompile Include="source\Vehicle.cpp">
       <Filter>Scripting\World</Filter>
     </ClCompile>
+    <ClCompile Include="source\Euphoria.cpp">
+      <Filter>Scripting\World</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EuphoriaBase.cpp">
+      <Filter>Scripting\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -201,6 +207,15 @@
       <Filter>Scripting\World</Filter>
     </ClInclude>
     <ClInclude Include="source\WeaponHashes.hpp">
+      <Filter>Scripting\World</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Euphoria.hpp">
+      <Filter>Scripting\World</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EuphoriaBase.hpp">
+      <Filter>Scripting\World</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EuphoriaHelpers.hpp">
       <Filter>Scripting\World</Filter>
     </ClInclude>
   </ItemGroup>

@@ -236,5 +236,6 @@ namespace GTA
 	private:
 		static GameVersion sGameVersion = GameVersion::Unknown;
 		static GlobalCollection ^sGlobals = nullptr;
+		static GTA::Player ^sPlayer;
 	};
 }

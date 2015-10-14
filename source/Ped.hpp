@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Euphoria.hpp"
 
 namespace GTA
 {
@@ -153,6 +154,11 @@ namespace GTA
 	{
 	public:
 		Ped(int handle);
+
+		property NaturalMotion::Euphoria ^Euphoria
+		{
+			NaturalMotion::Euphoria ^get();
+		}
 
 		property int Accuracy
 		{
@@ -479,6 +485,7 @@ namespace GTA
 	private:
 		Tasks ^mTasks;
 		WeaponCollection ^pWeapons;
+		NaturalMotion::Euphoria ^pEuphoria;
 	};
 
 	public ref class PedGroup

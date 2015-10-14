@@ -37,7 +37,16 @@ namespace GTA
 	}
 	Ped ^Player::Character::get()
 	{
-		return this->mPed;
+		GTA::Ped ^ped = Native::Function::Call<GTA::Ped ^>(Native::Hash::GET_PLAYER_PED, this->Handle);
+		if (ReferenceEquals(mPed, nullptr))
+		{
+			mPed = ped;
+		}
+		else if (ped->Handle == mPed->Handle)
+			return mPed;
+		else
+			mPed = ped;
+		return mPed;
 	}
 	System::Drawing::Color Player::Color::get()
 	{
