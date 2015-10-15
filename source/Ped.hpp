@@ -301,6 +301,26 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsFalling
+		{
+			bool get();
+		}
+		property bool IsJumping
+		{
+			bool get();
+		}
+		property bool IsClimbing
+		{
+			bool get();
+		}
+		property bool IsVaulting
+		{
+			bool get();
+		}
+		property bool IsDiving
+		{
+			bool get();
+		}
 		property bool IsGoingIntoCover
 		{
 			bool get();
