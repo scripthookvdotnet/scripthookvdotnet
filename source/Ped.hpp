@@ -212,6 +212,11 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property int MaxHealth
+		{
+			int get();
+			void set(int value);
+		}
 		property PedGroup ^CurrentPedGroup
 		{
 			PedGroup ^get();

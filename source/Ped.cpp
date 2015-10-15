@@ -284,6 +284,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
 	}
+	int Ped::MaxHealth::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_MAX_HEALTH, Handle);
+	}
+	void Ped::MaxHealth::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_MAX_HEALTH, Handle, value);
+	}
 	bool Ped::IsStopped::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_STOPPED, Handle);
