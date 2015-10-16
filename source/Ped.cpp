@@ -90,6 +90,26 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GETTING_INTO_A_VEHICLE, Handle);
 	}
+	bool Ped::IsFalling::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_FALLING, Handle);
+	}
+	bool Ped::IsJumping::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_JUMPING, Handle);
+	}
+	bool Ped::IsClimbing::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_CLIMBING, Handle);
+	}
+	bool Ped::IsVaulting::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_VAULTING, Handle);
+	}
+	bool Ped::IsDiving::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_DIVING, Handle);
+	}
 	bool Ped::IsTryingToEnterALockedVehicle::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
