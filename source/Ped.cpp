@@ -340,6 +340,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_MAX_CRUISE_SPEED, Handle, value);
 	}
+	int Ped::MaxHealth::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_MAX_HEALTH, Handle);
+	}
+	void Ped::MaxHealth::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_MAX_HEALTH, Handle, value);
+	}
 	void Ped::DrivingStyle::set(GTA::DrivingStyle value)
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, Handle, static_cast<int>(value));
