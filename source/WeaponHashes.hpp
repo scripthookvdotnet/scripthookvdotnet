@@ -61,7 +61,10 @@ namespace GTA
 			Hatchet = 0xF9DCBF2D,
 			Railgun = 0x6D544C99,
 			Unarmed = 0xA2719263,
-			KnuckleDuster = 0xD8DF3C3C
+			KnuckleDuster = 0xD8DF3C3C,
+			Machete = 0xDD5DF8D9,
+			MachinePistol = 0xDB1AA450,
+			Flashlight = 0x8BB05FD7
 		};
 	}
 }
