@@ -1,3 +1,4 @@
+#include "Game.hpp"
 #include "Player.hpp"
 #include "Ped.hpp"
 #include "Vehicle.hpp"
@@ -111,13 +112,13 @@ namespace GTA
 		switch (static_cast<Native::PedHash>(Character->Model.Hash))
 		{
 			case Native::PedHash::Michael:
-				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP0_TOTAL_CASH");
+				hash = Game::GenerateHash("SP0_TOTAL_CASH");
 				break;
 			case Native::PedHash::Franklin:
-				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP1_TOTAL_CASH");
+				hash = Game::GenerateHash("SP1_TOTAL_CASH");
 				break;
 			case Native::PedHash::Trevor:
-				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP2_TOTAL_CASH");
+				hash = Game::GenerateHash("SP2_TOTAL_CASH");
 				break;
 			default:
 				return 0;
@@ -135,13 +136,13 @@ namespace GTA
 		switch (static_cast<Native::PedHash>(Character->Model.Hash))
 		{
 			case Native::PedHash::Michael:
-				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP0_TOTAL_CASH");
+				hash = GTA::Game::GenerateHash("SP0_TOTAL_CASH");
 				break;
 			case Native::PedHash::Franklin:
-				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP1_TOTAL_CASH");
+				hash = GTA::Game::GenerateHash("SP1_TOTAL_CASH");
 				break;
 			case Native::PedHash::Trevor:
-				hash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "SP2_TOTAL_CASH");
+				hash = GTA::Game::GenerateHash("SP2_TOTAL_CASH");
 				break;
 			default:
 				return;

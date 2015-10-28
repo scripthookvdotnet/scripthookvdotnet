@@ -7,7 +7,7 @@ namespace GTA
 	Model::Model(int hash) : _hash(hash)
 	{
 	}
-	Model::Model(System::String ^name) : _hash(Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, name))
+	Model::Model(System::String ^name) : _hash(Game::GenerateHash(name))
 	{
 	}
 	Model::Model(Native::PedHash hash) : _hash(static_cast<int>(hash))
