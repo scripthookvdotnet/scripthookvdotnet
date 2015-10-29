@@ -236,6 +236,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool DropsWeaponsOnDeath
+		{
+			void set(bool value);
+		}
 		property bool DrownsInSinkingVehicle
 		{
 			void set(bool value);
@@ -322,6 +326,10 @@ namespace GTA
 			bool get();
 		}
 		property bool IsGoingIntoCover
+		{
+			bool get();
+		}
+		property bool IsFleeing
 		{
 			bool get();
 		}
