@@ -110,6 +110,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_DIVING, Handle);
 	}
+	bool Ped::IsFleeing::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_FLEEING, Handle);
+	}
 	bool Ped::IsTryingToEnterALockedVehicle::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
@@ -359,6 +363,10 @@ namespace GTA
 	void Ped::ShootRate::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_SHOOT_RATE, Handle, value);
+	}
+	void Ped::DropsWeaponsOnDeath::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 	}
 	void Ped::DiesInstantlyInWater::set(bool value)
 	{

@@ -136,13 +136,13 @@ namespace GTA
 		switch (static_cast<Native::PedHash>(Character->Model.Hash))
 		{
 			case Native::PedHash::Michael:
-				hash = GTA::Game::GenerateHash("SP0_TOTAL_CASH");
+				hash = Game::GenerateHash("SP0_TOTAL_CASH");
 				break;
 			case Native::PedHash::Franklin:
-				hash = GTA::Game::GenerateHash("SP1_TOTAL_CASH");
+				hash = Game::GenerateHash("SP1_TOTAL_CASH");
 				break;
 			case Native::PedHash::Trevor:
-				hash = GTA::Game::GenerateHash("SP2_TOTAL_CASH");
+				hash = Game::GenerateHash("SP2_TOTAL_CASH");
 				break;
 			default:
 				return;
