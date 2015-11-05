@@ -1,6 +1,8 @@
 Community Script Hook V .NET
 ============================
 
+[![Join the chat at https://gitter.im/crosire/scripthookvdotnet](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/crosire/scripthookvdotnet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/crosire/scripthookvdotnet?branch=dev&svg=true)](https://ci.appveyor.com/project/crosire/scripthookvdotnet)
 [![Slack Invite](http://scripthookvdotnet.johnnycrazy.de/badge.svg)](http://scripthookvdotnet.johnnycrazy.de)
 
