@@ -51,6 +51,12 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_AS_SHORT_RANGE, Handle, value);
 	}
+	void Blip::Name::set(System::String ^value)
+	{
+		Native::Function::Call(Native::Hash::_0xF9113A30DE5C6670, "STRING");
+		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, value);
+		Native::Function::Call(Native::Hash::_0xBC38B49BCB83BC9B, Handle);
+	}
 	Math::Vector3 Blip::Position::get()
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_BLIP_INFO_ID_COORD, Handle);

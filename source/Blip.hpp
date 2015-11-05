@@ -264,6 +264,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property System::String ^Name
+		{
+			void set(System::String ^value);
+		}
 		property Math::Vector3 Position
 		{
 			Math::Vector3 get();
