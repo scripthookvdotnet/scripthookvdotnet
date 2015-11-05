@@ -144,7 +144,7 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
-		property int MaxHealth
+		virtual property int MaxHealth
 		{
 			int get();
 			void set(int value);

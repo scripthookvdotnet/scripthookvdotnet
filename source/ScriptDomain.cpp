@@ -89,7 +89,7 @@ namespace GTA
 		return toWaitOn->WaitOne(timeout);
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mRecordKeyboardEvents(true), mKeyboardState(gcnew array<bool>(255))
+	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mRecordKeyboardEvents(true), mKeyboardState(gcnew array<bool>(256))
 	{
 		sCurrentDomain = this;
 
@@ -500,7 +500,14 @@ namespace GTA
 	}
 	void ScriptDomain::DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		this->mKeyboardState[static_cast<int>(key)] = status;
+		const int keycode = static_cast<int>(key);
+
+		if (keycode < 0 || keycode >= 256)
+		{
+			return;
+		}
+
+		this->mKeyboardState[keycode] = status;
 
 		if (this->mRecordKeyboardEvents)
 		{

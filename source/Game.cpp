@@ -236,6 +236,11 @@ namespace GTA
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::_GET_LABEL_TEXT, entry);
 	}
+	int Game::GenerateHash(System::String ^input)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, input);
+	}
+
 
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
 	{

@@ -90,6 +90,30 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GETTING_INTO_A_VEHICLE, Handle);
 	}
+	bool Ped::IsFalling::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_FALLING, Handle);
+	}
+	bool Ped::IsJumping::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_JUMPING, Handle);
+	}
+	bool Ped::IsClimbing::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_CLIMBING, Handle);
+	}
+	bool Ped::IsVaulting::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_VAULTING, Handle);
+	}
+	bool Ped::IsDiving::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_DIVING, Handle);
+	}
+	bool Ped::IsFleeing::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_FLEEING, Handle);
+	}
 	bool Ped::IsTryingToEnterALockedVehicle::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
@@ -320,6 +344,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_MAX_CRUISE_SPEED, Handle, value);
 	}
+	int Ped::MaxHealth::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PED_MAX_HEALTH, Handle);
+	}
+	void Ped::MaxHealth::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_MAX_HEALTH, Handle, value);
+	}
 	void Ped::DrivingStyle::set(GTA::DrivingStyle value)
 	{
 		Native::Function::Call(Native::Hash::SET_DRIVE_TASK_DRIVING_STYLE, Handle, static_cast<int>(value));
@@ -331,6 +363,10 @@ namespace GTA
 	void Ped::ShootRate::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_SHOOT_RATE, Handle, value);
+	}
+	void Ped::DropsWeaponsOnDeath::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 	}
 	void Ped::DiesInstantlyInWater::set(bool value)
 	{

@@ -571,7 +571,7 @@ namespace GTA
 
 	void Vehicle::SoundHorn(int duration)
 	{
-		int heldDownHash = Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, "HELDDOWN");
+		int heldDownHash = Game::GenerateHash("HELDDOWN");
 		Native::Function::Call(Native::Hash::START_VEHICLE_HORN, Handle, duration, heldDownHash, 0);
 	}
 

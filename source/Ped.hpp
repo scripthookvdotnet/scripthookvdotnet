@@ -236,6 +236,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool DropsWeaponsOnDeath
+		{
+			void set(bool value);
+		}
 		property bool DrownsInSinkingVehicle
 		{
 			void set(bool value);
@@ -301,7 +305,31 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsFalling
+		{
+			bool get();
+		}
+		property bool IsJumping
+		{
+			bool get();
+		}
+		property bool IsClimbing
+		{
+			bool get();
+		}
+		property bool IsVaulting
+		{
+			bool get();
+		}
+		property bool IsDiving
+		{
+			bool get();
+		}
 		property bool IsGoingIntoCover
+		{
+			bool get();
+		}
+		property bool IsFleeing
 		{
 			bool get();
 		}
@@ -420,6 +448,11 @@ namespace GTA
 		property float MaxDrivingSpeed
 		{
 			void set(float value);
+		}
+		property int MaxHealth
+		{
+			int get() override;
+			void set(int value) override;
 		}
 		property int Money
 		{

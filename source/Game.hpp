@@ -223,6 +223,7 @@ namespace GTA
 		static void FadeScreenIn(int time);
 		static void FadeScreenOut(int time);
 		static System::String ^GetGXTEntry(System::String ^entry);
+		static int GenerateHash(System::String ^input);
 
 		static void PlaySound(System::String ^soundFile, System::String ^soundSet);
 		static void PlayMusic(System::String ^musicFile);
