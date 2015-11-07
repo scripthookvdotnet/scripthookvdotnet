@@ -29,6 +29,8 @@ namespace GTA
 		void EnterVehicle();
 		void EnterVehicle(Vehicle ^vehicle, VehicleSeat seat);
 		void EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout);
+		void EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout, float speed);
+		void EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout, float speed, int flag);
 		static void EveryoneLeaveVehicle(Vehicle ^vehicle);
 		void FightAgainst(Ped ^target);
 		void FightAgainst(Ped ^target, int duration);

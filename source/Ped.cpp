@@ -426,6 +426,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COVER, Handle, expectUseWeapon);
 	}
+	bool Ped::IsInCombatAgainst(Ped ^target)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COMBAT, Handle, target);
+	}
 
 	Ped ^Ped::GetJacker()
 	{

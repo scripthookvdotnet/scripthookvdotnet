@@ -52,15 +52,23 @@ namespace GTA
 	}
 	void Tasks::EnterVehicle()
 	{
-		EnterVehicle(gcnew Vehicle(0), VehicleSeat::Any, -1);
+		EnterVehicle(gcnew Vehicle(0), VehicleSeat::Any, -1, 0.0f, 0);
 	}
 	void Tasks::EnterVehicle(Vehicle ^vehicle, VehicleSeat seat)
 	{
-		EnterVehicle(vehicle, seat, -1);
+		EnterVehicle(vehicle, seat, -1, 0.0f, 0);
 	}
 	void Tasks::EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout)
 	{
-		Native::Function::Call(Native::Hash::TASK_ENTER_VEHICLE, _ped->Handle, vehicle->Handle, timeout, static_cast<int>(seat), 0.0f, 0, 0);
+		EnterVehicle(vehicle, seat, timeout, 0.0f, 0);
+	}
+	void Tasks::EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout, float speed)
+	{
+		EnterVehicle(vehicle, seat, timeout, speed, 0);
+	}
+	void Tasks::EnterVehicle(Vehicle ^vehicle, VehicleSeat seat, int timeout, float speed, int flag)
+	{
+		Native::Function::Call(Native::Hash::TASK_ENTER_VEHICLE, _ped->Handle, vehicle->Handle, timeout, static_cast<int>(seat), speed, flag, 0);
 	}
 	void Tasks::EveryoneLeaveVehicle(Vehicle ^vehicle)
 	{

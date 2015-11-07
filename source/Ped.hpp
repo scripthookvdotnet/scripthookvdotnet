@@ -505,6 +505,7 @@ namespace GTA
 		void SetIntoVehicle(Vehicle ^vehicle, VehicleSeat seat);
 		bool IsInCover();
 		bool IsInCover(bool expectUseWeapon);
+		bool IsInCombatAgainst(Ped ^target);
 
 		Ped ^GetJacker();
 		Ped ^GetJackTarget();
