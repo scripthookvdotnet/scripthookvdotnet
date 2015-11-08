@@ -506,6 +506,7 @@ namespace GTA
 		bool IsInCover();
 		bool IsInCover(bool expectUseWeapon);
 		bool IsInCombatAgainst(Ped ^target);
+		bool IsHeadtracking(Entity ^entity);
 
 		Ped ^GetJacker();
 		Ped ^GetJackTarget();
