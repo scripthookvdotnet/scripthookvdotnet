@@ -430,6 +430,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COMBAT, Handle, target);
 	}
+	bool Ped::IsHeadtracking(Entity ^entity)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_HEADTRACKING_ENTITY, Handle, entity);
+	}
 
 	Ped ^Ped::GetJacker()
 	{
