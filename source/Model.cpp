@@ -114,7 +114,7 @@ namespace GTA
 
 		while (!IsLoaded)
 		{
-			Script::Yield();
+			Script::Wait(0);
 
 			if (System::DateTime::Now >= endtime)
 			{

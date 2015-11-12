@@ -72,6 +72,9 @@ namespace GTA
 
 		this->mScriptDomain->AbortScript(this);
 	}
+	static void Yield() {
+		Script::Wait(0);
+	}
 	void Script::Wait(int ms)
 	{
 		Script ^script = ScriptDomain::ExecutingScript;
@@ -90,10 +93,10 @@ namespace GTA
 		}
 		while (DateTime::Now < resume);
 	}
-	void Script::Yield()
+	 /*void Yield()
 	{
-		Wait(0);
-	}
+		
+	}*/
 
 	void Script::MainLoop()
 	{

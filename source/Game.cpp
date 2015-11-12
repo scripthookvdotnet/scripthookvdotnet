@@ -275,7 +275,7 @@ namespace GTA
 
 		while (Native::Function::Call<int>(Native::Hash::UPDATE_ONSCREEN_KEYBOARD) == 0)
 		{
-			Script::Yield();
+			Script::Wait(0);
 		}
 
 		ScriptDomain::CurrentDomain->PauseKeyboardEvents(false);

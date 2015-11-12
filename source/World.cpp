@@ -389,15 +389,15 @@ namespace GTA
 		{
 			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
 			{
-				case 1:
-					resultHandles->Add(gcnew Ped(entities[i]));
-					break;
-				case 2:
-					resultHandles->Add(gcnew Vehicle(entities[i]));
-					break;
-				case 3:
-					resultHandles->Add(gcnew Prop(entities[i]));
-					break;
+			case 1:
+				resultHandles->Add(gcnew Ped(entities[i]));
+				break;
+			case 2:
+				resultHandles->Add(gcnew Vehicle(entities[i]));
+				break;
+			case 3:
+				resultHandles->Add(gcnew Prop(entities[i]));
+				break;
 			}
 		}
 
@@ -412,15 +412,15 @@ namespace GTA
 		{
 			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entities[i]))
 			{
-				case 1:
-					resultHandles->Add(gcnew Ped(entities[i]));
-					break;
-				case 2:
-					resultHandles->Add(gcnew Vehicle(entities[i]));
-					break;
-				case 3:
-					resultHandles->Add(gcnew Prop(entities[i]));
-					break;
+			case 1:
+				resultHandles->Add(gcnew Ped(entities[i]));
+				break;
+			case 2:
+				resultHandles->Add(gcnew Vehicle(entities[i]));
+				break;
+			case 3:
+				resultHandles->Add(gcnew Prop(entities[i]));
+				break;
 			}
 		}
 
@@ -609,6 +609,40 @@ namespace GTA
 			return Math::Vector3::Zero;
 		}
 	}
+	public enum CheckType
+	{
+		CylinderSingleArrow = 0,
+		CylinderDoubleArrow = 1,
+		CylinderTripleArrow = 2,
+		CylinderCycleArrow = 3,
+		CylinderChecker = 4,
+		CyclinderFadeSingleArrow = 5,
+		CyclinderFadeDoubleArrow = 6,
+		CylinderFadeTripleArrow = 7,
+		CyclinderFadeCycleArrow = 8,
+		CylinderSmallLowChecker = 9,
+		ArrowInCircle = 10,
+		DoubleArrowInCircle = 11,
+		TripleArrowInCircle = 12,
+		CycleArrowInCircle = 13,
+		CheckerInCircle = 14,
+		Arrow = 15,
+		DoubleArrow2 = 16,
+		DoubleArrow3 = 17,
+		CycleArrow2 = 18,
+		CheckerFinish = 19,
+		CylinderArrowLeft = 20,
+		CylinderDoubleLeftArrow = 21,
+		CylinderTripleLeftArrow = 22,
+		CylinderHightChecker = 24,
+		CylinderHighCycleArrow = 28,
+		PlaneLeftRollInCircle = 36,
+		PlaneRightRollInCircle = 36,
+		PlaneForwardInCircle = 36,
+		CircleBankLeft = 40,
+		CylinderZero = 42,
+		Cylinder = 45
+	};
 	System::String ^World::GetZoneName(Math::Vector2 position)
 	{
 		return GetZoneName(Math::Vector3(position.X, position.Y, 0));
@@ -623,184 +657,184 @@ namespace GTA
 		{
 			switch (id)
 			{
-				case ZoneID::AIRP:
-					return "Los Santos International Airport";
-				case ZoneID::ALAMO:
-					return "Alamo Sea";
-				case ZoneID::ALTA:
-					return "Alta";
-				case ZoneID::ARMYB:
-					return "Fort Zancudo";
-				case ZoneID::BANHAMC:
-					return "Banham Canyon";
-				case ZoneID::BANNING:
-					return "Banning";
-				case ZoneID::BEACH:
-					return "Vespucci Beach";
-				case ZoneID::BHAMCA:
-					return "Banham Canyon";
-				case ZoneID::BRADP:
-					return "Braddock Pass";
-				case ZoneID::BRADT:
-					return "Braddock Tunnel";
-				case ZoneID::BURTON:
-					return "Burton";
-				case ZoneID::CALAFB:
-					return "Calafia Bridge";
-				case ZoneID::CANNY:
-					return "Raton Canyon";
-				case ZoneID::CCREAK:
-					return "Cassidy Creek";
-				case ZoneID::CHAMH:
-					return "Chamberlain Hills";
-				case ZoneID::CHIL:
-					return "Vinewood Hills";
-				case ZoneID::CHU:
-					return "Chumash";
-				case ZoneID::CMSW:
-					return "Chiliad Mountain State Wilderness";
-				case ZoneID::CYPRE:
-					return "Cypress Flats";
-				case ZoneID::DAVIS:
-					return "Davis";
-				case ZoneID::DELBE:
-					return "Del Perro Beach";
-				case ZoneID::DELPE:
-					return "Del Perro";
-				case ZoneID::DELSOL:
-					return "Puerto Del Sol";
-				case ZoneID::DESRT:
-					return "Grand Senora Desert";
-				case ZoneID::DOWNT:
-					return "Downtown";
-				case ZoneID::DTVINE:
-					return "Downtown Vinewood";
-				case ZoneID::EAST_V:
-					return "East Vinewood";
-				case ZoneID::EBURO:
-					return "El Burro Heights";
-				case ZoneID::ELGORL:
-					return "El Gordo Lighthouse";
-				case ZoneID::ELYSIAN:
-					return "Elysian Island";
-				case ZoneID::GALFISH:
-					return "Galilee";
-				case ZoneID::golf:
-					return "GWC and Golfing Society";
-				case ZoneID::GRAPES:
-					return "Grapeseed";
-				case ZoneID::GREATC:
-					return "Great Chaparral";
-				case ZoneID::HARMO:
-					return "Harmony";
-				case ZoneID::HAWICK:
-					return "Hawick";
-				case ZoneID::HORS:
-					return "Vinewood Racetrack";
-				case ZoneID::HUMLAB:
-					return "Humane Labs and Research";
-				case ZoneID::JAIL:
-					return "Bolingbroke Penitentiary";
-				case ZoneID::KOREAT:
-					return "Little Seoul";
-				case ZoneID::LACT:
-					return "Land Act Reservoir";
-				case ZoneID::LAGO:
-					return "Lago Zancudo";
-				case ZoneID::LDAM:
-					return "Land Act Dam";
-				case ZoneID::LEGSQU:
-					return "Legion Square";
-				case ZoneID::LMESA:
-					return "La Mesa";
-				case ZoneID::LOSPUER:
-					return "La Puerta";
-				case ZoneID::MIRR:
-					return "Mirror Park";
-				case ZoneID::MORN:
-					return "Morningwood";
-				case ZoneID::MOVIE:
-					return "Richards Majestic";
-				case ZoneID::MTCHIL:
-					return "Mount Chiliad";
-				case ZoneID::MTGORDO:
-					return "Mount Gordo";
-				case ZoneID::MTJOSE:
-					return "Mount Josiah";
-				case ZoneID::MURRI:
-					return "Murrieta Heights";
-				case ZoneID::NCHU:
-					return "North Chumash";
-				case ZoneID::NOOSE:
-					return "N.O.O.S.E.";
-				case ZoneID::OCEANA:
-					return "Pacific Ocean";
-				case ZoneID::PALCOV:
-					return "Paleto Cove";
-				case ZoneID::PALETO:
-					return "Paleto Bay";
-				case ZoneID::PALFOR:
-					return "Paleto Forest";
-				case ZoneID::PALHIGH:
-					return "Palomino Highlands";
-				case ZoneID::PALMPOW:
-					return "Palmer-Taylor Power Station";
-				case ZoneID::PBLUFF:
-					return "Pacific Bluffs";
-				case ZoneID::PBOX:
-					return "Pillbox Hill";
-				case ZoneID::PROCOB:
-					return "Procopio Beach";
-				case ZoneID::RANCHO:
-					return "Rancho";
-				case ZoneID::RGLEN:
-					return "Richman Glen";
-				case ZoneID::RICHM:
-					return "Richman";
-				case ZoneID::ROCKF:
-					return "Rockford Hills";
-				case ZoneID::RTRAK:
-					return "Redwood Lights Track";
-				case ZoneID::SanAnd:
-					return "San Andreas";
-				case ZoneID::SANCHIA:
-					return "San Chianski Mountain Range";
-				case ZoneID::SANDY:
-					return "Sandy Shores";
-				case ZoneID::SKID:
-					return "Mission Row";
-				case ZoneID::SLAB:
-					return "Stab City";
-				case ZoneID::STAD:
-					return "Maze Bank Arena";
-				case ZoneID::STRAW:
-					return "Strawberry";
-				case ZoneID::TATAMO:
-					return "Tataviam Mountains";
-				case ZoneID::TERMINA:
-					return "Terminal";
-				case ZoneID::TEXTI:
-					return "Textile City";
-				case ZoneID::TONGVAH:
-					return "Tongva Hills";
-				case ZoneID::TONGVAV:
-					return "Tongva Valley";
-				case ZoneID::VCANA:
-					return "Vespucci Canals";
-				case ZoneID::VESP:
-					return "Vespucci";
-				case ZoneID::VINE:
-					return "Vinewood";
-				case ZoneID::WINDF:
-					return "RON Alternates Wind Farm";
-				case ZoneID::WVINE:
-					return "West Vinewood";
-				case ZoneID::ZANCUDO:
-					return "Zancudo River";
-				case ZoneID::ZP_ORT:
-					return "Port of South Los Santos";
-				case ZoneID::ZQ_UAR:
-					return "Davis Quartz";
+			case ZoneID::AIRP:
+				return "Los Santos International Airport";
+			case ZoneID::ALAMO:
+				return "Alamo Sea";
+			case ZoneID::ALTA:
+				return "Alta";
+			case ZoneID::ARMYB:
+				return "Fort Zancudo";
+			case ZoneID::BANHAMC:
+				return "Banham Canyon";
+			case ZoneID::BANNING:
+				return "Banning";
+			case ZoneID::BEACH:
+				return "Vespucci Beach";
+			case ZoneID::BHAMCA:
+				return "Banham Canyon";
+			case ZoneID::BRADP:
+				return "Braddock Pass";
+			case ZoneID::BRADT:
+				return "Braddock Tunnel";
+			case ZoneID::BURTON:
+				return "Burton";
+			case ZoneID::CALAFB:
+				return "Calafia Bridge";
+			case ZoneID::CANNY:
+				return "Raton Canyon";
+			case ZoneID::CCREAK:
+				return "Cassidy Creek";
+			case ZoneID::CHAMH:
+				return "Chamberlain Hills";
+			case ZoneID::CHIL:
+				return "Vinewood Hills";
+			case ZoneID::CHU:
+				return "Chumash";
+			case ZoneID::CMSW:
+				return "Chiliad Mountain State Wilderness";
+			case ZoneID::CYPRE:
+				return "Cypress Flats";
+			case ZoneID::DAVIS:
+				return "Davis";
+			case ZoneID::DELBE:
+				return "Del Perro Beach";
+			case ZoneID::DELPE:
+				return "Del Perro";
+			case ZoneID::DELSOL:
+				return "Puerto Del Sol";
+			case ZoneID::DESRT:
+				return "Grand Senora Desert";
+			case ZoneID::DOWNT:
+				return "Downtown";
+			case ZoneID::DTVINE:
+				return "Downtown Vinewood";
+			case ZoneID::EAST_V:
+				return "East Vinewood";
+			case ZoneID::EBURO:
+				return "El Burro Heights";
+			case ZoneID::ELGORL:
+				return "El Gordo Lighthouse";
+			case ZoneID::ELYSIAN:
+				return "Elysian Island";
+			case ZoneID::GALFISH:
+				return "Galilee";
+			case ZoneID::golf:
+				return "GWC and Golfing Society";
+			case ZoneID::GRAPES:
+				return "Grapeseed";
+			case ZoneID::GREATC:
+				return "Great Chaparral";
+			case ZoneID::HARMO:
+				return "Harmony";
+			case ZoneID::HAWICK:
+				return "Hawick";
+			case ZoneID::HORS:
+				return "Vinewood Racetrack";
+			case ZoneID::HUMLAB:
+				return "Humane Labs and Research";
+			case ZoneID::JAIL:
+				return "Bolingbroke Penitentiary";
+			case ZoneID::KOREAT:
+				return "Little Seoul";
+			case ZoneID::LACT:
+				return "Land Act Reservoir";
+			case ZoneID::LAGO:
+				return "Lago Zancudo";
+			case ZoneID::LDAM:
+				return "Land Act Dam";
+			case ZoneID::LEGSQU:
+				return "Legion Square";
+			case ZoneID::LMESA:
+				return "La Mesa";
+			case ZoneID::LOSPUER:
+				return "La Puerta";
+			case ZoneID::MIRR:
+				return "Mirror Park";
+			case ZoneID::MORN:
+				return "Morningwood";
+			case ZoneID::MOVIE:
+				return "Richards Majestic";
+			case ZoneID::MTCHIL:
+				return "Mount Chiliad";
+			case ZoneID::MTGORDO:
+				return "Mount Gordo";
+			case ZoneID::MTJOSE:
+				return "Mount Josiah";
+			case ZoneID::MURRI:
+				return "Murrieta Heights";
+			case ZoneID::NCHU:
+				return "North Chumash";
+			case ZoneID::NOOSE:
+				return "N.O.O.S.E.";
+			case ZoneID::OCEANA:
+				return "Pacific Ocean";
+			case ZoneID::PALCOV:
+				return "Paleto Cove";
+			case ZoneID::PALETO:
+				return "Paleto Bay";
+			case ZoneID::PALFOR:
+				return "Paleto Forest";
+			case ZoneID::PALHIGH:
+				return "Palomino Highlands";
+			case ZoneID::PALMPOW:
+				return "Palmer-Taylor Power Station";
+			case ZoneID::PBLUFF:
+				return "Pacific Bluffs";
+			case ZoneID::PBOX:
+				return "Pillbox Hill";
+			case ZoneID::PROCOB:
+				return "Procopio Beach";
+			case ZoneID::RANCHO:
+				return "Rancho";
+			case ZoneID::RGLEN:
+				return "Richman Glen";
+			case ZoneID::RICHM:
+				return "Richman";
+			case ZoneID::ROCKF:
+				return "Rockford Hills";
+			case ZoneID::RTRAK:
+				return "Redwood Lights Track";
+			case ZoneID::SanAnd:
+				return "San Andreas";
+			case ZoneID::SANCHIA:
+				return "San Chianski Mountain Range";
+			case ZoneID::SANDY:
+				return "Sandy Shores";
+			case ZoneID::SKID:
+				return "Mission Row";
+			case ZoneID::SLAB:
+				return "Stab City";
+			case ZoneID::STAD:
+				return "Maze Bank Arena";
+			case ZoneID::STRAW:
+				return "Strawberry";
+			case ZoneID::TATAMO:
+				return "Tataviam Mountains";
+			case ZoneID::TERMINA:
+				return "Terminal";
+			case ZoneID::TEXTI:
+				return "Textile City";
+			case ZoneID::TONGVAH:
+				return "Tongva Hills";
+			case ZoneID::TONGVAV:
+				return "Tongva Valley";
+			case ZoneID::VCANA:
+				return "Vespucci Canals";
+			case ZoneID::VESP:
+				return "Vespucci";
+			case ZoneID::VINE:
+				return "Vinewood";
+			case ZoneID::WINDF:
+				return "RON Alternates Wind Farm";
+			case ZoneID::WVINE:
+				return "West Vinewood";
+			case ZoneID::ZANCUDO:
+				return "Zancudo River";
+			case ZoneID::ZP_ORT:
+				return "Port of South Los Santos";
+			case ZoneID::ZQ_UAR:
+				return "Davis Quartz";
 			}
 		}
 
@@ -1054,5 +1088,9 @@ namespace GTA
 	void World::DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
 	{
 		Native::Function::Call(Native::Hash::_DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+	}
+	void World::DrawCheckpoint(GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha)
+	{
+		GTA::Native::Function::Call(Native::Hash::CREATE_CHECKPOINT, 0, Position.X, Position.Y, Position.Z, radius, Red, green, blue, alpha, 0);
 	}
 }
