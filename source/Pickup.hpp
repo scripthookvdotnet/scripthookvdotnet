@@ -23,8 +23,28 @@ namespace GTA
 		}
 
 		bool Exists();
+		static bool Exists(Pickup ^pickup);
 		bool ObjectExists();
 		void Delete();
+		virtual bool Equals(Pickup ^pickup);
+
+		virtual inline int GetHashCode() override
+		{
+			return Handle;
+		}
+		static inline bool operator==(Pickup ^left, Pickup ^right)
+		{
+			if (ReferenceEquals(left, nullptr))
+			{
+				return ReferenceEquals(right, nullptr);
+			}
+
+			return left->Equals(right);
+		}
+		static inline bool operator!=(Pickup ^left, Pickup ^right)
+		{
+			return !operator==(left, right);
+		}
 
 	private:
 		int _handle;

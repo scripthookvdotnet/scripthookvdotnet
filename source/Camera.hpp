@@ -115,7 +115,27 @@ namespace GTA
 		void StopPointing();
 
 		bool Exists();
+		static bool Exists(Camera ^camera);
 		void Destroy();
+		virtual bool Equals(Camera ^camera);
+
+		virtual inline int GetHashCode() override
+		{
+			return Handle;
+		}
+		static inline bool operator==(Camera ^left, Camera ^right)
+		{
+			if (ReferenceEquals(left, nullptr))
+			{
+				return ReferenceEquals(right, nullptr);
+			}
+
+			return left->Equals(right);
+		}
+		static inline bool operator!=(Camera ^left, Camera ^right)
+		{
+			return !operator==(left, right);
+		}
 
 	internal:
 		static initonly array<System::String ^> ^_shakeNames = { "HAND_SHAKE", "SMALL_EXPLOSION_SHAKE", "MEDIUM_EXPLOSION_SHAKE", "LARGE_EXPLOSION_SHAKE", "JOLT_SHAKE", "VIBRATE_SHAKE", "ROAD_VIBRATION_SHAKE", "DRUNK_SHAKE", "SKY_DIVING_SHAKE", "FAMILY5_DRUG_TRIP_SHAKE", "DEATH_FAIL_IN_EFFECT_SHAKE" };
