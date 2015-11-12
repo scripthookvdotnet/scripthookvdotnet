@@ -21,7 +21,7 @@
 */
 #include "Game.hpp"
 #include "Ped.hpp"
-#include "stdafx.h"
+//#include "stdafx.h"
 #pragma once
 #pragma managed
 
