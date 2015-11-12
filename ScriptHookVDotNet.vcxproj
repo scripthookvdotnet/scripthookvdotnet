@@ -33,9 +33,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions);NOSOUND;NOMINMAX</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>source;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ErrorReporting>Queue</ErrorReporting>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -52,8 +55,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\AnimationSet.cpp" />
     <ClCompile Include="source\Blip.cpp" />
     <ClCompile Include="source\Camera.cpp" />
+    <ClCompile Include="source\Checkpoint.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\EuphoriaBase.cpp" />
     <ClCompile Include="source\Euphoria.cpp" />
@@ -83,6 +88,8 @@
     <ClCompile Include="source\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\AnimationSet.h" />
+    <ClInclude Include="source\Checkpoint.hpp" />
     <ClInclude Include="source\Controls.hpp" />
     <ClInclude Include="source\Blip.hpp" />
     <ClInclude Include="source\Camera.hpp" />
