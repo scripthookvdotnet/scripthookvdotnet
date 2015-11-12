@@ -29,8 +29,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <d3d9.h>
-#include <d3dx9.h>
+//#include <d3d9.h>
+//#include <d3dx9.h>
 #include <vcclr.h>
 //
 #pragma managed
