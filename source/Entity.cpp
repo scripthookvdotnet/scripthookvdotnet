@@ -51,7 +51,7 @@ namespace GTA
 	}
 	int Entity::Health::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) - 100;
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) / 2;
 	}
 	void Entity::Health::set(int value)
 	{
