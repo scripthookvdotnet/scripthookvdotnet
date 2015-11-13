@@ -314,7 +314,7 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsDamaged()
+		property bool IsDamaged
 		{
 			bool get();
 		}
