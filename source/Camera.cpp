@@ -233,11 +233,19 @@ namespace GTA
 
 	bool Camera::Exists()
 	{
-		return Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, Handle);
+		return Exists(this);
+	}
+	bool Camera::Exists(Camera ^camera)
+	{
+		return !Object::ReferenceEquals(camera, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, camera->Handle);
 	}
 	void Camera::Destroy()
 	{
 		Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
+	}
+	bool Camera::Equals(Camera ^camera)
+	{
+		return !System::Object::ReferenceEquals(camera, nullptr) && Handle == camera->Handle;
 	}
 
 	void GameplayCamera::ClampYaw(float min, float max)

@@ -295,7 +295,27 @@ namespace GTA
 		void ShowNumber(int number);
 
 		bool Exists();
+		static bool Exists(Blip ^blip);
 		void Remove();
+		virtual bool Equals(Blip ^blip);
+
+		virtual inline int GetHashCode() override
+		{
+			return Handle;
+		}
+		static inline bool operator==(Blip ^left, Blip ^right)
+		{
+			if (ReferenceEquals(left, nullptr))
+			{
+				return ReferenceEquals(right, nullptr);
+			}
+
+			return left->Equals(right);
+		}
+		static inline bool operator!=(Blip ^left, Blip ^right)
+		{
+			return !operator==(left, right);
+		}
 
 	private:
 		int _handle;

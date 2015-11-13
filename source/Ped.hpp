@@ -567,8 +567,27 @@ namespace GTA
 		Ped ^GetMember(int index);
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
+		virtual bool Equals(PedGroup ^pedGroup);
 
 		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
+
+		virtual inline int GetHashCode() override
+		{
+			return Handle;
+		}
+		static inline bool operator==(PedGroup ^left, PedGroup ^right)
+		{
+			if (ReferenceEquals(left, nullptr))
+			{
+				return ReferenceEquals(right, nullptr);
+			}
+
+			return left->Equals(right);
+		}
+		static inline bool operator!=(PedGroup ^left, PedGroup ^right)
+		{
+			return !operator==(left, right);
+		}
 
 	private:
 		int _handle;
