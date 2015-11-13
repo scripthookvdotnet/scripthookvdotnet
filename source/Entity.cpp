@@ -39,7 +39,7 @@ namespace GTA
 	}
 	void Entity::HasGravity::set(bool value)
 	{
-		Native::Function::Call(Native::Hash::SET_PED_GRAVITY, Handle, value);
+		Native::Function::Call(Native::Hash::SET_ENTITY_HAS_GRAVITY, Handle, value);
 	}
 	float Entity::Heading::get()
 	{
