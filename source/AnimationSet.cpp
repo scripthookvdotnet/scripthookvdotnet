@@ -29,8 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <d3d9.h>
-#include <d3dx9.h>
+#include "Native.hpp"
 #include <vcclr.h>
 //
 #pragma managed
@@ -38,13 +37,16 @@
 namespace GTA {
 	using System::String;
 	using GTA::Game;
-	AnimationSet::AnimationSet(System::String^ ModelName){
+	/*AnimationSet::AnimationSet(System::String^ ModelName){
 		pName = ModelName;
-	}
+	}*/
+	/*AnimationSet::AnimationSet(){
+	pName = ModelName;
+	}*/
 
-	String^ AnimationSet::Name::get() {
-		return pName;
-	}
+	//String^ AnimationSet::Name::get() {
+	//	return pName;
+	//}
 
 	//bool AnimationSet::isInMemory::get() {
 	//	char* ptr = PinStringA(pName);
@@ -105,35 +107,27 @@ namespace GTA {
 	//	}
 	//	return res;
 	//}
-	//float AnimationSet::GetPedsCurrentAnimationTime(Ped^ ped, String^ AnimationName) {
-	//	OBJECT_NON_EXISTING_CHECK(ped,0.0f);
-	//	float res = 0.0f;
-	//	char* pAnimSet = PinStringA(pName);
-	//	char* pAnimName = PinStringA(AnimationName);
-	//	try {
-	//		Script::GetCharAnimCurrentTime(ped->Handle, pAnimSet, pAnimName, &res);
-	//	} finally {
-	//		FreeString(pAnimSet);
-	//		FreeString(pAnimName);
-	//	}
-	//	return res;
-	//}
+	float AnimationSet::GetPedsCurrentAnimationTime(Entity^ ped, String^ AnimationDictionary, String^ AnimationName) {
+		float return12;
+		return12 = GTA::Native::Function::Call<float>(Native::Hash::GET_ENTITY_ANIM_CURRENT_TIME, ped, AnimationDictionary, AnimationName);
+		return return12;
+	}
 
 	//bool AnimationSet::operator == (AnimationSet^ left, AnimationSet^ right) {
 	//	if isNULL(left) return isNULL(right);
 	//	if isNULL(right) return false;
 	//	return (left->Name->Equals(right->Name));
 	//}
-	bool AnimationSet::operator != (AnimationSet^ left, AnimationSet^ right) {
+	/*bool AnimationSet::operator != (AnimationSet^ left, AnimationSet^ right) {
 		return !(left == right);
-	}
+	}*/
 	/*AnimationSet AnimationSet^ (String^ source) {
 		return gcnew AnimationSet(source);
 	}*/
 
-	String^ AnimationSet::ToString() {
+	/*String^ AnimationSet::ToString() {
 		return Name;
-	}
+	}*/
 
 }
 

@@ -21,7 +21,7 @@
 */
 #include "Game.hpp"
 #include "Ped.hpp"
-#include "stdafx.h"
+//#include "stdafx.h"
 #pragma once
 #pragma managed
 
@@ -37,25 +37,26 @@ namespace GTA {
 		bool LoadToMemoryNow();*/
 		
 	public:
-		AnimationSet(System::String^ Name);
+		/*AnimationSet(System::String^ Name);
 
 		property System::String^ Name { 
 			System::String^ get();
-		}
+		}*/
 
 	/*	property bool isInMemory { 
 			bool get();
 		}*/
 
 		/*void DisposeFromMemoryNow();
-		bool isPedPlayingAnimation(Ped^ ped, System::String^ AnimationName);
-		float GetPedsCurrentAnimationTime(Ped^ ped, System::String^ AnimationName);*/
+		bool isPedPlayingAnimation(Ped^ ped, System::String^ AnimationName);*/
+		float AnimationSet::GetPedsCurrentAnimationTime(Entity^ ped, System::String^ AnimationDictionary, System::String^ AnimationName);
+		/*float GetPedsCurrentAnimationTime(Ped^ ped, System::String^ AnimationName);*/
 
 		/*static bool operator == ( AnimationSet^ left, AnimationSet^ right );*/
-		static bool operator != ( AnimationSet^ left, AnimationSet^ right );
+	/*	static bool operator != ( AnimationSet^ left, AnimationSet^ right );*/
 		//static operator AnimationSet^ (String^ source);
 
-		virtual System::String^ ToString() override;
+	/*	virtual System::String^ ToString() override;*/
 
 	};
 
