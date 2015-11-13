@@ -62,6 +62,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ON_ALL_WHEELS, Handle);
 	}
+	bool Vehicle::IsDamaged::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_IS_VEHICLE_DAMAGED, Handle);
+	}
 	float Vehicle::Speed::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_SPEED, Handle);
