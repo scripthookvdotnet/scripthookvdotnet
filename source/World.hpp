@@ -2,7 +2,7 @@
 
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-
+#include "Checkpoint.hpp"
 namespace GTA
 {
 	#pragma region Forward Declarations
@@ -322,7 +322,7 @@ namespace GTA
 		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
 		static void DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
 		static void DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
-		static void World::DrawCheckpoint(GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha);
+		static void World::DrawCheckpoint(GTA::Checkpoint::CheckType check, GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha, bool AlignWithGround);
 		/*/// <summary>
 		/// Draws a 3D Checkpoint at the given position.
 		/// </summary>

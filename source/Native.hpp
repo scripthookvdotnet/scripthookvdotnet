@@ -236,6 +236,7 @@ namespace GTA
 		public:
 			generic <typename T>
 			static T Call(Hash hash, ... array<InputArgument ^> ^arguments);
+			/*static void Call(Hash hash, ... array<int^> ^arguments);*/
 			static void Call(Hash hash, ... array<InputArgument ^> ^arguments);
 
 		internal:

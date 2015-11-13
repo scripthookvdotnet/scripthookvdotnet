@@ -10,6 +10,7 @@
 #include "Raycast.hpp"
 #include "Rope.hpp"
 #include "Vehicle.hpp"
+#include "Checkpoint.hpp"
 
 namespace GTA
 {
@@ -609,40 +610,6 @@ namespace GTA
 			return Math::Vector3::Zero;
 		}
 	}
-	public enum CheckType
-	{
-		CylinderSingleArrow = 0,
-		CylinderDoubleArrow = 1,
-		CylinderTripleArrow = 2,
-		CylinderCycleArrow = 3,
-		CylinderChecker = 4,
-		CyclinderFadeSingleArrow = 5,
-		CyclinderFadeDoubleArrow = 6,
-		CylinderFadeTripleArrow = 7,
-		CyclinderFadeCycleArrow = 8,
-		CylinderSmallLowChecker = 9,
-		ArrowInCircle = 10,
-		DoubleArrowInCircle = 11,
-		TripleArrowInCircle = 12,
-		CycleArrowInCircle = 13,
-		CheckerInCircle = 14,
-		Arrow = 15,
-		DoubleArrow2 = 16,
-		DoubleArrow3 = 17,
-		CycleArrow2 = 18,
-		CheckerFinish = 19,
-		CylinderArrowLeft = 20,
-		CylinderDoubleLeftArrow = 21,
-		CylinderTripleLeftArrow = 22,
-		CylinderHightChecker = 24,
-		CylinderHighCycleArrow = 28,
-		PlaneLeftRollInCircle = 36,
-		PlaneRightRollInCircle = 36,
-		PlaneForwardInCircle = 36,
-		CircleBankLeft = 40,
-		CylinderZero = 42,
-		Cylinder = 45
-	};
 	System::String ^World::GetZoneName(Math::Vector2 position)
 	{
 		return GetZoneName(Math::Vector3(position.X, position.Y, 0));
@@ -1089,8 +1056,9 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
 	}
-	void World::DrawCheckpoint(GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha)
+	void World::DrawCheckpoint(GTA::Checkpoint::CheckType check,GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha, bool AlignWithGround)
 	{
-		GTA::Native::Function::Call(Native::Hash::CREATE_CHECKPOINT, 0, Position.X, Position.Y, Position.Z, radius, Red, green, blue, alpha, 0);
+		GTA::Checkpoint::DrawCheckpoint(check, Position, radius, Red, green, blue, alpha, AlignWithGround);
+		/*GTA::Native::Function::Call(Native::Hash::CREATE_CHECKPOINT, 0, Position.X, Position.Y, Position.Z, radius, Red, green, blue, alpha, 0);*/
 	}
 }
