@@ -39,7 +39,27 @@ namespace GTA
 		Math::Vector3 GetVertexCoord(int vertex);
 
 		bool Exists();
+		static bool Exists(Rope ^rope);
 		void Delete();
+		virtual bool Equals(Rope ^rope);
+
+		virtual inline int GetHashCode() override
+		{
+			return Handle;
+		}
+		static inline bool operator==(Rope ^left, Rope ^right)
+		{
+			if (ReferenceEquals(left, nullptr))
+			{
+				return ReferenceEquals(right, nullptr);
+			}
+
+			return left->Equals(right);
+		}
+		static inline bool operator!=(Rope ^left, Rope ^right)
+		{
+			return !operator==(left, right);
+		}
 
 	private:
 		int _handle;

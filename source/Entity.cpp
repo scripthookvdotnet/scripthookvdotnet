@@ -39,7 +39,7 @@ namespace GTA
 	}
 	void Entity::HasGravity::set(bool value)
 	{
-		Native::Function::Call(Native::Hash::SET_PED_GRAVITY, Handle, value);
+		Native::Function::Call(Native::Hash::SET_ENTITY_HAS_GRAVITY, Handle, value);
 	}
 	float Entity::Heading::get()
 	{
@@ -51,7 +51,7 @@ namespace GTA
 	}
 	int Entity::Health::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) - 100;
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) / 2;
 	}
 	void Entity::Health::set(int value)
 	{

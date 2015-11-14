@@ -542,6 +542,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, Handle);
 	}
+	bool PedGroup::Equals(PedGroup ^pedGroup)
+	{
+		return !System::Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
+	}
 
 	System::Collections::Generic::List<Ped ^> ^PedGroup::ToList(bool includingLeader)
 	{
