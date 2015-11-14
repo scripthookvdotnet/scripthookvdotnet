@@ -445,6 +445,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsJumpingOutOfVehicle
+		{
+			bool get();
+		}
 		property float MaxDrivingSpeed
 		{
 			void set(float value);
