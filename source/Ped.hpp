@@ -515,6 +515,7 @@ namespace GTA
 		Ped ^GetJacker();
 		Ped ^GetJackTarget();
 		Entity ^GetKiller();
+		Vehicle ^GetVehicleIsTryingToEnter();
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();

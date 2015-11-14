@@ -451,6 +451,10 @@ namespace GTA
 	{
 		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, Handle);
 	}
+	Vehicle ^Ped::GetVehicleIsTryingToEnter()
+	{
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+	}
 
 	void Ped::Kill()
 	{
