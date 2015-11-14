@@ -126,6 +126,14 @@ namespace GTA
 
 		return Native::Function::Call<int>(Native::Hash::GET_MAX_AMMO_IN_CLIP, _owner->Handle, static_cast<int>(Hash), true);
 	}
+	void Weapon::Tint::set(WeaponTint value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_WEAPON_TINT_INDEX, _owner, static_cast<int>(Hash), static_cast<int>(value));
+	}
+	WeaponTint Weapon::Tint::get()
+	{
+		return static_cast<WeaponTint>(Native::Function::Call<int>(Native::Hash::GET_PED_WEAPON_TINT_INDEX, _owner, static_cast<int>(Hash)));
+	}
 
 	WeaponCollection::WeaponCollection(Ped ^owner) : _owner(owner), _weapons(gcnew Dictionary<Native::WeaponHash, Weapon ^>())
 	{
