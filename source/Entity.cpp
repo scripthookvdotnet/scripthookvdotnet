@@ -351,6 +351,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_TOUCHING_ENTITY, Handle, entity->Handle);
 	}
+	bool Entity::IsTouching(GTA::Model model)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_ENTITY_TOUCHING_MODEL, Handle, model.Hash);
+	}
 	bool Entity::HasBeenDamagedBy(Entity ^entity)
 	{
 		return Native::Function::Call<bool>(Native::Hash::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, Handle, entity->Handle, 1);
