@@ -519,6 +519,8 @@ namespace GTA
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();
+		void Clone();
+		void Clone(float heading);
 		void ApplyDamage(int damageAmount);
 		Math::Vector3 GetBoneCoord(Bone BoneID);
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);
