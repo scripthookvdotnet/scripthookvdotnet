@@ -324,10 +324,6 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_SPRINTING, Handle);
 	}
-	bool Ped::IsJumpingOutOfVehicle::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
-	}
 	void Ped::NeverLeavesGroup::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_NEVER_LEAVES_GROUP, Handle, value);
