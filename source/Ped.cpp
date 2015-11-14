@@ -447,6 +447,10 @@ namespace GTA
 	{
 		return Native::Function::Call<Ped ^>(Native::Hash::GET_JACK_TARGET, Handle);
 	}
+	Ped ^Ped::GetMeleeTarget()
+	{
+		return Native::Function::Call<Ped ^>(Native::Hash::GET_MELEE_TARGET_FOR_PED, Handle);
+	}
 	Entity ^Ped::GetKiller()
 	{
 		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, Handle);

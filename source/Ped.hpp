@@ -514,6 +514,7 @@ namespace GTA
 
 		Ped ^GetJacker();
 		Ped ^GetJackTarget();
+		Ped ^GetMeleeTarget();
 		Entity ^GetKiller();
 		Vehicle ^GetVehicleIsTryingToEnter();
 		void Kill();
