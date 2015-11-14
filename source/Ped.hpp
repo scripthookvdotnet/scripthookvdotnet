@@ -445,6 +445,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsJumpingOutOfVehicle
+		{
+			bool get();
+		}
 		property float MaxDrivingSpeed
 		{
 			void set(float value);
@@ -510,10 +514,14 @@ namespace GTA
 
 		Ped ^GetJacker();
 		Ped ^GetJackTarget();
+		Ped ^GetMeleeTarget();
 		Entity ^GetKiller();
+		Vehicle ^GetVehicleIsTryingToEnter();
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();
+		void Clone();
+		void Clone(float heading);
 		void ApplyDamage(int damageAmount);
 		Math::Vector3 GetBoneCoord(Bone BoneID);
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);

@@ -170,6 +170,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_SHAKE_AMPLITUDE, amplitude);
 	}
+	float GameplayCamera::Zoom::get()
+	{
+		return Native::Function::Call<float>(Native::Hash::_GET_GAMEPLAY_CAM_ZOOM);
+	}
 
 	void Camera::Shake(CameraShake shakeType, float amplitude)
 	{
