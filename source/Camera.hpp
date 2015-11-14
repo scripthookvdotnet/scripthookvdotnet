@@ -196,6 +196,10 @@ namespace GTA
 		{
 			void set(float amplitude);
 		}
+		static property float Zoom
+		{
+			float get();
+		}
 
 		static void Shake(CameraShake shakeType, float amplitude);
 		static void StopShaking();
