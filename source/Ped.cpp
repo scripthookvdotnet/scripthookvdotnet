@@ -316,6 +316,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_WALKING, Handle);
 	}
+	bool Ped::IsJumpingOutOfVehicle::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
+	}
 	bool Ped::IsRunning::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_RUNNING, Handle);
