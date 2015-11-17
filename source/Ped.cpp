@@ -174,6 +174,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_AIMING_FROM_COVER, Handle);
 	}
+	bool Ped::IsCuffed::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_CUFFED, Handle);
+	}
 	bool Ped::IsInCoverFacingLeft::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COVER_FACING_LEFT, Handle);

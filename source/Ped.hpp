@@ -260,6 +260,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsCuffed
+		{
+			bool get();
+		}
 		property bool IsBeingJacked
 		{
 			bool get();
