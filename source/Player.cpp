@@ -206,6 +206,14 @@ namespace GTA
 
 		return nullptr;
 	}
+	void Player::SetMayOnlyEnterThisVehicleThisFrame(Vehicle ^vehicle)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle);
+	}
+	void Player::SetMayNotEnterAnyVehicleThisFrame()
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_MAY_NOT_ENTER_ANY_VEHICLE, Handle);
+	}
 
 	bool Player::Equals(Player ^player)
 	{

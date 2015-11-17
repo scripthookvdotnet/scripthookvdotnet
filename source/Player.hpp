@@ -117,6 +117,8 @@ namespace GTA
 		void DisableFiringThisFrame();
 		bool IsTargetting(Entity ^entity);
 		Entity ^GetTargetedEntity();
+		void SetMayOnlyEnterThisVehicleThisFrame(Vehicle ^vehicle);
+		void SetMayNotEnterAnyVehicleThisFrame();
 
 		virtual bool Equals(Player ^player);
 
