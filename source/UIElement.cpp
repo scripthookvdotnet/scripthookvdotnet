@@ -15,6 +15,8 @@ namespace GTA
 		Color = Drawing::Color::WhiteSmoke;
 		Font = GTA::Font::ChaletLondon;
 		Centered = false;
+		Shadow = false;
+		Outline = false;
 	}
 	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color)
 	{
@@ -25,6 +27,8 @@ namespace GTA
 		Color = color;
 		Font = GTA::Font::ChaletLondon;
 		Centered = false;
+		Shadow = false;
+		Outline = false;
 	}
 	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color, GTA::Font font, bool centered)
 	{
@@ -35,6 +39,20 @@ namespace GTA
 		Color = color;
 		Font = font;
 		Centered = centered;
+		Shadow = false;
+		Outline = false;
+	}
+	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color, GTA::Font font, bool centered, bool shadow, bool outline)
+	{
+		Enabled = true;
+		Caption = caption;
+		Position = position;
+		Scale = scale;
+		Color = color;
+		Font = font;
+		Centered = centered;
+		Shadow = shadow;
+		Outline = outline;
 	}
 
 	void UIText::Draw()
@@ -51,6 +69,14 @@ namespace GTA
 		const float x = (static_cast<float>(Position.X) + offset.Width) / UI::WIDTH;
 		const float y = (static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT;
 
+		if (Shadow)
+		{
+			Native::Function::Call(Native::Hash::SET_TEXT_DROP_SHADOW);
+		}
+		if (Outline)
+		{
+			Native::Function::Call(Native::Hash::SET_TEXT_OUTLINE);
+		}
 		Native::Function::Call(Native::Hash::SET_TEXT_FONT, static_cast<int>(Font));
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, Scale, Scale);
 		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
