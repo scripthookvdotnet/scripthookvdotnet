@@ -207,6 +207,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
 	}
+	float Game::GetControlNormal(int index, Control control)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_CONTROL_NORMAL, index, static_cast<int>(control));
+	}
 
 	void Game::Pause(bool value)
 	{
