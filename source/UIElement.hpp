@@ -88,6 +88,8 @@ namespace GTA
 		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position, System::Drawing::Color color);
 		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position, System::Drawing::Color color, float rotation);
 
+		virtual ~UISprite();
+
 		virtual property bool Enabled;
 		virtual property System::Drawing::Point Position;
 		virtual property System::Drawing::Color Color;

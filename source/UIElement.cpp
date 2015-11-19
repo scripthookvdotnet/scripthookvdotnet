@@ -198,6 +198,10 @@ namespace GTA
 		Rotation = rotation;
 		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
 	}
+	UISprite::~UISprite()
+	{
+		Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+	}
 
 	void UISprite::Draw()
 	{
