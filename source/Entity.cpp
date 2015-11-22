@@ -280,9 +280,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_SPEED, Handle, value);
 	}
+	System::IntPtr Entity::MemoryAddress::get()
+	{
+		System::Int64 *memoryAddress = reinterpret_cast<System::Int64*>(Native::MemoryAccess::GetAddressOfEntity(Handle));
+		return System::IntPtr(memoryAddress);
+	}
 	GTA::Model Entity::Model::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, Handle);
+	}
+	EntityPointer ^Entity::Pointer::get()
+	{
+		return gcnew EntityPointer(this);
 	}
 	Math::Vector3 Entity::Position::get()
 	{
@@ -442,5 +451,77 @@ namespace GTA
 	bool Entity::Equals(Entity ^entity)
 	{
 		return !System::Object::ReferenceEquals(entity, nullptr) && Handle == entity->Handle;
+	}
+
+	EntityPointer::EntityPointer(GTA::Entity ^entity) : _entity(entity)
+	{
+		_address = Native::MemoryAccess::GetAddressOfEntity(entity->Handle);
+	}
+
+	GTA::Entity ^EntityPointer::Entity::get()
+	{
+		if (!ReferenceEquals(_entity, nullptr) && _entity->Exists())
+		{
+			return _entity;
+		}
+		else
+		{
+			_address = 0;
+			_entity = nullptr;
+			return nullptr;
+		}
+	}
+	System::IntPtr EntityPointer::MemoryAddress::get()
+	{
+		if (Entity->Exists())
+		{
+			return System::IntPtr(reinterpret_cast<System::Int64*>(_address));
+		}
+		else
+		{
+			_address = 0;
+			_entity = nullptr;
+			return System::IntPtr::Zero;
+		}
+	}
+
+	System::Byte EntityPointer::ReadByte(int offset)
+	{
+		return _address == 0 ? 0 : (*reinterpret_cast<System::Byte *>(_address + offset));
+	}
+	int EntityPointer::ReadInt(int offset)
+	{
+		return _address == 0 ? 0 : (*reinterpret_cast<int *>(_address + offset));
+	}
+	float EntityPointer::ReadFloat(int offset)
+	{
+		return _address == 0 ? 0.0f : (*reinterpret_cast<float *>(_address + offset));
+	}
+	void EntityPointer::WriteByte(int offset, System::Byte value)
+	{
+		if (_address == 0)
+		{
+			return;
+		}
+
+		(*reinterpret_cast<System::Byte *>(_address + offset)) = value;
+	}
+	void EntityPointer::WriteInt(int offset, int value)
+	{
+		if (_address == 0)
+		{
+			return;
+		}
+
+		(*reinterpret_cast<int *>(_address + offset)) = value;
+	}
+	void EntityPointer::WriteFloat(int offset, float value)
+	{
+		if (_address == 0)
+		{
+			return;
+		}
+
+		(*reinterpret_cast<float *>(_address + offset)) = value;
 	}
 }

@@ -8,6 +8,7 @@ namespace GTA
 {
 	#pragma region Forward Declarations
 	ref class Blip;
+	ref class EntityPointer;
 	#pragma endregion
 
 	public ref class Entity abstract
@@ -153,9 +154,17 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		property System::IntPtr MemoryAddress
+		{
+			System::IntPtr get();
+		}
 		property GTA::Model Model
 		{
 			GTA::Model get();
+		}
+		property EntityPointer ^Pointer
+		{
+			EntityPointer ^get();
 		}
 		property Math::Vector3 Position
 		{
@@ -241,5 +250,31 @@ namespace GTA
 		
 	private:
 		int _handle;
+	};
+
+	public ref class EntityPointer
+	{
+	public:
+		EntityPointer(Entity ^entity);
+
+		property Entity ^Entity
+		{
+			GTA::Entity ^get();
+		}
+		property System::IntPtr MemoryAddress
+		{
+			System::IntPtr get();
+		}
+
+		System::Byte ReadByte(int offset);
+		int ReadInt(int offset);
+		float ReadFloat(int offset);
+		void WriteByte(int offset, System::Byte value);
+		void WriteInt(int offset, int value);
+		void WriteFloat(int offset, float value);
+
+	private:
+		GTA::Entity ^_entity;
+		System::UInt64 _address;
 	};
 }
