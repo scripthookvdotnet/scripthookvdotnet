@@ -14,6 +14,9 @@ namespace GTA
 	{
 	public:
 		Light(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
+		Light(Entity ^entityAttachedTo, System::Drawing::Color color, float range, float intensity);
+		Light(Entity ^entityAttachedTo, Math::Vector3 offset, System::Drawing::Color color, float range, float intensity);
+		Light(Entity ^entityAttachedTo, Math::Vector3 offset, bool relativeAttaching, System::Drawing::Color color, float range, float intensity);
 
 		property bool IsEnabled
 		{

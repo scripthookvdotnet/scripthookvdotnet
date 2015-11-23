@@ -9,15 +9,63 @@ namespace GTA
 
 	Light::Light(Math::Vector3 position, Drawing::Color color, float range, float intensity)
 	{
-		_isEnabled = false;
+		_isEnabled = true;
 		_position = position;
 		_color = color;
 		_range = range;
 		_intensity = intensity;
+
 		_isAttached = false;
 		_entity = nullptr;
 		_offset = Math::Vector3::Zero;
 		_relative = true;
+
+		Parent->PerFrameScriptDrawing += gcnew EventHandler(this, &Light::PerFrameDrawing);
+	}
+	Light::Light(Entity ^entityAttachedTo, Drawing::Color color, float range, float intensity)
+	{
+		_isEnabled = true;
+		_position = Math::Vector3::Zero;
+		_color = color;
+		_range = range;
+		_intensity = intensity;
+
+		_isAttached = true;
+		_entity = entityAttachedTo;
+		_offset = Math::Vector3::Zero;
+		_relative = true;
+
+		Parent->PerFrameScriptDrawing += gcnew EventHandler(this, &Light::PerFrameDrawing);
+	}
+	Light::Light(Entity ^entityAttachedTo, Math::Vector3 offset, Drawing::Color color, float range, float intensity)
+	{
+		_isEnabled = true;
+		_position = Math::Vector3::Zero;
+		_color = color;
+		_range = range;
+		_intensity = intensity;
+
+		_isAttached = true;
+		_entity = entityAttachedTo;
+		_offset = offset;
+		_relative = true;
+
+		Parent->PerFrameScriptDrawing += gcnew EventHandler(this, &Light::PerFrameDrawing);
+	}
+	Light::Light(Entity ^entityAttachedTo, Math::Vector3 offset, bool relativeAttaching, Drawing::Color color, float range, float intensity)
+	{
+		_isEnabled = true;
+		_position = Math::Vector3::Zero;
+		_color = color;
+		_range = range;
+		_intensity = intensity;
+
+		_isAttached = true;
+		_entity = entityAttachedTo;
+		_offset = offset;
+		_relative = relativeAttaching;
+
+		Parent->PerFrameScriptDrawing += gcnew EventHandler(this, &Light::PerFrameDrawing);
 	}
 
 	bool Light::IsEnabled::get()
