@@ -2,7 +2,7 @@
 
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-
+#include "Checkpoint.hpp"
 namespace GTA
 {
 	#pragma region Forward Declarations
@@ -322,8 +322,22 @@ namespace GTA
 		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
 		static void DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
 		static void DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
-
+		static void World::DrawCheckpoint(GTA::Checkpoint::CheckType check, GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha, bool AlignWithGround);
+		/*/// <summary>
+		/// Draws a 3D Checkpoint at the given position.
+		/// </summary>
+		void World::DrawCheckpoint(GTA::Math::Vector3 Position, float radius, int Red, int green, int blue, int alpha)
+		{
+			GTA::Native::Function::Call(Native::Hash::CREATE_CHECKPOINT, 0, Position.X, Position.Y, Position.Z, radius, Red, green, blue, alpha, 0);
+		}
+		/// <summary>
+		/// Draws a 3D Checkpoint at the given position.
+		/// </summary>
+		void World::DrawCheckpoint(int check, GTA::Math::Vector3 Position, int radius, System::Drawing::Color pColor)
+		{
+			GTA::Native::Function::Call(Native::Hash::CREATE_CHECKPOINT, check, Position.X, Position.Y, Position.Z, radius, pColor, pColor, pColor, pColor, 0);
+		}*/
 	internal:
 		static initonly array<System::String ^> ^_weatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
-	};
+};
 }

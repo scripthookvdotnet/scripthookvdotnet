@@ -22,11 +22,7 @@ namespace GTA
 
 	bool Pickup::Exists()
 	{
-		return Exists(this);
-	}
-	bool Pickup::Exists(Pickup ^pickup)
-	{
-		return !Object::ReferenceEquals(pickup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_PICKUP_EXIST, pickup->Handle);
+		return Native::Function::Call<bool>(Native::Hash::DOES_PICKUP_EXIST, Handle);
 	}
 	bool Pickup::ObjectExists()
 	{
@@ -35,9 +31,5 @@ namespace GTA
 	void Pickup::Delete()
 	{
 		return Native::Function::Call(Native::Hash::REMOVE_PICKUP, Handle);
-	}
-	bool Pickup::Equals(Pickup ^pickup)
-	{
-		return !System::Object::ReferenceEquals(pickup, nullptr) && Handle == pickup->Handle;
 	}
 }

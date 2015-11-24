@@ -97,19 +97,11 @@ namespace GTA
 
 	bool Blip::Exists()
 	{
-		return Exists(this);
-	}
-	bool Blip::Exists(Blip ^blip)
-	{
-		return !Object::ReferenceEquals(blip, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, blip->Handle);
+		return Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, Handle);
 	}
 	void Blip::Remove()
 	{
 		int id = Handle;
 		Native::Function::Call(Native::Hash::REMOVE_BLIP, &id);
-	}
-	bool Blip::Equals(Blip ^blip)
-	{
-		return !System::Object::ReferenceEquals(blip, nullptr) && Handle == blip->Handle;
 	}
 }

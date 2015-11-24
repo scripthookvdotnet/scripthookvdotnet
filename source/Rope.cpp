@@ -70,23 +70,8 @@ namespace GTA
 
 	bool Rope::Exists()
 	{
-		return Exists(this);
-	}
-	bool Rope::Exists(Rope ^rope)
-	{
-		if (!Object::ReferenceEquals(rope, nullptr))
-		{
-			int handle = rope->Handle;
-			return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
-		}
-		else
-		{
-			return false;
-		}
-	}
-	bool Rope::Equals(Rope ^rope)
-	{
-		return !System::Object::ReferenceEquals(rope, nullptr) && Handle == rope->Handle;
+		int handle = Handle;
+		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
 	}
 	void Rope::Delete()
 	{
