@@ -49,6 +49,7 @@ namespace GTA {
 		/*void DisposeFromMemoryNow();
 		bool isPedPlayingAnimation(Ped^ ped, System::String^ AnimationName);*/
 		float AnimationSet::GetPedsCurrentAnimationTime(Entity^ ped, System::String^ AnimationDictionary, System::String^ AnimationName);
+		/*static void Draw_Sprite(char* textureDict, char* textureName, float screenX, float screenY, float scaleX, float scaleY, float heading, int colorR, int colorG, int colorB, int colorA);*/
 		/*float GetPedsCurrentAnimationTime(Ped^ ped, System::String^ AnimationName);*/
 
 		/*static bool operator == ( AnimationSet^ left, AnimationSet^ right );*/

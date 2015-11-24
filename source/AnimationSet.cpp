@@ -37,6 +37,10 @@
 namespace GTA {
 	using System::String;
 	using GTA::Game;
+	static void Draw_Sprite(char* textureDict, char* textureName, float screenX, float screenY, float scaleX, float scaleY, float heading, int colorR, int colorG, int colorB, int colorA)
+	{
+		Native::Function::Call(Native::Hash::DRAW_SPRITE, textureDict, textureName, screenX, screenY, scaleX, scaleY, heading, colorR, colorG, colorB, colorA);
+	}
 	/*AnimationSet::AnimationSet(System::String^ ModelName){
 		pName = ModelName;
 	}*/
