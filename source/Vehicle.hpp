@@ -314,10 +314,6 @@ namespace GTA
 		{
 			bool get();
 		}
-		property bool IsDamaged
-		{
-			bool get();
-		}
 		property float Speed
 		{
 			float get();

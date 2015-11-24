@@ -174,10 +174,6 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_AIMING_FROM_COVER, Handle);
 	}
-	bool Ped::IsCuffed::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_CUFFED, Handle);
-	}
 	bool Ped::IsInCoverFacingLeft::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COVER_FACING_LEFT, Handle);
@@ -320,10 +316,6 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_WALKING, Handle);
 	}
-	bool Ped::IsJumpingOutOfVehicle::get()
-	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
-	}
 	bool Ped::IsRunning::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_RUNNING, Handle);
@@ -451,17 +443,9 @@ namespace GTA
 	{
 		return Native::Function::Call<Ped ^>(Native::Hash::GET_JACK_TARGET, Handle);
 	}
-	Ped ^Ped::GetMeleeTarget()
-	{
-		return Native::Function::Call<Ped ^>(Native::Hash::GET_MELEE_TARGET_FOR_PED, Handle);
-	}
 	Entity ^Ped::GetKiller()
 	{
 		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, Handle);
-	}
-	Vehicle ^Ped::GetVehicleIsTryingToEnter()
-	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
 	}
 
 	void Ped::Kill()
@@ -475,14 +459,6 @@ namespace GTA
 	void Ped::ClearBloodDamage()
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_BLOOD_DAMAGE, Handle);
-	}
-	void Ped::Clone()
-	{
-		Ped::Clone(0.0F);
-	}
-	void Ped::Clone(float heading)
-	{
-		Native::Function::Call(Native::Hash::CLONE_PED, Handle, heading, false, false);
 	}
 	void Ped::ApplyDamage(int damageAmount)
 	{
@@ -565,10 +541,6 @@ namespace GTA
 	bool PedGroup::Contains(Ped ^ped)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, Handle);
-	}
-	bool PedGroup::Equals(PedGroup ^pedGroup)
-	{
-		return !System::Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
 	}
 
 	System::Collections::Generic::List<Ped ^> ^PedGroup::ToList(bool includingLeader)

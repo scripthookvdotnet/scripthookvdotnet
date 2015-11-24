@@ -170,10 +170,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_GAMEPLAY_CAM_SHAKE_AMPLITUDE, amplitude);
 	}
-	float GameplayCamera::Zoom::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::_GET_GAMEPLAY_CAM_ZOOM);
-	}
 
 	void Camera::Shake(CameraShake shakeType, float amplitude)
 	{
@@ -237,19 +233,11 @@ namespace GTA
 
 	bool Camera::Exists()
 	{
-		return Exists(this);
-	}
-	bool Camera::Exists(Camera ^camera)
-	{
-		return !Object::ReferenceEquals(camera, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, camera->Handle);
+		return Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, Handle);
 	}
 	void Camera::Destroy()
 	{
 		Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
-	}
-	bool Camera::Equals(Camera ^camera)
-	{
-		return !System::Object::ReferenceEquals(camera, nullptr) && Handle == camera->Handle;
 	}
 
 	void GameplayCamera::ClampYaw(float min, float max)
