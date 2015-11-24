@@ -106,8 +106,5 @@ namespace GTA
 		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
 		bool mRecordKeyboardEvents;
 		array<bool> ^mKeyboardState;
-		/*void PerFrameDrawing();
-		void PerFrameScriptDrawing();
-		void ScriptDomain::SetCurrentScript(GTA::Script^ script);*/
 	};
 }

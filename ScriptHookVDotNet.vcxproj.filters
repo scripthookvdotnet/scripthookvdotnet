@@ -111,11 +111,11 @@
     <ClCompile Include="source\EuphoriaBase.cpp">
       <Filter>scripting\NaturalMotion</Filter>
     </ClCompile>
-    <ClCompile Include="source\AnimationSet.cpp">
+    <ClCompile Include="source\Light.cpp">
       <Filter>scripting\World</Filter>
     </ClCompile>
-    <ClCompile Include="source\Checkpoint.cpp">
-      <Filter>scripting\World</Filter>
+    <ClCompile Include="source\ScriptChild.cpp">
+      <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,11 +224,11 @@
     <ClInclude Include="source\EuphoriaHelpers.hpp">
       <Filter>scripting\NaturalMotion</Filter>
     </ClInclude>
-    <ClInclude Include="source\AnimationSet.h">
+    <ClInclude Include="source\Light.hpp">
       <Filter>scripting\World</Filter>
     </ClInclude>
-    <ClInclude Include="source\Checkpoint.hpp">
-      <Filter>scripting\World</Filter>
+    <ClInclude Include="source\ScriptChild.hpp">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

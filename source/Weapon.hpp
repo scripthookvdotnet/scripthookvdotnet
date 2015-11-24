@@ -9,6 +9,18 @@ namespace GTA
 	ref class Prop;
 	#pragma endregion
 
+	public enum class WeaponTint
+	{
+		Normal = 0,
+		Green = 1,
+		Gold = 2,
+		Pink = 3,
+		Army = 4,
+		LSPD = 5,
+		Orange = 6,
+		Platinum = 7
+	};
+	
 	public ref class Weapon sealed
 	{
 	public:	
@@ -45,6 +57,11 @@ namespace GTA
 		property int MaxAmmoInClip
 		{
 			int get();
+		}
+		property WeaponTint Tint
+		{
+			void set(WeaponTint value);
+			WeaponTint get();
 		}
 
 	internal:

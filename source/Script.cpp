@@ -72,9 +72,6 @@ namespace GTA
 
 		this->mScriptDomain->AbortScript(this);
 	}
-	static void Yield() {
-		Script::Wait(0);
-	}
 	void Script::Wait(int ms)
 	{
 		Script ^script = ScriptDomain::ExecutingScript;
@@ -88,15 +85,16 @@ namespace GTA
 
 		do
 		{
+			script->DoPerFrameScriptDrawing();
 			script->mWaitEvent->Set();
 			script->mContinueEvent->WaitOne();
 		}
 		while (DateTime::Now < resume);
 	}
-	 /*void Yield()
+	void Script::Yield()
 	{
-		
-	}*/
+		Wait(0);
+	}
 
 	void Script::MainLoop()
 	{
@@ -144,5 +142,10 @@ namespace GTA
 			// Yield execution to next tick
 			Wait(this->mInterval);
 		}
+	}
+
+	void Script::DoPerFrameScriptDrawing()
+	{
+		PerFrameScriptDrawing(this, EventArgs::Empty);
 	}
 }

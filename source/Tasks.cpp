@@ -213,7 +213,7 @@ namespace GTA
 
 		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animSet))
 		{
-			Script::Wait(0);
+			Script::Yield();
 
 			if (System::DateTime::Now >= endtime)
 			{

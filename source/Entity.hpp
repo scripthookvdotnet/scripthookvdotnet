@@ -195,6 +195,7 @@ namespace GTA
 		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2, float angle);
 		bool IsNearEntity(Entity^ entity, Math::Vector3 distance);
 		bool IsTouching(Entity ^entity);
+		bool IsTouching(GTA::Model model);
 		bool HasBeenDamagedBy(Entity ^entity);
 		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
 		Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 offset);
