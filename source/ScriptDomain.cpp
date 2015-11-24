@@ -574,4 +574,49 @@ namespace GTA
 	{
 		return nullptr;
 	}
+	//void ScriptDomain::SetCurrentScript(GTA::Script^ script) {
+	//	mExecutingScript = script;
+	//}
+//	[System::Runtime::ExceptionServices::HandleProcessCorruptedStateExceptions]
+//	void ScriptDomain::PerFrameDrawing() {
+//		//pCurrentThread = nullptr;
+//		if ((mRunningScripts->Count == 0)) return;
+//		//if (isConsoleActive) return;
+//
+//		/*pGraphics->InitFrame();*/
+//		/*GTA::EventArgs GraphicsEventArgs;
+//*/
+///*GraphicsEventArgs = gcnew GTA::EventArgs GraphicsEventArgs(pGraphics);*/
+//
+//		for (int i = 0; i < mRunningScripts->Count; i++) {
+//		/*	try {*/
+//				SetCurrentScript(mRunningScripts[i]); // set it here because it is called from outside the thread, wait is blocked anyway
+//				/*GTA::->InitScript();*/
+//				/*mRunningScripts[i]->DoPerFrameDrawing(args);*/
+//
+//		/*	} catchScriptErrors(scriptList[i], "PerFrameDrawing", i--; )*/
+//			}
+//			//SetCurrentScript(nullptr);
+//			///*FormHost->TriggerPaint(args);*/
+//			//SetCurrentScript(nullptr);
+//		}
+//	}
+
+	//[System::Runtime::ExceptionServices::HandleProcessCorruptedStateExceptions]
+	//void PerFrameScriptDrawing() {
+	//	/*pCurrentScript = nullptr;
+	//	pCurrentThread = nullptr;
+	//	CheckState();*/
+	//	if ((mRunningScripts->Count == 0)) return;
+
+	//	for (int i = 0; i<mRunningScripts->Count; i++) {
+	//		try {
+
+	//			SetCurrentScript(scriptList[i]); // set it here because it is called from outside the thread, wait is blocked anyway
+	//			scriptList[i]->DoPerFrameScriptDrawing();
+
+	//		} catchScriptErrors(scriptList[i], "PerFrameScriptDrawing", i--; )
+	//	}
+	//	SetCurrentScript(nullptr);
+	//}
 }

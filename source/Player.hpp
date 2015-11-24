@@ -114,7 +114,6 @@ namespace GTA
 			void set(int value);
 		}
 
-		void DisableFiringThisFrame();
 		bool IsTargetting(Entity ^entity);
 		Entity ^GetTargetedEntity();
 

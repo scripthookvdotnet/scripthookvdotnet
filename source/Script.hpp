@@ -15,7 +15,6 @@
  */
 
 #pragma once
-
 #include "Game.hpp"
 
 namespace GTA
@@ -41,10 +40,9 @@ namespace GTA
 	{
 	public:
 		Script();
-
 		static void Wait(int ms);
-		static void Yield();
-
+		
+		/*static void Yield();*/
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
@@ -86,7 +84,6 @@ namespace GTA
 		~Script();
 
 		void MainLoop();
-		void DoPerFrameScriptDrawing();
 
 		int mInterval;
 		bool mRunning;
@@ -97,6 +94,5 @@ namespace GTA
 		System::Threading::AutoResetEvent ^mContinueEvent;
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		ScriptSettings ^mSettings;
-		event System::EventHandler ^PerFrameScriptDrawing;
 	};
 }
