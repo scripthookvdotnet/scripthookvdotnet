@@ -6,6 +6,9 @@ Community Script Hook V .NET
 
 This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language in-game.
 
+Do you have any questions related to GTA-V scripting or the project itself? Feel free to ask them in the public [Gitter-Chat](https://gitter.im/crosire/scripthookvdotnet)!  
+(The issues-page should be primarily used for bug reports and enhancement ideas)
+
 ## Requirements
 
 * [C++ ScriptHook by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)

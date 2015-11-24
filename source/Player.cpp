@@ -172,6 +172,10 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL_NOW, Handle, false);
 	}
 
+	void Player::DisableFiringThisFrame()
+	{
+		Native::Function::Call(Native::Hash::DISABLE_PLAYER_FIRING, Handle, 0);
+	}
 	bool Player::IsTargetting(Entity ^entity)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING_AT_ENTITY, Handle, entity->Handle);

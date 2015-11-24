@@ -32,6 +32,7 @@ namespace GTA
 		UIText(System::String ^caption, System::Drawing::Point position, float scale);
 		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color);
 		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, Font font, bool centered);
+		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, Font font, bool centered, bool shadow, bool outline);
 
 		virtual property bool Enabled;
 		virtual property System::Drawing::Point Position;
@@ -40,6 +41,8 @@ namespace GTA
 		property Font Font;
 		property float Scale;
 		property bool Centered;
+		property bool Shadow;
+		property bool Outline;
 
 		virtual void Draw();
 		virtual void Draw(System::Drawing::Size offset);
