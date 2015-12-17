@@ -90,6 +90,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_DIRT_LEVEL, Handle, value);
 	}
+	VehicleLandingGear Vehicle::LandingGear::get()
+	{
+		return static_cast<VehicleLandingGear>(Native::Function::Call<int>(Native::Hash::_GET_VEHICLE_LANDING_GEAR, Handle));
+	}
+	void Vehicle::LandingGear::set(VehicleLandingGear value)
+	{
+		Native::Function::Call(Native::Hash::_GET_VEHICLE_LANDING_GEAR, Handle, static_cast<int>(value));
+	}
 	VehicleRoofState Vehicle::RoofState::get()
 	{
 		return static_cast<VehicleRoofState>(Native::Function::Call<int>(Native::Hash::GET_CONVERTIBLE_ROOF_STATE, Handle));
@@ -350,6 +358,10 @@ namespace GTA
 	void Vehicle::CanTiresBurst::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_TYRES_CAN_BURST, Handle, value);
+	}
+	void Vehicle::CanWheelsBreak::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_WHEELS_CAN_BREAK, Handle, value);
 	}
 	void Vehicle::CanBeVisiblyDamaged::set(bool value)
 	{

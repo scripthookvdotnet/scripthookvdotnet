@@ -180,6 +180,13 @@ namespace GTA
 		Trunk = 5,
 		Trunk2 = 6,
 	};
+	public enum class VehicleLandingGear
+	{
+		Deployed = 0,
+		Closing = 1,
+		Opening = 2,
+		Retracted = 3,
+	};
 	public enum class VehicleMod
 	{
 		Spoilers = 0,
@@ -333,6 +340,11 @@ namespace GTA
 			VehicleRoofState get();
 			void set(VehicleRoofState value);
 		}
+		property VehicleLandingGear LandingGear
+		{
+			VehicleLandingGear get();
+			void set(VehicleLandingGear value);
+		}
 		property float BodyHealth
 		{
 			float get();
@@ -473,6 +485,10 @@ namespace GTA
 		property bool CanTiresBurst
 		{
 			bool get();
+			void set(bool value);
+		}
+		property bool CanWheelsBreak
+		{
 			void set(bool value);
 		}
 		property bool CanBeVisiblyDamaged
