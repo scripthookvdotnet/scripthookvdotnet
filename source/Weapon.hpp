@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Model.hpp"
 #include "WeaponHashes.hpp"
 
 namespace GTA
@@ -21,7 +22,7 @@ namespace GTA
 		Platinum = 7
 	};
 
-	public enum class WeaponGroup
+	public enum class WeaponGroup : System::UInt32
 	{
 		Unarmed = 0xA00FC1E4,
 		Melee = 0xD49321D4,

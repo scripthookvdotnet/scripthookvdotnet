@@ -79,22 +79,6 @@ namespace GTA
 			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, _owner->Handle, static_cast<int>(Hash), value, true, true);
 		}
 	}
-	void Weapon::AmmoInClip::set(int value)
-	{
-		if (Hash == Native::WeaponHash::Unarmed)
-		{
-			return;
-		}
-
-		if (IsPresent)
-		{
-			Native::Function::Call(Native::Hash::SET_AMMO_IN_CLIP, _owner->Handle, static_cast<int>(Hash), value);
-		}
-		else
-		{
-			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, _owner->Handle, static_cast<int>(Hash), value, true, true);
-		}
-	}
 	bool Weapon::CanUseOnParachute::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::CAN_USE_WEAPON_ON_PARACHUTE, static_cast<int>(Hash));
@@ -105,7 +89,7 @@ namespace GTA
 	}
 	WeaponGroup Weapon::Group::get()
 	{
-		return static_cast<WeaponGroup>(Native::Function::Call(Native::Hash::GET_WEAPONTYPE_GROUP, static_cast<int>(Hash)));
+		return static_cast<WeaponGroup>(Native::Function::Call<int>(Native::Hash::GET_WEAPONTYPE_GROUP, static_cast<int>(Hash)));
 	}
 	void Weapon::InfiniteAmmo::set(bool value)
 	{
