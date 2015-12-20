@@ -173,9 +173,25 @@ namespace GTA
 			Native::Function::Call(Native::Hash::RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
 		}
 	}
+	GTA::Weather World::Weather::get()
+	{
+		for (int i = 0; i < _weatherNames->Length; i++)
+		{
+			int weatherHash = Native::Function::Call<int>(Native::Hash::_GET_CURRENT_WEATHER_TYPE);
+			
+			if (weatherHash == Game::GenerateHash(_weatherNames[i]))
+			{
+				return static_cast<GTA::Weather>(i);
+			}
+		}
+		return GTA::Weather::Unknown;
+	}
 	void World::Weather::set(GTA::Weather value)
 	{
-		Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, _weatherNames[static_cast<int>(value)]);
+		if (Enum::IsDefined(value.GetType(), value) && value != GTA::Weather::Unknown)
+		{
+			Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, _weatherNames[static_cast<int>(value)]);
+		}
 	}
 
 	array<Blip ^> ^World::GetActiveBlips()

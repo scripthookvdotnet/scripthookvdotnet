@@ -200,6 +200,7 @@ namespace GTA
 	};
 	public enum class Weather
 	{
+		Unknown = -1,
 		ExtraSunny,
 		Clear,
 		Clouds,
@@ -240,6 +241,7 @@ namespace GTA
 		}
 		static property GTA::Weather Weather
 		{
+			GTA::Weather get();
 			void set(GTA::Weather value);
 		}
 
