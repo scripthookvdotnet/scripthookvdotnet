@@ -16,103 +16,109 @@
 
 #include "ScriptDomain.hpp"
 
-ref struct ScriptHook
+namespace
 {
-	static GTA::ScriptDomain ^Domain = nullptr;
-};
+	using namespace System;
+	using namespace System::Windows::Forms;
 
-bool ManagedInit()
-{
-	if (!System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	ref struct ScriptHook
 	{
-		GTA::ScriptDomain::Unload(ScriptHook::Domain);
-	}
+		static GTA::ScriptDomain ^Domain = nullptr;
+	};
 
-	ScriptHook::Domain = GTA::ScriptDomain::Load(System::IO::Path::Combine(System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
-
-	if (!System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	bool ManagedInit()
 	{
+		if (!Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+		{
+			GTA::ScriptDomain::Unload(ScriptHook::Domain);
+		}
+
+		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
+
+		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+		{
+			return false;
+		}
+
 		ScriptHook::Domain->Start();
 
 		return true;
 	}
-	else
+	bool ManagedTick()
 	{
-		return false;
+		if (ScriptHook::Domain->IsKeyPressed(Keys::Insert))
+		{
+			return false;
+		}
+
+		ScriptHook::Domain->DoTick();
+
+		return true;
 	}
-}
-bool ManagedTick()
-{
-	if (ScriptHook::Domain->IsKeyPressed(System::Windows::Forms::Keys::Insert))
+	void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		return false;
+		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+		{
+			return;
+		}
+
+		ScriptHook::Domain->DoKeyboardMessage(static_cast<Keys>(key), status, statusCtrl, statusShift, statusAlt);
 	}
-
-	ScriptHook::Domain->DoTick();
-
-	return true;
-}
-void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
-{
-	if (System::Object::ReferenceEquals(ScriptHook::Domain, nullptr))
-	{
-		return;
-	}
-
-	ScriptHook::Domain->DoKeyboardMessage(static_cast<System::Windows::Forms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
 }
 
 #pragma unmanaged
-#pragma warning(disable: 4793)
 
 #include <Main.h>
 #include <Windows.h>
 
-bool sGameReloaded = false;
-PVOID sMainFib = nullptr;
-PVOID sScriptFib = nullptr;
+namespace
+{
+	bool sGameReloaded = false;
+	PVOID sMainFib = nullptr;
+	PVOID sScriptFib = nullptr;
 
-void ScriptYield()
-{
-	// Switch back to main script fiber used by Script Hook
-	SwitchToFiber(sMainFib);
-}
-void CALLBACK ScriptMainLoop()
-{
-	while (ManagedInit())
+	void ScriptYield()
 	{
-		sGameReloaded = false;
-
-		// Run main loop
-		while (!sGameReloaded && ManagedTick())
+		// Switch back to main script fiber used by Script Hook
+		SwitchToFiber(sMainFib);
+	}
+	void CALLBACK ScriptMainLoop()
+	{
+		while (ManagedInit())
 		{
-			ScriptYield();
+			sGameReloaded = false;
+
+			// Run main loop
+			while (!sGameReloaded && ManagedTick())
+			{
+				ScriptYield();
+			}
 		}
 	}
-}
-void ScriptMainSetup()
-{
-	sGameReloaded = true;
-	sMainFib = GetCurrentFiber();
-
-	if (sScriptFib == nullptr)
+	void ScriptMainSetup()
 	{
-		// Create our own fiber for the common language runtime once
-		sScriptFib = CreateFiber(0, reinterpret_cast<LPFIBER_START_ROUTINE>(&ScriptMainLoop), nullptr);
-	}
+		sGameReloaded = true;
+		sMainFib = GetCurrentFiber();
 
-	while (true)
+		if (sScriptFib == nullptr)
+		{
+			// Create our own fiber for the common language runtime once
+			sScriptFib = CreateFiber(0, reinterpret_cast<LPFIBER_START_ROUTINE>(&ScriptMainLoop), nullptr);
+		}
+
+		while (true)
+		{
+			// Yield execution
+			scriptWait(0);
+
+			// Switch to our own fiber and wait for it to switch back
+			SwitchToFiber(sScriptFib);
+		}
+	}
+	void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 	{
-		// Yield execution
-		scriptWait(0);
-
-		// Switch to our own fiber and wait for it to switch back
-		SwitchToFiber(sScriptFib);
+		ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
 	}
-}
-void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
-{
-	ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
 }
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
