@@ -215,6 +215,7 @@ namespace GTA
 		static bool IsControlJustReleased(int index, Control control);
 		static void EnableControl(int index, Control control);
 		static void DisableControl(int index, Control control);
+		static float GetControlNormal(int index, Control control);
 
 		static void Pause(bool value);
 		static void PauseClock(bool value);

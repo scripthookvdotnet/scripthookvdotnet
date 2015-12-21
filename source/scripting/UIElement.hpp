@@ -81,4 +81,26 @@ namespace GTA
 	private:
 		System::Collections::Generic::List<UIElement ^> ^_items;
 	};
+	public ref class UISprite : public UIElement
+	{
+	public:
+		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position);
+		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position, System::Drawing::Color color);
+		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position, System::Drawing::Color color, float rotation);
+
+		virtual ~UISprite();
+
+		virtual property bool Enabled;
+		virtual property System::Drawing::Point Position;
+		virtual property System::Drawing::Color Color;
+		property System::Drawing::Size Scale;
+		property float Rotation;
+
+		virtual void Draw() override;
+		virtual void Draw(System::Drawing::Size offset) override;
+
+	private:
+		System::String ^_textureDict;
+		System::String ^_textureName;
+	};
 }

@@ -164,4 +164,61 @@ namespace GTA
 			item->Draw(static_cast<Drawing::Size>(UIRectangle::Position + offset));
 		}
 	}
+
+	UISprite::UISprite(String ^textureDict, String ^textureName, Drawing::Size scale, Drawing::Point position)
+	{
+		Enabled = true;
+		_textureDict = textureDict;
+		_textureName = textureName;
+		Scale = scale;
+		Position = position;
+		Color = Drawing::Color::White;
+		Rotation = 0.0F;
+		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+	}
+	UISprite::UISprite(String ^textureDict, String ^textureName, Drawing::Size scale, Drawing::Point position, Drawing::Color color)
+	{
+		Enabled = true;
+		_textureDict = textureDict;
+		_textureName = textureName;
+		Scale = scale;
+		Position = position;
+		Color = color;
+		Rotation = 0.0F;
+		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+	}
+	UISprite::UISprite(String ^textureDict, String ^textureName, Drawing::Size scale, Drawing::Point position, Drawing::Color color, float rotation)
+	{
+		Enabled = true;
+		_textureDict = textureDict;
+		_textureName = textureName;
+		Scale = scale;
+		Position = position;
+		Color = color;
+		Rotation = rotation;
+		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+	}
+	UISprite::~UISprite()
+	{
+		Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+	}
+
+	void UISprite::Draw()
+	{
+		Draw(Drawing::Size());
+	}
+	void UISprite::Draw(Drawing::Size offset)
+	{
+		if (!Enabled || !Native::Function::Call<bool>(Native::Hash::HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
+		{
+			return;
+		}
+
+		const float scaleX = static_cast<float>(Scale.Width) / UI::WIDTH;
+		const float scaleY = static_cast<float>(Scale.Height) / UI::HEIGHT;
+		const float positionX = ((static_cast<float>(Position.X) + offset.Width) / UI::WIDTH) + scaleX * 0.5f;
+		const float positionY = ((static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT) + scaleY * 0.5f;
+
+		Native::Function::Call(Native::Hash::DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+	}
 }
