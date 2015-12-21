@@ -58,6 +58,7 @@
     <ClCompile Include="source\EuphoriaBase.cpp" />
     <ClCompile Include="source\Euphoria.cpp" />
     <ClCompile Include="source\Game.cpp" />
+    <ClCompile Include="source\Light.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
     <ClCompile Include="source\Model.cpp" />
@@ -71,6 +72,7 @@
     <ClCompile Include="source\Rope.cpp" />
     <ClCompile Include="source\Scaleform.cpp" />
     <ClCompile Include="source\Script.cpp" />
+    <ClCompile Include="source\ScriptChild.cpp" />
     <ClCompile Include="source\ScriptDomain.cpp" />
     <ClCompile Include="source\Settings.cpp" />
     <ClCompile Include="source\Tasks.cpp" />
@@ -91,6 +93,7 @@
     <ClInclude Include="source\Euphoria.hpp" />
     <ClInclude Include="source\EuphoriaHelpers.hpp" />
     <ClInclude Include="source\Game.hpp" />
+    <ClInclude Include="source\Light.hpp" />
     <ClInclude Include="source\Matrix.hpp" />
     <ClInclude Include="source\Model.hpp" />
     <ClInclude Include="source\Native.hpp" />
@@ -106,6 +109,7 @@
     <ClInclude Include="source\Rope.hpp" />
     <ClInclude Include="source\Scaleform.hpp" />
     <ClInclude Include="source\Script.hpp" />
+    <ClInclude Include="source\ScriptChild.hpp" />
     <ClInclude Include="source\ScriptDomain.hpp" />
     <ClInclude Include="source\Settings.hpp" />
     <ClInclude Include="source\Tasks.hpp" />

@@ -85,6 +85,7 @@ namespace GTA
 
 		do
 		{
+			script->DoPerFrameScriptDrawing();
 			script->mWaitEvent->Set();
 			script->mContinueEvent->WaitOne();
 		}
@@ -141,5 +142,10 @@ namespace GTA
 			// Yield execution to next tick
 			Wait(this->mInterval);
 		}
+	}
+
+	void Script::DoPerFrameScriptDrawing()
+	{
+		PerFrameScriptDrawing(this, EventArgs::Empty);
 	}
 }

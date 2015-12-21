@@ -86,6 +86,7 @@ namespace GTA
 		~Script();
 
 		void MainLoop();
+		void DoPerFrameScriptDrawing();
 
 		int mInterval;
 		bool mRunning;
@@ -96,5 +97,6 @@ namespace GTA
 		System::Threading::AutoResetEvent ^mContinueEvent;
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
 		ScriptSettings ^mSettings;
+		event System::EventHandler ^PerFrameScriptDrawing;
 	};
 }
