@@ -52,6 +52,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Audio.cpp" />
     <ClCompile Include="source\Blip.cpp" />
     <ClCompile Include="source\Camera.cpp" />
     <ClCompile Include="source\Entity.cpp" />
@@ -83,6 +84,7 @@
     <ClCompile Include="source\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Audio.hpp" />
     <ClInclude Include="source\Controls.hpp" />
     <ClInclude Include="source\Blip.hpp" />
     <ClInclude Include="source\Camera.hpp" />

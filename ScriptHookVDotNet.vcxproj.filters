@@ -111,6 +111,9 @@
     <ClCompile Include="source\EuphoriaBase.cpp">
       <Filter>scripting\NaturalMotion</Filter>
     </ClCompile>
+    <ClCompile Include="source\Audio.cpp">
+      <Filter>scripting\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Native.hpp">
@@ -217,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="source\EuphoriaHelpers.hpp">
       <Filter>scripting\NaturalMotion</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Audio.hpp">
+      <Filter>scripting\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
