@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Model.hpp"
 #include "WeaponHashes.hpp"
 
 namespace GTA
@@ -20,6 +21,21 @@ namespace GTA
 		Orange = 6,
 		Platinum = 7
 	};
+
+	public enum class WeaponGroup : System::UInt32
+	{
+		Unarmed = 0xA00FC1E4,
+		Melee = 0xD49321D4,
+		Pistol = 0x18D5FA97,
+		SMG = 0xC6E9A5C5,
+		AssaultRifle = 0xC7D15052,
+		MG = 0x451B04BC,
+		Shotgun = 0x33431399,
+		Sniper = 0xB7BBD827,
+		Heavy = 0xA27A4F9F,
+		Thrown = 0x5C4C5883,
+		PetrolCan = 0x5F1BE07C,
+	};
 	
 	public ref class Weapon sealed
 	{
@@ -37,6 +53,18 @@ namespace GTA
 		{
 			int get();
 			void set(int value);
+		}
+		property bool CanUseOnParachute
+		{
+			bool get();
+		}
+		property int DefaultClipSize
+		{
+			int get();
+		}
+		property WeaponGroup Group
+		{
+			WeaponGroup get();
 		}
 		property bool InfiniteAmmo
 		{
@@ -57,6 +85,10 @@ namespace GTA
 		property int MaxAmmoInClip
 		{
 			int get();
+		}
+		property GTA::Model Model
+		{
+			GTA::Model get();
 		}
 		property WeaponTint Tint
 		{
@@ -91,6 +123,7 @@ namespace GTA
 
 		void Drop();
 		Weapon ^Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded);
+		bool IsWeaponValid(Native::WeaponHash hash);
 		bool Select(Weapon ^weapon);
 		void Remove(Weapon ^weapon);
 		void RemoveAll();

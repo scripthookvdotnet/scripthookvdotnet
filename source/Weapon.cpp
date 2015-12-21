@@ -79,6 +79,18 @@ namespace GTA
 			Native::Function::Call(Native::Hash::GIVE_WEAPON_TO_PED, _owner->Handle, static_cast<int>(Hash), value, true, true);
 		}
 	}
+	bool Weapon::CanUseOnParachute::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::CAN_USE_WEAPON_ON_PARACHUTE, static_cast<int>(Hash));
+	}
+	int Weapon::DefaultClipSize::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_WEAPON_CLIP_SIZE, static_cast<int>(Hash));
+	}
+	WeaponGroup Weapon::Group::get()
+	{
+		return static_cast<WeaponGroup>(Native::Function::Call<int>(Native::Hash::GET_WEAPONTYPE_GROUP, static_cast<int>(Hash)));
+	}
 	void Weapon::InfiniteAmmo::set(bool value)
 	{
 		if (Hash == Native::WeaponHash::Unarmed)
@@ -125,6 +137,10 @@ namespace GTA
 		}
 
 		return Native::Function::Call<int>(Native::Hash::GET_MAX_AMMO_IN_CLIP, _owner->Handle, static_cast<int>(Hash), true);
+	}
+	GTA::Model Weapon::Model::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_WEAPONTYPE_MODEL, static_cast<int>(Hash));
 	}
 	void Weapon::Tint::set(WeaponTint value)
 	{
@@ -194,7 +210,7 @@ namespace GTA
 	{
 		Weapon ^weapon;
 
-		if (!_weapons->TryGetValue(hash, weapon))
+		if (IsWeaponValid(hash))
 		{
 			weapon = gcnew Weapon(_owner, hash);
 			_weapons->Add(hash, weapon);
@@ -210,6 +226,10 @@ namespace GTA
 		}
 
 		return weapon;
+	}
+	bool WeaponCollection::IsWeaponValid(Native::WeaponHash hash)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_WEAPON_VALID, static_cast<int>(hash));
 	}
 	bool WeaponCollection::Select(Weapon ^weapon)
 	{
