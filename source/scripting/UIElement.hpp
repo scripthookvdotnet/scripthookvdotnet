@@ -96,8 +96,8 @@ namespace GTA
 		property System::Drawing::Size Scale;
 		property float Rotation;
 
-		virtual void Draw() override;
-		virtual void Draw(System::Drawing::Size offset) override;
+		virtual void Draw();
+		virtual void Draw(System::Drawing::Size offset);
 
 	private:
 		System::String ^_textureDict;
