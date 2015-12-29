@@ -2,6 +2,7 @@
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
 
+#include "Audio.hpp"
 #include "World.hpp"
 #include "Raycast.hpp"
 
@@ -245,10 +246,9 @@ namespace GTA
 		return Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, input);
 	}
 
-
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
 	{
-		Native::Function::Call(Native::Hash::PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
+		Audio::ReleaseSound(Audio::PlaySoundFrontend(soundFile, soundSet));
 	}
 	void Game::PlayMusic(System::String ^musicFile)
 	{
