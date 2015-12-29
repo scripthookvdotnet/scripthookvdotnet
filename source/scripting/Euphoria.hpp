@@ -11,10 +11,10 @@ namespace GTA
 		{
 		private:
 			Ped ^_ped;
-			System::Collections::Generic::Dictionary<System::String ^, BaseHelper ^> ^_helperCache;
+			System::Collections::Generic::Dictionary<System::String ^, CustomHelper ^> ^_helperCache;
 
-			generic <typename T> where T : BaseHelper
-			T GetHelper(System::String ^MessageID);
+			generic <typename T> where T : CustomHelper
+			T GetHelper(System::String ^message);
 
 		internal:
 			Euphoria(Ped ^ped);

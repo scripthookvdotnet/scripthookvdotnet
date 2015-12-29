@@ -10,84 +10,46 @@ namespace GTA
 
 	namespace NaturalMotion
 	{
-		public ref class BaseMessage abstract
+		public ref class Message
 		{
 		public:
+			Message(System::String ^message);
+
+			void Abort(Ped ^target);
+			void SendTo(Ped ^target);
+			void SendTo(Ped ^target, int duration);
+
+			void SetArgument(System::String ^message, bool value);
+			void SetArgument(System::String ^message, int value);
+			void SetArgument(System::String ^message, float value);
+			void SetArgument(System::String ^message, double value);
+			void SetArgument(System::String ^message, System::String ^value);
+			void SetArgument(System::String ^message, Math::Vector3 value);
+			void ResetArguments();
+
 			virtual System::String ^ToString() override;
 
 		internal:
-			BaseMessage(System::String ^Message);
-
-			void Abort(Ped ^target);
-			void SendTo(Ped ^target);
-			void SendTo(Ped ^target, int duration);
-
-			void SetArgument(System::String ^message, bool value);
-			void SetArgument(System::String ^message, int value);
-			void SetArgument(System::String ^message, float value);
-			void SetArgument(System::String ^message, double value);
-			void SetArgument(System::String ^message, System::String ^value);
-			void SetArgument(System::String ^message, Math::Vector3 value);
-			void ResetArguments();
-
 			System::String ^_message;
-			System::Collections::Generic::Dictionary<System::String ^, bool> ^lBool;
-			System::Collections::Generic::Dictionary<System::String ^, int> ^lInt;
-			System::Collections::Generic::Dictionary<System::String ^, float> ^lFloat;
-			System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^lString;
-			System::Collections::Generic::Dictionary<System::String ^, Math::Vector3> ^lVec;
+			System::Collections::Generic::Dictionary<System::String ^, bool> ^_argumentBools;
+			System::Collections::Generic::Dictionary<System::String ^, int> ^_argumentInts;
+			System::Collections::Generic::Dictionary<System::String ^, float> ^_argumentFloats;
+			System::Collections::Generic::Dictionary<System::String ^, Math::Vector3> ^_argumentVectors;
+			System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^_argumentStrings;
 		};
 
-		public ref class BaseHelper abstract : public BaseMessage
+		public ref class CustomHelper abstract : public Message
 		{
 		public:
-			void Stop();
-
-		internal:
-			BaseHelper(Ped ^ped, System::String ^message);
+			CustomHelper(Ped ^target, System::String ^message);
 
 			void Start();
 			void Start(int duration);
+			void Stop();
+			void Abort();
 
 		protected:
 			Ped ^_ped;
-		};
-		public ref class CustomHelper : public BaseHelper
-		{
-		public:
-			CustomHelper(Ped ^ped, System::String ^message);
-
-			void Start();
-			void Start(int duration);
-
-			void SetArgument(System::String ^message, bool value);
-			void SetArgument(System::String ^message, int value);
-			void SetArgument(System::String ^message, float value);
-			void SetArgument(System::String ^message, double value);
-			void SetArgument(System::String ^message, System::String ^value);
-			void SetArgument(System::String ^message, Math::Vector3 value);
-			void ResetArguments();
-		};
-		public ref class CustomMessage : public BaseMessage
-		{
-		public:
-			CustomMessage(System::String ^message);
-
-			property System::String ^Message
-			{
-				System::String ^get();
-			}
-
-			void Abort(Ped ^target);
-			void SendTo(Ped ^target);
-			void SendTo(Ped ^target, int duration);
-
-			void SetArgument(System::String ^message, bool value);
-			void SetArgument(System::String ^message, int value);
-			void SetArgument(System::String ^message, float value);
-			void SetArgument(System::String ^message, double value);
-			void SetArgument(System::String ^message, System::String ^value);
-			void SetArgument(System::String ^message, Math::Vector3 value);
 		};
 	}
 }

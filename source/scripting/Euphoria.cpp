@@ -11,26 +11,23 @@ namespace GTA
 		{
 		}
 
-		generic <typename T> where T : BaseHelper
-		T Euphoria::GetHelper(String ^MessageID)
+		generic <typename T> where T : CustomHelper
+		T Euphoria::GetHelper(String ^message)
 		{
-			BaseHelper ^h;
+			CustomHelper ^h;
 
 			if (ReferenceEquals(_helperCache, nullptr))
 			{
-				_helperCache = gcnew Dictionary<String ^, BaseHelper ^>();
+				_helperCache = gcnew Dictionary<String ^, CustomHelper ^>();
 			}
-			else
+			else if (_helperCache->TryGetValue(message, h))
 			{
-				if (_helperCache->TryGetValue(MessageID, h))
-				{
-					return static_cast<T>(h);
-				}
+				return static_cast<T>(h);
 			}
 
-			h = static_cast<BaseHelper ^>(Activator::CreateInstance(T::typeid, _ped));
+			h = static_cast<CustomHelper ^>(Activator::CreateInstance(T::typeid, _ped));
 
-			_helperCache->Add(MessageID, h);
+			_helperCache->Add(message, h);
 
 			return static_cast<T>(h);
 		}
