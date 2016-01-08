@@ -161,11 +161,11 @@ namespace GTA
 
 			virtual System::String ^ToString() override
 			{
-				return this->mData.ToString();
+				return _data.ToString();
 			}
 
 		internal:
-			System::UInt64 mData;
+			System::UInt64 _data;
 		};
 		public ref class OutputArgument : public InputArgument
 		{
@@ -228,7 +228,7 @@ namespace GTA
 		protected:
 			!OutputArgument();
 
-			unsigned char *mStorage;
+			unsigned char *_storage;
 		};
 
 		public ref class Function abstract sealed

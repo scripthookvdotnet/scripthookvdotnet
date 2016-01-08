@@ -37,7 +37,7 @@ namespace GTA
 		ScriptSettings(System::String ^filename);
 		
 	private:
-		System::String ^mFileName;
-		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^mValues;
+		System::String ^_filename;
+		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^_values;
 	};
 }

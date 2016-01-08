@@ -43,19 +43,19 @@ namespace GTA
 			{
 				virtual void Run()
 				{
-					nativeInit(this->Hash);
+					nativeInit(_hash);
 
-					for each (InputArgument ^argument in this->Arguments)
+					for each (InputArgument ^argument in _arguments)
 					{
-						nativePush64(argument->mData);
+						nativePush64(argument->_data);
 					}
 
-					this->Result = nativeCall();
+					_result = nativeCall();
 				}
 
-				UINT64 Hash;
-				PUINT64 Result;
-				array<InputArgument ^> ^Arguments;
+				UINT64 _hash;
+				PUINT64 _result;
+				array<InputArgument ^> ^_arguments;
 			};
 
 			UINT64 ObjectToNative(System::Object ^value)
@@ -253,25 +253,25 @@ namespace GTA
 			}
 		}
 
-		InputArgument::InputArgument(System::Object ^value) : mData(ObjectToNative(value))
+		InputArgument::InputArgument(System::Object ^value) : _data(ObjectToNative(value))
 		{
 		}
-		OutputArgument::OutputArgument() : mStorage(new unsigned char[24]()), InputArgument(IntPtr(this->mStorage))
+		OutputArgument::OutputArgument() : _storage(new unsigned char[24]()), InputArgument(IntPtr(_storage))
 		{
 		}
 		OutputArgument::OutputArgument(System::Object ^value) : OutputArgument()
 		{
-			*reinterpret_cast<UINT64 *>(mStorage) = ObjectToNative(value);
+			*reinterpret_cast<UINT64 *>(_storage) = ObjectToNative(value);
 		}
 		OutputArgument::!OutputArgument()
 		{
-			delete[] this->mStorage;
+			delete[] _storage;
 		}
 
 		generic <typename T>
 		T OutputArgument::GetResult()
 		{
-			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<PUINT64>(this->mData)));
+			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<PUINT64>(_data)));
 		}
 
 		generic <typename T>
@@ -287,12 +287,12 @@ namespace GTA
 		T Function::Call(UInt64 hash, ... array<InputArgument ^> ^arguments)
 		{
 			NativeTask ^task = gcnew NativeTask();
-			task->Hash = hash;
-			task->Arguments = arguments;
+			task->_hash = hash;
+			task->_arguments = arguments;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
-			return static_cast<T>(ObjectFromNative(T::typeid, task->Result));
+			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
 		}
 	}
 }

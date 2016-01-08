@@ -26,7 +26,7 @@ namespace GTA
 
 	extern void HandleUnhandledException(Object ^sender, UnhandledExceptionEventArgs ^args);
 
-	Script::Script() : mInterval(0), mRunning(false), mFilename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), mScriptDomain(ScriptDomain::CurrentDomain), mWaitEvent(gcnew AutoResetEvent(false)), mContinueEvent(gcnew AutoResetEvent(false)), mKeyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
+	Script::Script() : _interval(0), _running(false), _filename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), _scriptdomain(ScriptDomain::CurrentDomain), _waitEvent(gcnew AutoResetEvent(false)), _continueEvent(gcnew AutoResetEvent(false)), _keyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
 	}
 	Script::~Script()
@@ -35,25 +35,25 @@ namespace GTA
 
 	ScriptSettings ^Script::Settings::get()
 	{
-		if (Object::ReferenceEquals(this->mSettings, nullptr))
+		if (Object::ReferenceEquals(_settings, nullptr))
 		{
-			String ^path = IO::Path::ChangeExtension(this->mFilename, ".ini");
+			String ^path = IO::Path::ChangeExtension(_filename, ".ini");
 
 			if (IO::File::Exists(path))
 			{
-				this->mSettings = ScriptSettings::Load(path);
+				_settings = ScriptSettings::Load(path);
 			}
 			else
 			{
-				this->mSettings = gcnew ScriptSettings(path);
+				_settings = gcnew ScriptSettings(path);
 			}
 		}
 
-		return this->mSettings;
+		return _settings;
 	}
 	int Script::Interval::get()
 	{
-		return this->mInterval;
+		return _interval;
 	}
 	void Script::Interval::set(int value)
 	{
@@ -62,20 +62,20 @@ namespace GTA
 			value = 0;
 		}
 
-		this->mInterval = value;
+		_interval = value;
 	}
 
 	void Script::Abort()
 	{
-		this->mWaitEvent->Set();
+		_waitEvent->Set();
 
-		this->mScriptDomain->AbortScript(this);
+		_scriptdomain->AbortScript(this);
 	}
 	void Script::Wait(int ms)
 	{
 		Script ^script = ScriptDomain::ExecutingScript;
 
-		if (Object::ReferenceEquals(script, nullptr) || !script->mRunning)
+		if (Object::ReferenceEquals(script, nullptr) || !script->_running)
 		{
 			throw gcnew InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
 		}
@@ -84,8 +84,8 @@ namespace GTA
 
 		do
 		{
-			script->mWaitEvent->Set();
-			script->mContinueEvent->WaitOne();
+			script->_waitEvent->Set();
+			script->_continueEvent->WaitOne();
 		}
 		while (DateTime::Now < resume);
 	}
@@ -97,15 +97,15 @@ namespace GTA
 	void Script::MainLoop()
 	{
 		// Wait for domain to run scripts
-		this->mContinueEvent->WaitOne();
+		_continueEvent->WaitOne();
 
 		// Run main loop
-		while (this->mRunning)
+		while (_running)
 		{
 			Tuple<bool, KeyEventArgs ^> ^keyevent = nullptr;
 
 			// Process events
-			while (this->mKeyboardEvents->TryDequeue(keyevent))
+			while (_keyboardEvents->TryDequeue(keyevent))
 			{
 				try
 				{
@@ -138,7 +138,7 @@ namespace GTA
 			}
 
 			// Yield execution to next tick
-			Wait(this->mInterval);
+			Wait(_interval);
 		}
 	}
 }
