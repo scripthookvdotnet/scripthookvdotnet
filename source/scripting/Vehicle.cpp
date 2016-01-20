@@ -453,6 +453,10 @@ namespace GTA
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2212);
 	}
+	VehicleClass Vehicle::ClassType::get()
+	{
+		return static_cast<VehicleClass>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_CLASS, Handle));
+	}
 
 	int Vehicle::GetMod(VehicleMod modType)
 	{
