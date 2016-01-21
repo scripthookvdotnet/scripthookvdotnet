@@ -21,7 +21,7 @@ namespace GTA
 	using namespace System;
 	using namespace System::Collections::Generic;
 
-	ScriptSettings::ScriptSettings(String ^filename) : mFileName(filename), mValues(gcnew Dictionary<String ^, String ^>())
+	ScriptSettings::ScriptSettings(String ^filename) : _filename(filename), _values(gcnew Dictionary<String ^, String ^>())
 	{
 	}
 
@@ -80,15 +80,15 @@ namespace GTA
 
 					String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
-					if (result->mValues->ContainsKey(lookup))
+					if (result->_values->ContainsKey(lookup))
 					{
-						for (int i = 1; result->mValues->ContainsKey(lookup = String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper()); ++i)
+						for (int i = 1; result->_values->ContainsKey(lookup = String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper()); ++i)
 						{
 							continue;
 						}
 					}
 
-					result->mValues->Add(lookup, value);
+					result->_values->Add(lookup, value);
 				}
 			}
 		}
@@ -103,7 +103,7 @@ namespace GTA
 	{
 		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^result = gcnew Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
 
-		for each (KeyValuePair<String ^, String ^> data in mValues)
+		for each (KeyValuePair<String ^, String ^> data in _values)
 		{
 			String ^key = data.Key->Substring(data.Key->IndexOf("]") + 1);
 			String ^section = data.Key->Remove(data.Key->IndexOf("]"))->Substring(1);
@@ -125,7 +125,7 @@ namespace GTA
 
 		try
 		{
-			writer = IO::File::CreateText(mFileName);
+			writer = IO::File::CreateText(_filename);
 		}
 		catch (IO::IOException ^)
 		{
@@ -187,7 +187,7 @@ namespace GTA
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
-		mValues->TryGetValue(lookup, value);
+		_values->TryGetValue(lookup, value);
 
 		return value;
 	}
@@ -202,7 +202,7 @@ namespace GTA
 		{
 			values->Add(value);
 
-			for (int i = 1; mValues->TryGetValue(String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper(), value); ++i)
+			for (int i = 1; _values->TryGetValue(String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper(), value); ++i)
 			{
 				values->Add(value);
 			}
@@ -219,13 +219,13 @@ namespace GTA
 	{
 		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
 
-		if (!mValues->ContainsKey(lookup))
+		if (!_values->ContainsKey(lookup))
 		{
-			mValues->Add(lookup, value);
+			_values->Add(lookup, value);
 		}
 		else
 		{
-			mValues->default[lookup] = value;
+			_values->default[lookup] = value;
 		}
 	}
 }

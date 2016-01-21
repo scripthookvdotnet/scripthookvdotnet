@@ -40,7 +40,7 @@ namespace GTA
 					return nullptr;
 				}
 
-				return sCurrentDomain->mExecutingScript;
+				return sCurrentDomain->_executingScript;
 			}
 		}
 		static property ScriptDomain ^CurrentDomain
@@ -58,14 +58,14 @@ namespace GTA
 		{
 			inline System::String ^get()
 			{
-				return this->mAppDomain->FriendlyName;
+				return _appdomain->FriendlyName;
 			}
 		}
 		property System::AppDomain ^AppDomain
 		{
 			inline System::AppDomain ^get()
 			{
-				return this->mAppDomain;
+				return _appdomain;
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace GTA
 		System::IntPtr PinString(System::String ^string);
 		inline bool IsKeyPressed(System::Windows::Forms::Keys key)
 		{
-			return this->mKeyboardState[static_cast<int>(key)];
+			return this->_keyboardState[static_cast<int>(key)];
 		}
 		inline System::String ^LookupScriptFilename(Script ^script)
 		{
@@ -97,14 +97,14 @@ namespace GTA
 		void CleanupStrings();
 
 		static ScriptDomain ^sCurrentDomain;
-		System::AppDomain ^mAppDomain;
-		int mExecutingThreadId;
-		Script ^mExecutingScript;
-		System::Collections::Generic::List<Script ^> ^mRunningScripts;
-		System::Collections::Generic::Queue<IScriptTask ^> ^mTaskQueue;
-		System::Collections::Generic::List<System::IntPtr> ^mPinnedStrings;
-		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^mScriptTypes;
-		bool mRecordKeyboardEvents;
-		array<bool> ^mKeyboardState;
+		System::AppDomain ^_appdomain;
+		int _executingThreadId;
+		Script ^_executingScript;
+		System::Collections::Generic::List<Script ^> ^_runningScripts;
+		System::Collections::Generic::Queue<IScriptTask ^> ^_taskQueue;
+		System::Collections::Generic::List<System::IntPtr> ^_pinnedStrings;
+		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^_scriptTypes;
+		bool _recordKeyboardEvents;
+		array<bool> ^_keyboardState;
 	};
 }

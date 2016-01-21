@@ -29,12 +29,12 @@ namespace GTA
 	public ref class RequireScript : System::Attribute
 	{
 	public:
-		RequireScript(System::Type ^dependency) : mDependency(dependency)
+		RequireScript(System::Type ^dependency) : _dependency(dependency)
 		{
 		}
 
 	internal:
-		System::Type ^mDependency;
+		System::Type ^_dependency;
 	};
 
 	public ref class Script abstract
@@ -60,7 +60,7 @@ namespace GTA
 		{
 			System::String ^get()
 			{
-				return this->mFilename;
+				return _filename;
 			}
 		}
 		property ScriptSettings ^Settings
@@ -87,14 +87,14 @@ namespace GTA
 
 		void MainLoop();
 
-		int mInterval;
-		bool mRunning;
-		System::String ^mFilename;
-		ScriptDomain ^mScriptDomain;
-		System::Threading::Thread ^mThread;
-		System::Threading::AutoResetEvent ^mWaitEvent;
-		System::Threading::AutoResetEvent ^mContinueEvent;
-		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^mKeyboardEvents;
-		ScriptSettings ^mSettings;
+		int _interval;
+		bool _running;
+		System::String ^_filename;
+		ScriptDomain ^_scriptdomain;
+		System::Threading::Thread ^_thread;
+		System::Threading::AutoResetEvent ^_waitEvent;
+		System::Threading::AutoResetEvent ^_continueEvent;
+		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^_keyboardEvents;
+		ScriptSettings ^_settings;
 	};
 }

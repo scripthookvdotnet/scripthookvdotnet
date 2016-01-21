@@ -89,20 +89,20 @@ namespace GTA
 		return toWaitOn->WaitOne(timeout);
 	}
 
-	ScriptDomain::ScriptDomain() : mAppDomain(System::AppDomain::CurrentDomain), mExecutingThreadId(Thread::CurrentThread->ManagedThreadId), mRunningScripts(gcnew List<Script ^>()), mTaskQueue(gcnew Queue<IScriptTask ^>()), mPinnedStrings(gcnew List<IntPtr>()), mScriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), mRecordKeyboardEvents(true), mKeyboardState(gcnew array<bool>(256))
+	ScriptDomain::ScriptDomain() : _appdomain(System::AppDomain::CurrentDomain), _executingThreadId(Thread::CurrentThread->ManagedThreadId), _runningScripts(gcnew List<Script ^>()), _taskQueue(gcnew Queue<IScriptTask ^>()), _pinnedStrings(gcnew List<IntPtr>()), _scriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), _recordKeyboardEvents(true), _keyboardState(gcnew array<bool>(256))
 	{
 		sCurrentDomain = this;
 
-		this->mAppDomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
-		this->mAppDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
+		_appdomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
+		_appdomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
-		Log("[DEBUG]", "Created script domain '", this->mAppDomain->FriendlyName, "'.");
+		Log("[DEBUG]", "Created script domain '", _appdomain->FriendlyName, "'.");
 	}
 	ScriptDomain::~ScriptDomain()
 	{
 		CleanupStrings();
 
-		Log("[DEBUG]", "Deleted script domain '", this->mAppDomain->FriendlyName, "'.");
+		Log("[DEBUG]", "Deleted script domain '", _appdomain->FriendlyName, "'.");
 	}
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
@@ -260,7 +260,7 @@ namespace GTA
 				}
 
 				count++;
-				this->mScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
+				_scriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
 			}
 		}
 		catch (Reflection::ReflectionTypeLoadException ^ex)
@@ -336,7 +336,7 @@ namespace GTA
 
 			for each (RequireScript ^attribute in static_cast<MemberInfo ^>(scripttype->Item2)->GetCustomAttributes(RequireScript::typeid, true))
 			{
-				dependencies->Add(attribute->mDependency);
+				dependencies->Add(attribute->_dependency);
 			}
 
 			graph->Add(scripttype, dependencies);
@@ -378,7 +378,7 @@ namespace GTA
 	}
 	void ScriptDomain::Start()
 	{
-		if (this->mRunningScripts->Count != 0 || this->mScriptTypes->Count == 0)
+		if (_runningScripts->Count != 0 || _scriptTypes->Count == 0)
 		{
 			return;
 		}
@@ -409,14 +409,14 @@ namespace GTA
 			}
 		}
 
-		Log("[DEBUG]", "Starting ", this->mScriptTypes->Count.ToString(), " script(s) ...");
+		Log("[DEBUG]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
 
-		if (!SortScripts(this->mScriptTypes))
+		if (!SortScripts(_scriptTypes))
 		{
 			return;
 		}
 
-		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
+		for each (Tuple<String ^, Type ^> ^scripttype in _scriptTypes)
 		{
 			Script ^script = InstantiateScript(scripttype->Item2);
 
@@ -425,68 +425,68 @@ namespace GTA
 				continue;
 			}
 
-			script->mRunning = true;
-			script->mFilename = scripttype->Item1;
-			script->mScriptDomain = this;
-			script->mThread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
+			script->_running = true;
+			script->_filename = scripttype->Item1;
+			script->_scriptdomain = this;
+			script->_thread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
 
-			script->mThread->Start();
+			script->_thread->Start();
 
 			Log("[DEBUG]", "Started script '", script->Name, "'.");
 
-			this->mRunningScripts->Add(script);
+			_runningScripts->Add(script);
 		}
 	}
 	void ScriptDomain::Abort()
 	{
-		Log("[DEBUG]", "Stopping ", this->mRunningScripts->Count.ToString(), " script(s) ...");
+		Log("[DEBUG]", "Stopping ", _runningScripts->Count.ToString(), " script(s) ...");
 
-		for each (Script ^script in this->mRunningScripts)
+		for each (Script ^script in _runningScripts)
 		{
 			AbortScript(script);
 
 			delete script;
 		}
 
-		this->mScriptTypes->Clear();
-		this->mRunningScripts->Clear();
+		_scriptTypes->Clear();
+		_runningScripts->Clear();
 
 		GC::Collect();
 	}
 	void ScriptDomain::AbortScript(Script ^script)
 	{
-		if (Object::ReferenceEquals(script->mThread, nullptr))
+		if (Object::ReferenceEquals(script->_thread, nullptr))
 		{
 			return;
 		}
 
-		script->mRunning = false;
+		script->_running = false;
 
-		script->mThread->Abort();
-		script->mThread = nullptr;
+		script->_thread->Abort();
+		script->_thread = nullptr;
 
 		Log("[DEBUG]", "Aborted script '", script->Name, "'.");
 	}
 	void ScriptDomain::DoTick()
 	{
 		// Execute scripts
-		for each (Script ^script in this->mRunningScripts)
+		for each (Script ^script in _runningScripts)
 		{
-			if (!script->mRunning)
+			if (!script->_running)
 			{
 				continue;
 			}
 
-			this->mExecutingScript = script;
+			_executingScript = script;
 
-			while ((script->mRunning = SignalAndWait(script->mContinueEvent, script->mWaitEvent, 5000)) && this->mTaskQueue->Count > 0)
+			while ((script->_running = SignalAndWait(script->_continueEvent, script->_waitEvent, 5000)) && _taskQueue->Count > 0)
 			{
-				this->mTaskQueue->Dequeue()->Run();
+				_taskQueue->Dequeue()->Run();
 			}
 
-			this->mExecutingScript = nullptr;
+			_executingScript = nullptr;
 
-			if (!script->mRunning)
+			if (!script->_running)
 			{
 				Log("[ERROR]", "Script '", script->Name, "' is not responding! Aborting ...");
 
@@ -507,35 +507,35 @@ namespace GTA
 			return;
 		}
 
-		this->mKeyboardState[keycode] = status;
+		_keyboardState[keycode] = status;
 
-		if (this->mRecordKeyboardEvents)
+		if (_recordKeyboardEvents)
 		{
 			KeyEventArgs ^args = gcnew KeyEventArgs(key | (statusCtrl ? Keys::Control : Keys::None) | (statusShift ? Keys::Shift : Keys::None) | (statusAlt ? Keys::Alt : Keys::None));
 			Tuple<bool, KeyEventArgs ^> ^eventinfo = gcnew Tuple<bool, KeyEventArgs ^>(status, args);
 
-			for each (Script ^script in this->mRunningScripts)
+			for each (Script ^script in _runningScripts)
 			{
-				script->mKeyboardEvents->Enqueue(eventinfo);
+				script->_keyboardEvents->Enqueue(eventinfo);
 			}
 		}
 	}
 
 	void ScriptDomain::PauseKeyboardEvents(bool pause)
 	{
-		this->mRecordKeyboardEvents = !pause;
+		_recordKeyboardEvents = !pause;
 	}
 	void ScriptDomain::ExecuteTask(IScriptTask ^task)
 	{
-		if (Thread::CurrentThread->ManagedThreadId == this->mExecutingThreadId)
+		if (Thread::CurrentThread->ManagedThreadId == _executingThreadId)
 		{
 			task->Run();
 		}
 		else
 		{
-			this->mTaskQueue->Enqueue(task);
+			_taskQueue->Enqueue(task);
 
-			SignalAndWait(ExecutingScript->mWaitEvent, ExecutingScript->mContinueEvent);
+			SignalAndWait(ExecutingScript->_waitEvent, ExecutingScript->_continueEvent);
 		}
 	}
 	IntPtr ScriptDomain::PinString(String ^string)
@@ -545,22 +545,22 @@ namespace GTA
 
 		Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(string), 0, handle, size);
 
-		this->mPinnedStrings->Add(handle);
+		_pinnedStrings->Add(handle);
 
 		return handle;
 	}
 	void ScriptDomain::CleanupStrings()
 	{
-		for each (IntPtr handle in this->mPinnedStrings)
+		for each (IntPtr handle in _pinnedStrings)
 		{
 			delete[] handle.ToPointer();
 		}
 
-		this->mPinnedStrings->Clear();
+		_pinnedStrings->Clear();
 	}
 	String ^ScriptDomain::LookupScriptFilename(Type ^type)
 	{
-		for each (Tuple<String ^, Type ^> ^scripttype in this->mScriptTypes)
+		for each (Tuple<String ^, Type ^> ^scripttype in _scriptTypes)
 		{
 			if (scripttype->Item2 == type)
 			{
