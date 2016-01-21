@@ -68,7 +68,9 @@ namespace GTA
 			KnuckleDuster = 0xD8DF3C3C,
 			Machete = 0xDD5DF8D9,
 			MachinePistol = 0xDB1AA450,
-			Flashlight = 0x8BB05FD7
+			Flashlight = 0x8BB05FD7,
+			Ball = 0x23C9F95C,
+			Flare = 0x497FACC3,
 		};
 	}
 }
