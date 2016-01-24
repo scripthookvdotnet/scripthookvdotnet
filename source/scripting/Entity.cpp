@@ -51,7 +51,14 @@ namespace GTA
 	}
 	int Entity::Health::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) / 2;
+		if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, Handle))
+		{
+			return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) / 2;
+		}
+		else
+	        {
+		        return Native::Function::Call<int>(Native::Hash::GET_ENTITY_HEALTH, Handle) / 10;
+	        }
 	}
 	void Entity::Health::set(int value)
 	{
