@@ -151,6 +151,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		static property bool IsSwitchInProgress
+		{
+			bool get();
+		}
 		static property bool IsWaypointActive
 		{
 			bool get();
