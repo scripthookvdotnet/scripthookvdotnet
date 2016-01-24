@@ -89,6 +89,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
+	bool Game::IsSwitchInProgress::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::_0xD9D2CFFF49FAB35F);
+	}
 	bool Game::IsWaypointActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
@@ -228,6 +232,10 @@ namespace GTA
 	void Game::ShowSaveMenu()
 	{
 		Native::Function::Call(Native::Hash::SET_SAVE_MENU_ACTIVE, true);
+	}
+	void Game::StopPlayerSwitch()
+	{
+		Native::Function::Call(Native::Hash::STOP_PLAYER_SWITCH);
 	}
 	void Game::FadeScreenIn(int time)
 	{
