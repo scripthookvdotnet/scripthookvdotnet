@@ -229,6 +229,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_SAVE_MENU_ACTIVE, true);
 	}
+	void Game::StopPlayerSwitch()
+	{
+		Native::Function::Call(Native::Hash::STOP_PLAYER_SWITCH);
+	}
 	void Game::FadeScreenIn(int time)
 	{
 		Native::Function::Call(Native::Hash::DO_SCREEN_FADE_IN, time);
