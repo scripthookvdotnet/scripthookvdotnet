@@ -229,6 +229,7 @@ namespace GTA
 		static void PauseClock(bool value);
 		static void DoAutoSave();
 		static void ShowSaveMenu();
+		static void StopPlayerSwitch();
 		static void FadeScreenIn(int time);
 		static void FadeScreenOut(int time);
 		static System::String ^GetGXTEntry(System::String ^entry);
