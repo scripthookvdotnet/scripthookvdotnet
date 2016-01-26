@@ -145,11 +145,26 @@ namespace GTA
 	}
 	GTA::RadioStation Game::RadioStation::get()
 	{
-		return static_cast<GTA::RadioStation>(Native::Function::Call<int>(Native::Hash::GET_PLAYER_RADIO_STATION_INDEX));
+		System::String ^radioName = Native::Function::Call<System::String ^>(Native::Hash::GET_PLAYER_RADIO_STATION_NAME);
+		if (System::String::Equals(radioName, ""))
+		{
+			return GTA::RadioStation::RadioOff;
+		}
+		else
+		{
+			return static_cast<GTA::RadioStation>(System::Array::IndexOf(Game::_radioNames, radioName));
+		}
 	}
 	void Game::RadioStation::set(GTA::RadioStation value)
 	{
-		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
+		if (System::Enum::IsDefined(value.GetType(), value) && value != GTA::RadioStation::RadioOff)
+		{
+			Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_NAME, _radioNames[static_cast<int>(value)]);
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_NAME, "");
+		}
 	}
 	System::Drawing::Size Game::ScreenResolution::get()
 	{
