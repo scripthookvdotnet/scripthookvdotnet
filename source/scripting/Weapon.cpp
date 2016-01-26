@@ -210,7 +210,7 @@ namespace GTA
 	{
 		Weapon ^weapon;
 
-		if (IsWeaponValid(hash))
+		if (!_weapons->TryGetValue(hash, weapon))
 		{
 			weapon = gcnew Weapon(_owner, hash);
 			_weapons->Add(hash, weapon);

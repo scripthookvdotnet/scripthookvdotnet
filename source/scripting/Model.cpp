@@ -82,7 +82,7 @@ namespace GTA
 	}
 	bool Model::IsCargobob::get()
 	{
-		return Hash == static_cast<int>(Native::VehicleHash::Cargobob) || Hash == static_cast<int>(Native::VehicleHash::Cargobob2) || Hash == static_cast<int>(Native::VehicleHash::Cargobob3);
+		return Hash == static_cast<int>(Native::VehicleHash::Cargobob) || Hash == static_cast<int>(Native::VehicleHash::Cargobob2) || Hash == static_cast<int>(Native::VehicleHash::Cargobob3) || Hash == static_cast<int>(Native::VehicleHash::Cargobob4);
 	}
 
 	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
