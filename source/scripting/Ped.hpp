@@ -208,6 +208,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool CanBeShootInVehicle
+		{
+			void set(bool value);
+		}
 		property bool CanPlayGestures
 		{
 			void set(bool value);
@@ -377,11 +381,19 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsInParachuteFreeFall
+		{
+			bool get();
+		}
 		property bool IsInSub
 		{
 			bool get();
 		}
 		property bool IsInTrain
+		{
+			bool get();
+		}
+		property bool IsInTaxi
 		{
 			bool get();
 		}

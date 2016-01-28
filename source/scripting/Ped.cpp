@@ -230,6 +230,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_TRAIN, Handle);
 	}
+	bool Ped::IsInTaxi::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_TAXI, Handle);
+	}
 	bool Ped::IsInFlyingVehicle::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_FLYING_VEHICLE, Handle);
@@ -237,6 +241,10 @@ namespace GTA
 	bool Ped::IsInPoliceVehicle::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
+	}
+	bool Ped::IsInParachuteFreeFall::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
 	}
 	Vehicle ^Ped::CurrentVehicle::get()
 	{
@@ -307,6 +315,10 @@ namespace GTA
 	void Ped::CanBeTargetted::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_TARGETTED, Handle, value);
+	}
+	void Ped::CanBeShootInVehicle::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
 	}
 	void Ped::CanPlayGestures::set(bool value)
 	{
