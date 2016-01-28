@@ -215,11 +215,17 @@ namespace GTA
 		}
 
 		static bool IsKeyPressed(System::Windows::Forms::Keys key);
+		[System::ObsoleteAttribute("The Game.IsControlPressed is obsolete, use Controls.IsControlPressed instead.")]
 		static bool IsControlPressed(int index, Control control);
+		[System::ObsoleteAttribute("The Game.IsControlJustPressed is obsolete, use Controls.IsControlJustPressed instead.")]
 		static bool IsControlJustPressed(int index, Control control);
+		[System::ObsoleteAttribute("The Game.IsControlJustReleased is obsolete, use Controls.IsControlJustReleased instead.")]
 		static bool IsControlJustReleased(int index, Control control);
+		[System::ObsoleteAttribute("The Game.EnableControl is obsolete, use Controls.EnableControlThisFrame instead.")]
 		static void EnableControl(int index, Control control);
+		[System::ObsoleteAttribute("The Game.DisableControl is obsolete, use Controls.DisableControlThisFrame instead.")]
 		static void DisableControl(int index, Control control);
+		[System::ObsoleteAttribute("The Game.GetControlNormal is obsolete, use Controls.GetControlNormal instead.")]
 		static float GetControlNormal(int index, Control control);
 
 		static void Pause(bool value);
