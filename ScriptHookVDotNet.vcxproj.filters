@@ -182,9 +182,6 @@
     <ClInclude Include="source\scripting\Game.hpp">
       <Filter>scripting\Game</Filter>
     </ClInclude>
-    <ClInclude Include="source\scripting\Controls.hpp">
-      <Filter>scripting\Game</Filter>
-    </ClInclude>
     <ClInclude Include="source\scripting\Entity.hpp">
       <Filter>scripting\World</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
       <Filter>scripting\NaturalMotion</Filter>
     </ClInclude>
     <ClInclude Include="source\scripting\Audio.hpp">
+      <Filter>scripting\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scripting\Control.hpp">
       <Filter>scripting\Game</Filter>
     </ClInclude>
   </ItemGroup>

@@ -91,7 +91,7 @@
     <ClInclude Include="source\core\ScriptDomain.hpp" />
     <ClInclude Include="source\core\Settings.hpp" />
     <ClInclude Include="source\scripting\Audio.hpp" />
-    <ClInclude Include="source\scripting\Controls.hpp" />
+    <ClInclude Include="source\scripting\Control.hpp" />
     <ClInclude Include="source\scripting\Blip.hpp" />
     <ClInclude Include="source\scripting\Camera.hpp" />
     <ClInclude Include="source\scripting\Entity.hpp" />
