@@ -208,7 +208,7 @@ namespace GTA
 		{
 			void set(bool value);
 		}
-		property bool CanBeShootInVehicle
+		property bool CanBeShotInVehicle
 		{
 			void set(bool value);
 		}

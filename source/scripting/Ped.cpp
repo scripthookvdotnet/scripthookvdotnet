@@ -316,7 +316,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_TARGETTED, Handle, value);
 	}
-	void Ped::CanBeShootInVehicle::set(bool value)
+	void Ped::CanBeShotInVehicle::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
 	}
