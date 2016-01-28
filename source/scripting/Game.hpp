@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Player.hpp"
-#include "Controls.hpp"
+#include "Control.hpp"
 #include "Vector3.hpp"
 
 namespace GTA
