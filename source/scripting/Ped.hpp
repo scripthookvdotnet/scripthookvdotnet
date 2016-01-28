@@ -492,6 +492,10 @@ namespace GTA
 		{
 			void set(int value);
 		}
+		property float Sweat
+		{
+			void set(float value);
+		}
 		property Tasks ^Task
 		{
 			Tasks ^get();

@@ -384,6 +384,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_SHOOT_RATE, Handle, value);
 	}
+	void Ped::Sweat::set(float value)
+	{
+		if (value > 100.0) value = 100.0;
+		if (value < 0) value = 0;
+
+		Native::Function::Call(Native::Hash::SET_PED_SWEAT, Handle, value);
+	}
 	void Ped::DropsWeaponsOnDeath::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
