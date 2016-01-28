@@ -215,6 +215,18 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
 	}
+	bool Game::IsDisabledControlPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsDisabledControlJustPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsDisabledControlJustReleased(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
+	}
 	void Game::EnableControl(int index, Control control)
 	{
 		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
@@ -223,9 +235,37 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
 	}
+	void Game::EnableControlThisFrame(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
+	void Game::DisableControlThisFrame(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
+	void Game::DisableAllControlsThisFrame(int index)
+	{
+		Native::Function::Call(Native::Hash::DISABLE_ALL_CONTROL_ACTIONS, index);
+	}
+	void Game::EnableAllControlsThisFrame(int index)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_ALL_CONTROL_ACTIONS, index);
+	}
 	float Game::GetControlNormal(int index, Control control)
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_CONTROL_NORMAL, index, static_cast<int>(control));
+	}
+	float Game::GetDisabledControlNormal(int index, Control control)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISABLED_CONTROL_NORMAL, index, static_cast<int>(control));
+	}
+	int Game::GetControlValue(int index, Control control)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_CONTROL_VALUE, index, static_cast<int>(control));
+	}
+	void Game::SetControlNormal(int index, Control control, float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_CONTROL_NORMAL, index, static_cast<int>(control), value);
 	}
 
 	void Game::Pause(bool value)
