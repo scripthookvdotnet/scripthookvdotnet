@@ -82,18 +82,18 @@ namespace GTA
 			Native::Function::Call(Native::Hash::SET_VEHICLE_FORWARD_SPEED, Handle, value);
 		}
 	}
-	float Vehicle::MaxSpeed::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::_GET_VEHICLE_MAX_SPEED, Model.Hash);
-	}
-	float Vehicle::MaxTraction::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_MAX_TRACTION, Handle);
-	}
-	float Vehicle::MaxBraking::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_MAX_BRAKING, Handle);
-	}
+    float Vehicle::MaxSpeed::get()
+    {
+        return Native::Function::Call<float>(Native::Hash::_GET_VEHICLE_MAX_SPEED, Model.Hash);
+    }
+    float Vehicle::MaxTraction::get()
+    {
+        return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_MAX_TRACTION, Handle);
+    }
+    float Vehicle::MaxBraking::get()
+    {
+        return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_MAX_BRAKING, Handle);
+    }
 	float Vehicle::DirtLevel::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_DIRT_LEVEL, Handle);
