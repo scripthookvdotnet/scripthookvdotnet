@@ -80,6 +80,11 @@ namespace GTA
 	}
 	void UI::DrawTexture(String ^filename, int index, int level, int time, Point pos, PointF center, Size size, float rotation, Color color, float aspectRatio)
 	{
+		if (!System::IO::File::Exists(filename))
+		{
+			throw gcnew System::IO::FileNotFoundException(filename);
+		}
+
 		int id;
 
 		if (_textures->ContainsKey(filename))
