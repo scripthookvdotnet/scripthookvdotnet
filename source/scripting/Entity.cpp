@@ -41,6 +41,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_HAS_GRAVITY, Handle, value);
 	}
+	bool Entity::HasCollidedWithAnything::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
+	}
 	float Entity::Heading::get()
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_ENTITY_HEADING, Handle);

@@ -44,6 +44,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool HasCollidedWithAnything
+		{
+			bool get();
+		}
 		property float Heading
 		{
 			float get();
