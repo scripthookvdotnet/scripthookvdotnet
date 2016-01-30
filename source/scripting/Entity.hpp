@@ -206,6 +206,7 @@ namespace GTA
 		bool IsAttached();
 		bool IsAttachedTo(Entity ^entity);
 		Entity ^GetEntityAttachedTo();
+		void SetNoCollision(Entity^ entity, bool toggle);
 		void AttachTo(Entity^ entity, int boneIndex);
 		void AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation);
 		void Detach();

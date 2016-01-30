@@ -384,6 +384,10 @@ namespace GTA
 	{
 		return Native::Function::Call<Entity^>(Native::Hash::GET_ENTITY_ATTACHED_TO, Handle);
 	}
+	void Entity::SetNoCollision(Entity^ entity, bool toggle)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity->Handle, !toggle);
+	}
 	void Entity::Detach()
 	{
 		Native::Function::Call(Native::Hash::DETACH_ENTITY, Handle, 1, 1);
