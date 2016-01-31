@@ -16,7 +16,7 @@ namespace GTA
 
 			Abigail = 0x400AEC41,
 			Agent = 0xD770C9B4,
-			Agent14Cutscene = 0xFBF98469,
+			Agent14 = 0xFBF98469,
 			AmandaTownley = 0x6D1E15F7,
 			Andreas = 0x47E4EEA0,
 			Ashley = 0x7EF440DB,
