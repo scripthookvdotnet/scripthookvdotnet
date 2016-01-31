@@ -287,9 +287,9 @@ namespace GTA
 			Rottweiler = 0x9563221D,
 			Seagull = 0xD3939DFD,
 			Shepherd = 0x431FC24C,
-			Stingray = 0x4148614D,
+			Stingray = 0xA148614D,
 			TigerShark = 0x6C3F072,
-			Westy = 0xAD7844B,
+			Westy = 0xAD7844BB,
 
 			// Unique Pedestrians
 
