@@ -206,6 +206,7 @@ namespace GTA
 			Lazer = 0xB39B0AE6,
 			Lectro = 0x26321E67,
 			Lguard = 0x1BF8D381,
+			Limo2 = 0xF92AEC4D,
 			Lurcher = 0x7B47A6A7,
 			Luxor = 0x250B0C5E,
 			Luxor2 = 0xB79F589E,
