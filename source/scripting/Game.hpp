@@ -221,6 +221,7 @@ namespace GTA
 		static bool IsDisabledControlPressed(int index, Control control);
 		static bool IsDisabledControlJustPressed(int index, Control control);
 		static bool IsDisabledControlJustReleased(int index, Control control);
+		static bool IsControlEnabled(int index, Control control);
 		static void EnableControl(int index, Control control);
 		static void DisableControl(int index, Control control);
 		static void EnableControlThisFrame(int index, Control control);
