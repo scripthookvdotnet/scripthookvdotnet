@@ -218,12 +218,16 @@ namespace GTA
 		static bool IsControlPressed(int index, Control control);
 		static bool IsControlJustPressed(int index, Control control);
 		static bool IsControlJustReleased(int index, Control control);
+		static bool IsEnabledControlPressed(int index, Control control);
+		static bool IsEnabledControlJustPressed(int index, Control control);
+		static bool IsEnabledControlJustReleased(int index, Control control);
 		static bool IsDisabledControlPressed(int index, Control control);
 		static bool IsDisabledControlJustPressed(int index, Control control);
 		static bool IsDisabledControlJustReleased(int index, Control control);
-		[System::ObsoleteAttribute("The Game.EnableControl is obsolete, use Controls.EnableControlThisFrame instead.")]
+		static bool IsControlEnabled(int index, Control control);
+		[System::ObsoleteAttribute("The Game.EnableControl is obsolete, use Game.EnableControlThisFrame instead.")]
 		static void EnableControl(int index, Control control);
-		[System::ObsoleteAttribute("The Game.DisableControl is obsolete, use Controls.DisableControlThisFrame instead.")]
+		[System::ObsoleteAttribute("The Game.DisableControl is obsolete, use Game.DisableControlThisFrame instead.")]
 		static void DisableControl(int index, Control control);
 		static void EnableControlThisFrame(int index, Control control);
 		static void DisableControlThisFrame(int index, Control control);
