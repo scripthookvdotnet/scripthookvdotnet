@@ -68,18 +68,23 @@ namespace GTA
 		Vector3 Vector3::RandomXY()
 		{
 			Vector3 v;
-			v.X = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Z = 0.0f;
+			double radian = Random::Instance->NextDouble() * 2 * System::Math::PI;
+
+			v.X = (float)(System::Math::Cos(radian));
+			v.Y = (float)(System::Math::Sin(radian));
 			v.Normalize();
 			return v;
 		}
 		Vector3 Vector3::RandomXYZ()
 		{
 			Vector3 v;
-			v.X = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Z = (float)(Random::Instance->NextDouble() - 0.5);
+			double radian = Random::Instance->NextDouble() * 2.0 * System::Math::PI;
+			double cosTheta = (Random::Instance->NextDouble() * 2.0) - 1.0;
+			double theta = System::Math::Acos(cosTheta);
+
+			v.X = (float)(System::Math::Sin(theta) * System::Math::Cos(radian));
+			v.Y = (float)(System::Math::Sin(theta) * System::Math::Sin(radian));
+			v.Z = (float)(System::Math::Cos(theta));
 			v.Normalize();
 			return v;
 		}

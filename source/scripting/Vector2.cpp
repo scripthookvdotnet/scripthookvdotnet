@@ -62,8 +62,9 @@ namespace GTA
 		Vector2 Vector2::RandomXY()
 		{
 			Vector2 v;
-			v.X = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
+			double radian = Random::Instance->NextDouble() * 2 * System::Math::PI;
+			v.X = (float)(System::Math::Cos(radian));
+			v.Y = (float)(System::Math::Sin(radian));
 			v.Normalize();
 			return v;
 		}
