@@ -209,13 +209,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animSet);
 
-		const System::DateTime endtime = System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, 1000);
+		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
 
 		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animSet))
 		{
 			Script::Yield();
 
-			if (System::DateTime::Now >= endtime)
+			if (System::DateTime::UtcNow >= endtime)
 			{
 				return;
 			}

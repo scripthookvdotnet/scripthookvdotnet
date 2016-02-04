@@ -110,13 +110,13 @@ namespace GTA
 	{
 		Request();
 
-		const System::DateTime endtime = timeout >= 0 ? System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, timeout) : System::DateTime::MaxValue;
+		const System::DateTime endtime = timeout >= 0 ? System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, timeout) : System::DateTime::MaxValue;
 
 		while (!IsLoaded)
 		{
 			Script::Yield();
 
-			if (System::DateTime::Now >= endtime)
+			if (System::DateTime::UtcNow >= endtime)
 			{
 				return false;
 			}
