@@ -80,14 +80,14 @@ namespace GTA
 			throw gcnew InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
 		}
 
-		const DateTime resume = DateTime::Now + TimeSpan::FromMilliseconds(ms);
+		const DateTime resume = DateTime::UtcNow + TimeSpan::FromMilliseconds(ms);
 
 		do
 		{
 			script->_waitEvent->Set();
 			script->_continueEvent->WaitOne();
 		}
-		while (DateTime::Now < resume);
+		while (DateTime::UtcNow < resume);
 	}
 	void Script::Yield()
 	{
