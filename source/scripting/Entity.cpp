@@ -125,7 +125,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 10)) != 0;
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 11)) != 0;
 	}
 	void Entity::IsExplosionProof::set(bool value)
 	{
@@ -138,11 +138,11 @@ namespace GTA
 
 		if (value)
 		{
-			*reinterpret_cast<int *>(address + 392) |= (1 << 10);
+			*reinterpret_cast<int *>(address + 392) |= (1 << 11);
 		}
 		else
 		{
-			*reinterpret_cast<int *>(address + 392) &= ~(1 << 10);
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 11);
 		}
 	}
 	bool Entity::IsFireProof::get()
