@@ -36,6 +36,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions);NOSOUND;NOMINMAX</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>source\core;source\scripting;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>

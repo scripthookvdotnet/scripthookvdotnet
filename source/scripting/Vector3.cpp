@@ -39,6 +39,11 @@ namespace GTA
 			Z = z;
 		}
 
+		Vector3 Vector3::Normalized::get()
+		{
+			return Vector3::Normalize(Vector3(X, Y, Z));
+		}
+
 		float Vector3::Length()
 		{
 			return static_cast<float>(System::Math::Sqrt((X*X) + (Y*Y) + (Z*Z)));
@@ -60,6 +65,62 @@ namespace GTA
 		{
 			return (position - *this).Length();
 		}
+		float Vector3::DistanceToSquared(Vector3 position)
+		{
+			return DistanceSquared(position, *this);
+		}
+		float Vector3::DistanceTo2D(Vector3 position)
+		{
+			return Distance(position, *this);
+		}
+		float Vector3::DistanceToSquared2D(Vector3 position)
+		{
+			return DistanceSquared(position, *this);
+		}
+		float Vector3::Distance(Vector3 position1, Vector3 position2)
+		{
+			return (position1 - position2).Length();
+		}
+		float Vector3::DistanceSquared(Vector3 position1, Vector3 position2)
+		{
+			return (position1 - position2).LengthSquared();
+		}
+		float Vector3::Distance2D(Vector3 position1, Vector3 position2)
+		{
+			Vector3 pos1 = Vector3(position1.X, position1.Y, 0);
+			Vector3 pos2 = Vector3(position1.X, position1.Y, 0);
+			return (pos1 - pos2).Length();
+		}
+		float Vector3::DistanceSquared2D(Vector3 position1, Vector3 position2)
+		{
+			Vector3 pos1 = Vector3(position1.X, position1.Y, 0);
+			Vector3 pos2 = Vector3(position1.X, position1.Y, 0);
+			return (pos1 - pos2).LengthSquared();
+		}
+
+		float Vector3::Angle(Vector3 from, Vector3 to)
+		{
+			double dot = Vector3::Dot(from.Normalized, to.Normalized);
+			return (float)(System::Math::Acos((dot)) * (180.0 / System::Math::PI));
+		}
+		float Vector3::SignedAngle(Vector3 from, Vector3 to, Vector3 planeNormal)
+		{
+			Vector3 perpVector = Vector3::Cross(planeNormal, from);
+
+			double angle = Vector3::Angle(from, to);
+			double dot = Vector3::Dot(perpVector, to);
+			if (dot < 0)
+			{
+				angle *= -1;
+			}
+
+			return (float)angle;
+		}
+		float Vector3::ToHeading()
+		{
+			return (float)((System::Math::Atan2(X, -Y) + System::Math::PI) * (180.0 / System::Math::PI));
+		}
+
 		Vector3 Vector3::Around(float distance)
 		{
 			return *this + Vector3::RandomXY() * distance;
