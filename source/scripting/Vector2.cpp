@@ -38,6 +38,11 @@ namespace GTA
 			Y = y;
 		}
 
+		Vector2 Vector2::Normalized::get()
+		{
+			return Vector2::Normalize(Vector2(X, Y));
+		}
+
 		float Vector2::Length()
 		{
 			return static_cast<float>(System::Math::Sqrt((X*X) + (Y*Y)));
@@ -58,12 +63,38 @@ namespace GTA
 		{
 			return (position - *this).Length();
 		}
+		float Vector2::DistanceToSquared(Vector2 position)
+		{
+			return DistanceSquared(position, *this);
+		}
+		float Vector2::Distance(Vector2 position1, Vector2 position2)
+		{
+			return (position1 - position2).Length();
+		}
+		float Vector2::DistanceSquared(Vector2 position1, Vector2 position2)
+		{
+			return (position1 - position2).LengthSquared();
+		}
+
+		float Vector2::Angle(Vector2 from, Vector2 to)
+		{
+			return System::Math::Abs(SignedAngle(from, to));
+		}
+		float Vector2::SignedAngle(Vector2 from, Vector2 to)
+		{
+			return (float)((System::Math::Atan2(to.Y, to.X) - System::Math::Atan2(from.Y, from.X)) * (180.0 / System::Math::PI));
+		}
+		float Vector2::ToHeading()
+		{
+			return (float)((System::Math::Atan2(X, -Y) + System::Math::PI) * (180.0 / System::Math::PI));
+		}
 
 		Vector2 Vector2::RandomXY()
 		{
 			Vector2 v;
-			v.X = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
+			double radian = Random::Instance->NextDouble() * 2 * System::Math::PI;
+			v.X = (float)(System::Math::Cos(radian));
+			v.Y = (float)(System::Math::Sin(radian));
 			v.Normalize();
 			return v;
 		}
