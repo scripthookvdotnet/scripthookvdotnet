@@ -29,9 +29,21 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_FORWARD_VECTOR, Handle);
 	}
+	bool Entity::FreezePosition::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x2E) & (1 << 1)) != 0;
+	}
 	void Entity::FreezePosition::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::FREEZE_ENTITY_POSITION, Handle, value);
+	}
+	bool Entity::HasCollision::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x29) & (1 << 1)) == 0;
 	}
 	void Entity::HasCollision::set(bool value)
 	{

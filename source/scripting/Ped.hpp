@@ -189,6 +189,7 @@ namespace GTA
 		}
 		property bool CanSufferCriticalHits
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool CanFlyThroughWindscreen

@@ -34,10 +34,12 @@ namespace GTA
 		}
 		property bool FreezePosition
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool HasCollision
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool HasGravity
