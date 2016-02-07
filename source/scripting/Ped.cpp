@@ -5,6 +5,7 @@
 #include "Weapon.hpp"
 #include "World.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 
 namespace GTA
 {
@@ -291,6 +292,12 @@ namespace GTA
 	void Ped::CanSwitchWeapons::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_SWITCH_WEAPON, Handle, value);
+	}
+	bool Ped::CanSufferCriticalHits::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BC) & (1 << 2)) != 0;
 	}
 	void Ped::CanSufferCriticalHits::set(bool value)
 	{
