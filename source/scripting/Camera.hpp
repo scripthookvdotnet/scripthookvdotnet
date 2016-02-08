@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Interface/IHandleable.hpp"
+#include "Interface/ISpatial.hpp"
+#include "Interface/IRotatable.hpp"
 
 namespace GTA
 {
@@ -24,14 +27,14 @@ namespace GTA
 		DeathFail
 	};
 
-	public ref class Camera sealed : System::IEquatable<Camera ^>
+	public ref class Camera sealed : System::IEquatable<Camera ^>, IHandleable, IRotatable, ISpatial
 	{
 	public:
 		Camera(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
-			int get();
+			virtual int get();
 		}
 		property float DepthOfFieldStrength
 		{
@@ -83,12 +86,12 @@ namespace GTA
 		{
 			void set(float nearDOF);
 		}
-		property Math::Vector3 Position
+		virtual property Math::Vector3 Position
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 position);
 		}
-		property Math::Vector3 Rotation
+		virtual property Math::Vector3 Rotation
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 rotation);
@@ -114,7 +117,7 @@ namespace GTA
 		void PointAt(Ped ^target, int boneIndex, Math::Vector3 offset);
 		void StopPointing();
 
-		bool Exists();
+		virtual bool Exists();
 		static bool Exists(Camera ^camera);
 		void Destroy();
 		virtual bool Equals(System::Object ^obj) override;

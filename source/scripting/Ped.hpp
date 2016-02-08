@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 #include "Euphoria.hpp"
+#include "Interface/IHandleable.hpp"
 
 namespace GTA
 {
@@ -562,14 +563,14 @@ namespace GTA
 		Line = 3
 	};
 
-	public ref class PedGroup : System::IEquatable<PedGroup ^>
+	public ref class PedGroup : System::IEquatable<PedGroup ^>, IHandleable
 	{
 	public:
 		PedGroup();
 		PedGroup(int handle);
 		~PedGroup();
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -592,7 +593,7 @@ namespace GTA
 
 		void Add(Ped ^ped, bool leader);
 		void Remove(Ped ^ped);
-		bool Exists();
+		virtual bool Exists();
 		Ped ^GetMember(int index);
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
