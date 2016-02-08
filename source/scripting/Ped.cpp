@@ -297,7 +297,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BC) & (1 << 2)) != 0;
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BC) & (1 << 2)) == 0;
 	}
 	void Ped::CanSufferCriticalHits::set(bool value)
 	{

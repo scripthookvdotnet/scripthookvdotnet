@@ -43,7 +43,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x29) & (1 << 1)) == 0;
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x29) & (1 << 1)) != 0;
 	}
 	void Entity::HasCollision::set(bool value)
 	{
