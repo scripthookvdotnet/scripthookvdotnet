@@ -84,6 +84,16 @@ namespace GTA
 			return false;
 		}
 	}
+	bool Rope::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Rope ^>(value));
+	}
 	bool Rope::Equals(Rope ^rope)
 	{
 		return !System::Object::ReferenceEquals(rope, nullptr) && Handle == rope->Handle;

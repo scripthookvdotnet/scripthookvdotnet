@@ -562,7 +562,7 @@ namespace GTA
 		Line = 3
 	};
 
-	public ref class PedGroup
+	public ref class PedGroup : System::IEquatable<PedGroup ^>
 	{
 	public:
 		PedGroup();
@@ -596,6 +596,7 @@ namespace GTA
 		Ped ^GetMember(int index);
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(PedGroup ^pedGroup);
 
 		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);

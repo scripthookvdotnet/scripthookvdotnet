@@ -392,7 +392,7 @@ namespace GTA
 		}
 		int Quaternion::GetHashCode()
 		{
-			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+			return X.GetHashCode() ^ Y.GetHashCode() << 2 ^ Z.GetHashCode() >> 2 ^ W.GetHashCode();
 		}
 		bool Quaternion::Equals(Object^ value)
 		{

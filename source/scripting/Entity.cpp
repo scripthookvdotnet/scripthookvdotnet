@@ -459,6 +459,16 @@ namespace GTA
 		int handle = Handle;
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
 	}
+	bool Entity::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Entity ^>(value));
+	}
 	bool Entity::Equals(Entity ^entity)
 	{
 		return !System::Object::ReferenceEquals(entity, nullptr) && Handle == entity->Handle;

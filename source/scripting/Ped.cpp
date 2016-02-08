@@ -592,6 +592,16 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, Handle);
 	}
+	bool PedGroup::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<PedGroup ^>(value));
+	}
 	bool PedGroup::Equals(PedGroup ^pedGroup)
 	{
 		return !System::Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;

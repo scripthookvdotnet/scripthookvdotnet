@@ -10,7 +10,7 @@ namespace GTA
 	ref class Blip;
 	#pragma endregion
 
-	public ref class Entity abstract
+	public ref class Entity abstract : System::IEquatable<Entity ^>
 	{
 	public:
 		Entity(int handle);
@@ -226,6 +226,7 @@ namespace GTA
 		bool Exists();
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Entity ^entity);
 
 		virtual inline int GetHashCode() override

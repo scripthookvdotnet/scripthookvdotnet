@@ -28,7 +28,7 @@ namespace GTA
 
 		[System::SerializableAttribute]
 		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential)]
-		public value class Quaternion
+		public value class Quaternion : System::IEquatable<Quaternion>
 		{
 		public:
 			/// <summary>

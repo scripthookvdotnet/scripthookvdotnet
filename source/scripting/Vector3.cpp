@@ -284,7 +284,7 @@ namespace GTA
 		}
 		int Vector3::GetHashCode()
 		{
-			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
+			return X.GetHashCode() ^ Y.GetHashCode() << 2 ^ Z.GetHashCode() >> 2;
 		}
 		bool Vector3::Equals(Object ^value)
 		{

@@ -227,7 +227,7 @@ namespace GTA
 		DollarSignSquared = 434,
 	};
 
-	public ref class Blip sealed
+	public ref class Blip sealed : System::IEquatable<Blip ^>
 	{
 	public:
 		Blip(int handle);
@@ -297,6 +297,7 @@ namespace GTA
 		bool Exists();
 		static bool Exists(Blip ^blip);
 		void Remove();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Blip ^blip);
 
 		virtual inline int GetHashCode() override

@@ -4,7 +4,7 @@
 
 namespace GTA
 {
-	public ref class Pickup sealed
+	public ref class Pickup sealed : System::IEquatable<Pickup ^>
 	{
 	public:
 		Pickup(int handle);
@@ -26,6 +26,7 @@ namespace GTA
 		static bool Exists(Pickup ^pickup);
 		bool ObjectExists();
 		void Delete();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Pickup ^pickup);
 
 		virtual inline int GetHashCode() override

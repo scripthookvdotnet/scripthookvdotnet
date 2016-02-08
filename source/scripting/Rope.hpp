@@ -8,7 +8,7 @@ namespace GTA
 	ref class Entity;
 	#pragma endregion
 
-	public ref class Rope sealed
+	public ref class Rope sealed : System::IEquatable<Rope ^>
 	{
 	public:
 		Rope(int handle);
@@ -41,6 +41,7 @@ namespace GTA
 		bool Exists();
 		static bool Exists(Rope ^rope);
 		void Delete();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Rope ^rope);
 
 		virtual inline int GetHashCode() override

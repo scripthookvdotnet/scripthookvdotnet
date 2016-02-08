@@ -24,7 +24,7 @@ namespace GTA
 		DeathFail
 	};
 
-	public ref class Camera sealed
+	public ref class Camera sealed : System::IEquatable<Camera ^>
 	{
 	public:
 		Camera(int handle);
@@ -117,6 +117,7 @@ namespace GTA
 		bool Exists();
 		static bool Exists(Camera ^camera);
 		void Destroy();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Camera ^camera);
 
 		virtual inline int GetHashCode() override
