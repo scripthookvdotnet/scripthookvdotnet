@@ -22,9 +22,6 @@
     <Filter Include="scripting\NaturalMotion">
       <UniqueIdentifier>{7d70b8bd-e3f7-4ac8-975f-9757c66b19bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="scripting\Interface">
-      <UniqueIdentifier>{0c76b37f-dbfe-438c-9696-7bd917fd12d3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Main.cpp">
@@ -227,14 +224,8 @@
     <ClInclude Include="source\scripting\Audio.hpp">
       <Filter>scripting\Game</Filter>
     </ClInclude>
-    <ClInclude Include="source\scripting\interface\IHandleable.hpp">
-      <Filter>scripting\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\interface\IRotatable.hpp">
-      <Filter>scripting\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\interface\ISpatial.hpp">
-      <Filter>scripting\Interface</Filter>
+    <ClInclude Include="source\scripting\Interface.hpp">
+      <Filter>scripting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

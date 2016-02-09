@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Vector3.hpp"
-#include "Interface/IHandleable.hpp"
-#include "Interface/ISpatial.hpp"
-#include "Interface/IRotatable.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -27,7 +25,7 @@ namespace GTA
 		DeathFail
 	};
 
-	public ref class Camera sealed : System::IEquatable<Camera ^>, IHandleable, IRotatable, ISpatial
+	public ref class Camera sealed : System::IEquatable<Camera ^>, IHandleable, ISpatial
 	{
 	public:
 		Camera(int handle);

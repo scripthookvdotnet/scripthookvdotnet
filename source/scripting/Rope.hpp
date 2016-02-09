@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vector3.hpp"
-#include "Interface/IHandleable.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {

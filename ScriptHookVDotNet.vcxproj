@@ -100,9 +100,7 @@
     <ClInclude Include="source\scripting\Euphoria.hpp" />
     <ClInclude Include="source\scripting\EuphoriaHelpers.hpp" />
     <ClInclude Include="source\scripting\Game.hpp" />
-    <ClInclude Include="source\scripting\interface\IHandleable.hpp" />
-    <ClInclude Include="source\scripting\interface\IRotatable.hpp" />
-    <ClInclude Include="source\scripting\interface\ISpatial.hpp" />
+    <ClInclude Include="source\scripting\Interface.hpp" />
     <ClInclude Include="source\scripting\Matrix.hpp" />
     <ClInclude Include="source\scripting\Model.hpp" />
     <ClInclude Include="source\scripting\Ped.hpp" />

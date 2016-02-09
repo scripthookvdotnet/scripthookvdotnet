@@ -3,9 +3,7 @@
 #include "Model.hpp"
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
-#include "Interface/IHandleable.hpp"
-#include "Interface/IRotatable.hpp"
-#include "Interface/ISpatial.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -13,7 +11,7 @@ namespace GTA
 	ref class Blip;
 	#pragma endregion
 
-	public ref class Entity abstract : System::IEquatable<Entity ^>, IHandleable, IRotatable, ISpatial
+	public ref class Entity abstract : System::IEquatable<Entity ^>, IHandleable, ISpatial
 	{
 	public:
 		Entity(int handle);

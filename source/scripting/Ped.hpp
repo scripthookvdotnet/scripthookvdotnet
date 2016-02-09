@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 #include "Euphoria.hpp"
-#include "Interface/IHandleable.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
