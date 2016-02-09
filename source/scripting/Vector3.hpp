@@ -25,7 +25,7 @@ namespace GTA
 	{
 		[System::SerializableAttribute]
 		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential, Pack = 4)]
-		public value class Vector3
+		public value class Vector3 : System::IEquatable<Vector3>
 		{
 		public:
 			/// <summary>

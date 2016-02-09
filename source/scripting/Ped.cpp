@@ -297,7 +297,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BC) & (1 << 2)) != 0;
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BC) & (1 << 2)) == 0;
 	}
 	void Ped::CanSufferCriticalHits::set(bool value)
 	{
@@ -591,6 +591,16 @@ namespace GTA
 	bool PedGroup::Contains(Ped ^ped)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, Handle);
+	}
+	bool PedGroup::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<PedGroup ^>(value));
 	}
 	bool PedGroup::Equals(PedGroup ^pedGroup)
 	{

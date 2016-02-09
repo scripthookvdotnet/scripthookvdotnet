@@ -43,7 +43,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x29) & (1 << 1)) == 0;
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x29) & (1 << 1)) != 0;
 	}
 	void Entity::HasCollision::set(bool value)
 	{
@@ -458,6 +458,16 @@ namespace GTA
 	{
 		int handle = Handle;
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+	}
+	bool Entity::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Entity ^>(value));
 	}
 	bool Entity::Equals(Entity ^entity)
 	{

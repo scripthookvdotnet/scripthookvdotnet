@@ -217,7 +217,7 @@ namespace GTA
 		}
 		int Vector2::GetHashCode()
 		{
-			return X.GetHashCode() + Y.GetHashCode();
+			return X.GetHashCode() ^ Y.GetHashCode();
 		}
 		bool Vector2::Equals(Object ^value)
 		{

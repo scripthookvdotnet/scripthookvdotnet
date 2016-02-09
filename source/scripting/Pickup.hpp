@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
-	public ref class Pickup sealed
+	public ref class Pickup sealed : System::IEquatable<Pickup ^>, IHandleable
 	{
 	public:
 		Pickup(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -22,10 +23,11 @@ namespace GTA
 			Math::Vector3 get();
 		}
 
-		bool Exists();
+		virtual bool Exists();
 		static bool Exists(Pickup ^pickup);
 		bool ObjectExists();
 		void Delete();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Pickup ^pickup);
 
 		virtual inline int GetHashCode() override

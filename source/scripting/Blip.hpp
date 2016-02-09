@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -227,12 +228,12 @@ namespace GTA
 		DollarSignSquared = 434,
 	};
 
-	public ref class Blip sealed
+	public ref class Blip sealed : System::IEquatable<Blip ^>, IHandleable
 	{
 	public:
 		Blip(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -294,9 +295,10 @@ namespace GTA
 		void HideNumber();
 		void ShowNumber(int number);
 
-		bool Exists();
+		virtual bool Exists();
 		static bool Exists(Blip ^blip);
 		void Remove();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Blip ^blip);
 
 		virtual inline int GetHashCode() override

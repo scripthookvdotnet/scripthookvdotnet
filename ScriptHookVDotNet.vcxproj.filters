@@ -224,5 +224,8 @@
     <ClInclude Include="source\scripting\Audio.hpp">
       <Filter>scripting\Game</Filter>
     </ClInclude>
+    <ClInclude Include="source\scripting\Interface.hpp">
+      <Filter>scripting</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

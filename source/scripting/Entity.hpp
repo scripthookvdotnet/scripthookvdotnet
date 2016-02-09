@@ -3,6 +3,7 @@
 #include "Model.hpp"
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -10,12 +11,12 @@ namespace GTA
 	ref class Blip;
 	#pragma endregion
 
-	public ref class Entity abstract
+	public ref class Entity abstract : System::IEquatable<Entity ^>, IHandleable, ISpatial
 	{
 	public:
 		Entity(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -163,7 +164,7 @@ namespace GTA
 		{
 			GTA::Model get();
 		}
-		property Math::Vector3 Position
+		virtual property Math::Vector3 Position
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
@@ -181,7 +182,7 @@ namespace GTA
 		{
 			Math::Vector3 get();
 		}
-		property Math::Vector3 Rotation
+		virtual property Math::Vector3 Rotation
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
@@ -223,9 +224,10 @@ namespace GTA
 		void ResetAlpha();
 
 		void Delete();
-		bool Exists();
+		virtual bool Exists();
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Entity ^entity);
 
 		virtual inline int GetHashCode() override
