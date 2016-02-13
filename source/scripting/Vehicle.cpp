@@ -97,6 +97,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NUMBER_PLATE_TEXT, Handle, value);
 	}
+	GTA::NumberPlateMounting Vehicle::NumberPlateMounting::get()
+	{
+		return static_cast<GTA::NumberPlateMounting>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PLATE_TYPE, Handle));
+	}
+	GTA::NumberPlateType Vehicle::NumberPlateType::get()
+	{
+		return static_cast<GTA::NumberPlateType>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle));
+	}
+	void Vehicle::NumberPlateType::set(GTA::NumberPlateType value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle, static_cast<int>(value));
+	}
 	bool Vehicle::IsConvertible::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
@@ -161,6 +173,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_GET_VEHICLE_LANDING_GEAR, Handle, static_cast<int>(value));
 	}
+	VehicleLockStatus Vehicle::LockStatus::get()
+	{
+		return static_cast<VehicleLockStatus>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_DOOR_LOCK_STATUS, Handle));
+	}
+	void Vehicle::LockStatus::set(VehicleLockStatus value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOORS_LOCKED, Handle, static_cast<int>(value));
+	}
 	VehicleRoofState Vehicle::RoofState::get()
 	{
 		return static_cast<VehicleRoofState>(Native::Function::Call<int>(Native::Hash::GET_CONVERTIBLE_ROOF_STATE, Handle));
@@ -170,10 +190,12 @@ namespace GTA
 		switch (value)
 		{
 		case VehicleRoofState::Closed:
+			Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, Handle, 1);
 		case VehicleRoofState::Closing:
 			Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, Handle, 0);
 			break;
 		case VehicleRoofState::Opened:
+			Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, Handle, 1);
 		case VehicleRoofState::Opening:
 			Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, Handle, 0);
 			break;

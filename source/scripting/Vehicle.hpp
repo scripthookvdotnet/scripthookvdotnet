@@ -180,6 +180,16 @@ namespace GTA
 		Trunk = 5,
 		Trunk2 = 6,
 	};
+	public enum class VehicleLockStatus
+	{
+		None = 0,
+		Unlocked = 1,
+		Locked = 2,
+		LockedForPlayer = 3,
+		CannotBeOpenedFromInside = 4,
+		CanBeBrokenInto = 7,
+		CannotBeTryedToEnter = 10
+	};
 	public enum class VehicleLandingGear
 	{
 		Deployed = 0,
@@ -207,7 +217,7 @@ namespace GTA
 		Suspension = 15,
 		Armor = 16,
 		FrontWheels = 23,
-		BackWheels = 24 // only for motocycles
+		BackWheels = 24 // only for motorcycles
 	};
 	public enum class VehicleNeonLight
 	{
@@ -280,6 +290,22 @@ namespace GTA
 		Limo = 5,
 		Green = 6
 	};
+	public enum class NumberPlateMounting
+	{
+		FrontAndRear = 0,
+		Front = 1,
+		Rear = 2,
+		None = 3,
+	};
+	public enum class NumberPlateType
+	{
+		BlueOnWhite1 = 0,
+		YellowOnBlack = 1,
+		YellowOnBlue = 2,
+		BlueOnWhite2 = 3,
+		BlueOnWhite3 = 4,
+		NorthYankton = 5,
+	};
 	public enum class CargobobHook
 	{
 		Hook = 0,
@@ -348,6 +374,15 @@ namespace GTA
 			System::String ^get();
 			void set(System::String ^value);
 		}
+		property GTA::NumberPlateMounting NumberPlateMounting
+		{
+			GTA::NumberPlateMounting get();
+		}
+		property GTA::NumberPlateType NumberPlateType
+		{
+			GTA::NumberPlateType get();
+			void set(GTA::NumberPlateType value);
+		}
 		property bool IsConvertible
 		{
 			bool get();
@@ -385,6 +420,11 @@ namespace GTA
 			void set(float value);
 		}
 
+		property VehicleLockStatus LockStatus
+		{
+			VehicleLockStatus get();
+			void set(VehicleLockStatus value);
+		}
 		property VehicleRoofState RoofState
 		{
 			VehicleRoofState get();
