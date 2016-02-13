@@ -387,6 +387,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_FIRING_PATTERN, Handle, static_cast<int>(value));
 	}
+	VehicleSeat Ped::SeatIndex::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		int seatIndex = address == -1 ? false : (*reinterpret_cast<char *>(address + 0x1542));
+
+		if (seatIndex == -1 && IsInVehicle())
+		{
+			return VehicleSeat::None;
+		}
+		return static_cast<VehicleSeat>(seatIndex - 1);
+	}
 	void Ped::ShootRate::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_SHOOT_RATE, Handle, value);
@@ -607,6 +618,36 @@ namespace GTA
 		return !System::Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
 	}
 
+	array<Ped ^> ^PedGroup::ToArray(bool includingLeader)
+	{
+		const int arraySize = includingLeader ? MemberCount + 1 : MemberCount;
+		array<Ped ^> ^memberArray = gcnew array<Ped ^>(arraySize);
+		int memberIndex = 0;
+
+		if (includingLeader)
+		{
+			Ped ^leader = Leader;
+
+			if (!ReferenceEquals(leader, nullptr) && leader->Exists())
+			{
+				memberArray[0] = leader;
+				++memberIndex;
+			}
+		}
+
+		for (int i = 0; i < MemberCount; i++)
+		{
+			Ped ^ped = GetMember(i);
+
+			if (!Object::ReferenceEquals(ped, nullptr) && ped->Exists())
+			{
+				memberArray[memberIndex] = ped;
+				++memberIndex;
+			}
+		}
+
+		return memberArray;
+	}
 	System::Collections::Generic::List<Ped ^> ^PedGroup::ToList(bool includingLeader)
 	{
 		List<Ped ^> ^list = gcnew List<Ped ^>();

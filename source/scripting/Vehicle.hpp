@@ -233,6 +233,18 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+		ExtraSeat1 = 3,
+		ExtraSeat2 = 4,
+		ExtraSeat3 = 5,
+		ExtraSeat4 = 6,
+		ExtraSeat5 = 7,
+		ExtraSeat6 = 8,
+		ExtraSeat7 = 9,
+		ExtraSeat8 = 10,
+		ExtraSeat9 = 11,
+		ExtraSeat10 = 12,
+		ExtraSeat11 = 13,
+		ExtraSeat12 = 14,
 	};
 	public enum class VehicleToggleMod
 	{
@@ -307,6 +319,18 @@ namespace GTA
 		{
 			bool get();
 		}
+		property array<Ped ^> ^Occupants
+		{
+			array<Ped ^> ^get();
+		}
+		property array<Ped ^> ^Passengers
+		{
+			array<Ped ^> ^get();
+		}
+		property int PassengerCount
+		{
+			int get();
+		}
 		property int PassengerSeats
 		{
 			int get();
@@ -360,6 +384,7 @@ namespace GTA
 			float get();
 			void set(float value);
 		}
+
 		property VehicleRoofState RoofState
 		{
 			VehicleRoofState get();

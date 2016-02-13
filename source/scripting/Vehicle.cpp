@@ -14,6 +14,69 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_VEHICLE_HAVE_ROOF, Handle);
 	}
+	array<Ped ^> ^Vehicle::Occupants::get()
+	{
+		Ped ^driver = GetPedOnSeat(VehicleSeat::Driver);
+
+		const int arraySize = Ped::Exists(driver) ? PassengerCount + 1 : PassengerCount;
+		array<Ped ^> ^occupantsArray = gcnew array<Ped ^>(arraySize);
+		int occupantIndex = 0;
+
+		if (Object::ReferenceEquals(driver, nullptr) || !driver->Exists())
+		{
+			occupantsArray[0] = driver;
+			++occupantIndex;
+		}
+
+		for (int i = 0; i < PassengerSeats; i++)
+		{
+			Ped ^ped = GetPedOnSeat(static_cast<VehicleSeat>(i));
+
+			if (Object::ReferenceEquals(ped, nullptr) || !ped->Exists())
+			{
+				continue;
+			}
+
+			occupantsArray[occupantIndex] = ped;
+			++occupantIndex;
+
+			if (occupantIndex >= PassengerSeats)
+			{
+				return occupantsArray;
+			}
+		}
+
+		return occupantsArray;
+	}
+	array<Ped ^> ^Vehicle::Passengers::get()
+	{
+		array<Ped ^> ^passengersArray = gcnew array<Ped ^>(PassengerCount);
+		int passengerIndex = 0;
+
+		for (int i = 0; i < PassengerSeats; i++)
+		{
+			Ped ^ped = GetPedOnSeat(static_cast<VehicleSeat>(i));
+
+			if (Object::ReferenceEquals(ped, nullptr) || !ped->Exists())
+			{
+				continue;
+			}
+
+			passengersArray[passengerIndex] = ped;
+			++passengerIndex;
+
+			if (passengerIndex >= PassengerSeats)
+			{
+				return passengersArray;
+			}
+		}
+
+		return passengersArray;
+	}
+	int Vehicle::PassengerCount::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
+	}
 	int Vehicle::PassengerSeats::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
