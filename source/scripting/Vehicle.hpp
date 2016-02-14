@@ -415,6 +415,18 @@ namespace GTA
 			float get();
 			void set(float value);
 		}
+		property float MaxSpeed
+		{
+			float get();
+		}
+		property float MaxTraction
+		{
+			float get();
+		}
+		property float MaxBraking
+		{
+			float get();
+		}
 		property float DirtLevel
 		{
 			float get();
