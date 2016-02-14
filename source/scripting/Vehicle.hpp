@@ -626,6 +626,15 @@ namespace GTA
 		{
 			bool get();
 		}
+		property int CurrentGear
+		{
+			int get();
+		}
+		property int HighGear
+		{
+			int get();
+			void set(int value);
+		}
 		property float CurrentRPM
 		{
 			float get();
@@ -634,9 +643,30 @@ namespace GTA
 		{
 			float get();
 		}
+		[System::ObsoleteAttribute("Vehicle.Steering is obsolete, please use Vehicle.SteeringScale instead.")]
 		property float Steering
 		{
+			float get()
+			{
+				return SteeringScale;
+			}
+		}
+		/// <summary>
+		/// Gets or sets the steering angle.
+		/// </summary>
+		/// <value>The steering angle in degrees.</value>
+		property float SteeringAngle
+		{
 			float get();
+		}
+		/// <summary>
+		/// Gets or sets the steering scale.
+		/// </summary>
+		/// <value>A float between -1.0f (fully right) and 1.0f (fully left).</value>
+		property float SteeringScale
+		{
+			float get();
+			void set(float value);
 		}
 		property VehicleClass ClassType
 		{

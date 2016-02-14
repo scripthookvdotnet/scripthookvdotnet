@@ -518,6 +518,41 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, Handle);
 	}
+	int Vehicle::CurrentGear::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A0: 0x790);
+
+		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
+	}
+	int Vehicle::HighGear::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
+
+		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
+	}
+	void Vehicle::HighGear::set(int value)
+	{
+		if (value > System::Byte::MaxValue)
+		{
+			throw gcnew System::ArgumentOutOfRangeException("value", "Values run from 0 to 255, inclusive.");
+
+		}
+
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
+
+		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
+	}
 	float Vehicle::CurrentRPM::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
@@ -534,13 +569,42 @@ namespace GTA
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
-	float Vehicle::Steering::get()
+	float Vehicle::SteeringAngle::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8AC : 0x89C);
+
+		if (!address == 0)
+		{
+			float steeringRadian = *reinterpret_cast<const float *>(address + offset);
+			return static_cast<float>(steeringRadian * (180.0 / System::Math::PI));
+		}
+		else
+		{
+			return 0.0f;
+		}
+	}
+	float Vehicle::SteeringScale::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
 		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+	}
+	void Vehicle::SteeringScale::set(float value)
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
+
+		*reinterpret_cast<float *>(address + offset) = value;
 	}
 	VehicleClass Vehicle::ClassType::get()
 	{
