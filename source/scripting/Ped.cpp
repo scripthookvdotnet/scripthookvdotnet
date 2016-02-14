@@ -392,7 +392,7 @@ namespace GTA
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 		int seatIndex = address == -1 ? false : (*reinterpret_cast<char *>(address + 0x1542));
 
-		if (seatIndex == -1 && !IsInVehicle())
+		if (seatIndex == -1 || !IsInVehicle())
 		{
 			return VehicleSeat::None;
 		}
