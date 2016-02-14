@@ -530,13 +530,17 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2020);
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7E4 : 0x7D4);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	float Vehicle::Steering::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2212);
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	VehicleClass Vehicle::ClassType::get()
 	{
