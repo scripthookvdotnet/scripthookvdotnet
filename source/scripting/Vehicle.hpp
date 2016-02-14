@@ -217,7 +217,8 @@ namespace GTA
 		Suspension = 15,
 		Armor = 16,
 		FrontWheels = 23,
-		BackWheels = 24 // only for motorcycles
+		BackWheels = 24, // only for motorcycles
+		Livery = 48
 	};
 	public enum class VehicleNeonLight
 	{
@@ -618,6 +619,14 @@ namespace GTA
 		{
 			int get();
 		}
+		property Vehicle ^TowedVehicle
+		{
+			Vehicle ^get();
+		}
+		property float TowingCraneRaisedAmount
+		{
+			void set(float value);
+		}
 		property bool HasAlarm
 		{
 			void set(bool value);
@@ -675,6 +684,7 @@ namespace GTA
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
+		int GetModCount(VehicleMod modType);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
 		System::String ^GetModTypeName(VehicleMod modType);
@@ -711,6 +721,9 @@ namespace GTA
 		void RemoveCargobobHook();
 		void CargoBobMagnetGrabVehicle();
 		void CargoBobMagnetReleaseVehicle();
+		void TowVehicle(Vehicle ^vehicle, bool rear);
+		void DetachFromTowTruck();
+		void DetachTowedVehicle();
 
 		bool IsTireBurst(int wheel);
 		void BurstTire(int wheel);

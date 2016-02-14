@@ -500,15 +500,37 @@ namespace GTA
 	}
 	int Vehicle::Livery::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY, Handle);
+		if (GetModCount(VehicleMod::Livery) >= 1)
+		{
+			return GetMod(VehicleMod::Livery);
+		}
+		else
+		{
+			return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY, Handle);
+		}
 	}
 	void Vehicle::Livery::set(int liveryIndex)
 	{
-		return Native::Function::Call(Native::Hash::SET_VEHICLE_LIVERY, Handle, liveryIndex);
+		if (GetModCount(VehicleMod::Livery) >= 1)
+		{
+			SetMod(VehicleMod::Livery, liveryIndex, false);
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::SET_VEHICLE_LIVERY, Handle, liveryIndex);
+		}
 	}
 	int Vehicle::LiveryCount::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY_COUNT, Handle);
+	}
+	Vehicle ^Vehicle::TowedVehicle::get()
+	{
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle);
+	}
+	void Vehicle::TowingCraneRaisedAmount::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_TOW_TRUCK_CRANE_RAISED, Handle, value);
 	}
 	void Vehicle::HasAlarm::set(bool value)
 	{
@@ -618,6 +640,10 @@ namespace GTA
 	void Vehicle::SetMod(VehicleMod modType, int modIndex, bool variations)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, Handle, static_cast<int>(modType), modIndex, variations);
+	}
+	int Vehicle::GetModCount(VehicleMod modType)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_NUM_VEHICLE_MODS, Handle, static_cast<int>(modType));
 	}
 	void Vehicle::ToggleMod(VehicleToggleMod toggleMod, bool toggle)
 	{
@@ -807,6 +833,21 @@ namespace GTA
 		if (IsCargobobHookActive(CargobobHook::Magnet))
 		{
 			Native::Function::Call(Native::Hash::_0x9A665550F8DA349B, Handle, false);
+		}
+	}
+	void Vehicle::TowVehicle(Vehicle ^vehicle, bool rear)
+	{
+		Native::Function::Call(Native::Hash::ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle->Handle, rear, 0.0f, 0.0f, 0.0f);
+	}
+	void Vehicle::DetachFromTowTruck()
+	{
+		Native::Function::Call(Native::Hash::DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
+	}
+	void Vehicle::DetachTowedVehicle()
+	{
+		if (!ReferenceEquals(TowedVehicle, nullptr) && TowedVehicle->Exists())
+		{
+			Native::Function::Call(Native::Hash::DETACH_VEHICLE_FROM_TOW_TRUCK, Handle, TowedVehicle->Handle);
 		}
 	}
 
