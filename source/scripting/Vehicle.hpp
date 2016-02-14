@@ -180,6 +180,16 @@ namespace GTA
 		Trunk = 5,
 		Trunk2 = 6,
 	};
+	public enum class VehicleLockStatus
+	{
+		None = 0,
+		Unlocked = 1,
+		Locked = 2,
+		LockedForPlayer = 3,
+		CannotBeOpenedFromInside = 4,
+		CanBeBrokenInto = 7,
+		CannotBeTryedToEnter = 10
+	};
 	public enum class VehicleLandingGear
 	{
 		Deployed = 0,
@@ -207,7 +217,8 @@ namespace GTA
 		Suspension = 15,
 		Armor = 16,
 		FrontWheels = 23,
-		BackWheels = 24 // only for motocycles
+		BackWheels = 24, // only for motorcycles
+		Livery = 48
 	};
 	public enum class VehicleNeonLight
 	{
@@ -233,6 +244,18 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+		ExtraSeat1 = 3,
+		ExtraSeat2 = 4,
+		ExtraSeat3 = 5,
+		ExtraSeat4 = 6,
+		ExtraSeat5 = 7,
+		ExtraSeat6 = 8,
+		ExtraSeat7 = 9,
+		ExtraSeat8 = 10,
+		ExtraSeat9 = 11,
+		ExtraSeat10 = 12,
+		ExtraSeat11 = 13,
+		ExtraSeat12 = 14,
 	};
 	public enum class VehicleToggleMod
 	{
@@ -267,6 +290,22 @@ namespace GTA
 		Stock = 4,
 		Limo = 5,
 		Green = 6
+	};
+	public enum class NumberPlateMounting
+	{
+		FrontAndRear = 0,
+		Front = 1,
+		Rear = 2,
+		None = 3,
+	};
+	public enum class NumberPlateType
+	{
+		BlueOnWhite1 = 0,
+		YellowOnBlack = 1,
+		YellowOnBlue = 2,
+		BlueOnWhite2 = 3,
+		BlueOnWhite3 = 4,
+		NorthYankton = 5,
 	};
 	public enum class CargobobHook
 	{
@@ -307,6 +346,18 @@ namespace GTA
 		{
 			bool get();
 		}
+		property array<Ped ^> ^Occupants
+		{
+			array<Ped ^> ^get();
+		}
+		property array<Ped ^> ^Passengers
+		{
+			array<Ped ^> ^get();
+		}
+		property int PassengerCount
+		{
+			int get();
+		}
 		property int PassengerSeats
 		{
 			int get();
@@ -323,6 +374,15 @@ namespace GTA
 		{
 			System::String ^get();
 			void set(System::String ^value);
+		}
+		property GTA::NumberPlateMounting NumberPlateMounting
+		{
+			GTA::NumberPlateMounting get();
+		}
+		property GTA::NumberPlateType NumberPlateType
+		{
+			GTA::NumberPlateType get();
+			void set(GTA::NumberPlateType value);
 		}
 		property bool IsConvertible
 		{
@@ -359,6 +419,12 @@ namespace GTA
 		{
 			float get();
 			void set(float value);
+		}
+
+		property VehicleLockStatus LockStatus
+		{
+			VehicleLockStatus get();
+			void set(VehicleLockStatus value);
 		}
 		property VehicleRoofState RoofState
 		{
@@ -553,6 +619,14 @@ namespace GTA
 		{
 			int get();
 		}
+		property Vehicle ^TowedVehicle
+		{
+			Vehicle ^get();
+		}
+		property float TowingCraneRaisedAmount
+		{
+			void set(float value);
+		}
 		property bool HasAlarm
 		{
 			void set(bool value);
@@ -560,6 +634,15 @@ namespace GTA
 		property bool AlarmActive
 		{
 			bool get();
+		}
+		property int CurrentGear
+		{
+			int get();
+		}
+		property int HighGear
+		{
+			int get();
+			void set(int value);
 		}
 		property float CurrentRPM
 		{
@@ -569,9 +652,30 @@ namespace GTA
 		{
 			float get();
 		}
+		[System::ObsoleteAttribute("Vehicle.Steering is obsolete, please use Vehicle.SteeringScale instead.")]
 		property float Steering
 		{
+			float get()
+			{
+				return SteeringScale;
+			}
+		}
+		/// <summary>
+		/// Gets or sets the steering angle.
+		/// </summary>
+		/// <value>The steering angle in degrees.</value>
+		property float SteeringAngle
+		{
 			float get();
+		}
+		/// <summary>
+		/// Gets or sets the steering scale.
+		/// </summary>
+		/// <value>A float between -1.0f (fully right) and 1.0f (fully left).</value>
+		property float SteeringScale
+		{
+			float get();
+			void set(float value);
 		}
 		property VehicleClass ClassType
 		{
@@ -580,6 +684,7 @@ namespace GTA
 
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
+		int GetModCount(VehicleMod modType);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
 		System::String ^GetModTypeName(VehicleMod modType);
@@ -616,6 +721,9 @@ namespace GTA
 		void RemoveCargobobHook();
 		void CargoBobMagnetGrabVehicle();
 		void CargoBobMagnetReleaseVehicle();
+		void TowVehicle(Vehicle ^vehicle, bool rear);
+		void DetachFromTowTruck();
+		void DetachTowedVehicle();
 
 		bool IsTireBurst(int wheel);
 		void BurstTire(int wheel);

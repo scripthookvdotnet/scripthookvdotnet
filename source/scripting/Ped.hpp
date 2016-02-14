@@ -490,6 +490,10 @@ namespace GTA
 			int get();
 			void set(int group);
 		}
+		property VehicleSeat SeatIndex
+		{
+			VehicleSeat get();
+		}
 		property int ShootRate
 		{
 			void set(int value);
@@ -600,6 +604,7 @@ namespace GTA
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(PedGroup ^pedGroup);
 
+		array<Ped ^> ^ToArray(bool includingLeader);
 		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 		virtual inline int GetHashCode() override

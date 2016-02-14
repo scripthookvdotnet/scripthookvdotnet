@@ -14,6 +14,69 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_VEHICLE_HAVE_ROOF, Handle);
 	}
+	array<Ped ^> ^Vehicle::Occupants::get()
+	{
+		Ped ^driver = GetPedOnSeat(VehicleSeat::Driver);
+
+		const int arraySize = Ped::Exists(driver) ? PassengerCount + 1 : PassengerCount;
+		array<Ped ^> ^occupantsArray = gcnew array<Ped ^>(arraySize);
+		int occupantIndex = 0;
+
+		if (Object::ReferenceEquals(driver, nullptr) || !driver->Exists())
+		{
+			occupantsArray[0] = driver;
+			++occupantIndex;
+		}
+
+		for (int i = 0; i < PassengerSeats; i++)
+		{
+			Ped ^ped = GetPedOnSeat(static_cast<VehicleSeat>(i));
+
+			if (Object::ReferenceEquals(ped, nullptr) || !ped->Exists())
+			{
+				continue;
+			}
+
+			occupantsArray[occupantIndex] = ped;
+			++occupantIndex;
+
+			if (occupantIndex >= PassengerSeats)
+			{
+				return occupantsArray;
+			}
+		}
+
+		return occupantsArray;
+	}
+	array<Ped ^> ^Vehicle::Passengers::get()
+	{
+		array<Ped ^> ^passengersArray = gcnew array<Ped ^>(PassengerCount);
+		int passengerIndex = 0;
+
+		for (int i = 0; i < PassengerSeats; i++)
+		{
+			Ped ^ped = GetPedOnSeat(static_cast<VehicleSeat>(i));
+
+			if (Object::ReferenceEquals(ped, nullptr) || !ped->Exists())
+			{
+				continue;
+			}
+
+			passengersArray[passengerIndex] = ped;
+			++passengerIndex;
+
+			if (passengerIndex >= PassengerSeats)
+			{
+				return passengersArray;
+			}
+		}
+
+		return passengersArray;
+	}
+	int Vehicle::PassengerCount::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
+	}
 	int Vehicle::PassengerSeats::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
@@ -33,6 +96,18 @@ namespace GTA
 	void Vehicle::NumberPlate::set(System::String ^value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NUMBER_PLATE_TEXT, Handle, value);
+	}
+	GTA::NumberPlateMounting Vehicle::NumberPlateMounting::get()
+	{
+		return static_cast<GTA::NumberPlateMounting>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PLATE_TYPE, Handle));
+	}
+	GTA::NumberPlateType Vehicle::NumberPlateType::get()
+	{
+		return static_cast<GTA::NumberPlateType>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle));
+	}
+	void Vehicle::NumberPlateType::set(GTA::NumberPlateType value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle, static_cast<int>(value));
 	}
 	bool Vehicle::IsConvertible::get()
 	{
@@ -98,6 +173,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_GET_VEHICLE_LANDING_GEAR, Handle, static_cast<int>(value));
 	}
+	VehicleLockStatus Vehicle::LockStatus::get()
+	{
+		return static_cast<VehicleLockStatus>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_DOOR_LOCK_STATUS, Handle));
+	}
+	void Vehicle::LockStatus::set(VehicleLockStatus value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_DOORS_LOCKED, Handle, static_cast<int>(value));
+	}
 	VehicleRoofState Vehicle::RoofState::get()
 	{
 		return static_cast<VehicleRoofState>(Native::Function::Call<int>(Native::Hash::GET_CONVERTIBLE_ROOF_STATE, Handle));
@@ -107,10 +190,12 @@ namespace GTA
 		switch (value)
 		{
 		case VehicleRoofState::Closed:
+			Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, Handle, 1);
 		case VehicleRoofState::Closing:
 			Native::Function::Call(Native::Hash::RAISE_CONVERTIBLE_ROOF, Handle, 0);
 			break;
 		case VehicleRoofState::Opened:
+			Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, Handle, 1);
 		case VehicleRoofState::Opening:
 			Native::Function::Call(Native::Hash::LOWER_CONVERTIBLE_ROOF, Handle, 0);
 			break;
@@ -415,15 +500,37 @@ namespace GTA
 	}
 	int Vehicle::Livery::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY, Handle);
+		if (GetModCount(VehicleMod::Livery) >= 1)
+		{
+			return GetMod(VehicleMod::Livery);
+		}
+		else
+		{
+			return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY, Handle);
+		}
 	}
 	void Vehicle::Livery::set(int liveryIndex)
 	{
-		return Native::Function::Call(Native::Hash::SET_VEHICLE_LIVERY, Handle, liveryIndex);
+		if (GetModCount(VehicleMod::Livery) >= 1)
+		{
+			SetMod(VehicleMod::Livery, liveryIndex, false);
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::SET_VEHICLE_LIVERY, Handle, liveryIndex);
+		}
 	}
 	int Vehicle::LiveryCount::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY_COUNT, Handle);
+	}
+	Vehicle ^Vehicle::TowedVehicle::get()
+	{
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle);
+	}
+	void Vehicle::TowingCraneRaisedAmount::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_TOW_TRUCK_CRANE_RAISED, Handle, value);
 	}
 	void Vehicle::HasAlarm::set(bool value)
 	{
@@ -432,6 +539,41 @@ namespace GTA
 	bool Vehicle::AlarmActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, Handle);
+	}
+	int Vehicle::CurrentGear::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A0: 0x790);
+
+		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
+	}
+	int Vehicle::HighGear::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
+
+		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
+	}
+	void Vehicle::HighGear::set(int value)
+	{
+		if (value > System::Byte::MaxValue)
+		{
+			throw gcnew System::ArgumentOutOfRangeException("value", "Values run from 0 to 255, inclusive.");
+
+		}
+
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
+
+		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
 	float Vehicle::CurrentRPM::get()
 	{
@@ -445,13 +587,46 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2020);
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7E4 : 0x7D4);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
-	float Vehicle::Steering::get()
+	float Vehicle::SteeringAngle::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + 2212);
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8AC : 0x89C);
+
+		if (!address == 0)
+		{
+			float steeringRadian = *reinterpret_cast<const float *>(address + offset);
+			return static_cast<float>(steeringRadian * (180.0 / System::Math::PI));
+		}
+		else
+		{
+			return 0.0f;
+		}
+	}
+	float Vehicle::SteeringScale::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+	}
+	void Vehicle::SteeringScale::set(float value)
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
+
+		*reinterpret_cast<float *>(address + offset) = value;
 	}
 	VehicleClass Vehicle::ClassType::get()
 	{
@@ -465,6 +640,10 @@ namespace GTA
 	void Vehicle::SetMod(VehicleMod modType, int modIndex, bool variations)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD, Handle, static_cast<int>(modType), modIndex, variations);
+	}
+	int Vehicle::GetModCount(VehicleMod modType)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_NUM_VEHICLE_MODS, Handle, static_cast<int>(modType));
 	}
 	void Vehicle::ToggleMod(VehicleToggleMod toggleMod, bool toggle)
 	{
@@ -654,6 +833,21 @@ namespace GTA
 		if (IsCargobobHookActive(CargobobHook::Magnet))
 		{
 			Native::Function::Call(Native::Hash::_0x9A665550F8DA349B, Handle, false);
+		}
+	}
+	void Vehicle::TowVehicle(Vehicle ^vehicle, bool rear)
+	{
+		Native::Function::Call(Native::Hash::ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle->Handle, rear, 0.0f, 0.0f, 0.0f);
+	}
+	void Vehicle::DetachFromTowTruck()
+	{
+		Native::Function::Call(Native::Hash::DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
+	}
+	void Vehicle::DetachTowedVehicle()
+	{
+		if (!ReferenceEquals(TowedVehicle, nullptr) && TowedVehicle->Exists())
+		{
+			Native::Function::Call(Native::Hash::DETACH_VEHICLE_FROM_TOW_TRUCK, Handle, TowedVehicle->Handle);
 		}
 	}
 
