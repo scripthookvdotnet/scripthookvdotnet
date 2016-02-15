@@ -22,6 +22,11 @@ namespace GTA
 		array<Ped ^> ^occupantsArray = gcnew array<Ped ^>(arraySize);
 		int occupantIndex = 0;
 
+		if (arraySize == 0)
+		{
+			return occupantsArray;
+		}
+
 		if (Object::ReferenceEquals(driver, nullptr) || !driver->Exists())
 		{
 			occupantsArray[0] = driver;
@@ -52,6 +57,11 @@ namespace GTA
 	{
 		array<Ped ^> ^passengersArray = gcnew array<Ped ^>(PassengerCount);
 		int passengerIndex = 0;
+
+		if (PassengerCount == 0)
+		{
+			return passengersArray;
+		}
 
 		for (int i = 0; i < PassengerSeats; i++)
 		{
@@ -534,7 +544,16 @@ namespace GTA
 	}
 	int Vehicle::LiveryCount::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY_COUNT, Handle);
+		const int bennysLiveryCount = GetModCount(VehicleMod::Livery);
+
+		if (bennysLiveryCount > 0)
+		{
+			return bennysLiveryCount;
+		}
+		else
+		{
+			return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_LIVERY_COUNT, Handle);
+		}
 	}
 	Vehicle ^Vehicle::TowedVehicle::get()
 	{
@@ -570,10 +589,9 @@ namespace GTA
 	}
 	void Vehicle::HighGear::set(int value)
 	{
-		if (value > System::Byte::MaxValue)
+		if (value < 0 || value > System::Byte::MaxValue)
 		{
-			throw gcnew System::ArgumentOutOfRangeException("value", "Values run from 0 to 255, inclusive.");
-
+			throw gcnew System::ArgumentOutOfRangeException("value", "Values must be between 0 and 255, inclusive.");
 		}
 
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
