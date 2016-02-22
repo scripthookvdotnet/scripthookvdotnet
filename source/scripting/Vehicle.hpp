@@ -186,9 +186,12 @@ namespace GTA
 		Unlocked = 1,
 		Locked = 2,
 		LockedForPlayer = 3,
-		CannotBeOpenedFromInside = 4,
+		///<summary>Doesn't allow players to exit the vehicle with the exit vehicle key.</summary>
+		StickPlayerInside = 4,
+		///<summary>Can be broken into the car. if the glass is broken, the value will be set to 1.</summary>
 		CanBeBrokenInto = 7,
-		CannotBeTryedToEnter = 10
+		CanBeBrokenIntoPersist = 8,
+		CannotBeTriedToEnter = 10
 	};
 	public enum class VehicleLandingGear
 	{
@@ -402,6 +405,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsStoppedAtTrafficLights
+		{
+			bool get();
+		}
 		property bool IsOnAllWheels
 		{
 			bool get();
@@ -468,6 +475,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property bool IsSirenSilent
+		{
+			void set(bool value);
+		}
 		property VehicleColor PrimaryColor
 		{
 			VehicleColor get();
@@ -487,6 +498,15 @@ namespace GTA
 		{
 			VehicleColor get();
 			void set(VehicleColor value);
+		}
+		property int ColorCombination
+		{
+			int get();
+			void set(int value);
+		}
+		property int ColorCombinationCount
+		{
+			int get();
 		}
 		property VehicleWheelType WheelType
 		{
@@ -535,6 +555,7 @@ namespace GTA
 		}
 		property bool HighBeamsOn
 		{
+			void set(bool value);
 			bool get();
 		}
 		property float LightsMultiplier
@@ -583,6 +604,7 @@ namespace GTA
 		}
 		property bool NeedsToBeHotwired
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool CanTiresBurst
@@ -600,6 +622,7 @@ namespace GTA
 		}
 		property bool PreviouslyOwnedByPlayer
 		{
+			bool get();
 			void set(bool value);
 		}
 		property System::Drawing::Color CustomPrimaryColor
@@ -683,7 +706,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the steering scale.
 		/// </summary>
-		/// <value>A float between -1.0f (fully right) and 1.0f (fully left).</value>
+		/// <value>A single between -1.0f (fully right) and 1.0f (fully left).</value>
 		property float SteeringScale
 		{
 			float get();
