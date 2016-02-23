@@ -143,6 +143,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_STOPPED, Handle);
 	}
+	bool Vehicle::IsStoppedAtTrafficLights::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS, Handle);
+	}
 	bool Vehicle::IsOnAllWheels::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ON_ALL_WHEELS, Handle);
@@ -255,6 +259,11 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_SIREN, Handle, value);
 	}
+	void Vehicle::IsSirenSilent::set(bool value)
+	{
+		//sets if the siren is silent actually 
+		Native::Function::Call(Native::Hash::DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, Handle, value);
+	}
 	VehicleColor Vehicle::PrimaryColor::get()
 	{
 		int color1, color2;
@@ -300,6 +309,18 @@ namespace GTA
 	void Vehicle::PearlescentColor::set(VehicleColor value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, Handle, static_cast<int>(value), static_cast<int>(RimColor));
+	}
+	int Vehicle::ColorCombination::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_COLOUR_COMBINATION, Handle);
+	}
+	void Vehicle::ColorCombination::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_COLOUR_COMBINATION, Handle, value);
+	}
+	int Vehicle::ColorCombinationCount::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_NUMBER_OF_VEHICLE_COLOURS, Handle);
 	}
 	VehicleWheelType Vehicle::WheelType::get()
 	{
@@ -359,6 +380,10 @@ namespace GTA
 		int lightState1, lightState2;
 		Native::Function::Call(Native::Hash::GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
 		return lightState1 == 1;
+	}
+	void Vehicle::HighBeamsOn::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_FULLBEAM, Handle, value);
 	}
 	bool Vehicle::HighBeamsOn::get()
 	{
@@ -454,6 +479,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_INTERIORLIGHT, Handle, value);
 	}
+	bool Vehicle::NeedsToBeHotwired::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		const int offset = (static_cast<int>(Game::Version) > 3 ? 0x844 : 0x834);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 2)) != 0;
+	}
 	void Vehicle::NeedsToBeHotwired::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_NEEDS_TO_BE_HOTWIRED, Handle, value);
@@ -473,6 +506,14 @@ namespace GTA
 	void Vehicle::CanBeVisiblyDamaged::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED, Handle, value);
+	}
+	bool Vehicle::PreviouslyOwnedByPlayer::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		const int offset = (static_cast<int>(Game::Version) > 3 ? 0x844 : 0x834);
+
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 1)) != 0;
 	}
 	void Vehicle::PreviouslyOwnedByPlayer::set(bool value)
 	{
