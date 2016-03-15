@@ -314,7 +314,32 @@ namespace GTA
 	}
 	int Game::GenerateHash(System::String ^input)
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, input);
+		System::UInt32 hash = 0;
+		array<System::Char>^ chars = input->ToCharArray();
+
+		//converts ascii uppercase to lowercase
+		for (int i = 0, length = chars->Length; i < length; i++)
+		{
+			if (chars[i] >= 'A' && chars[i] <= 'Z')
+			{
+				chars[i] = chars[i] + 32;
+			}
+		}
+
+		array<System::Byte>^ bytes = System::Text::Encoding::UTF8->GetBytes(chars);
+
+		for (int i = 0, length = bytes->Length; i < length; i++)
+		{
+			hash += bytes[i];
+			hash += (hash << 10);
+			hash ^= (hash >> 6);
+		}
+
+		hash += (hash << 3);
+		hash ^= (hash >> 11);
+		hash += (hash << 15);
+
+		return static_cast<int>(hash);
 	}
 
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)
