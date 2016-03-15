@@ -6,6 +6,8 @@
 
 namespace GTA
 {
+	using namespace System::Collections;
+
 	#pragma region Forward Declarations
 	ref class Tasks;
 	ref class PedGroup;
@@ -567,7 +569,7 @@ namespace GTA
 		Line = 3
 	};
 
-	public ref class PedGroup : System::IEquatable<PedGroup ^>, IHandleable
+	public ref class PedGroup : System::IEquatable<PedGroup ^>, Generic::IEnumerable<Ped ^>, IHandleable
 	{
 	public:
 		PedGroup();
@@ -597,15 +599,15 @@ namespace GTA
 
 		void Add(Ped ^ped, bool leader);
 		void Remove(Ped ^ped);
-		virtual bool Exists();
 		Ped ^GetMember(int index);
+		virtual bool Exists();
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(PedGroup ^pedGroup);
 
 		array<Ped ^> ^ToArray(bool includingLeader);
-		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
+		Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 		virtual inline int GetHashCode() override
 		{
@@ -623,6 +625,65 @@ namespace GTA
 		static inline bool operator!=(PedGroup ^left, PedGroup ^right)
 		{
 			return !operator==(left, right);
+		}
+
+		// Enumerator
+		ref struct enumerator : Generic::IEnumerator<Ped^>
+		{
+			enumerator(PedGroup^ group)
+			{
+				colInst = group;
+				currentIndex = -2;
+			}
+
+			virtual bool MoveNext() = Generic::IEnumerator<Ped^>::MoveNext
+			{
+				if (currentIndex < (colInst->MemberCount - 1))
+				{
+					currentIndex++;
+					currentPed = currentIndex < 0 ? colInst->Leader : colInst->GetMember(currentIndex);
+
+					if (!Object::ReferenceEquals(currentPed, nullptr) && currentPed->Exists())
+					{
+						return true;
+					}
+					return MoveNext();
+				}
+			return false;
+			}
+
+			virtual property Ped^ Current
+			{
+				Ped^ get()
+				{
+					return currentPed;
+				}
+			};
+			// This is required as IEnumerator<T> also implements IEnumerator
+			virtual property Object^ Current2
+			{
+				virtual Object^ get() sealed = System::Collections::IEnumerator::Current::get
+				{
+					return Current;
+				}
+			};
+
+			virtual void Reset() = Generic::IEnumerator<Ped^>::Reset{}
+			~enumerator() {}
+
+			PedGroup^ colInst;
+			int currentIndex;
+			Ped^ currentPed;
+		};
+
+		virtual IEnumerator^ PedGroup::GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
+		{
+			return gcnew enumerator(this);
+		}
+
+		virtual Generic::IEnumerator<Ped^>^ PedGroup::GetEnumerator()
+		{
+			return gcnew enumerator(this);
 		}
 
 	private:
