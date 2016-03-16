@@ -151,25 +151,25 @@ namespace GTA
 		return static_cast<WeaponTint>(Native::Function::Call<int>(Native::Hash::GET_PED_WEAPON_TINT_INDEX, _owner, static_cast<int>(Hash)));
 	}
 
-	WeaponCollection::WeaponCollection(Ped ^owner) : _owner(owner), _weapons(gcnew Dictionary<Native::WeaponHash, Weapon ^>())
+	WeaponCollection::WeaponCollection(Ped ^owner) : _owner(owner), _weapons(gcnew Dictionary<System::UInt32, Weapon ^>())
 	{
 	}
 
 	Weapon ^WeaponCollection::Current::get()
 	{
-		int hash = 0;
+		unsigned int hash;
 		Native::WeaponHash thash;
 
 		Native::Function::Call(Native::Hash::GET_CURRENT_PED_WEAPON, _owner->Handle, &hash, true);
 		thash = static_cast<Native::WeaponHash>(hash);
 
-		if (_weapons->ContainsKey(thash))
+		if (_weapons->ContainsKey(hash))
 		{
-			return _weapons->default[thash];
+			return _weapons->default[hash];
 		}
 
 		Weapon ^weapon = gcnew Weapon(_owner, thash);
-		_weapons->Add(thash, weapon);
+		_weapons->Add(hash, weapon);
 
 		return weapon;
 	}
@@ -184,27 +184,28 @@ namespace GTA
 	}
 	Weapon ^WeaponCollection::BestWeapon::get()
 	{
-		int hash = 0;
+		System::UInt32 hash = 0;
 		Native::WeaponHash thash;
 
 		hash = Native::Function::Call<int>(Native::Hash::GET_BEST_PED_WEAPON, _owner->Handle, 0);
 		thash = static_cast<Native::WeaponHash>(hash);
 
-		if (_weapons->ContainsKey(thash))
+		if (_weapons->ContainsKey(hash))
 		{
-			return _weapons->default[thash];
+			return _weapons->default[hash];
 		}
 
 		Weapon ^weapon = gcnew Weapon(_owner, thash);
-		_weapons->Add(thash, weapon);
+		_weapons->Add(hash, weapon);
 
 		return weapon;
 	}
 	Weapon ^WeaponCollection::default::get(Native::WeaponHash hash)
 	{
 		Weapon ^weapon;
+		System::UInt32 uintHash = static_cast<System::UInt32>(hash);
 
-		if (_weapons->TryGetValue(hash, weapon))
+		if (_weapons->TryGetValue(uintHash, weapon))
 		{
 			return weapon;
 		}
@@ -215,7 +216,7 @@ namespace GTA
 		}
 
 		weapon = gcnew Weapon(_owner, hash);
-		_weapons->Add(hash, weapon);
+		_weapons->Add(uintHash, weapon);
 
 		return weapon;
 	}
@@ -227,11 +228,12 @@ namespace GTA
 	Weapon ^WeaponCollection::Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded)
 	{
 		Weapon ^weapon;
+		System::UInt32 uintHash = static_cast<System::UInt32>(hash);
 
-		if (!_weapons->TryGetValue(hash, weapon))
+		if (!_weapons->TryGetValue(static_cast<System::UInt32>(hash), weapon))
 		{
 			weapon = gcnew Weapon(_owner, hash);
-			_weapons->Add(hash, weapon);
+			_weapons->Add(uintHash, weapon);
 		}
 
 		if (weapon->IsPresent)
@@ -281,9 +283,11 @@ namespace GTA
 	}
 	void WeaponCollection::Remove(Weapon ^weapon)
 	{
-		if (_weapons->ContainsKey(weapon->Hash))
+		System::UInt32 hash = static_cast<System::UInt32>(weapon->Hash);
+
+		if (_weapons->ContainsKey(hash))
 		{
-			_weapons->Remove(weapon->Hash);
+			_weapons->Remove(hash);
 		}
 
 		WeaponCollection::Remove(weapon->Hash);

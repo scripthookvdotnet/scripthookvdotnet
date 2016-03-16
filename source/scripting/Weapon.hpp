@@ -141,6 +141,6 @@ namespace GTA
 
 	private:
 		Ped ^_owner;
-		System::Collections::Generic::Dictionary<Native::WeaponHash, Weapon ^> ^_weapons;
+		System::Collections::Generic::Dictionary<System::UInt32, Weapon ^> ^_weapons;
 	};
 }
