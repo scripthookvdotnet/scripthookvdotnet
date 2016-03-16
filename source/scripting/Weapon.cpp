@@ -182,6 +182,24 @@ namespace GTA
 
 		return nullptr;
 	}
+	Weapon ^WeaponCollection::BestWeapon::get()
+	{
+		int hash = 0;
+		Native::WeaponHash thash;
+
+		hash = Native::Function::Call<int>(Native::Hash::GET_BEST_PED_WEAPON, _owner->Handle, 0);
+		thash = static_cast<Native::WeaponHash>(hash);
+
+		if (_weapons->ContainsKey(thash))
+		{
+			return _weapons->default[thash];
+		}
+
+		Weapon ^weapon = gcnew Weapon(_owner, thash);
+		_weapons->Add(thash, weapon);
+
+		return weapon;
+	}
 	Weapon ^WeaponCollection::default::get(Native::WeaponHash hash)
 	{
 		Weapon ^weapon;
@@ -227,6 +245,10 @@ namespace GTA
 
 		return weapon;
 	}
+	bool WeaponCollection::HasWeapon(Native::WeaponHash weaponHash)
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, _owner->Handle, static_cast<int>(weaponHash));
+	}
 	bool WeaponCollection::IsWeaponValid(Native::WeaponHash hash)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_WEAPON_VALID, static_cast<int>(hash));
@@ -242,6 +264,21 @@ namespace GTA
 
 		return true;
 	}
+	bool WeaponCollection::Select(Native::WeaponHash weaponHash)
+	{
+		return WeaponCollection::Select(weaponHash, true);
+	}
+	bool WeaponCollection::Select(Native::WeaponHash weaponHash, bool equipNow)
+	{
+		if (!Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON, _owner->Handle, static_cast<int>(weaponHash)))
+		{
+			return false;
+		}
+
+		Native::Function::Call(Native::Hash::SET_CURRENT_PED_WEAPON, _owner->Handle, static_cast<int>(weaponHash), equipNow);
+
+		return true;
+	}
 	void WeaponCollection::Remove(Weapon ^weapon)
 	{
 		if (_weapons->ContainsKey(weapon->Hash))
@@ -249,7 +286,11 @@ namespace GTA
 			_weapons->Remove(weapon->Hash);
 		}
 
-		Native::Function::Call(Native::Hash::REMOVE_WEAPON_FROM_PED, _owner->Handle, static_cast<int>(weapon->Hash));
+		WeaponCollection::Remove(weapon->Hash);
+	}
+	void WeaponCollection::Remove(Native::WeaponHash weaponHash)
+	{
+		Native::Function::Call(Native::Hash::REMOVE_WEAPON_FROM_PED, _owner->Handle, static_cast<int>(weaponHash));
 	}
 	void WeaponCollection::RemoveAll()
 	{

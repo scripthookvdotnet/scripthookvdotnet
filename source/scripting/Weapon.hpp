@@ -116,6 +116,10 @@ namespace GTA
 		{
 			Prop ^get();
 		}
+		property Weapon ^BestWeapon
+		{
+			Weapon ^get();
+		}
 		property Weapon ^default[Native::WeaponHash]
 		{
 			Weapon ^get(Native::WeaponHash hash);
@@ -123,9 +127,13 @@ namespace GTA
 
 		void Drop();
 		Weapon ^Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded);
+		bool HasWeapon(Native::WeaponHash weaponHash);
 		bool IsWeaponValid(Native::WeaponHash hash);
 		bool Select(Weapon ^weapon);
+		bool Select(Native::WeaponHash weaponHash);
+		bool Select(Native::WeaponHash weaponHash, bool equipNow);
 		void Remove(Weapon ^weapon);
+		void Remove(Native::WeaponHash weaponHash);
 		void RemoveAll();
 
 	internal:
