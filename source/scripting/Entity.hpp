@@ -160,6 +160,10 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		property System::IntPtr MemoryAddress
+		{
+			System::IntPtr get();
+		}
 		property GTA::Model Model
 		{
 			GTA::Model get();

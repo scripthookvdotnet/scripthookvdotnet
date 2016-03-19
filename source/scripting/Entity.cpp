@@ -296,6 +296,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_SPEED, Handle, value);
 	}
+	System::IntPtr Entity::MemoryAddress::get()
+	{
+		return System::IntPtr(reinterpret_cast<int *>(Native::MemoryAccess::GetAddressOfEntity(Handle)));
+	}
 	GTA::Model Entity::Model::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, Handle);
