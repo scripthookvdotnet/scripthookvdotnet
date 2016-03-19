@@ -16,7 +16,7 @@ namespace GTA
 	{
 	}
 
-	System::IntPtr Global::Address::get()
+	System::IntPtr Global::MemoryAddress::get()
 	{
 		return System::IntPtr(mAddress);
 	}

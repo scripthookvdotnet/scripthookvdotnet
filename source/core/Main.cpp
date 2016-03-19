@@ -47,7 +47,7 @@ namespace
 	bool DisableMplowrider2CarRemoving()
 	{
 		GTA::Global global2558120 = GTA::Game::Globals[2558120];
-		if (global2558120.Address != System::IntPtr::Zero)
+		if (global2558120.MemoryAddress != System::IntPtr::Zero)
 		{
 			global2558120.SetInt(1);
 			return true;

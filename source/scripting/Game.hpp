@@ -105,7 +105,7 @@ namespace GTA
 	public value class Global
 	{
 	public:
-		property System::IntPtr Address
+		property System::IntPtr MemoryAddress
 		{
 			System::IntPtr get();
 		}
