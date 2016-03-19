@@ -89,6 +89,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
+	bool Game::IsLoading::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_IS_LOADING_SCREEN_ACTIVE);
+	}
 	bool Game::IsWaypointActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
