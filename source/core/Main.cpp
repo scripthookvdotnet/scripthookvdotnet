@@ -44,16 +44,6 @@ namespace
 
 		return true;
 	}
-	bool DisableMplowrider2CarRemoving()
-	{
-		GTA::Global global2558120 = GTA::Game::Globals[2558120];
-		if (global2558120.MemoryAddress != System::IntPtr::Zero)
-		{
-			global2558120.SetInt(1);
-			return true;
-		}
-		return false;
-	}
 	bool ManagedTick()
 	{
 		if (ScriptHook::Domain->IsKeyPressed(Keys::Insert))
@@ -88,6 +78,16 @@ namespace
 	PVOID sScriptFib = nullptr;
 	bool sMplowrider2CarRemovingDisabled = false;
 
+	bool DisableMplowrider2CarRemoving()
+	{
+		unsigned long long *global2558120 = getGlobalPtr(2558120);
+		if (global2558120 != 0)
+		{
+			*reinterpret_cast<int *>(global2558120) = 1;
+			return true;
+		}
+		return false;
+	}
 	void ScriptYield()
 	{
 		if (!sMplowrider2CarRemovingDisabled)

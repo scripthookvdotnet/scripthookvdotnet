@@ -105,9 +105,9 @@ namespace GTA
 	public value class Global
 	{
 	public:
-		property System::IntPtr MemoryAddress
+		property unsigned long long *MemoryAddress
 		{
-			System::IntPtr get();
+			unsigned long long *get();
 		}
 
 		void SetInt(int value);

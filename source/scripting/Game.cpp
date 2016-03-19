@@ -16,9 +16,9 @@ namespace GTA
 	{
 	}
 
-	System::IntPtr Global::MemoryAddress::get()
+	unsigned long long *Global::MemoryAddress::get()
 	{
-		return System::IntPtr(mAddress);
+		return reinterpret_cast<unsigned long long *>(this->mAddress);
 	}
 
 	void Global::SetInt(int value)
