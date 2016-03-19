@@ -227,6 +227,9 @@ namespace GTA
 
 		void ResetAlpha();
 
+		Math::Vector3 GetBoneCoord(int boneIndex);
+		int GetBoneIndex(System::String ^boneName);
+
 		void Delete();
 		virtual bool Exists();
 		static bool Exists(Entity ^entity);

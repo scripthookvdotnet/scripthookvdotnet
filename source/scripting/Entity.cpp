@@ -444,6 +444,15 @@ namespace GTA
 		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, Handle);
 	}
 
+	Math::Vector3 Entity::GetBoneCoord(int boneIndex)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneIndex);
+	}
+	int Entity::GetBoneIndex(System::String ^boneName)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
+	}
+
 	void Entity::Delete()
 	{
 		int handle = Handle;
