@@ -93,6 +93,10 @@ namespace GTA
 			{
 				return gcnew InputArgument(value);
 			}
+			static inline operator InputArgument ^ (bool *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
 			static inline operator InputArgument ^ (int value)
 			{
 				return gcnew InputArgument(value);
