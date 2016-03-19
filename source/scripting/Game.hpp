@@ -105,6 +105,11 @@ namespace GTA
 	public value class Global
 	{
 	public:
+		property System::IntPtr Address
+		{
+			System::IntPtr get();
+		}
+
 		void SetInt(int value);
 		void SetFloat(float value);
 		void SetString(System::String ^value);

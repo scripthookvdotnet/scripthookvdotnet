@@ -16,6 +16,11 @@ namespace GTA
 	{
 	}
 
+	System::IntPtr Global::Address::get()
+	{
+		return System::IntPtr(mAddress);
+	}
+
 	void Global::SetInt(int value)
 	{
 		*reinterpret_cast<int *>(this->mAddress) = value;
