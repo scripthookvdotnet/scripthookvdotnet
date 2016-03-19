@@ -44,6 +44,16 @@ namespace
 
 		return true;
 	}
+	bool DisableMplowrider2CarRemoving()
+	{
+		GTA::Global global2558120 = GTA::Game::Globals[2558120];
+		if (global2558120.Address != System::IntPtr::Zero)
+		{
+			global2558120.SetInt(1);
+			return true;
+		}
+		return false;
+	}
 	bool ManagedTick()
 	{
 		if (ScriptHook::Domain->IsKeyPressed(Keys::Insert))
@@ -76,16 +86,30 @@ namespace
 	bool sGameReloaded = false;
 	PVOID sMainFib = nullptr;
 	PVOID sScriptFib = nullptr;
+	bool sMplowrider2CarRemovingDisabled = false;
 
 	void ScriptYield()
 	{
+		if (!sMplowrider2CarRemovingDisabled)
+		{
+			if (DisableMplowrider2CarRemoving())
+			{
+				sMplowrider2CarRemovingDisabled = true;
+			}
+		}
 		// Switch back to main script fiber used by Script Hook
 		SwitchToFiber(sMainFib);
 	}
 	void CALLBACK ScriptMainLoop()
 	{
 		while (ManagedInit())
-		{
+		{			
+			// Disables mplowrider2 car removing when starting a new game or loading a save game
+			if (sGameReloaded)
+			{
+				sMplowrider2CarRemovingDisabled = false;
+				DisableMplowrider2CarRemoving();
+			}
 			sGameReloaded = false;
 
 			// Run main loop
