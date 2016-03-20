@@ -90,13 +90,6 @@ namespace
 	}
 	void ScriptYield()
 	{
-		if (!sMplowrider2CarRemovingDisabled)
-		{
-			if (DisableMplowrider2CarRemoving())
-			{
-				sMplowrider2CarRemovingDisabled = true;
-			}
-		}
 		// Switch back to main script fiber used by Script Hook
 		SwitchToFiber(sMainFib);
 	}
@@ -115,6 +108,13 @@ namespace
 			// Run main loop
 			while (!sGameReloaded && ManagedTick())
 			{
+				if (!sMplowrider2CarRemovingDisabled)
+				{
+					if (DisableMplowrider2CarRemoving())
+					{
+						sMplowrider2CarRemovingDisabled = true;
+					}
+				}
 				ScriptYield();
 			}
 		}
