@@ -341,11 +341,11 @@ namespace GTA
 	}
 	bool Ped::CanWrithe::get()
 	{
-		return GetConfigFlag(281);
+		return !GetConfigFlag(281);
 	}
 	void Ped::CanWrithe::set(bool value)
 	{
-		SetConfigFlag(281, value);
+		SetConfigFlag(281, !value);
 	}
 	bool Ped::IsStopped::get()
 	{
