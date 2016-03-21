@@ -133,6 +133,12 @@ namespace GTA
 		RB_Neck_1 = 0x8b93,
 		IK_Root = 0xdd1c
 	};
+	public enum class HelmetType : System::UInt32
+	{
+		RegularMotorcycleHelmet = 4096,
+		FiremanHelmet = 16384,
+		PilotHeadset = 32768
+	};
 	public enum class FiringPattern : System::UInt32
 	{
 		Default = 0,
@@ -218,6 +224,15 @@ namespace GTA
 		}
 		property bool CanPlayGestures
 		{
+			void set(bool value);
+		}
+		property bool CanWearHelmet
+		{
+			void set(bool value);
+		}
+		property bool CanWrithe
+		{
+			bool get();
 			void set(bool value);
 		}
 		property PedGroup ^CurrentPedGroup
@@ -465,9 +480,17 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsWearingHelmet
+		{
+			bool get();
+		}
 		property bool IsJumpingOutOfVehicle
 		{
 			bool get();
+		}
+		property Vehicle ^LastVehicle
+		{
+			Vehicle ^get();
 		}
 		property float MaxDrivingSpeed
 		{
@@ -484,6 +507,10 @@ namespace GTA
 			void set(int value);
 		}
 		property bool NeverLeavesGroup
+		{
+			void set(bool value);
+		}
+		property bool StaysInVehicleWhenJacked
 		{
 			void set(bool value);
 		}
@@ -548,12 +575,21 @@ namespace GTA
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();
+		void RandomizeOutfit();
+		void SetDefaultClothes();
 		void Clone();
 		void Clone(float heading);
 		void ApplyDamage(int damageAmount);
 		Math::Vector3 GetBoneCoord(Bone BoneID);
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);
 		int GetBoneIndex(Bone BoneID);
+
+		bool GetConfigFlag(int flagID);
+		void SetConfigFlag(int flagID, bool value);
+		void ResetConfigFlag(int flagID);
+
+		void GiveHelmet(bool canBeRemovedByPed, HelmetType helmetType, int textureIndex);
+		void RemoveHelmet(bool instantly);
 
 	private:
 		Tasks ^_tasks;
@@ -676,7 +712,7 @@ namespace GTA
 			Ped^ currentPed;
 		};
 
-		virtual IEnumerator^ PedGroup::GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
+		virtual System::Collections::IEnumerator^ PedGroup::GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
 		{
 			return gcnew enumerator(this);
 		}
