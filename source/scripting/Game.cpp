@@ -16,6 +16,11 @@ namespace GTA
 	{
 	}
 
+	unsigned long long *Global::MemoryAddress::get()
+	{
+		return reinterpret_cast<unsigned long long *>(this->mAddress);
+	}
+
 	void Global::SetInt(int value)
 	{
 		*reinterpret_cast<int *>(this->mAddress) = value;
@@ -88,6 +93,10 @@ namespace GTA
 	void Game::IsPaused::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
+	}
+	bool Game::IsLoading::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_IS_LOADING_SCREEN_ACTIVE);
 	}
 	bool Game::IsWaypointActive::get()
 	{

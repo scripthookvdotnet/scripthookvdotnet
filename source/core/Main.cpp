@@ -76,7 +76,18 @@ namespace
 	bool sGameReloaded = false;
 	PVOID sMainFib = nullptr;
 	PVOID sScriptFib = nullptr;
+	bool sMplowrider2CarRemovingDisabled = false;
 
+	bool DisableMplowrider2CarRemoving()
+	{
+		unsigned long long *global2558120 = getGlobalPtr(2558120);
+		if (global2558120 != 0)
+		{
+			*reinterpret_cast<int *>(global2558120) = 1;
+			return true;
+		}
+		return false;
+	}
 	void ScriptYield()
 	{
 		// Switch back to main script fiber used by Script Hook
@@ -85,12 +96,25 @@ namespace
 	void CALLBACK ScriptMainLoop()
 	{
 		while (ManagedInit())
-		{
+		{			
+			// Disables mplowrider2 car removing when starting a new game or loading a save game
+			if (sGameReloaded)
+			{
+				sMplowrider2CarRemovingDisabled = false;
+				DisableMplowrider2CarRemoving();
+			}
 			sGameReloaded = false;
 
 			// Run main loop
 			while (!sGameReloaded && ManagedTick())
 			{
+				if (!sMplowrider2CarRemovingDisabled)
+				{
+					if (DisableMplowrider2CarRemoving())
+					{
+						sMplowrider2CarRemovingDisabled = true;
+					}
+				}
 				ScriptYield();
 			}
 		}

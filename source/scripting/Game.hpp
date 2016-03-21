@@ -105,6 +105,11 @@ namespace GTA
 	public value class Global
 	{
 	public:
+		property unsigned long long *MemoryAddress
+		{
+			unsigned long long *get();
+		}
+
 		void SetInt(int value);
 		void SetFloat(float value);
 		void SetString(System::String ^value);
@@ -155,6 +160,10 @@ namespace GTA
 		{
 			bool get();
 			void set(bool value);
+		}
+		static property bool IsLoading
+		{
+			bool get();
 		}
 		static property bool IsWaypointActive
 		{
