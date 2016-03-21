@@ -76,58 +76,43 @@ namespace
 	bool sGameReloaded = false;
 	PVOID sMainFib = nullptr;
 	PVOID sScriptFib = nullptr;
-	bool sMplowrider2CarRemovingDisabled = false;
 
-	bool DisableMplowrider2CarRemoving()
-	{
-		unsigned long long *global2558120 = getGlobalPtr(2558120);
-		if (global2558120 != 0)
-		{
-			*reinterpret_cast<int *>(global2558120) = 1;
-			return true;
-		}
-		return false;
-	}
 	void ScriptYield()
 	{
 		// Switch back to main script fiber used by Script Hook
 		SwitchToFiber(sMainFib);
 	}
-	void CALLBACK ScriptMainLoop()
+	void CALLBACK ScriptMainLoop(LPVOID)
 	{
 		while (ManagedInit())
 		{			
-			// Disables mplowrider2 car removing when starting a new game or loading a save game
-			if (sGameReloaded)
-			{
-				sMplowrider2CarRemovingDisabled = false;
-				DisableMplowrider2CarRemoving();
-			}
 			sGameReloaded = false;
 
 			// Run main loop
 			while (!sGameReloaded && ManagedTick())
 			{
-				if (!sMplowrider2CarRemovingDisabled)
-				{
-					if (DisableMplowrider2CarRemoving())
-					{
-						sMplowrider2CarRemovingDisabled = true;
-					}
-				}
 				ScriptYield();
 			}
 		}
 	}
 	void ScriptMainSetup()
 	{
+		// Disable mplowrider2 car removing
+		const auto global2558120 = getGlobalPtr(2558120);
+
+		if (global2558120 != nullptr)
+		{
+			*global2558120 = 1;
+		}
+
+		// Set up fibers
 		sGameReloaded = true;
 		sMainFib = GetCurrentFiber();
 
 		if (sScriptFib == nullptr)
 		{
 			// Create our own fiber for the common language runtime once
-			sScriptFib = CreateFiber(0, reinterpret_cast<LPFIBER_START_ROUTINE>(&ScriptMainLoop), nullptr);
+			sScriptFib = CreateFiber(0, &ScriptMainLoop, nullptr);
 		}
 
 		while (true)
