@@ -110,7 +110,7 @@ namespace GTA
 			property float default[int]
 			{
 				float get(int index);
-			void set(int index, float value);
+				void set(int index, float value);
 			}
 
 			/// <summary>
