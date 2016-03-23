@@ -195,6 +195,12 @@ namespace GTA
 				}
 			}
 
+			property float default[int]
+			{
+				float get(int index);
+				void set(int index, float value);
+			}
+
 			/// <summary>
 			/// Calculates the length of the vector.
 			/// </summary>
