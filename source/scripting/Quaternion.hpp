@@ -105,6 +105,12 @@ namespace GTA
 			float Length();
 
 			/// <summary>
+			/// Calculates the squared length of the quaternion.
+			/// </summary>
+			/// <returns>The squared length of the quaternion.</returns>
+			float LengthSquared();
+
+			/// <summary>
 			/// Converts the quaternion into a unit quaternion.
 			/// </summary>
 			void Normalize();
@@ -165,6 +171,41 @@ namespace GTA
 			static Quaternion Lerp(Quaternion start, Quaternion end, float amount);
 
 			/// <summary>
+			/// Interpolates between two quaternions, using spherical linear interpolation..
+			/// </summary>
+			/// <param name="start">Start quaternion.</param>
+			/// <param name="end">End quaternion.</param>
+			/// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
+			/// <returns>The spherical linear interpolation of the two quaternions.</returns>
+			static Quaternion Slerp(Quaternion start, Quaternion end, float amount);
+
+			/// <summary>
+			/// Creates a rotation which rotates from fromDirection to toDirection.
+			/// </summary>
+			static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection);
+
+			/// <summary>
+			/// Creates a rotation with the specified forward and upwards directions.
+			/// </summary>
+			/// <param name="forward">The direction to look in.</param>
+			static Quaternion LookRotation(Vector3 forward);
+
+			/// <summary>
+			/// Creates a rotation with the specified forward and upwards directions.
+			/// </summary>
+			/// <param name="forward">The direction to look in.</param>
+			/// <param name="upwards">The vector that defines in which direction up is.</param>
+			static Quaternion LookRotation(Vector3 forward, Vector3 upwards);
+
+			/// <summary>
+			/// Rotates a rotation from towards to.
+			/// </summary>
+			/// <param name="from">From Quaternion.</param>
+			/// <param name="to">To Quaternion.</param>
+			/// <param name ="maxDegreesDelta"></param>
+			static Quaternion RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta);
+
+			/// <summary>
 			/// Modulates a quaternion by another.
 			/// </summary>
 			/// <param name="left">The first quaternion to modulate.</param>
@@ -193,6 +234,28 @@ namespace GTA
 			/// <param name="quaternion">The quaternion to normalize.</param>
 			/// <returns>The normalized quaternion.</returns>
 			static Quaternion Normalize(Quaternion quaternion);
+
+			/// <summary>
+			/// Returns the angle in degrees between two rotations a and b.
+			/// </summary>
+			/// <param name="a">The first quaternion to calculate angle.</param>
+			/// <param name="b">The second quaternion to calculate angle.</param>
+			/// <returns>The angle in degrees between two rotations a and b.</returns>
+			static float AngleBetween(Quaternion a, Quaternion b);
+
+			/// <summary>
+			/// eturns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+			/// </summary>
+			/// <param name="x">X degrees.</param>
+			/// <param name ="y">Y degrees.</param>
+			/// <param name ="z">Z degrees.</param>
+			static Quaternion Euler(float x, float y, float z);
+
+			/// <summary>
+			/// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+			/// </summary>
+			/// <param name="euler">Euler angles in degrees.</param>
+			static Quaternion Euler(Vector3 euler);
 
 			/// <summary>
 			/// Creates a quaternion given a rotation and an axis.

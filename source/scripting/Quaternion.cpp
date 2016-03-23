@@ -72,6 +72,10 @@ namespace GTA
 		{
 			return static_cast<float>(System::Math::Sqrt((X * X) + (Y * Y) + (Z * Z) + (W * W)));
 		}
+		float Quaternion::LengthSquared()
+		{
+			return static_cast<float>((X * X) + (Y * Y) + (Z * Z) + (W * W));
+		}
 		void Quaternion::Normalize()
 		{
 			float length = 1.0f / Length();
@@ -159,6 +163,108 @@ namespace GTA
 
 			return result;
 		}
+		Quaternion Quaternion::Slerp(Quaternion start, Quaternion end, float amount)
+		{
+			Quaternion result;
+			const float kEpsilon = static_cast<float>(1.192093E-07);
+			float opposite;
+			float inverse;
+			float dot = Dot(start, end);
+
+			if (System::Math::Abs(dot) > (1.0f - kEpsilon))
+			{
+				inverse = 1.0f - amount;
+				opposite = amount * System::Math::Sign(dot);
+			}
+			else
+			{
+				float acos = (float)System::Math::Acos(System::Math::Abs(dot));
+				float invSin = (float)(1.0 / System::Math::Sin(acos));
+
+				inverse = static_cast<float>(System::Math::Sin((1.0f - amount) * acos) * invSin);
+				opposite = static_cast<float>(System::Math::Sin(amount * acos) * invSin * System::Math::Sign(dot));
+			}
+
+			result.X = (inverse * start.X) + (opposite * end.X);
+			result.Y = (inverse * start.Y) + (opposite * end.Y);
+			result.Z = (inverse * start.Z) + (opposite * end.Z);
+			result.W = (inverse * start.W) + (opposite * end.W);
+
+			return result;
+		}
+		Quaternion Quaternion::FromToRotation(Vector3 fromDirection, Vector3 toDirection)
+		{
+			return RotateTowards(LookRotation(fromDirection, Vector3::WorldDown), LookRotation(toDirection, Vector3::WorldDown), System::Single::MaxValue);
+		}
+		Quaternion Quaternion::LookRotation(Vector3 forward)
+		{
+			return LookRotation(forward, Vector3::WorldDown);
+		}
+		Quaternion Quaternion::LookRotation(Vector3 forward, Vector3 upwards)
+		{
+			forward = Vector3::Normalize(forward);
+			Vector3 right = Vector3::Normalize(Vector3::Cross(upwards, forward));
+			upwards = Vector3::Cross(forward, right);
+			float m00 = right.X;
+			float m01 = right.Y;
+			float m02 = right.Z;
+			float m10 = upwards.X;
+			float m11 = upwards.Y;
+			float m12 = upwards.Z;
+			float m20 = forward.X;
+			float m21 = forward.Y;
+			float m22 = forward.Z;
+
+
+			float num8 = (m00 + m11) + m22;
+			Quaternion quaternion = Quaternion();
+			if (num8 > 0.0f)
+			{
+				float num = static_cast<float>(System::Math::Sqrt(num8 + 1.0f));
+				quaternion.W = num * 0.5f;
+				num = 0.5f / num;
+				quaternion.X = (m12 - m21) * num;
+				quaternion.Y = (m20 - m02) * num;
+				quaternion.Z = (m01 - m10) * num;
+				return quaternion;
+			}
+			if ((m00 >= m11) && (m00 >= m22))
+			{
+				float num7 = static_cast<float>(System::Math::Sqrt(((1.0f + m00) - m11) - m22));
+				float num4 = 0.5f / num7;
+				quaternion.X = 0.5f * num7;
+				quaternion.Y = (m01 + m10) * num4;
+				quaternion.Z = (m02 + m20) * num4;
+				quaternion.W = (m12 - m21) * num4;
+				return quaternion;
+			}
+			if (m11 > m22)
+			{
+				float num6 = static_cast<float>(System::Math::Sqrt(((1.0f + m11) - m00) - m22));
+				float num3 = 0.5f / num6;
+				quaternion.X = (m10 + m01) * num3;
+				quaternion.Y = 0.5f * num6;
+				quaternion.Z = (m21 + m12) * num3;
+				quaternion.W = (m20 - m02) * num3;
+				return quaternion;
+			}
+			float num5 = static_cast<float>(System::Math::Sqrt(((1.0f + m22) - m00) - m11));
+			float num2 = 0.5f / num5;
+			quaternion.X = (m20 + m02) * num2;
+			quaternion.Y = (m21 + m12) * num2;
+			quaternion.Z = 0.5f * num5;
+			quaternion.W = (m01 - m10) * num2;
+			return quaternion;
+		}
+		Quaternion Quaternion::RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta)
+		{
+			float angle = AngleBetween(from, to);
+			if (angle == 0.0f)
+			{
+				return to;
+			}
+			return Slerp(from, to, maxDegreesDelta / angle);
+		}
 		Quaternion Quaternion::Multiply(Quaternion left, Quaternion right)
 		{
 			Quaternion quaternion;
@@ -200,6 +306,21 @@ namespace GTA
 		{
 			quat.Normalize();
 			return quat;
+		}
+		float Quaternion::AngleBetween(Quaternion a, Quaternion b)
+		{
+			float dot = Dot(a, b);
+			return static_cast<float>((System::Math::Acos(System::Math::Min(System::Math::Abs(dot), 1.0f)) * 2.0 * (180.0f / System::Math::PI)));
+		}
+		Quaternion Quaternion::Euler(float x, float y, float z)
+		{
+			const float Deg2Rad =static_cast<float>((System::Math::PI / 180.0));
+			return RotationYawPitchRoll(x * Deg2Rad, y * Deg2Rad, z * Deg2Rad);
+		}
+		Quaternion Quaternion::Euler(Vector3 euler)
+		{
+			const Vector3 eulerRad = euler * static_cast<float>((System::Math::PI / 180.0));
+			return RotationYawPitchRoll(eulerRad.X, eulerRad.Y, eulerRad.Z);
 		}
 		Quaternion Quaternion::RotationAxis(Vector3 axis, float angle)
 		{
