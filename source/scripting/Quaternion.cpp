@@ -314,7 +314,7 @@ namespace GTA
 		}
 		Quaternion Quaternion::Euler(float x, float y, float z)
 		{
-			const float Deg2Rad =static_cast<float>((System::Math::PI / 180.0));
+			const float Deg2Rad = static_cast<float>((System::Math::PI / 180.0));
 			return RotationYawPitchRoll(x * Deg2Rad, y * Deg2Rad, z * Deg2Rad);
 		}
 		Quaternion Quaternion::Euler(Vector3 euler)

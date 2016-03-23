@@ -245,6 +245,14 @@ namespace GTA
 			result.Z = left.X * right.Y - left.Y * right.X;
 			return result;
 		}
+		Vector3 Vector3::Project(Vector3 vector, Vector3 onNormal)
+		{
+			float dot = Vector3::Dot(vector, onNormal);
+			float lenSq = vector.LengthSquared();
+
+			return Vector3(dot / lenSq * vector.X, dot / lenSq * vector.Y, dot / lenSq * vector.Z);
+		}
+
 		Vector3 Vector3::Reflect(Vector3 vector, Vector3 normal)
 		{
 			Vector3 result;
