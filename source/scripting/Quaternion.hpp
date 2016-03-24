@@ -180,6 +180,14 @@ namespace GTA
 			static Quaternion Slerp(Quaternion start, Quaternion end, float amount);
 
 			/// <summary>
+			/// Interpolates between two quaternions, using spherical linear interpolation. The parameter /t/ is not clamped.
+			/// </summary>
+			/// <param name="a"></param>
+			/// <param name="b"></param>
+			/// <param name="t"></param>
+			static Quaternion SlerpUnclamped(Quaternion a, Quaternion b, float t);
+
+			/// <summary>
 			/// Creates a rotation which rotates from fromDirection to toDirection.
 			/// </summary>
 			static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection);
