@@ -193,19 +193,6 @@ namespace GTA
 			static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection);
 
 			/// <summary>
-			/// Creates a rotation with the specified forward and upwards directions.
-			/// </summary>
-			/// <param name="forward">The direction to look in.</param>
-			static Quaternion LookRotation(Vector3 forward);
-
-			/// <summary>
-			/// Creates a rotation with the specified forward and upwards directions.
-			/// </summary>
-			/// <param name="forward">The direction to look in.</param>
-			/// <param name="upwards">The vector that defines in which direction up is.</param>
-			static Quaternion LookRotation(Vector3 forward, Vector3 upwards);
-
-			/// <summary>
 			/// Rotates a rotation from towards to.
 			/// </summary>
 			/// <param name="from">From Quaternion.</param>

@@ -267,66 +267,6 @@ namespace GTA
 			Result.Normalize();
 			return Result;
 		}
-		Quaternion Quaternion::LookRotation(Vector3 forward)
-		{
-			return LookRotation(forward, Vector3::WorldDown);
-		}
-		Quaternion Quaternion::LookRotation(Vector3 forward, Vector3 upwards)
-		{
-			forward = Vector3::Normalize(forward);
-			Vector3 right = Vector3::Normalize(Vector3::Cross(upwards, forward));
-			upwards = Vector3::Cross(forward, right);
-			float m00 = right.X;
-			float m01 = right.Y;
-			float m02 = right.Z;
-			float m10 = upwards.X;
-			float m11 = upwards.Y;
-			float m12 = upwards.Z;
-			float m20 = forward.X;
-			float m21 = forward.Y;
-			float m22 = forward.Z;
-
-
-			float num8 = (m00 + m11) + m22;
-			Quaternion quaternion = Quaternion();
-			if (num8 > 0.0f)
-			{
-				float num = static_cast<float>(System::Math::Sqrt(num8 + 1.0f));
-				quaternion.W = num * 0.5f;
-				num = 0.5f / num;
-				quaternion.X = (m12 - m21) * num;
-				quaternion.Y = (m20 - m02) * num;
-				quaternion.Z = (m01 - m10) * num;
-				return quaternion;
-			}
-			if ((m00 >= m11) && (m00 >= m22))
-			{
-				float num7 = static_cast<float>(System::Math::Sqrt(((1.0f + m00) - m11) - m22));
-				float num4 = 0.5f / num7;
-				quaternion.X = 0.5f * num7;
-				quaternion.Y = (m01 + m10) * num4;
-				quaternion.Z = (m02 + m20) * num4;
-				quaternion.W = (m12 - m21) * num4;
-				return quaternion;
-			}
-			if (m11 > m22)
-			{
-				float num6 = static_cast<float>(System::Math::Sqrt(((1.0f + m11) - m00) - m22));
-				float num3 = 0.5f / num6;
-				quaternion.X = (m10 + m01) * num3;
-				quaternion.Y = 0.5f * num6;
-				quaternion.Z = (m21 + m12) * num3;
-				quaternion.W = (m20 - m02) * num3;
-				return quaternion;
-			}
-			float num5 = static_cast<float>(System::Math::Sqrt(((1.0f + m22) - m00) - m11));
-			float num2 = 0.5f / num5;
-			quaternion.X = (m20 + m02) * num2;
-			quaternion.Y = (m21 + m12) * num2;
-			quaternion.Z = 0.5f * num5;
-			quaternion.W = (m01 - m10) * num2;
-			return quaternion;
-		}
 		Quaternion Quaternion::RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta)
 		{
 			float angle = AngleBetween(from, to);
