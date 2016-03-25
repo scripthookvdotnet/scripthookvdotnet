@@ -247,9 +247,12 @@ namespace GTA
 		}
 		Vector3 Vector3::Project(Vector3 vector, Vector3 onNormal)
 		{
-			return onNormal * Vector3::Dot(vector, onNormal) / Vector3::Dot(onNormal, onNormal);
+			return onNormal * Dot(vector, onNormal) / Dot(onNormal, onNormal);
 		}
-
+		Vector3 Vector3::ProjectOnPlane(Vector3 vector, Vector3 planeNormal)
+		{
+			return (vector - (planeNormal * Dot(vector, planeNormal)));
+		}
 		Vector3 Vector3::Reflect(Vector3 vector, Vector3 normal)
 		{
 			Vector3 result;
