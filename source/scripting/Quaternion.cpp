@@ -320,7 +320,8 @@ namespace GTA
 			{
 				return to;
 			}
-			return Slerp(from, to, maxDegreesDelta / angle);
+			float t = System::Math::Min(1.0f, maxDegreesDelta / angle);
+			return SlerpUnclamped(from, to, t);
 		}
 		Quaternion Quaternion::Multiply(Quaternion left, Quaternion right)
 		{
