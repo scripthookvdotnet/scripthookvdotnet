@@ -405,8 +405,8 @@ namespace GTA
 			/// <summary>
 			/// Projects a vector onto another vector.
 			/// </summary>
-			/// <param name="vector">The vector to project</param>
-			/// <param name="onNormal">Normal of the vector, no need to normalize onNormal.</param>
+			/// <param name="vector">The vector to project.</param>
+			/// <param name="onNormal">Vector to project onto, does not assume it is normalized.</param>
 			/// <returns>The projected vector.</returns>
 			static Vector3 Project(Vector3 vector, Vector3 onNormal);
 

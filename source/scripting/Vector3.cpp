@@ -247,10 +247,7 @@ namespace GTA
 		}
 		Vector3 Vector3::Project(Vector3 vector, Vector3 onNormal)
 		{
-			float dot = Vector3::Dot(vector, onNormal);
-			float lenSq = vector.LengthSquared();
-
-			return Vector3(dot / lenSq * vector.X, dot / lenSq * vector.Y, dot / lenSq * vector.Z);
+			return onNormal * Vector3::Dot(vector, onNormal) / Vector3::Dot(onNormal, onNormal);
 		}
 
 		Vector3 Vector3::Reflect(Vector3 vector, Vector3 normal)
