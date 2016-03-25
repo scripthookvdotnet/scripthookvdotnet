@@ -194,7 +194,6 @@ namespace GTA
 		}
 		Quaternion Quaternion::SlerpUnclamped(Quaternion a, Quaternion b, float t)
 		{
-			// if either input is zero, return the other.
 			if (a.LengthSquared() == 0.0f)
 			{
 				if (b.LengthSquared() == 0.0f)
@@ -213,7 +212,6 @@ namespace GTA
 
 			if (cosHalfAngle >= 1.0f || cosHalfAngle <= -1.0f)
 			{
-				// angle = 0.0f, so just return one input.
 				return a;
 			}
 			else if (cosHalfAngle < 0.0f)
@@ -229,7 +227,6 @@ namespace GTA
 			float blendB;
 			if (cosHalfAngle < 0.99f)
 			{
-				// do proper slerp for big angles
 				float halfAngle = (float)System::Math::Acos(cosHalfAngle);
 				float sinHalfAngle = (float)System::Math::Sin(halfAngle);
 				float oneOverSinHalfAngle = 1.0f / sinHalfAngle;
@@ -238,7 +235,6 @@ namespace GTA
 			}
 			else
 			{
-				// do lerp if angle is really small.
 				blendA = 1.0f - t;
 				blendB = t;
 			}
@@ -251,7 +247,25 @@ namespace GTA
 		}
 		Quaternion Quaternion::FromToRotation(Vector3 fromDirection, Vector3 toDirection)
 		{
-			return RotateTowards(LookRotation(fromDirection, Vector3::WorldDown), LookRotation(toDirection, Vector3::WorldDown), System::Single::MaxValue);
+			float NormAB = static_cast<float>(System::Math::Sqrt(fromDirection.LengthSquared() * fromDirection.LengthSquared()));
+
+			float w = NormAB + Vector3::Dot(fromDirection, toDirection);
+			Quaternion Result;
+
+			if (w >= 1e-6f * NormAB)
+			{
+				Result = Quaternion(Vector3::Cross(fromDirection, toDirection), w);
+			}
+			else
+			{
+				w = 0.0f;
+				Result = System::Math::Abs(fromDirection.X) > System::Math::Abs(fromDirection.Y)
+					? Quaternion(-fromDirection.Z, 0.0f, fromDirection.X, w)
+					: Quaternion(0.0f, -fromDirection.Z, fromDirection.Y, w);
+			}
+
+			Result.Normalize();
+			return Result;
 		}
 		Quaternion Quaternion::LookRotation(Vector3 forward)
 		{
