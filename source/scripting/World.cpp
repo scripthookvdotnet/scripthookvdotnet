@@ -214,7 +214,7 @@ namespace GTA
 			Native::Function::Call(Native::Hash::_GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 
 			nextWeatherHash = Game::GenerateHash(_weatherNames[static_cast<int>(value)]);
-			Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+			Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, nextWeatherHash, weatherTransition);
 		}
 	}
 	float World::WeatherTransition::get()
