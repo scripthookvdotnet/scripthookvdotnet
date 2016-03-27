@@ -456,6 +456,13 @@ namespace GTA
 
 			return quaternion;
 		}
+		Vector3 Quaternion::operator * (Quaternion rotation, Vector3 point)
+		{
+			Vector3 q = Vector3(rotation.X, rotation.Y, rotation.Z);
+			Vector3 t = 2.0f * Vector3::Cross(q, point);
+			Vector3 result = point + (rotation.W * t) + Vector3::Cross(q, t);
+			return result;
+		}
 		Quaternion Quaternion::operator * (Quaternion quaternion, float scale)
 		{
 			Quaternion result;
