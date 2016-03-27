@@ -147,6 +147,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_STEALTH_KILLED, Handle);
 	}
+	void Ped::Voice::set(System::String ^value)
+	{
+		return Native::Function::Call(Native::Hash::SET_AMBIENT_VOICE_NAME, Handle, value);
+	}
 	bool Ped::WasKilledByStealth::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::WAS_PED_KILLED_BY_STEALTH, Handle);
@@ -341,11 +345,11 @@ namespace GTA
 	}
 	bool Ped::CanWrithe::get()
 	{
-		return GetConfigFlag(281);
+		return !GetConfigFlag(281);
 	}
 	void Ped::CanWrithe::set(bool value)
 	{
-		SetConfigFlag(281, value);
+		SetConfigFlag(281, !value);
 	}
 	bool Ped::IsStopped::get()
 	{
@@ -544,6 +548,10 @@ namespace GTA
 	void Ped::SetDefaultClothes()
 	{
 		Native::Function::Call(Native::Hash::SET_PED_DEFAULT_COMPONENT_VARIATION, Handle);
+	}
+	void Ped::LeaveGroup()
+	{
+		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, Handle);
 	}
 	void Ped::Clone()
 	{

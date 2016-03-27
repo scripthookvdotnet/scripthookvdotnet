@@ -452,6 +452,10 @@ namespace GTA
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
 	}
+	bool Entity::HasBone(System::String ^boneName)
+	{
+		return GetBoneIndex(boneName) != -1;
+	}
 
 	void Entity::Delete()
 	{

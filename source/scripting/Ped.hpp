@@ -539,6 +539,10 @@ namespace GTA
 		{
 			int get();
 		}
+		property System::String ^Voice
+		{
+			void set(System::String ^value);
+		}
 		property bool WasKilledByStealth
 		{
 			bool get();
@@ -577,6 +581,7 @@ namespace GTA
 		void ClearBloodDamage();
 		void RandomizeOutfit();
 		void SetDefaultClothes();
+		void LeaveGroup();
 		void Clone();
 		void Clone(float heading);
 		void ApplyDamage(int damageAmount);
