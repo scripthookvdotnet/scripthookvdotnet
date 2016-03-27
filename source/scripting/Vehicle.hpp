@@ -222,6 +222,31 @@ namespace GTA
 		Armor = 16,
 		FrontWheels = 23,
 		BackWheels = 24, // only for motorcycles
+
+		// Benny's
+
+		PlateHolder = 25,
+		VanityPlates = 26,
+		TrimDesign = 27,
+		Ornaments = 28,
+		Dashboard = 29,
+		DialDesign = 30,
+		DoorSpeakers = 31,
+		Seats = 32,
+		SteeringWheels = 33,
+		ColumnShifterLevers = 34,
+		Plaques = 35,
+		Speakers = 36,
+		Trunk = 37,
+		Hydraulics = 38,
+		EngineBlock = 39,
+		AirFilter = 40,
+		Struts = 41,
+		ArchCover = 42,
+		Aerials = 43,
+		Trim = 44,
+		Tank = 45,
+		Windows = 46,
 		Livery = 48
 	};
 	public enum class VehicleNeonLight
