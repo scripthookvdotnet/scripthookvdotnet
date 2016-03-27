@@ -525,6 +525,16 @@ namespace GTA
 			VehicleColor get();
 			void set(VehicleColor value);
 		}
+		property VehicleColor DashboardColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
+		property VehicleColor TrimColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
 		property int ColorCombination
 		{
 			int get();

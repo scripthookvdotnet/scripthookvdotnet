@@ -310,6 +310,26 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, Handle, static_cast<int>(value), static_cast<int>(RimColor));
 	}
+	VehicleColor Vehicle::DashboardColor::get()
+	{
+		int dashboardColor;
+		Native::Function::Call(static_cast<Native::Hash>(0xB7635E80A5C31BFF), Handle, &dashboardColor);
+		return static_cast<VehicleColor>(dashboardColor);
+	}
+	void Vehicle::DashboardColor::set(VehicleColor value)
+	{
+		Native::Function::Call(static_cast<Native::Hash>(0x6089CDF6A57F326C), Handle, static_cast<int>(value));
+	}
+	VehicleColor Vehicle::TrimColor::get()
+	{
+		int trimColor;
+		Native::Function::Call(static_cast<Native::Hash>(0x7D1464D472D32136), Handle, &trimColor);
+		return static_cast<VehicleColor>(trimColor);
+	}
+	void Vehicle::TrimColor::set(VehicleColor value)
+	{
+		Native::Function::Call(static_cast<Native::Hash>(0xF40DD601A65F7F19), Handle, static_cast<int>(value));
+	}
 	int Vehicle::ColorCombination::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_COLOUR_COMBINATION, Handle);
