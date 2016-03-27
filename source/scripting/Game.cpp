@@ -343,6 +343,11 @@ namespace GTA
 	}
 	int Game::GenerateHash(System::String ^input)
 	{
+		if (Object::ReferenceEquals(input, nullptr))
+		{
+			return 0;
+		}
+
 		System::UInt32 hash = 0;
 		array<System::Char>^ chars = input->ToCharArray();
 
