@@ -165,6 +165,22 @@ namespace GTA
 		{
 			bool get();
 		}
+		static property bool IsScreenFadedIn
+		{
+			bool get();
+		}
+		static property bool IsScreenFadedOut
+		{
+			bool get();
+		}
+		static property bool IsScreenFadingIn
+		{
+			bool get();
+		}
+		static property bool IsScreenFadingOut
+		{
+			bool get();
+		}
 		static property bool IsWaypointActive
 		{
 			bool get();
@@ -208,6 +224,10 @@ namespace GTA
 		static property System::Drawing::Size ScreenResolution
 		{
 			System::Drawing::Size get();
+		}
+		static property bool ShowsPoliceBlipsOnRadar
+		{
+			void set(bool value);
 		}
 		static property bool ThermalVision
 		{
