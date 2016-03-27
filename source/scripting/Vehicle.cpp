@@ -760,6 +760,10 @@ namespace GTA
 		return static_cast<VehicleClass>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_CLASS, Handle));
 	}
 
+	void Vehicle::InstallModKit()
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD_KIT, Handle, 0);
+	}
 	int Vehicle::GetMod(VehicleMod modType)
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_MOD, Handle, static_cast<int>(modType));

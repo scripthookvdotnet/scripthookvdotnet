@@ -766,6 +766,7 @@ namespace GTA
 			VehicleClass get();
 		}
 
+		void InstallModKit();
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
 		int GetModCount(VehicleMod modType);
