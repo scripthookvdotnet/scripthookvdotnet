@@ -650,6 +650,27 @@ namespace GTA
 
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
+	float Vehicle::FuelLevel::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x768: 0x758);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+	}
+	void Vehicle::FuelLevel::set(float value)
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x768 : 0x758);
+
+		*reinterpret_cast<float *>(address + offset) = value;
+	}
 	float Vehicle::CurrentRPM::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);

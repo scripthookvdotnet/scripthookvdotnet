@@ -684,6 +684,11 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
+		property float FuelLevel
+		{
+			float get();
+			void set(float value);
+		}
 		property float CurrentRPM
 		{
 			float get();
