@@ -454,11 +454,7 @@ namespace GTA
 	}
 	bool Entity::HasBone(System::String ^boneName)
 	{
-		if (GetBoneIndex(boneName) != -1)
-		{
-			return true;
-		}
-		return false;
+		return GetBoneIndex(boneName) != -1;
 	}
 
 	void Entity::Delete()
