@@ -195,6 +195,12 @@ namespace GTA
 				}
 			}
 
+			property float default[int]
+			{
+				float get(int index);
+				void set(int index, float value);
+			}
+
 			/// <summary>
 			/// Calculates the length of the vector.
 			/// </summary>
@@ -397,9 +403,26 @@ namespace GTA
 			static Vector3 Cross(Vector3 left, Vector3 right);
 
 			/// <summary>
+			/// Projects a vector onto another vector.
+			/// </summary>
+			/// <param name="vector">The vector to project.</param>
+			/// <param name="onNormal">Vector to project onto, does not assume it is normalized.</param>
+			/// <returns>The projected vector.</returns>
+			static Vector3 Project(Vector3 vector, Vector3 onNormal);
+
+
+			/// <summary>
+			/// Projects a vector onto a plane defined by a normal orthogonal to the plane.
+			/// </summary>
+			/// <param name="vector">The vector to project.</param>
+			/// <param name="planeNormal">Normal of the plane,  does not assume it is normalized.</param>
+			/// <returns>The Projection of vector onto plane.</returns>
+			static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
+
+			/// <summary>
 			/// Returns the reflection of a vector off a surface that has the specified normal. 
 			/// </summary>
-			/// <param name="vector">The source vector.</param>
+			/// <param name="vector">The vector to project onto the plane.</param>
 			/// <param name="normal">Normal of the surface.</param>
 			/// <returns>The reflected vector.</returns>
 			/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 

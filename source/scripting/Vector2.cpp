@@ -43,6 +43,34 @@ namespace GTA
 			return Vector2::Normalize(Vector2(X, Y));
 		}
 
+		float Vector2::default::get(int index)
+		{
+			switch (index)
+			{
+			case 0:
+				return X;
+			case 1:
+				return Y;
+			default:
+				throw gcnew ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+			}
+		}
+
+		void Vector2::default::set(int index, float value)
+		{
+			switch (index)
+			{
+			case 0:
+				X = value;
+				break;
+			case 1:
+				Y = value;
+				break;
+			default:
+				throw gcnew ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+			}
+		}
+
 		float Vector2::Length()
 		{
 			return static_cast<float>(System::Math::Sqrt((X*X) + (Y*Y)));
