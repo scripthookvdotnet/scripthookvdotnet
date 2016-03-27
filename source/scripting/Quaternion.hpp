@@ -293,6 +293,14 @@ namespace GTA
 			static Quaternion operator * (Quaternion left, Quaternion right);
 
 			/// <summary>
+			/// Rotates the point with rotation.
+			/// </summary>
+			/// <param name="rotation">The quaternion to rotate the vector.</param>
+			/// <param name="point">The vector to be rotated.</param>
+			/// <returns>The vector after rotation.</returns>
+			static Vector3 operator * (Quaternion rotation, Vector3 point);
+
+			/// <summary>
 			/// Scales a quaternion by the given value.
 			/// </summary>
 			/// <param name="quaternion">The quaternion to scale.</param>
