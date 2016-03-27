@@ -229,6 +229,7 @@ namespace GTA
 
 		Math::Vector3 GetBoneCoord(int boneIndex);
 		int GetBoneIndex(System::String ^boneName);
+		bool HasBone(System::String ^boneName);
 
 		void Delete();
 		virtual bool Exists();

@@ -244,6 +244,18 @@ namespace GTA
 			GTA::Weather get();
 			void set(GTA::Weather value);
 		}
+		static property GTA::Weather NextWeather
+		{
+			GTA::Weather get();
+			void set(GTA::Weather value);
+		}
+		/// <summary>Gets or sets the current transition ratio of the weather.</summary>
+		/// <value>A Single representing the current time ratio between 0.0f and 1.0f.</value>
+		static property float WeatherTransition
+		{
+			float get();
+			void set(float value);
+		}
 
 		static array<Blip ^> ^GetActiveBlips();
 		static array<Ped ^> ^GetAllPeds();
@@ -280,6 +292,8 @@ namespace GTA
 		static Math::Vector3 GetNextPositionOnSidewalk(Math::Vector3 position);
 		static System::String ^GetZoneName(Math::Vector2 position);
 		static System::String ^GetZoneName(Math::Vector3 position);
+		static System::String ^GetZoneNameLabel(Math::Vector2 position);
+		static System::String ^GetZoneNameLabel(Math::Vector3 position);
 		static System::String ^GetStreetName(Math::Vector2 position);
 		static System::String ^GetStreetName(Math::Vector3 position);
 
@@ -324,6 +338,8 @@ namespace GTA
 		static void DrawLightWithRange(Math::Vector3 position, System::Drawing::Color color, float range, float intensity);
 		static void DrawSpotLight(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
 		static void DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, System::Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout);
+
+		static void TransitionToWeather(GTA::Weather weather, float duration);
 
 	internal:
 		static initonly array<System::String ^> ^_weatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Game.hpp"
 
 namespace GTA
 {
@@ -531,6 +532,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool IsRadioEnabled
+		{
+			void set(bool value);
+		}
 		property bool EngineRunning
 		{
 			bool get();
@@ -711,6 +716,10 @@ namespace GTA
 		{
 			float get();
 			void set(float value);
+		}
+		property GTA::RadioStation RadioStation
+		{
+			void set(GTA::RadioStation value);
 		}
 		property VehicleClass ClassType
 		{

@@ -351,6 +351,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_IS_WANTED, Handle, value);
 	}
+	void Vehicle::IsRadioEnabled::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_RADIO_ENABLED, Handle, value);
+	}
 	bool Vehicle::EngineRunning::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::_IS_VEHICLE_ENGINE_ON, Handle);
@@ -698,6 +702,17 @@ namespace GTA
 		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
 
 		*reinterpret_cast<float *>(address + offset) = value;
+	}
+	void Vehicle::RadioStation::set(GTA::RadioStation value)
+	{
+		if (value == GTA::RadioStation::RadioOff)
+		{
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, "OFF");
+		}
+		else if (System::Enum::IsDefined(value.GetType(), value))
+		{
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Game::_radioNames[static_cast<int>(value)]);
+		}
 	}
 	VehicleClass Vehicle::ClassType::get()
 	{
