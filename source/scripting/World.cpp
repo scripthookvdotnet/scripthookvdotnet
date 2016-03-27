@@ -214,7 +214,7 @@ namespace GTA
 			Native::Function::Call(Native::Hash::_GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 
 			nextWeatherHash = Game::GenerateHash(_weatherNames[static_cast<int>(value)]);
-			Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+			Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, nextWeatherHash, weatherTransition);
 		}
 	}
 	float World::WeatherTransition::get()
@@ -998,7 +998,11 @@ namespace GTA
 
 	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)
 	{
-		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, -1);
+		ShootBullet(sourcePosition, targetPosition, owner, model, damage, -1.0f);
+	}
+	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage, float speed)
+	{
+		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, speed);
 	}
 	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
