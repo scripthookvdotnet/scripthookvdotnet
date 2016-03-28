@@ -62,6 +62,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <!-- Core source files -->
   <ItemGroup>
     <ClCompile Include="source\core\Main.cpp" />
     <ClCompile Include="source\core\Native.cpp" />
@@ -69,12 +70,23 @@
     <ClCompile Include="source\core\Script.cpp" />
     <ClCompile Include="source\core\ScriptDomain.cpp" />
     <ClCompile Include="source\core\Settings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\core\Native.hpp" />
+    <ClInclude Include="source\core\NativeHashes.hpp" />
+    <ClInclude Include="source\core\NativeMemory.hpp" />
+    <ClInclude Include="source\core\Script.hpp" />
+    <ClInclude Include="source\core\ScriptDomain.hpp" />
+    <ClInclude Include="source\core\Settings.hpp" />
+  </ItemGroup>
+  <!-- Additional source files -->
+  <ItemGroup>
     <ClCompile Include="source\scripting\Audio.cpp" />
     <ClCompile Include="source\scripting\Blip.cpp" />
     <ClCompile Include="source\scripting\Camera.cpp" />
     <ClCompile Include="source\scripting\Entity.cpp" />
-    <ClCompile Include="source\scripting\EuphoriaBase.cpp" />
     <ClCompile Include="source\scripting\Euphoria.cpp" />
+    <ClCompile Include="source\scripting\EuphoriaBase.cpp" />
     <ClCompile Include="source\scripting\Game.cpp" />
     <ClCompile Include="source\scripting\Matrix.cpp" />
     <ClCompile Include="source\scripting\Model.cpp" />
@@ -95,19 +107,13 @@
     <ClCompile Include="source\scripting\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\core\Native.hpp" />
-    <ClInclude Include="source\core\NativeHashes.hpp" />
-    <ClInclude Include="source\core\NativeMemory.hpp" />
-    <ClInclude Include="source\core\Script.hpp" />
-    <ClInclude Include="source\core\ScriptDomain.hpp" />
-    <ClInclude Include="source\core\Settings.hpp" />
     <ClInclude Include="source\scripting\Audio.hpp" />
-    <ClInclude Include="source\scripting\Controls.hpp" />
     <ClInclude Include="source\scripting\Blip.hpp" />
+    <ClInclude Include="source\scripting\Controls.hpp" />
     <ClInclude Include="source\scripting\Camera.hpp" />
     <ClInclude Include="source\scripting\Entity.hpp" />
-    <ClInclude Include="source\scripting\EuphoriaBase.hpp" />
     <ClInclude Include="source\scripting\Euphoria.hpp" />
+    <ClInclude Include="source\scripting\EuphoriaBase.hpp" />
     <ClInclude Include="source\scripting\EuphoriaHelpers.hpp" />
     <ClInclude Include="source\scripting\Game.hpp" />
     <ClInclude Include="source\scripting\Interface.hpp" />
