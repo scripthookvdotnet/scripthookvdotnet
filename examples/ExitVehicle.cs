@@ -8,18 +8,18 @@ public class ExitVehicle : Script
 		Tick += OnTick;
 	}
 
-	DateTime mLastExit;
+	DateTime _lastExit;
 
 	void OnTick(object sender, EventArgs e)
 	{
 		Ped player = Game.Player.Character;
 
-		if (Game.IsControlPressed(2, Control.VehicleExit) && DateTime.Now > this.mLastExit && player.IsInVehicle())
+		if (Game.IsControlPressed(2, Control.VehicleExit) && DateTime.Now > _lastExit && player.IsInVehicle())
 		{
 			Wait(250);
 
 			Vehicle vehicle = player.CurrentVehicle;
-			bool isDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
+			bool isPlayerTheDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
 
 			if (Game.IsControlPressed(2, Control.VehicleExit))
 			{
@@ -31,13 +31,13 @@ public class ExitVehicle : Script
 
 				Wait(0);
 
-				if (isDriver)
+				if (isPlayerTheDriver)
 				{
 					vehicle.EngineRunning = true;
 				}
 			}
 
-			this.mLastExit = DateTime.Now + TimeSpan.FromMilliseconds(2000);
+			_lastExit = DateTime.Now + TimeSpan.FromMilliseconds(2000);
 		}
 	}
 }
