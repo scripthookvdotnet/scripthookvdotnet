@@ -105,6 +105,11 @@ namespace GTA
 	public value class Global
 	{
 	public:
+		property unsigned long long *MemoryAddress
+		{
+			unsigned long long *get();
+		}
+
 		void SetInt(int value);
 		void SetFloat(float value);
 		void SetString(System::String ^value);
@@ -156,6 +161,26 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		static property bool IsLoading
+		{
+			bool get();
+		}
+		static property bool IsScreenFadedIn
+		{
+			bool get();
+		}
+		static property bool IsScreenFadedOut
+		{
+			bool get();
+		}
+		static property bool IsScreenFadingIn
+		{
+			bool get();
+		}
+		static property bool IsScreenFadingOut
+		{
+			bool get();
+		}
 		static property bool IsWaypointActive
 		{
 			bool get();
@@ -199,6 +224,10 @@ namespace GTA
 		static property System::Drawing::Size ScreenResolution
 		{
 			System::Drawing::Size get();
+		}
+		static property bool ShowsPoliceBlipsOnRadar
+		{
+			void set(bool value);
 		}
 		static property bool ThermalVision
 		{

@@ -296,6 +296,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_SPEED, Handle, value);
 	}
+	int *Entity::MemoryAddress::get()
+	{
+		return reinterpret_cast<int *>(Native::MemoryAccess::GetAddressOfEntity(Handle));
+	}
 	GTA::Model Entity::Model::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, Handle);
@@ -438,6 +442,19 @@ namespace GTA
 	void Entity::ResetAlpha()
 	{
 		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, Handle);
+	}
+
+	Math::Vector3 Entity::GetBoneCoord(int boneIndex)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneIndex);
+	}
+	int Entity::GetBoneIndex(System::String ^boneName)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
+	}
+	bool Entity::HasBone(System::String ^boneName)
+	{
+		return GetBoneIndex(boneName) != -1;
 	}
 
 	void Entity::Delete()

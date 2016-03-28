@@ -147,6 +147,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_BEING_STEALTH_KILLED, Handle);
 	}
+	void Ped::Voice::set(System::String ^value)
+	{
+		return Native::Function::Call(Native::Hash::SET_AMBIENT_VOICE_NAME, Handle, value);
+	}
 	bool Ped::WasKilledByStealth::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::WAS_PED_KILLED_BY_STEALTH, Handle);
@@ -256,6 +260,10 @@ namespace GTA
 
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, Handle, false);
 	}
+	Vehicle ^Ped::LastVehicle::get()
+	{
+		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, Handle, true);
+	}
 	PedGroup ^Ped::CurrentPedGroup::get()
 	{
 		if (!IsInGroup)
@@ -331,6 +339,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
 	}
+	void Ped::CanWearHelmet::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_HELMET, Handle, value);
+	}
+	bool Ped::CanWrithe::get()
+	{
+		return !GetConfigFlag(281);
+	}
+	void Ped::CanWrithe::set(bool value)
+	{
+		SetConfigFlag(281, !value);
+	}
 	bool Ped::IsStopped::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_STOPPED, Handle);
@@ -338,6 +358,10 @@ namespace GTA
 	bool Ped::IsWalking::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_WALKING, Handle);
+	}
+	bool Ped::IsWearingHelmet::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_WEARING_HELMET, Handle);
 	}
 	bool Ped::IsJumpingOutOfVehicle::get()
 	{
@@ -354,6 +378,10 @@ namespace GTA
 	void Ped::NeverLeavesGroup::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_NEVER_LEAVES_GROUP, Handle, value);
+	}
+	void Ped::StaysInVehicleWhenJacked::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_STAY_IN_VEHICLE_WHEN_JACKED, Handle, value);
 	}
 	int Ped::RelationshipGroup::get()
 	{
@@ -513,6 +541,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::CLEAR_PED_BLOOD_DAMAGE, Handle);
 	}
+	void Ped::RandomizeOutfit()
+	{
+		Native::Function::Call(Native::Hash::SET_PED_RANDOM_COMPONENT_VARIATION, Handle, false);
+	}
+	void Ped::SetDefaultClothes()
+	{
+		Native::Function::Call(Native::Hash::SET_PED_DEFAULT_COMPONENT_VARIATION, Handle);
+	}
+	void Ped::LeaveGroup()
+	{
+		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, Handle);
+	}
 	void Ped::Clone()
 	{
 		Ped::Clone(0.0F);
@@ -536,6 +576,28 @@ namespace GTA
 	int Ped::GetBoneIndex(Bone BoneID)
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, Handle, (int)BoneID);
+	}
+
+	bool Ped::GetConfigFlag(int flagID)
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_PED_CONFIG_FLAG, Handle, flagID, true);
+	}
+	void Ped::SetConfigFlag(int flagID, bool value)
+	{
+		Native::Function::Call(Native::Hash::GET_PED_CONFIG_FLAG, Handle, flagID, value);
+	}
+	void Ped::ResetConfigFlag(int flagID)
+	{
+		Native::Function::Call(Native::Hash::SET_PED_RESET_FLAG, Handle, flagID, true);
+	}
+
+	void Ped::GiveHelmet(bool canBeRemovedByPed, HelmetType helmetType, int textureIndex)
+	{
+		Native::Function::Call(Native::Hash::GIVE_PED_HELMET, Handle, !canBeRemovedByPed, (int)helmetType, textureIndex);
+	}
+	void Ped::RemoveHelmet(bool instantly)
+	{
+		Native::Function::Call(Native::Hash::REMOVE_PED_HELMET, Handle, instantly);
 	}
 
 	PedGroup::PedGroup() : _handle(Native::Function::Call<int>(Native::Hash::CREATE_GROUP, 0))

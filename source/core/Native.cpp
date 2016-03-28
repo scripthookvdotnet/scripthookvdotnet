@@ -72,9 +72,13 @@ namespace GTA
 				{
 					return static_cast<bool>(value) ? 1 : 0;
 				}
-				if (type == Int32::typeid || type == UInt32::typeid)
+				if (type == Int32::typeid)
 				{
 					return static_cast<int>(value);
+				}
+				if (type == UInt32::typeid)
+				{
+					return static_cast<unsigned int>(value);
 				}
 				if (type == Single::typeid)
 				{
@@ -145,9 +149,13 @@ namespace GTA
 				{
 					return *reinterpret_cast<int *>(value) != 0;
 				}
-				if (type == Int32::typeid || type == UInt32::typeid)
+				if (type == Int32::typeid)
 				{
 					return *reinterpret_cast<int *>(value);
+				}
+				if (type == UInt32::typeid)
+				{
+					return *reinterpret_cast<unsigned int *>(value);
 				}
 				if (type == Single::typeid)
 				{

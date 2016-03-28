@@ -16,6 +16,11 @@ namespace GTA
 	{
 	}
 
+	unsigned long long *Global::MemoryAddress::get()
+	{
+		return reinterpret_cast<unsigned long long *>(this->mAddress);
+	}
+
 	void Global::SetInt(int value)
 	{
 		*reinterpret_cast<int *>(this->mAddress) = value;
@@ -88,6 +93,26 @@ namespace GTA
 	void Game::IsPaused::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
+	}
+	bool Game::IsLoading::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_IS_LOADING_SCREEN_ACTIVE);
+	}
+	bool Game::IsScreenFadedIn::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADED_IN);
+	}
+	bool Game::IsScreenFadedOut::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADED_OUT);
+	}
+	bool Game::IsScreenFadingIn::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADING_IN);
+	}
+	bool Game::IsScreenFadingOut::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADING_OUT);
 	}
 	bool Game::IsWaypointActive::get()
 	{
@@ -172,6 +197,10 @@ namespace GTA
 		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
 
 		return System::Drawing::Size(w, h);
+	}
+	void Game::ShowsPoliceBlipsOnRadar::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_POLICE_RADAR_BLIPS, value);
 	}
 	bool Game::ThermalVision::get()
 	{
@@ -314,6 +343,11 @@ namespace GTA
 	}
 	int Game::GenerateHash(System::String ^input)
 	{
+		if (Object::ReferenceEquals(input, nullptr))
+		{
+			return 0;
+		}
+
 		System::UInt32 hash = 0;
 		array<System::Char>^ chars = input->ToCharArray();
 

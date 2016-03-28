@@ -310,6 +310,26 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA_COLOURS, Handle, static_cast<int>(value), static_cast<int>(RimColor));
 	}
+	VehicleColor Vehicle::DashboardColor::get()
+	{
+		int dashboardColor;
+		Native::Function::Call(static_cast<Native::Hash>(0xB7635E80A5C31BFF), Handle, &dashboardColor);
+		return static_cast<VehicleColor>(dashboardColor);
+	}
+	void Vehicle::DashboardColor::set(VehicleColor value)
+	{
+		Native::Function::Call(static_cast<Native::Hash>(0x6089CDF6A57F326C), Handle, static_cast<int>(value));
+	}
+	VehicleColor Vehicle::TrimColor::get()
+	{
+		int trimColor;
+		Native::Function::Call(static_cast<Native::Hash>(0x7D1464D472D32136), Handle, &trimColor);
+		return static_cast<VehicleColor>(trimColor);
+	}
+	void Vehicle::TrimColor::set(VehicleColor value)
+	{
+		Native::Function::Call(static_cast<Native::Hash>(0xF40DD601A65F7F19), Handle, static_cast<int>(value));
+	}
 	int Vehicle::ColorCombination::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_COLOUR_COMBINATION, Handle);
@@ -350,6 +370,10 @@ namespace GTA
 	void Vehicle::IsWanted::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_IS_WANTED, Handle, value);
+	}
+	void Vehicle::IsRadioEnabled::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_RADIO_ENABLED, Handle, value);
 	}
 	bool Vehicle::EngineRunning::get()
 	{
@@ -483,7 +507,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		const int offset = (static_cast<int>(Game::Version) > 3 ? 0x844 : 0x834);
+		const int offset = (static_cast<int>(Game::Version) > 4 ? 0x844 : 0x834);
 
 		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 2)) != 0;
 	}
@@ -511,7 +535,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		const int offset = (static_cast<int>(Game::Version) > 3 ? 0x844 : 0x834);
+		const int offset = (static_cast<int>(Game::Version) > 4 ? 0x844 : 0x834);
 
 		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 1)) != 0;
 	}
@@ -616,7 +640,7 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A0: 0x790);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x7A0: 0x790);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -624,7 +648,7 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x7A6 : 0x796);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -642,15 +666,36 @@ namespace GTA
 			return;
 		}
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x7A6 : 0x796);
 
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
+	}
+	float Vehicle::FuelLevel::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x768: 0x758);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+	}
+	void Vehicle::FuelLevel::set(float value)
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		if (address == 0)
+		{
+			return;
+		}
+
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x768 : 0x758);
+
+		*reinterpret_cast<float *>(address + offset) = value;
 	}
 	float Vehicle::CurrentRPM::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 2004 : 1988);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 2004 : 1988);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -658,7 +703,7 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7E4 : 0x7D4);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x7E4 : 0x7D4);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -666,7 +711,7 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8AC : 0x89C);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x8AC : 0x89C);
 
 		if (!address == 0)
 		{
@@ -682,7 +727,7 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x8A4 : 0x894);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -695,15 +740,30 @@ namespace GTA
 			return;
 		}
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x8A4 : 0x894);
 
 		*reinterpret_cast<float *>(address + offset) = value;
+	}
+	void Vehicle::RadioStation::set(GTA::RadioStation value)
+	{
+		if (value == GTA::RadioStation::RadioOff)
+		{
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, "OFF");
+		}
+		else if (System::Enum::IsDefined(value.GetType(), value))
+		{
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Game::_radioNames[static_cast<int>(value)]);
+		}
 	}
 	VehicleClass Vehicle::ClassType::get()
 	{
 		return static_cast<VehicleClass>(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_CLASS, Handle));
 	}
 
+	void Vehicle::InstallModKit()
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_MOD_KIT, Handle, 0);
+	}
 	int Vehicle::GetMod(VehicleMod modType)
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_VEHICLE_MOD, Handle, static_cast<int>(modType));

@@ -44,6 +44,39 @@ namespace GTA
 			return Vector3::Normalize(Vector3(X, Y, Z));
 		}
 
+		float Vector3::default::get(int index)
+		{
+			switch (index)
+			{
+			case 0:
+				return X;
+			case 1:
+				return Y;
+			case 2:
+				return Z;
+			default:
+				throw gcnew ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
+			}
+		}
+
+		void Vector3::default::set(int index, float value)
+		{
+			switch (index)
+			{
+			case 0:
+				X = value;
+				break;
+			case 1:
+				Y = value;
+				break;
+			case 2:
+				Z = value;
+				break;
+			default:
+				throw gcnew ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
+			}
+		}
+
 		float Vector3::Length()
 		{
 			return static_cast<float>(System::Math::Sqrt((X*X) + (Y*Y) + (Z*Z)));
@@ -211,6 +244,14 @@ namespace GTA
 			result.Y = left.Z * right.X - left.X * right.Z;
 			result.Z = left.X * right.Y - left.Y * right.X;
 			return result;
+		}
+		Vector3 Vector3::Project(Vector3 vector, Vector3 onNormal)
+		{
+			return onNormal * Dot(vector, onNormal) / Dot(onNormal, onNormal);
+		}
+		Vector3 Vector3::ProjectOnPlane(Vector3 vector, Vector3 planeNormal)
+		{
+			return (vector - Project(vector, planeNormal));
 		}
 		Vector3 Vector3::Reflect(Vector3 vector, Vector3 normal)
 		{

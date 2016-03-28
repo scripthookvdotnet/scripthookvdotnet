@@ -160,6 +160,10 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		property int *MemoryAddress
+		{
+			int *get();
+		}
 		property GTA::Model Model
 		{
 			GTA::Model get();
@@ -222,6 +226,10 @@ namespace GTA
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
 
 		void ResetAlpha();
+
+		Math::Vector3 GetBoneCoord(int boneIndex);
+		int GetBoneIndex(System::String ^boneName);
+		bool HasBone(System::String ^boneName);
 
 		void Delete();
 		virtual bool Exists();
