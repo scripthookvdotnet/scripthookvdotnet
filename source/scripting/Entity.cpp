@@ -29,9 +29,21 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_FORWARD_VECTOR, Handle);
 	}
+	bool Entity::FreezePosition::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x2E) & (1 << 1)) != 0;
+	}
 	void Entity::FreezePosition::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::FREEZE_ENTITY_POSITION, Handle, value);
+	}
+	bool Entity::HasCollision::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x29) & (1 << 1)) != 0;
 	}
 	void Entity::HasCollision::set(bool value)
 	{
@@ -40,6 +52,10 @@ namespace GTA
 	void Entity::HasGravity::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_HAS_GRAVITY, Handle, value);
+	}
+	bool Entity::HasCollidedWithAnything::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
 	}
 	float Entity::Heading::get()
 	{
@@ -121,7 +137,7 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 10)) != 0;
+		return address == 0 ? false : (*reinterpret_cast<int *>(address + 392) & (1 << 11)) != 0;
 	}
 	void Entity::IsExplosionProof::set(bool value)
 	{
@@ -134,11 +150,11 @@ namespace GTA
 
 		if (value)
 		{
-			*reinterpret_cast<int *>(address + 392) |= (1 << 10);
+			*reinterpret_cast<int *>(address + 392) |= (1 << 11);
 		}
 		else
 		{
-			*reinterpret_cast<int *>(address + 392) &= ~(1 << 10);
+			*reinterpret_cast<int *>(address + 392) &= ~(1 << 11);
 		}
 	}
 	bool Entity::IsFireProof::get()
@@ -280,6 +296,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_ENTITY_MAX_SPEED, Handle, value);
 	}
+	int *Entity::MemoryAddress::get()
+	{
+		return reinterpret_cast<int *>(Native::MemoryAccess::GetAddressOfEntity(Handle));
+	}
 	GTA::Model Entity::Model::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_MODEL, Handle);
@@ -380,6 +400,10 @@ namespace GTA
 	{
 		return Native::Function::Call<Entity^>(Native::Hash::GET_ENTITY_ATTACHED_TO, Handle);
 	}
+	void Entity::SetNoCollision(Entity^ entity, bool toggle)
+	{
+		Native::Function::Call(Native::Hash::SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity->Handle, !toggle);
+	}
 	void Entity::Detach()
 	{
 		Native::Function::Call(Native::Hash::DETACH_ENTITY, Handle, 1, 1);
@@ -420,6 +444,19 @@ namespace GTA
 		Native::Function::Call(Native::Hash::RESET_ENTITY_ALPHA, Handle);
 	}
 
+	Math::Vector3 Entity::GetBoneCoord(int boneIndex)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneIndex);
+	}
+	int Entity::GetBoneIndex(System::String ^boneName)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
+	}
+	bool Entity::HasBone(System::String ^boneName)
+	{
+		return GetBoneIndex(boneName) != -1;
+	}
+
 	void Entity::Delete()
 	{
 		int handle = Handle;
@@ -438,6 +475,16 @@ namespace GTA
 	{
 		int handle = Handle;
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+	}
+	bool Entity::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Entity ^>(value));
 	}
 	bool Entity::Equals(Entity ^entity)
 	{

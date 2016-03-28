@@ -3,6 +3,7 @@
 #include "Model.hpp"
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -10,12 +11,12 @@ namespace GTA
 	ref class Blip;
 	#pragma endregion
 
-	public ref class Entity abstract
+	public ref class Entity abstract : System::IEquatable<Entity ^>, IHandleable, ISpatial
 	{
 	public:
 		Entity(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -34,15 +35,21 @@ namespace GTA
 		}
 		property bool FreezePosition
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool HasCollision
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool HasGravity
 		{
 			void set(bool value);
+		}
+		property bool HasCollidedWithAnything
+		{
+			bool get();
 		}
 		property float Heading
 		{
@@ -153,11 +160,15 @@ namespace GTA
 		{
 			void set(float value);
 		}
+		property int *MemoryAddress
+		{
+			int *get();
+		}
 		property GTA::Model Model
 		{
 			GTA::Model get();
 		}
-		property Math::Vector3 Position
+		virtual property Math::Vector3 Position
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
@@ -175,7 +186,7 @@ namespace GTA
 		{
 			Math::Vector3 get();
 		}
-		property Math::Vector3 Rotation
+		virtual property Math::Vector3 Rotation
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
@@ -202,6 +213,7 @@ namespace GTA
 		bool IsAttached();
 		bool IsAttachedTo(Entity ^entity);
 		Entity ^GetEntityAttachedTo();
+		void SetNoCollision(Entity^ entity, bool toggle);
 		void AttachTo(Entity^ entity, int boneIndex);
 		void AttachTo(Entity^ entity, int boneIndex, Math::Vector3 position, Math::Vector3 rotation);
 		void Detach();
@@ -215,10 +227,15 @@ namespace GTA
 
 		void ResetAlpha();
 
+		Math::Vector3 GetBoneCoord(int boneIndex);
+		int GetBoneIndex(System::String ^boneName);
+		bool HasBone(System::String ^boneName);
+
 		void Delete();
-		bool Exists();
+		virtual bool Exists();
 		static bool Exists(Entity ^entity);
 		void MarkAsNoLongerNeeded();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Entity ^entity);
 
 		virtual inline int GetHashCode() override

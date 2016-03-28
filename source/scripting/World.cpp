@@ -193,6 +193,42 @@ namespace GTA
 			Native::Function::Call(Native::Hash::SET_WEATHER_TYPE_NOW, _weatherNames[static_cast<int>(value)]);
 		}
 	}
+	GTA::Weather World::NextWeather::get()
+	{
+		for (int i = 0, length = _weatherNames->Length; i < length; i++)
+		{
+			if (Native::Function::Call<bool>(Native::Hash::IS_NEXT_WEATHER_TYPE, _weatherNames[i]))
+			{
+				return static_cast<GTA::Weather>(i);
+			}
+		}
+		return GTA::Weather::Unknown;
+	}
+	void World::NextWeather::set(GTA::Weather value)
+	{
+		if (Enum::IsDefined(value.GetType(), value) && value != GTA::Weather::Unknown)
+		{
+			int currentWeatherHash, nextWeatherHash;
+			float weatherTransition;
+
+			Native::Function::Call(Native::Hash::_GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+
+			nextWeatherHash = Game::GenerateHash(_weatherNames[static_cast<int>(value)]);
+			Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, nextWeatherHash, weatherTransition);
+		}
+	}
+	float World::WeatherTransition::get()
+	{
+		int currentWeatherHash, nextWeatherHash;
+		float weatherTransition;
+
+		Native::Function::Call(Native::Hash::_GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+		return weatherTransition;
+	}
+	void World::WeatherTransition::set(float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_TRANSITION, 0, 0, value);
+	}
 
 	array<Blip ^> ^World::GetActiveBlips()
 	{
@@ -631,7 +667,7 @@ namespace GTA
 	}
 	System::String ^World::GetZoneName(Math::Vector3 position)
 	{
-		System::String ^code = Native::Function::Call<System::String ^>(Native::Hash::GET_NAME_OF_ZONE, position.X, position.Y, position.Z);
+		System::String ^code = GetZoneNameLabel(position);
 
 		ZoneID id;
 
@@ -822,6 +858,14 @@ namespace GTA
 
 		return System::String::Empty;
 	}
+	System::String ^World::GetZoneNameLabel(Math::Vector2 position)
+	{
+		return GetZoneNameLabel(Math::Vector3(position.X, position.Y, 0));
+	}
+	System::String ^World::GetZoneNameLabel(Math::Vector3 position)
+	{
+		return Native::Function::Call<System::String ^>(Native::Hash::GET_NAME_OF_ZONE, position.X, position.Y, position.Z);
+	}
 	System::String ^World::GetStreetName(Math::Vector2 position)
 	{
 		return GetStreetName(Math::Vector3(position.X, position.Y, 0));
@@ -954,7 +998,11 @@ namespace GTA
 
 	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage)
 	{
-		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, -1);
+		ShootBullet(sourcePosition, targetPosition, owner, model, damage, -1.0f);
+	}
+	void World::ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage, float speed)
+	{
+		Native::Function::Call(Native::Hash::SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner->Handle, 1, 0, speed);
 	}
 	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
@@ -1070,5 +1118,12 @@ namespace GTA
 	void World::DrawSpotLightWithShadow(Math::Vector3 pos, Math::Vector3 dir, Drawing::Color color, float distance, float brightness, float roundness, float radius, float fadeout)
 	{
 		Native::Function::Call(Native::Hash::_DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+	}
+	void World::TransitionToWeather(GTA::Weather value, float duration)
+	{
+		if (Enum::IsDefined(value.GetType(), value) && value != GTA::Weather::Unknown)
+		{
+			Native::Function::Call(Native::Hash::_SET_WEATHER_TYPE_OVER_TIME, _weatherNames[static_cast<int>(value)], duration);
+		}
 	}
 }

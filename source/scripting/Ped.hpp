@@ -2,9 +2,12 @@
 
 #include "Entity.hpp"
 #include "Euphoria.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
+	using namespace System::Collections;
+
 	#pragma region Forward Declarations
 	ref class Tasks;
 	ref class PedGroup;
@@ -130,6 +133,12 @@ namespace GTA
 		RB_Neck_1 = 0x8b93,
 		IK_Root = 0xdd1c
 	};
+	public enum class HelmetType : System::UInt32
+	{
+		RegularMotorcycleHelmet = 4096,
+		FiremanHelmet = 16384,
+		PilotHeadset = 32768
+	};
 	public enum class FiringPattern : System::UInt32
 	{
 		Default = 0,
@@ -189,6 +198,7 @@ namespace GTA
 		}
 		property bool CanSufferCriticalHits
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool CanFlyThroughWindscreen
@@ -208,8 +218,21 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool CanBeShotInVehicle
+		{
+			void set(bool value);
+		}
 		property bool CanPlayGestures
 		{
+			void set(bool value);
+		}
+		property bool CanWearHelmet
+		{
+			void set(bool value);
+		}
+		property bool CanWrithe
+		{
+			bool get();
 			void set(bool value);
 		}
 		property PedGroup ^CurrentPedGroup
@@ -377,11 +400,19 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsInParachuteFreeFall
+		{
+			bool get();
+		}
 		property bool IsInSub
 		{
 			bool get();
 		}
 		property bool IsInTrain
+		{
+			bool get();
+		}
+		property bool IsInTaxi
 		{
 			bool get();
 		}
@@ -449,9 +480,17 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsWearingHelmet
+		{
+			bool get();
+		}
 		property bool IsJumpingOutOfVehicle
 		{
 			bool get();
+		}
+		property Vehicle ^LastVehicle
+		{
+			Vehicle ^get();
 		}
 		property float MaxDrivingSpeed
 		{
@@ -471,14 +510,26 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool StaysInVehicleWhenJacked
+		{
+			void set(bool value);
+		}
 		property int RelationshipGroup
 		{
 			int get();
 			void set(int group);
 		}
+		property VehicleSeat SeatIndex
+		{
+			VehicleSeat get();
+		}
 		property int ShootRate
 		{
 			void set(int value);
+		}
+		property float Sweat
+		{
+			void set(float value);
 		}
 		property Tasks ^Task
 		{
@@ -487,6 +538,10 @@ namespace GTA
 		property int TaskSequenceProgress
 		{
 			int get();
+		}
+		property System::String ^Voice
+		{
+			void set(System::String ^value);
 		}
 		property bool WasKilledByStealth
 		{
@@ -524,12 +579,22 @@ namespace GTA
 		void Kill();
 		void ResetVisibleDamage();
 		void ClearBloodDamage();
+		void RandomizeOutfit();
+		void SetDefaultClothes();
+		void LeaveGroup();
 		void Clone();
 		void Clone(float heading);
 		void ApplyDamage(int damageAmount);
 		Math::Vector3 GetBoneCoord(Bone BoneID);
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);
 		int GetBoneIndex(Bone BoneID);
+
+		bool GetConfigFlag(int flagID);
+		void SetConfigFlag(int flagID, bool value);
+		void ResetConfigFlag(int flagID);
+
+		void GiveHelmet(bool canBeRemovedByPed, HelmetType helmetType, int textureIndex);
+		void RemoveHelmet(bool instantly);
 
 	private:
 		Tasks ^_tasks;
@@ -545,14 +610,14 @@ namespace GTA
 		Line = 3
 	};
 
-	public ref class PedGroup
+	public ref class PedGroup : System::IEquatable<PedGroup ^>, Generic::IEnumerable<Ped ^>, IHandleable
 	{
 	public:
 		PedGroup();
 		PedGroup(int handle);
 		~PedGroup();
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -575,13 +640,15 @@ namespace GTA
 
 		void Add(Ped ^ped, bool leader);
 		void Remove(Ped ^ped);
-		bool Exists();
 		Ped ^GetMember(int index);
+		virtual bool Exists();
 		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(PedGroup ^pedGroup);
 
-		System::Collections::Generic::List<Ped ^> ^ToList(bool includingLeader);
+		array<Ped ^> ^ToArray(bool includingLeader);
+		Generic::List<Ped ^> ^ToList(bool includingLeader);
 
 		virtual inline int GetHashCode() override
 		{
@@ -599,6 +666,65 @@ namespace GTA
 		static inline bool operator!=(PedGroup ^left, PedGroup ^right)
 		{
 			return !operator==(left, right);
+		}
+
+		// Enumerator
+		ref struct enumerator : Generic::IEnumerator<Ped^>
+		{
+			enumerator(PedGroup^ group)
+			{
+				colInst = group;
+				currentIndex = -2;
+			}
+
+			virtual bool MoveNext() = Generic::IEnumerator<Ped^>::MoveNext
+			{
+				if (currentIndex < (colInst->MemberCount - 1))
+				{
+					currentIndex++;
+					currentPed = currentIndex < 0 ? colInst->Leader : colInst->GetMember(currentIndex);
+
+					if (!Object::ReferenceEquals(currentPed, nullptr) && currentPed->Exists())
+					{
+						return true;
+					}
+					return MoveNext();
+				}
+			return false;
+			}
+
+			virtual property Ped^ Current
+			{
+				Ped^ get()
+				{
+					return currentPed;
+				}
+			};
+			// This is required as IEnumerator<T> also implements IEnumerator
+			virtual property Object^ Current2
+			{
+				virtual Object^ get() sealed = System::Collections::IEnumerator::Current::get
+				{
+					return Current;
+				}
+			};
+
+			virtual void Reset() = Generic::IEnumerator<Ped^>::Reset{}
+			~enumerator() {}
+
+			PedGroup^ colInst;
+			int currentIndex;
+			Ped^ currentPed;
+		};
+
+		virtual System::Collections::IEnumerator^ PedGroup::GetEnumerator2() sealed = System::Collections::IEnumerable::GetEnumerator
+		{
+			return gcnew enumerator(this);
+		}
+
+		virtual Generic::IEnumerator<Ped^>^ PedGroup::GetEnumerator()
+		{
+			return gcnew enumerator(this);
 		}
 
 	private:

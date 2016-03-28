@@ -25,7 +25,7 @@ namespace GTA
 	{
 		[System::SerializableAttribute]
 		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential, Pack = 4)]
-		public value class Vector2
+		public value class Vector2 : System::IEquatable<Vector2>
 		{
 		public:
 			/// <summary>
@@ -46,6 +46,14 @@ namespace GTA
 			/// <param name="x">Initial value for the X component of the vector.</param>
 			/// <param name="y">Initial value for the Y component of the vector.</param>
 			Vector2(float x, float y);
+
+			/// <summary>
+			/// Returns this vector with a magnitude of 1.
+			/// </summary>
+			property Vector2 Normalized
+			{
+				Vector2 get();
+			}
 
 			/// <summary>
 			/// Returns a null vector. (0,0)
@@ -99,6 +107,12 @@ namespace GTA
 				}
 			}
 
+			property float default[int]
+			{
+				float get(int index);
+				void set(int index, float value);
+			}
+
 			/// <summary>
 			/// Calculates the length of the vector.
 			/// </summary>
@@ -122,6 +136,45 @@ namespace GTA
 			/// <param name="position">The second vector to calculate the distance to.</param>
 			/// <returns>The distance to the other vector.</returns>
 			float DistanceTo(Vector2 position);
+
+			/// <summary>
+			/// Calculates the squared distance between two vectors.
+			/// </summary>
+			/// <param name="position">The second vector to calculate the squared distance to.</param>
+			/// <returns>The squared distance to the other vector.</returns>
+			float DistanceToSquared(Vector2 position);
+
+			/// <summary>
+			/// Calculates the distance between two vectors.
+			/// </summary>
+			/// <param name="position2">The first vector to calculate the distance to the second vector.</param>
+			/// <param name="position2">The second vector to calculate the distance to the first vector.</param>
+			/// <returns>The distance between the two vectors.</returns>
+			static float Distance(Vector2 position1, Vector2 position2);
+
+			/// <summary>
+			/// Calculates the squared distance between two vectors.
+			/// </summary>
+			/// <param name="position2">The first vector to calculate the squared distance to the second vector.</param>
+			/// <param name="position2">The second vector to calculate the squared distance to the first vector.</param>
+			/// <returns>The squared distance between the two vectors.</returns>
+			static float DistanceSquared(Vector2 position1, Vector2 position2);
+
+			/// <summary>
+			/// Returns the angle in degrees between from and to.
+			/// The angle returned is always the acute angle between the two vectors.
+			/// </summary>
+			static float Angle(Vector2 from, Vector2 to);
+
+			/// <summary>
+			/// Returns the signed angle in degrees between from and to.
+			/// </summary>
+			static float SignedAngle(Vector2 from, Vector2 to);
+
+			/// <summary>
+			/// Converts a vector to a heading.
+			/// </summary>
+			float ToHeading();
 
 			/// <summary>
 			/// Returns a new normalized vector with random X and Y components.

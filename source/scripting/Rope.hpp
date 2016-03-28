@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -8,12 +9,12 @@ namespace GTA
 	ref class Entity;
 	#pragma endregion
 
-	public ref class Rope sealed
+	public ref class Rope sealed : System::IEquatable<Rope ^>, IHandleable
 	{
 	public:
 		Rope(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -38,9 +39,10 @@ namespace GTA
 		void UnpinVertex(int vertex);
 		Math::Vector3 GetVertexCoord(int vertex);
 
-		bool Exists();
+		virtual bool Exists();
 		static bool Exists(Rope ^rope);
 		void Delete();
+		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Rope ^rope);
 
 		virtual inline int GetHashCode() override

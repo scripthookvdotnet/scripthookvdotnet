@@ -82,7 +82,7 @@ namespace GTA
 	}
 	bool Model::IsCargobob::get()
 	{
-		return Hash == static_cast<int>(Native::VehicleHash::Cargobob) || Hash == static_cast<int>(Native::VehicleHash::Cargobob2) || Hash == static_cast<int>(Native::VehicleHash::Cargobob3);
+		return Hash == static_cast<int>(Native::VehicleHash::Cargobob) || Hash == static_cast<int>(Native::VehicleHash::Cargobob2) || Hash == static_cast<int>(Native::VehicleHash::Cargobob3) || Hash == static_cast<int>(Native::VehicleHash::Cargobob4);
 	}
 
 	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
@@ -110,13 +110,13 @@ namespace GTA
 	{
 		Request();
 
-		const System::DateTime endtime = timeout >= 0 ? System::DateTime::Now + System::TimeSpan(0, 0, 0, 0, timeout) : System::DateTime::MaxValue;
+		const System::DateTime endtime = timeout >= 0 ? System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, timeout) : System::DateTime::MaxValue;
 
 		while (!IsLoaded)
 		{
 			Script::Yield();
 
-			if (System::DateTime::Now >= endtime)
+			if (System::DateTime::UtcNow >= endtime)
 			{
 				return false;
 			}

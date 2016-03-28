@@ -108,6 +108,16 @@ namespace GTA
 		int id = Handle;
 		Native::Function::Call(Native::Hash::REMOVE_BLIP, &id);
 	}
+	bool Blip::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Blip ^>(value));
+	}
 	bool Blip::Equals(Blip ^blip)
 	{
 		return !System::Object::ReferenceEquals(blip, nullptr) && Handle == blip->Handle;

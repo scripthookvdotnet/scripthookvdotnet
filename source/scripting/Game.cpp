@@ -16,6 +16,11 @@ namespace GTA
 	{
 	}
 
+	unsigned long long *Global::MemoryAddress::get()
+	{
+		return reinterpret_cast<unsigned long long *>(this->mAddress);
+	}
+
 	void Global::SetInt(int value)
 	{
 		*reinterpret_cast<int *>(this->mAddress) = value;
@@ -89,6 +94,26 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PAUSE_MENU_ACTIVE, value);
 	}
+	bool Game::IsLoading::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::GET_IS_LOADING_SCREEN_ACTIVE);
+	}
+	bool Game::IsScreenFadedIn::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADED_IN);
+	}
+	bool Game::IsScreenFadedOut::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADED_OUT);
+	}
+	bool Game::IsScreenFadingIn::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADING_IN);
+	}
+	bool Game::IsScreenFadingOut::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_SCREEN_FADING_OUT);
+	}
 	bool Game::IsWaypointActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_WAYPOINT_ACTIVE);
@@ -145,11 +170,26 @@ namespace GTA
 	}
 	GTA::RadioStation Game::RadioStation::get()
 	{
-		return static_cast<GTA::RadioStation>(Native::Function::Call<int>(Native::Hash::GET_PLAYER_RADIO_STATION_INDEX));
+		System::String ^radioName = Native::Function::Call<System::String ^>(Native::Hash::GET_PLAYER_RADIO_STATION_NAME);
+		if (System::String::Equals(radioName, ""))
+		{
+			return GTA::RadioStation::RadioOff;
+		}
+		else
+		{
+			return static_cast<GTA::RadioStation>(System::Array::IndexOf(Game::_radioNames, radioName));
+		}
 	}
 	void Game::RadioStation::set(GTA::RadioStation value)
 	{
-		Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_INDEX, static_cast<int>(value));
+		if (System::Enum::IsDefined(value.GetType(), value) && value != GTA::RadioStation::RadioOff)
+		{
+			Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_NAME, _radioNames[static_cast<int>(value)]);
+		}
+		else
+		{
+			Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_NAME, "");
+		}
 	}
 	System::Drawing::Size Game::ScreenResolution::get()
 	{
@@ -157,6 +197,10 @@ namespace GTA
 		Native::Function::Call(Native::Hash::_GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
 
 		return System::Drawing::Size(w, h);
+	}
+	void Game::ShowsPoliceBlipsOnRadar::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_POLICE_RADAR_BLIPS, value);
 	}
 	bool Game::ThermalVision::get()
 	{
@@ -200,6 +244,34 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_DISABLED_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
 	}
+	bool Game::IsEnabledControlPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsEnabledControlJustPressed(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_JUST_PRESSED, index, static_cast<int>(control));
+	}
+	bool Game::IsEnabledControlJustReleased(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_JUST_RELEASED, index, static_cast<int>(control));
+	}
+	bool Game::IsDisabledControlPressed(int index, Control control)
+	{
+		return IsControlPressed(index, control) && !IsControlEnabled(index, control);
+	}
+	bool Game::IsDisabledControlJustPressed(int index, Control control)
+	{
+		return IsControlJustPressed(index, control) && !IsControlEnabled(index, control);
+	}
+	bool Game::IsDisabledControlJustReleased(int index, Control control)
+	{
+		return IsControlJustReleased(index, control) && !IsControlEnabled(index, control);
+	}
+	bool Game::IsControlEnabled(int index, Control control)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_ENABLED, index, static_cast<int>(control));
+	}
 	void Game::EnableControl(int index, Control control)
 	{
 		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
@@ -208,9 +280,37 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
 	}
+	void Game::EnableControlThisFrame(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
+	void Game::DisableControlThisFrame(int index, Control control)
+	{
+		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
+	}
+	void Game::DisableAllControlsThisFrame(int index)
+	{
+		Native::Function::Call(Native::Hash::DISABLE_ALL_CONTROL_ACTIONS, index);
+	}
+	void Game::EnableAllControlsThisFrame(int index)
+	{
+		Native::Function::Call(Native::Hash::ENABLE_ALL_CONTROL_ACTIONS, index);
+	}
 	float Game::GetControlNormal(int index, Control control)
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_CONTROL_NORMAL, index, static_cast<int>(control));
+	}
+	float Game::GetDisabledControlNormal(int index, Control control)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_DISABLED_CONTROL_NORMAL, index, static_cast<int>(control));
+	}
+	int Game::GetControlValue(int index, Control control)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_CONTROL_VALUE, index, static_cast<int>(control));
+	}
+	void Game::SetControlNormal(int index, Control control, float value)
+	{
+		Native::Function::Call(Native::Hash::_SET_CONTROL_NORMAL, index, static_cast<int>(control), value);
 	}
 
 	void Game::Pause(bool value)
@@ -243,7 +343,37 @@ namespace GTA
 	}
 	int Game::GenerateHash(System::String ^input)
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_HASH_KEY, input);
+		if (Object::ReferenceEquals(input, nullptr))
+		{
+			return 0;
+		}
+
+		System::UInt32 hash = 0;
+		array<System::Char>^ chars = input->ToCharArray();
+
+		//converts ascii uppercase to lowercase
+		for (int i = 0, length = chars->Length; i < length; i++)
+		{
+			if (chars[i] >= 'A' && chars[i] <= 'Z')
+			{
+				chars[i] = chars[i] + 32;
+			}
+		}
+
+		array<System::Byte>^ bytes = System::Text::Encoding::UTF8->GetBytes(chars);
+
+		for (int i = 0, length = bytes->Length; i < length; i++)
+		{
+			hash += bytes[i];
+			hash += (hash << 10);
+			hash ^= (hash >> 6);
+		}
+
+		hash += (hash << 3);
+		hash ^= (hash >> 11);
+		hash += (hash << 15);
+
+		return static_cast<int>(hash);
 	}
 
 	void Game::PlaySound(System::String ^soundFile, System::String ^soundSet)

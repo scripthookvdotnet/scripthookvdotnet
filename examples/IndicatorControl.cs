@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 using GTA;
 
 public class IndicatorControl : Script
@@ -10,8 +9,8 @@ public class IndicatorControl : Script
 		Interval = 100;
 	}
 
-	private bool mLeftActive = false, mRightActive = false;
-	private DateTime mTimeLeftSwitchOff, mTimeRightSwitchOff;
+	readonly bool[] _active = new bool[2];
+	readonly DateTime[] _timeLeft = new DateTime[2];
 
 	void OnTick(object sender, EventArgs e)
 	{
@@ -21,32 +20,32 @@ public class IndicatorControl : Script
 		{
 			Vehicle vehicle = player.CurrentVehicle;
 
-			if (Game.IsControlPressed(2, GTA.Control.VehicleMoveLeftOnly))
+			if (Game.IsControlPressed(2, Control.VehicleMoveLeftOnly))
 			{
 				if (vehicle.Speed < 10.0f)
 				{
-					vehicle.LeftIndicatorLightOn = this.mLeftActive = true;
-					vehicle.RightIndicatorLightOn = this.mRightActive = false;
-					this.mTimeLeftSwitchOff = DateTime.Now + TimeSpan.FromMilliseconds(3000);
+					vehicle.LeftIndicatorLightOn = _active[0] = true;
+					vehicle.RightIndicatorLightOn = _active[1] = false;
+					_timeLeft[0] = DateTime.Now + TimeSpan.FromMilliseconds(3000);
 				}
 			}
-			else if (this.mLeftActive && DateTime.Now > mTimeLeftSwitchOff)
+			else if (_active[0] && DateTime.Now > _timeLeft[0])
 			{
-				vehicle.LeftIndicatorLightOn = this.mLeftActive = false;
+				vehicle.LeftIndicatorLightOn = _active[0] = false;
 			}
 
-			if (Game.IsControlPressed(2, GTA.Control.VehicleMoveRightOnly))
+			if (Game.IsControlPressed(2, Control.VehicleMoveRightOnly))
 			{
 				if (vehicle.Speed < 10.0f)
 				{
-					vehicle.LeftIndicatorLightOn = this.mLeftActive = false;
-					vehicle.RightIndicatorLightOn = this.mRightActive = true;
-					this.mTimeRightSwitchOff = DateTime.Now + TimeSpan.FromMilliseconds(3000);
+					vehicle.LeftIndicatorLightOn = _active[0] = false;
+					vehicle.RightIndicatorLightOn = _active[1] = true;
+					_timeLeft[1] = DateTime.Now + TimeSpan.FromMilliseconds(3000);
 				}
 			}
-			else if (this.mRightActive && DateTime.Now > mTimeRightSwitchOff)
+			else if (_active[1] && DateTime.Now > _timeLeft[1])
 			{
-				vehicle.RightIndicatorLightOn = this.mRightActive = false;
+				vehicle.RightIndicatorLightOn = _active[1] = false;
 			}
 		}
 	}

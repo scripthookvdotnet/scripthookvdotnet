@@ -25,7 +25,7 @@ namespace GTA
 	{
 		[System::SerializableAttribute]
 		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential, Pack = 4)]
-		public value class Vector3
+		public value class Vector3 : System::IEquatable<Vector3>
 		{
 		public:
 			/// <summary>
@@ -53,6 +53,14 @@ namespace GTA
 			/// <param name="y">Initial value for the Y component of the vector.</param>
 			/// <param name="z">Initial value for the Z component of the vector.</param>
 			Vector3(float x, float y, float z);
+
+			/// <summary>
+			/// Returns this vector with a magnitude of 1.
+			/// </summary>
+			property Vector3 Normalized
+			{
+				Vector3 get();
+			}
 
 			/// <summary>
 			/// Returns a null vector. (0,0,0)
@@ -187,6 +195,12 @@ namespace GTA
 				}
 			}
 
+			property float default[int]
+			{
+				float get(int index);
+				void set(int index, float value);
+			}
+
 			/// <summary>
 			/// Calculates the length of the vector.
 			/// </summary>
@@ -210,6 +224,75 @@ namespace GTA
 			/// <param name="position">The second vector to calculate the distance to.</param>
 			/// <returns>The distance to the other vector.</returns>
 			float DistanceTo(Vector3 position);
+
+			/// <summary>
+			/// Calculates the squared distance between two vectors.
+			/// </summary>
+			/// <param name="position">The second vector to calculate the distance to.</param>
+			/// <returns>The distance to the other vector.</returns>
+			float DistanceToSquared(Vector3 position);
+
+			/// <summary>
+			/// Calculates the distance between two vectors, ignoring the Z-component.
+			/// </summary>
+			/// <param name="position">The second vector to calculate the distance to.</param>
+			/// <returns>The distance to the other vector.</returns>
+			float DistanceTo2D(Vector3 position);
+
+			/// <summary>
+			/// Calculates the squared distance between two vectors, ignoring the Z-component.
+			/// </summary>
+			/// <param name="position">The second vector to calculate the squared distance to.</param>
+			/// <returns>The distance to the other vector.</returns>
+			float DistanceToSquared2D(Vector3 position);
+
+			/// <summary>
+			/// Calculates the distance between two vectors.
+			/// </summary>
+			/// <param name="position2">The first vector to calculate the distance to the second vector.</param>
+			/// <param name="position2">The second vector to calculate the distance to the first vector.</param>
+			/// <returns>The distance between the two vectors.</returns>
+			static float Distance(Vector3 position1, Vector3 position2);
+
+			/// <summary>
+			/// Calculates the squared distance between two vectors.
+			/// </summary>
+			/// <param name="position2">The first vector to calculate the squared distance to the second vector.</param>
+			/// <param name="position2">The second vector to calculate the squared distance to the first vector.</param>
+			/// <returns>The squared distance between the two vectors.</returns>
+			static float DistanceSquared(Vector3 position1, Vector3 position2);
+
+			/// <summary>
+			/// Calculates the distance between two vectors, ignoring the Z-component.
+			/// </summary>
+			/// <param name="position2">The first vector to calculate the distance to the second vector.</param>
+			/// <param name="position2">The second vector to calculate the distance to the first vector.</param>
+			/// <returns>The distance between the two vectors.</returns>
+			static float Distance2D(Vector3 position1, Vector3 position2);
+
+			/// <summary>
+			/// Calculates the squared distance between two vectors, ignoring the Z-component.
+			/// </summary>
+			/// <param name="position2">The first vector to calculate the squared distance to the second vector.</param>
+			/// <param name="position2">The second vector to calculate the squared distance to the first vector.</param>
+			/// <returns>The squared distance between the two vectors.</returns>
+			static float DistanceSquared2D(Vector3 position1, Vector3 position2);
+
+			/// <summary>
+			/// Returns the angle in degrees between from and to.
+			/// The angle returned is always the acute angle between the two vectors.
+			/// </summary>
+			static float Angle(Vector3 from, Vector3 to);
+
+			/// <summary>
+			/// Returns the signed angle in degrees between from and to.
+			/// </summary>
+			static float SignedAngle(Vector3 from, Vector3 to, Vector3 planeNormal);
+
+			/// <summary>
+			/// Converts a vector to a heading.
+			/// </summary>
+			float ToHeading();
 
 			/// <summary>
 			/// Creates a random vector inside the circle around this position.
@@ -320,9 +403,26 @@ namespace GTA
 			static Vector3 Cross(Vector3 left, Vector3 right);
 
 			/// <summary>
+			/// Projects a vector onto another vector.
+			/// </summary>
+			/// <param name="vector">The vector to project.</param>
+			/// <param name="onNormal">Vector to project onto, does not assume it is normalized.</param>
+			/// <returns>The projected vector.</returns>
+			static Vector3 Project(Vector3 vector, Vector3 onNormal);
+
+
+			/// <summary>
+			/// Projects a vector onto a plane defined by a normal orthogonal to the plane.
+			/// </summary>
+			/// <param name="vector">The vector to project.</param>
+			/// <param name="planeNormal">Normal of the plane,  does not assume it is normalized.</param>
+			/// <returns>The Projection of vector onto plane.</returns>
+			static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
+
+			/// <summary>
 			/// Returns the reflection of a vector off a surface that has the specified normal. 
 			/// </summary>
-			/// <param name="vector">The source vector.</param>
+			/// <param name="vector">The vector to project onto the plane.</param>
 			/// <param name="normal">Normal of the surface.</param>
 			/// <returns>The reflected vector.</returns>
 			/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 

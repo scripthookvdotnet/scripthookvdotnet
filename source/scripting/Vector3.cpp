@@ -39,6 +39,44 @@ namespace GTA
 			Z = z;
 		}
 
+		Vector3 Vector3::Normalized::get()
+		{
+			return Vector3::Normalize(Vector3(X, Y, Z));
+		}
+
+		float Vector3::default::get(int index)
+		{
+			switch (index)
+			{
+			case 0:
+				return X;
+			case 1:
+				return Y;
+			case 2:
+				return Z;
+			default:
+				throw gcnew ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
+			}
+		}
+
+		void Vector3::default::set(int index, float value)
+		{
+			switch (index)
+			{
+			case 0:
+				X = value;
+				break;
+			case 1:
+				Y = value;
+				break;
+			case 2:
+				Z = value;
+				break;
+			default:
+				throw gcnew ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
+			}
+		}
+
 		float Vector3::Length()
 		{
 			return static_cast<float>(System::Math::Sqrt((X*X) + (Y*Y) + (Z*Z)));
@@ -60,6 +98,62 @@ namespace GTA
 		{
 			return (position - *this).Length();
 		}
+		float Vector3::DistanceToSquared(Vector3 position)
+		{
+			return DistanceSquared(position, *this);
+		}
+		float Vector3::DistanceTo2D(Vector3 position)
+		{
+			return Distance(position, *this);
+		}
+		float Vector3::DistanceToSquared2D(Vector3 position)
+		{
+			return DistanceSquared(position, *this);
+		}
+		float Vector3::Distance(Vector3 position1, Vector3 position2)
+		{
+			return (position1 - position2).Length();
+		}
+		float Vector3::DistanceSquared(Vector3 position1, Vector3 position2)
+		{
+			return (position1 - position2).LengthSquared();
+		}
+		float Vector3::Distance2D(Vector3 position1, Vector3 position2)
+		{
+			Vector3 pos1 = Vector3(position1.X, position1.Y, 0);
+			Vector3 pos2 = Vector3(position1.X, position1.Y, 0);
+			return (pos1 - pos2).Length();
+		}
+		float Vector3::DistanceSquared2D(Vector3 position1, Vector3 position2)
+		{
+			Vector3 pos1 = Vector3(position1.X, position1.Y, 0);
+			Vector3 pos2 = Vector3(position1.X, position1.Y, 0);
+			return (pos1 - pos2).LengthSquared();
+		}
+
+		float Vector3::Angle(Vector3 from, Vector3 to)
+		{
+			double dot = Vector3::Dot(from.Normalized, to.Normalized);
+			return (float)(System::Math::Acos((dot)) * (180.0 / System::Math::PI));
+		}
+		float Vector3::SignedAngle(Vector3 from, Vector3 to, Vector3 planeNormal)
+		{
+			Vector3 perpVector = Vector3::Cross(planeNormal, from);
+
+			double angle = Vector3::Angle(from, to);
+			double dot = Vector3::Dot(perpVector, to);
+			if (dot < 0)
+			{
+				angle *= -1;
+			}
+
+			return (float)angle;
+		}
+		float Vector3::ToHeading()
+		{
+			return (float)((System::Math::Atan2(X, -Y) + System::Math::PI) * (180.0 / System::Math::PI));
+		}
+
 		Vector3 Vector3::Around(float distance)
 		{
 			return *this + Vector3::RandomXY() * distance;
@@ -68,18 +162,23 @@ namespace GTA
 		Vector3 Vector3::RandomXY()
 		{
 			Vector3 v;
-			v.X = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Z = 0.0f;
+			double radian = Random::Instance->NextDouble() * 2 * System::Math::PI;
+
+			v.X = (float)(System::Math::Cos(radian));
+			v.Y = (float)(System::Math::Sin(radian));
 			v.Normalize();
 			return v;
 		}
 		Vector3 Vector3::RandomXYZ()
 		{
 			Vector3 v;
-			v.X = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Y = (float)(Random::Instance->NextDouble() - 0.5);
-			v.Z = (float)(Random::Instance->NextDouble() - 0.5);
+			double radian = Random::Instance->NextDouble() * 2.0 * System::Math::PI;
+			double cosTheta = (Random::Instance->NextDouble() * 2.0) - 1.0;
+			double theta = System::Math::Acos(cosTheta);
+
+			v.X = (float)(System::Math::Sin(theta) * System::Math::Cos(radian));
+			v.Y = (float)(System::Math::Sin(theta) * System::Math::Sin(radian));
+			v.Z = (float)(System::Math::Cos(theta));
 			v.Normalize();
 			return v;
 		}
@@ -145,6 +244,14 @@ namespace GTA
 			result.Y = left.Z * right.X - left.X * right.Z;
 			result.Z = left.X * right.Y - left.Y * right.X;
 			return result;
+		}
+		Vector3 Vector3::Project(Vector3 vector, Vector3 onNormal)
+		{
+			return onNormal * Dot(vector, onNormal) / Dot(onNormal, onNormal);
+		}
+		Vector3 Vector3::ProjectOnPlane(Vector3 vector, Vector3 planeNormal)
+		{
+			return (vector - Project(vector, planeNormal));
 		}
 		Vector3 Vector3::Reflect(Vector3 vector, Vector3 normal)
 		{
@@ -218,7 +325,7 @@ namespace GTA
 		}
 		int Vector3::GetHashCode()
 		{
-			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
+			return X.GetHashCode() ^ Y.GetHashCode() << 2 ^ Z.GetHashCode() >> 2;
 		}
 		bool Vector3::Equals(Object ^value)
 		{

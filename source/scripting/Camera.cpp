@@ -247,6 +247,16 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
 	}
+	bool Camera::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Camera ^>(value));
+	}
 	bool Camera::Equals(Camera ^camera)
 	{
 		return !System::Object::ReferenceEquals(camera, nullptr) && Handle == camera->Handle;

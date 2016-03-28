@@ -36,6 +36,16 @@ namespace GTA
 	{
 		return Native::Function::Call(Native::Hash::REMOVE_PICKUP, Handle);
 	}
+	bool Pickup::Equals(Object ^value)
+	{
+		if (value == nullptr)
+			return false;
+
+		if (value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<Pickup ^>(value));
+	}
 	bool Pickup::Equals(Pickup ^pickup)
 	{
 		return !System::Object::ReferenceEquals(pickup, nullptr) && Handle == pickup->Handle;

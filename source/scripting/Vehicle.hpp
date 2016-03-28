@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Game.hpp"
 
 namespace GTA
 {
@@ -180,6 +181,19 @@ namespace GTA
 		Trunk = 5,
 		Trunk2 = 6,
 	};
+	public enum class VehicleLockStatus
+	{
+		None = 0,
+		Unlocked = 1,
+		Locked = 2,
+		LockedForPlayer = 3,
+		///<summary>Doesn't allow players to exit the vehicle with the exit vehicle key.</summary>
+		StickPlayerInside = 4,
+		///<summary>Can be broken into the car. if the glass is broken, the value will be set to 1.</summary>
+		CanBeBrokenInto = 7,
+		CanBeBrokenIntoPersist = 8,
+		CannotBeTriedToEnter = 10
+	};
 	public enum class VehicleLandingGear
 	{
 		Deployed = 0,
@@ -207,7 +221,33 @@ namespace GTA
 		Suspension = 15,
 		Armor = 16,
 		FrontWheels = 23,
-		BackWheels = 24 // only for motocycles
+		BackWheels = 24, // only for motorcycles
+
+		// Benny's
+
+		PlateHolder = 25,
+		VanityPlates = 26,
+		TrimDesign = 27,
+		Ornaments = 28,
+		Dashboard = 29,
+		DialDesign = 30,
+		DoorSpeakers = 31,
+		Seats = 32,
+		SteeringWheels = 33,
+		ColumnShifterLevers = 34,
+		Plaques = 35,
+		Speakers = 36,
+		Trunk = 37,
+		Hydraulics = 38,
+		EngineBlock = 39,
+		AirFilter = 40,
+		Struts = 41,
+		ArchCover = 42,
+		Aerials = 43,
+		Trim = 44,
+		Tank = 45,
+		Windows = 46,
+		Livery = 48
 	};
 	public enum class VehicleNeonLight
 	{
@@ -233,6 +273,18 @@ namespace GTA
 		RightFront = Passenger,
 		LeftRear = 1,
 		RightRear = 2,
+		ExtraSeat1 = 3,
+		ExtraSeat2 = 4,
+		ExtraSeat3 = 5,
+		ExtraSeat4 = 6,
+		ExtraSeat5 = 7,
+		ExtraSeat6 = 8,
+		ExtraSeat7 = 9,
+		ExtraSeat8 = 10,
+		ExtraSeat9 = 11,
+		ExtraSeat10 = 12,
+		ExtraSeat11 = 13,
+		ExtraSeat12 = 14,
 	};
 	public enum class VehicleToggleMod
 	{
@@ -267,6 +319,22 @@ namespace GTA
 		Stock = 4,
 		Limo = 5,
 		Green = 6
+	};
+	public enum class NumberPlateMounting
+	{
+		FrontAndRear = 0,
+		Front = 1,
+		Rear = 2,
+		None = 3,
+	};
+	public enum class NumberPlateType
+	{
+		BlueOnWhite1 = 0,
+		YellowOnBlack = 1,
+		YellowOnBlue = 2,
+		BlueOnWhite2 = 3,
+		BlueOnWhite3 = 4,
+		NorthYankton = 5,
 	};
 	public enum class CargobobHook
 	{
@@ -307,6 +375,18 @@ namespace GTA
 		{
 			bool get();
 		}
+		property array<Ped ^> ^Occupants
+		{
+			array<Ped ^> ^get();
+		}
+		property array<Ped ^> ^Passengers
+		{
+			array<Ped ^> ^get();
+		}
+		property int PassengerCount
+		{
+			int get();
+		}
 		property int PassengerSeats
 		{
 			int get();
@@ -323,6 +403,15 @@ namespace GTA
 		{
 			System::String ^get();
 			void set(System::String ^value);
+		}
+		property GTA::NumberPlateMounting NumberPlateMounting
+		{
+			GTA::NumberPlateMounting get();
+		}
+		property GTA::NumberPlateType NumberPlateType
+		{
+			GTA::NumberPlateType get();
+			void set(GTA::NumberPlateType value);
 		}
 		property bool IsConvertible
 		{
@@ -342,6 +431,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool IsStoppedAtTrafficLights
+		{
+			bool get();
+		}
 		property bool IsOnAllWheels
 		{
 			bool get();
@@ -355,10 +448,28 @@ namespace GTA
 			float get();
 			void set(float value);
 		}
+		property float MaxSpeed
+		{
+			float get();
+		}
+		property float MaxTraction
+		{
+			float get();
+		}
+		property float MaxBraking
+		{
+			float get();
+		}
 		property float DirtLevel
 		{
 			float get();
 			void set(float value);
+		}
+
+		property VehicleLockStatus LockStatus
+		{
+			VehicleLockStatus get();
+			void set(VehicleLockStatus value);
 		}
 		property VehicleRoofState RoofState
 		{
@@ -390,6 +501,10 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property bool IsSirenSilent
+		{
+			void set(bool value);
+		}
 		property VehicleColor PrimaryColor
 		{
 			VehicleColor get();
@@ -409,6 +524,25 @@ namespace GTA
 		{
 			VehicleColor get();
 			void set(VehicleColor value);
+		}
+		property VehicleColor DashboardColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
+		property VehicleColor TrimColor
+		{
+			VehicleColor get();
+			void set(VehicleColor value);
+		}
+		property int ColorCombination
+		{
+			int get();
+			void set(int value);
+		}
+		property int ColorCombinationCount
+		{
+			int get();
 		}
 		property VehicleWheelType WheelType
 		{
@@ -430,6 +564,10 @@ namespace GTA
 		}
 
 		property bool IsWanted
+		{
+			void set(bool value);
+		}
+		property bool IsRadioEnabled
 		{
 			void set(bool value);
 		}
@@ -457,6 +595,7 @@ namespace GTA
 		}
 		property bool HighBeamsOn
 		{
+			void set(bool value);
 			bool get();
 		}
 		property float LightsMultiplier
@@ -505,6 +644,7 @@ namespace GTA
 		}
 		property bool NeedsToBeHotwired
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool CanTiresBurst
@@ -522,6 +662,7 @@ namespace GTA
 		}
 		property bool PreviouslyOwnedByPlayer
 		{
+			bool get();
 			void set(bool value);
 		}
 		property System::Drawing::Color CustomPrimaryColor
@@ -553,6 +694,14 @@ namespace GTA
 		{
 			int get();
 		}
+		property Vehicle ^TowedVehicle
+		{
+			Vehicle ^get();
+		}
+		property float TowingCraneRaisedAmount
+		{
+			void set(float value);
+		}
 		property bool HasAlarm
 		{
 			void set(bool value);
@@ -560,6 +709,20 @@ namespace GTA
 		property bool AlarmActive
 		{
 			bool get();
+		}
+		property int CurrentGear
+		{
+			int get();
+		}
+		property int HighGear
+		{
+			int get();
+			void set(int value);
+		}
+		property float FuelLevel
+		{
+			float get();
+			void set(float value);
 		}
 		property float CurrentRPM
 		{
@@ -569,17 +732,44 @@ namespace GTA
 		{
 			float get();
 		}
+		[System::ObsoleteAttribute("Vehicle.Steering is obsolete, please use Vehicle.SteeringScale instead.")]
 		property float Steering
 		{
+			float get()
+			{
+				return SteeringScale;
+			}
+		}
+		/// <summary>
+		/// Gets or sets the steering angle.
+		/// </summary>
+		/// <value>The steering angle in degrees.</value>
+		property float SteeringAngle
+		{
 			float get();
+		}
+		/// <summary>
+		/// Gets or sets the steering scale.
+		/// </summary>
+		/// <value>A single between -1.0f (fully right) and 1.0f (fully left).</value>
+		property float SteeringScale
+		{
+			float get();
+			void set(float value);
+		}
+		property GTA::RadioStation RadioStation
+		{
+			void set(GTA::RadioStation value);
 		}
 		property VehicleClass ClassType
 		{
 			VehicleClass get();
 		}
 
+		void InstallModKit();
 		int GetMod(VehicleMod modType);
 		void SetMod(VehicleMod modType, int modIndex, bool variations);
+		int GetModCount(VehicleMod modType);
 		void ToggleMod(VehicleToggleMod toggleMod, bool toggle);
 		bool IsToggleModOn(VehicleToggleMod toggleMod);
 		System::String ^GetModTypeName(VehicleMod modType);
@@ -616,6 +806,9 @@ namespace GTA
 		void RemoveCargobobHook();
 		void CargoBobMagnetGrabVehicle();
 		void CargoBobMagnetReleaseVehicle();
+		void TowVehicle(Vehicle ^vehicle, bool rear);
+		void DetachFromTowTruck();
+		void DetachTowedVehicle();
 
 		bool IsTireBurst(int wheel);
 		void BurstTire(int wheel);
