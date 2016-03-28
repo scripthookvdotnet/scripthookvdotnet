@@ -104,11 +104,17 @@ namespace GTA
 		}
 		float Vector3::DistanceTo2D(Vector3 position)
 		{
-			return Distance(position, *this);
+			Vector3 lhs(X, Y, 0.0f);
+			Vector3 rhs(position.X, position.Y, 0.0f);
+
+			return Distance(lhs, rhs);
 		}
 		float Vector3::DistanceToSquared2D(Vector3 position)
 		{
-			return DistanceSquared(position, *this);
+			Vector3 lhs(X, Y, 0.0f);
+			Vector3 rhs(position.X, position.Y, 0.0f);
+
+			return DistanceSquared(lhs, rhs);
 		}
 		float Vector3::Distance(Vector3 position1, Vector3 position2)
 		{
