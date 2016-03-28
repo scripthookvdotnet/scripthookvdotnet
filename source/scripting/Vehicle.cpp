@@ -45,7 +45,7 @@ namespace GTA
 			occupantsArray[occupantIndex] = ped;
 			++occupantIndex;
 
-			if (occupantIndex >= PassengerSeats)
+			if (occupantIndex >= arraySize)
 			{
 				return occupantsArray;
 			}
@@ -75,7 +75,7 @@ namespace GTA
 			passengersArray[passengerIndex] = ped;
 			++passengerIndex;
 
-			if (passengerIndex >= PassengerSeats)
+			if (passengerIndex >= passengersArray->Length)
 			{
 				return passengersArray;
 			}
