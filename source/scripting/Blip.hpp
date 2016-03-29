@@ -295,9 +295,11 @@ namespace GTA
 		void HideNumber();
 		void ShowNumber(int number);
 
+		void Remove();
+
 		virtual bool Exists();
 		static bool Exists(Blip ^blip);
-		void Remove();
+		
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Blip ^blip);
 
@@ -305,6 +307,7 @@ namespace GTA
 		{
 			return Handle;
 		}
+
 		static inline bool operator==(Blip ^left, Blip ^right)
 		{
 			if (ReferenceEquals(left, nullptr))

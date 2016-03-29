@@ -232,9 +232,11 @@ namespace GTA
 		bool HasBone(System::String ^boneName);
 
 		void Delete();
+		void MarkAsNoLongerNeeded();
+
 		virtual bool Exists();
 		static bool Exists(Entity ^entity);
-		void MarkAsNoLongerNeeded();
+
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Entity ^entity);
 
@@ -242,6 +244,7 @@ namespace GTA
 		{
 			return Handle;
 		}
+
 		static inline bool operator==(Entity ^left, Entity ^right)
 		{
 			if (ReferenceEquals(left, nullptr))

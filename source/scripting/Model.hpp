@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Interface.hpp"
+
 #include "PedHashes.hpp"
 #include "VehicleHashes.hpp"
 #include "WeaponHashes.hpp"
 
 namespace GTA
 {
-	public value class Model
+	public value class Model : System::IEquatable<Model>
 	{
 	public:
 		Model(int hash);
@@ -87,6 +89,7 @@ namespace GTA
 		void Request();
 		bool Request(int timeout);
 		void MarkAsNoLongerNeeded();
+
 		virtual bool Equals(Model model);
 
 		virtual inline int GetHashCode() override
@@ -97,6 +100,7 @@ namespace GTA
 		{
 			return "0x" + Hash.ToString("X");
 		}
+
 		static inline operator Model(int source)
 		{
 			return Model(source);
@@ -117,6 +121,7 @@ namespace GTA
 		{
 			return Model(source);
 		}
+
 		static inline bool operator==(Model left, Model right)
 		{
 			return left.Equals(right);
@@ -125,7 +130,6 @@ namespace GTA
 		{
 			return !operator==(left, right);
 		}
-
 	private:
 		int _hash;
 	};

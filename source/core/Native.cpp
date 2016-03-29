@@ -98,11 +98,16 @@ namespace GTA
 				}
 
 				// Scripting types
+				if (IHandleable::typeid->IsAssignableFrom(type))
+				{
+					return safe_cast<IHandleable ^>(value)->Handle;
+				}
 				if (type == Model::typeid)
 				{
 					return static_cast<Model>(value).Hash;
 				}
 
+                /*
 				if (type == Blip::typeid)
 				{
 					return static_cast<Blip ^>(value)->Handle;
@@ -139,6 +144,7 @@ namespace GTA
 				{
 					return static_cast<Vehicle ^>(value)->Handle;
 				}
+				*/
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
@@ -197,11 +203,13 @@ namespace GTA
 				// Math types
 				if (type == Math::Vector2::typeid)
 				{
-					return gcnew Math::Vector2(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y);
+					NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
+					return gcnew Math::Vector2(vec->x, vec->y);
 				}
 				if (type == Math::Vector3::typeid)
 				{
-					return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
+					NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
+					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
 				}
 
 				const int handle = *reinterpret_cast<int *>(value);
