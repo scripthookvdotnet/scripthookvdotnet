@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Interface.hpp"
+
 #include "PedHashes.hpp"
 #include "VehicleHashes.hpp"
 #include "WeaponHashes.hpp"
 
 namespace GTA
 {
-	public value class Model
+    public value class Model : System::IEquatable<Model>, INativeValue
 	{
 	public:
 		Model(int hash);
@@ -87,7 +89,8 @@ namespace GTA
 		void Request();
 		bool Request(int timeout);
 		void MarkAsNoLongerNeeded();
-		virtual bool Equals(Model model);
+
+        virtual bool Equals(Model model);
 
 		virtual inline int GetHashCode() override
 		{
@@ -97,35 +100,41 @@ namespace GTA
 		{
 			return "0x" + Hash.ToString("X");
 		}
-		static inline operator Model(int source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(System::String ^source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::PedHash source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::VehicleHash source)
-		{
-			return Model(source);
-		}
-		static inline operator Model(Native::WeaponHash source)
-		{
-			return Model(source);
-		}
-		static inline bool operator==(Model left, Model right)
-		{
-			return left.Equals(right);
-		}
-		static inline bool operator!=(Model left, Model right)
-		{
-			return !operator==(left, right);
-		}
 
+        static inline operator Model(int source)
+        {
+            return Model(source);
+        }
+        static inline operator Model(System::String ^source)
+        {
+            return Model(source);
+        }
+        static inline operator Model(Native::PedHash source)
+        {
+            return Model(source);
+        }
+        static inline operator Model(Native::VehicleHash source)
+        {
+            return Model(source);
+        }
+        static inline operator Model(Native::WeaponHash source)
+        {
+            return Model(source);
+        }
+
+        static inline bool operator==(Model left, Model right)
+        {
+            return left.Equals(right);
+        }
+        static inline bool operator!=(Model left, Model right)
+        {
+            return !operator==(left, right);
+        }
+    protected:
+        virtual property int NativeValue
+        {
+            int get() = INativeValue::NativeValue::get;
+        }
 	private:
 		int _hash;
 	};

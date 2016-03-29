@@ -39,9 +39,11 @@ namespace GTA
 		void UnpinVertex(int vertex);
 		Math::Vector3 GetVertexCoord(int vertex);
 
+        void Delete();
+
 		virtual bool Exists();
 		static bool Exists(Rope ^rope);
-		void Delete();
+		
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Rope ^rope);
 
@@ -49,6 +51,7 @@ namespace GTA
 		{
 			return Handle;
 		}
+
 		static inline bool operator==(Rope ^left, Rope ^right)
 		{
 			if (ReferenceEquals(left, nullptr))

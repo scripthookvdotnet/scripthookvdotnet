@@ -68,39 +68,31 @@ namespace GTA
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, Handle, vertex);
 	}
 
+    void Rope::Delete()
+    {
+        int handle = Handle;
+        Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
+    }
+
 	bool Rope::Exists()
 	{
-		return Exists(this);
+        int handle = Handle;
+        return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
 	}
 	bool Rope::Exists(Rope ^rope)
 	{
-		if (!Object::ReferenceEquals(rope, nullptr))
-		{
-			int handle = rope->Handle;
-			return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
-		}
-		else
-		{
-			return false;
-		}
+        return !Object::ReferenceEquals(rope, nullptr) && rope->Exists();
 	}
+
 	bool Rope::Equals(Object ^value)
 	{
-		if (value == nullptr)
-			return false;
-
-		if (value->GetType() != GetType())
+		if (value == nullptr || value->GetType() != GetType())
 			return false;
 
 		return Equals(safe_cast<Rope ^>(value));
 	}
 	bool Rope::Equals(Rope ^rope)
 	{
-		return !System::Object::ReferenceEquals(rope, nullptr) && Handle == rope->Handle;
-	}
-	void Rope::Delete()
-	{
-		int handle = Handle;
-		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
+		return !Object::ReferenceEquals(rope, nullptr) && Handle == rope->Handle;
 	}
 }

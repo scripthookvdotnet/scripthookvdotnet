@@ -335,10 +335,7 @@ namespace GTA
 		}
 		bool Vector3::Equals(Object ^value)
 		{
-			if (value == nullptr)
-				return false;
-
-			if (value->GetType() != GetType())
+			if (value == nullptr || value->GetType() != GetType())
 				return false;
 
 			return Equals(safe_cast<Vector3>(value));

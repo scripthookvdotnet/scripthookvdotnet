@@ -641,19 +641,22 @@ namespace GTA
 		void Add(Ped ^ped, bool leader);
 		void Remove(Ped ^ped);
 		Ped ^GetMember(int index);
-		virtual bool Exists();
-		static bool Exists(PedGroup ^pedGroup);
 		bool Contains(Ped ^ped);
-		virtual bool Equals(System::Object ^obj) override;
-		virtual bool Equals(PedGroup ^pedGroup);
-
+		
 		array<Ped ^> ^ToArray(bool includingLeader);
 		Generic::List<Ped ^> ^ToList(bool includingLeader);
+
+        virtual bool Exists();
+        static bool Exists(PedGroup ^pedGroup);
+
+        virtual bool Equals(System::Object ^obj) override;
+        virtual bool Equals(PedGroup ^pedGroup);
 
 		virtual inline int GetHashCode() override
 		{
 			return Handle;
 		}
+
 		static inline bool operator==(PedGroup ^left, PedGroup ^right)
 		{
 			if (ReferenceEquals(left, nullptr))

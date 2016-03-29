@@ -234,32 +234,30 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::STOP_CAM_POINTING, Handle);
 	}
+    void Camera::Destroy()
+    {
+        Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
+    }
 
 	bool Camera::Exists()
 	{
-		return Exists(this);
+        return Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, Handle);
 	}
 	bool Camera::Exists(Camera ^camera)
 	{
-		return !Object::ReferenceEquals(camera, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, camera->Handle);
+        return !Object::ReferenceEquals(camera, nullptr) && camera->Exists();
 	}
-	void Camera::Destroy()
-	{
-		Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
-	}
+	
 	bool Camera::Equals(Object ^value)
 	{
-		if (value == nullptr)
-			return false;
-
-		if (value->GetType() != GetType())
+		if (value == nullptr || value->GetType() != GetType())
 			return false;
 
 		return Equals(safe_cast<Camera ^>(value));
 	}
 	bool Camera::Equals(Camera ^camera)
 	{
-		return !System::Object::ReferenceEquals(camera, nullptr) && Handle == camera->Handle;
+		return !Object::ReferenceEquals(camera, nullptr) && Handle == camera->Handle;
 	}
 
 	void GameplayCamera::ClampYaw(float min, float max)

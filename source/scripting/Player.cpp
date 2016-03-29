@@ -215,8 +215,15 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_PLAYER_MAY_NOT_ENTER_ANY_VEHICLE, Handle);
 	}
 
+    bool Player::Equals(Object ^value)
+    {
+        if (value == nullptr || value->GetType() != GetType())
+            return false;
+
+        return Equals(safe_cast<Entity ^>(value));
+    }
 	bool Player::Equals(Player ^player)
 	{
-		return !ReferenceEquals(player, nullptr) && Handle == player->Handle;
+		return !Object::ReferenceEquals(player, nullptr) && Handle == player->Handle;
 	}
 }

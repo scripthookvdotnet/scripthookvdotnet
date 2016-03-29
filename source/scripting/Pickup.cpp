@@ -19,35 +19,33 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_PICKUP_COORDS, Handle);
 	}
+    void Pickup::Delete()
+    {
+        return Native::Function::Call(Native::Hash::REMOVE_PICKUP, Handle);
+    }
+    bool Pickup::ObjectExists()
+    {
+        return Native::Function::Call<bool>(Native::Hash::DOES_PICKUP_OBJECT_EXIST, Handle);
+    }
 
 	bool Pickup::Exists()
 	{
-		return Exists(this);
+        return Native::Function::Call<bool>(Native::Hash::DOES_PICKUP_EXIST, Handle);
 	}
 	bool Pickup::Exists(Pickup ^pickup)
 	{
-		return !Object::ReferenceEquals(pickup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_PICKUP_EXIST, pickup->Handle);
+        return !Object::ReferenceEquals(pickup, nullptr) && pickup->Exists();
 	}
-	bool Pickup::ObjectExists()
-	{
-		return Native::Function::Call<bool>(Native::Hash::DOES_PICKUP_OBJECT_EXIST, Handle);
-	}
-	void Pickup::Delete()
-	{
-		return Native::Function::Call(Native::Hash::REMOVE_PICKUP, Handle);
-	}
+    
 	bool Pickup::Equals(Object ^value)
 	{
-		if (value == nullptr)
-			return false;
-
-		if (value->GetType() != GetType())
+		if (value == nullptr || value->GetType() != GetType())
 			return false;
 
 		return Equals(safe_cast<Pickup ^>(value));
 	}
 	bool Pickup::Equals(Pickup ^pickup)
 	{
-		return !System::Object::ReferenceEquals(pickup, nullptr) && Handle == pickup->Handle;
+		return !Object::ReferenceEquals(pickup, nullptr) && Handle == pickup->Handle;
 	}
 }

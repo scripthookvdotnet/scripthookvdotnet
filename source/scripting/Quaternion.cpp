@@ -536,10 +536,7 @@ namespace GTA
 		}
 		bool Quaternion::Equals(Object^ value)
 		{
-			if (value == nullptr)
-				return false;
-
-			if (value->GetType() != GetType())
+			if (value == nullptr || value->GetType() != GetType())
 				return false;
 
 			return Equals(safe_cast<Quaternion>(value));
@@ -548,7 +545,7 @@ namespace GTA
 		{
 			return (X == value.X && Y == value.Y && Z == value.Z && W == value.W);
 		}
-		bool Quaternion::Equals(Quaternion% value1, Quaternion% value2)
+		bool Quaternion::Equals(Quaternion %value1, Quaternion %value2)
 		{
 			return (value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W);
 		}

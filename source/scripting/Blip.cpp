@@ -110,16 +110,13 @@ namespace GTA
 	}
 	bool Blip::Equals(Object ^value)
 	{
-		if (value == nullptr)
-			return false;
-
-		if (value->GetType() != GetType())
+		if (value == nullptr || value->GetType() != GetType())
 			return false;
 
 		return Equals(safe_cast<Blip ^>(value));
 	}
 	bool Blip::Equals(Blip ^blip)
 	{
-		return !System::Object::ReferenceEquals(blip, nullptr) && Handle == blip->Handle;
+		return !Object::ReferenceEquals(blip, nullptr) && Handle == blip->Handle;
 	}
 }

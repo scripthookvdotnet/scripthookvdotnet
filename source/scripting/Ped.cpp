@@ -659,33 +659,11 @@ namespace GTA
 	{
 		return Native::Function::Call<Ped ^>(Native::Hash::GET_PED_AS_GROUP_MEMBER, Handle, index);
 	}
-	bool PedGroup::Exists()
-	{
-		return Exists(this);
-	}
-	bool PedGroup::Exists(PedGroup ^pedGroup)
-	{
-		return !ReferenceEquals(pedGroup, nullptr) && Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, pedGroup->Handle);
-	}
 	bool PedGroup::Contains(Ped ^ped)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_GROUP_MEMBER, ped->Handle, Handle);
 	}
-	bool PedGroup::Equals(Object ^value)
-	{
-		if (value == nullptr)
-			return false;
-
-		if (value->GetType() != GetType())
-			return false;
-
-		return Equals(safe_cast<PedGroup ^>(value));
-	}
-	bool PedGroup::Equals(PedGroup ^pedGroup)
-	{
-		return !System::Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
-	}
-
+	
 	array<Ped ^> ^PedGroup::ToArray(bool includingLeader)
 	{
 		const int arraySize = includingLeader ? MemberCount + 1 : MemberCount;
@@ -742,4 +720,25 @@ namespace GTA
 
 		return list;
 	}
+
+    bool PedGroup::Exists()
+    {
+        return Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, Handle);
+    }
+    bool PedGroup::Exists(PedGroup ^pedGroup)
+    {
+        return !Object::ReferenceEquals(pedGroup, nullptr) && pedGroup->Exists();
+    }
+
+    bool PedGroup::Equals(Object ^value)
+    {
+        if (value == nullptr || value->GetType() != GetType())
+            return false;
+
+        return Equals(safe_cast<PedGroup ^>(value));
+    }
+    bool PedGroup::Equals(PedGroup ^pedGroup)
+    {
+        return !Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
+    }
 }

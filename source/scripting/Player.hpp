@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Vector3.hpp"
+#include "Interface.hpp"
+
 namespace GTA
 {
 	#pragma region Forward Declarations
@@ -8,12 +11,12 @@ namespace GTA
 	ref class Entity;
 	#pragma endregion
 
-	public ref class Player sealed
+    public ref class Player sealed : System::IEquatable<Player ^>, IHandleable
 	{
 	public:
 		Player(int handle);
 
-		property int Handle
+		virtual property int Handle
 		{
 			int get();
 		}
@@ -120,12 +123,21 @@ namespace GTA
 		void SetMayOnlyEnterThisVehicleThisFrame(Vehicle ^vehicle);
 		void SetMayNotEnterAnyVehicleThisFrame();
 
-		virtual bool Equals(Player ^player);
+        virtual bool Equals(System::Object ^obj) override;
+        virtual bool Equals(Player ^player);
+
+        virtual inline bool Exists() = IHandleable::Exists
+        {
+            // IHandleable forces us to implement this unfortunately,
+            // so we'll implement it explicitly and return true
+            return true;
+        }
 
 		virtual inline int GetHashCode() override
 		{
 			return Handle;
 		}
+
 		static inline bool operator==(Player ^left, Player ^right)
 		{
 			if (Object::ReferenceEquals(left, nullptr))
@@ -139,7 +151,6 @@ namespace GTA
 		{
 			return !operator==(left, right);
 		}
-
 	private:
 		int _handle;
 		Ped ^_ped;
