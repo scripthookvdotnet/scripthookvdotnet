@@ -45,7 +45,7 @@ namespace GTA
 			occupantsArray[occupantIndex] = ped;
 			++occupantIndex;
 
-			if (occupantIndex >= PassengerSeats)
+			if (occupantIndex >= arraySize)
 			{
 				return occupantsArray;
 			}
@@ -75,7 +75,7 @@ namespace GTA
 			passengersArray[passengerIndex] = ped;
 			++passengerIndex;
 
-			if (passengerIndex >= PassengerSeats)
+			if (passengerIndex >= passengersArray->Length)
 			{
 				return passengersArray;
 			}
@@ -170,10 +170,6 @@ namespace GTA
 		{
 			Native::Function::Call(Native::Hash::SET_VEHICLE_FORWARD_SPEED, Handle, value);
 		}
-	}
-	float Vehicle::MaxSpeed::get()
-	{
-		return Native::Function::Call<float>(Native::Hash::_GET_VEHICLE_MAX_SPEED, Model.Hash);
 	}
 	float Vehicle::MaxTraction::get()
 	{

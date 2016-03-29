@@ -418,7 +418,13 @@ namespace GTA
 	VehicleSeat Ped::SeatIndex::get()
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
-		int seatIndex = address == -1 ? false : (*reinterpret_cast<char *>(address + 0x1542));
+		
+		if (address == 0)
+		{
+			return VehicleSeat::None;
+		}
+
+		int seatIndex = (*reinterpret_cast<char *>(address + 0x1542));
 
 		if (seatIndex == -1 || !IsInVehicle())
 		{

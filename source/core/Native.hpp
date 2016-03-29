@@ -97,6 +97,22 @@ namespace GTA
 			{
 				return gcnew InputArgument(System::IntPtr(value));
 			}
+			static inline operator InputArgument ^ (char value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static inline operator InputArgument ^ (unsigned char value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static inline operator InputArgument ^ (short value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static inline operator InputArgument ^ (unsigned short value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
 			static inline operator InputArgument ^ (int value)
 			{
 				return gcnew InputArgument(value);
@@ -188,6 +204,18 @@ namespace GTA
 			OutputArgument();
 			OutputArgument(System::Object ^initvalue);
 			inline OutputArgument(bool initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
+			{
+			}
+			inline OutputArgument(char initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue)))
+			{
+			}
+			inline OutputArgument(unsigned char initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue)))
+			{
+			}
+			inline OutputArgument(short initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue)))
+			{
+			}
+			inline OutputArgument(unsigned short initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue)))
 			{
 			}
 			inline OutputArgument(int initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue))
