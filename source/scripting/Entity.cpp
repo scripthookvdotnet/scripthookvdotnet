@@ -463,28 +463,28 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, true, false);
 		Native::Function::Call(Native::Hash::DELETE_ENTITY, &handle);
 	}
-    void Entity::MarkAsNoLongerNeeded()
-    {
-        int handle = Handle;
-        Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
-    }
+	void Entity::MarkAsNoLongerNeeded()
+	{
+		int handle = Handle;
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+	}
 
 	bool Entity::Exists()
 	{
-        return Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, Handle);
+		return Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, Handle);
 	}
-    bool Entity::Exists(Entity ^entity)
-    {
-        return !Object::ReferenceEquals(entity, nullptr) && entity->Exists();
-    }
+	bool Entity::Exists(Entity ^entity)
+	{
+		return !Object::ReferenceEquals(entity, nullptr) && entity->Exists();
+	}
 
-    bool Entity::Equals(Object ^value)
-    {
-        if (value == nullptr || value->GetType() != GetType())
-            return false;
+	bool Entity::Equals(Object ^value)
+	{
+		if (value == nullptr || value->GetType() != GetType())
+			return false;
 
-        return Equals(safe_cast<Entity ^>(value));
-    }
+		return Equals(safe_cast<Entity ^>(value));
+	}
 	bool Entity::Equals(Entity ^entity)
 	{
 		return !Object::ReferenceEquals(entity, nullptr) && Handle == entity->Handle;

@@ -39,7 +39,7 @@ namespace GTA
 		void UnpinVertex(int vertex);
 		Math::Vector3 GetVertexCoord(int vertex);
 
-        void Delete();
+		void Delete();
 
 		virtual bool Exists();
 		static bool Exists(Rope ^rope);

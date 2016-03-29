@@ -721,24 +721,24 @@ namespace GTA
 		return list;
 	}
 
-    bool PedGroup::Exists()
-    {
-        return Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, Handle);
-    }
-    bool PedGroup::Exists(PedGroup ^pedGroup)
-    {
-        return !Object::ReferenceEquals(pedGroup, nullptr) && pedGroup->Exists();
-    }
+	bool PedGroup::Exists()
+	{
+		return Native::Function::Call<bool>(Native::Hash::DOES_GROUP_EXIST, Handle);
+	}
+	bool PedGroup::Exists(PedGroup ^pedGroup)
+	{
+		return !Object::ReferenceEquals(pedGroup, nullptr) && pedGroup->Exists();
+	}
 
-    bool PedGroup::Equals(Object ^value)
-    {
-        if (value == nullptr || value->GetType() != GetType())
-            return false;
+	bool PedGroup::Equals(Object ^value)
+	{
+		if (value == nullptr || value->GetType() != GetType())
+			return false;
 
-        return Equals(safe_cast<PedGroup ^>(value));
-    }
-    bool PedGroup::Equals(PedGroup ^pedGroup)
-    {
-        return !Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
-    }
+		return Equals(safe_cast<PedGroup ^>(value));
+	}
+	bool PedGroup::Equals(PedGroup ^pedGroup)
+	{
+		return !Object::ReferenceEquals(pedGroup, nullptr) && Handle == pedGroup->Handle;
+	}
 }

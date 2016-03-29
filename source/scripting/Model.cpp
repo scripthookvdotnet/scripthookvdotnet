@@ -24,10 +24,10 @@ namespace GTA
 	{
 		return _hash;
 	}
-    int Model::NativeValue::get()
-    {
-        return Hash;
-    }
+	int Model::NativeValue::get()
+	{
+		return Hash;
+	}
 	bool Model::IsValid::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_VALID, Hash);
@@ -86,15 +86,15 @@ namespace GTA
 	}
 	bool Model::IsCargobob::get()
 	{
-        switch (static_cast<Native::VehicleHash>(Hash))
-        {
-            case Native::VehicleHash::Cargobob:
-            case Native::VehicleHash::Cargobob2:
-            case Native::VehicleHash::Cargobob3:
-            case Native::VehicleHash::Cargobob4:
-                return true;
-        }
-        return false;
+		switch (static_cast<Native::VehicleHash>(Hash))
+		{
+			case Native::VehicleHash::Cargobob:
+			case Native::VehicleHash::Cargobob2:
+			case Native::VehicleHash::Cargobob3:
+			case Native::VehicleHash::Cargobob4:
+				return true;
+		}
+		return false;
 	}
 
 	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)

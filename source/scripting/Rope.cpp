@@ -68,20 +68,20 @@ namespace GTA
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ROPE_VERTEX_COORD, Handle, vertex);
 	}
 
-    void Rope::Delete()
-    {
-        int handle = Handle;
-        Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
-    }
+	void Rope::Delete()
+	{
+		int handle = Handle;
+		Native::Function::Call(Native::Hash::DELETE_ROPE, &handle);
+	}
 
 	bool Rope::Exists()
 	{
-        int handle = Handle;
-        return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
+		int handle = Handle;
+		return Native::Function::Call<bool>(Native::Hash::DOES_ROPE_EXIST, &handle);
 	}
 	bool Rope::Exists(Rope ^rope)
 	{
-        return !Object::ReferenceEquals(rope, nullptr) && rope->Exists();
+		return !Object::ReferenceEquals(rope, nullptr) && rope->Exists();
 	}
 
 	bool Rope::Equals(Object ^value)

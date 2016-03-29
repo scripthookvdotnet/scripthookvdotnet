@@ -97,17 +97,17 @@ namespace GTA
 					return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
 				}
 
-                // Scripting types
-                if (INativeValue::typeid->IsAssignableFrom(type))
-                {
-                    return safe_cast<INativeValue ^>(value)->NativeValue;
-                }
-                if (IHandleable::typeid->IsAssignableFrom(type))
-                {
-                    return safe_cast<IHandleable ^>(value)->Handle;
-                }
+				// Scripting types
+				if (INativeValue::typeid->IsAssignableFrom(type))
+				{
+					return safe_cast<INativeValue ^>(value)->NativeValue;
+				}
+				if (IHandleable::typeid->IsAssignableFrom(type))
+				{
+					return safe_cast<IHandleable ^>(value)->Handle;
+				}
 
-                /*
+				/*
 				if (type == Model::typeid)
 				{
 					return static_cast<Model>(value).Hash;
@@ -149,7 +149,7 @@ namespace GTA
 				{
 					return static_cast<Vehicle ^>(value)->Handle;
 				}
-                */
+				*/
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
@@ -208,12 +208,12 @@ namespace GTA
 				// Math types
 				if (type == Math::Vector2::typeid)
 				{
-                    NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
+					NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
 					return gcnew Math::Vector2(vec->x, vec->y);
 				}
 				if (type == Math::Vector3::typeid)
 				{
-                    NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
+					NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
 					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
 				}
 

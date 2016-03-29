@@ -646,11 +646,11 @@ namespace GTA
 		array<Ped ^> ^ToArray(bool includingLeader);
 		Generic::List<Ped ^> ^ToList(bool includingLeader);
 
-        virtual bool Exists();
-        static bool Exists(PedGroup ^pedGroup);
+		virtual bool Exists();
+		static bool Exists(PedGroup ^pedGroup);
 
-        virtual bool Equals(System::Object ^obj) override;
-        virtual bool Equals(PedGroup ^pedGroup);
+		virtual bool Equals(System::Object ^obj) override;
+		virtual bool Equals(PedGroup ^pedGroup);
 
 		virtual inline int GetHashCode() override
 		{

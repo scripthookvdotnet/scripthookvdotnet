@@ -23,7 +23,7 @@ namespace GTA
 			Math::Vector3 get();
 		}
 
-        void Delete();
+		void Delete();
 		bool ObjectExists();
 
 		virtual bool Exists();

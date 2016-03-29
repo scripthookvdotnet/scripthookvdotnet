@@ -11,7 +11,7 @@ namespace GTA
 	ref class Entity;
 	#pragma endregion
 
-    public ref class Player sealed : System::IEquatable<Player ^>, IHandleable
+	public ref class Player sealed : System::IEquatable<Player ^>, IHandleable
 	{
 	public:
 		Player(int handle);
@@ -123,15 +123,15 @@ namespace GTA
 		void SetMayOnlyEnterThisVehicleThisFrame(Vehicle ^vehicle);
 		void SetMayNotEnterAnyVehicleThisFrame();
 
-        virtual bool Equals(System::Object ^obj) override;
-        virtual bool Equals(Player ^player);
+		virtual bool Equals(System::Object ^obj) override;
+		virtual bool Equals(Player ^player);
 
-        virtual inline bool Exists() = IHandleable::Exists
-        {
-            // IHandleable forces us to implement this unfortunately,
-            // so we'll implement it explicitly and return true
-            return true;
-        }
+		virtual inline bool Exists() = IHandleable::Exists
+		{
+			// IHandleable forces us to implement this unfortunately,
+			// so we'll implement it explicitly and return true
+			return true;
+		}
 
 		virtual inline int GetHashCode() override
 		{

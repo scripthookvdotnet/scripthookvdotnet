@@ -295,7 +295,7 @@ namespace GTA
 		void HideNumber();
 		void ShowNumber(int number);
 
-        void Remove();
+		void Remove();
 
 		virtual bool Exists();
 		static bool Exists(Blip ^blip);

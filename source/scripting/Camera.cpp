@@ -234,18 +234,18 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::STOP_CAM_POINTING, Handle);
 	}
-    void Camera::Destroy()
-    {
-        Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
-    }
+	void Camera::Destroy()
+	{
+		Native::Function::Call(Native::Hash::DESTROY_CAM, Handle, 0);
+	}
 
 	bool Camera::Exists()
 	{
-        return Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, Handle);
+		return Native::Function::Call<bool>(Native::Hash::DOES_CAM_EXIST, Handle);
 	}
 	bool Camera::Exists(Camera ^camera)
 	{
-        return !Object::ReferenceEquals(camera, nullptr) && camera->Exists();
+		return !Object::ReferenceEquals(camera, nullptr) && camera->Exists();
 	}
 	
 	bool Camera::Equals(Object ^value)

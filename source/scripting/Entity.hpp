@@ -232,7 +232,7 @@ namespace GTA
 		bool HasBone(System::String ^boneName);
 
 		void Delete();
-        void MarkAsNoLongerNeeded();
+		void MarkAsNoLongerNeeded();
 
 		virtual bool Exists();
 		static bool Exists(Entity ^entity);
