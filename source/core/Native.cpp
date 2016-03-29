@@ -98,21 +98,16 @@ namespace GTA
 				}
 
 				// Scripting types
-				if (INativeValue::typeid->IsAssignableFrom(type))
-				{
-					return safe_cast<INativeValue ^>(value)->NativeValue;
-				}
 				if (IHandleable::typeid->IsAssignableFrom(type))
 				{
 					return safe_cast<IHandleable ^>(value)->Handle;
 				}
-
-				/*
 				if (type == Model::typeid)
 				{
 					return static_cast<Model>(value).Hash;
 				}
 
+                /*
 				if (type == Blip::typeid)
 				{
 					return static_cast<Blip ^>(value)->Handle;

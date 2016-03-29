@@ -24,10 +24,6 @@ namespace GTA
 	{
 		return _hash;
 	}
-	int Model::NativeValue::get()
-	{
-		return Hash;
-	}
 	bool Model::IsValid::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_MODEL_VALID, Hash);

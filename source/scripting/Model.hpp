@@ -9,7 +9,7 @@
 
 namespace GTA
 {
-	public value class Model : System::IEquatable<Model>, INativeValue
+	public value class Model : System::IEquatable<Model>
 	{
 	public:
 		Model(int hash);
@@ -129,11 +129,6 @@ namespace GTA
 		static inline bool operator!=(Model left, Model right)
 		{
 			return !operator==(left, right);
-		}
-	protected:
-		virtual property int NativeValue
-		{
-			int get() = INativeValue::NativeValue::get;
 		}
 	private:
 		int _hash;

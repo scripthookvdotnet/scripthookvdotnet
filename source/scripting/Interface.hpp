@@ -2,14 +2,6 @@
 
 namespace GTA
 {
-	public interface class INativeValue
-	{
-		property int NativeValue
-		{
-			int get();
-		}
-	};
-
 	public interface class IHandleable
 	{
 		property int Handle
