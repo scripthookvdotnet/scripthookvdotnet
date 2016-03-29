@@ -590,7 +590,7 @@ namespace GTA
 	}
 	void Ped::SetConfigFlag(int flagID, bool value)
 	{
-		Native::Function::Call(Native::Hash::GET_PED_CONFIG_FLAG, Handle, flagID, value);
+		Native::Function::Call(Native::Hash::SET_PED_CONFIG_FLAG, Handle, flagID, value);
 	}
 	void Ped::ResetConfigFlag(int flagID)
 	{
