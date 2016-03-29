@@ -22,9 +22,7 @@ namespace GTA
 					Entity
 				};
 
-				EntityPoolTask(Type type) : _type(type), _handles(gcnew List<int>()), _posCheck(false), _modelCheck(false)
-				{
-				}
+				EntityPoolTask(Type type) : _type(type), _handles(gcnew List<int>()), _posCheck(false), _modelCheck(false) { }
 
 				bool CheckEntity(uintptr_t address)
 				{

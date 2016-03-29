@@ -74,8 +74,7 @@ namespace
 namespace
 {
 	bool sGameReloaded = false;
-	PVOID sMainFib = nullptr;
-	PVOID sScriptFib = nullptr;
+	PVOID sMainFib = nullptr, sScriptFib = nullptr;
 
 	void ScriptYield()
 	{

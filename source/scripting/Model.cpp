@@ -1,5 +1,6 @@
 #include "Model.hpp"
 #include "Native.hpp"
+#include "Game.hpp"
 #include "Script.hpp"
 
 namespace GTA

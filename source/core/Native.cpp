@@ -53,19 +53,18 @@ namespace GTA
 					_result = nativeCall();
 				}
 
-				UINT64 _hash;
-				PUINT64 _result;
+				UINT64 _hash, *_result;
 				array<InputArgument ^> ^_arguments;
 			};
 
-			UINT64 ObjectToNative(System::Object ^value)
+			UINT64 ObjectToNative(Object ^value)
 			{
-				if (System::Object::ReferenceEquals(value, nullptr))
+				if (Object::ReferenceEquals(value, nullptr))
 				{
 					return 0;
 				}
 
-				System::Type ^type = value->GetType();
+				Type ^type = value->GetType();
 
 				// Fundamental types
 				if (type == Boolean::typeid)
@@ -98,57 +97,18 @@ namespace GTA
 				}
 
 				// Scripting types
-				if (IHandleable::typeid->IsAssignableFrom(type))
-				{
-					return safe_cast<IHandleable ^>(value)->Handle;
-				}
 				if (type == Model::typeid)
 				{
 					return static_cast<Model>(value).Hash;
 				}
-
-                /*
-				if (type == Blip::typeid)
+				if (IHandleable::typeid->IsAssignableFrom(type))
 				{
-					return static_cast<Blip ^>(value)->Handle;
+					return safe_cast<IHandleable ^>(value)->Handle;
 				}
-				if (type == Camera::typeid)
-				{
-					return static_cast<Camera ^>(value)->Handle;
-				}
-				if (type == Entity::typeid)
-				{
-					return static_cast<Entity ^>(value)->Handle;
-				}
-				if (type == Ped::typeid)
-				{
-					return static_cast<Ped ^>(value)->Handle;
-				}
-				if (type == PedGroup::typeid)
-				{
-					return static_cast<PedGroup ^>(value)->Handle;
-				}
-				if (type == Player::typeid)
-				{
-					return static_cast<Player ^>(value)->Handle;
-				}
-				if (type == Prop::typeid)
-				{
-					return static_cast<Prop ^>(value)->Handle;
-				}
-				if (type == Rope::typeid)
-				{
-					return static_cast<Rope ^>(value)->Handle;
-				}
-				if (type == Vehicle::typeid)
-				{
-					return static_cast<Vehicle ^>(value)->Handle;
-				}
-				*/
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
-			System::Object ^ObjectFromNative(System::Type ^type, PUINT64 value)
+			Object ^ObjectFromNative(Type ^type, UINT64 *value)
 			{
 				// Fundamental types
 				if (type == Boolean::typeid)
@@ -269,15 +229,19 @@ namespace GTA
 			}
 		}
 
-		InputArgument::InputArgument(System::Object ^value) : _data(ObjectToNative(value))
+		InputArgument::InputArgument(Object ^value) : _data(ObjectToNative(value))
 		{
 		}
 		OutputArgument::OutputArgument() : _storage(new unsigned char[24]()), InputArgument(IntPtr(_storage))
 		{
 		}
-		OutputArgument::OutputArgument(System::Object ^value) : OutputArgument()
+		OutputArgument::OutputArgument(Object ^value) : OutputArgument()
 		{
 			*reinterpret_cast<UINT64 *>(_storage) = ObjectToNative(value);
+		}
+		OutputArgument::~OutputArgument()
+		{
+			this->!OutputArgument();
 		}
 		OutputArgument::!OutputArgument()
 		{
@@ -287,7 +251,7 @@ namespace GTA
 		generic <typename T>
 		T OutputArgument::GetResult()
 		{
-			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<PUINT64>(_data)));
+			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<UINT64 *>(_data)));
 		}
 
 		generic <typename T>
