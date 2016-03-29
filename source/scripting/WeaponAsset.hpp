@@ -38,6 +38,14 @@ namespace GTA
 		{
 			return "0x" + static_cast<System::UInt32>(Hash).ToString("X");
 		}
+		static inline operator WeaponAsset(int source)
+		{
+			return WeaponAsset(source);
+		}
+		static inline operator WeaponAsset(System::UInt32 source)
+		{
+			return WeaponAsset(source);
+		}
 		static inline operator WeaponAsset(Native::WeaponHash source)
 		{
 			return WeaponAsset(source);
