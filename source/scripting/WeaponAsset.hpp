@@ -4,12 +4,12 @@
 
 namespace GTA
 {
-	public value class WeaponAsset
+	public value class WeaponAsset : System::IEquatable<WeaponAsset>
 	{
 	public:
-		WeaponAsset(int hash);
-		WeaponAsset(System::UInt32 hash);
-		WeaponAsset(Native::WeaponHash hash);
+		WeaponAsset(int weaponHash);
+		WeaponAsset(System::UInt32 weaponHash);
+		WeaponAsset(Native::WeaponHash weaponHash);
 
 		property int Hash
 		{
@@ -27,7 +27,8 @@ namespace GTA
 		void Request();
 		bool Request(int timeout);
 		void Dismiss();
-		virtual bool Equals(WeaponAsset model);
+		virtual bool Equals(System::Object ^obj) override;
+		virtual bool Equals(WeaponAsset weaponAsset);
 
 		virtual inline int GetHashCode() override
 		{

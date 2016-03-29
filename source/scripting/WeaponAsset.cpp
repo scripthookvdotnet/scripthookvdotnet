@@ -4,13 +4,13 @@
 
 namespace GTA
 {
-	WeaponAsset::WeaponAsset(int hash) : _hash(hash)
+	WeaponAsset::WeaponAsset(int weaponHash) : _hash(weaponHash)
 	{
 	}
-	WeaponAsset::WeaponAsset(System::UInt32 hash) : _hash(static_cast<int>(hash))
+	WeaponAsset::WeaponAsset(System::UInt32 weaponHash) : _hash(static_cast<int>(weaponHash))
 	{
 	}
-	WeaponAsset::WeaponAsset(Native::WeaponHash hash) : _hash(static_cast<int>(hash))
+	WeaponAsset::WeaponAsset(Native::WeaponHash weaponHash) : _hash(static_cast<int>(weaponHash))
 	{
 	}
 
@@ -53,8 +53,15 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::REMOVE_WEAPON_ASSET, Hash);
 	}
-	bool WeaponAsset::Equals(WeaponAsset model)
+	bool WeaponAsset::Equals(Object ^value)
 	{
-		return Hash == model.Hash;
+		if (value == nullptr || value->GetType() != GetType())
+			return false;
+
+		return Equals(safe_cast<WeaponAsset>(value));
+	}
+	bool WeaponAsset::Equals(WeaponAsset weaponAsset)
+	{
+		return Hash == weaponAsset.Hash;
 	}
 }
