@@ -179,8 +179,11 @@ namespace GTA
 		compilerOptions->GenerateInMemory = true;
 		compilerOptions->IncludeDebugInformation = true;
 		compilerOptions->ReferencedAssemblies->Add("System.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.Core.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
 		compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.XML.dll");
+		compilerOptions->ReferencedAssemblies->Add("System.XML.Linq.dll");
 		compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
 
 		String ^extension = IO::Path::GetExtension(filename);
