@@ -16,8 +16,6 @@
 
 #pragma once
 
-#include "Game.hpp"
-
 namespace GTA
 {
 	#pragma region Forward Declarations
@@ -29,9 +27,7 @@ namespace GTA
 	public ref class RequireScript : System::Attribute
 	{
 	public:
-		RequireScript(System::Type ^dependency) : _dependency(dependency)
-		{
-		}
+		RequireScript(System::Type ^dependency) : _dependency(dependency) { }
 
 	internal:
 		System::Type ^_dependency;

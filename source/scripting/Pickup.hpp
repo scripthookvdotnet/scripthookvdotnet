@@ -23,10 +23,12 @@ namespace GTA
 			Math::Vector3 get();
 		}
 
+		void Delete();
+		bool ObjectExists();
+
 		virtual bool Exists();
 		static bool Exists(Pickup ^pickup);
-		bool ObjectExists();
-		void Delete();
+
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Pickup ^pickup);
 
@@ -34,6 +36,7 @@ namespace GTA
 		{
 			return Handle;
 		}
+
 		static inline bool operator==(Pickup ^left, Pickup ^right)
 		{
 			if (ReferenceEquals(left, nullptr))

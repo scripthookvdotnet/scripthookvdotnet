@@ -1,5 +1,6 @@
 #include "Model.hpp"
 #include "Native.hpp"
+#include "Game.hpp"
 #include "Script.hpp"
 
 namespace GTA
@@ -82,7 +83,15 @@ namespace GTA
 	}
 	bool Model::IsCargobob::get()
 	{
-		return Hash == static_cast<int>(Native::VehicleHash::Cargobob) || Hash == static_cast<int>(Native::VehicleHash::Cargobob2) || Hash == static_cast<int>(Native::VehicleHash::Cargobob3) || Hash == static_cast<int>(Native::VehicleHash::Cargobob4);
+		switch (static_cast<Native::VehicleHash>(Hash))
+		{
+			case Native::VehicleHash::Cargobob:
+			case Native::VehicleHash::Cargobob2:
+			case Native::VehicleHash::Cargobob3:
+			case Native::VehicleHash::Cargobob4:
+				return true;
+		}
+		return false;
 	}
 
 	void Model::GetDimensions([System::Runtime::InteropServices::OutAttribute] Math::Vector3 %minimum, [System::Runtime::InteropServices::OutAttribute] Math::Vector3 %maximum)
