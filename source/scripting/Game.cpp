@@ -39,9 +39,11 @@ namespace GTA
 	}
 	void Global::SetVector3(Math::Vector3 value)
 	{
-		*(reinterpret_cast<float *>(this->mAddress) + 0) = value.X;
-		*(reinterpret_cast<float *>(this->mAddress) + 1) = value.Y;
-		*(reinterpret_cast<float *>(this->mAddress) + 2) = value.Z;
+		float *vec = reinterpret_cast<float *>(this->mAddress);
+
+		*(vec + 0) = value.X;
+		*(vec + 1) = value.Y;
+		*(vec + 2) = value.Z;
 	}
 	int Global::GetInt()
 	{
@@ -57,7 +59,9 @@ namespace GTA
 	}
 	Math::Vector3 Global::GetVector3()
 	{
-		return Math::Vector3(*(reinterpret_cast<float *>(this->mAddress) + 0), *(reinterpret_cast<float *>(this->mAddress) + 1), *(reinterpret_cast<float *>(this->mAddress) + 2));
+		float *vec = reinterpret_cast<float *>(this->mAddress);
+
+		return Math::Vector3(*(vec + 0), *(vec + 1), *(vec + 2));
 	}
 
 	Global GlobalCollection::default::get(int index)

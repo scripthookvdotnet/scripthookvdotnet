@@ -80,7 +80,7 @@ namespace GTA
 		System::IntPtr PinString(System::String ^string);
 		inline bool IsKeyPressed(System::Windows::Forms::Keys key)
 		{
-			return this->_keyboardState[static_cast<int>(key)];
+			return _keyboardState[static_cast<int>(key)];
 		}
 		inline System::String ^LookupScriptFilename(Script ^script)
 		{

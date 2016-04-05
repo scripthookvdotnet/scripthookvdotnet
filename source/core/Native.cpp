@@ -45,7 +45,7 @@ namespace GTA
 				{
 					nativeInit(_hash);
 
-					for each (InputArgument ^argument in _arguments)
+					for each (auto argument in _arguments)
 					{
 						nativePush64(argument->_data);
 					}
@@ -53,19 +53,18 @@ namespace GTA
 					_result = nativeCall();
 				}
 
-				UINT64 _hash;
-				PUINT64 _result;
+				UINT64 _hash, *_result;
 				array<InputArgument ^> ^_arguments;
 			};
 
-			UINT64 ObjectToNative(System::Object ^value)
+			UINT64 ObjectToNative(Object ^value)
 			{
-				if (System::Object::ReferenceEquals(value, nullptr))
+				if (Object::ReferenceEquals(value, nullptr))
 				{
 					return 0;
 				}
 
-				System::Type ^type = value->GetType();
+				Type ^type = value->GetType();
 
 				// Fundamental types
 				if (type == Boolean::typeid)
@@ -102,75 +101,42 @@ namespace GTA
 				{
 					return static_cast<Model>(value).Hash;
 				}
-
-				if (type == Blip::typeid)
+				if (IHandleable::typeid->IsAssignableFrom(type))
 				{
-					return static_cast<Blip ^>(value)->Handle;
-				}
-				if (type == Camera::typeid)
-				{
-					return static_cast<Camera ^>(value)->Handle;
-				}
-				if (type == Entity::typeid)
-				{
-					return static_cast<Entity ^>(value)->Handle;
-				}
-				if (type == Ped::typeid)
-				{
-					return static_cast<Ped ^>(value)->Handle;
-				}
-				if (type == PedGroup::typeid)
-				{
-					return static_cast<PedGroup ^>(value)->Handle;
-				}
-				if (type == Player::typeid)
-				{
-					return static_cast<Player ^>(value)->Handle;
-				}
-				if (type == Prop::typeid)
-				{
-					return static_cast<Prop ^>(value)->Handle;
-				}
-				if (type == Rope::typeid)
-				{
-					return static_cast<Rope ^>(value)->Handle;
-				}
-				if (type == Vehicle::typeid)
-				{
-					return static_cast<Vehicle ^>(value)->Handle;
+					return safe_cast<IHandleable ^>(value)->Handle;
 				}
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
-			System::Object ^ObjectFromNative(System::Type ^type, PUINT64 value)
+			Object ^ObjectFromNative(Type ^type, UINT64 *value)
 			{
 				// Fundamental types
 				if (type == Boolean::typeid)
 				{
-					return *reinterpret_cast<int *>(value) != 0;
+					return *reinterpret_cast<const int *>(value) != 0;
 				}
 				if (type == Int32::typeid)
 				{
-					return *reinterpret_cast<int *>(value);
+					return *reinterpret_cast<const int *>(value);
 				}
 				if (type == UInt32::typeid)
 				{
-					return *reinterpret_cast<unsigned int *>(value);
+					return *reinterpret_cast<const unsigned int *>(value);
 				}
 				if (type == Single::typeid)
 				{
-					return *reinterpret_cast<float *>(value);
+					return *reinterpret_cast<const float *>(value);
 				}
 				if (type == Double::typeid)
 				{
-					return static_cast<double>(*reinterpret_cast<float *>(value));
+					return static_cast<double>(*reinterpret_cast<const float *>(value));
 				}
 				if (type == String::typeid)
 				{
 					if (*value != 0)
 					{
-						const int size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
-						array<Byte> ^bytes = gcnew array<Byte>(size);
+						const auto size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
+						const auto bytes = gcnew array<Byte>(size);
 
 						Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(static_cast<Int64>(*value)), bytes, 0, size);
 
@@ -182,7 +148,7 @@ namespace GTA
 					}
 				}
 
-				#pragma pack(push, 1)
+#pragma pack(push, 1)
 				struct NativeVector3
 				{
 					float x;
@@ -192,16 +158,18 @@ namespace GTA
 					float z;
 					DWORD _paddingz;
 				};
-				#pragma pack(pop)
+#pragma pack(pop)
 
 				// Math types
 				if (type == Math::Vector2::typeid)
 				{
-					return gcnew Math::Vector2(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y);
+					const auto vec = reinterpret_cast<NativeVector3 *>(value);
+					return gcnew Math::Vector2(vec->x, vec->y);
 				}
 				if (type == Math::Vector3::typeid)
 				{
-					return gcnew Math::Vector3(reinterpret_cast<NativeVector3 *>(value)->x, reinterpret_cast<NativeVector3 *>(value)->y, reinterpret_cast<NativeVector3 *>(value)->z);
+					const auto vec = reinterpret_cast<NativeVector3 *>(value);
+					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
 				}
 
 				const int handle = *reinterpret_cast<int *>(value);
@@ -261,15 +229,19 @@ namespace GTA
 			}
 		}
 
-		InputArgument::InputArgument(System::Object ^value) : _data(ObjectToNative(value))
+		InputArgument::InputArgument(Object ^value) : _data(ObjectToNative(value))
 		{
 		}
 		OutputArgument::OutputArgument() : _storage(new unsigned char[24]()), InputArgument(IntPtr(_storage))
 		{
 		}
-		OutputArgument::OutputArgument(System::Object ^value) : OutputArgument()
+		OutputArgument::OutputArgument(Object ^value) : OutputArgument()
 		{
 			*reinterpret_cast<UINT64 *>(_storage) = ObjectToNative(value);
+		}
+		OutputArgument::~OutputArgument()
+		{
+			this->!OutputArgument();
 		}
 		OutputArgument::!OutputArgument()
 		{
@@ -279,7 +251,7 @@ namespace GTA
 		generic <typename T>
 		T OutputArgument::GetResult()
 		{
-			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<PUINT64>(_data)));
+			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<UINT64 *>(_data)));
 		}
 
 		generic <typename T>
@@ -294,7 +266,7 @@ namespace GTA
 		generic <typename T>
 		T Function::Call(UInt64 hash, ... array<InputArgument ^> ^arguments)
 		{
-			NativeTask ^task = gcnew NativeTask();
+			const auto task = gcnew NativeTask();
 			task->_hash = hash;
 			task->_arguments = arguments;
 

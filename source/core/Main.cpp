@@ -74,8 +74,7 @@ namespace
 namespace
 {
 	bool sGameReloaded = false;
-	PVOID sMainFib = nullptr;
-	PVOID sScriptFib = nullptr;
+	PVOID sMainFib = nullptr, sScriptFib = nullptr;
 
 	void ScriptYield()
 	{
@@ -97,12 +96,17 @@ namespace
 	}
 	void ScriptMainSetup()
 	{
-		// Disable mplowrider2 car removing
-		const auto global2558120 = getGlobalPtr(2558120);
+		const auto version = getGameVersion();
 
-		if (global2558120 != nullptr)
+		if (version >= 18)
 		{
-			*global2558120 = 1;
+			// Disable mplowrider2 car removing
+			const auto global2558120 = getGlobalPtr(2558120);
+
+			if (global2558120 != nullptr)
+			{
+				*global2558120 = 1;
+			}
 		}
 
 		// Set up fibers
