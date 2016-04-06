@@ -45,7 +45,7 @@ namespace GTA
 				{
 					nativeInit(_hash);
 
-					for each (InputArgument ^argument in _arguments)
+					for each (auto argument in _arguments)
 					{
 						nativePush64(argument->_data);
 					}
@@ -113,30 +113,30 @@ namespace GTA
 				// Fundamental types
 				if (type == Boolean::typeid)
 				{
-					return *reinterpret_cast<int *>(value) != 0;
+					return *reinterpret_cast<const int *>(value) != 0;
 				}
 				if (type == Int32::typeid)
 				{
-					return *reinterpret_cast<int *>(value);
+					return *reinterpret_cast<const int *>(value);
 				}
 				if (type == UInt32::typeid)
 				{
-					return *reinterpret_cast<unsigned int *>(value);
+					return *reinterpret_cast<const unsigned int *>(value);
 				}
 				if (type == Single::typeid)
 				{
-					return *reinterpret_cast<float *>(value);
+					return *reinterpret_cast<const float *>(value);
 				}
 				if (type == Double::typeid)
 				{
-					return static_cast<double>(*reinterpret_cast<float *>(value));
+					return static_cast<double>(*reinterpret_cast<const float *>(value));
 				}
 				if (type == String::typeid)
 				{
 					if (*value != 0)
 					{
-						const int size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
-						array<Byte> ^bytes = gcnew array<Byte>(size);
+						const auto size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
+						const auto bytes = gcnew array<Byte>(size);
 
 						Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(static_cast<Int64>(*value)), bytes, 0, size);
 
@@ -148,7 +148,7 @@ namespace GTA
 					}
 				}
 
-				#pragma pack(push, 1)
+#pragma pack(push, 1)
 				struct NativeVector3
 				{
 					float x;
@@ -158,17 +158,17 @@ namespace GTA
 					float z;
 					DWORD _paddingz;
 				};
-				#pragma pack(pop)
+#pragma pack(pop)
 
 				// Math types
 				if (type == Math::Vector2::typeid)
 				{
-					NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
+					const auto vec = reinterpret_cast<NativeVector3 *>(value);
 					return gcnew Math::Vector2(vec->x, vec->y);
 				}
 				if (type == Math::Vector3::typeid)
 				{
-					NativeVector3 *vec = reinterpret_cast<NativeVector3 *>(value);
+					const auto vec = reinterpret_cast<NativeVector3 *>(value);
 					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
 				}
 
@@ -266,7 +266,7 @@ namespace GTA
 		generic <typename T>
 		T Function::Call(UInt64 hash, ... array<InputArgument ^> ^arguments)
 		{
-			NativeTask ^task = gcnew NativeTask();
+			const auto task = gcnew NativeTask();
 			task->_hash = hash;
 			task->_arguments = arguments;
 
