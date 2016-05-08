@@ -15,7 +15,6 @@ namespace GTA
 	{
 		namespace
 		{
-			// TODO: Fix this for the latest game patch
 			private ref struct NmApply : IScriptTask
 			{
 			public:
@@ -144,7 +143,7 @@ namespace GTA
 
 		void Message::Abort(Ped ^target)
 		{
-			//ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
+			ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
 		}
 		void Message::SendTo(Ped ^target)
 		{
@@ -160,8 +159,7 @@ namespace GTA
 
 			SetArgument("start", true);
 
-			//ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
-			Log("[ERROR]", "The euphoria system is currently disabled due to incompatibility with the latest game patch.");
+			ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
 		}
 		void Message::SendTo(Ped ^target, int duration)
 		{
