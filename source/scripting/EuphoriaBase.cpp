@@ -15,7 +15,6 @@ namespace GTA
 	{
 		namespace
 		{
-			// TODO: Fix this for the latest game patch
 			private ref struct NmApply : IScriptTask
 			{
 			public:
@@ -84,12 +83,12 @@ namespace GTA
 						return;
 					if (*reinterpret_cast<__int64*>(_PedAddress + 48) == 0)
 						return;
-					PedNmAddress = *reinterpret_cast<__int64*>(_PedAddress + 5016);
-					if (*reinterpret_cast<__int64*>(_PedAddress + 48) == PedNmAddress && *reinterpret_cast<float*>(_PedAddress + 5232) <= *reinterpret_cast<float*>(_PedAddress + 640))
+					PedNmAddress = *reinterpret_cast<__int64*>(_PedAddress + 5032); //
+					if (*reinterpret_cast<__int64*>(_PedAddress + 48) == PedNmAddress && *reinterpret_cast<float*>(_PedAddress + 5248) <= *reinterpret_cast<float*>(_PedAddress + 640))
 					{
 						if ((*reinterpret_cast<int(**)(__int64)> (*reinterpret_cast<__int64*>(PedNmAddress)+152))(PedNmAddress) != -1)
 						{
-							if (*(short *)(reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xA2) + BaseFunc + 0xA6)(*(__int64 *)(*(__int64 *)(_PedAddress + 4208) + 864)) + 52) == 401)
+							if (*(short *)(reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xA2) + BaseFunc + 0xA6)(*(__int64 *)(*(__int64 *)(_PedAddress + 4224) + 864)) + 52) == 401)
 							{
 								v5 = true;
 							}
@@ -101,14 +100,14 @@ namespace GTA
 									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xD3) + BaseFunc + 0xD7)(UnkStrAddr);
 									v7 = *(__int8*)ByteAddr;
 								}
-								int count = *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 1064);
+								int count = *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4224) + 1064);
 								if (v7)
 								{
 									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xF0) + BaseFunc + 0xF4)(UnkStrAddr);
 								}
 								for (int i = 0; i < count; i++)
 								{
-									v11 = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 8 * ((i + *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208) + 1060) + 1) % 16) + 928);
+									v11 = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_PedAddress + 4224) + 8 * ((i + *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4224) + 1060) + 1) % 16) + 928);
 									if (v11)
 									{
 										if ((*(int(__fastcall **)(__int64))(*reinterpret_cast<__int64*>(v11)+24))(v11) == 132)
@@ -144,7 +143,7 @@ namespace GTA
 
 		void Message::Abort(Ped ^target)
 		{
-			//ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
+			ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
 		}
 		void Message::SendTo(Ped ^target)
 		{
@@ -160,8 +159,7 @@ namespace GTA
 
 			SetArgument("start", true);
 
-			//ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
-			Log("[ERROR]", "The euphoria system is currently disabled due to incompatibility with the latest game patch.");
+			ScriptDomain::CurrentDomain->ExecuteTask(gcnew NmApply(this, target));
 		}
 		void Message::SendTo(Ped ^target, int duration)
 		{
