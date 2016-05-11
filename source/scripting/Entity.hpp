@@ -202,8 +202,10 @@ namespace GTA
 		}
 
 		bool IsInRangeOf(Math::Vector3 position, float range);
-		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2);
+		bool IsInArea(Math::Vector3 minBounds, Math::Vector3 maxBounds);
+		[System::ObsoleteAttribute("The Entity.IsInArea(Vector3, Vector3, float) is obsolete, use Entity.IsInAngledArea(Vector3, Vector3, float) instead.")]
 		bool IsInArea(Math::Vector3 pos1, Math::Vector3 pos2, float angle);
+		bool IsInAngledArea(Math::Vector3 Origin, Math::Vector3 Edge, float angle);
 		bool IsNearEntity(Entity^ entity, Math::Vector3 distance);
 		bool IsTouching(Entity ^entity);
 		bool IsTouching(GTA::Model model);
