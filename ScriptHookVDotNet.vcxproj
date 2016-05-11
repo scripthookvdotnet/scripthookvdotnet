@@ -104,6 +104,7 @@
     <ClCompile Include="source\scripting\Vector2.cpp" />
     <ClCompile Include="source\scripting\Vector3.cpp" />
     <ClCompile Include="source\scripting\Vehicle.cpp" />
+    <ClCompile Include="source\scripting\WeaponAsset.cpp" />
     <ClCompile Include="source\scripting\World.cpp" />
     <ClCompile Include="source\scripting\Weapon.cpp" />
   </ItemGroup>
@@ -137,6 +138,7 @@
     <ClInclude Include="source\scripting\Vector3.hpp" />
     <ClInclude Include="source\scripting\Vehicle.hpp" />
     <ClInclude Include="source\scripting\VehicleHashes.hpp" />
+    <ClInclude Include="source\scripting\WeaponAsset.hpp" />
     <ClInclude Include="source\scripting\WeaponHashes.hpp" />
     <ClInclude Include="source\scripting\World.hpp" />
     <ClInclude Include="source\scripting\Weapon.hpp" />

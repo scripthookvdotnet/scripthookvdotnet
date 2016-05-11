@@ -117,6 +117,9 @@
     <ClCompile Include="source\scripting\Menu.cpp">
       <Filter>scripting\UI</Filter>
     </ClCompile>
+    <ClCompile Include="source\scripting\WeaponAsset.cpp">
+      <Filter>scripting\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\Native.hpp">
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="source\scripting\Interface.hpp">
       <Filter>scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scripting\WeaponAsset.hpp">
+      <Filter>scripting\World</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
