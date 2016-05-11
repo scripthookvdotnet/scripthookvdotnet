@@ -520,6 +520,21 @@ namespace GTA
 		}
 		return nullptr;
 	}
+	ISpatial ^World::GetClosest(Math::Vector3 position, ... array<ISpatial ^> ^spatials)
+	{
+		float closestDist2 = 3e38f;
+		ISpatial ^closest = nullptr;
+		for (int i = 0; i < spatials->Length; i++)
+		{
+			float dist2 = Math::Vector3::Subtract(spatials[i]->Position,  position).LengthSquared();
+			if (dist2 <= closestDist2)
+			{
+				closest = spatials[i];
+				closestDist2 = dist2;
+			}
+		}
+		return closest;
+	}
 	float World::GetDistance(Math::Vector3 origin, Math::Vector3 destination)
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);

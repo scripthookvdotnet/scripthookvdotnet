@@ -9,6 +9,7 @@ namespace GTA
 	ref class Ped;
 	ref class Vehicle;
 	ref class Entity;
+	value class Model;
 	#pragma endregion
 
 	public ref class Player sealed : System::IEquatable<Player ^>, IHandleable
@@ -116,12 +117,26 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
+		property Math::Vector3 WantedCentrePosition
+		{
+			Math::Vector3 get();
+			void set(Math::Vector3 value);
+		}
+
+		void ChangeModel(Model model);
+		void RefillSpecialAbility();
 
 		void DisableFiringThisFrame();
 		bool IsTargetting(Entity ^entity);
+		void SetRunSpeedMultThisFrame(float mult);
+		void SetSwimSpeedMultThisFrame(float mult);
 		Entity ^GetTargetedEntity();
 		void SetMayOnlyEnterThisVehicleThisFrame(Vehicle ^vehicle);
 		void SetMayNotEnterAnyVehicleThisFrame();
+		void SetExplosiveAmmoThisFrame();
+		void SetExplosiveMeleeThisFrame();
+		void SetSuperJumpThisFrame();
+		void SetFireAmmoThisFrame();
 
 		virtual bool Equals(System::Object ^obj) override;
 		virtual bool Equals(Player ^player);

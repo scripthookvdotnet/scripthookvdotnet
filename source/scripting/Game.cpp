@@ -424,4 +424,20 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::_GET_LAST_INPUT_METHOD, 2) ? InputMode::MouseAndKeyboard : InputMode::GamePad;
 	}
+	int Game::GetRandomInt(int max)
+	{
+		return GetRandomInt(0, max);
+	}
+	int Game::GetRandomInt(int min, int max)
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_RANDOM_INT_IN_RANGE, min, max);
+	}
+	float Game::GetRandomFloat(float max)
+	{
+		return GetRandomFloat(0, max);
+	}
+	float Game::GetRandomFloat(float min, float max)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_RANDOM_FLOAT_IN_RANGE, min, max);
+	}
 }

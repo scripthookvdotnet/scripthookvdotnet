@@ -289,6 +289,11 @@ namespace GTA
 		static System::String ^GetUserInput(System::String^ defaultText, int maxLength);
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 
+		static int GetRandomInt(int max);
+		static int GetRandomInt(int min, int max);
+		static float GetRandomFloat(float max);
+		static float GetRandomFloat(float min, float max);
+
 	internal:
 		static initonly array<System::String ^> ^_radioNames = { "RADIO_01_CLASS_ROCK", "RADIO_02_POP", "RADIO_03_HIPHOP_NEW", "RADIO_04_PUNK", "RADIO_05_TALK_01", "RADIO_06_COUNTRY", "RADIO_07_DANCE_01", "RADIO_08_MEXICAN", "RADIO_09_HIPHOP_OLD", "RADIO_11_TALK_02", "RADIO_12_REGGAE", "RADIO_13_JAZZ", "RADIO_14_DANCE_02", "RADIO_15_MOTOWN", "RADIO_16_SILVERLAKE", "RADIO_17_FUNK", "RADIO_18_90S_ROCK", "RADIO_19_USER", "RADIO_20_THELAB", "RADIO_OFF" };
 

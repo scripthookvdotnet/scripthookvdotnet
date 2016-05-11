@@ -589,6 +589,8 @@ namespace GTA
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);
 		int GetBoneIndex(Bone BoneID);
 
+		Math::Vector3 GetLastWeaponImpactCoords();
+
 		bool GetConfigFlag(int flagID);
 		void SetConfigFlag(int flagID, bool value);
 		void ResetConfigFlag(int flagID);

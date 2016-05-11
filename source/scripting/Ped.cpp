@@ -584,6 +584,14 @@ namespace GTA
 		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, Handle, (int)BoneID);
 	}
 
+	Math::Vector3 Ped::GetLastWeaponImpactCoords()
+	{
+		Native::OutputArgument ^OutCoords = gcnew Native::OutputArgument();
+		if (Native::Function::Call<bool>(Native::Hash::GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, OutCoords))
+			return OutCoords->GetResult<Math::Vector3>();
+		return Math::Vector3::Zero;
+	}
+
 	bool Ped::GetConfigFlag(int flagID)
 	{
 		return Native::Function::Call<bool>(Native::Hash::GET_PED_CONFIG_FLAG, Handle, flagID, true);
