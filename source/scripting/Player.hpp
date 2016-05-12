@@ -11,7 +11,24 @@ namespace GTA
 	ref class Entity;
 	value class Model;
 	#pragma endregion
-
+	public enum class ParachuteTint
+	{
+		None = -1,
+		Rainbow = 0,
+		Red = 1,
+		SeasideStripes = 2,
+		WidowMaker = 3,
+		Patriot = 4,
+		Blue = 5,
+		Black = 6,
+		Hornet = 7,
+		AirFocce = 8,
+		Desert = 9,
+		Shadow = 10,
+		HighAltitude = 11,
+		Airbone = 12,
+		Sunrise = 13,
+	};
 	public ref class Player sealed : System::IEquatable<Player ^>, IHandleable
 	{
 	public:
@@ -117,10 +134,20 @@ namespace GTA
 			int get();
 			void set(int value);
 		}
-		property Math::Vector3 WantedCentrePosition
+		property Math::Vector3 WantedCenterPosition
 		{
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
+		}
+		property ParachuteTint PrimaryParachuteTint
+		{
+			ParachuteTint get();
+			void set(ParachuteTint value);
+		}
+		property ParachuteTint ReserveParachuteTint
+		{
+			ParachuteTint get();
+			void set(ParachuteTint value);
 		}
 
 		void ChangeModel(Model model);

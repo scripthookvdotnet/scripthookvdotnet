@@ -173,13 +173,33 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL, Handle, value, false);
 		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL_NOW, Handle, false);
 	}
-	Math::Vector3 Player::WantedCentrePosition::get()
+	Math::Vector3 Player::WantedCenterPosition::get()
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_PLAYER_WANTED_CENTRE_POSITION, Handle);
 	}
-	void Player::WantedCentrePosition::set(Math::Vector3 value)
+	void Player::WantedCenterPosition::set(Math::Vector3 value)
 	{
 		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_CENTRE_POSITION, Handle, value.X, value.Y, value.Z);
+	}
+	ParachuteTint Player::PrimaryParachuteTint::get()
+	{
+		int tint = 0;
+		Native::Function::Call(Native::Hash::GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &tint);
+		return static_cast<int>(tint);
+	}
+	void Player::PrimaryParachuteTint::set(ParachuteTint value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, static_cast<int>(value));
+	}
+	ParachuteTint Player::ReserveParachuteTint::get()
+	{
+		int tint = 0;
+		Native::Function::Call(Native::Hash::GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &tint);
+		return static_cast<int>(tint);
+	}
+	void Player::ReserveParachuteTint::set(ParachuteTint value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, static_cast<int>(value));
 	}
 	void Player::ChangeModel(Model model)
 	{
