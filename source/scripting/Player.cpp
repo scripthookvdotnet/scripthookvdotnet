@@ -185,7 +185,7 @@ namespace GTA
 	{
 		int tint = 0;
 		Native::Function::Call(Native::Hash::GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &tint);
-		return static_cast<int>(tint);
+		return static_cast<ParachuteTint>(tint);
 	}
 	void Player::PrimaryParachuteTint::set(ParachuteTint value)
 	{
@@ -195,7 +195,7 @@ namespace GTA
 	{
 		int tint = 0;
 		Native::Function::Call(Native::Hash::GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &tint);
-		return static_cast<int>(tint);
+		return static_cast<ParachuteTint>(tint);
 	}
 	void Player::ReserveParachuteTint::set(ParachuteTint value)
 	{
