@@ -230,6 +230,7 @@ namespace GTA
 		void ResetAlpha();
 
 		Math::Vector3 GetBoneCoord(int boneIndex);
+		Math::Vector3 GetBoneCoord(System::String ^boneName);
 		int GetBoneIndex(System::String ^boneName);
 		bool HasBone(System::String ^boneName);
 

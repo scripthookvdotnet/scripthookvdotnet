@@ -450,7 +450,11 @@ namespace GTA
 
 	Math::Vector3 Entity::GetBoneCoord(int boneIndex)
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneIndex);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::_GET_ENTITY_BONE_COORDS, Handle, boneIndex);
+	}
+	Math::Vector3 Entity::GetBoneCoord(System::String ^boneName)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::_GET_ENTITY_BONE_COORDS, Handle, GetBoneIndex(boneName));
 	}
 	int Entity::GetBoneIndex(System::String ^boneName)
 	{
