@@ -728,6 +728,14 @@ namespace GTA
 		{
 			float get();
 		}
+		/// <summary>
+		/// Gets the speed the wheels are spinning at
+		/// </summary>
+		/// <value>The speed in metres per second</value>
+		property float WheelSpeed
+		{
+			float get();
+		}
 		[System::ObsoleteAttribute("Vehicle.Steering is obsolete, please use Vehicle.SteeringScale instead.")]
 		property float Steering
 		{

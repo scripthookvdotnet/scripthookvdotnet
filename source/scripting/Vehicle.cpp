@@ -703,6 +703,14 @@ namespace GTA
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
+	float Vehicle::WheelSpeed::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		//old game version hasnt been tested, just following the patterns above for old game ver
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x9A4 : 0x994);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+	}
 	float Vehicle::SteeringAngle::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
