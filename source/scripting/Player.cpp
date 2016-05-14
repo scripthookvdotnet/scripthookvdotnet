@@ -5,7 +5,6 @@
 #include "Prop.hpp"
 #include "Native.hpp"
 #include "Model.hpp"
-#include "UI.hpp"
 
 namespace GTA
 {
@@ -201,18 +200,20 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, static_cast<int>(value));
 	}
-	void Player::ChangeModel(Model model)
+	bool Player::ChangeModel(Model model)
 	{
-		if (model.IsInCdImage && model.IsPed)
+		if (!model.IsInCdImage && !model.IsPed)
 		{
-			if (model.Request(500))
-			{
-				Native::Function::Call(Native::Hash::SET_PLAYER_MODEL, Handle, model.Hash);
-				model.MarkAsNoLongerNeeded();
-				return;
-			}
+			return false;
 		}
-		UI::ShowSubtitle(System::String::Format("Error setting player model to {0}", model.ToString()));
+		if (model.Request(1000))
+		{
+			Native::Function::Call(Native::Hash::SET_PLAYER_MODEL, Handle, model.Hash);
+			model.MarkAsNoLongerNeeded();
+			return true;
+		}
+		return false;
+		
 	}
 	void Player::RefillSpecialAbility()
 	{

@@ -731,7 +731,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the speed the wheels are spinning at
 		/// </summary>
-		/// <value>The speed in metres per second</value>
+		/// <value>The speed in meters per second</value>
 		property float WheelSpeed
 		{
 			float get();

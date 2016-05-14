@@ -150,7 +150,7 @@ namespace GTA
 			void set(ParachuteTint value);
 		}
 
-		void ChangeModel(Model model);
+		bool ChangeModel(Model model);
 		void RefillSpecialAbility();
 
 		void DisableFiringThisFrame();
