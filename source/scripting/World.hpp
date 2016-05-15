@@ -277,7 +277,8 @@ namespace GTA
 		static array<Entity ^> ^GetNearbyEntities(Math::Vector3 position, float radius);
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
-		static ISpatial ^GetClosest(Math::Vector3 position, ... array<ISpatial ^> ^spatials);
+		generic <typename T> where T : ISpatial
+		static T GetClosest(Math::Vector3 position, ... array<T> ^spatials);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float GetGroundHeight(Math::Vector2 position);

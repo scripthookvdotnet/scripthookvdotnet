@@ -520,7 +520,8 @@ namespace GTA
 		}
 		return nullptr;
 	}
-	ISpatial ^World::GetClosest(Math::Vector3 position, ... array<ISpatial ^> ^spatials)
+	generic <typename T> where T : ISpatial
+	T World::GetClosest(Math::Vector3 position, ... array<T> ^spatials)
 	{
 		float closestDist2 = 3e38f;
 		ISpatial ^closest = nullptr;
@@ -533,7 +534,7 @@ namespace GTA
 				closestDist2 = dist2;
 			}
 		}
-		return closest;
+		return static_cast<T>(closest);
 	}
 	float World::GetDistance(Math::Vector3 origin, Math::Vector3 destination)
 	{
