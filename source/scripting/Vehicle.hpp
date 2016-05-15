@@ -179,7 +179,6 @@ namespace GTA
 		BackLeftDoor = 2,
 		Hood = 4,
 		Trunk = 5,
-		Trunk2 = 6,
 	};
 	public enum class VehicleLockStatus
 	{
