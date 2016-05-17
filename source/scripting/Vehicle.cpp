@@ -895,7 +895,7 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_DOOR_DAMAGED, Handle, static_cast<int>(door));
 	}
-	bool Vehicle::IsDoorOpem(VehicleDoor door)
+	bool Vehicle::IsDoorOpen(VehicleDoor door)
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, static_cast<int>(door)) > 0.0f;
 	}
@@ -907,7 +907,7 @@ namespace GTA
 	{
 		return HasBone("door_hatch_l") && HasBone("door_hatch_r");
 	}
-	void Vehicle::OpenBombay()
+	void Vehicle::OpenBombBay()
 	{
 		if (HasBombBay())
 			Native::Function::Call(Native::Hash::_OPEN_VEHICLE_BOMB_BAY, Handle);

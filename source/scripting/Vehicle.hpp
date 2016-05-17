@@ -795,10 +795,10 @@ namespace GTA
 		void CloseDoor(VehicleDoor door, bool instantly);
 		void BreakDoor(VehicleDoor door);
 		bool IsDoorBroken(VehicleDoor door);
-		bool IsDoorOpem(VehicleDoor door);
+		bool IsDoorOpen(VehicleDoor door);
 		void SetDoorBreakable(VehicleDoor door, bool isBreakable);
 		bool HasBombBay();
-		void OpenBombay();
+		void OpenBombBay();
 		void CloseBombBay();
 		void FixWindow(VehicleWindow window);
 		void SmashWindow(VehicleWindow window);

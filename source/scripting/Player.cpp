@@ -106,6 +106,14 @@ namespace GTA
 	{
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_PLAYERS_LAST_VEHICLE);
 	}
+	int Player::MaxArmour::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_MAX_ARMOUR, Handle);
+	}
+	void Player::MaxArmour::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_MAX_ARMOUR, Handle, value);
+	}
 	int Player::Money::get()
 	{
 		int hash;

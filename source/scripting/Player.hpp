@@ -112,6 +112,11 @@ namespace GTA
 		{
 			Vehicle ^get();
 		}
+		property int MaxArmour
+		{
+			int get();
+			void set(int value);
+		}
 		property int Money
 		{
 			int get();
