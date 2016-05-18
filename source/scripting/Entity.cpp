@@ -428,19 +428,27 @@ namespace GTA
 
 	void Entity::ApplyForce(Math::Vector3 direction)
 	{
-		ApplyForce(direction, Math::Vector3::Zero);
+		ApplyForce(direction, Math::Vector3::Zero, ForceType::MaxForceRot2);
 	}
 	void Entity::ApplyForce(Math::Vector3 direction, Math::Vector3 rotation)
 	{
-		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
+		ApplyForce(direction, rotation, ForceType::MaxForceRot2);
+	}
+	void Entity::ApplyForce(Math::Vector3 direction, Math::Vector3 rotation, ForceType forceType)
+	{
+		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, Handle, static_cast<int>(forceType), direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
 	}
 	void Entity::ApplyForceRelative(Math::Vector3 direction)
 	{
-		ApplyForceRelative(direction, Math::Vector3::Zero);
+		ApplyForceRelative(direction, Math::Vector3::Zero, ForceType::MaxForceRot2);
 	}
 	void Entity::ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation)
 	{
-		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, Handle, 3, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+		ApplyForceRelative(direction, Rotation, ForceType::MaxForceRot2);
+	}
+	void Entity::ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation, ForceType forceType)
+	{
+		Native::Function::Call(Native::Hash::APPLY_FORCE_TO_ENTITY, Handle, static_cast<int>(forceType), direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 	}
 
 	void Entity::ResetAlpha()
@@ -450,7 +458,11 @@ namespace GTA
 
 	Math::Vector3 Entity::GetBoneCoord(int boneIndex)
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneIndex);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::_GET_ENTITY_BONE_COORDS, Handle, boneIndex);
+	}
+	Math::Vector3 Entity::GetBoneCoord(System::String ^boneName)
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::_GET_ENTITY_BONE_COORDS, Handle, GetBoneIndex(boneName));
 	}
 	int Entity::GetBoneIndex(System::String ^boneName)
 	{

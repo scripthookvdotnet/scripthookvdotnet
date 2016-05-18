@@ -10,6 +10,15 @@ namespace GTA
 	#pragma region Forward Declarations
 	ref class Blip;
 	#pragma endregion
+	public enum class ForceType{
+
+		MinForce = 0,
+		MaxForceRot = 1,
+		MinForce2 = 2,
+		MaxForceRot2 = 3, //stable, good for custom handling
+		ForceNoRot = 4,
+		ForceRotPlusForce = 5
+	};
 
 	public ref class Entity abstract : System::IEquatable<Entity ^>, IHandleable, ISpatial
 	{
@@ -224,12 +233,15 @@ namespace GTA
 
 		void ApplyForce(Math::Vector3 direction);
 		void ApplyForce(Math::Vector3 direction, Math::Vector3 rotation);
+		void ApplyForce(Math::Vector3 direction, Math::Vector3 rotation, ForceType forceType);
 		void ApplyForceRelative(Math::Vector3 direction);
 		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation);
+		void ApplyForceRelative(Math::Vector3 direction, Math::Vector3 rotation, ForceType forceType);
 
 		void ResetAlpha();
 
 		Math::Vector3 GetBoneCoord(int boneIndex);
+		Math::Vector3 GetBoneCoord(System::String ^boneName);
 		int GetBoneIndex(System::String ^boneName);
 		bool HasBone(System::String ^boneName);
 

@@ -703,6 +703,14 @@ namespace GTA
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
+	float Vehicle::WheelSpeed::get()
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		//old game version hasnt been tested, just following the patterns above for old game ver
+		int offset = (static_cast<int>(Game::Version) > 4 ? 0x9A4 : 0x994);
+
+		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+	}
 	float Vehicle::SteeringAngle::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
@@ -792,6 +800,18 @@ namespace GTA
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_MOD_TEXT_LABEL, Handle, static_cast<int>(modType), modValue);
 	}
+	bool Vehicle::DoesExtraExist(int extra)
+	{
+		return Native::Function::Call<bool>(Native::Hash::DOES_EXTRA_EXIST, Handle, extra);
+	}
+	bool Vehicle::IsExtraOn(int extra)
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
+	}
+	void Vehicle::ToggleExtra(int extra, bool toggle)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_EXTRA, Handle, extra, !toggle);
+	}
 	void Vehicle::ClearCustomPrimaryColor()
 	{
 		Native::Function::Call(Native::Hash::CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, Handle);
@@ -842,6 +862,23 @@ namespace GTA
 			}
 		}
 	}
+	array<VehicleDoor> ^Vehicle::GetDoors()
+	{
+		System::Collections::Generic::List<VehicleDoor> ^Doors = gcnew System::Collections::Generic::List<VehicleDoor>();
+		if (HasBone("door_dside_f"))
+			Doors->Add(VehicleDoor::FrontLeftDoor);
+		if (HasBone("door_pside_f"))
+			Doors->Add(VehicleDoor::FrontRightDoor);
+		if (HasBone("door_dside_r"))
+			Doors->Add(VehicleDoor::BackLeftDoor);
+		if (HasBone("door_pside_r"))
+			Doors->Add(VehicleDoor::BackRightDoor);
+		if (HasBone("bonnet"))
+			Doors->Add(VehicleDoor::Hood);
+		if (HasBone("hood"))
+			Doors->Add(VehicleDoor::Trunk);
+		return Doors->ToArray();
+	}
 	void Vehicle::OpenDoor(VehicleDoor door, bool loose, bool instantly)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_DOOR_OPEN, Handle, static_cast<int>(door), loose, instantly);
@@ -858,9 +895,27 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_DOOR_DAMAGED, Handle, static_cast<int>(door));
 	}
+	bool Vehicle::IsDoorOpen(VehicleDoor door)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, static_cast<int>(door)) > 0.0f;
+	}
 	void Vehicle::SetDoorBreakable(VehicleDoor door, bool isBreakable)
 	{
 		Native::Function::Call(Native::Hash::_SET_VEHICLE_DOOR_BREAKABLE, Handle, static_cast<int>(door), isBreakable);
+	}
+	bool Vehicle::HasBombBay()
+	{
+		return HasBone("door_hatch_l") && HasBone("door_hatch_r");
+	}
+	void Vehicle::OpenBombBay()
+	{
+		if (HasBombBay())
+			Native::Function::Call(Native::Hash::_OPEN_VEHICLE_BOMB_BAY, Handle);
+	}
+	void Vehicle::CloseBombBay()
+	{
+		if (HasBombBay())
+			Native::Function::Call(Native::Hash::_0x3556041742A0DC74, Handle);
 	}
 	void Vehicle::FixWindow(VehicleWindow window)
 	{

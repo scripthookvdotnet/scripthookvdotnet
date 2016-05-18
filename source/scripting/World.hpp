@@ -2,6 +2,7 @@
 
 #include "Vector2.hpp"
 #include "Vector3.hpp"
+#include "Interface.hpp"
 
 namespace GTA
 {
@@ -276,6 +277,8 @@ namespace GTA
 		static array<Entity ^> ^GetNearbyEntities(Math::Vector3 position, float radius);
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
 		static Vehicle ^GetClosestVehicle(Math::Vector3 position, float radius);
+		generic <typename T> where T : ISpatial
+		static T GetClosest(Math::Vector3 position, ... array<T> ^spatials);
 		static float GetDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float CalculateTravelDistance(Math::Vector3 origin, Math::Vector3 destination);
 		static float GetGroundHeight(Math::Vector2 position);
@@ -314,7 +317,9 @@ namespace GTA
 		static void ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage);
 		static void ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage, float speed);
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Invis, bool Aubidble);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
+		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Invis, bool Aubidble);
 		static Rope ^AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable);
 		static void DestroyAllCameras();
 		static void SetBlackout(bool enable);

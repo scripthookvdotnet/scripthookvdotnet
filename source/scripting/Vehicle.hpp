@@ -179,7 +179,6 @@ namespace GTA
 		BackLeftDoor = 2,
 		Hood = 4,
 		Trunk = 5,
-		Trunk2 = 6,
 	};
 	public enum class VehicleLockStatus
 	{
@@ -728,6 +727,14 @@ namespace GTA
 		{
 			float get();
 		}
+		/// <summary>
+		/// Gets the speed the wheels are spinning at
+		/// </summary>
+		/// <value>The speed in meters per second</value>
+		property float WheelSpeed
+		{
+			float get();
+		}
 		[System::ObsoleteAttribute("Vehicle.Steering is obsolete, please use Vehicle.SteeringScale instead.")]
 		property float Steering
 		{
@@ -771,6 +778,9 @@ namespace GTA
 		System::String ^GetModTypeName(VehicleMod modType);
 		System::String ^GetToggleModTypeName(VehicleToggleMod toggleModType);
 		System::String ^GetModName(VehicleMod modType, int modValue);
+		bool DoesExtraExist(int extra);
+		bool IsExtraOn(int extra);
+		void ToggleExtra(int extra, bool toggle);
 		void ClearCustomPrimaryColor();
 		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
@@ -780,11 +790,16 @@ namespace GTA
 		void Explode();
 		bool PlaceOnGround();
 		void PlaceOnNextStreet();
+		array<VehicleDoor> ^GetDoors();
 		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
 		void CloseDoor(VehicleDoor door, bool instantly);
 		void BreakDoor(VehicleDoor door);
 		bool IsDoorBroken(VehicleDoor door);
+		bool IsDoorOpen(VehicleDoor door);
 		void SetDoorBreakable(VehicleDoor door, bool isBreakable);
+		bool HasBombBay();
+		void OpenBombBay();
+		void CloseBombBay();
 		void FixWindow(VehicleWindow window);
 		void SmashWindow(VehicleWindow window);
 		void RollUpWindow(VehicleWindow window);
