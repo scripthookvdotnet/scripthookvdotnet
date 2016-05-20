@@ -1,5 +1,5 @@
+#include "Ped.hpp" // <-- Include before Tasks.hpp to solve "Duplicate managed types have different visibilities" error on VS2015, because reasons.
 #include "Tasks.hpp"
-#include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Native.hpp"
 #include "Script.hpp"
