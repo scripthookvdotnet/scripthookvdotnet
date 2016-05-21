@@ -29,7 +29,7 @@ namespace GTA
 		for (int i = 0; i < message->Length; i += strLen)
 		{
 			System::String ^substr = message->Substring(i, System::Math::Min(strLen, message->Length - i));
-			Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, substr);
+			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, substr);
 		}
 
 		return gcnew Notification(Native::Function::Call<int>(Native::Hash::_DRAW_NOTIFICATION, blinking, 1));
@@ -46,7 +46,7 @@ namespace GTA
 		for (int i = 0; i < message->Length; i += strLen)
 		{
 			System::String ^substr = message->Substring(i, System::Math::Min(strLen, message->Length - i));
-			Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, substr);
+			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, substr);
 		}
 		Native::Function::Call(Native::Hash::_DRAW_SUBTITLE_TIMED, duration, 1);
 	}
