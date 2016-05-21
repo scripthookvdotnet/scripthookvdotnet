@@ -17,6 +17,8 @@
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
 
+#include "AnimationDictionary.hpp"
+#include "AnimationSet.hpp"
 #include "Blip.hpp"
 #include "Camera.hpp"
 #include "Entity.hpp"
@@ -97,6 +99,16 @@ namespace GTA
 				}
 
 				// Scripting types
+				if (type == AnimationDictionary::typeid)
+				{
+					System::String ^str = static_cast<AnimationDictionary ^>(value)->Name;
+					return ScriptDomain::CurrentDomain->PinString(str).ToInt64();
+				}
+				if (type == AnimationSet::typeid)
+				{
+					System::String ^str = static_cast<AnimationSet ^>(value)->Name;
+					return ScriptDomain::CurrentDomain->PinString(str).ToInt64();
+				}
 				if (type == Model::typeid)
 				{
 					return static_cast<Model>(value).Hash;

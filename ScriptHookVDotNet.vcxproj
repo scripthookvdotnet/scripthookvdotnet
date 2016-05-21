@@ -81,6 +81,8 @@
   </ItemGroup>
   <!-- Additional source files -->
   <ItemGroup>
+    <ClCompile Include="source\scripting\AnimationDictionary.cpp" />
+    <ClCompile Include="source\scripting\AnimationSet.cpp" />
     <ClCompile Include="source\scripting\Audio.cpp" />
     <ClCompile Include="source\scripting\Blip.cpp" />
     <ClCompile Include="source\scripting\Camera.cpp" />
@@ -108,6 +110,8 @@
     <ClCompile Include="source\scripting\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\scripting\AnimationDictionary.hpp" />
+    <ClInclude Include="source\scripting\AnimationSet.hpp" />
     <ClInclude Include="source\scripting\Audio.hpp" />
     <ClInclude Include="source\scripting\Blip.hpp" />
     <ClInclude Include="source\scripting\Controls.hpp" />
