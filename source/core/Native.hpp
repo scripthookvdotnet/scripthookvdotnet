@@ -120,11 +120,11 @@ namespace GTA
 			{
 				return gcnew InputArgument(gcnew System::String(value));
 			}
-			static inline operator InputArgument ^ (AnimationDictionary ^animDict)
+			static inline operator InputArgument ^(AnimationDictionary ^animDict)
 			{
 				return gcnew InputArgument(animDict);
 			}
-			static inline operator InputArgument ^ (AnimationSet ^animSet)
+			static inline operator InputArgument ^(AnimationSet ^animSet)
 			{
 				return gcnew InputArgument(animSet);
 			}
@@ -192,6 +192,8 @@ namespace GTA
 			inline OutputArgument(float initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(double initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(System::String ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
+			inline OutputArgument(AnimationDictionary ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
+			inline OutputArgument(AnimationSet ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(Model initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(Blip ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(Camera ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }

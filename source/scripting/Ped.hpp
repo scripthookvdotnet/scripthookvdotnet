@@ -9,6 +9,7 @@ namespace GTA
 	using namespace System::Collections;
 
 	#pragma region Forward Declarations
+	ref class AnimationSet;
 	ref class Tasks;
 	ref class PedGroup;
 	ref class Vehicle;
@@ -261,6 +262,7 @@ namespace GTA
 		}
 		property bool DropsWeaponsOnDeath
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool DrownsInSinkingVehicle
@@ -278,6 +280,10 @@ namespace GTA
 		property GTA::Gender Gender
 		{
 			GTA::Gender get();
+		}
+		property AnimationSet ^MovementAnimationSet
+		{
+			void set(AnimationSet ^value);
 		}
 		property bool IsAimingFromCover
 		{

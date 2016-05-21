@@ -1,6 +1,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
+#include "AnimationSet.hpp"
 #include "Tasks.hpp"
 #include "Weapon.hpp"
 #include "World.hpp"
@@ -38,6 +39,14 @@ namespace GTA
 	GTA::Gender Ped::Gender::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_MALE, Handle) ? GTA::Gender::Male : GTA::Gender::Female;
+	}
+	void Ped::MovementAnimationSet::set(AnimationSet ^value)
+	{
+		if (value->Request(1000))
+		{
+			Native::Function::Call(Native::Hash::SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
+		}
+		return;
 	}
 	int Ped::Armor::get()
 	{
@@ -442,6 +451,12 @@ namespace GTA
 		if (value < 0) value = 0;
 
 		Native::Function::Call(Native::Hash::SET_PED_SWEAT, Handle, value);
+	}
+	bool Ped::DropsWeaponsOnDeath::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BD) & (1 << 6)) == 0;
 	}
 	void Ped::DropsWeaponsOnDeath::set(bool value)
 	{

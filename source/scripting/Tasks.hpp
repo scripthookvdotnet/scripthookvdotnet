@@ -5,6 +5,7 @@
 namespace GTA
 {
 	#pragma region Forward Declarations
+	ref class AnimationDictionary;
 	ref class Ped;
 	ref class Vehicle;
 	enum class VehicleSeat;
@@ -13,9 +14,32 @@ namespace GTA
 	enum class FiringPattern : System::UInt32;
 	#pragma endregion
 
+	[System::Flags]
+	public enum class AnimationFlags
+	{
+		None = 0,
+		Loop = 1,
+		StayInEndFrame = 2,
+		UpperBodyOnly = 16,
+		AllowRotation = 32,
+		CancelableWithMovement = 128,
+		RagdollOnCollision = 4194304,
+	};
+
+	[System::Flags]
+	public enum class LeaveVehicleFlags
+	{
+		None = 0,
+		WarpOut = 16,
+		LeaveDoorOpen = 256,
+		BailOut = 4096,
+	};
+
 	public ref class Tasks
 	{
 	public:
+		void AchieveHeading(float heading);
+		void AchieveHeading(float heading, int timeout);
 		void AimAt(Entity ^target, int duration);
 		void AimAt(Math::Vector3 target, int duration);
 		void Arrest(Ped ^ped);
@@ -47,11 +71,15 @@ namespace GTA
 		void GoTo(Math::Vector3 position);
 		void GoTo(Math::Vector3 position, bool ignorePaths);
 		void GoTo(Math::Vector3 position, bool ignorePaths, int timeout);
+		void FollowToOffsetFromEntity(Entity ^target, Math::Vector3 offset, int timeout, float stoppingRange);
+		void FollowToOffsetFromEntity(Entity ^target, Math::Vector3 offset, float movementSpeed, int timeout, float stoppingRange, bool persistFollowing);
 		void GuardCurrentPosition();
 		void HandsUp(int duration);
 		void Jump();
 		void LeaveVehicle();
 		void LeaveVehicle(Vehicle ^vehicle, bool closeDoor);
+		void LeaveVehicle(LeaveVehicleFlags flags);
+		void LeaveVehicle(Vehicle ^vehicle, LeaveVehicleFlags flags);
 		void LookAt(Entity ^target);
 		void LookAt(Entity ^target, int duration);
 		void LookAt(Math::Vector3 position);
@@ -59,7 +87,34 @@ namespace GTA
 		void ParachuteTo(Math::Vector3 position);
 		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading);
 		void PerformSequence(TaskSequence ^sequence);
-		void PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate);
+
+		void PlayAnimation(System::String ^animDict, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate);
+		/// <summary>
+		/// Starts an animation.
+		/// </summary>
+		/// <param name="animDict">The animation dictionary.</param>
+		/// <param name="animName">The animation name.</param>
+		void PlayAnimation(AnimationDictionary ^animDict, System::String ^animName);
+		/// <summary>
+		/// Starts an animation.
+		/// </summary>
+		/// <param name="animDict">The animation dictionary.</param>
+		/// <param name="animName">The animation name.</param>
+		/// <param name="blendInSpeed">Normal value is 8.0.</param>
+		/// <param name="duration">The duration.</param>
+		/// <param name="flags">The animation flags.</param>
+		void PlayAnimation(AnimationDictionary ^animDict, System::String ^animName, float blendInSpeed, int duration, AnimationFlags flags);
+		/// <summary>
+		/// Starts an animation.
+		/// </summary>
+		/// <param name="animDict">The animation dictionary.</param>
+		/// <param name="animName">The animation name.</param>
+		/// <param name="blendInSpeed">Normal value is 8.0.</param>
+		/// <param name="blendOutSpeed">Normal value is -8.0.</param>
+		/// <param name="duration">The duration.</param>
+		/// <param name="flags">The animation flags.</param>
+		/// <param name="playbackRate">Values are between 0.0 and 1.0.</param>
+		void PlayAnimation(AnimationDictionary ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
 		void ReactAndFlee(Ped ^ped);
