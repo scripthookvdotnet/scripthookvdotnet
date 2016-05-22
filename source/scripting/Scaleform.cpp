@@ -101,6 +101,6 @@ namespace GTA
 	}
 	void Scaleform::Render3DAdditive(Math::Vector3 position, Math::Vector3 rotation, Math::Vector3 scale)
 	{
-		Native::Function::Call(Native::Hash::_DRAW_SCALEFORM_MOVIE_3D_NON_ADDITIVE, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
+		Native::Function::Call(Native::Hash::DRAW_SCALEFORM_MOVIE_3D, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 	}
 }
