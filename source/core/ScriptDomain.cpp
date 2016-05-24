@@ -234,6 +234,11 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename)
 	{
+		if (IO::Path::GetFileNameWithoutExtension(filename)->ToLower() == "scripthookvdotnet")
+		{
+			return false;
+		}
+
 		Reflection::Assembly ^assembly = nullptr;
 
 		try
