@@ -446,7 +446,7 @@ namespace GTA
 
 		for each (Script ^script in _runningScripts)
 		{
-			AbortScript(script);
+			script->Abort();
 
 			delete script;
 		}
