@@ -44,6 +44,7 @@ namespace GTA
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
+		event System::EventHandler ^Aborted;
 
 		property System::String ^Name
 		{
