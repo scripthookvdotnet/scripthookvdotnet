@@ -278,7 +278,7 @@ namespace GTA
 	}
 	int Entity::LodDistance::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::_GET_ENTITY_LOD_DIST, Handle);
+		return Native::Function::Call<int>(Native::Hash::GET_ENTITY_LOD_DIST, Handle);
 	}
 	void Entity::LodDistance::set(int value)
 	{
@@ -458,11 +458,11 @@ namespace GTA
 
 	Math::Vector3 Entity::GetBoneCoord(int boneIndex)
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::_GET_ENTITY_BONE_COORDS, Handle, boneIndex);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_WORLD_POSITION_OF_ENTITY_BONE, Handle, boneIndex);
 	}
 	Math::Vector3 Entity::GetBoneCoord(System::String ^boneName)
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::_GET_ENTITY_BONE_COORDS, Handle, GetBoneIndex(boneName));
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_WORLD_POSITION_OF_ENTITY_BONE, Handle, GetBoneIndex(boneName));
 	}
 	int Entity::GetBoneIndex(System::String ^boneName)
 	{

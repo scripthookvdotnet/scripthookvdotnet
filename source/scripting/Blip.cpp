@@ -53,9 +53,9 @@ namespace GTA
 	}
 	void Blip::Name::set(System::String ^value)
 	{
-		Native::Function::Call(Native::Hash::_0xF9113A30DE5C6670, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, value);
-		Native::Function::Call(Native::Hash::_0xBC38B49BCB83BC9B, Handle);
+		Native::Function::Call(Native::Hash::BEGIN_TEXT_COMMAND_SET_BLIP_NAME, "STRING");
+		Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, value);
+		Native::Function::Call(Native::Hash::END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
 	}
 	Math::Vector3 Blip::Position::get()
 	{
