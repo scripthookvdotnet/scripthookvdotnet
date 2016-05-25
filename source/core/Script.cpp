@@ -29,9 +29,6 @@ namespace GTA
 	Script::Script() : _interval(0), _running(false), _filename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), _scriptdomain(ScriptDomain::CurrentDomain), _waitEvent(gcnew AutoResetEvent(false)), _continueEvent(gcnew AutoResetEvent(false)), _keyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
 	{
 	}
-	Script::~Script()
-	{
-	}
 
 	ScriptSettings ^Script::Settings::get()
 	{
