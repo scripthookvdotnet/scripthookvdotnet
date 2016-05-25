@@ -1,7 +1,6 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
-#include "AnimationSet.hpp"
 #include "Tasks.hpp"
 #include "Weapon.hpp"
 #include "World.hpp"
@@ -40,13 +39,23 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_MALE, Handle) ? GTA::Gender::Male : GTA::Gender::Female;
 	}
-	void Ped::MovementAnimationSet::set(AnimationSet ^value)
+	void Ped::MovementAnimationSet::set(System::String ^value)
 	{
-		if (value->Request(1000))
+		Native::Function::Call(Native::Hash::REQUEST_ANIM_SET, value);
+
+		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
+
+		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, value))
 		{
-			Native::Function::Call(Native::Hash::SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
+			Script::Yield();
+
+			if (System::DateTime::UtcNow >= endtime)
+			{
+				return;
+			}
 		}
-		return;
+
+		Native::Function::Call(Native::Hash::SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
 	}
 	int Ped::Armor::get()
 	{

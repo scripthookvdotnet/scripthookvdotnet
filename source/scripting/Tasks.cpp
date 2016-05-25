@@ -1,5 +1,4 @@
 #include "Ped.hpp" // <-- Include before Tasks.hpp to solve "Duplicate managed types have different visibilities" error on VS2015, because reasons.
-#include "AnimationDictionary.hpp"
 #include "Tasks.hpp"
 #include "Vehicle.hpp"
 #include "Native.hpp"
@@ -248,20 +247,29 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animDict, animName, speed, -8.0f, duration, lastAnimation, playbackRate, 0, 0, 0);
 	}
-	void Tasks::PlayAnimation(AnimationDictionary ^animDict, System::String ^animName)
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName)
 	{
 		PlayAnimation(animDict, animName, 8.0f, -8.0f, -1, AnimationFlags::None, 0.0f);
 	}
-	void Tasks::PlayAnimation(AnimationDictionary ^animDict, System::String ^animName, float blendInSpeed, int duration, AnimationFlags flags)
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, int duration, AnimationFlags flags)
 	{
 		PlayAnimation(animDict, animName, blendInSpeed, -8.0f, duration, flags, 0.0f);
 	}
-	void Tasks::PlayAnimation(AnimationDictionary ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 	{
-		if (animDict->Request(1000))
+		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
+
+		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animDict))
 		{
-			Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, static_cast<int>(flags), playbackRate, 0, 0, 0);
+			Script::Yield();
+
+			if (System::DateTime::UtcNow >= endtime)
+			{
+				return;
+			}			
 		}
+
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, static_cast<int>(flags), playbackRate, 0, 0, 0);
 	}
 	void Tasks::PutAwayMobilePhone()
 	{

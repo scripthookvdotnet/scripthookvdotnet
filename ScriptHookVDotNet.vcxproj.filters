@@ -117,12 +117,6 @@
     <ClCompile Include="source\scripting\WeaponAsset.cpp">
       <Filter>scripting\World</Filter>
     </ClCompile>
-    <ClCompile Include="source\scripting\AnimationDictionary.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\AnimationSet.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\Native.hpp">
@@ -237,12 +231,6 @@
       <Filter>scripting</Filter>
     </ClInclude>
     <ClInclude Include="source\scripting\WeaponAsset.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\AnimationDictionary.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\AnimationSet.hpp">
       <Filter>scripting\World</Filter>
     </ClInclude>
   </ItemGroup>

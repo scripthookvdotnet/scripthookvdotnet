@@ -22,8 +22,6 @@
 namespace GTA
 {
 	#pragma region Forward Declarations
-	ref class AnimationDictionary;
-	ref class AnimationSet;
 	ref class Blip;
 	ref class Camera;
 	ref class Entity;
@@ -47,8 +45,6 @@ namespace GTA
 			inline InputArgument(float value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(double value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(AnimationDictionary ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(AnimationSet ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Model value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
@@ -120,14 +116,6 @@ namespace GTA
 			{
 				return gcnew InputArgument(gcnew System::String(value));
 			}
-			static inline operator InputArgument ^(AnimationDictionary ^animDict)
-			{
-				return gcnew InputArgument(animDict);
-			}
-			static inline operator InputArgument ^(AnimationSet ^animSet)
-			{
-				return gcnew InputArgument(animSet);
-			}
 			static inline operator InputArgument ^(Model model)
 			{
 				return gcnew InputArgument(model);
@@ -192,8 +180,6 @@ namespace GTA
 			inline OutputArgument(float initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(double initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(System::String ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(AnimationDictionary ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(AnimationSet ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(Model initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(Blip ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			inline OutputArgument(Camera ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }

@@ -9,7 +9,6 @@ namespace GTA
 	using namespace System::Collections;
 
 	#pragma region Forward Declarations
-	ref class AnimationSet;
 	ref class Tasks;
 	ref class PedGroup;
 	ref class Vehicle;
@@ -281,9 +280,9 @@ namespace GTA
 		{
 			GTA::Gender get();
 		}
-		property AnimationSet ^MovementAnimationSet
+		property System::String ^MovementAnimationSet
 		{
-			void set(AnimationSet ^value);
+			void set(System::String ^value);
 		}
 		property bool IsAimingFromCover
 		{

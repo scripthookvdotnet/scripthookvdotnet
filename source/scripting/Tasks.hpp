@@ -5,7 +5,6 @@
 namespace GTA
 {
 	#pragma region Forward Declarations
-	ref class AnimationDictionary;
 	ref class Ped;
 	ref class Vehicle;
 	enum class VehicleSeat;
@@ -94,7 +93,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="animDict">The animation dictionary.</param>
 		/// <param name="animName">The animation name.</param>
-		void PlayAnimation(AnimationDictionary ^animDict, System::String ^animName);
+		void PlayAnimation(System::String ^animDict, System::String ^animName);
 		/// <summary>
 		/// Starts an animation.
 		/// </summary>
@@ -103,7 +102,7 @@ namespace GTA
 		/// <param name="blendInSpeed">Normal value is 8.0.</param>
 		/// <param name="duration">The duration.</param>
 		/// <param name="flags">The animation flags.</param>
-		void PlayAnimation(AnimationDictionary ^animDict, System::String ^animName, float blendInSpeed, int duration, AnimationFlags flags);
+		void PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, int duration, AnimationFlags flags);
 		/// <summary>
 		/// Starts an animation.
 		/// </summary>
@@ -114,7 +113,7 @@ namespace GTA
 		/// <param name="duration">The duration.</param>
 		/// <param name="flags">The animation flags.</param>
 		/// <param name="playbackRate">Values are between 0.0 and 1.0.</param>
-		void PlayAnimation(AnimationDictionary ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate);
+		void PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate);
 		void PutAwayMobilePhone();
 		void PutAwayParachute();
 		void ReactAndFlee(Ped ^ped);
