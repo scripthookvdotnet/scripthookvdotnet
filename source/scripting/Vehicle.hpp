@@ -374,6 +374,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property Ped ^Driver
+		{
+			Ped ^get();
+		}
 		property array<Ped ^> ^Occupants
 		{
 			array<Ped ^> ^get();
@@ -435,6 +439,14 @@ namespace GTA
 			bool get();
 		}
 		property bool IsOnAllWheels
+		{
+			bool get();
+		}
+		property bool IsFrontBumperBrokenOff
+		{
+			bool get();
+		}
+		property bool IsRearBumperBrokenOff
 		{
 			bool get();
 		}
@@ -583,6 +595,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool IsAxlesStrong
+		{
+			void set(bool value);
+		}
 		property bool LightsOn
 		{
 			void set(bool value);
@@ -660,6 +676,14 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property bool DropsMoneyOnExplosion
+		{
+			void set(bool value);
+		}
+		property bool ProvidesCover
+		{
+			void set(bool value);
+		}
 		property System::Drawing::Color CustomPrimaryColor
 		{
 			System::Drawing::Color get();
@@ -702,6 +726,22 @@ namespace GTA
 			void set(bool value);
 		}
 		property bool AlarmActive
+		{
+			bool get();
+		}
+		property bool HasBombBay
+		{
+			bool get();
+		}
+		property bool HasForks
+		{
+			bool get();
+		}
+		property bool HasSiren
+		{
+			bool get();
+		}
+		property bool HasTowArm
 		{
 			bool get();
 		}
@@ -778,7 +818,7 @@ namespace GTA
 		System::String ^GetModTypeName(VehicleMod modType);
 		System::String ^GetToggleModTypeName(VehicleToggleMod toggleModType);
 		System::String ^GetModName(VehicleMod modType, int modValue);
-		bool DoesExtraExist(int extra);
+		bool ExtraExists(int extra);
 		bool IsExtraOn(int extra);
 		void ToggleExtra(int extra, bool toggle);
 		void ClearCustomPrimaryColor();
@@ -787,6 +827,7 @@ namespace GTA
 		bool IsSeatFree(VehicleSeat seat);
 
 		void Repair();
+		void Wash();
 		void Explode();
 		bool PlaceOnGround();
 		void PlaceOnNextStreet();
@@ -796,8 +837,8 @@ namespace GTA
 		void BreakDoor(VehicleDoor door);
 		bool IsDoorBroken(VehicleDoor door);
 		bool IsDoorOpen(VehicleDoor door);
+		float GetDoorAngleRatio(VehicleDoor door);
 		void SetDoorBreakable(VehicleDoor door, bool isBreakable);
-		bool HasBombBay();
 		void OpenBombBay();
 		void CloseBombBay();
 		void FixWindow(VehicleWindow window);

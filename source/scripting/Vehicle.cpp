@@ -14,6 +14,10 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_VEHICLE_HAVE_ROOF, Handle);
 	}
+	Ped ^Vehicle::Driver::get()
+	{
+		return GetPedOnSeat(VehicleSeat::Driver);
+	}
 	array<Ped ^> ^Vehicle::Occupants::get()
 	{
 		Ped ^driver = GetPedOnSeat(VehicleSeat::Driver);
@@ -150,6 +154,14 @@ namespace GTA
 	bool Vehicle::IsOnAllWheels::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ON_ALL_WHEELS, Handle);
+	}
+	bool Vehicle::IsFrontBumperBrokenOff::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, true);
+	}
+	bool Vehicle::IsRearBumperBrokenOff::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, false);
 	}
 	bool Vehicle::IsDamaged::get()
 	{
@@ -391,6 +403,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_ENGINE_CAN_DEGRADE, Handle, value);
 	}
+	void Vehicle::IsAxlesStrong::set(bool value)
+	{
+		Native::Function::Call<bool>(Native::Hash::SET_VEHICLE_HAS_STRONG_AXLES, Handle, value);
+	}
 	void Vehicle::LightsOn::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_LIGHTS, Handle, value ? 3 : 4);
@@ -539,6 +555,14 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_HAS_BEEN_OWNED_BY_PLAYER, Handle, value);
 	}
+	void Vehicle::DropsMoneyOnExplosion::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::_0x068F64F2470F9656, Handle, value);
+	}
+	void Vehicle::ProvidesCover::set(bool value)
+	{
+		Native::Function::Call(Native::Hash::SET_VEHICLE_PROVIDES_COVER, Handle, value);
+	}
 	void Vehicle::CustomPrimaryColor::set(System::Drawing::Color color)
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, Handle, color.R, color.G, color.B);
@@ -631,6 +655,22 @@ namespace GTA
 	bool Vehicle::AlarmActive::get()
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_VEHICLE_ALARM_ACTIVATED, Handle);
+	}
+	bool Vehicle::HasBombBay::get()
+	{
+		return HasBone("door_hatch_l") && HasBone("door_hatch_r");
+	}
+	bool Vehicle::HasForks::get()
+	{
+		return HasBone("forks");
+	}
+	bool Vehicle::HasSiren::get()
+	{
+		return HasBone("siren1");
+	}
+	bool Vehicle::HasTowArm::get()
+	{
+		return HasBone("tow_arm");
 	}
 	int Vehicle::CurrentGear::get()
 	{
@@ -800,7 +840,7 @@ namespace GTA
 	{
 		return Native::Function::Call<System::String ^>(Native::Hash::GET_MOD_TEXT_LABEL, Handle, static_cast<int>(modType), modValue);
 	}
-	bool Vehicle::DoesExtraExist(int extra)
+	bool Vehicle::ExtraExists(int extra)
 	{
 		return Native::Function::Call<bool>(Native::Hash::DOES_EXTRA_EXIST, Handle, extra);
 	}
@@ -832,6 +872,10 @@ namespace GTA
 	void Vehicle::Repair()
 	{
 		Native::Function::Call(Native::Hash::SET_VEHICLE_FIXED, Handle);
+	}
+	void Vehicle::Wash()
+	{
+		DirtLevel = 0.0f;
 	}
 	void Vehicle::Explode()
 	{
@@ -899,22 +943,22 @@ namespace GTA
 	{
 		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, static_cast<int>(door)) > 0.0f;
 	}
+	float Vehicle::GetDoorAngleRatio(VehicleDoor door)
+	{
+		return Native::Function::Call<float>(Native::Hash::GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, static_cast<int>(door));
+	}
 	void Vehicle::SetDoorBreakable(VehicleDoor door, bool isBreakable)
 	{
 		Native::Function::Call(Native::Hash::_SET_VEHICLE_DOOR_BREAKABLE, Handle, static_cast<int>(door), isBreakable);
 	}
-	bool Vehicle::HasBombBay()
-	{
-		return HasBone("door_hatch_l") && HasBone("door_hatch_r");
-	}
 	void Vehicle::OpenBombBay()
 	{
-		if (HasBombBay())
+		if (HasBombBay)
 			Native::Function::Call(Native::Hash::_OPEN_VEHICLE_BOMB_BAY, Handle);
 	}
 	void Vehicle::CloseBombBay()
 	{
-		if (HasBombBay())
+		if (HasBombBay)
 			Native::Function::Call(Native::Hash::_0x3556041742A0DC74, Handle);
 	}
 	void Vehicle::FixWindow(VehicleWindow window)
