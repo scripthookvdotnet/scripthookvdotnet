@@ -735,14 +735,14 @@ namespace GTA
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
-    void Vehicle::CurrentRPM::set(float value)
-    {
+	void Vehicle::CurrentRPM::set(float value)
+	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
 		int offset = (static_cast<int>(Game::Version) > 4 ? 2004 : 1988);
 
 		*reinterpret_cast<float *>(address + offset) = value;
-    }
+	}
 	float Vehicle::Acceleration::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
