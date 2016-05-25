@@ -236,6 +236,8 @@ namespace GTA
 	{
 		if (IO::Path::GetFileNameWithoutExtension(filename)->ToLower() == "scripthookvdotnet")
 		{
+			Log("[ERROR]", "Skipped assembly '", IO::Path::GetFileName(filename), "'. Please remove it from the 'scripts' directory.");
+
 			return false;
 		}
 
