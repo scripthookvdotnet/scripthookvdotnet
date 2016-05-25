@@ -24,7 +24,7 @@ namespace GTA
 		}
 		Notification ^Screen::Notify(String ^message, bool blinking)
 		{
-			Native::Function::Call(Native::Hash::_SET_NOTIFICATION_TEXT_ENTRY, "jamyfafi");
+			Native::Function::Call(Native::Hash::_SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
 			const int strLen = 99;
 			for (int i = 0; i < message->Length; i += strLen)
 			{
@@ -41,7 +41,7 @@ namespace GTA
 		}
 		void Screen::ShowSubtitle(String ^message, int duration)
 		{
-			Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_2, "jamyfafi");
+			Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
 			const int strLen = 99;
 			for (int i = 0; i < message->Length; i += strLen)
 			{
