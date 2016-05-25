@@ -1,224 +1,333 @@
 #include "UIElement.hpp"
 #include "Native.hpp"
+#include "ScriptDomain.hpp"
+
+#include <Main.h>
 
 namespace GTA
 {
-	using namespace System;
-	using namespace System::Collections::Generic;
+	namespace UI
+	{
+		using namespace System;
+		using namespace System::Collections::Generic;
 
-	UIText::UIText(String ^caption, Drawing::Point position, float scale)
-	{
-		Enabled = true;
-		Caption = caption;
-		Position = position;
-		Scale = scale;
-		Color = Drawing::Color::WhiteSmoke;
-		Font = GTA::Font::ChaletLondon;
-		Centered = false;
-		Shadow = false;
-		Outline = false;
-	}
-	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color)
-	{
-		Enabled = true;
-		Caption = caption;
-		Position = position;
-		Scale = scale;
-		Color = color;
-		Font = GTA::Font::ChaletLondon;
-		Centered = false;
-		Shadow = false;
-		Outline = false;
-	}
-	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color, GTA::Font font, bool centered)
-	{
-		Enabled = true;
-		Caption = caption;
-		Position = position;
-		Scale = scale;
-		Color = color;
-		Font = font;
-		Centered = centered;
-		Shadow = false;
-		Outline = false;
-	}
-	UIText::UIText(String ^caption, Drawing::Point position, float scale, Drawing::Color color, GTA::Font font, bool centered, bool shadow, bool outline)
-	{
-		Enabled = true;
-		Caption = caption;
-		Position = position;
-		Scale = scale;
-		Color = color;
-		Font = font;
-		Centered = centered;
-		Shadow = shadow;
-		Outline = outline;
-	}
-
-	void UIText::Draw()
-	{
-		Draw(Drawing::Size());
-	}
-	void UIText::Draw(Drawing::Size offset)
-	{
-		if (!Enabled)
+		Text::Text(String ^caption, Drawing::PointF position, float scale)
 		{
-			return;
+			Enabled = true;
+			Caption = caption;
+			Position = position;
+			Scale = scale;
+			Color = Drawing::Color::WhiteSmoke;
+			Font = GTA::UI::Font::ChaletLondon;
+			Centered = false;
+			Shadow = false;
+			Outline = false;
+		}
+		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color)
+		{
+			Enabled = true;
+			Caption = caption;
+			Position = position;
+			Scale = scale;
+			Color = color;
+			Font = GTA::UI::Font::ChaletLondon;
+			Centered = false;
+			Shadow = false;
+			Outline = false;
+		}
+		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, bool centered)
+		{
+			Enabled = true;
+			Caption = caption;
+			Position = position;
+			Scale = scale;
+			Color = color;
+			Font = font;
+			Centered = centered;
+			Shadow = false;
+			Outline = false;
+		}
+		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, bool centered, bool shadow, bool outline)
+		{
+			Enabled = true;
+			Caption = caption;
+			Position = position;
+			Scale = scale;
+			Color = color;
+			Font = font;
+			Centered = centered;
+			Shadow = shadow;
+			Outline = outline;
 		}
 
-		const float x = (static_cast<float>(Position.X) + offset.Width) / UI::WIDTH;
-		const float y = (static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT;
-
-		if (Shadow)
+		void Text::Draw()
 		{
-			Native::Function::Call(Native::Hash::SET_TEXT_DROP_SHADOW);
+			Draw(Drawing::SizeF::Empty);
 		}
-		if (Outline)
+		void Text::Draw(Drawing::SizeF offset)
 		{
-			Native::Function::Call(Native::Hash::SET_TEXT_OUTLINE);
-		}
-		Native::Function::Call(Native::Hash::SET_TEXT_FONT, static_cast<int>(Font));
-		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, Scale, Scale);
-		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-		Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, Centered ? 1 : 0);
-		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, Caption);
-		Native::Function::Call(Native::Hash::_DRAW_TEXT, x, y);
-	}
+			if (!Enabled)
+			{
+				return;
+			}
 
-	UIRectangle::UIRectangle()
-	{
-		Enabled = true;
-		Position = Drawing::Point();
-		Size = Drawing::Size(UI::WIDTH, UI::HEIGHT);
-		Color = Drawing::Color::Transparent;
-	}
-	UIRectangle::UIRectangle(Drawing::Point position, Drawing::Size size)
-	{
-		Enabled = true;
-		Position = position;
-		Size = size;
-		Color = Drawing::Color::Transparent;
-	}
-	UIRectangle::UIRectangle(Drawing::Point position, Drawing::Size size, Drawing::Color color)
-	{
-		Enabled = true;
-		Position = position;
-		Size = size;
-		Color = color;
-	}
+			const float x = (Position.X + offset.Width) / Screen::WIDTH;
+			const float y = (Position.Y + offset.Height) / Screen::HEIGHT;
 
-	void UIRectangle::Draw()
-	{
-		Draw(Drawing::Size());
-	}
-	void UIRectangle::Draw(Drawing::Size offset)
-	{
-		if (!Enabled)
-		{
-			return;
+			if (Shadow)
+			{
+				Native::Function::Call(Native::Hash::SET_TEXT_DROP_SHADOW);
+			}
+			if (Outline)
+			{
+				Native::Function::Call(Native::Hash::SET_TEXT_OUTLINE);
+			}
+			Native::Function::Call(Native::Hash::SET_TEXT_FONT, static_cast<int>(Font));
+			Native::Function::Call(Native::Hash::SET_TEXT_SCALE, Scale, Scale);
+			Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
+			Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, Centered ? 1 : 0);
+			Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "STRING");
+			Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, Caption);
+			Native::Function::Call(Native::Hash::_DRAW_TEXT, x, y);
 		}
 
-		const float w = static_cast<float>(Size.Width) / UI::WIDTH;
-		const float h = static_cast<float>(Size.Height) / UI::HEIGHT;
-		const float x = ((static_cast<float>(Position.X) + offset.Width) / UI::WIDTH) + w * 0.5f;
-		const float y = ((static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT) + h * 0.5f;
-
-		Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
-	}
-
-	UIContainer::UIContainer() : UIRectangle(), _items(gcnew List<UIElement ^>())
-	{
-	}
-	UIContainer::UIContainer(Drawing::Point position, Drawing::Size size) : UIRectangle(position, size), _items(gcnew List<UIElement ^>())
-	{
-	}
-	UIContainer::UIContainer(Drawing::Point position, Drawing::Size size, Drawing::Color color) : UIRectangle(position, size, color), _items(gcnew List<UIElement ^>())
-	{
-	}
-
-	List<UIElement ^> ^UIContainer::Items::get()
-	{
-		return _items;
-	}
-	void UIContainer::Items::set(List<UIElement ^> ^value)
-	{
-		_items = value;
-	}
-
-	void UIContainer::Draw()
-	{
-		Draw(Drawing::Size());
-	}
-	void UIContainer::Draw(Drawing::Size offset)
-	{
-		if (!Enabled)
+		Rectangle::Rectangle()
 		{
-			return;
+			Enabled = true;
+			Position = Drawing::PointF();
+			Size = Drawing::SizeF(Screen::WIDTH, Screen::HEIGHT);
+			Color = Drawing::Color::Transparent;
+		}
+		Rectangle::Rectangle(Drawing::PointF position, Drawing::SizeF size)
+		{
+			Enabled = true;
+			Position = position;
+			Size = size;
+			Color = Drawing::Color::Transparent;
+		}
+		Rectangle::Rectangle(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color)
+		{
+			Enabled = true;
+			Position = position;
+			Size = size;
+			Color = color;
 		}
 
-		UIRectangle::Draw(offset);
-
-		for each (UIElement ^item in Items)
+		void Rectangle::Draw()
 		{
-			item->Draw(static_cast<Drawing::Size>(UIRectangle::Position + offset));
+			Draw(Drawing::SizeF::Empty);
 		}
-	}
-
-	UISprite::UISprite(String ^textureDict, String ^textureName, Drawing::Size scale, Drawing::Point position)
-	{
-		Enabled = true;
-		_textureDict = textureDict;
-		_textureName = textureName;
-		Scale = scale;
-		Position = position;
-		Color = Drawing::Color::White;
-		Rotation = 0.0F;
-		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
-	}
-	UISprite::UISprite(String ^textureDict, String ^textureName, Drawing::Size scale, Drawing::Point position, Drawing::Color color)
-	{
-		Enabled = true;
-		_textureDict = textureDict;
-		_textureName = textureName;
-		Scale = scale;
-		Position = position;
-		Color = color;
-		Rotation = 0.0F;
-		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
-	}
-	UISprite::UISprite(String ^textureDict, String ^textureName, Drawing::Size scale, Drawing::Point position, Drawing::Color color, float rotation)
-	{
-		Enabled = true;
-		_textureDict = textureDict;
-		_textureName = textureName;
-		Scale = scale;
-		Position = position;
-		Color = color;
-		Rotation = rotation;
-		Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
-	}
-	UISprite::~UISprite()
-	{
-		Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
-	}
-
-	void UISprite::Draw()
-	{
-		Draw(Drawing::Size());
-	}
-	void UISprite::Draw(Drawing::Size offset)
-	{
-		if (!Enabled || !Native::Function::Call<bool>(Native::Hash::HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
+		void Rectangle::Draw(Drawing::SizeF offset)
 		{
-			return;
+			if (!Enabled)
+			{
+				return;
+			}
+
+			const float w = Size.Width / Screen::WIDTH;
+			const float h = Size.Height / Screen::HEIGHT;
+			const float x = ((Position.X + offset.Width) / Screen::WIDTH) + w * 0.5f;
+			const float y = ((Position.Y + offset.Height) / Screen::HEIGHT) + h * 0.5f;
+
+			Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 		}
 
-		const float scaleX = static_cast<float>(Scale.Width) / UI::WIDTH;
-		const float scaleY = static_cast<float>(Scale.Height) / UI::HEIGHT;
-		const float positionX = ((static_cast<float>(Position.X) + offset.Width) / UI::WIDTH) + scaleX * 0.5f;
-		const float positionY = ((static_cast<float>(Position.Y) + offset.Height) / UI::HEIGHT) + scaleY * 0.5f;
+		Container::Container() : Rectangle(), _items(gcnew List<Element ^>())
+		{
+		}
+		Container::Container(Drawing::PointF position, Drawing::SizeF size) : Rectangle(position, size), _items(gcnew List<Element ^>())
+		{
+		}
+		Container::Container(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color) : Rectangle(position, size, color), _items(gcnew List<Element ^>())
+		{
+		}
 
-		Native::Function::Call(Native::Hash::DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+		List<Element ^> ^Container::Items::get()
+		{
+			return _items;
+		}
+		void Container::Items::set(List<Element ^> ^value)
+		{
+			_items = value;
+		}
+
+		void Container::Draw()
+		{
+			Draw(Drawing::SizeF::Empty);
+		}
+		void Container::Draw(Drawing::SizeF offset)
+		{
+			if (!Enabled)
+			{
+				return;
+			}
+
+			Rectangle::Draw(offset);
+
+			for each (Element ^item in Items)
+			{
+				item->Draw(Drawing::SizeF(Rectangle::Position + offset));
+			}
+		}
+
+		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position)
+		{
+			Enabled = true;
+			_textureDict = textureDict;
+			_textureName = textureName;
+			Scale = scale;
+			Position = position;
+			Color = Drawing::Color::White;
+			Rotation = 0.0F;
+			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+		}
+		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color)
+		{
+			Enabled = true;
+			_textureDict = textureDict;
+			_textureName = textureName;
+			Scale = scale;
+			Position = position;
+			Color = color;
+			Rotation = 0.0F;
+			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+		}
+		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation)
+		{
+			Enabled = true;
+			_textureDict = textureDict;
+			_textureName = textureName;
+			Scale = scale;
+			Position = position;
+			Color = color;
+			Rotation = rotation;
+			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+		}
+		Sprite::~Sprite()
+		{
+			Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+		}
+
+		void Sprite::Draw()
+		{
+			Draw(Drawing::SizeF::Empty);
+		}
+		void Sprite::Draw(Drawing::SizeF offset)
+		{
+			if (!Enabled || !Native::Function::Call<bool>(Native::Hash::HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
+			{
+				return;
+			}
+
+			const float scaleX = Scale.Width / Screen::WIDTH;
+			const float scaleY = Scale.Height / Screen::HEIGHT;
+			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + scaleX * 0.5f;
+			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + scaleY * 0.5f;
+
+			Native::Function::Call(Native::Hash::DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+		}
+
+		CustomSprite::CustomSprite(String ^filename, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation)
+		{
+			if (!IO::File::Exists(filename))
+			{
+				throw gcnew IO::FileNotFoundException(filename);
+			}
+
+			if (_textures->ContainsKey(filename))
+			{
+				Id = _textures->default[filename];
+			}
+			else
+			{
+				Id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+
+				_textures->Add(filename, Id);
+			}
+			Enabled = true;
+			Scale = scale;
+			Position = position;
+			Color = color;
+			Rotation = rotation;
+		}
+		CustomSprite::CustomSprite(String ^filename, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color)
+		{
+			if (!IO::File::Exists(filename))
+			{
+				throw gcnew IO::FileNotFoundException(filename);
+			}
+
+			if (_textures->ContainsKey(filename))
+			{
+				Id = _textures->default[filename];
+			}
+			else
+			{
+				Id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+
+				_textures->Add(filename, Id);
+			}
+			Enabled = true;
+			Scale = scale;
+			Position = position;
+			Color = color;
+			Rotation = 0.0f;
+		}
+		CustomSprite::CustomSprite(String ^filename, Drawing::SizeF scale, Drawing::PointF position)
+		{
+			if (!IO::File::Exists(filename))
+			{
+				throw gcnew IO::FileNotFoundException(filename);
+			}
+
+			if (_textures->ContainsKey(filename))
+			{
+				Id = _textures->default[filename];
+			}
+			else
+			{
+				Id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+
+				_textures->Add(filename, Id);
+			}
+			Enabled = true;
+			Scale = scale;
+			Position = position;
+			Color = Drawing::Color::White;
+			Rotation = 0.0f;
+		}
+
+		void CustomSprite::Draw()
+		{
+			Draw(Drawing::SizeF::Empty);
+		}
+		
+		void CustomSprite::Draw(Drawing::SizeF offset)
+		{
+			if (!Enabled)
+			{
+				return;
+			}
+			int FrameCount = Native::Function::Call<int>(Native::Hash::GET_FRAME_COUNT);
+			if (_lastDrawFrame != FrameCount)
+			{
+				_lastDrawFrame = FrameCount;
+				_index = 0;
+			}
+			if (_globalLastDrawFrame != FrameCount)
+			{
+				_globalLastDrawFrame = FrameCount;
+				_level = 0;
+			}
+			float aspectRatio = Native::Function::Call<float>(Native::Hash::_GET_SCREEN_ASPECT_RATIO, 0);
+
+			const float scaleX = Scale.Width / Screen::WIDTH;
+			const float scaleY = Scale.Height / Screen::HEIGHT;
+			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + scaleX * 0.5f;
+			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + scaleY * 0.5f;
+
+			drawTexture(Id, _index++, _level++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, Color.A / 255.0f);
+		}
+
 	}
 }

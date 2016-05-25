@@ -4,103 +4,132 @@
 
 namespace GTA
 {
-	public interface class UIElement
+	namespace UI
 	{
-		void Draw();
-		void Draw(System::Drawing::Size offset);
-
-		property bool Enabled
+		public interface class Element
 		{
-			bool get();
-			void set(bool value);
-		}
-		property System::Drawing::Point Position
+			void Draw();
+			void Draw(System::Drawing::SizeF offset);
+
+			property bool Enabled
+			{
+				bool get();
+				void set(bool value);
+			}
+			property System::Drawing::PointF Position
+			{
+				System::Drawing::PointF get();
+				void set(System::Drawing::PointF value);
+			}
+			property System::Drawing::Color Color
+			{
+				System::Drawing::Color get();
+				void set(System::Drawing::Color value);
+			}
+		};
+
+		public ref class Text : public Element
 		{
-			System::Drawing::Point get();
-			void set(System::Drawing::Point value);
-		}
-		property System::Drawing::Color Color
+		public:
+			Text(System::String ^caption, System::Drawing::PointF position, float scale);
+			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color);
+			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, bool centered);
+			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, bool centered, bool shadow, bool outline);
+
+			virtual property bool Enabled;
+			virtual property System::Drawing::PointF Position;
+			virtual property System::Drawing::Color Color;
+			property System::String ^Caption;
+			property Font Font;
+			property float Scale;
+			property bool Centered;
+			property bool Shadow;
+			property bool Outline;
+
+			virtual void Draw();
+			virtual void Draw(System::Drawing::SizeF offset);
+		};
+		public ref class Rectangle : public Element
 		{
-			System::Drawing::Color get();
-			void set(System::Drawing::Color value);
-		}
-	};
+		public:
+			Rectangle();
+			Rectangle(System::Drawing::PointF position, System::Drawing::SizeF size);
+			Rectangle(System::Drawing::PointF position, System::Drawing::SizeF size, System::Drawing::Color color);
 
-	public ref class UIText : public UIElement
-	{
-	public:
-		UIText(System::String ^caption, System::Drawing::Point position, float scale);
-		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color);
-		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, Font font, bool centered);
-		UIText(System::String ^caption, System::Drawing::Point position, float scale, System::Drawing::Color color, Font font, bool centered, bool shadow, bool outline);
+			virtual property bool Enabled;
+			virtual property System::Drawing::PointF Position;
+			property System::Drawing::SizeF Size;
+			virtual property System::Drawing::Color Color;
 
-		virtual property bool Enabled;
-		virtual property System::Drawing::Point Position;
-		virtual property System::Drawing::Color Color;
-		property System::String ^Caption;
-		property Font Font;
-		property float Scale;
-		property bool Centered;
-		property bool Shadow;
-		property bool Outline;
-
-		virtual void Draw();
-		virtual void Draw(System::Drawing::Size offset);
-	};
-	public ref class UIRectangle : public UIElement
-	{
-	public:
-		UIRectangle();
-		UIRectangle(System::Drawing::Point position, System::Drawing::Size size);
-		UIRectangle(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color);
-
-		virtual property bool Enabled;
-		virtual property System::Drawing::Point Position;
-		property System::Drawing::Size Size;
-		virtual property System::Drawing::Color Color;
-
-		virtual void Draw();
-		virtual void Draw(System::Drawing::Size offset);
-	};
-	public ref class UIContainer : public UIRectangle
-	{
-	public:
-		UIContainer();
-		UIContainer(System::Drawing::Point position, System::Drawing::Size size);
-		UIContainer(System::Drawing::Point position, System::Drawing::Size size, System::Drawing::Color color);
-
-		property System::Collections::Generic::List<UIElement ^> ^Items
+			virtual void Draw();
+			virtual void Draw(System::Drawing::SizeF offset);
+		};
+		public ref class Container : public Rectangle
 		{
-			System::Collections::Generic::List<UIElement ^> ^get();
-			void set(System::Collections::Generic::List<UIElement ^> ^value);
-		}
+		public:
+			Container();
+			Container(System::Drawing::PointF position, System::Drawing::SizeF Size);
+			Container(System::Drawing::PointF position, System::Drawing::SizeF Size, System::Drawing::Color color);
 
-		virtual void Draw() override;
-		virtual void Draw(System::Drawing::Size offset) override;
+			property System::Collections::Generic::List<Element ^> ^Items
+			{
+				System::Collections::Generic::List<Element ^> ^get();
+				void set(System::Collections::Generic::List<Element ^> ^value);
+			}
 
-	private:
-		System::Collections::Generic::List<UIElement ^> ^_items;
-	};
-	public ref class UISprite : public UIElement
-	{
-	public:
-		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position);
-		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position, System::Drawing::Color color);
-		UISprite(System::String ^textureDict, System::String ^textureName, System::Drawing::Size scale, System::Drawing::Point position, System::Drawing::Color color, float rotation);
+			virtual void Draw() override;
+			virtual void Draw(System::Drawing::SizeF offset) override;
 
-		virtual ~UISprite();
+		private:
+			System::Collections::Generic::List<Element ^> ^_items;
+		};
+		public ref class Sprite : public Element
+		{
+		public:
+			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position);
+			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color);
+			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation);
 
-		virtual property bool Enabled;
-		virtual property System::Drawing::Point Position;
-		virtual property System::Drawing::Color Color;
-		property System::Drawing::Size Scale;
-		property float Rotation;
+			virtual ~Sprite();
 
-		virtual void Draw();
-		virtual void Draw(System::Drawing::Size offset);
+			virtual property bool Enabled;
+			virtual property System::Drawing::PointF Position;
+			virtual property System::Drawing::Color Color;
+			property System::Drawing::SizeF Scale;
+			property float Rotation;
 
-	private:
-		System::String ^_textureDict;
-		System::String ^_textureName;
-	};
+			virtual void Draw();
+			virtual void Draw(System::Drawing::SizeF offset);
+
+		private:
+			System::String ^_textureDict;
+			System::String ^_textureName;
+		};
+		public ref class CustomSprite : public Element
+		{
+		public:
+			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position);
+			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color);
+			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation);
+
+			virtual property bool Enabled;
+			virtual property System::Drawing::PointF Position;
+			virtual property System::Drawing::Color Color;
+			property System::Drawing::SizeF Scale;
+			property float Rotation;
+
+
+			virtual void Draw();
+			virtual void Draw(System::Drawing::SizeF offset);
+		private:
+			int _index;
+			int _lastDrawFrame;
+			int Id;
+			static System::Collections::Generic::Dictionary<System::String ^, int> ^_textures = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
+
+			static int _globalLastDrawFrame = 0;
+			static int _level;
+
+		};
+	}
 }
