@@ -762,6 +762,7 @@ namespace GTA
 		property float CurrentRPM
 		{
 			float get();
+			void set(float value);
 		}
 		property float Acceleration
 		{
