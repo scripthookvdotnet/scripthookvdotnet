@@ -261,6 +261,7 @@ namespace GTA
 		}
 		property bool DropsWeaponsOnDeath
 		{
+			bool get();
 			void set(bool value);
 		}
 		property bool DrownsInSinkingVehicle
@@ -278,6 +279,10 @@ namespace GTA
 		property GTA::Gender Gender
 		{
 			GTA::Gender get();
+		}
+		property System::String ^MovementAnimationSet
+		{
+			void set(System::String ^value);
 		}
 		property bool IsAimingFromCover
 		{

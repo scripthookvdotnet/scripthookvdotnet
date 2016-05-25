@@ -10,6 +10,14 @@ namespace GTA
 	{
 	}
 
+	void Tasks::AchieveHeading(float heading)
+	{
+		AchieveHeading(heading, 0);
+	}
+	void Tasks::AchieveHeading(float heading, int timeout)
+	{
+		Native::Function::Call(Native::Hash::TASK_ACHIEVE_HEADING, _ped->Handle, heading, timeout);
+	}
 	void Tasks::AimAt(Entity ^target, int duration)
 	{
 		Native::Function::Call(Native::Hash::TASK_AIM_GUN_AT_ENTITY, _ped->Handle, target->Handle, duration, 0);
@@ -148,6 +156,14 @@ namespace GTA
 			Native::Function::Call(Native::Hash::TASK_FOLLOW_NAV_MESH_TO_COORD, _ped->Handle, position.X, position.Y, position.Z, 1.0f, timeout, 0.0f, 0, 0.0f);
 		}
 	}
+	void Tasks::FollowToOffsetFromEntity(Entity ^target, Math::Vector3 offset, int timeout, float stoppingRange)
+	{
+		FollowToOffsetFromEntity(target, offset, 1.0f, timeout, stoppingRange, true);
+	}
+	void Tasks::FollowToOffsetFromEntity(Entity ^target, Math::Vector3 offset, float movementSpeed, int timeout, float stoppingRange, bool persistFollowing)
+	{
+		Native::Function::Call(Native::Hash::TASK_FOLLOW_NAV_MESH_TO_COORD, _ped->Handle, target->Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, stoppingRange, persistFollowing);
+	}
 	void Tasks::GuardCurrentPosition()
 	{
 		Native::Function::Call(Native::Hash::TASK_GUARD_CURRENT_POSITION, _ped->Handle, 15.0f, 10.0f, true);
@@ -167,6 +183,14 @@ namespace GTA
 	void Tasks::LeaveVehicle(Vehicle ^vehicle, bool closeDoor)
 	{
 		Native::Function::Call(Native::Hash::TASK_LEAVE_VEHICLE, _ped->Handle, vehicle->Handle, closeDoor ? 0 : 1 << 8);
+	}
+	void Tasks::LeaveVehicle(LeaveVehicleFlags flags)
+	{
+		Native::Function::Call(Native::Hash::TASK_LEAVE_ANY_VEHICLE, _ped->Handle, 0, static_cast<int>(flags));
+	}
+	void Tasks::LeaveVehicle(Vehicle ^vehicle, LeaveVehicleFlags flags)
+	{
+		Native::Function::Call(Native::Hash::TASK_LEAVE_VEHICLE, _ped->Handle, vehicle->Handle, static_cast<int>(flags));
 	}
 	void Tasks::LookAt(Entity ^target)
 	{
@@ -205,13 +229,13 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, _ped->Handle, sequence->Handle);
 	}
-	void Tasks::PlayAnimation(System::String ^animSet, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate)
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate)
 	{
-		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animSet);
+		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animDict);
 
 		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
 
-		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animSet))
+		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animDict))
 		{
 			Script::Yield();
 
@@ -221,7 +245,31 @@ namespace GTA
 			}
 		}
 
-		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animSet, animName, speed, -8.0f, duration, lastAnimation, playbackRate, 0, 0, 0);
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animDict, animName, speed, -8.0f, duration, lastAnimation, playbackRate, 0, 0, 0);
+	}
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName)
+	{
+		PlayAnimation(animDict, animName, 8.0f, -8.0f, -1, AnimationFlags::None, 0.0f);
+	}
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, int duration, AnimationFlags flags)
+	{
+		PlayAnimation(animDict, animName, blendInSpeed, -8.0f, duration, flags, 0.0f);
+	}
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
+	{
+		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
+
+		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animDict))
+		{
+			Script::Yield();
+
+			if (System::DateTime::UtcNow >= endtime)
+			{
+				return;
+			}			
+		}
+
+		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, static_cast<int>(flags), playbackRate, 0, 0, 0);
 	}
 	void Tasks::PutAwayMobilePhone()
 	{
