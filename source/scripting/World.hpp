@@ -317,9 +317,9 @@ namespace GTA
 		static void ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage);
 		static void ShootBullet(Math::Vector3 sourcePosition, Math::Vector3 targetPosition, Ped ^owner, Model model, int damage, float speed);
 		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
-		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Invis, bool Aubidble);
+		static void AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis);
 		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake);
-		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Invis, bool Aubidble);
+		static void AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis);
 		static Rope ^AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable);
 		static void DestroyAllCameras();
 		static void SetBlackout(bool enable);

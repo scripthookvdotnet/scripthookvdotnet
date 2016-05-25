@@ -73,6 +73,8 @@ namespace GTA
 			Flashlight = 0x8BB05FD7,
 			Ball = 0x23C9F95C,
 			Flare = 0x497FACC3,
+			NightVision = 0xA720365C,
+			Parachute = 0xFBAB5776
 		};
 	}
 }

@@ -135,6 +135,14 @@ namespace GTA
 				{
 					return *reinterpret_cast<const unsigned int *>(value);
 				}
+				if (type == Int64::typeid)
+				{
+					return *reinterpret_cast<const long long *>(value);
+				}
+				if (type == UInt64::typeid)
+				{
+					return *reinterpret_cast<const unsigned long long *>(value);
+				}
 				if (type == Single::typeid)
 				{
 					return *reinterpret_cast<const float *>(value);

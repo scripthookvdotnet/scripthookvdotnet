@@ -274,6 +274,10 @@ namespace GTA
 			Math::Vector3 get();
 			void set(Math::Vector3 value);
 		}
+		property int Rotation
+		{
+			void set(int value);
+		}
 		property float Scale
 		{
 			void set(float scale);
