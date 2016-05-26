@@ -124,9 +124,8 @@ namespace GTA
 		private:
 			int _index;
 			int _lastDrawFrame;
-			int Id;
+			int _id;
 			static System::Collections::Generic::Dictionary<System::String ^, int> ^_textures = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
-
 			static int _globalLastDrawFrame = 0;
 			static int _level;
 

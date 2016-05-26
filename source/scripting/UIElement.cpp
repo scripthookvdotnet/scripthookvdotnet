@@ -236,13 +236,13 @@ namespace GTA
 
 			if (_textures->ContainsKey(filename))
 			{
-				Id = _textures->default[filename];
+				_id = _textures->default[filename];
 			}
 			else
 			{
-				Id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+				_id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
 
-				_textures->Add(filename, Id);
+				_textures->Add(filename, _id);
 			}
 			Enabled = true;
 			Scale = scale;
@@ -259,13 +259,13 @@ namespace GTA
 
 			if (_textures->ContainsKey(filename))
 			{
-				Id = _textures->default[filename];
+				_id = _textures->default[filename];
 			}
 			else
 			{
-				Id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+				_id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
 
-				_textures->Add(filename, Id);
+				_textures->Add(filename, _id);
 			}
 			Enabled = true;
 			Scale = scale;
@@ -282,13 +282,13 @@ namespace GTA
 
 			if (_textures->ContainsKey(filename))
 			{
-				Id = _textures->default[filename];
+				_id = _textures->default[filename];
 			}
 			else
 			{
-				Id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+				_id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
 
-				_textures->Add(filename, Id);
+				_textures->Add(filename, _id);
 			}
 			Enabled = true;
 			Scale = scale;
@@ -308,14 +308,18 @@ namespace GTA
 			{
 				return;
 			}
+
 			int FrameCount = Native::Function::Call<int>(Native::Hash::GET_FRAME_COUNT);
 			if (_lastDrawFrame != FrameCount)
 			{
+				//reset index to 0 if on a new frame
 				_lastDrawFrame = FrameCount;
 				_index = 0;
 			}
 			if (_globalLastDrawFrame != FrameCount)
 			{
+				//reset level to 0 for all textures if on a new frame.
+				//this means that textures are drawn in the order their draw call is called
 				_globalLastDrawFrame = FrameCount;
 				_level = 0;
 			}
@@ -326,7 +330,7 @@ namespace GTA
 			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + scaleX * 0.5f;
 			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + scaleY * 0.5f;
 
-			drawTexture(Id, _index++, _level++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, Color.A / 255.0f);
+			drawTexture(_id, _index++, _level++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, Color.A / 255.0f);
 		}
 
 	}
