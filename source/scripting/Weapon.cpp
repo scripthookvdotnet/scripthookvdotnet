@@ -330,9 +330,9 @@ namespace GTA
 		{
 			switch (component)
 			{
-			case Native::WeaponComponent::AtRailcover01:
+			case Native::WeaponComponent::AtRailCover01:
 				return "WCT_RAIL";
-			case Native::WeaponComponent::AtArAfgrip:
+			case Native::WeaponComponent::AtArAfGrip:
 				return "WCT_GRIP";
 			case Native::WeaponComponent::AtPiFlsh:
 				return "WCT_FLASH";
@@ -364,55 +364,55 @@ namespace GTA
 				return "WCT_CLIP1";
 			case Native::WeaponComponent::PistolClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::CombatpistolClip01:
+			case Native::WeaponComponent::CombatPistolClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::CombatpistolClip02:
+			case Native::WeaponComponent::CombatPistolClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::AppistolClip01:
+			case Native::WeaponComponent::APPistolClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::AppistolClip02:
+			case Native::WeaponComponent::APPistolClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::MicrosmgClip01:
+			case Native::WeaponComponent::MicroSMGClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::MicrosmgClip02:
+			case Native::WeaponComponent::MicroSMGClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::SmgClip01:
+			case Native::WeaponComponent::SMGClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::SmgClip02:
+			case Native::WeaponComponent::SMGClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::AssaultrifleClip01:
+			case Native::WeaponComponent::AssaultRifleClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::AssaultrifleClip02:
+			case Native::WeaponComponent::AssaultRifleClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::CarbinerifleClip01:
+			case Native::WeaponComponent::CarbineRifleClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::CarbinerifleClip02:
+			case Native::WeaponComponent::CarbineRifleClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::AdvancedrifleClip01:
+			case Native::WeaponComponent::AdvancedRifleClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::AdvancedrifleClip02:
+			case Native::WeaponComponent::AdvancedRifleClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::MgClip01:
+			case Native::WeaponComponent::MGClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::MgClip02:
+			case Native::WeaponComponent::MGClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::CombatmgClip01:
+			case Native::WeaponComponent::CombatMGClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::CombatmgClip02:
+			case Native::WeaponComponent::CombatMGClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::AssaultshotgunClip01:
+			case Native::WeaponComponent::AssaultShotgunClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::AssaultshotgunClip02:
+			case Native::WeaponComponent::AssaultShotgunClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::SniperrifleClip01:
+			case Native::WeaponComponent::SniperRifleClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::HeavysniperClip01:
+			case Native::WeaponComponent::HeavySniperClip01:
 				return "WCT_CLIP1";
 			case Native::WeaponComponent::MinigunClip01:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::AssaultsmgClip01:
+			case Native::WeaponComponent::AssaultSMGClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::AssaultsmgClip02:
+			case Native::WeaponComponent::AssaultSMGClip02:
 				return "WCT_CLIP2";
 			case Native::WeaponComponent::Pistol50Clip01:
 				return "WCT_CLIP1";
@@ -432,75 +432,75 @@ namespace GTA
 				return "WCT_CLIP1";
 			case static_cast<Native::WeaponComponent>(0x3E7E6956) :
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::SnspistolClip01:
+			case Native::WeaponComponent::SNSPistolClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::SnspistolClip02:
+			case Native::WeaponComponent::SNSPistolClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::VintagepistolClip01:
+			case Native::WeaponComponent::VintagePistolClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::VintagepistolClip02:
+			case Native::WeaponComponent::VintagePistolClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::HeavyshotgunClip01:
+			case Native::WeaponComponent::HeavyShotgunClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::MarksmanrifleClip01:
+			case Native::WeaponComponent::MarksmanRifleClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::HeavyshotgunClip02:
+			case Native::WeaponComponent::HeavyShotgunClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::MarksmanrifleClip02:
+			case Native::WeaponComponent::MarksmanRifleClip02:
 				return "WCT_CLIP2";
 			case Native::WeaponComponent::AtScopeLargeFixedZoom:
 				return "WCT_SCOPE_LRG";
 			case Native::WeaponComponent::AtPiSupp02:
 				return "WCT_SUPP";
-			case Native::WeaponComponent::CombatpdwClip01:
+			case Native::WeaponComponent::CombatPDWClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::CombatpdwClip02:
+			case Native::WeaponComponent::CombatPDWClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::MarksmanpistolClip01:
+			case Native::WeaponComponent::MarksmanPistolClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::MachinepistolClip01:
+			case Native::WeaponComponent::MachinePistolClip01:
 				return "WCT_CLIP1";
-			case Native::WeaponComponent::MachinepistolClip02:
+			case Native::WeaponComponent::MachinePistolClip02:
 				return "WCT_CLIP2";
-			case Native::WeaponComponent::AssaultrifleVarmodLuxe:
+			case Native::WeaponComponent::AssaultRifleVarmodLuxe:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::AdvancedrifleVarmodLuxe:
+			case Native::WeaponComponent::AdvancedRifleVarmodLuxe:
 				return "WCT_VAR_METAL";
-			case Native::WeaponComponent::CarbinerifleVarmodLuxe:
+			case Native::WeaponComponent::CarbineRifleVarmodLuxe:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::AppistolVarmodLuxe:
+			case Native::WeaponComponent::APPistolVarmodLuxe:
 				return "WCT_VAR_METAL";
 			case Native::WeaponComponent::PistolVarmodLuxe:
 				return "WCT_VAR_GOLD";
 			case Native::WeaponComponent::Pistol50VarmodLuxe:
 				return "WCT_VAR_SIL";
-			case Native::WeaponComponent::HeavypistolVarmodLuxe:
+			case Native::WeaponComponent::HeavyPistolVarmodLuxe:
 				return "WCT_VAR_WOOD";
-			case Native::WeaponComponent::SmgVarmodLuxe:
+			case Native::WeaponComponent::SMGVarmodLuxe:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::MicrosmgVarmodLuxe:
+			case Native::WeaponComponent::MicroSMGVarmodLuxe:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::SawnoffshotgunVarmodLuxe:
+			case Native::WeaponComponent::SawnoffShotgunVarmodLuxe:
 				return "WCT_VAR_METAL";
-			case Native::WeaponComponent::SniperrifleVarmodLuxe:
+			case Native::WeaponComponent::SniperRifleVarmodLuxe:
 				return "WCT_VAR_WOOD";
 			case static_cast<Native::WeaponComponent>(0x161E9241) :
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::AssaultsmgVarmodLowrider:
+			case Native::WeaponComponent::AssaultSMGVarmodLowrider:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::BullpuprifleVarmodLow:
+			case Native::WeaponComponent::BullpupRifleVarmodLow:
 				return "WCT_VAR_METAL";
-			case Native::WeaponComponent::CombatmgVarmodLowrider:
+			case Native::WeaponComponent::CombatMGVarmodLowrider:
 				return "WCT_VAR_ETCHM";
-			case Native::WeaponComponent::CombatpistolVarmodLowrider:
+			case Native::WeaponComponent::CombatPistolVarmodLowrider:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::MgVarmodLowrider:
+			case Native::WeaponComponent::MGVarmodLowrider:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::PumpshotgunVarmodLowrider:
+			case Native::WeaponComponent::PumpShotgunVarmodLowrider:
 				return "WCT_VAR_GOLD";
-			case Native::WeaponComponent::SnspistolVarmodLowrider:
+			case Native::WeaponComponent::SNSPistolVarmodLowrider:
 				return "WCT_VAR_WOOD";
-			case Native::WeaponComponent::SpecialcarbineVarmodLowrider:
+			case Native::WeaponComponent::SpecialCarbineVarmodLowrider:
 				return "WCT_VAR_ETCHM";
 			case Native::WeaponComponent::SwitchbladeVarmodBase:
 				return "WCT_SB_BASE";
@@ -566,100 +566,100 @@ namespace GTA
 		case Native::WeaponHash::CombatPistol:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::CombatpistolClip01,
-					Native::WeaponComponent::CombatpistolClip02,
+				Native::WeaponComponent::CombatPistolClip01,
+					Native::WeaponComponent::CombatPistolClip02,
 					Native::WeaponComponent::AtPiFlsh,
 					Native::WeaponComponent::AtPiSupp,
-					Native::WeaponComponent::CombatpistolVarmodLowrider,
+					Native::WeaponComponent::CombatPistolVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::APPistol:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AppistolClip01,
-					Native::WeaponComponent::AppistolClip02,
+				Native::WeaponComponent::APPistolClip01,
+					Native::WeaponComponent::APPistolClip02,
 					Native::WeaponComponent::AtPiFlsh,
 					Native::WeaponComponent::AtPiSupp,
-					Native::WeaponComponent::AppistolVarmodLuxe,
+					Native::WeaponComponent::APPistolVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::MicroSMG:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::MicrosmgClip01,
-					Native::WeaponComponent::MicrosmgClip02,
+				Native::WeaponComponent::MicroSMGClip01,
+					Native::WeaponComponent::MicroSMGClip02,
 					Native::WeaponComponent::AtPiFlsh,
 					Native::WeaponComponent::AtScopeMacro,
 					Native::WeaponComponent::AtArSupp02,
-					Native::WeaponComponent::MicrosmgVarmodLuxe,
+					Native::WeaponComponent::MicroSMGVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::SMG:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::SmgClip01,
-					Native::WeaponComponent::SmgClip02,
+				Native::WeaponComponent::SMGClip01,
+					Native::WeaponComponent::SMGClip02,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtPiSupp,
 					Native::WeaponComponent::AtScopeMacro02,
-					Native::WeaponComponent::AtArAfgrip,
-					Native::WeaponComponent::SmgVarmodLuxe,
+					Native::WeaponComponent::AtArAfGrip,
+					Native::WeaponComponent::SMGVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::AssaultRifle:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AssaultrifleClip01,
-					Native::WeaponComponent::AssaultrifleClip02,
-					Native::WeaponComponent::AtArAfgrip,
+				Native::WeaponComponent::AssaultRifleClip01,
+					Native::WeaponComponent::AssaultRifleClip02,
+					Native::WeaponComponent::AtArAfGrip,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeMacro,
 					Native::WeaponComponent::AtArSupp02,
-					Native::WeaponComponent::AssaultrifleVarmodLuxe,
+					Native::WeaponComponent::AssaultRifleVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::CarbineRifle:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::CarbinerifleClip01,
-					Native::WeaponComponent::CarbinerifleClip02,
-					Native::WeaponComponent::AtRailcover01,
-					Native::WeaponComponent::AtArAfgrip,
+				Native::WeaponComponent::CarbineRifleClip01,
+					Native::WeaponComponent::CarbineRifleClip02,
+					Native::WeaponComponent::AtRailCover01,
+					Native::WeaponComponent::AtArAfGrip,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeMedium,
 					Native::WeaponComponent::AtArSupp,
-					Native::WeaponComponent::CarbinerifleVarmodLuxe,
+					Native::WeaponComponent::CarbineRifleVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::AdvancedRifle:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AdvancedrifleClip01,
-					Native::WeaponComponent::AdvancedrifleClip02,
+				Native::WeaponComponent::AdvancedRifleClip01,
+					Native::WeaponComponent::AdvancedRifleClip02,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeSmall,
 					Native::WeaponComponent::AtArSupp,
-					Native::WeaponComponent::AdvancedrifleVarmodLuxe,
+					Native::WeaponComponent::AdvancedRifleVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::MG:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::MgClip01,
-					Native::WeaponComponent::MgClip02,
+				Native::WeaponComponent::MGClip01,
+					Native::WeaponComponent::MGClip02,
 					Native::WeaponComponent::AtScopeSmall02,
-					Native::WeaponComponent::AtArAfgrip,
-					Native::WeaponComponent::MgVarmodLowrider,
+					Native::WeaponComponent::AtArAfGrip,
+					Native::WeaponComponent::MGVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::CombatMG:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::CombatmgClip01,
-					Native::WeaponComponent::CombatmgClip02,
-					Native::WeaponComponent::AtArAfgrip,
+				Native::WeaponComponent::CombatMGClip01,
+					Native::WeaponComponent::CombatMGClip02,
+					Native::WeaponComponent::AtArAfGrip,
 					Native::WeaponComponent::AtScopeMedium,
-					Native::WeaponComponent::CombatmgVarmodLowrider,
+					Native::WeaponComponent::CombatMGVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::PumpShotgun:
@@ -667,15 +667,15 @@ namespace GTA
 			return gcnew array<Native::WeaponComponent>{
 				Native::WeaponComponent::AtSrSupp,
 					Native::WeaponComponent::AtArFlsh,
-					Native::WeaponComponent::PumpshotgunVarmodLowrider,
+					Native::WeaponComponent::PumpShotgunVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::AssaultShotgun:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AssaultshotgunClip01,
-					Native::WeaponComponent::AssaultshotgunClip02,
-					Native::WeaponComponent::AtArAfgrip,
+				Native::WeaponComponent::AssaultShotgunClip01,
+					Native::WeaponComponent::AssaultShotgunClip02,
+					Native::WeaponComponent::AtArAfGrip,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtArSupp,
 			};
@@ -683,17 +683,17 @@ namespace GTA
 		case Native::WeaponHash::SniperRifle:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::SniperrifleClip01,
+				Native::WeaponComponent::SniperRifleClip01,
 					Native::WeaponComponent::AtScopeLarge,
 					Native::WeaponComponent::AtScopeMax,
 					Native::WeaponComponent::AtArSupp02,
-					Native::WeaponComponent::SniperrifleVarmodLuxe,
+					Native::WeaponComponent::SniperRifleVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::HeavySniper:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::HeavysniperClip01,
+				Native::WeaponComponent::HeavySniperClip01,
 					Native::WeaponComponent::AtScopeLarge,
 					Native::WeaponComponent::AtScopeMax,
 			};
@@ -701,7 +701,7 @@ namespace GTA
 		case Native::WeaponHash::GrenadeLauncher:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AtArAfgrip,
+				Native::WeaponComponent::AtArAfGrip,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeSmall,
 			};
@@ -715,18 +715,18 @@ namespace GTA
 		case Native::WeaponHash::AssaultSMG:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AssaultsmgClip01,
-					Native::WeaponComponent::AssaultsmgClip02,
+				Native::WeaponComponent::AssaultSMGClip01,
+					Native::WeaponComponent::AssaultSMGClip02,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeMacro,
 					Native::WeaponComponent::AtArSupp02,
-					Native::WeaponComponent::AssaultsmgVarmodLowrider,
+					Native::WeaponComponent::AssaultSMGVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::BullpupShotgun:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::AtArAfgrip,
+				Native::WeaponComponent::AtArAfGrip,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtArSupp02,
 			};
@@ -744,49 +744,49 @@ namespace GTA
 		case Native::WeaponHash::CombatPDW:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::CombatpdwClip01,
-					Native::WeaponComponent::CombatpdwClip02,
+				Native::WeaponComponent::CombatPDWClip01,
+					Native::WeaponComponent::CombatPDWClip02,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeSmall,
-					Native::WeaponComponent::AtArAfgrip,
+					Native::WeaponComponent::AtArAfGrip,
 			};
 		}
 		case Native::WeaponHash::SawnOffShotgun:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::SawnoffshotgunVarmodLuxe,
+				Native::WeaponComponent::SawnoffShotgunVarmodLuxe,
 			};
 		}
 		case Native::WeaponHash::BullpupRifle:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::BullpuprifleClip01,
-					Native::WeaponComponent::BullpuprifleClip02,
+				Native::WeaponComponent::BullpupRifleClip01,
+					Native::WeaponComponent::BullpupRifleClip02,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeSmall,
 					Native::WeaponComponent::AtArSupp,
-					Native::WeaponComponent::AtArAfgrip,
-					Native::WeaponComponent::BullpuprifleVarmodLow,
+					Native::WeaponComponent::AtArAfGrip,
+					Native::WeaponComponent::BullpupRifleVarmodLow,
 			};
 		}
 		case Native::WeaponHash::SNSPistol:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::SnspistolClip01,
-					Native::WeaponComponent::SnspistolClip02,
-					Native::WeaponComponent::SnspistolVarmodLowrider,
+				Native::WeaponComponent::SNSPistolClip01,
+					Native::WeaponComponent::SNSPistolClip02,
+					Native::WeaponComponent::SNSPistolVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::SpecialCarbine:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::SpecialcarbineClip01,
-					Native::WeaponComponent::SpecialcarbineClip02,
+				Native::WeaponComponent::SpecialCarbineClip01,
+					Native::WeaponComponent::SpecialCarbineClip02,
 					Native::WeaponComponent::AtArFlsh,
 					Native::WeaponComponent::AtScopeMedium,
 					Native::WeaponComponent::AtArSupp02,
-					Native::WeaponComponent::AtArAfgrip,
-					Native::WeaponComponent::SpecialcarbineVarmodLowrider,
+					Native::WeaponComponent::AtArAfGrip,
+					Native::WeaponComponent::SpecialCarbineVarmodLowrider,
 			};
 		}
 		case Native::WeaponHash::KnuckleDuster:
@@ -806,8 +806,8 @@ namespace GTA
 		case Native::WeaponHash::MachinePistol:
 		{
 			return gcnew array<Native::WeaponComponent>{
-				Native::WeaponComponent::MachinepistolClip01,
-					Native::WeaponComponent::MachinepistolClip02,
+				Native::WeaponComponent::MachinePistolClip01,
+					Native::WeaponComponent::MachinePistolClip02,
 					Native::WeaponComponent::AtPiSupp,
 			};
 		}
