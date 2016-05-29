@@ -234,14 +234,16 @@ namespace GTA
 	{
 		Collections::Generic::List<Blip ^> ^res = gcnew Collections::Generic::List<Blip ^>();
 
-		int it = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
-		int handle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, it);
-
-		while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, handle))
+		for each(BlipSprite sprite in Enum::GetValues(BlipSprite::typeid))
 		{
-			res->Add(gcnew Blip(handle));
+			int handle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, static_cast<int>(sprite));
 
-			handle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, it);
+			while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, handle))
+			{
+				res->Add(gcnew Blip(handle));
+
+				handle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, static_cast<int>(sprite));
+			}
 		}
 
 		return res->ToArray();

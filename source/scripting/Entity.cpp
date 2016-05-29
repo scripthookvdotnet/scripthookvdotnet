@@ -476,7 +476,7 @@ namespace GTA
 	void Entity::Delete()
 	{
 		int handle = Handle;
-		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, true, false);
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 		Native::Function::Call(Native::Hash::DELETE_ENTITY, &handle);
 	}
 	void Entity::MarkAsNoLongerNeeded()
