@@ -328,7 +328,12 @@ namespace GTA
 	}
 	Math::Vector3 Entity::RightVector::get()
 	{
-		return Math::Vector3::Cross(ForwardVector, Math::Vector3(0, 0, 1));
+		const double D2R = 0.01745329251994329576923690768489;
+		double num1 = System::Math::Cos(Rotation.Y * D2R);
+		double x = num1 * System::Math::Cos(-Rotation.Z  * D2R);
+		double y = num1 * System::Math::Sin(Rotation.Z  * D2R);
+		double z = System::Math::Sin(-Rotation.Y * D2R);
+		return Math::Vector3((float)x, (float)y, (float)z);
 	}
 	Math::Vector3 Entity::Rotation::get()
 	{
