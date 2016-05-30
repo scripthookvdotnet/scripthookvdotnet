@@ -77,7 +77,8 @@ namespace GTA
 		auto assembly = GTA::Script::typeid->Assembly;
 		auto assemblyName = gcnew AssemblyName(args->Name);
 
-		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
+		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase) &&
+			assemblyName->Version->Major == assembly->GetName()->Version->Major)
 		{
 			return assembly;
 		}
