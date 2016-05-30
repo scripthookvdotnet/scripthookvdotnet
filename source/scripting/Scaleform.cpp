@@ -8,16 +8,38 @@ namespace GTA
 
 	extern void Log(String ^logLevel, ... array<String ^> ^message);
 
-	Scaleform::Scaleform()
+	Scaleform::Scaleform(String ^scaleformID) : _handle(0), _scaleformID(scaleformID)
 	{
 	}
 	Scaleform::Scaleform(int handle) : _handle(handle)
 	{
 	}
+	Scaleform::~Scaleform()
+	{
+		Unload();
+	}
 
 	int Scaleform::Handle::get()
 	{
 		return _handle;
+	}
+	bool Scaleform::IsLoaded::get()
+	{
+		return Native::Function::Call<bool>(Native::Hash::HAS_SCALEFORM_MOVIE_LOADED, _handle);
+	}
+
+	bool Scaleform::Load()
+	{
+		const int handle = Native::Function::Call<int>(Native::Hash::REQUEST_SCALEFORM_MOVIE, _scaleformID);
+
+		if (handle == 0)
+		{
+			return false;
+		}
+
+		_handle = handle;
+
+		return true;
 	}
 
 	bool Scaleform::Load(String ^scaleformID)
@@ -33,6 +55,17 @@ namespace GTA
 		_scaleformID = scaleformID;
 
 		return true;
+	}
+	void Scaleform::Unload()
+	{
+		if (!IsLoaded)
+		{
+			return;
+		}
+		{
+			int handle = _handle;
+			Native::Function::Call(Native::Hash::SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, &handle);
+		}
 	}
 
 	void Scaleform::CallFunction(String ^function, ... array<Object ^> ^arguments)
