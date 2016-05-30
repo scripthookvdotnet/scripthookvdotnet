@@ -99,6 +99,9 @@ namespace GTA
 			void set(float amplitude);
 		}
 
+		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
+		Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 offset);
+
 		void Shake(CameraShake shakeType, float amplitude);
 		void StopShaking();
 
@@ -112,7 +115,7 @@ namespace GTA
 		void PointAt(Entity ^target);
 		void PointAt(Entity ^target, Math::Vector3 offset);
 		void PointAt(Ped ^target, int boneIndex);
-		void PointAt(Ped ^target, int boneIndex, Math::Vector3 offset);
+		void PointAt(Ped ^target, int boneIndex, Math::Vector3 worldCoords);
 		void StopPointing();
 
 		void Destroy();
@@ -218,6 +221,9 @@ namespace GTA
 		{
 			float get();
 		}
+
+		static Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
+		static Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 worldCoords);
 
 		static void Shake(CameraShake shakeType, float amplitude);
 		static void StopShaking();
