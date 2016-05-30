@@ -16,25 +16,39 @@
 
 #include "ScriptDomain.hpp"
 
+using namespace System;
+using namespace System::Threading;
+using namespace System::Reflection;
+using namespace System::Windows::Forms;
+using namespace System::Collections::Generic;
+
+namespace
+{
+	inline void SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn)
+	{
+		toSignal->Set();
+		toWaitOn->WaitOne();
+	}
+	inline bool SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn, int timeout)
+	{
+		toSignal->Set();
+		return toWaitOn->WaitOne(timeout);
+	}
+}
+
 namespace GTA
 {
-	using namespace System;
-	using namespace System::Threading;
-	using namespace System::Reflection;
-	using namespace System::Windows::Forms;
-	using namespace System::Collections::Generic;
-
 	void Log(String ^logLevel, ... array<String ^> ^message)
 	{
 		DateTime now = DateTime::Now;
-		String ^logpath = IO::Path::ChangeExtension(Reflection::Assembly::GetExecutingAssembly()->Location, ".log");
+		String ^logpath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
 
 		logpath = logpath->Insert(logpath->IndexOf(".log"), "-" + now.ToString("yyyy-MM-dd"));
 
 		try
 		{
-			IO::FileStream ^fs = gcnew IO::FileStream(logpath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
-			IO::StreamWriter ^sw = gcnew IO::StreamWriter(fs);
+			auto fs = gcnew IO::FileStream(logpath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
+			auto sw = gcnew IO::StreamWriter(fs);
 
 			try
 			{
@@ -58,11 +72,14 @@ namespace GTA
 			return;
 		}
 	}
-	Reflection::Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
+	Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
 	{
-		if (args->Name->ToLower()->Contains("scripthookvdotnet"))
+		auto assembly = GTA::Script::typeid->Assembly;
+		auto assemblyName = gcnew AssemblyName(args->Name);
+
+		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
 		{
-			return Reflection::Assembly::GetAssembly(GTA::Script::typeid);
+			return assembly;
 		}
 
 		return nullptr;
@@ -78,16 +95,6 @@ namespace GTA
 			Log("[ERROR]", "Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
 	}
-	inline void SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn)
-	{
-		toSignal->Set();
-		toWaitOn->WaitOne();
-	}
-	inline bool SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn, int timeout)
-	{
-		toSignal->Set();
-		return toWaitOn->WaitOne(timeout);
-	}
 
 	ScriptDomain::ScriptDomain() : _appdomain(System::AppDomain::CurrentDomain), _executingThreadId(Thread::CurrentThread->ManagedThreadId), _runningScripts(gcnew List<Script ^>()), _taskQueue(gcnew Queue<IScriptTask ^>()), _pinnedStrings(gcnew List<IntPtr>()), _scriptTypes(gcnew List<Tuple<String ^, Type ^> ^>()), _recordKeyboardEvents(true), _keyboardState(gcnew array<bool>(256))
 	{
@@ -96,7 +103,7 @@ namespace GTA
 		_appdomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
 		_appdomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
-		Log("[DEBUG]", "Created script domain '", _appdomain->FriendlyName, "'.");
+		Log("[DEBUG]", "Created script domain '", _appdomain->FriendlyName, "' with v", ScriptDomain::typeid->Assembly->GetName()->Version->ToString(3), ".");
 	}
 	ScriptDomain::~ScriptDomain()
 	{
@@ -234,18 +241,18 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename)
 	{
-		if (IO::Path::GetFileNameWithoutExtension(filename)->ToLower() == "scripthookvdotnet")
+		if (IO::Path::GetFileNameWithoutExtension(filename)->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
 		{
 			Log("[ERROR]", "Skipped assembly '", IO::Path::GetFileName(filename), "'. Please remove it from the 'scripts' directory.");
 
 			return false;
 		}
 
-		Reflection::Assembly ^assembly = nullptr;
+		Assembly ^assembly = nullptr;
 
 		try
 		{
-			assembly = Reflection::Assembly::LoadFrom(filename);
+			assembly = Assembly::LoadFrom(filename);
 		}
 		catch (Exception ^ex)
 		{
@@ -256,13 +263,13 @@ namespace GTA
 
 		return LoadAssembly(filename, assembly);
 	}
-	bool ScriptDomain::LoadAssembly(String ^filename, Reflection::Assembly ^assembly)
+	bool ScriptDomain::LoadAssembly(String ^filename, Assembly ^assembly)
 	{
 		unsigned int count = 0;
 
 		try
 		{
-			for each (Type ^type in assembly->GetTypes())
+			for each (auto type in assembly->GetTypes())
 			{
 				if (!type->IsSubclassOf(Script::typeid))
 				{
@@ -273,9 +280,9 @@ namespace GTA
 				_scriptTypes->Add(gcnew Tuple<String ^, Type ^>(filename, type));
 			}
 		}
-		catch (Reflection::ReflectionTypeLoadException ^ex)
+		catch (ReflectionTypeLoadException ^ex)
 		{
-			Log("[ERROR]", "Failed to list assembly types:", Environment::NewLine, ex->ToString());
+			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
 
 			return false;
 		}
@@ -324,7 +331,7 @@ namespace GTA
 		{
 			Log("[ERROR]", "Failed to instantiate script '", scripttype->FullName, "' because no public default constructor was found.");
 		}
-		catch (Reflection::TargetInvocationException ^ex)
+		catch (TargetInvocationException ^ex)
 		{
 			Log("[ERROR]", "Failed to instantiate script '", scripttype->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString());
 		}
@@ -338,11 +345,11 @@ namespace GTA
 
 	bool SortScripts(List<Tuple<String ^, Type ^> ^> ^%scripttypes)
 	{
-		Dictionary<Tuple<String ^, Type ^> ^, List<Type ^> ^> ^graph = gcnew Dictionary<Tuple<String ^, Type ^> ^, List<Type ^> ^>();
+		auto graph = gcnew Dictionary<Tuple<String ^, Type ^> ^, List<Type ^> ^>();
 
 		for each (auto scripttype in scripttypes)
 		{
-			List<Type ^> ^dependencies = gcnew List<Type ^>();
+			auto dependencies = gcnew List<Type ^>();
 
 			for each (RequireScript ^attribute in static_cast<MemberInfo ^>(scripttype->Item2)->GetCustomAttributes(RequireScript::typeid, true))
 			{
@@ -352,7 +359,7 @@ namespace GTA
 			graph->Add(scripttype, dependencies);
 		}
 
-		List<Tuple<String ^, Type ^> ^> ^result = gcnew List<Tuple<String ^, Type ^> ^>(graph->Count);
+		auto result = gcnew List<Tuple<String ^, Type ^> ^>(graph->Count);
 
 		while (graph->Count > 0)
 		{
@@ -393,10 +400,10 @@ namespace GTA
 			return;
 		}
 
-		String ^assemblyPath = Reflection::Assembly::GetExecutingAssembly()->Location;
+		String ^assemblyPath = Assembly::GetExecutingAssembly()->Location;
 		String ^assemblyFilename = IO::Path::GetFileNameWithoutExtension(assemblyPath);
 
-		for each (System::String ^path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(assemblyPath), "*.log"))
+		for each (String ^path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(assemblyPath), "*.log"))
 		{
 			if (!path->StartsWith(assemblyFilename))
 			{

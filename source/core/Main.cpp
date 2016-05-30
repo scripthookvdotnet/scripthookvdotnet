@@ -16,11 +16,11 @@
 
 #include "ScriptDomain.hpp"
 
+using namespace System;
+using namespace System::Windows::Forms;
+
 namespace
 {
-	using namespace System;
-	using namespace System::Windows::Forms;
-
 	ref struct ScriptHook
 	{
 		static GTA::ScriptDomain ^Domain = nullptr;

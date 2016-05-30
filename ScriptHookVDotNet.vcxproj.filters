@@ -117,6 +117,7 @@
     <ClCompile Include="source\scripting\WeaponAsset.cpp">
       <Filter>scripting\World</Filter>
     </ClCompile>
+    <ClCompile Include="source\AssemblyInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\Native.hpp">
