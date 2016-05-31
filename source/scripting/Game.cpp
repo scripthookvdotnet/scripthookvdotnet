@@ -168,6 +168,10 @@ namespace GTA
 
 		return _cachedPlayer;
 	}
+	GTA::Ped ^Game::PlayerPed::get()
+	{
+		return GTA::Game::Player->Character;
+	}
 	void Game::RadarZoom::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
@@ -308,7 +312,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_SET_CONTROL_NORMAL, index, static_cast<int>(control), value);
 	}
-
 	void Game::Pause(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_GAME_PAUSED, value);

@@ -137,21 +137,21 @@ namespace GTA
 			Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 		}
 
-		Container::Container() : Rectangle(), _items(gcnew List<Element ^>())
+		Container::Container() : Rectangle(), _items(gcnew List<IElement ^>())
 		{
 		}
-		Container::Container(Drawing::PointF position, Drawing::SizeF size) : Rectangle(position, size), _items(gcnew List<Element ^>())
+		Container::Container(Drawing::PointF position, Drawing::SizeF size) : Rectangle(position, size), _items(gcnew List<IElement ^>())
 		{
 		}
-		Container::Container(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color) : Rectangle(position, size, color), _items(gcnew List<Element ^>())
+		Container::Container(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color) : Rectangle(position, size, color), _items(gcnew List<IElement ^>())
 		{
 		}
 
-		List<Element ^> ^Container::Items::get()
+		List<IElement ^> ^Container::Items::get()
 		{
 			return _items;
 		}
-		void Container::Items::set(List<Element ^> ^value)
+		void Container::Items::set(List<IElement ^> ^value)
 		{
 			_items = value;
 		}
@@ -169,7 +169,7 @@ namespace GTA
 
 			Rectangle::Draw(offset);
 
-			for each (Element ^item in Items)
+			for each (IElement ^item in Items)
 			{
 				item->Draw(Drawing::SizeF(Rectangle::Position + offset));
 			}

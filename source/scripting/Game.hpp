@@ -212,6 +212,10 @@ namespace GTA
 		{
 			GTA::Player ^get();
 		}
+		static property Ped ^PlayerPed
+		{
+			GTA::Ped ^get();
+		}
 		static property int RadarZoom
 		{
 			void set(int value);

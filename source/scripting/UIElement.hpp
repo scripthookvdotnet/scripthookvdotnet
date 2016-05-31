@@ -6,7 +6,7 @@ namespace GTA
 {
 	namespace UI
 	{
-		public interface class Element
+		public interface class IElement
 		{
 			void Draw();
 			void Draw(System::Drawing::SizeF offset);
@@ -28,7 +28,7 @@ namespace GTA
 			}
 		};
 
-		public ref class Text : public Element
+		public ref class Text : public IElement
 		{
 		public:
 			Text(System::String ^caption, System::Drawing::PointF position, float scale);
@@ -49,7 +49,7 @@ namespace GTA
 			virtual void Draw();
 			virtual void Draw(System::Drawing::SizeF offset);
 		};
-		public ref class Rectangle : public Element
+		public ref class Rectangle : public IElement
 		{
 		public:
 			Rectangle();
@@ -71,19 +71,25 @@ namespace GTA
 			Container(System::Drawing::PointF position, System::Drawing::SizeF Size);
 			Container(System::Drawing::PointF position, System::Drawing::SizeF Size, System::Drawing::Color color);
 
-			property System::Collections::Generic::List<Element ^> ^Items
+			property System::Collections::Generic::List<IElement ^> ^Items
 			{
-				System::Collections::Generic::List<Element ^> ^get();
-				void set(System::Collections::Generic::List<Element ^> ^value);
+				System::Collections::Generic::List<IElement ^> ^get();
+				void set(System::Collections::Generic::List<IElement ^> ^value);
 			}
 
 			virtual void Draw() override;
 			virtual void Draw(System::Drawing::SizeF offset) override;
 
 		private:
-			System::Collections::Generic::List<Element ^> ^_items;
+			System::Collections::Generic::List<IElement ^> ^_items;
 		};
-		public ref class Sprite : public Element
+		public interface class ISprite : public IElement
+		{
+		public:
+			property System::Drawing::SizeF Scale;
+			property float Rotation;
+		};
+		public ref class Sprite : public ISprite
 		{
 		public:
 			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position);
@@ -95,8 +101,8 @@ namespace GTA
 			virtual property bool Enabled;
 			virtual property System::Drawing::PointF Position;
 			virtual property System::Drawing::Color Color;
-			property System::Drawing::SizeF Scale;
-			property float Rotation;
+			virtual property System::Drawing::SizeF Scale;
+			virtual property float Rotation;
 
 			virtual void Draw();
 			virtual void Draw(System::Drawing::SizeF offset);
@@ -105,7 +111,7 @@ namespace GTA
 			System::String ^_textureDict;
 			System::String ^_textureName;
 		};
-		public ref class CustomSprite : public Element
+		public ref class CustomSprite : public ISprite
 		{
 		public:
 			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position);
@@ -115,8 +121,8 @@ namespace GTA
 			virtual property bool Enabled;
 			virtual property System::Drawing::PointF Position;
 			virtual property System::Drawing::Color Color;
-			property System::Drawing::SizeF Scale;
-			property float Rotation;
+			virtual property System::Drawing::SizeF Scale;
+			virtual property float Rotation;
 
 
 			virtual void Draw();
