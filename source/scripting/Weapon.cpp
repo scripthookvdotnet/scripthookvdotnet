@@ -887,7 +887,7 @@ namespace GTA
 	{
 		if (Current->Hash != Native::WeaponHash::Unarmed)
 		{
-			return Native::Function::Call<Prop^>(Native::Hash::_0x3B390A939AF0B5FC, _owner->Handle);
+			return Native::Function::Call<Prop^>(Native::Hash::GET_CURRENT_PED_WEAPON_ENTITY_INDEX, _owner->Handle);
 		}
 
 		return nullptr;

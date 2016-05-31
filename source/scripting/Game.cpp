@@ -422,6 +422,6 @@ namespace GTA
 	}
 	InputMode Game::CurrentInputMode::get()
 	{
-		return Native::Function::Call<bool>(Native::Hash::_GET_LAST_INPUT_METHOD, 2) ? InputMode::MouseAndKeyboard : InputMode::GamePad;
+		return Native::Function::Call<bool>(Native::Hash::_IS_INPUT_DISABLED, 2) ? InputMode::MouseAndKeyboard : InputMode::GamePad;
 	}
 }

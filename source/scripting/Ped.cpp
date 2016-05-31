@@ -655,7 +655,7 @@ namespace GTA
 	}
 	Ped ^PedGroup::Leader::get()
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::_0x5CCE68DBD5FE93EC, Handle);
+		return Native::Function::Call<Ped ^>(Native::Hash::_GET_PED_AS_GROUP_LEADER, Handle);
 	}
 	int PedGroup::MemberCount::get()
 	{

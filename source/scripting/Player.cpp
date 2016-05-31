@@ -248,7 +248,7 @@ namespace GTA
 	{
 		int entity = 0;
 
-		if (Native::Function::Call<bool>(Native::Hash::_GET_AIMED_ENTITY, Handle, &entity))
+		if (Native::Function::Call<bool>(Native::Hash::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entity))
 		{
 			if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity))
 			{

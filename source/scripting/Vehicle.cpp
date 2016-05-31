@@ -557,7 +557,7 @@ namespace GTA
 	}
 	void Vehicle::DropsMoneyOnExplosion::set(bool value)
 	{
-		Native::Function::Call(Native::Hash::_0x068F64F2470F9656, Handle, value);
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_CREATES_MONEY_PICKUPS_WHEN_EXPLODED, Handle, value);
 	}
 	void Vehicle::ProvidesCover::set(bool value)
 	{
@@ -646,7 +646,7 @@ namespace GTA
 	}
 	void Vehicle::TowingCraneRaisedAmount::set(float value)
 	{
-		Native::Function::Call(Native::Hash::_SET_TOW_TRUCK_CRANE_RAISED, Handle, value);
+		Native::Function::Call(Native::Hash::_SET_TOW_TRUCK_CRANE_HEIGHT, Handle, value);
 	}
 	void Vehicle::HasAlarm::set(bool value)
 	{
@@ -967,7 +967,7 @@ namespace GTA
 	void Vehicle::CloseBombBay()
 	{
 		if (HasBombBay)
-			Native::Function::Call(Native::Hash::_0x3556041742A0DC74, Handle);
+			Native::Function::Call(Native::Hash::_CLOSE_VEHICLE_BOMB_BAY, Handle);
 	}
 	void Vehicle::FixWindow(VehicleWindow window)
 	{
@@ -1015,7 +1015,7 @@ namespace GTA
 		{
 			if (mult >= 0.0f && mult <= 1.0f)
 			{
-				Native::Function::Call(Native::Hash::_0x6E0859B530A365CC, Handle, mult);
+				Native::Function::Call(Native::Hash::_SET_HELICOPTER_ROLL_PITCH_YAW_MULT, Handle, mult);
 			}
 		}
 	}
@@ -1023,14 +1023,14 @@ namespace GTA
 	{
 		if (Model.IsCargobob)
 		{
-			Native::Function::Call(Native::Hash::_0x7BEB0C7A235F6F3B, Handle, static_cast<int>(hookType));
+			Native::Function::Call(Native::Hash::_ENABLE_CARGOBOB_HOOK, Handle, static_cast<int>(hookType));
 		}
 	}
 	bool Vehicle::IsCargobobHookActive()
 	{
 		if (Model.IsCargobob)
 		{
-			return Native::Function::Call<bool>(Native::Hash::_0x1821D91AD4B56108, Handle) || Native::Function::Call<bool>(Native::Hash::_0x6E08BF5B3722BAC9, Handle);
+			return Native::Function::Call<bool>(Native::Hash::_IS_CARGOBOB_HOOK_ACTIVE, Handle) || Native::Function::Call<bool>(Native::Hash::_IS_CARGOBOB_MAGNET_ACTIVE, Handle);
 		}
 		return false;
 	}
@@ -1041,9 +1041,9 @@ namespace GTA
 			switch (hookType)
 			{
 			case CargobobHook::Hook:
-				return Native::Function::Call<bool>(Native::Hash::_0x1821D91AD4B56108, Handle);
+				return Native::Function::Call<bool>(Native::Hash::_IS_CARGOBOB_HOOK_ACTIVE, Handle);
 			case CargobobHook::Magnet:
-				return Native::Function::Call<bool>(Native::Hash::_0x6E08BF5B3722BAC9, Handle);
+				return Native::Function::Call<bool>(Native::Hash::_IS_CARGOBOB_MAGNET_ACTIVE, Handle);
 			}
 		}
 		return false;
@@ -1052,21 +1052,21 @@ namespace GTA
 	{
 		if (Model.IsCargobob)
 		{
-			Native::Function::Call(Native::Hash::_0x9768CF648F54C804, Handle);
+			Native::Function::Call(Native::Hash::_RETRACT_CARGOBOB_HOOK, Handle);
 		}
 	}
 	void Vehicle::CargoBobMagnetGrabVehicle()
 	{
 		if (IsCargobobHookActive(CargobobHook::Magnet))
 		{
-			Native::Function::Call(Native::Hash::_0x9A665550F8DA349B, Handle, true);
+			Native::Function::Call(Native::Hash::_CARGOBOB_MAGNET_GRAB_VEHICLE, Handle, true);
 		}
 	}
 	void Vehicle::CargoBobMagnetReleaseVehicle()
 	{
 		if (IsCargobobHookActive(CargobobHook::Magnet))
 		{
-			Native::Function::Call(Native::Hash::_0x9A665550F8DA349B, Handle, false);
+			Native::Function::Call(Native::Hash::_CARGOBOB_MAGNET_GRAB_VEHICLE, Handle, false);
 		}
 	}
 	void Vehicle::TowVehicle(Vehicle ^vehicle, bool rear)
