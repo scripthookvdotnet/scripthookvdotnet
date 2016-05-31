@@ -88,6 +88,7 @@ namespace GTA
 		public:
 			property System::Drawing::SizeF Scale;
 			property float Rotation;
+			property bool Centered;
 		};
 		public ref class Sprite : public ISprite
 		{
@@ -95,7 +96,7 @@ namespace GTA
 			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position);
 			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color);
 			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation);
-
+			Sprite(System::String ^textureDict, System::String ^textureName, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation, bool centered);
 			virtual ~Sprite();
 
 			virtual property bool Enabled;
@@ -103,6 +104,7 @@ namespace GTA
 			virtual property System::Drawing::Color Color;
 			virtual property System::Drawing::SizeF Scale;
 			virtual property float Rotation;
+			virtual property bool Centered;
 
 			virtual void Draw();
 			virtual void Draw(System::Drawing::SizeF offset);
@@ -117,12 +119,14 @@ namespace GTA
 			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position);
 			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color);
 			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation);
+			CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation, bool centered);
 
 			virtual property bool Enabled;
 			virtual property System::Drawing::PointF Position;
 			virtual property System::Drawing::Color Color;
 			virtual property System::Drawing::SizeF Scale;
 			virtual property float Rotation;
+			virtual property bool Centered;
 
 
 			virtual void Draw();

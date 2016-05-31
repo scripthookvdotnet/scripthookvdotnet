@@ -184,6 +184,7 @@ namespace GTA
 			Position = position;
 			Color = Drawing::Color::White;
 			Rotation = 0.0F;
+			Centered = false;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
 		}
 		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color)
@@ -195,6 +196,7 @@ namespace GTA
 			Position = position;
 			Color = color;
 			Rotation = 0.0F;
+			Centered = false;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
 		}
 		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation)
@@ -206,6 +208,19 @@ namespace GTA
 			Position = position;
 			Color = color;
 			Rotation = rotation;
+			Centered = false;
+			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+		}
+		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation, bool centered)
+		{
+			Enabled = true;
+			_textureDict = textureDict;
+			_textureName = textureName;
+			Scale = scale;
+			Position = position;
+			Color = color;
+			Rotation = rotation;
+			Centered = centered;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
 		}
 		Sprite::~Sprite()
@@ -226,12 +241,35 @@ namespace GTA
 
 			const float scaleX = Scale.Width / Screen::WIDTH;
 			const float scaleY = Scale.Height / Screen::HEIGHT;
-			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + scaleX * 0.5f;
-			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + scaleY * 0.5f;
+			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + ((!Centered) ? scaleX * 0.5f : 0.0f);
+			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + ((!Centered) ? scaleY * 0.5f : 0.0f);
 
 			Native::Function::Call(Native::Hash::DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
+		CustomSprite::CustomSprite(System::String ^filename, System::Drawing::SizeF scale, System::Drawing::PointF position, System::Drawing::Color color, float rotation, bool centered)
+		{
+			if (!IO::File::Exists(filename))
+			{
+				throw gcnew IO::FileNotFoundException(filename);
+			}
 
+			if (_textures->ContainsKey(filename))
+			{
+				_id = _textures->default[filename];
+			}
+			else
+			{
+				_id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+
+				_textures->Add(filename, _id);
+			}
+			Enabled = true;
+			Scale = scale;
+			Position = position;
+			Color = color;
+			Rotation = rotation;
+			Centered = centered;
+		}
 		CustomSprite::CustomSprite(String ^filename, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation)
 		{
 			if (!IO::File::Exists(filename))
@@ -254,6 +292,7 @@ namespace GTA
 			Position = position;
 			Color = color;
 			Rotation = rotation;
+			Centered = false;
 		}
 		CustomSprite::CustomSprite(String ^filename, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color)
 		{
@@ -277,6 +316,7 @@ namespace GTA
 			Position = position;
 			Color = color;
 			Rotation = 0.0f;
+			Centered = false;
 		}
 		CustomSprite::CustomSprite(String ^filename, Drawing::SizeF scale, Drawing::PointF position)
 		{
@@ -300,6 +340,7 @@ namespace GTA
 			Position = position;
 			Color = Drawing::Color::White;
 			Rotation = 0.0f;
+			Centered = false;
 		}
 
 		void CustomSprite::Draw()
@@ -332,8 +373,8 @@ namespace GTA
 
 			const float scaleX = Scale.Width / Screen::WIDTH;
 			const float scaleY = Scale.Height / Screen::HEIGHT;
-			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + scaleX * 0.5f;
-			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + scaleY * 0.5f;
+			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + ((!Centered) ? scaleX * 0.5f : 0.0f);
+			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + ((!Centered) ? scaleY * 0.5f : 0.0f);
 
 			drawTexture(_id, _index++, _level++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, Color.A / 255.0f);
 		}
