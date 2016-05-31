@@ -487,6 +487,7 @@ namespace GTA
 	void Entity::MarkAsNoLongerNeeded()
 	{
 		int handle = Handle;
+		Native::Function::Call(Native::Hash::SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 		Native::Function::Call(Native::Hash::SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
 	}
 

@@ -1082,18 +1082,14 @@ namespace GTA
 	}
 	void World::DrawMarker(MarkerType type, Math::Vector3 pos, Math::Vector3 dir, Math::Vector3 rot, Math::Vector3 scale, Drawing::Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, String ^textueDict, String ^textureName, bool drawOnEnt)
 	{
-		Native::InputArgument^ dict = gcnew Native::InputArgument(0), ^ name = gcnew Native::InputArgument(0);
-
-		if (textueDict != nullptr && textureName != nullptr)
+		if (textueDict != nullptr && textueDict->Length > 0 && textureName != nullptr && textureName->Length > 0)
 		{
-			if (textueDict->Length > 0 && textureName->Length > 0)
-			{
-				dict = gcnew Native::InputArgument(textueDict);
-				name = gcnew Native::InputArgument(textureName);
-			}
+			Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict, textureName, drawOnEnt);
 		}
-
-		Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
+		else
+		{
+			Native::Function::Call(Native::Hash::DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
+		}		
 	}
 	void World::DrawLightWithRange(Math::Vector3 position, Drawing::Color color, float range, float intensity)
 	{

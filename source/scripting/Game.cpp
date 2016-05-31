@@ -168,6 +168,10 @@ namespace GTA
 
 		return _cachedPlayer;
 	}
+	GTA::Ped ^Game::PlayerPed::get()
+	{
+		return GTA::Game::Player->Character;
+	}
 	void Game::RadarZoom::set(int value)
 	{
 		Native::Function::Call(Native::Hash::SET_RADAR_ZOOM, value);
@@ -276,14 +280,6 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_CONTROL_ENABLED, index, static_cast<int>(control));
 	}
-	void Game::EnableControl(int index, Control control)
-	{
-		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
-	}
-	void Game::DisableControl(int index, Control control)
-	{
-		Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
-	}
 	void Game::EnableControlThisFrame(int index, Control control)
 	{
 		Native::Function::Call(Native::Hash::ENABLE_CONTROL_ACTION, index, static_cast<int>(control), true);
@@ -316,7 +312,6 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::_SET_CONTROL_NORMAL, index, static_cast<int>(control), value);
 	}
-
 	void Game::Pause(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_GAME_PAUSED, value);

@@ -587,8 +587,8 @@ namespace GTA
 		void RandomizeOutfit();
 		void SetDefaultClothes();
 		void LeaveGroup();
-		void Clone();
-		void Clone(float heading);
+		Ped ^Clone();
+		Ped ^Clone(float heading);
 		void ApplyDamage(int damageAmount);
 		Math::Vector3 GetBoneCoord(Bone BoneID);
 		Math::Vector3 GetBoneCoord(Bone BoneID, Math::Vector3 Offset);

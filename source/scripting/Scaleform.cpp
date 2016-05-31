@@ -12,9 +12,6 @@ namespace GTA
 	{
 		_handle = Native::Function::Call<int>(Native::Hash::REQUEST_SCALEFORM_MOVIE, _scaleformID);
 	}
-	Scaleform::Scaleform(int handle) : _handle(handle)
-	{
-	}
 	Scaleform::~Scaleform()
 	{
 		Unload();
@@ -33,20 +30,6 @@ namespace GTA
 		return _handle != 0;
 	}
 
-	bool Scaleform::Load(String ^scaleformID)
-	{
-		const int handle = Native::Function::Call<int>(Native::Hash::REQUEST_SCALEFORM_MOVIE, scaleformID);
-
-		if (handle == 0)
-		{
-			return false;
-		}
-
-		_handle = handle;
-		_scaleformID = scaleformID;
-
-		return true;
-	}
 	void Scaleform::Unload()
 	{
 		if (!IsLoaded)
