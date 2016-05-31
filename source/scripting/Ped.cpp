@@ -583,13 +583,13 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::REMOVE_PED_FROM_GROUP, Handle);
 	}
-	void Ped::Clone()
+	Ped ^Ped::Clone()
 	{
-		Ped::Clone(0.0F);
+		return Ped::Clone(0.0F);
 	}
-	void Ped::Clone(float heading)
+	Ped ^Ped::Clone(float heading)
 	{
-		Native::Function::Call(Native::Hash::CLONE_PED, Handle, heading, false, false);
+		return Native::Function::Call<Ped ^>(Native::Hash::CLONE_PED, Handle, heading, false, false);
 	}
 	void Ped::ApplyDamage(int damageAmount)
 	{

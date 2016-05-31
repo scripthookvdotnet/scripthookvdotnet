@@ -86,8 +86,13 @@ namespace GTA
 			Native::Function::Call(Native::Hash::SET_TEXT_SCALE, Scale, Scale);
 			Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
 			Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, Centered ? 1 : 0);
-			Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "STRING");
-			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Caption);
+			Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
+			const int strLen = 99;
+			for (int i = 0; i < Caption->Length; i += strLen)
+			{
+				System::String ^substr = Caption->Substring(i, System::Math::Min(strLen, Caption->Length - i));
+				Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, substr);
+			}
 			Native::Function::Call(Native::Hash::_DRAW_TEXT, x, y);
 		}
 

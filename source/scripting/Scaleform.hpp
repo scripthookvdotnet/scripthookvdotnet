@@ -19,8 +19,6 @@ namespace GTA
 	{
 	public:
 		Scaleform(System::String ^scaleformID);
-		[System::ObsoleteAttribute("Scaleform(int handle) is obselete, Please Use Scaleform(string scaleformID) instead")]
-		Scaleform(int handle);
 		~Scaleform();
 
 		property int Handle
@@ -36,8 +34,6 @@ namespace GTA
 			bool get();
 		}
 
-		[System::ObsoleteAttribute("Scaleform.Load(string scaleformID) is obselete, Please Use Scaleform(string scaleformID) instead")]
-		bool Load(System::String ^scaleformID);
 		void Unload();
 
 		void CallFunction(System::String ^function, ... array<System::Object ^> ^arguments);
