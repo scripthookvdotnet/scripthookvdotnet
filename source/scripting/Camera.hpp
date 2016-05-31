@@ -99,6 +99,9 @@ namespace GTA
 			void set(float amplitude);
 		}
 
+		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
+		Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 worldCoords);
+
 		void Shake(CameraShake shakeType, float amplitude);
 		void StopShaking();
 
@@ -218,6 +221,9 @@ namespace GTA
 		{
 			float get();
 		}
+
+		static Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
+		static Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 worldCoords);
 
 		static void Shake(CameraShake shakeType, float amplitude);
 		static void StopShaking();
