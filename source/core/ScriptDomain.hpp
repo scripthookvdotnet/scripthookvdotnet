@@ -18,14 +18,20 @@
 
 #include "Script.hpp"
 
+using namespace System;
+using namespace System::Threading;
+using namespace System::Reflection;
+using namespace System::Windows::Forms;
+using namespace System::Collections::Generic;
+
 namespace GTA
 {
 	private interface class IScriptTask
 	{
 		void Run();
 	};
-
-	private ref class ScriptDomain sealed : public System::MarshalByRefObject
+    
+	private ref class ScriptDomain sealed : public MarshalByRefObject
 	{
 	public:
 		ScriptDomain();
@@ -35,7 +41,7 @@ namespace GTA
 		{
 			Script ^get()
 			{
-				if (System::Object::ReferenceEquals(sCurrentDomain, nullptr))
+				if (Object::ReferenceEquals(sCurrentDomain, nullptr))
 				{
 					return nullptr;
 				}
@@ -51,21 +57,21 @@ namespace GTA
 			}
 		}
 
-		static ScriptDomain ^Load(System::String ^path);
+		static ScriptDomain ^Load(String ^path);
 		static void Unload(ScriptDomain ^%domain);
 
 		property System::String ^Name
 		{
 			inline System::String ^get()
 			{
-				return _appdomain->FriendlyName;
+				return _appDomain->FriendlyName;
 			}
 		}
 		property System::AppDomain ^AppDomain
 		{
 			inline System::AppDomain ^get()
 			{
-				return _appdomain;
+				return _appDomain;
 			}
 		}
 
@@ -73,12 +79,12 @@ namespace GTA
 		void Abort();
 		static void AbortScript(Script ^script);
 		void DoTick();
-		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
+		void DoKeyboardMessage(Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
 		void PauseKeyboardEvents(bool pause);
 		void ExecuteTask(IScriptTask ^task);
-		System::IntPtr PinString(System::String ^string);
-		inline bool IsKeyPressed(System::Windows::Forms::Keys key)
+		IntPtr PinString(String ^string);
+		inline bool IsKeyPressed(Keys key)
 		{
 			return _keyboardState[static_cast<int>(key)];
 		}
@@ -86,25 +92,36 @@ namespace GTA
 		{
 			return LookupScriptFilename(script->GetType());
 		}
-		System::String ^LookupScriptFilename(System::Type ^scripttype);
-		System::Object ^InitializeLifetimeService() override;
+		String ^LookupScriptFilename(Type ^scripttype);
+		Object ^InitializeLifetimeService() override;
 
 	private:
-		bool LoadScript(System::String ^filename);
-		bool LoadAssembly(System::String ^filename);
-		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
-		Script ^InstantiateScript(System::Type ^scripttype);
+		bool LoadScript(String ^filename);
+        bool LoadAssembly(String ^filename);
+		bool LoadAssembly(String ^filename, Assembly ^assembly);
+		Script ^InstantiateScript(Type ^scripttype);
 		void CleanupStrings();
 
 		static ScriptDomain ^sCurrentDomain;
-		System::AppDomain ^_appdomain;
+
+		System::AppDomain ^_appDomain;
 		int _executingThreadId;
 		Script ^_executingScript;
-		System::Collections::Generic::List<Script ^> ^_runningScripts;
-		System::Collections::Generic::Queue<IScriptTask ^> ^_taskQueue;
-		System::Collections::Generic::List<System::IntPtr> ^_pinnedStrings;
-		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^_scriptTypes;
-		bool _recordKeyboardEvents;
-		array<bool> ^_keyboardState;
+
+		List<Script ^> ^_runningScripts = gcnew List<Script ^>();
+        System::Collections::Generic::Queue<IScriptTask ^> ^_taskQueue = gcnew System::Collections::Generic::Queue<IScriptTask ^>();
+		List<IntPtr> ^_pinnedStrings = gcnew List<IntPtr>();
+		List<Tuple<String ^, Type ^> ^> ^_scriptTypes = gcnew List<Tuple<String ^, Type ^> ^>();
+		bool _recordKeyboardEvents = true;
+		array<bool> ^_keyboardState = gcnew array<bool>(256);
+
+		static initonly array<String ^> ^_referenceAssemblies = gcnew array<String ^> {
+			"System.dll",
+			"System.Core.dll",
+			"System.Drawing.dll",
+			"System.Windows.Forms.dll",
+			"System.XML.dll",
+			"System.XML.Linq.dll",
+		};
 	};
 }
