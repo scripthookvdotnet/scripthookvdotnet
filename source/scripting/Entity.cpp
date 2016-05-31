@@ -392,9 +392,9 @@ namespace GTA
 	{
 		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
 	}
-	Math::Vector3 Entity::GetOffsetFromWorldCoords(Math::Vector3 offset)
+	Math::Vector3 Entity::GetOffsetFromWorldCoords(Math::Vector3 worldCoords)
 	{
-		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
 	}
 
 	bool Entity::IsAttached()

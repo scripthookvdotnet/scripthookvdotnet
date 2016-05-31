@@ -174,6 +174,56 @@ namespace GTA
 	{
 		return Native::Function::Call<float>(Native::Hash::_GET_GAMEPLAY_CAM_ZOOM);
 	}
+	Math::Vector3 Camera::GetOffsetInWorldCoords(Math::Vector3 offset)
+	{
+		Math::Vector3 Forward = Direction;
+		const double D2R = 0.01745329251994329576923690768489;
+		double num1 = System::Math::Cos(Rotation.Y * D2R);
+		double x = num1 * System::Math::Cos(-Rotation.Z  * D2R);
+		double y = num1 * System::Math::Sin(Rotation.Z  * D2R);
+		double z = System::Math::Sin(-Rotation.Y * D2R);
+		Math::Vector3 Right = Math::Vector3((float)x, (float)y, (float)z);
+		Math::Vector3 Up = Math::Vector3::Cross(Right, Forward);
+		return Position + (Right * offset.X) + (Forward * offset.Y) + (Up * offset.Z);
+	}
+	Math::Vector3 Camera::GetOffsetFromWorldCoords(Math::Vector3 worldCoords)
+	{
+		Math::Vector3 Forward = Direction;
+		const double D2R = 0.01745329251994329576923690768489;
+		double num1 = System::Math::Cos(Rotation.Y * D2R);
+		double x = num1 * System::Math::Cos(-Rotation.Z  * D2R);
+		double y = num1 * System::Math::Sin(Rotation.Z  * D2R);
+		double z = System::Math::Sin(-Rotation.Y * D2R);
+		Math::Vector3 Right = Math::Vector3((float)x, (float)y, (float)z);
+		Math::Vector3 Up = Math::Vector3::Cross(Right, Forward);
+		Math::Vector3 Delta = worldCoords - Position;
+		return Math::Vector3(Math::Vector3::Dot(Right, Delta), Math::Vector3::Dot(Forward, Delta), Math::Vector3::Dot(Up, Delta));
+	}
+	Math::Vector3 GameplayCamera::GetOffsetInWorldCoords(Math::Vector3 offset)
+	{
+		Math::Vector3 Forward = Direction;
+		const double D2R = 0.01745329251994329576923690768489;
+		double num1 = System::Math::Cos(Rotation.Y * D2R);
+		double x = num1 * System::Math::Cos(-Rotation.Z  * D2R);
+		double y = num1 * System::Math::Sin(Rotation.Z  * D2R);
+		double z = System::Math::Sin(-Rotation.Y * D2R);
+		Math::Vector3 Right = Math::Vector3((float)x, (float)y, (float)z);
+		Math::Vector3 Up = Math::Vector3::Cross(Right, Forward);
+		return Position + (Right * offset.X) + (Forward * offset.Y) + (Up * offset.Z);
+	}
+	Math::Vector3 GameplayCamera::GetOffsetFromWorldCoords(Math::Vector3 worldCoords)
+	{
+		Math::Vector3 Forward = Direction;
+		const double D2R = 0.01745329251994329576923690768489;
+		double num1 = System::Math::Cos(Rotation.Y * D2R);
+		double x = num1 * System::Math::Cos(-Rotation.Z  * D2R);
+		double y = num1 * System::Math::Sin(Rotation.Z  * D2R);
+		double z = System::Math::Sin(-Rotation.Y * D2R);
+		Math::Vector3 Right = Math::Vector3((float)x, (float)y, (float)z);
+		Math::Vector3 Up = Math::Vector3::Cross(Right, Forward);
+		Math::Vector3 Delta = worldCoords - Position;
+		return Math::Vector3(Math::Vector3::Dot(Right, Delta), Math::Vector3::Dot(Forward, Delta), Math::Vector3::Dot(Up, Delta));
+	}
 
 	void Camera::Shake(CameraShake shakeType, float amplitude)
 	{

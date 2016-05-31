@@ -38,6 +38,6 @@ namespace GTA
 		
 	private:
 		System::String ^_filename;
-		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^_values;
+		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^_values = gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>();
 	};
 }

@@ -16,12 +16,12 @@
 
 #include "Settings.hpp"
 
+using namespace System;
+using namespace System::Collections::Generic;
+
 namespace GTA
 {
-	using namespace System;
-	using namespace System::Collections::Generic;
-
-	ScriptSettings::ScriptSettings(String ^filename) : _filename(filename), _values(gcnew Dictionary<String ^, String ^>())
+	ScriptSettings::ScriptSettings(String ^filename) : _filename(filename)
 	{
 	}
 
@@ -45,7 +45,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		ScriptSettings ^result = gcnew ScriptSettings(filename);
+		auto result = gcnew ScriptSettings(filename);
 
 		try
 		{
@@ -101,9 +101,9 @@ namespace GTA
 	}
 	bool ScriptSettings::Save()
 	{
-		Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^> ^result = gcnew Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
+		auto result = gcnew Dictionary<String ^, List<Tuple<String ^, String ^> ^> ^>();
 
-		for each (KeyValuePair<String ^, String ^> data in _values)
+		for each (auto data in _values)
 		{
 			String ^key = data.Key->Substring(data.Key->IndexOf("]") + 1);
 			String ^section = data.Key->Remove(data.Key->IndexOf("]"))->Substring(1);
@@ -134,7 +134,7 @@ namespace GTA
 
 		try
 		{
-			for each (KeyValuePair<String ^, List<Tuple<String ^, String ^> ^> ^> section in result)
+			for each (auto section in result)
 			{
 				writer->WriteLine("[" + section.Key + "]");
 

@@ -220,7 +220,7 @@ namespace GTA
 		bool IsTouching(GTA::Model model);
 		bool HasBeenDamagedBy(Entity ^entity);
 		Math::Vector3 GetOffsetInWorldCoords(Math::Vector3 offset);
-		Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 offset);
+		Math::Vector3 GetOffsetFromWorldCoords(Math::Vector3 worldCoords);
 		bool IsAttached();
 		bool IsAttachedTo(Entity ^entity);
 		Entity ^GetEntityAttachedTo();

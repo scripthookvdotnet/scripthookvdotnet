@@ -30,13 +30,13 @@
 
 #include <NativeCaller.h>
 
+using namespace System;
+using namespace System::Collections::Generic;
+
 namespace GTA
 {
 	namespace Native
 	{
-		using namespace System;
-		using namespace System::Collections::Generic;
-
 		namespace
 		{
 			private ref struct NativeTask : IScriptTask
@@ -53,11 +53,11 @@ namespace GTA
 					_result = nativeCall();
 				}
 
-				UINT64 _hash, *_result;
+				UInt64 _hash, *_result;
 				array<InputArgument ^> ^_arguments;
 			};
 
-			UINT64 ObjectToNative(Object ^value)
+			UInt64 ObjectToNative(Object ^value)
 			{
 				if (Object::ReferenceEquals(value, nullptr))
 				{
@@ -108,7 +108,7 @@ namespace GTA
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
-			Object ^ObjectFromNative(Type ^type, UINT64 *value)
+			Object ^ObjectFromNative(Type ^type, UInt64 *value)
 			{
 				// Fundamental types
 				if (type == Boolean::typeid)
