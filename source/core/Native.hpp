@@ -39,22 +39,6 @@ namespace GTA
 		{
 		public:
 			InputArgument(System::Object ^value);
-			inline InputArgument(bool value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(int value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(float value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(double value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Model value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Entity ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Ped ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(PedGroup ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Player ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Prop ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Vehicle ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Rope ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 
 			static inline operator InputArgument ^(bool value)
 			{
@@ -170,26 +154,6 @@ namespace GTA
 		public:
 			OutputArgument();
 			OutputArgument(System::Object ^initvalue);
-			inline OutputArgument(bool initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(char initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue))) { }
-			inline OutputArgument(unsigned char initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue))) { }
-			inline OutputArgument(short initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue))) { }
-			inline OutputArgument(unsigned short initvalue) : OutputArgument(static_cast<System::Object ^>(static_cast<int>(initvalue))) { }
-			inline OutputArgument(int initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(unsigned int initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(float initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(double initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(System::String ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Model initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Blip ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Camera ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Entity ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Ped ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(PedGroup ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Player ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Prop ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Vehicle ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
-			inline OutputArgument(Rope ^initvalue) : OutputArgument(static_cast<System::Object ^>(initvalue)) { }
 			~OutputArgument();
 
 			generic <typename T>

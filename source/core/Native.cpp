@@ -245,7 +245,7 @@ namespace GTA
 		}
 		OutputArgument::OutputArgument(Object ^value) : OutputArgument()
 		{
-			*reinterpret_cast<UINT64 *>(_storage) = ObjectToNative(value);
+			*reinterpret_cast<UInt64 *>(_storage) = ObjectToNative(value);
 		}
 		OutputArgument::~OutputArgument()
 		{
