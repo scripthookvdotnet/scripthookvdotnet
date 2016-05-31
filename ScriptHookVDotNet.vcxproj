@@ -85,6 +85,7 @@
     <ClCompile Include="source\scripting\Audio.cpp" />
     <ClCompile Include="source\scripting\Blip.cpp" />
     <ClCompile Include="source\scripting\Camera.cpp" />
+    <ClCompile Include="source\scripting\Checkpoint.cpp" />
     <ClCompile Include="source\scripting\Entity.cpp" />
     <ClCompile Include="source\scripting\Euphoria.cpp" />
     <ClCompile Include="source\scripting\EuphoriaBase.cpp" />
@@ -111,8 +112,9 @@
   <ItemGroup>
     <ClInclude Include="source\scripting\Audio.hpp" />
     <ClInclude Include="source\scripting\Blip.hpp" />
-    <ClInclude Include="source\scripting\Controls.hpp" />
     <ClInclude Include="source\scripting\Camera.hpp" />
+    <ClInclude Include="source\scripting\Checkpoint.hpp" />
+    <ClInclude Include="source\scripting\Controls.hpp" />
     <ClInclude Include="source\scripting\Entity.hpp" />
     <ClInclude Include="source\scripting\Euphoria.hpp" />
     <ClInclude Include="source\scripting\EuphoriaBase.hpp" />
