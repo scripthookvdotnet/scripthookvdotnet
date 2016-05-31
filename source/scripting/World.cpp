@@ -248,23 +248,24 @@ namespace GTA
 
 		return res->ToArray();
 	}
-	array<Ped ^> ^World::GetAllPeds()
+	array<int> ^ModelListToHashList(array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetPedHandles();
-		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
+		array<int> ^hashes = gcnew array<int>(models->Length);
+		for (int i = 0; i < models->Length; i++)
 		{
-			resultHandles[i] = gcnew Ped(entities[i]);
+			hashes[i] = models[i].Hash;
 		}
-
-		return resultHandles;
+		return hashes;
 	}
-	array<Ped ^> ^World::GetAllPeds(Model model)
+	array<Ped ^> ^World::GetAllPeds(... array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetPedHandles(model.Hash);
-		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
+		array<int> ^entities;
+		if (models->Length == 0)
+			entities = Native::MemoryAccess::GetPedHandles();
+		else
+			entities = Native::MemoryAccess::GetPedHandles(ModelListToHashList(models));
 
+		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
 		for (int i = 0; i < entities->Length; i++)
 		{
 			resultHandles[i] = gcnew Ped(entities[i]);
@@ -289,9 +290,13 @@ namespace GTA
 
 		return resultHandles->ToArray();
 	}
-	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius)
+	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius, ... array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetPedHandles(position, radius);
+		array<int> ^entities;
+		if (models->Length == 0)
+			entities = Native::MemoryAccess::GetPedHandles(position, radius);
+		else
+			entities = Native::MemoryAccess::GetPedHandles(position, radius, ModelListToHashList(models));
 		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
@@ -301,33 +306,13 @@ namespace GTA
 
 		return resultHandles;
 	}
-	array<Ped ^> ^World::GetNearbyPeds(Math::Vector3 position, float radius, Model model)
+	array<Vehicle ^> ^World::GetAllVehicles(... array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetPedHandles(position, radius, model.Hash);
-		array<Ped ^> ^resultHandles = gcnew array<Ped ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Ped(entities[i]);
-		}
-
-		return resultHandles;
-	}
-	array<Vehicle ^> ^World::GetAllVehicles()
-	{
-		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles();
-		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Vehicle(entities[i]);
-		}
-
-		return resultHandles;
-	}
-	array<Vehicle ^> ^World::GetAllVehicles(Model model)
-	{
-		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(model.Hash);
+		array<int> ^entities;
+		if (models->Length == 0)
+			entities = Native::MemoryAccess::GetVehicleHandles();
+		else
+			entities = Native::MemoryAccess::GetVehicleHandles(ModelListToHashList(models));
 		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
@@ -362,9 +347,13 @@ namespace GTA
 
 		return resultHandles->ToArray();
 	}
-	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius)
+	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius, ... array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius);
+		array<int> ^entities;
+		if (models->Length == 0)
+			entities = Native::MemoryAccess::GetVehicleHandles(position, radius);
+		else
+			entities = Native::MemoryAccess::GetVehicleHandles(position, radius, ModelListToHashList(models));
 		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
@@ -374,21 +363,13 @@ namespace GTA
 
 		return resultHandles;
 	}
-	array<Vehicle ^> ^World::GetNearbyVehicles(Math::Vector3 position, float radius, Model model)
+	array<Prop ^> ^World::GetAllProps(... array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetVehicleHandles(position, radius, model.Hash);
-		array<Vehicle ^> ^resultHandles = gcnew array<Vehicle ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Vehicle(entities[i]);
-		}
-
-		return resultHandles;
-	}
-	array<Prop ^> ^World::GetAllProps()
-	{
-		array<int> ^entities = Native::MemoryAccess::GetPropHandles();
+		array<int> ^entities;
+		if (models->Length == 0)
+			entities = Native::MemoryAccess::GetPropHandles();
+		else
+			entities = Native::MemoryAccess::GetPropHandles(ModelListToHashList(models));
 		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)
@@ -398,33 +379,14 @@ namespace GTA
 
 		return resultHandles;
 	}
-	array<Prop ^> ^World::GetAllProps(Model model)
+
+	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius, ... array<Model> ^models)
 	{
-		array<int> ^entities = Native::MemoryAccess::GetPropHandles(model.Hash);
-		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Prop(entities[i]);
-		}
-
-		return resultHandles;
-	}
-	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius)
-	{
-		array<int> ^entities = Native::MemoryAccess::GetPropHandles(position, radius);
-		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
-
-		for (int i = 0; i < entities->Length; i++)
-		{
-			resultHandles[i] = gcnew Prop(entities[i]);
-		}
-
-		return resultHandles;
-	}
-	array<Prop ^> ^World::GetNearbyProps(Math::Vector3 position, float radius, Model model)
-	{
-		array<int> ^entities = Native::MemoryAccess::GetPropHandles(position, radius, model.Hash);
+		array<int> ^entities;
+		if (models->Length == 0)
+			entities = Native::MemoryAccess::GetPropHandles(position, radius);
+		else
+			entities = Native::MemoryAccess::GetPropHandles(position, radius, ModelListToHashList(models));
 		array<Prop ^> ^resultHandles = gcnew array<Prop ^>(entities->Length);
 
 		for (int i = 0; i < entities->Length; i++)

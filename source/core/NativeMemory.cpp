@@ -45,10 +45,19 @@ namespace GTA
 						UINT32 v3 = ((v2 ^ v0) & 0x10000000 ^ v2) & 0x3FFFFFFF;
 						const uintptr_t v5 = MemoryAccess::GetEntityModel2(reinterpret_cast<uintptr_t>(&v3));
 
-						if (v5 && *reinterpret_cast<int *>(v5 + 24) != _modelHash)
+						
+						if (!v5)
 						{
 							return false;
 						}
+						for each(int hash in _modelHashes)
+						{
+							if (*reinterpret_cast<int *>(v5 + 24) == hash)
+							{
+								return true;
+							}
+						}
+						return false;
 					}
 
 					return true;
@@ -145,7 +154,7 @@ namespace GTA
 				bool _posCheck, _modelCheck;
 				Math::Vector3 _position;
 				float _radiusSquared;
-				int _modelHash;
+				array<int> ^_modelHashes;
 			};
 		}
 
@@ -195,10 +204,10 @@ namespace GTA
 
 			return poolTask->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetVehicleHandles(int modelhash)
+		array<int> ^MemoryAccess::GetVehicleHandles(array<int> ^modelhashes)
 		{
 			auto poolTask = gcnew EntityPoolTask(EntityPoolTask::Type::Vehicle);
-			poolTask->_modelHash = modelhash;
+			poolTask->_modelHashes = modelhashes;
 			poolTask->_modelCheck = true;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);
@@ -216,13 +225,13 @@ namespace GTA
 
 			return poolTask->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetVehicleHandles(Math::Vector3 position, float radius, int modelhash)
+		array<int> ^MemoryAccess::GetVehicleHandles(Math::Vector3 position, float radius, array<int> ^modelhashes)
 		{
 			auto poolTask = gcnew EntityPoolTask(EntityPoolTask::Type::Vehicle);
 			poolTask->_position = position;
 			poolTask->_radiusSquared = radius * radius;
 			poolTask->_posCheck = true;
-			poolTask->_modelHash = modelhash;
+			poolTask->_modelHashes = modelhashes;
 			poolTask->_modelCheck = true;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);
@@ -237,10 +246,10 @@ namespace GTA
 
 			return poolTask->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetPedHandles(int modelhash)
+		array<int> ^MemoryAccess::GetPedHandles(array<int> ^modelhashes)
 		{
 			auto poolTask = gcnew EntityPoolTask(EntityPoolTask::Type::Ped);
-			poolTask->_modelHash = modelhash;
+			poolTask->_modelHashes = modelhashes;
 			poolTask->_modelCheck = true;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);
@@ -258,13 +267,13 @@ namespace GTA
 
 			return poolTask->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetPedHandles(Math::Vector3 position, float radius, int modelhash)
+		array<int> ^MemoryAccess::GetPedHandles(Math::Vector3 position, float radius, array<int> ^modelhashes)
 		{
 			auto poolTask = gcnew EntityPoolTask(EntityPoolTask::Type::Ped);
 			poolTask->_position = position;
 			poolTask->_radiusSquared = radius * radius;
 			poolTask->_posCheck = true;
-			poolTask->_modelHash = modelhash;
+			poolTask->_modelHashes = modelhashes;
 			poolTask->_modelCheck = true;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);
@@ -279,10 +288,10 @@ namespace GTA
 
 			return poolTask->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetPropHandles(int modelhash)
+		array<int> ^MemoryAccess::GetPropHandles(array<int> ^modelhashes)
 		{
 			auto poolTask = gcnew EntityPoolTask(EntityPoolTask::Type::Object);
-			poolTask->_modelHash = modelhash;
+			poolTask->_modelHashes = modelhashes;
 			poolTask->_modelCheck = true;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);
@@ -300,13 +309,13 @@ namespace GTA
 
 			return poolTask->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetPropHandles(Math::Vector3 position, float radius, int modelhash)
+		array<int> ^MemoryAccess::GetPropHandles(Math::Vector3 position, float radius, array<int> ^modelhashes)
 		{
 			auto poolTask = gcnew EntityPoolTask(EntityPoolTask::Type::Object);
 			poolTask->_position = position;
 			poolTask->_radiusSquared = radius * radius;
 			poolTask->_posCheck = true;
-			poolTask->_modelHash = modelhash;
+			poolTask->_modelHashes = modelhashes;
 			poolTask->_modelCheck = true;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);

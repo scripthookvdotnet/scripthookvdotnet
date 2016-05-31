@@ -2,6 +2,7 @@
 
 #include "Vector2.hpp"
 #include "Vector3.hpp"
+#include "Model.hpp"
 #include "Interface.hpp"
 
 namespace GTA
@@ -15,7 +16,6 @@ namespace GTA
 	ref class Rope;
 	ref class Vehicle;
 	ref class Pickup;
-	value class Model;
 	value class RaycastResult;
 	#pragma endregion
 
@@ -257,22 +257,15 @@ namespace GTA
 			float get();
 			void set(float value);
 		}
-
 		static array<Blip ^> ^GetActiveBlips();
-		static array<Ped ^> ^GetAllPeds();
-		static array<Ped ^> ^GetAllPeds(Model model);
+		static array<Ped ^> ^GetAllPeds(... array<Model> ^models);
 		static array<Ped ^> ^GetNearbyPeds(Ped ^ped, float radius);
-		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius);
-		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius, Model model);
-		static array<Vehicle ^> ^GetAllVehicles();
-		static array<Vehicle ^> ^GetAllVehicles(Model model);
+		static array<Ped ^> ^GetNearbyPeds(Math::Vector3 position, float radius, ... array<Model> ^models);
+		static array<Vehicle ^> ^GetAllVehicles(... array<Model> ^models);
 		static array<Vehicle ^> ^GetNearbyVehicles(Ped ^ped, float radius);
-		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius);
-		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius, Model model);
-		static array<Prop ^> ^GetAllProps();
-		static array<Prop ^> ^GetAllProps(Model model);
-		static array<Prop ^> ^GetNearbyProps(Math::Vector3 position, float radius);
-		static array<Prop ^> ^GetNearbyProps(Math::Vector3 position, float radius, Model model);
+		static array<Vehicle ^> ^GetNearbyVehicles(Math::Vector3 position, float radius, ... array<Model> ^models);
+		static array<Prop ^> ^GetAllProps(... array<Model> ^models);
+		static array<Prop ^> ^GetNearbyProps(Math::Vector3 position, float radius, ... array<Model> ^models);
 		static array<Entity ^> ^GetAllEntities();
 		static array<Entity ^> ^GetNearbyEntities(Math::Vector3 position, float radius);
 		static Ped ^GetClosestPed(Math::Vector3 position, float radius);
