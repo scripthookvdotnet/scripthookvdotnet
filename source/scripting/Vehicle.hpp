@@ -311,12 +311,13 @@ namespace GTA
 	};
 	public enum class VehicleWindowTint
 	{
+		GrangerNone = -1,
 		None = 0,
-		PureBlack = 1,
+		Limo = 1,
 		DarkSmoke = 2,
 		LightSmoke = 3,
 		Stock = 4,
-		Limo = 5,
+		PureBlack = 5,
 		Green = 6
 	};
 	public enum class NumberPlateMounting
