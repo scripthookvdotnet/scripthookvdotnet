@@ -112,10 +112,10 @@ namespace GTA
 	}
 	void Scaleform::Render2DScreenSpace(Drawing::PointF location, Drawing::PointF size)
 	{
-		float x = location.X / UI::WIDTH;
-		float y = location.Y / UI::HEIGHT;
-		float width = size.X / UI::WIDTH;
-		float height = size.Y / UI::HEIGHT;
+		float x = location.X / UI::Screen::WIDTH;
+		float y = location.Y / UI::Screen::HEIGHT;
+		float width = size.X / UI::Screen::WIDTH;
+		float height = size.Y / UI::Screen::HEIGHT;
 
 		Native::Function::Call(Native::Hash::DRAW_SCALEFORM_MOVIE, Handle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
 	}
