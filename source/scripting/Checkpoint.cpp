@@ -12,7 +12,7 @@ namespace GTA
     }
     Checkpoint::Checkpoint(CheckpointIcon icon, Math::Vector3 position, Math::Vector3 pointTo, float radius, System::Drawing::Color color, int reserved) : _icon(icon), _position(position), _pointTo(pointTo), _radius(radius), _color(color), _reserved(reserved)
     {
-        _handle = Native::Function::Call<int>(Native::Hash::CREATE_CHECKPOINT, static_cast<int>(icon), position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, static_cast<int>(color.R), static_cast<int>(color.G), static_cast<int>(color.B), static_cast<int>(color.A), reserved);
+        _handle = Native::Function::Call<int>(Native::Hash::CREATE_CHECKPOINT, static_cast<int>(icon), position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, reserved);
     }
     Checkpoint::~Checkpoint()
     {
@@ -45,7 +45,7 @@ namespace GTA
     }
     void Checkpoint::Color::set(System::Drawing::Color color)
     {
-        Native::Function::Call(Native::Hash::SET_CHECKPOINT_RGBA, Handle, static_cast<int>(color.R), static_cast<int>(color.G), static_cast<int>(color.B), static_cast<int>(color.A));
+        Native::Function::Call(Native::Hash::SET_CHECKPOINT_RGBA, Handle, color.R, color.G, color.B, color.A);
         _color = color;
     }
 
@@ -56,13 +56,16 @@ namespace GTA
     }
     void Checkpoint::SetIconColor(System::Drawing::Color color)
     {
-        Native::Function::Call(Native::Hash::_SET_CHECKPOINT_ICON_RGBA, Handle, static_cast<int>(color.R), static_cast<int>(color.G), static_cast<int>(color.B), static_cast<int>(color.A));
+        Native::Function::Call(Native::Hash::_SET_CHECKPOINT_ICON_RGBA, Handle, color.R, color.G, color.B, color.A);
     }
 
     void Checkpoint::Delete()
     {
-        Native::Function::Call(Native::Hash::DELETE_CHECKPOINT, Handle);
-        _handle = -1;
+        if (Exists())
+        {
+            Native::Function::Call(Native::Hash::DELETE_CHECKPOINT, Handle);
+            _handle = -1;
+        }
     }
 
     bool Checkpoint::Exists()
