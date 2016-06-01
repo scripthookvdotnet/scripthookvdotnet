@@ -26,6 +26,11 @@ namespace GTA
 				System::Drawing::Color get();
 				void set(System::Drawing::Color value);
 			}
+			property bool Centered
+			{
+				bool get();
+				void set(bool value);
+			}
 		};
 
 		public ref class Text : public IElement
@@ -42,7 +47,7 @@ namespace GTA
 			property System::String ^Caption;
 			property Font Font;
 			property float Scale;
-			property bool Centered;
+			virtual property bool Centered;
 			property bool Shadow;
 			property bool Outline;
 
@@ -55,11 +60,13 @@ namespace GTA
 			Rectangle();
 			Rectangle(System::Drawing::PointF position, System::Drawing::SizeF size);
 			Rectangle(System::Drawing::PointF position, System::Drawing::SizeF size, System::Drawing::Color color);
+			Rectangle(System::Drawing::PointF position, System::Drawing::SizeF size, System::Drawing::Color color, bool centered);
 
 			virtual property bool Enabled;
 			virtual property System::Drawing::PointF Position;
 			property System::Drawing::SizeF Size;
 			virtual property System::Drawing::Color Color;
+			virtual property bool Centered;
 
 			virtual void Draw();
 			virtual void Draw(System::Drawing::SizeF offset);
@@ -70,13 +77,14 @@ namespace GTA
 			Container();
 			Container(System::Drawing::PointF position, System::Drawing::SizeF Size);
 			Container(System::Drawing::PointF position, System::Drawing::SizeF Size, System::Drawing::Color color);
+			Container(System::Drawing::PointF position, System::Drawing::SizeF Size, System::Drawing::Color color, bool centered);
 
 			property System::Collections::Generic::List<IElement ^> ^Items
 			{
 				System::Collections::Generic::List<IElement ^> ^get();
 				void set(System::Collections::Generic::List<IElement ^> ^value);
 			}
-
+					
 			virtual void Draw() override;
 			virtual void Draw(System::Drawing::SizeF offset) override;
 
@@ -87,8 +95,11 @@ namespace GTA
 		{
 		public:
 			property System::Drawing::SizeF Scale;
-			property float Rotation;
-			property bool Centered;
+			property float Rotation
+			{
+				float get();
+				void set(float value);
+			}
 		};
 		public ref class Sprite : public ISprite
 		{

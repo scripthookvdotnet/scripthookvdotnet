@@ -102,6 +102,7 @@ namespace GTA
 			Position = Drawing::PointF();
 			Size = Drawing::SizeF(Screen::WIDTH, Screen::HEIGHT);
 			Color = Drawing::Color::Transparent;
+			Centered = false;
 		}
 		Rectangle::Rectangle(Drawing::PointF position, Drawing::SizeF size)
 		{
@@ -109,6 +110,7 @@ namespace GTA
 			Position = position;
 			Size = size;
 			Color = Drawing::Color::Transparent;
+			Centered = false;
 		}
 		Rectangle::Rectangle(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color)
 		{
@@ -116,6 +118,15 @@ namespace GTA
 			Position = position;
 			Size = size;
 			Color = color;
+			Centered = false;
+		}
+		Rectangle::Rectangle(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color, bool centered)
+		{
+			Enabled = true;
+			Position = position;
+			Size = size;
+			Color = color;
+			Centered = centered;
 		}
 
 		void Rectangle::Draw()
@@ -131,8 +142,8 @@ namespace GTA
 
 			const float w = Size.Width / Screen::WIDTH;
 			const float h = Size.Height / Screen::HEIGHT;
-			const float x = ((Position.X + offset.Width) / Screen::WIDTH) + w * 0.5f;
-			const float y = ((Position.Y + offset.Height) / Screen::HEIGHT) + h * 0.5f;
+			const float x = ((Position.X + offset.Width) / Screen::WIDTH) + ((!Centered) ?  w * 0.5f : 0.0f);
+			const float y = ((Position.Y + offset.Height) / Screen::HEIGHT) + ((!Centered) ? h * 0.5f : 0.0f);
 
 			Native::Function::Call(Native::Hash::DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 		}
@@ -144,6 +155,9 @@ namespace GTA
 		{
 		}
 		Container::Container(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color) : Rectangle(position, size, color), _items(gcnew List<IElement ^>())
+		{
+		}
+		Container::Container(Drawing::PointF position, Drawing::SizeF size, Drawing::Color color, bool centered) : Rectangle(position, size, color, centered), _items(gcnew List<IElement ^>())
 		{
 		}
 
@@ -169,9 +183,14 @@ namespace GTA
 
 			Rectangle::Draw(offset);
 
+			Drawing::SizeF newOfset = Drawing::SizeF(Rectangle::Position + offset);
+			if (Centered)
+			{
+				newOfset -= Drawing::SizeF(Size.Width / 2.0f, Size.Height / 2.0f);
+			}
 			for each (IElement ^item in Items)
 			{
-				item->Draw(Drawing::SizeF(Rectangle::Position + offset));
+				item->Draw(newOfset);
 			}
 		}
 
