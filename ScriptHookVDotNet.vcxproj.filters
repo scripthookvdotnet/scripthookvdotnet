@@ -235,4 +235,9 @@
       <Filter>scripting\World</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="source\scripting\Test.cs">
+      <Filter>scripting</Filter>
+    </CsCompile>
+  </ItemGroup>
 </Project>

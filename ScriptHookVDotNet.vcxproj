@@ -147,6 +147,9 @@
     <ClInclude Include="source\scripting\World.hpp" />
     <ClInclude Include="source\scripting\Weapon.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="source\scripting\Test.cs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)ScriptingApi.netmodule">
