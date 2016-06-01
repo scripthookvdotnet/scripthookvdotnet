@@ -254,6 +254,7 @@ namespace GTA
 			Rotation = 0.0F;
 			Centered = false;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+			AddInstance(_textureDict);
 		}
 		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color)
 		{
@@ -266,6 +267,7 @@ namespace GTA
 			Rotation = 0.0F;
 			Centered = false;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+			AddInstance(_textureDict);
 		}
 		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation)
 		{
@@ -278,6 +280,7 @@ namespace GTA
 			Rotation = rotation;
 			Centered = false;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+			AddInstance(_textureDict);
 		}
 		Sprite::Sprite(String ^textureDict, String ^textureName, Drawing::SizeF scale, Drawing::PointF position, Drawing::Color color, float rotation, bool centered)
 		{
@@ -290,10 +293,39 @@ namespace GTA
 			Rotation = rotation;
 			Centered = centered;
 			Native::Function::Call(Native::Hash::REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+			AddInstance(_textureDict);
 		}
 		Sprite::~Sprite()
 		{
-			Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+			if (_textureDicts->ContainsKey(_textureDict->ToLower()))
+			{
+				int current = _textureDicts[_textureDict->ToLower()];
+				if (current == 1)
+				{
+					Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+					_textureDicts->Remove(_textureDict->ToLower());
+				}
+				else
+				{
+					_textureDicts[_textureDict->ToLower()] = current - 1;
+				}
+			}
+			else
+			{
+				//In practice this should never get executed
+				Native::Function::Call(Native::Hash::SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+			}
+		}
+		void Sprite::AddInstance(String ^textureDict)
+		{
+			if (_textureDicts->ContainsKey(textureDict->ToLower()))
+			{
+				_textureDicts[textureDict->ToLower()] += 1;
+			}
+			else
+			{
+				_textureDicts->Add(textureDict->ToLower(), 1);
+			}
 		}
 
 		void Sprite::Draw()
@@ -327,9 +359,17 @@ namespace GTA
 			}
 			else
 			{
-				_id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
+				_indexes[_id] = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
 
 				_textures->Add(filename, _id);
+			}
+			if (!_indexes->ContainsKey(_id))
+			{
+				_indexes->Add(_id, 0);
+			}
+			if (!_lastDraw->ContainsKey(_id))
+			{
+				_lastDraw->Add(_id, 0);
 			}
 			Enabled = true;
 			Scale = scale;
@@ -355,6 +395,14 @@ namespace GTA
 
 				_textures->Add(filename, _id);
 			}
+			if (!_indexes->ContainsKey(_id))
+			{
+				_indexes->Add(_id, 0);
+			}
+			if (!_lastDraw->ContainsKey(_id))
+			{
+				_lastDraw->Add(_id, 0);
+			}
 			Enabled = true;
 			Scale = scale;
 			Position = position;
@@ -378,6 +426,14 @@ namespace GTA
 				_id = createTexture(reinterpret_cast<const char *>(ScriptDomain::CurrentDomain->PinString(filename).ToPointer()));
 
 				_textures->Add(filename, _id);
+			}
+			if (!_indexes->ContainsKey(_id))
+			{
+				_indexes->Add(_id, 0);
+			}
+			if (!_lastDraw->ContainsKey(_id))
+			{
+				_lastDraw->Add(_id, 0);
 			}
 			Enabled = true;
 			Scale = scale;
@@ -403,6 +459,14 @@ namespace GTA
 
 				_textures->Add(filename, _id);
 			}
+			if (!_indexes->ContainsKey(_id))
+			{
+				_indexes->Add(_id, 0);
+			}
+			if (!_lastDraw->ContainsKey(_id))
+			{
+				_lastDraw->Add(_id, 0);
+			}
 			Enabled = true;
 			Scale = scale;
 			Position = position;
@@ -424,11 +488,11 @@ namespace GTA
 			}
 
 			int FrameCount = Native::Function::Call<int>(Native::Hash::GET_FRAME_COUNT);
-			if (_lastDrawFrame != FrameCount)
+			if (_lastDraw[_id] != FrameCount)
 			{
 				//reset index to 0 if on a new frame
-				_lastDrawFrame = FrameCount;
-				_index = 0;
+				_lastDraw[_id] = FrameCount;
+				_indexes[_id] = 0;
 			}
 			if (_globalLastDrawFrame != FrameCount)
 			{
@@ -444,7 +508,7 @@ namespace GTA
 			const float positionX = ((Position.X + offset.Width) / Screen::WIDTH) + ((!Centered) ? scaleX * 0.5f : 0.0f);
 			const float positionY = ((Position.Y + offset.Height) / Screen::HEIGHT) + ((!Centered) ? scaleY * 0.5f : 0.0f);
 
-			drawTexture(_id, _index++, _level++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, Color.A / 255.0f);
+			drawTexture(_id, _indexes[_id]++, _level++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, Color.A / 255.0f);
 		}
 
 	}

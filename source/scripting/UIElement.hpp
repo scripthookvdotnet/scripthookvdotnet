@@ -134,8 +134,11 @@ namespace GTA
 			virtual void Draw(System::Drawing::SizeF offset);
 
 		private:
+			static void AddInstance(System::String ^textureDict);
 			System::String ^_textureDict;
 			System::String ^_textureName;
+			static System::Collections::Generic::Dictionary<System::String ^, int> ^_textureDicts = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
+			
 		};
 		public ref class CustomSprite : public ISprite
 		{
@@ -156,10 +159,10 @@ namespace GTA
 			virtual void Draw();
 			virtual void Draw(System::Drawing::SizeF offset);
 		private:
-			int _index;
-			int _lastDrawFrame;
 			int _id;
 			static System::Collections::Generic::Dictionary<System::String ^, int> ^_textures = gcnew System::Collections::Generic::Dictionary<System::String ^, int>();
+			static System::Collections::Generic::Dictionary<int, int> ^_lastDraw = gcnew System::Collections::Generic::Dictionary<int, int>();
+			static System::Collections::Generic::Dictionary<int, int> ^_indexes = gcnew System::Collections::Generic::Dictionary<int, int>();
 			static int _globalLastDrawFrame = 0;
 			static int _level;
 
