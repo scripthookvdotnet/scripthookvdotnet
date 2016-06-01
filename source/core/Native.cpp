@@ -16,17 +16,8 @@
 
 #include "Native.hpp"
 #include "ScriptDomain.hpp"
-
-#include "Blip.hpp"
-#include "Camera.hpp"
-#include "Entity.hpp"
-#include "Ped.hpp"
-#include "Player.hpp"
-#include "Prop.hpp"
-#include "Rope.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-#include "Vehicle.hpp"
 
 #include <NativeCaller.h>
 
@@ -96,16 +87,6 @@ namespace GTA
 					return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
 				}
 
-				// Scripting types
-				if (type == Model::typeid)
-				{
-					return static_cast<Model>(value).Hash;
-				}
-				if (IHandleable::typeid->IsAssignableFrom(type))
-				{
-					return safe_cast<IHandleable ^>(value)->Handle;
-				}
-
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
 			Object ^ObjectFromNative(Type ^type, UInt64 *value)
@@ -156,81 +137,18 @@ namespace GTA
 					}
 				}
 
-#pragma pack(push, 1)
-				struct NativeVector3
-				{
-					float x;
-					DWORD _paddingx;
-					float y;
-					DWORD _paddingy;
-					float z;
-					DWORD _paddingz;
-				};
-#pragma pack(pop)
-
 				// Math types
 				if (type == Math::Vector2::typeid)
 				{
-					const auto vec = reinterpret_cast<NativeVector3 *>(value);
-					return gcnew Math::Vector2(vec->x, vec->y);
+					const auto data = reinterpret_cast<const float *>(value);
+
+					return gcnew Math::Vector2(data[0], data[2]);
 				}
 				if (type == Math::Vector3::typeid)
 				{
-					const auto vec = reinterpret_cast<NativeVector3 *>(value);
-					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
-				}
+					const auto data = reinterpret_cast<const float *>(value);
 
-				const int handle = *reinterpret_cast<int *>(value);
-
-				// Scripting types
-				if (type == Blip::typeid)
-				{
-					return gcnew Blip(handle);
-				}
-				if (type == Camera::typeid)
-				{
-					return gcnew Camera(handle);
-				}
-				if (type == Entity::typeid)
-				{
-					if (Function::Call<bool>(Hash::DOES_ENTITY_EXIST, handle))
-					{
-						switch (Function::Call<int>(Hash::GET_ENTITY_TYPE, handle))
-						{
-							case 1:
-								return gcnew Ped(handle);
-							case 2:
-								return gcnew Vehicle(handle);
-							case 3:
-								return gcnew Prop(handle);
-						}
-					}
-
-					return nullptr;
-				}
-				if (type == Ped::typeid)
-				{
-					return gcnew Ped(handle);
-				}
-				if (type == PedGroup::typeid)
-				{
-					return gcnew PedGroup(handle);
-				}
-				if (type == Player::typeid)
-				{
-					return gcnew Player(handle);
-				}
-				if (type == Prop::typeid)
-				{
-					return gcnew Prop(handle);
-				}
-				if (type == Rope::typeid)
-				{
-					return gcnew Rope(handle);
-				}
-				if (type == Vehicle::typeid)
-				{
-					return gcnew Vehicle(handle);
+					return gcnew Math::Vector3(data[0], data[2], data[4]);
 				}
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));

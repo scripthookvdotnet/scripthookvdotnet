@@ -2,6 +2,9 @@
 #include "Blip.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
+#include "Ped.hpp"
+#include "Vehicle.hpp"
+#include "Prop.hpp"
 
 namespace GTA
 {
@@ -23,7 +26,7 @@ namespace GTA
 	}
 	Blip ^Entity::CurrentBlip::get()
 	{
-		return Native::Function::Call<Blip ^>(Native::Hash::GET_BLIP_FROM_ENTITY, Handle);
+		return gcnew Blip(Native::Function::Call<int>(Native::Hash::GET_BLIP_FROM_ENTITY, Handle));
 	}
 	Math::Vector3 Entity::ForwardVector::get()
 	{
@@ -407,7 +410,22 @@ namespace GTA
 	}
 	Entity ^Entity::GetEntityAttachedTo()
 	{
-		return Native::Function::Call<Entity^>(Native::Hash::GET_ENTITY_ATTACHED_TO, Handle);
+		const int entity = Native::Function::Call<int>(Native::Hash::GET_ENTITY_ATTACHED_TO, Handle);
+
+		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity))
+		{
+			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entity))
+			{
+				case 1:
+					return gcnew Ped(entity);
+				case 2:
+					return gcnew Vehicle(entity);
+				case 3:
+					return gcnew Prop(entity);
+			}
+		}
+
+		return nullptr;
 	}
 	void Entity::SetNoCollision(Entity^ entity, bool toggle)
 	{
@@ -428,7 +446,7 @@ namespace GTA
 
 	Blip ^Entity::AddBlip()
 	{
-		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_ENTITY, Handle);
+		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_ENTITY, Handle));
 	}
 
 	void Entity::ApplyForce(Math::Vector3 direction)

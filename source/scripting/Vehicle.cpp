@@ -642,7 +642,7 @@ namespace GTA
 	}
 	Vehicle ^Vehicle::TowedVehicle::get()
 	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle);
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle));
 	}
 	void Vehicle::TowingCraneRaisedAmount::set(float value)
 	{
@@ -870,7 +870,7 @@ namespace GTA
 	}
 	Ped ^Vehicle::GetPedOnSeat(VehicleSeat seat)
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, Handle, static_cast<int>(seat));
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::GET_PED_IN_VEHICLE_SEAT, Handle, static_cast<int>(seat)));
 	}
 	bool Vehicle::IsSeatFree(VehicleSeat seat)
 	{
@@ -1117,19 +1117,19 @@ namespace GTA
 			return nullptr;
 		}
 
-		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, static_cast<int>(seat), 1, 1);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, static_cast<int>(seat), 1, 1));
 	}
 	Ped ^Vehicle::CreateRandomPedOnSeat(VehicleSeat seat)
 	{
 		if (seat == VehicleSeat::Driver)
 		{
-			return Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED_AS_DRIVER, Handle, true);
+			return gcnew Ped(Native::Function::Call<int>(Native::Hash::CREATE_RANDOM_PED_AS_DRIVER, Handle, true));
 		}
 		else
 		{
-			Ped ^ped = Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
-			Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, ped->Handle, Handle, static_cast<int>(seat));
-			return ped;
+			const int pedHandle = Native::Function::Call<int>(Native::Hash::CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
+			Native::Function::Call(Native::Hash::SET_PED_INTO_VEHICLE, pedHandle, Handle, static_cast<int>(seat));
+			return gcnew Ped(pedHandle);
 		}
 	}
 }

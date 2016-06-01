@@ -261,11 +261,11 @@ namespace GTA
 	}
 	void Weapon::Tint::set(WeaponTint value)
 	{
-		Native::Function::Call(Native::Hash::SET_PED_WEAPON_TINT_INDEX, _owner, static_cast<int>(Hash), static_cast<int>(value));
+		Native::Function::Call(Native::Hash::SET_PED_WEAPON_TINT_INDEX, _owner->Handle, static_cast<int>(Hash), static_cast<int>(value));
 	}
 	WeaponTint Weapon::Tint::get()
 	{
-		return static_cast<WeaponTint>(Native::Function::Call<int>(Native::Hash::GET_PED_WEAPON_TINT_INDEX, _owner, static_cast<int>(Hash)));
+		return static_cast<WeaponTint>(Native::Function::Call<int>(Native::Hash::GET_PED_WEAPON_TINT_INDEX, _owner->Handle, static_cast<int>(Hash)));
 	}
 	int Weapon::MaxComponents::get()
 	{
@@ -283,16 +283,16 @@ namespace GTA
 	{
 		if (on)
 		{
-			Native::Function::Call(Native::Hash::GIVE_WEAPON_COMPONENT_TO_PED, _owner, static_cast<int>(Hash), static_cast<int>(component));
+			Native::Function::Call(Native::Hash::GIVE_WEAPON_COMPONENT_TO_PED, _owner->Handle, static_cast<int>(Hash), static_cast<int>(component));
 		}
 		else
 		{
-			Native::Function::Call(Native::Hash::REMOVE_WEAPON_COMPONENT_FROM_PED, _owner, static_cast<int>(Hash), static_cast<int>(component));
+			Native::Function::Call(Native::Hash::REMOVE_WEAPON_COMPONENT_FROM_PED, _owner->Handle, static_cast<int>(Hash), static_cast<int>(component));
 		}
 	}
 	bool Weapon::IsComponentActive(Native::WeaponComponent component)
 	{
-		return Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON_COMPONENT, _owner, static_cast<int>(Hash), static_cast<int>(component));
+		return Native::Function::Call<bool>(Native::Hash::HAS_PED_GOT_WEAPON_COMPONENT, _owner->Handle, static_cast<int>(Hash), static_cast<int>(component));
 	}
 	System::String ^Weapon::ComponentName(Native::WeaponComponent component)
 	{
@@ -887,7 +887,7 @@ namespace GTA
 	{
 		if (Current->Hash != Native::WeaponHash::Unarmed)
 		{
-			return Native::Function::Call<Prop^>(Native::Hash::GET_CURRENT_PED_WEAPON_ENTITY_INDEX, _owner->Handle);
+			return gcnew Prop(Native::Function::Call<int>(Native::Hash::GET_CURRENT_PED_WEAPON_ENTITY_INDEX, _owner->Handle));
 		}
 
 		return nullptr;
@@ -933,7 +933,7 @@ namespace GTA
 
 	void WeaponCollection::Drop()
 	{
-		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPON, _owner);
+		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPON, _owner->Handle);
 	}
 	Weapon ^WeaponCollection::Give(Native::WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded)
 	{

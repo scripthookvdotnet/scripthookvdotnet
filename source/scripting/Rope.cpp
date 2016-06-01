@@ -41,19 +41,19 @@ namespace GTA
 	void Rope::AttachEntities(Entity ^entityOne, Math::Vector3 positionOne, Entity ^entityTwo, Math::Vector3 positionTwo, float length)
 	{
 		int tmpOne, tmpTwo;
-		Native::Function::Call(Native::Hash::ATTACH_ENTITIES_TO_ROPE, Handle, entityOne, entityTwo, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, &tmpOne, &tmpTwo);
+		Native::Function::Call(Native::Hash::ATTACH_ENTITIES_TO_ROPE, Handle, entityOne->Handle, entityTwo->Handle, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, &tmpOne, &tmpTwo);
 	}
 	void Rope::AttachEntity(Entity ^entity)
 	{
 		AttachEntity(entity, Math::Vector3());
 	}
-	void Rope::AttachEntity(Entity^ entity, Math::Vector3 position)
+	void Rope::AttachEntity(Entity ^entity, Math::Vector3 position)
 	{
-		Native::Function::Call(Native::Hash::ATTACH_ROPE_TO_ENTITY, Handle, entity, position.X, position.Y, position.Z, 0);
+		Native::Function::Call(Native::Hash::ATTACH_ROPE_TO_ENTITY, Handle, entity->Handle, position.X, position.Y, position.Z, 0);
 	}
-	void Rope::DetachEntity(Entity^ entity)
+	void Rope::DetachEntity(Entity ^entity)
 	{
-		Native::Function::Call(Native::Hash::DETACH_ROPE_FROM_ENTITY, Handle, entity);
+		Native::Function::Call(Native::Hash::DETACH_ROPE_FROM_ENTITY, Handle, entity->Handle);
 	}
 	void Rope::PinVertex(int vertex, Math::Vector3 position)
 	{

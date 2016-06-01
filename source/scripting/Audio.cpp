@@ -18,13 +18,13 @@ namespace GTA
 	}
 	int Audio::PlaySoundFromEntity(Entity ^entity, System::String ^sound)
 	{
-		Native::Function::Call(Native::Hash::PLAY_SOUND_FROM_ENTITY, -1, sound, entity, 0, 0, 0);
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FROM_ENTITY, -1, sound, entity->Handle, 0, 0, 0);
 
 		return Native::Function::Call<int>(Native::Hash::GET_SOUND_ID);
 	}
 	int Audio::PlaySoundFromEntity(Entity ^entity, System::String ^sound, System::String ^set)
 	{
-		Native::Function::Call(Native::Hash::PLAY_SOUND_FROM_ENTITY, -1, sound, entity, set, 0, 0);
+		Native::Function::Call(Native::Hash::PLAY_SOUND_FROM_ENTITY, -1, sound, entity->Handle, set, 0, 0);
 
 		return Native::Function::Call<int>(Native::Hash::GET_SOUND_ID);
 	}

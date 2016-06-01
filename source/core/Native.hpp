@@ -16,23 +16,10 @@
 
 #pragma once
 
-#include "Model.hpp"
 #include "NativeHashes.hpp"
 
 namespace GTA
 {
-	#pragma region Forward Declarations
-	ref class Blip;
-	ref class Camera;
-	ref class Entity;
-	ref class Ped;
-	ref class PedGroup;
-	ref class Player;
-	ref class Prop;
-	ref class Rope;
-	ref class Vehicle;
-	#pragma endregion
-
 	namespace Native
 	{
 		public ref class InputArgument
@@ -40,105 +27,65 @@ namespace GTA
 		public:
 			InputArgument(System::Object ^value);
 
-			static inline operator InputArgument ^(bool value)
+			static operator InputArgument ^(bool value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^(bool *value)
+			static operator InputArgument ^(bool *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
 			}
-			static inline operator InputArgument ^(char value)
+			static operator InputArgument ^(char value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static inline operator InputArgument ^(unsigned char value)
+			static operator InputArgument ^(unsigned char value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static inline operator InputArgument ^(short value)
+			static operator InputArgument ^(short value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static inline operator InputArgument ^(unsigned short value)
+			static operator InputArgument ^(unsigned short value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static inline operator InputArgument ^(int value)
+			static operator InputArgument ^(int value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^(int *value)
+			static operator InputArgument ^(int *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
 			}
-			static inline operator InputArgument ^(unsigned int value)
+			static operator InputArgument ^(unsigned int value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^(unsigned int *value)
+			static operator InputArgument ^(unsigned int *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
 			}
-			static inline operator InputArgument ^(float value)
+			static operator InputArgument ^(float value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^(float *value)
+			static operator InputArgument ^(float *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
 			}
-			static inline operator InputArgument ^(double value)
+			static operator InputArgument ^(double value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^(System::String ^value)
+			static operator InputArgument ^(System::String ^value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static inline operator InputArgument ^(const char value[])
+			static operator InputArgument ^(const char *value)
 			{
 				return gcnew InputArgument(gcnew System::String(value));
-			}
-			static inline operator InputArgument ^(Model model)
-			{
-				return gcnew InputArgument(model);
-			}
-			static inline operator InputArgument ^(Blip ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Camera ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Entity ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Ped ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(PedGroup ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Player ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Prop ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Vehicle ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Rope ^object)
-			{
-				return gcnew InputArgument(object);
 			}
 
 			virtual System::String ^ToString() override

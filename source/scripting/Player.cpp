@@ -104,7 +104,7 @@ namespace GTA
 	}
 	Vehicle ^Player::LastVehicle::get()
 	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_PLAYERS_LAST_VEHICLE);
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_PLAYERS_LAST_VEHICLE));
 	}
 	int Player::MaxArmor::get()
 	{
@@ -250,21 +250,17 @@ namespace GTA
 
 		if (Native::Function::Call<bool>(Native::Hash::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entity))
 		{
-			if (!Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity))
+			if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity))
 			{
-				return nullptr;
-			}
-			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_PED, entity))
-			{
-				return gcnew Ped(entity);
-			}
-			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_A_VEHICLE, entity))
-			{
-				return gcnew Vehicle(entity);
-			}
-			else if (Native::Function::Call<bool>(Native::Hash::IS_ENTITY_AN_OBJECT, entity))
-			{
-				return gcnew Prop(entity);
+				switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entity))
+				{
+					case 1:
+						return gcnew Ped(entity);
+					case 2:
+						return gcnew Vehicle(entity);
+					case 3:
+						return gcnew Prop(entity);
+				}
 			}
 		}
 
@@ -272,7 +268,7 @@ namespace GTA
 	}
 	void Player::SetMayOnlyEnterThisVehicleThisFrame(Vehicle ^vehicle)
 	{
-		Native::Function::Call(Native::Hash::SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle);
+		Native::Function::Call(Native::Hash::SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle->Handle);
 	}
 	void Player::SetMayNotEnterAnyVehicleThisFrame()
 	{

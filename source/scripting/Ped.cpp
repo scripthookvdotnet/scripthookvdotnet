@@ -276,11 +276,11 @@ namespace GTA
 			return nullptr;
 		}
 
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, Handle, false);
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_IN, Handle, false));
 	}
 	Vehicle ^Ped::LastVehicle::get()
 	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_IN, Handle, true);
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_IN, Handle, true));
 	}
 	PedGroup ^Ped::CurrentPedGroup::get()
 	{
@@ -289,7 +289,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		return Native::Function::Call<PedGroup ^>(Native::Hash::GET_PED_GROUP_INDEX, Handle, false);
+		return gcnew PedGroup(Native::Function::Call<int>(Native::Hash::GET_PED_GROUP_INDEX, Handle, false));
 	}
 	void Ped::IsEnemy::set(bool value)
 	{
@@ -531,32 +531,47 @@ namespace GTA
 	}
 	bool Ped::IsInCombatAgainst(Ped ^target)
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COMBAT, Handle, target);
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_IN_COMBAT, Handle, target->Handle);
 	}
 	bool Ped::IsHeadtracking(Entity ^entity)
 	{
-		return Native::Function::Call<bool>(Native::Hash::IS_PED_HEADTRACKING_ENTITY, Handle, entity);
+		return Native::Function::Call<bool>(Native::Hash::IS_PED_HEADTRACKING_ENTITY, Handle, entity->Handle);
 	}
 
 	Ped ^Ped::GetJacker()
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::GET_PEDS_JACKER, Handle);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::GET_PEDS_JACKER, Handle));
 	}
 	Ped ^Ped::GetJackTarget()
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::GET_JACK_TARGET, Handle);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::GET_JACK_TARGET, Handle));
 	}
 	Ped ^Ped::GetMeleeTarget()
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::GET_MELEE_TARGET_FOR_PED, Handle);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::GET_MELEE_TARGET_FOR_PED, Handle));
 	}
 	Entity ^Ped::GetKiller()
 	{
-		return Native::Function::Call<Entity ^>(Native::Hash::_GET_PED_KILLER, Handle);
+		const int entity = Native::Function::Call<int>(Native::Hash::_GET_PED_KILLER, Handle);
+
+		if (Native::Function::Call<bool>(Native::Hash::DOES_ENTITY_EXIST, entity))
+		{
+			switch (Native::Function::Call<int>(Native::Hash::GET_ENTITY_TYPE, entity))
+			{
+				case 1:
+					return gcnew Ped(entity);
+				case 2:
+					return gcnew Vehicle(entity);
+				case 3:
+					return gcnew Prop(entity);
+			}
+		}
+
+		return nullptr;
 	}
 	Vehicle ^Ped::GetVehicleIsTryingToEnter()
 	{
-		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle));
 	}
 
 	void Ped::Kill()
@@ -589,7 +604,7 @@ namespace GTA
 	}
 	Ped ^Ped::Clone(float heading)
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::CLONE_PED, Handle, heading, false, false);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::CLONE_PED, Handle, heading, false, false));
 	}
 	void Ped::ApplyDamage(int damageAmount)
 	{
@@ -655,7 +670,7 @@ namespace GTA
 	}
 	Ped ^PedGroup::Leader::get()
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::_GET_PED_AS_GROUP_LEADER, Handle);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::_GET_PED_AS_GROUP_LEADER, Handle));
 	}
 	int PedGroup::MemberCount::get()
 	{
@@ -689,7 +704,7 @@ namespace GTA
 	}
 	Ped ^PedGroup::GetMember(int index)
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::GET_PED_AS_GROUP_MEMBER, Handle, index);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::GET_PED_AS_GROUP_MEMBER, Handle, index));
 	}
 	bool PedGroup::Contains(Ped ^ped)
 	{

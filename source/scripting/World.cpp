@@ -158,7 +158,7 @@ namespace GTA
 	}
 	Camera ^World::RenderingCamera::get()
 	{
-		return Native::Function::Call<Camera ^>(Native::Hash::GET_RENDERING_CAM);
+		return gcnew Camera(Native::Function::Call<int>(Native::Hash::GET_RENDERING_CAM));
 	}
 	void World::RenderingCamera::set(Camera ^renderingCamera)
 	{
@@ -860,15 +860,15 @@ namespace GTA
 
 	Blip ^World::CreateBlip(Math::Vector3 position)
 	{
-		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
+		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z));
 	}
 	Blip ^World::CreateBlip(Math::Vector3 position, float radius)
 	{
-		return Native::Function::Call<Blip ^>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
+		return gcnew Blip(Native::Function::Call<int>(Native::Hash::ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius));
 	}
 	Camera ^World::CreateCamera(Math::Vector3 position, Math::Vector3 rotation, float fov)
 	{
-		return Native::Function::Call<Camera ^>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+		return gcnew Camera(Native::Function::Call<int>(Native::Hash::CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2));
 	}
 	Ped ^World::CreatePed(Model model, Math::Vector3 position)
 	{
@@ -881,11 +881,11 @@ namespace GTA
 			return nullptr;
 		}
 
-		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 	}
 	Ped ^World::CreateRandomPed(Math::Vector3 position)
 	{
-		return Native::Function::Call<Ped ^>(Native::Hash::CREATE_RANDOM_PED, position.X, position.Y, position.Z);
+		return gcnew Ped(Native::Function::Call<int>(Native::Hash::CREATE_RANDOM_PED, position.X, position.Y, position.Z));
 	}
 	Vehicle ^World::CreateVehicle(Model model, Math::Vector3 position)
 	{
@@ -898,7 +898,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		return Native::Function::Call<Vehicle ^>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+		return gcnew Vehicle(Native::Function::Call<int>(Native::Hash::CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 	}
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, bool dynamic, bool placeOnGround)
 	{
@@ -912,7 +912,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		return Native::Function::Call<Prop ^>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+		return gcnew Prop(Native::Function::Call<int>(Native::Hash::CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
 	}
 	Prop ^World::CreateProp(Model model, Math::Vector3 position, Math::Vector3 rotation, bool dynamic, bool placeOnGround)
 	{
@@ -1004,7 +1004,7 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ROPE_LOAD_TEXTURES);
 
-		return Native::Function::Call<Rope ^>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0);
+		return gcnew Rope(Native::Function::Call<int>(Native::Hash::ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, static_cast<int>(type), length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0));
 	}
 	void World::DestroyAllCameras()
 	{
