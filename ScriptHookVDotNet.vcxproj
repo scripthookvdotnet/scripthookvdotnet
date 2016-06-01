@@ -19,10 +19,12 @@
     <!-- Support for VS2013 and VS2015 -->
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <CLRSupport>true</CLRSupport>
     <OutDir>bin\</OutDir>
     <IntDir>obj\</IntDir>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <ExtensionsToDeleteOnClean>*.netmodule;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <!-- Release configuration settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -42,7 +44,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ScriptHookV.lib;$(IntDir)ScriptingApi.netmodule;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
@@ -61,6 +63,9 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\PropertyPageSchema.xml" />
   </ItemGroup>
   <!-- Core source files -->
   <ItemGroup>
@@ -143,6 +148,11 @@
     <ClInclude Include="source\scripting\Weapon.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Compile C# source files -->
+  <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)ScriptingApi.netmodule">
+    <Message Text="Compiling scripting API" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Native.obj" TargetType="Module" OutputAssembly="$(IntDir)ScriptingApi.netmodule" Condition="'@(CsCompile)' != ''" />
+  </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>
