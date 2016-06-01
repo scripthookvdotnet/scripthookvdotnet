@@ -101,6 +101,10 @@ namespace GTA
 				{
 					return static_cast<Model>(value).Hash;
 				}
+				if (type == RelationshipGroup::typeid)
+				{
+					return static_cast<RelationshipGroup>(value).Hash;
+				}
 				if (IHandleable::typeid->IsAssignableFrom(type))
 				{
 					return safe_cast<IHandleable ^>(value)->Handle;

@@ -8,6 +8,7 @@
 #include "Pickup.hpp"
 #include "Prop.hpp"
 #include "Raycast.hpp"
+#include "RelationshipGroup.hpp"
 #include "Rope.hpp"
 #include "Vehicle.hpp"
 
@@ -1015,30 +1016,12 @@ namespace GTA
 		Native::Function::Call(Native::Hash::_SET_BLACKOUT, enable);
 	}
 
-	int World::AddRelationshipGroup(String ^groupName)
+	RelationshipGroup World::AddRelationshipGroup(String ^groupName)
 	{
-		int handle = 0;
-		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &handle);
+		int hash;
+		Native::Function::Call(Native::Hash::ADD_RELATIONSHIP_GROUP, groupName, &hash);
 
-		return handle;
-	}
-	void World::RemoveRelationshipGroup(int group)
-	{
-		Native::Function::Call(Native::Hash::REMOVE_RELATIONSHIP_GROUP, group);
-	}
-	Relationship World::GetRelationshipBetweenGroups(int group1, int group2)
-	{
-		return static_cast<Relationship>(Native::Function::Call<int>(Native::Hash::GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2));
-	}
-	void World::SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-	{
-		Native::Function::Call(Native::Hash::SET_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
-		Native::Function::Call(Native::Hash::SET_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
-	}
-	void World::ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-	{
-		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group1, group2);
-		Native::Function::Call(Native::Hash::CLEAR_RELATIONSHIP_BETWEEN_GROUPS, static_cast<int>(relationship), group2, group1);
+		return RelationshipGroup(hash);
 	}
 
 	RaycastResult World::Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options)
