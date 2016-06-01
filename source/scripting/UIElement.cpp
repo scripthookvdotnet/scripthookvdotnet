@@ -19,9 +19,10 @@ namespace GTA
 			Scale = scale;
 			Color = Drawing::Color::WhiteSmoke;
 			Font = GTA::UI::Font::ChaletLondon;
-			Centered = false;
+			Alignment = TextAlignment::Left;
 			Shadow = false;
 			Outline = false;
+			WrapWidth = 0.0f;
 		}
 		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color)
 		{
@@ -31,11 +32,12 @@ namespace GTA
 			Scale = scale;
 			Color = color;
 			Font = GTA::UI::Font::ChaletLondon;
-			Centered = false;
+			Alignment = TextAlignment::Left;
 			Shadow = false;
 			Outline = false;
+			WrapWidth = 0.0f;
 		}
-		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, bool centered)
+		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, TextAlignment alignment)
 		{
 			Enabled = true;
 			Caption = caption;
@@ -43,11 +45,12 @@ namespace GTA
 			Scale = scale;
 			Color = color;
 			Font = font;
-			Centered = centered;
+			Alignment = alignment;
 			Shadow = false;
 			Outline = false;
+			WrapWidth = 0.0f;
 		}
-		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, bool centered, bool shadow, bool outline)
+		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, TextAlignment alignment, bool shadow, bool outline)
 		{
 			Enabled = true;
 			Caption = caption;
@@ -55,11 +58,37 @@ namespace GTA
 			Scale = scale;
 			Color = color;
 			Font = font;
-			Centered = centered;
+			Alignment = alignment;
 			Shadow = shadow;
 			Outline = outline;
+			WrapWidth = 0.0f;
+		}
+		Text::Text(String ^caption, Drawing::PointF position, float scale, Drawing::Color color, GTA::UI::Font font, TextAlignment alignment, bool shadow, bool outline, float wrapWidth)
+		{
+			Enabled = true;
+			Caption = caption;
+			Position = position;
+			Scale = scale;
+			Color = color;
+			Font = font;
+			Alignment = alignment;
+			Shadow = shadow;
+			Outline = outline;
+			WrapWidth = wrapWidth;
 		}
 
+		bool Text::Centered::get()
+		{
+			return Alignment == TextAlignment::Center;
+		}
+		void Text::Centered::set(bool value)
+		{
+			if (value)
+			{
+				Alignment = TextAlignment::Center;
+			}
+		}
+		
 		void Text::Draw()
 		{
 			Draw(Drawing::SizeF::Empty);
@@ -73,6 +102,7 @@ namespace GTA
 
 			const float x = (Position.X + offset.Width) / Screen::WIDTH;
 			const float y = (Position.Y + offset.Height) / Screen::HEIGHT;
+			const float w = WrapWidth / Screen::WIDTH;
 
 			if (Shadow)
 			{
@@ -85,7 +115,26 @@ namespace GTA
 			Native::Function::Call(Native::Hash::SET_TEXT_FONT, static_cast<int>(Font));
 			Native::Function::Call(Native::Hash::SET_TEXT_SCALE, Scale, Scale);
 			Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-			Native::Function::Call(Native::Hash::SET_TEXT_CENTRE, Centered ? 1 : 0);
+			Native::Function::Call(Native::Hash::SET_TEXT_JUSTIFICATION, static_cast<int>(Alignment));
+			if (WrapWidth > 0.0f)
+			{
+				switch (Alignment)
+				{
+					case TextAlignment::Center:
+						Native::Function::Call(Native::Hash::SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
+						break;
+					case TextAlignment::Left:
+						Native::Function::Call(Native::Hash::SET_TEXT_WRAP, x, x + w);
+						break;
+					case TextAlignment::Right:
+						Native::Function::Call(Native::Hash::SET_TEXT_WRAP, x - w, x);
+						break;
+				}
+			}
+			else if (Alignment == TextAlignment::Right)
+			{
+				Native::Function::Call(Native::Hash::SET_TEXT_WRAP, 0.0f, x);
+			}
 			Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
 			const int strLen = 99;
 			for (int i = 0; i < Caption->Length; i += strLen)

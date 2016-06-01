@@ -32,14 +32,20 @@ namespace GTA
 				void set(bool value);
 			}
 		};
-
+		public enum class TextAlignment
+		{
+			Center = 0,
+			Left = 1,
+			Right = 2,
+		};
 		public ref class Text : public IElement
 		{
 		public:
 			Text(System::String ^caption, System::Drawing::PointF position, float scale);
 			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color);
-			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, bool centered);
-			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, bool centered, bool shadow, bool outline);
+			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, TextAlignment alignment);
+			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, TextAlignment alignment, bool shadow, bool outline);
+			Text(System::String ^caption, System::Drawing::PointF position, float scale, System::Drawing::Color color, Font font, TextAlignment alignment, bool shadow, bool outline, float wrapWidth);
 
 			virtual property bool Enabled;
 			virtual property System::Drawing::PointF Position;
@@ -47,9 +53,16 @@ namespace GTA
 			property System::String ^Caption;
 			property Font Font;
 			property float Scale;
-			virtual property bool Centered;
+			property TextAlignment Alignment;
+			virtual property bool Centered
+			{
+				virtual bool get();
+				virtual void set(bool value);
+			}
+			
 			property bool Shadow;
 			property bool Outline;
+			property float WrapWidth;
 
 			virtual void Draw();
 			virtual void Draw(System::Drawing::SizeF offset);
