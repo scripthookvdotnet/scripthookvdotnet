@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
+#include "Script.hpp"
 
 #include "Blip.hpp"
 #include "Camera.hpp"

@@ -1,4 +1,5 @@
 #include "NativeMemory.hpp"
+#include "ScriptDomain.hpp"
 
 #include <Main.h>
 #include <Psapi.h>

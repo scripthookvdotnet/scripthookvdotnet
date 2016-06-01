@@ -27,6 +27,9 @@
     <ClCompile Include="source\core\Main.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\MainCore.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
     <ClCompile Include="source\core\Native.cpp">
       <Filter>core</Filter>
     </ClCompile>

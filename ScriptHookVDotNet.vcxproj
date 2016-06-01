@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="source\AssemblyInfo.cpp" />
     <ClCompile Include="source\core\Main.cpp" />
+    <ClCompile Include="source\core\MainCore.cpp" />
     <ClCompile Include="source\core\Native.cpp" />
     <ClCompile Include="source\core\NativeMemory.cpp" />
     <ClCompile Include="source\core\Script.cpp" />
@@ -154,7 +155,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)ScriptingApi.netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Native.obj" TargetType="Module" OutputAssembly="$(IntDir)ScriptingApi.netmodule" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)MainCore.obj" TargetType="Module" OutputAssembly="$(IntDir)ScriptingApi.netmodule" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">

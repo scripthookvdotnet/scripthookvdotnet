@@ -6,6 +6,7 @@
 #include "World.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
+#include "Script.hpp"
 
 namespace GTA
 {

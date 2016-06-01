@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector3.hpp"
-#include "ScriptDomain.hpp"
 
 namespace GTA
 {
