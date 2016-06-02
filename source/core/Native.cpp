@@ -154,6 +154,10 @@ namespace GTA
 
 					return gcnew Math::Vector3(data[0], data[2], data[4]);
 				}
+				if (GTA::IHandleable::typeid->IsAssignableFrom(type))
+				{
+					return Activator::CreateInstance(type, gcnew array<Object ^>(1){ *reinterpret_cast<const int *>(value) });
+				}
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 			}
