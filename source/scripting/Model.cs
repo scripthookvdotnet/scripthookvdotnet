@@ -6,25 +6,21 @@ namespace GTA
 {
 	public struct Model : IEquatable<Model>
 	{
-		public Model(int hash)
+		public Model(int hash) : this()
 		{
 			Hash = hash;
 		}
-		public Model(string name)
+		public Model(string name) : this(Game.GenerateHash(name))
 		{
-			Hash = Game.GenerateHash(name);
 		}
-		public Model(PedHash hash)
+		public Model(PedHash hash) : this((int)hash)
 		{
-			Hash = (int)hash;
 		}
-		public Model(VehicleHash hash)
+		public Model(VehicleHash hash) : this((int)hash)
 		{
-			Hash = (int)hash;
 		}
-		public Model(WeaponHash hash)
+		public Model(WeaponHash hash) : this((int)hash)
 		{
-			Hash = (int)hash;
 		}
 
 		public int Hash { get; private set; }

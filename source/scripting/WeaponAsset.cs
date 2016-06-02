@@ -5,17 +5,15 @@ namespace GTA
 {
 	public struct WeaponAsset : IEquatable<WeaponAsset>
 	{
-		public WeaponAsset(int hash)
+		public WeaponAsset(int hash) : this()
 		{
 			Hash = hash;
 		}
-		public WeaponAsset(uint hash)
+		public WeaponAsset(uint hash) : this((int)hash)
 		{
-			Hash = (int)hash;
 		}
-		public WeaponAsset(WeaponHash hash)
+		public WeaponAsset(WeaponHash hash) : this((int)hash)
 		{
-			Hash = (int)hash;
 		}
 
 		public int Hash { get; private set; }

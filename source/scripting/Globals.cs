@@ -6,7 +6,7 @@ namespace GTA
 {
 	public struct Global
 	{
-		internal Global(IntPtr address)
+		internal Global(IntPtr address) : this()
 		{
 			MemoryAddress = address;
 		}

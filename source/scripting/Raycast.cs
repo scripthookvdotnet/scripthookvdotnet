@@ -5,7 +5,7 @@ namespace GTA
 {
 	public struct RaycastResult
 	{
-		public RaycastResult(int handle)
+		public RaycastResult(int handle) : this()
 		{
 			var hitPositionArg = new OutputArgument();
 			var hitSomethingArg = new OutputArgument();

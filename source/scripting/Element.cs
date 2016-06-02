@@ -57,16 +57,19 @@ namespace GTA.UI
 	}
 	public class Container : Rectangle
 	{
-		public List<IElement> Items { get; private set; } = new List<IElement>();
+		public List<IElement> Items { get; private set; }
 
 		public Container()
 		{
+			Items = new List<IElement>();
 		}
 		public Container(PointF position, SizeF size) : base(position, size)
 		{
+			Items = new List<IElement>();
 		}
 		public Container(PointF position, SizeF size, Color color) : base(position, size, color)
 		{
+			Items = new List<IElement>();
 		}
 
 		public override void Draw()

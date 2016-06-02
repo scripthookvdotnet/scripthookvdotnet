@@ -110,6 +110,7 @@ namespace GTA
 		static Game()
 		{
 			Version = (GameVersion)MemoryAccess.GetGameVersion();
+			Globals = new GlobalCollection();
 		}
 
 		public static GameVersion Version { get; private set; }
@@ -161,7 +162,7 @@ namespace GTA
 			}
 		}
 
-		public static GlobalCollection Globals { get; private set; } = new GlobalCollection();
+		public static GlobalCollection Globals { get; private set; }
 
 		public static int MaxWantedLevel
 		{

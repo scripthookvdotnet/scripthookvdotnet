@@ -17,9 +17,10 @@
 #include "ScriptDomain.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
+#include "Matrix.hpp"
+#include "Quaternion.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-#include "Quaternion.hpp"
 
 using namespace System;
 using namespace System::Reflection;
