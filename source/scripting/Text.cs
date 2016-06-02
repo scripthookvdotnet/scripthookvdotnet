@@ -91,10 +91,10 @@ namespace GTA.UI
 				Function.Call(Hash.SET_TEXT_OUTLINE);
 			}
 
-			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
+			Function.Call(Hash.SET_TEXT_FONT, Font);
 			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
+			Function.Call(Hash.SET_TEXT_JUSTIFICATION, Alignment);
 			if (WrapWidth > 0.0f)
 			{
 				switch (Alignment)

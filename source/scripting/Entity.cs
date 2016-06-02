@@ -661,7 +661,7 @@ namespace GTA
 		}
 		public void ApplyForce(Vector3 direction, Vector3 rotation, ForceType forceType)
 		{
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
 		}
 		public void ApplyForceRelative(Vector3 direction)
 		{
@@ -673,7 +673,7 @@ namespace GTA
 		}
 		public void ApplyForceRelative(Vector3 direction, Vector3 rotation, ForceType forceType)
 		{
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 		}
 
 		public void Delete()

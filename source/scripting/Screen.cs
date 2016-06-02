@@ -119,15 +119,15 @@ namespace GTA.UI
 
 		public static bool IsHudComponentActive(HudComponent component)
 		{
-			return Function.Call<bool>(Hash.IS_HUD_COMPONENT_ACTIVE, (int)component);
+			return Function.Call<bool>(Hash.IS_HUD_COMPONENT_ACTIVE, component);
 		}
 		public static void ShowHudComponentThisFrame(HudComponent component)
 		{
-			Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, (int)component);
+			Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, component);
 		}
 		public static void HideHudComponentThisFrame(HudComponent component)
 		{
-			Function.Call(Hash.HIDE_HUD_COMPONENT_THIS_FRAME, (int)component);
+			Function.Call(Hash.HIDE_HUD_COMPONENT_THIS_FRAME, component);
 		}
 
 		public static PointF WorldToScreen(Vector3 position)

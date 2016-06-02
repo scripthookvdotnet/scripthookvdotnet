@@ -178,7 +178,7 @@ namespace GTA
 					return true;
 				}
 
-				return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, (int)Hash);
+				return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, Hash);
 			}
 		}
 
@@ -193,25 +193,25 @@ namespace GTA
 		{
 			get
 			{
-				return new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, (int)Hash));
+				return new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
 			}
 		}
 		public WeaponTint Tint
 		{
 			get
 			{
-				return (WeaponTint)Function.Call<int>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, _owner.Handle, (int)Hash);
+				return Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, _owner.Handle, Hash);
 			}
 			set
 			{
-				Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, _owner.Handle, (int)Hash, (int)value);
+				Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, _owner.Handle, Hash, value);
 			}
 		}
 		public WeaponGroup Group
 		{
 			get
 			{
-				return (WeaponGroup)Function.Call<int>(Native.Hash.GET_WEAPONTYPE_GROUP, (int)Hash);
+				return Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, Hash);
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, _owner.Handle, (int)Hash);
+				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, _owner.Handle, Hash);
 			}
 			set
 			{
@@ -240,11 +240,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_PED_AMMO, _owner.Handle, (int)Hash, value);
+					Function.Call(Native.Hash.SET_PED_AMMO, _owner.Handle, Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, (int)Hash, value, false, true);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, Hash, value, false, true);
 				}
 			}
 		}
@@ -263,7 +263,7 @@ namespace GTA
 				}
 
 				var ammoInClip = new OutputArgument();
-				Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, (int)Hash, ammoInClip);
+				Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, Hash, ammoInClip);
 
 				return ammoInClip.GetResult<int>();
 			}
@@ -276,11 +276,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, _owner.Handle, (int)Hash, value);
+					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, _owner.Handle, Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, (int)Hash, value, true, false);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, Hash, value, true, false);
 				}
 			}
 		}
@@ -294,7 +294,7 @@ namespace GTA
 				}
 
 				var maxAmmo = new OutputArgument();
-				Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, (int)Hash, maxAmmo);
+				Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, maxAmmo);
 
 				return maxAmmo.GetResult<int>();
 			}
@@ -313,14 +313,14 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, _owner.Handle, (int)Hash, true);
+				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, _owner.Handle, Hash, true);
 			}
 		}
 		public int DefaultClipSize
 		{
 			get
 			{
-				return Function.Call<int>(Native.Hash.GET_WEAPON_CLIP_SIZE, (int)Hash);
+				return Function.Call<int>(Native.Hash.GET_WEAPON_CLIP_SIZE, Hash);
 			}
 		}
 		public bool InfiniteAmmo
@@ -332,7 +332,7 @@ namespace GTA
 					return;
 				}
 
-				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, _owner.Handle, value, (int)Hash);
+				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, _owner.Handle, value, Hash);
 			}
 		}
 		public bool InfiniteAmmoClip
@@ -347,7 +347,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (int)Hash);
+				return Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, Hash);
 			}
 		}
 
@@ -377,16 +377,16 @@ namespace GTA
 		{
 			if (active)
 			{
-				Function.Call(Native.Hash.GIVE_WEAPON_COMPONENT_TO_PED, _owner.Handle, (int)Hash, (int)component);
+				Function.Call(Native.Hash.GIVE_WEAPON_COMPONENT_TO_PED, _owner.Handle, Hash, component);
 			}
 			else
 			{
-				Function.Call(Native.Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, (int)Hash, (int)component);
+				Function.Call(Native.Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, Hash, component);
 			}
 		}
 		public bool IsComponentActive(WeaponComponent component)
 		{
-			return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, (int)Hash, (int)component);
+			return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, Hash, component);
 		}
 
 		public static string GetDisplayNameFromHash(WeaponHash hash)

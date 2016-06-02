@@ -117,7 +117,7 @@ namespace GTA
 
 		public void EnterVehicle()
 		{
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, -1, (int)VehicleSeat.Any, 0f, 0, 0);
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, -1, VehicleSeat.Any, 0f, 0, 0);
 		}
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
@@ -133,7 +133,7 @@ namespace GTA
 		}
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, float speed, int flag)
 		{
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, (int)seat, speed, flag, 0);
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, seat, speed, flag, 0);
 		}
 
 		public static void EveryoneLeaveVehicle(Vehicle vehicle)
@@ -244,7 +244,7 @@ namespace GTA
 		}
 		public void LeaveVehicle(LeaveVehicleFlags flags)
 		{
-			Function.Call(Hash.TASK_LEAVE_ANY_VEHICLE, _ped.Handle, 0, (int)flags);
+			Function.Call(Hash.TASK_LEAVE_ANY_VEHICLE, _ped.Handle, 0, flags);
 		}
 		public void LeaveVehicle(Vehicle vehicle, bool closeDoor)
 		{
@@ -252,7 +252,7 @@ namespace GTA
 		}
 		public void LeaveVehicle(Vehicle vehicle, LeaveVehicleFlags flags)
 		{
-			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, (int)flags);
+			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, flags);
 		}
 
 		public void LookAt(Entity target)
@@ -323,7 +323,7 @@ namespace GTA
 				}
 			}
 
-			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, (int)flags, playbackRate, 0, 0, 0);
+			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, 0, 0, 0);
 		}
 
 		public void ReactAndFlee(Ped ped)
@@ -366,7 +366,7 @@ namespace GTA
 		}
 		public void ShootAt(Ped target, int duration, FiringPattern pattern)
 		{
-			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, (int)pattern);
+			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, pattern);
 		}
 		public void ShootAt(Vector3 position)
 		{
@@ -378,7 +378,7 @@ namespace GTA
 		}
 		public void ShootAt(Vector3 position, int duration, FiringPattern pattern)
 		{
-			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, (int)pattern);
+			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, pattern);
 		}
 
 		public void ShuffleToNextVehicleSeat(Vehicle vehicle)
@@ -474,7 +474,7 @@ namespace GTA
 
 		public void WarpIntoVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
-			Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, _ped.Handle, vehicle.Handle, (int)seat);
+			Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, _ped.Handle, vehicle.Handle, seat);
 		}
 		public void WarpOutOfVehicle(Vehicle vehicle)
 		{

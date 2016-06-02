@@ -147,11 +147,11 @@ namespace GTA
 				var result = new OutputArgument();
 				Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, result);
 
-				return (ParachuteTint)result.GetResult<int>();
+				return result.GetResult<ParachuteTint>();
 			}
 			set
 			{
-				Function.Call(Hash.SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, (int)value);
+				Function.Call(Hash.SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, value);
 			}
 		}
 		public ParachuteTint ReserveParachuteTint
@@ -161,11 +161,11 @@ namespace GTA
 				var result = new OutputArgument();
 				Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, result);
 
-				return (ParachuteTint)result.GetResult<int>();
+				return result.GetResult<ParachuteTint>();
 			}
 			set
 			{
-				Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, (int)value);
+				Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, value);
 			}
 		}
 

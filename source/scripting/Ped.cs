@@ -658,7 +658,7 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, (int)value);
+				Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, value);
 			}
 		}
 
@@ -690,7 +690,7 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (int)value);
+				Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, value);
 			}
 		}
 
@@ -855,7 +855,7 @@ namespace GTA
 		}
 		public void SetIntoVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
-			Function.Call(Hash.SET_PED_INTO_VEHICLE, Handle, vehicle.Handle, (int)seat);
+			Function.Call(Hash.SET_PED_INTO_VEHICLE, Handle, vehicle.Handle, seat);
 		}
 
 		public Relationship GetRelationshipWithPed(Ped ped)
@@ -969,7 +969,7 @@ namespace GTA
 
 		public int GetBoneIndex(Bone BoneID)
 		{
-			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, (int)BoneID);
+			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, BoneID);
 		}
 		public Vector3 GetBoneCoord(Bone BoneID)
 		{
@@ -977,7 +977,7 @@ namespace GTA
 		}
 		public Vector3 GetBoneCoord(Bone BoneID, Vector3 Offset)
 		{
-			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, (int)BoneID, Offset.X, Offset.Y, Offset.Z);
+			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, BoneID, Offset.X, Offset.Y, Offset.Z);
 		}
 
 		public Vector3 GetLastWeaponImpactPosition()
@@ -994,7 +994,7 @@ namespace GTA
 
 		public void GiveHelmet(bool canBeRemovedByPed, HelmetType helmetType, int textureIndex)
 		{
-			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, (int)helmetType, textureIndex);
+			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, helmetType, textureIndex);
 		}
 		public void RemoveHelmet(bool instantly)
 		{

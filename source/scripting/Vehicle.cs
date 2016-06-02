@@ -381,7 +381,7 @@ namespace GTA
 		{
 			get
 			{
-				return (VehicleClass)Function.Call<int>(Hash.GET_VEHICLE_CLASS, Handle);
+				return Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS, Handle);
 			}
 		}
 
@@ -1025,22 +1025,22 @@ namespace GTA
 		{
 			get
 			{
-				return (VehicleWheelType)Function.Call<int>(Hash.GET_VEHICLE_WHEEL_TYPE, Handle);
+				return Function.Call<VehicleWheelType>(Hash.GET_VEHICLE_WHEEL_TYPE, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, Handle, (int)value);
+				Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, Handle, value);
 			}
 		}
 		public VehicleWindowTint WindowTint
 		{
 			get
 			{
-				return (VehicleWindowTint)Function.Call<int>(Hash.GET_VEHICLE_WINDOW_TINT, Handle);
+				return Function.Call<VehicleWindowTint>(Hash.GET_VEHICLE_WINDOW_TINT, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, Handle, (int)value);
+				Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, Handle, value);
 			}
 		}
 
@@ -1052,11 +1052,11 @@ namespace GTA
 				var color2 = new OutputArgument();
 				Function.Call(Hash.GET_VEHICLE_COLOURS, Handle, color1, color2);
 
-				return (VehicleColor)color1.GetResult<int>();
+				return color1.GetResult<VehicleColor>();
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_COLOURS, Handle, (int)value, (int)SecondaryColor);
+				Function.Call(Hash.SET_VEHICLE_COLOURS, Handle, value, SecondaryColor);
 			}
 		}
 		public VehicleColor SecondaryColor
@@ -1067,11 +1067,11 @@ namespace GTA
 				var color2 = new OutputArgument();
 				Function.Call(Hash.GET_VEHICLE_COLOURS, Handle, color1, color2);
 
-				return (VehicleColor)color2.GetResult<int>();
+				return color2.GetResult<VehicleColor>();
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_COLOURS, Handle, (int)PrimaryColor, (int)value);
+				Function.Call(Hash.SET_VEHICLE_COLOURS, Handle, PrimaryColor, value);
 			}
 		}
 		public VehicleColor RimColor
@@ -1082,11 +1082,11 @@ namespace GTA
 				var color2 = new OutputArgument();
 				Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, Handle, color1, color2);
 
-				return (VehicleColor)color2.GetResult<int>();
+				return color2.GetResult<VehicleColor>();
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, Handle, (int)PearlescentColor, (int)value);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, Handle, PearlescentColor, value);
 			}
 		}
 		public VehicleColor PearlescentColor
@@ -1097,11 +1097,11 @@ namespace GTA
 				var color2 = new OutputArgument();
 				Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, Handle, color1, color2);
 
-				return (VehicleColor)color1.GetResult<int>();
+				return color1.GetResult<VehicleColor>();
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, Handle, (int)value, (int)RimColor);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, Handle, value, RimColor);
 			}
 		}
 		public VehicleColor TrimColor
@@ -1111,11 +1111,11 @@ namespace GTA
 				var color = new OutputArgument();
 				Function.Call((Hash)9012939617897488694uL, Handle, color);
 
-				return (VehicleColor)color.GetResult<int>();
+				return color.GetResult<VehicleColor>();
 			}
 			set
 			{
-				Function.Call((Hash)17585947422526242585uL, Handle, (int)value);
+				Function.Call((Hash)17585947422526242585uL, Handle, value);
 			}
 		}
 		public VehicleColor DashboardColor
@@ -1125,11 +1125,11 @@ namespace GTA
 				var color = new OutputArgument();
 				Function.Call((Hash)13214509638265019391uL, Handle, color);
 
-				return (VehicleColor)color.GetResult<int>();
+				return color.GetResult<VehicleColor>();
 			}
 			set
 			{
-				Function.Call((Hash)6956317558672667244uL, Handle, (int)value);
+				Function.Call((Hash)6956317558672667244uL, Handle, value);
 			}
 		}
 		public int ColorCombination
@@ -1241,18 +1241,18 @@ namespace GTA
 		{
 			get
 			{
-				return (NumberPlateType)Function.Call<int>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle);
+				return Function.Call<NumberPlateType>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle, (int)value);
+				Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle, value);
 			}
 		}
 		public NumberPlateMounting NumberPlateMounting
 		{
 			get
 			{
-				return (NumberPlateMounting)Function.Call<int>(Hash.GET_VEHICLE_PLATE_TYPE, Handle);
+				return Function.Call<NumberPlateMounting>(Hash.GET_VEHICLE_PLATE_TYPE, Handle);
 			}
 		}
 		public string NumberPlate
@@ -1271,18 +1271,18 @@ namespace GTA
 		{
 			get
 			{
-				return (VehicleLandingGear)Function.Call<int>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
+				return Function.Call<VehicleLandingGear>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
 			}
 			set
 			{
-				Function.Call(Hash._SET_VEHICLE_LANDING_GEAR, Handle, (int)value);
+				Function.Call(Hash._SET_VEHICLE_LANDING_GEAR, Handle, value);
 			}
 		}
 		public VehicleRoofState RoofState
 		{
 			get
 			{
-				return (VehicleRoofState)Function.Call<int>(Hash.GET_CONVERTIBLE_ROOF_STATE, Handle);
+				return Function.Call<VehicleRoofState>(Hash.GET_CONVERTIBLE_ROOF_STATE, Handle);
 			}
 			set
 			{
@@ -1309,11 +1309,11 @@ namespace GTA
 		{
 			get
 			{
-				return (VehicleLockStatus)Function.Call<int>(Hash.GET_VEHICLE_DOOR_LOCK_STATUS, Handle);
+				return Function.Call<VehicleLockStatus>(Hash.GET_VEHICLE_DOOR_LOCK_STATUS, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, Handle, (int)value);
+				Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, Handle, value);
 			}
 		}
 
@@ -1453,35 +1453,35 @@ namespace GTA
 		}
 		public int GetMod(VehicleMod modType)
 		{
-			return Function.Call<int>(Hash.GET_VEHICLE_MOD, Handle, (int)modType);
+			return Function.Call<int>(Hash.GET_VEHICLE_MOD, Handle, modType);
 		}
 		public void SetMod(VehicleMod modType, int modIndex, bool variations)
 		{
-			Function.Call(Hash.SET_VEHICLE_MOD, Handle, (int)modType, modIndex, variations);
+			Function.Call(Hash.SET_VEHICLE_MOD, Handle, modType, modIndex, variations);
 		}
 		public int GetModCount(VehicleMod modType)
 		{
-			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Handle, (int)modType);
+			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Handle, modType);
 		}
 		public void ToggleMod(VehicleToggleMod toggleMod, bool toggle)
 		{
-			Function.Call(Hash.TOGGLE_VEHICLE_MOD, Handle, (int)toggleMod, toggle);
+			Function.Call(Hash.TOGGLE_VEHICLE_MOD, Handle, toggleMod, toggle);
 		}
 		public bool IsToggleModOn(VehicleToggleMod toggleMod)
 		{
-			return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Handle, (int)toggleMod);
+			return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Handle, toggleMod);
 		}
 		public string GetModTypeName(VehicleMod modType)
 		{
-			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, (int)modType);
+			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, modType);
 		}
 		public string GetToggleModTypeName(VehicleToggleMod toggleModType)
 		{
-			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, (int)toggleModType);
+			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, toggleModType);
 		}
 		public string GetModName(VehicleMod modType, int modValue)
 		{
-			return Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Handle, (int)modType, modValue);
+			return Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Handle, modType, modValue);
 		}
 
 		public bool ExtraExists(int extra)
@@ -1499,11 +1499,11 @@ namespace GTA
 
 		public Ped GetPedOnSeat(VehicleSeat seat)
 		{
-			return new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)seat));
+			return new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, seat));
 		}
 		public bool IsSeatFree(VehicleSeat seat)
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)seat);
+			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, seat);
 		}
 
 		public void Wash()
@@ -1590,44 +1590,46 @@ namespace GTA
 
 		public VehicleDoor[] GetDoors()
 		{
-			List<VehicleDoor> list = new List<VehicleDoor>();
-			if (base.HasBone("door_dside_f"))
+			var list = new List<VehicleDoor>();
+
+			if (HasBone("door_dside_f"))
 			{
 				list.Add(VehicleDoor.FrontLeftDoor);
 			}
-			if (base.HasBone("door_pside_f"))
+			if (HasBone("door_pside_f"))
 			{
 				list.Add(VehicleDoor.FrontRightDoor);
 			}
-			if (base.HasBone("door_dside_r"))
+			if (HasBone("door_dside_r"))
 			{
 				list.Add(VehicleDoor.BackLeftDoor);
 			}
-			if (base.HasBone("door_pside_r"))
+			if (HasBone("door_pside_r"))
 			{
 				list.Add(VehicleDoor.BackRightDoor);
 			}
-			if (base.HasBone("bonnet"))
+			if (HasBone("bonnet"))
 			{
 				list.Add(VehicleDoor.Hood);
 			}
-			if (base.HasBone("hood"))
+			if (HasBone("hood"))
 			{
 				list.Add(VehicleDoor.Trunk);
 			}
+
 			return list.ToArray();
 		}
 		public void OpenDoor(VehicleDoor door, bool loose, bool instantly)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, Handle, (int)door, loose, instantly);
+			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, Handle, door, loose, instantly);
 		}
 		public void CloseDoor(VehicleDoor door, bool instantly)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, Handle, (int)door, instantly);
+			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, Handle, door, instantly);
 		}
 		public void BreakDoor(VehicleDoor door)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Handle, (int)door);
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Handle, door);
 		}
 		public bool IsDoorOpen(VehicleDoor door)
 		{
@@ -1635,15 +1637,15 @@ namespace GTA
 		}
 		public bool IsDoorBroken(VehicleDoor door)
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, Handle, (int)door);
+			return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, Handle, door);
 		}
 		public void SetDoorBreakable(VehicleDoor door, bool isBreakable)
 		{
-			Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, Handle, (int)door, isBreakable);
+			Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, Handle, door, isBreakable);
 		}
 		public float GetDoorAngleRatio(VehicleDoor door)
 		{
-			return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, (int)door);
+			return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, door);
 		}
 
 		public bool HasBombBay
@@ -1670,19 +1672,19 @@ namespace GTA
 
 		public void FixWindow(VehicleWindow window)
 		{
-			Function.Call(Hash.FIX_VEHICLE_WINDOW, Handle, (int)window);
+			Function.Call(Hash.FIX_VEHICLE_WINDOW, Handle, window);
 		}
 		public void SmashWindow(VehicleWindow window)
 		{
-			Function.Call(Hash.SMASH_VEHICLE_WINDOW, Handle, (int)window);
+			Function.Call(Hash.SMASH_VEHICLE_WINDOW, Handle, window);
 		}
 		public void RollUpWindow(VehicleWindow window)
 		{
-			Function.Call(Hash.ROLL_UP_WINDOW, Handle, (int)window);
+			Function.Call(Hash.ROLL_UP_WINDOW, Handle, window);
 		}
 		public void RollDownWindow(VehicleWindow window)
 		{
-			Function.Call(Hash.ROLL_DOWN_WINDOW, Handle, (int)window);
+			Function.Call(Hash.ROLL_DOWN_WINDOW, Handle, window);
 		}
 		public void RollDownWindows()
 		{
@@ -1690,16 +1692,16 @@ namespace GTA
 		}
 		public void RemoveWindow(VehicleWindow window)
 		{
-			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, Handle, (int)window);
+			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, Handle, window);
 		}
 
 		public bool IsNeonLightsOn(VehicleNeonLight light)
 		{
-			return Function.Call<bool>(Hash._IS_VEHICLE_NEON_LIGHT_ENABLED, Handle, (int)light);
+			return Function.Call<bool>(Hash._IS_VEHICLE_NEON_LIGHT_ENABLED, Handle, light);
 		}
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
-			Function.Call(Hash._SET_VEHICLE_NEON_LIGHT_ENABLED, Handle, (int)light, on);
+			Function.Call(Hash._SET_VEHICLE_NEON_LIGHT_ENABLED, Handle, light, on);
 		}
 
 		public void SetHeliYawPitchRollMult(float mult)
@@ -1714,7 +1716,7 @@ namespace GTA
 		{
 			if (Model.IsCargobob)
 			{
-				Function.Call(Hash._ENABLE_CARGOBOB_HOOK, Handle, (int)hook);
+				Function.Call(Hash._ENABLE_CARGOBOB_HOOK, Handle, hook);
 			}
 		}
 		public void RetractCargobobHook()
@@ -1814,7 +1816,7 @@ namespace GTA
 				return null;
 			}
 
-			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, (int)seat, 1, 1));
+			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, seat, 1, 1));
 		}
 		public Ped CreateRandomPedOnSeat(VehicleSeat seat)
 		{
@@ -1825,7 +1827,7 @@ namespace GTA
 			else
 			{
 				int pedHandle = Function.Call<int>(Hash.CREATE_RANDOM_PED, 0f, 0f, 0f);
-				Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, (int)seat);
+				Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, seat);
 
 				return new Ped(pedHandle);
 			}

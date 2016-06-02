@@ -447,15 +447,15 @@ namespace GTA
 		{
 			var res = new List<Blip>();
 
-			foreach (var sprite in Enum.GetValues(typeof(BlipSprite)))
+			foreach (BlipSprite sprite in Enum.GetValues(typeof(BlipSprite)))
 			{
-				int handle = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, (int)sprite);
+				int handle = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, sprite);
 
 				while (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
 				{
 					res.Add(new Blip(handle));
 
-					handle = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, (int)sprite);
+					handle = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, sprite);
 				}
 			}
 
@@ -1078,7 +1078,7 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP, (int)type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
 
 			if (handle == 0)
 			{
@@ -1094,7 +1094,7 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, (int)type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
 
 			if (handle == 0)
 			{
@@ -1110,7 +1110,7 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, (int)type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
 
 			if (handle == 0)
 			{
@@ -1124,7 +1124,7 @@ namespace GTA
 		{
 			Function.Call(Hash.ROPE_LOAD_TEXTURES);
 
-			return new Rope(Function.Call<int>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, (int)type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0));
+			return new Rope(Function.Call<int>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0));
 		}
 
 		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage)
@@ -1141,7 +1141,7 @@ namespace GTA
 		}
 		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble, bool invisible)
 		{
-			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, aubidble, invisible, cameraShake);
+			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 		}
 		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake)
 		{
@@ -1149,7 +1149,7 @@ namespace GTA
 		}
 		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble, bool invisible)
 		{
-			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, aubidble, invisible, cameraShake);
+			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 		}
 
 		public static int AddRelationshipGroup(string groupName)
@@ -1169,13 +1169,13 @@ namespace GTA
 		}
 		public static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
 		{
-			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group1, group2);
-			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group2, group1);
+			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, group1, group2);
+			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, group2, group1);
 		}
 		public static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
 		{
-			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group1, group2);
-			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group2, group1);
+			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, group1, group2);
+			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, group2, group1);
 		}
 
 		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options)
@@ -1184,7 +1184,7 @@ namespace GTA
 		}
 		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity)
 		{
-			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options)
 		{
@@ -1194,7 +1194,7 @@ namespace GTA
 		{
 			Vector3 target = source + direction * maxDistance;
 
-			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options)
 		{
@@ -1202,7 +1202,7 @@ namespace GTA
 		}
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity)
 		{
-			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options)
 		{
@@ -1212,7 +1212,7 @@ namespace GTA
 		{
 			Vector3 target = source + direction * maxDistance;
 
-			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		public static RaycastResult GetCrosshairCoordinates()
 		{
@@ -1227,11 +1227,11 @@ namespace GTA
 		{
 			if (!string.IsNullOrEmpty(textueDict) && !string.IsNullOrEmpty(textureName))
 			{
-				Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict, textureName, drawOnEnt);
+				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict, textureName, drawOnEnt);
 			}
 			else
 			{
-				Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
+				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
 			}
 		}
 

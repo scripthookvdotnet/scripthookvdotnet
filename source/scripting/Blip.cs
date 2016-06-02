@@ -286,7 +286,7 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.SET_BLIP_COLOUR, Handle, (int)value);
+				Function.Call(Hash.SET_BLIP_COLOUR, Handle, value);
 			}
 		}
 		public BlipSprite Sprite
@@ -297,7 +297,7 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.SET_BLIP_SPRITE, Handle, (int)value);
+				Function.Call(Hash.SET_BLIP_SPRITE, Handle, value);
 			}
 		}
 		public string Name

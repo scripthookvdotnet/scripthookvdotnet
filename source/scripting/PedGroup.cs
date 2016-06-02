@@ -109,7 +109,7 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash.SET_GROUP_FORMATION, Handle, (int)value);
+				Function.Call(Hash.SET_GROUP_FORMATION, Handle, value);
 			}
 		}
 

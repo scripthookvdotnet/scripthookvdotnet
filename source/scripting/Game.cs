@@ -358,27 +358,27 @@ namespace GTA
 		}
 		public static bool IsControlPressed(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, index, control);
 		}
 		public static bool IsControlJustPressed(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, index, control);
 		}
 		public static bool IsControlJustReleased(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, control);
 		}
 		public static bool IsEnabledControlPressed(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, index, control);
 		}
 		public static bool IsEnabledControlJustPressed(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, index, control);
 		}
 		public static bool IsEnabledControlJustReleased(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, index, control);
 		}
 		public static bool IsDisabledControlPressed(int index, Control control)
 		{
@@ -394,16 +394,16 @@ namespace GTA
 		}
 		public static bool IsControlEnabled(int index, Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, index, (int)control);
+			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, index, control);
 		}
 
 		public static void EnableControlThisFrame(int index, Control control)
 		{
-			Function.Call(Hash.ENABLE_CONTROL_ACTION, index, (int)control, true);
+			Function.Call(Hash.ENABLE_CONTROL_ACTION, index, control, true);
 		}
 		public static void DisableControlThisFrame(int index, Control control)
 		{
-			Function.Call(Hash.DISABLE_CONTROL_ACTION, index, (int)control, true);
+			Function.Call(Hash.DISABLE_CONTROL_ACTION, index, control, true);
 		}
 		public static void DisableAllControlsThisFrame(int index)
 		{
@@ -416,19 +416,19 @@ namespace GTA
 
 		public static float GetControlNormal(int index, Control control)
 		{
-			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, index, (int)control);
+			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, index, control);
 		}
 		public static float GetDisabledControlNormal(int index, Control control)
 		{
-			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, index, (int)control);
+			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, index, control);
 		}
 		public static int GetControlValue(int index, Control control)
 		{
-			return Function.Call<int>(Hash.GET_CONTROL_VALUE, index, (int)control);
+			return Function.Call<int>(Hash.GET_CONTROL_VALUE, index, control);
 		}
 		public static void SetControlNormal(int index, Control control, float value)
 		{
-			Function.Call(Hash._SET_CONTROL_NORMAL, index, (int)control, value);
+			Function.Call(Hash._SET_CONTROL_NORMAL, index, control, value);
 		}
 
 		public static void Pause(bool value)
