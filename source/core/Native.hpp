@@ -27,70 +27,79 @@ namespace GTA
 		public:
 			InputArgument(System::Object ^value);
 
-			static operator InputArgument ^(bool value)
+			virtual System::String ^ToString() override
+			{
+				return _data.ToString();
+			}
+
+			// Value Types
+			static operator InputArgument ^ (bool value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^(bool *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^(char value)
+			static operator InputArgument ^ (char value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static operator InputArgument ^(unsigned char value)
+			static operator InputArgument ^ (unsigned char value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static operator InputArgument ^(short value)
+			static operator InputArgument ^ (short value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static operator InputArgument ^(unsigned short value)
+			static operator InputArgument ^ (unsigned short value)
 			{
 				return gcnew InputArgument(static_cast<int>(value));
 			}
-			static operator InputArgument ^(int value)
+			static operator InputArgument ^ (int value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^(int *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^(unsigned int value)
+			static operator InputArgument ^ (unsigned int value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^(unsigned int *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^(float value)
+			static operator InputArgument ^ (float value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^(float *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^(double value)
+			static operator InputArgument ^ (double value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^(System::String ^value)
+
+			// String Types
+			static operator InputArgument ^ (System::String ^value)
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^(const char *value)
+			static operator InputArgument ^ (const char *value)
 			{
 				return gcnew InputArgument(gcnew System::String(value));
 			}
 
-			virtual System::String ^ToString() override
+			// Pointer Types
+			static operator InputArgument ^ (System::IntPtr value)
 			{
-				return _data.ToString();
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (bool *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
+			static operator InputArgument ^ (int *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
+			static operator InputArgument ^ (unsigned int *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
+			static operator InputArgument ^ (float *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
 			}
 
 		internal:

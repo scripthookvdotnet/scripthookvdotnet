@@ -27,9 +27,6 @@
     <ClCompile Include="source\core\Main.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\MainCore.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="source\core\Native.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -56,69 +53,6 @@
     </ClCompile>
     <ClCompile Include="source\scripting\Vector3.cpp">
       <Filter>scripting\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\UI.cpp">
-      <Filter>scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\UIElement.cpp">
-      <Filter>scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Pickup.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Camera.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Blip.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Raycast.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\World.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Scaleform.cpp">
-      <Filter>scripting\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Rope.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Tasks.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Weapon.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Game.cpp">
-      <Filter>scripting\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Entity.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Model.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Ped.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Player.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Vehicle.cpp">
-      <Filter>scripting\World</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Euphoria.cpp">
-      <Filter>scripting\NaturalMotion</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\EuphoriaBase.cpp">
-      <Filter>scripting\NaturalMotion</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\Audio.cpp">
-      <Filter>scripting\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="source\scripting\WeaponAsset.cpp">
-      <Filter>scripting\World</Filter>
     </ClCompile>
     <ClCompile Include="source\AssemblyInfo.cpp" />
   </ItemGroup>
@@ -153,94 +87,118 @@
     <ClInclude Include="source\scripting\Vector3.hpp">
       <Filter>scripting\Math</Filter>
     </ClInclude>
-    <ClInclude Include="source\scripting\UIElement.hpp">
-      <Filter>scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\UI.hpp">
-      <Filter>scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Pickup.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Camera.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Blip.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Raycast.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\World.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Scaleform.hpp">
-      <Filter>scripting\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Rope.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Tasks.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Weapon.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Game.hpp">
-      <Filter>scripting\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Controls.hpp">
-      <Filter>scripting\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Entity.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Model.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Ped.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\PedHashes.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Player.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Prop.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Vehicle.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\VehicleHashes.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\WeaponHashes.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Euphoria.hpp">
-      <Filter>scripting\NaturalMotion</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\EuphoriaBase.hpp">
-      <Filter>scripting\NaturalMotion</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\EuphoriaHelpers.hpp">
-      <Filter>scripting\NaturalMotion</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Audio.hpp">
-      <Filter>scripting\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\Interface.hpp">
-      <Filter>scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scripting\WeaponAsset.hpp">
-      <Filter>scripting\World</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="source\scripting\Test.cs">
+    <CsCompile Include="source\scripting\Blip.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Bone.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Camera.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Entity.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Model.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Ped.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\PedGroup.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\PedHash.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Pickup.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Player.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Prop.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Relationship.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Rope.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Tasks.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Vehicle.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleHash.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Weapon.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponAsset.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponHash.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\World.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Audio.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Game.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Scaleform.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\RadioStation.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Font.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Globals.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Screen.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Interfaces.cs">
       <Filter>scripting</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Controls.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Text.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Sprite.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Element.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Raycast.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Euphoria.cs">
+      <Filter>scripting\NaturalMotion</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\EuphoriaBase.cs">
+      <Filter>scripting\NaturalMotion</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\EuphoriaHelpers.cs">
+      <Filter>scripting\NaturalMotion</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>

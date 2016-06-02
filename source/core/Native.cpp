@@ -78,13 +78,13 @@ namespace GTA
 				{
 					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
 				}
-				if (type == IntPtr::typeid)
-				{
-					return static_cast<IntPtr>(value).ToInt64();
-				}
 				if (type == String::typeid)
 				{
 					return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
+				}
+				if (type == IntPtr::typeid)
+				{
+					return static_cast<IntPtr>(value).ToInt64();
 				}
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
@@ -135,6 +135,10 @@ namespace GTA
 					{
 						return String::Empty;
 					}
+				}
+				if (type == IntPtr::typeid)
+				{
+					return IntPtr(*reinterpret_cast<const long long *>(value));
 				}
 
 				// Math types

@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Include="examples\ExitVehicle.cs" />
     <Compile Include="examples\IndicatorControl.cs" />
-    <Compile Include="examples\Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
