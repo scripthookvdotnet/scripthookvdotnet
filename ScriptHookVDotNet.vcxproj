@@ -141,7 +141,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)ScriptingApi.netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" OutputAssembly="$(IntDir)ScriptingApi.netmodule" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="true" OutputAssembly="$(IntDir)ScriptingApi.netmodule" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
