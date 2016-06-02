@@ -228,14 +228,11 @@ namespace GTA
 		DollarSignSquared = 434
 	}
 
-	public sealed class Blip : IEquatable<Blip>, IHandleable
+	public sealed class Blip : PoolObject, IEquatable<Blip>
 	{
-		public Blip(int handle)
+		public Blip(int handle) : base(handle)
 		{
-			Handle = handle;
 		}
-
-		public int Handle { get; private set; }
 
 		public Vector3 Position
 		{
@@ -371,7 +368,7 @@ namespace GTA
 			Function.Call(Hash.REMOVE_BLIP, new OutputArgument(Handle));
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_BLIP_EXIST, Handle);
 		}

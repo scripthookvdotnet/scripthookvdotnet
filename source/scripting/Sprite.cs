@@ -16,6 +16,7 @@ namespace GTA.UI
 	{
 		#region Fields
 		string _textureDict, _textureName;
+		static Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
 		#endregion
 
 		public bool Enabled { get; set; }
@@ -23,14 +24,18 @@ namespace GTA.UI
 		public PointF Position { get; set; }
 		public SizeF Scale { get; set; }
 		public float Rotation { get; set; }
+		public bool Centered { get; set; }
 
-		public Sprite(string textureDict, string textureName, SizeF scale, PointF position) : this(textureDict, textureName, scale, position, Color.WhiteSmoke, 0f)
+		public Sprite(string textureDict, string textureName, SizeF scale, PointF position) : this(textureDict, textureName, scale, position, Color.WhiteSmoke, 0f, false)
 		{
 		}
-		public Sprite(string textureDict, string textureName, SizeF scale, PointF position, Color color) : this(textureDict, textureName, scale, position, color, 0f)
+		public Sprite(string textureDict, string textureName, SizeF scale, PointF position, Color color) : this(textureDict, textureName, scale, position, color, 0f, false)
 		{
 		}
-		public Sprite(string textureDict, string textureName, SizeF scale, PointF position, Color color, float rotation)
+		public Sprite(string textureDict, string textureName, SizeF scale, PointF position, Color color, float rotation) : this(textureDict, textureName, scale, position, color, rotation, false)
+		{
+		}
+		public Sprite(string textureDict, string textureName, SizeF scale, PointF position, Color color, float rotation, bool centered)
 		{
 			_textureDict = textureDict;
 			_textureName = textureName;
@@ -40,8 +45,17 @@ namespace GTA.UI
 			Position = position;
 			Color = color;
 			Rotation = rotation;
+			Centered = centered;
 
 			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+			if (_activeTextures.ContainsKey(textureDict.ToLower()))
+			{
+				_activeTextures[textureDict.ToLower()] += 1;
+			}
+			else
+			{
+				_activeTextures.Add(textureDict.ToLower(), 1);
+			}
 		}
 
 		public void Dispose()
@@ -53,7 +67,25 @@ namespace GTA.UI
 		{
 			if (disposing)
 			{
-				Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+				if (_activeTextures.ContainsKey(_textureDict.ToLower()))
+				{
+					int current = _activeTextures[_textureDict.ToLower()];
+					if (current == 1)
+					{
+						Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+						_activeTextures.Remove(_textureDict.ToLower());
+					}
+					else
+					{
+						_activeTextures[_textureDict.ToLower()] = current - 1;
+					}
+				}
+				else
+				{
+					//In practice this should never get executed
+					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _textureDict);
+				}
+
 			}
 		}
 
@@ -70,8 +102,8 @@ namespace GTA.UI
 
 			float scaleX = Scale.Width / Screen.Width;
 			float scaleY = Scale.Height / Screen.Height;
-			float positionX = ((Position.X + offset.Width) / Screen.Width) + scaleX * 0.5f;
-			float positionY = ((Position.Y + offset.Height) / Screen.Height) + scaleY * 0.5f;
+			float positionX = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? scaleX * 0.5f : 0.0f);
+			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
 
 			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
@@ -79,9 +111,11 @@ namespace GTA.UI
 	public class CustomSprite : ISprite
 	{
 		#region Fields
-		int _id, _index, _lastDrawFrame;
+		int _id;
 		static int _globalLevel = 0, _globalLastDrawFrame = 0;
 		static Dictionary<string, int> _textures = new Dictionary<string, int>();
+		static Dictionary<int, int> _lastDraw = new Dictionary<int, int>();
+		static Dictionary<int, int> _indexes = new Dictionary<int, int>();
 		#endregion
 
 		public bool Enabled { get; set; }
@@ -89,14 +123,18 @@ namespace GTA.UI
 		public PointF Position { get; set; }
 		public SizeF Scale { get; set; }
 		public float Rotation { get; set; }
+		public bool Centered { get; set; }
 
-		public CustomSprite(string filename, SizeF scale, PointF position) : this(filename, scale, position, Color.WhiteSmoke, 0.0f)
+		public CustomSprite(string filename, SizeF scale, PointF position) : this(filename, scale, position, Color.WhiteSmoke, 0.0f, false)
 		{
 		}
-		public CustomSprite(string filename, SizeF scale, PointF position, Color color) : this(filename, scale, position, color, 0.0f)
+		public CustomSprite(string filename, SizeF scale, PointF position, Color color) : this(filename, scale, position, color, 0.0f, false)
 		{
 		}
-		public CustomSprite(string filename, SizeF scale, PointF position, Color color, float rotation)
+		public CustomSprite(string filename, SizeF scale, PointF position, Color color, float rotation) : this(filename, scale, position, color, rotation, false)
+		{
+		}
+		public CustomSprite(string filename, SizeF scale, PointF position, Color color, float rotation, bool centered)
 		{
 			if (!File.Exists(filename))
 			{
@@ -112,12 +150,21 @@ namespace GTA.UI
 				_id = MemoryAccess.CreateTexture(filename);
 				_textures.Add(filename, _id);
 			}
+			if (!_indexes.ContainsKey(_id))
+			{
+				_indexes.Add(_id, 0);
+			}
+			if (!_lastDraw.ContainsKey(_id))
+			{
+				_lastDraw.Add(_id, 0);
+			}
 
 			Enabled = true;
 			Scale = scale;
 			Position = position;
 			Color = color;
 			Rotation = rotation;
+			Centered = centered;
 		}
 
 		public void Draw()
@@ -133,10 +180,10 @@ namespace GTA.UI
 
 			int frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
 
-			if (_lastDrawFrame != frameCount)
+			if (_lastDraw[_id] != frameCount)
 			{
-				_index = 0;
-				_lastDrawFrame = frameCount;
+				_lastDraw[_id] = frameCount;
+				_indexes[_id] = 0;
 			}
 			if (_globalLastDrawFrame != frameCount)
 			{
@@ -148,10 +195,10 @@ namespace GTA.UI
 
 			float scaleX = Scale.Width / Screen.Width;
 			float scaleY = Scale.Height / Screen.Height;
-			float positionX = ((Position.X + offset.Width) / Screen.Width) + scaleX * 0.5f;
-			float positionY = ((Position.Y + offset.Height) / Screen.Height) + scaleY * 0.5f;
+			float positionX = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? scaleX * 0.5f : 0.0f);
+			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
 
-			MemoryAccess.DrawTexture(_id, _index++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color);
+			MemoryAccess.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color);
 		}
 	}
 }

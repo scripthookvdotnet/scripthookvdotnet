@@ -79,14 +79,11 @@ namespace GTA
 		AmmoGrenadeLauncherMP = 2753668402u
 	}
 
-	public sealed class Pickup : IEquatable<Pickup>, IHandleable
+	public sealed class Pickup : PoolObject, IEquatable<Pickup>
 	{
-		public Pickup(int handle)
+		public Pickup(int handle) : base(handle)
 		{
-			Handle = handle;
 		}
-
-		public int Handle { get; private set; }
 
 		public Vector3 Position
 		{
@@ -109,7 +106,7 @@ namespace GTA
 			Function.Call(Hash.REMOVE_PICKUP, Handle);
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_PICKUP_EXIST, Handle);
 		}

@@ -13,7 +13,7 @@ namespace GTA
 		Line
 	}
 
-	public class PedGroup : IEquatable<PedGroup>, IEnumerable<Ped>, IHandleable, IDisposable
+	public class PedGroup : PoolObject, IEquatable<PedGroup>, IEnumerable<Ped>, IDisposable
 	{
 		public class Enumerator : IEnumerator<Ped>
 		{
@@ -67,13 +67,11 @@ namespace GTA
 			}
 		}
 
-		public PedGroup()
+		public PedGroup() : base(Function.Call<int>(Hash.CREATE_GROUP, 0))
 		{
-			Handle = Function.Call<int>(Hash.CREATE_GROUP, 0);
 		}
-		public PedGroup(int handle)
+		public PedGroup(int handle) : base(handle)
 		{
-			Handle = handle;
 		}
 
 		public void Dispose()
@@ -180,7 +178,7 @@ namespace GTA
 			return result;
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_GROUP_EXIST, Handle);
 		}

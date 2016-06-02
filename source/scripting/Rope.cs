@@ -9,14 +9,11 @@ namespace GTA
 		Normal = 4
 	}
 
-	public sealed class Rope : IEquatable<Rope>, IHandleable
+	public sealed class Rope : PoolObject, IEquatable<Rope>
 	{
-		public Rope(int handle)
+		public Rope(int handle) : base(handle)
 		{
-			Handle = handle;
 		}
-
-		public int Handle { get; private set; }
 
 		public float Length
 		{
@@ -85,7 +82,7 @@ namespace GTA
 			Function.Call(Hash.DELETE_ROPE, new OutputArgument(Handle));
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ROPE_EXIST, new OutputArgument(Handle));
 		}

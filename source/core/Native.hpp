@@ -17,11 +17,20 @@
 #pragma once
 
 #include "NativeHashes.hpp"
+#include "PoolObject.hpp"
 
 namespace GTA
 {
 	namespace Native
 	{
+		public interface class INativeValue
+		{
+		public:
+			property System::UInt64 NativeValue
+			{
+				System::UInt64 get();
+			}
+		};
 		public ref class InputArgument
 		{
 		public:
@@ -100,6 +109,20 @@ namespace GTA
 			static operator InputArgument ^ (float *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
+			}
+
+			//INativeValue
+			static operator InputArgument ^ (INativeValue ^value)
+			{
+				return gcnew InputArgument(value->NativeValue);
+			}
+			static operator InputArgument ^ (GTA::PoolObject ^value)
+			{
+				return gcnew InputArgument(value->Handle);
+			}
+			static operator InputArgument ^ (System::Enum^ value)
+			{
+				return gcnew InputArgument(value);
 			}
 
 		internal:
