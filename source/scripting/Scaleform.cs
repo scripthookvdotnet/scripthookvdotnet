@@ -17,7 +17,7 @@ namespace GTA
 		}
 	}
 
-	public sealed class Scaleform : IDisposable
+	public sealed class Scaleform : IDisposable, INativeValue
 	{
 		public Scaleform(string scaleformID)
 		{
@@ -35,6 +35,14 @@ namespace GTA
 		}
 
 		public int Handle { get; private set; }
+
+		public ulong NativeValue
+		{
+			get
+			{
+				return (ulong)Handle;
+			}
+		}
 
 		public bool IsValid
 		{

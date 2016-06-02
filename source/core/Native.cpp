@@ -70,6 +70,14 @@ namespace GTA
 				{
 					return static_cast<unsigned int>(value);
 				}
+				if (type == Int64::typeid)
+				{
+					return static_cast<long long>(value);
+				}
+				if (type == UInt64::typeid)
+				{
+					return static_cast<unsigned long long>(value);
+				}
 				if (type == Single::typeid)
 				{
 					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
@@ -86,7 +94,34 @@ namespace GTA
 				{
 					return static_cast<IntPtr>(value).ToInt64();
 				}
-
+				if (GTA::PoolObject::typeid->IsAssignableFrom(type))
+				{
+					return static_cast<GTA::PoolObject^>(value)->Handle;
+				}
+				if (INativeValue::typeid->IsAssignableFrom(type))
+				{
+					return static_cast<INativeValue^>(value)->NativeValue;
+				}
+				if (Enum::typeid->IsAssignableFrom(type))
+				{
+					Type ^eType = Enum::GetUnderlyingType(type);
+					if (eType == Int32::typeid)
+					{
+						return Convert::ToInt32(value);
+					}
+					else if (eType == UInt32::typeid)
+					{
+						return Convert::ToUInt32(value);
+					}
+					else if (eType == Int64::typeid)
+					{
+						return Convert::ToInt64(value);
+					}
+					else if (eType == UInt64::typeid)
+					{
+						return Convert::ToUInt64(value);
+					}
+				}
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
 			Object ^ObjectFromNative(Type ^type, UInt64 *value)

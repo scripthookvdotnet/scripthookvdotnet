@@ -120,6 +120,10 @@ namespace GTA
 			{
 				return gcnew InputArgument(value->Handle);
 			}
+			static operator InputArgument ^ (System::Enum^ value)
+			{
+				return gcnew InputArgument(value);
+			}
 
 		internal:
 			System::UInt64 _data;

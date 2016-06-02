@@ -4,7 +4,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public struct Model : IEquatable<Model>
+	public struct Model : IEquatable<Model>, INativeValue
 	{
 		public Model(int hash) : this()
 		{
@@ -24,6 +24,14 @@ namespace GTA
 		}
 
 		public int Hash { get; private set; }
+
+		public ulong NativeValue
+		{
+			get
+			{
+				return (ulong)Hash;
+			}
+		}
 
 		public bool IsValid
 		{
