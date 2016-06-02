@@ -154,7 +154,7 @@ namespace GTA
 
 					return gcnew Math::Vector3(data[0], data[2], data[4]);
 				}
-				if (GTA::IHandleable::typeid->IsAssignableFrom(type))
+				if (GTA::PoolObject::typeid->IsAssignableFrom(type))
 				{
 					return Activator::CreateInstance(type, gcnew array<Object ^>(1){ *reinterpret_cast<const int *>(value) });
 				}

@@ -19,7 +19,7 @@ namespace GTA
 		DeathFail
 	}
 
-	public sealed class Camera : IEquatable<Camera>, IHandleable, ISpatial
+ public sealed class Camera : PoolObject, IEquatable<Camera>, ISpatial
 	{
 		#region Fields
 		internal static readonly string[] _shakeNames = {
@@ -36,13 +36,9 @@ namespace GTA
 			"DEATH_FAIL_IN_EFFECT_SHAKE"
 		};
 		#endregion
-
-		public Camera(int handle)
-		{
-			Handle = handle;
-		}
-
-		public int Handle { get; private set; }
+  public Camera(int handle) :base(handle)
+  {
+  }
 
 		public bool IsActive
 		{
@@ -270,7 +266,7 @@ namespace GTA
 			Function.Call(Hash.DESTROY_CAM, Handle, 0);
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_CAM_EXIST, Handle);
 		}

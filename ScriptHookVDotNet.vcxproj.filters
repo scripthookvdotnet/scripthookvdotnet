@@ -66,6 +66,9 @@
     <ClInclude Include="source\core\NativeMemory.hpp">
       <Filter>core</Filter>
     </ClInclude>
+	<ClInclude Include="source\core\PoolObject.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\Script.hpp">
       <Filter>core</Filter>
     </ClInclude>

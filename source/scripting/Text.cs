@@ -4,12 +4,12 @@ using GTA.Native;
 
 namespace GTA.UI
 {
-    public enum TextAlignment
-    {
-        Center = 0,
-        Left = 1,
-        Right = 2,
-    }
+	public enum TextAlignment
+	{
+		Center = 0,
+		Left = 1,
+		Right = 2,
+	}
 	public class Text : IElement
 	{
 		public bool Enabled { get; set; }
@@ -18,42 +18,47 @@ namespace GTA.UI
 		public float Scale { get; set; }
 		public Font Font { get; set; }
 		public string Caption { get; set; }
-        public TextAlignment Alignment { get; set; }
+		public TextAlignment Alignment { get; set; }
 		public bool Shadow { get; set; }
 		public bool Outline { get; set; }
-        public float WrapWidth { get; set; }
-        public bool Centered
-        {
-            get
-            {
-                return Alignment == TextAlignment.Center;
-            }
-            set
-            {
-                if (value)
-                {
-                    Alignment = TextAlignment.Center;
-                }
-            }
-        }
+		public float WrapWidth { get; set; }
+		public bool Centered
+		{
+			get
+			{
+				return Alignment == TextAlignment.Center;
+			}
+			set
+			{
+				if (value)
+				{
+					Alignment = TextAlignment.Center;
+				}
+			}
+		}
 
 
-		public Text(string caption, PointF position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
+		public Text(string caption, PointF position, float scale)
+			: this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
-		public Text(string caption, PointF position, float scale, Color color) : this(caption, position, scale, color, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
+		public Text(string caption, PointF position, float scale, Color color)
+			: this(caption, position, scale, color, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
-        public Text(string caption, PointF position, float scale, Color color, Font font) : this(caption, position, scale, color, font, TextAlignment.Left, false, false, 0.0f)
-        {
-        }
-        public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment) : this(caption, position, scale, color, font, alignment, false, false, 0.0f)
+		public Text(string caption, PointF position, float scale, Color color, Font font)
+			: this(caption, position, scale, color, font, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
-        public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline) :this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
-        {
-        }
-        public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline, float wrapWidth)
+		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment)
+			: this(caption, position, scale, color, font, alignment, false, false, 0.0f)
+		{
+		}
+		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline)
+			: this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
+		{
+		}
+		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline, float wrapWidth)
 		{
 			Enabled = true;
 			Caption = caption;
@@ -64,7 +69,7 @@ namespace GTA.UI
 			Alignment = alignment;
 			Shadow = shadow;
 			Outline = outline;
-            WrapWidth = wrapWidth;
+			WrapWidth = wrapWidth;
 		}
 
 		public virtual void Draw()
@@ -80,7 +85,7 @@ namespace GTA.UI
 
 			float x = (Position.X + offset.Width) / Screen.Width;
 			float y = (Position.Y + offset.Height) / Screen.Height;
-            float w = WrapWidth / Screen.Width;
+			float w = WrapWidth / Screen.Width;
 
 			if (Shadow)
 			{
@@ -94,7 +99,7 @@ namespace GTA.UI
 			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-            Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
+			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
 			if (WrapWidth > 0.0f)
 			{
 				switch (Alignment)

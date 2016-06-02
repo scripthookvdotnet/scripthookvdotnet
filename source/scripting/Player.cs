@@ -25,16 +25,14 @@ namespace GTA
 		Sunrise
 	}
 
-	public sealed class Player : IEquatable<Player>, IHandleable
+	public sealed class Player : PoolObject, IEquatable<Player>
 	{
 		public Player(int handle)
+			: base(handle)
 		{
-			Handle = handle;
 		}
 
 		Ped _ped;
-
-		public int Handle { get; private set; }
 
 		public Ped Character
 		{
@@ -406,7 +404,7 @@ namespace GTA
 			Function.Call(Hash.SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle.Handle);
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return true;
 		}

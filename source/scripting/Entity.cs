@@ -14,14 +14,11 @@ namespace GTA
 		ForceRotPlusForce
 	}
 
-	public abstract class Entity : IEquatable<Entity>, IHandleable, ISpatial
+ public abstract class Entity : PoolObject, IEquatable<Entity>, ISpatial
 	{
-		public Entity(int handle)
-		{
-			Handle = handle;
-		}
-
-		public int Handle { get; private set; }
+  public Entity(int handle) : base(handle)
+  {
+  }
 		public IntPtr MemoryAddress
 		{
 			get
@@ -689,7 +686,7 @@ namespace GTA
 			Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, new OutputArgument(Handle));
 		}
 
-		public bool Exists()
+		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, Handle);
 		}
