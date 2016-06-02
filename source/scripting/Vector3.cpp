@@ -207,7 +207,8 @@ namespace GTA
 		}
 		Vector3 Vector3::Divide(Vector3 value, float scale)
 		{
-			return Vector3(value.X / scale, value.Y / scale, value.Z / scale);
+			float invScale = 1.0f / scale;
+			return Vector3(value.X * invScale, value.Y * invScale, value.Z * invScale);
 		}
 		Vector3 Vector3::Negate(Vector3 value)
 		{
@@ -314,7 +315,8 @@ namespace GTA
 		}
 		Vector3 Vector3::operator / (Vector3 value, float scale)
 		{
-			return Vector3(value.X / scale, value.Y / scale, value.Z / scale);
+			float invScale = 1.0f / scale;
+			return Vector3(value.X * invScale, value.Y * invScale, value.Z * invScale);
 		}
 		bool Vector3::operator == (Vector3 left, Vector3 right)
 		{

@@ -144,7 +144,7 @@ namespace GTA.UI
 			Function.Call(Hash.HIDE_HUD_COMPONENT_THIS_FRAME, (int)component);
 		}
 
-		public static PointF WorldToScreen(Vector3 position)
+		public static PointF WorldToScreen(Vector3 position, bool scaleWidth = false)
 		{
 			var pointX = new OutputArgument();
 			var pointY = new OutputArgument();
@@ -154,7 +154,7 @@ namespace GTA.UI
 				return PointF.Empty;
 			}
 
-			return new PointF(pointX.GetResult<float>() * Width, pointY.GetResult<float>() * Height);
+			return new PointF(pointX.GetResult<float>() * (scaleWidth ? ScaledWidth : Width), pointY.GetResult<float>() * Height);
 		}
 	}
 }

@@ -157,25 +157,26 @@ namespace GTA
 			float Det = Determinant();
 			if (Det == 0.0f)
 				return;
-			float tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) / Det;
-			float tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) / Det;
-			float tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) / Det;
-			float tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) / Det;
+			float invDet = 1.0f / Det;
+			float tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
+			float tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
+			float tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
+			float tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
 
-			float tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) / Det;
-			float tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) / Det;
-			float tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) / Det;
-			float tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) / Det;
+			float tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
+			float tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
+			float tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
+			float tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
 
-			float tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) / Det;
-			float tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) / Det;
-			float tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) / Det;
-			float tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) / Det;
+			float tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
+			float tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
+			float tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
+			float tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
 
-			float tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) / Det;
-			float tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) / Det;
-			float tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) / Det;
-			float tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) / Det;
+			float tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
+			float tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
+			float tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
+			float tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
 
 			M11 = tM11;
 			M12 = tM12;
@@ -699,22 +700,23 @@ namespace GTA
 		Matrix Matrix::operator / (Matrix left, float right)
 		{
 			Matrix result;
-			result.M11 = left.M11 / right;
-			result.M12 = left.M12 / right;
-			result.M13 = left.M13 / right;
-			result.M14 = left.M14 / right;
-			result.M21 = left.M21 / right;
-			result.M22 = left.M22 / right;
-			result.M23 = left.M23 / right;
-			result.M24 = left.M24 / right;
-			result.M31 = left.M31 / right;
-			result.M32 = left.M32 / right;
-			result.M33 = left.M33 / right;
-			result.M34 = left.M34 / right;
-			result.M41 = left.M41 / right;
-			result.M42 = left.M42 / right;
-			result.M43 = left.M43 / right;
-			result.M44 = left.M44 / right;
+			float invRight = 1.0f / right;
+			result.M11 = left.M11 * invRight;
+			result.M12 = left.M12 * invRight;
+			result.M13 = left.M13 * invRight;
+			result.M14 = left.M14 * invRight;
+			result.M21 = left.M21 * invRight;
+			result.M22 = left.M22 * invRight;
+			result.M23 = left.M23 * invRight;
+			result.M24 = left.M24 * invRight;
+			result.M31 = left.M31 * invRight;
+			result.M32 = left.M32 * invRight;
+			result.M33 = left.M33 * invRight;
+			result.M34 = left.M34 * invRight;
+			result.M41 = left.M41 * invRight;
+			result.M42 = left.M42 * invRight;
+			result.M43 = left.M43 * invRight;
+			result.M44 = left.M44 * invRight;
 			return result;
 		}
 		Matrix Matrix::operator + (Matrix left, Matrix right)
