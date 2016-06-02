@@ -14,6 +14,8 @@ namespace GTA.UI
 
 		void Draw();
 		void Draw(SizeF offset);
+		void ScaledDraw();
+		void ScaledDraw(SizeF offset);
 	}
 
 	public class Rectangle : IElement
@@ -56,6 +58,24 @@ namespace GTA.UI
 			float w = Size.Width / Screen.Width;
 			float h = Size.Height / Screen.Height;
 			float x = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? w * 0.5f : 0.0f);
+			float y = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? h * 0.5f : 0.0f);
+
+			Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
+		}
+		public virtual void ScaledDraw()
+		{
+			ScaledDraw(SizeF.Empty);
+		}
+		public virtual void ScaledDraw(SizeF offset)
+		{
+			if (!Enabled)
+			{
+				return;
+			}
+
+			float w = Size.Width / Screen.ScaledWidth;
+			float h = Size.Height / Screen.Height;
+			float x = ((Position.X + offset.Width) / Screen.ScaledWidth) + ((!Centered) ? w * 0.5f : 0.0f);
 			float y = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? h * 0.5f : 0.0f);
 
 			Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
@@ -105,6 +125,31 @@ namespace GTA.UI
 			foreach (var item in Items)
 			{
 				item.Draw(newOfset);
+			}
+		}
+		public override void ScaledDraw()
+		{
+			ScaledDraw(SizeF.Empty);
+		}
+		public override void ScaledDraw(SizeF offset)
+		{
+			if (!Enabled)
+			{
+				return;
+			}
+
+			base.ScaledDraw(offset);
+
+			SizeF newOfset = new SizeF(Position + offset);
+
+			if (Centered)
+			{
+				newOfset -= new SizeF(Size.Width / 2.0f, Size.Height / 2.0f);
+			}
+
+			foreach (var item in Items)
+			{
+				item.ScaledDraw(newOfset);
 			}
 		}
 	}
