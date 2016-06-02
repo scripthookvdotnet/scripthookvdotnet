@@ -20,6 +20,15 @@
 
 namespace GTA
 {
+	public interface class IHandleable
+	{
+	public:
+		property int Handle
+		{
+			int get();
+		}
+		bool Exists();
+	};
 	namespace Native
 	{
 		public ref class InputArgument
@@ -100,6 +109,12 @@ namespace GTA
 			static operator InputArgument ^ (float *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
+			}
+
+			//IHandleable
+			static operator InputArgument ^ (GTA::IHandleable ^value)
+			{
+				return gcnew InputArgument(value->Handle);
 			}
 
 		internal:
