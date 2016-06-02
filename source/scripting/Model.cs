@@ -31,6 +31,10 @@ namespace GTA
 			{
 				return (ulong)Hash;
 			}
+			set
+			{
+				Hash = unchecked((int)value);
+			}
 		}
 
 		public bool IsValid

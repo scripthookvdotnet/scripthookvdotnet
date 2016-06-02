@@ -87,8 +87,6 @@ namespace GTA
 			}
 		}
 
-		public int Handle { get; private set; }
-
 		public int MemberCount
 		{
 			get

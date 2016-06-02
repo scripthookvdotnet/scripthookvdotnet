@@ -17,7 +17,6 @@
 #pragma once
 
 #include "NativeHashes.hpp"
-#include "PoolObject.hpp"
 
 namespace GTA
 {
@@ -25,12 +24,13 @@ namespace GTA
 	{
 		public interface class INativeValue
 		{
-		public:
 			property System::UInt64 NativeValue
 			{
 				System::UInt64 get();
-			}
+				void set(System::UInt64 value);
+			};
 		};
+
 		public ref class InputArgument
 		{
 		public:
@@ -41,7 +41,7 @@ namespace GTA
 				return _data.ToString();
 			}
 
-			// Value Types
+			// Value types
 			static operator InputArgument ^ (bool value)
 			{
 				return gcnew InputArgument(value);
@@ -76,10 +76,18 @@ namespace GTA
 			}
 			static operator InputArgument ^ (double value)
 			{
+				return gcnew InputArgument(static_cast<float>(value));
+			}
+			static operator InputArgument ^ (System::Enum ^value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (INativeValue ^value)
+			{
 				return gcnew InputArgument(value);
 			}
 
-			// String Types
+			// String types
 			static operator InputArgument ^ (System::String ^value)
 			{
 				return gcnew InputArgument(value);
@@ -89,7 +97,7 @@ namespace GTA
 				return gcnew InputArgument(gcnew System::String(value));
 			}
 
-			// Pointer Types
+			// Pointer types
 			static operator InputArgument ^ (System::IntPtr value)
 			{
 				return gcnew InputArgument(value);
@@ -109,20 +117,6 @@ namespace GTA
 			static operator InputArgument ^ (float *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
-			}
-
-			//INativeValue
-			static operator InputArgument ^ (INativeValue ^value)
-			{
-				return gcnew InputArgument(value->NativeValue);
-			}
-			static operator InputArgument ^ (GTA::PoolObject ^value)
-			{
-				return gcnew InputArgument(value->Handle);
-			}
-			static operator InputArgument ^ (System::Enum^ value)
-			{
-				return gcnew InputArgument(value);
 			}
 
 		internal:

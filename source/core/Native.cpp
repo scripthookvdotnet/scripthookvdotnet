@@ -55,28 +55,32 @@ namespace GTA
 					return 0;
 				}
 
-				Type ^type = value->GetType();
+				auto type = value->GetType();
 
-				// Fundamental types
+				if (type->IsEnum)
+				{
+					value = Convert::ChangeType(value, type = Enum::GetUnderlyingType(type));
+				}
+
 				if (type == Boolean::typeid)
 				{
 					return static_cast<bool>(value) ? 1 : 0;
 				}
 				if (type == Int32::typeid)
 				{
-					return static_cast<int>(value);
+					return static_cast<Int32>(value);
 				}
 				if (type == UInt32::typeid)
 				{
-					return static_cast<unsigned int>(value);
+					return static_cast<UInt32>(value);
 				}
 				if (type == Int64::typeid)
 				{
-					return static_cast<long long>(value);
+					return static_cast<Int64>(value);
 				}
 				if (type == UInt64::typeid)
 				{
-					return static_cast<unsigned long long>(value);
+					return static_cast<UInt64>(value);
 				}
 				if (type == Single::typeid)
 				{
@@ -86,66 +90,50 @@ namespace GTA
 				{
 					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
 				}
+
 				if (type == String::typeid)
 				{
 					return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
 				}
+
 				if (type == IntPtr::typeid)
 				{
 					return static_cast<IntPtr>(value).ToInt64();
 				}
-				if (GTA::PoolObject::typeid->IsAssignableFrom(type))
-				{
-					return static_cast<GTA::PoolObject^>(value)->Handle;
-				}
+
 				if (INativeValue::typeid->IsAssignableFrom(type))
 				{
-					return static_cast<INativeValue^>(value)->NativeValue;
+					return static_cast<INativeValue ^>(value)->NativeValue;
 				}
-				if (Enum::typeid->IsAssignableFrom(type))
-				{
-					Type ^eType = Enum::GetUnderlyingType(type);
-					if (eType == Int32::typeid)
-					{
-						return Convert::ToInt32(value);
-					}
-					else if (eType == UInt32::typeid)
-					{
-						return Convert::ToUInt32(value);
-					}
-					else if (eType == Int64::typeid)
-					{
-						return Convert::ToInt64(value);
-					}
-					else if (eType == UInt64::typeid)
-					{
-						return Convert::ToUInt64(value);
-					}
-				}
+
 				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
 			}
 			Object ^ObjectFromNative(Type ^type, UInt64 *value)
 			{
-				// Fundamental types
+				if (type->IsEnum)
+				{
+					type = Enum::GetUnderlyingType(type);
+				}
+
 				if (type == Boolean::typeid)
 				{
 					return *reinterpret_cast<const int *>(value) != 0;
 				}
 				if (type == Int32::typeid)
 				{
-					return *reinterpret_cast<const int *>(value);
+					return *reinterpret_cast<const Int32 *>(value);
 				}
 				if (type == UInt32::typeid)
 				{
-					return *reinterpret_cast<const unsigned int *>(value);
+					return *reinterpret_cast<const UInt32 *>(value);
 				}
 				if (type == Int64::typeid)
 				{
-					return *reinterpret_cast<const long long *>(value);
+					return *reinterpret_cast<const Int64 *>(value);
 				}
 				if (type == UInt64::typeid)
 				{
-					return *reinterpret_cast<const unsigned long long *>(value);
+					return *reinterpret_cast<const UInt64 *>(value);
 				}
 				if (type == Single::typeid)
 				{
@@ -155,9 +143,10 @@ namespace GTA
 				{
 					return static_cast<double>(*reinterpret_cast<const float *>(value));
 				}
+
 				if (type == String::typeid)
 				{
-					if (*value != 0)
+					if (*value != '\0')
 					{
 						const auto size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
 						const auto bytes = gcnew array<Byte>(size);
@@ -171,12 +160,12 @@ namespace GTA
 						return String::Empty;
 					}
 				}
+
 				if (type == IntPtr::typeid)
 				{
-					return IntPtr(*reinterpret_cast<const long long *>(value));
+					return IntPtr(*reinterpret_cast<const Int64 *>(value));
 				}
 
-				// Math types
 				if (type == Math::Vector2::typeid)
 				{
 					const auto data = reinterpret_cast<const float *>(value);
@@ -189,9 +178,14 @@ namespace GTA
 
 					return gcnew Math::Vector3(data[0], data[2], data[4]);
 				}
-				if (GTA::PoolObject::typeid->IsAssignableFrom(type))
+
+				if (INativeValue::typeid->IsAssignableFrom(type))
 				{
-					return Activator::CreateInstance(type, gcnew array<Object ^>(1){ *reinterpret_cast<const int *>(value) });
+					// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
+					auto result = static_cast<INativeValue ^>(Runtime::Serialization::FormatterServices::GetUninitializedObject(type));
+					result->NativeValue = *value;
+
+					return result;
 				}
 
 				throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));

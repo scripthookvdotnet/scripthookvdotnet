@@ -81,7 +81,6 @@
     <ClInclude Include="source\core\Native.hpp" />
     <ClInclude Include="source\core\NativeHashes.hpp" />
     <ClInclude Include="source\core\NativeMemory.hpp" />
-	<ClInclude Include="source\core\PoolObject.hpp" />
     <ClInclude Include="source\core\Script.hpp" />
     <ClInclude Include="source\core\ScriptDomain.hpp" />
     <ClInclude Include="source\core\Settings.hpp" />

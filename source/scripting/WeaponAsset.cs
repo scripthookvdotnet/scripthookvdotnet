@@ -3,7 +3,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public struct WeaponAsset : IEquatable<WeaponAsset>
+	public struct WeaponAsset : IEquatable<WeaponAsset>, INativeValue
 	{
 		public WeaponAsset(int hash) : this()
 		{
@@ -17,6 +17,11 @@ namespace GTA
 		}
 
 		public int Hash { get; private set; }
+		public ulong NativeValue
+		{
+			get { return (ulong)Hash; }
+			set { Hash = unchecked((int)value); }
+		}
 
 		public bool IsValid
 		{

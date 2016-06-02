@@ -42,6 +42,10 @@ namespace GTA
 			{
 				return (ulong)Handle;
 			}
+			set
+			{
+				Handle = unchecked((int)value);
+			}
 		}
 
 		public bool IsValid
