@@ -214,7 +214,15 @@ namespace GTA
 	}
 	void Tasks::ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading)
 	{
-		Native::Function::Call(Native::Hash::TASK_VEHICLE_PARK, _ped->Handle, vehicle->Handle, position.X, position.Y, position.Z, heading, 1, 0.0f, false);
+		Native::Function::Call(Native::Hash::TASK_VEHICLE_PARK, _ped->Handle, vehicle->Handle, position.X, position.Y, position.Z, heading, 1, 20.0f, false);
+	}
+	void Tasks::ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading, float radius)
+	{
+		Native::Function::Call(Native::Hash::TASK_VEHICLE_PARK, _ped->Handle, vehicle->Handle, position.X, position.Y, position.Z, heading, 1, radius, false);
+	}
+	void Tasks::ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading, float radius, bool keepEngineOn)
+	{
+		Native::Function::Call(Native::Hash::TASK_VEHICLE_PARK, _ped->Handle, vehicle->Handle, position.X, position.Y, position.Z, heading, 1, radius, keepEngineOn);
 	}
 	void Tasks::PerformSequence(TaskSequence ^sequence)
 	{
