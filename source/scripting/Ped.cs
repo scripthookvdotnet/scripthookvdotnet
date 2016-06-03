@@ -932,15 +932,15 @@ namespace GTA
 			Function.Call(Hash.SET_PED_DEFAULT_COMPONENT_VARIATION, Handle);
 		}
 
-		public int RelationshipGroup
+		public RelationshipGroup RelationshipGroup
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_PED_RELATIONSHIP_GROUP_HASH, Handle);
+				return new GTA.RelationshipGroup(Function.Call<int>(Hash.GET_PED_RELATIONSHIP_GROUP_HASH, Handle));
 			}
 			set
 			{
-				Function.Call(Hash.SET_PED_RELATIONSHIP_GROUP_HASH, Handle, value);
+				Function.Call(Hash.SET_PED_RELATIONSHIP_GROUP_HASH, Handle, value.Hash);
 			}
 		}
 		public bool IsInGroup

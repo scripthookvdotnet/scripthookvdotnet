@@ -101,6 +101,7 @@
     <CsCompile Include="source\scripting\Blip.cs" />
     <CsCompile Include="source\scripting\Bone.cs" />
     <CsCompile Include="source\scripting\Camera.cs" />
+    <CsCompile Include="source\scripting\Checkpoint.cs" />
     <CsCompile Include="source\scripting\Controls.cs" />
     <CsCompile Include="source\scripting\Entity.cs" />
     <CsCompile Include="source\scripting\Euphoria.cs" />
@@ -121,6 +122,7 @@
     <CsCompile Include="source\scripting\RadioStation.cs" />
     <CsCompile Include="source\scripting\Raycast.cs" />
     <CsCompile Include="source\scripting\Relationship.cs" />
+    <CsCompile Include="source\scripting\RelationshipGroup.cs" />
     <CsCompile Include="source\scripting\Rope.cs" />
     <CsCompile Include="source\scripting\Scaleform.cs" />
     <CsCompile Include="source\scripting\Screen.cs" />

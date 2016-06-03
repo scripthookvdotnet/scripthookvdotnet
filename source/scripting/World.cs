@@ -1120,6 +1120,18 @@ namespace GTA
 			return new Prop(handle);
 		}
 
+		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
+
+			if (handle == 0)
+			{
+				return null;
+			}
+
+			return new Checkpoint(handle);
+		}
+
 		public static Rope AddRope(RopeType type, Vector3 position, Vector3 rotation, float length, float minLength, bool breakable)
 		{
 			Function.Call(Hash.ROPE_LOAD_TEXTURES);
@@ -1152,30 +1164,12 @@ namespace GTA
 			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 		}
 
-		public static int AddRelationshipGroup(string groupName)
+		public static RelationshipGroup AddRelationshipGroup(string name)
 		{
-			var groupArg = new OutputArgument();
-			Function.Call(Hash.ADD_RELATIONSHIP_GROUP, groupName, groupArg);
+			var resultArg = new OutputArgument();
+			Function.Call(Hash.ADD_RELATIONSHIP_GROUP, name, resultArg);
 
-			return groupArg.GetResult<int>();
-		}
-		public static void RemoveRelationshipGroup(int group)
-		{
-			Function.Call(Hash.REMOVE_RELATIONSHIP_GROUP, group);
-		}
-		public static Relationship GetRelationshipBetweenGroups(int group1, int group2)
-		{
-			return (Relationship)Function.Call<int>(Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2);
-		}
-		public static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-		{
-			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, group1, group2);
-			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, group2, group1);
-		}
-		public static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-		{
-			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, group1, group2);
-			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, group2, group1);
+			return new RelationshipGroup(resultArg.GetResult<int>());
 		}
 
 		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options)

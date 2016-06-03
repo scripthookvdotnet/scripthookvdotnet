@@ -200,5 +200,11 @@
     <CsCompile Include="source\scripting\EuphoriaHelpers.cs">
       <Filter>scripting\NaturalMotion</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\RelationshipGroup.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Checkpoint.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>
