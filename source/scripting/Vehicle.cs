@@ -736,6 +736,18 @@ namespace GTA
 
 		public bool IsWanted
 		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+				//Unsure of the exact version this switched, but all others in the rangs are the same
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x84C : 0x83C;
+
+				return (MemoryAccess.ReadByte(memoryAddress + offset) & 8) != 0;
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_IS_WANTED, Handle, value);
@@ -744,6 +756,18 @@ namespace GTA
 
 		public bool ProvidesCover
 		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+				//Unsure of the exact version this switched, but all others in the rangs are the same
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x84C : 0x82C;
+
+				return (MemoryAccess.ReadByte(memoryAddress + offset) & 4) != 0;
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_PROVIDES_COVER, Handle, value);
@@ -751,7 +775,24 @@ namespace GTA
 		}
 
 		public bool DropsMoneyOnExplosion
-		{
+		{		   
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+				//Unsure of the exact version this switched or if it switched over a few title updates
+				//as its shifted by 0x20 bytes where as rest are only 0x10 bytes
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xA98 : 0xA78;
+
+				if (MemoryAccess.ReadInt(memoryAddress + offset) <= 8)
+				{
+					return (MemoryAccess.ReadByte(memoryAddress + 0x12F9) & 2) != 0;
+				}
+				return false;
+			}
 			set
 			{
 				Function.Call(Hash._SET_VEHICLE_CREATES_MONEY_PICKUPS_WHEN_EXPLODED, Handle, value);
@@ -828,6 +869,17 @@ namespace GTA
 		}
 		public bool InteriorLightOn
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x841 : 0x831;
+
+				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 6)) != 0;
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_INTERIORLIGHT, Handle, value);

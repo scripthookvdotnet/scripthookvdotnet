@@ -196,6 +196,21 @@ namespace GTA
 
 		public bool HasGravity
 		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return true;
+				}
+				memoryAddress = MemoryAccess.ReadPtr(memoryAddress + 48);
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return true;
+				}
+				return (MemoryAccess.ReadShort(memoryAddress + 26) & 16) == 0;
+
+			}
 			set
 			{
 				Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);

@@ -94,6 +94,17 @@ namespace GTA.UI
 				return Height * AspectRatio;
 			}
 		}
+		public static Size Resolution
+		{
+			get
+			{
+				var width = new OutputArgument();
+				var height = new OutputArgument();
+				Function.Call(Hash._GET_SCREEN_ACTIVE_RESOLUTION, width, height);
+
+				return new Size(width.GetResult<int>(), height.GetResult<int>());
+			}
+		}
 
 		public static void ShowSubtitle(string message, int duration = 2500)
 		{

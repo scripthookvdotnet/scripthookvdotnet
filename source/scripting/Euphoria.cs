@@ -18,7 +18,7 @@ namespace GTA
 				_helperCache = new Dictionary<string, CustomHelper>();
 			}
 
-			T GetHelper<T>(System.String message) where T : CustomHelper
+			internal T GetHelper<T>(System.String message) where T : CustomHelper
 			{
 				CustomHelper h;
 

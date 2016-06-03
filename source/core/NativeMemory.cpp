@@ -323,6 +323,12 @@ namespace GTA
 
 			return *data;
 		}
+		short MemoryAccess::ReadShort(IntPtr address)
+		{
+			const auto data = static_cast<const short *>(address.ToPointer());
+
+			return *data;
+		}
 		int MemoryAccess::ReadInt(IntPtr address)
 		{
 			const auto data = static_cast<const int *>(address.ToPointer());
@@ -347,9 +353,21 @@ namespace GTA
 
 			return gcnew System::String(data);
 		}
+		IntPtr MemoryAccess::ReadPtr(IntPtr address)
+		{
+			const auto data = static_cast<void **>(address.ToPointer());
+
+			return IntPtr(*data);
+		}
 		void MemoryAccess::WriteByte(System::IntPtr address, unsigned char value)
 		{
 			const auto data = static_cast<unsigned char *>(address.ToPointer());
+
+			*data = value;
+		}
+		void MemoryAccess::WriteShort(System::IntPtr address, short value)
+		{
+			const auto data = static_cast<short *>(address.ToPointer());
 
 			*data = value;
 		}

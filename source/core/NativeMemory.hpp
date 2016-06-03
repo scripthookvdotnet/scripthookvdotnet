@@ -12,11 +12,14 @@ namespace GTA
 			static int GetGameVersion();
 
 			static unsigned char ReadByte(System::IntPtr address);
+			static short ReadShort(System::IntPtr address);
 			static int ReadInt(System::IntPtr address);
 			static float ReadFloat(System::IntPtr address);
 			static Math::Vector3 ReadVector3(System::IntPtr address);
 			static System::String ^ReadString(System::IntPtr address);
+			static System::IntPtr ReadPtr(System::IntPtr address);
 			static void WriteByte(System::IntPtr address, unsigned char value);
+			static void WriteShort(System::IntPtr address, short value);
 			static void WriteInt(System::IntPtr address, int value);
 			static void WriteFloat(System::IntPtr address, float value);
 			static void WriteVector3(System::IntPtr address, Math::Vector3 value);

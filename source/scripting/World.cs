@@ -216,6 +216,14 @@ namespace GTA
 		Valkyrie
 	}
 
+	public enum GravityType
+	{
+		Normal,
+		Moon,
+		UltraLow,
+		None,
+	}
+
 	public static class World
 	{
 		#region Fields
@@ -237,6 +245,12 @@ namespace GTA
 		};
 		#endregion
 
+		/// <summary>
+		/// Gets or sets the current date and time in the GTA World.
+		/// </summary>
+		/// <value>
+		/// The current date and time.
+		/// </value>
 		public static DateTime CurrentDate
 		{
 			get
@@ -256,6 +270,12 @@ namespace GTA
 				Function.Call(Hash.SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the current time of day in the GTA World.
+		/// </summary>
+		/// <value>
+		/// The current time of day
+		/// </value>
 		public static TimeSpan CurrentDayTime
 		{
 			get
@@ -272,6 +292,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether lights in the <see cref="World"/> should be rendered.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if blackout; otherwise, <c>false</c>.
+		/// </value>
 		public static bool Blackout
 		{
 			set
@@ -279,6 +305,12 @@ namespace GTA
 				Function.Call(Hash._SET_BLACKOUT, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the weather.
+		/// </summary>
+		/// <value>
+		/// The weather.
+		/// </value>
 		public static Weather Weather
 		{
 			get
@@ -301,6 +333,12 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the next weather.
+		/// </summary>
+		/// <value>
+		/// The next weather.
+		/// </value>
 		public static Weather NextWeather
 		{
 			get
@@ -327,6 +365,12 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the weather transition.
+		/// </summary>
+		/// <value>
+		/// The weather transition.
+		/// </value>
 		public static float WeatherTransition
 		{
 			get
@@ -343,6 +387,11 @@ namespace GTA
 				Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, 0, 0, value);
 			}
 		}
+		/// <summary>
+		/// Transitions to weather.
+		/// </summary>
+		/// <param name="weather">The weather.</param>
+		/// <param name="duration">The duration.</param>
 		public static void TransitionToWeather(Weather weather, float duration)
 		{
 			if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
@@ -351,7 +400,13 @@ namespace GTA
 			}
 		}
 
-		public static int GravityLevel
+		/// <summary>
+		/// Sets the gravity level for all <see cref="World"/> objects.
+		/// </summary>
+		/// <value>
+		/// The gravity level.
+		/// </value>
+		public static GravityType GravityLevel
 		{
 			set
 			{
@@ -359,6 +414,15 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the rendering camera.
+		/// </summary>
+		/// <value>
+		/// The rendering <see cref="Camera"/>.
+		/// </value>
+		/// <remarks>
+		/// Setting to <see langword="null"/> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
+		/// </remarks>
 		public static Camera RenderingCamera
 		{
 			get
@@ -378,11 +442,22 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Destroys all user created <see cref="Camera"/>s.
+		/// </summary>
 		public static void DestroyAllCameras()
 		{
 			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
 		}
 
+		/// <summary>
+		/// Gets the waypoint position.
+		/// </summary>
+		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
+		/// <remarks>
+		/// Returns an empty <see cref="Vector3"/> if a waypoing <see cref="Blip"/> hasn't been set
+		/// If the game engine cant extract height information the Z component will be 0.0f
+		/// </remarks>
 		public static Vector3 GetWaypointPosition()
 		{
 			if (!Game.IsWaypointActive)
@@ -422,18 +497,40 @@ namespace GTA
 			return position;
 		}
 
+		/// <summary>
+		/// Gets the straight line distance between 2 positions.
+		/// </summary>
+		/// <param name="origin">The origin.</param>
+		/// <param name="destination">The destination.</param>
+		/// <returns>The distance</returns>
 		public static float GetDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 		}
+		/// <summary>
+		/// Calculates the travel distance using roads and paths between 2 positions.
+		/// </summary>
+		/// <param name="origin">The origin.</param>
+		/// <param name="destination">The destination.</param>
+		/// <returns>The travel distance</returns>
 		public static float CalculateTravelDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.CALCULATE_TRAVEL_DISTANCE_BETWEEN_POINTS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z);
 		}
+		/// <summary>
+		/// Gets the height of the ground at a given position.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector3 position)
 		{
 			return GetGroundHeight(new Vector2(position.X, position.Y));
 		}
+		/// <summary>
+		/// Gets the height of the ground at a given position.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector2 position)
 		{
 			var resultArg = new OutputArgument();
@@ -443,6 +540,10 @@ namespace GTA
 			return resultArg.GetResult<float>();
 		}
 
+		/// <summary>
+		/// Gets an <see langword="array"/> of all the <see cref="Blip"/>s on the Map
+		/// </summary>
+		/// <returns><see cref="Blip"/>[] of all the blips</returns>
 		public static Blip[] GetActiveBlips()
 		{
 			var res = new List<Blip>();
