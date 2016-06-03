@@ -16,139 +16,107 @@
 
 #pragma once
 
-#include "Model.hpp"
-#include "RelationshipGroup.hpp"
 #include "NativeHashes.hpp"
 
 namespace GTA
 {
-	#pragma region Forward Declarations
-	ref class Blip;
-	ref class Camera;
-	ref class Entity;
-	ref class Ped;
-	ref class PedGroup;
-	ref class Player;
-	ref class Prop;
-	ref class Rope;
-	ref class Vehicle;
-	#pragma endregion
-
 	namespace Native
 	{
+		public interface class INativeValue
+		{
+			property System::UInt64 NativeValue
+			{
+				System::UInt64 get();
+				void set(System::UInt64 value);
+			};
+		};
+
 		public ref class InputArgument
 		{
 		public:
 			InputArgument(System::Object ^value);
 
-			static inline operator InputArgument ^(bool value)
-			{
-				return gcnew InputArgument(value);
-			}
-			static inline operator InputArgument ^(bool *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static inline operator InputArgument ^(char value)
-			{
-				return gcnew InputArgument(static_cast<int>(value));
-			}
-			static inline operator InputArgument ^(unsigned char value)
-			{
-				return gcnew InputArgument(static_cast<int>(value));
-			}
-			static inline operator InputArgument ^(short value)
-			{
-				return gcnew InputArgument(static_cast<int>(value));
-			}
-			static inline operator InputArgument ^(unsigned short value)
-			{
-				return gcnew InputArgument(static_cast<int>(value));
-			}
-			static inline operator InputArgument ^(int value)
-			{
-				return gcnew InputArgument(value);
-			}
-			static inline operator InputArgument ^(int *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static inline operator InputArgument ^(unsigned int value)
-			{
-				return gcnew InputArgument(value);
-			}
-			static inline operator InputArgument ^(unsigned int *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static inline operator InputArgument ^(float value)
-			{
-				return gcnew InputArgument(value);
-			}
-			static inline operator InputArgument ^(float *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static inline operator InputArgument ^(double value)
-			{
-				return gcnew InputArgument(value);
-			}
-			static inline operator InputArgument ^(System::String ^value)
-			{
-				return gcnew InputArgument(value);
-			}
-			static inline operator InputArgument ^(const char value[])
-			{
-				return gcnew InputArgument(gcnew System::String(value));
-			}
-			static inline operator InputArgument ^(Model model)
-			{
-				return gcnew InputArgument(model);
-			}
-			static inline operator InputArgument ^(RelationshipGroup relationShipGroup)
-			{
-				return gcnew InputArgument(relationShipGroup);
-			}
-			static inline operator InputArgument ^(Blip ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Camera ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Entity ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Ped ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(PedGroup ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Player ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Prop ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Vehicle ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-			static inline operator InputArgument ^(Rope ^object)
-			{
-				return gcnew InputArgument(object);
-			}
-
 			virtual System::String ^ToString() override
 			{
 				return _data.ToString();
+			}
+
+			// Value types
+			static operator InputArgument ^ (bool value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (char value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static operator InputArgument ^ (unsigned char value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static operator InputArgument ^ (short value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static operator InputArgument ^ (unsigned short value)
+			{
+				return gcnew InputArgument(static_cast<int>(value));
+			}
+			static operator InputArgument ^ (int value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (unsigned int value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (float value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (double value)
+			{
+				return gcnew InputArgument(static_cast<float>(value));
+			}
+			static operator InputArgument ^ (System::Enum ^value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (INativeValue ^value)
+			{
+				return gcnew InputArgument(value);
+			}
+
+			// String types
+			static operator InputArgument ^ (System::String ^value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (const char *value)
+			{
+				return gcnew InputArgument(gcnew System::String(value));
+			}
+
+			// Pointer types
+			static operator InputArgument ^ (System::IntPtr value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (bool *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
+			static operator InputArgument ^ (int *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
+			static operator InputArgument ^ (unsigned int *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
+			}
+			static operator InputArgument ^ (float *value)
+			{
+				return gcnew InputArgument(System::IntPtr(value));
 			}
 
 		internal:

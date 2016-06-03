@@ -50,9 +50,10 @@ namespace GTA
 
 			if (length != 0.0f)
 			{
-				axis.X = X / length;
-				axis.Y = Y / length;
-				axis.Z = Z / length;
+				float invlength = 1.0f / length;
+				axis.X = X * invlength;
+				axis.Y = Y * invlength;
+				axis.Z = Z * invlength;
 			}
 			else
 			{
@@ -484,10 +485,11 @@ namespace GTA
 		Quaternion Quaternion::operator / (Quaternion lhs, float rhs)
 		{
 			Quaternion result;
-			result.X = lhs.X / rhs;
-			result.Y = lhs.Y / rhs;
-			result.Z = lhs.Z / rhs;
-			result.W = lhs.W / rhs;
+			float invRhs = 1.0f / rhs;
+			result.X = lhs.X * invRhs;
+			result.Y = lhs.Y * invRhs;
+			result.Z = lhs.Z * invRhs;
+			result.W = lhs.W * invRhs;
 			return result;
 		}
 		Quaternion Quaternion::operator + (Quaternion lhs, Quaternion rhs)

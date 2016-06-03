@@ -19,20 +19,20 @@
     <!-- Support for VS2013 and VS2015 -->
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir)obj\</IntDir>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <OutDir>bin\</OutDir>
-    <IntDir>obj\</IntDir>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <ExtensionsToDeleteOnClean>*.netmodule;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <!-- Release configuration settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>true</Optimize>
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <!-- Global compilation settings -->
   <ItemDefinitionGroup>
     <ClCompile>
@@ -42,7 +42,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ScriptHookV.lib;$(IntDir)$(TargetName).netmodule;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
@@ -61,6 +61,9 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" />
   </ItemGroup>
   <!-- Core source files -->
   <ItemGroup>
@@ -82,71 +85,64 @@
   </ItemGroup>
   <!-- Additional source files -->
   <ItemGroup>
-    <ClCompile Include="source\scripting\Audio.cpp" />
-    <ClCompile Include="source\scripting\Blip.cpp" />
-    <ClCompile Include="source\scripting\Camera.cpp" />
-    <ClCompile Include="source\scripting\Checkpoint.cpp" />
-    <ClCompile Include="source\scripting\Entity.cpp" />
-    <ClCompile Include="source\scripting\Euphoria.cpp" />
-    <ClCompile Include="source\scripting\EuphoriaBase.cpp" />
-    <ClCompile Include="source\scripting\Game.cpp" />
     <ClCompile Include="source\scripting\Matrix.cpp" />
-    <ClCompile Include="source\scripting\Model.cpp" />
-    <ClCompile Include="source\scripting\Ped.cpp" />
-    <ClCompile Include="source\scripting\Pickup.cpp" />
-    <ClCompile Include="source\scripting\Player.cpp" />
     <ClCompile Include="source\scripting\Quaternion.cpp" />
-    <ClCompile Include="source\scripting\Raycast.cpp" />
-    <ClCompile Include="source\scripting\RelationshipGroup.cpp" />
-    <ClCompile Include="source\scripting\Rope.cpp" />
-    <ClCompile Include="source\scripting\Scaleform.cpp" />
-    <ClCompile Include="source\scripting\Tasks.cpp" />
-    <ClCompile Include="source\scripting\UI.cpp" />
-    <ClCompile Include="source\scripting\UIElement.cpp" />
     <ClCompile Include="source\scripting\Vector2.cpp" />
     <ClCompile Include="source\scripting\Vector3.cpp" />
-    <ClCompile Include="source\scripting\Vehicle.cpp" />
-    <ClCompile Include="source\scripting\WeaponAsset.cpp" />
-    <ClCompile Include="source\scripting\World.cpp" />
-    <ClCompile Include="source\scripting\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\scripting\Audio.hpp" />
-    <ClInclude Include="source\scripting\Blip.hpp" />
-    <ClInclude Include="source\scripting\Camera.hpp" />
-    <ClInclude Include="source\scripting\Checkpoint.hpp" />
-    <ClInclude Include="source\scripting\Controls.hpp" />
-    <ClInclude Include="source\scripting\Entity.hpp" />
-    <ClInclude Include="source\scripting\Euphoria.hpp" />
-    <ClInclude Include="source\scripting\EuphoriaBase.hpp" />
-    <ClInclude Include="source\scripting\EuphoriaHelpers.hpp" />
-    <ClInclude Include="source\scripting\Game.hpp" />
-    <ClInclude Include="source\scripting\Interface.hpp" />
     <ClInclude Include="source\scripting\Matrix.hpp" />
-    <ClInclude Include="source\scripting\Model.hpp" />
-    <ClInclude Include="source\scripting\Ped.hpp" />
-    <ClInclude Include="source\scripting\PedHashes.hpp" />
-    <ClInclude Include="source\scripting\Pickup.hpp" />
-    <ClInclude Include="source\scripting\Player.hpp" />
-    <ClInclude Include="source\scripting\Prop.hpp" />
     <ClInclude Include="source\scripting\Quaternion.hpp" />
-    <ClInclude Include="source\scripting\Raycast.hpp" />
-    <ClInclude Include="source\scripting\RelationshipGroup.hpp" />
-    <ClInclude Include="source\scripting\Rope.hpp" />
-    <ClInclude Include="source\scripting\Scaleform.hpp" />
-    <ClInclude Include="source\scripting\Tasks.hpp" />
-    <ClInclude Include="source\scripting\UI.hpp" />
-    <ClInclude Include="source\scripting\UIElement.hpp" />
     <ClInclude Include="source\scripting\Vector2.hpp" />
     <ClInclude Include="source\scripting\Vector3.hpp" />
-    <ClInclude Include="source\scripting\Vehicle.hpp" />
-    <ClInclude Include="source\scripting\VehicleHashes.hpp" />
-    <ClInclude Include="source\scripting\WeaponAsset.hpp" />
-    <ClInclude Include="source\scripting\WeaponHashes.hpp" />
-    <ClInclude Include="source\scripting\World.hpp" />
-    <ClInclude Include="source\scripting\Weapon.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="source\scripting\Audio.cs" />
+    <CsCompile Include="source\scripting\Blip.cs" />
+    <CsCompile Include="source\scripting\Bone.cs" />
+    <CsCompile Include="source\scripting\Camera.cs" />
+    <CsCompile Include="source\scripting\Checkpoint.cs" />
+    <CsCompile Include="source\scripting\Controls.cs" />
+    <CsCompile Include="source\scripting\Entity.cs" />
+    <CsCompile Include="source\scripting\Euphoria.cs" />
+    <CsCompile Include="source\scripting\EuphoriaBase.cs" />
+    <CsCompile Include="source\scripting\EuphoriaHelpers.cs" />
+    <CsCompile Include="source\scripting\Font.cs" />
+    <CsCompile Include="source\scripting\Game.cs" />
+    <CsCompile Include="source\scripting\Globals.cs" />
+    <CsCompile Include="source\scripting\Element.cs" />
+    <CsCompile Include="source\scripting\Interfaces.cs" />
+    <CsCompile Include="source\scripting\Model.cs" />
+    <CsCompile Include="source\scripting\Ped.cs" />
+    <CsCompile Include="source\scripting\PedGroup.cs" />
+    <CsCompile Include="source\scripting\PedHash.cs" />
+    <CsCompile Include="source\scripting\Pickup.cs" />
+    <CsCompile Include="source\scripting\Player.cs" />
+    <CsCompile Include="source\scripting\Prop.cs" />
+    <CsCompile Include="source\scripting\RadioStation.cs" />
+    <CsCompile Include="source\scripting\Raycast.cs" />
+    <CsCompile Include="source\scripting\Relationship.cs" />
+    <CsCompile Include="source\scripting\RelationshipGroup.cs" />
+    <CsCompile Include="source\scripting\Rope.cs" />
+    <CsCompile Include="source\scripting\Scaleform.cs" />
+    <CsCompile Include="source\scripting\Screen.cs" />
+    <CsCompile Include="source\scripting\Sprite.cs" />
+    <CsCompile Include="source\scripting\Tasks.cs" />
+    <CsCompile Include="source\scripting\Text.cs" />
+    <CsCompile Include="source\scripting\Vehicle.cs" />
+    <CsCompile Include="source\scripting\VehicleHash.cs" />
+    <CsCompile Include="source\scripting\Weapon.cs" />
+    <CsCompile Include="source\scripting\WeaponAsset.cs" />
+    <CsCompile Include="source\scripting\WeaponCollection.cs" />
+    <CsCompile Include="source\scripting\WeaponHash.cs" />
+    <CsCompile Include="source\scripting\World.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Compile C# source files -->
+  <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
+    <Message Text="Compiling scripting API" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="$(Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" Condition="'@(CsCompile)' != ''" />
+  </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>

@@ -1,0 +1,113 @@
+using System;
+using GTA.Native;
+
+namespace GTA
+{
+	public struct RelationshipGroup : IEquatable<RelationshipGroup>, INativeValue
+	{
+		RelationshipGroup(String name) : this()
+		{
+			var hashArg = new OutputArgument();
+			Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, hashArg);
+
+			Hash = hashArg.GetResult<int>();
+		}
+		public RelationshipGroup(int hash) : this()
+		{
+			Hash = hash;
+		}
+		public RelationshipGroup(uint hash) : this((int)hash)
+		{
+		}
+
+		public int Hash { get; private set; }
+
+		public ulong NativeValue
+		{
+			get
+			{
+				return (ulong)Hash;
+			}
+			set
+			{
+				Hash = unchecked((int)value);
+			}
+		}
+
+		Relationship GetRelationshipBetweenGroups(RelationshipGroup targetGroup)
+		{
+			return Function.Call<Relationship>(Native.Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, Hash, targetGroup);
+		}
+		void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
+		{
+			SetRelationshipBetweenGroups(targetGroup, relationship);
+		}
+		void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
+		{
+			Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup);
+
+			if (isBidirectional)
+			{
+				Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup, Hash);
+			}
+		}
+		void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
+		{
+			ClearRelationshipBetweenGroups(targetGroup, relationship, false);
+		}
+		void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
+		{
+			Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup);
+
+			if (isBidirectional)
+			{
+				Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup, Hash);
+			}
+		}
+
+		void Remove()
+		{
+			Function.Call(Native.Hash.REMOVE_RELATIONSHIP_GROUP, Hash);
+		}
+
+		public bool Equals(RelationshipGroup obj)
+		{
+			return Hash == obj.Hash;
+		}
+		public override bool Equals(object obj)
+		{
+			return obj != null && Equals((RelationshipGroup)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return Hash;
+		}
+		public override string ToString()
+		{
+			return "0x" + Hash.ToString("X");
+		}
+
+		public static implicit operator RelationshipGroup(int source)
+		{
+			return new RelationshipGroup(source);
+		}
+		public static implicit operator RelationshipGroup(uint source)
+		{
+			return new RelationshipGroup(source);
+		}
+		public static implicit operator RelationshipGroup(String source)
+		{
+			return new RelationshipGroup(source);
+		}
+
+		public static bool operator ==(RelationshipGroup left, RelationshipGroup right)
+		{
+			return left.Equals(right);
+		}
+		public static bool operator !=(RelationshipGroup left, RelationshipGroup right)
+		{
+			return !(left == right);
+		}
+	}
+}

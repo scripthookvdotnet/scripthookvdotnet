@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <ContentType Name="CsCode" DisplayName="C# code" ItemType="CsCompile" />
+  <ItemType Name="CsCompile" DisplayName="C# compiler"/>
+  <FileExtension Name=".cs" ContentType="CsCode"/>
+</ProjectSchemaDefinitions>
