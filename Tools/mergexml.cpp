@@ -1,3 +1,6 @@
+/*compiled with visual studio 2013 cl.exe
+using a compiler like gnu g++ will result in 
+errors when the post build in visual studio runs*/
 #include <fstream>
 #include <string>
 #include <vector>
