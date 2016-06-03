@@ -79,19 +79,19 @@ namespace GTA.UI
 
 	public static class Screen
 	{
-		public static float Width = 1280f, Height = 720f;
-		public static float ScaledWidth
-		{
-			get
-			{
-				return Height * ScreenAspectRatio;
-			}
-		}
-		public static float ScreenAspectRatio
+		public const float Width = 1280f, Height = 720f;
+		public static float AspectRatio
 		{
 			get
 			{
 				return Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
+			}
+		}
+		public static float ScaledWidth
+		{
+			get
+			{
+				return Height * AspectRatio;
 			}
 		}
 
