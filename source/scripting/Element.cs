@@ -46,37 +46,38 @@ namespace GTA.UI
 
 		public virtual void Draw()
 		{
-			Draw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.Width, Screen.Height);
 		}
 		public virtual void Draw(SizeF offset)
 		{
-			if (!Enabled)
-			{
-				return;
-			}
-
-			float w = Size.Width / Screen.Width;
-			float h = Size.Height / Screen.Height;
-			float x = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? w * 0.5f : 0.0f);
-			float y = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? h * 0.5f : 0.0f);
-
-			Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
+			InternalDraw(offset, Screen.Width, Screen.Height);
 		}
 		public virtual void ScaledDraw()
 		{
-			ScaledDraw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.ScaledWidth, Screen.Height);
 		}
 		public virtual void ScaledDraw(SizeF offset)
+		{
+			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+		}
+
+		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
 			if (!Enabled)
 			{
 				return;
 			}
 
-			float w = Size.Width / Screen.ScaledWidth;
-			float h = Size.Height / Screen.Height;
-			float x = ((Position.X + offset.Width) / Screen.ScaledWidth) + ((!Centered) ? w * 0.5f : 0.0f);
-			float y = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? h * 0.5f : 0.0f);
+			float w = Size.Width / screenWidth;
+			float h = Size.Height / screenHeight;
+			float x = (Position.X + offset.Width) / screenWidth;
+			float y = (Position.Y + offset.Height) / screenHeight;
+
+			if (!Centered)
+			{
+				x += w * 0.5f;
+				y += h * 0.5f;
+			}
 
 			Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 		}
@@ -115,16 +116,16 @@ namespace GTA.UI
 
 			base.Draw(offset);
 
-			SizeF newOfset = new SizeF(Position + offset);
+			offset += new SizeF(Position);
 
 			if (Centered)
 			{
-				newOfset -= new SizeF(Size.Width / 2.0f, Size.Height / 2.0f);
+				offset -= new SizeF(Size.Width * 0.5f, Size.Height * 0.5f);
 			}
 
 			foreach (var item in Items)
 			{
-				item.Draw(newOfset);
+				item.Draw(offset);
 			}
 		}
 		public override void ScaledDraw()
@@ -140,16 +141,16 @@ namespace GTA.UI
 
 			base.ScaledDraw(offset);
 
-			SizeF newOfset = new SizeF(Position + offset);
+			offset += new SizeF(Position);
 
 			if (Centered)
 			{
-				newOfset -= new SizeF(Size.Width / 2.0f, Size.Height / 2.0f);
+				offset -= new SizeF(Size.Width * 0.5f, Size.Height * 0.5f);
 			}
 
 			foreach (var item in Items)
 			{
-				item.ScaledDraw(newOfset);
+				item.ScaledDraw(offset);
 			}
 		}
 	}

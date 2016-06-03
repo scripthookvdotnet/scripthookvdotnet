@@ -95,29 +95,7 @@ namespace GTA.UI
 			}
 		}
 
-		public static Notification Notify(string message)
-		{
-			return Notify(message, false);
-		}
-		public static Notification Notify(string message, bool blinking)
-		{
-			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
-
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < message.Length; i += maxStringLength)
-			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
-			}
-
-			return new Notification(Function.Call<int>(Hash._DRAW_NOTIFICATION, blinking, 1));
-		}
-
-		public static void ShowSubtitle(string message)
-		{
-			ShowSubtitle(message, 2500);
-		}
-		public static void ShowSubtitle(string message, int duration)
+		public static void ShowSubtitle(string message, int duration = 2500)
 		{
 			Function.Call(Hash._SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
 
@@ -129,6 +107,19 @@ namespace GTA.UI
 			}
 
 			Function.Call(Hash._DRAW_SUBTITLE_TIMED, duration, 1);
+		}
+		public static Notification ShowNotification(string message, bool blinking = false)
+		{
+			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
+
+			const int maxStringLength = 99;
+
+			for (int i = 0; i < message.Length; i += maxStringLength)
+			{
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
+			}
+
+			return new Notification(Function.Call<int>(Hash._DRAW_NOTIFICATION, blinking, true));
 		}
 
 		public static bool IsHudComponentActive(HudComponent component)
@@ -146,6 +137,10 @@ namespace GTA.UI
 
 		public static PointF WorldToScreen(Vector3 position, bool scaleWidth = false)
 		{
+			return WorldToScreen(position, scaleWidth ? ScaledWidth : Width, Height);
+		}
+		public static PointF WorldToScreen(Vector3 position, float screenWidth, float screenHeight)
+		{
 			var pointX = new OutputArgument();
 			var pointY = new OutputArgument();
 
@@ -154,7 +149,7 @@ namespace GTA.UI
 				return PointF.Empty;
 			}
 
-			return new PointF(pointX.GetResult<float>() * (scaleWidth ? ScaledWidth : Width), pointY.GetResult<float>() * Height);
+			return new PointF(pointX.GetResult<float>() * screenWidth, pointY.GetResult<float>() * screenHeight);
 		}
 	}
 }

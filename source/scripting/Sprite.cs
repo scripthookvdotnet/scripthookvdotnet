@@ -48,6 +48,7 @@ namespace GTA.UI
 			Centered = centered;
 
 			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+
 			if (_activeTextures.ContainsKey(textureDict.ToLower()))
 			{
 				_activeTextures[textureDict.ToLower()] += 1;
@@ -91,37 +92,38 @@ namespace GTA.UI
 
 		public virtual void Draw()
 		{
-			Draw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.Width, Screen.Height);
 		}
 		public virtual void Draw(SizeF offset)
 		{
-			if (!Enabled || !Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
-			{
-				return;
-			}
-
-			float scaleX = Scale.Width / Screen.Width;
-			float scaleY = Scale.Height / Screen.Height;
-			float positionX = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? scaleX * 0.5f : 0.0f);
-			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
-
-			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+			InternalDraw(offset, Screen.Width, Screen.Height);
 		}
 		public virtual void ScaledDraw()
 		{
-			ScaledDraw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.ScaledWidth, Screen.Height);
 		}
 		public virtual void ScaledDraw(SizeF offset)
+		{
+			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+		}
+
+		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
 			if (!Enabled || !Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
 			{
 				return;
 			}
 
-			float scaleX = Scale.Width / Screen.ScaledWidth;
-			float scaleY = Scale.Height / Screen.Height;
-			float positionX = ((Position.X + offset.Width) / Screen.ScaledWidth) + ((!Centered) ? scaleX * 0.5f : 0.0f);
-			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
+			float scaleX = Scale.Width / screenWidth;
+			float scaleY = Scale.Height / screenHeight;
+			float positionX = (Position.X + offset.Width) / screenWidth;
+			float positionY = (Position.Y + offset.Height) / screenHeight;
+
+			if (!Centered)
+			{
+				positionX += scaleX * 0.5f;
+				positionY += scaleY * 0.5f;
+			}
 
 			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
@@ -168,6 +170,7 @@ namespace GTA.UI
 				_id = MemoryAccess.CreateTexture(filename);
 				_textures.Add(filename, _id);
 			}
+
 			if (!_indexes.ContainsKey(_id))
 			{
 				_indexes.Add(_id, 0);
@@ -187,42 +190,22 @@ namespace GTA.UI
 
 		public void Draw()
 		{
-			Draw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.Width, Screen.Height);
 		}
 		public void Draw(SizeF offset)
 		{
-			if (!Enabled)
-			{
-				return;
-			}
-
-			int frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
-
-			if (_lastDraw[_id] != frameCount)
-			{
-				_lastDraw[_id] = frameCount;
-				_indexes[_id] = 0;
-			}
-			if (_globalLastDrawFrame != frameCount)
-			{
-				_globalLevel = 0;
-				_globalLastDrawFrame = frameCount;
-			}
-
-			float aspectRatio = Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
-
-			float scaleX = Scale.Width / Screen.Width;
-			float scaleY = Scale.Height / Screen.Height;
-			float positionX = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? scaleX * 0.5f : 0.0f);
-			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
-
-			MemoryAccess.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color);
+			InternalDraw(offset, Screen.Width, Screen.Height);
 		}
 		public virtual void ScaledDraw()
 		{
-			ScaledDraw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.ScaledWidth, Screen.Height);
 		}
 		public virtual void ScaledDraw(SizeF offset)
+		{
+			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+		}
+
+		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
 			if (!Enabled)
 			{
@@ -233,8 +216,8 @@ namespace GTA.UI
 
 			if (_lastDraw[_id] != frameCount)
 			{
-				_lastDraw[_id] = frameCount;
 				_indexes[_id] = 0;
+				_lastDraw[_id] = frameCount;
 			}
 			if (_globalLastDrawFrame != frameCount)
 			{
@@ -242,12 +225,17 @@ namespace GTA.UI
 				_globalLastDrawFrame = frameCount;
 			}
 
-			float aspectRatio = Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
+			float scaleX = Scale.Width / screenWidth;
+			float scaleY = Scale.Height / screenHeight;
+			float positionX = (Position.X + offset.Width) / screenWidth;
+			float positionY = (Position.Y + offset.Height) / screenHeight;
+			float aspectRatio = Screen.AspectRatio;
 
-			float scaleX = Scale.Width / Screen.ScaledWidth;
-			float scaleY = Scale.Height / Screen.Height;
-			float positionX = ((Position.X + offset.Width) / Screen.ScaledWidth) + ((!Centered) ? scaleX * 0.5f : 0.0f);
-			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
+			if (!Centered)
+			{
+				positionX += scaleX * 0.5f;
+				positionY += scaleY * 0.5f;
+			}
 
 			MemoryAccess.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color);
 		}

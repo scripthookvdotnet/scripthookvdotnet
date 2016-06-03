@@ -10,6 +10,7 @@ namespace GTA.UI
 		Left = 1,
 		Right = 2,
 	}
+
 	public class Text : IElement
 	{
 		public bool Enabled { get; set; }
@@ -51,7 +52,6 @@ namespace GTA.UI
 			}
 		}
 
-
 		public Text(string caption, PointF position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
@@ -80,45 +80,67 @@ namespace GTA.UI
 			Outline = outline;
 			WrapWidth = wrapWidth;
 		}
+
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+
 			const int maxStringLength = 99;
+
 			for (int i = 0; i < text.Length; i += maxStringLength)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, System.Math.Min(maxStringLength, text.Length - i)));
 			}
+
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
+
 			return Screen.Width * Function.Call<float>(Hash._GET_TEXT_SCREEN_WIDTH, 1);
 		}
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+
 			const int maxStringLength = 99;
+
 			for (int i = 0; i < text.Length; i += maxStringLength)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, System.Math.Min(maxStringLength, text.Length - i)));
 			}
+
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
+
 			return Screen.ScaledWidth * Function.Call<float>(Hash._GET_TEXT_SCREEN_WIDTH, 1);
 		}
 
 		public virtual void Draw()
 		{
-			Draw(SizeF.Empty);
+			InternalDraw(SizeF.Empty, Screen.Width, Screen.Height);
 		}
 		public virtual void Draw(SizeF offset)
+		{
+			InternalDraw(offset, Screen.Width, Screen.Height);
+		}
+		public virtual void ScaledDraw()
+		{
+			InternalDraw(SizeF.Empty, Screen.ScaledWidth, Screen.Height);
+		}
+		public virtual void ScaledDraw(SizeF offset)
+		{
+			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+		}
+
+		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
 			if (!Enabled)
 			{
 				return;
 			}
 
-			float x = (Position.X + offset.Width) / Screen.Width;
-			float y = (Position.Y + offset.Height) / Screen.Height;
-			float w = WrapWidth / Screen.Width;
+			float x = (Position.X + offset.Width) / screenWidth;
+			float y = (Position.Y + offset.Height) / screenHeight;
+			float w = WrapWidth / screenWidth;
 
 			if (Shadow)
 			{
@@ -133,6 +155,7 @@ namespace GTA.UI
 			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
 			Function.Call(Hash.SET_TEXT_JUSTIFICATION, Alignment);
+
 			if (WrapWidth > 0.0f)
 			{
 				switch (Alignment)
@@ -152,64 +175,7 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.SET_TEXT_WRAP, 0.0f, x);
 			}
-			Function.Call(Hash._SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
 
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < Caption.Length; i += maxStringLength)
-			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Caption.Substring(i, System.Math.Min(maxStringLength, Caption.Length - i)));
-			}
-
-			Function.Call(Hash._DRAW_TEXT, x, y);
-		}
-		public virtual void ScaledDraw()
-		{
-			ScaledDraw(SizeF.Empty);
-		}
-		public virtual void ScaledDraw(SizeF offset)
-		{
-			if (!Enabled)
-			{
-				return;
-			}
-
-			float x = (Position.X + offset.Width) / Screen.ScaledWidth;
-			float y = (Position.Y + offset.Height) / Screen.Height;
-			float w = WrapWidth / Screen.ScaledWidth;
-
-			if (Shadow)
-			{
-				Function.Call(Hash.SET_TEXT_DROP_SHADOW);
-			}
-			if (Outline)
-			{
-				Function.Call(Hash.SET_TEXT_OUTLINE);
-			}
-
-			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
-			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
-			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
-			if (WrapWidth > 0.0f)
-			{
-				switch (Alignment)
-				{
-					case TextAlignment.Center:
-						Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
-						break;
-					case TextAlignment.Left:
-						Function.Call(Hash.SET_TEXT_WRAP, x, x + w);
-						break;
-					case TextAlignment.Right:
-						Function.Call(Hash.SET_TEXT_WRAP, x - w, x);
-						break;
-				}
-			}
-			else if (Alignment == TextAlignment.Right)
-			{
-				Function.Call(Hash.SET_TEXT_WRAP, 0.0f, x);
-			}
 			Function.Call(Hash._SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
 
 			const int maxStringLength = 99;
