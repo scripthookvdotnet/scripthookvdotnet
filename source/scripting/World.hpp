@@ -17,6 +17,7 @@ namespace GTA
 	ref class Vehicle;
 	ref class Pickup;
 	value class RaycastResult;
+	value class RelationshipGroup;
 	#pragma endregion
 
 	public enum class ExplosionType
@@ -317,11 +318,7 @@ namespace GTA
 		static void DestroyAllCameras();
 		static void SetBlackout(bool enable);
 
-		static int AddRelationshipGroup(System::String ^groupName);
-		static void RemoveRelationshipGroup(int group);
-		static Relationship GetRelationshipBetweenGroups(int group1, int group2);
-		static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
-		static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2);
+		static RelationshipGroup AddRelationshipGroup(System::String ^groupName);
 
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options);
 		static RaycastResult Raycast(Math::Vector3 source, Math::Vector3 target, IntersectOptions options, Entity ^ignoreEntity);

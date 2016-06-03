@@ -96,6 +96,7 @@
     <ClCompile Include="source\scripting\Player.cpp" />
     <ClCompile Include="source\scripting\Quaternion.cpp" />
     <ClCompile Include="source\scripting\Raycast.cpp" />
+    <ClCompile Include="source\scripting\RelationshipGroup.cpp" />
     <ClCompile Include="source\scripting\Rope.cpp" />
     <ClCompile Include="source\scripting\Scaleform.cpp" />
     <ClCompile Include="source\scripting\Tasks.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="source\scripting\Prop.hpp" />
     <ClInclude Include="source\scripting\Quaternion.hpp" />
     <ClInclude Include="source\scripting\Raycast.hpp" />
+    <ClInclude Include="source\scripting\RelationshipGroup.hpp" />
     <ClInclude Include="source\scripting\Rope.hpp" />
     <ClInclude Include="source\scripting\Scaleform.hpp" />
     <ClInclude Include="source\scripting\Tasks.hpp" />

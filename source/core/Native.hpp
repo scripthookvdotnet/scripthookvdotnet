@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Model.hpp"
+#include "RelationshipGroup.hpp"
 #include "NativeHashes.hpp"
 
 namespace GTA
@@ -103,6 +104,10 @@ namespace GTA
 			static inline operator InputArgument ^(Model model)
 			{
 				return gcnew InputArgument(model);
+			}
+			static inline operator InputArgument ^(RelationshipGroup relationShipGroup)
+			{
+				return gcnew InputArgument(relationShipGroup);
 			}
 			static inline operator InputArgument ^(Blip ^object)
 			{

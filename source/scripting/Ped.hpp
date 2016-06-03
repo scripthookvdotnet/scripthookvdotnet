@@ -14,6 +14,7 @@ namespace GTA
 	ref class Vehicle;
 	ref class WeaponCollection;
 	value class Model;
+	value class RelationshipGroup;
 	enum class VehicleSeat;
 	enum class Relationship;
 	#pragma endregion
@@ -519,10 +520,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
-		property int RelationshipGroup
+		property RelationshipGroup RelationshipGroup
 		{
-			int get();
-			void set(int group);
+			GTA::RelationshipGroup get();
+			void set(GTA::RelationshipGroup group);
 		}
 		property VehicleSeat SeatIndex
 		{

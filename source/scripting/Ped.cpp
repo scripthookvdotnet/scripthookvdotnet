@@ -1,6 +1,7 @@
 #include "Ped.hpp"
 #include "Vehicle.hpp"
 #include "Prop.hpp"
+#include "RelationshipGroup.hpp"
 #include "Tasks.hpp"
 #include "Weapon.hpp"
 #include "World.hpp"
@@ -401,11 +402,11 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_PED_STAY_IN_VEHICLE_WHEN_JACKED, Handle, value);
 	}
-	int Ped::RelationshipGroup::get()
+	RelationshipGroup Ped::RelationshipGroup::get()
 	{
-		return Native::Function::Call<int>(Native::Hash::GET_PED_RELATIONSHIP_GROUP_HASH, Handle);
+		return static_cast<GTA::RelationshipGroup>(Native::Function::Call<int>(Native::Hash::GET_PED_RELATIONSHIP_GROUP_HASH, Handle));
 	}
-	void Ped::RelationshipGroup::set(int group)
+	void Ped::RelationshipGroup::set(GTA::RelationshipGroup group)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_RELATIONSHIP_GROUP_HASH, Handle, group);
 	}
