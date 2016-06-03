@@ -100,6 +100,10 @@ class Program
 
 			foreach (XmlNode member in members.ChildNodes)
 			{
+				member.Attributes.RemoveNamedItem("decl");
+				member.Attributes.RemoveNamedItem("source");
+				member.Attributes.RemoveNamedItem("line");
+
 				outputNode.AppendChild(outputDocument.ImportNode(member, true));
 			}
 		}
