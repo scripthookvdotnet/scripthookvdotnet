@@ -107,6 +107,24 @@ namespace GTA.UI
 
 			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
+		public virtual void ScaledDraw()
+		{
+			ScaledDraw(SizeF.Empty);
+		}
+		public virtual void ScaledDraw(SizeF offset)
+		{
+			if (!Enabled || !Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
+			{
+				return;
+			}
+
+			float scaleX = Scale.Width / Screen.ScaledWidth;
+			float scaleY = Scale.Height / Screen.Height;
+			float positionX = ((Position.X + offset.Width) / Screen.ScaledWidth) + ((!Centered) ? scaleX * 0.5f : 0.0f);
+			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
+
+			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+		}
 	}
 	public class CustomSprite : ISprite
 	{
@@ -196,6 +214,39 @@ namespace GTA.UI
 			float scaleX = Scale.Width / Screen.Width;
 			float scaleY = Scale.Height / Screen.Height;
 			float positionX = ((Position.X + offset.Width) / Screen.Width) + ((!Centered) ? scaleX * 0.5f : 0.0f);
+			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
+
+			MemoryAccess.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color);
+		}
+		public virtual void ScaledDraw()
+		{
+			ScaledDraw(SizeF.Empty);
+		}
+		public virtual void ScaledDraw(SizeF offset)
+		{
+			if (!Enabled)
+			{
+				return;
+			}
+
+			int frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
+
+			if (_lastDraw[_id] != frameCount)
+			{
+				_lastDraw[_id] = frameCount;
+				_indexes[_id] = 0;
+			}
+			if (_globalLastDrawFrame != frameCount)
+			{
+				_globalLevel = 0;
+				_globalLastDrawFrame = frameCount;
+			}
+
+			float aspectRatio = Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
+
+			float scaleX = Scale.Width / Screen.ScaledWidth;
+			float scaleY = Scale.Height / Screen.Height;
+			float positionX = ((Position.X + offset.Width) / Screen.ScaledWidth) + ((!Centered) ? scaleX * 0.5f : 0.0f);
 			float positionY = ((Position.Y + offset.Height) / Screen.Height) + ((!Centered) ? scaleY * 0.5f : 0.0f);
 
 			MemoryAccess.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation, aspectRatio, Color);

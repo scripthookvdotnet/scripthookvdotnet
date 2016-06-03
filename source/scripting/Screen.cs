@@ -80,6 +80,20 @@ namespace GTA.UI
 	public static class Screen
 	{
 		public static float Width = 1280f, Height = 720f;
+		public static float ScaledWidth
+		{
+			get
+			{
+				return Height * ScreenAspectRatio;
+			}
+		}
+		public static float ScreenAspectRatio
+		{
+			get
+			{
+				return Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
+			}
+		}
 
 		public static Notification Notify(string message)
 		{
@@ -130,7 +144,7 @@ namespace GTA.UI
 			Function.Call(Hash.HIDE_HUD_COMPONENT_THIS_FRAME, component);
 		}
 
-		public static PointF WorldToScreen(Vector3 position)
+		public static PointF WorldToScreen(Vector3 position, bool scaleWidth = false)
 		{
 			var pointX = new OutputArgument();
 			var pointY = new OutputArgument();
@@ -140,7 +154,7 @@ namespace GTA.UI
 				return PointF.Empty;
 			}
 
-			return new PointF(pointX.GetResult<float>() * Width, pointY.GetResult<float>() * Height);
+			return new PointF(pointX.GetResult<float>() * (scaleWidth ? ScaledWidth : Width), pointY.GetResult<float>() * Height);
 		}
 	}
 }

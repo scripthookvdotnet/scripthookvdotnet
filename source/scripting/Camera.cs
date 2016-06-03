@@ -80,8 +80,8 @@ namespace GTA
 			get
 			{
 				Vector3 rotation = Rotation;
-				double num1 = rotation.X / 57.295779513082323;
-				double num2 = rotation.Z / 57.295779513082323;
+				double num1 = rotation.X * 0.017453292519943295;
+				double num2 = rotation.Z * 0.017453292519943295;
 				double num3 = System.Math.Abs(System.Math.Cos(num1));
 				return new Vector3((float)(-(System.Math.Sin(num2) * num3)), (float)(System.Math.Cos(num2) * num3), (float)System.Math.Sin(num1));
 			}
@@ -320,8 +320,8 @@ namespace GTA
 			get
 			{
 				var rot = Rotation;
-				double rotX = rot.X / 57.295779513082320876798154814105;
-				double rotZ = rot.Z / 57.295779513082320876798154814105;
+				double rotX = rot.X * 0.017453292519943295;
+				double rotZ = rot.Z * 0.017453292519943295;
 				double multXY = System.Math.Abs(System.Math.Cos(rotX));
 
 				return new Vector3((float)(-System.Math.Sin(rotZ) * multXY), (float)(System.Math.Cos(rotZ) * multXY), (float)System.Math.Sin(rotX));
@@ -331,7 +331,7 @@ namespace GTA
 		public static Vector3 GetOffsetInWorldCoords(Vector3 offset)
 		{
 			Vector3 Forward = Direction;
-			const double D2R = 0.01745329251994329576923690768489;
+			const double D2R = 0.017453292519943295;
 			double num1 = System.Math.Cos(Rotation.Y * D2R);
 			double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
 			double y = num1 * System.Math.Sin(Rotation.Z * D2R);
@@ -343,7 +343,7 @@ namespace GTA
 		public static Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
 		{
 			Vector3 Forward = Direction;
-			const double D2R = 0.01745329251994329576923690768489;
+			const double D2R = 0.017453292519943295;
 			double num1 = System.Math.Cos(Rotation.Y * D2R);
 			double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
 			double y = num1 * System.Math.Sin(Rotation.Z * D2R);
