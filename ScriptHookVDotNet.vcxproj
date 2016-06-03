@@ -63,7 +63,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\PropertyPageSchema.xml" />
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" />
   </ItemGroup>
   <!-- Core source files -->
   <ItemGroup>
