@@ -45,7 +45,8 @@
       <AdditionalDependencies>ScriptHookV.lib;$(IntDir)$(TargetName).netmodule;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
+      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"
+"$(SolutionDir)Tools\mergexml.exe" "$(OutDir)$(TargetName).xml" "$(IntDir)$(TargetName).xml"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <!-- Release compilation settings -->
@@ -141,7 +142,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="$(Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="$(Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" Condition="'@(CsCompile)' != ''" DocumentationFile="$(IntDir)$(TargetName).xml" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
