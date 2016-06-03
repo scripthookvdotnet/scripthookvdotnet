@@ -24,7 +24,9 @@
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <ExtensionsToDeleteOnClean>*.netmodule;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
+    <ExtensionsToDeleteOnClean>*.netmodule;*.xdc;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
+    <XDCMakeToolExe>XDCMake.exe</XDCMakeToolExe>
+    <XDCMakeToolPath>$(SolutionDir)tools\</XDCMakeToolPath>
   </PropertyGroup>
   <!-- Release configuration settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -44,6 +46,9 @@
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ScriptHookV.lib;$(IntDir)$(TargetName).netmodule;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Xdcmake>
+      <AdditionalDocumentFile>$(IntDir)$(TargetName).xdc;%(AdditionalDocumentFile)</AdditionalDocumentFile>
+    </Xdcmake>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
     </PostBuildEvent>
@@ -141,7 +146,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="$(Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="$(Optimize)" DisabledWarnings="1591" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
