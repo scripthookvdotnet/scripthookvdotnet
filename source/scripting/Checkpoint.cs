@@ -257,7 +257,7 @@ namespace GTA
 
 		public override bool Exists()
 		{
-			return Handle != 0;
+			return Handle != 0 && MemoryAddress != IntPtr.Zero;
 		}
 		public static bool Exists(Checkpoint checkpoint)
 		{

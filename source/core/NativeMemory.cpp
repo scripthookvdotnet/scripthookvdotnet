@@ -443,7 +443,7 @@ namespace GTA
 		{
 			int handle = *(int*)(&Data);
 			UInt64 addr = MemoryAccess::CheckpointHandleAddr(MemoryAccess::CheckpointBaseAddr(), handle);
-			if (handle != 0)
+			if (addr != 0)
 			{
 				return (UInt64)((UInt64)(MemoryAccess::checkpointPoolAddress) + 96 * *reinterpret_cast<int *>(addr + 16));
 			}
@@ -600,6 +600,30 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
 			return task->_handles->ToArray();
+		}
+		UInt64 _getCheckpoinHandles(UInt64 ArrayPtr)
+		{
+			UInt64 addr = MemoryAccess::CheckpointBaseAddr();
+			int* handles = (int*)ArrayPtr;
+			UInt64 count = 0;
+			UInt64 i;
+			for (i = *(UInt64*)(addr + 48); i && count<64; i = *(UInt64*)(i+24))
+			{
+				handles[count++] = *(int*)(i + 12);
+			}
+			return count;
+		}
+		array<int> ^MemoryAccess::GetCheckpointHandles()
+		{
+			int* Handles = new int[64];
+			GenericTask ^task = gcnew GenericTask(_getCheckpoinHandles, (UInt64)Handles);
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
+			int count = (int)task->GetResult();
+			array<int>^ data_array = gcnew array<int>(count);
+			pin_ptr<int> ptrBuffer = &data_array[data_array->GetLowerBound(0)];
+			memcpy(ptrBuffer, Handles, count * 4);
+			delete[] Handles;
+			return data_array;
 		}
 
 		void MemoryAccess::SendEuphoriaMessage(int targetHandle, String ^message, Dictionary<String ^, Object ^> ^arguments)

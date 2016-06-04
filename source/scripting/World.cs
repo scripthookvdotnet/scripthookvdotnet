@@ -563,6 +563,11 @@ namespace GTA
 			return res.ToArray();
 		}
 
+		public static Checkpoint[] GetActiveCheckpoints()
+		{					   
+			return Array.ConvertAll<int, Checkpoint>(MemoryAccess.GetCheckpointHandles(), element => new Checkpoint(element));
+		}
+
 		static int[] ModelListToHashList(Model[] models)
 		{
 			int[] hashes = new int[models.Length];

@@ -44,6 +44,7 @@ namespace GTA
 			static array<int> ^GetPropHandles(array<int> ^modelhashes);
 			static array<int> ^GetPropHandles(Math::Vector3 position, float radius);
 			static array<int> ^GetPropHandles(Math::Vector3 position, float radius, array<int> ^modelhashes);
+			static array<int> ^GetCheckpointHandles();
 
 			static void SendEuphoriaMessage(int targetHandle, System::String ^message, System::Collections::Generic::Dictionary<System::String ^, System::Object ^> ^_arguments);
 
