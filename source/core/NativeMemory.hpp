@@ -28,6 +28,7 @@ namespace GTA
 			static System::IntPtr GetGlobalAddress(int id);
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
+			static System::IntPtr GetCheckpointAddress(int handle);
 
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
@@ -61,6 +62,9 @@ namespace GTA
 			static unsigned char(*SetNmVec3Address)(__int64, __int64, float, float, float);
 			static unsigned char(*SetNmStringAddress)(__int64, __int64, __int64);
 			static System::UInt64 CreateNmMessageFunc, GiveNmMessageFunc;
+			static System::UInt64(*CheckpointBaseAddr)();
+			static System::UInt64(*CheckpointHandleAddr)(System::UInt64 baseAddr, int Handle);
+			static System::UInt64 *checkpointPoolAddress;
 
 		private:
 			static MemoryAccess();

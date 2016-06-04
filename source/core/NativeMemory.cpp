@@ -267,6 +267,28 @@ namespace GTA
 				String ^_message;
 				Dictionary<String ^, Object ^> ^_arguments;
 			};
+			private ref struct GenericTask : IScriptTask
+			{
+			public:
+				typedef UInt64(*func)(UInt64);
+				GenericTask(func pFunc, UInt64 Arg) : _toRun(pFunc), _arg(Arg)
+				{
+				}
+				virtual void Run()
+				{
+					_res = _toRun(_arg);
+				}
+			
+				UInt64 GetResult()
+				{
+					return _res;
+				}
+
+			private:
+				func _toRun;
+				UInt64 _arg;
+				UInt64 _res;
+			};
 		}
 
 		static MemoryAccess::MemoryAccess()
@@ -310,6 +332,11 @@ namespace GTA
 			SetNmStringAddress = reinterpret_cast<unsigned char(*)(__int64, __int64, __int64)>(address);
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmVec3Address = reinterpret_cast<unsigned char(*)(__int64, __int64, float, float, float)>(address);
+
+			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
+			CheckpointBaseAddr = reinterpret_cast<UINT64(*)()>(*reinterpret_cast<int*>(address - 19) + address - 15);
+			CheckpointHandleAddr = reinterpret_cast<UINT64(*)(UINT64, int)>(*reinterpret_cast<int*>(address - 9) + address - 5);
+			checkpointPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 17) + address + 21);
 		}
 
 		int MemoryAccess::GetGameVersion()
@@ -411,6 +438,22 @@ namespace GTA
 		IntPtr MemoryAccess::GetPlayerAddress(int handle)
 		{
 			return IntPtr((long long)_playerAddressFunc(handle));
+		}
+		UInt64 _getCheckpointAddress(UInt64 Data)
+		{
+			int handle = *(int*)(&Data);
+			UInt64 addr = MemoryAccess::CheckpointHandleAddr(MemoryAccess::CheckpointBaseAddr(), handle);
+			if (handle != 0)
+			{
+				return (UInt64)((UInt64)(MemoryAccess::checkpointPoolAddress) + 96 * *reinterpret_cast<int *>(addr + 16));
+			}
+			return 0;
+		}
+		IntPtr MemoryAccess::GetCheckpointAddress(int handle)
+		{
+			GenericTask ^task = gcnew GenericTask(_getCheckpointAddress, handle);
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
+			return IntPtr((long long)task->GetResult());
 		}
 
 		array<int> ^MemoryAccess::GetEntityHandles()
