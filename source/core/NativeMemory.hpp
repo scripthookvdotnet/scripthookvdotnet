@@ -32,17 +32,11 @@ namespace GTA
 
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
-			static array<int> ^GetVehicleHandles();
 			static array<int> ^GetVehicleHandles(array<int> ^modelhashes);
-			static array<int> ^GetVehicleHandles(Math::Vector3 position, float radius);
 			static array<int> ^GetVehicleHandles(Math::Vector3 position, float radius, array<int> ^modelhashes);
-			static array<int> ^GetPedHandles();
 			static array<int> ^GetPedHandles(array<int> ^modelhashes);
-			static array<int> ^GetPedHandles(Math::Vector3 position, float radius);
 			static array<int> ^GetPedHandles(Math::Vector3 position, float radius, array<int> ^modelhashes);
-			static array<int> ^GetPropHandles();
 			static array<int> ^GetPropHandles(array<int> ^modelhashes);
-			static array<int> ^GetPropHandles(Math::Vector3 position, float radius);
 			static array<int> ^GetPropHandles(Math::Vector3 position, float radius, array<int> ^modelhashes);
 			static array<int> ^GetCheckpointHandles();
 

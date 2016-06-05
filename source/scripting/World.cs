@@ -455,7 +455,7 @@ namespace GTA
 		/// </summary>
 		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
 		/// <remarks>
-		/// Returns an empty <see cref="Vector3"/> if a waypoing <see cref="Blip"/> hasn't been set
+		/// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
 		/// If the game engine cant extract height information the Z component will be 0.0f
 		/// </remarks>
 		public static Vector3 GetWaypointPosition()
@@ -570,45 +570,20 @@ namespace GTA
 
 		static int[] ModelListToHashList(Model[] models)
 		{
-			int[] hashes = new int[models.Length];
-
-			for (int i = 0; i < models.Length; i++)
-			{
-				hashes[i] = models[i].Hash;
-			}
-
-			return hashes;
+			return Array.ConvertAll<Model, int>(models, model => model.Hash);
 		}
 
 		public static Ped[] GetAllPeds(params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetPedHandles() : MemoryAccess.GetPedHandles(ModelListToHashList(models));
-
-			var result = new Ped[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Ped(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(ModelListToHashList(models)), handle => new Ped(handle));
 		}
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetPedHandles(position, radius) : MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models));
-
-			var result = new Ped[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Ped(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models)), handle => new Ped(handle));
 		}
-		public static Ped[] GetNearbyPeds(Ped ped, float radius)
+		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
 		{
-			int[] handles = MemoryAccess.GetPedHandles(ped.Position, radius);
+			int[] handles = MemoryAccess.GetPedHandles(ped.Position, radius, ModelListToHashList(models));
 
 			var result = new List<Ped>();
 
@@ -624,68 +599,33 @@ namespace GTA
 
 			return result.ToArray();
 		}
-		public static Ped GetClosestPed(Vector3 position, float radius)
+		public static Ped GetClosestPed(Vector3 position, float radius, params Model[] models)
 		{
-			int[] handles = MemoryAccess.GetPedHandles(position, radius);
-
-			int closestHandle = 0;
-			float closestDistance = radius * radius;
-
-			foreach (var handle in handles)
-			{
-				float distance = Vector3.Subtract(Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, handle, 0), position).LengthSquared();
-
-				if (distance <= closestDistance)
-				{
-					closestHandle = handle;
-					closestDistance = distance;
-				}
-
-			}
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, closestHandle))
-			{
-				return new Ped(closestHandle);
-			}
-
-			return null;
+			Ped[] peds =
+				Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models)),
+					handle => new Ped(handle));
+			return GetClosest<Ped>(position, peds);
 		}
 
 		public static Vehicle[] GetAllVehicles(params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetVehicleHandles() : MemoryAccess.GetVehicleHandles(ModelListToHashList(models));
-
-			var result = new Vehicle[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Vehicle(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetVehicleHandles(position, radius) : MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models));
-
-			var result = new Vehicle[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Vehicle(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
-		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius)
+		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
 		{
-			int[] handles = MemoryAccess.GetVehicleHandles(ped.Position, radius);
+			int[] handles = MemoryAccess.GetVehicleHandles(ped.Position, radius, ModelListToHashList(models));
 
 			var result = new List<Vehicle>();
+			Vehicle ignore = ped.CurrentVehicle;
+			int ignoreHandle = Vehicle.Exists(ignore) ? ignore.Handle : 0;
 
 			foreach (int handle in handles)
 			{
-				if (handle == ped.Handle)
+				if (handle == ignoreHandle)
 				{
 					continue;
 				}
@@ -695,107 +635,31 @@ namespace GTA
 
 			return result.ToArray();
 		}
-		public static Vehicle GetClosestVehicle(Vector3 position, float radius)
+		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params Model[] models)
 		{
-			int[] entities = MemoryAccess.GetVehicleHandles(position, radius);
+			Vehicle[] vehicles = 
+				Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models)),
+					handle => new Vehicle(handle));
+			return GetClosest<Vehicle>(position, vehicles);
 
-			int closestHandle = 0;
-			float closestDistance = radius * radius;
-
-			foreach (var handle in entities)
-			{
-				float distance = Vector3.Subtract(Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, handle, 0), position).LengthSquared();
-
-				if (distance <= closestDistance)
-				{
-					closestHandle = handle;
-					closestDistance = distance;
-				}
-
-			}
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, closestHandle))
-			{
-				return new Vehicle(closestHandle);
-			}
-
-			return null;
 		}
 
 		public static Prop[] GetAllProps(params Model[] models)
-		{
-			int[] entities = models.Length == 0 ? MemoryAccess.GetPropHandles() : MemoryAccess.GetPropHandles(ModelListToHashList(models));
-
-			var result = new Prop[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				result[i] = new Prop(entities[i]);
-			}
-
-			return result;
+		{						
+			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(ModelListToHashList(models)), handle => new Prop(handle));
 		}
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
 		{
-			int[] entities = models.Length == 0 ? MemoryAccess.GetPropHandles(position, radius) : MemoryAccess.GetPropHandles(position, radius, ModelListToHashList(models));
-
-			var result = new Prop[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				result[i] = new Prop(entities[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(position, radius, ModelListToHashList(models)), handle => new Prop(handle));
 		}
 
 		public static Entity[] GetAllEntities()
-		{
-			int[] entities = MemoryAccess.GetEntityHandles();
-
-			var result = new Entity[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, entities[i]))
-				{
-					case 1:
-						result[i] = new Ped(entities[i]);
-						break;
-					case 2:
-						result[i] = new Vehicle(entities[i]);
-						break;
-					case 3:
-						result[i] = new Prop(entities[i]);
-						break;
-				}
-			}
-
-			return result;
+		{									   
+			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(), Entity.FromHandle);
 		}
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
-			int[] entities = MemoryAccess.GetEntityHandles(position, radius);
-
-			var result = new Entity[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, entities[i]))
-				{
-					case 1:
-						result[i] = new Ped(entities[i]);
-						break;
-					case 2:
-						result[i] = new Vehicle(entities[i]);
-						break;
-					case 3:
-						result[i] = new Prop(entities[i]);
-						break;
-				}
-			}
-
-			return result;
+			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(position, radius), Entity.FromHandle);
 		}
 
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
@@ -864,7 +728,7 @@ namespace GTA
 			}
 			else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, outPos, 1, 0x40400000, 0))
 			{
-				return outPos.GetResult<Vector3>();
+				return outPos.GetResult<Vector3>();		
 			}
 
 			return Vector3.Zero;
@@ -1322,34 +1186,56 @@ namespace GTA
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000f, IntersectOptions.Everything, null);
 		}
-
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color)
 		{
 			DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, null, null, false);
 		}
-		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
+
+		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color,
+			bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
 		{
 			if (!string.IsNullOrEmpty(textueDict) && !string.IsNullOrEmpty(textureName))
 			{
-				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict, textureName, drawOnEnt);
+				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
+					scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict,
+					textureName, drawOnEnt);
 			}
 			else
 			{
-				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
+				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
+					scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
 			}
 		}
 
 		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
 		{
-			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
+			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range,
+				intensity);
 		}
-		public static void DrawSpotLight(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+
+		public static void DrawSpotLight(Vector3 pos, Vector3 dir, Color color, float distance, float brightness,
+			float roundness, float radius, float fadeout)
 		{
-			Function.Call(Hash.DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+			Function.Call(Hash.DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance,
+				brightness, roundness, radius, fadeout);
 		}
-		public static void DrawSpotLightWithShadow(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+
+		public static void DrawSpotLightWithShadow(Vector3 pos, Vector3 dir, Color color, float distance, float brightness,
+			float roundness, float radius, float fadeout)
 		{
-			Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+			Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B,
+				distance, brightness, roundness, radius, fadeout);
+		}
+
+		public static void DrawLine(Vector3 start, Vector3 end, Color color)
+		{
+			Function.Call(Hash.DRAW_LINE, start.X, start.Y, start.Z, end.X, end.Y, end.Z, color.R, color.G, color.B, color.A);
+		}
+
+		public static void DrawPoly(Vector3 vertexA, Vector3 vertexB, Vector3 vertexC, Color color)
+		{
+			Function.Call(Hash.DRAW_POLY, vertexA.X, vertexA.Y, vertexA.Z, vertexB.X, vertexB.Y, vertexB.Z, vertexC.X, vertexC.Y,
+				vertexC.Z, color.R, color.G, color.B, color.A);
 		}
 	}
 }

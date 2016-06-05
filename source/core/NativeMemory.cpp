@@ -475,30 +475,11 @@ namespace GTA
 
 			return task->_handles->ToArray();
 		}
-		array<int> ^MemoryAccess::GetVehicleHandles()
-		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Vehicle);
-
-			ScriptDomain::CurrentDomain->ExecuteTask(task);
-
-			return task->_handles->ToArray();
-		}
 		array<int> ^MemoryAccess::GetVehicleHandles(array<int> ^modelhashes)
 		{
 			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Vehicle);
 			task->_modelHashes = modelhashes;
-			task->_modelCheck = true;
-
-			ScriptDomain::CurrentDomain->ExecuteTask(task);
-
-			return task->_handles->ToArray();
-		}
-		array<int> ^MemoryAccess::GetVehicleHandles(Math::Vector3 position, float radius)
-		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Vehicle);
-			task->_position = position;
-			task->_radiusSquared = radius * radius;
-			task->_posCheck = true;
+			task->_modelCheck = modelhashes != nullptr && modelhashes->Length > 0;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
@@ -511,15 +492,7 @@ namespace GTA
 			task->_radiusSquared = radius * radius;
 			task->_posCheck = true;
 			task->_modelHashes = modelhashes;
-			task->_modelCheck = true;
-
-			ScriptDomain::CurrentDomain->ExecuteTask(task);
-
-			return task->_handles->ToArray();
-		}
-		array<int> ^MemoryAccess::GetPedHandles()
-		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Ped);
+			task->_modelCheck = modelhashes != nullptr && modelhashes->Length > 0;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
@@ -529,18 +502,7 @@ namespace GTA
 		{
 			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Ped);
 			task->_modelHashes = modelhashes;
-			task->_modelCheck = true;
-
-			ScriptDomain::CurrentDomain->ExecuteTask(task);
-
-			return task->_handles->ToArray();
-		}
-		array<int> ^MemoryAccess::GetPedHandles(Math::Vector3 position, float radius)
-		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Ped);
-			task->_position = position;
-			task->_radiusSquared = radius * radius;
-			task->_posCheck = true;
+			task->_modelCheck = modelhashes != nullptr && modelhashes->Length > 0;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
@@ -553,15 +515,7 @@ namespace GTA
 			task->_radiusSquared = radius * radius;
 			task->_posCheck = true;
 			task->_modelHashes = modelhashes;
-			task->_modelCheck = true;
-
-			ScriptDomain::CurrentDomain->ExecuteTask(task);
-
-			return task->_handles->ToArray();
-		}
-		array<int> ^MemoryAccess::GetPropHandles()
-		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Object);
+			task->_modelCheck = modelhashes != nullptr && modelhashes->Length > 0;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
@@ -571,18 +525,7 @@ namespace GTA
 		{
 			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Object);
 			task->_modelHashes = modelhashes;
-			task->_modelCheck = true;
-
-			ScriptDomain::CurrentDomain->ExecuteTask(task);
-
-			return task->_handles->ToArray();
-		}
-		array<int> ^MemoryAccess::GetPropHandles(Math::Vector3 position, float radius)
-		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Object);
-			task->_position = position;
-			task->_radiusSquared = radius * radius;
-			task->_posCheck = true;
+			task->_modelCheck = modelhashes != nullptr && modelhashes->Length > 0;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
@@ -595,7 +538,7 @@ namespace GTA
 			task->_radiusSquared = radius * radius;
 			task->_posCheck = true;
 			task->_modelHashes = modelhashes;
-			task->_modelCheck = true;
+			task->_modelCheck = modelhashes != nullptr && modelhashes->Length > 0;
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 

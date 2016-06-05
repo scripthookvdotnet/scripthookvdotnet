@@ -702,6 +702,20 @@ namespace GTA
 			Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, new OutputArgument(Handle));
 		}
 
+		public static Entity FromHandle(int handle)
+		{
+			switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
+			{
+				case 1:
+					return new Ped(handle);
+				case 2:
+					return new Vehicle(handle);	
+				case 3:
+					return new Prop(handle); 
+			}
+			return null;
+		}
+
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, Handle);
