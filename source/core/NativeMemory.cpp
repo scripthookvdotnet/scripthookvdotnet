@@ -441,10 +441,6 @@ namespace GTA
 			reinterpret_cast<char *>(address.ToPointer())[size] = '\0';
 		}
 
-		IntPtr MemoryAccess::GetGlobalAddress(int id)
-		{
-			return IntPtr(getGlobalPtr(id));
-		}
 		IntPtr MemoryAccess::GetEntityAddress(int handle)
 		{
 			return IntPtr((long long)_entityAddressFunc(handle));

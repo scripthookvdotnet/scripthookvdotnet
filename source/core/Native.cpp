@@ -18,6 +18,7 @@
 #include "ScriptDomain.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
+#include "NativeMemory.hpp"
 
 #include <NativeCaller.h>
 
@@ -236,6 +237,87 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
+		}
+
+		Global::Global(IntPtr memoryAddress) : _address(memoryAddress)
+		{
+		}
+		Global Global::Get(int index)
+		{
+			IntPtr address = IntPtr(getGlobalPtr(index));
+			if (address == IntPtr::Zero)
+			{
+				throw gcnew IndexOutOfRangeException(String::Format("The global index {0} is outside the range of allowed global indexes", index));
+			}
+			return Global(address);
+		}
+
+		generic <typename T>
+		T Global::Read()
+		{
+			Type ^type = T::typeid;
+			if (type == String::typeid)
+			{
+				char* address = (char*)_address.ToPointer();
+				const auto size = static_cast<int>(strlen(address));
+				if (size == 0)
+				{
+					return static_cast<T>(static_cast<Object^>(String::Empty));
+				}
+				const auto bytes = gcnew array<Byte>(size);
+
+				Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(_address), bytes, 0, size);
+
+				return static_cast<T>(static_cast<Object^>(Text::Encoding::UTF8->GetString(bytes)));
+			}
+			else
+			{
+				return static_cast<T>(ObjectFromNative(T::typeid, static_cast<unsigned long long*>(_address.ToPointer())));
+			}
+		}
+
+		generic <typename T>
+		void Global::Write(T value)
+		{
+			Type ^type = T::typeid;
+			if (type == String::typeid)
+			{
+				MemoryAccess::WriteString(_address, reinterpret_cast<String ^>(value));
+			}
+			else if (type == Math::Vector3::typeid)
+			{
+				MemoryAccess::WritePaddedVector3(_address, static_cast<Math::Vector3>(value));
+			}
+			else
+			{
+				*static_cast<unsigned long long*>(_address.ToPointer()) = ObjectToNative(value);
+			}
+		}
+
+		Global Global::GetArrayItem(int index, int itemSize)
+		{
+			int maxIndex = Read<int>();
+			if (index < 0 || index >= maxIndex)
+			{
+				throw gcnew IndexOutOfRangeException(String::Format("The array index {0} was outside the bounds of the array size"));
+			}
+			if (itemSize <= 0)
+			{
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be a positive number");
+			}
+			return Global(IntPtr(MemoryAddress + 8 + (8 * itemSize*index)));
+		}
+		Global Global::GetStructField(int index)
+		{
+			if (index < 0)
+			{
+				throw gcnew IndexOutOfRangeException(String::Format("The struct item index cannot be negative"));
+			}
+			return Global(IntPtr(MemoryAddress + (8 * index)));
+		}
+		IntPtr Global::MemoryAddress::get()
+		{
+			return _address;
 		}
 	}
 }

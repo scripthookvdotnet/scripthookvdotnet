@@ -149,5 +149,27 @@ namespace GTA
 			generic <typename T>
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
 		};
+		public value class Global sealed
+		{
+		public:
+			static Global Get(int index);
+
+			generic <typename T>
+			T Read();
+
+			generic <typename T>
+			void Write(T value);
+
+			Global GetArrayItem(int index, int itemSize);
+			Global GetStructField(int index);
+
+			property System::IntPtr MemoryAddress
+			{
+				System::IntPtr get();
+			}
+		private:
+			Global(System::IntPtr memoryAddress);
+			System::IntPtr _address;
+		};
 	}
 }
