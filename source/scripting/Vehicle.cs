@@ -213,7 +213,7 @@ namespace GTA
 		PureGold,
 		BrushedGold
 	}
-	public enum VehicleLandingGear
+	public enum VehicleLandingGearState
 	{
 		Deployed,
 		Closing,
@@ -285,9 +285,9 @@ namespace GTA
 		{
 			Doors = new VehicleDoorCollection(this);
 			Mods = new VehicleModCollection(this);
-            Wheels = new VehicleWheelCollection(this);
-            Windows = new VehicleWindowCollection(this);
-        }
+			Wheels = new VehicleWheelCollection(this);
+			Windows = new VehicleWindowCollection(this);
+		}
 
 		public string DisplayName
 		{
@@ -370,7 +370,7 @@ namespace GTA
 			}
 		}
 
-		public bool EngineRunning
+		public bool IsEngineRunning
 		{
 			get
 			{
@@ -977,7 +977,7 @@ namespace GTA
 			}
 		}
 
-		public bool EngineCanDegrade
+		public bool CanEngineDegrade
 		{
 			set
 			{
@@ -999,17 +999,6 @@ namespace GTA
 			}
 		}
 
-		public VehicleWheelType WheelType
-		{
-			get
-			{
-				return Function.Call<VehicleWheelType>(Hash.GET_VEHICLE_WHEEL_TYPE, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, Handle, value);
-			}
-		}
 		public VehicleWindowTint WindowTint
 		{
 			get
@@ -1245,11 +1234,11 @@ namespace GTA
 			}
 		}
 
-		public VehicleLandingGear LandingGear
+		public VehicleLandingGearState LandingGearState
 		{
 			get
 			{
-				return Function.Call<VehicleLandingGear>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
+				return Function.Call<VehicleLandingGearState>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
 			}
 			set
 			{
@@ -1424,12 +1413,12 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
 			}
 		}
-        public VehicleDoorCollection Doors { get; private set; }
-        public VehicleModCollection Mods { get; private set; }
-        public VehicleWheelCollection Wheels { get; private set; }
-        public VehicleWindowCollection Windows { get; private set; }
+		public VehicleDoorCollection Doors { get; private set; }
+		public VehicleModCollection Mods { get; private set; }
+		public VehicleWheelCollection Wheels { get; private set; }
+		public VehicleWindowCollection Windows { get; private set; }
 
-        public bool ExtraExists(int extra)
+		public bool ExtraExists(int extra)
 		{
 			return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
 		}
@@ -1527,27 +1516,27 @@ namespace GTA
 
 			if (HasBone("door_dside_f"))
 			{
-			    new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor);
+				new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor);
 			}
 			if (HasBone("door_pside_f"))
 			{
-                new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor);
+				new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor);
 			}
 			if (HasBone("door_dside_r"))
 			{
-                new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor);
+				new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor);
 			}
 			if (HasBone("door_pside_r"))
 			{
-                new VehicleDoor(this, VehicleDoorIndex.BackRightDoor);
+				new VehicleDoor(this, VehicleDoorIndex.BackRightDoor);
 			}
 			if (HasBone("bonnet"))
 			{
-                new VehicleDoor(this, VehicleDoorIndex.Hood);
+				new VehicleDoor(this, VehicleDoorIndex.Hood);
 			}
 			if (HasBone("hood"))
 			{
-                new VehicleDoor(this, VehicleDoorIndex.Trunk);
+				new VehicleDoor(this, VehicleDoorIndex.Trunk);
 			}
 
 			return list.ToArray();

@@ -33,7 +33,7 @@ public class ExitVehicle : Script
 
 				if (isPlayerTheDriver)
 				{
-					vehicle.EngineRunning = true;
+					vehicle.IsEngineRunning = true;
 				}
 			}
 
