@@ -146,19 +146,17 @@ namespace GTA
 
 				if (type == String::typeid)
 				{
-					if (*value != '\0')
-					{
-						const auto size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
-						const auto bytes = gcnew array<Byte>(size);
+					IntPtr string(static_cast<Int64>(*value));
 
-						Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(static_cast<Int64>(*value)), bytes, 0, size);
-
-						return Text::Encoding::UTF8->GetString(bytes);
-					}
-					else
+					if (string == IntPtr::Zero)
 					{
 						return String::Empty;
 					}
+
+					const auto bytes = gcnew array<Byte>(strlen(static_cast<const char *>(string.ToPointer())));
+					Runtime::InteropServices::Marshal::Copy(string, bytes, 0, bytes->Length);
+
+					return Text::Encoding::UTF8->GetString(bytes);
 				}
 
 				if (type == IntPtr::typeid)
