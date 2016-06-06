@@ -14,11 +14,12 @@ namespace GTA
 
 		internal VehicleWheel(Vehicle owner, int index)
 		{
-			_owner = owner;
+            _owner = owner;
+            Index = index;
 
-			int wheelsPtrOffset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xAA0 : 0xA80;
-			MemoryAddress = MemoryAccess.ReadPtr(owner.MemoryAddress + wheelsPtrOffset) + index * 8;
-		}
+            int wheelsPtrOffset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xAA0 : 0xA80;
+            MemoryAddress = MemoryAccess.ReadPtr(MemoryAccess.ReadPtr(owner.MemoryAddress + wheelsPtrOffset) + (index * 8));
+        }
 
 		public int Index { get; private set; }
 		public IntPtr MemoryAddress { get; private set; }
