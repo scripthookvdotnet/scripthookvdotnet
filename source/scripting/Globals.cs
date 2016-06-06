@@ -45,6 +45,28 @@ namespace GTA
 		{
 			MemoryAccess.WriteString(MemoryAddress, value);
 		}
+		public Global GetArrayItem(int index, int itemSize)
+		{
+			int MaxIndex = GetInt();
+			if (index < 0 || index >= MaxIndex)
+			{
+				throw new IndexOutOfRangeException(string.Format("The array index {0} was outside the bounds of the array size"));
+			}
+			if (itemSize <= 0)
+			{
+				throw new ArgumentOutOfRangeException("itemSize", "The item size for an array must be a positive number");
+			}
+			return new Global(MemoryAddress + 8 + (8*itemSize*index));
+		}
+
+		public Global GetStructItem(int index)
+		{
+			if (index < 0)
+			{
+				throw new IndexOutOfRangeException(string.Format("The struct item index cannot be negative"));
+			}
+			return new Global(MemoryAddress + (8*index));
+		}
 	}
 
 	public class GlobalCollection
@@ -57,7 +79,13 @@ namespace GTA
 		{
 			get
 			{
-				return new Global(MemoryAccess.GetGlobalAddress(id));
+				IntPtr memoryAddress = MemoryAccess.GetGlobalAddress(id);
+				if (memoryAddress == IntPtr.Zero)
+				{
+					throw new IndexOutOfRangeException(
+						string.Format("The global index {0} is outside the range of allowed global indexes", id));
+				}
+				return new Global(memoryAddress);
 			}
 		}
 	}
