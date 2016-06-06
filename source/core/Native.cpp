@@ -239,21 +239,21 @@ namespace GTA
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
 		}
 
-		Global::Global(IntPtr memoryAddress) : _address(memoryAddress)
+		GlobalVariable::GlobalVariable(IntPtr memoryAddress) : _address(memoryAddress)
 		{
 		}
-		Global Global::Get(int index)
+		GlobalVariable GlobalVariable::Get(int index)
 		{
 			IntPtr address = IntPtr(getGlobalPtr(index));
 			if (address == IntPtr::Zero)
 			{
 				throw gcnew IndexOutOfRangeException(String::Format("The global index {0} is outside the range of allowed global indexes", index));
 			}
-			return Global(address);
+			return GlobalVariable(address);
 		}
 
 		generic <typename T>
-		T Global::Read()
+		T GlobalVariable::Read()
 		{
 			Type ^type = T::typeid;
 			if (type == String::typeid)
@@ -277,7 +277,7 @@ namespace GTA
 		}
 
 		generic <typename T>
-		void Global::Write(T value)
+		void GlobalVariable::Write(T value)
 		{
 			Type ^type = T::typeid;
 			if (type == String::typeid)
@@ -294,7 +294,7 @@ namespace GTA
 			}
 		}
 
-		Global Global::GetArrayItem(int index, int itemSize)
+		GlobalVariable GlobalVariable::GetArrayItem(int index, int itemSize)
 		{
 			int maxIndex = Read<int>();
 			if (index < 0 || index >= maxIndex)
@@ -305,17 +305,17 @@ namespace GTA
 			{
 				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be a positive number");
 			}
-			return Global(IntPtr(MemoryAddress + 8 + (8 * itemSize*index)));
+			return GlobalVariable(IntPtr(MemoryAddress + 8 + (8 * itemSize*index)));
 		}
-		Global Global::GetStructField(int index)
+		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)
 			{
 				throw gcnew IndexOutOfRangeException(String::Format("The struct item index cannot be negative"));
 			}
-			return Global(IntPtr(MemoryAddress + (8 * index)));
+			return GlobalVariable(IntPtr(MemoryAddress + (8 * index)));
 		}
-		IntPtr Global::MemoryAddress::get()
+		IntPtr GlobalVariable::MemoryAddress::get()
 		{
 			return _address;
 		}

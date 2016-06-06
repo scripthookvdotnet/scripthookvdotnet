@@ -149,10 +149,10 @@ namespace GTA
 			generic <typename T>
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
 		};
-		public value class Global sealed
+		public value class GlobalVariable sealed
 		{
 		public:
-			static Global Get(int index);
+			static GlobalVariable Get(int index);
 
 			generic <typename T>
 			T Read();
@@ -160,15 +160,15 @@ namespace GTA
 			generic <typename T>
 			void Write(T value);
 
-			Global GetArrayItem(int index, int itemSize);
-			Global GetStructField(int index);
+			GlobalVariable GetArrayItem(int index, int itemSize);
+			GlobalVariable GetStructField(int index);
 
 			property System::IntPtr MemoryAddress
 			{
 				System::IntPtr get();
 			}
 		private:
-			Global(System::IntPtr memoryAddress);
+			GlobalVariable(System::IntPtr memoryAddress);
 			System::IntPtr _address;
 		};
 	}
