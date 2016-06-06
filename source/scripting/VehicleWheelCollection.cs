@@ -16,7 +16,6 @@ namespace GTA
             _owner = owner;
         }
 
-
         public VehicleWheel this[int index]
         {
             get

@@ -281,12 +281,15 @@ namespace GTA
 
 	public sealed class Vehicle : Entity
 	{
-		public Vehicle(int handle) : base(handle)
+        #region Fields
+        VehicleDoorCollection _doors;
+        VehicleModCollection _mods;
+        VehicleWheelCollection _wheels;
+        VehicleWindowCollection _windows;
+        #endregion
+
+        public Vehicle(int handle) : base(handle)
 		{
-			Doors = new VehicleDoorCollection(this);
-			Mods = new VehicleModCollection(this);
-			Wheels = new VehicleWheelCollection(this);
-			Windows = new VehicleWindowCollection(this);
 		}
 
 		public string DisplayName
@@ -1413,12 +1416,57 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
 			}
 		}
-		public VehicleDoorCollection Doors { get; private set; }
-		public VehicleModCollection Mods { get; private set; }
-		public VehicleWheelCollection Wheels { get; private set; }
-		public VehicleWindowCollection Windows { get; private set; }
 
-		public bool ExtraExists(int extra)
+	    public VehicleDoorCollection Doors
+	    {
+            get
+            {
+                if (_doors == null)
+                {
+                    _doors = new VehicleDoorCollection(this);
+                }
+
+                return _doors;
+            }
+        }
+		public VehicleModCollection Mods
+        {
+            get
+            {
+                if (_mods == null)
+                {
+                    _mods = new VehicleModCollection(this);
+                }
+
+                return _mods;
+            }
+        }
+        public VehicleWheelCollection Wheels
+        {
+            get
+            {
+                if (_wheels == null)
+                {
+                    _wheels = new VehicleWheelCollection(this);
+                }
+
+                return _wheels;
+            }
+        }
+        public VehicleWindowCollection Windows
+        {
+            get
+            {
+                if (_windows == null)
+                {
+                    _windows = new VehicleWindowCollection(this);
+                }
+
+                return _windows;
+            }
+        }
+
+        public bool ExtraExists(int extra)
 		{
 			return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
 		}
