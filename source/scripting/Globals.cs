@@ -23,7 +23,7 @@ namespace GTA
 		}
 		public Vector3 GetVector3()
 		{
-			return MemoryAccess.ReadVector3(MemoryAddress);
+			return MemoryAccess.ReadPaddedVector3(MemoryAddress);
 		}
 		public string GetString()
 		{
@@ -39,7 +39,7 @@ namespace GTA
 		}
 		public void SetVector3(Vector3 value)
 		{
-			MemoryAccess.WriteVector3(MemoryAddress, value);
+			MemoryAccess.WritePaddedVector3(MemoryAddress, value);
 		}
 		public void SetString(string value)
 		{
