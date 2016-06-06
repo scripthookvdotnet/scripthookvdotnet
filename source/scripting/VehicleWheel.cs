@@ -94,13 +94,13 @@ namespace GTA
             get { return _owner; }
         }
 
-        public void Fix()
-        {
-            Function.Call(Hash.SET_VEHICLE_TYRE_FIXED, _owner.Handle, Index);
-        }
         public void Burst()
         {
             Function.Call(Hash.SET_VEHICLE_TYRE_BURST, _owner.Handle, Index, true, 1000f);
+        }
+        public void Fix()
+        {
+            Function.Call(Hash.SET_VEHICLE_TYRE_FIXED, _owner.Handle, Index);
         }
     }
 }

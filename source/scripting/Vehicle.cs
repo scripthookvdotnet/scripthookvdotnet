@@ -268,13 +268,6 @@ namespace GTA
 		ExtraSeat11,
 		ExtraSeat12
 	}
-	public enum VehicleWindow
-	{
-		FrontRightWindow = 1,
-		FrontLeftWindow = 0,
-		BackRightWindow = 3,
-		BackLeftWindow = 2
-	}
 	public enum VehicleWindowTint
 	{
 		None,
@@ -293,6 +286,7 @@ namespace GTA
 			Doors = new VehicleDoorCollection(this);
 			Mods = new VehicleModCollection(this);
             Wheels = new VehicleWheelCollection(this);
+            Windows = new VehicleWindowCollection(this);
         }
 
 		public string DisplayName
@@ -1433,6 +1427,7 @@ namespace GTA
         public VehicleDoorCollection Doors { get; private set; }
         public VehicleModCollection Mods { get; private set; }
         public VehicleWheelCollection Wheels { get; private set; }
+        public VehicleWindowCollection Windows { get; private set; }
 
         public bool ExtraExists(int extra)
 		{
@@ -1578,31 +1573,6 @@ namespace GTA
 			{
 				Function.Call(Hash._CLOSE_VEHICLE_BOMB_BAY, Handle);
 			}
-		}
-
-		public void FixWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.FIX_VEHICLE_WINDOW, Handle, window);
-		}
-		public void SmashWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.SMASH_VEHICLE_WINDOW, Handle, window);
-		}
-		public void RollUpWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.ROLL_UP_WINDOW, Handle, window);
-		}
-		public void RollDownWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.ROLL_DOWN_WINDOW, Handle, window);
-		}
-		public void RollDownWindows()
-		{
-			Function.Call(Hash.ROLL_DOWN_WINDOWS, Handle);
-		}
-		public void RemoveWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, Handle, window);
 		}
 
 		public bool IsNeonLightsOn(VehicleNeonLight light)

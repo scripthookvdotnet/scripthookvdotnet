@@ -143,6 +143,8 @@
     <CsCompile Include="source\scripting\VehicleToggleMod.cs" />
     <CsCompile Include="source\scripting\VehicleWheel.cs" />
     <CsCompile Include="source\scripting\VehicleWheelCollection.cs" />
+    <CsCompile Include="source\scripting\VehicleWindow.cs" />
+    <CsCompile Include="source\scripting\VehicleWindowCollection.cs" />
     <CsCompile Include="source\scripting\Weapon.cs" />
     <CsCompile Include="source\scripting\WeaponAsset.cs" />
     <CsCompile Include="source\scripting\WeaponCollection.cs" />
