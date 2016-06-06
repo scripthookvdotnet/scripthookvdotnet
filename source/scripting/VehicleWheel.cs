@@ -19,18 +19,18 @@ namespace GTA
 
 			int wheelsPtrOffset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xAA0 : 0xA80;
 			int wheelOffset = (index * 8);
-			if (index == 45 && _owner.HasBone("wheel_lm2")) //wheel_lm2 is assigned to 45 on the native functions, but it's index is 4 in the wheel collection struct.
+			if (index == 45 && _owner.HasBone("wheel_lm2")) //wheel_lm2 is assigned to 45 on the native functions, but its index in the wheel collection struct is 4.
 			{
 				index = 4;
 			}
-			if (index == 47 && _owner.HasBone("wheel_rm2")) //wheel_lm2 is assigned to 47 on the native functions, but it's index is 5 in the wheel collection struct.
+			if (index == 47 && _owner.HasBone("wheel_rm2")) //wheel_rm2 is assigned to 47 on the native functions, but its index in the wheel collection struct is 5.
 			{
 				index = 5;
 			}
 
 			if (index < 0 || 19 < index)
 			{
-				new ArgumentOutOfRangeException("index", "Index values must be between 0 and 19 except for 45 of wheel_lm2 or 47 of wheel_lm2, inclusive.");
+				new ArgumentOutOfRangeException("index", "Index values must be between 0 and 19 except for 45 of wheel_lm2 or 47 of wheel_rm2, inclusive.");
 			}
 
 			MemoryAddress = MemoryAccess.ReadPtr(MemoryAccess.ReadPtr(owner.MemoryAddress + wheelsPtrOffset) + (index * 8));
