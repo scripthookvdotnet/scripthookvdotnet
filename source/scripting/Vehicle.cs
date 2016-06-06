@@ -292,7 +292,8 @@ namespace GTA
 		{
 			Doors = new VehicleDoorCollection(this);
 			Mods = new VehicleModCollection(this);
-		}
+            Wheels = new VehicleWheelCollection(this);
+        }
 
 		public string DisplayName
 		{
@@ -1431,8 +1432,9 @@ namespace GTA
 		}
         public VehicleDoorCollection Doors { get; private set; }
         public VehicleModCollection Mods { get; private set; }
+        public VehicleWheelCollection Wheels { get; private set; }
 
-		public bool ExtraExists(int extra)
+        public bool ExtraExists(int extra)
 		{
 			return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
 		}
@@ -1522,18 +1524,6 @@ namespace GTA
 			{
 				Function.Call(Hash.SET_VEHICLE_WHEELS_CAN_BREAK, Handle, value);
 			}
-		}
-		public void FixTire(int wheel)
-		{
-			Function.Call(Hash.SET_VEHICLE_TYRE_FIXED, Handle, wheel);
-		}
-		public void BurstTire(int wheel)
-		{
-			Function.Call(Hash.SET_VEHICLE_TYRE_BURST, Handle, wheel, 1, 1000f);
-		}
-		public bool IsTireBurst(int wheel)
-		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_TYRE_BURST, Handle, wheel, false);
 		}
 
 		public VehicleDoor[] GetDoors()
