@@ -374,12 +374,6 @@ namespace GTA
 
 			return Math::Vector3(data[0], data[1], data[2]);
 		}
-		Math::Vector3 MemoryAccess::ReadPaddedVector3(IntPtr address)
-		{
-			const auto data = static_cast<const float *>(address.ToPointer());
-
-			return Math::Vector3(data[0], data[2], data[4]);
-		}
 		String ^MemoryAccess::ReadString(IntPtr address)
 		{
 			const auto data = static_cast<const char *>(address.ToPointer());
@@ -423,22 +417,6 @@ namespace GTA
 			data[0] = value.X;
 			data[1] = value.Y;
 			data[2] = value.Z;
-		}
-		void MemoryAccess::WritePaddedVector3(IntPtr address, Math::Vector3 value)
-		{
-			const auto data = static_cast<float *>(address.ToPointer());
-
-			data[0] = value.X;
-			data[2] = value.Y;
-			data[4] = value.Z;
-		}
-		void MemoryAccess::WriteString(IntPtr address, String ^value)
-		{
-			const int size = Text::Encoding::UTF8->GetByteCount(value);
-
-			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, address, size);
-
-			reinterpret_cast<char *>(address.ToPointer())[size] = '\0';
 		}
 
 		IntPtr MemoryAccess::GetEntityAddress(int handle)

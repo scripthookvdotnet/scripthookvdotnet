@@ -31,6 +31,7 @@ namespace GTA
 			};
 		};
 
+		#pragma region Functions
 		public ref class InputArgument
 		{
 		public:
@@ -149,27 +150,35 @@ namespace GTA
 			generic <typename T>
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
 		};
+		#pragma endregion
+
+		#pragma region Global Variables
 		public value class GlobalVariable sealed
 		{
 		public:
 			static GlobalVariable Get(int index);
 
+			property System::IntPtr MemoryAddress
+			{
+				System::IntPtr get()
+				{
+					return _address;
+				}
+			}
+
 			generic <typename T>
 			T Read();
-
 			generic <typename T>
 			void Write(T value);
 
 			GlobalVariable GetArrayItem(int index, int itemSize);
 			GlobalVariable GetStructField(int index);
 
-			property System::IntPtr MemoryAddress
-			{
-				System::IntPtr get();
-			}
 		private:
-			GlobalVariable(System::IntPtr memoryAddress);
+			GlobalVariable(System::IntPtr address);
+
 			System::IntPtr _address;
 		};
+		#pragma endregion
 	}
 }

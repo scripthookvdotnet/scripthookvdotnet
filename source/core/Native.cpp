@@ -18,7 +18,6 @@
 #include "ScriptDomain.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
-#include "NativeMemory.hpp"
 
 #include <NativeCaller.h>
 
@@ -29,166 +28,170 @@ namespace GTA
 {
 	namespace Native
 	{
-		namespace
+		private ref struct NativeTask : IScriptTask
 		{
-			private ref struct NativeTask : IScriptTask
+			virtual void Run()
 			{
-				virtual void Run()
+				nativeInit(_hash);
+
+				for each (auto argument in _arguments)
 				{
-					nativeInit(_hash);
-
-					for each (auto argument in _arguments)
-					{
-						nativePush64(argument->_data);
-					}
-
-					_result = nativeCall();
+					nativePush64(argument->_data);
 				}
 
-				UInt64 _hash, *_result;
-				array<InputArgument ^> ^_arguments;
-			};
-
-			UInt64 ObjectToNative(Object ^value)
-			{
-				if (Object::ReferenceEquals(value, nullptr))
-				{
-					return 0;
-				}
-
-				auto type = value->GetType();
-
-				if (type->IsEnum)
-				{
-					value = Convert::ChangeType(value, type = Enum::GetUnderlyingType(type));
-				}
-
-				if (type == Boolean::typeid)
-				{
-					return static_cast<bool>(value) ? 1 : 0;
-				}
-				if (type == Int32::typeid)
-				{
-					return static_cast<Int32>(value);
-				}
-				if (type == UInt32::typeid)
-				{
-					return static_cast<UInt32>(value);
-				}
-				if (type == Int64::typeid)
-				{
-					return static_cast<Int64>(value);
-				}
-				if (type == UInt64::typeid)
-				{
-					return static_cast<UInt64>(value);
-				}
-				if (type == Single::typeid)
-				{
-					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
-				}
-				if (type == Double::typeid)
-				{
-					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
-				}
-
-				if (type == String::typeid)
-				{
-					return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
-				}
-
-				if (type == IntPtr::typeid)
-				{
-					return static_cast<IntPtr>(value).ToInt64();
-				}
-
-				if (INativeValue::typeid->IsAssignableFrom(type))
-				{
-					return static_cast<INativeValue ^>(value)->NativeValue;
-				}
-
-				throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
+				_result = nativeCall();
 			}
-			Object ^ObjectFromNative(Type ^type, UInt64 *value)
+
+			UInt64 _hash, *_result;
+			array<InputArgument ^> ^_arguments;
+		};
+
+		UInt64 ObjectToNative(Object ^value)
+		{
+			if (Object::ReferenceEquals(value, nullptr))
 			{
-				if (type->IsEnum)
-				{
-					type = Enum::GetUnderlyingType(type);
-				}
-
-				if (type == Boolean::typeid)
-				{
-					return *reinterpret_cast<const int *>(value) != 0;
-				}
-				if (type == Int32::typeid)
-				{
-					return *reinterpret_cast<const Int32 *>(value);
-				}
-				if (type == UInt32::typeid)
-				{
-					return *reinterpret_cast<const UInt32 *>(value);
-				}
-				if (type == Int64::typeid)
-				{
-					return *reinterpret_cast<const Int64 *>(value);
-				}
-				if (type == UInt64::typeid)
-				{
-					return *reinterpret_cast<const UInt64 *>(value);
-				}
-				if (type == Single::typeid)
-				{
-					return *reinterpret_cast<const float *>(value);
-				}
-				if (type == Double::typeid)
-				{
-					return static_cast<double>(*reinterpret_cast<const float *>(value));
-				}
-
-				if (type == String::typeid)
-				{
-					IntPtr string(static_cast<Int64>(*value));
-
-					if (string == IntPtr::Zero)
-					{
-						return String::Empty;
-					}
-
-					const auto bytes = gcnew array<Byte>(strlen(static_cast<const char *>(string.ToPointer())));
-					Runtime::InteropServices::Marshal::Copy(string, bytes, 0, bytes->Length);
-
-					return Text::Encoding::UTF8->GetString(bytes);
-				}
-
-				if (type == IntPtr::typeid)
-				{
-					return IntPtr(*reinterpret_cast<const Int64 *>(value));
-				}
-
-				if (type == Math::Vector2::typeid)
-				{
-					const auto data = reinterpret_cast<const float *>(value);
-
-					return gcnew Math::Vector2(data[0], data[2]);
-				}
-				if (type == Math::Vector3::typeid)
-				{
-					const auto data = reinterpret_cast<const float *>(value);
-
-					return gcnew Math::Vector3(data[0], data[2], data[4]);
-				}
-
-				if (INativeValue::typeid->IsAssignableFrom(type))
-				{
-					// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
-					auto result = static_cast<INativeValue ^>(Runtime::Serialization::FormatterServices::GetUninitializedObject(type));
-					result->NativeValue = *value;
-
-					return result;
-				}
-
-				throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
+				return 0;
 			}
+
+			auto type = value->GetType();
+
+			if (type->IsEnum)
+			{
+				value = Convert::ChangeType(value, type = Enum::GetUnderlyingType(type));
+			}
+
+			if (type == Boolean::typeid)
+			{
+				return static_cast<bool>(value) ? 1 : 0;
+			}
+			if (type == Int32::typeid)
+			{
+				return static_cast<Int32>(value);
+			}
+			if (type == UInt32::typeid)
+			{
+				return static_cast<UInt32>(value);
+			}
+			if (type == Int64::typeid)
+			{
+				return static_cast<Int64>(value);
+			}
+			if (type == UInt64::typeid)
+			{
+				return static_cast<UInt64>(value);
+			}
+			if (type == Single::typeid)
+			{
+				return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
+			}
+			if (type == Double::typeid)
+			{
+				return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
+			}
+
+			if (type == String::typeid)
+			{
+				return ScriptDomain::CurrentDomain->PinString(static_cast<String ^>(value)).ToInt64();
+			}
+
+			if (type == IntPtr::typeid)
+			{
+				return static_cast<IntPtr>(value).ToInt64();
+			}
+
+			if (INativeValue::typeid->IsAssignableFrom(type))
+			{
+				return static_cast<INativeValue ^>(value)->NativeValue;
+			}
+
+			throw gcnew InvalidCastException(String::Concat("Unable to cast object of type '", type->FullName, "' to native value"));
+		}
+		Object ^ObjectFromNative(Type ^type, UInt64 *value)
+		{
+			if (type->IsEnum)
+			{
+				type = Enum::GetUnderlyingType(type);
+			}
+
+			if (type == Boolean::typeid)
+			{
+				return *reinterpret_cast<const int *>(value) != 0;
+			}
+			if (type == Int32::typeid)
+			{
+				return *reinterpret_cast<const Int32 *>(value);
+			}
+			if (type == UInt32::typeid)
+			{
+				return *reinterpret_cast<const UInt32 *>(value);
+			}
+			if (type == Int64::typeid)
+			{
+				return *reinterpret_cast<const Int64 *>(value);
+			}
+			if (type == UInt64::typeid)
+			{
+				return *reinterpret_cast<const UInt64 *>(value);
+			}
+			if (type == Single::typeid)
+			{
+				return *reinterpret_cast<const float *>(value);
+			}
+			if (type == Double::typeid)
+			{
+				return static_cast<double>(*reinterpret_cast<const float *>(value));
+			}
+
+			if (type == String::typeid)
+			{
+				const auto address = reinterpret_cast<char *>(*value);
+
+				if (address == nullptr)
+				{
+					return String::Empty;
+				}
+
+				const auto size = static_cast<int>(strlen(address));
+
+				if (size == 0)
+				{
+					return String::Empty;
+				}
+
+				const auto bytes = gcnew array<Byte>(size);
+				Runtime::InteropServices::Marshal::Copy(IntPtr(address), bytes, 0, bytes->Length);
+
+				return Text::Encoding::UTF8->GetString(bytes);
+			}
+
+			if (type == IntPtr::typeid)
+			{
+				return IntPtr(*reinterpret_cast<const Int64 *>(value));
+			}
+
+			if (type == Math::Vector2::typeid)
+			{
+				const auto data = reinterpret_cast<const float *>(value);
+
+				return gcnew Math::Vector2(data[0], data[2]);
+			}
+			if (type == Math::Vector3::typeid)
+			{
+				const auto data = reinterpret_cast<const float *>(value);
+
+				return gcnew Math::Vector3(data[0], data[2], data[4]);
+			}
+
+			if (INativeValue::typeid->IsAssignableFrom(type))
+			{
+				// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
+				auto result = static_cast<INativeValue ^>(Runtime::Serialization::FormatterServices::GetUninitializedObject(type));
+				result->NativeValue = *value;
+
+				return result;
+			}
+
+			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 		}
 
 		InputArgument::InputArgument(Object ^value) : _data(ObjectToNative(value))
@@ -237,85 +240,99 @@ namespace GTA
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
 		}
 
-		GlobalVariable::GlobalVariable(IntPtr memoryAddress) : _address(memoryAddress)
-		{
-		}
 		GlobalVariable GlobalVariable::Get(int index)
 		{
-			IntPtr address = IntPtr(getGlobalPtr(index));
+			IntPtr address(getGlobalPtr(index));
+
 			if (address == IntPtr::Zero)
 			{
-				throw gcnew IndexOutOfRangeException(String::Format("The global index {0} is outside the range of allowed global indexes", index));
+				throw gcnew IndexOutOfRangeException(String::Format("The index {0} is outside the range of allowed global indexes.", index));
 			}
+
 			return GlobalVariable(address);
+		}
+
+		GlobalVariable::GlobalVariable(IntPtr address) : _address(address)
+		{
 		}
 
 		generic <typename T>
 		T GlobalVariable::Read()
 		{
-			Type ^type = T::typeid;
-			if (type == String::typeid)
+			if (T::typeid == String::typeid)
 			{
-				char* address = (char*)_address.ToPointer();
-				const auto size = static_cast<int>(strlen(address));
+				const auto size = static_cast<int>(strlen(static_cast<char *>(_address.ToPointer())));
+
 				if (size == 0)
 				{
-					return static_cast<T>(static_cast<Object^>(String::Empty));
+					return reinterpret_cast<T>(String::Empty);
 				}
+
 				const auto bytes = gcnew array<Byte>(size);
+				Runtime::InteropServices::Marshal::Copy(_address, bytes, 0, bytes->Length);
 
-				Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(_address), bytes, 0, size);
+				return reinterpret_cast<T>(Text::Encoding::UTF8->GetString(bytes));
+			}
 
-				return static_cast<T>(static_cast<Object^>(Text::Encoding::UTF8->GetString(bytes)));
-			}
-			else
-			{
-				return static_cast<T>(ObjectFromNative(T::typeid, static_cast<unsigned long long*>(_address.ToPointer())));
-			}
+			return static_cast<T>(ObjectFromNative(T::typeid, static_cast<UInt64 *>(_address.ToPointer())));
 		}
-
 		generic <typename T>
 		void GlobalVariable::Write(T value)
 		{
-			Type ^type = T::typeid;
-			if (type == String::typeid)
+			if (T::typeid == String::typeid)
 			{
-				MemoryAccess::WriteString(_address, reinterpret_cast<String ^>(value));
+				const auto val = reinterpret_cast<String ^>(value);
+				const auto size = Text::Encoding::UTF8->GetByteCount(val);
+
+				Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(val), 0, _address, size);
+				static_cast<char *>(_address.ToPointer())[size] = '\0';
+				return;
 			}
-			else if (type == Math::Vector3::typeid)
+
+			if (T::typeid == Math::Vector2::typeid)
 			{
-				MemoryAccess::WritePaddedVector3(_address, static_cast<Math::Vector3>(value));
+				const auto val = static_cast<Math::Vector2>(value);
+				const auto data = static_cast<float *>(_address.ToPointer());
+
+				data[0] = val.X;
+				data[2] = val.Y;
+				return;
 			}
-			else
+			if (T::typeid == Math::Vector3::typeid)
 			{
-				*static_cast<unsigned long long*>(_address.ToPointer()) = ObjectToNative(value);
+				const auto val = static_cast<Math::Vector3>(value);
+				const auto data = static_cast<float *>(_address.ToPointer());
+
+				data[0] = val.X;
+				data[2] = val.Y;
+				data[4] = val.Z;
+				return;
 			}
+
+			*static_cast<UInt64 *>(_address.ToPointer()) = ObjectToNative(value);
 		}
 
 		GlobalVariable GlobalVariable::GetArrayItem(int index, int itemSize)
 		{
-			int maxIndex = Read<int>();
-			if (index < 0 || index >= maxIndex)
+			if (index < 0 || index >= Read<int>())
 			{
-				throw gcnew IndexOutOfRangeException(String::Format("The array index {0} was outside the bounds of the array size"));
+				throw gcnew IndexOutOfRangeException(String::Format("The index {0} was outside the array bounds.", index));
 			}
 			if (itemSize <= 0)
 			{
-				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be a positive number");
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be a positive number.");
 			}
-			return GlobalVariable(IntPtr(MemoryAddress + 8 + (8 * itemSize*index)));
+
+			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
 		}
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)
 			{
-				throw gcnew IndexOutOfRangeException(String::Format("The struct item index cannot be negative"));
+				throw gcnew IndexOutOfRangeException("The struct item index cannot be negative.");
 			}
-			return GlobalVariable(IntPtr(MemoryAddress + (8 * index)));
-		}
-		IntPtr GlobalVariable::MemoryAddress::get()
-		{
-			return _address;
+
+			return GlobalVariable(MemoryAddress + (8 * index));
 		}
 	}
 }
