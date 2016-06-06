@@ -31,13 +31,11 @@ namespace GTA
 		#region Fields
 		Tasks _tasks;
 		Euphoria _euphoria;
+		WeaponCollection _weapons;
 		#endregion
 
 		public Ped(int handle) : base(handle)
 		{
-			_tasks = new Tasks(this);
-			_euphoria = new Euphoria(this);
-			Weapons = new WeaponCollection(this);
 		}
 
 		public int Money
@@ -96,6 +94,10 @@ namespace GTA
 		{
 			get
 			{
+				if (ReferenceEquals(_tasks, null))
+				{
+					_tasks = new Tasks(this);
+				}
 				return _tasks;
 			}
 		}
@@ -111,11 +113,25 @@ namespace GTA
 		{
 			get
 			{
+				if (ReferenceEquals(_euphoria, null))
+				{
+					_euphoria = new Euphoria(this);
+				}
 				return _euphoria;
 			}
 		}
 
-		public WeaponCollection Weapons { get; private set; }
+		public WeaponCollection Weapons
+		{
+			get
+			{
+				if (ReferenceEquals(_weapons, null))
+				{
+					_weapons = new WeaponCollection(this);
+				}
+				return _weapons;
+			}
+		}
 
 		public Vehicle LastVehicle
 		{
@@ -498,7 +514,6 @@ namespace GTA
 
 		public bool IsJacking
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_JACKING, Handle);
@@ -520,7 +535,6 @@ namespace GTA
 		}
 		public bool IsTryingToEnterALockedVehicle
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
@@ -625,7 +639,6 @@ namespace GTA
 		}
 		public bool IsInCoverFacingLeft
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_IN_COVER_FACING_LEFT, Handle);

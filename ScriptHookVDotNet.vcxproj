@@ -114,7 +114,6 @@
     <CsCompile Include="source\scripting\EuphoriaHelpers.cs" />
     <CsCompile Include="source\scripting\Font.cs" />
     <CsCompile Include="source\scripting\Game.cs" />
-    <CsCompile Include="source\scripting\Globals.cs" />
     <CsCompile Include="source\scripting\Element.cs" />
     <CsCompile Include="source\scripting\Interfaces.cs" />
     <CsCompile Include="source\scripting\Model.cs" />

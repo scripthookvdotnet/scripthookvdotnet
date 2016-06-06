@@ -16,6 +16,7 @@ namespace GTA
 			static int ReadInt(System::IntPtr address);
 			static float ReadFloat(System::IntPtr address);
 			static Math::Vector3 ReadVector3(System::IntPtr address);
+			static Math::Vector3 ReadPaddedVector3(System::IntPtr address);
 			static System::String ^ReadString(System::IntPtr address);
 			static System::IntPtr ReadPtr(System::IntPtr address);
 			static void WriteByte(System::IntPtr address, unsigned char value);
@@ -23,9 +24,9 @@ namespace GTA
 			static void WriteInt(System::IntPtr address, int value);
 			static void WriteFloat(System::IntPtr address, float value);
 			static void WriteVector3(System::IntPtr address, Math::Vector3 value);
+			static void WritePaddedVector3(System::IntPtr address, Math::Vector3 value);
 			static void WriteString(System::IntPtr address, System::String ^value);
 
-			static System::IntPtr GetGlobalAddress(int id);
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
 			static System::IntPtr GetCheckpointAddress(int handle);

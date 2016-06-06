@@ -167,9 +167,6 @@
     <CsCompile Include="source\scripting\Font.cs">
       <Filter>scripting\UI</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\Globals.cs">
-      <Filter>scripting\Game</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Screen.cs">
       <Filter>scripting\UI</Filter>
     </CsCompile>
