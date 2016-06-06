@@ -39,14 +39,14 @@ namespace GTA
                 return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, (int)ModType);
             }
         }
+        public Vehicle Vehicle
+        {
+            get { return _owner; }
+        }
+
         public void Remove()
         {
             Function.Call(Hash.REMOVE_VEHICLE_MOD, _owner.Handle, (int)ModType);
-        }
-
-    public Vehicle Vehicle
-        {
-            get { return _owner; }
         }
     }
 }

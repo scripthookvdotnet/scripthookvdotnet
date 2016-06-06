@@ -135,6 +135,8 @@
     <CsCompile Include="source\scripting\Tasks.cs" />
     <CsCompile Include="source\scripting\Text.cs" />
     <CsCompile Include="source\scripting\Vehicle.cs" />
+    <CsCompile Include="source\scripting\VehicleDoor.cs" />
+    <CsCompile Include="source\scripting\VehicleDoorCollection.cs" />
     <CsCompile Include="source\scripting\VehicleHash.cs" />
     <CsCompile Include="source\scripting\VehicleMod.cs" />
     <CsCompile Include="source\scripting\VehicleModCollection.cs" />

@@ -213,15 +213,6 @@ namespace GTA
 		PureGold,
 		BrushedGold
 	}
-	public enum VehicleDoor
-	{
-		FrontRightDoor = 1,
-		FrontLeftDoor = 0,
-		BackRightDoor = 3,
-		BackLeftDoor = 2,
-		Hood = 4,
-		Trunk
-	}
 	public enum VehicleLandingGear
 	{
 		Deployed,
@@ -299,6 +290,7 @@ namespace GTA
 	{
 		public Vehicle(int handle) : base(handle)
 		{
+			Doors = new VehicleDoorCollection(this);
 			Mods = new VehicleModCollection(this);
 		}
 
@@ -1437,7 +1429,8 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
 			}
 		}
-		public VehicleModCollection Mods { get; private set; }
+        public VehicleDoorCollection Doors { get; private set; }
+        public VehicleModCollection Mods { get; private set; }
 
 		public bool ExtraExists(int extra)
 		{
@@ -1549,58 +1542,30 @@ namespace GTA
 
 			if (HasBone("door_dside_f"))
 			{
-				list.Add(VehicleDoor.FrontLeftDoor);
+			    new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor);
 			}
 			if (HasBone("door_pside_f"))
 			{
-				list.Add(VehicleDoor.FrontRightDoor);
+                new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor);
 			}
 			if (HasBone("door_dside_r"))
 			{
-				list.Add(VehicleDoor.BackLeftDoor);
+                new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor);
 			}
 			if (HasBone("door_pside_r"))
 			{
-				list.Add(VehicleDoor.BackRightDoor);
+                new VehicleDoor(this, VehicleDoorIndex.BackRightDoor);
 			}
 			if (HasBone("bonnet"))
 			{
-				list.Add(VehicleDoor.Hood);
+                new VehicleDoor(this, VehicleDoorIndex.Hood);
 			}
 			if (HasBone("hood"))
 			{
-				list.Add(VehicleDoor.Trunk);
+                new VehicleDoor(this, VehicleDoorIndex.Trunk);
 			}
 
 			return list.ToArray();
-		}
-		public void OpenDoor(VehicleDoor door, bool loose, bool instantly)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, Handle, door, loose, instantly);
-		}
-		public void CloseDoor(VehicleDoor door, bool instantly)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, Handle, door, instantly);
-		}
-		public void BreakDoor(VehicleDoor door)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Handle, door);
-		}
-		public bool IsDoorOpen(VehicleDoor door)
-		{
-			return GetDoorAngleRatio(door) > 0;
-		}
-		public bool IsDoorBroken(VehicleDoor door)
-		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, Handle, door);
-		}
-		public void SetDoorBreakable(VehicleDoor door, bool isBreakable)
-		{
-			Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, Handle, door, isBreakable);
-		}
-		public float GetDoorAngleRatio(VehicleDoor door)
-		{
-			return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, door);
 		}
 
 		public bool HasBombBay

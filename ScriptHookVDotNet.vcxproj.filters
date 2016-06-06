@@ -215,5 +215,11 @@
     <CsCompile Include="source\scripting\VehicleToggleMod.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\VehicleDoor.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleDoorCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>
