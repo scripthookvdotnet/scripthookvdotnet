@@ -196,6 +196,21 @@ namespace GTA
 
 		public bool HasGravity
 		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return true;
+				}
+				memoryAddress = MemoryAccess.ReadPtr(memoryAddress + 48);
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return true;
+				}
+				return (MemoryAccess.ReadShort(memoryAddress + 26) & 16) == 0;
+
+			}
 			set
 			{
 				Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
@@ -685,6 +700,20 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 			Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, new OutputArgument(Handle));
+		}
+
+		public static Entity FromHandle(int handle)
+		{
+			switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
+			{
+				case 1:
+					return new Ped(handle);
+				case 2:
+					return new Vehicle(handle);	
+				case 3:
+					return new Prop(handle); 
+			}
+			return null;
 		}
 
 		public override bool Exists()

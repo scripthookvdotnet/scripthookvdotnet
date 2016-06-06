@@ -216,6 +216,14 @@ namespace GTA
 		Valkyrie
 	}
 
+	public enum GravityType
+	{
+		Normal,
+		Moon,
+		UltraLow,
+		None,
+	}
+
 	public static class World
 	{
 		#region Fields
@@ -237,6 +245,12 @@ namespace GTA
 		};
 		#endregion
 
+		/// <summary>
+		/// Gets or sets the current date and time in the GTA World.
+		/// </summary>
+		/// <value>
+		/// The current date and time.
+		/// </value>
 		public static DateTime CurrentDate
 		{
 			get
@@ -256,6 +270,12 @@ namespace GTA
 				Function.Call(Hash.SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the current time of day in the GTA World.
+		/// </summary>
+		/// <value>
+		/// The current time of day
+		/// </value>
 		public static TimeSpan CurrentDayTime
 		{
 			get
@@ -272,6 +292,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether lights in the <see cref="World"/> should be rendered.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if blackout; otherwise, <c>false</c>.
+		/// </value>
 		public static bool Blackout
 		{
 			set
@@ -279,6 +305,12 @@ namespace GTA
 				Function.Call(Hash._SET_BLACKOUT, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the weather.
+		/// </summary>
+		/// <value>
+		/// The weather.
+		/// </value>
 		public static Weather Weather
 		{
 			get
@@ -301,6 +333,12 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the next weather.
+		/// </summary>
+		/// <value>
+		/// The next weather.
+		/// </value>
 		public static Weather NextWeather
 		{
 			get
@@ -327,6 +365,12 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the weather transition.
+		/// </summary>
+		/// <value>
+		/// The weather transition.
+		/// </value>
 		public static float WeatherTransition
 		{
 			get
@@ -343,6 +387,11 @@ namespace GTA
 				Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, 0, 0, value);
 			}
 		}
+		/// <summary>
+		/// Transitions to weather.
+		/// </summary>
+		/// <param name="weather">The weather.</param>
+		/// <param name="duration">The duration.</param>
 		public static void TransitionToWeather(Weather weather, float duration)
 		{
 			if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
@@ -351,7 +400,13 @@ namespace GTA
 			}
 		}
 
-		public static int GravityLevel
+		/// <summary>
+		/// Sets the gravity level for all <see cref="World"/> objects.
+		/// </summary>
+		/// <value>
+		/// The gravity level.
+		/// </value>
+		public static GravityType GravityLevel
 		{
 			set
 			{
@@ -359,6 +414,15 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the rendering camera.
+		/// </summary>
+		/// <value>
+		/// The rendering <see cref="Camera"/>.
+		/// </value>
+		/// <remarks>
+		/// Setting to <see langword="null"/> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
+		/// </remarks>
 		public static Camera RenderingCamera
 		{
 			get
@@ -378,11 +442,22 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Destroys all user created <see cref="Camera"/>s.
+		/// </summary>
 		public static void DestroyAllCameras()
 		{
 			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
 		}
 
+		/// <summary>
+		/// Gets the waypoint position.
+		/// </summary>
+		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
+		/// <remarks>
+		/// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
+		/// If the game engine cant extract height information the Z component will be 0.0f
+		/// </remarks>
 		public static Vector3 GetWaypointPosition()
 		{
 			if (!Game.IsWaypointActive)
@@ -422,18 +497,40 @@ namespace GTA
 			return position;
 		}
 
+		/// <summary>
+		/// Gets the straight line distance between 2 positions.
+		/// </summary>
+		/// <param name="origin">The origin.</param>
+		/// <param name="destination">The destination.</param>
+		/// <returns>The distance</returns>
 		public static float GetDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 		}
+		/// <summary>
+		/// Calculates the travel distance using roads and paths between 2 positions.
+		/// </summary>
+		/// <param name="origin">The origin.</param>
+		/// <param name="destination">The destination.</param>
+		/// <returns>The travel distance</returns>
 		public static float CalculateTravelDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.CALCULATE_TRAVEL_DISTANCE_BETWEEN_POINTS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z);
 		}
+		/// <summary>
+		/// Gets the height of the ground at a given position.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector3 position)
 		{
 			return GetGroundHeight(new Vector2(position.X, position.Y));
 		}
+		/// <summary>
+		/// Gets the height of the ground at a given position.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector2 position)
 		{
 			var resultArg = new OutputArgument();
@@ -443,6 +540,10 @@ namespace GTA
 			return resultArg.GetResult<float>();
 		}
 
+		/// <summary>
+		/// Gets an <see langword="array"/> of all the <see cref="Blip"/>s on the Map
+		/// </summary>
+		/// <returns><see cref="Blip"/>[] of all the blips</returns>
 		public static Blip[] GetActiveBlips()
 		{
 			var res = new List<Blip>();
@@ -462,47 +563,27 @@ namespace GTA
 			return res.ToArray();
 		}
 
+		public static Checkpoint[] GetActiveCheckpoints()
+		{					   
+			return Array.ConvertAll<int, Checkpoint>(MemoryAccess.GetCheckpointHandles(), element => new Checkpoint(element));
+		}
+
 		static int[] ModelListToHashList(Model[] models)
 		{
-			int[] hashes = new int[models.Length];
-
-			for (int i = 0; i < models.Length; i++)
-			{
-				hashes[i] = models[i].Hash;
-			}
-
-			return hashes;
+			return Array.ConvertAll<Model, int>(models, model => model.Hash);
 		}
 
 		public static Ped[] GetAllPeds(params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetPedHandles() : MemoryAccess.GetPedHandles(ModelListToHashList(models));
-
-			var result = new Ped[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Ped(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(ModelListToHashList(models)), handle => new Ped(handle));
 		}
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetPedHandles(position, radius) : MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models));
-
-			var result = new Ped[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Ped(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models)), handle => new Ped(handle));
 		}
-		public static Ped[] GetNearbyPeds(Ped ped, float radius)
+		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
 		{
-			int[] handles = MemoryAccess.GetPedHandles(ped.Position, radius);
+			int[] handles = MemoryAccess.GetPedHandles(ped.Position, radius, ModelListToHashList(models));
 
 			var result = new List<Ped>();
 
@@ -518,68 +599,33 @@ namespace GTA
 
 			return result.ToArray();
 		}
-		public static Ped GetClosestPed(Vector3 position, float radius)
+		public static Ped GetClosestPed(Vector3 position, float radius, params Model[] models)
 		{
-			int[] handles = MemoryAccess.GetPedHandles(position, radius);
-
-			int closestHandle = 0;
-			float closestDistance = radius * radius;
-
-			foreach (var handle in handles)
-			{
-				float distance = Vector3.Subtract(Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, handle, 0), position).LengthSquared();
-
-				if (distance <= closestDistance)
-				{
-					closestHandle = handle;
-					closestDistance = distance;
-				}
-
-			}
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, closestHandle))
-			{
-				return new Ped(closestHandle);
-			}
-
-			return null;
+			Ped[] peds =
+				Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models)),
+					handle => new Ped(handle));
+			return GetClosest<Ped>(position, peds);
 		}
 
 		public static Vehicle[] GetAllVehicles(params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetVehicleHandles() : MemoryAccess.GetVehicleHandles(ModelListToHashList(models));
-
-			var result = new Vehicle[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Vehicle(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
 		{
-			int[] handles = models.Length == 0 ? MemoryAccess.GetVehicleHandles(position, radius) : MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models));
-
-			var result = new Vehicle[handles.Length];
-
-			for (int i = 0; i < handles.Length; i++)
-			{
-				result[i] = new Vehicle(handles[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
-		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius)
+		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
 		{
-			int[] handles = MemoryAccess.GetVehicleHandles(ped.Position, radius);
+			int[] handles = MemoryAccess.GetVehicleHandles(ped.Position, radius, ModelListToHashList(models));
 
 			var result = new List<Vehicle>();
+			Vehicle ignore = ped.CurrentVehicle;
+			int ignoreHandle = Vehicle.Exists(ignore) ? ignore.Handle : 0;
 
 			foreach (int handle in handles)
 			{
-				if (handle == ped.Handle)
+				if (handle == ignoreHandle)
 				{
 					continue;
 				}
@@ -589,107 +635,31 @@ namespace GTA
 
 			return result.ToArray();
 		}
-		public static Vehicle GetClosestVehicle(Vector3 position, float radius)
+		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params Model[] models)
 		{
-			int[] entities = MemoryAccess.GetVehicleHandles(position, radius);
+			Vehicle[] vehicles = 
+				Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models)),
+					handle => new Vehicle(handle));
+			return GetClosest<Vehicle>(position, vehicles);
 
-			int closestHandle = 0;
-			float closestDistance = radius * radius;
-
-			foreach (var handle in entities)
-			{
-				float distance = Vector3.Subtract(Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, handle, 0), position).LengthSquared();
-
-				if (distance <= closestDistance)
-				{
-					closestHandle = handle;
-					closestDistance = distance;
-				}
-
-			}
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, closestHandle))
-			{
-				return new Vehicle(closestHandle);
-			}
-
-			return null;
 		}
 
 		public static Prop[] GetAllProps(params Model[] models)
-		{
-			int[] entities = models.Length == 0 ? MemoryAccess.GetPropHandles() : MemoryAccess.GetPropHandles(ModelListToHashList(models));
-
-			var result = new Prop[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				result[i] = new Prop(entities[i]);
-			}
-
-			return result;
+		{						
+			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(ModelListToHashList(models)), handle => new Prop(handle));
 		}
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
 		{
-			int[] entities = models.Length == 0 ? MemoryAccess.GetPropHandles(position, radius) : MemoryAccess.GetPropHandles(position, radius, ModelListToHashList(models));
-
-			var result = new Prop[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				result[i] = new Prop(entities[i]);
-			}
-
-			return result;
+			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(position, radius, ModelListToHashList(models)), handle => new Prop(handle));
 		}
 
 		public static Entity[] GetAllEntities()
-		{
-			int[] entities = MemoryAccess.GetEntityHandles();
-
-			var result = new Entity[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, entities[i]))
-				{
-					case 1:
-						result[i] = new Ped(entities[i]);
-						break;
-					case 2:
-						result[i] = new Vehicle(entities[i]);
-						break;
-					case 3:
-						result[i] = new Prop(entities[i]);
-						break;
-				}
-			}
-
-			return result;
+		{									   
+			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(), Entity.FromHandle);
 		}
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
-			int[] entities = MemoryAccess.GetEntityHandles(position, radius);
-
-			var result = new Entity[entities.Length];
-
-			for (int i = 0; i < entities.Length; i++)
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, entities[i]))
-				{
-					case 1:
-						result[i] = new Ped(entities[i]);
-						break;
-					case 2:
-						result[i] = new Vehicle(entities[i]);
-						break;
-					case 3:
-						result[i] = new Prop(entities[i]);
-						break;
-				}
-			}
-
-			return result;
+			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(position, radius), Entity.FromHandle);
 		}
 
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
@@ -758,7 +728,7 @@ namespace GTA
 			}
 			else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, outPos, 1, 0x40400000, 0))
 			{
-				return outPos.GetResult<Vector3>();
+				return outPos.GetResult<Vector3>();		
 			}
 
 			return Vector3.Zero;
@@ -1122,7 +1092,11 @@ namespace GTA
 
 		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
-			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
+			return CreateCheckpoint(icon, position, pointTo, radius, color, 0);
+		}
+		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color, byte reserved)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, reserved);
 
 			if (handle == 0)
 			{
@@ -1212,34 +1186,56 @@ namespace GTA
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000f, IntersectOptions.Everything, null);
 		}
-
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color)
 		{
 			DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, null, null, false);
 		}
-		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
+
+		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color,
+			bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
 		{
 			if (!string.IsNullOrEmpty(textueDict) && !string.IsNullOrEmpty(textureName))
 			{
-				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict, textureName, drawOnEnt);
+				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
+					scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, textueDict,
+					textureName, drawOnEnt);
 			}
 			else
 			{
-				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
+				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
+					scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, 0, 0, drawOnEnt);
 			}
 		}
 
 		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
 		{
-			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
+			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range,
+				intensity);
 		}
-		public static void DrawSpotLight(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+
+		public static void DrawSpotLight(Vector3 pos, Vector3 dir, Color color, float distance, float brightness,
+			float roundness, float radius, float fadeout)
 		{
-			Function.Call(Hash.DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+			Function.Call(Hash.DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance,
+				brightness, roundness, radius, fadeout);
 		}
-		public static void DrawSpotLightWithShadow(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+
+		public static void DrawSpotLightWithShadow(Vector3 pos, Vector3 dir, Color color, float distance, float brightness,
+			float roundness, float radius, float fadeout)
 		{
-			Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+			Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B,
+				distance, brightness, roundness, radius, fadeout);
+		}
+
+		public static void DrawLine(Vector3 start, Vector3 end, Color color)
+		{
+			Function.Call(Hash.DRAW_LINE, start.X, start.Y, start.Z, end.X, end.Y, end.Z, color.R, color.G, color.B, color.A);
+		}
+
+		public static void DrawPoly(Vector3 vertexA, Vector3 vertexB, Vector3 vertexC, Color color)
+		{
+			Function.Call(Hash.DRAW_POLY, vertexA.X, vertexA.Y, vertexA.Z, vertexB.X, vertexB.Y, vertexB.Z, vertexC.X, vertexC.Y,
+				vertexC.Z, color.R, color.G, color.B, color.A);
 		}
 	}
 }

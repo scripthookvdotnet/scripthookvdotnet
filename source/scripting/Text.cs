@@ -13,16 +13,86 @@ namespace GTA.UI
 
 	public class Text : IElement
 	{
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Text" /> will be drawn.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if enabled; otherwise, <c>false</c>.
+		/// </value>
 		public bool Enabled { get; set; }
+		/// <summary>
+		/// Gets or sets the color of this <see cref="Text" />.
+		/// </summary>
+		/// <value>
+		/// The color.
+		/// </value>
 		public Color Color { get; set; }
+		/// <summary>
+		/// Gets or sets the position of this <see cref="Text" />.
+		/// </summary>
+		/// <value>
+		/// The position scaled on a 1280*720 pixel base.
+		/// </value>
+		/// <remarks>
+		/// If ScaledDraw is called, the position will be scaled by the width returned in <see cref="Screen.ScaledWidth" />.
+		/// </remarks>
 		public PointF Position { get; set; }
+		/// <summary>
+		/// Gets or sets the scale of this <see cref="Text"/>.
+		/// </summary>
+		/// <value>
+		/// The scale usually a value between ~0.5 and 3.0, Default = 1.0
+		/// </value>
 		public float Scale { get; set; }
+		/// <summary>
+		/// Gets or sets the font of this <see cref="Text"/>.
+		/// </summary>
+		/// <value>
+		/// The GTA Font use when drawing.
+		/// </value>
 		public Font Font { get; set; }
+		/// <summary>
+		/// Gets or sets the text to draw in this <see cref="Text"/>.
+		/// </summary>
+		/// <value>
+		/// The caption.
+		/// </value>
 		public string Caption { get; set; }
+		/// <summary>
+		/// Gets or sets the alignment of this <see cref="Text"/>.
+		/// </summary>
+		/// <value>
+		/// The alignment:<c>Left</c>, <c>Center</c>, <c>Right</c> Justify
+		/// </value>
 		public TextAlignment Alignment { get; set; }
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Text"/> is drawn with a shadow effect.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if shadow; otherwise, <c>false</c>.
+		/// </value>
 		public bool Shadow { get; set; }
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Text"/> is drawn with an outline.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if outline; otherwise, <c>false</c>.
+		/// </value>
 		public bool Outline { get; set; }
+		/// <summary>
+		/// Gets or sets the maximun size of the <see cref="Text"/> before it wraps to a new line.
+		/// </summary>
+		/// <value>
+		/// The width of the <see cref="Text"/>.
+		/// </value>
 		public float WrapWidth { get; set; }
+		/// <summary>
+		/// Gets or sets a value indicating whether the alignment of this <see cref="Text" /> is centered.
+		/// See <see cref="Alignment"/>
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if centered; otherwise, <c>false</c>.
+		/// </value>
 		public bool Centered
 		{
 			get
@@ -37,6 +107,9 @@ namespace GTA.UI
 				}
 			}
 		}
+		/// <summary>
+		/// Measures how many pixels in the horizontal axis this <see cref="Text"/> will use when drawn	against a 1280 pixel base
+		/// </summary>
 		public float Width
 		{
 			get
@@ -44,6 +117,9 @@ namespace GTA.UI
 				return GetStringWidth(Caption, Font, Scale);
 			}
 		}
+		/// <summary>
+		/// Measures how many pixels in the horizontal axis this <see cref="Text"/> will use when drawn against a <see cref="ScaledWidth"/> pixel base
+		/// </summary>
 		public float ScaledWidth
 		{
 			get
@@ -52,21 +128,75 @@ namespace GTA.UI
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
+		/// </summary>
+		/// <param name="caption">The <see cref="Text"/> to draw</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>	
 		public Text(string caption, PointF position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
+		/// </summary>
+		/// <param name="caption">The <see cref="Text"/> to draw</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 	
 		public Text(string caption, PointF position, float scale, Color color) : this(caption, position, scale, color, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
+		/// </summary>
+		/// <param name="caption">The <see cref="Text"/> to draw</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>	
 		public Text(string caption, PointF position, float scale, Color color, Font font) : this(caption, position, scale, color, font, TextAlignment.Left, false, false, 0.0f)
 		{
 		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
+		/// </summary>
+		/// <param name="caption">The <see cref="Text"/> to draw</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="TextAlignment.Left"/>,<see cref="TextAlignment.Center"/> or <see cref="TextAlignment.Right"/></param>
 		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment) : this(caption, position, scale, color, font, alignment, false, false, 0.0f)
 		{
 		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
+		/// </summary>
+		/// <param name="caption">The <see cref="Text"/> to draw</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="TextAlignment.Left"/>,<see cref="TextAlignment.Center"/> or <see cref="TextAlignment.Right"/></param>
+		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect</param>
+		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters</param>	
 		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline) : this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
 		{
 		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
+		/// </summary>
+		/// <param name="caption">The <see cref="Text"/> to draw</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="TextAlignment.Left"/>,<see cref="TextAlignment.Center"/> or <see cref="TextAlignment.Right"/></param>
+		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect</param>
+		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters</param>
+		/// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="Text"/> on the next line down</param>											 																	  
 		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline, float wrapWidth)
 		{
 			Enabled = true;
@@ -81,6 +211,15 @@ namespace GTA.UI
 			WrapWidth = wrapWidth;
 		}
 
+		/// <summary>
+		/// Measures how many pixels in the horizontal axis the string will use when drawn
+		/// </summary>
+		/// <param name="text">The string of text to measure.</param>
+		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
+		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling</param>
+		/// <returns>
+		/// The amount of pixels scaled on a 1280 pixel width base
+		/// </returns>
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
@@ -97,6 +236,15 @@ namespace GTA.UI
 
 			return Screen.Width * Function.Call<float>(Hash._GET_TEXT_SCREEN_WIDTH, 1);
 		}
+		/// <summary>
+		/// Measures how many pixels in the horizontal axis the string will use when drawn
+		/// </summary>
+		/// <param name="text">The string of text to measure.</param>
+		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
+		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling</param>
+		/// <returns>
+		/// The amount of pixels scaled by the pixel width base return in <see cref="Screen.ScaledWidth"/>
+		/// </returns>
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
@@ -114,18 +262,36 @@ namespace GTA.UI
 			return Screen.ScaledWidth * Function.Call<float>(Hash._GET_TEXT_SCREEN_WIDTH, 1);
 		}
 
+
+		/// <summary>
+		/// Draws the <see cref="Text" /> this frame.
+		/// </summary>
 		public virtual void Draw()
 		{
-			InternalDraw(SizeF.Empty, Screen.Width, Screen.Height);
+			Draw(SizeF.Empty);
 		}
+
+		/// <summary>
+		/// Draws the <see cref="Text" /> this frame at the specified offset.
+		/// </summary>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Text" /> using a 1280*720 pixel base</param>
 		public virtual void Draw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.Width, Screen.Height);
 		}
+
+		/// <summary>
+		/// Draws the <see cref="Text" /> this frame using the width returned in <see cref="Screen.ScaledWidth" />.
+		/// </summary>
 		public virtual void ScaledDraw()
 		{
-			InternalDraw(SizeF.Empty, Screen.ScaledWidth, Screen.Height);
+			ScaledDraw(SizeF.Empty);
 		}
+
+		/// <summary>
+		/// Draws the <see cref="Text" /> this frame at the specified offset using the width returned in <see cref="Screen.ScaledWidth" />.
+		/// </summary>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Text" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base</param>
 		public virtual void ScaledDraw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
