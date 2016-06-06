@@ -5,7 +5,7 @@ namespace GTA
 {
 	public struct RelationshipGroup : IEquatable<RelationshipGroup>, INativeValue
 	{
-		RelationshipGroup(String name) : this()
+		RelationshipGroup(string name) : this()
 		{
 			var hashArg = new OutputArgument();
 			Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, hashArg);
@@ -96,7 +96,7 @@ namespace GTA
 		{
 			return new RelationshipGroup(source);
 		}
-		public static implicit operator RelationshipGroup(String source)
+		public static implicit operator RelationshipGroup(string source)
 		{
 			return new RelationshipGroup(source);
 		}
