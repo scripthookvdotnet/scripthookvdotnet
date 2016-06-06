@@ -240,51 +240,6 @@ namespace GTA
 		CanBeBrokenIntoPersist,
 		CannotBeTriedToEnter = 10
 	}
-	public enum VehicleMod
-	{
-		Spoilers,
-		FrontBumper,
-		RearBumper,
-		SideSkirt,
-		Exhaust,
-		Frame,
-		Grille,
-		Hood,
-		Fender,
-		RightFender,
-		Roof,
-		Engine,
-		Brakes,
-		Transmission,
-		Horns,
-		Suspension,
-		Armor,
-		FrontWheels = 23,
-		BackWheels,
-		PlateHolder,
-		VanityPlates,
-		TrimDesign,
-		Ornaments,
-		Dashboard,
-		DialDesign,
-		DoorSpeakers,
-		Seats,
-		SteeringWheels,
-		ColumnShifterLevers,
-		Plaques,
-		Speakers,
-		Trunk,
-		Hydraulics,
-		EngineBlock,
-		AirFilter,
-		Struts,
-		ArchCover,
-		Aerials,
-		Trim,
-		Tank,
-		Windows,
-		Livery = 48
-	}
 	public enum VehicleNeonLight
 	{
 		Left,
@@ -322,23 +277,6 @@ namespace GTA
 		ExtraSeat11,
 		ExtraSeat12
 	}
-	public enum VehicleToggleMod
-	{
-		Turbo = 18,
-		TireSmoke = 20,
-		XenonHeadlights = 22
-	}
-	public enum VehicleWheelType
-	{
-		Sport,
-		Muscle,
-		Lowrider,
-		SUV,
-		Offroad,
-		Tuner,
-		BikeWheels,
-		HighEnd
-	}
 	public enum VehicleWindow
 	{
 		FrontRightWindow = 1,
@@ -361,6 +299,7 @@ namespace GTA
 	{
 		public Vehicle(int handle) : base(handle)
 		{
+			Mods = new VehicleModCollection(this);
 		}
 
 		public string DisplayName
@@ -698,7 +637,7 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = GetModCount(VehicleMod.Livery);
+				int modCount = Mods[VehicleModType.Livery].ModCount;
 
 				if (modCount > 0)
 				{
@@ -709,9 +648,9 @@ namespace GTA
 			}
 			set
 			{
-				if (GetModCount(VehicleMod.Livery) > 0)
+				if (Mods[VehicleModType.Livery].ModCount > 0)
 				{
-					SetMod(VehicleMod.Livery, value, false);
+					Mods[VehicleModType.Livery].Index = value;
 				}
 				else
 				{
@@ -723,7 +662,7 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = GetModCount(VehicleMod.Livery);
+				int modCount = Mods[VehicleModType.Livery].ModCount;
 
 				if (modCount > 0)
 				{
@@ -1498,43 +1437,7 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
 			}
 		}
-
-		public void InstallModKit()
-		{
-			Function.Call(Hash.SET_VEHICLE_MOD_KIT, Handle, 0);
-		}
-		public int GetMod(VehicleMod modType)
-		{
-			return Function.Call<int>(Hash.GET_VEHICLE_MOD, Handle, modType);
-		}
-		public void SetMod(VehicleMod modType, int modIndex, bool variations)
-		{
-			Function.Call(Hash.SET_VEHICLE_MOD, Handle, modType, modIndex, variations);
-		}
-		public int GetModCount(VehicleMod modType)
-		{
-			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Handle, modType);
-		}
-		public void ToggleMod(VehicleToggleMod toggleMod, bool toggle)
-		{
-			Function.Call(Hash.TOGGLE_VEHICLE_MOD, Handle, toggleMod, toggle);
-		}
-		public bool IsToggleModOn(VehicleToggleMod toggleMod)
-		{
-			return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Handle, toggleMod);
-		}
-		public string GetModTypeName(VehicleMod modType)
-		{
-			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, modType);
-		}
-		public string GetToggleModTypeName(VehicleToggleMod toggleModType)
-		{
-			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, toggleModType);
-		}
-		public string GetModName(VehicleMod modType, int modValue)
-		{
-			return Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Handle, modType, modValue);
-		}
+		public VehicleModCollection Mods { get; private set; }
 
 		public bool ExtraExists(int extra)
 		{
