@@ -85,6 +85,8 @@ namespace GTA
 		void LookAt(Math::Vector3 position, int duration);
 		void ParachuteTo(Math::Vector3 position);
 		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading);
+		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading, float radius);
+		void ParkVehicle(Vehicle ^vehicle, Math::Vector3 position, float heading, float radius, bool keepEngineOn);
 		void PerformSequence(TaskSequence ^sequence);
 
 		void PlayAnimation(System::String ^animDict, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate);
