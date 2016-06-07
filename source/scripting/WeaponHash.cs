@@ -1,4 +1,4 @@
-namespace GTA.Native
+namespace GTA
 {
 	public enum WeaponHash : uint
 	{
