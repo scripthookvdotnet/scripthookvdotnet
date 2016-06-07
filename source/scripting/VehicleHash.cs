@@ -1,4 +1,4 @@
-namespace GTA.Native
+namespace GTA
 {
 	public enum VehicleHash : uint
 	{
@@ -32,6 +32,7 @@ namespace GTA.Native
 		Bati2 = 3403504941u,
 		Benson = 2053223216u,
 		Besra = 1824333165u,
+		Bestiagt = 3349510363u,
 		BfInjection = 1126868326u,
 		Biff = 850991848u,
 		Bifta = 3945366167u,
@@ -57,6 +58,7 @@ namespace GTA.Native
 		Boxville3 = 121658888u,
 		Boxville4 = 444171386u,
 		Brawler = 2815302597u,
+		Brickade = 3989239879u,
 		BType = 117401876u,
 		BType2 = 3463132580u,
 		BType3 = 3692679425u,
@@ -151,6 +153,7 @@ namespace GTA.Native
 		Fixter = 3458454463u,
 		Flatbed = 1353720154u,
 		Forklift = 1491375716u,
+		Fmj = 1426219628u,
 		Fq2 = 3157435195u,
 		Freight = 1030400667u,
 		FreightCar = 184361638u,
@@ -233,6 +236,7 @@ namespace GTA.Native
 		Mule3 = 2242229361u,
 		Nemesis = 3660088182u,
 		Nightshade = 2351681756u,
+		Nimbus = 2999939664u,
 		Ninef = 1032823388u,
 		Ninef2 = 2833484545u,
 		Oracle = 1348744438u,
@@ -246,6 +250,7 @@ namespace GTA.Native
 		PCJ = 3385765638u,
 		Penumbra = 3917501776u,
 		Peyote = 1830407356u,
+		Pfister811 = 2465164804u,
 		Phantom = 2157618379u,
 		Phoenix = 2199527893u,
 		Picador = 1507916787u,
@@ -269,6 +274,7 @@ namespace GTA.Native
 		Primo = 3144368207u,
 		Primo2 = 2254540506u,
 		PropTrailer = 356391690u,
+		Prototipo = 2123327359u,
 		Radi = 2643899483u,
 		RakeTrailer = 390902130u,
 		RancherXL = 1645267888u,
@@ -277,6 +283,7 @@ namespace GTA.Native
 		RapidGT2 = 1737773231u,
 		RatLoader = 3627815886u,
 		RatLoader2 = 3705788919u,
+		Reaper = 234062309u,
 		Rebel = 3087195462u,
 		Rebel2 = 2249373259u,
 		Regina = 4280472072u,
@@ -292,6 +299,7 @@ namespace GTA.Native
 		Ruiner = 4067225593u,
 		Rumpo = 1162065741u,
 		Rumpo2 = 2518351607u,
+		Rumpo3 = 1475773103u,
 		SabreGT = 2609945748u,
 		SabreGT2 = 223258115u,
 		Sadler = 3695398481u,
@@ -316,6 +324,7 @@ namespace GTA.Native
 		Sentinel = 1349725314u,
 		Sentinel2 = 873639469u,
 		Serrano = 1337041428u,
+		Seven70 = 2537130571u,
 		Shamal = 3080461301u,
 		Sheriff = 2611638396u,
 		Sheriff2 = 1922257928u,
@@ -395,6 +404,7 @@ namespace GTA.Native
 		TriBike3 = 3894672200u,
 		Tropic = 290013743u,
 		Tropic2 = 1448677353u,
+		Tug = 2194326579u,
 		Turismor = 408192225u,
 		TVTrailer = 2524324030u,
 		UtilityTruck = 516990260u,
@@ -416,16 +426,21 @@ namespace GTA.Native
 		Virgo = 3796912450u,
 		Virgo2 = 3395457658u,
 		Virgo3 = 16646064u,
+		Volatus = 2449479409u,
 		Voltic = 2672523198u,
 		Voodoo = 2006667053u,
 		Voodoo2 = 523724515u,
 		Warrener = 1373123368u,
 		Washington = 1777363799u,
 		Windsor = 1581459400u,
+		Windsor2 = 2364918497u,
+		Xls = 1203490606u,
+		Xls2 = 3862958888u,
 		Youga = 65402552u,
 		Zentorno = 2891838741u,
 		Zion = 3172678083u,
 		Zion2 = 3101863448u,
 		Ztype = 758895617u
+		
 	}
 }
