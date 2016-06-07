@@ -148,6 +148,13 @@ namespace GTA
 		SwitchbladeVarmodVar2 = 3885209186u,
 		VintagePistolClip01 = 1168357051u,
 		VintagePistolClip02 = 867832552u,
+		//757 update
+		SMGClip03 = 0x79C77076,
+		AssaultRifleClip03 = 0xDBF0A53D,
+		CarbineRifleClip03 = 0xBA62E935,
+		CombatPDWClip03 = 0x6EB8C8DB,
+		SpecialCarbineClip03 = 0x6B59AEAA,
+		MachinePistolClip03 = 0xA9E9CAF4,
 		Invalid = 4294967295u
 	}
 
@@ -541,6 +548,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.SMGClip01,
 							WeaponComponent.SMGClip02,
+							WeaponComponent.SMGClip03,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtPiSupp,
 							WeaponComponent.AtScopeMacro02,
@@ -551,6 +559,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.AssaultRifleClip01,
 							WeaponComponent.AssaultRifleClip02,
+							WeaponComponent.AssaultRifleClip03,
 							WeaponComponent.AtArAfGrip,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtScopeMacro,
@@ -561,6 +570,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.CarbineRifleClip01,
 							WeaponComponent.CarbineRifleClip02,
+							WeaponComponent.CarbineRifleClip03,
 							WeaponComponent.AtRailCover01,
 							WeaponComponent.AtArAfGrip,
 							WeaponComponent.AtArFlsh,
@@ -658,6 +668,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.CombatPDWClip01,
 							WeaponComponent.CombatPDWClip02,
+							WeaponComponent.CombatPDWClip03,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtScopeSmall,
 							WeaponComponent.AtArAfGrip,
@@ -686,6 +697,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.SpecialCarbineClip01,
 							WeaponComponent.SpecialCarbineClip02,
+							WeaponComponent.SpecialCarbineClip03,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtScopeMedium,
 							WeaponComponent.AtArSupp02,
@@ -708,6 +720,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.MachinePistolClip01,
 							WeaponComponent.MachinePistolClip02,
+							WeaponComponent.MachinePistolClip03,
 							WeaponComponent.AtPiSupp,
 						};
 				case WeaponHash.SwitchBlade:
@@ -908,6 +921,12 @@ namespace GTA
 						return "WCT_REV_VARB";
 					case WeaponComponent.RevolverVarmodGoon:
 						return "WCT_REV_VARG";
+					case WeaponComponent.SMGClip03:
+					case WeaponComponent.AssaultRifleClip03:
+					case (WeaponComponent)0x88C7DA53:
+						return "WCT_CLIP_DRM";
+					case WeaponComponent.CarbineRifleClip03:
+						return "WCT_CLIP_BOX";
 				}
 			}
 

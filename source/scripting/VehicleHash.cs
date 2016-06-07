@@ -426,6 +426,21 @@ namespace GTA.Native
 		Zentorno = 2891838741u,
 		Zion = 3172678083u,
 		Zion2 = 3101863448u,
-		Ztype = 758895617u
+		Ztype = 758895617u,
+		//757
+		Bestiagt = 3349510363u,
+		Brickade = 3989239879u,
+		Fmj = 1426219628u,
+		Nimbus = 2999939664u,
+		Pfister811 = 2465164804u,
+		Prototipo = 2123327359u,
+		Reaper = 234062309u,
+		Rumpo3 = 1475773103u,
+		Seven70 = 2537130571u,
+		Tug = 2194326579u,
+		Volatus = 2449479409u,
+		Windsor2 = 2364918497u,
+		Xls = 1203490606u,
+		Xls2 = 3862958888u
 	}
 }
