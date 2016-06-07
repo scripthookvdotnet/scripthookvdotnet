@@ -38,6 +38,9 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets or sets how much money the <see cref="Ped"/> is carrying.
+		/// </summary>
 		public int Money
 		{
 			get
@@ -49,6 +52,10 @@ namespace GTA
 				Function.Call(Hash.SET_PED_MONEY, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets the gender of the <see cref="Ped"/>.
+		/// </summary>
+
 		public Gender Gender
 		{
 			get
@@ -56,6 +63,9 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PED_MALE, Handle) ? Gender.Male : Gender.Female;
 			}
 		}
+		/// <summary>
+		/// Gets or sets the maximum health of the <see cref="Ped"/>.
+		/// </summary>
 		public override int MaxHealth
 		{
 			get
@@ -67,6 +77,9 @@ namespace GTA
 				Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets how much Armor the <see cref="Ped"/> is wearing.
+		/// </summary>
 		public int Armor
 		{
 			get
@@ -78,6 +91,12 @@ namespace GTA
 				Function.Call(Hash.SET_PED_ARMOUR, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets how accurate the <see cref="Ped"/>s shooting ability is.
+		/// </summary>
+		/// <value>
+		/// The accuracy from 0 to 100, 0 being very innacurate, 100 being perfectly accurate.
+		/// </value>
 		public int Accuracy
 		{
 			get
@@ -90,6 +109,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Opens a list of <see cref="Tasks"/> that the <see cref="Ped"/> can carry out.
+		/// </summary>
 		public Tasks Task
 		{
 			get
@@ -101,6 +123,9 @@ namespace GTA
 				return _tasks;
 			}
 		}
+		/// <summary>
+		/// Gets the stage of the <see cref="TaskSequence"/> the <see cref="Ped"/> is currently executing.
+		/// </summary>
 		public int TaskSequenceProgress
 		{
 			get
@@ -109,6 +134,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Opens a list of <see cref="GTA.NaturalMotion.Euphoria"/> Helpers which can be applie to the <see cref="Ped"/>.
+		/// </summary>
 		public Euphoria Euphoria
 		{
 			get
@@ -121,6 +149,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets a collection of all the <see cref="Ped"/>s <see cref="Weapon"/>s.
+		/// </summary>
 		public WeaponCollection Weapons
 		{
 			get
@@ -133,6 +164,10 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the last <see cref="Vehicle"/> the <see cref="Ped"/> used.
+		/// </summary>
+		/// <remarks>returns <langword>null</langword> if the Last Vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle
 		{
 			get
@@ -147,6 +182,10 @@ namespace GTA
 				return new Vehicle(handle);
 			}
 		}
+		/// <summary>
+		/// Gets the current <see cref="Vehicle"/> the <see cref="Ped"/> is using.
+		/// </summary>
+		/// <remarks>returns <langword>null</langword> if the <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
 		public Vehicle CurrentVehicle
 		{
 			get
@@ -159,6 +198,9 @@ namespace GTA
 				return new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
 			}
 		}
+		/// <summary>
+		/// Gets the PedGroup the <see cref="Ped"/> is in.
+		/// </summary>
 		public PedGroup CurrentPedGroup
 		{
 			get
@@ -172,8 +214,22 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the how much sweat should be rendered on the <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The sweat from 0 to 100, 0 being no sweat, 100 being saturated.
+		/// </value>
 		public float Sweat
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0;
+				}
+				return MemoryAccess.ReadInt(MemoryAddress + 4464);
+			}
 			set
 			{
 				if (value < 0)
@@ -188,14 +244,30 @@ namespace GTA
 				Function.Call(Hash.SET_PED_SWEAT, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets how high up on the <see cref="Ped"/>s body water should be visible
+		/// </summary>
+		/// <value>
+		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water
+		/// </value>
 		public float WetnessHeight
 		{
 			set
 			{
-				Function.Call<float>(Hash.SET_PED_WETNESS_HEIGHT, Handle, value);
+				if (value == 0.0f)
+				{
+					Function.Call(Hash.CLEAR_PED_WETNESS, Handle);
+				}
+				else
+				{
+					Function.Call<float>(Hash.SET_PED_WETNESS_HEIGHT, Handle, value);
+				}
 			}
 		}
 
+		/// <summary>
+		/// Sets the voice to use when the <see cref="Ped"/> speaks.
+		/// </summary>
 		public string Voice
 		{
 			set
@@ -204,6 +276,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets the rate the <see cref="Ped"/> will shoot at.
+		/// </summary>
+		/// <value>
+		/// The shoot rate from 0.0f to 1000.0f, 100.0f is the default value
+		/// </value>
 		public int ShootRate
 		{
 			set
@@ -212,6 +290,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the <see cref="Ped"/> was killed by a stealth attack.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if <see cref="Ped"/> was killed by stealth; otherwise, <c>false</c>.
+		/// </value>
 		public bool WasKilledByStealth
 		{
 			get
@@ -219,6 +303,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.WAS_PED_KILLED_BY_STEALTH, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether the <see cref="Ped"/> was killed by a takedown.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if <see cref="Ped"/> was killed by a takedown; otherwise, <c>false</c>.
+		/// </value>
 		public bool WasKilledByTakedown
 		{
 			get
@@ -227,6 +317,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="VehicleSeat"/> the <see cref="Ped"/> is in
+		/// </summary>
+		/// <value>
+		/// The <see cref="VehicleSeat"/> the <see cref="Ped"/> is in if the <see cref="Ped"/> is in a <see cref="Vehicle"/>; otherwise, <see cref="VehicleSeat.None"/>
+		/// </value>
 		public VehicleSeat SeatIndex
 		{
 			get
@@ -246,6 +342,12 @@ namespace GTA
 				return (VehicleSeat)(seatIndex - 1);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Ped"/> is jumping out of their vehicle.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Ped"/> is jumping out of their vehicle; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsJumpingOutOfVehicle
 		{
 			get
@@ -253,6 +355,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
 			}
 		}
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if <see cref="Ped"/> stays in vehicle when jacked; otherwise, <c>false</c>.
+		/// </value>
 		public bool StaysInVehicleWhenJacked
 		{
 			set
@@ -261,6 +369,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets the maximum driving speed the <see cref="Ped"/> can drive at.
+		/// </summary>
 		public float MaxDrivingSpeed
 		{
 			set
@@ -269,6 +380,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Ped"/> is human.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Ped"/> is human; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsHuman
 		{
 			get
