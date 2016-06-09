@@ -18,19 +18,16 @@
 #include "Menu.hpp"
 #include "Settings.hpp"
 
+using namespace System;
+using namespace System::Threading;
+using namespace System::Collections::Concurrent;
+namespace WinForms = System::Windows::Forms;
+
 namespace GTA
 {
-	using namespace System;
-	using namespace System::Threading;
-	using namespace System::Windows::Forms;
-	using namespace System::Collections::Concurrent;
-
 	extern void HandleUnhandledException(Object ^sender, UnhandledExceptionEventArgs ^args);
 
-	Script::Script() : _interval(0), _running(false), _filename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), _scriptdomain(ScriptDomain::CurrentDomain), _waitEvent(gcnew AutoResetEvent(false)), _continueEvent(gcnew AutoResetEvent(false)), _keyboardEvents(gcnew ConcurrentQueue<Tuple<bool, KeyEventArgs ^> ^>())
-	{
-	}
-	Script::~Script()
+	Script::Script() : _filename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), _scriptdomain(ScriptDomain::CurrentDomain)
 	{
 	}
 
@@ -80,6 +77,15 @@ namespace GTA
 
 	void Script::Abort()
 	{
+		try
+		{
+			Aborted(this, EventArgs::Empty);
+		}
+		catch (Exception ^ex)
+		{
+			HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, true));
+		}
+
 		_waitEvent->Set();
 
 		_scriptdomain->AbortScript(this);
@@ -93,7 +99,7 @@ namespace GTA
 			throw gcnew InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
 		}
 
-		const DateTime resume = DateTime::UtcNow + TimeSpan::FromMilliseconds(ms);
+		const auto resume = DateTime::UtcNow + TimeSpan::FromMilliseconds(ms);
 
 		do
 		{
@@ -115,7 +121,7 @@ namespace GTA
 		// Run main loop
 		while (_running)
 		{
-			Tuple<bool, KeyEventArgs ^> ^keyevent = nullptr;
+			Tuple<bool, WinForms::KeyEventArgs ^> ^keyevent = nullptr;
 
 			// Process events
 			while (_keyboardEvents->TryDequeue(keyevent))

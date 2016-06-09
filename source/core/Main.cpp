@@ -16,11 +16,12 @@
 
 #include "ScriptDomain.hpp"
 
+using namespace System;
+using namespace System::Reflection;
+namespace WinForms = System::Windows::Forms;
+
 namespace
 {
-	using namespace System;
-	using namespace System::Windows::Forms;
-
 	ref struct ScriptHook
 	{
 		static GTA::ScriptDomain ^Domain = nullptr;
@@ -33,7 +34,7 @@ namespace
 			GTA::ScriptDomain::Unload(ScriptHook::Domain);
 		}
 
-		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(Reflection::Assembly::GetExecutingAssembly()->Location), "scripts"));
+		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(Assembly::GetExecutingAssembly()->Location), "scripts"));
 
 		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 		{
@@ -46,7 +47,7 @@ namespace
 	}
 	bool ManagedTick()
 	{
-		if (ScriptHook::Domain->IsKeyPressed(Keys::Insert))
+		if (ScriptHook::Domain->IsKeyPressed(WinForms::Keys::Insert))
 		{
 			return false;
 		}
@@ -62,7 +63,7 @@ namespace
 			return;
 		}
 
-		ScriptHook::Domain->DoKeyboardMessage(static_cast<Keys>(key), status, statusCtrl, statusShift, statusAlt);
+		ScriptHook::Domain->DoKeyboardMessage(static_cast<WinForms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
 	}
 }
 
@@ -98,7 +99,17 @@ namespace
 	{
 		const auto version = getGameVersion();
 
-		if (version >= 18)
+		if (version >= 20)
+		{
+			// Disable mpexecutive and mplowrider2 car removing
+			const auto global2562051 = getGlobalPtr(2562051);
+
+			if (global2562051 != nullptr)
+			{
+				*global2562051 = 1;
+			}
+		}
+		else if (version >= 18)
 		{
 			// Disable mplowrider2 car removing
 			const auto global2558120 = getGlobalPtr(2558120);

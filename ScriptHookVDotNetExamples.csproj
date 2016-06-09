@@ -30,6 +30,7 @@
     <ProjectReference Include="ScriptHookVDotNet.vcxproj">
       <Project>{019193a7-50c0-444a-84ca-777595e702cd}</Project>
       <Name>ScriptHookVDotNet</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

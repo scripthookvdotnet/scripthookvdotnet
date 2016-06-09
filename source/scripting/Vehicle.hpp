@@ -179,7 +179,6 @@ namespace GTA
 		BackLeftDoor = 2,
 		Hood = 4,
 		Trunk = 5,
-		Trunk2 = 6,
 	};
 	public enum class VehicleLockStatus
 	{
@@ -375,6 +374,10 @@ namespace GTA
 		{
 			bool get();
 		}
+		property Ped ^Driver
+		{
+			Ped ^get();
+		}
 		property array<Ped ^> ^Occupants
 		{
 			array<Ped ^> ^get();
@@ -436,6 +439,14 @@ namespace GTA
 			bool get();
 		}
 		property bool IsOnAllWheels
+		{
+			bool get();
+		}
+		property bool IsFrontBumperBrokenOff
+		{
+			bool get();
+		}
+		property bool IsRearBumperBrokenOff
 		{
 			bool get();
 		}
@@ -584,6 +595,10 @@ namespace GTA
 		{
 			void set(bool value);
 		}
+		property bool IsAxlesStrong
+		{
+			void set(bool value);
+		}
 		property bool LightsOn
 		{
 			void set(bool value);
@@ -661,6 +676,14 @@ namespace GTA
 			bool get();
 			void set(bool value);
 		}
+		property bool DropsMoneyOnExplosion
+		{
+			void set(bool value);
+		}
+		property bool ProvidesCover
+		{
+			void set(bool value);
+		}
 		property System::Drawing::Color CustomPrimaryColor
 		{
 			System::Drawing::Color get();
@@ -706,6 +729,22 @@ namespace GTA
 		{
 			bool get();
 		}
+		property bool HasBombBay
+		{
+			bool get();
+		}
+		property bool HasForks
+		{
+			bool get();
+		}
+		property bool HasSiren
+		{
+			bool get();
+		}
+		property bool HasTowArm
+		{
+			bool get();
+		}
 		property int CurrentGear
 		{
 			int get();
@@ -723,8 +762,17 @@ namespace GTA
 		property float CurrentRPM
 		{
 			float get();
+			void set(float value);
 		}
 		property float Acceleration
+		{
+			float get();
+		}
+		/// <summary>
+		/// Gets the speed the wheels are spinning at
+		/// </summary>
+		/// <value>The speed in meters per second</value>
+		property float WheelSpeed
 		{
 			float get();
 		}
@@ -771,20 +819,29 @@ namespace GTA
 		System::String ^GetModTypeName(VehicleMod modType);
 		System::String ^GetToggleModTypeName(VehicleToggleMod toggleModType);
 		System::String ^GetModName(VehicleMod modType, int modValue);
+		bool ExtraExists(int extra);
+		bool IsExtraOn(int extra);
+		void ToggleExtra(int extra, bool toggle);
 		void ClearCustomPrimaryColor();
 		void ClearCustomSecondaryColor();
 		Ped ^GetPedOnSeat(VehicleSeat seat);
 		bool IsSeatFree(VehicleSeat seat);
 
 		void Repair();
+		void Wash();
 		void Explode();
 		bool PlaceOnGround();
 		void PlaceOnNextStreet();
+		array<VehicleDoor> ^GetDoors();
 		void OpenDoor(VehicleDoor door, bool loose, bool instantly);
 		void CloseDoor(VehicleDoor door, bool instantly);
 		void BreakDoor(VehicleDoor door);
 		bool IsDoorBroken(VehicleDoor door);
+		bool IsDoorOpen(VehicleDoor door);
+		float GetDoorAngleRatio(VehicleDoor door);
 		void SetDoorBreakable(VehicleDoor door, bool isBreakable);
+		void OpenBombBay();
+		void CloseBombBay();
 		void FixWindow(VehicleWindow window);
 		void SmashWindow(VehicleWindow window);
 		void RollUpWindow(VehicleWindow window);

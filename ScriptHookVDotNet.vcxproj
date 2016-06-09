@@ -64,6 +64,7 @@
   </ItemGroup>
   <!-- Core source files -->
   <ItemGroup>
+    <ClCompile Include="source\AssemblyInfo.cpp" />
     <ClCompile Include="source\core\Main.cpp" />
     <ClCompile Include="source\core\Native.cpp" />
     <ClCompile Include="source\core\NativeMemory.cpp" />

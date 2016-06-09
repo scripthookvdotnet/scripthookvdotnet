@@ -234,14 +234,16 @@ namespace GTA
 	{
 		Collections::Generic::List<Blip ^> ^res = gcnew Collections::Generic::List<Blip ^>();
 
-		int it = Native::Function::Call<int>(Native::Hash::_GET_BLIP_INFO_ID_ITERATOR);
-		int handle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, it);
-
-		while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, handle))
+		for each(BlipSprite sprite in Enum::GetValues(BlipSprite::typeid))
 		{
-			res->Add(gcnew Blip(handle));
+			int handle = Native::Function::Call<int>(Native::Hash::GET_FIRST_BLIP_INFO_ID, static_cast<int>(sprite));
 
-			handle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, it);
+			while (Native::Function::Call<bool>(Native::Hash::DOES_BLIP_EXIST, handle))
+			{
+				res->Add(gcnew Blip(handle));
+
+				handle = Native::Function::Call<int>(Native::Hash::GET_NEXT_BLIP_INFO_ID, static_cast<int>(sprite));
+			}
 		}
 
 		return res->ToArray();
@@ -519,6 +521,22 @@ namespace GTA
 			return gcnew Vehicle(closestHandle);
 		}
 		return nullptr;
+	}
+	generic <typename T> where T : ISpatial
+	T World::GetClosest(Math::Vector3 position, ... array<T> ^spatials)
+	{
+		float closestDist2 = 3e38f;
+		ISpatial ^closest = nullptr;
+		for (int i = 0; i < spatials->Length; i++)
+		{
+			float dist2 = Math::Vector3::Subtract(spatials[i]->Position,  position).LengthSquared();
+			if (dist2 <= closestDist2)
+			{
+				closest = spatials[i];
+				closestDist2 = dist2;
+			}
+		}
+		return static_cast<T>(closest);
 	}
 	float World::GetDistance(Math::Vector3 origin, Math::Vector3 destination)
 	{
@@ -1008,9 +1026,17 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
 	}
+	void World::AddExplosion(Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
+	{
+		Native::Function::Call(Native::Hash::ADD_EXPLOSION, position.X, position.Y, position.Z, static_cast<int>(type), radius, Aubidble, Invis, cameraShake);
+	}
 	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake)
 	{
 		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, true, false, cameraShake);
+	}
+	void World::AddOwnedExplosion(Ped ^ped, Math::Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
+	{
+		Native::Function::Call(Native::Hash::ADD_OWNED_EXPLOSION, ped->Handle, position.X, position.Y, position.Z, static_cast<int>(type), radius, Aubidble, Invis, cameraShake);
 	}
 	Rope ^World::AddRope(RopeType type, Math::Vector3 position, Math::Vector3 rotation, float length, float minLength, bool breakable)
 	{

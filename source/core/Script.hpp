@@ -45,6 +45,7 @@ namespace GTA
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
+		event System::EventHandler ^Aborted;
 
 		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys ActivateKey = System::Windows::Forms::Keys::NumPad5;
@@ -98,20 +99,18 @@ namespace GTA
 		}
 
 	internal:
-		~Script();
-
 		void MainLoop();
 		void HandleViewportDraw(System::Object ^sender, System::EventArgs ^e);
 		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
-		int _interval;
-		bool _running;
+		int _interval = 0;
+		bool _running = false;
 		System::String ^_filename;
 		ScriptDomain ^_scriptdomain;
 		System::Threading::Thread ^_thread;
-		System::Threading::AutoResetEvent ^_waitEvent;
-		System::Threading::AutoResetEvent ^_continueEvent;
-		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^_keyboardEvents;
+		System::Threading::AutoResetEvent ^_waitEvent = gcnew System::Threading::AutoResetEvent(false);
+		System::Threading::AutoResetEvent ^_continueEvent = gcnew System::Threading::AutoResetEvent(false);
+		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^_keyboardEvents = gcnew System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^>();
 		Viewport ^_viewport;
 		ScriptSettings ^_settings;
 	};

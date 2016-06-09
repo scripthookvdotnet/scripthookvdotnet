@@ -44,6 +44,11 @@ namespace GTA
 		{
 			Native::WeaponHash get();
 		}
+
+		property System::String ^Name
+		{
+			System::String ^get();
+		}
 		property int Ammo
 		{
 			int get();
@@ -95,6 +100,18 @@ namespace GTA
 			void set(WeaponTint value);
 			WeaponTint get();
 		}
+		property int MaxComponents
+		{
+			int get();
+		}
+		Native::WeaponComponent GetComponent(int index);
+		void SetComponent(Native::WeaponComponent component, bool on);
+		bool IsComponentActive(Native::WeaponComponent component);
+		System::String ^ComponentName(Native::WeaponComponent component);
+
+		static System::String ^GetDisplayNameFromHash(Native::WeaponHash Hash);
+		static array<Native::WeaponComponent> ^GetComponentsFromHash(Native::WeaponHash Hash);
+		static System::String ^GetComponentDisplayNameFromHash(Native::WeaponHash Hash, Native::WeaponComponent component);
 
 	internal:
 		Weapon();

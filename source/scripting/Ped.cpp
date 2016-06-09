@@ -39,6 +39,24 @@ namespace GTA
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PED_MALE, Handle) ? GTA::Gender::Male : GTA::Gender::Female;
 	}
+	void Ped::MovementAnimationSet::set(System::String ^value)
+	{
+		Native::Function::Call(Native::Hash::REQUEST_ANIM_SET, value);
+
+		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
+
+		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, value))
+		{
+			Script::Yield();
+
+			if (System::DateTime::UtcNow >= endtime)
+			{
+				return;
+			}
+		}
+
+		Native::Function::Call(Native::Hash::SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
+	}
 	int Ped::Armor::get()
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_ARMOUR, Handle);
@@ -443,6 +461,12 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::SET_PED_SWEAT, Handle, value);
 	}
+	bool Ped::DropsWeaponsOnDeath::get()
+	{
+		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BD) & (1 << 6)) == 0;
+	}
 	void Ped::DropsWeaponsOnDeath::set(bool value)
 	{
 		Native::Function::Call(Native::Hash::SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
@@ -582,6 +606,14 @@ namespace GTA
 	int Ped::GetBoneIndex(Bone BoneID)
 	{
 		return Native::Function::Call<int>(Native::Hash::GET_PED_BONE_INDEX, Handle, (int)BoneID);
+	}
+
+	Math::Vector3 Ped::GetLastWeaponImpactCoords()
+	{
+		Native::OutputArgument ^OutCoords = gcnew Native::OutputArgument();
+		if (Native::Function::Call<bool>(Native::Hash::GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, OutCoords))
+			return OutCoords->GetResult<Math::Vector3>();
+		return Math::Vector3::Zero;
 	}
 
 	bool Ped::GetConfigFlag(int flagID)

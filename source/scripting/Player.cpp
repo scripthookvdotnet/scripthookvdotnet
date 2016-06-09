@@ -4,6 +4,7 @@
 #include "Vehicle.hpp"
 #include "Prop.hpp"
 #include "Native.hpp"
+#include "Model.hpp"
 
 namespace GTA
 {
@@ -105,6 +106,14 @@ namespace GTA
 	{
 		return Native::Function::Call<Vehicle ^>(Native::Hash::GET_PLAYERS_LAST_VEHICLE);
 	}
+	int Player::MaxArmor::get()
+	{
+		return Native::Function::Call<int>(Native::Hash::GET_PLAYER_MAX_ARMOUR, Handle);
+	}
+	void Player::MaxArmor::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_MAX_ARMOUR, Handle, value);
+	}
 	int Player::Money::get()
 	{
 		int hash;
@@ -171,7 +180,54 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL, Handle, value, false);
 		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_LEVEL_NOW, Handle, false);
 	}
-
+	Math::Vector3 Player::WantedCenterPosition::get()
+	{
+		return Native::Function::Call<Math::Vector3>(Native::Hash::GET_PLAYER_WANTED_CENTRE_POSITION, Handle);
+	}
+	void Player::WantedCenterPosition::set(Math::Vector3 value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_WANTED_CENTRE_POSITION, Handle, value.X, value.Y, value.Z);
+	}
+	ParachuteTint Player::PrimaryParachuteTint::get()
+	{
+		int tint = 0;
+		Native::Function::Call(Native::Hash::GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &tint);
+		return static_cast<ParachuteTint>(tint);
+	}
+	void Player::PrimaryParachuteTint::set(ParachuteTint value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, static_cast<int>(value));
+	}
+	ParachuteTint Player::ReserveParachuteTint::get()
+	{
+		int tint = 0;
+		Native::Function::Call(Native::Hash::GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &tint);
+		return static_cast<ParachuteTint>(tint);
+	}
+	void Player::ReserveParachuteTint::set(ParachuteTint value)
+	{
+		Native::Function::Call(Native::Hash::SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, static_cast<int>(value));
+	}
+	bool Player::ChangeModel(Model model)
+	{
+		if (!model.IsInCdImage && !model.IsPed)
+		{
+			return false;
+		}
+		if (model.Request(1000))
+		{
+			Native::Function::Call(Native::Hash::SET_PLAYER_MODEL, Handle, model.Hash);
+			model.MarkAsNoLongerNeeded();
+			return true;
+		}
+		return false;
+		
+	}
+	void Player::RefillSpecialAbility()
+	{
+		Native::Function::Call(Native::Hash::SPECIAL_ABILITY_FILL_METER, Handle, 1);
+	}
+		
 	void Player::DisableFiringThisFrame()
 	{
 		Native::Function::Call(Native::Hash::DISABLE_PLAYER_FIRING, Handle, 0);
@@ -179,6 +235,14 @@ namespace GTA
 	bool Player::IsTargetting(Entity ^entity)
 	{
 		return Native::Function::Call<bool>(Native::Hash::IS_PLAYER_FREE_AIMING_AT_ENTITY, Handle, entity->Handle);
+	}
+	void Player::SetRunSpeedMultThisFrame(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Handle, value > 1.499f ? 1.499f : value);
+	}
+	void Player::SetSwimSpeedMultThisFrame(float value)
+	{
+		Native::Function::Call(Native::Hash::SET_SWIM_MULTIPLIER_FOR_PLAYER, Handle, value > 1.499f ? 1.499f : value);
 	}
 	Entity ^Player::GetTargetedEntity()
 	{
@@ -213,6 +277,22 @@ namespace GTA
 	void Player::SetMayNotEnterAnyVehicleThisFrame()
 	{
 		Native::Function::Call(Native::Hash::SET_PLAYER_MAY_NOT_ENTER_ANY_VEHICLE, Handle);
+	}
+	void Player::SetExplosiveAmmoThisFrame()
+	{
+		Native::Function::Call(Native::Hash::SET_EXPLOSIVE_AMMO_THIS_FRAME, Handle);
+	}
+	void Player::SetExplosiveMeleeThisFrame()
+	{
+		Native::Function::Call(Native::Hash::SET_EXPLOSIVE_MELEE_THIS_FRAME, Handle);
+	}
+	void Player::SetSuperJumpThisFrame()
+	{
+		Native::Function::Call(Native::Hash::SET_SUPER_JUMP_THIS_FRAME, Handle);
+	}
+	void Player::SetFireAmmoThisFrame()
+	{
+		Native::Function::Call(Native::Hash::SET_FIRE_AMMO_THIS_FRAME, Handle);
 	}
 
 	bool Player::Equals(Object ^value)

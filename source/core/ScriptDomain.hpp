@@ -100,11 +100,11 @@ namespace GTA
 		System::AppDomain ^_appdomain;
 		int _executingThreadId;
 		Script ^_executingScript;
-		System::Collections::Generic::List<Script ^> ^_runningScripts;
-		System::Collections::Generic::Queue<IScriptTask ^> ^_taskQueue;
-		System::Collections::Generic::List<System::IntPtr> ^_pinnedStrings;
-		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^_scriptTypes;
-		bool _recordKeyboardEvents;
-		array<bool> ^_keyboardState;
+		System::Collections::Generic::List<Script ^> ^_runningScripts = gcnew System::Collections::Generic::List<Script ^>();
+		System::Collections::Generic::Queue<IScriptTask ^> ^_taskQueue = gcnew System::Collections::Generic::Queue<IScriptTask ^>();
+		System::Collections::Generic::List<System::IntPtr> ^_pinnedStrings = gcnew System::Collections::Generic::List<System::IntPtr>();
+		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^_scriptTypes = gcnew System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^>();
+		bool _recordKeyboardEvents = true;
+		array<bool> ^_keyboardState = gcnew array<bool>(256);
 	};
 }

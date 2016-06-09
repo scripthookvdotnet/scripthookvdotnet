@@ -65,6 +65,10 @@ namespace GTA
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_COORDS, Handle, value.X, value.Y, value.Z);
 	}
+	void Blip::Rotation::set(int value)
+	{
+		Native::Function::Call(Native::Hash::SET_BLIP_ROTATION, Handle, value);
+	}
 	void Blip::Scale::set(float scale)
 	{
 		Native::Function::Call(Native::Hash::SET_BLIP_SCALE, Handle, scale);
