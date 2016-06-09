@@ -764,7 +764,7 @@ namespace GTA
 					return false;
 				}
 				//Unsure of the exact version this switched, but all others in the rangs are the same
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x84C : 0x82C;
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83C : 0x82C;
 
 				return (MemoryAccess.ReadByte(memoryAddress + offset) & 4) != 0;
 			}
