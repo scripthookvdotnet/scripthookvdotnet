@@ -41,7 +41,7 @@ namespace GTA
             }
         }
 
-        public bool AreAllWindowIntact
+        public bool AreAllWindowsIntact
         {
             get
             {

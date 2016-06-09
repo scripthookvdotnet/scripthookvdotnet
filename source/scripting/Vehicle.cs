@@ -905,7 +905,7 @@ namespace GTA
 				return Function.Call<bool>(Hash.DOES_VEHICLE_HAVE_ROOF, Handle);
 			}
 		}
-		public bool LeftHeadLightBroken
+		public bool IsLeftHeadLightBroken
 		{
 			get
 			{
@@ -931,7 +931,7 @@ namespace GTA
 				}
 			}
 		}
-		public bool RightHeadLightBroken
+		public bool IsRightHeadLightBroken
 		{
 			get
 			{
@@ -1402,7 +1402,7 @@ namespace GTA
 				return result;
 			}
 		}
-		public int PassengerSeats
+		public int PassengerCapacity
 		{
 			get
 			{
