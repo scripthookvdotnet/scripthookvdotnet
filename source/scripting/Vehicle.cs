@@ -1564,27 +1564,29 @@ namespace GTA
 
 			if (HasBone("door_dside_f"))
 			{
-				new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor);
+                list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor));
 			}
 			if (HasBone("door_pside_f"))
 			{
-				new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor);
+                list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor));
 			}
 			if (HasBone("door_dside_r"))
 			{
-				new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor);
+                list.Add(new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor));
+                
 			}
 			if (HasBone("door_pside_r"))
 			{
-				new VehicleDoor(this, VehicleDoorIndex.BackRightDoor);
+                list.Add(new VehicleDoor(this, VehicleDoorIndex.BackRightDoor));               
 			}
 			if (HasBone("bonnet"))
 			{
-				new VehicleDoor(this, VehicleDoorIndex.Hood);
+                list.Add(new VehicleDoor(this, VehicleDoorIndex.Hood));                
 			}
 			if (HasBone("hood"))
 			{
-				new VehicleDoor(this, VehicleDoorIndex.Trunk);
+                list.Add(new VehicleDoor(this, VehicleDoorIndex.Trunk));
+                
 			}
 
 			return list.ToArray();
