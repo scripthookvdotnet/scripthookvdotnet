@@ -32,6 +32,7 @@ namespace
 	ref struct ScriptHook
 	{
 		static GTA::ScriptDomain ^Domain = nullptr;
+		static WinForms::Keys ReloadKey = WinForms::Keys::None;
 	};
 
 	bool ManagedInit()
@@ -45,6 +46,7 @@ namespace
 		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(location, ".ini"));
 
 		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), settings->GetValue(String::Empty, "ScriptsLocation", "scripts")));
+		ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
 		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 		{
@@ -57,7 +59,7 @@ namespace
 	}
 	bool ManagedTick()
 	{
-		if (ScriptHook::Domain->IsKeyPressed(WinForms::Keys::Insert))
+		if (ScriptHook::Domain->IsKeyPressed(ScriptHook::ReloadKey))
 		{
 			return false;
 		}
