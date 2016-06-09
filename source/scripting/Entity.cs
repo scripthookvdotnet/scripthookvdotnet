@@ -134,27 +134,33 @@ namespace GTA
 		{
 			get
 			{
-				return Vector3.Cross(RightVector, ForwardVector);
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return Vector3.RelativeTop;
+				}
+				return MemoryAccess.ReadVector3(MemoryAddress + 0x80);
 			}
 		}
 		public Vector3 RightVector
 		{
 			get
 			{
-				Vector3 rotation = Rotation;
-				const double D2R = 0.01745329251994329576923690768489;
-				double s = System.Math.Cos(rotation.Y * D2R);
-				double x = s * System.Math.Cos(-rotation.Z * D2R);
-				double y = s * System.Math.Sin(rotation.Z * D2R);
-				double z = System.Math.Sin(-rotation.Y * D2R);
-				return new Vector3((float)x, (float)y, (float)z);
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return Vector3.RelativeRight;
+				}
+				return MemoryAccess.ReadVector3(MemoryAddress + 0x60);
 			}
 		}
 		public Vector3 ForwardVector
 		{
 			get
 			{
-				return Function.Call<Vector3>(Hash.GET_ENTITY_FORWARD_VECTOR, Handle);
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return Vector3.RelativeFront;
+				}
+				return MemoryAccess.ReadVector3(MemoryAddress + 0x70);
 			}
 		}
 
