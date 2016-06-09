@@ -105,7 +105,17 @@ namespace
 	{
 		const auto version = getGameVersion();
 
-		if (version >= 18)
+		if (version >= 20)
+		{
+			// Disable mpexecutive and mplowrider2 car removing
+			const auto global2562051 = getGlobalPtr(2562051);
+
+			if (global2562051 != nullptr)
+			{
+				*global2562051 = 1;
+			}
+		}
+		else if (version >= 18)
 		{
 			// Disable mplowrider2 car removing
 			const auto global2558120 = getGlobalPtr(2558120);
