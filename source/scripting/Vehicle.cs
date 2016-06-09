@@ -281,14 +281,14 @@ namespace GTA
 
 	public sealed class Vehicle : Entity
 	{
-        #region Fields
-        VehicleDoorCollection _doors;
-        VehicleModCollection _mods;
-        VehicleWheelCollection _wheels;
-        VehicleWindowCollection _windows;
-        #endregion
+		#region Fields
+		VehicleDoorCollection _doors;
+		VehicleModCollection _mods;
+		VehicleWheelCollection _wheels;
+		VehicleWindowCollection _windows;
+		#endregion
 
-        public Vehicle(int handle) : base(handle)
+		public Vehicle(int handle) : base(handle)
 		{
 		}
 
@@ -1375,7 +1375,7 @@ namespace GTA
 				var result = new Ped[PassengerCount + 1];
 				result[0] = driver;
 
-				for (int i = 0, seats = PassengerSeats; i < seats && i <= result.Length; i++)
+				for (int i = 0, seats = PassengerCapacity; i < seats && i <= result.Length; i++)
 				{
 					result[i + 1] = GetPedOnSeat((VehicleSeat)i);
 				}
@@ -1394,7 +1394,7 @@ namespace GTA
 					return result;
 				}
 
-				for (int i = 0, seats = PassengerSeats; i < seats && i < result.Length; i++)
+				for (int i = 0, seats = PassengerCapacity; i < seats && i < result.Length; i++)
 				{
 					result[i] = GetPedOnSeat((VehicleSeat)i);
 				}
@@ -1417,56 +1417,56 @@ namespace GTA
 			}
 		}
 
-	    public VehicleDoorCollection Doors
-	    {
-            get
-            {
-                if (_doors == null)
-                {
-                    _doors = new VehicleDoorCollection(this);
-                }
+		public VehicleDoorCollection Doors
+		{
+			get
+			{
+				if (_doors == null)
+				{
+					_doors = new VehicleDoorCollection(this);
+				}
 
-                return _doors;
-            }
-        }
+				return _doors;
+			}
+		}
 		public VehicleModCollection Mods
-        {
-            get
-            {
-                if (_mods == null)
-                {
-                    _mods = new VehicleModCollection(this);
-                }
+		{
+			get
+			{
+				if (_mods == null)
+				{
+					_mods = new VehicleModCollection(this);
+				}
 
-                return _mods;
-            }
-        }
-        public VehicleWheelCollection Wheels
-        {
-            get
-            {
-                if (_wheels == null)
-                {
-                    _wheels = new VehicleWheelCollection(this);
-                }
+				return _mods;
+			}
+		}
+		public VehicleWheelCollection Wheels
+		{
+			get
+			{
+				if (_wheels == null)
+				{
+					_wheels = new VehicleWheelCollection(this);
+				}
 
-                return _wheels;
-            }
-        }
-        public VehicleWindowCollection Windows
-        {
-            get
-            {
-                if (_windows == null)
-                {
-                    _windows = new VehicleWindowCollection(this);
-                }
+				return _wheels;
+			}
+		}
+		public VehicleWindowCollection Windows
+		{
+			get
+			{
+				if (_windows == null)
+				{
+					_windows = new VehicleWindowCollection(this);
+				}
 
-                return _windows;
-            }
-        }
+				return _windows;
+			}
+		}
 
-        public bool ExtraExists(int extra)
+		public bool ExtraExists(int extra)
 		{
 			return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
 		}
@@ -1564,29 +1564,29 @@ namespace GTA
 
 			if (HasBone("door_dside_f"))
 			{
-                list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor));
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor));
 			}
 			if (HasBone("door_pside_f"))
 			{
-                list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor));
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor));
 			}
 			if (HasBone("door_dside_r"))
 			{
-                list.Add(new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor));
-                
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor));
+				
 			}
 			if (HasBone("door_pside_r"))
 			{
-                list.Add(new VehicleDoor(this, VehicleDoorIndex.BackRightDoor));               
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackRightDoor));               
 			}
 			if (HasBone("bonnet"))
 			{
-                list.Add(new VehicleDoor(this, VehicleDoorIndex.Hood));                
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.Hood));                
 			}
 			if (HasBone("hood"))
 			{
-                list.Add(new VehicleDoor(this, VehicleDoorIndex.Trunk));
-                
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.Trunk));
+				
 			}
 
 			return list.ToArray();
