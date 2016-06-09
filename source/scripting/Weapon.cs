@@ -39,6 +39,7 @@ namespace GTA
 		APPistolVarmodLuxe = 2608252716u,
 		AssaultRifleClip01 = 3193891350u,
 		AssaultRifleClip02 = 2971750299u,
+		AssaultRifleClip03 = 3689981245u,
 		AssaultRifleVarmodLuxe = 1319990579u,
 		AssaultSMGClip01 = 2366834608u,
 		AssaultSMGClip02 = 3141985303u,
@@ -68,17 +69,20 @@ namespace GTA
 		BullpupShotgunClip01 = 3377353998u,
 		CarbineRifleClip01 = 2680042476u,
 		CarbineRifleClip02 = 2433783441u,
+		CarbineRifleClip03 = 3127044405u,
 		CarbineRifleVarmodLuxe = 3634075224u,
 		CombatMGClip01 = 3791631178u,
 		CombatMGClip02 = 3603274966u,
 		CombatMGVarmodLowrider = 2466172125u,
 		CombatPDWClip01 = 1125642654u,
 		CombatPDWClip02 = 860508675u,
+		CombatPDWClip03 = 1857603803u,
 		CombatPistolClip01 = 119648377u,
 		CombatPistolClip02 = 3598405421u,
 		CombatPistolVarmodLowrider = 3328527730u,
 		CompactRifleClip01 = 1363085923u,
 		CompactRifleClip02 = 1509923832u,
+		CompactRifleClip03 = 3322377230u,
 		DBShotgunClip01 = 703231006u,
 		FireworkClip01 = 3840197261u,
 		FlareGunClip01 = 2481569177u,
@@ -91,6 +95,7 @@ namespace GTA
 		HeavyPistolVarmodLuxe = 2053798779u,
 		HeavyShotgunClip01 = 844049759u,
 		HeavyShotgunClip02 = 2535257853u,
+		HeavyShotgunClip03 = 2294798931u,
 		HeavySniperClip01 = 1198478068u,
 		HomingLauncherClip01 = 4162006335u,
 		KnuckleVarmodBallas = 4007263587u,
@@ -108,6 +113,7 @@ namespace GTA
 		MGVarmodLowrider = 3604658878u,
 		MachinePistolClip01 = 1198425599u,
 		MachinePistolClip02 = 3106695545u,
+		MachinePistolClip03 = 2850671348u,
 		MarksmanPistolClip01 = 3416146413u,
 		MarksmanRifleClip01 = 3627761985u,
 		MarksmanRifleClip02 = 3439143621u,
@@ -132,6 +138,7 @@ namespace GTA
 		RevolverVarmodGoon = 2492708877u,
 		SMGClip01 = 643254679u,
 		SMGClip02 = 889808635u,
+		SMGClip03 = 2043113590u,
 		SMGVarmodLuxe = 663170192u,
 		SNSPistolClip01 = 4169150169u,
 		SNSPistolClip02 = 2063610803u,
@@ -142,6 +149,7 @@ namespace GTA
 		SniperRifleVarmodLuxe = 1077065191u,
 		SpecialCarbineClip01 = 3334989185u,
 		SpecialCarbineClip02 = 2089537806u,
+		SpecialCarbineClip03 = 1801039530u,
 		SpecialCarbineVarmodLowrider = 1929467122u,
 		SwitchbladeVarmodBase = 2436343040u,
 		SwitchbladeVarmodVar1 = 1530822070u,
@@ -541,6 +549,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.SMGClip01,
 							WeaponComponent.SMGClip02,
+							WeaponComponent.SMGClip03,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtPiSupp,
 							WeaponComponent.AtScopeMacro02,
@@ -551,6 +560,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.AssaultRifleClip01,
 							WeaponComponent.AssaultRifleClip02,
+							WeaponComponent.AssaultRifleClip03,
 							WeaponComponent.AtArAfGrip,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtScopeMacro,
@@ -561,6 +571,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.CarbineRifleClip01,
 							WeaponComponent.CarbineRifleClip02,
+							WeaponComponent.CarbineRifleClip03,
 							WeaponComponent.AtRailCover01,
 							WeaponComponent.AtArAfGrip,
 							WeaponComponent.AtArFlsh,
@@ -658,6 +669,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.CombatPDWClip01,
 							WeaponComponent.CombatPDWClip02,
+							WeaponComponent.CombatPDWClip03,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtScopeSmall,
 							WeaponComponent.AtArAfGrip,
@@ -686,6 +698,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.SpecialCarbineClip01,
 							WeaponComponent.SpecialCarbineClip02,
+							WeaponComponent.SpecialCarbineClip03,
 							WeaponComponent.AtArFlsh,
 							WeaponComponent.AtScopeMedium,
 							WeaponComponent.AtArSupp02,
@@ -708,6 +721,7 @@ namespace GTA
 					return new WeaponComponent[] {
 							WeaponComponent.MachinePistolClip01,
 							WeaponComponent.MachinePistolClip02,
+							WeaponComponent.MachinePistolClip03,
 							WeaponComponent.AtPiSupp,
 						};
 				case WeaponHash.SwitchBlade:
@@ -908,6 +922,12 @@ namespace GTA
 						return "WCT_REV_VARB";
 					case WeaponComponent.RevolverVarmodGoon:
 						return "WCT_REV_VARG";
+					case WeaponComponent.SMGClip03:
+					case WeaponComponent.AssaultRifleClip03:
+					case WeaponComponent.HeavyShotgunClip03:
+						return "WCT_CLIP_DRM";
+					case WeaponComponent.CarbineRifleClip03:
+						return "WCT_CLIP_BOX";
 				}
 			}
 

@@ -23,9 +23,7 @@ namespace GTA
 			static void WriteInt(System::IntPtr address, int value);
 			static void WriteFloat(System::IntPtr address, float value);
 			static void WriteVector3(System::IntPtr address, Math::Vector3 value);
-			static void WriteString(System::IntPtr address, System::String ^value);
 
-			static System::IntPtr GetGlobalAddress(int id);
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
 			static System::IntPtr GetCheckpointAddress(int handle);

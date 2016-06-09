@@ -418,19 +418,7 @@ namespace GTA
 			data[1] = value.Y;
 			data[2] = value.Z;
 		}
-		void MemoryAccess::WriteString(IntPtr address, String ^value)
-		{
-			const int size = Text::Encoding::UTF8->GetByteCount(value);
 
-			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, address, size);
-
-			reinterpret_cast<char *>(address.ToPointer())[size] = '\0';
-		}
-
-		IntPtr MemoryAccess::GetGlobalAddress(int id)
-		{
-			return IntPtr(getGlobalPtr(id));
-		}
 		IntPtr MemoryAccess::GetEntityAddress(int handle)
 		{
 			return IntPtr((long long)_entityAddressFunc(handle));

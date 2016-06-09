@@ -110,7 +110,6 @@ namespace GTA
 		static Game()
 		{
 			Version = (GameVersion)MemoryAccess.GetGameVersion();
-			Globals = new GlobalCollection();
 		}
 
 		public static GameVersion Version { get; private set; }
@@ -150,8 +149,6 @@ namespace GTA
 				return Function.Call<float>(Hash.GET_FRAME_TIME);
 			}
 		}
-
-		public static GlobalCollection Globals { get; private set; }
 
 		public static int MaxWantedLevel
 		{

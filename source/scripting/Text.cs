@@ -4,7 +4,7 @@ using GTA.Native;
 
 namespace GTA.UI
 {
-	public enum TextAlignment
+	public enum Alignment
 	{
 		Center = 0,
 		Left = 1,
@@ -64,7 +64,7 @@ namespace GTA.UI
 		/// <value>
 		/// The alignment:<c>Left</c>, <c>Center</c>, <c>Right</c> Justify
 		/// </value>
-		public TextAlignment Alignment { get; set; }
+		public Alignment Alignment { get; set; }
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Text"/> is drawn with a shadow effect.
 		/// </summary>
@@ -97,13 +97,13 @@ namespace GTA.UI
 		{
 			get
 			{
-				return Alignment == TextAlignment.Center;
+				return Alignment == Alignment.Center;
 			}
 			set
 			{
 				if (value)
 				{
-					Alignment = TextAlignment.Center;
+					Alignment = Alignment.Center;
 				}
 			}
 		}
@@ -134,7 +134,7 @@ namespace GTA.UI
 		/// <param name="caption">The <see cref="Text"/> to draw</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>	
-		public Text(string caption, PointF position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
+		public Text(string caption, PointF position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
@@ -144,7 +144,7 @@ namespace GTA.UI
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 	
-		public Text(string caption, PointF position, float scale, Color color) : this(caption, position, scale, color, Font.ChaletLondon, TextAlignment.Left, false, false, 0.0f)
+		public Text(string caption, PointF position, float scale, Color color) : this(caption, position, scale, color, Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
@@ -155,7 +155,7 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>	
-		public Text(string caption, PointF position, float scale, Color color, Font font) : this(caption, position, scale, color, font, TextAlignment.Left, false, false, 0.0f)
+		public Text(string caption, PointF position, float scale, Color color, Font font) : this(caption, position, scale, color, font, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
@@ -166,8 +166,8 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="TextAlignment.Left"/>,<see cref="TextAlignment.Center"/> or <see cref="TextAlignment.Right"/></param>
-		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment) : this(caption, position, scale, color, font, alignment, false, false, 0.0f)
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="Alignment.Left"/>,<see cref="Alignment.Center"/> or <see cref="Alignment.Right"/></param>
+		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment) : this(caption, position, scale, color, font, alignment, false, false, 0.0f)
 		{
 		}
 		/// <summary>
@@ -178,10 +178,10 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="TextAlignment.Left"/>,<see cref="TextAlignment.Center"/> or <see cref="TextAlignment.Right"/></param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="Alignment.Left"/>,<see cref="Alignment.Center"/> or <see cref="Alignment.Right"/></param>
 		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect</param>
 		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters</param>	
-		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline) : this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
+		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline) : this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
 		{
 		}
 
@@ -193,11 +193,11 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="TextAlignment.Left"/>,<see cref="TextAlignment.Center"/> or <see cref="TextAlignment.Right"/></param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="Alignment.Left"/>,<see cref="Alignment.Center"/> or <see cref="Alignment.Right"/></param>
 		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect</param>
 		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters</param>
 		/// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="Text"/> on the next line down</param>											 																	  
-		public Text(string caption, PointF position, float scale, Color color, Font font, TextAlignment alignment, bool shadow, bool outline, float wrapWidth)
+		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline, float wrapWidth)
 		{
 			Enabled = true;
 			Caption = caption;
@@ -326,18 +326,18 @@ namespace GTA.UI
 			{
 				switch (Alignment)
 				{
-					case TextAlignment.Center:
+					case Alignment.Center:
 						Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
 						break;
-					case TextAlignment.Left:
+					case Alignment.Left:
 						Function.Call(Hash.SET_TEXT_WRAP, x, x + w);
 						break;
-					case TextAlignment.Right:
+					case Alignment.Right:
 						Function.Call(Hash.SET_TEXT_WRAP, x - w, x);
 						break;
 				}
 			}
-			else if (Alignment == TextAlignment.Right)
+			else if (Alignment == Alignment.Right)
 			{
 				Function.Call(Hash.SET_TEXT_WRAP, 0.0f, x);
 			}
