@@ -15,6 +15,7 @@
  */
 
 #include "ScriptDomain.hpp"
+#include "Settings.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
 #include "Matrix.hpp"
@@ -40,7 +41,10 @@ namespace
 			GTA::ScriptDomain::Unload(ScriptHook::Domain);
 		}
 
-		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(Assembly::GetExecutingAssembly()->Location), "scripts"));
+		auto location = Assembly::GetExecutingAssembly()->Location;
+		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(location, ".ini"));
+
+		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), settings->GetValue(String::Empty, "ScriptsLocation", "scripts")));
 
 		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 		{

@@ -33,7 +33,7 @@ namespace GTA
 		}
 
 		String ^line = nullptr;
-		String ^section = "";
+		String ^section = String::Empty;
 		IO::StreamReader ^reader = nullptr;
 		
 		try
@@ -138,7 +138,7 @@ namespace GTA
 			{
 				writer->WriteLine("[" + section.Key + "]");
 
-				for each (Tuple<String ^, String ^> ^value in section.Value)
+				for each (auto value in section.Value)
 				{
 					writer->WriteLine(value->Item1 + " = " + value->Item2);
 				}
