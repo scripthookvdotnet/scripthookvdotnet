@@ -633,23 +633,7 @@ namespace GTA
 			{
 				return 0;
 			}
-
-			uint hash = 0;	  
-			
-			byte[] bytes = Encoding.ASCII.GetBytes(input.ToLower());
-
-			for (int i = 0, length = bytes.Length; i < length; i++)
-			{
-				hash += bytes[i];
-				hash += (hash << 10);
-				hash ^= (hash >> 6);
-			}
-
-			hash += (hash << 3);
-			hash ^= (hash >> 11);
-			hash += (hash << 15);
-
-			return (int)hash;
+			return unchecked((int) MemoryAccess.GetHashKey(input));
 		}
 
 		/// <summary>

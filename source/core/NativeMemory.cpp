@@ -337,6 +337,9 @@ namespace GTA
 			CheckpointBaseAddr = reinterpret_cast<UINT64(*)()>(*reinterpret_cast<int*>(address - 19) + address - 15);
 			CheckpointHandleAddr = reinterpret_cast<UINT64(*)(UINT64, int)>(*reinterpret_cast<int*>(address - 9) + address - 5);
 			checkpointPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 17) + address + 21);
+
+			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
+			_getHashKey = reinterpret_cast<unsigned int(*)(char*, unsigned int)>(*reinterpret_cast<int*>(address + 6) + address + 10);
 		}
 
 		int MemoryAccess::GetGameVersion()
@@ -417,6 +420,11 @@ namespace GTA
 			data[0] = value.X;
 			data[1] = value.Y;
 			data[2] = value.Z;
+		}
+		unsigned int MemoryAccess::GetHashKey(String^ toHash)
+		{
+			IntPtr handle = ScriptDomain::CurrentDomain->PinString(toHash);
+			return _getHashKey((char*)handle.ToPointer(), 0);
 		}
 
 		IntPtr MemoryAccess::GetEntityAddress(int handle)

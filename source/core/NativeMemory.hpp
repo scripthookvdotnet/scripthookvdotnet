@@ -23,6 +23,7 @@ namespace GTA
 			static void WriteInt(System::IntPtr address, int value);
 			static void WriteFloat(System::IntPtr address, float value);
 			static void WriteVector3(System::IntPtr address, Math::Vector3 value);
+			static unsigned int GetHashKey(System::String ^toHash);
 
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
@@ -43,6 +44,7 @@ namespace GTA
 			static int CreateTexture(System::String ^filename);
 			static void DrawTexture(int id, int index, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation, float scaleFactor, System::Drawing::Color color);
 
+			static unsigned int(*_getHashKey)(char* stringPtr, unsigned int initialHash);
 			static System::UInt64(*_entityAddressFunc)(int handle);
 			static System::UInt64(*_playerAddressFunc)(int handle);
 			static int(*_addEntityToPoolFunc)(System::UInt64 address);
