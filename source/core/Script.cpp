@@ -38,7 +38,7 @@ namespace GTA
 			_viewport = gcnew GTA::Viewport();
 
 			Tick += gcnew EventHandler(this, &Script::HandleViewportDraw);
-			KeyUp += gcnew KeyEventHandler(this, &Script::HandleViewportInput);
+			KeyUp += gcnew WinForms::KeyEventHandler(this, &Script::HandleViewportInput);
 		}
 
 		return _viewport;
@@ -164,7 +164,7 @@ namespace GTA
 	{
 		_viewport->Draw();
 	}
-	void Script::HandleViewportInput(Object ^sender, KeyEventArgs ^e)
+	void Script::HandleViewportInput(Object ^sender, WinForms::KeyEventArgs ^e)
 	{
 		if (e->KeyCode == ActivateKey) _viewport->HandleActivate();
 		else if (e->KeyCode == BackKey) _viewport->HandleBack();
