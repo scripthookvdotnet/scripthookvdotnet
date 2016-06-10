@@ -33,10 +33,9 @@ namespace GTA
 		void SetValue(System::String ^section, System::String ^name, T value);
 		void SetValue(System::String ^section, System::String ^name, System::String ^value);
 
-	internal:
-		ScriptSettings(System::String ^filename);
-		
 	private:
+		ScriptSettings(System::String ^filename);
+
 		System::String ^_filename;
 		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^_values = gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>();
 	};
