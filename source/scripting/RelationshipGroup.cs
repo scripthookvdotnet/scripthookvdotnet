@@ -34,15 +34,15 @@ namespace GTA
 			}
 		}
 
-		Relationship GetRelationshipBetweenGroups(RelationshipGroup targetGroup)
+		public Relationship GetRelationshipBetweenGroups(RelationshipGroup targetGroup)
 		{
 			return Function.Call<Relationship>(Native.Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, Hash, targetGroup);
 		}
-		void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
+		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
 		{
 			SetRelationshipBetweenGroups(targetGroup, relationship);
 		}
-		void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
+		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
 		{
 			Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup);
 
@@ -51,11 +51,11 @@ namespace GTA
 				Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup, Hash);
 			}
 		}
-		void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
+		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
 		{
 			ClearRelationshipBetweenGroups(targetGroup, relationship, false);
 		}
-		void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
+		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
 		{
 			Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup);
 
@@ -65,7 +65,7 @@ namespace GTA
 			}
 		}
 
-		void Remove()
+		public void Remove()
 		{
 			Function.Call(Native.Hash.REMOVE_RELATIONSHIP_GROUP, Hash);
 		}
@@ -85,7 +85,7 @@ namespace GTA
 		}
 		public override string ToString()
 		{
-			return "0x" + Hash.ToString("X");
+			return "0x" + ((uint)Hash).ToString("X");
 		}
 
 		public static implicit operator RelationshipGroup(int source)
