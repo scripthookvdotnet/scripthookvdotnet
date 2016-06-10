@@ -77,9 +77,13 @@ namespace GTA
 		auto assembly = Script::typeid->Assembly;
 		auto assemblyName = gcnew AssemblyName(args->Name);
 
-		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase) &&
-			assemblyName->Version->Major <= assembly->GetName()->Version->Major)
+		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
 		{
+			if (assemblyName->Version->Major > assembly->GetName()->Version->Major)
+			{
+				Log("[WARNING]", "A script references v", assemblyName->Version->ToString(3), " which may not be compatible with the current v" + assembly->GetName()->Version->ToString(3), ".");
+			}
+
 			return assembly;
 		}
 
@@ -239,7 +243,7 @@ namespace GTA
 	{
 		if (IO::Path::GetFileNameWithoutExtension(filename)->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
 		{
-			Log("[ERROR]", "Skipped assembly '", IO::Path::GetFileName(filename), "'. Please remove it from the directory.");
+			Log("[WARNING]", "Skipped assembly '", IO::Path::GetFileName(filename), "'. Please remove it from the directory.");
 
 			return false;
 		}
