@@ -540,11 +540,11 @@ namespace GTA
 			return resultArg.GetResult<float>();
 		}
 
-		/// <summary>
-		/// Gets an <see langword="array"/> of all the <see cref="Blip"/>s on the Map
-		/// </summary>
-		/// <returns><see cref="Blip"/>[] of all the blips</returns>
-		public static Blip[] GetActiveBlips()
+	    /// <summary>
+	    /// Gets an <see langword="array"/> of all the <see cref="Blip"/>s on the Map
+	    /// </summary>
+	    /// <returns><see cref="Blip"/>[] of all the blips</returns>
+	    public static Blip[] GetAllBlips()
 		{
 			var res = new List<Blip>();
 

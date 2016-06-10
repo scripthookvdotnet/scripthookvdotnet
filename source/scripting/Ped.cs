@@ -25,6 +25,21 @@ namespace GTA
 		FiremanHelmet = 16384u,
 		PilotHeadset = 32768u
 	}
+	public enum ParachuteLandingType
+	{
+		None = -1,
+		Stumbling = 1,
+		Rolling,
+		Ragdoll
+	}
+	public enum ParachuteState
+	{
+		None = -1,
+		FreeFalling,
+		Deploying,
+		Gliding,
+		LandingOrFallingToDoom
+	}
 
 	public sealed class Ped : Entity
 	{
@@ -199,9 +214,20 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets the <see cref="Vehicle"/> the <see cref="Ped"/> is trying to enter.
+		/// </summary>
+		/// <remarks>returns <langword>null</langword> if the <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		public Vehicle VehicleTryingToEnter
+		{
+			get
+			{
+				return Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+			}
+		}
+		/// <summary>
 		/// Gets the PedGroup the <see cref="Ped"/> is in.
 		/// </summary>
-		public PedGroup CurrentPedGroup
+		public PedGroup PedGroup
 		{
 			get
 			{
@@ -791,6 +817,20 @@ namespace GTA
 				Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, value);
 			}
 		}
+		public ParachuteLandingType ParachuteLandingType
+		{
+			get
+			{
+				return Function.Call<ParachuteLandingType>(Hash.GET_PED_PARACHUTE_LANDING_TYPE, Handle);
+			}
+		}
+		public ParachuteState ParachuteState
+		{
+			get
+			{
+				return Function.Call<ParachuteState>(Hash.GET_PED_PARACHUTE_STATE, Handle);
+			}
+		}
 
 		public bool DropsWeaponsOnDeath
 		{
@@ -922,7 +962,13 @@ namespace GTA
 				SetConfigFlag(281, !value);
 			}
 		}
-
+		/// <summary>
+		/// Sets whether permanent events are blocked for this <see cref="Ped"/>.
+		///  If permanent events are blocked, this <see cref="Ped"/> will only do as it's told, and won't flee when shot at, etc.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if permanent events are blocked; otherwise, <c>false</c>.
+		/// </value>
 		public bool BlockPermanentEvents
 		{
 			set
@@ -1034,11 +1080,6 @@ namespace GTA
 			return null;
 		}
 
-		public Vehicle GetVehicleIsTryingToEnter()
-		{
-			return new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle));
-		}
-
 		public void Kill()
 		{
 			Health = -1;
@@ -1129,6 +1170,11 @@ namespace GTA
 		public void RemoveHelmet(bool instantly)
 		{
 			Function.Call(Hash.REMOVE_PED_HELMET, Handle, instantly);
+		}
+
+		public void OpenParachute()
+		{
+			Function.Call(Hash.FORCE_PED_TO_OPEN_PARACHUTE, Handle);
 		}
 
 		public bool GetConfigFlag(int flagID)

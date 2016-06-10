@@ -278,6 +278,20 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
 			}
 		}
+		public int Order
+		{
+			set
+			{
+				Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
+			}
+		}
+		public int NumberLabel
+		{
+			set
+			{
+				Function.Call(Hash.SHOW_NUMBER_ON_BLIP, Handle, value);
+			}
+		}
 		public BlipColor Color
 		{
 			get
@@ -307,6 +321,13 @@ namespace GTA
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, "STRING");
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, value);
 				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
+			}
+		}
+		public Entity Entity
+		{
+			get
+			{
+				return Function.Call<Entity>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, Handle);
 			}
 		}
 
@@ -354,13 +375,9 @@ namespace GTA
 			}
 		}
 
-		public void HideNumber()
+		public void RemoveNumberLabel()
 		{
 			Function.Call(Hash.HIDE_NUMBER_ON_BLIP, Handle);
-		}
-		public void ShowNumber(int number)
-		{
-			Function.Call(Hash.SHOW_NUMBER_ON_BLIP, Handle, number);
 		}
 
 		public void Remove()
