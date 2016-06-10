@@ -27,13 +27,15 @@ namespace GTA
 
 	ScriptSettings ^ScriptSettings::Load(String ^filename)
 	{
+		auto result = gcnew ScriptSettings(filename);
+
 		if (!IO::File::Exists(filename))
 		{
-			return nullptr;
+			return result;
 		}
 
 		String ^line = nullptr;
-		String ^section = "";
+		String ^section = String::Empty;
 		IO::StreamReader ^reader = nullptr;
 		
 		try
@@ -42,10 +44,8 @@ namespace GTA
 		}
 		catch (IO::IOException ^)
 		{
-			return nullptr;
+			return result;
 		}
-
-		auto result = gcnew ScriptSettings(filename);
 
 		try
 		{
@@ -138,7 +138,7 @@ namespace GTA
 			{
 				writer->WriteLine("[" + section.Key + "]");
 
-				for each (Tuple<String ^, String ^> ^value in section.Value)
+				for each (auto value in section.Value)
 				{
 					writer->WriteLine(value->Item1 + " = " + value->Item2);
 				}

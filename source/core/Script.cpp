@@ -49,14 +49,7 @@ namespace GTA
 		{
 			String ^path = IO::Path::ChangeExtension(_filename, ".ini");
 
-			if (IO::File::Exists(path))
-			{
-				_settings = ScriptSettings::Load(path);
-			}
-			else
-			{
-				_settings = gcnew ScriptSettings(path);
-			}
+			_settings = ScriptSettings::Load(path);
 		}
 
 		return _settings;
