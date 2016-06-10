@@ -15,76 +15,73 @@
  */
 
 #include "ScriptDomain.hpp"
-#include "Settings.hpp"
 #include "Native.hpp"
 #include "NativeMemory.hpp"
 #include "Matrix.hpp"
 #include "Quaternion.hpp"
 #include "Vector2.hpp"
 #include "Vector3.hpp"
+#include "Settings.hpp"
 
 using namespace System;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
-namespace
+ref struct ScriptHook
 {
-	ref struct ScriptHook
+	static GTA::ScriptDomain ^Domain = nullptr;
+	static WinForms::Keys ReloadKey = WinForms::Keys::None;
+};
+
+bool ManagedInit()
+{
+	if (!Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
-		static GTA::ScriptDomain ^Domain = nullptr;
-		static WinForms::Keys ReloadKey = WinForms::Keys::None;
-	};
-
-	bool ManagedInit()
-	{
-		if (!Object::ReferenceEquals(ScriptHook::Domain, nullptr))
-		{
-			GTA::ScriptDomain::Unload(ScriptHook::Domain);
-		}
-
-		String ^scriptsLocation = "scripts";
-		WinForms::Keys reloadKey = WinForms::Keys::Insert;
-		auto location = Assembly::GetExecutingAssembly()->Location;
-		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(location, ".ini"));
-
-		if (!Object::ReferenceEquals(settings, nullptr))
-		{
-			scriptsLocation = settings->GetValue(String::Empty, "ScriptsLocation", scriptsLocation);
-			reloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", reloadKey);
-		}
-
-		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), scriptsLocation));
-		ScriptHook::ReloadKey = reloadKey;
-
-		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
-		{
-			return false;
-		}
-
-		ScriptHook::Domain->Start();
-
-		return true;
+		GTA::ScriptDomain::Unload(ScriptHook::Domain);
 	}
-	bool ManagedTick()
+
+	String ^scriptsLocation = "scripts";
+	String ^assemblyLocation = Assembly::GetExecutingAssembly()->Location;
+	WinForms::Keys reloadKey = WinForms::Keys::Insert;
+	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(assemblyLocation, ".ini"));
+
+	if (!Object::ReferenceEquals(settings, nullptr))
 	{
-		if (ScriptHook::Domain->IsKeyPressed(ScriptHook::ReloadKey))
-		{
-			return false;
-		}
-
-		ScriptHook::Domain->DoTick();
-
-		return true;
+		reloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", reloadKey);
+		scriptsLocation = settings->GetValue(String::Empty, "ScriptsLocation", scriptsLocation);
 	}
-	void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
+
+	ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(assemblyLocation), scriptsLocation));
+	ScriptHook::ReloadKey = reloadKey;
+
+	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
-		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
-		{
-			return;
-		}
-
-		ScriptHook::Domain->DoKeyboardMessage(static_cast<WinForms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
+		return false;
 	}
+
+	ScriptHook::Domain->Start();
+
+	return true;
+}
+bool ManagedTick()
+{
+	if (ScriptHook::Domain->IsKeyPressed(ScriptHook::ReloadKey))
+	{
+		return false;
+	}
+
+	ScriptHook::Domain->DoTick();
+
+	return true;
+}
+void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
+{
+	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	{
+		return;
+	}
+
+	ScriptHook::Domain->DoKeyboardMessage(static_cast<WinForms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
 }
 
 #pragma unmanaged
@@ -92,77 +89,71 @@ namespace
 #include <Main.h>
 #include <Windows.h>
 
-namespace
+bool sGameReloaded = false;
+PVOID sMainFib = nullptr, sScriptFib = nullptr;
+
+void ScriptMain()
 {
-	bool sGameReloaded = false;
-	PVOID sMainFib = nullptr, sScriptFib = nullptr;
+	const auto version = getGameVersion();
 
-	void ScriptYield()
+	if (version >= 20)
 	{
-		// Switch back to main script fiber used by Script Hook
-		SwitchToFiber(sMainFib);
+		// Disable mpexecutive and mplowrider2 car removing
+		const auto global2562051 = getGlobalPtr(2562051);
+
+		if (global2562051 != nullptr)
+		{
+			*global2562051 = 1;
+		}
 	}
-	void CALLBACK ScriptMainLoop(LPVOID)
+	else if (version >= 18)
 	{
-		while (ManagedInit())
-		{			
-			sGameReloaded = false;
+		// Disable mplowrider2 car removing
+		const auto global2558120 = getGlobalPtr(2558120);
 
-			// Run main loop
-			while (!sGameReloaded && ManagedTick())
+		if (global2558120 != nullptr)
+		{
+			*global2558120 = 1;
+		}
+	}
+
+	// Set up fibers
+	sGameReloaded = true;
+	sMainFib = GetCurrentFiber();
+
+	if (sScriptFib == nullptr)
+	{
+		const auto callback = [](LPVOID)
+		{
+			while (ManagedInit())
 			{
-				ScriptYield();
+				sGameReloaded = false;
+
+				// Run main loop
+				while (!sGameReloaded && ManagedTick())
+				{
+					// Switch back to main script fiber used by Script Hook
+					SwitchToFiber(sMainFib);
+				}
 			}
-		}
+		};
+
+		// Create our own fiber for the common language runtime once
+		sScriptFib = CreateFiber(0, callback, nullptr);
 	}
-	void ScriptMainSetup()
+
+	while (true)
 	{
-		const auto version = getGameVersion();
+		// Yield execution
+		scriptWait(0);
 
-		if (version >= 20)
-		{
-			// Disable mpexecutive and mplowrider2 car removing
-			const auto global2562051 = getGlobalPtr(2562051);
-
-			if (global2562051 != nullptr)
-			{
-				*global2562051 = 1;
-			}
-		}
-		else if (version >= 18)
-		{
-			// Disable mplowrider2 car removing
-			const auto global2558120 = getGlobalPtr(2558120);
-
-			if (global2558120 != nullptr)
-			{
-				*global2558120 = 1;
-			}
-		}
-
-		// Set up fibers
-		sGameReloaded = true;
-		sMainFib = GetCurrentFiber();
-
-		if (sScriptFib == nullptr)
-		{
-			// Create our own fiber for the common language runtime once
-			sScriptFib = CreateFiber(0, &ScriptMainLoop, nullptr);
-		}
-
-		while (true)
-		{
-			// Yield execution
-			scriptWait(0);
-
-			// Switch to our own fiber and wait for it to switch back
-			SwitchToFiber(sScriptFib);
-		}
+		// Switch to our own fiber and wait for it to switch back
+		SwitchToFiber(sScriptFib);
 	}
-	void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
-	{
-		ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
-	}
+}
+void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+{
+	ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
 }
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
@@ -171,7 +162,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	{
 		case DLL_PROCESS_ATTACH:
 			DisableThreadLibraryCalls(hModule);
-			scriptRegister(hModule, &ScriptMainSetup);
+			scriptRegister(hModule, &ScriptMain);
 			keyboardHandlerRegister(&ScriptKeyboardMessage);
 			break;
 		case DLL_PROCESS_DETACH:
