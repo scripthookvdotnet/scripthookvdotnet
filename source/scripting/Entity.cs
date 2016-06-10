@@ -192,6 +192,13 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
 			}
 		}
+		public Vector3 RotationVelocity
+		{
+			get
+			{
+				return Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
+			}
+		}
 		public float MaxSpeed
 		{
 			set
@@ -227,6 +234,16 @@ namespace GTA
 			get
 			{
 				return Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
+			}
+		}
+		/// <summary>
+		/// Gets a value indicating how submersed this <see cref="Entity"/> is, 1.0f is that whole entity is submersed.
+		/// </summary>
+		public float SubmersionLevel
+		{
+			get
+			{
+				return Function.Call<float>(Hash.GET_ENTITY_SUBMERGED_LEVEL, Handle);
 			}
 		}
 
@@ -550,6 +567,16 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
+			}
+		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is recording collisions.
+		/// </summary>
+		public bool IsRecordingCollisions
+		{
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_RECORDS_COLLISIONS, Handle, value);
 			}
 		}
 		public void SetNoCollision(Entity entity, bool toggle)
