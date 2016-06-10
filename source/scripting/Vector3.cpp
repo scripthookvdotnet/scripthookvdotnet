@@ -127,13 +127,13 @@ namespace GTA
 		float Vector3::Distance2D(Vector3 position1, Vector3 position2)
 		{
 			Vector3 pos1 = Vector3(position1.X, position1.Y, 0);
-			Vector3 pos2 = Vector3(position1.X, position1.Y, 0);
+			Vector3 pos2 = Vector3(position2.X, position2.Y, 0);
 			return (pos1 - pos2).Length();
 		}
 		float Vector3::DistanceSquared2D(Vector3 position1, Vector3 position2)
 		{
 			Vector3 pos1 = Vector3(position1.X, position1.Y, 0);
-			Vector3 pos2 = Vector3(position1.X, position1.Y, 0);
+			Vector3 pos2 = Vector3(position2.X, position2.Y, 0);
 			return (pos1 - pos2).LengthSquared();
 		}
 
