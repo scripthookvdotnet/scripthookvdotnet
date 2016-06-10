@@ -11,20 +11,20 @@ namespace GTA
 		Hook,
 		Magnet
 	}
-	public enum NumberPlateType
+	public enum LicensePlateStyle
 	{
-		BlueOnWhite1,
-		YellowOnBlack,
-		YellowOnBlue,
-		BlueOnWhite2,
-		BlueOnWhite3,
-		NorthYankton
+		BlueOnWhite1 = 3,
+		BlueOnWhite1 = 0,
+		BlueOnWhite3 = 4,
+		YellowOnBlack = 1,
+		YellowOnBlue = 2,		
+		NorthYankton = 5
 	}
-	public enum NumberPlateMounting
+	public enum LicensePlateType
 	{
-		FrontAndRear,
-		Front,
-		Rear,
+		FrontAndRearPlates,
+		FrontPlate,
+		RearPlate,
 		None
 	}
 	public enum VehicleClass
@@ -1207,25 +1207,25 @@ namespace GTA
 			Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, Handle);
 		}
 
-		public NumberPlateType NumberPlateType
+		public LicensePlateStyle LicensePlateStyle
 		{
 			get
 			{
-				return Function.Call<NumberPlateType>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle);
+				return Function.Call<LicensePlateStyle>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle);
 			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle, value);
 			}
 		}
-		public NumberPlateMounting NumberPlateMounting
+		public LicensePlateType LicensePlateType
 		{
 			get
 			{
-				return Function.Call<NumberPlateMounting>(Hash.GET_VEHICLE_PLATE_TYPE, Handle);
+				return Function.Call<LicensePlateType>(Hash.GET_VEHICLE_PLATE_TYPE, Handle);
 			}
 		}
-		public string NumberPlate
+		public string LicensePlate
 		{
 			get
 			{
