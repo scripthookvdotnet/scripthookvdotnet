@@ -25,14 +25,14 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, _owner.Handle, (int)Index);
+				return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, _owner.Handle, Index);
 			}
 		}
-		public bool CanBeBrokenOff
+		public bool CanBeBroken
 		{
 			set
 			{
-				Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, _owner.Handle, (int)Index, value);
+				Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, _owner.Handle, Index, value);
 			}
 		}
 		public bool IsOpen
@@ -46,14 +46,14 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_FULLY_OPEN, _owner.Handle, (int)Index);
+				return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_FULLY_OPEN, _owner.Handle, Index);
 			}
 		}     
 		public bool IsBroken
 		{
 			get
 			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, _owner.Handle, (int)Index);
+				return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, _owner.Handle, Index);
 			}
 		}
 		public Vehicle Vehicle
@@ -61,25 +61,17 @@ namespace GTA
 			get { return _owner; }
 		}
 
-		public void Open(bool instantly)
+		public void Open(bool instantly, bool loose = false)
 		{
-			Open(instantly);
-		}
-		public void Open(bool loose, bool instantly)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, _owner.Handle, (int)Index, loose, instantly);
+			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, _owner.Handle, Index, loose, instantly);
 		}
 		public void Close(bool instantly)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, _owner.Handle, (int)Index, instantly);
+			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, _owner.Handle, Index, instantly);
 		}
-		public void BreakOff()
+		public void Break(bool stayInTheWorld = true)
 		{
-			BreakOff(true);
-		}
-		public void BreakOff(bool stayInTheWorld)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, (int)Index, stayInTheWorld);
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, Index, stayInTheWorld);
 		}
 	}
 }

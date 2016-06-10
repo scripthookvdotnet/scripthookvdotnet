@@ -25,18 +25,18 @@ namespace GTA
         {
             get
             {
-                return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, _owner.Handle, (int)ModType);
+                return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, _owner.Handle, ModType);
             }
             set
             {
-                Function.Call(Hash.TOGGLE_VEHICLE_MOD, _owner.Handle, (int)ModType, value);
+                Function.Call(Hash.TOGGLE_VEHICLE_MOD, _owner.Handle, ModType, value);
             }
         }
         public string LocalizedModTypeName
         {
             get
             {
-                return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, (int)ModType);
+                return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, ModType);
             }
         }
         public Vehicle Vehicle
@@ -46,7 +46,7 @@ namespace GTA
 
         public void Remove()
         {
-            Function.Call(Hash.REMOVE_VEHICLE_MOD, _owner.Handle, (int)ModType);
+            Function.Call(Hash.REMOVE_VEHICLE_MOD, _owner.Handle, ModType);
         }
     }
 }

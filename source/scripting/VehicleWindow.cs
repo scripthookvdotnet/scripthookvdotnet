@@ -25,7 +25,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_WINDOW_INTACT, _owner.Handle, (int)Index);
+				return Function.Call<bool>(Hash.IS_VEHICLE_WINDOW_INTACT, _owner.Handle, Index);
 			}
 		}
 		public Vehicle Vehicle
@@ -35,23 +35,23 @@ namespace GTA
 
 		public void Repair()
 		{
-			Function.Call(Hash.FIX_VEHICLE_WINDOW, _owner.Handle, (int)Index);
+			Function.Call(Hash.FIX_VEHICLE_WINDOW, _owner.Handle, Index);
 		}
 		public void Smash()
 		{
-			Function.Call(Hash.SMASH_VEHICLE_WINDOW, _owner.Handle, (int)Index);
+			Function.Call(Hash.SMASH_VEHICLE_WINDOW, _owner.Handle, Index);
 		}
 		public void RollUp()
 		{
-			Function.Call(Hash.ROLL_UP_WINDOW, _owner.Handle, (int)Index);
+			Function.Call(Hash.ROLL_UP_WINDOW, _owner.Handle, Index);
 		}
 		public void RollDown()
 		{
-			Function.Call(Hash.ROLL_DOWN_WINDOW, _owner.Handle, (int)Index);
+			Function.Call(Hash.ROLL_DOWN_WINDOW, _owner.Handle, Index);
 		}
 		public void Remove()
 		{
-			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, _owner.Handle, (int)Index);
+			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, _owner.Handle, Index);
 		}
 	}
 }
