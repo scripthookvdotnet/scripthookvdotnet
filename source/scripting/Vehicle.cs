@@ -14,7 +14,7 @@ namespace GTA
 	public enum LicensePlateStyle
 	{
 		BlueOnWhite1 = 3,
-		BlueOnWhite1 = 0,
+		BlueOnWhite2 = 0,
 		BlueOnWhite3 = 4,
 		YellowOnBlack = 1,
 		YellowOnBlue = 2,		
@@ -1349,9 +1349,19 @@ namespace GTA
 			}
 		}
 
-		public bool IsInBurnout()
+		public bool IsBurnoutForced
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_IN_BURNOUT, Handle);
+			set
+			{
+				Function.Call<bool>(Hash.SET_VEHICLE_BURNOUT, Handle, value);
+			}
+		}
+		public bool IsInBurnout
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_VEHICLE_IN_BURNOUT, Handle);
+			}
 		}
 
 		public Ped Driver
