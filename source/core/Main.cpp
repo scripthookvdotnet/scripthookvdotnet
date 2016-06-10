@@ -42,11 +42,19 @@ namespace
 			GTA::ScriptDomain::Unload(ScriptHook::Domain);
 		}
 
+		String ^scriptsLocation = "scripts";
+		WinForms::Keys reloadKey = WinForms::Keys::Insert;
 		auto location = Assembly::GetExecutingAssembly()->Location;
 		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(location, ".ini"));
 
-		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), settings->GetValue(String::Empty, "ScriptsLocation", "scripts")));
-		ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
+		if (!Object::ReferenceEquals(settings, nullptr))
+		{
+			scriptsLocation = settings->GetValue(String::Empty, "ScriptsLocation", scriptsLocation);
+			reloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", reloadKey);
+		}
+
+		ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), scriptsLocation));
+		ScriptHook::ReloadKey = reloadKey;
 
 		if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 		{
