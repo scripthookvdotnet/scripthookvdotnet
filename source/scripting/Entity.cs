@@ -660,10 +660,7 @@ namespace GTA
 		{
 			get
 			{
-				var allBlips = World.GetAllBlips();
-				var attachedBlips = new List<Blip>();
-				attachedBlips.AddRange(allBlips.Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x) == Handle));
-				return attachedBlips.ToArray();
+				return World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x) == Handle).ToArray();
 			}
 		}
 

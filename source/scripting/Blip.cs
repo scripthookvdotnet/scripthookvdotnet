@@ -278,7 +278,7 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
 			}
 		}
-		public int Order
+		public int Priority
 		{
 			set
 			{

@@ -85,7 +85,7 @@ namespace GTA
 		}
 		public override string ToString()
 		{
-			return "0x" + ((uint)Hash).ToString("X");
+			return "0x" + Hash.ToString("X");
 		}
 
 		public static implicit operator RelationshipGroup(int source)
