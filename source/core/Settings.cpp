@@ -27,9 +27,11 @@ namespace GTA
 
 	ScriptSettings ^ScriptSettings::Load(String ^filename)
 	{
+		auto result = gcnew ScriptSettings(filename);
+
 		if (!IO::File::Exists(filename))
 		{
-			return nullptr;
+			return result;
 		}
 
 		String ^line = nullptr;
@@ -42,10 +44,8 @@ namespace GTA
 		}
 		catch (IO::IOException ^)
 		{
-			return nullptr;
+			return result;
 		}
-
-		auto result = gcnew ScriptSettings(filename);
 
 		try
 		{

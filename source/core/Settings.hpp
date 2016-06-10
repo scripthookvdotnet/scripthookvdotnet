@@ -33,7 +33,7 @@ namespace GTA
 		void SetValue(System::String ^section, System::String ^name, T value);
 		void SetValue(System::String ^section, System::String ^name, System::String ^value);
 
-	internal:
+	private:
 		ScriptSettings(System::String ^filename);
 
 		System::String ^_filename;

@@ -40,19 +40,11 @@ bool ManagedInit()
 		GTA::ScriptDomain::Unload(ScriptHook::Domain);
 	}
 
-	String ^scriptsLocation = "scripts";
-	String ^assemblyLocation = Assembly::GetExecutingAssembly()->Location;
-	WinForms::Keys reloadKey = WinForms::Keys::Insert;
-	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(assemblyLocation, ".ini"));
+	auto location = Assembly::GetExecutingAssembly()->Location;
+	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(location, ".ini"));
 
-	if (!Object::ReferenceEquals(settings, nullptr))
-	{
-		reloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", reloadKey);
-		scriptsLocation = settings->GetValue(String::Empty, "ScriptsLocation", scriptsLocation);
-	}
-
-	ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(assemblyLocation), scriptsLocation));
-	ScriptHook::ReloadKey = reloadKey;
+	ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), settings->GetValue(String::Empty, "ScriptsLocation", "scripts")));
+	ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
 	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
