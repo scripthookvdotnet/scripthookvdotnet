@@ -26,6 +26,14 @@ namespace GTA
 		PilotHeadset = 32768u
 	}
 
+	public enum RagdollType
+	{
+		Normal = 0,
+		StiffLegs,
+		NarrowLegs,
+		WideLegs,
+	}
+
 	public sealed class Ped : Entity
 	{
 		#region Fields
@@ -766,21 +774,48 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash.REQUEST_ANIM_SET, value);
-
-				var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
-
-				while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, value))
+				if (value == null)
 				{
-					Script.Yield();
-
-					if (DateTime.UtcNow >= endtime)
-					{
-						return;
-					}
+					Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, 0.25f);
+					Task.ClearAll();
 				}
+				else
+				{
+					//Movement sets can be applied from anim_dicts and anim_sets(also clip_sets but they use the same native as anim_sets)
+					//so check if the string is a valid anim_dict, if so load it as anim dict
+					//otherwise load it as an anim_set
+					if (Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value))
+					{
+						Function.Call(Hash.REQUEST_ANIM_DICT, value);
+						var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
 
-				Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
+						while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, value))
+						{
+							Script.Yield();
+
+							if (DateTime.UtcNow >= endtime)
+							{
+								return;
+							}
+						}
+					}
+					else
+					{
+						Function.Call(Hash.REQUEST_ANIM_SET, value);
+						var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+
+						while (!Function.Call<bool>(Hash.HAS_ANIM_SET_LOADED, value))
+						{
+							Script.Yield();
+
+							if (DateTime.UtcNow >= endtime)
+							{
+								return;
+							}
+						}
+					}			 
+					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
+				}
 			}
 		}
 
@@ -1016,22 +1051,7 @@ namespace GTA
 		}
 		public Entity GetKiller()
 		{
-			int entity = Function.Call<int>(Hash._GET_PED_KILLER, Handle);
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, entity))
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, entity))
-				{
-					case 1:
-						return new Ped(entity);
-					case 2:
-						return new Vehicle(entity);
-					case 3:
-						return new Prop(entity);
-				}
-			}
-
-			return null;
+			return Entity.FromHandle(Function.Call<int>(Hash._GET_PED_KILLER, Handle));
 		}
 
 		public Vehicle GetVehicleIsTryingToEnter()
@@ -1096,6 +1116,36 @@ namespace GTA
 		{
 			Function.Call(Hash.APPLY_DAMAGE_TO_PED, Handle, damageAmount, true);
 		}
+		public new bool HasBeenDamagedBy(WeaponHash weapon)
+		{
+			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, weapon, 0);
+		}
+		public new bool HasBeenDamagedByAnyWeapon()
+		{
+			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 2);
+		}
+		public new bool HasBeenDamagedByAnyMeleeWeapon()
+		{
+			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 1);
+		}
+		public new void ClearLastWeaponDamage()
+		{
+			Function.Call(Hash.CLEAR_PED_LAST_WEAPON_DAMAGE, Handle);
+		}
+
+		public Bone GetLastDamagedBone()
+		{
+			OutputArgument outBone = new OutputArgument();
+			if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, Handle, outBone))
+			{
+				return outBone.GetResult<Bone>();
+			}
+			return Bone.SKEL_ROOT;
+		}
+		public void ClearLastBoneDamage()
+		{
+			Function.Call(Hash.CLEAR_PED_LAST_DAMAGE_BONE, Handle);
+		}
 
 		public int GetBoneIndex(Bone BoneID)
 		{
@@ -1120,6 +1170,17 @@ namespace GTA
 			}
 
 			return Vector3.Zero;
+		}
+
+		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Normal)
+		{
+			CanRagdoll = true;
+			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, ragdollType, false, false, false);
+		}
+
+		public void CancelRagdoll()
+		{
+			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, 1, 1, 1, false, false, false);
 		}
 
 		public void GiveHelmet(bool canBeRemovedByPed, HelmetType helmetType, int textureIndex)

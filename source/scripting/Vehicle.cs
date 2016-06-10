@@ -1679,9 +1679,9 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, Handle, door, instantly);
 		}
-		public void BreakDoor(VehicleDoor door)
+		public void BreakDoor(VehicleDoor door, bool delete = true)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Handle, door);
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Handle, door, delete);
 		}
 		public bool IsDoorOpen(VehicleDoor door)
 		{
