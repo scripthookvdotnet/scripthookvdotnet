@@ -32,7 +32,7 @@ namespace GTA
 		Bati2 = 3403504941u,
 		Benson = 2053223216u,
 		Besra = 1824333165u,
-		Bestiagt = 3349510363u,
+		BestiaGTS = 1274868363u,
 		BfInjection = 1126868326u,
 		Biff = 850991848u,
 		Bifta = 3945366167u,
@@ -153,8 +153,8 @@ namespace GTA
 		Fixter = 3458454463u,
 		Flatbed = 1353720154u,
 		Forklift = 1491375716u,
-		Fmj = 1426219628u,
-		Fq2 = 3157435195u,
+		FMJ = 1426219628u,
+		FQ2 = 3157435195u,
 		Freight = 1030400667u,
 		FreightCar = 184361638u,
 		FreightCont1 = 920453016u,
@@ -434,13 +434,13 @@ namespace GTA
 		Washington = 1777363799u,
 		Windsor = 1581459400u,
 		Windsor2 = 2364918497u,
-		Xls = 1203490606u,
-		Xls2 = 3862958888u,
+		XLS = 1203490606u,
+		XLS2 = 3862958888u,
 		Youga = 65402552u,
 		Zentorno = 2891838741u,
 		Zion = 3172678083u,
 		Zion2 = 3101863448u,
-		Ztype = 758895617u
+		ZType = 758895617u
 		
 	}
 }

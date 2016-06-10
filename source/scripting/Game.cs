@@ -28,7 +28,9 @@ namespace GTA
 		v1_0_617_1_Steam,
 		v1_0_617_1_NoSteam,
 		v1_0_678_1_Steam,
-		v1_0_678_1_NoSteam
+		v1_0_678_1_NoSteam,
+		v1_0_757_2_Steam,
+		v1_0_757_2_NoSteam
 	}
 	public enum Language
 	{
@@ -112,7 +114,14 @@ namespace GTA
 			Version = (GameVersion)MemoryAccess.GetGameVersion();
 		}
 
+		/// <summary>
+		/// Gets the current GameVersion.
+		/// </summary>	
 		public static GameVersion Version { get; private set; }
+
+		/// <summary>
+		/// Gets the game Language.
+		/// </summary>		
 		public static Language Language
 		{
 			get
@@ -121,6 +130,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets how many milliseconds the game has been open in this session
+		/// </summary> 
 		public static int GameTime
 		{
 			get
@@ -128,6 +140,12 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_GAME_TIMER);
 			}
 		}
+		/// <summary>
+		/// Sets the time scale of the Game.
+		/// </summary>
+		/// <value>
+		/// The Time Scale, only accepts values in range 0.0f to 1.0f
+		/// </value>
 		public static float TimeScale
 		{
 			set
@@ -135,6 +153,9 @@ namespace GTA
 				Function.Call(Hash.SET_TIME_SCALE, value);
 			}
 		}
+		/// <summary>
+		/// returns the instantaneous Frames per Second
+		/// </summary>
 		public static float FPS
 		{
 			get
@@ -142,6 +163,9 @@ namespace GTA
 				return 1.0f / LastFrameTime;
 			}
 		}
+		/// <summary>
+		/// Gets how long(in seconds) the last frame was displayed before the next was rendered
+		/// </summary>
 		public static float LastFrameTime
 		{
 			get
@@ -150,6 +174,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the maximum wanted level a <see cref="GTA.Player"/> can receive.
+		/// </summary>
+		/// <value>
+		/// The maximum wanted level, only accepts values 0 to 5
+		/// </value>
 		public static int MaxWantedLevel
 		{
 			get
@@ -170,6 +200,13 @@ namespace GTA
 				Function.Call(Hash.SET_MAX_WANTED_LEVEL, value);
 			}
 		}
+
+		/// <summary>
+		/// Sets the wanted level multiplier
+		/// </summary>
+		/// <value>
+		/// The multiplier to apply to a players wanted level
+		/// </value>
 		public static float WantedMultiplier
 		{
 			set
@@ -178,6 +215,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets how far the Minimap should be zoomed in
+		/// </summary>
+		/// <value>
+		/// The Radar zoom, Accepts values from 0 to 200
+		/// </value>
 		public static int RadarZoom
 		{
 			set
@@ -185,6 +228,9 @@ namespace GTA
 				Function.Call(Hash.SET_RADAR_ZOOM, value);
 			}
 		}
+		/// <summary>
+		/// Sets a value indicating whether Police <see cref="Blip"/>s should be visible on the Minimap
+		/// </summary>
 		public static bool ShowsPoliceBlipsOnRadar
 		{
 			set
@@ -193,6 +239,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the radio station.
+		/// </summary>
 		public static RadioStation RadioStation
 		{
 			get
@@ -219,6 +268,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="GTA.Player"/> that you are controling
+		/// </summary>
 		public static Player Player
 		{
 			get
@@ -233,6 +285,10 @@ namespace GTA
 				return _cachedPlayer;
 			}
 		}
+
+		/// <summary>
+		/// Gets the <see cref="GTA.Ped"/> that you are controling
+		/// </summary>
 		public static Ped PlayerPed
 		{
 			get
@@ -241,6 +297,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether to render the world with a night vision filter
+		/// </summary>
 		public static bool Nightvision
 		{
 			get
@@ -252,6 +311,9 @@ namespace GTA
 				Function.Call(Hash.SET_NIGHTVISION, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether to render the world with a thermal vision filter
+		/// </summary>
 		public static bool ThermalVision
 		{
 			get
@@ -264,6 +326,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value informing the Game Engine if a mission is in progress
+		/// </summary>
+		/// <value>
+		/// if <c>true</c> a mission is currently active; otherwise, <c>false</c>
+		/// </value>
 		public static bool MissionFlag
 		{
 			get
@@ -275,6 +343,9 @@ namespace GTA
 				Function.Call(Hash.SET_MISSION_FLAG, value);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether there is a Waypoint set
+		/// </summary>
 		public static bool IsWaypointActive
 		{
 			get
@@ -283,6 +354,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the game is paused
+		/// </summary>
 		public static bool IsPaused
 		{
 			get
@@ -294,6 +368,9 @@ namespace GTA
 				Function.Call(Hash.SET_PAUSE_MENU_ACTIVE, value);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether there is a loading screen being displayed
+		/// </summary>
 		public static bool IsLoading
 		{
 			get
@@ -301,35 +378,10 @@ namespace GTA
 				return Function.Call<bool>(Hash.GET_IS_LOADING_SCREEN_ACTIVE);
 			}
 		}
-		public static bool IsScreenFadedIn
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADED_IN);
-			}
-		}
-		public static bool IsScreenFadedOut
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
-			}
-		}
-		public static bool IsScreenFadingIn
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADING_IN);
-			}
-		}
-		public static bool IsScreenFadingOut
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
-			}
-		}
 
+		/// <summary>
+		/// Gets whether the last input was made with a GamePad or Keyboard and Mouse
+		/// </summary>
 		public static InputMode CurrentInputMode
 		{
 			get
@@ -338,178 +390,314 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets whether a <see cref="Keys"/> is currently held down
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <returns></returns>
 		public static bool IsKeyPressed(Keys key)
 		{
 			return ScriptDomain.CurrentDomain.IsKeyPressed(key);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is currently pressed
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
 		public static bool IsControlPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> was just pressed this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
 		public static bool IsControlJustPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> was just released this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
 		public static bool IsControlJustReleased(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Enabled this frame and is currently pressed
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
 		public static bool IsEnabledControlPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Enabled and was just pressed this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
 		public static bool IsEnabledControlJustPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Enabled and was just released this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
 		public static bool IsEnabledControlJustReleased(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Disabled this frame and is currently pressed
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
 		public static bool IsDisabledControlPressed(int index, Control control)
 		{
 			return IsControlPressed(index, control) && !IsControlEnabled(index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Disabled and was just pressed this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
 		public static bool IsDisabledControlJustPressed(int index, Control control)
 		{
 			return IsControlJustPressed(index, control) && !IsControlEnabled(index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Disabled and was just released this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
 		public static bool IsDisabledControlJustReleased(int index, Control control)
 		{
 			return IsControlJustReleased(index, control) && !IsControlEnabled(index, control);
 		}
+		/// <summary>
+		/// Gets whether a <see cref="Control"/> is Enabled ot Disabled this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns><c>true</c> if the <see cref="Control"/> is Enabled; otherwise, <c>false</c></returns>
 		public static bool IsControlEnabled(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, index, control);
 		}
 
+		/// <summary>
+		/// Makes the Game Engine respond to the given Control this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
 		public static void EnableControlThisFrame(int index, Control control)
 		{
 			Function.Call(Hash.ENABLE_CONTROL_ACTION, index, control, true);
 		}
+		/// <summary>
+		/// Makes the Game Engine ignore to the given Control this frame
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
 		public static void DisableControlThisFrame(int index, Control control)
 		{
 			Function.Call(Hash.DISABLE_CONTROL_ACTION, index, control, true);
 		}
+		/// <summary>
+		/// Disables all <see cref="Control"/>s this frame.
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
 		public static void DisableAllControlsThisFrame(int index)
 		{
 			Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, index);
 		}
+		/// <summary>
+		/// Enables all <see cref="Control"/>s this frame.
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
 		public static void EnableAllControlsThisFrame(int index)
 		{
 			Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, index);
 		}
 
+		/// <summary>
+		/// Gets an Analog value of a <see cref="Control"/> input between -1.0f and 1.0f
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns>The normalised <see cref="Control"/> value</returns>
 		public static float GetControlNormal(int index, Control control)
 		{
 			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, index, control);
 		}
+		/// <summary>
+		/// Gets an Analog value of a Disabled <see cref="Control"/> input between -1.0f and 1.0f
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns>The normalised <see cref="Control"/> value</returns>
 		public static float GetDisabledControlNormal(int index, Control control)
 		{
 			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, index, control);
 		}
+		/// <summary>
+		/// Gets an value of a <see cref="Control"/> input.
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <returns>The <see cref="Control"/> value</returns>
 		public static int GetControlValue(int index, Control control)
 		{
 			return Function.Call<int>(Hash.GET_CONTROL_VALUE, index, control);
 		}
+		/// <summary>
+		/// Override a <see cref="Control"/> by giving it a user defined value this frame.
+		/// </summary>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="value">the value to set the control to</param>
 		public static void SetControlNormal(int index, Control control, float value)
 		{
 			Function.Call(Hash._SET_CONTROL_NORMAL, index, control, value);
 		}
 
+		/// <summary>
+		/// Pauses or Resumes the game
+		/// </summary>
+		/// <param name="value">if set to <c>true</c> Pause the game; otherwise, resume the game</param>
 		public static void Pause(bool value)
 		{
 			Function.Call(Hash.SET_GAME_PAUSED, value);
 		}
+		/// <summary>
+		/// Pauses or Resumes the game clock
+		/// </summary>
+		/// <param name="value">if set to <c>true</c> Pause the game clock; otherwise, resume the game clock</param>
 		public static void PauseClock(bool value)
 		{
 			Function.Call(Hash.PAUSE_CLOCK, value);
 		}
 
+		/// <summary>
+		/// Performs and automative game save
+		/// </summary>
 		public static void DoAutoSave()
 		{
 			Function.Call(Hash.DO_AUTO_SAVE);
 		}
+		/// <summary>
+		/// Shows the save menu enabling the user to perform a manual game save.
+		/// </summary>
 		public static void ShowSaveMenu()
 		{
 			Function.Call(Hash.SET_SAVE_MENU_ACTIVE, true);
 		}
 
-		public static void FadeScreenIn(int time)
-		{
-			Function.Call(Hash.DO_SCREEN_FADE_IN, time);
-		}
-		public static void FadeScreenOut(int time)
-		{
-			Function.Call(Hash.DO_SCREEN_FADE_OUT, time);
-		}
-
+		/// <summary>
+		/// Returns a localised <see cref="string"/> from the games language files with a specified GXT key
+		/// </summary>
+		/// <param name="entry">The GXT key</param>
+		/// <returns>The localised <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetGXTEntry(string entry)
 		{
-			return Function.Call<string>(Hash._GET_LABEL_TEXT, entry);
+			if (Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry))
+			{
+				return Function.Call<string>(Hash._GET_LABEL_TEXT, entry);
+			}
+			return "";
 		}
 
+		/// <summary>
+		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> which can then be used by any native function that takes a hash
+		/// </summary>
+		/// <param name="input">The input <see cref="string"/> to hash</param>
+		/// <returns>The Jenkins hash of the <see cref="string"/></returns>
 		public static int GenerateHash(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{
 				return 0;
 			}
-
-			uint hash = 0;
-			char[] chars = input.ToCharArray();
-
-			//converts ascii uppercase to lowercase
-			for (int i = 0, length = chars.Length; i < length; i++)
-			{
-				if (chars[i] >= 'A' && chars[i] <= 'Z')
-				{
-					chars[i] = (char)(chars[i] + 32);
-				}
-			}
-
-			byte[] bytes = Encoding.UTF8.GetBytes(chars);
-
-			for (int i = 0, length = bytes.Length; i < length; i++)
-			{
-				hash += bytes[i];
-				hash += (hash << 10);
-				hash ^= (hash >> 6);
-			}
-
-			hash += (hash << 3);
-			hash ^= (hash >> 11);
-			hash += (hash << 15);
-
-			return (int)hash;
+			return unchecked((int) MemoryAccess.GetHashKey(input));
 		}
 
+		/// <summary>
+		/// Plays a sound from the games sound files
+		/// </summary>
+		/// <param name="soundFile">The file the sound is stored in</param>
+		/// <param name="soundSet">The name of the sound inside the file</param>
 		public static void PlaySound(string soundFile, string soundSet)
 		{
 			Audio.ReleaseSound(Audio.PlaySoundFrontend(soundFile, soundSet));
 		}
 
+		/// <summary>
+		/// Plays music from the games music files
+		/// </summary>
+		/// <param name="musicFile">The music file to play</param>
 		public static void PlayMusic(string musicFile)
 		{
 			Function.Call(Hash.TRIGGER_MUSIC_EVENT, musicFile);
 		}
+		/// <summary>
+		/// Stops playing a music file
+		/// </summary>
+		/// <param name="musicFile">The music file to stop</param>
 		public static void StopMusic(string musicFile)
 		{
 			Function.Call(Hash.CANCEL_MUSIC_EVENT, musicFile);
 		}
-
+		/// <summary>
+		/// Creates an input box for enabling a user to input text using the keyboard
+		/// </summary>
+		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(int maxLength)
 		{
 			return GetUserInput(WindowTitle.FMMC_KEY_TIP8, string.Empty, maxLength);
 		}
+		/// <summary>
+		/// Creates an input box for enabling a user to input text using the keyboard
+		/// </summary>
+		/// <param name="defaultText">The default text.</param>
+		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(string defaultText, int maxLength)
 		{
 			return GetUserInput(WindowTitle.FMMC_KEY_TIP8, defaultText, maxLength);
 		}
+		/// <summary>
+		/// Creates an input box for enabling a user to input text using the keyboard
+		/// </summary>
+		/// <param name="windowTitle">The Title of the Window.</param>
+		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(WindowTitle windowTitle, int maxLength)
 		{
 			return GetUserInput(windowTitle, string.Empty, maxLength);
 		}
+		/// <summary>
+		/// Creates an input box for enabling a user to input text using the keyboard
+		/// </summary>
+		/// <param name="windowTitle">The Title of the Window.</param>
+		/// <param name="defaultText">The default text.</param>
+		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(WindowTitle windowTitle, string defaultText, int maxLength)
 		{
 			ScriptDomain.CurrentDomain.PauseKeyboardEvents(true);
