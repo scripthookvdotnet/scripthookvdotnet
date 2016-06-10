@@ -75,7 +75,11 @@ namespace GTA
 		}
 		public void BreakOff()
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, (int)Index);
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, (int)Index, true);
+		}
+		public void Delete()
+		{
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, (int)Index, false);
 		}
 	}
 }
