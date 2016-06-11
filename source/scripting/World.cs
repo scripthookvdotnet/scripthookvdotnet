@@ -544,7 +544,7 @@ namespace GTA
 		/// Gets an <see langword="array"/> of all the <see cref="Blip"/>s on the Map
 		/// </summary>
 		/// <returns><see cref="Blip"/>[] of all the blips</returns>
-		public static Blip[] GetActiveBlips()
+		public static Blip[] GetAllBlips()
 		{
 			var res = new List<Blip>();
 

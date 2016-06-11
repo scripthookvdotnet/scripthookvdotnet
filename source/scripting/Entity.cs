@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using GTA.Math;
 using GTA.Native;
 
@@ -164,7 +167,7 @@ namespace GTA
 			}
 		}
 
-		public bool FreezePosition
+		public bool IsPositionFrozen
 		{
 			get
 			{
@@ -190,6 +193,13 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
+			}
+		}
+		public Vector3 RotationVelocity
+		{
+			get
+			{
+				return Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
 			}
 		}
 		public float MaxSpeed
@@ -227,6 +237,16 @@ namespace GTA
 			get
 			{
 				return Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
+			}
+		}
+		/// <summary>
+		/// Gets a value indicating how submersed this <see cref="Entity"/> is, 1.0f is that whole entity is submersed.
+		/// </summary>
+		public float SubmersionLevel
+		{
+			get
+			{
+				return Function.Call<float>(Hash.GET_ENTITY_SUBMERGED_LEVEL, Handle);
 			}
 		}
 
@@ -513,7 +533,7 @@ namespace GTA
 			}
 		}
 
-		public int Alpha
+		public int Opacity
 		{
 			get
 			{
@@ -524,7 +544,7 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_ALPHA, Handle, value, false);
 			}
 		}
-		public void ResetAlpha()
+		public void ResetOpacity()
 		{
 			Function.Call(Hash.RESET_ENTITY_ALPHA, Handle);
 		}
@@ -536,20 +556,25 @@ namespace GTA
 				return Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
 			}
 		}
-		public bool HasCollision
+		public bool IsCollisionEnabled
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return (MemoryAccess.ReadByte(MemoryAddress + 0x29) & (1 << 1)) != 0;
+				return !Function.Call<bool>(Hash._IS_ENTITY_COLLISON_DISABLED, Handle);
 			}
 			set
 			{
 				Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
+			}
+		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is recording collisions.
+		/// </summary>
+		public bool IsRecordingCollisions
+		{
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_RECORDS_COLLISIONS, Handle, value);
 			}
 		}
 		public void SetNoCollision(Entity entity, bool toggle)
@@ -603,11 +628,11 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_ENTITY_TOUCHING_ENTITY, Handle, entity.Handle);
 		}
 
-		public Vector3 GetOffsetInWorldCoords(Vector3 offset)
+		public Vector3 GetOffsetPosition(Vector3 offset)
 		{
 			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
 		}
-		public Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
+		public Vector3 GetPositionOffset(Vector3 worldCoords)
 		{
 			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
 		}
@@ -616,24 +641,24 @@ namespace GTA
 		{
 			return Function.Call<int>(Hash.GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
 		}
-		public Vector3 GetBoneCoord(int boneIndex)
+		public Vector3 GetBonePosition(int boneIndex)
 		{
 			return Function.Call<Vector3>(Hash.GET_WORLD_POSITION_OF_ENTITY_BONE, Handle, boneIndex);
 		}
-		public Vector3 GetBoneCoord(string boneName)
+		public Vector3 GetBonePosition(string boneName)
 		{
-			return GetBoneCoord(GetBoneIndex(boneName));
+			return GetBonePosition(GetBoneIndex(boneName));
 		}
 		public bool HasBone(string boneName)
 		{
 			return GetBoneIndex(boneName) != -1;
 		}
 
-		public Blip AddBlip()
+		public Blip AttachBlip()
 		{
 			return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_ENTITY, Handle));
 		}
-		public Blip CurrentBlip
+		public Blip AttachedBlip
 		{
 			get
 			{
@@ -645,6 +670,13 @@ namespace GTA
 				}
 
 				return null;
+			}
+		}
+		public Blip[] AttachedBlips
+		{
+			get
+			{
+				return World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x) == Handle).ToArray();
 			}
 		}
 
