@@ -17,6 +17,7 @@
 #pragma once
 
 #include "NativeHashes.hpp"
+#include "../scripting/Vector3.hpp"
 
 namespace GTA
 {
@@ -156,6 +157,11 @@ namespace GTA
 		public value class GlobalVariable sealed
 		{
 		public:
+			/// <summary>
+			/// Gets the Global variable at the specified index
+			/// </summary>
+			/// <param name="index">The index of the global</param>
+			/// <returns></returns>
 			static GlobalVariable Get(int index);
 
 			property System::IntPtr MemoryAddress
@@ -166,12 +172,39 @@ namespace GTA
 				}
 			}
 
+			/// <summary>
+			/// Gets the value stored in the <see cref = "GlobalVariable"/>
+			/// </summary>
 			generic <typename T>
 			T Read();
+
+			/// <summary>
+			/// Set the value stored in the <see cref = "GlobalVariable"/>
+			/// </summary>
+			/// <param name="value">The new value to assign to the <see cref = "GlobalVariable"/></param>
 			generic <typename T>
 			void Write(T value);
 
+			/// <summary>
+			/// Set the value stored in the <see cref = "GlobalVariable"/> to a string
+			/// </summary>
+			/// <param name="value">The string to set the <see cref = "GlobalVariable"/> to.</param>
+			/// <param name="maxSize">The maximum size the string can be, must be a multiple of 8 less than or equal to 64</param>
+			void WriteString(System::String ^value, int maxSize);
+
+			/// <summary>
+			/// Gets the <see cref = "GlobalVariable"/> stored at a specific index in this <see cref = "GlobalVariable"/> array
+			/// </summary>
+			/// <param name="index">The array index.</param>
+			/// <param name="itemSize">How many items does each array index store, e.g an array of <see cref = "GTA::Math::Vector3"/>s would take up 3 items.</param>
+			/// <returns>The <see cref = "GlobalVariable"/> at the index given</returns>
 			GlobalVariable GetArrayItem(int index, int itemSize);
+
+			/// <summary>
+			/// Gets the <see cref = "GlobalVariable"/> stored at a given offset in a global structure
+			/// </summary>
+			/// <param name="index">The index the <see cref = "GlobalVariable"/> is stored in the structure, e.g for a Global <see cref = "GTA::Math::Vector3"/> the Y component would be at index 1</param>
+			/// <returns>The <see cref = "GlobalVariable"/> at the index given</returns>
 			GlobalVariable GetStructField(int index);
 
 		private:
