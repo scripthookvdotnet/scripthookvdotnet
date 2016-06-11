@@ -240,6 +240,7 @@ namespace GTA
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
 		}
 
+		
 		GlobalVariable GlobalVariable::Get(int index)
 		{
 			IntPtr address(getGlobalPtr(index));
@@ -256,6 +257,7 @@ namespace GTA
 		{
 		}
 
+		
 		generic <typename T>
 		T GlobalVariable::Read()
 		{
@@ -276,6 +278,7 @@ namespace GTA
 
 			return static_cast<T>(ObjectFromNative(T::typeid, static_cast<UInt64 *>(_address.ToPointer())));
 		}
+
 		generic <typename T>
 		void GlobalVariable::Write(T value)
 		{
@@ -312,6 +315,28 @@ namespace GTA
 			*static_cast<UInt64 *>(_address.ToPointer()) = ObjectToNative(value);
 		}
 
+
+		void GlobalVariable::WriteString(String ^value, int maxSize)
+		{
+			if (maxSize % 8 != 0)
+			{
+				throw gcnew ArgumentException("Global max string size should be a multiple of 8", "maxSize");
+			}
+			if (maxSize > 64)
+			{
+				throw gcnew ArgumentException("Global max string size cannot be larger than 64", "maxSize");
+			}
+			auto size = Text::Encoding::UTF8->GetByteCount(value);
+			if (size >= maxSize)
+			{
+				size = maxSize - 1;
+			}
+
+			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, _address, size);
+			static_cast<char *>(_address.ToPointer())[size] = '\0';
+			return;
+		}
+
 		GlobalVariable GlobalVariable::GetArrayItem(int index, int itemSize)
 		{
 			if (index < 0 || index >= Read<int>())
@@ -325,6 +350,7 @@ namespace GTA
 
 			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
 		}
+
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)

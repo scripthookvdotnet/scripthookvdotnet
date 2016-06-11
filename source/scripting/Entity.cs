@@ -561,6 +561,22 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, Handle, entity.Handle, 1);
 		}
+		public virtual bool HasBeenDamagedBy(WeaponHash weapon)
+		{
+			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, weapon, 0);
+		}
+		public virtual bool HasBeenDamagedByAnyWeapon()
+		{
+			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 2);
+		}
+		public virtual bool HasBeenDamagedByAnyMeleeWeapon()
+		{
+			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 1);
+		}
+		public virtual void ClearLastWeaponDamage()
+		{
+			Function.Call(Hash.CLEAR_ENTITY_LAST_WEAPON_DAMAGE, Handle);
+		}
 
 		public bool IsInArea(Vector3 minBounds, Vector3 maxBounds)
 		{

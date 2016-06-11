@@ -143,6 +143,23 @@ namespace GTA.UI
 
 			Function.Call(Hash._DRAW_SUBTITLE_TIMED, duration, 1);
 		}
+
+		/// <summary>
+		/// Displays a help message in the top corner of the screen this frame.
+		/// </summary>
+		/// <param name="helpText">The text to display.</param>
+		public static void DisplayHelpTextThisFrame(string helpText)
+		{
+			Function.Call(Hash._SET_TEXT_COMPONENT_FORMAT, "CELL_EMAIL_BCON");
+			const int maxStringLength = 99;
+
+			for (int i = 0; i < helpText.Length; i += maxStringLength)
+			{
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, helpText.Substring(i, System.Math.Min(maxStringLength, helpText.Length - i)));
+			}
+			Function.Call(Hash._DISPLAY_HELP_TEXT_FROM_STRING_LABEL, 0, 0, 1, -1);
+		}
+
 		/// <summary>
 		/// Creates a <see cref="Notification"/> above the minimap with the given message.
 		/// </summary>
