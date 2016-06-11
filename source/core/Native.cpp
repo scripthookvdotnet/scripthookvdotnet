@@ -28,6 +28,7 @@ namespace GTA
 {
 	namespace Native
 	{
+		#pragma region Functions
 		private ref struct NativeTask : IScriptTask
 		{
 			virtual void Run()
@@ -239,15 +240,16 @@ namespace GTA
 
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
 		}
+		#pragma endregion
 
-		
+		#pragma region Global Variables
 		GlobalVariable GlobalVariable::Get(int index)
 		{
 			IntPtr address(getGlobalPtr(index));
 
 			if (address == IntPtr::Zero)
 			{
-				throw gcnew IndexOutOfRangeException(String::Format("The index {0} is outside the range of allowed global indexes.", index));
+				throw gcnew IndexOutOfRangeException(String::Format("The index {0} does not correspond to an existing global variable.", index));
 			}
 
 			return GlobalVariable(address);
@@ -257,7 +259,6 @@ namespace GTA
 		{
 		}
 
-		
 		generic <typename T>
 		T GlobalVariable::Read()
 		{
@@ -278,18 +279,12 @@ namespace GTA
 
 			return static_cast<T>(ObjectFromNative(T::typeid, static_cast<UInt64 *>(_address.ToPointer())));
 		}
-
 		generic <typename T>
 		void GlobalVariable::Write(T value)
 		{
 			if (T::typeid == String::typeid)
 			{
-				const auto val = reinterpret_cast<String ^>(value);
-				const auto size = Text::Encoding::UTF8->GetByteCount(val);
-
-				Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(val), 0, _address, size);
-				static_cast<char *>(_address.ToPointer())[size] = '\0';
-				return;
+				throw gcnew InvalidOperationException("Cannot write string values via 'Write<string>', use 'WriteString' instead.");
 			}
 
 			if (T::typeid == Math::Vector2::typeid)
@@ -314,19 +309,15 @@ namespace GTA
 
 			*static_cast<UInt64 *>(_address.ToPointer()) = ObjectToNative(value);
 		}
-
-
 		void GlobalVariable::WriteString(String ^value, int maxSize)
 		{
-			if (maxSize % 8 != 0)
+			if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
 			{
-				throw gcnew ArgumentException("Global max string size should be a multiple of 8", "maxSize");
+				throw gcnew ArgumentException("The string maximum size should be one of 8, 16, 24, 32 or 64.", "maxSize");
 			}
-			if (maxSize > 64)
-			{
-				throw gcnew ArgumentException("Global max string size cannot be larger than 64", "maxSize");
-			}
+
 			auto size = Text::Encoding::UTF8->GetByteCount(value);
+
 			if (size >= maxSize)
 			{
 				size = maxSize - 1;
@@ -334,7 +325,6 @@ namespace GTA
 
 			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, _address, size);
 			static_cast<char *>(_address.ToPointer())[size] = '\0';
-			return;
 		}
 
 		GlobalVariable GlobalVariable::GetArrayItem(int index, int itemSize)
@@ -345,20 +335,20 @@ namespace GTA
 			}
 			if (itemSize <= 0)
 			{
-				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be a positive number.");
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
 			}
 
 			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
 		}
-
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)
 			{
-				throw gcnew IndexOutOfRangeException("The struct item index cannot be negative.");
+				throw gcnew IndexOutOfRangeException("The structure item index cannot be negative.");
 			}
 
 			return GlobalVariable(MemoryAddress + (8 * index));
 		}
+		#pragma endregion
 	}
 }
