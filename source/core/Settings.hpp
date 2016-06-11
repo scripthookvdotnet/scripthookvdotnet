@@ -35,7 +35,7 @@ namespace GTA
 
 	private:
 		ScriptSettings(System::String ^filename);
-		
+
 		System::String ^_filename;
 		System::Collections::Generic::Dictionary<System::String ^, System::String ^> ^_values = gcnew System::Collections::Generic::Dictionary<System::String ^, System::String ^>();
 	};
