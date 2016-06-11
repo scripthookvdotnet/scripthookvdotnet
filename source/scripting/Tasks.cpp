@@ -237,23 +237,9 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::TASK_PERFORM_SEQUENCE, _ped->Handle, sequence->Handle);
 	}
-	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float speed, int duration, bool lastAnimation, float playbackRate)
+	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float speed, int duration, bool loop, float playbackRate)
 	{
-		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animDict);
-
-		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
-
-		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animDict))
-		{
-			Script::Yield();
-
-			if (System::DateTime::UtcNow >= endtime)
-			{
-				return;
-			}
-		}
-
-		Native::Function::Call(Native::Hash::TASK_PLAY_ANIM, _ped->Handle, animDict, animName, speed, -8.0f, duration, lastAnimation, playbackRate, 0, 0, 0);
+		PlayAnimation(animDict, animName, speed, -8.0f, duration, loop ? AnimationFlags::Loop : AnimationFlags::None, playbackRate);
 	}
 	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName)
 	{
@@ -265,6 +251,8 @@ namespace GTA
 	}
 	void Tasks::PlayAnimation(System::String ^animDict, System::String ^animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 	{
+		Native::Function::Call(Native::Hash::REQUEST_ANIM_DICT, animDict);
+
 		const System::DateTime endtime = System::DateTime::UtcNow + System::TimeSpan(0, 0, 0, 0, 1000);
 
 		while (!Native::Function::Call<bool>(Native::Hash::HAS_ANIM_DICT_LOADED, animDict))
