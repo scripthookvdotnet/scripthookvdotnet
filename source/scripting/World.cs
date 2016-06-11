@@ -680,15 +680,7 @@ namespace GTA
 			return (T)closest;
 		}
 
-		public static Vector3 GetSafeCoordForPed(Vector3 position)
-		{
-			return GetSafeCoordForPed(position, true, 0);
-		}
-		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk)
-		{
-			return GetSafeCoordForPed(position, sidewalk, 0);
-		}
-		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk, int flags)
+		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
 		{
 			var outPos = new OutputArgument();
 
@@ -700,15 +692,11 @@ namespace GTA
 			return Vector3.Zero;
 		}
 
-		public static Vector3 GetNextPositionOnStreet(Vector3 position)
-		{
-			return GetNextPositionOnStreet(position, false);
-		}
-		public static Vector3 GetNextPositionOnStreet(Vector2 position, bool unoccupied)
+		public static Vector3 GetNextPositionOnStreet(Vector2 position, bool unoccupied = false)
 		{
 			return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
 		}
-		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied)
+		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
 		{
 			var outPos = new OutputArgument();
 
@@ -983,11 +971,7 @@ namespace GTA
 			return new Camera(Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2));
 		}
 
-		public static Ped CreatePed(Model model, Vector3 position)
-		{
-			return CreatePed(model, position, 0f);
-		}
-		public static Ped CreatePed(Model model, Vector3 position, float heading)
+		public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
 		{
 			if (!model.IsPed || !model.Request(1000))
 			{
@@ -1001,11 +985,7 @@ namespace GTA
 			return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
 		}
 
-		public static Vehicle CreateVehicle(Model model, Vector3 position)
-		{
-			return CreateVehicle(model, position, 0f);
-		}
-		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading)
+		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
 		{
 			if (!model.IsVehicle || !model.Request(1000))
 			{
@@ -1090,11 +1070,7 @@ namespace GTA
 			return new Prop(handle);
 		}
 
-		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
-		{
-			return CreateCheckpoint(icon, position, pointTo, radius, color, 0);
-		}
-		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color, byte reserved)
+		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color, byte reserved = 0)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, reserved);
 
@@ -1113,27 +1089,17 @@ namespace GTA
 			return new Rope(Function.Call<int>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0));
 		}
 
-		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage)
-		{
-			ShootBullet(sourcePosition, targetPosition, owner, model, damage, -1f);
-		}
-		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage, float speed)
+
+		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage, float speed = -1f)
 		{
 			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner.Handle, 1, 0, speed);
 		}
-		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake)
-		{
-			AddExplosion(position, type, radius, cameraShake, true, false);
-		}
-		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble, bool invisible)
+
+		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble = true, bool invisible = false)
 		{
 			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 		}
-		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake)
-		{
-			AddOwnedExplosion(ped, position, type, radius, cameraShake, true, false);
-		}
-		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble, bool invisible)
+		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble = true, bool invisible = false)
 		{
 			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 		}
@@ -1146,37 +1112,21 @@ namespace GTA
 			return new RelationshipGroup(resultArg.GetResult<int>());
 		}
 
-		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options)
-		{
-			return Raycast(source, target, options, null);
-		}
-		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity)
+		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
-		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options)
-		{
-			return Raycast(source, direction, maxDistance, options, null);
-		}
-		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity)
+		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
 
 			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options)
-		{
-			return RaycastCapsule(source, target, radius, options, null);
-		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity)
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options)
-		{
-			return RaycastCapsule(source, direction, maxDistance, radius, options, null);
-		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity)
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
 
@@ -1186,13 +1136,9 @@ namespace GTA
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000f, IntersectOptions.Everything, null);
 		}
-		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color)
-		{
-			DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, null, null, false);
-		}
 
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color,
-			bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
+			bool bobUpAndDown = false, bool faceCamY = false, int unk2 = 2, bool rotateY = false, string textueDict = null, string textureName = null, bool drawOnEnt = false)
 		{
 			if (!string.IsNullOrEmpty(textueDict) && !string.IsNullOrEmpty(textureName))
 			{

@@ -480,7 +480,6 @@ namespace GTA
 		}
 		public bool IsClimbing
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_CLIMBING, Handle);
@@ -488,7 +487,6 @@ namespace GTA
 		}
 		public bool IsJumping
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_JUMPING, Handle);
@@ -496,7 +494,6 @@ namespace GTA
 		}
 		public bool IsFalling
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_FALLING, Handle);
@@ -814,7 +811,7 @@ namespace GTA
 							}
 						}
 					}			 
-					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 1.0f);
+					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 0.25f);
 				}
 			}
 		}

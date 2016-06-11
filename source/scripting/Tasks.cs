@@ -55,11 +55,7 @@ namespace GTA
 			_ped = ped;
 		}
 
-		public void AchieveHeading(float heading)
-		{
-			AchieveHeading(heading, 0);
-		}
-		public void AchieveHeading(float heading, int timeout)
+		public void AchieveHeading(float heading, int timeout = 0)
 		{
 			Function.Call(Hash.TASK_ACHIEVE_HEADING, _ped.Handle, heading, timeout);
 		}
@@ -97,41 +93,22 @@ namespace GTA
 			Function.Call(Hash.TASK_COWER, _ped.Handle, duration);
 		}
 
-		public void CruiseWithVehicle(Vehicle vehicle, float speed)
-		{
-			CruiseWithVehicle(vehicle, speed, 0);
-		}
-		public void CruiseWithVehicle(Vehicle vehicle, float speed, int drivingstyle)
+		public void CruiseWithVehicle(Vehicle vehicle, float speed, int drivingstyle = 0)
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, drivingstyle);
 		}
 
-		public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed)
-		{
-			DriveTo(vehicle, target, radius, speed, 0);
-		}
-		public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed, int drivingstyle)
+		public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed, int drivingstyle = 0)
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, drivingstyle, radius);
 		}
 
-		public void EnterVehicle()
+		public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 0f, int flag = 0)
 		{
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, -1, VehicleSeat.Any, 0f, 0, 0);
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, seat, speed, flag, 0);
 		}
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat)
-		{
-			EnterVehicle(vehicle, seat, -1, 0f, 0);
-		}
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout)
-		{
-			EnterVehicle(vehicle, seat, timeout, 0f, 0);
-		}
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, float speed)
-		{
-			EnterVehicle(vehicle, seat, timeout, speed, 0);
-		}
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, float speed, int flag)
+
+		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 0f, int flag = 0)
 		{
 			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, seat, speed, flag, 0);
 		}
@@ -158,19 +135,11 @@ namespace GTA
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, duration, 0);
 		}
 
-		public void FleeFrom(Ped ped)
-		{
-			FleeFrom(ped, -1);
-		}
-		public void FleeFrom(Ped ped, int duration)
+		public void FleeFrom(Ped ped, int duration = -1)
 		{
 			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, ped.Handle, 100f, duration, 0, 0);
 		}
-		public void FleeFrom(Vector3 position)
-		{
-			FleeFrom(position, -1);
-		}
-		public void FleeFrom(Vector3 position, int duration)
+		public void FleeFrom(Vector3 position, int duration = -1)
 		{
 			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, 100f, duration, 0, 0);
 		}
@@ -200,23 +169,11 @@ namespace GTA
 		{
 			GoTo(target, Vector3.Zero, -1);
 		}
-		public void GoTo(Entity target, Vector3 offset)
-		{
-			GoTo(target, offset, -1);
-		}
-		public void GoTo(Entity target, Vector3 offset, int timeout)
+		public void GoTo(Entity target, Vector3 offset, int timeout = -1)
 		{
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
-		public void GoTo(Vector3 position)
-		{
-			GoTo(position, false, -1);
-		}
-		public void GoTo(Vector3 position, bool ignorePaths)
-		{
-			GoTo(position, ignorePaths, -1);
-		}
-		public void GoTo(Vector3 position, bool ignorePaths, int timeout)
+		public void GoTo(Vector3 position, bool ignorePaths = false, int timeout = -1)
 		{
 			if (ignorePaths)
 			{
@@ -238,11 +195,7 @@ namespace GTA
 			Function.Call(Hash.TASK_HANDS_UP, _ped.Handle, duration, 0, -1, false);
 		}
 
-		public void LeaveVehicle()
-		{
-			LeaveVehicle(LeaveVehicleFlags.None);
-		}
-		public void LeaveVehicle(LeaveVehicleFlags flags)
+		public void LeaveVehicle(LeaveVehicleFlags flags = LeaveVehicleFlags.None)
 		{
 			Function.Call(Hash.TASK_LEAVE_ANY_VEHICLE, _ped.Handle, 0, flags);
 		}
@@ -255,19 +208,11 @@ namespace GTA
 			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, flags);
 		}
 
-		public void LookAt(Entity target)
-		{
-			LookAt(target, -1);
-		}
-		public void LookAt(Entity target, int duration)
+		public void LookAt(Entity target, int duration = -1)
 		{
 			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, 0, 2);
 		}
-		public void LookAt(Vector3 position)
-		{
-			LookAt(position, -1);
-		}
-		public void LookAt(Vector3 position, int duration)
+		public void LookAt(Vector3 position, int duration = -1)
 		{
 			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, 0, 2);
 		}
@@ -336,15 +281,7 @@ namespace GTA
 			Function.Call(Hash.TASK_RELOAD_WEAPON, _ped.Handle, true);
 		}
 
-		public void RunTo(Vector3 position)
-		{
-			RunTo(position, false, -1);
-		}
-		public void RunTo(Vector3 position, bool ignorePaths)
-		{
-			RunTo(position, ignorePaths, -1);
-		}
-		public void RunTo(Vector3 position, bool ignorePaths, int timeout)
+		public void RunTo(Vector3 position, bool ignorePaths = false, int timeout = -1)
 		{
 			if (ignorePaths)
 			{
@@ -356,27 +293,12 @@ namespace GTA
 			}
 		}
 
-		public void ShootAt(Ped target)
-		{
-			ShootAt(target, -1, FiringPattern.Default);
-		}
-		public void ShootAt(Ped target, int duration)
-		{
-			ShootAt(target, duration, FiringPattern.Default);
-		}
-		public void ShootAt(Ped target, int duration, FiringPattern pattern)
+
+		public void ShootAt(Ped target, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
 			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, pattern);
 		}
-		public void ShootAt(Vector3 position)
-		{
-			ShootAt(position, -1, FiringPattern.Default);
-		}
-		public void ShootAt(Vector3 position, int duration)
-		{
-			ShootAt(position, duration, FiringPattern.Default);
-		}
-		public void ShootAt(Vector3 position, int duration, FiringPattern pattern)
+		public void ShootAt(Vector3 position, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
 			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, pattern);
 		}
@@ -411,19 +333,12 @@ namespace GTA
 			Function.Call(Hash.TASK_SWAP_WEAPON, _ped.Handle, false);
 		}
 
-		public void TurnTo(Entity target)
-		{
-			TurnTo(target, -1);
-		}
-		public void TurnTo(Entity target, int duration)
+		public void TurnTo(Entity target, int duration = -1)
 		{
 			Function.Call(Hash.TASK_TURN_PED_TO_FACE_ENTITY, _ped.Handle, target.Handle, duration);
 		}
-		public void TurnTo(Vector3 position)
-		{
-			TurnTo(position, -1);
-		}
-		public void TurnTo(Vector3 position, int duration)
+
+		public void TurnTo(Vector3 position, int duration = -1)
 		{
 			Function.Call(Hash.TASK_TURN_PED_TO_FACE_COORD, _ped.Handle, position.X, position.Y, position.Z, duration);
 		}
