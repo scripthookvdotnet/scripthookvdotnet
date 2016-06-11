@@ -38,28 +38,20 @@ namespace GTA
 		{
 			return Function.Call<Relationship>(Native.Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, Hash, targetGroup);
 		}
-		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
-		{
-			SetRelationshipBetweenGroups(targetGroup, relationship);
-		}
-		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
+		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool bidirectionally = false)
 		{
 			Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup);
 
-			if (isBidirectional)
+			if (bidirectionally)
 			{
 				Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup, Hash);
 			}
 		}
-		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship)
-		{
-			ClearRelationshipBetweenGroups(targetGroup, relationship, false);
-		}
-		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool isBidirectional)
+		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool bidirectionally = false)
 		{
 			Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup);
 
-			if (isBidirectional)
+			if (bidirectionally)
 			{
 				Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup, Hash);
 			}
