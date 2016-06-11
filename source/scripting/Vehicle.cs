@@ -11,20 +11,20 @@ namespace GTA
 		Hook,
 		Magnet
 	}
-	public enum NumberPlateType
+	public enum LicensePlateStyle
 	{
-		BlueOnWhite1,
-		YellowOnBlack,
-		YellowOnBlue,
-		BlueOnWhite2,
-		BlueOnWhite3,
-		NorthYankton
+		BlueOnWhite1 = 3,
+		BlueOnWhite2 = 0,
+		BlueOnWhite3 = 4,
+		YellowOnBlack = 1,
+		YellowOnBlue = 2,		
+		NorthYankton = 5
 	}
-	public enum NumberPlateMounting
+	public enum LicensePlateType
 	{
-		FrontAndRear,
-		Front,
-		Rear,
+		FrontAndRearPlates,
+		FrontPlate,
+		RearPlate,
 		None
 	}
 	public enum VehicleClass
@@ -213,16 +213,7 @@ namespace GTA
 		PureGold,
 		BrushedGold
 	}
-	public enum VehicleDoor
-	{
-		FrontRightDoor = 1,
-		FrontLeftDoor = 0,
-		BackRightDoor = 3,
-		BackLeftDoor = 2,
-		Hood = 4,
-		Trunk
-	}
-	public enum VehicleLandingGear
+	public enum VehicleLandingGearState
 	{
 		Deployed,
 		Closing,
@@ -239,51 +230,6 @@ namespace GTA
 		CanBeBrokenInto = 7,
 		CanBeBrokenIntoPersist,
 		CannotBeTriedToEnter = 10
-	}
-	public enum VehicleMod
-	{
-		Spoilers,
-		FrontBumper,
-		RearBumper,
-		SideSkirt,
-		Exhaust,
-		Frame,
-		Grille,
-		Hood,
-		Fender,
-		RightFender,
-		Roof,
-		Engine,
-		Brakes,
-		Transmission,
-		Horns,
-		Suspension,
-		Armor,
-		FrontWheels = 23,
-		BackWheels,
-		PlateHolder,
-		VanityPlates,
-		TrimDesign,
-		Ornaments,
-		Dashboard,
-		DialDesign,
-		DoorSpeakers,
-		Seats,
-		SteeringWheels,
-		ColumnShifterLevers,
-		Plaques,
-		Speakers,
-		Trunk,
-		Hydraulics,
-		EngineBlock,
-		AirFilter,
-		Struts,
-		ArchCover,
-		Aerials,
-		Trim,
-		Tank,
-		Windows,
-		Livery = 48
 	}
 	public enum VehicleNeonLight
 	{
@@ -322,30 +268,6 @@ namespace GTA
 		ExtraSeat11,
 		ExtraSeat12
 	}
-	public enum VehicleToggleMod
-	{
-		Turbo = 18,
-		TireSmoke = 20,
-		XenonHeadlights = 22
-	}
-	public enum VehicleWheelType
-	{
-		Sport,
-		Muscle,
-		Lowrider,
-		SUV,
-		Offroad,
-		Tuner,
-		BikeWheels,
-		HighEnd
-	}
-	public enum VehicleWindow
-	{
-		FrontRightWindow = 1,
-		FrontLeftWindow = 0,
-		BackRightWindow = 3,
-		BackLeftWindow = 2
-	}
 	public enum VehicleWindowTint
 	{
 		None,
@@ -359,6 +281,13 @@ namespace GTA
 
 	public sealed class Vehicle : Entity
 	{
+		#region Fields
+		VehicleDoorCollection _doors;
+		VehicleModCollection _mods;
+		VehicleWheelCollection _wheels;
+		VehicleWindowCollection _windows;
+		#endregion
+
 		public Vehicle(int handle) : base(handle)
 		{
 		}
@@ -444,7 +373,7 @@ namespace GTA
 			}
 		}
 
-		public bool EngineRunning
+		public bool IsEngineRunning
 		{
 			get
 			{
@@ -698,7 +627,7 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = GetModCount(VehicleMod.Livery);
+				int modCount = Mods[VehicleModType.Livery].ModCount;
 
 				if (modCount > 0)
 				{
@@ -709,9 +638,9 @@ namespace GTA
 			}
 			set
 			{
-				if (GetModCount(VehicleMod.Livery) > 0)
+				if (Mods[VehicleModType.Livery].ModCount > 0)
 				{
-					SetMod(VehicleMod.Livery, value, false);
+					Mods[VehicleModType.Livery].Index = value;
 				}
 				else
 				{
@@ -723,7 +652,7 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = GetModCount(VehicleMod.Livery);
+				int modCount = Mods[VehicleModType.Livery].ModCount;
 
 				if (modCount > 0)
 				{
@@ -976,7 +905,7 @@ namespace GTA
 				return Function.Call<bool>(Hash.DOES_VEHICLE_HAVE_ROOF, Handle);
 			}
 		}
-		public bool LeftHeadLightBroken
+		public bool IsLeftHeadLightBroken
 		{
 			get
 			{
@@ -1002,7 +931,7 @@ namespace GTA
 				}
 			}
 		}
-		public bool RightHeadLightBroken
+		public bool IsRightHeadLightBroken
 		{
 			get
 			{
@@ -1051,7 +980,7 @@ namespace GTA
 			}
 		}
 
-		public bool EngineCanDegrade
+		public bool CanEngineDegrade
 		{
 			set
 			{
@@ -1073,17 +1002,6 @@ namespace GTA
 			}
 		}
 
-		public VehicleWheelType WheelType
-		{
-			get
-			{
-				return Function.Call<VehicleWheelType>(Hash.GET_VEHICLE_WHEEL_TYPE, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, Handle, value);
-			}
-		}
 		public VehicleWindowTint WindowTint
 		{
 			get
@@ -1289,25 +1207,25 @@ namespace GTA
 			Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, Handle);
 		}
 
-		public NumberPlateType NumberPlateType
+		public LicensePlateStyle LicensePlateStyle
 		{
 			get
 			{
-				return Function.Call<NumberPlateType>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle);
+				return Function.Call<LicensePlateStyle>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle);
 			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, Handle, value);
 			}
 		}
-		public NumberPlateMounting NumberPlateMounting
+		public LicensePlateType LicensePlateType
 		{
 			get
 			{
-				return Function.Call<NumberPlateMounting>(Hash.GET_VEHICLE_PLATE_TYPE, Handle);
+				return Function.Call<LicensePlateType>(Hash.GET_VEHICLE_PLATE_TYPE, Handle);
 			}
 		}
-		public string NumberPlate
+		public string LicensePlate
 		{
 			get
 			{
@@ -1319,11 +1237,11 @@ namespace GTA
 			}
 		}
 
-		public VehicleLandingGear LandingGear
+		public VehicleLandingGearState LandingGearState
 		{
 			get
 			{
-				return Function.Call<VehicleLandingGear>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
+				return Function.Call<VehicleLandingGearState>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
 			}
 			set
 			{
@@ -1431,9 +1349,19 @@ namespace GTA
 			}
 		}
 
-		public bool IsInBurnout()
+		public bool IsBurnoutForced
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_IN_BURNOUT, Handle);
+			set
+			{
+				Function.Call<bool>(Hash.SET_VEHICLE_BURNOUT, Handle, value);
+			}
+		}
+		public bool IsInBurnout
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_VEHICLE_IN_BURNOUT, Handle);
+			}
 		}
 
 		public Ped Driver
@@ -1457,7 +1385,7 @@ namespace GTA
 				var result = new Ped[PassengerCount + 1];
 				result[0] = driver;
 
-				for (int i = 0, seats = PassengerSeats; i < seats && i <= result.Length; i++)
+				for (int i = 0, seats = PassengerCapacity; i < seats && i <= result.Length; i++)
 				{
 					result[i + 1] = GetPedOnSeat((VehicleSeat)i);
 				}
@@ -1476,7 +1404,7 @@ namespace GTA
 					return result;
 				}
 
-				for (int i = 0, seats = PassengerSeats; i < seats && i < result.Length; i++)
+				for (int i = 0, seats = PassengerCapacity; i < seats && i < result.Length; i++)
 				{
 					result[i] = GetPedOnSeat((VehicleSeat)i);
 				}
@@ -1484,7 +1412,7 @@ namespace GTA
 				return result;
 			}
 		}
-		public int PassengerSeats
+		public int PassengerCapacity
 		{
 			get
 			{
@@ -1499,41 +1427,53 @@ namespace GTA
 			}
 		}
 
-		public void InstallModKit()
+		public VehicleDoorCollection Doors
 		{
-			Function.Call(Hash.SET_VEHICLE_MOD_KIT, Handle, 0);
+			get
+			{
+				if (_doors == null)
+				{
+					_doors = new VehicleDoorCollection(this);
+				}
+
+				return _doors;
+			}
 		}
-		public int GetMod(VehicleMod modType)
+		public VehicleModCollection Mods
 		{
-			return Function.Call<int>(Hash.GET_VEHICLE_MOD, Handle, modType);
+			get
+			{
+				if (_mods == null)
+				{
+					_mods = new VehicleModCollection(this);
+				}
+
+				return _mods;
+			}
 		}
-		public void SetMod(VehicleMod modType, int modIndex, bool variations)
+		public VehicleWheelCollection Wheels
 		{
-			Function.Call(Hash.SET_VEHICLE_MOD, Handle, modType, modIndex, variations);
+			get
+			{
+				if (_wheels == null)
+				{
+					_wheels = new VehicleWheelCollection(this);
+				}
+
+				return _wheels;
+			}
 		}
-		public int GetModCount(VehicleMod modType)
+		public VehicleWindowCollection Windows
 		{
-			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Handle, modType);
-		}
-		public void ToggleMod(VehicleToggleMod toggleMod, bool toggle)
-		{
-			Function.Call(Hash.TOGGLE_VEHICLE_MOD, Handle, toggleMod, toggle);
-		}
-		public bool IsToggleModOn(VehicleToggleMod toggleMod)
-		{
-			return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Handle, toggleMod);
-		}
-		public string GetModTypeName(VehicleMod modType)
-		{
-			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, modType);
-		}
-		public string GetToggleModTypeName(VehicleToggleMod toggleModType)
-		{
-			return Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Handle, toggleModType);
-		}
-		public string GetModName(VehicleMod modType, int modValue)
-		{
-			return Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Handle, modType, modValue);
+			get
+			{
+				if (_windows == null)
+				{
+					_windows = new VehicleWindowCollection(this);
+				}
+
+				return _windows;
+			}
 		}
 
 		public bool ExtraExists(int extra)
@@ -1627,18 +1567,6 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_WHEELS_CAN_BREAK, Handle, value);
 			}
 		}
-		public void FixTire(int wheel)
-		{
-			Function.Call(Hash.SET_VEHICLE_TYRE_FIXED, Handle, wheel);
-		}
-		public void BurstTire(int wheel)
-		{
-			Function.Call(Hash.SET_VEHICLE_TYRE_BURST, Handle, wheel, 1, 1000f);
-		}
-		public bool IsTireBurst(int wheel)
-		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_TYRE_BURST, Handle, wheel, false);
-		}
 
 		public VehicleDoor[] GetDoors()
 		{
@@ -1646,58 +1574,32 @@ namespace GTA
 
 			if (HasBone("door_dside_f"))
 			{
-				list.Add(VehicleDoor.FrontLeftDoor);
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor));
 			}
 			if (HasBone("door_pside_f"))
 			{
-				list.Add(VehicleDoor.FrontRightDoor);
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor));
 			}
 			if (HasBone("door_dside_r"))
 			{
-				list.Add(VehicleDoor.BackLeftDoor);
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor));
+				
 			}
 			if (HasBone("door_pside_r"))
 			{
-				list.Add(VehicleDoor.BackRightDoor);
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackRightDoor));               
 			}
 			if (HasBone("bonnet"))
 			{
-				list.Add(VehicleDoor.Hood);
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.Hood));                
 			}
 			if (HasBone("hood"))
 			{
-				list.Add(VehicleDoor.Trunk);
+				list.Add(new VehicleDoor(this, VehicleDoorIndex.Trunk));
+				
 			}
 
 			return list.ToArray();
-		}
-		public void OpenDoor(VehicleDoor door, bool loose, bool instantly)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, Handle, door, loose, instantly);
-		}
-		public void CloseDoor(VehicleDoor door, bool instantly)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, Handle, door, instantly);
-		}
-		public void BreakDoor(VehicleDoor door, bool delete = true)
-		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Handle, door, delete);
-		}
-		public bool IsDoorOpen(VehicleDoor door)
-		{
-			return GetDoorAngleRatio(door) > 0;
-		}
-		public bool IsDoorBroken(VehicleDoor door)
-		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, Handle, door);
-		}
-		public void SetDoorBreakable(VehicleDoor door, bool isBreakable)
-		{
-			Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, Handle, door, isBreakable);
-		}
-		public float GetDoorAngleRatio(VehicleDoor door)
-		{
-			return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, Handle, door);
 		}
 
 		public bool HasBombBay
@@ -1720,31 +1622,6 @@ namespace GTA
 			{
 				Function.Call(Hash._CLOSE_VEHICLE_BOMB_BAY, Handle);
 			}
-		}
-
-		public void FixWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.FIX_VEHICLE_WINDOW, Handle, window);
-		}
-		public void SmashWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.SMASH_VEHICLE_WINDOW, Handle, window);
-		}
-		public void RollUpWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.ROLL_UP_WINDOW, Handle, window);
-		}
-		public void RollDownWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.ROLL_DOWN_WINDOW, Handle, window);
-		}
-		public void RollDownWindows()
-		{
-			Function.Call(Hash.ROLL_DOWN_WINDOWS, Handle);
-		}
-		public void RemoveWindow(VehicleWindow window)
-		{
-			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, Handle, window);
 		}
 
 		public bool IsNeonLightsOn(VehicleNeonLight light)

@@ -203,5 +203,32 @@
     <CsCompile Include="source\scripting\Checkpoint.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\VehicleModCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleMod.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleToggleMod.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleDoor.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleDoorCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWheel.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWheelCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWindow.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWindowCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>

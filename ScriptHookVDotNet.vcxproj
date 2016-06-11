@@ -134,7 +134,16 @@
     <CsCompile Include="source\scripting\Tasks.cs" />
     <CsCompile Include="source\scripting\Text.cs" />
     <CsCompile Include="source\scripting\Vehicle.cs" />
+    <CsCompile Include="source\scripting\VehicleDoor.cs" />
+    <CsCompile Include="source\scripting\VehicleDoorCollection.cs" />
     <CsCompile Include="source\scripting\VehicleHash.cs" />
+    <CsCompile Include="source\scripting\VehicleMod.cs" />
+    <CsCompile Include="source\scripting\VehicleModCollection.cs" />
+    <CsCompile Include="source\scripting\VehicleToggleMod.cs" />
+    <CsCompile Include="source\scripting\VehicleWheel.cs" />
+    <CsCompile Include="source\scripting\VehicleWheelCollection.cs" />
+    <CsCompile Include="source\scripting\VehicleWindow.cs" />
+    <CsCompile Include="source\scripting\VehicleWindowCollection.cs" />
     <CsCompile Include="source\scripting\Weapon.cs" />
     <CsCompile Include="source\scripting\WeaponAsset.cs" />
     <CsCompile Include="source\scripting\WeaponCollection.cs" />
