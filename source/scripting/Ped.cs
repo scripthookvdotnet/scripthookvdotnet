@@ -29,9 +29,9 @@ namespace GTA
 	public enum RagdollType
 	{
 		Normal = 0,
-		StiffLegs,
-		NarrowLegs,
-		WideLegs,
+		StiffLegs = 1,
+		NarrowLegs = 2,
+		WideLegs = 3,
 	}
 
 	public sealed class Ped : Entity
@@ -1116,19 +1116,19 @@ namespace GTA
 		{
 			Function.Call(Hash.APPLY_DAMAGE_TO_PED, Handle, damageAmount, true);
 		}
-		public new bool HasBeenDamagedBy(WeaponHash weapon)
+		public override bool HasBeenDamagedBy(WeaponHash weapon)
 		{
 			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, weapon, 0);
 		}
-		public new bool HasBeenDamagedByAnyWeapon()
+		public override bool HasBeenDamagedByAnyWeapon()
 		{
 			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 2);
 		}
-		public new bool HasBeenDamagedByAnyMeleeWeapon()
+		public override bool HasBeenDamagedByAnyMeleeWeapon()
 		{
 			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 1);
 		}
-		public new void ClearLastWeaponDamage()
+		public override void ClearLastWeaponDamage()
 		{
 			Function.Call(Hash.CLEAR_PED_LAST_WEAPON_DAMAGE, Handle);
 		}
@@ -1147,17 +1147,17 @@ namespace GTA
 			Function.Call(Hash.CLEAR_PED_LAST_DAMAGE_BONE, Handle);
 		}
 
-		public int GetBoneIndex(Bone BoneID)
+		public int GetBoneIndex(Bone boneID)
 		{
-			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, BoneID);
+			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, boneID);
 		}
-		public Vector3 GetBoneCoord(Bone BoneID)
+		public Vector3 GetBoneCoord(Bone boneID)
 		{
-			return GetBoneCoord(BoneID, Vector3.Zero);
+			return GetBoneCoord(boneID, Vector3.Zero);
 		}
-		public Vector3 GetBoneCoord(Bone BoneID, Vector3 Offset)
+		public Vector3 GetBoneCoord(Bone boneID, Vector3 offset)
 		{
-			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, BoneID, Offset.X, Offset.Y, Offset.Z);
+			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, boneID, offset.X, offset.Y, offset.Z);
 		}
 
 		public Vector3 GetLastWeaponImpactPosition()
@@ -1205,11 +1205,7 @@ namespace GTA
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, flagID, true);
 		}
 
-		public Ped Clone()
-		{
-			return Clone(0f);
-		}
-		public Ped Clone(float heading)
+		public Ped Clone(float heading = 0.0f)
 		{
 			return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, heading, false, false));
 		}
