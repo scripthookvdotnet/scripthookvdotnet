@@ -110,7 +110,7 @@ namespace GTA
 
 			if (!result->ContainsKey(section))
 			{
-				List<Tuple<String ^, String ^> ^> ^values = gcnew List<Tuple<String ^, String ^> ^>();
+				auto values = gcnew List<Tuple<String ^, String ^> ^>();
 				values->Add(gcnew Tuple<String ^, String ^>(key, data.Value));
 
 				result->Add(section, values);
@@ -183,20 +183,24 @@ namespace GTA
 	{
 		return GetValue(section, key, String::Empty);
 	}
-	String ^ScriptSettings::GetValue(String ^section, String ^key, String ^value)
+	String ^ScriptSettings::GetValue(String ^section, String ^key, String ^defaultvalue)
 	{
-		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
+		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper(), ^value;
 
-		_values->TryGetValue(lookup, value);
-
-		return value;
+		if (_values->TryGetValue(lookup, value))
+		{
+			return value;
+		}
+		else
+		{
+			return defaultvalue;
+		}
 	}
 	array<String ^> ^ScriptSettings::GetAllValues(String ^section, String ^key)
 	{
-		String ^value = nullptr;
-		List<String ^> ^values = gcnew List<String ^>();
+		auto values = gcnew List<String ^>();
 
-		value = GetValue(section, key, static_cast<String ^>(nullptr));
+		String ^value = GetValue(section, key, static_cast<String ^>(nullptr));
 
 		if (!ReferenceEquals(value, nullptr))
 		{
