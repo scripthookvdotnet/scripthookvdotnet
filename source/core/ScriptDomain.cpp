@@ -108,13 +108,11 @@ namespace GTA
 		_appdomain->AssemblyResolve += gcnew ResolveEventHandler(&HandleResolve);
 		_appdomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
-		Log("[DEBUG]", "Created script domain '", _appdomain->FriendlyName, "' with v", ScriptDomain::typeid->Assembly->GetName()->Version->ToString(3), ".");
+		Log("[INFO]", "Created new script domain with v", ScriptDomain::typeid->Assembly->GetName()->Version->ToString(3), ".");
 	}
 	ScriptDomain::~ScriptDomain()
 	{
 		CleanupStrings();
-
-		Log("[DEBUG]", "Deleted script domain '", _appdomain->FriendlyName, "'.");
 	}
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
@@ -144,7 +142,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log("[DEBUG]", "Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
+		Log("[INFO]", "Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
 
 		if (IO::Directory::Exists(path))
 		{
@@ -217,7 +215,7 @@ namespace GTA
 
 		if (!compilerResult->Errors->HasErrors)
 		{
-			Log("[DEBUG]", "Successfully compiled '", IO::Path::GetFileName(filename), "'.");
+			Log("[INFO]", "Successfully compiled '", IO::Path::GetFileName(filename), "'.");
 
 			return LoadAssembly(filename, compilerResult->CompiledAssembly);
 		}
@@ -287,13 +285,13 @@ namespace GTA
 			return false;
 		}
 
-		Log("[DEBUG]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
+		Log("[INFO]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
 
 		return count != 0;
 	}
 	void ScriptDomain::Unload(ScriptDomain ^%domain)
 	{
-		Log("[DEBUG]", "Unloading script domain '", domain->Name, "' ...");
+		Log("[INFO]", "Unloading script domain ...");
 
 		domain->Abort();
 
@@ -321,7 +319,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log("[DEBUG]", "Instantiating script '", scriptType->FullName, "' in script domain '", Name, "' ...");
+		Log("[INFO]", "Instantiating script '", scriptType->FullName, "' in script domain '", Name, "' ...");
 
 		try
 		{
@@ -426,7 +424,7 @@ namespace GTA
 			}
 		}
 
-		Log("[DEBUG]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
+		Log("[INFO]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
 
 		if (!SortScripts(_scriptTypes))
 		{
@@ -449,14 +447,14 @@ namespace GTA
 
 			script->_thread->Start();
 
-			Log("[DEBUG]", "Started script '", script->Name, "'.");
+			Log("[INFO]", "Started script '", script->Name, "'.");
 
 			_runningScripts->Add(script);
 		}
 	}
 	void ScriptDomain::Abort()
 	{
-		Log("[DEBUG]", "Stopping ", _runningScripts->Count.ToString(), " script(s) ...");
+		Log("[INFO]", "Stopping ", _runningScripts->Count.ToString(), " script(s) ...");
 
 		for each (Script ^script in _runningScripts)
 		{
@@ -482,7 +480,7 @@ namespace GTA
 		script->_thread->Abort();
 		script->_thread = nullptr;
 
-		Log("[DEBUG]", "Aborted script '", script->Name, "'.");
+		Log("[INFO]", "Aborted script '", script->Name, "'.");
 	}
 	void ScriptDomain::DoTick()
 	{
