@@ -327,37 +327,6 @@ namespace GTA
 			static_cast<char *>(_address.ToPointer())[size] = '\0';
 		}
 
-		GlobalVariable GlobalVariable::GetArrayItem(int index, int itemSize)
-		{
-			if (index < 0 || index >= Read<int>())
-			{
-				throw gcnew IndexOutOfRangeException(String::Format("The index {0} was outside the array bounds.", index));
-			}
-			if (itemSize <= 0)
-			{
-				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
-			}
-
-			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
-		}
-		array<GlobalVariable> ^GlobalVariable::GetArray(int itemSize)
-		{
-			if (itemSize <= 0)
-			{
-				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
-			}
-			int maxIndex = Read<int>();
-			if (maxIndex < 1 || maxIndex >= 65536 / itemSize) //Globals are stored in pages that only hold 65536 items
-			{
-				throw gcnew Exception("The GlobalVariable is not recognised as an array");
-			}
-			array<GlobalVariable> ^res = gcnew array<GlobalVariable>(maxIndex);
-			for (int i = 0; i < maxIndex;i++)
-			{
-				res[i] = GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
-			}
-			return res;
-		}
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)
@@ -366,6 +335,53 @@ namespace GTA
 			}
 
 			return GlobalVariable(MemoryAddress + (8 * index));
+		}
+
+		array<GlobalVariable> ^GlobalVariable::GetArray(int itemSize)
+		{
+			if (itemSize <= 0)
+			{
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
+			}
+
+			int count = Read<int>();
+
+			// Globals are stored in pages that hold a maximum of 65536 items
+			if (count < 1 || count >= 65536 / itemSize)
+			{
+				throw gcnew InvalidOperationException("The variable does not seem to be an array.");
+			}
+
+			auto result = gcnew array<GlobalVariable>(count);
+
+			for (int i = 0; i < count; i++)
+			{
+				result[i] = GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
+			}
+
+			return result;
+		}
+		GlobalVariable GlobalVariable::GetArrayItem(int index, int itemSize)
+		{
+			if (itemSize <= 0)
+			{
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
+			}
+
+			int count = Read<int>();
+
+			// Globals are stored in pages that hold a maximum of 65536 items
+			if (count < 1 || count >= 65536 / itemSize)
+			{
+				throw gcnew InvalidOperationException("The variable does not seem to be an array.");
+			}
+
+			if (index < 0 || index >= count)
+			{
+				throw gcnew IndexOutOfRangeException(String::Format("The index {0} was outside the array bounds.", index));
+			}
+
+			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
 		}
 		#pragma endregion
 	}
