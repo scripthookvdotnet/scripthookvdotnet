@@ -164,6 +164,15 @@ namespace GTA
 		#pragma endregion
 
 		#pragma region Global Variables
+		public enum class GlobalStringSize
+		{
+			String_8 = 8,
+			String_16 = 16,
+			String_24 = 24,
+			String_32 = 32,
+			String_64 = 64
+
+		};
 		public value class GlobalVariable sealed
 		{
 		public:
@@ -200,8 +209,8 @@ namespace GTA
 			/// Set the value stored in the <see cref="GlobalVariable"/> to a string.
 			/// </summary>
 			/// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
-			/// <param name="maxSize">The maximum size of the string. Must be a multiple of 8 less than or equal to 64.</param>
-			void WriteString(System::String ^value, int maxSize);
+			/// <param name="maxSize">The maximum size of the string. Can be found for a given Global Variable by looking in decompiled scripts.</param>
+			void WriteString(System::String ^value, GlobalStringSize maxSize);
 
 			/// <summary>
 			/// Gets the <see cref="GlobalVariable"/> stored at a specific index in a global array.

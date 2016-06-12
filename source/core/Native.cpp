@@ -309,18 +309,19 @@ namespace GTA
 
 			*static_cast<UInt64 *>(_address.ToPointer()) = ObjectToNative(value);
 		}
-		void GlobalVariable::WriteString(String ^value, int maxSize)
+		void GlobalVariable::WriteString(String ^value, GlobalStringSize maxSize)
 		{
-			if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
+			int _maxSize = static_cast<int>(maxSize);
+			if (_maxSize % 8 != 0 || _maxSize <= 0 || _maxSize > 64)//check if someone just casts an int a GlobalStringSize
 			{
 				throw gcnew ArgumentException("The string maximum size should be one of 8, 16, 24, 32 or 64.", "maxSize");
 			}
 
 			auto size = Text::Encoding::UTF8->GetByteCount(value);
 
-			if (size >= maxSize)
+			if (size >= _maxSize)
 			{
-				size = maxSize - 1;
+				size = _maxSize - 1;
 			}
 
 			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, _address, size);
