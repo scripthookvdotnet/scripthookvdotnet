@@ -421,6 +421,39 @@ namespace GTA
 			data[1] = value.Y;
 			data[2] = value.Z;
 		}
+		void MemoryAccess::SetBit(IntPtr address, int bit)
+		{
+			if (bit < 0 || bit >31)
+			{
+				throw gcnew ArgumentOutOfRangeException("bit", "The bit index has to be between 0 and 31");
+			}
+			const int mask = 1 << bit;
+			
+			const auto data = static_cast<int *>(address.ToPointer());
+			*data |= mask;
+		}
+		void MemoryAccess::ClearBit(IntPtr address, int bit)
+		{
+			if (bit < 0 || bit >31)
+			{
+				throw gcnew ArgumentOutOfRangeException("bit", "The bit index has to be between 0 and 31");
+			}
+			const int mask = 1 << bit;
+
+			const auto data = static_cast<int *>(address.ToPointer());
+			*data &= ~mask;
+		}
+		bool MemoryAccess::IsBitSet(IntPtr address, int bit)
+		{
+			if (bit < 0 || bit >31)
+			{
+				throw gcnew ArgumentOutOfRangeException("bit", "The bit index has to be between 0 and 31");
+			}
+			const int mask = 1 << bit;
+
+			const auto data = static_cast<int *>(address.ToPointer());
+			return (*data & mask) != 0;
+		}
 		unsigned int MemoryAccess::GetHashKey(String^ toHash)
 		{
 			IntPtr handle = ScriptDomain::CurrentDomain->PinString(toHash);

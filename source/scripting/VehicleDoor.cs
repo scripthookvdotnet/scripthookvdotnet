@@ -48,7 +48,7 @@ namespace GTA
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_FULLY_OPEN, _owner.Handle, Index);
 			}
-		}     
+		}
 		public bool IsBroken
 		{
 			get
@@ -61,17 +61,17 @@ namespace GTA
 			get { return _owner; }
 		}
 
-		public void Open(bool instantly, bool loose = false)
+		public void Open(bool loose = false, bool instantly = false)
 		{
 			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, _owner.Handle, Index, loose, instantly);
 		}
-		public void Close(bool instantly)
+		public void Close(bool instantly = false)
 		{
 			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, _owner.Handle, Index, instantly);
 		}
 		public void Break(bool stayInTheWorld = true)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, Index, stayInTheWorld);
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, Index, !stayInTheWorld);
 		}
 	}
 }

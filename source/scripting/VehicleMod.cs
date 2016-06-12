@@ -29,8 +29,21 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.SET_VEHICLE_MOD, _owner.Handle, ModType, ModType, true);
+				Function.Call(Hash.SET_VEHICLE_MOD, _owner.Handle, ModType, value, Variation);
 			}
+		}
+
+		public bool Variation
+		{
+			get
+			{				  
+				return Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, _owner.Handle, ModType);
+			}
+			set
+			{
+				Function.Call(Hash.SET_VEHICLE_MOD, _owner.Handle, ModType, Index, value);
+			}	 
+
 		}
 
 		public string LocalizedModTypeName

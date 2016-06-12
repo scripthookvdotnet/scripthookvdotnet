@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Linq;
 using GTA.Math;
 using GTA.Native;
 
@@ -675,7 +676,7 @@ namespace GTA
 				//Unsure of the exact version this switched, but all others in the rangs are the same
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x84C : 0x83C;
 
-				return (MemoryAccess.ReadByte(memoryAddress + offset) & 8) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 3);
 			}
 			set
 			{
@@ -695,7 +696,7 @@ namespace GTA
 				//Unsure of the exact version this switched, but all others in the rangs are the same
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83C : 0x82C;
 
-				return (MemoryAccess.ReadByte(memoryAddress + offset) & 4) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 2);
 			}
 			set
 			{
@@ -718,7 +719,7 @@ namespace GTA
 
 				if (MemoryAccess.ReadInt(memoryAddress + offset) <= 8)
 				{
-					return (MemoryAccess.ReadByte(memoryAddress + 0x12F9) & 2) != 0;
+					return MemoryAccess.IsBitSet(memoryAddress + 0x12F9, 1);
 				}
 				return false;
 			}
@@ -739,7 +740,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x844 : 0x834;
 
-				return (MemoryAccess.ReadInt(MemoryAddress + offset) & (1 << 1)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 1);
 			}
 			set
 			{
@@ -758,7 +759,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x844 : 0x834;
 
-				return (MemoryAccess.ReadInt(MemoryAddress + offset) & (1 << 2)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 2);
 			}
 			set
 			{
@@ -807,7 +808,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x841 : 0x831;
 
-				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 6)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
 			}
 			set
 			{
@@ -919,15 +920,13 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 1916;
-				const int mask = 1 << 0;
-
 				if (value)
 				{
-					MemoryAccess.WriteByte(address, (byte)(MemoryAccess.ReadByte(address) | mask));
+					MemoryAccess.SetBit(address, 0);
 				}
 				else
 				{
-					MemoryAccess.WriteByte(address, (byte)(MemoryAccess.ReadByte(address) & ~mask));
+					MemoryAccess.ClearBit(address, 0);
 				}
 			}
 		}
@@ -944,16 +943,14 @@ namespace GTA
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 1916;
-				const int mask = 1 << 1;
-
+				IntPtr address = MemoryAddress + 1916;	  
 				if (value)
 				{
-					MemoryAccess.WriteByte(address, (byte)(MemoryAccess.ReadByte(address) | mask));
+					MemoryAccess.SetBit(address, 1);
 				}
 				else
 				{
-					MemoryAccess.WriteByte(address, (byte)(MemoryAccess.ReadByte(address) & ~mask));
+					MemoryAccess.ClearBit(address, 1);
 				}
 			}
 		}
@@ -1385,9 +1382,12 @@ namespace GTA
 				var result = new Ped[PassengerCount + 1];
 				result[0] = driver;
 
-				for (int i = 0, seats = PassengerCapacity; i < seats && i <= result.Length; i++)
-				{
-					result[i + 1] = GetPedOnSeat((VehicleSeat)i);
+				for (int i = 0, j = 0, seats = PassengerCapacity; i < seats && j < result.Length; i++)
+				{												  
+					if (!IsSeatFree((VehicleSeat)i))
+					{
+						result[j++ + 1] = GetPedOnSeat((VehicleSeat)i);
+					}
 				}
 
 				return result;
@@ -1404,9 +1404,12 @@ namespace GTA
 					return result;
 				}
 
-				for (int i = 0, seats = PassengerCapacity; i < seats && i < result.Length; i++)
+				for (int i = 0, j = 0, seats = PassengerCapacity; i < seats && j < result.Length; i++)
 				{
-					result[i] = GetPedOnSeat((VehicleSeat)i);
+					if (!IsSeatFree((VehicleSeat)i))
+					{
+						result[j++] = GetPedOnSeat((VehicleSeat)i);
+					}
 				}
 
 				return result;
@@ -1568,40 +1571,6 @@ namespace GTA
 			}
 		}
 
-		public VehicleDoor[] GetDoors()
-		{
-			var list = new List<VehicleDoor>();
-
-			if (HasBone("door_dside_f"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor));
-			}
-			if (HasBone("door_pside_f"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor));
-			}
-			if (HasBone("door_dside_r"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor));
-				
-			}
-			if (HasBone("door_pside_r"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackRightDoor));               
-			}
-			if (HasBone("bonnet"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.Hood));                
-			}
-			if (HasBone("hood"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.Trunk));
-				
-			}
-
-			return list.ToArray();
-		}
-
 		public bool HasBombBay
 		{
 			get
@@ -1631,6 +1600,27 @@ namespace GTA
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
 			Function.Call(Hash._SET_VEHICLE_NEON_LIGHT_ENABLED, Handle, light, on);
+		}
+		public bool HasNeonLights
+		{
+			get
+			{ return Enum.GetValues(typeof(VehicleNeonLight)).Cast<VehicleNeonLight>().Any(HasNeonLight); }
+		}
+		public bool HasNeonLight(VehicleNeonLight neonLight)
+		{
+			switch (neonLight)
+			{
+				case VehicleNeonLight.Left:
+					return HasBone("neon_l");
+				case VehicleNeonLight.Right:
+					return HasBone("neon_r");
+				case VehicleNeonLight.Front:
+					return HasBone("neon_f");
+				case VehicleNeonLight.Back:
+					return HasBone("neon_b");
+				default:
+					return false;
+			}
 		}
 
 		public void SetHeliYawPitchRollMult(float mult)
@@ -1740,6 +1730,10 @@ namespace GTA
 
 		public Ped CreatePedOnSeat(VehicleSeat seat, Model model)
 		{
+			if (!IsSeatFree(seat))
+			{
+				throw new ArgumentException("The VehicleSeat selected was not free", "seat");
+			}
 			if (!model.IsPed || !model.Request(1000))
 			{
 				return null;
@@ -1749,6 +1743,10 @@ namespace GTA
 		}
 		public Ped CreateRandomPedOnSeat(VehicleSeat seat)
 		{
+			if (!IsSeatFree(seat))
+			{
+				throw new ArgumentException("The VehicleSeat selected was not free", "seat");
+			}
 			if (seat == VehicleSeat.Driver)
 			{
 				return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED_AS_DRIVER, Handle, true));
