@@ -29,6 +29,9 @@ namespace GTA
 	Script::Script() : _filename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), _scriptdomain(ScriptDomain::CurrentDomain)
 	{
 	}
+	Script::~Script()
+	{
+	}
 
 	ScriptSettings ^Script::Settings::get()
 	{

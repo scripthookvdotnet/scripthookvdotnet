@@ -80,6 +80,8 @@ namespace GTA
 		}
 
 	internal:
+		~Script();
+
 		void MainLoop();
 
 		int _interval = 0;
