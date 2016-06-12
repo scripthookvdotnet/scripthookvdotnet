@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Linq;
 using GTA.Math;
 using GTA.Native;
 
@@ -1568,40 +1569,6 @@ namespace GTA
 			}
 		}
 
-		public VehicleDoor[] GetDoors()
-		{
-			var list = new List<VehicleDoor>();
-
-			if (HasBone("door_dside_f"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontLeftDoor));
-			}
-			if (HasBone("door_pside_f"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.FrontRightDoor));
-			}
-			if (HasBone("door_dside_r"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackLeftDoor));
-				
-			}
-			if (HasBone("door_pside_r"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.BackRightDoor));               
-			}
-			if (HasBone("bonnet"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.Hood));                
-			}
-			if (HasBone("hood"))
-			{
-				list.Add(new VehicleDoor(this, VehicleDoorIndex.Trunk));
-				
-			}
-
-			return list.ToArray();
-		}
-
 		public bool HasBombBay
 		{
 			get
@@ -1631,6 +1598,27 @@ namespace GTA
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
 			Function.Call(Hash._SET_VEHICLE_NEON_LIGHT_ENABLED, Handle, light, on);
+		}
+		public bool HasNeonLights
+		{
+			get
+			{ return Enum.GetValues(typeof(VehicleNeonLight)).Cast<VehicleNeonLight>().Any(HasNeonLight); }
+		}
+		public bool HasNeonLight(VehicleNeonLight neonLight)
+		{
+			switch (neonLight)
+			{
+				case VehicleNeonLight.Left:
+					return HasBone("neon_l");
+				case VehicleNeonLight.Right:
+					return HasBone("neon_r");
+				case VehicleNeonLight.Front:
+					return HasBone("neon_f");
+				case VehicleNeonLight.Back:
+					return HasBone("neon_b");
+				default:
+					return false;
+			}
 		}
 
 		public void SetHeliYawPitchRollMult(float mult)
