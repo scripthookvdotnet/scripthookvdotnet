@@ -176,7 +176,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadByte(MemoryAddress + 0x2E) & (1 << 1)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 0x2E, 1);
 			}
 			set
 			{
@@ -224,7 +224,7 @@ namespace GTA
 				{
 					return true;
 				}
-				return (MemoryAccess.ReadShort(memoryAddress + 26) & 16) == 0;
+				return MemoryAccess.IsBitSet(memoryAddress + 26, 4);
 
 			}
 			set
@@ -354,7 +354,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 5)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 5);
 			}
 			set
 			{
@@ -364,15 +364,14 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 392;
-				const int mask = 1 << 5;
 
 				if (value)
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) | mask);
+					MemoryAccess.SetBit(address, 5);
 				}
 				else
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) & ~mask);
+					MemoryAccess.ClearBit(address, 5);
 				}
 			}
 		}
@@ -385,7 +384,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 7)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 7);
 			}
 			set
 			{
@@ -395,15 +394,14 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 392;
-				const int mask = 1 << 7;
 
 				if (value)
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) | mask);
+					MemoryAccess.SetBit(address, 7);
 				}
 				else
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) & ~mask);
+					MemoryAccess.ClearBit(address, 7);
 				}
 			}
 		}
@@ -416,7 +414,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 4)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 4);
 			}
 			set
 			{
@@ -426,15 +424,14 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 392;
-				const int mask = 1 << 4;
 
 				if (value)
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) | mask);
+					MemoryAccess.SetBit(address, 4);
 				}
 				else
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) & ~mask);
+					MemoryAccess.ClearBit(address, 4);
 				}
 			}
 		}
@@ -447,7 +444,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 11)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 11);
 			}
 			set
 			{
@@ -457,15 +454,14 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 392;
-				const int mask = 1 << 11;
 
 				if (value)
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) | mask);
+					MemoryAccess.SetBit(address, 11);
 				}
 				else
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) & ~mask);
+					MemoryAccess.ClearBit(address, 11);
 				}
 			}
 		}
@@ -478,7 +474,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 6)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 6);
 			}
 			set
 			{
@@ -488,15 +484,14 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 392;
-				const int mask = 1 << 6;
 
 				if (value)
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) | mask);
+					MemoryAccess.SetBit(address, 6);
 				}
 				else
 				{
-					MemoryAccess.WriteInt(address, MemoryAccess.ReadInt(address) & ~mask);
+					MemoryAccess.ClearBit(address, 6);
 				}
 			}
 		}
@@ -509,7 +504,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 8)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 8);
 			}
 			set
 			{
@@ -525,7 +520,7 @@ namespace GTA
 					return false;
 				}
 
-				return (MemoryAccess.ReadInt(MemoryAddress + 392) & (1 << 9)) != 0;
+				return MemoryAccess.IsBitSet(MemoryAddress + 392, 9);
 			}
 			set
 			{

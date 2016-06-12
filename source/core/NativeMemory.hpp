@@ -23,6 +23,9 @@ namespace GTA
 			static void WriteInt(System::IntPtr address, int value);
 			static void WriteFloat(System::IntPtr address, float value);
 			static void WriteVector3(System::IntPtr address, Math::Vector3 value);
+			static void SetBit(System::IntPtr address, int bit);
+			static void ClearBit(System::IntPtr address, int bit);
+			static bool IsBitSet(System::IntPtr address, int bit);
 			static unsigned int GetHashKey(System::String ^toHash);
 
 			static System::IntPtr GetEntityAddress(int handle);
