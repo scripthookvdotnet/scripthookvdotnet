@@ -30,6 +30,9 @@ namespace GTA
 	Script::Script() : _filename(ScriptDomain::CurrentDomain->LookupScriptFilename(this)), _scriptdomain(ScriptDomain::CurrentDomain)
 	{
 	}
+	Script::~Script()
+	{
+	}
 
 	Viewport ^Script::View::get()
 	{

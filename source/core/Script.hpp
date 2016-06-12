@@ -99,6 +99,8 @@ namespace GTA
 		}
 
 	internal:
+		~Script();
+
 		void MainLoop();
 		void HandleViewportDraw(System::Object ^sender, System::EventArgs ^e);
 		void HandleViewportInput(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
