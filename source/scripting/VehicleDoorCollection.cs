@@ -4,50 +4,52 @@ using System.Collections.Generic;
 
 namespace GTA
 {
-    public enum VehicleDoorIndex
-    {
-        FrontRightDoor = 1,
-        FrontLeftDoor = 0,
-        BackRightDoor = 3,
-        BackLeftDoor = 2,
-        Hood = 4,
-        Trunk = 5
-    }
+	public enum VehicleDoorIndex
+	{
+		FrontRightDoor = 1,
+		FrontLeftDoor = 0,
+		BackRightDoor = 3,
+		BackLeftDoor = 2,
+		Hood = 4,
+		Trunk = 5
+	}
 
-    public sealed class VehicleDoorCollection
-    {
-        #region Fields
-        Vehicle _owner;
-        readonly Dictionary<int, VehicleDoor> _vehicleDoors = new Dictionary<int, VehicleDoor>();
-        #endregion
+	public sealed class VehicleDoorCollection
+	{
+		#region Fields
 
-        internal VehicleDoorCollection(Vehicle owner)
-        {
-            _owner = owner;
-        }
+		Vehicle _owner;
+		readonly Dictionary<int, VehicleDoor> _vehicleDoors = new Dictionary<int, VehicleDoor>();
 
-        public VehicleDoor this[VehicleDoorIndex index]
-        {
-            get
-            {
-                VehicleDoor vehicleDoor = null;
+		#endregion
 
-                if (!_vehicleDoors.TryGetValue((int)index, out vehicleDoor))
-                {
-                    vehicleDoor = new VehicleDoor(_owner, index);
-                    _vehicleDoors.Add((int)index, vehicleDoor);
-                }
+		internal VehicleDoorCollection(Vehicle owner)
+		{
+			_owner = owner;
+		}
 
-                return vehicleDoor;
-            }
-        }
+		public VehicleDoor this[VehicleDoorIndex index]
+		{
+			get
+			{
+				VehicleDoor vehicleDoor = null;
 
-	    public bool HasDoor(VehicleDoorIndex door)
-	    {
-		    switch (door)
-		    {
+				if (!_vehicleDoors.TryGetValue((int) index, out vehicleDoor))
+				{
+					vehicleDoor = new VehicleDoor(_owner, index);
+					_vehicleDoors.Add((int) index, vehicleDoor);
+				}
+
+				return vehicleDoor;
+			}
+		}
+
+		public bool HasDoor(VehicleDoorIndex door)
+		{
+			switch (door)
+			{
 				case VehicleDoorIndex.FrontLeftDoor:
-				    return _owner.HasBone("door_dside_f");
+					return _owner.HasBone("door_dside_f");
 				case VehicleDoorIndex.FrontRightDoor:
 					return _owner.HasBone("door_pside_f");
 				case VehicleDoorIndex.BackLeftDoor:
@@ -61,6 +63,7 @@ namespace GTA
 			}
 			return false;
 		}
+
 		public VehicleDoor[] GetAll()
 		{
 			var result = new List<VehicleDoor>();
@@ -72,10 +75,10 @@ namespace GTA
 			return result.ToArray();
 		}
 
-	    public IEnumerator<VehicleDoor> GetEnumerator()
-	    {
-		    return (GetAll() as IEnumerable<VehicleDoor>).GetEnumerator();
-	    }
+		public IEnumerator<VehicleDoor> GetEnumerator()
+		{
+			return (GetAll() as IEnumerable<VehicleDoor>).GetEnumerator();
+		}
 
 	}
 }
