@@ -228,6 +228,23 @@ namespace GTA
 			return new Model(source);
 		}
 
+		public static implicit operator int(Model source)
+		{
+			return source.Hash;
+		}
+		public static implicit operator PedHash(Model source)
+		{
+			return (PedHash)source.Hash;
+		}
+		public static implicit operator VehicleHash(Model source)
+		{
+			return (VehicleHash)source.Hash;
+		}
+		public static implicit operator WeaponHash(Model source)
+		{
+			return (WeaponHash)source.Hash;
+		}
+
 		public static bool operator ==(Model left, Model right)
 		{
 			return left.Equals(right);

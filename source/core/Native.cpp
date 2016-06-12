@@ -340,6 +340,24 @@ namespace GTA
 
 			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
 		}
+		array<GlobalVariable> ^GlobalVariable::GetArray(int itemSize)
+		{
+			if (itemSize <= 0)
+			{
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
+			}
+			int maxIndex = Read<int>();
+			if (maxIndex < 1 || maxIndex >= 65536 / itemSize) //Globals are stored in pages that only hold 65536 items
+			{
+				throw gcnew Exception("The GlobalVariable is not recognised as an array");
+			}
+			array<GlobalVariable> ^res = gcnew array<GlobalVariable>(maxIndex);
+			for (int i = 0; i < maxIndex;i++)
+			{
+				res[i] = GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
+			}
+			return res;
+		}
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)
