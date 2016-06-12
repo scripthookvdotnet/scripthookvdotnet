@@ -207,6 +207,11 @@ namespace GTA
 
 		public static string GetLocalizedWheelTypeName(VehicleWheelType wheelType)
 		{
+			if (!Function.Call<bool>(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10))
+			{
+				Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
+				Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
+			}
 			if (_wheelNames.ContainsKey(wheelType))
 			{
 				if (Game.DoesGXTEntryExist(_wheelNames[wheelType].Item1))
