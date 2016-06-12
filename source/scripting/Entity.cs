@@ -224,7 +224,7 @@ namespace GTA
 				{
 					return true;
 				}
-				return MemoryAccess.IsBitSet(memoryAddress + 26, 4);
+				return !MemoryAccess.IsBitSet(memoryAddress + 26, 4);
 
 			}
 			set
