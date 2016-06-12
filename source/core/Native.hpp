@@ -164,15 +164,6 @@ namespace GTA
 		#pragma endregion
 
 		#pragma region Global Variables
-		public enum class GlobalStringSize
-		{
-			String_8 = 8,
-			String_16 = 16,
-			String_24 = 24,
-			String_32 = 32,
-			String_64 = 64
-
-		};
 		public value class GlobalVariable sealed
 		{
 		public:
@@ -210,7 +201,7 @@ namespace GTA
 			/// </summary>
 			/// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
 			/// <param name="maxSize">The maximum size of the string. Can be found for a given Global Variable by looking in decompiled scripts.</param>
-			void WriteString(System::String ^value, GlobalStringSize maxSize);
+			void WriteString(System::String ^value, int maxSize);
 
 			/// <summary>
 			/// Gets the <see cref="GlobalVariable"/> stored at a specific index in a global array.
@@ -219,6 +210,14 @@ namespace GTA
 			/// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
 			/// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
 			GlobalVariable GetArrayItem(int index, int itemSize);
+
+			/// <summary>
+			/// Returns an Array of all <see cref="GlobalVariable"/>s in the given <see cref="GlobalVariable"/>
+			/// </summary>
+			/// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
+			/// <returns>The array of <see cref="GlobalVariable"/>s.</returns>
+			array<GlobalVariable> ^GetArray(int itemSize);
+
 			/// <summary>
 			/// Gets the <see cref="GlobalVariable"/> stored at a given offset in a global structure.
 			/// </summary>

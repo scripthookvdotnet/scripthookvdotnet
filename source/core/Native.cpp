@@ -309,19 +309,18 @@ namespace GTA
 
 			*static_cast<UInt64 *>(_address.ToPointer()) = ObjectToNative(value);
 		}
-		void GlobalVariable::WriteString(String ^value, GlobalStringSize maxSize)
+		void GlobalVariable::WriteString(String ^value, int maxSize)
 		{
-			int _maxSize = static_cast<int>(maxSize);
-			if (_maxSize % 8 != 0 || _maxSize <= 0 || _maxSize > 64)//check if someone just casts an int a GlobalStringSize
+			if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
 			{
 				throw gcnew ArgumentException("The string maximum size should be one of 8, 16, 24, 32 or 64.", "maxSize");
 			}
 
 			auto size = Text::Encoding::UTF8->GetByteCount(value);
 
-			if (size >= _maxSize)
+			if (size >= maxSize)
 			{
-				size = _maxSize - 1;
+				size = maxSize - 1;
 			}
 
 			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, _address, size);
@@ -340,6 +339,24 @@ namespace GTA
 			}
 
 			return GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
+		}
+		array<GlobalVariable> ^GlobalVariable::GetArray(int itemSize)
+		{
+			if (itemSize <= 0)
+			{
+				throw gcnew ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
+			}
+			int maxIndex = Read<int>();
+			if (maxIndex < 1 || maxIndex >= 65536 / itemSize) //Globals are stored in pages that only hold 65536 items
+			{
+				throw gcnew Exception("The GlobalVariable is not recognised as an array");
+			}
+			array<GlobalVariable> ^res = gcnew array<GlobalVariable>(maxIndex);
+			for (int i = 0; i < maxIndex;i++)
+			{
+				res[i] = GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
+			}
+			return res;
 		}
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
