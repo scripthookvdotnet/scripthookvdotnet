@@ -563,6 +563,23 @@ namespace GTA
 			return res.ToArray();
 		}
 
+		public static Blip[] GetAllBlipsOfType(params BlipSprite[] blipTypes)
+		{
+			var res = new List<Blip>();
+			foreach (BlipSprite sprite in blipTypes)
+			{
+				int handle = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, sprite);
+
+				while (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
+				{
+					res.Add(new Blip(handle));
+
+					handle = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, sprite);
+				}
+			}
+			return res.ToArray();
+		}
+
 		public static Checkpoint[] GetActiveCheckpoints()
 		{					   
 			return Array.ConvertAll<int, Checkpoint>(MemoryAccess.GetCheckpointHandles(), element => new Checkpoint(element));
@@ -993,6 +1010,19 @@ namespace GTA
 			}
 
 			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+		}
+
+		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
+		{
+			OutputArgument outModel = new OutputArgument(), outInt = new OutputArgument();
+			Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, outModel, outInt);
+			Model model = outModel.GetResult<Model>();
+			if (model.IsVehicle && model.IsLoaded)
+			{
+				return
+					new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+			}
+			return null;
 		}
 
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)

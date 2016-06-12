@@ -48,7 +48,7 @@ namespace GTA
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_DOOR_FULLY_OPEN, _owner.Handle, Index);
 			}
-		}     
+		}
 		public bool IsBroken
 		{
 			get
