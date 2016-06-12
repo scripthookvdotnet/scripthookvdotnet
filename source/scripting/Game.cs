@@ -612,13 +612,23 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Determines the game language files contain a entry for the specified GXT key
+		/// </summary>
+		/// <param name="entry">The GXT key</param>
+		/// <returns><c>true</c> if GXT entry exists; otherwise, <c>false</c></returns>
+		public static bool DoesGXTEntryExist(string entry)
+		{
+			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry);
+		}
+
+		/// <summary>
 		/// Returns a localised <see cref="string"/> from the games language files with a specified GXT key
 		/// </summary>
 		/// <param name="entry">The GXT key</param>
 		/// <returns>The localised <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetGXTEntry(string entry)
 		{
-			if (Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry))
+			if (DoesGXTEntryExist(entry))
 			{
 				return Function.Call<string>(Hash._GET_LABEL_TEXT, entry);
 			}
