@@ -205,7 +205,7 @@ namespace GTA
 			get { return GetLocalizedWheelTypeName(WheelType); }
 		}
 
-		public static string GetLocalizedWheelTypeName(VehicleWheelType wheelType)
+		public string GetLocalizedWheelTypeName(VehicleWheelType wheelType)
 		{
 			if (!Function.Call<bool>(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10))
 			{

@@ -31,6 +31,8 @@ namespace GTA
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
 			static System::IntPtr GetCheckpointAddress(int handle);
+			static float ReadWorldGravity();
+			static void WriteWorldGravity(float value);
 
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
@@ -63,6 +65,7 @@ namespace GTA
 			static System::UInt64(*CheckpointBaseAddr)();
 			static System::UInt64(*CheckpointHandleAddr)(System::UInt64 baseAddr, int Handle);
 			static System::UInt64 *checkpointPoolAddress;
+			static float *_readWorldGravityAddr, *_writeWorldGravityAddr;
 
 		private:
 			static MemoryAccess();

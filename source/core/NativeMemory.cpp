@@ -340,6 +340,10 @@ namespace GTA
 
 			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
 			_getHashKey = reinterpret_cast<unsigned int(*)(char*, unsigned int)>(*reinterpret_cast<int*>(address + 6) + address + 10);
+
+			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
+			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
+			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
 		}
 
 		int MemoryAccess::GetGameVersion()
@@ -484,6 +488,15 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 			return IntPtr((long long)task->GetResult());
 		}
+		float MemoryAccess::ReadWorldGravity()
+		{
+			return *_readWorldGravityAddr;
+		}
+		void MemoryAccess::WriteWorldGravity(float value)
+		{
+			*_writeWorldGravityAddr = value;
+		}
+
 
 		array<int> ^MemoryAccess::GetEntityHandles()
 		{
