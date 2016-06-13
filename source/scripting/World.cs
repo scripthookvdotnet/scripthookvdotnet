@@ -409,7 +409,7 @@ namespace GTA
 			{
 				//write the value you want to the first item in the array where the native reads the gravity level choices from
 				MemoryAccess.WriteWorldGravity(value);
-				//call set_gravity_level normally using - as gravity type
+				//call set_gravity_level normally using 0 as gravity type
 				//the native will then set the gravity level to what we just wrote
 				Function.Call(Hash.SET_GRAVITY_LEVEL, 0);
 				//reset the array item back to 9.8 so as to restore behaviour of the native
