@@ -27,6 +27,9 @@
     <ClCompile Include="source\core\Main.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\Console.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
     <ClCompile Include="source\core\Native.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -55,11 +58,11 @@
       <Filter>scripting\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\AssemblyInfo.cpp" />
-    <ClCompile Include="source\core\Console.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\core\Console.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\Native.hpp">
       <Filter>core</Filter>
     </ClInclude>
@@ -202,7 +205,6 @@
     </CsCompile>
     <CsCompile Include="source\scripting\RelationshipGroup.cs">
       <Filter>scripting\World</Filter>
-<<<<<<< 95901d49c74499962ed707f3e11a8369cd185f90
     </CsCompile>
     <CsCompile Include="source\scripting\Checkpoint.cs">
       <Filter>scripting\World</Filter>
@@ -234,9 +236,5 @@
     <CsCompile Include="source\scripting\VehicleWindowCollection.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
-    </ClInclude>
-    <ClInclude Include="source\core\Console.hpp">
-      <Filter>core</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
