@@ -101,6 +101,7 @@ namespace GTA
 		}
 	}
 
+
 	ScriptDomain::ScriptDomain() : _appdomain(System::AppDomain::CurrentDomain), _executingThreadId(Thread::CurrentThread->ManagedThreadId)
 	{
 		sCurrentDomain = this;
@@ -393,7 +394,7 @@ namespace GTA
 	}
 	void ScriptDomain::Start()
 	{
-		if (_runningScripts->Count != 0 || _scriptTypes->Count == 0)
+		if (_runningScripts->Count != 0)
 		{
 			return;
 		}
@@ -424,7 +425,23 @@ namespace GTA
 			}
 		}
 
-		Log("[INFO]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
+		//Initialize Console-Script, propably should be moved somewhere else
+		_console = gcnew Console();
+		_console->Script = gcnew ConsoleScript();
+		_console->Script->_running = true;
+		_console->Script->_filename = "internal";
+		_console->Script->_scriptdomain = this;
+
+		_console->Script->_thread = gcnew Thread(gcnew ThreadStart(_console->Script, &Script::MainLoop));
+		_console->Script->_thread->Start();
+		_runningScripts->Add(_console->Script);
+
+		if (_scriptTypes->Count == 0)
+		{
+			return;
+		}
+
+		Log("[DEBUG]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
 
 		if (!SortScripts(_scriptTypes))
 		{
@@ -439,6 +456,9 @@ namespace GTA
 			{
 				continue;
 			}
+
+			//TODO Maybe move elsewhere
+			_console->Script->RegisterCommands(scriptType->Item2);
 
 			script->_running = true;
 			script->_filename = scriptType->Item1;

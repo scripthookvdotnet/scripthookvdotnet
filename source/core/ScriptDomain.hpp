@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Script.hpp"
+#include "Console.hpp"
 
 namespace GTA
 {
@@ -98,6 +99,7 @@ namespace GTA
 
 		static ScriptDomain ^sCurrentDomain;
 		System::AppDomain ^_appdomain;
+		Console ^_console;
 		int _executingThreadId;
 		Script ^_executingScript;
 		System::Collections::Generic::List<Script ^> ^_runningScripts = gcnew System::Collections::Generic::List<Script ^>();
