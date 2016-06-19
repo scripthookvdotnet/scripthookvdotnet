@@ -16,9 +16,6 @@
 
 #pragma once
 
-#include "../scripting/UI.hpp"
-#include "../scripting/UIElement.hpp"
-#include "../scripting/Controls.hpp"
 #include "Native.hpp"
 #include "NativeHashes.hpp"
 #include "Script.hpp"
@@ -145,9 +142,9 @@ namespace GTA
 		void MoveCursorLeft();
 
 		void DrawRect(int x, int y, int width, int height, System::Drawing::Color color);
-		void DrawText(int x, int y, System::String ^text, float scale, GTA::Font font, System::Drawing::Color color);
+		void DrawText(int x, int y, System::String ^text, float scale, int font, System::Drawing::Color color);
 
-		float GetTextLength(System::String ^text, float scale, GTA::Font font); //TODO Maybe implement somewhere else?
+		float GetTextLength(System::String ^text, float scale, int font); //TODO Maybe implement somewhere else?
 
 		bool _isOpen;
 		int _page;
@@ -163,12 +160,9 @@ namespace GTA
 		System::CodeDom::Compiler::CodeDomProvider ^_compiler;
 		System::CodeDom::Compiler::CompilerParameters ^_compilerOptions;
 
-		//Cache controls values
-		static System::Array ^_controls = System::Enum::GetValues(Control::typeid);
-
 		static System::Windows::Forms::Keys ToggleKey = System::Windows::Forms::Keys::F3;
 
-		static Font DefaultFont = Font::ChaletLondon;
+		static int DefaultFont = 0; //Chalet London :>
 
 		static const System::Drawing::Color InputColor = System::Drawing::Color::White;
 		static const System::Drawing::Color InputColorBusy = System::Drawing::Color::DarkGray;
@@ -183,6 +177,10 @@ namespace GTA
 
 		static System::String ^CompileTemplate = "using System; using GTA; using GTA.Native; using Console = GTA.Console;" +
 			" public class ConsoleInput : GTA.DefaultConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
+
+		//TODO Temporary UI Stuff
+		static const int WIDTH = 1280;
+		static const int HEIGHT = 720;
 	};
 
 	public ref class DefaultConsoleCommands

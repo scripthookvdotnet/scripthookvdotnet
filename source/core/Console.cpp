@@ -200,16 +200,16 @@ namespace GTA
 
 		SetControlsEnabled(false);
 
-		DrawRect(0, 0, UI::WIDTH, UI::HEIGHT / 3, BackgroundColor);
-		DrawRect(0, UI::HEIGHT / 3, UI::WIDTH, InputHeight, AltBackgroundColor);
+		DrawRect(0, 0, WIDTH, HEIGHT / 3, BackgroundColor);
+		DrawRect(0, HEIGHT / 3, WIDTH, InputHeight, AltBackgroundColor);
 
-		DrawText(0, UI::HEIGHT / 3, "$>", DefaultScale, DefaultFont, PrefixColor);
-		DrawText(20, UI::HEIGHT / 3, _input, DefaultScale, DefaultFont, _compilerTask == nullptr ? InputColor : InputColorBusy);
+		DrawText(0, HEIGHT / 3, "$>", DefaultScale, DefaultFont, PrefixColor);
+		DrawText(20, HEIGHT / 3, _input, DefaultScale, DefaultFont, _compilerTask == nullptr ? InputColor : InputColorBusy);
 
 		if (now.Millisecond < 500)
 		{
 			float length = GetTextLength(_input->Substring(0, _input->Length - _cursorPos), DefaultScale, DefaultFont);
-			DrawText(20 + (length * UI::WIDTH) - 4, UI::HEIGHT / 3, "~w~~h~|~w~", DefaultScale, DefaultFont, InputColor);
+			DrawText(20 + (length * WIDTH) - 4, HEIGHT / 3, "~w~~h~|~w~", DefaultScale, DefaultFont, InputColor);
 		}
 
 		//We can't get the n-th, so let's do it with a counter
@@ -268,9 +268,9 @@ namespace GTA
 
 	void ConsoleScript::SetControlsEnabled(bool enabled)
 	{
-		for each (Control c in _controls)
+		for (int i = 0; i < 338; i++)
 		{
-			Function::Call(Hash::DISABLE_CONTROL_ACTION, 0, (int)c, enabled);
+			Function::Call(Hash::DISABLE_CONTROL_ACTION, 0, i, enabled);
 		}
 	}
 	void ConsoleScript::AddLines(System::String ^prefix, array<System::String^> ^msgs)
@@ -393,20 +393,20 @@ namespace GTA
 
 	void ConsoleScript::DrawRect(int x, int y, int width, int height, Color color)
 	{
-		const float w = static_cast<float>(width) / UI::WIDTH;
-		const float h = static_cast<float>(height) / UI::HEIGHT;
-		float xNew = ((static_cast<float>(x)) / UI::WIDTH) + w * 0.5f;
-		float yNew = ((static_cast<float>(y)) / UI::HEIGHT) + h * 0.5f;
+		const float w = static_cast<float>(width) / WIDTH;
+		const float h = static_cast<float>(height) / HEIGHT;
+		float xNew = ((static_cast<float>(x)) / WIDTH) + w * 0.5f;
+		float yNew = ((static_cast<float>(y)) / HEIGHT) + h * 0.5f;
 
 		Native::Function::Call(Native::Hash::DRAW_RECT, xNew, yNew, w, h, color.R, color.G, color.B, color.A);
 	}
-	void ConsoleScript::DrawText(int x, int y, System::String ^text, float scale, GTA::Font font, Color color)
+	void ConsoleScript::DrawText(int x, int y, System::String ^text, float scale, int font, Color color)
 	{
-		float xNew = (static_cast<float>(x) / UI::WIDTH);
-		float yNew = (static_cast<float>(y) / UI::HEIGHT);
+		float xNew = (static_cast<float>(x) / WIDTH);
+		float yNew = (static_cast<float>(y) / HEIGHT);
 
 
-		Native::Function::Call(Native::Hash::SET_TEXT_FONT, static_cast<int>(font));
+		Native::Function::Call(Native::Hash::SET_TEXT_FONT, font);
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, scale, scale);
 		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, color.R, color.G, color.B, color.A);
 		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
@@ -415,18 +415,26 @@ namespace GTA
 
 		for (int i = 0; i < text->Length; i += maxStringLength)
 		{
-			Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, text->Substring(i, System::Math::Min(maxStringLength, text->Length - i)));
+			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, System::Math::Min(maxStringLength, text->Length - i)));
 		}
 
 		Native::Function::Call(Native::Hash::_DRAW_TEXT, xNew, yNew);
 	}
-	float ConsoleScript::GetTextLength(String ^text, float scale, GTA::Font font)
+	float ConsoleScript::GetTextLength(String ^text, float scale, int font)
 	{
-		Function::Call(GTA::Hash::_SET_TEXT_ENTRY_FOR_WIDTH, "STRING");
-		Function::Call(GTA::Hash::_ADD_TEXT_COMPONENT_STRING, text);
-		Function::Call(GTA::Hash::SET_TEXT_FONT, (int) font);
-		Function::Call(GTA::Hash::SET_TEXT_SCALE, scale, scale);
-		return Function::Call<float>(GTA::Hash::_GET_TEXT_SCREEN_WIDTH, 1);
+		Function::Call(Hash::_SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+
+		const int maxStringLength = 99;
+
+		for (int i = 0; i < text->Length; i += maxStringLength)
+		{
+			Function::Call(Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, System::Math::Min(maxStringLength, text->Length - i)));
+		}
+
+		Function::Call(Hash::SET_TEXT_FONT, font);
+		Function::Call(Hash::SET_TEXT_SCALE, scale, scale);
+
+		return Function::Call<float>(Hash::_GET_TEXT_SCREEN_WIDTH, 1);
 	}
 
 	ConsoleArg::ConsoleArg(System::String ^ type, System::String ^ name) : _type(type), _name(name)
