@@ -183,7 +183,7 @@ namespace GTA
 		static const int HEIGHT = 720;
 	};
 
-	private ref class DefaultConsoleCommands
+	public ref class DefaultConsoleCommands
 	{
 	public:
 		[ConsoleCommand("Prints the default Help-Output")]
