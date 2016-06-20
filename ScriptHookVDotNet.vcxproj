@@ -49,6 +49,9 @@
     <Xdcmake>
       <AdditionalDocumentFile>$(IntDir)$(TargetName).xdc;%(AdditionalDocumentFile)</AdditionalDocumentFile>
     </Xdcmake>
+    <PreBuildEvent>
+      <Command>tools\NativeGen.exe source\core\NativeHashes.hpp</Command>
+    </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
     </PostBuildEvent>
