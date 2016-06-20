@@ -107,7 +107,7 @@ namespace GTA
 		System::Collections::Generic::List<ConsoleArg^> ^_consoleArgs;
 	};
 
-	public ref class ConsoleScript : Script
+	private ref class ConsoleScript : Script
 	{
 	internal:
 		ConsoleScript();
@@ -183,7 +183,7 @@ namespace GTA
 		static const int HEIGHT = 720;
 	};
 
-	public ref class DefaultConsoleCommands
+	private ref class DefaultConsoleCommands
 	{
 	public:
 		[ConsoleCommand("Prints the default Help-Output")]
