@@ -204,12 +204,12 @@ namespace GTA
 		DrawRect(0, HEIGHT / 3, WIDTH, InputHeight, AltBackgroundColor);
 
 		DrawText(0, HEIGHT / 3, "$>", DefaultScale, DefaultFont, PrefixColor);
-		DrawText(20, HEIGHT / 3, _input, DefaultScale, DefaultFont, _compilerTask == nullptr ? InputColor : InputColorBusy);
+		DrawText(25, HEIGHT / 3, _input, DefaultScale, DefaultFont, _compilerTask == nullptr ? InputColor : InputColorBusy);
 
 		if (now.Millisecond < 500)
 		{
 			float length = GetTextLength(_input->Substring(0, _input->Length - _cursorPos), DefaultScale, DefaultFont);
-			DrawText(20 + (length * WIDTH) - 4, HEIGHT / 3, "~w~~h~|~w~", DefaultScale, DefaultFont, InputColor);
+			DrawText(25 + (length * WIDTH) - 4, HEIGHT / 3, "~w~~h~|~w~", DefaultScale, DefaultFont, InputColor);
 		}
 
 		//We can't get the n-th, so let's do it with a counter
