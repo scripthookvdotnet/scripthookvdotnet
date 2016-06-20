@@ -141,8 +141,8 @@ namespace GTA
 		void MoveCursorRight();
 		void MoveCursorLeft();
 
-		void DrawRect(int x, int y, int width, int height, System::Drawing::Color color);
-		void DrawText(int x, int y, System::String ^text, float scale, int font, System::Drawing::Color color);
+		void DrawRect(float x, float y, int width, int height, System::Drawing::Color color);
+		void DrawText(float x, float y, System::String ^text, float scale, int font, System::Drawing::Color color);
 
 		float GetTextLength(System::String ^text, float scale, int font); //TODO Maybe implement somewhere else?
 

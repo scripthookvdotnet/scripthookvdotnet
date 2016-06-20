@@ -218,7 +218,7 @@ namespace GTA
 		{
 			if (i > 15)
 				break;
-			DrawText(2, (15 - i) * 14, line, DefaultScale, DefaultFont, OutputColor);
+			DrawText(2, (float)((15 - i) * 14), line, DefaultScale, DefaultFont, OutputColor);
 			i++;
 		}
 	}
@@ -391,7 +391,7 @@ namespace GTA
 			_cursorPos++;
 	}
 
-	void ConsoleScript::DrawRect(int x, int y, int width, int height, Color color)
+	void ConsoleScript::DrawRect(float x, float y, int width, int height, Color color)
 	{
 		const float w = static_cast<float>(width) / WIDTH;
 		const float h = static_cast<float>(height) / HEIGHT;
@@ -400,7 +400,7 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::DRAW_RECT, xNew, yNew, w, h, color.R, color.G, color.B, color.A);
 	}
-	void ConsoleScript::DrawText(int x, int y, System::String ^text, float scale, int font, Color color)
+	void ConsoleScript::DrawText(float x, float y, System::String ^text, float scale, int font, Color color)
 	{
 		float xNew = (static_cast<float>(x) / WIDTH);
 		float yNew = (static_cast<float>(y) / HEIGHT);
