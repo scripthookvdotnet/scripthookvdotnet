@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.hpp"
+#include "Matrix.hpp"
 
 namespace GTA
 {
@@ -18,6 +19,7 @@ namespace GTA
 			static Math::Vector3 ReadVector3(System::IntPtr address);
 			static System::String ^ReadString(System::IntPtr address);
 			static System::IntPtr ReadPtr(System::IntPtr address);
+			static Math::Matrix ReadMatrix(System::IntPtr address);
 			static void WriteByte(System::IntPtr address, unsigned char value);
 			static void WriteShort(System::IntPtr address, short value);
 			static void WriteInt(System::IntPtr address, int value);
@@ -31,6 +33,7 @@ namespace GTA
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
 			static System::IntPtr GetCheckpointAddress(int handle);
+			static System::IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex);
 			static float ReadWorldGravity();
 			static void WriteWorldGravity(float value);
 

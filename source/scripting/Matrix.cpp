@@ -22,40 +22,40 @@
 #include "Quaternion.hpp"
 #include <xmmintrin.h>
 #pragma unmanaged
-void mmul_sse(const float * a, const float * b, float * r)
+void matrixmul_sse(const float * a, const float * b, float * r)
 {
 	__m128  r_line;
 	for (int i = 0; i<16; i += 4) {
-		r_line = _mm_mul_ps(_mm_load_ps(a), _mm_set1_ps(b[i]));
+		r_line = _mm_mul_ps(_mm_loadu_ps(a), _mm_set1_ps(b[i]));
 		for (int j = 1; j<4; j++) {
-			r_line = _mm_add_ps(_mm_mul_ps(_mm_load_ps(&a[j * 4]), _mm_set1_ps(b[i + j])), r_line);
+			r_line = _mm_add_ps(_mm_mul_ps(_mm_loadu_ps(&a[j * 4]), _mm_set1_ps(b[i + j])), r_line);
 		}
-		_mm_store_ps(&r[i], r_line);
+		_mm_storeu_ps(&r[i], r_line);
 	}
 }
 void mdiv_sse(const float * a, const float * b, float * r)
 {
 	for (int i = 0; i<16; i += 4) {
-		_mm_store_ps(&r[i], _mm_div_ps(_mm_load_ps(&a[i]), _mm_load_ps(&b[i])));
+		_mm_storeu_ps(&r[i], _mm_div_ps(_mm_loadu_ps(&a[i]), _mm_loadu_ps(&b[i])));
 	}
 }
-void msmul_sse(const float * a, const float scale, float * r)
+void mmul_sse(const float * a, const float scale, float * r)
 {
 	__m128 s_line = _mm_set1_ps(scale);
 	for (int i = 0; i<16; i += 4) {
-		_mm_store_ps(&r[i], _mm_mul_ps(_mm_load_ps(&a[i]), s_line));
+		_mm_storeu_ps(&r[i], _mm_mul_ps(_mm_loadu_ps(&a[i]), s_line));
 	}
 }
 void madd_sse(const float * a, const float * b, float * r)
 {
 	for (int i = 0; i<16; i += 4) {
-		_mm_store_ps(&r[i], _mm_add_ps(_mm_load_ps(&a[i]), _mm_load_ps(&b[i])));
+		_mm_storeu_ps(&r[i], _mm_add_ps(_mm_loadu_ps(&a[i]), _mm_loadu_ps(&b[i])));
 	}
 }
 void msub_sse(const float * a, const float * b, float * r)
 {
 	for (int i = 0; i<16; i += 4) {
-		_mm_store_ps(&r[i], _mm_sub_ps(_mm_load_ps(&a[i]), _mm_load_ps(&b[i])));
+		_mm_storeu_ps(&r[i], _mm_sub_ps(_mm_loadu_ps(&a[i]), _mm_loadu_ps(&b[i])));
 	}
 }
 void mlerp_sse(const float * a, const float * b, float amount, float * r)
@@ -64,13 +64,61 @@ void mlerp_sse(const float * a, const float * b, float amount, float * r)
 	__m128 s_line1 = _mm_set1_ps(1 - amount);
 	__m128 s_line2 = _mm_set1_ps(amount);
 	for (int i = 0; i<16; i += 4) {
-		_mm_store_ps(&r[i], _mm_add_ps(
-			_mm_mul_ps(_mm_load_ps(&a[i]), s_line1),
-			_mm_mul_ps(_mm_load_ps(&b[i]), s_line2)));
+		_mm_storeu_ps(&r[i], _mm_add_ps(
+			_mm_mul_ps(_mm_loadu_ps(&a[i]), s_line1),
+			_mm_mul_ps(_mm_loadu_ps(&b[i]), s_line2)));
 	}
 }
+void mneg_sse(const float * a, float * r)
+{
+	__m128 xorval = _mm_set1_ps(-0.0);
+	for (int i = 0; i<16; i += 4) {
+		_mm_storeu_ps(&r[i], _mm_xor_ps(_mm_loadu_ps(&a[i]), xorval));
+	}
+}
+void mtranspose_sse(const float *a, float * r)
+{
+	__m128 row1 = _mm_loadu_ps(a),
+		row2 = _mm_loadu_ps(&a[4]),
+		row3 = _mm_loadu_ps(&a[8]),
+		row4 = _mm_loadu_ps(&a[12]);
+	_MM_TRANSPOSE4_PS(row1, row2, row3, row4);
+	_mm_storeu_ps(r, row1);
+	_mm_storeu_ps(&r[4], row2);
+	_mm_storeu_ps(&r[8], row3);
+	_mm_storeu_ps(&r[12], row4);
+}
+void mtransform_point_sse(const float * matrix, const float pointX, const float pointY, const float pointZ, float * r)
+{
+	__m128 point = _mm_set_ps(1.0f, pointZ, pointY, pointX);
+	point = _mm_add_ps(
+		_mm_add_ps(
+			_mm_add_ps(
+				_mm_mul_ps(_mm_loadu_ps(matrix), _mm_shuffle_ps(point, point, _MM_SHUFFLE(0, 0, 0, 0))),
+				_mm_mul_ps(_mm_loadu_ps(&matrix[4]), _mm_shuffle_ps(point, point, _MM_SHUFFLE(1, 1, 1, 1)))),
+			_mm_mul_ps(_mm_loadu_ps(&matrix[8]), _mm_shuffle_ps(point, point, _MM_SHUFFLE(2, 2, 2, 2)))),
+		_mm_loadu_ps(&matrix[12])
+	);
+	_mm_storeu_ps(r, point);
+}
+void minvtransform_point_sse(const float * matrix, const float pointX, const float pointY, const float pointZ, float *r)
+{
+	__m128 off = _mm_sub_ps(_mm_set_ps(1.0f, pointZ, pointY, pointX), _mm_loadu_ps(&matrix[12]));
+	__m128 r1 = _mm_loadu_ps(matrix);
+	__m128 r2 = _mm_loadu_ps(&matrix[4]);
+	__m128 r3 = _mm_loadu_ps(&matrix[8]);
+	__m128 zero = _mm_setzero_ps();
+	__m128 lo = _mm_unpacklo_ps(r1, r3);//r0, u0, r1, u1
+	__m128 lo2 = _mm_unpacklo_ps(r2, zero);//f0, 0, f1, 0
+	off = _mm_add_ps(
+		_mm_add_ps(
+			_mm_mul_ps(_mm_unpacklo_ps(lo, lo2), _mm_shuffle_ps(off, off, _MM_SHUFFLE(0, 0, 0, 0))),
+			_mm_mul_ps(_mm_unpackhi_ps(lo, lo2), _mm_shuffle_ps(off, off, _MM_SHUFFLE(1, 1, 1, 1)))),
+		_mm_mul_ps(
+			_mm_unpacklo_ps(_mm_unpackhi_ps(r1, r3), _mm_unpackhi_ps(r2, zero)), _mm_shuffle_ps(off, off, _MM_SHUFFLE(2, 2, 2, 2))));
+	_mm_storeu_ps(r, off);
+}
 #pragma managed
-
 namespace GTA
 {
 	namespace Math
@@ -163,26 +211,7 @@ namespace GTA
 			if (floatArray->Length != 16)
 				throw gcnew Exception("Array must contain 16 items to be converted to a 4*4 Matrix");
 			Matrix result;
-			result.M11 = floatArray[0];
-			result.M12 = floatArray[1];
-			result.M13 = floatArray[2];
-			result.M14 = floatArray[3];
-
-			result.M21 = floatArray[4];
-			result.M22 = floatArray[5];
-			result.M23 = floatArray[6];
-			result.M24 = floatArray[7];
-
-			result.M31 = floatArray[8];
-			result.M32 = floatArray[9];
-			result.M33 = floatArray[10];
-			result.M34 = floatArray[11];
-
-			result.M41 = floatArray[12];
-			result.M42 = floatArray[13];
-			result.M43 = floatArray[14];
-			result.M44 = floatArray[15];
-
+			System::Runtime::InteropServices::Marshal::Copy(floatArray, 0, IntPtr(&result), 16);
 			return result;
 		}
 
@@ -249,38 +278,34 @@ namespace GTA
 			M44 = tM44;
 		}
 
+		Vector3 Matrix::TransformPoint(Vector3 point)
+		{
+			pin_ptr<Matrix> pinned = this;
+			mtransform_point_sse((float*)pinned, point.X, point.Y, point.Z, (float*)&point);
+			return point;
+		}
+
+		Vector3 Matrix::InverseTransformPoint(Vector3 point)
+		{
+			pin_ptr<Matrix> pinned = this;
+			minvtransform_point_sse((float*)pinned, point.X, point.Y, point.Z, (float*)&point);
+			return point;
+		}
+
 		Matrix Matrix::Add(Matrix left, Matrix right)
 		{
-			Matrix result;
-			madd_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			madd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Subtract(Matrix left, Matrix right)
 		{
-			Matrix result;
-			msub_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			msub_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Negate(Matrix matrix)
 		{
-			Matrix result;
-			result.M11 = -matrix.M11;
-			result.M12 = -matrix.M12;
-			result.M13 = -matrix.M13;
-			result.M14 = -matrix.M14;
-			result.M21 = -matrix.M21;
-			result.M22 = -matrix.M22;
-			result.M23 = -matrix.M23;
-			result.M24 = -matrix.M24;
-			result.M31 = -matrix.M31;
-			result.M32 = -matrix.M32;
-			result.M33 = -matrix.M33;
-			result.M34 = -matrix.M34;
-			result.M41 = -matrix.M41;
-			result.M42 = -matrix.M42;
-			result.M43 = -matrix.M43;
-			result.M44 = -matrix.M44;
-			return result;
+			mneg_sse((float*)&matrix, (float*)&matrix);
+			return matrix;
 		}
 
 		Matrix Matrix::Inverse(Matrix matrix)
@@ -290,34 +315,28 @@ namespace GTA
 		}
 		Matrix Matrix::Multiply(Matrix left, Matrix right)
 		{
-			Matrix result;
-			mmul_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			matrixmul_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Multiply(Matrix left, float right)
 		{
-			Matrix result;
-			msmul_sse(&left.M11, right, &result.M11);
-			return result;
+			mmul_sse((float*)&left, right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Divide(Matrix left, Matrix right)
 		{
-			Matrix result;
-			mdiv_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			mdiv_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Divide(Matrix left, float right)
 		{
-			Matrix result;
-			float invRight = 1.0f / right;
-			msmul_sse(&left.M11, invRight, &result.M11);
-			return result;
+			mmul_sse((float*)&left, 1.0f / right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Lerp(Matrix value1, Matrix value2, float amount)
 		{
-			Matrix result;
-			mlerp_sse(&value1.M11, &value2.M11, amount, &result.M11);
-			return result;
+			mlerp_sse((float*)&value1, (float*)&value2, amount, (float*)&value1);
+			return value1;
 		}
 		Matrix Matrix::RotationX(float angle)
 		{
@@ -554,37 +573,19 @@ namespace GTA
 		}
 		Matrix Matrix::Transpose(Matrix mat)
 		{
-			Matrix result;
-			result.M11 = mat.M11;
-			result.M12 = mat.M21;
-			result.M13 = mat.M31;
-			result.M14 = mat.M41;
-			result.M21 = mat.M12;
-			result.M22 = mat.M22;
-			result.M23 = mat.M32;
-			result.M24 = mat.M42;
-			result.M31 = mat.M13;
-			result.M32 = mat.M23;
-			result.M33 = mat.M33;
-			result.M34 = mat.M43;
-			result.M41 = mat.M14;
-			result.M42 = mat.M24;
-			result.M43 = mat.M34;
-			result.M44 = mat.M44;
-			return result;
+			mtranspose_sse((float*)&mat, (float*)&mat);
+			return mat;
 		}
 
 		Matrix Matrix::operator * (Matrix left, Matrix right)
 		{
-			Matrix result;
-			mmul_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			matrixmul_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator * (Matrix left, float right)
 		{
-			Matrix result;
-			msmul_sse(&left.M11, right, &result.M11);
-			return result;
+			mmul_sse((float*)&left, right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator * (float right, Matrix left)
 		{
@@ -592,49 +593,28 @@ namespace GTA
 		}
 		Matrix Matrix::operator / (Matrix left, Matrix right)
 		{
-			Matrix result;
-			mdiv_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			mdiv_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator / (Matrix left, float right)
 		{
-			Matrix result;
-			float invRight = 1.0f / right;
-			msmul_sse(&left.M11, invRight, &result.M11);
-			return result;
+			mmul_sse((float*)&left, 1.0f / right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator + (Matrix left, Matrix right)
 		{
-			Matrix result;
-			madd_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			madd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator - (Matrix left, Matrix right)
 		{
-			Matrix result;
-			msub_sse(&left.M11, &right.M11, &result.M11);
-			return result;
+			msub_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator - (Matrix matrix)
 		{
-			Matrix result;
-			result.M11 = -matrix.M11;
-			result.M12 = -matrix.M12;
-			result.M13 = -matrix.M13;
-			result.M14 = -matrix.M14;
-			result.M21 = -matrix.M21;
-			result.M22 = -matrix.M22;
-			result.M23 = -matrix.M23;
-			result.M24 = -matrix.M24;
-			result.M31 = -matrix.M31;
-			result.M32 = -matrix.M32;
-			result.M33 = -matrix.M33;
-			result.M34 = -matrix.M34;
-			result.M41 = -matrix.M41;
-			result.M42 = -matrix.M42;
-			result.M43 = -matrix.M43;
-			result.M44 = -matrix.M44;
-			return result;
+			mneg_sse((float*)&matrix, (float*)&matrix);
+			return matrix;
 		}
 		bool Matrix::operator == (Matrix left, Matrix right)
 		{
@@ -648,23 +628,8 @@ namespace GTA
 		array<float> ^Matrix::ToArray()
 		{
 			array<float> ^result = gcnew array<float>(16);
-			result[0] = M11;
-			result[1] = M12;
-			result[2] = M13;
-			result[3] = M14;
-			result[4] = M21;
-			result[5] = M22;
-			result[6] = M23;
-			result[7] = M24;
-			result[8] = M31;
-			result[9] = M32;
-			result[10] = M33;
-			result[11] = M34;
-			result[12] = M41;
-			result[13] = M42;
-			result[14] = M43;
-			result[15] = M44;
-
+			pin_ptr<Matrix> pinned = this;
+			System::Runtime::InteropServices::Marshal::Copy(IntPtr(pinned), result, 0, 16);
 			return result;
 		}
 		String ^Matrix::ToString()

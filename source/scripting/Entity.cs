@@ -167,6 +167,19 @@ namespace GTA
 			}
 		}
 
+		public Matrix Matrix
+		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return new Matrix();
+				}
+				return MemoryAccess.ReadMatrix(memoryAddress + 96);
+			}
+		}
+
 		public bool IsPositionFrozen
 		{
 			get
@@ -643,7 +656,50 @@ namespace GTA
 		public Vector3 GetBonePosition(string boneName)
 		{
 			return GetBonePosition(GetBoneIndex(boneName));
+		}	
+
+		public Vector3 GetBoneOffsetPosition(string boneName, Vector3 offset)
+		{
+			return GetBoneOffsetPosition(GetBoneIndex(boneName), offset);
 		}
+		public Vector3 GetBoneOffsetPosition(int boneIndex, Vector3 offset)
+		{
+			IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(Handle, boneIndex);
+			if (address == IntPtr.Zero)
+			{
+				return Position;
+			}
+			return Matrix.TransformPoint(MemoryAccess.ReadMatrix(address).TransformPoint(offset));
+		}
+
+		public Vector3 GetBonePositionOffset(string boneName, Vector3 worldCoords)
+		{
+			return GetBonePositionOffset(GetBoneIndex(boneName), worldCoords);
+		}
+		public Vector3 GetBonePositionOffset(int boneIndex, Vector3 worldCoords)
+		{
+			IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(Handle, boneIndex);
+			if (address == IntPtr.Zero)
+			{
+				return Vector3.Zero;
+			}
+			return MemoryAccess.ReadMatrix(address).InverseTransformPoint(Matrix.InverseTransformPoint(worldCoords));
+		}
+
+		public Matrix GetBoneMatrix(string boneName)
+		{
+			return GetBoneMatrix(GetBoneIndex(boneName));
+		}	  
+		public Matrix GetBoneMatrix(int boneIndex)
+		{
+			IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(Handle, boneIndex);
+			if (address == IntPtr.Zero)
+			{
+				return new Matrix();
+			}
+			return MemoryAccess.ReadMatrix(address);
+		}
+
 		public bool HasBone(string boneName)
 		{
 			return GetBoneIndex(boneName) != -1;

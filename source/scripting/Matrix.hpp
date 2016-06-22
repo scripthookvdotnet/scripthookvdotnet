@@ -170,6 +170,20 @@ namespace GTA
 			/// Calculates the inverse of the matrix if it exists.
 			/// </summary>
 			void Inverse();
+						
+			/// <summary>
+			/// Apply the transformation matrix to a point in world space
+			/// </summary>
+			/// <param name="point">The original vertex location</param>
+			/// <returns>The vertex location transformed by the given <see cref="Matrix"/></returns>
+			Vector3 TransformPoint(Vector3 point);
+
+			/// <summary>
+			/// Calculates the position of a point before this transformation matrix gets applied
+			/// </summary>
+			/// <param name="point">The transformed vertex location</param>
+			/// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
+			Vector3 InverseTransformPoint(Vector3 point);
 
 			/// <summary>
 			/// Determines the sum of two matrices.

@@ -18,7 +18,38 @@
  */
 
 #include "Vector3.hpp"
-
+#include <xmmintrin.h>
+#pragma unmanaged
+alignas(16) float _negXor[4] = { -0.0f, -0.0f, -0.0f, -0.0f};
+inline void vmul_sse(const float * a, const float b, float * r)
+{
+	_mm_storeu_ps(r, _mm_mul_ps(_mm_loadu_ps(a), _mm_set1_ps(b)));
+}
+inline void vdiv_sse(const float * a, const float b, float * r)
+{
+	_mm_storeu_ps(r, _mm_div_ps(_mm_loadu_ps(a), _mm_set1_ps(b)));
+}
+inline void vadd_sse(const float * a, const float * b, float * r)
+{
+	_mm_storeu_ps(r, _mm_add_ps(_mm_loadu_ps(a), _mm_loadu_ps(b)));
+}
+inline void vsub_sse(const float * a, const float * b, float * r)
+{
+	_mm_storeu_ps(r, _mm_sub_ps(_mm_loadu_ps(a), _mm_loadu_ps(b)));
+}
+inline void vmodmul_sse(const float * a, const float * b, float * r)
+{
+	_mm_storeu_ps(r, _mm_mul_ps(_mm_loadu_ps(a), _mm_loadu_ps(b)));
+}
+inline void vneg_sse(const float * a, float * r)
+{
+	_mm_storeu_ps(r, _mm_xor_ps(_mm_loadu_ps(a), _mm_load_ps(_negXor)));
+}
+inline void vclamp_sse(const float* a, float* min, float* max, float* r)
+{
+	_mm_storeu_ps(r, _mm_max_ps(_mm_loadu_ps(min), _mm_min_ps(_mm_loadu_ps(max), _mm_loadu_ps(a))));
+}
+#pragma managed
 namespace GTA
 {
 	namespace Math
@@ -41,7 +72,13 @@ namespace GTA
 
 		Vector3 Vector3::Normalized::get()
 		{
-			return Vector3::Normalize(Vector3(X, Y, Z));
+			Vector3 result;
+			float length = Length();
+			if (length == 0) 
+				return result;
+			pin_ptr<Vector3> pinned = this;
+			vdiv_sse((float*)pinned, length, (float*)&result);
+			return result;
 		}
 
 		float Vector3::default::get(int index)
@@ -88,11 +125,10 @@ namespace GTA
 		void Vector3::Normalize()
 		{
 			float length = Length();
-			if (length == 0) return;
-			float num = 1 / length;
-			X *= num;
-			Y *= num;
-			Z *= num;
+			if (length == 0) 
+				return;
+			pin_ptr<Vector3> pinned = this;
+			vdiv_sse((float*)pinned, length, (float*)pinned);
 		}
 		float Vector3::DistanceTo(Vector3 position)
 		{
@@ -191,44 +227,38 @@ namespace GTA
 
 		Vector3 Vector3::Add(Vector3 left, Vector3 right)
 		{
-			return Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+			vadd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Vector3 Vector3::Subtract(Vector3 left, Vector3 right)
 		{
-			return Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+			vadd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Vector3 Vector3::Modulate(Vector3 left, Vector3 right)
 		{
-			return Vector3(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
+			vadd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Vector3 Vector3::Multiply(Vector3 value, float scale)
 		{
-			return Vector3(value.X * scale, value.Y * scale, value.Z * scale);
+			vdiv_sse((float*)&value, scale, (float*)&value);
+			return value;
 		}
 		Vector3 Vector3::Divide(Vector3 value, float scale)
 		{
-			float invScale = 1.0f / scale;
-			return Vector3(value.X * invScale, value.Y * invScale, value.Z * invScale);
+			vdiv_sse((float*)&value, scale, (float*)&value);
+			return value;
 		}
 		Vector3 Vector3::Negate(Vector3 value)
 		{
-			return Vector3(-value.X, -value.Y, -value.Z);
+			vneg_sse((float*)&value, (float*)&value);
+			return value;
 		}
 		Vector3 Vector3::Clamp(Vector3 value, Vector3 min, Vector3 max)
 		{
-			float x = value.X;
-			x = (x > max.X) ? max.X : x;
-			x = (x < min.X) ? min.X : x;
-
-			float y = value.Y;
-			y = (y > max.Y) ? max.Y : y;
-			y = (y < min.Y) ? min.Y : y;
-
-			float z = value.Z;
-			z = (z > max.Z) ? max.Z : z;
-			z = (z < min.Z) ? min.Z : z;
-
-			return Vector3(x, y, z);
+			vclamp_sse((float*)&value, (float*)&min, (float*)&max, (float*)&value);
+			return value;
 		}
 		Vector3 Vector3::Lerp(Vector3 start, Vector3 end, float factor)
 		{
@@ -263,11 +293,11 @@ namespace GTA
 		Vector3 Vector3::Reflect(Vector3 vector, Vector3 normal)
 		{
 			Vector3 result;
-			float dot = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
+			float dubdot = 2.0f * ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
 
-			result.X = vector.X - ((2.0f * dot) * normal.X);
-			result.Y = vector.Y - ((2.0f * dot) * normal.Y);
-			result.Z = vector.Z - ((2.0f * dot) * normal.Z);
+			result.X = vector.X - (dubdot * normal.X);
+			result.Y = vector.Y - (dubdot * normal.Y);
+			result.Z = vector.Z - (dubdot * normal.Z);
 
 			return result;
 		}
@@ -295,28 +325,33 @@ namespace GTA
 
 		Vector3 Vector3::operator + (Vector3 left, Vector3 right)
 		{
-			return Vector3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+			vadd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Vector3 Vector3::operator - (Vector3 left, Vector3 right)
 		{
-			return Vector3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+			vsub_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Vector3 Vector3::operator - (Vector3 value)
 		{
-			return Vector3(-value.X, -value.Y, -value.Z);
+			vneg_sse((float*)&value, (float*)&value);
+			return value;
 		}
 		Vector3 Vector3::operator * (Vector3 value, float scale)
 		{
-			return Vector3(value.X * scale, value.Y * scale, value.Z * scale);
+			vmul_sse((float*)&value, scale, (float*)&value);
+			return value;
 		}
 		Vector3 Vector3::operator * (float scale, Vector3 vec)
 		{
-			return vec * scale;
+			vmul_sse((float*)&vec, scale, (float*)&vec);
+			return vec;
 		}
 		Vector3 Vector3::operator / (Vector3 value, float scale)
 		{
-			float invScale = 1.0f / scale;
-			return Vector3(value.X * invScale, value.Y * invScale, value.Z * invScale);
+			vdiv_sse((float*)&value, scale, (float*)&value);
+			return value;
 		}
 		bool Vector3::operator == (Vector3 left, Vector3 right)
 		{

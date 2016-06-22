@@ -24,27 +24,29 @@ namespace GTA
 	namespace Math
 	{
 		[System::SerializableAttribute]
-		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential, Pack = 4)]
+		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Explicit, Pack = 4)]
 		public value class Vector3 : System::IEquatable<Vector3>
 		{
+		private:
+			[System::Runtime::InteropServices::FieldOffset(12)]float _padding = 0.0f;
 		public:
 			/// <summary>
 			/// Gets or sets the X component of the vector.
 			/// </summary>
 			/// <value>The X component of the vector.</value>
-			float X;
+			[System::Runtime::InteropServices::FieldOffset(0)]float X;
 
 			/// <summary>
 			/// Gets or sets the Y component of the vector.
 			/// </summary>
 			/// <value>The Y component of the vector.</value>
-			float Y;
+			[System::Runtime::InteropServices::FieldOffset(4)]float Y;
 
 			/// <summary>
 			/// Gets or sets the Z component of the vector.
 			/// </summary>
 			/// <value>The Z component of the vector.</value>
-			float Z;
+			[System::Runtime::InteropServices::FieldOffset(8)]float Z;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="Vector3"/> class.

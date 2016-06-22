@@ -176,6 +176,10 @@ namespace GTA
 		}
 
 		public WeaponHash Hash { get; private set; }
+		public static implicit operator WeaponHash(Weapon weapon)
+		{
+			return weapon.Hash;
+		}
 
 		public bool IsPresent
 		{

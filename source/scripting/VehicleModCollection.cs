@@ -227,5 +227,25 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_MOD_KIT, _owner.Handle, 0);
 		}
+
+		public bool RequestAdditionTextFile(int timeout = 1000)
+		{
+			if (!Function.Call<bool>(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10))
+			{
+				Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
+				Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
+				int end = Game.GameTime + timeout;
+				{
+					while (Game.GameTime < end)
+					{
+						if (Function.Call<bool>(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10))
+							return true;
+						Script.Yield();
+					}
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 }
