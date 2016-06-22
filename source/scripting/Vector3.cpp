@@ -20,7 +20,7 @@
 #include "Vector3.hpp"
 #include <xmmintrin.h>
 #pragma unmanaged
-alignas(16) float _negXor[4] = { -0.0f, -0.0f, -0.0f, -0.0f};
+float _negXor[4] = { -0.0f, -0.0f, -0.0f, -0.0f};
 inline void vmul_sse(const float * a, const float b, float * r)
 {
 	_mm_storeu_ps(r, _mm_mul_ps(_mm_loadu_ps(a), _mm_set1_ps(b)));
@@ -43,7 +43,7 @@ inline void vmodmul_sse(const float * a, const float * b, float * r)
 }
 inline void vneg_sse(const float * a, float * r)
 {
-	_mm_storeu_ps(r, _mm_xor_ps(_mm_loadu_ps(a), _mm_load_ps(_negXor)));
+	_mm_storeu_ps(r, _mm_xor_ps(_mm_loadu_ps(a), _mm_loadu_ps(_negXor)));
 }
 inline void vclamp_sse(const float* a, float* min, float* max, float* r)
 {

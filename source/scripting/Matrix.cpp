@@ -22,6 +22,7 @@
 #include "Quaternion.hpp"
 #include <xmmintrin.h>
 #pragma unmanaged
+extern float _negXor[4];
 void matrixmul_sse(const float * a, const float * b, float * r)
 {
 	__m128  r_line;
@@ -71,10 +72,11 @@ void mlerp_sse(const float * a, const float * b, float amount, float * r)
 }
 void mneg_sse(const float * a, float * r)
 {
-	__m128 xorval = _mm_set1_ps(-0.0);
-	for (int i = 0; i<16; i += 4) {
-		_mm_storeu_ps(&r[i], _mm_xor_ps(_mm_loadu_ps(&a[i]), xorval));
-	}
+	__m128 xorVal = _mm_loadu_ps(_negXor);
+	_mm_storeu_ps(r, _mm_xor_ps(_mm_loadu_ps(a), xorVal));
+	_mm_storeu_ps(&r[4], _mm_xor_ps(_mm_loadu_ps(&a[4]), xorVal));
+	_mm_storeu_ps(&r[8], _mm_xor_ps(_mm_loadu_ps(&a[8]), xorVal));
+	_mm_storeu_ps(&r[12], _mm_xor_ps(_mm_loadu_ps(&a[12]), xorVal));
 }
 void mtranspose_sse(const float *a, float * r)
 {
