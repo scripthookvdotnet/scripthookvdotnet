@@ -71,7 +71,9 @@ namespace GTA
 		_isOpen = false;
 		_page = 0;
 		_cursorPos = 0;
+		_commandPos = -1;
 		_lines = gcnew LinkedList<String^>();
+		_commandHistory = gcnew List<String ^>();
 
 		Info("--- Console ready to go ---");
 
@@ -191,14 +193,15 @@ namespace GTA
 		//Hack so the input gets blocked long enogh
 		if (_lastClosed > now)
 		{
-			SetControlsEnabled(false);
+			if (Native::Function::Call<bool>(Native::Hash::_IS_INPUT_DISABLED, 2))
+				SetControlsEnabled(false);
 			return;
 		}
 
 		if (!_isOpen)
 			return;
-
-		SetControlsEnabled(false);
+		if (Native::Function::Call<bool>(Native::Hash::_IS_INPUT_DISABLED, 2))
+			SetControlsEnabled(false);
 
 		DrawRect(0, 0, WIDTH, HEIGHT / 3, BackgroundColor);
 		DrawRect(0, HEIGHT / 3, WIDTH, InputHeight, AltBackgroundColor);
@@ -251,8 +254,19 @@ namespace GTA
 		case Keys::Right:
 			MoveCursorRight();
 			break;
+		case Keys::Up:
+			GoUpCommandList();
+			break;
+		case Keys::Down:
+			GoDownCommandList();
+			break;
 		case Keys::Enter:
 			ExecuteInput();
+			break;
+		case Keys::Escape:
+			_isOpen = false;
+			SetControlsEnabled(false);
+			_lastClosed = DateTime::UtcNow.AddMilliseconds(200); //Hack so the input gets blocked long enogh
 			break;
 		default:
 			AddToInput(GetCharsFromKeys(e->KeyCode, e->Shift, e->Alt));
@@ -373,6 +387,11 @@ namespace GTA
 	{
 		if (_input == "")
 			return;
+		_commandPos = -1;
+		if (_commandHistory->Count == 0 || _commandHistory[_commandHistory->Count -1] != _input)
+		{
+			_commandHistory->Add(_input);
+		}
 		if (_compilerTask != nullptr)
 		{
 			Error("Can't compile input - Compiler is busy");
@@ -389,6 +408,24 @@ namespace GTA
 	{
 		if (_cursorPos < _input->Length)
 			_cursorPos++;
+	}
+	void ConsoleScript::GoUpCommandList()
+	{
+		if (_commandHistory->Count == 0)
+			return;
+		if (_commandPos >= _commandHistory->Count - 1)
+			return;
+		_commandPos++;
+		_input = _commandHistory[_commandHistory->Count - _commandPos - 1];
+	}
+	void ConsoleScript::GoDownCommandList()
+	{
+		if (_commandHistory->Count == 0)
+			return;
+		if (_commandPos <= 0)
+			return;
+		_commandPos--;
+		_input = _commandHistory[_commandHistory->Count - _commandPos - 1];
 	}
 
 	void ConsoleScript::DrawRect(float x, float y, int width, int height, Color color)
