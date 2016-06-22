@@ -427,14 +427,7 @@ namespace GTA
 
 		//Initialize Console-Script, propably should be moved somewhere else
 		_console = gcnew Console();
-		_console->Script = gcnew ConsoleScript();
-		_console->Script->_running = true;
-		_console->Script->_filename = "internal";
-		_console->Script->_scriptdomain = this;
-
-		_console->Script->_thread = gcnew Thread(gcnew ThreadStart(_console->Script, &Script::MainLoop));
-		_console->Script->_thread->Start();
-		_runningScripts->Add(_console->Script);
+		ConsoleInit();
 
 		if (_scriptTypes->Count == 0)
 		{
@@ -457,9 +450,6 @@ namespace GTA
 				continue;
 			}
 
-			//TODO Maybe move elsewhere
-			_console->Script->RegisterCommands(scriptType->Item2);
-
 			script->_running = true;
 			script->_filename = scriptType->Item1;
 			script->_scriptdomain = this;
@@ -471,6 +461,7 @@ namespace GTA
 
 			_runningScripts->Add(script);
 		}
+		ConsoleRegisterScripts();
 	}
 	void ScriptDomain::Abort()
 	{
@@ -482,6 +473,9 @@ namespace GTA
 
 			delete script;
 		}
+		_console->Script->Abort();
+		
+		delete _console->Script;
 
 		_scriptTypes->Clear();
 		_runningScripts->Clear();
@@ -501,6 +495,27 @@ namespace GTA
 		script->_thread = nullptr;
 
 		Log("[INFO]", "Aborted script '", script->Name, "'.");
+	}
+	void ScriptDomain::ConsoleInit()
+	{
+		if (_console->Script != nullptr)
+		{
+			_console->Script->Abort();
+		}
+		_console->Script = gcnew ConsoleScript();
+		_console->Script->_running = true;
+		_console->Script->_filename = "internal";
+		_console->Script->_scriptdomain = this;
+
+		_console->Script->_thread = gcnew Thread(gcnew ThreadStart(_console->Script, &Script::MainLoop));
+		_console->Script->_thread->Start();
+	}
+	void ScriptDomain::ConsoleRegisterScripts()
+	{
+		for each(Script ^script in _runningScripts)
+		{
+			_console->Script->RegisterCommands(script->GetType());
+		}
 	}
 	void ScriptDomain::DoTick()
 	{
@@ -529,9 +544,43 @@ namespace GTA
 				continue;
 			}
 		}
-
+		if (!DoConsoleTick())
+		{
+			ConsoleInit();
+			ConsoleRegisterScripts();
+		}
 		// Clean up pinned strings
 		CleanupStrings();
+	}
+	bool ScriptDomain::DoConsoleTick()
+	{
+		Script ^script = _console->Script;
+		if (script == nullptr)
+		{
+			return false;
+		}
+		if (!script->_running)
+		{
+			return false;
+		}
+
+		_executingScript = script;
+
+		while ((script->_running = SignalAndWait(script->_continueEvent, script->_waitEvent, 5000)) && _taskQueue->Count > 0)
+		{
+			_taskQueue->Dequeue()->Run();
+		}
+
+		_executingScript = nullptr;
+
+		if (!script->_running)
+		{
+			Log("[ERROR]", "Script '", script->Name, "' is not responding! Aborting ...");
+
+			AbortScript(script);
+			return false;
+		}
+		return true;
 	}
 	void ScriptDomain::DoKeyboardMessage(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
@@ -562,10 +611,14 @@ namespace GTA
 			auto args = gcnew WinForms::KeyEventArgs(key);
 			auto eventinfo = gcnew Tuple<bool, WinForms::KeyEventArgs ^>(status, args);
 
-			for each (Script ^script in _runningScripts)
+			if (!_console->Script->IsOpen())
 			{
-				script->_keyboardEvents->Enqueue(eventinfo);
+				for each (Script ^script in _runningScripts)
+				{
+					script->_keyboardEvents->Enqueue(eventinfo);
+				}
 			}
+			_console->Script->_keyboardEvents->Enqueue(eventinfo);
 		}
 	}
 
