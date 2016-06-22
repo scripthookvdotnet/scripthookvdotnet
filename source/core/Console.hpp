@@ -141,6 +141,9 @@ namespace GTA
 		void MoveCursorRight();
 		void MoveCursorLeft();
 
+		void GoUpCommandList();
+		void GoDownCommandList();
+
 		void DrawRect(float x, float y, int width, int height, System::Drawing::Color color);
 		void DrawText(float x, float y, System::String ^text, float scale, int font, System::Drawing::Color color);
 
@@ -149,9 +152,11 @@ namespace GTA
 		bool _isOpen;
 		int _page;
 		int _cursorPos;
+		int _commandPos;
 		System::String ^_input;
 		System::DateTime _lastClosed;
 		System::Collections::Generic::LinkedList<System::String^> ^_lines;
+		System::Collections::Generic::List<System::String^> ^_commandHistory;
 
 		System::Threading::Tasks::Task<System::Reflection::Assembly^> ^_compilerTask;
 		System::Collections::Concurrent::ConcurrentQueue<array<System::String^>^> ^_outputQueue;

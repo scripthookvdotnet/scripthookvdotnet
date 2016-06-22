@@ -73,7 +73,10 @@ namespace GTA
 		void Start();
 		void Abort();
 		static void AbortScript(Script ^script);
+		void ConsoleInit();
+		void ConsoleRegisterScripts();
 		void DoTick();
+		bool DoConsoleTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
 		void PauseKeyboardEvents(bool pause);
