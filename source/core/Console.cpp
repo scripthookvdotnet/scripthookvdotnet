@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Console.hpp"
+#include "ScriptDomain.hpp"
 #include <Windows.h>
 
 namespace GTA
@@ -481,7 +482,7 @@ namespace GTA
 
 	void DefaultConsoleCommands::Help()
 	{
-		Console::Script->PrintHelpString();
+		ScriptDomain::CurrentDomain->Console->PrintHelpString();
 	}
 	void DefaultConsoleCommands::Help(String ^ command) //TODO Add all commands
 	{
@@ -505,28 +506,28 @@ namespace GTA
 	}
 	void DefaultConsoleCommands::Clear()
 	{
-		Console::Script->Clear();
+		ScriptDomain::CurrentDomain->Console->Clear();
 	}
 
 	void Console::Info(... array<String^> ^messages)
 	{
 		for each (String^ message in messages)
 		{
-			Console::Script->Info(message);
+			ScriptDomain::CurrentDomain->Console->Info(message);
 		}
 	}
 	void Console::Error(... array<String^> ^messages)
 	{
 		for each (String^ message in messages)
 		{
-			Console::Script->Error(message);
+			ScriptDomain::CurrentDomain->Console->Error(message);
 		}
 	}
 	void Console::Warn(... array<String^> ^messages)
 	{
 		for each (String^ message in messages)
 		{
-			Console::Script->Warn(message);
+			ScriptDomain::CurrentDomain->Console->Warn(message);
 		}
 	}
 }

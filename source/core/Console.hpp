@@ -221,20 +221,5 @@ namespace GTA
 		static void Info(... array<System::String^> ^messages);
 		static void Error(... array<System::String^> ^messages);
 		static void Warn(... array<System::String^> ^messages);
-
-	internal:
-		static property ConsoleScript ^Script
-		{
-			ConsoleScript ^get()
-			{
-				return _script;
-			}
-			void set(ConsoleScript ^script)
-			{
-				_script = script;
-			}
-		}
-	private:
-		static ConsoleScript ^_script;
 	};
 }

@@ -425,8 +425,6 @@ namespace GTA
 			}
 		}
 
-		//Initialize Console-Script, propably should be moved somewhere else
-		_console = gcnew Console();
 		ConsoleInit();
 
 		if (_scriptTypes->Count == 0)
@@ -473,9 +471,9 @@ namespace GTA
 
 			delete script;
 		}
-		_console->Script->Abort();
+		_console->Abort();
 		
-		delete _console->Script;
+		delete _console;
 
 		_scriptTypes->Clear();
 		_runningScripts->Clear();
@@ -498,23 +496,23 @@ namespace GTA
 	}
 	void ScriptDomain::ConsoleInit()
 	{
-		if (_console->Script != nullptr)
+		if (_console != nullptr)
 		{
-			_console->Script->Abort();
+			_console->Abort();
 		}
-		_console->Script = gcnew ConsoleScript();
-		_console->Script->_running = true;
-		_console->Script->_filename = "internal";
-		_console->Script->_scriptdomain = this;
+		_console = gcnew ConsoleScript();
+		_console->_running = true;
+		_console->_filename = "internal";
+		_console->_scriptdomain = this;
 
-		_console->Script->_thread = gcnew Thread(gcnew ThreadStart(_console->Script, &Script::MainLoop));
-		_console->Script->_thread->Start();
+		_console->_thread = gcnew Thread(gcnew ThreadStart(_console, &Script::MainLoop));
+		_console->_thread->Start();
 	}
 	void ScriptDomain::ConsoleRegisterScripts()
 	{
-		for each(Script ^script in _runningScripts)
+		for each (Script ^script in _runningScripts)
 		{
-			_console->Script->RegisterCommands(script->GetType());
+			_console->RegisterCommands(script->GetType());
 		}
 	}
 	void ScriptDomain::DoTick()
@@ -554,30 +552,25 @@ namespace GTA
 	}
 	bool ScriptDomain::DoConsoleTick()
 	{
-		Script ^script = _console->Script;
-		if (script == nullptr)
-		{
-			return false;
-		}
-		if (!script->_running)
+		if (_console == nullptr || !_console->_running)
 		{
 			return false;
 		}
 
-		_executingScript = script;
+		_executingScript = _console;
 
-		while ((script->_running = SignalAndWait(script->_continueEvent, script->_waitEvent, 5000)) && _taskQueue->Count > 0)
+		while ((_console->_running = SignalAndWait(_console->_continueEvent, _console->_waitEvent, 5000)) && _taskQueue->Count > 0)
 		{
 			_taskQueue->Dequeue()->Run();
 		}
 
 		_executingScript = nullptr;
 
-		if (!script->_running)
+		if (!_console->_running)
 		{
-			Log("[ERROR]", "Script '", script->Name, "' is not responding! Aborting ...");
+			Log("[ERROR]", "Script '", _console->Name, "' is not responding! Aborting ...");
 
-			AbortScript(script);
+			AbortScript(_console);
 			return false;
 		}
 		return true;
@@ -611,14 +604,14 @@ namespace GTA
 			auto args = gcnew WinForms::KeyEventArgs(key);
 			auto eventinfo = gcnew Tuple<bool, WinForms::KeyEventArgs ^>(status, args);
 
-			if (!_console->Script->IsOpen())
+			if (!_console->IsOpen())
 			{
 				for each (Script ^script in _runningScripts)
 				{
 					script->_keyboardEvents->Enqueue(eventinfo);
 				}
 			}
-			_console->Script->_keyboardEvents->Enqueue(eventinfo);
+			_console->_keyboardEvents->Enqueue(eventinfo);
 		}
 	}
 

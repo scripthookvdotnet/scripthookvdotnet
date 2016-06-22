@@ -69,6 +69,13 @@ namespace GTA
 				return _appdomain;
 			}
 		}
+		property ConsoleScript ^Console
+		{
+			inline ConsoleScript ^get()
+			{
+				return _console;
+			}
+		}
 
 		void Start();
 		void Abort();
@@ -102,7 +109,7 @@ namespace GTA
 
 		static ScriptDomain ^sCurrentDomain;
 		System::AppDomain ^_appdomain;
-		Console ^_console;
+		ConsoleScript ^_console;
 		int _executingThreadId;
 		Script ^_executingScript;
 		System::Collections::Generic::List<Script ^> ^_runningScripts = gcnew System::Collections::Generic::List<Script ^>();
