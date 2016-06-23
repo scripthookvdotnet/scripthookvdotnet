@@ -51,8 +51,7 @@ namespace GTA
 				return sCurrentDomain;
 			}
 		}
-
-		static ScriptDomain ^Load(System::String ^path);
+		static ScriptDomain ^Load(System::String ^path, System::String ^scriptDir);
 		static void Unload(ScriptDomain ^%domain);
 
 		property System::String ^Name
@@ -74,6 +73,13 @@ namespace GTA
 			inline ConsoleScript ^get()
 			{
 				return _console;
+			}
+		}
+		property System::String ^ScriptsDirectory
+		{
+			System::String ^get()
+			{
+				return _scriptDir;
 			}
 		}
 
@@ -99,15 +105,23 @@ namespace GTA
 		}
 		System::String ^LookupScriptFilename(System::Type ^scripttype);
 		System::Object ^InitializeLifetimeService() override;
-
+	internal:
+		void ConsoleLoadScript(System::String ^filename);
+		void ConsoleUnloadScript(System::String ^filename);
+		void ConsoleReloadScript(System::String ^filename);
+		void ConsoleListScripts();
+		
 	private:
+		void ConsoleStartScript(System::String ^filename);
 		bool LoadScript(System::String ^filename);
 		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
 		Script ^InstantiateScript(System::Type ^scripttype);
 		void CleanupStrings();
+		void SetScriptDirectory(System::String ^scriptDirectory);
 
 		static ScriptDomain ^sCurrentDomain;
+		System::String ^_scriptDir;
 		System::AppDomain ^_appdomain;
 		ConsoleScript ^_console;
 		int _executingThreadId;
@@ -118,5 +132,6 @@ namespace GTA
 		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^_scriptTypes = gcnew System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^>();
 		bool _recordKeyboardEvents = true;
 		array<bool> ^_keyboardState = gcnew array<bool>(256);
+		
 	};
 }

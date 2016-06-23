@@ -100,10 +100,40 @@ namespace GTA
 	{
 		AddLines("[~o~WARN~w~] ", msg->Split('\n'));
 	}
+	void ConsoleScript::Debug(System::String ^ msg)
+	{
+		AddLines("[~b~DEBUG~w~] ", msg->Split('\n'));
+	}
 
 	void ConsoleScript::RegisterCommands(System::Type ^ type)
 	{
 		RegisterCommands(type, false);
+	}
+	void ConsoleScript::UnregisterCommands(System::Type ^ type)
+	{
+		for each(auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
+		{
+			for each(auto attribute in method->GetCustomAttributes(ConsoleCommand::typeid, true))
+			{
+				ConsoleCommand^ command = static_cast<ConsoleCommand^>(attribute);
+				command->Namespace = method->DeclaringType->FullName;
+				if (_commands->ContainsKey(command->Namespace))
+				{
+					List<Tuple<ConsoleCommand^, MethodInfo^>^>^ Namespace = _commands[command->Namespace];
+					for (int i = 0;i<Namespace->Count;i++)
+					{
+						if (Namespace[i]->Item1 == command || Namespace[i]->Item2 == method)
+						{
+							Namespace->RemoveAt(i--);
+						}
+					}
+					if (Namespace->Count == 0)
+					{
+						_commands->Remove(command->Namespace);
+					}
+				}
+			}
+		}
 	}
 
 	void ConsoleScript::RegisterCommands(System::Type ^ type, bool defaultCommands)
@@ -490,19 +520,19 @@ namespace GTA
 	}
 	void DefaultConsoleCommands::Load(String ^ script)
 	{
-		
+		ScriptDomain::CurrentDomain->ConsoleLoadScript(script);
 	}
 	void DefaultConsoleCommands::Unload(String ^ script)
 	{
-		
+		ScriptDomain::CurrentDomain->ConsoleUnloadScript(script);
 	}
 	void DefaultConsoleCommands::Reload(String ^ script)
 	{
-		
+		ScriptDomain::CurrentDomain->ConsoleReloadScript(script);
 	}
 	void DefaultConsoleCommands::List()
 	{
-		
+		ScriptDomain::CurrentDomain->ConsoleListScripts();
 	}
 	void DefaultConsoleCommands::Clear()
 	{
@@ -524,6 +554,13 @@ namespace GTA
 		}
 	}
 	void Console::Warn(... array<String^> ^messages)
+	{
+		for each (String^ message in messages)
+		{
+			ScriptDomain::CurrentDomain->Console->Warn(message);
+		}
+	}
+	void Console::Debug(... array<System::String^> ^messages)
 	{
 		for each (String^ message in messages)
 		{

@@ -118,9 +118,11 @@ namespace GTA
 		void Info(System::String ^msg);
 		void Error(System::String ^msg);
 		void Warn(System::String ^msg);
+		void Debug(System::String ^msg);
 
 		bool IsOpen();
 		void RegisterCommands(System::Type ^type);
+		void UnregisterCommands(System::Type ^type);
 		void RegisterCommands(System::Type ^type, bool defaultCommands);
 		void RegisterCommand(ConsoleCommand ^command, System::Reflection::MethodInfo ^methodInfo);
 		void RegisterCommand(ConsoleCommand ^command, System::Reflection::MethodInfo ^methodInfo, bool defaultCommand);
@@ -221,5 +223,6 @@ namespace GTA
 		static void Info(... array<System::String^> ^messages);
 		static void Error(... array<System::String^> ^messages);
 		static void Warn(... array<System::String^> ^messages);
+		static void Debug(... array<System::String^> ^messages);
 	};
 }
