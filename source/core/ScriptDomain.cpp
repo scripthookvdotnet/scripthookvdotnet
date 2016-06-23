@@ -72,16 +72,6 @@ namespace GTA
 			return;
 		}
 	}
-	void LogToConsoleError( ... array<String ^> ^message)
-	{
-		Log("[ERROR]", message);
-		ScriptDomain::CurrentDomain->Console->Error(String::Join("", message));
-	}
-	void LogToConsoleInfo(... array<String ^> ^message)
-	{
-		Log("[INFO]", message);
-		ScriptDomain::CurrentDomain->Console->Info(String::Join("", message));
-	}
 	String^ FixFilePathCasing(String ^filePath, String ^BaseDir = nullptr)
 	{
 		if (!String::IsNullOrEmpty(BaseDir))
@@ -136,7 +126,6 @@ namespace GTA
 		}
 	}
 
-
 	ScriptDomain::ScriptDomain() : _appdomain(System::AppDomain::CurrentDomain), _executingThreadId(Thread::CurrentThread->ManagedThreadId)
 	{
 		sCurrentDomain = this;
@@ -145,94 +134,28 @@ namespace GTA
 		_appdomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&HandleUnhandledException);
 
 		Log("[INFO]", "Created new script domain with v", ScriptDomain::typeid->Assembly->GetName()->Version->ToString(3), ".");
+
+		_console = gcnew ConsoleScript();
 	}
 	ScriptDomain::~ScriptDomain()
 	{
 		CleanupStrings();
 	}
 
-	ScriptDomain ^ScriptDomain::Load(String ^baseDir, String ^scriptDir)
-	{
-		String ^path = IO::Path::GetFullPath(IO::Path::Combine(baseDir, scriptDir));
-		
-		auto setup = gcnew AppDomainSetup();
-		setup->ApplicationBase = path;
-		setup->ShadowCopyFiles = "true";
-		setup->ShadowCopyDirectories = path;
-
-		auto appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (path->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted));
-		appdomain->InitializeLifetimeService();
-
-		ScriptDomain ^scriptdomain = nullptr;
-
-		try
-		{
-			scriptdomain = static_cast<ScriptDomain ^>(appdomain->CreateInstanceFromAndUnwrap(ScriptDomain::typeid->Assembly->Location, ScriptDomain::typeid->FullName));
-		}
-		catch (Exception ^ex)
-		{
-			Log("[ERROR]", "Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
-
-			System::AppDomain::Unload(appdomain);
-
-			return nullptr;
-		}
-		
-		Log("[INFO]", "Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
-
-		scriptdomain->SetScriptDirectory(scriptDir);
-
-		if (IO::Directory::Exists(path))
-		{
-			auto filenameScripts = gcnew List<String ^>();
-			auto filenameAssemblies = gcnew List<String ^>();
-
-			try
-			{
-				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb", IO::SearchOption::AllDirectories));
-				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs", IO::SearchOption::AllDirectories));
-				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll", IO::SearchOption::AllDirectories));
-			}
-			catch (Exception ^ex)
-			{
-				Log("[ERROR]", "Failed to reload scripts:", Environment::NewLine, ex->ToString());
-
-				System::AppDomain::Unload(appdomain);
-
-				return nullptr;
-			}
-
-			for each (String ^filename in filenameScripts)
-			{
-				scriptdomain->LoadScript(filename);
-			}
-			for each (String ^filename in filenameAssemblies)
-			{
-				scriptdomain->LoadAssembly(filename);
-			}
-		}
-		else
-		{
-			Log("[ERROR]", "Failed to reload scripts because the directory is missing.");
-		}
-
-		return scriptdomain;
-	}
-
 	void ScriptDomain::ConsoleLoadScript(String ^filename)
 	{
-		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->SetupInformation->ApplicationBase, filename)))
+		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->BaseDirectory, filename)))
 		{
-			array<String ^> ^AllFiles = System::IO::Directory::GetFiles(_appdomain->SetupInformation->ApplicationBase, filename, System::IO::SearchOption::AllDirectories);
+			array<String ^> ^AllFiles = System::IO::Directory::GetFiles(_appdomain->BaseDirectory, filename, System::IO::SearchOption::AllDirectories);
 			if (AllFiles->Length == 0)
 			{
-				Console->Error("The specified file '" + filename + "' was not found in the '" + ScriptDomain::CurrentDomain->ScriptsDirectory + "' folder");
+				Console->Error("The specified file '" + filename + "' was not found in '" + _appdomain->BaseDirectory + "'");
 				return;
 			}
 			else if (AllFiles->Length > 1)
 			{
-				Console->Error("The specified file '" + filename + "' was found in multiple subdirectories of the '" + ScriptDomain::CurrentDomain->ScriptsDirectory + "' folder. Please specify which file you want to load");
-				int remLength = _appdomain->SetupInformation->ApplicationBase->Length + 1;
+				Console->Error("The specified file '" + filename + "' was found in multiple subdirectories of '" + _appdomain->BaseDirectory + "'. Please specify which file you want to load");
+				int remLength = _appdomain->BaseDirectory->Length + 1;
 				for each (auto file in AllFiles)
 				{
 					Console->Info(file->Substring(remLength));
@@ -241,13 +164,13 @@ namespace GTA
 			}
 			else
 			{
-				Console->Warn("The specified file was not found in the '" + ScriptDomain::CurrentDomain->ScriptsDirectory + "' folder, loading from the '" + System::IO::Path::GetDirectoryName(AllFiles[0]->Substring(_appdomain->SetupInformation->ApplicationBase->Length + 1)) + "' sub directory");
-				filename = AllFiles[0]->Substring(_appdomain->SetupInformation->ApplicationBase->Length + 1);
+				Console->Warn("The specified file was not found in '" + _appdomain->BaseDirectory + "', loading from the '" + System::IO::Path::GetDirectoryName(AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1)) + "' sub directory");
+				filename = AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1);
 			}
 		}
 		else
 		{
-			filename = FixFilePathCasing(filename, _appdomain->SetupInformation->ApplicationBase);
+			filename = FixFilePathCasing(filename, _appdomain->BaseDirectory);
 		}
 		String ^ext = System::IO::Path::GetExtension(filename)->ToLower();
 		if (ext != ".cs" && ext != ".vb" && ext != ".dll")
@@ -255,7 +178,7 @@ namespace GTA
 			Console->Error("The specified file '" + filename + "' was not recognised as a script, please include the file extension.");
 			return;
 		}
-		String ^filepath = System::IO::Path::Combine(_appdomain->SetupInformation->ApplicationBase, filename);
+		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
 		for each(auto val in _scriptTypes)
 		{
 			if (filepath->Equals(val->Item1, StringComparison::InvariantCultureIgnoreCase))
@@ -269,7 +192,7 @@ namespace GTA
 	}
 	void ScriptDomain::ConsoleUnloadScript(String ^filename)
 	{
-		String ^filepath = System::IO::Path::Combine(_appdomain->SetupInformation->ApplicationBase, filename);
+		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
 		//cant use the same file finding method incase the script was deleted, could maybe implement a searching method that would use the filenames in ScriptTypes
 		bool foundany = false;
 		for (int i = 0; i<_scriptTypes->Count;i++)
@@ -290,7 +213,7 @@ namespace GTA
 							script->_thread->Abort();
 							script->_thread = nullptr;
 
-							LogToConsoleInfo("Aborted script '", script->Name, "'.");
+							Console->Info("Aborted script '" + script->Name + "'.");
 						}
 
 						
@@ -321,18 +244,18 @@ namespace GTA
 	}
 	void ScriptDomain::ConsoleReloadScript(String ^filename)
 	{
-		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->SetupInformation->ApplicationBase, filename)))
+		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->BaseDirectory, filename)))
 		{
-			array<String ^> ^AllFiles = System::IO::Directory::GetFiles(_appdomain->SetupInformation->ApplicationBase, filename, System::IO::SearchOption::AllDirectories);
+			array<String ^> ^AllFiles = System::IO::Directory::GetFiles(_appdomain->BaseDirectory, filename, System::IO::SearchOption::AllDirectories);
 			if (AllFiles->Length == 0)
 			{
-				Console->Error("The specified file '" + filename + "' was not found in the '" + ScriptDomain::CurrentDomain->ScriptsDirectory + "' folder");
+				Console->Error("The specified file '" + filename + "' was not found in '" + _appdomain->BaseDirectory + "'");
 				return;
 			}
 			else if (AllFiles->Length > 1)
 			{
-				Console->Error("The specified file '" + filename + "' was found in multiple subdirectories of the '" + ScriptDomain::CurrentDomain->ScriptsDirectory + "' folder. Please specify which file you want to load");
-				int remLength = _appdomain->SetupInformation->ApplicationBase->Length + 1;
+				Console->Error("The specified file '" + filename + "' was found in multiple subdirectories of '" + _appdomain->BaseDirectory + "'. Please specify which file you want to load");
+				int remLength = _appdomain->BaseDirectory->Length + 1;
 				for each (auto file in AllFiles)
 				{
 					Console->Info(file->Substring(remLength));
@@ -341,13 +264,13 @@ namespace GTA
 			}
 			else
 			{
-				Console->Warn("The specified file was not found in the '" + ScriptDomain::CurrentDomain->ScriptsDirectory + "' folder, loading from the '" + System::IO::Path::GetDirectoryName(AllFiles[0]->Substring(_appdomain->SetupInformation->ApplicationBase->Length + 1)) + "' sub directory");
-				filename = AllFiles[0]->Substring(_appdomain->SetupInformation->ApplicationBase->Length + 1);
+				Console->Warn("The specified file was not found in '" + _appdomain->BaseDirectory + "', loading from the '" + System::IO::Path::GetDirectoryName(AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1)) + "' sub directory");
+				filename = AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1);
 			}
 		}
 		else
 		{
-			filename = FixFilePathCasing(filename, _appdomain->SetupInformation->ApplicationBase);
+			filename = FixFilePathCasing(filename, _appdomain->BaseDirectory);
 		}
 		String ^ext = System::IO::Path::GetExtension(filename)->ToLower();
 		if (ext != ".cs" && ext != ".vb" && ext != ".dll")
@@ -355,7 +278,7 @@ namespace GTA
 			Console->Error("The specified file '" + filename + "' was not recognised as a script, please include the file extension.");
 			return;
 		}
-		String ^filepath = System::IO::Path::Combine(_appdomain->SetupInformation->ApplicationBase, filename);
+		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
 		bool found = false;
 		for each(auto val in _scriptTypes)
 		{
@@ -380,7 +303,7 @@ namespace GTA
 		}
 		else
 		{
-			String ^baseDir = _appdomain->SetupInformation->ApplicationBase;
+			String ^baseDir = _appdomain->BaseDirectory;
 			for each (auto var in _runningScripts)
 			{
 				String ^Filename = var->Filename;
@@ -394,7 +317,7 @@ namespace GTA
 	}
 	void ScriptDomain::ConsoleStartScript(String ^filename)
 	{
-		String ^filepath = System::IO::Path::Combine(_appdomain->SetupInformation->ApplicationBase, filename);
+		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
 		if (!System::IO::File::Exists(filepath))
 		{
 			Console->Error("The specified script file '" + filename + "' doesnt exist");
@@ -410,7 +333,7 @@ namespace GTA
 			}
 			catch (Exception ^ex)
 			{
-				LogToConsoleError("Failed to load assembly '", IO::Path::GetFileName(filepath), "':", Environment::NewLine, ex->ToString());
+				Console->Error("Failed to load assembly '" + IO::Path::GetFileName(filepath) + "':" + Environment::NewLine + ex->ToString());
 
 				return;
 			}
@@ -447,7 +370,7 @@ namespace GTA
 
 			if (!compilerResult->Errors->HasErrors)
 			{
-				LogToConsoleInfo("Successfully compiled '", IO::Path::GetFileName(filepath), "'.");
+				Console->Info("Successfully compiled '" + IO::Path::GetFileName(filepath) + "'.");
 
 				assembly = compilerResult->CompiledAssembly;
 			}
@@ -464,7 +387,7 @@ namespace GTA
 					errors->AppendLine();
 				}
 
-				LogToConsoleError("[ERROR]", "Failed to compile '", IO::Path::GetFileName(filepath), "' with ", compilerResult->Errors->Count.ToString(), " error(s):", Environment::NewLine, errors->ToString());
+				Console->Error("Failed to compile '" + IO::Path::GetFileName(filepath) + "' with " + compilerResult->Errors->Count.ToString() + " error(s):" + Environment::NewLine + errors->ToString());
 
 				return;
 			}
@@ -488,11 +411,11 @@ namespace GTA
 		}
 		catch (ReflectionTypeLoadException ^ex)
 		{
-			LogToConsoleError("Failed to load assembly '", IO::Path::GetFileName(filepath), "':", Environment::NewLine, ex->ToString());
+			Console->Error("Failed to load assembly '" + IO::Path::GetFileName(filepath) + "':" + Environment::NewLine, ex->ToString());
 			return;
 		}
-		LogToConsoleInfo("Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filepath), "'.");
-		LogToConsoleInfo("Starting ", count.ToString(), " script(s) ...");
+		Console->Info("Found " + count.ToString() + " script(s) in '" + IO::Path::GetFileName(filepath) + "'.");
+		Console->Info("Starting " + count.ToString() + " script(s) ...");
 
 	//	if (!SortScripts(ScriptTypes))
 	//	{
@@ -515,12 +438,83 @@ namespace GTA
 
 			script->_thread->Start();
 
-			LogToConsoleInfo("Started script '", script->Name, "'.");
+			Console->Info("Started script '" + script->Name + "'.");
 
 			_runningScripts->Add(script);
 		}
 		return;
 		
+	}
+
+	ScriptDomain ^ScriptDomain::Load(String ^path)
+	{
+		if (!IO::Path::IsPathRooted(path))
+		{
+			path = IO::Path::Combine(IO::Path::GetDirectoryName(Assembly::GetExecutingAssembly()->Location), path);
+		}
+
+		path = IO::Path::GetFullPath(path);
+
+		auto setup = gcnew AppDomainSetup();
+		setup->ApplicationBase = path;
+		setup->ShadowCopyFiles = "true";
+		setup->ShadowCopyDirectories = path;
+
+		auto appdomain = System::AppDomain::CreateDomain("ScriptDomain_" + (path->GetHashCode() * Environment::TickCount).ToString("X"), nullptr, setup, gcnew Security::PermissionSet(Security::Permissions::PermissionState::Unrestricted));
+		appdomain->InitializeLifetimeService();
+
+		ScriptDomain ^scriptdomain = nullptr;
+
+		try
+		{
+			scriptdomain = static_cast<ScriptDomain ^>(appdomain->CreateInstanceFromAndUnwrap(ScriptDomain::typeid->Assembly->Location, ScriptDomain::typeid->FullName));
+		}
+		catch (Exception ^ex)
+		{
+			Log("[ERROR]", "Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
+
+			System::AppDomain::Unload(appdomain);
+
+			return nullptr;
+		}
+
+		Log("[INFO]", "Loading scripts from '", path, "' ...");
+
+		if (IO::Directory::Exists(path))
+		{
+			auto filenameScripts = gcnew List<String ^>();
+			auto filenameAssemblies = gcnew List<String ^>();
+
+			try
+			{
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.vb", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(path, "*.cs", IO::SearchOption::AllDirectories));
+				filenameAssemblies->AddRange(IO::Directory::GetFiles(path, "*.dll", IO::SearchOption::AllDirectories));
+			}
+			catch (Exception ^ex)
+			{
+				Log("[ERROR]", "Failed to reload scripts:", Environment::NewLine, ex->ToString());
+
+				System::AppDomain::Unload(appdomain);
+
+				return nullptr;
+			}
+
+			for each (String ^filename in filenameScripts)
+			{
+				scriptdomain->LoadScript(filename);
+			}
+			for each (String ^filename in filenameAssemblies)
+			{
+				scriptdomain->LoadAssembly(filename);
+			}
+		}
+		else
+		{
+			Log("[ERROR]", "Failed to reload scripts because the directory is missing.");
+		}
+
+		return scriptdomain;
 	}
 	bool ScriptDomain::LoadScript(String ^filename)
 	{
@@ -740,42 +734,18 @@ namespace GTA
 			return;
 		}
 
-		String ^assemblyPath = Assembly::GetExecutingAssembly()->Location;
-		String ^assemblyFilename = IO::Path::GetFileNameWithoutExtension(assemblyPath);
+		// Start console
+		_console->_running = true;
+		_console->_thread = gcnew Thread(gcnew ThreadStart(_console, &Script::MainLoop));
 
-		for each (String ^path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(assemblyPath), "*.log"))
-		{
-			if (!path->StartsWith(assemblyFilename))
-			{
-				continue;
-			}
+		_console->_thread->Start();
 
-			try
-			{
-				TimeSpan logAge = DateTime::Now - DateTime::Parse(IO::Path::GetFileNameWithoutExtension(path)->Substring(path->IndexOf('-') + 1));
+		_runningScripts->Add(_console);
 
-				// Delete logs older than 5 days
-				if (logAge.Days >= 5)
-				{
-					IO::File::Delete(path);
-				}
-			}
-			catch (...)
-			{
-				continue;
-			}
-		}
+		// Start script threads
+		Log("[INFO]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
 
-		ConsoleInit();
-
-		if (_scriptTypes->Count == 0)
-		{
-			return;
-		}
-
-		Log("[DEBUG]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
-
-		if (!SortScripts(_scriptTypes))
+		if (_scriptTypes->Count == 0 || !SortScripts(_scriptTypes))
 		{
 			return;
 		}
@@ -799,11 +769,14 @@ namespace GTA
 			Log("[INFO]", "Started script '", script->Name, "'.");
 
 			_runningScripts->Add(script);
+
+			_console->RegisterCommands(scriptType->Item2);
 		}
-		ConsoleRegisterScripts();
 	}
 	void ScriptDomain::Abort()
 	{
+		_runningScripts->Remove(_console);
+
 		Log("[INFO]", "Stopping ", _runningScripts->Count.ToString(), " script(s) ...");
 
 		for each (Script ^script in _runningScripts)
@@ -812,9 +785,8 @@ namespace GTA
 
 			delete script;
 		}
+
 		_console->Abort();
-		
-		delete _console;
 
 		_scriptTypes->Clear();
 		_runningScripts->Clear();
@@ -834,27 +806,6 @@ namespace GTA
 		script->_thread = nullptr;
 
 		Log("[INFO]", "Aborted script '", script->Name, "'.");
-	}
-	void ScriptDomain::ConsoleInit()
-	{
-		if (_console != nullptr)
-		{
-			_console->Abort();
-		}
-		_console = gcnew ConsoleScript();
-		_console->_running = true;
-		_console->_filename = "internal";
-		_console->_scriptdomain = this;
-
-		_console->_thread = gcnew Thread(gcnew ThreadStart(_console, &Script::MainLoop));
-		_console->_thread->Start();
-	}
-	void ScriptDomain::ConsoleRegisterScripts()
-	{
-		for each (Script ^script in _runningScripts)
-		{
-			_console->RegisterCommands(script->GetType());
-		}
 	}
 	void ScriptDomain::DoTick()
 	{
@@ -883,38 +834,9 @@ namespace GTA
 				continue;
 			}
 		}
-		if (!DoConsoleTick())
-		{
-			ConsoleInit();
-			ConsoleRegisterScripts();
-		}
+
 		// Clean up pinned strings
 		CleanupStrings();
-	}
-	bool ScriptDomain::DoConsoleTick()
-	{
-		if (_console == nullptr || !_console->_running)
-		{
-			return false;
-		}
-
-		_executingScript = _console;
-
-		while ((_console->_running = SignalAndWait(_console->_continueEvent, _console->_waitEvent, 5000)) && _taskQueue->Count > 0)
-		{
-			_taskQueue->Dequeue()->Run();
-		}
-
-		_executingScript = nullptr;
-
-		if (!_console->_running)
-		{
-			Log("[ERROR]", "Script '", _console->Name, "' is not responding! Aborting ...");
-
-			AbortScript(_console);
-			return false;
-		}
-		return true;
 	}
 	void ScriptDomain::DoKeyboardMessage(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
@@ -945,14 +867,17 @@ namespace GTA
 			auto args = gcnew WinForms::KeyEventArgs(key);
 			auto eventinfo = gcnew Tuple<bool, WinForms::KeyEventArgs ^>(status, args);
 
-			if (!_console->IsOpen())
+			if (_console->IsOpen())
+			{
+				_console->_keyboardEvents->Enqueue(eventinfo);
+			}
+			else
 			{
 				for each (Script ^script in _runningScripts)
 				{
 					script->_keyboardEvents->Enqueue(eventinfo);
 				}
 			}
-			_console->_keyboardEvents->Enqueue(eventinfo);
 		}
 	}
 
@@ -1008,9 +933,5 @@ namespace GTA
 	Object ^ScriptDomain::InitializeLifetimeService()
 	{
 		return nullptr;
-	}
-	void ScriptDomain::SetScriptDirectory(System::String ^scriptDirectory)
-	{
-		_scriptDir = scriptDirectory;
 	}
 }
