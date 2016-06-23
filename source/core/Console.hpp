@@ -115,10 +115,10 @@ namespace GTA
 		void OnKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs  ^e);
 		void OnKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
-		void Info(System::String ^msg);
-		void Error(System::String ^msg);
-		void Warn(System::String ^msg);
-		void Debug(System::String ^msg);
+		void Info(System::String ^msg, ...array<System::Object^>^ args);
+		void Error(System::String ^msg, ...array<System::Object^>^ args);
+		void Warn(System::String ^msg, ...array<System::Object^>^ args);
+		void Debug(System::String ^msg, ...array<System::Object^>^ args);
 
 		bool IsOpen();
 		void RegisterCommands(System::Type ^type);
@@ -132,6 +132,7 @@ namespace GTA
 	private:
 		void SetControlsEnabled(bool enabled);
 		void AddLines(System::String ^prefix, array<System::String^> ^msgs);
+		void AddLines(System::String ^prefix, array<System::String^> ^msgs, System::String ^textColor);
 		System::String^ GetCharsFromKeys(System::Windows::Forms::Keys keys, bool shift, bool alt);
 		void AddToInput(System::String ^input);
 		void RemoveCharRight();
@@ -143,6 +144,9 @@ namespace GTA
 		void MoveCursorRight();
 		void MoveCursorLeft();
 
+		void PageUp();
+		void PageDown();
+
 		void GoUpCommandList();
 		void GoDownCommandList();
 
@@ -150,6 +154,8 @@ namespace GTA
 		void DrawText(float x, float y, System::String ^text, float scale, int font, System::Drawing::Color color);
 
 		float GetTextLength(System::String ^text, float scale, int font); //TODO Maybe implement somewhere else?
+
+		void DoUpdateCheck();
 
 		bool _isOpen;
 		int _page;
@@ -167,7 +173,9 @@ namespace GTA
 		System::CodeDom::Compiler::CodeDomProvider ^_compiler;
 		System::CodeDom::Compiler::CompilerParameters ^_compilerOptions;
 
-		static System::Windows::Forms::Keys ToggleKey = System::Windows::Forms::Keys::F3;
+		literal System::Windows::Forms::Keys PageUpKey = System::Windows::Forms::Keys::PageUp;
+		literal System::Windows::Forms::Keys PageDownKey = System::Windows::Forms::Keys::PageDown;
+		literal System::Windows::Forms::Keys ToggleKey = System::Windows::Forms::Keys::F3;
 
 		static int DefaultFont = 0; //Chalet London :>
 
@@ -181,6 +189,10 @@ namespace GTA
 		static const int VersionWidth = 50;
 		static const int InputHeight = 20;
 		static const float DefaultScale = 0.35f;
+		
+		static System::String ^UpdateCheckUserAgent = "scripthookvdotnet"; //Oh my dear github-api, why you do this...
+		static System::String ^UpdateCheckUrl = "https://api.github.com/repos/crosire/scripthookvdotnet/releases/latest";
+		static System::String ^UpdateCheckPattern = "\"tag_name\":\"v(.*?)\"";
 
 		static System::String ^CompileTemplate = "using System; using GTA; using GTA.Native; using Console = GTA.Console;" +
 			" public class ConsoleInput : GTA.DefaultConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
@@ -220,9 +232,9 @@ namespace GTA
 
 		//TODO Maybe change the structure, we basically just create delegate methods?
 	public:
-		static void Info(... array<System::String^> ^messages);
-		static void Error(... array<System::String^> ^messages);
-		static void Warn(... array<System::String^> ^messages);
-		static void Debug(... array<System::String^> ^messages);
+		static void Info(System::String ^msg, ... array<System::Object^> ^args);
+		static void Error(System::String ^msg, ... array<System::Object^> ^args);
+		static void Warn(System::String ^msg, ... array<System::Object^> ^args);
+		static void Debug(System::String ^msg, ... array<System::Object^> ^args);
 	};
 }

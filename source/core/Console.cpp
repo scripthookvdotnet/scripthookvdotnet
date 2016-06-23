@@ -29,6 +29,8 @@ namespace GTA
 	using namespace System::Collections::Generic;
 	using namespace System::Collections::Concurrent;
 	using namespace System::Drawing;
+	using namespace System::Net;
+	using namespace System::Text::RegularExpressions;
 	using namespace System::Threading::Tasks;
 	using namespace System::Reflection;
 	using namespace GTA::Native;
@@ -70,13 +72,18 @@ namespace GTA
 
 		_input = "";
 		_isOpen = false;
-		_page = 0;
+		_page = 1;
 		_cursorPos = 0;
 		_commandPos = -1;
 		_lines = gcnew LinkedList<String^>();
 		_commandHistory = gcnew List<String ^>();
 
-		Info("--- Console ready to go ---");
+		System::Version ^version = Assembly::GetExecutingAssembly()->GetName()->Version;
+		Info("--- Community Script Hook V .NET {0} ---", version);
+		Info("--- Type \"Help();\" to print an overview of available commands ---");
+
+		//Start a update check Task
+		Task::Factory->StartNew(gcnew Action(this, &ConsoleScript::DoUpdateCheck));
 
 		RegisterCommands(DefaultConsoleCommands::typeid, true);
 	}
@@ -86,23 +93,23 @@ namespace GTA
 		return _isOpen;
 	}
 
-	void ConsoleScript::Info(System::String ^ msg)
+	void ConsoleScript::Info(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~b~INFO~w~] ", msg->Split('\n'));
+		AddLines("[~b~INFO~w~] ", String::Format(msg, args)->Split('\n'));
 	}
 
-	void ConsoleScript::Error(System::String ^ msg)
+	void ConsoleScript::Error(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~r~ERROR~w~]", msg->Split('\n'));
+		AddLines("[~r~ERROR~w~]", String::Format(msg, args)->Split('\n'), "~r~");
 	}
 
-	void ConsoleScript::Warn(System::String ^ msg)
+	void ConsoleScript::Warn(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~o~WARN~w~] ", msg->Split('\n'));
+		AddLines("[~o~WARN~w~] ", String::Format(msg, args)->Split('\n'));
 	}
-	void ConsoleScript::Debug(System::String ^ msg)
+	void ConsoleScript::Debug(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~b~DEBUG~w~] ", msg->Split('\n'));
+		AddLines("[~c~DEBUG~w~] ", String::Format(msg, args)->Split('\n'), "~c~");
 	}
 
 	void ConsoleScript::RegisterCommands(System::Type ^ type)
@@ -165,7 +172,6 @@ namespace GTA
 			_commands[command->Namespace] = gcnew List<Tuple<ConsoleCommand^, MethodInfo^>^>();
 
 		_commands[command->Namespace]->Add(gcnew Tuple<ConsoleCommand^, MethodInfo^>(command, methodInfo));
-		Info("Registered Command: " + command->Name);
 	}
 
 	void ConsoleScript::PrintHelpString()
@@ -236,9 +242,11 @@ namespace GTA
 
 		DrawRect(0, 0, WIDTH, HEIGHT / 3, BackgroundColor);
 		DrawRect(0, HEIGHT / 3, WIDTH, InputHeight, AltBackgroundColor);
+		DrawRect(0, HEIGHT / 3 + InputHeight, 80, InputHeight, AltBackgroundColor);
 
 		DrawText(0, HEIGHT / 3, "$>", DefaultScale, DefaultFont, PrefixColor);
 		DrawText(25, HEIGHT / 3, _input, DefaultScale, DefaultFont, _compilerTask == nullptr ? InputColor : InputColorBusy);
+		DrawText(5, HEIGHT / 3 + InputHeight, "Page " + _page + "/" +  (_lines->Count == 0 ? 0 : ((_lines->Count + 16 - 1) / 16)), DefaultScale, DefaultFont, InputColor); //TODO Nicer way for page-max
 
 		if (now.Millisecond < 500)
 		{
@@ -247,12 +255,18 @@ namespace GTA
 		}
 
 		//We can't get the n-th, so let's do it with a counter
+		//page = 1 --> start: 0 end: 15
+		//page = 2 --> start: 16 end: 31
+		int start = (_page - 1) * 16; //0
+		int end = Math::Min(_lines->Count, _page * 16 - 1); //12
+
 		int i = 0;
 		for each (String ^line in _lines)
 		{
-			if (i > 15)
-				break;
-			DrawText(2, (float)((15 - i) * 14), line, DefaultScale, DefaultFont, OutputColor);
+			if (i >= start && i <= end)
+			{
+				DrawText(2, (float)((15 - (i % 16)) * 14), line, DefaultScale, DefaultFont, OutputColor);
+			}
 			i++;
 		}
 	}
@@ -290,6 +304,11 @@ namespace GTA
 			break;
 		case Keys::Down:
 			GoDownCommandList();
+		case PageUpKey:
+			PageUp();
+			break;
+		case PageDownKey:
+			PageDown();
 			break;
 		case Keys::Enter:
 			ExecuteInput();
@@ -318,11 +337,15 @@ namespace GTA
 			Function::Call(Hash::DISABLE_CONTROL_ACTION, 0, i, enabled);
 		}
 	}
-	void ConsoleScript::AddLines(System::String ^prefix, array<System::String^> ^msgs)
+	void ConsoleScript::AddLines(String ^prefix, array<String^> ^msgs)
+	{
+		AddLines(prefix, msgs, "~w~");
+	}
+	void ConsoleScript::AddLines(String ^prefix, array<String^> ^msgs, String ^textColor)
 	{
 		for (int i = 0; i < msgs->Length; i++)
 		{
-			msgs[i] = String::Format("~c~[{0}] ~w~{1} {2}", DateTime::Now.ToString("HH:mm:ss"), prefix, msgs[i]); //Add proper styling
+			msgs[i] = String::Format("~c~[{0}] ~w~{1} {2}{3}", DateTime::Now.ToString("HH:mm:ss"), prefix, textColor, msgs[i]); //Add proper styling
 		}
 		_outputQueue->Enqueue(msgs);
 	}
@@ -392,7 +415,7 @@ namespace GTA
 		}
 		else
 		{
-			Error("Couldn't compile input-string");
+			Error(String::Format("Couldn't compile input-string: {0}", _input));
 
 			StringBuilder ^errors = gcnew StringBuilder();
 
@@ -439,6 +462,16 @@ namespace GTA
 	{
 		if (_cursorPos < _input->Length)
 			_cursorPos++;
+	}
+	void ConsoleScript::PageUp()
+	{
+		if (_page + 1 <= ((_lines->Count + 16 - 1) / 16))
+			_page++;
+	}
+	void ConsoleScript::PageDown()
+	{
+		if (_page - 1 >= 1)
+			_page--;
 	}
 	void ConsoleScript::GoUpCommandList()
 	{
@@ -505,6 +538,41 @@ namespace GTA
 		return Function::Call<float>(Hash::_GET_TEXT_SCREEN_WIDTH, 1);
 	}
 
+	void ConsoleScript::DoUpdateCheck()
+	{
+		Version ^curVersion = Assembly::GetExecutingAssembly()->GetName()->Version;
+		WebClient ^webclient = gcnew WebClient();
+		webclient->Headers->Add("user-agent", UpdateCheckUserAgent);
+
+		try
+		{
+			String ^response = webclient->DownloadString(UpdateCheckUrl);
+			if (!String::IsNullOrEmpty(response))
+			{
+				Regex ^regex = gcnew Regex(UpdateCheckPattern);
+				Match ^match = regex->Match(response);
+
+				if (match->Success)
+				{
+					Version ^fetchedVersion = gcnew Version(match->Groups[1]->Value);
+					if (fetchedVersion > curVersion)
+						Info("There is a new SHV.NET Version available: ~y~v{0}", fetchedVersion);
+					else
+						Info("You're running on the latest SHV.NET Version");
+					return;
+				}
+			}
+		}
+		catch (Exception ^e)
+		{
+			Warn("SHV.NET Update-Check failed: {0}", e->Message);
+			return;
+		}
+		Warn("SHV.NET Update-Check failed");
+
+		delete webclient;
+	}
+
 	ConsoleArg::ConsoleArg(System::String ^ type, System::String ^ name) : _type(type), _name(name)
 	{
 		
@@ -539,32 +607,20 @@ namespace GTA
 		ScriptDomain::CurrentDomain->Console->Clear();
 	}
 
-	void Console::Info(... array<String^> ^messages)
+	void Console::Info(String ^ msg, ...array<Object^>^ args)
 	{
-		for each (String^ message in messages)
-		{
-			ScriptDomain::CurrentDomain->Console->Info(message);
-		}
+		ScriptDomain::CurrentDomain->Console->Info(msg, args);
 	}
-	void Console::Error(... array<String^> ^messages)
+	void Console::Error(String ^ msg, ...array<Object^>^ args)
 	{
-		for each (String^ message in messages)
-		{
-			ScriptDomain::CurrentDomain->Console->Error(message);
-		}
+		ScriptDomain::CurrentDomain->Console->Error(msg, args);
 	}
-	void Console::Warn(... array<String^> ^messages)
+	void Console::Warn(String ^ msg, ...array<Object^>^ args)
 	{
-		for each (String^ message in messages)
-		{
-			ScriptDomain::CurrentDomain->Console->Warn(message);
-		}
+		ScriptDomain::CurrentDomain->Console->Warn(msg, args);
 	}
-	void Console::Debug(... array<System::String^> ^messages)
+	void Console::Debug(String ^ msg, ...array<Object^>^ args)
 	{
-		for each (String^ message in messages)
-		{
-			ScriptDomain::CurrentDomain->Console->Warn(message);
-		}
+		ScriptDomain::CurrentDomain->Console->Debug(msg, args);
 	}
 }
