@@ -8,13 +8,10 @@
       <DataSource Persistence="ProjectFile" ItemType="CsCompile" />
     </Rule.DataSource>
     <Rule.Categories>
-      <Category Name="General">
-        <Category.DisplayName>
-          <sys:String>General</sys:String>
-        </Category.DisplayName>
-      </Category>
+      <Category Name="General" DisplayName="General" />
+      <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
     </Rule.Categories>
-    <BoolProperty Name="Optimize" DisplayName="Optimize" />
-    <StringListProperty Name="NoWarn" DisplayName="Disable Specific Warnings" />
+    <BoolProperty Name="Optimize" DisplayName="Optimize" Category="General" />
+    <StringListProperty Name="NoWarn" DisplayName="Disable Specific Warnings" Category="General" />
   </Rule>
 </ProjectSchemaDefinitions>

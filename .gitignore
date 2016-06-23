@@ -19,6 +19,3 @@ ipch/
 # Temporary OS files
 .DS_Store
 Thumbs.db
-
-# Generated files
-source/core/NativeHashes.hpp
