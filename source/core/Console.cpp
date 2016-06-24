@@ -590,11 +590,52 @@ namespace GTA
 	}
 	void DefaultConsoleCommands::Load(String ^filename)
 	{
-		ScriptDomain::CurrentDomain->ConsoleLoadScript(filename);
+		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
+
+		if (!IO::File::Exists(IO::Path::Combine(basedirectory, filename)))
+		{
+			array<String ^> ^files = IO::Directory::GetFiles(basedirectory, filename, IO::SearchOption::AllDirectories);
+
+			if (files->Length != 1)
+			{
+				Console::Error("The file '" + filename + "' was not found in '" + basedirectory + "'");
+				return;
+			}
+
+			Console::Warn("The file '" + filename + "' was not found in '" + basedirectory + "', loading from '" + IO::Path::GetDirectoryName(files[0]->Substring(basedirectory->Length + 1)) + "' instead");
+
+			filename = files[0]->Substring(basedirectory->Length + 1);
+		}
+		else
+		{
+			filename = IO::Path::Combine(basedirectory, filename);
+		}
+
+		filename = IO::Path::GetFullPath(filename);
+
+		String ^extension = System::IO::Path::GetExtension(filename)->ToLower();
+
+		if (extension != ".cs" && extension != ".vb" && extension != ".dll")
+		{
+			Console::Error("The file '" + filename + "' was not recognized as a script file");
+			return;
+		}
+
+		for each (auto script in ScriptDomain::CurrentDomain->RunningScripts)
+		{
+			if (filename->Equals(script->Filename, StringComparison::OrdinalIgnoreCase) && script->_running)
+			{
+				Console::Error("The script is already running");
+				return;
+			}
+		}
+
+		ScriptDomain::CurrentDomain->StartScript(filename);
 	}
 	void DefaultConsoleCommands::Reload(String ^filename)
 	{
-		ScriptDomain::CurrentDomain->ConsoleReloadScript(filename);
+		Abort(filename);
+		Load(filename);
 	}
 	void DefaultConsoleCommands::List()
 	{
@@ -624,6 +665,7 @@ namespace GTA
 	void DefaultConsoleCommands::Abort(String ^filename)
 	{
 		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
+
 		filename = IO::Path::Combine(basedirectory, filename);
 
 		if (!IO::File::Exists(filename))

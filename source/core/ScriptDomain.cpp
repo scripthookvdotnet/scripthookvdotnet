@@ -67,35 +67,33 @@ namespace GTA
 				fs->Close();
 			}
 		}
-		catch (...)
+		catch (...) { }
+
+		if (Object::ReferenceEquals(ScriptDomain::CurrentDomain, nullptr))
 		{
 			return;
 		}
-	}
-	String^ FixFilePathCasing(String ^filePath, String ^BaseDir = nullptr)
-	{
-		if (!String::IsNullOrEmpty(BaseDir))
+
+		auto console = ScriptDomain::CurrentDomain->Console;
+
+		if (!Object::ReferenceEquals(console, nullptr))
 		{
-			filePath = System::IO::Path::Combine(BaseDir, filePath);
-		}
-		String^  sTmp = "";
-		for each(String^  sPth in filePath->Split('\\'))
-		{
-			if (String::IsNullOrEmpty(sTmp))
+			if (logLevel == "[INFO]")
 			{
-				sTmp = sPth + "\\";
-				continue;
+				console->Info(String::Join(String::Empty, message));
+				return;
 			}
-			sTmp = System::IO::Directory::GetFileSystemEntries(sTmp, sPth)[0];
-		}
-		if (!String::IsNullOrEmpty(BaseDir))
-		{
-			if (sTmp->StartsWith(BaseDir))
+			if (logLevel == "[ERROR]")
 			{
-				sTmp = sTmp->Substring(BaseDir->Length + (BaseDir->EndsWith("\\") ? 0 : 1));
+				console->Error(String::Join(String::Empty, message));
+				return;
+			}
+			if (logLevel == "[WARNING]")
+			{
+				console->Warn(String::Join(String::Empty, message));
+				return;
 			}
 		}
-		return sTmp;
 	}
 	Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
 	{
@@ -140,238 +138,6 @@ namespace GTA
 	ScriptDomain::~ScriptDomain()
 	{
 		CleanupStrings();
-	}
-
-	void ScriptDomain::ConsoleLoadScript(String ^filename)
-	{
-		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->BaseDirectory, filename)))
-		{
-			array<String ^> ^AllFiles = System::IO::Directory::GetFiles(_appdomain->BaseDirectory, filename, System::IO::SearchOption::AllDirectories);
-			if (AllFiles->Length == 0)
-			{
-				Console->Error("The specified file '" + filename + "' was not found in '" + _appdomain->BaseDirectory + "'");
-				return;
-			}
-			else if (AllFiles->Length > 1)
-			{
-				Console->Error("The specified file '" + filename + "' was found in multiple subdirectories of '" + _appdomain->BaseDirectory + "'. Please specify which file you want to load");
-				int remLength = _appdomain->BaseDirectory->Length + 1;
-				for each (auto file in AllFiles)
-				{
-					Console->Info(file->Substring(remLength));
-				}
-				return;
-			}
-			else
-			{
-				Console->Warn("The specified file was not found in '" + _appdomain->BaseDirectory + "', loading from the '" + System::IO::Path::GetDirectoryName(AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1)) + "' sub directory");
-				filename = AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1);
-			}
-		}
-		else
-		{
-			filename = FixFilePathCasing(filename, _appdomain->BaseDirectory);
-		}
-		String ^ext = System::IO::Path::GetExtension(filename)->ToLower();
-		if (ext != ".cs" && ext != ".vb" && ext != ".dll")
-		{
-			Console->Error("The specified file '" + filename + "' was not recognised as a script, please include the file extension.");
-			return;
-		}
-		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
-		for each(auto val in _scriptTypes)
-		{
-			if (filepath->Equals(val->Item1, StringComparison::InvariantCultureIgnoreCase))
-			{
-				Console->Warn("The script is currently loaded, unloading");
-				ConsoleUnloadScript(filename);
-				break;
-			}
-		}
-		ConsoleStartScript(filename);
-	}
-	void ScriptDomain::ConsoleReloadScript(String ^filename)
-	{
-		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->BaseDirectory, filename)))
-		{
-			array<String ^> ^AllFiles = System::IO::Directory::GetFiles(_appdomain->BaseDirectory, filename, System::IO::SearchOption::AllDirectories);
-			if (AllFiles->Length == 0)
-			{
-				Console->Error("The specified file '" + filename + "' was not found in '" + _appdomain->BaseDirectory + "'");
-				return;
-			}
-			else if (AllFiles->Length > 1)
-			{
-				Console->Error("The specified file '" + filename + "' was found in multiple subdirectories of '" + _appdomain->BaseDirectory + "'. Please specify which file you want to load");
-				int remLength = _appdomain->BaseDirectory->Length + 1;
-				for each (auto file in AllFiles)
-				{
-					Console->Info(file->Substring(remLength));
-				}
-				return;
-			}
-			else
-			{
-				Console->Warn("The specified file was not found in '" + _appdomain->BaseDirectory + "', loading from the '" + System::IO::Path::GetDirectoryName(AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1)) + "' sub directory");
-				filename = AllFiles[0]->Substring(_appdomain->BaseDirectory->Length + 1);
-			}
-		}
-		else
-		{
-			filename = FixFilePathCasing(filename, _appdomain->BaseDirectory);
-		}
-		String ^ext = System::IO::Path::GetExtension(filename)->ToLower();
-		if (ext != ".cs" && ext != ".vb" && ext != ".dll")
-		{
-			Console->Error("The specified file '" + filename + "' was not recognised as a script, please include the file extension.");
-			return;
-		}
-		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
-		bool found = false;
-		for each(auto val in _scriptTypes)
-		{
-			if (filepath->Equals(val->Item1, StringComparison::InvariantCultureIgnoreCase))
-			{
-				ConsoleUnloadScript(filename);
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-		{
-			Console->Warn("The script was not currently running.");
-		}
-		ConsoleStartScript(filename);
-	}
-	void ScriptDomain::ConsoleStartScript(String ^filename)
-	{
-		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
-		if (!System::IO::File::Exists(filepath))
-		{
-			Console->Error("The specified script file '" + filename + "' doesnt exist");
-			return;
-		}
-		String ^extension = IO::Path::GetExtension(filepath);
-		Assembly^ assembly = nullptr;
-		if (extension->Equals(".dll", StringComparison::InvariantCultureIgnoreCase))
-		{
-			try
-			{
-				assembly = Assembly::Load(System::IO::File::ReadAllBytes(filename));
-			}
-			catch (Exception ^ex)
-			{
-				Console->Error("Failed to load assembly '" + IO::Path::GetFileName(filepath) + "':" + Environment::NewLine + ex->ToString());
-
-				return;
-			}
-		}
-		else
-		{
-			auto compilerOptions = gcnew CodeDom::Compiler::CompilerParameters();
-			compilerOptions->CompilerOptions = "/optimize";
-			compilerOptions->GenerateInMemory = true;
-			compilerOptions->IncludeDebugInformation = true;
-			compilerOptions->ReferencedAssemblies->Add("System.dll");
-			compilerOptions->ReferencedAssemblies->Add("System.Core.dll");
-			compilerOptions->ReferencedAssemblies->Add("System.Drawing.dll");
-			compilerOptions->ReferencedAssemblies->Add("System.Windows.Forms.dll");
-			compilerOptions->ReferencedAssemblies->Add("System.XML.dll");
-			compilerOptions->ReferencedAssemblies->Add("System.XML.Linq.dll");
-			compilerOptions->ReferencedAssemblies->Add(GTA::Script::typeid->Assembly->Location);
-
-			CodeDom::Compiler::CodeDomProvider ^compiler = nullptr;
-			if (extension->Equals(".cs", StringComparison::InvariantCultureIgnoreCase))
-			{
-				compiler = gcnew Microsoft::CSharp::CSharpCodeProvider();
-				compilerOptions->CompilerOptions += " /unsafe";
-			}
-			else if (extension->Equals(".vb", StringComparison::InvariantCultureIgnoreCase))
-			{
-				compiler = gcnew Microsoft::VisualBasic::VBCodeProvider();
-			}
-			else
-			{
-				return;
-			}
-			CodeDom::Compiler::CompilerResults ^compilerResult = compiler->CompileAssemblyFromFile(compilerOptions, filepath);
-
-			if (!compilerResult->Errors->HasErrors)
-			{
-				Console->Info("Successfully compiled '" + IO::Path::GetFileName(filepath) + "'.");
-
-				assembly = compilerResult->CompiledAssembly;
-			}
-			else
-			{
-				auto errors = gcnew Text::StringBuilder();
-
-				for each (CodeDom::Compiler::CompilerError ^error in compilerResult->Errors)
-				{
-					errors->Append("   at line ");
-					errors->Append(error->Line);
-					errors->Append(": ");
-					errors->Append(error->ErrorText);
-					errors->AppendLine();
-				}
-
-				Console->Error("Failed to compile '" + IO::Path::GetFileName(filepath) + "' with " + compilerResult->Errors->Count.ToString() + " error(s):" + Environment::NewLine + errors->ToString());
-
-				return;
-			}
-		}
-
-		unsigned int count = 0;
-		List<Tuple<String ^, Type ^>^>^ ScriptTypes = gcnew List<Tuple<String ^, Type ^>^>();
-		try
-		{
-			for each (auto type in assembly->GetTypes())
-			{
-				if (!type->IsSubclassOf(Script::typeid))
-				{
-					continue;
-				}
-
-				count++;
-				_scriptTypes->Add(gcnew Tuple<String ^, Type ^>(filepath, type));
-				ScriptTypes->Add(gcnew Tuple<String ^, Type ^>(filepath, type));
-			}
-		}
-		catch (ReflectionTypeLoadException ^ex)
-		{
-			Console->Error("Failed to load assembly '" + IO::Path::GetFileName(filepath) + "':" + Environment::NewLine, ex->ToString());
-			return;
-		}
-		Console->Info("Found " + count.ToString() + " script(s) in '" + IO::Path::GetFileName(filepath) + "'.");
-		Console->Info("Starting " + count.ToString() + " script(s) ...");
-
-	//	if (!SortScripts(ScriptTypes))
-	//	{
-	//		return;
-	//	}
-
-		for each (auto scriptType in ScriptTypes)
-		{
-			Script ^script = InstantiateScript(scriptType->Item2);
-
-			if (Object::ReferenceEquals(script, nullptr))
-			{
-				continue;
-			}
-
-			script->_running = true;
-			script->_filename = scriptType->Item1;
-			script->_scriptdomain = this;
-			script->_thread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
-
-			script->_thread->Start();
-
-			Console->Info("Started script '" + script->Name + "'.");
-
-			_runningScripts->Add(script);
-		}
-		return;
-		
 	}
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
@@ -703,6 +469,72 @@ namespace GTA
 			_console->RegisterCommands(scriptType->Item2);
 		}
 	}
+	void ScriptDomain::StartScript(String ^filename)
+	{
+		filename = IO::Path::GetFullPath(filename);
+
+		int offset = _scriptTypes->Count;
+		String ^extension = IO::Path::GetExtension(filename);
+
+		if (!extension->Equals(".dll", StringComparison::OrdinalIgnoreCase))
+		{
+			if (!LoadScript(filename))
+			{
+				return;
+			}
+		}
+		else
+		{
+			Assembly ^assembly = nullptr;
+
+			try
+			{
+				assembly = Assembly::Load(IO::File::ReadAllBytes(filename));
+			}
+			catch (Exception ^ex)
+			{
+				Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
+				return;
+			}
+
+			if (!LoadAssembly(filename, assembly))
+			{
+				return;
+			}
+		}
+
+		auto types = gcnew List<Type ^>();
+
+		for (int i = offset; i < _scriptTypes->Count; i++)
+		{
+			types->Add(_scriptTypes[i]->Item2);
+		}
+
+		Log("[INFO]", "Starting ", types->Count.ToString(), " script(s) ...");
+
+		for each (auto type in types)
+		{
+			Script ^script = InstantiateScript(type);
+
+			if (Object::ReferenceEquals(script, nullptr))
+			{
+				continue;
+			}
+
+			script->_running = true;
+			script->_filename = filename;
+			script->_scriptdomain = this;
+			script->_thread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
+
+			script->_thread->Start();
+
+			Log("[INFO]", "Started script '", script->Name, "'.");
+
+			_runningScripts->Add(script);
+
+			_console->RegisterCommands(type);
+		}
+	}
 	void ScriptDomain::Abort()
 	{
 		_runningScripts->Remove(_console);
@@ -741,11 +573,6 @@ namespace GTA
 	}
 	void ScriptDomain::AbortScript(String ^filename)
 	{
-		if (!IO::Path::IsPathRooted(filename))
-		{
-			filename = IO::Path::Combine(_appdomain->BaseDirectory, filename);
-		}
-
 		filename = IO::Path::GetFullPath(filename);
 
 		for each (Script ^script in _runningScripts)
@@ -761,8 +588,10 @@ namespace GTA
 	void ScriptDomain::DoTick()
 	{
 		// Execute scripts
-		for each (Script ^script in _runningScripts)
+		for (int i = 0; i < _runningScripts->Count; i++)
 		{
+			Script ^script = _runningScripts[i];
+
 			if (!script->_running)
 			{
 				continue;

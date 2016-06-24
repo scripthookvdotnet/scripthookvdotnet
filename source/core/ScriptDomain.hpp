@@ -85,6 +85,7 @@ namespace GTA
 		}
 
 		void Start();
+		void StartScript(System::String ^filename);
 		void Abort();
 		static void AbortScript(Script ^script);
 		void AbortScript(System::String ^filename);
@@ -104,10 +105,6 @@ namespace GTA
 		}
 		System::String ^LookupScriptFilename(System::Type ^scripttype);
 		System::Object ^InitializeLifetimeService() override;
-
-		void ConsoleLoadScript(System::String ^filename);
-		void ConsoleReloadScript(System::String ^filename);
-		void ConsoleStartScript(System::String ^filename);
 
 	private:
 		bool LoadScript(System::String ^filename);
