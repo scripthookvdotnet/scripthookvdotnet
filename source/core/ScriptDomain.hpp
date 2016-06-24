@@ -87,6 +87,7 @@ namespace GTA
 		void Start();
 		void Abort();
 		static void AbortScript(Script ^script);
+		void AbortScript(System::String ^filename);
 		void DoTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
@@ -117,7 +118,6 @@ namespace GTA
 		void CleanupStrings();
 
 		static ScriptDomain ^sCurrentDomain;
-		System::String ^_scriptDir;
 		System::AppDomain ^_appdomain;
 		ConsoleScript ^_console;
 		int _executingThreadId;

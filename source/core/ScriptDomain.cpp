@@ -102,7 +102,7 @@ namespace GTA
 		auto assembly = Script::typeid->Assembly;
 		auto assemblyName = gcnew AssemblyName(args->Name);
 
-		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
+		if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::OrdinalIgnoreCase))
 		{
 			if (assemblyName->Version->Major != assembly->GetName()->Version->Major)
 			{
@@ -513,12 +513,12 @@ namespace GTA
 		String ^extension = IO::Path::GetExtension(filename);
 		CodeDom::Compiler::CodeDomProvider ^compiler = nullptr;
 
-		if (extension->Equals(".cs", StringComparison::InvariantCultureIgnoreCase))
+		if (extension->Equals(".cs", StringComparison::OrdinalIgnoreCase))
 		{
 			compiler = gcnew Microsoft::CSharp::CSharpCodeProvider();
 			compilerOptions->CompilerOptions += " /unsafe";
 		}
-		else if (extension->Equals(".vb", StringComparison::InvariantCultureIgnoreCase))
+		else if (extension->Equals(".vb", StringComparison::OrdinalIgnoreCase))
 		{
 			compiler = gcnew Microsoft::VisualBasic::VBCodeProvider();
 		}
@@ -555,7 +555,7 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename)
 	{
-		if (IO::Path::GetFileNameWithoutExtension(filename)->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
+		if (IO::Path::GetFileNameWithoutExtension(filename)->StartsWith("ScriptHookVDotNet", StringComparison::OrdinalIgnoreCase))
 		{
 			Log("[WARNING]", "Skipped assembly '", IO::Path::GetFileName(filename), "'. Please remove it from the directory.");
 
@@ -579,6 +579,8 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename, Assembly ^assembly)
 	{
+		filename = IO::Path::GetFullPath(filename);
+
 		unsigned int count = 0;
 
 		try
@@ -635,7 +637,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log("[INFO]", "Instantiating script '", scriptType->FullName, "' in script domain '", Name, "' ...");
+		Log("[INFO]", "Instantiating script '", scriptType->FullName, "' ...");
 
 		try
 		{
@@ -785,7 +787,28 @@ namespace GTA
 		script->_thread->Abort();
 		script->_thread = nullptr;
 
+		script->_scriptdomain->_console->UnregisterCommands(script->GetType());
+
 		Log("[INFO]", "Aborted script '", script->Name, "'.");
+	}
+	void ScriptDomain::AbortScript(String ^filename)
+	{
+		if (!IO::Path::IsPathRooted(filename))
+		{
+			filename = IO::Path::Combine(_appdomain->BaseDirectory, filename);
+		}
+
+		filename = IO::Path::GetFullPath(filename);
+
+		for each (Script ^script in _runningScripts)
+		{
+			if (!filename->Equals(script->Filename, StringComparison::OrdinalIgnoreCase))
+			{
+				continue;
+			}
+
+			script->Abort();
+		}
 	}
 	void ScriptDomain::DoTick()
 	{
@@ -847,7 +870,7 @@ namespace GTA
 			auto args = gcnew WinForms::KeyEventArgs(key);
 			auto eventinfo = gcnew Tuple<bool, WinForms::KeyEventArgs ^>(status, args);
 
-			if (_console->IsOpen())
+			if (!ReferenceEquals(_console, nullptr) && _console->IsOpen())
 			{
 				_console->_keyboardEvents->Enqueue(eventinfo);
 			}

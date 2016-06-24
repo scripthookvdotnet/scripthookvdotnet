@@ -602,9 +602,10 @@ namespace GTA
 	}
 	void DefaultConsoleCommands::List()
 	{
-		array<Script ^> ^scripts = ScriptDomain::CurrentDomain->RunningScripts;
+		auto scripts = gcnew Collections::Generic::List<Script ^>(ScriptDomain::CurrentDomain->RunningScripts);
+		scripts->Remove(ScriptDomain::CurrentDomain->Console);
 
-		if (scripts->Length <= 1)
+		if (scripts->Count == 0)
 		{
 			Console::Info("There are no scripts loaded");
 			return;
@@ -614,20 +615,50 @@ namespace GTA
 
 		for each (auto script in scripts)
 		{
-			if (script->GetType() == ConsoleScript::typeid)
-			{
-				continue;
-			}
-
 			String ^filename = script->Filename;
 
-			if (filename->StartsWith(basedirectory))
+			if (filename->StartsWith(basedirectory, StringComparison::OrdinalIgnoreCase))
 			{
 				filename = filename->Substring(basedirectory->Length + 1);
 			}
 
 			Console::Info(filename + ": " + script->Name + (script->_running ? " [running]" : " [aborted]"));
 		}
+	}
+	void DefaultConsoleCommands::Abort(String ^filename)
+	{
+		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
+
+		if (!IO::File::Exists(IO::Path::Combine(basedirectory, filename)))
+		{
+			array<String ^> ^files = IO::Directory::GetFiles(basedirectory, filename, IO::SearchOption::AllDirectories);
+
+			if (files->Length == 0)
+			{
+				Console::Error("The file '" + filename + "' was not found in '" + basedirectory + "'");
+				return;
+			}
+			else if (files->Length > 1)
+			{
+				Console::Error("The file '" + filename + "' was found in multiple subdirectories of '" + basedirectory + "'. Please specify which file you meant.");
+
+				for each (auto file in files)
+				{
+					Console::Info(file->Substring(basedirectory->Length + 1));
+				}
+				return;
+			}
+
+			Console::Warn("The file '" + filename + "' was not found in '" + basedirectory + "', using '" + IO::Path::GetDirectoryName(files[0]->Substring(basedirectory->Length + 1)) + "' instead");
+
+			filename = files[0];
+		}
+		else
+		{
+			filename = IO::Path::Combine(basedirectory, filename);
+		}
+
+		ScriptDomain::CurrentDomain->AbortScript(filename);
 	}
 	void DefaultConsoleCommands::Clear()
 	{
