@@ -16,8 +16,6 @@
 
 #pragma once
 
-#include "Native.hpp"
-#include "NativeHashes.hpp"
 #include "Script.hpp"
 
 namespace GTA 

@@ -18,6 +18,8 @@
 
 #include "Console.hpp"
 #include "ScriptDomain.hpp"
+#include "Native.hpp"
+#include "NativeHashes.hpp"
 #include <Windows.h>
 
 namespace GTA

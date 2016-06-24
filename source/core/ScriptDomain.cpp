@@ -309,7 +309,7 @@ namespace GTA
 		{
 			try
 			{
-				assembly = Assembly::LoadFrom(filepath);
+				assembly = Assembly::Load(System::IO::File::ReadAllBytes(filename));
 			}
 			catch (Exception ^ex)
 			{
