@@ -336,6 +336,11 @@ namespace GTA
 	{
 		for (int i = 0; i < 338; i++)
 		{
+			if (i >= 1 && i <= 6)
+			{
+				continue;
+			}
+
 			Function::Call(Hash::DISABLE_CONTROL_ACTION, 0, i, enabled);
 		}
 	}
