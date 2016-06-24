@@ -76,6 +76,13 @@ namespace GTA
 				return _console;
 			}
 		}
+		property array<Script ^> ^RunningScripts
+		{
+			array<Script ^> ^get()
+			{
+				return _runningScripts->ToArray();
+			}
+		}
 
 		void Start();
 		void Abort();
@@ -100,7 +107,6 @@ namespace GTA
 		void ConsoleLoadScript(System::String ^filename);
 		void ConsoleUnloadScript(System::String ^filename);
 		void ConsoleReloadScript(System::String ^filename);
-		void ConsoleListScripts();
 		void ConsoleStartScript(System::String ^filename);
 
 	private:

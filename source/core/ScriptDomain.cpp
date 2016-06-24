@@ -295,26 +295,6 @@ namespace GTA
 		}
 		ConsoleStartScript(filename);
 	}
-	void ScriptDomain::ConsoleListScripts()
-	{
-		if (_runningScripts->Count == 0)
-		{
-			Console->Info("There are no scripts loaded");
-		}
-		else
-		{
-			String ^baseDir = _appdomain->BaseDirectory;
-			for each (auto var in _runningScripts)
-			{
-				String ^Filename = var->Filename;
-				if (Filename->StartsWith(baseDir))
-				{
-					Filename = Filename->Substring(baseDir->Length + 1/*the trailing \\*/);
-				}
-				Console->Info(Filename + ": " + var->Name + " - " + (var->_running ? "running" : "aborted"));
-			}
-		}
-	}
 	void ScriptDomain::ConsoleStartScript(String ^filename)
 	{
 		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);

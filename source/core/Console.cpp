@@ -80,7 +80,7 @@ namespace GTA
 
 		System::Version ^version = Assembly::GetExecutingAssembly()->GetName()->Version;
 		Info("--- Community Script Hook V .NET {0} ---", version);
-		Info("--- Type \"Help();\" to print an overview of available commands ---");
+		Info("--- Type \"Help()\" to print an overview of available commands ---");
 
 		//Start a update check Task
 		Task::Factory->StartNew(gcnew Action(this, &ConsoleScript::DoUpdateCheck));
@@ -582,7 +582,7 @@ namespace GTA
 	{
 		ScriptDomain::CurrentDomain->Console->PrintHelpString();
 	}
-	void DefaultConsoleCommands::Help(String ^ command) //TODO Add all commands
+	void DefaultConsoleCommands::Help(String ^command) //TODO Add all commands
 	{
 		
 	}
@@ -600,26 +600,46 @@ namespace GTA
 	}
 	void DefaultConsoleCommands::List()
 	{
-		ScriptDomain::CurrentDomain->ConsoleListScripts();
+		array<Script ^> ^scripts = ScriptDomain::CurrentDomain->RunningScripts;
+
+		if (scripts->Length == 0)
+		{
+			Console::Info("There are no scripts loaded");
+			return;
+		}
+
+		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
+
+		for each (auto script in scripts)
+		{
+			String ^filename = script->Filename;
+
+			if (filename->StartsWith(basedirectory))
+			{
+				filename = filename->Substring(basedirectory->Length + 1);
+			}
+
+			Console::Info(filename + ": " + script->Name + (script->_running ? " [running]" : " [aborted]"));
+		}
 	}
 	void DefaultConsoleCommands::Clear()
 	{
 		ScriptDomain::CurrentDomain->Console->Clear();
 	}
 
-	void Console::Info(String ^ msg, ...array<Object^>^ args)
+	void Console::Info(String ^msg, ...array<Object ^> ^args)
 	{
 		ScriptDomain::CurrentDomain->Console->Info(msg, args);
 	}
-	void Console::Error(String ^ msg, ...array<Object^>^ args)
+	void Console::Error(String ^msg, ...array<Object ^> ^args)
 	{
 		ScriptDomain::CurrentDomain->Console->Error(msg, args);
 	}
-	void Console::Warn(String ^ msg, ...array<Object^>^ args)
+	void Console::Warn(String ^msg, ...array<Object ^> ^args)
 	{
 		ScriptDomain::CurrentDomain->Console->Warn(msg, args);
 	}
-	void Console::Debug(String ^ msg, ...array<Object^>^ args)
+	void Console::Debug(String ^msg, ...array<Object ^> ^args)
 	{
 		ScriptDomain::CurrentDomain->Console->Debug(msg, args);
 	}
