@@ -602,7 +602,7 @@ namespace GTA
 	{
 		array<Script ^> ^scripts = ScriptDomain::CurrentDomain->RunningScripts;
 
-		if (scripts->Length == 0)
+		if (scripts->Length <= 1)
 		{
 			Console::Info("There are no scripts loaded");
 			return;
@@ -612,6 +612,11 @@ namespace GTA
 
 		for each (auto script in scripts)
 		{
+			if (script->GetType() == ConsoleScript::typeid)
+			{
+				continue;
+			}
+
 			String ^filename = script->Filename;
 
 			if (filename->StartsWith(basedirectory))
