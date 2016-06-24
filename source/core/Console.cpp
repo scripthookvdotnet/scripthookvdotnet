@@ -588,17 +588,13 @@ namespace GTA
 	{
 		
 	}
-	void DefaultConsoleCommands::Load(String ^ script)
+	void DefaultConsoleCommands::Load(String ^filename)
 	{
-		ScriptDomain::CurrentDomain->ConsoleLoadScript(script);
+		ScriptDomain::CurrentDomain->ConsoleLoadScript(filename);
 	}
-	void DefaultConsoleCommands::Unload(String ^ script)
+	void DefaultConsoleCommands::Reload(String ^filename)
 	{
-		ScriptDomain::CurrentDomain->ConsoleUnloadScript(script);
-	}
-	void DefaultConsoleCommands::Reload(String ^ script)
-	{
-		ScriptDomain::CurrentDomain->ConsoleReloadScript(script);
+		ScriptDomain::CurrentDomain->ConsoleReloadScript(filename);
 	}
 	void DefaultConsoleCommands::List()
 	{
@@ -628,34 +624,12 @@ namespace GTA
 	void DefaultConsoleCommands::Abort(String ^filename)
 	{
 		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
+		filename = IO::Path::Combine(basedirectory, filename);
 
-		if (!IO::File::Exists(IO::Path::Combine(basedirectory, filename)))
+		if (!IO::File::Exists(filename))
 		{
-			array<String ^> ^files = IO::Directory::GetFiles(basedirectory, filename, IO::SearchOption::AllDirectories);
-
-			if (files->Length == 0)
-			{
-				Console::Error("The file '" + filename + "' was not found in '" + basedirectory + "'");
-				return;
-			}
-			else if (files->Length > 1)
-			{
-				Console::Error("The file '" + filename + "' was found in multiple subdirectories of '" + basedirectory + "'. Please specify which file you meant.");
-
-				for each (auto file in files)
-				{
-					Console::Info(file->Substring(basedirectory->Length + 1));
-				}
-				return;
-			}
-
-			Console::Warn("The file '" + filename + "' was not found in '" + basedirectory + "', using '" + IO::Path::GetDirectoryName(files[0]->Substring(basedirectory->Length + 1)) + "' instead");
-
-			filename = files[0];
-		}
-		else
-		{
-			filename = IO::Path::Combine(basedirectory, filename);
+			Console::Error("The file '" + filename + "' was not found");
+			return;
 		}
 
 		ScriptDomain::CurrentDomain->AbortScript(filename);

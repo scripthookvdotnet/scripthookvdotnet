@@ -190,58 +190,6 @@ namespace GTA
 		}
 		ConsoleStartScript(filename);
 	}
-	void ScriptDomain::ConsoleUnloadScript(String ^filename)
-	{
-		String ^filepath = System::IO::Path::Combine(_appdomain->BaseDirectory, filename);
-		//cant use the same file finding method incase the script was deleted, could maybe implement a searching method that would use the filenames in ScriptTypes
-		bool foundany = false;
-		for (int i = 0; i<_scriptTypes->Count;i++)
-		{
-			auto val = _scriptTypes[i];
-			if (filepath->Equals(val->Item1, StringComparison::InvariantCultureIgnoreCase))
-			{
-				Console->UnregisterCommands(val->Item2);
-				bool found = false;
-				for each(auto script in _runningScripts)
-				{
-					if (script->GetType() == val->Item2)
-					{
-						if (!Object::ReferenceEquals(script->_thread, nullptr))
-						{
-							script->_running = false;
-
-							script->_thread->Abort();
-							script->_thread = nullptr;
-
-							Console->Info("Aborted script '" + script->Name + "'.");
-						}
-
-						
-						_runningScripts->Remove(script);
-						_scriptTypes->RemoveAt(i--);
-						found = true;
-						break;
-					}
-				}
-				if (!found)
-				{
-					Console->Warn("Couldn't find a running instance of '" + val->Item2->Name + "'.");
-				}
-				foundany = true;
-			}
-		}
-		if (!foundany)
-		{
-			if (System::IO::File::Exists(filepath))
-			{
-				Console->Error("There were no loaded scripts found in the file '" + filename + "'.");
-			}
-			else
-			{
-				Console->Error("The specified file '" + filename + "'does not exist, did you include directoy information and file extension?");
-			}
-		}
-	}
 	void ScriptDomain::ConsoleReloadScript(String ^filename)
 	{
 		if (!System::IO::File::Exists(System::IO::Path::Combine(_appdomain->BaseDirectory, filename)))

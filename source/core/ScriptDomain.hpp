@@ -106,7 +106,6 @@ namespace GTA
 		System::Object ^InitializeLifetimeService() override;
 
 		void ConsoleLoadScript(System::String ^filename);
-		void ConsoleUnloadScript(System::String ^filename);
 		void ConsoleReloadScript(System::String ^filename);
 		void ConsoleStartScript(System::String ^filename);
 

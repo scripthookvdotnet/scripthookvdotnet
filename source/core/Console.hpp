@@ -209,19 +209,16 @@ namespace GTA
 		[ConsoleCommand("Prints the Help-Output for the specific command")]
 		static void Help(System::String ^command);
 
-		[ConsoleCommand("Loads a script")]
-		static void Load(System::String^ script);
+		[ConsoleCommand("Loads scripts from a file")]
+		static void Load(System::String ^filename);
 
-		[ConsoleCommand("Unloads a script")]
-		static void Unload(System::String^ script);
-
-		[ConsoleCommand("Reloads a script")]
-		static void Reload(System::String^ script);
+		[ConsoleCommand("Reloads scripts from a file")]
+		static void Reload(System::String ^filename);
 
 		[ConsoleCommand("List all loaded scripts")]
 		static void List();
 
-		[ConsoleCommand("Stops a script")]
+		[ConsoleCommand("Aborts all scripts from the specified file")]
 		static void Abort(System::String ^filename);
 
 		[ConsoleCommand("Clears the console output")]
