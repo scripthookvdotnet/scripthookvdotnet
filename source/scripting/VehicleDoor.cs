@@ -27,10 +27,6 @@ namespace GTA
 			{
 				return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, _owner.Handle, Index);
 			}
-            set
-            {
-                return Function.Call(Hash.SET_VEHICLE_DOOR_CONTROL, _owner.Handle, Index, 1, value);
-            }
 		}
 		public bool CanBeBroken
 		{

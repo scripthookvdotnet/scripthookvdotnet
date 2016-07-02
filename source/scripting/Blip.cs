@@ -11,9 +11,6 @@ namespace GTA
 		Red,
 		Green,
 		Blue,
-        MichaelBlue = 42,
-        FranklinGreen = 43,
-        TrevorOrange = 44,
 		Yellow = 66
 	}
 	public enum BlipSprite
