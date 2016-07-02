@@ -340,6 +340,10 @@ namespace GTA
 
 			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
 			_getHashKey = reinterpret_cast<unsigned int(*)(char*, unsigned int)>(*reinterpret_cast<int*>(address + 6) + address + 10);
+
+			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
+			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
+			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
 		}
 
 		int MemoryAccess::GetGameVersion()
@@ -388,6 +392,12 @@ namespace GTA
 			const auto data = static_cast<void **>(address.ToPointer());
 
 			return IntPtr(*data);
+		}
+		Math::Matrix MemoryAccess::ReadMatrix(System::IntPtr address)
+		{
+			const auto data = static_cast<const Math::Matrix*>(address.ToPointer());
+
+			return Math::Matrix(*data);
 		}
 		void MemoryAccess::WriteByte(System::IntPtr address, unsigned char value)
 		{
@@ -484,6 +494,58 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 			return IntPtr((long long)task->GetResult());
 		}
+		
+		IntPtr MemoryAccess::GetEntityBoneMatrixAddress(int handle, int boneIndex)
+		{
+			if ((boneIndex & 0x80000000) != 0)//boneIndex cant be negative
+				return IntPtr::Zero;
+
+			UInt64 MemAddress = _entityAddressFunc(handle);
+			UInt64 Addr2 = (*(UInt64(__fastcall **)(__int64))(*(UInt64 *)MemAddress + 88i64))(MemAddress);
+			UInt64 Addr3;
+			if (!Addr2)
+			{
+				Addr3 = *(UInt64*)(MemAddress + 80);
+				if (!Addr3)
+				{
+					return IntPtr::Zero;
+				}
+				else
+				{
+					Addr3 = *(UInt64*)(Addr3 + 40);
+				}
+			}
+			else
+			{
+				Addr3 = *(UInt64*)(Addr2 + 104);
+				if (!Addr3 || !*(UInt64*)(Addr2 + 120))
+				{
+					return IntPtr::Zero;
+				}
+				else
+				{
+					Addr3 = *(UInt64*)(Addr3 + 376);
+				}
+			}
+			if (!Addr3)
+			{
+				return IntPtr::Zero;
+			}
+			if (boneIndex < *(int*)(Addr3 + 32))
+			{
+				return IntPtr((long long)(*(UInt64*)(Addr3 + 24) +( (long long)boneIndex << 6)));
+			}
+			return IntPtr::Zero;
+		}
+		float MemoryAccess::ReadWorldGravity()
+		{
+			return *_readWorldGravityAddr;
+		}
+		void MemoryAccess::WriteWorldGravity(float value)
+		{
+			*_writeWorldGravityAddr = value;
+		}
+
 
 		array<int> ^MemoryAccess::GetEntityHandles()
 		{
