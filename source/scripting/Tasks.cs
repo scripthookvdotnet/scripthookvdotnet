@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using GTA.Math;
 using GTA.Native;
 
@@ -184,6 +185,22 @@ namespace GTA
 				Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
 			}
 		}
+
+	    public void GoToCoordWhileAiming(Vector3 position, Vector3 aimCoord, bool shooting, FiringPattern pattern)
+	    {
+	        if (shooting)
+	        {
+	            Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y,
+	                position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 1, 0x3F000000, 0x40800000, 1, 0, 0,
+	                (uint) pattern);
+	        }
+	        else
+	        {
+                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y,
+                    position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 0, 0x3F000000, 0x40800000, 1, 512, 0,
+                    (uint)pattern);
+            }
+	    }
 
 		public void GuardCurrentPosition()
 		{
