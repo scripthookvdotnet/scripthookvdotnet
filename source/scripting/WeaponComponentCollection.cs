@@ -161,7 +161,7 @@ namespace GTA
 					WeaponComponent component = null;
 					if (!_weaponComponents.TryGetValue(componentHash, out component))
 					{
-						component = new VehicleMod(_owner, componentHash);
+						component = new WeaponComponent(_owner, _weapon, componentHash);
 						_weaponComponents.Add(componentHash, component);
 					}
 
