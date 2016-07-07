@@ -189,11 +189,11 @@ namespace GTA
 	    {
             if (shooting)
             {
-                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 1, 0x3F000000, 0x40800000, 1, 0, 0, (uint)pattern);
+                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 1, 0.5f, 4, 1, 0, 0, pattern);
             }
             else
             {
-                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 0, 0x3F000000, 0x40800000, 1, 512, 0, (uint)pattern);
+                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 0, 0.5f, 4, 1, 512, 0, pattern);
             }
         }
 
