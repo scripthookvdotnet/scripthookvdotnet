@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace GTA
 {
-	class WeaponComponent
+	public class WeaponComponent
 	{
 		#region Fields
 		protected readonly Ped _owner;
@@ -247,7 +247,7 @@ namespace GTA
 			return result;
 		}
 	}
-	class InvalidWeaponComponent : WeaponComponent
+	public class InvalidWeaponComponent : WeaponComponent
 	{
 		internal InvalidWeaponComponent()
 		{

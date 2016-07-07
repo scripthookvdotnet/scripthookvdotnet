@@ -135,7 +135,7 @@ namespace GTA
 		Invalid = 4294967295u
 	}
 
-	class WeaponComponentCollection
+	public class WeaponComponentCollection
 	{
 		#region Fields
 		readonly Ped _owner;
