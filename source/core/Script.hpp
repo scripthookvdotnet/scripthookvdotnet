@@ -44,7 +44,7 @@ namespace GTA
 		event System::EventHandler ^Tick;
 		event System::Windows::Forms::KeyEventHandler ^KeyUp;
 		event System::Windows::Forms::KeyEventHandler ^KeyDown;
-		event System::EventHandler ^Aborted;
+		event System::UnhandledExceptionEventHandler ^Aborted;
 
 		property System::String ^Name
 		{
@@ -65,7 +65,7 @@ namespace GTA
 			ScriptSettings ^get();
 		}
 
-		void Abort();
+		void Abort(System::UnhandledExceptionEventArgs ^ex);
 
 		virtual System::String ^ToString() override
 		{
