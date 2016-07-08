@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Linq;
 using GTA;
 using GTA.Native;
@@ -219,7 +220,7 @@ namespace GTA
 			switch (hash)
 			{
 				case WeaponHash.Pistol:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.PistolClip01,
 							WeaponComponentHash.PistolClip02,
 							WeaponComponentHash.AtPiFlsh,
@@ -227,7 +228,7 @@ namespace GTA
 							WeaponComponentHash.PistolVarmodLuxe,
 						};
 				case WeaponHash.CombatPistol:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.CombatPistolClip01,
 							WeaponComponentHash.CombatPistolClip02,
 							WeaponComponentHash.AtPiFlsh,
@@ -235,7 +236,7 @@ namespace GTA
 							WeaponComponentHash.CombatPistolVarmodLowrider,
 						};
 				case WeaponHash.APPistol:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.APPistolClip01,
 							WeaponComponentHash.APPistolClip02,
 							WeaponComponentHash.AtPiFlsh,
@@ -243,7 +244,7 @@ namespace GTA
 							WeaponComponentHash.APPistolVarmodLuxe,
 						};
 				case WeaponHash.MicroSMG:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.MicroSMGClip01,
 							WeaponComponentHash.MicroSMGClip02,
 							WeaponComponentHash.AtPiFlsh,
@@ -252,7 +253,7 @@ namespace GTA
 							WeaponComponentHash.MicroSMGVarmodLuxe,
 						};
 				case WeaponHash.SMG:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.SMGClip01,
 							WeaponComponentHash.SMGClip02,
 							WeaponComponentHash.SMGClip03,
@@ -263,7 +264,7 @@ namespace GTA
 							WeaponComponentHash.SMGVarmodLuxe,
 						};
 				case WeaponHash.AssaultRifle:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AssaultRifleClip01,
 							WeaponComponentHash.AssaultRifleClip02,
 							WeaponComponentHash.AssaultRifleClip03,
@@ -274,7 +275,7 @@ namespace GTA
 							WeaponComponentHash.AssaultRifleVarmodLuxe,
 						};
 				case WeaponHash.CarbineRifle:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.CarbineRifleClip01,
 							WeaponComponentHash.CarbineRifleClip02,
 							WeaponComponentHash.CarbineRifleClip03,
@@ -286,7 +287,7 @@ namespace GTA
 							WeaponComponentHash.CarbineRifleVarmodLuxe,
 						};
 				case WeaponHash.AdvancedRifle:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AdvancedRifleClip01,
 							WeaponComponentHash.AdvancedRifleClip02,
 							WeaponComponentHash.AtArFlsh,
@@ -295,7 +296,7 @@ namespace GTA
 							WeaponComponentHash.AdvancedRifleVarmodLuxe,
 						};
 				case WeaponHash.MG:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.MGClip01,
 							WeaponComponentHash.MGClip02,
 							WeaponComponentHash.AtScopeSmall02,
@@ -303,7 +304,7 @@ namespace GTA
 							WeaponComponentHash.MGVarmodLowrider,
 						};
 				case WeaponHash.CombatMG:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.CombatMGClip01,
 							WeaponComponentHash.CombatMGClip02,
 							WeaponComponentHash.AtArAfGrip,
@@ -311,13 +312,13 @@ namespace GTA
 							WeaponComponentHash.CombatMGVarmodLowrider,
 						};
 				case WeaponHash.PumpShotgun:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AtSrSupp,
 							WeaponComponentHash.AtArFlsh,
 							WeaponComponentHash.PumpShotgunVarmodLowrider,
 						};
 				case WeaponHash.AssaultShotgun:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AssaultShotgunClip01,
 							WeaponComponentHash.AssaultShotgunClip02,
 							WeaponComponentHash.AtArAfGrip,
@@ -325,7 +326,7 @@ namespace GTA
 							WeaponComponentHash.AtArSupp,
 						};
 				case WeaponHash.SniperRifle:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.SniperRifleClip01,
 							WeaponComponentHash.AtScopeLarge,
 							WeaponComponentHash.AtScopeMax,
@@ -333,23 +334,23 @@ namespace GTA
 							WeaponComponentHash.SniperRifleVarmodLuxe,
 						};
 				case WeaponHash.HeavySniper:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.HeavySniperClip01,
 							WeaponComponentHash.AtScopeLarge,
 							WeaponComponentHash.AtScopeMax,
 						};
 				case WeaponHash.GrenadeLauncher:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AtArAfGrip,
 							WeaponComponentHash.AtArFlsh,
 							WeaponComponentHash.AtScopeSmall,
 						};
 				case WeaponHash.Minigun:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.MinigunClip01,
 						};
 				case WeaponHash.AssaultSMG:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AssaultSMGClip01,
 							WeaponComponentHash.AssaultSMGClip02,
 							WeaponComponentHash.AtArFlsh,
@@ -358,13 +359,13 @@ namespace GTA
 							WeaponComponentHash.AssaultSMGVarmodLowrider,
 						};
 				case WeaponHash.BullpupShotgun:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.AtArAfGrip,
 							WeaponComponentHash.AtArFlsh,
 							WeaponComponentHash.AtArSupp02,
 						};
 				case WeaponHash.Pistol50:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.Pistol50Clip01,
 							WeaponComponentHash.Pistol50Clip02,
 							WeaponComponentHash.AtPiFlsh,
@@ -372,7 +373,7 @@ namespace GTA
 							WeaponComponentHash.Pistol50VarmodLuxe,
 						};
 				case WeaponHash.CombatPDW:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.CombatPDWClip01,
 							WeaponComponentHash.CombatPDWClip02,
 							WeaponComponentHash.CombatPDWClip03,
@@ -381,11 +382,11 @@ namespace GTA
 							WeaponComponentHash.AtArAfGrip,
 						};
 				case WeaponHash.SawnOffShotgun:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.SawnoffShotgunVarmodLuxe,
 						};
 				case WeaponHash.BullpupRifle:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.BullpupRifleClip01,
 							WeaponComponentHash.BullpupRifleClip02,
 							WeaponComponentHash.AtArFlsh,
@@ -395,13 +396,13 @@ namespace GTA
 							WeaponComponentHash.BullpupRifleVarmodLow,
 						};
 				case WeaponHash.SNSPistol:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.SNSPistolClip01,
 							WeaponComponentHash.SNSPistolClip02,
 							WeaponComponentHash.SNSPistolVarmodLowrider,
 						};
 				case WeaponHash.SpecialCarbine:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.SpecialCarbineClip01,
 							WeaponComponentHash.SpecialCarbineClip02,
 							WeaponComponentHash.SpecialCarbineClip03,
@@ -412,7 +413,7 @@ namespace GTA
 							WeaponComponentHash.SpecialCarbineVarmodLowrider,
 						};
 				case WeaponHash.KnuckleDuster:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.KnuckleVarmodPimp,
 							WeaponComponentHash.KnuckleVarmodBallas,
 							WeaponComponentHash.KnuckleVarmodDollar,
@@ -424,19 +425,19 @@ namespace GTA
 							WeaponComponentHash.KnuckleVarmodVagos,
 						};
 				case WeaponHash.MachinePistol:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.MachinePistolClip01,
 							WeaponComponentHash.MachinePistolClip02,
 							WeaponComponentHash.MachinePistolClip03,
 							WeaponComponentHash.AtPiSupp,
 						};
 				case WeaponHash.SwitchBlade:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.SwitchbladeVarmodVar1,
 							WeaponComponentHash.SwitchbladeVarmodVar2,
 						};
 				case WeaponHash.Revolver:
-					return new WeaponComponent[] {
+					return new WeaponComponentHash[] {
 							WeaponComponentHash.RevolverClip01,
 							WeaponComponentHash.RevolverVarmodBoss,
 							WeaponComponentHash.RevolverVarmodGoon,
@@ -444,7 +445,7 @@ namespace GTA
 			}
 
 			IntPtr data = Marshal.AllocCoTaskMem(39 * 8);
-			WeaponComponent[] result = null;
+			WeaponComponentHash[] result = null;
 
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
@@ -452,13 +453,13 @@ namespace GTA
 				{
 					if (MemoryAccess.ReadInt(data + 8) == (int)hash)
 					{
-						result = new WeaponComponent[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
+						result = new WeaponComponentHash[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
 
 						for (int j = 0; j < result.Length; j++)
 						{
 							if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, data))
 							{
-								result[j] = (WeaponComponent)MemoryAccess.ReadInt(data + 3 * 8);
+								result[j] = (WeaponComponentHash)MemoryAccess.ReadInt(data + 3 * 8);
 							}
 							else
 							{
@@ -474,7 +475,7 @@ namespace GTA
 
 			if (result == null)
 			{
-				result = new WeaponComponent[0];
+				result = new WeaponComponentHash[0];
 			}
 
 			return result;
