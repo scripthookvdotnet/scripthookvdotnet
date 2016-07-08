@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GTA;
-using System.Linq;
+using GTA.Native;
 
 namespace GTA
 {

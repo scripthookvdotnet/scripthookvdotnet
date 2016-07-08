@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using GTA;
 using System.Linq;
+using GTA;
+using GTA.Native;
 
 namespace GTA
 {
@@ -141,7 +142,7 @@ namespace GTA
 		readonly Ped _owner;
 		readonly Weapon _weapon;
 		readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents = new Dictionary<WeaponComponentHash, WeaponComponent>();
-		readonly WeaponComponentHash _components;
+		readonly WeaponComponentHash[] _components;
 		readonly static InvalidWeaponComponent _invalidComponent = new InvalidWeaponComponent();
 		#endregion
 
