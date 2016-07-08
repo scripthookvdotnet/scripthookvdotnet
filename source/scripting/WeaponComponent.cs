@@ -20,7 +20,7 @@ namespace GTA
 			_component = component;
 		}
 
-		public bool Active
+		public virtual bool Active
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace GTA
 			}
 		}
 
-		public string DisplayName
+		public virtual string DisplayName
 		{
 			get
 			{
@@ -47,7 +47,7 @@ namespace GTA
 			}
 		}
 
-		public string FriendlyName
+		public virtual string FriendlyName
 		{
 			get
 			{
@@ -63,7 +63,7 @@ namespace GTA
 				{
 					case WeaponComponentHash.KnuckleVarmodBase:
 						return "WT_KNUCKLE";
-					case WeaponComponentHash.KnuckleVarmodPimp:
+						case WeaponComponentHash.KnuckleVarmodPimp:
 						return "WCT_KNUCK_02";
 					case WeaponComponentHash.KnuckleVarmodBallas:
 						return "WCT_KNUCK_BG";
