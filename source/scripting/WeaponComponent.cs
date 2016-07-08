@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using GTA;
 using GTA.Native;
 
@@ -20,6 +21,14 @@ namespace GTA
 			_component = component;
 		}
 
+		public WeaponComponentHash ComponentHash
+		{
+			get
+			{
+				return _component;
+			}
+		}
+
 		public virtual bool Active
 		{
 			get
@@ -28,7 +37,7 @@ namespace GTA
 			}
 			set
 			{
-				if (active)
+				if (value)
 				{
 					Function.Call(Native.Hash.GIVE_WEAPON_COMPONENT_TO_PED, _owner.Handle, _weapon.Hash, _component);
 				}
@@ -249,18 +258,15 @@ namespace GTA
 	}
 	public class InvalidWeaponComponent : WeaponComponent
 	{
-		internal InvalidWeaponComponent()
+		internal InvalidWeaponComponent(): base(null, null, WeaponComponentHash.Invalid)
 		{
-			_owner = null;
-			_weapon = null;
-			_component = WeaponComponentHash.Invalid;
 		}
 
 		public override bool Active
 		{
 			get
 			{
-				return False;
+				return false;
 			}
 			set
 			{

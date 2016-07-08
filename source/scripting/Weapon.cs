@@ -245,7 +245,7 @@ namespace GTA
 		{
 			get
 			{
-				if (_components = null)
+				if (_components == null)
 				{
 					_components = new WeaponComponentCollection(_owner, this);
 				}

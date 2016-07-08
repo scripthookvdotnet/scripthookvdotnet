@@ -149,7 +149,7 @@ namespace GTA
 		internal WeaponComponentCollection(Ped owner, Weapon weapon)
 		{
 			_owner = owner;
-			_weapon = Weapon;
+			_weapon = weapon;
 			_components = GetComponentsFromHash(weapon.Hash);
 		}
 
@@ -181,7 +181,7 @@ namespace GTA
 				WeaponComponent component = null;
 				if (index >= 0 && index < Count)
 				{
-					WeaponComponentHash hash = _components[index];
+					WeaponComponentHash componentHash = _components[index];
 				
 					if (!_weaponComponents.TryGetValue(componentHash, out component))
 					{
@@ -207,7 +207,11 @@ namespace GTA
 
 		public IEnumerator<WeaponComponent> GetEnumerator()
 		{
-			return (_components as IEnumerable<WeaponComponent>).GetEnumerator();
+			WeaponComponent[] AllComponents = new WeaponComponent[Count];
+			for (int i = 0;i<Count;i++){
+				AllComponents[i] = this[_components[i]];
+			}
+			return (AllComponents as IEnumerable<WeaponComponent>).GetEnumerator();
 		}
 
 		public static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
@@ -216,226 +220,226 @@ namespace GTA
 			{
 				case WeaponHash.Pistol:
 					return new WeaponComponent[] {
-							WeaponComponent.PistolClip01,
-							WeaponComponent.PistolClip02,
-							WeaponComponent.AtPiFlsh,
-							WeaponComponent.AtPiSupp02,
-							WeaponComponent.PistolVarmodLuxe,
+							WeaponComponentHash.PistolClip01,
+							WeaponComponentHash.PistolClip02,
+							WeaponComponentHash.AtPiFlsh,
+							WeaponComponentHash.AtPiSupp02,
+							WeaponComponentHash.PistolVarmodLuxe,
 						};
 				case WeaponHash.CombatPistol:
 					return new WeaponComponent[] {
-							WeaponComponent.CombatPistolClip01,
-							WeaponComponent.CombatPistolClip02,
-							WeaponComponent.AtPiFlsh,
-							WeaponComponent.AtPiSupp,
-							WeaponComponent.CombatPistolVarmodLowrider,
+							WeaponComponentHash.CombatPistolClip01,
+							WeaponComponentHash.CombatPistolClip02,
+							WeaponComponentHash.AtPiFlsh,
+							WeaponComponentHash.AtPiSupp,
+							WeaponComponentHash.CombatPistolVarmodLowrider,
 						};
 				case WeaponHash.APPistol:
 					return new WeaponComponent[] {
-							WeaponComponent.APPistolClip01,
-							WeaponComponent.APPistolClip02,
-							WeaponComponent.AtPiFlsh,
-							WeaponComponent.AtPiSupp,
-							WeaponComponent.APPistolVarmodLuxe,
+							WeaponComponentHash.APPistolClip01,
+							WeaponComponentHash.APPistolClip02,
+							WeaponComponentHash.AtPiFlsh,
+							WeaponComponentHash.AtPiSupp,
+							WeaponComponentHash.APPistolVarmodLuxe,
 						};
 				case WeaponHash.MicroSMG:
 					return new WeaponComponent[] {
-							WeaponComponent.MicroSMGClip01,
-							WeaponComponent.MicroSMGClip02,
-							WeaponComponent.AtPiFlsh,
-							WeaponComponent.AtScopeMacro,
-							WeaponComponent.AtArSupp02,
-							WeaponComponent.MicroSMGVarmodLuxe,
+							WeaponComponentHash.MicroSMGClip01,
+							WeaponComponentHash.MicroSMGClip02,
+							WeaponComponentHash.AtPiFlsh,
+							WeaponComponentHash.AtScopeMacro,
+							WeaponComponentHash.AtArSupp02,
+							WeaponComponentHash.MicroSMGVarmodLuxe,
 						};
 				case WeaponHash.SMG:
 					return new WeaponComponent[] {
-							WeaponComponent.SMGClip01,
-							WeaponComponent.SMGClip02,
-							WeaponComponent.SMGClip03,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtPiSupp,
-							WeaponComponent.AtScopeMacro02,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.SMGVarmodLuxe,
+							WeaponComponentHash.SMGClip01,
+							WeaponComponentHash.SMGClip02,
+							WeaponComponentHash.SMGClip03,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtPiSupp,
+							WeaponComponentHash.AtScopeMacro02,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.SMGVarmodLuxe,
 						};
 				case WeaponHash.AssaultRifle:
 					return new WeaponComponent[] {
-							WeaponComponent.AssaultRifleClip01,
-							WeaponComponent.AssaultRifleClip02,
-							WeaponComponent.AssaultRifleClip03,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeMacro,
-							WeaponComponent.AtArSupp02,
-							WeaponComponent.AssaultRifleVarmodLuxe,
+							WeaponComponentHash.AssaultRifleClip01,
+							WeaponComponentHash.AssaultRifleClip02,
+							WeaponComponentHash.AssaultRifleClip03,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeMacro,
+							WeaponComponentHash.AtArSupp02,
+							WeaponComponentHash.AssaultRifleVarmodLuxe,
 						};
 				case WeaponHash.CarbineRifle:
 					return new WeaponComponent[] {
-							WeaponComponent.CarbineRifleClip01,
-							WeaponComponent.CarbineRifleClip02,
-							WeaponComponent.CarbineRifleClip03,
-							WeaponComponent.AtRailCover01,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeMedium,
-							WeaponComponent.AtArSupp,
-							WeaponComponent.CarbineRifleVarmodLuxe,
+							WeaponComponentHash.CarbineRifleClip01,
+							WeaponComponentHash.CarbineRifleClip02,
+							WeaponComponentHash.CarbineRifleClip03,
+							WeaponComponentHash.AtRailCover01,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeMedium,
+							WeaponComponentHash.AtArSupp,
+							WeaponComponentHash.CarbineRifleVarmodLuxe,
 						};
 				case WeaponHash.AdvancedRifle:
 					return new WeaponComponent[] {
-							WeaponComponent.AdvancedRifleClip01,
-							WeaponComponent.AdvancedRifleClip02,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeSmall,
-							WeaponComponent.AtArSupp,
-							WeaponComponent.AdvancedRifleVarmodLuxe,
+							WeaponComponentHash.AdvancedRifleClip01,
+							WeaponComponentHash.AdvancedRifleClip02,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeSmall,
+							WeaponComponentHash.AtArSupp,
+							WeaponComponentHash.AdvancedRifleVarmodLuxe,
 						};
 				case WeaponHash.MG:
 					return new WeaponComponent[] {
-							WeaponComponent.MGClip01,
-							WeaponComponent.MGClip02,
-							WeaponComponent.AtScopeSmall02,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.MGVarmodLowrider,
+							WeaponComponentHash.MGClip01,
+							WeaponComponentHash.MGClip02,
+							WeaponComponentHash.AtScopeSmall02,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.MGVarmodLowrider,
 						};
 				case WeaponHash.CombatMG:
 					return new WeaponComponent[] {
-							WeaponComponent.CombatMGClip01,
-							WeaponComponent.CombatMGClip02,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.AtScopeMedium,
-							WeaponComponent.CombatMGVarmodLowrider,
+							WeaponComponentHash.CombatMGClip01,
+							WeaponComponentHash.CombatMGClip02,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.AtScopeMedium,
+							WeaponComponentHash.CombatMGVarmodLowrider,
 						};
 				case WeaponHash.PumpShotgun:
 					return new WeaponComponent[] {
-							WeaponComponent.AtSrSupp,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.PumpShotgunVarmodLowrider,
+							WeaponComponentHash.AtSrSupp,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.PumpShotgunVarmodLowrider,
 						};
 				case WeaponHash.AssaultShotgun:
 					return new WeaponComponent[] {
-							WeaponComponent.AssaultShotgunClip01,
-							WeaponComponent.AssaultShotgunClip02,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtArSupp,
+							WeaponComponentHash.AssaultShotgunClip01,
+							WeaponComponentHash.AssaultShotgunClip02,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtArSupp,
 						};
 				case WeaponHash.SniperRifle:
 					return new WeaponComponent[] {
-							WeaponComponent.SniperRifleClip01,
-							WeaponComponent.AtScopeLarge,
-							WeaponComponent.AtScopeMax,
-							WeaponComponent.AtArSupp02,
-							WeaponComponent.SniperRifleVarmodLuxe,
+							WeaponComponentHash.SniperRifleClip01,
+							WeaponComponentHash.AtScopeLarge,
+							WeaponComponentHash.AtScopeMax,
+							WeaponComponentHash.AtArSupp02,
+							WeaponComponentHash.SniperRifleVarmodLuxe,
 						};
 				case WeaponHash.HeavySniper:
 					return new WeaponComponent[] {
-							WeaponComponent.HeavySniperClip01,
-							WeaponComponent.AtScopeLarge,
-							WeaponComponent.AtScopeMax,
+							WeaponComponentHash.HeavySniperClip01,
+							WeaponComponentHash.AtScopeLarge,
+							WeaponComponentHash.AtScopeMax,
 						};
 				case WeaponHash.GrenadeLauncher:
 					return new WeaponComponent[] {
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeSmall,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeSmall,
 						};
 				case WeaponHash.Minigun:
 					return new WeaponComponent[] {
-							WeaponComponent.MinigunClip01,
+							WeaponComponentHash.MinigunClip01,
 						};
 				case WeaponHash.AssaultSMG:
 					return new WeaponComponent[] {
-							WeaponComponent.AssaultSMGClip01,
-							WeaponComponent.AssaultSMGClip02,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeMacro,
-							WeaponComponent.AtArSupp02,
-							WeaponComponent.AssaultSMGVarmodLowrider,
+							WeaponComponentHash.AssaultSMGClip01,
+							WeaponComponentHash.AssaultSMGClip02,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeMacro,
+							WeaponComponentHash.AtArSupp02,
+							WeaponComponentHash.AssaultSMGVarmodLowrider,
 						};
 				case WeaponHash.BullpupShotgun:
 					return new WeaponComponent[] {
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtArSupp02,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtArSupp02,
 						};
 				case WeaponHash.Pistol50:
 					return new WeaponComponent[] {
-							WeaponComponent.Pistol50Clip01,
-							WeaponComponent.Pistol50Clip02,
-							WeaponComponent.AtPiFlsh,
-							WeaponComponent.AtArSupp02,
-							WeaponComponent.Pistol50VarmodLuxe,
+							WeaponComponentHash.Pistol50Clip01,
+							WeaponComponentHash.Pistol50Clip02,
+							WeaponComponentHash.AtPiFlsh,
+							WeaponComponentHash.AtArSupp02,
+							WeaponComponentHash.Pistol50VarmodLuxe,
 						};
 				case WeaponHash.CombatPDW:
 					return new WeaponComponent[] {
-							WeaponComponent.CombatPDWClip01,
-							WeaponComponent.CombatPDWClip02,
-							WeaponComponent.CombatPDWClip03,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeSmall,
-							WeaponComponent.AtArAfGrip,
+							WeaponComponentHash.CombatPDWClip01,
+							WeaponComponentHash.CombatPDWClip02,
+							WeaponComponentHash.CombatPDWClip03,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeSmall,
+							WeaponComponentHash.AtArAfGrip,
 						};
 				case WeaponHash.SawnOffShotgun:
 					return new WeaponComponent[] {
-							WeaponComponent.SawnoffShotgunVarmodLuxe,
+							WeaponComponentHash.SawnoffShotgunVarmodLuxe,
 						};
 				case WeaponHash.BullpupRifle:
 					return new WeaponComponent[] {
-							WeaponComponent.BullpupRifleClip01,
-							WeaponComponent.BullpupRifleClip02,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeSmall,
-							WeaponComponent.AtArSupp,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.BullpupRifleVarmodLow,
+							WeaponComponentHash.BullpupRifleClip01,
+							WeaponComponentHash.BullpupRifleClip02,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeSmall,
+							WeaponComponentHash.AtArSupp,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.BullpupRifleVarmodLow,
 						};
 				case WeaponHash.SNSPistol:
 					return new WeaponComponent[] {
-							WeaponComponent.SNSPistolClip01,
-							WeaponComponent.SNSPistolClip02,
-							WeaponComponent.SNSPistolVarmodLowrider,
+							WeaponComponentHash.SNSPistolClip01,
+							WeaponComponentHash.SNSPistolClip02,
+							WeaponComponentHash.SNSPistolVarmodLowrider,
 						};
 				case WeaponHash.SpecialCarbine:
 					return new WeaponComponent[] {
-							WeaponComponent.SpecialCarbineClip01,
-							WeaponComponent.SpecialCarbineClip02,
-							WeaponComponent.SpecialCarbineClip03,
-							WeaponComponent.AtArFlsh,
-							WeaponComponent.AtScopeMedium,
-							WeaponComponent.AtArSupp02,
-							WeaponComponent.AtArAfGrip,
-							WeaponComponent.SpecialCarbineVarmodLowrider,
+							WeaponComponentHash.SpecialCarbineClip01,
+							WeaponComponentHash.SpecialCarbineClip02,
+							WeaponComponentHash.SpecialCarbineClip03,
+							WeaponComponentHash.AtArFlsh,
+							WeaponComponentHash.AtScopeMedium,
+							WeaponComponentHash.AtArSupp02,
+							WeaponComponentHash.AtArAfGrip,
+							WeaponComponentHash.SpecialCarbineVarmodLowrider,
 						};
 				case WeaponHash.KnuckleDuster:
 					return new WeaponComponent[] {
-							WeaponComponent.KnuckleVarmodPimp,
-							WeaponComponent.KnuckleVarmodBallas,
-							WeaponComponent.KnuckleVarmodDollar,
-							WeaponComponent.KnuckleVarmodDiamond,
-							WeaponComponent.KnuckleVarmodHate,
-							WeaponComponent.KnuckleVarmodLove,
-							WeaponComponent.KnuckleVarmodPlayer,
-							WeaponComponent.KnuckleVarmodKing,
-							WeaponComponent.KnuckleVarmodVagos,
+							WeaponComponentHash.KnuckleVarmodPimp,
+							WeaponComponentHash.KnuckleVarmodBallas,
+							WeaponComponentHash.KnuckleVarmodDollar,
+							WeaponComponentHash.KnuckleVarmodDiamond,
+							WeaponComponentHash.KnuckleVarmodHate,
+							WeaponComponentHash.KnuckleVarmodLove,
+							WeaponComponentHash.KnuckleVarmodPlayer,
+							WeaponComponentHash.KnuckleVarmodKing,
+							WeaponComponentHash.KnuckleVarmodVagos,
 						};
 				case WeaponHash.MachinePistol:
 					return new WeaponComponent[] {
-							WeaponComponent.MachinePistolClip01,
-							WeaponComponent.MachinePistolClip02,
-							WeaponComponent.MachinePistolClip03,
-							WeaponComponent.AtPiSupp,
+							WeaponComponentHash.MachinePistolClip01,
+							WeaponComponentHash.MachinePistolClip02,
+							WeaponComponentHash.MachinePistolClip03,
+							WeaponComponentHash.AtPiSupp,
 						};
 				case WeaponHash.SwitchBlade:
 					return new WeaponComponent[] {
-							WeaponComponent.SwitchbladeVarmodVar1,
-							WeaponComponent.SwitchbladeVarmodVar2,
+							WeaponComponentHash.SwitchbladeVarmodVar1,
+							WeaponComponentHash.SwitchbladeVarmodVar2,
 						};
 				case WeaponHash.Revolver:
 					return new WeaponComponent[] {
-							WeaponComponent.RevolverClip01,
-							WeaponComponent.RevolverVarmodBoss,
-							WeaponComponent.RevolverVarmodGoon,
+							WeaponComponentHash.RevolverClip01,
+							WeaponComponentHash.RevolverVarmodBoss,
+							WeaponComponentHash.RevolverVarmodGoon,
 						};
 			}
 
@@ -458,7 +462,7 @@ namespace GTA
 							}
 							else
 							{
-								result[j] = WeaponComponent.Invalid;
+								result[j] = WeaponComponentHash.Invalid;
 							}
 						}
 						break;
