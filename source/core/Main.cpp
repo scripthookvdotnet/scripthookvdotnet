@@ -89,7 +89,7 @@ void ScriptMain()
 	const auto version = getGameVersion();
 	if (version >= 24)
 	{
-		// Disable cunning stunts, mpexecutive and mplowrider2 car removing
+		// Disable mpstunts, mpexecutive and mplowrider2 car removing
 		const auto global2566708 = getGlobalPtr(2566708);
 
 		if (global2566708 != nullptr)
@@ -97,7 +97,7 @@ void ScriptMain()
 			*global2566708 = 1;
 		}	
 	}
-	if (version >= 20)
+	else if (version >= 20)
 	{
 		// Disable mpexecutive and mplowrider2 car removing
 		const auto global2562051 = getGlobalPtr(2562051);
