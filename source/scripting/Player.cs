@@ -1,8 +1,6 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace GTA
 {
@@ -326,7 +324,6 @@ namespace GTA
 		}
 		public bool IsTargettingAnything
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
@@ -338,20 +335,7 @@ namespace GTA
 
 			if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, entityArg))
 			{
-				int handle = entityArg.GetResult<int>();
-
-				if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, handle))
-				{
-					switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
-					{
-						case 1:
-							return new Ped(handle);
-						case 2:
-							return new Vehicle(handle);
-						case 3:
-							return new Prop(handle);
-					}
-				}
+				return Entity.FromHandle(entityArg.GetResult<int>());
 			}
 			return null;
 		}
