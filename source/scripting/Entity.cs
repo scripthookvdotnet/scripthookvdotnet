@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using GTA.Math;
 using GTA.Native;
 
@@ -753,22 +751,7 @@ namespace GTA
 		}
 		public Entity GetEntityAttachedTo()
 		{
-			int handle = Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle);
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, handle))
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
-				{
-					case 1:
-						return new Ped(handle);
-					case 2:
-						return new Vehicle(handle);
-					case 3:
-						return new Prop(handle);
-				}
-			}
-
-			return null;
+			return FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 		}
 
 		public void ApplyForce(Vector3 direction)

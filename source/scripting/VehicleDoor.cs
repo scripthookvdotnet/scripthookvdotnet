@@ -1,7 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
-using System.Windows.Forms;
 using GTA.Native;
 
 namespace GTA
