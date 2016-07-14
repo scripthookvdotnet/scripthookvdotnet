@@ -1297,7 +1297,7 @@ namespace GTA
 		{
 			if ((int)modifier >= 0 && (int)modifier < _speechModifierNames.Length)
 			{
-				Function.Call(Hash._PLAY_AMBIENT_SPEECH1, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
+				Function.Call(Hash._PLAY_AMBIENT_SPEECH_WITH_VOICE, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
 			}
 			else
 			{
