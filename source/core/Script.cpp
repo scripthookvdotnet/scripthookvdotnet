@@ -55,11 +55,11 @@ namespace GTA
 		_interval = value;
 	}
 
-	void Script::Abort()
+	void Script::Abort(System::UnhandledExceptionEventArgs ^ex)
 	{
 		try
 		{
-			Aborted(this, EventArgs::Empty);
+			Aborted(this, ex);
 		}
 		catch (Exception ^ex)
 		{
@@ -132,7 +132,7 @@ namespace GTA
 			{
 				HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, true));
 
-				Abort();
+				Abort(gcnew UnhandledExceptionEventArgs(ex, true));
 				break;
 			}
 

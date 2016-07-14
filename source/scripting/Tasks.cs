@@ -185,6 +185,18 @@ namespace GTA
 			}
 		}
 
+	    public void GoToCoordWhileAiming(Vector3 position, Vector3 aimCoord, bool shooting, FiringPattern pattern)
+	    {
+            if (shooting)
+            {
+                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 1, 0.5f, 4, 1, 0, 0, pattern);
+            }
+            else
+            {
+                Function.Call(Hash.TASK_GO_TO_COORD_WHILE_AIMING_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, aimCoord.X, aimCoord.Y, aimCoord.Z, 2f, 0, 0.5f, 4, 1, 512, 0, pattern);
+            }
+        }
+
 		public void GuardCurrentPosition()
 		{
 			Function.Call(Hash.TASK_GUARD_CURRENT_POSITION, _ped.Handle, 15f, 10f, true);
