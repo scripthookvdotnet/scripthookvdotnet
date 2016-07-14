@@ -19,6 +19,26 @@ namespace GTA
 		AvoidTraffic = 786468,
 		AvoidTrafficExtremely = 6
 	}
+	[Flags]
+	public enum VehicleDrivingFlags : uint
+	{
+		None = 0,
+		FollowTraffic = 1,
+		YieldToPeds = 2,
+		AvoidVehicles = 4,
+		AvoidEmptyVehicles = 8,
+		AvoidPeds = 16,
+		AvoidObjects = 32,
+		StopAtTrafficLights = 128,
+		UseBlinkers = 256,
+		AllowGoingWrongWay = 512,
+		Reverse = 1024,
+		AllowMedianCrossing = 262144,
+		DriveBySight = 4194304,
+		IgnorePathFinding = 16777216,
+		TryToAvoidHighways = 536870912,
+		StopAtDestination = 2147483648
+	}
 	public enum HelmetType : uint
 	{
 		RegularMotorcycleHelmet = 4096u,
@@ -49,13 +69,95 @@ namespace GTA
 		WideLegs = 3,
 	}
 
+	public enum SpeechModifier
+	{
+		Standard = 0,
+		AllowRepeat = 1,
+		Beat = 2,
+		Force = 3,
+		ForceFrontend = 4,
+		ForceNoRepeatFrontend = 5,
+		ForceNormal = 6,
+		ForceNormalClear = 7,
+		ForceNormalCritical = 8,
+		ForceShouted = 9,
+		ForceShoutedClear = 10,
+		ForceShoutedCritical = 11,
+		ForcePreloadOnly = 12,
+		Megaphone = 13,
+		Helicopter = 14,
+		ForceMegaphone = 15,
+		ForceHelicopter = 16,
+		Interrupt = 17,
+		InterruptShouted = 18,
+		InterruptShoutedClear = 19,
+		InterruptShoutedCritical = 20,
+		InterruptNoForce = 21,
+		InterruptFrontend = 22,
+		InterruptNoForceFrontend = 23,
+		AddBlip = 24,
+		AddBlipAllowRepeat = 25,
+		AddBlipForce = 26,
+		AddBlipShouted = 27,
+		AddBlipShoutedForce = 28,
+		AddBlipInterrupt = 29,
+		AddBlipInterruptForce = 30,
+		ForcePreloadOnlyShouted = 31,
+		ForcePreloadOnlyShoutedClear = 32,
+		ForcePreloadOnlyShoutedCritical = 33,
+		Shouted = 34,
+		ShoutedClear = 35,
+		ShoutedCritical = 36
+	}
+
 	public sealed class Ped : Entity
 	{
 		#region Fields
 		Tasks _tasks;
 		Euphoria _euphoria;
 		WeaponCollection _weapons;
+
+		internal static readonly string[] _speechModifierNames = {
+			"SPEECH_PARAMS_STANDARD",
+			"SPEECH_PARAMS_ALLOW_REPEAT",
+			"SPEECH_PARAMS_BEAT",
+			"SPEECH_PARAMS_FORCE",
+			"SPEECH_PARAMS_FORCE_FRONTEND",
+			"SPEECH_PARAMS_FORCE_NO_REPEAT_FRONTEND",
+			"SPEECH_PARAMS_FORCE_NORMAL",
+			"SPEECH_PARAMS_FORCE_NORMAL_CLEAR",
+			"SPEECH_PARAMS_FORCE_NORMAL_CRITICAL",
+			"SPEECH_PARAMS_FORCE_SHOUTED",
+			"SPEECH_PARAMS_FORCE_SHOUTED_CLEAR",
+			"SPEECH_PARAMS_FORCE_SHOUTED_CRITICAL",
+			"SPEECH_PARAMS_FORCE_PRELOAD_ONLY",
+			"SPEECH_PARAMS_MEGAPHONE",
+			"SPEECH_PARAMS_HELI",
+			"SPEECH_PARAMS_FORCE_MEGAPHONE",
+			"SPEECH_PARAMS_FORCE_HELI",
+			"SPEECH_PARAMS_INTERRUPT",
+			"SPEECH_PARAMS_INTERRUPT_SHOUTED",
+			"SPEECH_PARAMS_INTERRUPT_SHOUTED_CLEAR",
+			"SPEECH_PARAMS_INTERRUPT_SHOUTED_CRITICAL",
+			"SPEECH_PARAMS_INTERRUPT_NO_FORCE",
+			"SPEECH_PARAMS_INTERRUPT_FRONTEND",
+			"SPEECH_PARAMS_INTERRUPT_NO_FORCE_FRONTEND",
+			"SPEECH_PARAMS_ADD_BLIP",
+			"SPEECH_PARAMS_ADD_BLIP_ALLOW_REPEAT",
+			"SPEECH_PARAMS_ADD_BLIP_FORCE",
+			"SPEECH_PARAMS_ADD_BLIP_SHOUTED",
+			"SPEECH_PARAMS_ADD_BLIP_SHOUTED_FORCE",
+			"SPEECH_PARAMS_ADD_BLIP_INTERRUPT",
+			"SPEECH_PARAMS_ADD_BLIP_INTERRUPT_FORCE",
+			"SPEECH_PARAMS_FORCE_PRELOAD_ONLY_SHOUTED",
+			"SPEECH_PARAMS_FORCE_PRELOAD_ONLY_SHOUTED_CLEAR",
+			"SPEECH_PARAMS_FORCE_PRELOAD_ONLY_SHOUTED_CRITICAL",
+			"SPEECH_PARAMS_SHOUTED",
+			"SPEECH_PARAMS_SHOUTED_CLEAR",
+			"SPEECH_PARAMS_SHOUTED_CRITICAL",
+		};
 		#endregion
+
 
 		public Ped(int handle) : base(handle)
 		{
@@ -718,12 +820,34 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, Handle);
 			}
 		}
+		public bool IsInStealthMode
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.GET_PED_STEALTH_MOVEMENT, Handle);
+			}
+		}
+		public bool IsPlantingBomb
+		{
+
+			get
+			{
+				return Function.Call<bool>(Hash.IS_PED_PLANTING_BOMB, Handle);
+			}
+		}
 		public bool IsShooting
 		{
 
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PED_SHOOTING, Handle);
+			}
+		}
+		public bool IsAiming
+		{
+			get
+			{
+				return GetConfigFlag(78);
 			}
 		}
 		public bool IsReloading
@@ -889,6 +1013,13 @@ namespace GTA
 			}
 		}
 		public DrivingStyle DrivingStyle
+		{
+			set
+			{
+				Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, value);
+			}
+		}
+		public VehicleDrivingFlags VehicleDrivingFlags
 		{
 			set
 			{
@@ -1148,6 +1279,30 @@ namespace GTA
 		public void LeaveGroup()
 		{
 			Function.Call(Hash.REMOVE_PED_FROM_GROUP, Handle);
+		}
+
+		public void PlayAmbientSpeech(string speechName, SpeechModifier modifier = SpeechModifier.Standard)
+		{
+			if ((int) modifier >= 0 && (int) modifier < _speechModifierNames.Length)
+			{
+				Function.Call(Hash._PLAY_AMBIENT_SPEECH1, Handle, speechName, modifier);
+			}
+			else
+			{
+				new ArgumentOutOfRangeException("modifier");
+			}
+		}
+
+		public void PlayAmbientSpeech(string voiceName, string speechName, SpeechModifier modifier = SpeechModifier.Standard)
+		{
+			if ((int)modifier >= 0 && (int)modifier < _speechModifierNames.Length)
+			{
+				Function.Call(Hash._PLAY_AMBIENT_SPEECH1, Handle, speechName, voiceName, modifier, 0);
+			}
+			else
+			{
+				new ArgumentOutOfRangeException("modifier");
+			}
 		}
 
 		public void ApplyDamage(int damageAmount)
