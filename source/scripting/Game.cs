@@ -334,7 +334,7 @@ namespace GTA
 		/// <value>
 		/// if <c>true</c> a mission is currently active; otherwise, <c>false</c>
 		/// </value>
-		public static bool MissionFlag
+		public static bool IsMissionActive
 		{
 			get
 			{
