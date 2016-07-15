@@ -29,6 +29,11 @@ namespace GTA
 			}
 		}
 
+	    public static implicit operator WeaponComponentHash(WeaponComponent weaponComponent)
+	    {
+	        return weaponComponent.ComponentHash;
+	    }
+
 		public virtual bool Active
 		{
 			get
