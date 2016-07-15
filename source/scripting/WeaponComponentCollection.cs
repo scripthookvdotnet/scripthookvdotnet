@@ -215,7 +215,104 @@ namespace GTA
 			return (AllComponents as IEnumerable<WeaponComponent>).GetEnumerator();
 		}
 
-		public static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
+	    public WeaponComponent GetClipComponent(int index)
+	    {
+	        foreach (var component in this)
+	        {
+	            if (component.DisplayName.StartsWith("WCT_CLIP"))
+	            {
+	                if (index-- == 0)
+	                {
+	                    return component;
+	                }
+	            }
+	        }
+	        return _invalidComponent;
+	    }
+
+	    public int ClipVariations
+	    {
+	        get
+	        {
+	            int count = 0;
+                foreach (var component in this)
+                {
+                    if (component.DisplayName.StartsWith("WCT_CLIP"))
+                    {
+                        count++;
+                    }
+                }
+	            return count;
+	        }
+	    }
+
+	    public WeaponComponent GetScopeComponent(int index)
+	    {
+            foreach (var component in this)
+            {
+                if (component.DisplayName.StartsWith("WCT_SCOPE"))
+                {
+                    if (index-- == 0)
+                    {
+                        return component;
+                    }
+                }
+            }
+            return _invalidComponent;
+        }
+
+	    public int ScopeVariations
+	    {
+            get
+            {
+                int count = 0;
+                foreach (var component in this)
+                {
+                    if (component.DisplayName.StartsWith("WCT_SCOPE"))
+                    {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        public WeaponComponent GetSupressorComponent()
+        {
+            foreach (var component in this)
+            {
+                if (component.DisplayName.StartsWith("WCT_SUPP"))
+                {
+                    return component;
+                }
+            }
+            return _invalidComponent;
+        }
+        public WeaponComponent GetFlashlightComponent()
+        {
+            foreach (var component in this)
+            {
+                if (component.DisplayName.StartsWith("WCT_FLASH"))
+                {
+                    return component;
+                }
+            }
+            return _invalidComponent;
+        }
+
+	    public WeaponComponent GetLuxuryFinishComponent()
+	    {
+            foreach (var component in this)
+            {
+                if (component.DisplayName.StartsWith("WCT_VAR"))
+                {
+                    return component;
+                }
+            }
+            return _invalidComponent;
+        }
+
+        public static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
 		{
 			switch (hash)
 			{
