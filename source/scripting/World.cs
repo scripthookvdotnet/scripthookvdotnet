@@ -2,6 +2,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Drawing;
 
 namespace GTA
@@ -454,50 +455,72 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the waypoint position.
+		/// Gets or sets the waypoint position.
 		/// </summary>
 		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
 		/// <remarks>
 		/// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
 		/// If the game engine cant extract height information the Z component will be 0.0f
 		/// </remarks>
-		public static Vector3 GetWaypointPosition()
+		public static Vector3 WaypointPosition
+		{
+			get
+			{
+				Blip waypointBlip = GetWaypointBlip();
+
+				if (waypointBlip == null)
+				{
+					return Vector3.Zero;
+				}
+
+				Vector3 position = waypointBlip.Position;
+				var heightResult = new OutputArgument();
+
+				if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, heightResult))
+				{
+					position.Z = heightResult.GetResult<float>();
+					return position;
+				}
+
+				return Vector3.Zero;
+			}
+			set
+			{
+				Function.Call(Hash.SET_NEW_WAYPOINT, value.X, value.Y);
+			}
+		}
+
+		/// <summary>
+		/// Gets the waypoint blip.
+		/// </summary>
+		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
+		/// <remarks>
+		/// Returns <see langword="null"/> if a waypoint <see cref="Blip"/> hasn't been set
+		/// </remarks>
+		public static Blip GetWaypointBlip()
 		{
 			if (!Game.IsWaypointActive)
 			{
-				return Vector3.Zero;
+				return null;
 			}
 
-			Vector3 position = Vector3.Zero;
-
-			for (int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR), i = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, i); i = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
+			for (int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR), blip = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, blip); blip = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
 			{
-				if (Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, i) == 4)
+				if (Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, blip) == 4)
 				{
-					position = Function.Call<Vector3>(Hash.GET_BLIP_INFO_ID_COORD, i);
-					break;
+					return new Blip(blip);
 				}
 			}
 
-			if (position != Vector3.Zero)
-			{
-				position.Z = 1000.0f;
+			return null;
+		}
 
-				var heightResult = new OutputArgument();
-
-				for (float z = 800; z >= 0; z -= 50)
-				{
-					if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, z, heightResult))
-					{
-						position.Z = heightResult.GetResult<float>();
-						break;
-					}
-
-					Script.Wait(100);
-				}
-			}
-
-			return position;
+		/// <summary>
+		/// Removes the waypoint.
+		/// </summary>
+		public static void RemoveWaypoint()
+		{
+			Function.Call(Hash.SET_WAYPOINT_OFF);
 		}
 
 		/// <summary>
