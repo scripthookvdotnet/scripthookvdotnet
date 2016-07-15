@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 using GTA.Math;
 using GTA.Native;
 
@@ -1789,6 +1791,21 @@ namespace GTA
 	    {
             return "VEH_CLASS_" + ((int)vehicleClass).ToString();
         }
-        
-	}
+
+        public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
+        {
+            return Array.ConvertAll<int, VehicleHash>(MemoryAccess.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
+        }
+
+	    public static VehicleHash[] GetAllModels()
+	    {
+	        List<VehicleHash> allModels = new List<VehicleHash>();
+	        for (int i = 0; i < 0x20; i++)
+	        {
+                allModels.AddRange(Array.ConvertAll<int, VehicleHash>(MemoryAccess.VehicleModels[i].ToArray(), item => (VehicleHash)item));
+	        }
+	        return allModels.ToArray();
+	    }
+
+    }
 }
