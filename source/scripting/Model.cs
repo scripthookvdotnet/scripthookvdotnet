@@ -113,7 +113,7 @@ namespace GTA
 		{
 			get
 			{
-				return IsValid && !IsVehicle;
+				return MemoryAccess.IsModelAPed(Hash);
 			}
 		}
 		public bool IsPlane
