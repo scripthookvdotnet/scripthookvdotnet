@@ -123,6 +123,13 @@ namespace GTA
 				return Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_PLANE, Hash);
 			}
 		}
+		public bool IsProp
+		{
+			get
+			{
+				return IsValid && !IsPed && !IsVehicle;
+			}
+		}
 		public bool IsQuadbike
 		{
 			get
