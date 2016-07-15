@@ -204,7 +204,7 @@ namespace GTA
 			void WriteString(System::String ^value, int maxSize);
 			
 			/// <summary>
-			/// Gets a value indicating whether the a specific bit of the <see cref="GlobalVariable"/> is set.
+			/// Gets a value indicating whether a specific bit of the <see cref="GlobalVariable"/> is set.
 			/// </summary>
 			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to check.</param>
 			bool IsBitSet(int index);
