@@ -327,6 +327,33 @@ namespace GTA
 			static_cast<char *>(_address.ToPointer())[size] = '\0';
 		}
 
+		bool GlobalVariable::IsBitSet(int index)
+		{
+			if (index < 0 || index > 63)
+			{
+				throw gcnew IndexOutOfRangeException("The bit index has to be between 0 and 63");
+			}
+			return ((*static_cast<UInt64*>(_address.ToPointer()) >> index) & 1) != 0;
+		}
+
+		void GlobalVariable::SetBit(int index)
+		{
+			if (index < 0 || index > 63)
+			{
+				throw gcnew IndexOutOfRangeException("The bit index has to be between 0 and 63");
+			}
+			*static_cast<UInt64*>(_address.ToPointer()) |= ((long long)1 << index);
+		}
+
+		void GlobalVariable::ClearBit(int index)
+		{
+			if (index < 0 || index > 63)
+			{
+				throw gcnew IndexOutOfRangeException("The bit index has to be between 0 and 63");
+			}
+			*static_cast<UInt64*>(_address.ToPointer()) &= ~((long long)1 << index);
+		}
+
 		GlobalVariable GlobalVariable::GetStructField(int index)
 		{
 			if (index < 0)

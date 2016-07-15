@@ -202,6 +202,24 @@ namespace GTA
 			/// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
 			/// <param name="maxSize">The maximum size of the string. Can be found for a given global variable by checking the decompiled scripts from the game.</param>
 			void WriteString(System::String ^value, int maxSize);
+			
+			/// <summary>
+			/// Gets a value indicating whether the a specific bit of the <see cref="GlobalVariable"/> is set.
+			/// </summary>
+			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to check.</param>
+			bool IsBitSet(int index);
+
+			/// <summary>
+			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to true.
+			/// </summary>
+			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to set.</param>
+			void SetBit(int index);
+
+			/// <summary>
+			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to false.
+			/// </summary>
+			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to clear.</param>
+			void ClearBit(int index);
 
 			/// <summary>
 			/// Gets the <see cref="GlobalVariable"/> stored at a given offset in a global structure.
