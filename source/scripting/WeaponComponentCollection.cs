@@ -230,7 +230,7 @@ namespace GTA
 	        return _invalidComponent;
 	    }
 
-	    public int ClipVariations
+	    public int ClipVariationsCount
 	    {
 	        get
 	        {
@@ -261,7 +261,7 @@ namespace GTA
             return _invalidComponent;
         }
 
-	    public int ScopeVariations
+	    public int ScopeVariationsCount
 	    {
             get
             {
@@ -277,7 +277,7 @@ namespace GTA
             }
         }
 
-        public WeaponComponent GetSupressorComponent()
+        public WeaponComponent GetSuppressorComponent()
         {
             foreach (var component in this)
             {
@@ -288,7 +288,7 @@ namespace GTA
             }
             return _invalidComponent;
         }
-        public WeaponComponent GetFlashlightComponent()
+        public WeaponComponent GetFlashLightComponent()
         {
             foreach (var component in this)
             {
