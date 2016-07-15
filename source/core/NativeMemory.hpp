@@ -69,10 +69,16 @@ namespace GTA
 			static System::UInt64(*CheckpointHandleAddr)(System::UInt64 baseAddr, int Handle);
 			static System::UInt64 *checkpointPoolAddress;
 			static float *_readWorldGravityAddr, *_writeWorldGravityAddr;
-
+			static property System::Collections::ObjectModel::ReadOnlyCollection<System::Collections::ObjectModel::ReadOnlyCollection<int> ^> ^VehicleModels
+			{
+				System::Collections::ObjectModel::ReadOnlyCollection<System::Collections::ObjectModel::ReadOnlyCollection<int> ^> ^get()
+				{
+					return vehicleModels;
+				}
+			}
 		private:
 			static MemoryAccess();
-
+			static System::Collections::ObjectModel::ReadOnlyCollection<System::Collections::ObjectModel::ReadOnlyCollection<int> ^> ^vehicleModels;
 			static System::UInt64 FindPattern(const char *pattern, const char *mask);
 		};
 	}

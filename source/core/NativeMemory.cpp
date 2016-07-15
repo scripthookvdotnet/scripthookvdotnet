@@ -6,6 +6,7 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::Collections::ObjectModel;
 
 namespace GTA
 {
@@ -291,6 +292,64 @@ namespace GTA
 			};
 		}
 
+		inline bool bittest(int data, unsigned char index)
+		{
+			return (data & (1 << index)) != 0;
+		}
+
+		ReadOnlyCollection<ReadOnlyCollection<int> ^> ^GetVehicleModels(UINT64 baseFuncAddr, int classOffset)
+		{
+			UINT16 HashTableEntries = *reinterpret_cast<UINT16*>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
+			int cmp1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
+			UINT64 mov2 = *reinterpret_cast<UINT64*>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
+			UINT64 mul3 = *reinterpret_cast<UINT64*>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
+			UINT64 add4 = *reinterpret_cast<UINT64*>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
+			struct HashNode
+			{
+				int hash;
+				UINT16 data;
+				UINT16 padding;
+				HashNode* next;
+			};
+			HashNode** HashMap = *reinterpret_cast<HashNode***>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
+			//I know 0x20 items are defined even though there are only 0x16 vehicle classes.
+			//But keeping it at 0x20 is just being safe as the & 0x1F in theory supports up to 0x20
+			array<List<int>^> ^hashes = gcnew array<List<int>^>(0x20);
+			for (int i = 0; i<0x20;i++)
+			{
+				hashes[i] = gcnew List<int>();
+			}
+			for (int i = 0; i < HashTableEntries; i++)
+			{
+				for (HashNode* cur = HashMap[i]; cur; cur = cur->next)
+				{
+					cur->hash;
+					UINT16 data = cur->data;
+					if ((int)data < cmp1 && bittest(*reinterpret_cast<int*>(mov2 + (4 * data >> 5)), data & 0x1F))
+					{
+						UINT64 addr1 = add4 + mul3 * data;
+						if (addr1)
+						{
+							UINT64 addr2 = *reinterpret_cast<PUINT64>(addr1);
+							if (addr2)
+							{
+								if ((*reinterpret_cast<PBYTE>(addr2 + 157) & 0x1F) == 5)
+								{
+									hashes[*reinterpret_cast<PBYTE>(addr2 + classOffset) & 0x1F]->Add(cur->hash);
+								}
+							}
+						}
+					}
+				}
+			}
+			array<ReadOnlyCollection<int> ^> ^result = gcnew array<ReadOnlyCollection<int> ^>(0x20);
+			for (int i = 0; i<0x20; i++)
+			{
+				result[i] = Array::AsReadOnly(hashes[i]->ToArray());
+			}
+			return Array::AsReadOnly(result);
+		}
+
 		static MemoryAccess::MemoryAccess()
 		{
 			uintptr_t address;
@@ -344,6 +403,8 @@ namespace GTA
 			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
 			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
 			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
+			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx");
+			vehicleModels = GetVehicleModels(*reinterpret_cast<int*>(address - 0x21) + address - 0x1D, *reinterpret_cast<int*>(address + 0x10));
 		}
 
 		int MemoryAccess::GetGameVersion()

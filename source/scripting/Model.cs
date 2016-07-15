@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using GTA.Math;
 using GTA.Native;
 
@@ -244,6 +245,11 @@ namespace GTA
 		{
 			return (WeaponHash)source.Hash;
 		}
+
+	    public static VehicleHash[] AllVehiclesHashes(VehicleClass vehicleClass)
+	    {
+	        return Array.ConvertAll<int, VehicleHash>(MemoryAccess.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash) item);
+	    }
 
 		public static bool operator ==(Model left, Model right)
 		{

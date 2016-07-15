@@ -132,7 +132,7 @@ namespace GTA
 	{
 		Everything = -1,
 		Map = 1,
-		Mission_Entities,
+		MissionEntities,
 		Peds1 = 12,
 		Objects = 16,
 		Unk1 = 32,
@@ -169,7 +169,7 @@ namespace GTA
 		HorizontalCircleFat,
 		ReplayIcon,
 		HorizontalCircleSkinny,
-		HorizontalCircleSkinny_Arrow,
+		HorizontalCircleSkinnyArrow,
 		HorizontalSplitArrowCircle,
 		DebugSphere
 	}
@@ -763,7 +763,7 @@ namespace GTA
 
 		public static string GetZoneName(Vector2 position)
 		{
-			return World.GetZoneName(new Vector3(position.X, position.Y, 0f));
+			return GetZoneName(new Vector3(position.X, position.Y, 0f));
 		}
 		public static string GetZoneName(Vector3 position)
 		{
