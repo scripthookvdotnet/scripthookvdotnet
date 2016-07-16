@@ -114,6 +114,35 @@ namespace GTA
 		{
 			return (GetAllVariations() as IEnumerable<IPedVariation>).GetEnumerator();
 		}
+
+		public void RandmoizeOutfit()
+		{
+			switch ((PedHash)_ped.Model.Hash)
+			{
+				case PedHash.Michael:
+				case PedHash.Franklin:
+				case PedHash.Trevor:
+				case PedHash.FreemodeMale01:
+				case PedHash.FreemodeFemale01:
+					return;//these models freeze when randomized
+			}
+			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, _ped.Handle, false);
+		}
+		public void SetDefaultClothes()
+		{
+			Function.Call(Hash.SET_PED_DEFAULT_COMPONENT_VARIATION, _ped.Handle);
+		}
+
+		public void RandomizeProps()
+		{
+			Function.Call(Hash.SET_PED_RANDOM_PROPS, _ped.Handle);
+		}
+
+		public void ClearProps()
+		{
+			Function.Call(Hash.CLEAR_ALL_PED_PROPS, _ped.Handle);
+		}
+
 	}
 
 	public interface IPedVariation

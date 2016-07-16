@@ -1127,14 +1127,7 @@ namespace GTA
 			Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, Handle);
 		}
 
-		public void RandomizeOutfit()
-		{
-			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, Handle, false);
-		}
-		public void SetDefaultClothes()
-		{
-			Function.Call(Hash.SET_PED_DEFAULT_COMPONENT_VARIATION, Handle);
-		}
+		
 
 		public RelationshipGroup RelationshipGroup
 		{
