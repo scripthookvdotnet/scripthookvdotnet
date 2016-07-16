@@ -73,6 +73,47 @@ namespace GTA
 				return prop;
 			}
 		}
+
+		public PedComponent[] GetAllComponents()
+		{
+			List<PedComponent> components = new List<PedComponent>();
+			foreach (PedComponents componentId in Enum.GetValues(typeof(PedComponents)))
+			{
+				PedComponent component = this[componentId];
+				if (component.HasAnyVariations)
+				{
+					components.Add(component);
+				}
+			}
+			return components.ToArray();
+		}
+
+		public PedProp[] GetAllProps()
+		{
+			List<PedProp> props = new List<PedProp>();
+			foreach (PedProps propId in Enum.GetValues(typeof(PedProps)))
+			{
+				PedProp prop = this[propId];
+				if (prop.HasAnyVariations)
+				{
+					props.Add(prop);
+				}
+			}
+			return props.ToArray();
+		}
+
+		public IPedVariation[] GetAllVariations()
+		{
+			List<IPedVariation> variations = new List<IPedVariation>();
+			variations.AddRange(GetAllComponents());
+			variations.AddRange(GetAllProps());
+			return variations.ToArray();
+		}
+
+		public IEnumerator<IPedVariation> GetEnumerator()
+		{
+			return (GetAllVariations() as IEnumerable<IPedVariation>).GetEnumerator();
+		}
 	}
 
 	public interface IPedVariation
@@ -165,6 +206,10 @@ namespace GTA
 			get { return HasVariations || HasTextureVariations; }
 		}
 
+		public override string ToString()
+		{
+			return _componentdId.ToString();
+		}
 	}
 
 	public class PedProp : IPedVariation
@@ -243,7 +288,10 @@ namespace GTA
 			get { return HasVariations; }
 		}
 
-
+		public override string ToString()
+		{
+			return _propId.ToString();
+		}
 	}
 
 }
