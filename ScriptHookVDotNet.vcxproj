@@ -122,6 +122,7 @@
     <CsCompile Include="source\scripting\Bone.cs" />
     <CsCompile Include="source\scripting\Camera.cs" />
     <CsCompile Include="source\scripting\Checkpoint.cs" />
+    <CsCompile Include="source\scripting\Clothing.cs" />
     <CsCompile Include="source\scripting\Controls.cs" />
     <CsCompile Include="source\scripting\Entity.cs" />
     <CsCompile Include="source\scripting\Euphoria.cs" />

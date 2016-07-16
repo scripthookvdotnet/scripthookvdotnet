@@ -230,5 +230,8 @@
     <CsCompile Include="source\scripting\VehicleWindowCollection.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\Clothing.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>

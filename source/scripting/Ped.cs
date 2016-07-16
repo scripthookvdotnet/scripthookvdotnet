@@ -55,6 +55,7 @@ namespace GTA
 		Tasks _tasks;
 		Euphoria _euphoria;
 		WeaponCollection _weapons;
+		private PedClothing _clothing;
 		#endregion
 
 		public Ped(int handle) : base(handle)
@@ -184,6 +185,21 @@ namespace GTA
 					_weapons = new WeaponCollection(this);
 				}
 				return _weapons;
+			}
+		}
+
+		/// <summary>
+		/// Opens a list of clothing and prop configurations that the <see cref="Ped"/> can wear.
+		/// </summary>
+		public PedClothing Clothing
+		{
+			get
+			{
+				if (ReferenceEquals(_clothing, null))
+				{
+					_clothing = new PedClothing(this);
+				}
+				return _clothing;
 			}
 		}
 
