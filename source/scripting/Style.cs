@@ -115,7 +115,7 @@ namespace GTA
 			return (GetAllVariations() as IEnumerable<IPedVariation>).GetEnumerator();
 		}
 
-		public void RandmizeOutfit()
+		public void RandomizeOutfit()
 		{
 			switch ((PedHash)_ped.Model.Hash)
 			{
