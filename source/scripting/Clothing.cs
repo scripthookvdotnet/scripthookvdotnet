@@ -114,7 +114,19 @@ namespace GTA
 
 		public int TextureCount
 		{
-			get { return Function.Call<int>(Hash.GET_NUMBER_OF_PED_TEXTURE_VARIATIONS, _ped.Handle, _componentdId, Index) + 1; }
+			get
+			{
+				int count = Function.Call<int>(Hash.GET_NUMBER_OF_PED_TEXTURE_VARIATIONS, _ped.Handle, _componentdId, Index) + 1;
+				while (count > 0)
+				{
+					if (IsVariationValid(Index, count - 1))
+					{
+						break;
+					}
+					count--;
+				}
+				return count;
+			}
 		}
 
 		public int TextureIndex
