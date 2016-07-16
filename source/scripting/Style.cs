@@ -4,7 +4,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public enum ClothingComponents
+	public enum PedComponents
 	{
 		Face,
 		Head,
@@ -33,30 +33,30 @@ namespace GTA
 		Unknown8,
 		Unknown9,
 	}
-	public class PedClothing
+	public class Style
 	{
 		#region Fields
 		Ped _ped;
-		Dictionary<ClothingComponents, ClothingComponent> _clothingComponents = new Dictionary<ClothingComponents, ClothingComponent>();
+		Dictionary<PedComponents, PedComponent> _pedComponents = new Dictionary<PedComponents, PedComponent>();
 		Dictionary<PedProps, PedProp> _pedProps = new Dictionary<PedProps, PedProp>();
 		#endregion
 
-		internal PedClothing(Ped ped)
+		internal Style(Ped ped)
 		{
 			_ped = ped;
 		}
 
-		public ClothingComponent this[ClothingComponents componentId]
+		public PedComponent this[PedComponents componentId]
 		{
 			get
 			{
-				ClothingComponent component = null;
-				if (!_clothingComponents.TryGetValue(componentId, out component))
+				PedComponent variation = null;
+				if (!_pedComponents.TryGetValue(componentId, out variation))
 				{
-					component = new ClothingComponent(_ped, componentId);
-					_clothingComponents.Add(componentId, component);
+					variation = new PedComponent(_ped, componentId);
+					_pedComponents.Add(componentId, variation);
 				}
-				return component;
+				return variation;
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace GTA
 		}
 	}
 
-	public interface IPedComponent
+	public interface IPedVariation
 	{
 		int Count { get; }
 		int Index { get; set; }
@@ -88,14 +88,14 @@ namespace GTA
 		bool HasAnyVariations { get; }
 
 	}
-	public class ClothingComponent : IPedComponent
+	public class PedComponent : IPedVariation
 	{
 		#region Fields
-		Ped _ped;
-		ClothingComponents _componentdId;
+		readonly Ped _ped;
+		readonly PedComponents _componentdId;
 		#endregion
 
-		internal ClothingComponent(Ped ped, ClothingComponents componentId)
+		internal PedComponent(Ped ped, PedComponents componentId)
 		{
 			_ped = ped;
 			_componentdId = componentId;
@@ -167,11 +167,11 @@ namespace GTA
 
 	}
 
-	public class PedProp : IPedComponent
+	public class PedProp : IPedVariation
 	{
 		#region Fields
-		Ped _ped;
-		PedProps _propId;
+		readonly Ped _ped;
+		readonly PedProps _propId;
 		#endregion
 
 		internal PedProp(Ped ped, PedProps propId)
