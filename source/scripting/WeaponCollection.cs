@@ -8,7 +8,7 @@ namespace GTA
 	{
 		#region Fields
 		Ped _owner;
-		readonly Dictionary<uint, Weapon> _weapons = new Dictionary<uint, Weapon>();
+		readonly Dictionary<WeaponHash, Weapon> _weapons = new Dictionary<WeaponHash, Weapon>();
 		#endregion
 
 		internal WeaponCollection(Ped owner)
@@ -22,7 +22,7 @@ namespace GTA
 			{
 				Weapon weapon = null;
 
-				if (!_weapons.TryGetValue((uint)hash, out weapon))
+				if (!_weapons.TryGetValue(hash, out weapon))
 				{
 					if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, _owner.Handle, hash, 0))
 					{
@@ -30,7 +30,7 @@ namespace GTA
 					}
 
 					weapon = new Weapon(_owner, hash);
-					_weapons.Add((uint)hash, weapon);
+					_weapons.Add(hash, weapon);
 				}
 
 				return weapon;
@@ -44,7 +44,7 @@ namespace GTA
 				var currentWeapon = new OutputArgument();
 				Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, currentWeapon, true);
 
-				uint hash = currentWeapon.GetResult<uint>();
+				WeaponHash hash = currentWeapon.GetResult<WeaponHash>();
 
 				if (_weapons.ContainsKey(hash))
 				{
@@ -75,7 +75,7 @@ namespace GTA
 		{
 			get
 			{
-				uint hash = (uint)Function.Call<int>(Hash.GET_BEST_PED_WEAPON, _owner.Handle, 0);
+				WeaponHash hash = Function.Call<WeaponHash>(Hash.GET_BEST_PED_WEAPON, _owner.Handle, 0);
 
 				if (_weapons.ContainsKey(hash))
 				{
@@ -104,10 +104,10 @@ namespace GTA
 		{
 			Weapon weapon = null;
 
-			if (!_weapons.TryGetValue((uint)hash, out weapon))
+			if (!_weapons.TryGetValue(hash, out weapon))
 			{
 				weapon = new Weapon(_owner, hash);
-				_weapons.Add((uint)hash, weapon);
+				_weapons.Add(hash, weapon);
 			}
 
 			if (weapon.IsPresent)
@@ -154,7 +154,7 @@ namespace GTA
 		}
 		public void Remove(Weapon weapon)
 		{
-			uint hash = (uint)weapon.Hash;
+			WeaponHash hash = weapon.Hash;
 
 			if (_weapons.ContainsKey(hash))
 			{

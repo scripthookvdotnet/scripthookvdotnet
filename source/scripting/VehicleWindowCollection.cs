@@ -22,7 +22,7 @@ namespace GTA
 		#region Fields
 
 		Vehicle _owner;
-		readonly Dictionary<int, VehicleWindow> _vehicleWindows = new Dictionary<int, VehicleWindow>();
+		readonly Dictionary<VehicleWindowIndex, VehicleWindow> _vehicleWindows = new Dictionary<VehicleWindowIndex, VehicleWindow>();
 
 		#endregion
 
@@ -38,10 +38,10 @@ namespace GTA
 			{
 				VehicleWindow vehicleWindow = null;
 
-				if (!_vehicleWindows.TryGetValue((int) index, out vehicleWindow))
+				if (!_vehicleWindows.TryGetValue(index, out vehicleWindow))
 				{
 					vehicleWindow = new VehicleWindow(_owner, index);
-					_vehicleWindows.Add((int) index, vehicleWindow);
+					_vehicleWindows.Add(index, vehicleWindow);
 				}
 
 				return vehicleWindow;

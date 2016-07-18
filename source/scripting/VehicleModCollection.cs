@@ -78,8 +78,8 @@ namespace GTA
 		#region Fields
 
 		Vehicle _owner;
-		readonly Dictionary<int, VehicleMod> _vehicleMods = new Dictionary<int, VehicleMod>();
-		readonly Dictionary<int, VehicleToggleMod> _vehicleToggleMods = new Dictionary<int, VehicleToggleMod>();
+		readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new Dictionary<VehicleModType, VehicleMod>();
+		readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new Dictionary<VehicleToggleModType, VehicleToggleMod>();
 
 		private static readonly ReadOnlyDictionary<VehicleWheelType, Tuple<string, string>> _wheelNames = new ReadOnlyDictionary
 			<VehicleWheelType, Tuple<string, string>>(
@@ -110,10 +110,10 @@ namespace GTA
 			{
 				VehicleMod vehicleMod = null;
 
-				if (!_vehicleMods.TryGetValue((int) modType, out vehicleMod))
+				if (!_vehicleMods.TryGetValue(modType, out vehicleMod))
 				{
 					vehicleMod = new VehicleMod(_owner, modType);
-					_vehicleMods.Add((int) modType, vehicleMod);
+					_vehicleMods.Add(modType, vehicleMod);
 				}
 
 				return vehicleMod;
@@ -126,10 +126,10 @@ namespace GTA
 			{
 				VehicleToggleMod vehicleToggleMod = null;
 
-				if (!_vehicleToggleMods.TryGetValue((int) modType, out vehicleToggleMod))
+				if (!_vehicleToggleMods.TryGetValue(modType, out vehicleToggleMod))
 				{
 					vehicleToggleMod = new VehicleToggleMod(_owner, modType);
-					_vehicleToggleMods.Add((int) modType, vehicleToggleMod);
+					_vehicleToggleMods.Add(modType, vehicleToggleMod);
 				}
 
 				return vehicleToggleMod;
