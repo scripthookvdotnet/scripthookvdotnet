@@ -5,6 +5,10 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="NativeGen|x64">
+      <Configuration>NativeGen</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{019193A7-50C0-444A-84CA-777595E702CD}</ProjectGuid>
@@ -28,11 +32,13 @@
     <XDCMakeToolExe>XDCMake.exe</XDCMakeToolExe>
     <XDCMakeToolPath>$(SolutionDir)tools\</XDCMakeToolPath>
   </PropertyGroup>
-  <!-- Release configuration settings -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Optimize>true</Optimize>
+  <!-- Specific configuration settings -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'NativeGen'">
+    <ConfigurationType>Utility</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <!-- Global compilation settings -->
@@ -49,18 +55,27 @@
     <Xdcmake>
       <AdditionalDocumentFile>$(IntDir)$(TargetName).xdc;%(AdditionalDocumentFile)</AdditionalDocumentFile>
     </Xdcmake>
-    <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
-  <!-- Release compilation settings -->
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <!-- Specific compilation settings -->
+  <ItemDefinitionGroup Condition="'$(Configuration)' == 'Release'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
+    <CsCompile>
+      <Optimize>true</Optimize>
+      <NoWarn>1591;%(NoWarn)</NoWarn>
+    </CsCompile>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)' == 'NativeGen'">
+    <PreBuildEvent>
+      <Command>tools\NativeGen.exe source\core\NativeHashes.hpp</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -68,7 +83,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" />
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" Condition="'$(ConfigurationType)' != 'Utility'" />
   </ItemGroup>
   <!-- Core source files -->
   <ItemGroup>
@@ -156,7 +171,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="$(Optimize)" DisabledWarnings="1591" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">

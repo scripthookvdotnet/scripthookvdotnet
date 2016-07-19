@@ -1,7 +1,6 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-using System.Runtime.InteropServices;
 
 namespace GTA
 {

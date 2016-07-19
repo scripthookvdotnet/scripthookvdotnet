@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using GTA.Math;
 using GTA.Native;
 
@@ -164,6 +162,19 @@ namespace GTA
 					return Vector3.RelativeFront;
 				}
 				return MemoryAccess.ReadVector3(MemoryAddress + 0x70);
+			}
+		}
+
+		public Matrix Matrix
+		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return new Matrix();
+				}
+				return MemoryAccess.ReadMatrix(memoryAddress + 96);
 			}
 		}
 
@@ -643,7 +654,50 @@ namespace GTA
 		public Vector3 GetBonePosition(string boneName)
 		{
 			return GetBonePosition(GetBoneIndex(boneName));
+		}	
+
+		public Vector3 GetBoneOffsetPosition(string boneName, Vector3 offset)
+		{
+			return GetBoneOffsetPosition(GetBoneIndex(boneName), offset);
 		}
+		public Vector3 GetBoneOffsetPosition(int boneIndex, Vector3 offset)
+		{
+			IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(Handle, boneIndex);
+			if (address == IntPtr.Zero)
+			{
+				return Position;
+			}
+			return Matrix.TransformPoint(MemoryAccess.ReadMatrix(address).TransformPoint(offset));
+		}
+
+		public Vector3 GetBonePositionOffset(string boneName, Vector3 worldCoords)
+		{
+			return GetBonePositionOffset(GetBoneIndex(boneName), worldCoords);
+		}
+		public Vector3 GetBonePositionOffset(int boneIndex, Vector3 worldCoords)
+		{
+			IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(Handle, boneIndex);
+			if (address == IntPtr.Zero)
+			{
+				return Vector3.Zero;
+			}
+			return MemoryAccess.ReadMatrix(address).InverseTransformPoint(Matrix.InverseTransformPoint(worldCoords));
+		}
+
+		public Matrix GetBoneMatrix(string boneName)
+		{
+			return GetBoneMatrix(GetBoneIndex(boneName));
+		}	  
+		public Matrix GetBoneMatrix(int boneIndex)
+		{
+			IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(Handle, boneIndex);
+			if (address == IntPtr.Zero)
+			{
+				return new Matrix();
+			}
+			return MemoryAccess.ReadMatrix(address);
+		}
+
 		public bool HasBone(string boneName)
 		{
 			return GetBoneIndex(boneName) != -1;
@@ -697,22 +751,7 @@ namespace GTA
 		}
 		public Entity GetEntityAttachedTo()
 		{
-			int handle = Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle);
-
-			if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, handle))
-			{
-				switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
-				{
-					case 1:
-						return new Ped(handle);
-					case 2:
-						return new Vehicle(handle);
-					case 3:
-						return new Prop(handle);
-				}
-			}
-
-			return null;
+			return FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 		}
 
 		public void ApplyForce(Vector3 direction)

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
-  <ContentType Name="CsCode" DisplayName="C# code" ItemType="CsCompile" />
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:sys="clr-namespace:System;assembly=mscorlib">
   <ItemType Name="CsCompile" DisplayName="C# compiler"/>
+  <ContentType Name="CsCode" DisplayName="C# code" ItemType="CsCompile" />
   <FileExtension Name=".cs" ContentType="CsCode"/>
+  <Rule Name="CsCompile" PageTemplate="tool" DisplayName="C#" Order="11">
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" ItemType="CsCompile" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category Name="General" DisplayName="General" />
+      <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
+    </Rule.Categories>
+    <BoolProperty Name="Optimize" DisplayName="Optimize" Category="General" />
+    <StringListProperty Name="NoWarn" DisplayName="Disable Specific Warnings" Category="General" />
+  </Rule>
 </ProjectSchemaDefinitions>

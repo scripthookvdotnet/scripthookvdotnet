@@ -21,6 +21,108 @@
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
 
+#pragma unmanaged
+#include <xmmintrin.h>
+extern float _negXor[4];
+void matrixmul_sse(const float *a, const float *b, float *r)
+{
+	__m128  r_line;
+	for (int i = 0; i<16; i += 4) {
+		r_line = _mm_mul_ps(_mm_loadu_ps(a), _mm_set1_ps(b[i]));
+		for (int j = 1; j<4; j++) {
+			r_line = _mm_add_ps(_mm_mul_ps(_mm_loadu_ps(&a[j * 4]), _mm_set1_ps(b[i + j])), r_line);
+		}
+		_mm_storeu_ps(&r[i], r_line);
+	}
+}
+void mdiv_sse(const float *a, const float *b, float *r)
+{
+	for (int i = 0; i<16; i += 4) {
+		_mm_storeu_ps(&r[i], _mm_div_ps(_mm_loadu_ps(&a[i]), _mm_loadu_ps(&b[i])));
+	}
+}
+void mmul_sse(const float *a, const float scale, float *r)
+{
+	__m128 s_line = _mm_set1_ps(scale);
+	for (int i = 0; i<16; i += 4) {
+		_mm_storeu_ps(&r[i], _mm_mul_ps(_mm_loadu_ps(&a[i]), s_line));
+	}
+}
+void madd_sse(const float *a, const float *b, float *r)
+{
+	for (int i = 0; i<16; i += 4) {
+		_mm_storeu_ps(&r[i], _mm_add_ps(_mm_loadu_ps(&a[i]), _mm_loadu_ps(&b[i])));
+	}
+}
+void msub_sse(const float *a, const float *b, float *r)
+{
+	for (int i = 0; i<16; i += 4) {
+		_mm_storeu_ps(&r[i], _mm_sub_ps(_mm_loadu_ps(&a[i]), _mm_loadu_ps(&b[i])));
+	}
+}
+void mlerp_sse(const float *a, const float *b, float amount, float *r)
+{
+	//use lerp(x0, x1, t) = (1 - t)*x0 + t*x1 as to prevent rounding errors
+	__m128 s_line1 = _mm_set1_ps(1 - amount);
+	__m128 s_line2 = _mm_set1_ps(amount);
+	for (int i = 0; i<16; i += 4) {
+		_mm_storeu_ps(&r[i], _mm_add_ps(
+			_mm_mul_ps(_mm_loadu_ps(&a[i]), s_line1),
+			_mm_mul_ps(_mm_loadu_ps(&b[i]), s_line2)));
+	}
+}
+void mneg_sse(const float *a, float *r)
+{
+	__m128 xorVal = _mm_load_ps(_negXor);
+	_mm_storeu_ps(r, _mm_xor_ps(_mm_loadu_ps(a), xorVal));
+	_mm_storeu_ps(&r[4], _mm_xor_ps(_mm_loadu_ps(&a[4]), xorVal));
+	_mm_storeu_ps(&r[8], _mm_xor_ps(_mm_loadu_ps(&a[8]), xorVal));
+	_mm_storeu_ps(&r[12], _mm_xor_ps(_mm_loadu_ps(&a[12]), xorVal));
+}
+void mtranspose_sse(const float *a, float *r)
+{
+	__m128 row1 = _mm_loadu_ps(a),
+		row2 = _mm_loadu_ps(&a[4]),
+		row3 = _mm_loadu_ps(&a[8]),
+		row4 = _mm_loadu_ps(&a[12]);
+	_MM_TRANSPOSE4_PS(row1, row2, row3, row4);
+	_mm_storeu_ps(r, row1);
+	_mm_storeu_ps(&r[4], row2);
+	_mm_storeu_ps(&r[8], row3);
+	_mm_storeu_ps(&r[12], row4);
+}
+void mtransform_point_sse(const float *matrix, const float pointX, const float pointY, const float pointZ, float *r)
+{
+	__m128 point = _mm_set_ps(1.0f, pointZ, pointY, pointX);
+	point = _mm_add_ps(
+		_mm_add_ps(
+			_mm_add_ps(
+				_mm_mul_ps(_mm_loadu_ps(matrix), _mm_shuffle_ps(point, point, _MM_SHUFFLE(0, 0, 0, 0))),
+				_mm_mul_ps(_mm_loadu_ps(&matrix[4]), _mm_shuffle_ps(point, point, _MM_SHUFFLE(1, 1, 1, 1)))),
+			_mm_mul_ps(_mm_loadu_ps(&matrix[8]), _mm_shuffle_ps(point, point, _MM_SHUFFLE(2, 2, 2, 2)))),
+		_mm_loadu_ps(&matrix[12])
+	);
+	_mm_storeu_ps(r, point);
+}
+void minvtransform_point_sse(const float *matrix, const float pointX, const float pointY, const float pointZ, float *r)
+{
+	__m128 off = _mm_sub_ps(_mm_set_ps(1.0f, pointZ, pointY, pointX), _mm_loadu_ps(&matrix[12]));
+	__m128 r1 = _mm_loadu_ps(matrix);
+	__m128 r2 = _mm_loadu_ps(&matrix[4]);
+	__m128 r3 = _mm_loadu_ps(&matrix[8]);
+	__m128 zero = _mm_setzero_ps();
+	__m128 lo = _mm_unpacklo_ps(r1, r3);//r0, u0, r1, u1
+	__m128 lo2 = _mm_unpacklo_ps(r2, zero);//f0, 0, f1, 0
+	off = _mm_add_ps(
+		_mm_add_ps(
+			_mm_mul_ps(_mm_unpacklo_ps(lo, lo2), _mm_shuffle_ps(off, off, _MM_SHUFFLE(0, 0, 0, 0))),
+			_mm_mul_ps(_mm_unpackhi_ps(lo, lo2), _mm_shuffle_ps(off, off, _MM_SHUFFLE(1, 1, 1, 1)))),
+		_mm_mul_ps(
+			_mm_unpacklo_ps(_mm_unpackhi_ps(r1, r3), _mm_unpackhi_ps(r2, zero)), _mm_shuffle_ps(off, off, _MM_SHUFFLE(2, 2, 2, 2))));
+	_mm_storeu_ps(r, off);
+}
+#pragma managed
+
 namespace GTA
 {
 	namespace Math
@@ -113,26 +215,7 @@ namespace GTA
 			if (floatArray->Length != 16)
 				throw gcnew Exception("Array must contain 16 items to be converted to a 4*4 Matrix");
 			Matrix result;
-			result.M11 = floatArray[0];
-			result.M12 = floatArray[1];
-			result.M13 = floatArray[2];
-			result.M14 = floatArray[3];
-
-			result.M21 = floatArray[4];
-			result.M22 = floatArray[5];
-			result.M23 = floatArray[6];
-			result.M24 = floatArray[7];
-
-			result.M31 = floatArray[8];
-			result.M32 = floatArray[9];
-			result.M33 = floatArray[10];
-			result.M34 = floatArray[11];
-
-			result.M41 = floatArray[12];
-			result.M42 = floatArray[13];
-			result.M43 = floatArray[14];
-			result.M44 = floatArray[15];
-
+			System::Runtime::InteropServices::Marshal::Copy(floatArray, 0, IntPtr(&result), 16);
 			return result;
 		}
 
@@ -199,68 +282,34 @@ namespace GTA
 			M44 = tM44;
 		}
 
+		Vector3 Matrix::TransformPoint(Vector3 point)
+		{
+			pin_ptr<Matrix> pinned = this;
+			mtransform_point_sse((float*)pinned, point.X, point.Y, point.Z, (float*)&point);
+			return point;
+		}
+
+		Vector3 Matrix::InverseTransformPoint(Vector3 point)
+		{
+			pin_ptr<Matrix> pinned = this;
+			minvtransform_point_sse((float*)pinned, point.X, point.Y, point.Z, (float*)&point);
+			return point;
+		}
+
 		Matrix Matrix::Add(Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = left.M11 + right.M11;
-			result.M12 = left.M12 + right.M12;
-			result.M13 = left.M13 + right.M13;
-			result.M14 = left.M14 + right.M14;
-			result.M21 = left.M21 + right.M21;
-			result.M22 = left.M22 + right.M22;
-			result.M23 = left.M23 + right.M23;
-			result.M24 = left.M24 + right.M24;
-			result.M31 = left.M31 + right.M31;
-			result.M32 = left.M32 + right.M32;
-			result.M33 = left.M33 + right.M33;
-			result.M34 = left.M34 + right.M34;
-			result.M41 = left.M41 + right.M41;
-			result.M42 = left.M42 + right.M42;
-			result.M43 = left.M43 + right.M43;
-			result.M44 = left.M44 + right.M44;
-			return result;
+			madd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Subtract(Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = left.M11 - right.M11;
-			result.M12 = left.M12 - right.M12;
-			result.M13 = left.M13 - right.M13;
-			result.M14 = left.M14 - right.M14;
-			result.M21 = left.M21 - right.M21;
-			result.M22 = left.M22 - right.M22;
-			result.M23 = left.M23 - right.M23;
-			result.M24 = left.M24 - right.M24;
-			result.M31 = left.M31 - right.M31;
-			result.M32 = left.M32 - right.M32;
-			result.M33 = left.M33 - right.M33;
-			result.M34 = left.M34 - right.M34;
-			result.M41 = left.M41 - right.M41;
-			result.M42 = left.M42 - right.M42;
-			result.M43 = left.M43 - right.M43;
-			result.M44 = left.M44 - right.M44;
-			return result;
+			msub_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Negate(Matrix matrix)
 		{
-			Matrix result;
-			result.M11 = -matrix.M11;
-			result.M12 = -matrix.M12;
-			result.M13 = -matrix.M13;
-			result.M14 = -matrix.M14;
-			result.M21 = -matrix.M21;
-			result.M22 = -matrix.M22;
-			result.M23 = -matrix.M23;
-			result.M24 = -matrix.M24;
-			result.M31 = -matrix.M31;
-			result.M32 = -matrix.M32;
-			result.M33 = -matrix.M33;
-			result.M34 = -matrix.M34;
-			result.M41 = -matrix.M41;
-			result.M42 = -matrix.M42;
-			result.M43 = -matrix.M43;
-			result.M44 = -matrix.M44;
-			return result;
+			mneg_sse((float*)&matrix, (float*)&matrix);
+			return matrix;
 		}
 
 		Matrix Matrix::Inverse(Matrix matrix)
@@ -270,110 +319,28 @@ namespace GTA
 		}
 		Matrix Matrix::Multiply(Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = (left.M11 * right.M11) + (left.M12 * right.M21) + (left.M13 * right.M31) + (left.M14 * right.M41);
-			result.M12 = (left.M11 * right.M12) + (left.M12 * right.M22) + (left.M13 * right.M32) + (left.M14 * right.M42);
-			result.M13 = (left.M11 * right.M13) + (left.M12 * right.M23) + (left.M13 * right.M33) + (left.M14 * right.M43);
-			result.M14 = (left.M11 * right.M14) + (left.M12 * right.M24) + (left.M13 * right.M34) + (left.M14 * right.M44);
-			result.M21 = (left.M21 * right.M11) + (left.M22 * right.M21) + (left.M23 * right.M31) + (left.M24 * right.M41);
-			result.M22 = (left.M21 * right.M12) + (left.M22 * right.M22) + (left.M23 * right.M32) + (left.M24 * right.M42);
-			result.M23 = (left.M21 * right.M13) + (left.M22 * right.M23) + (left.M23 * right.M33) + (left.M24 * right.M43);
-			result.M24 = (left.M21 * right.M14) + (left.M22 * right.M24) + (left.M23 * right.M34) + (left.M24 * right.M44);
-			result.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + (left.M33 * right.M31) + (left.M34 * right.M41);
-			result.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + (left.M33 * right.M32) + (left.M34 * right.M42);
-			result.M33 = (left.M31 * right.M13) + (left.M32 * right.M23) + (left.M33 * right.M33) + (left.M34 * right.M43);
-			result.M34 = (left.M31 * right.M14) + (left.M32 * right.M24) + (left.M33 * right.M34) + (left.M34 * right.M44);
-			result.M41 = (left.M41 * right.M11) + (left.M42 * right.M21) + (left.M43 * right.M31) + (left.M44 * right.M41);
-			result.M42 = (left.M41 * right.M12) + (left.M42 * right.M22) + (left.M43 * right.M32) + (left.M44 * right.M42);
-			result.M43 = (left.M41 * right.M13) + (left.M42 * right.M23) + (left.M43 * right.M33) + (left.M44 * right.M43);
-			result.M44 = (left.M41 * right.M14) + (left.M42 * right.M24) + (left.M43 * right.M34) + (left.M44 * right.M44);
-			return result;
+			matrixmul_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Multiply(Matrix left, float right)
 		{
-			Matrix result;
-			result.M11 = left.M11 * right;
-			result.M12 = left.M12 * right;
-			result.M13 = left.M13 * right;
-			result.M14 = left.M14 * right;
-			result.M21 = left.M21 * right;
-			result.M22 = left.M22 * right;
-			result.M23 = left.M23 * right;
-			result.M24 = left.M24 * right;
-			result.M31 = left.M31 * right;
-			result.M32 = left.M32 * right;
-			result.M33 = left.M33 * right;
-			result.M34 = left.M34 * right;
-			result.M41 = left.M41 * right;
-			result.M42 = left.M42 * right;
-			result.M43 = left.M43 * right;
-			result.M44 = left.M44 * right;
-			return result;
+			mmul_sse((float*)&left, right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Divide(Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = left.M11 / right.M11;
-			result.M12 = left.M12 / right.M12;
-			result.M13 = left.M13 / right.M13;
-			result.M14 = left.M14 / right.M14;
-			result.M21 = left.M21 / right.M21;
-			result.M22 = left.M22 / right.M22;
-			result.M23 = left.M23 / right.M23;
-			result.M24 = left.M24 / right.M24;
-			result.M31 = left.M31 / right.M31;
-			result.M32 = left.M32 / right.M32;
-			result.M33 = left.M33 / right.M33;
-			result.M34 = left.M34 / right.M34;
-			result.M41 = left.M41 / right.M41;
-			result.M42 = left.M42 / right.M42;
-			result.M43 = left.M43 / right.M43;
-			result.M44 = left.M44 / right.M44;
-			return result;
+			mdiv_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Divide(Matrix left, float right)
 		{
-			Matrix result;
-			float inv = 1.0f / right;
-
-			result.M11 = left.M11 * inv;
-			result.M12 = left.M12 * inv;
-			result.M13 = left.M13 * inv;
-			result.M14 = left.M14 * inv;
-			result.M21 = left.M21 * inv;
-			result.M22 = left.M22 * inv;
-			result.M23 = left.M23 * inv;
-			result.M24 = left.M24 * inv;
-			result.M31 = left.M31 * inv;
-			result.M32 = left.M32 * inv;
-			result.M33 = left.M33 * inv;
-			result.M34 = left.M34 * inv;
-			result.M41 = left.M41 * inv;
-			result.M42 = left.M42 * inv;
-			result.M43 = left.M43 * inv;
-			result.M44 = left.M44 * inv;
-			return result;
+			mmul_sse((float*)&left, 1.0f / right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::Lerp(Matrix value1, Matrix value2, float amount)
 		{
-			Matrix result;
-			result.M11 = value1.M11 + ((value2.M11 - value1.M11) * amount);
-			result.M12 = value1.M12 + ((value2.M12 - value1.M12) * amount);
-			result.M13 = value1.M13 + ((value2.M13 - value1.M13) * amount);
-			result.M14 = value1.M14 + ((value2.M14 - value1.M14) * amount);
-			result.M21 = value1.M21 + ((value2.M21 - value1.M21) * amount);
-			result.M22 = value1.M22 + ((value2.M22 - value1.M22) * amount);
-			result.M23 = value1.M23 + ((value2.M23 - value1.M23) * amount);
-			result.M24 = value1.M24 + ((value2.M24 - value1.M24) * amount);
-			result.M31 = value1.M31 + ((value2.M31 - value1.M31) * amount);
-			result.M32 = value1.M32 + ((value2.M32 - value1.M32) * amount);
-			result.M33 = value1.M33 + ((value2.M33 - value1.M33) * amount);
-			result.M34 = value1.M34 + ((value2.M34 - value1.M34) * amount);
-			result.M41 = value1.M41 + ((value2.M41 - value1.M41) * amount);
-			result.M42 = value1.M42 + ((value2.M42 - value1.M42) * amount);
-			result.M43 = value1.M43 + ((value2.M43 - value1.M43) * amount);
-			result.M44 = value1.M44 + ((value2.M44 - value1.M44) * amount);
-			return result;
+			mlerp_sse((float*)&value1, (float*)&value2, amount, (float*)&value1);
+			return value1;
 		}
 		Matrix Matrix::RotationX(float angle)
 		{
@@ -610,67 +577,19 @@ namespace GTA
 		}
 		Matrix Matrix::Transpose(Matrix mat)
 		{
-			Matrix result;
-			result.M11 = mat.M11;
-			result.M12 = mat.M21;
-			result.M13 = mat.M31;
-			result.M14 = mat.M41;
-			result.M21 = mat.M12;
-			result.M22 = mat.M22;
-			result.M23 = mat.M32;
-			result.M24 = mat.M42;
-			result.M31 = mat.M13;
-			result.M32 = mat.M23;
-			result.M33 = mat.M33;
-			result.M34 = mat.M43;
-			result.M41 = mat.M14;
-			result.M42 = mat.M24;
-			result.M43 = mat.M34;
-			result.M44 = mat.M44;
-			return result;
+			mtranspose_sse((float*)&mat, (float*)&mat);
+			return mat;
 		}
 
 		Matrix Matrix::operator * (Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = (left.M11 * right.M11) + (left.M12 * right.M21) + (left.M13 * right.M31) + (left.M14 * right.M41);
-			result.M12 = (left.M11 * right.M12) + (left.M12 * right.M22) + (left.M13 * right.M32) + (left.M14 * right.M42);
-			result.M13 = (left.M11 * right.M13) + (left.M12 * right.M23) + (left.M13 * right.M33) + (left.M14 * right.M43);
-			result.M14 = (left.M11 * right.M14) + (left.M12 * right.M24) + (left.M13 * right.M34) + (left.M14 * right.M44);
-			result.M21 = (left.M21 * right.M11) + (left.M22 * right.M21) + (left.M23 * right.M31) + (left.M24 * right.M41);
-			result.M22 = (left.M21 * right.M12) + (left.M22 * right.M22) + (left.M23 * right.M32) + (left.M24 * right.M42);
-			result.M23 = (left.M21 * right.M13) + (left.M22 * right.M23) + (left.M23 * right.M33) + (left.M24 * right.M43);
-			result.M24 = (left.M21 * right.M14) + (left.M22 * right.M24) + (left.M23 * right.M34) + (left.M24 * right.M44);
-			result.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + (left.M33 * right.M31) + (left.M34 * right.M41);
-			result.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + (left.M33 * right.M32) + (left.M34 * right.M42);
-			result.M33 = (left.M31 * right.M13) + (left.M32 * right.M23) + (left.M33 * right.M33) + (left.M34 * right.M43);
-			result.M34 = (left.M31 * right.M14) + (left.M32 * right.M24) + (left.M33 * right.M34) + (left.M34 * right.M44);
-			result.M41 = (left.M41 * right.M11) + (left.M42 * right.M21) + (left.M43 * right.M31) + (left.M44 * right.M41);
-			result.M42 = (left.M41 * right.M12) + (left.M42 * right.M22) + (left.M43 * right.M32) + (left.M44 * right.M42);
-			result.M43 = (left.M41 * right.M13) + (left.M42 * right.M23) + (left.M43 * right.M33) + (left.M44 * right.M43);
-			result.M44 = (left.M41 * right.M14) + (left.M42 * right.M24) + (left.M43 * right.M34) + (left.M44 * right.M44);
-			return result;
+			matrixmul_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator * (Matrix left, float right)
 		{
-			Matrix result;
-			result.M11 = left.M11 * right;
-			result.M12 = left.M12 * right;
-			result.M13 = left.M13 * right;
-			result.M14 = left.M14 * right;
-			result.M21 = left.M21 * right;
-			result.M22 = left.M22 * right;
-			result.M23 = left.M23 * right;
-			result.M24 = left.M24 * right;
-			result.M31 = left.M31 * right;
-			result.M32 = left.M32 * right;
-			result.M33 = left.M33 * right;
-			result.M34 = left.M34 * right;
-			result.M41 = left.M41 * right;
-			result.M42 = left.M42 * right;
-			result.M43 = left.M43 * right;
-			result.M44 = left.M44 * right;
-			return result;
+			mmul_sse((float*)&left, right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator * (float right, Matrix left)
 		{
@@ -678,109 +597,28 @@ namespace GTA
 		}
 		Matrix Matrix::operator / (Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = left.M11 / right.M11;
-			result.M12 = left.M12 / right.M12;
-			result.M13 = left.M13 / right.M13;
-			result.M14 = left.M14 / right.M14;
-			result.M21 = left.M21 / right.M21;
-			result.M22 = left.M22 / right.M22;
-			result.M23 = left.M23 / right.M23;
-			result.M24 = left.M24 / right.M24;
-			result.M31 = left.M31 / right.M31;
-			result.M32 = left.M32 / right.M32;
-			result.M33 = left.M33 / right.M33;
-			result.M34 = left.M34 / right.M34;
-			result.M41 = left.M41 / right.M41;
-			result.M42 = left.M42 / right.M42;
-			result.M43 = left.M43 / right.M43;
-			result.M44 = left.M44 / right.M44;
-			return result;
+			mdiv_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator / (Matrix left, float right)
 		{
-			Matrix result;
-			float invRight = 1.0f / right;
-			result.M11 = left.M11 * invRight;
-			result.M12 = left.M12 * invRight;
-			result.M13 = left.M13 * invRight;
-			result.M14 = left.M14 * invRight;
-			result.M21 = left.M21 * invRight;
-			result.M22 = left.M22 * invRight;
-			result.M23 = left.M23 * invRight;
-			result.M24 = left.M24 * invRight;
-			result.M31 = left.M31 * invRight;
-			result.M32 = left.M32 * invRight;
-			result.M33 = left.M33 * invRight;
-			result.M34 = left.M34 * invRight;
-			result.M41 = left.M41 * invRight;
-			result.M42 = left.M42 * invRight;
-			result.M43 = left.M43 * invRight;
-			result.M44 = left.M44 * invRight;
-			return result;
+			mmul_sse((float*)&left, 1.0f / right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator + (Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = left.M11 + right.M11;
-			result.M12 = left.M12 + right.M12;
-			result.M13 = left.M13 + right.M13;
-			result.M14 = left.M14 + right.M14;
-			result.M21 = left.M21 + right.M21;
-			result.M22 = left.M22 + right.M22;
-			result.M23 = left.M23 + right.M23;
-			result.M24 = left.M24 + right.M24;
-			result.M31 = left.M31 + right.M31;
-			result.M32 = left.M32 + right.M32;
-			result.M33 = left.M33 + right.M33;
-			result.M34 = left.M34 + right.M34;
-			result.M41 = left.M41 + right.M41;
-			result.M42 = left.M42 + right.M42;
-			result.M43 = left.M43 + right.M43;
-			result.M44 = left.M44 + right.M44;
-			return result;
+			madd_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator - (Matrix left, Matrix right)
 		{
-			Matrix result;
-			result.M11 = left.M11 - right.M11;
-			result.M12 = left.M12 - right.M12;
-			result.M13 = left.M13 - right.M13;
-			result.M14 = left.M14 - right.M14;
-			result.M21 = left.M21 - right.M21;
-			result.M22 = left.M22 - right.M22;
-			result.M23 = left.M23 - right.M23;
-			result.M24 = left.M24 - right.M24;
-			result.M31 = left.M31 - right.M31;
-			result.M32 = left.M32 - right.M32;
-			result.M33 = left.M33 - right.M33;
-			result.M34 = left.M34 - right.M34;
-			result.M41 = left.M41 - right.M41;
-			result.M42 = left.M42 - right.M42;
-			result.M43 = left.M43 - right.M43;
-			result.M44 = left.M44 - right.M44;
-			return result;
+			msub_sse((float*)&left, (float*)&right, (float*)&left);
+			return left;
 		}
 		Matrix Matrix::operator - (Matrix matrix)
 		{
-			Matrix result;
-			result.M11 = -matrix.M11;
-			result.M12 = -matrix.M12;
-			result.M13 = -matrix.M13;
-			result.M14 = -matrix.M14;
-			result.M21 = -matrix.M21;
-			result.M22 = -matrix.M22;
-			result.M23 = -matrix.M23;
-			result.M24 = -matrix.M24;
-			result.M31 = -matrix.M31;
-			result.M32 = -matrix.M32;
-			result.M33 = -matrix.M33;
-			result.M34 = -matrix.M34;
-			result.M41 = -matrix.M41;
-			result.M42 = -matrix.M42;
-			result.M43 = -matrix.M43;
-			result.M44 = -matrix.M44;
-			return result;
+			mneg_sse((float*)&matrix, (float*)&matrix);
+			return matrix;
 		}
 		bool Matrix::operator == (Matrix left, Matrix right)
 		{
@@ -794,23 +632,8 @@ namespace GTA
 		array<float> ^Matrix::ToArray()
 		{
 			array<float> ^result = gcnew array<float>(16);
-			result[0] = M11;
-			result[1] = M12;
-			result[2] = M13;
-			result[3] = M14;
-			result[4] = M21;
-			result[5] = M22;
-			result[6] = M23;
-			result[7] = M24;
-			result[8] = M31;
-			result[9] = M32;
-			result[10] = M33;
-			result[11] = M34;
-			result[12] = M41;
-			result[13] = M42;
-			result[14] = M43;
-			result[15] = M44;
-
+			pin_ptr<Matrix> pinned = this;
+			System::Runtime::InteropServices::Marshal::Copy(IntPtr(pinned), result, 0, 16);
 			return result;
 		}
 		String ^Matrix::ToString()

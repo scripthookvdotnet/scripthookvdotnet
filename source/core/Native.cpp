@@ -22,7 +22,6 @@
 #include <NativeCaller.h>
 
 using namespace System;
-using namespace System::Collections::Generic;
 
 namespace GTA
 {
@@ -325,6 +324,34 @@ namespace GTA
 
 			Runtime::InteropServices::Marshal::Copy(Text::Encoding::UTF8->GetBytes(value), 0, _address, size);
 			static_cast<char *>(_address.ToPointer())[size] = '\0';
+		}
+
+		void GlobalVariable::SetBit(int index)
+		{
+			if (index < 0 || index > 63)
+			{
+				throw gcnew IndexOutOfRangeException("The bit index has to be between 0 and 63");
+			}
+
+			*static_cast<UInt64 *>(_address.ToPointer()) |= (1ull << index);
+		}
+		void GlobalVariable::ClearBit(int index)
+		{
+			if (index < 0 || index > 63)
+			{
+				throw gcnew IndexOutOfRangeException("The bit index has to be between 0 and 63");
+			}
+
+			*static_cast<UInt64 *>(_address.ToPointer()) &= ~(1ull << index);
+		}
+		bool GlobalVariable::IsBitSet(int index)
+		{
+			if (index < 0 || index > 63)
+			{
+				throw gcnew IndexOutOfRangeException("The bit index has to be between 0 and 63");
+			}
+
+			return ((*static_cast<UInt64 *>(_address.ToPointer()) >> index) & 1) != 0;
 		}
 
 		GlobalVariable GlobalVariable::GetStructField(int index)

@@ -24,7 +24,7 @@ namespace GTA
 	namespace Math
 	{
 		[System::SerializableAttribute]
-		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Sequential, Pack = 4)]
+		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Explicit, Pack = 4)]
 		public value class Vector3 : System::IEquatable<Vector3>
 		{
 		public:
@@ -32,18 +32,21 @@ namespace GTA
 			/// Gets or sets the X component of the vector.
 			/// </summary>
 			/// <value>The X component of the vector.</value>
+			[System::Runtime::InteropServices::FieldOffset(0)]
 			float X;
 
 			/// <summary>
 			/// Gets or sets the Y component of the vector.
 			/// </summary>
 			/// <value>The Y component of the vector.</value>
+			[System::Runtime::InteropServices::FieldOffset(4)]
 			float Y;
 
 			/// <summary>
 			/// Gets or sets the Z component of the vector.
 			/// </summary>
 			/// <value>The Z component of the vector.</value>
+			[System::Runtime::InteropServices::FieldOffset(8)]
 			float Z;
 
 			/// <summary>
@@ -542,6 +545,10 @@ namespace GTA
 			/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
 			/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
 			static bool Equals(Vector3 %value1, Vector3 %value2);
+
+		private:
+			[System::Runtime::InteropServices::FieldOffset(12)]
+			float _padding = 0.0f;
 		};
 	}
 }
