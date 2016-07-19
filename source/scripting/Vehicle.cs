@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using GTA.Math;
@@ -296,7 +297,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<string>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, base.Model.Hash);
+				return GetModelDisplayName(base.Model);
 			}
 		}
 		public string FriendlyName
@@ -306,6 +307,23 @@ namespace GTA
 				return Game.GetGXTEntry(DisplayName);
 			}
 		}
+
+		public string ClassDisplayName
+		{
+			get
+			{
+				return GetClassDisplayName(ClassType);
+			}
+		}
+
+		public string ClassFriendlyName
+		{
+			get
+			{
+				return Game.GetGXTEntry(ClassDisplayName);
+			}
+		}
+
 		public VehicleClass ClassType
 		{
 			get
@@ -1758,5 +1776,36 @@ namespace GTA
 				return new Ped(pedHandle);
 			}
 		}
+
+		public static string GetModelDisplayName(Model vehicleModel)
+		{
+			return Function.Call<string>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, vehicleModel.Hash);
+		}
+
+		public static VehicleClass GetModelClass(Model vehicleModel)
+		{
+			return Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS_FROM_NAME, vehicleModel.Hash);
+		}
+
+		public static string GetClassDisplayName(VehicleClass vehicleClass)
+		{
+			return "VEH_CLASS_" + ((int)vehicleClass).ToString();
+		}
+
+		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
+		{
+			return Array.ConvertAll<int, VehicleHash>(MemoryAccess.VehicleModels[(int) vehicleClass].ToArray(), item => (VehicleHash)item);
+		}
+
+		public static VehicleHash[] GetAllModels()
+		{
+			List<VehicleHash> allModels = new List<VehicleHash>();
+			for (int i = 0; i < 0x20; i++)
+			{
+				allModels.AddRange(Array.ConvertAll<int, VehicleHash>(MemoryAccess.VehicleModels[i].ToArray(), item => (VehicleHash)item));
+			}
+			return allModels.ToArray();
+		}
+
 	}
 }

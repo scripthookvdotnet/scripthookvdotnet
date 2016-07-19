@@ -6,6 +6,7 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::Collections::ObjectModel;
 
 namespace GTA
 {
@@ -344,8 +345,95 @@ namespace GTA
 			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
 			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
 			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
+			GenerateVehicleModelList();
+		}
+		struct HashNode
+		{
+			int hash;
+			UINT16 data;
+			UINT16 padding;
+			HashNode* next;
+		};
+
+		inline bool bittest(int data, unsigned char index)
+		{
+			return (data & (1 << index)) != 0;
 		}
 
+		void MemoryAccess::GenerateVehicleModelList()
+		{
+			uintptr_t address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
+			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address)+4;
+			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
+			modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
+			modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
+			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
+			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
+			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
+			int vehClassOff = *reinterpret_cast<int*>(address + 0x31);
+
+	
+			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
+			array<List<int>^> ^hashes = gcnew array<List<int>^>(0x20);
+			for (int i = 0; i<0x20; i++)
+			{
+				hashes[i] = gcnew List<int>();
+			}
+			for (int i = 0; i < modelHashEntries; i++)
+			{
+				for (HashNode* cur = HashMap[i]; cur; cur = cur->next)
+				{
+					UINT16 data = cur->data;
+					if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
+					{
+						UINT64 addr1 = modelNum4 + modelNum3 * data;
+						if (addr1)
+						{
+							UINT64 addr2 = *reinterpret_cast<PUINT64>(addr1);
+							if (addr2)
+							{
+								if ((*reinterpret_cast<PBYTE>(addr2 + 157) & 0x1F) == 5)
+								{
+									hashes[*reinterpret_cast<PBYTE>(addr2 + vehClassOff) & 0x1F]->Add(cur->hash);
+								}
+							}
+						}
+					}
+				}
+			}
+			array<ReadOnlyCollection<int> ^> ^result = gcnew array<ReadOnlyCollection<int> ^>(0x20);
+			for (int i = 0; i<0x20; i++)
+			{
+				result[i] = Array::AsReadOnly(hashes[i]->ToArray());
+			}
+			vehicleModels = Array::AsReadOnly(result);
+		}
+
+		bool MemoryAccess::IsModelAPed(int modelHash)
+		{
+			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
+			for (HashNode* cur = HashMap[modelHash % modelHashEntries]; cur; cur = cur->next)
+			{
+				if (cur->hash != modelHash)
+				{
+					continue;
+				}
+				UINT16 data = cur->data;
+				if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
+				{
+					UINT64 addr1 = modelNum4 + modelNum3 * data;
+					if (addr1)
+					{
+						UINT64 addr2 = *reinterpret_cast<PUINT64>(addr1);
+						if (addr2)
+						{
+							return (*reinterpret_cast<PBYTE>(addr2 + 157) & 0x1F) == 6;
+						}
+					}
+				}
+			}
+			return false;
+		}
 		int MemoryAccess::GetGameVersion()
 		{
 			return getGameVersion();
