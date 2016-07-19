@@ -204,22 +204,20 @@ namespace GTA
 			void WriteString(System::String ^value, int maxSize);
 			
 			/// <summary>
-			/// Gets a value indicating whether a specific bit of the <see cref="GlobalVariable"/> is set.
-			/// </summary>
-			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to check.</param>
-			bool IsBitSet(int index);
-
-			/// <summary>
 			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to true.
 			/// </summary>
 			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to set.</param>
 			void SetBit(int index);
-
 			/// <summary>
 			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to false.
 			/// </summary>
 			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to clear.</param>
 			void ClearBit(int index);
+			/// <summary>
+			/// Gets a value indicating whether a specific bit of the <see cref="GlobalVariable"/> is set.
+			/// </summary>
+			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to check.</param>
+			bool IsBitSet(int index);
 
 			/// <summary>
 			/// Gets the <see cref="GlobalVariable"/> stored at a given offset in a global structure.
