@@ -178,7 +178,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the time it currently takes to render a frame, in seconds.
 		/// </summary>
-		public static float DeltaTime
+		public static float LastFrameTime
 		{
 			get
 			{
