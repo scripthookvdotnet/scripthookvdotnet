@@ -113,7 +113,7 @@ namespace GTA
 		{
 			get
 			{
-				return IsValid && !IsVehicle;
+				return MemoryAccess.IsModelAPed(Hash);
 			}
 		}
 		public bool IsPlane
@@ -121,6 +121,13 @@ namespace GTA
 			get
 			{
 				return Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_PLANE, Hash);
+			}
+		}
+		public bool IsProp
+		{
+			get
+			{
+				return IsValid && !IsPed && !IsVehicle;
 			}
 		}
 		public bool IsQuadbike

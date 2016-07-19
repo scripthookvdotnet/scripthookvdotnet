@@ -87,6 +87,7 @@ PVOID sMainFib = nullptr, sScriptFib = nullptr;
 void ScriptMain()
 {
 	const auto version = getGameVersion();
+
 	if (version >= 24)
 	{
 		// Disable mpstunts, mpexecutive and mplowrider2 car removing
