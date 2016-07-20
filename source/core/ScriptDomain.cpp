@@ -164,6 +164,28 @@ namespace GTA
 				return nullptr;
 			}
 
+			for (int i = 0; i < filenameAssemblies->Count; i++)
+			{
+				auto filename = filenameAssemblies[i];
+				auto assemblyName = AssemblyName::GetAssemblyName(filename);
+
+				if (assemblyName->Name == "ScriptHookVDotNet")
+				{
+					Log("[WARNING]", "Removing assembly file '", IO::Path::GetFileName(filename), "'.");
+
+					filenameAssemblies->RemoveAt(i--);
+
+					try
+					{
+						IO::File::Delete(filename);
+					}
+					catch (Exception ^ex)
+					{
+						Log("[ERROR]", "Failed to delete assembly file:", Environment::NewLine, ex->ToString());
+					}
+				}
+			}
+
 			for each (String ^filename in filenameScripts)
 			{
 				scriptdomain->LoadScript(filename);
@@ -239,13 +261,6 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename)
 	{
-		if (IO::Path::GetFileNameWithoutExtension(filename)->StartsWith("ScriptHookVDotNet", StringComparison::CurrentCultureIgnoreCase))
-		{
-			Log("[WARNING]", "Skipped assembly '", IO::Path::GetFileName(filename), "'. Please remove it from the directory.");
-
-			return false;
-		}
-
 		Assembly ^assembly = nullptr;
 
 		try
