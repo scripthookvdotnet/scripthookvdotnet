@@ -4,11 +4,99 @@ using GTA;
 
 namespace GTA.NaturalMotion
 {
-	public enum ArmDirections
+	public enum ArmDirection
 	{
 		Backwards = -1,
-		Adaptive = 0,
-		Forwards = 1
+		Adaptive,
+		Forwards
+	}
+
+	public enum AnimSource
+	{
+		CurrentItems,
+		PreviousItems,
+		AnimItems
+	}
+
+	public enum FallType
+	{
+		RampDownStiffness,
+		DontChangeStep,
+		ForceBalance,
+		Slump
+	}
+
+	public enum Synchroisation
+	{
+		NotSynced,
+		AlwaysSynced,
+		SyncedAtStart
+	}
+
+	public enum TurnType
+	{
+		DontTurn,
+		ToTarget,
+		AwayFromTarget
+	}
+
+	public enum TorqueMode
+	{
+		Disabled,
+		Proportional,
+		Additive
+	}
+
+	public enum TorqueSpinMode
+	{
+		FromImpulse,
+		Random,
+		Flipping
+	}
+
+	public enum TorqueFilterMode
+	{
+		ApplyEveryBullet,
+		ApplyIfLastFinished,
+		ApplyIfSpinDifferent
+	}
+
+	public enum RbTwistAxis
+	{
+		WorldUp,
+		CharacterComUp
+	}
+
+	public enum WeaponMode
+	{
+		None = -1,
+		Pistol,
+		Dual,
+		Rifle,
+		SideArm,
+		PistolLeft,
+		PistolRight
+	}
+
+	public enum Hand
+	{
+		Left,
+		Right
+	}
+
+	public enum MirrorMode
+	{
+		Independant,
+		Mirrored,
+		Parallel
+	}
+
+	public enum AdaptiveMode
+	{
+		NotAdaptive,
+		OnlyDirection,
+		DirectionAndSpeed,
+		DirectionSpeedAndStrength
 	}
 
 	public sealed class ActivePoseHelper : CustomHelper
@@ -47,11 +135,10 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the AnimSource setting for this <see cref="ActivePoseHelper"/>
-		/// AnimSource 0 = CurrentItms, 1 = PreviousItms, 2 = AnimItms.
 		/// </summary>
-		public int AnimSource
+		public AnimSource AnimSource
 		{
-			set { SetArgument("animSource", value); }
+			set { SetArgument("animSource", (int) value); }
 		}
 	}
 
@@ -118,7 +205,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Impulse
 		{
-			set { SetArgument("impulse", Vector3.Clamp(value, new Vector3(-4500.0f, -4500.0f, -4500.0f), new Vector3(4500.0f, 4500.0f, 4500.0f))); }
+			set
+			{
+				SetArgument("impulse",
+					Vector3.Clamp(value, new Vector3(-4500.0f, -4500.0f, -4500.0f), new Vector3(4500.0f, 4500.0f, 4500.0f)));
+			}
 		}
 
 		/// <summary>
@@ -233,7 +324,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Impulse
 		{
-			set { SetArgument("impulse", Vector3.Clamp(value, new Vector3(-1000.0f, -1000.0f, -1000.0f), new Vector3(1000.0f, 1000.0f, 1000.0f))); }
+			set
+			{
+				SetArgument("impulse",
+					Vector3.Clamp(value, new Vector3(-1000.0f, -1000.0f, -1000.0f), new Vector3(1000.0f, 1000.0f, 1000.0f)));
+			}
 		}
 
 		/// <summary>
@@ -1011,20 +1106,15 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the FallType setting for this <see cref="ConfigureBalanceHelper"/>
-		/// How to fall after maxSteps or maxBalanceTime: 0=rampDown stiffness, 1= 0 and dontChangeStep, 2= 0 and forceBalance, 3=0 and slump (BCR has to be active).
+		/// How to fall after maxSteps or maxBalanceTime
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
+		/// Default value = <see cref="FallType.RampDownStiffness"/>
+		/// If <see cref="FallType.Slump"/> BCR has to be active
 		/// </remarks>
-		public int FallType
+		public FallType FallType
 		{
-			set
-			{
-				if (value < 0)
-					value = 0;
-				SetArgument("fallType", value);
-			}
+			set { SetArgument("fallType", (int) value); }
 		}
 
 		/// <summary>
@@ -1930,65 +2020,38 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the TorqueMode setting for this <see cref="ConfigureBulletsHelper"/>
-		/// 0: Disabled | 1: character strength proportional (can reduce impulse amount) | 2: Additive (no reduction of impulse and not proportional to character strength).
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TorqueMode.Disabled"/>
+		/// If <see cref="TorqueMode.Proportional"/> - proportional to character strength, can reduce impulse amount
+		/// If <see cref="TorqueMode.Additive"/> - no reduction of impulse and not proportional to character strength
 		/// </remarks>
-		public int TorqueMode
+		public TorqueMode TorqueMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("torqueMode", value);
-			}
+			set { SetArgument("torqueMode", (int) value); }
 		}
 
 		/// <summary>
 		/// Sets the TorqueSpinMode setting for this <see cref="ConfigureBulletsHelper"/>
-		/// 0: spin direction from impulse direction | 1: random direction | 2: direction flipped with each bullet (for burst effect).
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TorqueSpinMode.FromImpulse"/>
+		/// If <see cref="TorqueSpinMode.Flipping"/> a burst effect is achieved
 		/// </remarks>
-		public int TorqueSpinMode
+		public TorqueSpinMode TorqueSpinMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("torqueSpinMode", value);
-			}
+			set { SetArgument("torqueSpinMode", (int) value); }
 		}
 
 		/// <summary>
 		/// Sets the TorqueFilterMode setting for this <see cref="ConfigureBulletsHelper"/>
-		/// 0: apply torque for every bullet | 1: only apply new torque if previous has finished | 2: Only apply new torque if its spin direction is different from previous torque.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TorqueFilterMode.ApplyEveryBullet"/>
 		/// </remarks>
-		public int TorqueFilterMode
+		public TorqueFilterMode TorqueFilterMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("torqueFilterMode", value);
-			}
+			set { SetArgument("torqueFilterMode", (int) value); }
 		}
 
 		/// <summary>
@@ -2875,23 +2938,13 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the RbTwistAxis setting for this <see cref="ConfigureBulletsHelper"/>
-		/// Twist axis 0=World Up, 1=CharacterCOM up.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 1
+		/// Default value = <see cref="RbTwistAxis.WorldUp"/>
 		/// </remarks>
-		public int RbTwistAxis
+		public RbTwistAxis RbTwistAxis
 		{
-			set
-			{
-				if (value > 1)
-					value = 1;
-				if (value < 0)
-					value = 0;
-				SetArgument("rbTwistAxis", value);
-			}
+			set { SetArgument("rbTwistAxis", (int) value); }
 		}
 
 		/// <summary>
@@ -3006,65 +3059,38 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the TorqueMode setting for this <see cref="ConfigureBulletsExtraHelper"/>
-		/// 0: Disabled | 1: character strength proportional (can reduce impulse amount) | 2: Additive (no reduction of impulse and not proportional to character strength).
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TorqueMode.Disabled"/>
+		/// If <see cref="TorqueMode.Proportional"/> - proportional to character strength, can reduce impulse amount
+		/// If <see cref="TorqueMode.Additive"/> - no reduction of impulse and not proportional to character strength
 		/// </remarks>
-		public int TorqueMode
+		public TorqueMode TorqueMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("torqueMode", value);
-			}
+			set { SetArgument("torqueMode", (int) value); }
 		}
 
 		/// <summary>
 		/// Sets the TorqueSpinMode setting for this <see cref="ConfigureBulletsExtraHelper"/>
-		/// 0: spin direction from impulse direction | 1: random direction | 2: direction flipped with each bullet (for burst effect).
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TorqueSpinMode.FromImpulse"/>
+		/// If <see cref="TorqueSpinMode.Flipping"/> a burst effect is achieved
 		/// </remarks>
-		public int TorqueSpinMode
+		public TorqueSpinMode TorqueSpinMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("torqueSpinMode", value);
-			}
+			set { SetArgument("torqueSpinMode", (int) value); }
 		}
 
 		/// <summary>
 		/// Sets the TorqueFilterMode setting for this <see cref="ConfigureBulletsExtraHelper"/>
-		/// 0: apply torque for every bullet | 1: only apply new torque if previous has finished | 2: Only apply new torque if its spin direction is different from previous torque.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TorqueFilterMode.ApplyEveryBullet"/>
 		/// </remarks>
-		public int TorqueFilterMode
+		public TorqueFilterMode TorqueFilterMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("torqueFilterMode", value);
-			}
+			set { SetArgument("torqueFilterMode", (int) value); }
 		}
 
 		/// <summary>
@@ -3951,23 +3977,13 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the RbTwistAxis setting for this <see cref="ConfigureBulletsExtraHelper"/>
-		/// Twist axis 0=World Up, 1=CharacterCOM up.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 1
+		/// Default value = <see cref="RbTwistAxis.WorldUp"/>
 		/// </remarks>
-		public int RbTwistAxis
+		public RbTwistAxis RbTwistAxis
 		{
-			set
-			{
-				if (value > 1)
-					value = 1;
-				if (value < 0)
-					value = 0;
-				SetArgument("rbTwistAxis", value);
-			}
+			set { SetArgument("rbTwistAxis", (int) value); }
 		}
 
 		/// <summary>
@@ -4837,7 +4853,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Force
 		{
-			set { SetArgument("force", Vector3.Clamp(value, new Vector3(-100000.0f, -100000.0f, -100000.0f), new Vector3(100000.0f, 100000.0f, 100000.0f))); }
+			set
+			{
+				SetArgument("force",
+					Vector3.Clamp(value, new Vector3(-100000.0f, -100000.0f, -100000.0f), new Vector3(100000.0f, 100000.0f, 100000.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5078,7 +5098,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Offset
 		{
-			set { SetArgument("offset", Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f))); }
+			set
+			{
+				SetArgument("offset",
+					Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5344,7 +5368,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Offset
 		{
-			set { SetArgument("offset", Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f))); }
+			set
+			{
+				SetArgument("offset",
+					Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5673,7 +5701,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Offset
 		{
-			set { SetArgument("offset", Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f))); }
+			set
+			{
+				SetArgument("offset",
+					Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5873,23 +5905,13 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the WeaponMode setting for this <see cref="SetWeaponModeHelper"/>
-		/// Weapon mode. kNone = -1, kPistol = 0, kDual = 1, kRifle = 2, kSidearm = 3, kPistolLeft = 4, kPistolRight = 5. See WeaponMode enum in NmRsUtils.h and -1 from that..
 		/// </summary>
 		/// <remarks>
-		/// Default value = 5
-		/// Min value = -1
-		/// Max value = 6
+		/// Default value = <see cref="WeaponMode.PistolRight"/>
 		/// </remarks>
-		public int WeaponMode
+		public WeaponMode WeaponMode
 		{
-			set
-			{
-				if (value > 6)
-					value = 6;
-				if (value < -1)
-					value = -1;
-				SetArgument("weaponMode", value);
-			}
+			set { SetArgument("weaponMode", (int) value); }
 		}
 	}
 
@@ -5911,23 +5933,13 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the Hand setting for this <see cref="RegisterWeaponHelper"/>
-		/// What hand the weapon is in. LeftHand = 0, RightHand = 1.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 1
-		/// Min value = 0
-		/// Max value = 1
+		/// Default value = <see cref="Hand.Right"/>
 		/// </remarks>
-		public int Hand
+		public Hand Hand
 		{
-			set
-			{
-				if (value > 1)
-					value = 1;
-				if (value < 0)
-					value = 0;
-				SetArgument("hand", value);
-			}
+			set { SetArgument("hand", (int) value); }
 		}
 
 		/// <summary>
@@ -6135,23 +6147,14 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the GunHandEnum setting for this <see cref="FireWeaponHelper"/>
-		/// Which hand in the gun in, 0 = left, 1 = right..
+		/// Which hand is the gun in
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 1
+		/// Default value = <see cref="Hand.Left"/>
 		/// </remarks>
-		public int GunHandEnum
+		public Hand GunHandEnum
 		{
-			set
-			{
-				if (value > 1)
-					value = 1;
-				if (value < 0)
-					value = 0;
-				SetArgument("gunHandEnum", value);
-			}
+			set { SetArgument("gunHandEnum", (int) value); }
 		}
 
 		/// <summary>
@@ -8487,11 +8490,10 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the AnimSource setting for this <see cref="AnimPoseHelper"/>
-		/// AnimSource 0 = CurrentItms, 1 = PreviousItms, 2 = AnimItms.
 		/// </summary>
-		public int AnimSource
+		public AnimSource AnimSource
 		{
-			set { SetArgument("animSource", value); }
+			set { SetArgument("animSource", (int) value); }
 		}
 
 		/// <summary>
@@ -8972,44 +8974,25 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the MirrorMode setting for this <see cref="ArmsWindmillHelper"/>
-		/// 0: circle orientations are independent, 1: they mirror each other, 2: they're parallel (leftArm parmeters are used).
 		/// </summary>
 		/// <remarks>
-		/// Default value = 1
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="MirrorMode.Mirrored"/>
+		/// If <see cref="MirrorMode.Parallel"/> leftArm parameters are used
 		/// </remarks>
-		public int MirrorMode
+		public MirrorMode MirrorMode
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("mirrorMode", value);
-			}
+			set { SetArgument("mirrorMode", (int) value); }
 		}
 
 		/// <summary>
 		/// Sets the AdaptiveMode setting for this <see cref="ArmsWindmillHelper"/>
-		/// 0:not adaptive, 1:only direction, 2: dir and speed, 3: dir, speed and strength.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 0
-		/// Min value = 0
-		/// Max value = 3
+		/// Default value = <see cref="AdaptiveMode.NotAdaptive"/>
 		/// </remarks>
-		public int AdaptiveMode
+		public AdaptiveMode AdaptiveMode
 		{
-			set
-			{
-				if (value > 3)
-					value = 3;
-				if (value < 0)
-					value = 0;
-				SetArgument("adaptiveMode", value);
-			}
+			set { SetArgument("adaptiveMode", (int) value); }
 		}
 
 		/// <summary>
@@ -9280,15 +9263,16 @@ namespace GTA.NaturalMotion
 				SetArgument("elbowRate", value);
 			}
 		}
+
 		/// <summary>
 		/// Sets the ArmDirection setting for this <see cref="ArmsWindmillAdaptiveHelper"/>
 		/// </summary>
 		/// <remarks>
-		/// Default value = <see cref="ArmDirections.Adaptive"/>
+		/// Default value = <see cref="ArmDirection.Adaptive"/>
 		/// </remarks>
-		public ArmDirections ArmDirection
+		public ArmDirection ArmDirection
 		{
-			set { SetArgument("armDirection", (int)value); }
+			set { SetArgument("armDirection", (int) value); }
 		}
 
 		/// <summary>
@@ -10192,7 +10176,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 ObjectBehindVictimNormal
 		{
-			set { SetArgument("objectBehindVictimNormal", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("objectBehindVictimNormal",
+					Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 	}
 
@@ -10945,7 +10933,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 AngVelMultiplier
 		{
-			set { SetArgument("angVelMultiplier", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(20.0f, 20.0f, 20.0f))); }
+			set
+			{
+				SetArgument("angVelMultiplier",
+					Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(20.0f, 20.0f, 20.0f)));
+			}
 		}
 
 		/// <summary>
@@ -10959,7 +10951,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 AngVelThreshold
 		{
-			set { SetArgument("angVelThreshold", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(40.0f, 40.0f, 40.0f))); }
+			set
+			{
+				SetArgument("angVelThreshold", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(40.0f, 40.0f, 40.0f)));
+			}
 		}
 
 		/// <summary>
@@ -14329,23 +14324,13 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the TurnToTarget setting for this <see cref="GrabHelper"/>
-		/// 0=don't turn, 1=turnToTarget, 2=turnAwayFromTarget.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 1
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="TurnType.ToTarget"/>
 		/// </remarks>
-		public int TurnToTarget
+		public TurnType TurnToTarget
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("turnToTarget", value);
-			}
+			set { SetArgument("turnToTarget", (int) value); }
 		}
 
 		/// <summary>
@@ -14489,7 +14474,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 NormalR
 		{
-			set { SetArgument("normalR", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("normalR", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -14503,7 +14491,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 NormalL
 		{
-			set { SetArgument("normalL", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("normalL", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -14517,7 +14508,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 NormalR2
 		{
-			set { SetArgument("normalR2", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("normalR2", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -14531,7 +14525,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 NormalL2
 		{
-			set { SetArgument("normalL2", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("normalL2", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -14961,7 +14958,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Vel
 		{
-			set { SetArgument("vel", Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f))); }
+			set
+			{
+				SetArgument("vel", Vector3.Clamp(value, new Vector3(-100.0f, -100.0f, -100.0f), new Vector3(100.0f, 100.0f, 100.0f)));
+			}
 		}
 
 		/// <summary>
@@ -15333,23 +15333,16 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the Arms2LegsSync setting for this <see cref="HighFallHelper"/>
-		/// 0=not synched, 1=always synched, 2= synch at start only.  Synchs the arms angle to what the leg angle is.  All speed/direction parameters of armswindmill are overwritten if = 1.  If 2 and you want synced arms/legs then armAngSpeed=legAngSpeed, legAsymmetry = 0.0 (to stop randomizations of the leg cicle speed).
+		/// Syncs the arms angle to what the leg angle is.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 1
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="Synchroisation.AlwaysSynced"/>
+		/// All speed/direction parameters of armswindmill are overwritten if = <see cref="Synchroisation.AlwaysSynced"/>
+		/// If <see cref="Synchroisation.SyncedAtStart"/> and you want synced arms/legs then armAngSpeed=legAngSpeed, legAsymmetry = 0.0 (to stop randomizations of the leg cicle speed)
 		/// </remarks>
-		public int Arms2LegsSync
+		public Synchroisation Arms2LegsSync
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("arms2LegsSync", value);
-			}
+			set { SetArgument("arms2LegsSync", (int) value); }
 		}
 
 		/// <summary>
@@ -15847,7 +15840,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Injury1LocalNormal
 		{
-			set { SetArgument("injury1LocalNormal", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("injury1LocalNormal", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -15860,7 +15856,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Injury2LocalNormal
 		{
-			set { SetArgument("injury2LocalNormal", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("injury2LocalNormal", Vector3.Clamp(value, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -18575,7 +18574,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 CustomRollDir
 		{
-			set { SetArgument("customRollDir", Vector3.Clamp(value, new Vector3(1.0f, 1.0f, 1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("customRollDir", Vector3.Clamp(value, new Vector3(1.0f, 1.0f, 1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -20118,7 +20120,11 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 BulletVel
 		{
-			set { SetArgument("bulletVel", Vector3.Clamp(value, new Vector3(-2000.0f, -2000.0f, -2000.0f), new Vector3(2000.0f, 2000.0f, 2000.0f))); }
+			set
+			{
+				SetArgument("bulletVel",
+					Vector3.Clamp(value, new Vector3(-2000.0f, -2000.0f, -2000.0f), new Vector3(2000.0f, 2000.0f, 2000.0f)));
+			}
 		}
 	}
 
@@ -22722,23 +22728,16 @@ namespace GTA.NaturalMotion
 
 		/// <summary>
 		/// Sets the Arms2LegsSync setting for this <see cref="SmartFallHelper"/>
-		/// 0=not synched, 1=always synched, 2= synch at start only.  Synchs the arms angle to what the leg angle is.  All speed/direction parameters of armswindmill are overwritten if = 1.  If 2 and you want synced arms/legs then armAngSpeed=legAngSpeed, legAsymmetry = 0.0 (to stop randomizations of the leg cicle speed).
+		/// Syncs the arms angle to what the leg angle is.
 		/// </summary>
 		/// <remarks>
-		/// Default value = 1
-		/// Min value = 0
-		/// Max value = 2
+		/// Default value = <see cref="Synchroisation.AlwaysSynced"/>
+		/// All speed/direction parameters of armswindmill are overwritten if = <see cref="Synchroisation.AlwaysSynced"/>
+		/// If <see cref="Synchroisation.SyncedAtStart"/> and you want synced arms/legs then armAngSpeed=legAngSpeed, legAsymmetry = 0.0 (to stop randomizations of the leg cicle speed)
 		/// </remarks>
-		public int Arms2LegsSync
+		public Synchroisation Arms2LegsSync
 		{
-			set
-			{
-				if (value > 2)
-					value = 2;
-				if (value < 0)
-					value = 0;
-				SetArgument("arms2LegsSync", value);
-			}
+			set { SetArgument("arms2LegsSync", (int) value); }
 		}
 
 		/// <summary>
