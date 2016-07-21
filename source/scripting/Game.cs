@@ -168,11 +168,11 @@ namespace GTA
 		/// <summary>
 		/// Gets the current frame rate per second.
 		/// </summary>
-		public static float FrameRate
+		public static float FPS
 		{
 			get
 			{
-				return 1.0f / DeltaTime;
+				return 1.0f / LastFrameTime;
 			}
 		}
 		/// <summary>
