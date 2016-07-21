@@ -156,7 +156,17 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// returns the instantaneous Frames per Second
+		/// Gets the total number of frames that's been rendered in this session.
+		/// </summary>
+		public static int FrameCount
+		{
+			get
+			{
+				return Function.Call<int>(Hash.GET_FRAME_COUNT);
+			}
+		}
+		/// <summary>
+		/// Gets the current frame rate per second.
 		/// </summary>
 		public static float FPS
 		{
@@ -166,7 +176,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets how long(in seconds) the last frame was displayed before the next was rendered
+		/// Gets the time it currently takes to render a frame, in seconds.
 		/// </summary>
 		public static float LastFrameTime
 		{
@@ -334,7 +344,7 @@ namespace GTA
 		/// <value>
 		/// if <c>true</c> a mission is currently active; otherwise, <c>false</c>
 		/// </value>
-		public static bool MissionFlag
+		public static bool IsMissionActive
 		{
 			get
 			{
@@ -343,6 +353,36 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.SET_MISSION_FLAG, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets a value informing the Game Engine if a random event is in progress
+		/// </summary>
+		/// <value>
+		/// if <c>true</c> a random event is currently active; otherwise, <c>false</c>
+		/// </value>
+		public static bool IsRandomEventActive
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.GET_RANDOM_EVENT_FLAG);
+			}
+			set
+			{
+				Function.Call(Hash.SET_RANDOM_EVENT_FLAG, value);
+			}
+		}
+		/// <summary>
+		/// Gets or a value indicating whether the cutscene is active.
+		/// </summary>
+		/// <value>
+		/// if <c>true</c> a cutscene is currently active; otherwise, <c>false</c>
+		/// </value>
+		public static bool IsCutsceneActive
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_CUTSCENE_ACTIVE);
 			}
 		}
 		/// <summary>

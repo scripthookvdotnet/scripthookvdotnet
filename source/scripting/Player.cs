@@ -1,6 +1,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.Drawing;
 
 namespace GTA
 {
@@ -167,6 +168,30 @@ namespace GTA
 			}
 		}
 
+		public bool CanLeaveParachuteSmokeTrail
+		{
+			set
+			{
+				Function.Call(Hash.SET_PLAYER_CAN_LEAVE_PARACHUTE_SMOKE_TRAIL, Handle, value);
+			}
+		}
+		public Color ParachuteSmokeTrailColor
+		{
+			get
+			{
+				var red = new OutputArgument();
+				var green = new OutputArgument();
+				var blue = new OutputArgument();
+				Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, red, green, blue);
+
+				return Color.FromArgb(red.GetResult<int>(), green.GetResult<int>(), blue.GetResult<int>());
+			}
+			set
+			{
+				Function.Call(Hash.SET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, value.R, value.G, value.B);
+			}
+		}
+
 		public bool IsAlive
 		{
 			get
@@ -243,6 +268,14 @@ namespace GTA
 			}
 		}
 
+		public bool DispatchsCops
+		{
+			set
+			{
+				Function.Call(Hash.SET_DISPATCH_COPS_FOR_PLAYER, Handle, value);
+			}
+		}
+
 		public bool CanUseCover
 		{
 			set
@@ -305,9 +338,40 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_PLAYER_UNDERWATER_TIME_REMAINING, Handle);
 			}
 		}
+
+		public bool IsSpecialAbilityActive
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_SPECIAL_ABILITY_ACTIVE, Handle);
+			}
+		}
+		public bool IsSpecialAbilityEnabled
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_SPECIAL_ABILITY_ENABLED, Handle);
+			}
+			set
+			{
+				Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Handle, value);
+			}
+		}
+		public void ChargeSpecialAbility(int absoluteAmount)
+		{
+			Function.Call(Hash.SPECIAL_ABILITY_CHARGE_ABSOLUTE, Handle, absoluteAmount, true);
+		}
+		public void ChargeSpecialAbility(float normalizedRatio)
+		{
+			Function.Call(Hash.SPECIAL_ABILITY_CHARGE_NORMALIZED, Handle, normalizedRatio, true);
+		}
 		public void RefillSpecialAbility()
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_FILL_METER, Handle, 1);
+		}
+		public void DepleteSpecialAbility()
+		{
+			Function.Call(Hash.SPECIAL_ABILITY_DEPLETE_METER, Handle, 1);
 		}
 
 		public Vehicle LastVehicle
