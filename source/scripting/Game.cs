@@ -403,9 +403,18 @@ namespace GTA
 			return ScriptDomain.CurrentDomain.IsKeyPressed(key);
 		}
 
+        /// <summary>
+        /// Gets whether a <see cref="ButtonCombination"/> was entered.
+        /// </summary>
+        /// <param name="combination">The <see cref="ButtonCombination"/> to check against</param>
+        /// <returns><c>true</c> if the <see cref="ButtonCombination"/> was just entered; otherwise, <c>false</c></returns>
+        /// <remarks>
+        /// Only works for Gamepad inputs
+        /// Cheat combinations use the same system
+        /// </remarks>
 	    public static bool WasButtonCombinationJustEntered(ButtonCombination combination)
 	    {
-            return Function.Call<bool>(Native.Hash._HAS_BUTTON_COMBINATION_JUST_BEEN_ENTERED, combination.Hash, combination.Length);
+            return Function.Call<bool>(Hash._HAS_BUTTON_COMBINATION_JUST_BEEN_ENTERED, combination.Hash, combination.Length);
         }
 
 		/// <summary>
