@@ -51,12 +51,12 @@ namespace GTA
         /// Creates a <see cref="ButtonCombination"/> from a given list of <see cref="Button"/>s.
         /// </summary>
         /// <param name="buttons">The sequence of <see cref="Button"/>s in the order a user should enter in game.</param>
-        /// <remarks>There must be between 6 and 15 inclusive <see cref="Button"/>s otherwise an <see cref="ArgumentException"/> is thrown</remarks>
+        /// <remarks>There must be between 6 and 29 inclusive <see cref="Button"/>s otherwise an <see cref="ArgumentException"/> is thrown</remarks>
         public ButtonCombination(params Button[] buttons)
         {
-            if (buttons.Length < 6 || buttons.Length > 15)
+            if (buttons.Length < 6 || buttons.Length > 29)
             {
-                throw new ArgumentException("The amount of buttons must be between 6 and 15");
+                throw new ArgumentException("The amount of buttons must be between 6 and 29");
             }
             uint hash = 0;
             foreach (Button button in buttons)
