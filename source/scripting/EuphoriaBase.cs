@@ -12,10 +12,9 @@ namespace GTA.NaturalMotion
 	public class Message
 	{
 		#region Fields
-
 		readonly string _message;
 		readonly Dictionary<string, object> _arguments;
-
+		private static readonly Dictionary<string, object> _stopArgument = new Dictionary<string, object>() {{"start", false}};
 		#endregion
 
 		/// <summary>
@@ -34,7 +33,7 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to</param>
 		public void Abort(Ped target)
 		{
-			MemoryAccess.SendEuphoriaMessage(target.Handle, _message, _arguments);
+			MemoryAccess.SendEuphoriaMessage(target.Handle, _message, _stopArgument);
 		}
 
 		/// <summary>
@@ -143,12 +142,11 @@ namespace GTA.NaturalMotion
 	/// <summary>
 	/// A Helper class for building a <seealso cref="GTA.NaturalMotion.Message" /> and sending it to a given <see cref="Ped"/>
 	/// </summary>
-	public abstract class CustomHelper : Message
+	public abstract class CustomHelper
 	{
 		#region Fields
-
-		protected Ped _ped;
-
+		private readonly Ped _ped;
+		private readonly Message _message;
 		#endregion
 
 		/// <summary>
@@ -156,9 +154,10 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> that the message will be applied to</param>
 		/// <param name="message">The name of the natual motion message</param>
-		public CustomHelper(Ped target, string message) : base(message)
+		protected CustomHelper(Ped target, string message)
 		{
 			_ped = target;
+			_message = new Message(message);
 		}
 
 		/// <summary>
@@ -166,7 +165,8 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public void Start()
 		{
-			base.SendTo(_ped);
+			_message.SendTo(_ped);
+			_message.ResetArguments();
 		}
 
 		/// <summary>
@@ -175,7 +175,8 @@ namespace GTA.NaturalMotion
 		/// <param name="duration">How long to apply the behaviour for (-1 for looped)</param>
 		public void Start(int duration)
 		{
-			base.SendTo(_ped, duration);
+			_message.SendTo(_ped, duration);
+			_message.ResetArguments();
 		}
 
 		/// <summary>
@@ -183,7 +184,69 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public void Stop()
 		{
-			base.Abort(_ped);
+			_message.Abort(_ped);
+		}
+		/// <summary>
+		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value
+		/// </summary>
+		/// <param name="argName">The argument name</param>
+		/// <param name="value">The value to set the argument to</param>
+		public void SetArgument(string argName, bool value)
+		{
+			_message.SetArgument(argName, value);
+		}
+
+		/// <summary>
+		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value
+		/// </summary>
+		/// <param name="argName">The argument name</param>
+		/// <param name="value">The value to set the argument to</param>
+		public void SetArgument(string argName, int value)
+		{
+			_message.SetArgument(argName, value);
+		}
+
+		/// <summary>
+		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value
+		/// </summary>
+		/// <param name="argName">The argument name</param>
+		/// <param name="value">The value to set the argument to</param>
+		public void SetArgument(string argName, float value)
+		{
+			_message.SetArgument(argName, value);
+		}
+
+		/// <summary>
+		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value
+		/// </summary>
+		/// <param name="argName">The argument name</param>
+		/// <param name="value">The value to set the argument to</param>
+		public void SetArgument(string argName, string value)
+		{
+			_message.SetArgument(argName, value);
+		}
+
+		/// <summary>
+		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value
+		/// </summary>
+		/// <param name="argName">The argument name</param>
+		/// <param name="value">The value to set the argument to</param>
+		public void SetArgument(string argName, Vector3 value)
+		{
+			_message.SetArgument(argName, value);
+		}
+
+		/// <summary>
+		/// Resets all arguments to their default value's
+		/// </summary>
+		public void ResetArguments()
+		{
+			_message.ResetArguments();
+		}
+
+		public override string ToString()
+		{
+			return _message.ToString();
 		}
 	}
 }
