@@ -26,14 +26,26 @@ namespace GTA
     /// </summary>
     public struct ButtonCombination
     {
+        #region Fields
+        private int _hash;
+        private int _length;
+        #endregion
+
         /// <summary>
         /// Gets the calculated hash of the Sequence
         /// </summary>
-        public int Hash { get; private set; }
+        public int Hash
+        {
+            get { return _hash; }
+        }
+
         /// <summary>
         /// Gets the length of the sequence
         /// </summary>
-        public int Length { get; private set; }
+        public int Length
+        {
+            get { return _length; }
+        }
 
         /// <summary>
         /// Creates a <see cref="ButtonCombination"/> from a given list of <see cref="Button"/>s.
@@ -56,9 +68,9 @@ namespace GTA
             hash += (hash << 3);
             hash ^= (hash >> 11);
             hash += (hash << 15);
-            Hash = unchecked((int)hash);
+            _hash = unchecked((int)hash);
 
-            Length = buttons.Length;
+            _length = buttons.Length;
         }
     }
 }
