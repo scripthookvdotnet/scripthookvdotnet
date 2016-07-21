@@ -306,6 +306,7 @@ namespace GTA
 			break;
 		case Keys::Down:
 			GoDownCommandList();
+			break;
 		case PageUpKey:
 			PageUp();
 			break;
@@ -413,6 +414,12 @@ namespace GTA
 		_compilerOptions->IncludeDebugInformation = true;
 		_compilerOptions->ReferencedAssemblies->Add("System.dll");
 		_compilerOptions->ReferencedAssemblies->Add(Script::typeid->Assembly->Location);
+
+		for each (Script ^script in ScriptDomain::CurrentDomain->RunningScripts)
+		{
+			if(!String::IsNullOrEmpty(script->_filename))
+				_compilerOptions->ReferencedAssemblies->Add(script->_filename);
+		}
 
 		CodeDom::Compiler::CompilerResults ^compilerResult = _compiler->CompileAssemblyFromSource(_compilerOptions, inputStr);
 
