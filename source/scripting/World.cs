@@ -1077,6 +1077,28 @@ namespace GTA
 			return prop;
 		}
 
+		public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
+		{
+			if (!model.Request(1000))
+			{
+				return null;
+			}
+
+			return new Prop(Function.Call<int>(Hash.CREATE_OBJECT_NO_OFFSET, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+		}
+
+		public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
+		{
+			Prop prop = CreatePropNoOffset(model, position, dynamic);
+
+			if (prop != null)
+			{
+				prop.Rotation = rotation;
+			}
+
+			return prop;
+		}
+
 		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
 		{
 			if (!model.Request(1000))
