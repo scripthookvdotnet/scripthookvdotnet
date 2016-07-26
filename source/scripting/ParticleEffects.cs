@@ -20,26 +20,42 @@ namespace GTA
 	public class ParticleEffectsAsset
 	{
 		#region Fields
-
 		private readonly string _assetName;
-
 		#endregion
-
+		/// <summary>
+		/// Creates a class used for loading <see cref="ParticleEffectsAsset"/>s than can be used to start <see cref="ParticleEffect"/>s from inside the Asset
+		/// </summary>
+		/// <param name="assetName">The name of the asset file which contains all the <see cref="ParticleEffect"/>s you are wanting to start</param>
+		/// <remarks>The files have the extension *.ypt in OpenIV, use the file name withouth the extension for the <paramref name="assetName"/></remarks>
 		public ParticleEffectsAsset(string assetName)
 		{
 			_assetName = assetName;
 		}
-
+		/// <summary>
+		/// Gets the name of the this <see cref="ParticleEffectsAsset"/> file
+		/// </summary>
 		public string AssetName
 		{
 			get { return _assetName; }
 		}
-
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="ParticleEffectsAsset"/> is Loaded
+		/// </summary>
+		/// <remarks>Use <see cref="Request()"/> or <see cref="Request(int)"/> to load the asset</remarks>
 		public bool IsLoaded
 		{
 			get { return Function.Call<bool>(Hash.HAS_NAMED_PTFX_ASSET_LOADED, _assetName); }
 		}
 
+		/// <summary>
+		/// Starts a Particle Effect that runs once at a given position then is destroyed.
+		/// </summary>
+		/// <param name="effectName">The name of the effect.</param>
+		/// <param name="pos">The World position where the effect is.</param>
+		/// <param name="rot">What rotation to apply to the effect.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in.</param>
+		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
 		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None)
 		{
@@ -48,6 +64,17 @@ namespace GTA
 				rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
 		}
 
+		/// <summary>
+		/// Starts a Particle Effect on an <see cref="Entity"/> that runs once then is destroyed.
+		/// </summary>
+		/// <param name="effectName">the name of the effect.</param>
+		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
+		/// <param name="boneIndex">The <see cref="Entity"/> bone index to attach the effect to, -1 for CORE.</param>
+		/// <param name="off">The offset from the bone to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the bone, the effect has.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
 		public bool StartNonLoopedOnEntity(string effectName, Entity entity, int boneIndex = -1,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None)
@@ -57,7 +84,16 @@ namespace GTA
 				rot.Y, rot.Z, boneIndex, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
 		}
-
+		/// <summary>
+		/// Starts a <see cref="ParticleEffect"/> that runs looped at a given position.
+		/// </summary>
+		/// <param name="effectName">The name of the effect.</param>
+		/// <param name="pos">The World position where the effect is.</param>
+		/// <param name="rot">What rotation to apply to the effect.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in.</param>
+		/// <returns>The <see cref="ParticleEffect"/> that can be used to modify and end the effect</returns>
+		/// <remarks>If the <see cref="ParticleEffect"/> wasn't able to start, the returned values <see cref="ParticleEffect.Exists()"/>method will return <c>false</c></remarks>
 		public ParticleEffect StartLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3),
 			float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
 		{
@@ -65,9 +101,20 @@ namespace GTA
 			return
 				new ParticleEffect(Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X,
 					rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-					invertAxis.HasFlag(InvertAxis.Z), true));
+					invertAxis.HasFlag(InvertAxis.Z), false));
 		}
-
+		/// <summary>
+		/// Starts a <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
+		/// </summary>
+		/// <param name="effectName">the name of the effect.</param>
+		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
+		/// <param name="boneIndex">The <see cref="Entity"/> bone index to attach the effect to, -1 for CORE.</param>
+		/// <param name="off">The offset from the bone to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the bone, the effect has.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <returns>The <see cref="ParticleEffect"/> that can be used to modify and end the effect</returns>
+		/// <remarks>If the <see cref="ParticleEffect"/> wasn't able to start, the returned values <see cref="ParticleEffect.Exists()"/>method will return <c>false</c></remarks>
 		public ParticleEffect StartLoopedOnEntity(string effectName, Entity entity, int boneIndex = -1,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None)
@@ -79,6 +126,9 @@ namespace GTA
 				invertAxis.HasFlag(InvertAxis.Z)));
 		}
 
+		/// <summary>
+		/// Sets the <see cref="Color"/> for all NonLooped Particle Effects
+		/// </summary>
 		static Color NonLoopedColor
 		{
 			set
@@ -88,11 +138,19 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Attempts to load this <see cref="ParticleEffectsAsset"/> into memory so it can be used for starting <see cref="ParticleEffect"/>s.
+		/// </summary>
 		public void Request()
 		{
 			Function.Call(Hash.REQUEST_NAMED_PTFX_ASSET, _assetName);
 		}
 
+		/// <summary>
+		/// Attempts to load this <see cref="ParticleEffectsAsset"/> into memory so it can be used for starting <see cref="ParticleEffect"/>s.
+		/// </summary>
+		/// <param name="timeout">How long in milli-seconds should the game wait while the model hasnt been loaded before giving up</param>
+		/// <returns><c>true</c> if the <see cref="ParticleEffectsAsset"/> is Loaded; otherwise, <c>false</c></returns>
 		public bool Request(int timeout)
 		{
 			Request();
@@ -107,11 +165,15 @@ namespace GTA
 				{
 					return false;
 				}
+				Request();
 			}
 
 			return true;
 		}
 
+		/// <summary>
+		/// Tells the game we have finished using this <see cref="ParticleEffectsAsset"/> and it can be freed from memory
+		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
 			Function.Call(Hash._REMOVE_NAMED_PTFX_ASSET, _assetName);
@@ -134,11 +196,20 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets the memory address where this <see cref="ParticleEffect"/> is located in game memory.
+		/// </summary>
 		public IntPtr MemoryAddress
 		{
 			get { return MemoryAccess.GetPtfxAddress(Handle); }
 		}
 
+
+		/// <summary>
+		/// Gets or sets the offset.
+		/// If this <see cref="ParticleEffect"/> is attached to an <see cref="Entity"/>, this refers to the offset from the <see cref="Entity"/>; 
+		/// otherwise, this refers to its position in World coords
+		/// </summary>
 		public Vector3 Offset
 		{
 			get
@@ -168,6 +239,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets the rotation of this <see cref="ParticleEffect"/>
+		/// </summary>
 		public Vector3 Rotation
 		{
 			set
@@ -178,6 +252,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="Color"/> of this <see cref="ParticleEffect"/>.
+		/// </summary>
 		public Color Color
 		{
 			get
@@ -208,7 +285,14 @@ namespace GTA
 			}
 		}
 
-
+		/// <summary>
+		/// Gets or sets the size scaling factor of this <see cref="ParticleEffect"/>
+		/// </summary>
+		/// <value>
+		/// The scale, default = 1.0f; 
+		/// To Decrease the size use a value less than 1.0f;
+		/// To Increase the size use a value greater than 1.0f;
+		/// </value>
 		public float Scale
 		{
 			get
@@ -244,9 +328,22 @@ namespace GTA
 			set { Function.Call(Hash._SET_PARTICLE_FX_LOOPED_RANGE, Handle, value);}
 		}
 
+		/// <summary>
+		/// Modifys parameters of this <see cref="ParticleEffect"/>
+		/// </summary>
+		/// <param name="parameterName">Name of the parameter you want to modify, these are stored inside the effect files</param>
+		/// <param name="value">The new value for the parameter</param>
+		public void SetParameter(string parameterName, float value)
+		{
+			Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, parameterName, value, 0);
+		}
+
+		/// <summary>
+		/// Removes this <see cref="ParticleEffect"/>.
+		/// </summary>
 		public void Remove()
 		{
-			Function.Call(Hash.REMOVE_PARTICLE_FX, Handle, true);
+			Function.Call(Hash.REMOVE_PARTICLE_FX, Handle, false);
 		}
 
 		public override bool Exists()
