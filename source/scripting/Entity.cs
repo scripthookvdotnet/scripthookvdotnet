@@ -96,7 +96,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION, Handle, 0);
+				return Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION, Handle, 2);
 			}
 			set
 			{
@@ -777,6 +777,11 @@ namespace GTA
 		public void ApplyForceRelative(Vector3 direction, Vector3 rotation, ForceType forceType)
 		{
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+		}
+
+		public void RemoveAllParticleEffects()
+		{
+			Function.Call(Hash.REMOVE_PARTICLE_FX_FROM_ENTITY, Handle);
 		}
 
 		public void Delete()
