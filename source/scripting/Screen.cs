@@ -60,6 +60,15 @@ namespace GTA.UI
 		ReplayTimer
 	}
 
+	public enum BusySpinnerType
+	{
+		Clockwise1 = 1,
+		Clockwise2,
+		Clockwise3,
+		SocialClubSaving,
+		RegularClockwise
+	}
+
 	public sealed class Notification
 	{
 		#region Fields
@@ -296,6 +305,29 @@ namespace GTA.UI
 		public static void FadeOut(int time)
 		{
 			Function.Call(Hash.DO_SCREEN_FADE_OUT, time);
+		}
+
+		/// <summary>
+		/// Creates a loading prompt at the bottom right of the screen with the given text and spinner type
+		/// </summary>
+		/// <param name="loadingText">The text to display next to the spinner</param>
+		/// <param name="spinnerType">The style of spinner to draw</param>
+		/// <remarks>
+		/// <see cref="BusySpinnerType.Clockwise1"/>, <see cref="BusySpinnerType.Clockwise2"/>, <see cref="BusySpinnerType.Clockwise3"/> and <see cref="BusySpinnerType.RegularClockwise"/> all see to be the same. 
+		/// But Rockstar always seem to use the <see cref="BusySpinnerType.RegularClockwise"/> in the scripts
+		/// </remarks>
+		public static void ShowLoadingPrompt(string loadingText, BusySpinnerType spinnerType = BusySpinnerType.RegularClockwise)
+		{
+			Function.Call((Hash)0xABA17D7CE615ADBF, "STRING");//TO DO update this to Hash._SET_LOADING_PROMPT_TEXT_ENTRY when Hash enum next gets rebuilt
+			Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
+			Function.Call((Hash)0xBD12F8228410D9B4, spinnerType);//TO DO update to Hash._SHOW_LOADING_PROMPT
+		}
+		/// <summary>
+		/// Remove the loading prompt at the bottom right of the screen
+		/// </summary>
+		public static void RemoveLoadingPrompt()
+		{
+			Function.Call((Hash)0x10D373323E5B9C0D);//TO DO update to Hash._REMOVE_LOADING_PROMPT
 		}
 	}
 }
