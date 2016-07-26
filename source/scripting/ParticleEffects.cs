@@ -59,6 +59,10 @@ namespace GTA
 		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None)
 		{
+			if (!SetNextCall())
+			{
+				return false;
+			}
 			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y,
 				rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
@@ -79,51 +83,71 @@ namespace GTA
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None)
 		{
+			if (!SetNextCall())
+			{
+				return false;
+			}
 			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
 				rot.Y, rot.Z, boneIndex, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
 		}
+
 		/// <summary>
-		/// Starts a <see cref="ParticleEffect"/> that runs looped at a given position.
+		/// Starts this <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
+		/// </summary>
+		/// <param name="effectName">The name of the Effect</param>
+		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
+		/// <param name="boneIndex">The <see cref="Entity"/> bone index to attach the effect to, -1 for CORE.</param>
+		/// <param name="off">The offset from the bone to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the bone, the effect has.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
+		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
+		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
+		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity, int boneIndex = -1,
+			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
+			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+		{
+			var result = new EntityParticleEffect(this, effectName, entity)
+			{
+				BoneIndex = boneIndex,
+				Offset = off,
+				Rotation = rot,
+				Scale = scale,
+				InvertAxis = invertAxis
+			};
+			if (startNow)
+			{
+				result.Start();
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Starts this <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
 		/// </summary>
 		/// <param name="effectName">The name of the effect.</param>
 		/// <param name="pos">The World position where the effect is.</param>
 		/// <param name="rot">What rotation to apply to the effect.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
-		/// <returns>The <see cref="ParticleEffect"/> that can be used to modify and end the effect</returns>
-		/// <remarks>If the <see cref="ParticleEffect"/> wasn't able to start, the returned values <see cref="ParticleEffect.Exists()"/>method will return <c>false</c></remarks>
-		public ParticleEffect StartLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3),
-			float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
+		/// <returns>The <see cref="CoordinateParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
+		public CoordinateParticleEffect CreateEffectAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f,
+			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
 		{
-			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
-			return
-				new ParticleEffect(Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X,
-					rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-					invertAxis.HasFlag(InvertAxis.Z), false));
-		}
-		/// <summary>
-		/// Starts a <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
-		/// </summary>
-		/// <param name="effectName">the name of the effect.</param>
-		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
-		/// <param name="boneIndex">The <see cref="Entity"/> bone index to attach the effect to, -1 for CORE.</param>
-		/// <param name="off">The offset from the bone to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the bone, the effect has.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
-		/// <returns>The <see cref="ParticleEffect"/> that can be used to modify and end the effect</returns>
-		/// <remarks>If the <see cref="ParticleEffect"/> wasn't able to start, the returned values <see cref="ParticleEffect.Exists()"/>method will return <c>false</c></remarks>
-		public ParticleEffect StartLoopedOnEntity(string effectName, Entity entity, int boneIndex = -1,
-			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None)
-		{
-			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
-			Hash hash = entity is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash._START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
-			return new ParticleEffect(Function.Call<int>(hash, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
-				rot.Y, rot.Z, boneIndex, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-				invertAxis.HasFlag(InvertAxis.Z)));
+			var result = new CoordinateParticleEffect(this, effectName, pos)
+			{
+				Rotation = rot,
+				Scale = scale,
+				InvertAxis = invertAxis
+			};
+			if (startNow)
+			{
+				result.Start();
+			}
+			return result;
 		}
 
 		/// <summary>
@@ -171,6 +195,17 @@ namespace GTA
 			return true;
 		}
 
+		internal bool SetNextCall()
+		{
+			Request();
+			if (IsLoaded)
+			{
+				Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
+				return true;
+			}
+			return false;
+		}
+
 		/// <summary>
 		/// Tells the game we have finished using this <see cref="ParticleEffectsAsset"/> and it can be freed from memory
 		/// </summary>
@@ -188,12 +223,64 @@ namespace GTA
 		{
 			return _assetName.GetHashCode();
 		}
+
+		public static implicit operator InputArgument(ParticleEffectsAsset asset)
+		{
+			return new InputArgument(asset._assetName);
+		}
 	}
 
-	public class ParticleEffect : PoolObject
+	public abstract class ParticleEffect
 	{
-		internal ParticleEffect(int handle) : base(handle)
+		#region Fields
+		protected readonly ParticleEffectsAsset _asset;
+		protected readonly string _effectName;
+		protected Vector3 _offset;
+		protected Vector3 _rotation;
+		protected Color _color;
+		protected float _scale;
+		protected float _range;
+		protected InvertAxis _InvertAxis;
+		#endregion
+		internal ParticleEffect(ParticleEffectsAsset asset, string effectName)
 		{
+			Handle = -1;
+			_asset = asset;
+			_effectName = effectName;
+		}
+
+		/// <summary>
+		/// Gets the Handle of this <see cref="ParticleEffect"/>
+		/// </summary>
+		/// <value>
+		/// The handle, will return -1 when the this <see cref="ParticleEffect"/> is not active
+		/// </value>
+		public int Handle { get; protected set; }
+
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="ParticleEffect"/> is active.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="ParticleEffect"/> is active; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsActive
+		{
+			get { return Handle != -1 && Function.Call<bool>(Hash.DOES_PARTICLE_FX_LOOPED_EXIST, Handle); }
+		}
+
+		public abstract bool Start();
+
+		/// <summary>
+		/// Deletes this <see cref="ParticleEffect"/>.
+		/// </summary>
+		public void Stop()
+		{
+			if (IsActive)
+			{
+				Function.Call(Hash.REMOVE_PARTICLE_FX, Handle, false);
+			}
+			Handle = -1;
 		}
 
 		/// <summary>
@@ -201,9 +288,8 @@ namespace GTA
 		/// </summary>
 		public IntPtr MemoryAddress
 		{
-			get { return MemoryAccess.GetPtfxAddress(Handle); }
+			get { return IsActive ? MemoryAccess.GetPtfxAddress(Handle) : IntPtr.Zero; }
 		}
-
 
 		/// <summary>
 		/// Gets or sets the offset.
@@ -220,13 +306,14 @@ namespace GTA
 					address = MemoryAccess.ReadPtr(address + 32);
 					if (address != IntPtr.Zero)
 					{
-						return MemoryAccess.ReadVector3(address + 144);
+						return _offset = MemoryAccess.ReadVector3(address + 144);
 					}
 				}
-				return default(Vector3);
+				return _offset;
 			}
 			set
 			{
+				_offset = value;
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
@@ -240,15 +327,23 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the rotation of this <see cref="ParticleEffect"/>
+		/// Gets or Sets the rotation of this <see cref="ParticleEffect"/>
 		/// </summary>
 		public Vector3 Rotation
 		{
+			get
+			{
+				return _rotation;
+			}
 			set
 			{
-				//rotation information is stored in a matrix
-				Vector3 off = Offset;
-				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_OFFSETS, Handle, off.X, off.Y, off.Z, value.X, value.Y, value.Z);
+				_rotation = value;
+				if (IsActive)
+				{
+					//rotation information is stored in a matrix
+					Vector3 off = Offset;
+					Function.Call(Hash.SET_PARTICLE_FX_LOOPED_OFFSETS, Handle, off.X, off.Y, off.Z, value.X, value.Y, value.Z);
+				}
 			}
 		}
 
@@ -267,12 +362,13 @@ namespace GTA
 					byte g = Convert.ToByte(MemoryAccess.ReadFloat(address+4)*255f);
 					byte b = Convert.ToByte(MemoryAccess.ReadFloat(address+8) * 255f);
 					byte a = Convert.ToByte(MemoryAccess.ReadFloat(address+12) * 255f);
-					return Color.FromArgb(a, r, g, b);
+					return _color = Color.FromArgb(a, r, g, b);
 				}
-				return default(Color);
+				return _color;
 			}
 			set
 			{
+				_color = value;
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
@@ -300,12 +396,13 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					return MemoryAccess.ReadFloat(MemoryAccess.ReadPtr(address + 32) + 336);
+					return _scale = MemoryAccess.ReadFloat(MemoryAccess.ReadPtr(address + 32) + 336);
 				}
-				return 1.0f;
+				return _scale;
 			}
 			set
 			{
+				_scale = value;
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
@@ -321,39 +418,219 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					return MemoryAccess.ReadFloat(MemoryAccess.ReadPtr(address + 32) + 384);
+					return _range = MemoryAccess.ReadFloat(MemoryAccess.ReadPtr(address + 32) + 384);
 				}
-				return 0.0f;
+				return _range;
 			}
-			set { Function.Call(Hash._SET_PARTICLE_FX_LOOPED_RANGE, Handle, value);}
+			set
+			{
+				_range = value;
+				Function.Call(Hash._SET_PARTICLE_FX_LOOPED_RANGE, Handle, value);
+			}
 		}
 
 		/// <summary>
-		/// Modifys parameters of this <see cref="ParticleEffect"/>
+		/// Gets or sets which axis of this <see cref="ParticleEffect"/> should be inverted.
 		/// </summary>
-		/// <param name="parameterName">Name of the parameter you want to modify, these are stored inside the effect files</param>
-		/// <param name="value">The new value for the parameter</param>
+		public InvertAxis InvertAxis
+		{
+			get
+			{
+				return _InvertAxis;
+			}
+			set
+			{
+				_InvertAxis = value;
+				if (IsActive)
+				{
+					Stop();
+					Start();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Modifys parameters of this <see cref="ParticleEffect"/>.
+		/// </summary>
+		/// <param name="parameterName">Name of the parameter you want to modify, these are stored inside the effect files.</param>
+		/// <param name="value">The new value for the parameter.</param>
 		public void SetParameter(string parameterName, float value)
 		{
-			Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, parameterName, value, 0);
+			if (IsActive)
+				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, parameterName, value, 0);
 		}
 
 		/// <summary>
-		/// Removes this <see cref="ParticleEffect"/>.
+		/// Gets the name of the asset this effect is stored in.
 		/// </summary>
-		public void Remove()
+		public string AssetName
 		{
-			Function.Call(Hash.REMOVE_PARTICLE_FX, Handle, false);
+			get { return _asset.AssetName; }
 		}
 
-		public override bool Exists()
+		/// <summary>
+		/// Gets the name of this effect.
+		/// </summary>
+		public string EffectName
 		{
-			return Function.Call<bool>(Hash.DOES_PARTICLE_FX_LOOPED_EXIST, Handle);
+			get { return _effectName; }
 		}
 
-		public static bool Exists(ParticleEffect effect)
+		public override string ToString()
 		{
-			return !ReferenceEquals(effect, null) && effect.Exists();
+			return string.Format("{0}\\{1}", AssetName, EffectName);
+		}
+
+		public static implicit operator InputArgument(ParticleEffect effect)
+		{
+			//we only need to worry about supplying a particle effect to a native, never returning one
+			return new InputArgument(effect.Handle);
+		}
+	}
+
+	public class EntityParticleEffect : ParticleEffect
+	{
+		#region Fields
+		private Entity _entity;
+		private int _boneIndex;
+		#endregion
+		internal EntityParticleEffect(ParticleEffectsAsset asset, string effectName, Entity entity)
+			: base(asset, effectName)
+		{
+			_entity = entity;
+		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="GTA.Entity"/> this <see cref="EntityParticleEffect"/> is attached to.
+		/// </summary>
+		public Entity Entity
+		{
+			get { return _entity; }
+			set
+			{
+				_entity = value;
+				if (IsActive)
+				{
+					Stop();
+					Start();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the bone index of this <see cref="Entity"/> that this <see cref="EntityParticleEffect"/> is attached to.
+		/// </summary>
+		/// <remarks>If value == -1, use the <see cref="Entity"/> Core.</remarks>
+		public int BoneIndex
+		{
+			get { return _boneIndex;}
+			set
+			{
+				_boneIndex = value;
+				if (IsActive)
+				{
+					Stop();
+					Start();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Starts this <see cref="EntityParticleEffect"/>.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="EntityParticleEffect"/> was sucessfully started; otherwise, <c>false</c>.</returns>
+		public override bool Start()
+		{
+			Stop();
+			if (!_asset.SetNextCall())
+				return false;
+
+			Hash hash = _entity is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash._START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
+
+			Handle = Function.Call<int>(hash, _effectName, _entity.Handle, Offset.X, Offset.Y, Offset.Z, Rotation.X,
+				Rotation.Y, Rotation.Z, _boneIndex, _scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
+				InvertAxis.HasFlag(InvertAxis.Z));
+
+			if (IsActive)
+				return true;
+
+			Handle = -1;
+			return false;
+		}
+
+		/// <summary>
+		/// Creates a copy of this <see cref="EntityParticleEffect"/> to another <see cref="GTA.Entity"/> to simplify applying the same effect to many Entities.
+		/// </summary>
+		/// <param name="entity">The <see cref="GTA.Entity"/> to copy to.</param>
+		/// <returns>An <see cref="EntityParticleEffect"/> that has all the same properties as this instance, but for a different <see cref="GTA.Entity"/>.</returns>
+		public EntityParticleEffect CopyTo(Entity entity)
+		{
+			var result = new EntityParticleEffect(_asset, _effectName, entity)
+			{
+				BoneIndex = _boneIndex,
+				Offset = _offset,
+				Rotation = _rotation,
+				Color = _color,
+				Scale = _scale,
+				Range = _range,
+				InvertAxis = _InvertAxis
+			};
+			if (IsActive)
+			{
+				result.Start();
+			}
+			return result;
+		}
+	}
+
+	public class CoordinateParticleEffect : ParticleEffect
+	{
+		public CoordinateParticleEffect(ParticleEffectsAsset asset, string effectName, Vector3 location) : base(asset, effectName)
+		{
+			Offset = location;
+		}
+
+		/// <summary>
+		/// Starts this <see cref="CoordinateParticleEffect"/>.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="CoordinateParticleEffect"/> was sucessfully started; otherwise, <c>false</c>.</returns>
+		public override bool Start()
+		{
+			Stop();
+			if (!_asset.SetNextCall())
+				return false;
+
+			Handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, _effectName, Offset.X, Offset.Y, Offset.Z, Rotation.X,
+				Rotation.Y, Rotation.Z, Scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
+				InvertAxis.HasFlag(InvertAxis.Z), false);
+
+			if (IsActive)
+				return true;
+
+			Handle = -1;
+			return false;
+		}
+
+		/// <summary>
+		/// Creates a copy of this <see cref="CoordinateParticleEffect"/> to another position to simplify applying the same effect to many positions.
+		/// </summary>
+		/// <param name="position">The position to copy to.</param>
+		/// <returns>A <see cref="CoordinateParticleEffect"/> that has all the same properties as this instance, but for a different position.</returns>
+		public CoordinateParticleEffect CopyTo(Vector3 position)
+		{
+			var result = new CoordinateParticleEffect(_asset, _effectName, position)
+			{
+				Rotation = _rotation,
+				Color = _color,
+				Scale = _scale,
+				Range = _range,
+				InvertAxis = _InvertAxis
+			};
+			if (IsActive)
+			{
+				result.Start();
+			}
+			return result;
 		}
 	}
 }
