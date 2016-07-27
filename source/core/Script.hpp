@@ -36,27 +36,12 @@ namespace GTA
 	public ref class StriptAttribute : System::Attribute
 	{
 	private:
-		int _major;
-		int _minor;
-		int _build;
 		System::String ^_author;
 		System::String ^_supportURL;
 	public:
 		StriptAttribute()
 		{
 
-		}
-		property int MajorVersion {
-			int get() { return _major; }
-			void set(int value) { _major = value; }
-		}
-		property int MinorVersion {
-			int get() { return _minor; }
-			void set(int value) { _minor = value; }
-		}
-		property int BuildNumber {
-			int get() { return _build; }
-			void set(int value) { _build = value; }
 		}
 		property System::String ^Author {
 			System::String ^get() { return _author; }
@@ -68,9 +53,6 @@ namespace GTA
 		}
 		property bool HasSupport {
 			bool get() { return SupportURL != nullptr && SupportURL->Length > 0; }
-		}
-		property System::String ^Version {
-			System::String ^get() { return System::String::Format("v{0}.{1}.{2}", MajorVersion, MinorVersion, (BuildNumber == 0 ? "" : BuildNumber.ToString())); }
 		}
 	};
 

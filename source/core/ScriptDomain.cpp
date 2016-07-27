@@ -109,19 +109,6 @@ namespace GTA
 		}
 	}
 
-	String ^ScriptDomain::GetScriptVersion(Type ^scriptType)
-	{
-		for each(StriptAttribute ^ attribute in scriptType->GetCustomAttributes(StriptAttribute::typeid, true))
-		{
-			auto version = attribute->Version;
-			if (version != nullptr)
-			{
-				return " "+version->ToString();
-			}
-		}
-		return nullptr;
-	}
-
 	String ^ScriptDomain::GetScriptSupport(Type ^scriptType)
 	{
 		for each(StriptAttribute ^ attribute in scriptType->GetCustomAttributes(StriptAttribute::typeid, true))
@@ -312,7 +299,7 @@ namespace GTA
 	bool ScriptDomain::LoadAssembly(String ^filename, Assembly ^assembly)
 	{
 		unsigned int count = 0;
-
+		String ^VersionInfo = (IO::Path::GetExtension(filename) == ".dll" ? (" v" + assembly->GetName()->Version->ToString(3)) : "");
 		try
 		{
 			for each (auto type in assembly->GetTypes())
@@ -328,12 +315,12 @@ namespace GTA
 		}
 		catch (ReflectionTypeLoadException ^ex)
 		{
-			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
+			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), VersionInfo, "':", Environment::NewLine, ex->ToString());
 
 			return false;
 		}
 
-		Log("[INFO]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
+		Log("[INFO]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), VersionInfo, "'.");
 
 		return count != 0;
 	}
@@ -367,7 +354,7 @@ namespace GTA
 			return nullptr;
 		}
 	
-		Log("[INFO]", "Instantiating script '", scriptType->FullName, GetScriptVersion(scriptType), "' in script domain '", Name, "' ...");
+		Log("[INFO]", "Instantiating script '", scriptType->FullName,  "' in script domain '", Name, "' ...");
 		String^ SupportMessage = GetScriptSupport(scriptType);
 		if (SupportMessage == nullptr || SupportMessage->Length == 0)
 		{
@@ -383,15 +370,15 @@ namespace GTA
 		}
 		catch (MissingMethodException ^)
 		{
-			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, GetScriptVersion(scriptType), "' because no public default constructor was found.", SupportMessage);
+			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "' because no public default constructor was found.", SupportMessage);
 		}
 		catch (TargetInvocationException ^ex)
 		{
-			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, GetScriptVersion(scriptType), "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString(), SupportMessage);
+			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString(), SupportMessage);
 		}
 		catch (Exception ^ex)
 		{
-			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, GetScriptVersion(scriptType), "':", Environment::NewLine, ex->ToString(), SupportMessage);
+			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "':", Environment::NewLine, ex->ToString(), SupportMessage);
 		}
 
 		return nullptr;
