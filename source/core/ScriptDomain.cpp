@@ -111,7 +111,7 @@ namespace GTA
 
 	String ^ScriptDomain::GetScriptVersion(Type ^scriptType)
 	{
-		for each(StriptAttributes ^ attribute in scriptType->GetCustomAttributes(StriptAttributes::typeid, true))
+		for each(StriptAttribute ^ attribute in scriptType->GetCustomAttributes(StriptAttribute::typeid, true))
 		{
 			auto version = attribute->Version;
 			if (version != nullptr)
@@ -124,7 +124,7 @@ namespace GTA
 
 	String ^ScriptDomain::GetScriptSupport(Type ^scriptType)
 	{
-		for each(StriptAttributes ^ attribute in scriptType->GetCustomAttributes(StriptAttributes::typeid, true))
+		for each(StriptAttribute ^ attribute in scriptType->GetCustomAttributes(StriptAttribute::typeid, true))
 		{
 			if (attribute->HasSupport)
 			{
