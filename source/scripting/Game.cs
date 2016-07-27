@@ -227,19 +227,7 @@ namespace GTA
 			}
 		}
 
-		/// <summary>
-		/// Sets how far the Minimap should be zoomed in
-		/// </summary>
-		/// <value>
-		/// The Radar zoom, Accepts values from 0 to 200
-		/// </value>
-		public static int RadarZoom
-		{
-			set
-			{
-				Function.Call(Hash.SET_RADAR_ZOOM, value);
-			}
-		}
+		
 		/// <summary>
 		/// Sets a value indicating whether Police <see cref="Blip"/>s should be visible on the Minimap
 		/// </summary>

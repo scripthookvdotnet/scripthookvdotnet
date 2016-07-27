@@ -36,6 +36,7 @@ namespace GTA
 			static System::IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex);
 			static float ReadWorldGravity();
 			static void WriteWorldGravity(float value);
+			static int ReadCursorSprite();
 
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
@@ -77,6 +78,7 @@ namespace GTA
 				}
 			}
 			static bool IsModelAPed(int modelHash);
+			static int* _cursorSpriteAddr;
 		private:
 			static MemoryAccess();
 			static void GenerateVehicleModelList();
