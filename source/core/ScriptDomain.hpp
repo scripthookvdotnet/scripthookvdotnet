@@ -72,6 +72,8 @@ namespace GTA
 		void Start();
 		void Abort();
 		static void AbortScript(Script ^script);
+		static System::String ^GetScriptVersion(System::Type ^scriptType);
+		static System::String ^GetScriptSupport(System::Type ^scriptType);
 		void DoTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 
