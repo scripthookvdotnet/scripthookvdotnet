@@ -79,7 +79,11 @@ namespace GTA
 			}
 			static bool IsModelAPed(int modelHash);
 			static int* _cursorSpriteAddr;
+			static property System::IntPtr CellEmailBcon{
+				System::IntPtr get();
+			}
 		private:
+			static System::IntPtr _cellEmailBconPtr;
 			static MemoryAccess();
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;

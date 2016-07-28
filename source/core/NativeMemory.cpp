@@ -8,6 +8,8 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
 
+char* _cellEmailBcon = "CELL_EMAIL_BCON";
+
 namespace GTA
 {
 	namespace Native
@@ -349,7 +351,14 @@ namespace GTA
 			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
 			_cursorSpriteAddr = reinterpret_cast<int *>(*reinterpret_cast<int*>(address - 4) + address);
 			GenerateVehicleModelList();
+
+			_cellEmailBconPtr = IntPtr(_cellEmailBcon);
 		}
+		IntPtr MemoryAccess::CellEmailBcon::get()
+		{
+			return _cellEmailBconPtr;
+		}
+
 		struct HashNode
 		{
 			int hash;
