@@ -8,7 +8,9 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
 
-char* _cellEmailBcon = "CELL_EMAIL_BCON";
+const char* const _cellEmailBcon = "CELL_EMAIL_BCON";
+const char* const _string = "STRING";
+const char* const _nullStr = "";
 
 namespace GTA
 {
@@ -352,11 +354,21 @@ namespace GTA
 			_cursorSpriteAddr = reinterpret_cast<int *>(*reinterpret_cast<int*>(address - 4) + address);
 			GenerateVehicleModelList();
 
-			_cellEmailBconPtr = IntPtr(_cellEmailBcon);
+			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
+			_stringPtr = IntPtr((void*)_string);
+			_nullString = IntPtr((void*)_nullStr);
 		}
 		IntPtr MemoryAccess::CellEmailBcon::get()
 		{
 			return _cellEmailBconPtr;
+		}
+		IntPtr MemoryAccess::StringPtr::get()
+		{
+			return _stringPtr;
+		}
+		IntPtr MemoryAccess::NullString::get()
+		{
+			return _nullString;
 		}
 
 		struct HashNode

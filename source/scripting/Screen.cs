@@ -157,7 +157,7 @@ namespace GTA.UI
 		/// <param name="duration">The duration to display the subtitle in milliseconds.</param>
 		public static void ShowSubtitle(string message, int duration = 2500)
 		{
-			Function.Call(Hash._SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_ENTRY_2, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 
@@ -175,7 +175,7 @@ namespace GTA.UI
 		/// <param name="helpText">The text to display.</param>
 		public static void DisplayHelpTextThisFrame(string helpText)
 		{
-			Function.Call(Hash._SET_TEXT_COMPONENT_FORMAT, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_COMPONENT_FORMAT, MemoryAccess.CellEmailBcon);
 			const int maxStringLength = 99;
 
 			for (int i = 0; i < helpText.Length; i += maxStringLength)
@@ -193,7 +193,7 @@ namespace GTA.UI
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide()"/></returns>
 		public static Notification ShowNotification(string message, bool blinking = false)
 		{
-			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 
@@ -246,11 +246,11 @@ namespace GTA.UI
 					Hide();
 				if (loadingText == null)
 				{
-					Function.Call((Hash) 0xABA17D7CE615ADBF, "");
+					Function.Call((Hash) 0xABA17D7CE615ADBF, MemoryAccess.NullString);
 				}
 				else
 				{
-					Function.Call((Hash)0xABA17D7CE615ADBF, "STRING");//TO DO update this to Hash._SET_LOADING_PROMPT_TEXT_ENTRY when Hash enum next gets rebuilt
+					Function.Call((Hash)0xABA17D7CE615ADBF, MemoryAccess.StringPtr);//TO DO update this to Hash._SET_LOADING_PROMPT_TEXT_ENTRY when Hash enum next gets rebuilt
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
 				}
 				Function.Call((Hash)0xBD12F8228410D9B4, spinnerType);//TO DO update to Hash._SHOW_LOADING_PROMPT

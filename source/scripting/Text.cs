@@ -282,7 +282,7 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 
@@ -307,7 +307,7 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 

@@ -82,8 +82,17 @@ namespace GTA
 			static property System::IntPtr CellEmailBcon{
 				System::IntPtr get();
 			}
+			static property System::IntPtr StringPtr {
+				System::IntPtr get();
+			}
+			static property System::IntPtr NullString {
+				System::IntPtr get();
+			}
+
 		private:
 			static System::IntPtr _cellEmailBconPtr;
+			static System::IntPtr _stringPtr;
+			static System::IntPtr _nullString;
 			static MemoryAccess();
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;

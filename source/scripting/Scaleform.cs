@@ -75,13 +75,13 @@ namespace GTA
 				}
 				else if (argument is string)
 				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+					Function.Call(Hash._BEGIN_TEXT_COMPONENT, MemoryAccess.StringPtr);
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, (string)argument);
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}
 				else if (argument is char)
 				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+					Function.Call(Hash._BEGIN_TEXT_COMPONENT, MemoryAccess.StringPtr);
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, argument.ToString());
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}

@@ -263,7 +263,7 @@ namespace GTA
 				}
 				else
 				{
-					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, string.Empty);
+					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, MemoryAccess.NullString);
 				}
 			}
 		}
@@ -757,7 +757,7 @@ namespace GTA
 		{
 			ScriptDomain.CurrentDomain.PauseKeyboardEvents(true);
 
-			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), string.Empty, defaultText, string.Empty, string.Empty, string.Empty, maxLength + 1);
+			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), MemoryAccess.NullString, defaultText, MemoryAccess.NullString, MemoryAccess.NullString, MemoryAccess.NullString, maxLength + 1);
 
 			while (Function.Call<int>(Hash.UPDATE_ONSCREEN_KEYBOARD) == 0)
 			{
