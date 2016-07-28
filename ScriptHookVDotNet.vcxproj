@@ -161,6 +161,8 @@
     <CsCompile Include="source\scripting\VehicleWindow.cs" />
     <CsCompile Include="source\scripting\VehicleWindowCollection.cs" />
     <CsCompile Include="source\scripting\Weapon.cs" />
+    <CsCompile Include="source\scripting\WeaponComponent.cs" />
+    <CsCompile Include="source\scripting\WeaponComponentCollection.cs" />
     <CsCompile Include="source\scripting\WeaponAsset.cs" />
     <CsCompile Include="source\scripting\WeaponCollection.cs" />
     <CsCompile Include="source\scripting\WeaponHash.cs" />

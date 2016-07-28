@@ -140,6 +140,12 @@
     <CsCompile Include="source\scripting\Weapon.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\WeaponComponent.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponComponentCollection.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
     <CsCompile Include="source\scripting\WeaponAsset.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
