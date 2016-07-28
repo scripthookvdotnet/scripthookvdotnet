@@ -236,6 +236,9 @@
     <CsCompile Include="source\scripting\VehicleWindowCollection.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\Style.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
     <CsCompile Include="source\scripting\ButtonCombination.cs">
       <Filter>scripting\Game</Filter>
     </CsCompile>

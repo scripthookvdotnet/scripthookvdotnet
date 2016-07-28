@@ -116,6 +116,7 @@ namespace GTA
 		Tasks _tasks;
 		Euphoria _euphoria;
 		WeaponCollection _weapons;
+		Style _style;
 
 		internal static readonly string[] _speechModifierNames = {
 			"SPEECH_PARAMS_STANDARD",
@@ -286,6 +287,21 @@ namespace GTA
 					_weapons = new WeaponCollection(this);
 				}
 				return _weapons;
+			}
+		}
+
+		/// <summary>
+		/// Opens a list of clothing and prop configurations that the <see cref="Ped"/> can wear.
+		/// </summary>
+		public Style Style
+		{
+			get
+			{
+				if (ReferenceEquals(_style, null))
+				{
+					_style = new Style(this);
+				}
+				return _style;
 			}
 		}
 
@@ -1242,14 +1258,7 @@ namespace GTA
 			Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, Handle);
 		}
 
-		public void RandomizeOutfit()
-		{
-			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, Handle, false);
-		}
-		public void SetDefaultClothes()
-		{
-			Function.Call(Hash.SET_PED_DEFAULT_COMPONENT_VARIATION, Handle);
-		}
+		
 
 		public RelationshipGroup RelationshipGroup
 		{
