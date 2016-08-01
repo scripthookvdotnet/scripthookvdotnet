@@ -69,7 +69,10 @@
       <NoWarn>1591;%(NoWarn)</NoWarn>
     </CsCompile>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
+      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"
+if not exist "$(TargetDir)SDK" mkdir "$(TargetDir)SDK"
+move "$(TargetPath)" "$(TargetDir)SDK\$(TargetName)$(TargetExt)"
+move "$(TargetDir)$(TargetName).xml" "$(TargetDir)SDK\$(TargetName).xml"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)' == 'NativeGen'">
