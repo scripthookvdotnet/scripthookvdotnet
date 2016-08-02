@@ -68,12 +68,6 @@
       <Optimize>true</Optimize>
       <NoWarn>1591;%(NoWarn)</NoWarn>
     </CsCompile>
-    <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"
-if not exist "$(TargetDir)SDK" mkdir "$(TargetDir)SDK"
-move "$(TargetPath)" "$(TargetDir)SDK\$(TargetName)$(TargetExt)"
-move "$(TargetDir)$(TargetName).xml" "$(TargetDir)SDK\$(TargetName).xml"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)' == 'NativeGen'">
     <PreBuildEvent>
@@ -177,6 +171,13 @@ move "$(TargetDir)$(TargetName).xml" "$(TargetDir)SDK\$(TargetName).xml"</Comman
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
     <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
+  </Target>
+  <!-- Rename and move output files -->
+  <Target Name="MoveFiles" AfterTargets="AfterBuild">
+    <MakeDir Directories="$(TargetDir)SDK" Condition="!Exists('$(TargetDir)SDK')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)$(TargetName).asi"/>
+    <Move SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).xml" DestinationFolder="$(TargetDir)SDK\"/>
+    <Message Text="Moving output files..."/>
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
