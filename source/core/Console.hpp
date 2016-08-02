@@ -119,8 +119,8 @@ namespace GTA
 		void Debug(System::String ^msg, ...array<System::Object^>^ args);
 
 		bool IsOpen();
-		void RegisterCommands(System::Type ^type);
 		void UnregisterCommands(System::Type ^type);
+		void RegisterCommands(System::Type ^type);
 		void RegisterCommands(System::Type ^type, bool defaultCommands);
 		void RegisterCommand(ConsoleCommand ^command, System::Reflection::MethodInfo ^methodInfo);
 		void RegisterCommand(ConsoleCommand ^command, System::Reflection::MethodInfo ^methodInfo, bool defaultCommand);

@@ -97,27 +97,23 @@ namespace GTA
 
 	void ConsoleScript::Info(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~b~INFO~w~] ", String::Format(msg, args)->Split('\n'));
+		AddLines("[~b~INFO~w~] ", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'));
 	}
 
 	void ConsoleScript::Error(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~r~ERROR~w~]", String::Format(msg, args)->Split('\n'), "~r~");
+		AddLines("[~r~ERROR~w~]", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'), "~r~");
 	}
 
 	void ConsoleScript::Warn(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~o~WARN~w~] ", String::Format(msg, args)->Split('\n'));
+		AddLines("[~o~WARN~w~] ", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'));
 	}
 	void ConsoleScript::Debug(System::String ^ msg, ...array<Object^>^ args)
 	{
-		AddLines("[~c~DEBUG~w~] ", String::Format(msg, args)->Split('\n'), "~c~");
+		AddLines("[~c~DEBUG~w~] ", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'), "~c~");
 	}
 
-	void ConsoleScript::RegisterCommands(System::Type ^ type)
-	{
-		RegisterCommands(type, false);
-	}
 	void ConsoleScript::UnregisterCommands(System::Type ^ type)
 	{
 		for each(auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
@@ -129,7 +125,7 @@ namespace GTA
 				if (_commands->ContainsKey(command->Namespace))
 				{
 					List<Tuple<ConsoleCommand^, MethodInfo^>^>^ Namespace = _commands[command->Namespace];
-					for (int i = 0;i<Namespace->Count;i++)
+					for (int i = 0; i<Namespace->Count; i++)
 					{
 						if (Namespace[i]->Item1 == command || Namespace[i]->Item2 == method)
 						{
@@ -145,6 +141,10 @@ namespace GTA
 		}
 	}
 
+	void ConsoleScript::RegisterCommands(System::Type ^ type)
+	{
+		RegisterCommands(type, false);
+	}
 	void ConsoleScript::RegisterCommands(System::Type ^ type, bool defaultCommands)
 	{
 		for each(auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
@@ -662,6 +662,7 @@ namespace GTA
 
 		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
 
+		Console::Info("---");
 		for each (auto script in scripts)
 		{
 			String ^filename = script->Filename;
@@ -671,8 +672,9 @@ namespace GTA
 				filename = filename->Substring(basedirectory->Length + 1);
 			}
 
-			Console::Info(filename + ": " + script->Name + (script->_running ? " [running]" : " [aborted]"));
+			Console::Info("   " + filename + ": " + script->Name + (script->_running ? " ~g~[running]" : " ~r~[aborted]"));
 		}
+		Console::Info("---");
 	}
 	void DefaultConsoleCommands::Abort(String ^filename)
 	{
