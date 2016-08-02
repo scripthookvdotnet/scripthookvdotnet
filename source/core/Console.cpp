@@ -33,6 +33,7 @@ namespace GTA
 	using namespace System::Drawing;
 	using namespace System::Net;
 	using namespace System::Text::RegularExpressions;
+	using namespace System::Threading;
 	using namespace System::Threading::Tasks;
 	using namespace System::Reflection;
 	using namespace GTA::Native;
@@ -313,6 +314,10 @@ namespace GTA
 		case PageDownKey:
 			PageDown();
 			break;
+		case Keys::V:
+			if (e->Control)
+				PasteClipboard();
+			break;
 		case Keys::Enter:
 			ExecuteInput();
 			break;
@@ -467,6 +472,19 @@ namespace GTA
 		}
 		_compilerTask = Task::Factory->StartNew(gcnew Func<Assembly^>(this, &ConsoleScript::CompileInput));
 	}
+	void ConsoleScript::PasteClipboard()
+	{
+		Thread^ thread = gcnew Thread(gcnew ThreadStart(this, &ConsoleScript::AddClipboardContent));
+		thread->SetApartmentState(ApartmentState::STA);
+		thread->Start();
+	}
+	void ConsoleScript::AddClipboardContent()
+	{
+		String ^text = Clipboard::GetText();
+		text = text->Replace("\n", ""); //TODO Keep this?
+		AddToInput(text);
+	}
+
 	void ConsoleScript::MoveCursorRight()
 	{
 		if (_cursorPos > 0)

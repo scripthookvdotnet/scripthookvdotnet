@@ -138,6 +138,9 @@ namespace GTA
 		void ClearInput();
 		System::Reflection::Assembly^ CompileInput();
 		void ExecuteInput();
+		void PasteClipboard();
+		void AddClipboardContent();
+
 
 		void MoveCursorRight();
 		void MoveCursorLeft();
