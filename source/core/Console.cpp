@@ -20,6 +20,7 @@
 #include "ScriptDomain.hpp"
 #include "Native.hpp"
 #include "NativeHashes.hpp"
+#include "Settings.hpp"
 #include <Windows.h>
 
 namespace GTA
@@ -36,6 +37,7 @@ namespace GTA
 	using namespace System::Threading;
 	using namespace System::Threading::Tasks;
 	using namespace System::Reflection;
+
 	using namespace GTA::Native;
 
 	ConsoleCommand::ConsoleCommand() : _help("No help text available"), _consoleArgs(gcnew List<ConsoleArg^>())
@@ -89,6 +91,14 @@ namespace GTA
 		Task::Factory->StartNew(gcnew Action(this, &ConsoleScript::DoUpdateCheck));
 
 		RegisterCommands(DefaultConsoleCommands::typeid, true);
+
+		String ^assemblyPath = Assembly::GetExecutingAssembly()->Location;
+		String ^assemblyFilename = Path::GetFileNameWithoutExtension(assemblyPath);
+		ScriptSettings ^settings = ScriptSettings::Load(Path::ChangeExtension(assemblyPath, ".ini"));
+
+		ToggleKey = settings->GetValue<Keys>("Console", "ToggleKey", Keys::F3);
+		PageDownKey = settings->GetValue<Keys>("Console", "PageDown", Keys::PageDown);
+		PageUpKey = settings->GetValue<Keys>("Console", "PageUp", Keys::PageUp);
 	}
 
 	bool ConsoleScript::IsOpen()
@@ -288,6 +298,17 @@ namespace GTA
 		if (!_isOpen)
 			return;
 
+		if (e->KeyCode == PageUpKey)
+		{
+			PageUp();
+			return;
+		}
+		else if (e->KeyCode == PageDownKey)
+		{
+			PageDown();
+			return;
+		}
+
 		switch (e->KeyCode)
 		{
 		case Keys::Back:
@@ -307,12 +328,6 @@ namespace GTA
 			break;
 		case Keys::Down:
 			GoDownCommandList();
-			break;
-		case PageUpKey:
-			PageUp();
-			break;
-		case PageDownKey:
-			PageDown();
 			break;
 		case Keys::V:
 			if (e->Control)
@@ -474,7 +489,7 @@ namespace GTA
 	}
 	void ConsoleScript::PasteClipboard()
 	{
-		Thread^ thread = gcnew Thread(gcnew ThreadStart(this, &ConsoleScript::AddClipboardContent));
+		Thread ^thread = gcnew Thread(gcnew ThreadStart(this, &ConsoleScript::AddClipboardContent));
 		thread->SetApartmentState(ApartmentState::STA);
 		thread->Start();
 	}

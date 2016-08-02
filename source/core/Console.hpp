@@ -174,9 +174,9 @@ namespace GTA
 		System::CodeDom::Compiler::CodeDomProvider ^_compiler;
 		System::CodeDom::Compiler::CompilerParameters ^_compilerOptions;
 
-		literal System::Windows::Forms::Keys PageUpKey = System::Windows::Forms::Keys::PageUp;
-		literal System::Windows::Forms::Keys PageDownKey = System::Windows::Forms::Keys::PageDown;
-		literal System::Windows::Forms::Keys ToggleKey = System::Windows::Forms::Keys::F3;
+		System::Windows::Forms::Keys PageUpKey;
+		System::Windows::Forms::Keys PageDownKey;
+		System::Windows::Forms::Keys ToggleKey;
 
 		static int DefaultFont = 0; //Chalet London :>
 
