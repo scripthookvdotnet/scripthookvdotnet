@@ -33,6 +33,26 @@ namespace GTA
 		System::Type ^_dependency;
 	};
 
+	public ref class ScriptAttributes : System::Attribute
+	{
+	private:
+		System::String ^_author;
+		System::String ^_supportURL;
+	public:
+		ScriptAttributes(){}
+		property System::String ^Author {
+			System::String ^get() { return _author; }
+			void set(System::String ^value) { _author = value; }
+		}
+		property System::String ^SupportURL {
+			System::String ^get() { return _supportURL; }
+			void set(System::String ^value) { _supportURL = value; }
+		}
+		property bool HasSupport {
+			bool get() { return SupportURL != nullptr && SupportURL->Length > 0; }
+		}
+	};
+
 	public ref class Script abstract
 	{
 	public:
