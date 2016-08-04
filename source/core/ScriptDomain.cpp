@@ -662,7 +662,7 @@ namespace GTA
 			auto args = gcnew WinForms::KeyEventArgs(key);
 			auto eventinfo = gcnew Tuple<bool, WinForms::KeyEventArgs ^>(status, args);
 
-			if (!ReferenceEquals(_console, nullptr) && _console->IsOpen())
+			if (!ReferenceEquals(_console, nullptr) && _console->IsOpen)
 			{
 				// Do not send keyboard events to other running scripts when console is open
 				_console->_keyboardEvents->Enqueue(eventinfo);

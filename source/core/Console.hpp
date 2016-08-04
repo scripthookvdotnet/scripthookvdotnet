@@ -1,18 +1,18 @@
 /**
-* Copyright (C) 2015 crosire
-*
-* This software is  provided 'as-is', without any express  or implied  warranty. In no event will the
-* authors be held liable for any damages arising from the use of this software.
-* Permission  is granted  to anyone  to use  this software  for  any  purpose,  including  commercial
-* applications, and to alter it and redistribute it freely, subject to the following restrictions:
-*
-*   1. The origin of this software must not be misrepresented; you must not claim that you  wrote the
-*      original  software. If you use this  software  in a product, an  acknowledgment in the product
-*      documentation would be appreciated but is not required.
-*   2. Altered source versions must  be plainly  marked as such, and  must not be  misrepresented  as
-*      being the original software.
-*   3. This notice may not be removed or altered from any source distribution.
-*/
+ * Copyright (C) 2015 crosire
+ *
+ * This software is  provided 'as-is', without any express  or implied  warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ * Permission  is granted  to anyone  to use  this software  for  any  purpose,  including  commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ *   1. The origin of this software must not be misrepresented; you must not claim that you  wrote the
+ *      original  software. If you use this  software  in a product, an  acknowledgment in the product
+ *      documentation would be appreciated but is not required.
+ *   2. Altered source versions must  be plainly  marked as such, and  must not be  misrepresented  as
+ *      being the original software.
+ *   3. This notice may not be removed or altered from any source distribution.
+ */
 
 #pragma once
 
@@ -109,45 +109,47 @@ namespace GTA
 	{
 	internal:
 		ConsoleScript();
-		void OnTick(Object ^sender, System::EventArgs ^e);
-		void OnKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs  ^e);
-		void OnKeyUp(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
 
-		void Info(System::String ^msg, ...array<System::Object^>^ args);
-		void Error(System::String ^msg, ...array<System::Object^>^ args);
-		void Warn(System::String ^msg, ...array<System::Object^>^ args);
-		void Debug(System::String ^msg, ...array<System::Object^>^ args);
+		property bool IsOpen
+		{
+			inline bool get() { return _isOpen; }
+		}
 
-		bool IsOpen();
-		void UnregisterCommands(System::Type ^type);
-		void RegisterCommands(System::Type ^type);
-		void RegisterCommands(System::Type ^type, bool defaultCommands);
 		void RegisterCommand(ConsoleCommand ^command, System::Reflection::MethodInfo ^methodInfo);
 		void RegisterCommand(ConsoleCommand ^command, System::Reflection::MethodInfo ^methodInfo, bool defaultCommand);
+		void RegisterCommands(System::Type ^type);
+		void RegisterCommands(System::Type ^type, bool defaultCommands);
+		void UnregisterCommands(System::Type ^type);
+
+		void Info(System::String ^msg, ...array<System::Object ^> ^args);
+		void Error(System::String ^msg, ...array<System::Object ^> ^args);
+		void Warn(System::String ^msg, ...array<System::Object ^> ^args);
+		void Debug(System::String ^msg, ...array<System::Object ^> ^args);
 		void PrintHelpString();
+
 		void Clear();
 
+		void OnTick(Object ^sender, System::EventArgs ^e);
+		void OnKeyDown(System::Object ^sender, System::Windows::Forms::KeyEventArgs ^e);
+
 	private:
-		void SetControlsEnabled(bool enabled);
 		void AddLines(System::String ^prefix, array<System::String^> ^msgs);
 		void AddLines(System::String ^prefix, array<System::String^> ^msgs, System::String ^textColor);
-		System::String^ GetCharsFromKeys(System::Windows::Forms::Keys keys, bool shift, bool alt);
+
 		void AddToInput(System::String ^input);
-		void RemoveCharRight();
-		void RemoveCharLeft();
-		void ClearInput();
-		System::Reflection::Assembly^ CompileInput();
-		void ExecuteInput();
-		void PasteClipboard();
 		void AddClipboardContent();
+		void ClearInput();
+		System::Reflection::Assembly ^CompileInput();
+		void ExecuteInput();
 
+		void PasteClipboard();
 
-		void MoveCursorRight();
 		void MoveCursorLeft();
-
+		void MoveCursorRight();
+		void RemoveCharLeft();
+		void RemoveCharRight();
 		void PageUp();
 		void PageDown();
-
 		void GoUpCommandList();
 		void GoDownCommandList();
 
@@ -228,11 +230,9 @@ namespace GTA
 		static void Clear();
 	};
 
-	public ref class Console
+	public ref struct Console
 	{
-
 		//TODO Maybe change the structure, we basically just create delegate methods?
-	public:
 		static void Info(System::String ^msg, ... array<System::Object^> ^args);
 		static void Error(System::String ^msg, ... array<System::Object^> ^args);
 		static void Warn(System::String ^msg, ... array<System::Object^> ^args);

@@ -1,18 +1,18 @@
 /**
-* Copyright (C) 2015 crosire
-*
-* This software is  provided 'as-is', without any express  or implied  warranty. In no event will the
-* authors be held liable for any damages arising from the use of this software.
-* Permission  is granted  to anyone  to use  this software  for  any  purpose,  including  commercial
-* applications, and to alter it and redistribute it freely, subject to the following restrictions:
-*
-*   1. The origin of this software must not be misrepresented; you must not claim that you  wrote the
-*      original  software. If you use this  software  in a product, an  acknowledgment in the product
-*      documentation would be appreciated but is not required.
-*   2. Altered source versions must  be plainly  marked as such, and  must not be  misrepresented  as
-*      being the original software.
-*   3. This notice may not be removed or altered from any source distribution.
-*/
+ * Copyright (C) 2015 crosire
+ *
+ * This software is  provided 'as-is', without any express  or implied  warranty. In no event will the
+ * authors be held liable for any damages arising from the use of this software.
+ * Permission  is granted  to anyone  to use  this software  for  any  purpose,  including  commercial
+ * applications, and to alter it and redistribute it freely, subject to the following restrictions:
+ *
+ *   1. The origin of this software must not be misrepresented; you must not claim that you  wrote the
+ *      original  software. If you use this  software  in a product, an  acknowledgment in the product
+ *      documentation would be appreciated but is not required.
+ *   2. Altered source versions must  be plainly  marked as such, and  must not be  misrepresented  as
+ *      being the original software.
+ *   3. This notice may not be removed or altered from any source distribution.
+ */
 
 #pragma once
 
@@ -38,19 +38,52 @@ namespace GTA
 	using namespace System::Threading::Tasks;
 	using namespace System::Reflection;
 
-	using namespace GTA::Native;
+	void SetControlsEnabled(bool enabled)
+	{
+		for (int i = 0; i < 338; i++)
+		{
+			if (i >= 1 && i <= 6)
+			{
+				continue;
+			}
+
+			Native::Function::Call(Native::Hash::DISABLE_CONTROL_ACTION, 0, i, enabled);
+		}
+	}
+	String ^GetCharsFromKeys(System::Windows::Forms::Keys keys, bool shift, bool alt)
+	{
+		wchar_t buf[256] = { };
+		BYTE keyboardState[256] = { };
+
+		if (shift)
+		{
+			keyboardState[(int)Keys::ShiftKey] = 0xff;
+		}
+
+		if (alt)
+		{
+			keyboardState[(int)Keys::ControlKey] = 0xff;
+			keyboardState[(int)Keys::Menu] = 0xff;
+		}
+
+		if (ToUnicode((UInt32)keys, 0, keyboardState, buf, 256, 0) == 1)
+		{
+			return gcnew String(buf);
+		}
+
+		return nullptr;
+	}
 
 	ConsoleCommand::ConsoleCommand() : _help("No help text available"), _consoleArgs(gcnew List<ConsoleArg^>())
 	{
 		
 	}
-
-	ConsoleCommand::ConsoleCommand(System::String ^help) : _help(help), _consoleArgs(gcnew List<ConsoleArg^>())
+	ConsoleCommand::ConsoleCommand(String ^help) : _help(help), _consoleArgs(gcnew List<ConsoleArg^>())
 	{
 
 	}
 
-	System::String^ ConsoleCommand::BuildFormattedHelp()
+	String ^ConsoleCommand::BuildFormattedHelp()
 	{
 		StringBuilder^ builder = gcnew StringBuilder();
 		builder->Append("~h~" + Name + "~w~(");
@@ -67,10 +100,8 @@ namespace GTA
 
 	ConsoleScript::ConsoleScript()
 	{
-		Interval = 0;
-		Tick += gcnew System::EventHandler(this, &GTA::ConsoleScript::OnTick);
-		KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &GTA::ConsoleScript::OnKeyDown);
-		KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &GTA::ConsoleScript::OnKeyUp);
+		Tick += gcnew EventHandler(this, &ConsoleScript::OnTick);
+		KeyDown += gcnew KeyEventHandler(this, &ConsoleScript::OnKeyDown);
 
 		_outputQueue = gcnew ConcurrentQueue<array<String^>^>;
 		_commands = gcnew Dictionary<String^, List<Tuple<ConsoleCommand^, MethodInfo^>^>^>();
@@ -83,7 +114,7 @@ namespace GTA
 		_lines = gcnew LinkedList<String^>();
 		_commandHistory = gcnew List<String ^>();
 
-		System::Version ^version = Assembly::GetExecutingAssembly()->GetName()->Version;
+		Version ^version = Assembly::GetExecutingAssembly()->GetName()->Version;
 		Info("--- Community Script Hook V .NET {0} ---", version);
 		Info("--- Type \"Help()\" to print an overview of available commands ---");
 
@@ -101,48 +132,64 @@ namespace GTA
 		PageUpKey = settings->GetValue<Keys>("Console", "PageUp", Keys::PageUp);
 	}
 
-	bool ConsoleScript::IsOpen()
+	void ConsoleScript::RegisterCommand(ConsoleCommand ^command, MethodInfo ^methodInfo)
 	{
-		return _isOpen;
+		RegisterCommand(command, methodInfo, false);
 	}
+	void ConsoleScript::RegisterCommand(ConsoleCommand ^command, MethodInfo ^methodInfo, bool defaultCommand)
+	{
+		File::WriteAllText("console.log", (command == nullptr) + ":" + (methodInfo == nullptr));
 
-	void ConsoleScript::Info(System::String ^ msg, ...array<Object^>^ args)
-	{
-		AddLines("[~b~INFO~w~] ", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'));
-	}
+		command->Name = defaultCommand ? methodInfo->Name : methodInfo->DeclaringType->FullName + "." + methodInfo->Name; //TODO FIX
+		command->Namespace = defaultCommand ? "Default Commands" : methodInfo->DeclaringType->FullName;
 
-	void ConsoleScript::Error(System::String ^ msg, ...array<Object^>^ args)
-	{
-		AddLines("[~r~ERROR~w~]", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'), "~r~");
-	}
-
-	void ConsoleScript::Warn(System::String ^ msg, ...array<Object^>^ args)
-	{
-		AddLines("[~o~WARN~w~] ", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'));
-	}
-	void ConsoleScript::Debug(System::String ^ msg, ...array<Object^>^ args)
-	{
-		AddLines("[~c~DEBUG~w~] ", args->Length > 0 ? String::Format(msg, args)->Split('\n') : msg->Split('\n'), "~c~");
-	}
-
-	void ConsoleScript::UnregisterCommands(System::Type ^ type)
-	{
-		for each(auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
+		for each(auto args in methodInfo->GetParameters())
 		{
-			for each(auto attribute in method->GetCustomAttributes(ConsoleCommand::typeid, true))
+			command->ConsoleArgs->Add(gcnew ConsoleArg(args->ParameterType->Name, args->Name));
+		}
+
+		if (!_commands->ContainsKey(command->Namespace))
+		{
+			_commands[command->Namespace] = gcnew List<Tuple<ConsoleCommand ^, MethodInfo ^> ^>();
+		}
+
+		_commands[command->Namespace]->Add(gcnew Tuple<ConsoleCommand ^, MethodInfo ^>(command, methodInfo));
+	}
+	void ConsoleScript::RegisterCommands(Type ^type)
+	{
+		RegisterCommands(type, false);
+	}
+	void ConsoleScript::RegisterCommands(Type ^type, bool defaultCommands)
+	{
+		for each (auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
+		{
+			for each (auto attribute in method->GetCustomAttributes(ConsoleCommand::typeid, true))
 			{
-				ConsoleCommand^ command = static_cast<ConsoleCommand^>(attribute);
+				RegisterCommand(static_cast<ConsoleCommand ^>(attribute), method, defaultCommands);
+			}
+		}
+	}
+	void ConsoleScript::UnregisterCommands(Type ^ type)
+	{
+		for each (auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
+		{
+			for each (auto attribute in method->GetCustomAttributes(ConsoleCommand::typeid, true))
+			{
+				auto command = static_cast<ConsoleCommand ^>(attribute);
 				command->Namespace = method->DeclaringType->FullName;
+
 				if (_commands->ContainsKey(command->Namespace))
 				{
-					List<Tuple<ConsoleCommand^, MethodInfo^>^>^ Namespace = _commands[command->Namespace];
-					for (int i = 0; i<Namespace->Count; i++)
+					List<Tuple<ConsoleCommand ^, MethodInfo ^> ^> ^Namespace = _commands[command->Namespace];
+
+					for (int i = 0; i < Namespace->Count; i++)
 					{
 						if (Namespace[i]->Item1 == command || Namespace[i]->Item2 == method)
 						{
 							Namespace->RemoveAt(i--);
 						}
 					}
+
 					if (Namespace->Count == 0)
 					{
 						_commands->Remove(command->Namespace);
@@ -152,41 +199,42 @@ namespace GTA
 		}
 	}
 
-	void ConsoleScript::RegisterCommands(System::Type ^ type)
+	void ConsoleScript::Info(String ^msg, ...array<Object ^> ^args)
 	{
-		RegisterCommands(type, false);
-	}
-	void ConsoleScript::RegisterCommands(System::Type ^ type, bool defaultCommands)
-	{
-		for each(auto method in type->GetMethods(BindingFlags::Static | BindingFlags::Public))
+		if (args->Length > 0)
 		{
-			for each(auto attribute in method->GetCustomAttributes(ConsoleCommand::typeid, true))
-			{
-				RegisterCommand(static_cast<ConsoleCommand^>(attribute), method, defaultCommands);
-			}
+			msg = String::Format(msg, args);
 		}
-	}
 
-	void ConsoleScript::RegisterCommand(ConsoleCommand ^ command, System::Reflection::MethodInfo ^ methodInfo)
-	{
-		RegisterCommand(command, methodInfo, false);
+		AddLines("[~b~INFO~w~] ", msg->Split('\n'));
 	}
-
-	void ConsoleScript::RegisterCommand(ConsoleCommand ^ command, System::Reflection::MethodInfo ^ methodInfo, bool defaultCommand)
+	void ConsoleScript::Error(String ^msg, ...array<Object ^> ^args)
 	{
-		File::WriteAllText("console.log", (command == nullptr) + ":" + (methodInfo == nullptr));
-		command->Name = defaultCommand ? methodInfo->Name : methodInfo->DeclaringType->FullName + "." + methodInfo->Name; //TODO FIX
-		command->Namespace = defaultCommand ? "Default Commands" : methodInfo->DeclaringType->FullName;
-		for each(auto args in methodInfo->GetParameters())
+		if (args->Length > 0)
 		{
-			command->ConsoleArgs->Add(gcnew ConsoleArg(args->ParameterType->Name, args->Name));
+			msg = String::Format(msg, args);
 		}
-		if (!_commands->ContainsKey(command->Namespace))
-			_commands[command->Namespace] = gcnew List<Tuple<ConsoleCommand^, MethodInfo^>^>();
 
-		_commands[command->Namespace]->Add(gcnew Tuple<ConsoleCommand^, MethodInfo^>(command, methodInfo));
+		AddLines("[~r~ERROR~w~]", msg->Split('\n'), "~r~");
 	}
+	void ConsoleScript::Warn(String ^msg, ...array<Object ^> ^args)
+	{
+		if (args->Length > 0)
+		{
+			msg = String::Format(msg, args);
+		}
 
+		AddLines("[~o~WARN~w~] ", msg->Split('\n'));
+	}
+	void ConsoleScript::Debug(String ^msg, ...array<Object ^> ^args)
+	{
+		if (args->Length > 0)
+		{
+			msg = String::Format(msg, args);
+		}
+
+		AddLines("[~c~DEBUG~w~] ", msg->Split('\n'), "~c~");
+	}
 	void ConsoleScript::PrintHelpString()
 	{
 		StringBuilder ^help = gcnew StringBuilder();
@@ -204,6 +252,19 @@ namespace GTA
 		Info(help->ToString());
 	}
 
+	void ConsoleScript::AddLines(String ^prefix, array<String^> ^msgs)
+	{
+		AddLines(prefix, msgs, "~w~");
+	}
+	void ConsoleScript::AddLines(String ^prefix, array<String^> ^msgs, String ^textColor)
+	{
+		for (int i = 0; i < msgs->Length; i++)
+		{
+			msgs[i] = String::Format("~c~[{0}] ~w~{1} {2}{3}", DateTime::Now.ToString("HH:mm:ss"), prefix, textColor, msgs[i]); //Add proper styling
+		}
+
+		_outputQueue->Enqueue(msgs);
+	}
 	void ConsoleScript::Clear()
 	{
 		_lines->Clear();
@@ -283,7 +344,6 @@ namespace GTA
 			i++;
 		}
 	}
-
 	void ConsoleScript::OnKeyDown(Object ^sender, KeyEventArgs ^e)
 	{
 		if (e->KeyCode == ToggleKey)
@@ -347,84 +407,28 @@ namespace GTA
 		}
 	}
 
-	void ConsoleScript::OnKeyUp(Object ^sender, KeyEventArgs ^e)
+	void ConsoleScript::AddToInput(String ^input)
 	{
-		if (!_isOpen)
+		if (String::IsNullOrEmpty(input))
+		{
 			return;
-	}
-
-	void ConsoleScript::SetControlsEnabled(bool enabled)
-	{
-		for (int i = 0; i < 338; i++)
-		{
-			if (i >= 1 && i <= 6)
-			{
-				continue;
-			}
-
-			Function::Call(Hash::DISABLE_CONTROL_ACTION, 0, i, enabled);
-		}
-	}
-	void ConsoleScript::AddLines(String ^prefix, array<String^> ^msgs)
-	{
-		AddLines(prefix, msgs, "~w~");
-	}
-	void ConsoleScript::AddLines(String ^prefix, array<String^> ^msgs, String ^textColor)
-	{
-		for (int i = 0; i < msgs->Length; i++)
-		{
-			msgs[i] = String::Format("~c~[{0}] ~w~{1} {2}{3}", DateTime::Now.ToString("HH:mm:ss"), prefix, textColor, msgs[i]); //Add proper styling
-		}
-		_outputQueue->Enqueue(msgs);
-	}
-	System::String ^ ConsoleScript::GetCharsFromKeys(System::Windows::Forms::Keys keys, bool shift, bool alt)
-	{
-		System::String ^output = nullptr;
-		wchar_t buf[256] = {};
-		BYTE keyboardState[256] = {};
-
-		if (shift)
-			keyboardState[(int)Keys::ShiftKey] = 0xff;
-
-		if (alt)
-		{
-			keyboardState[(int)Keys::ControlKey] = 0xff;
-			keyboardState[(int)Keys::Menu] = 0xff;
 		}
 
-		if (ToUnicode((UInt32)keys, 0, keyboardState, buf, 256, 0) == 1)
-			output = gcnew System::String(buf);
-
-		return output;
+		_input = _input->Insert(_input->Length - _cursorPos, input);
 	}
-
-	void ConsoleScript::AddToInput(System::String ^ input)
+	void ConsoleScript::AddClipboardContent()
 	{
-		if (input != nullptr)
-			_input = _input->Insert(_input->Length - _cursorPos, input);
-	}
+		String ^text = Clipboard::GetText();
+		text = text->Replace("\n", ""); //TODO Keep this?
 
-	void ConsoleScript::RemoveCharRight()
-	{
-		if (_input->Length > 0)
-			_input = _input->Remove(_input->Length - _cursorPos, 1);
-		if (_cursorPos > 0)
-			_cursorPos--;
+		AddToInput(text);
 	}
-
-	void ConsoleScript::RemoveCharLeft()
-	{
-		if (_input->Length > 0)
-			_input = _input->Remove(_input->Length - _cursorPos - 1, 1);
-	}
-
 	void ConsoleScript::ClearInput()
 	{
 		_input = "";
 		_cursorPos = 0;
 	}
-
-	Assembly^ ConsoleScript::CompileInput()
+	Assembly ^ConsoleScript::CompileInput()
 	{
 		String ^inputStr = String::Format(CompileTemplate, _input);
 
@@ -437,8 +441,10 @@ namespace GTA
 
 		for each (Script ^script in ScriptDomain::CurrentDomain->RunningScripts)
 		{
-			if(!String::IsNullOrEmpty(script->_filename))
+			if (!String::IsNullOrEmpty(script->_filename))
+			{
 				_compilerOptions->ReferencedAssemblies->Add(script->_filename);
+			}
 		}
 
 		CodeDom::Compiler::CompilerResults ^compilerResult = _compiler->CompileAssemblyFromSource(_compilerOptions, inputStr);
@@ -470,45 +476,64 @@ namespace GTA
 			return nullptr;
 		}
 	}
-
 	void ConsoleScript::ExecuteInput()
 	{
-		if (_input == "")
+		if (String::IsNullOrEmpty(_input))
+		{
 			return;
+		}
+
 		_commandPos = -1;
+
 		if (_commandHistory->Count == 0 || _commandHistory[_commandHistory->Count -1] != _input)
 		{
 			_commandHistory->Add(_input);
 		}
+
 		if (_compilerTask != nullptr)
 		{
 			Error("Can't compile input - Compiler is busy");
 			return;
 		}
+
 		_compilerTask = Task::Factory->StartNew(gcnew Func<Assembly^>(this, &ConsoleScript::CompileInput));
 	}
+
 	void ConsoleScript::PasteClipboard()
 	{
 		Thread ^thread = gcnew Thread(gcnew ThreadStart(this, &ConsoleScript::AddClipboardContent));
 		thread->SetApartmentState(ApartmentState::STA);
 		thread->Start();
 	}
-	void ConsoleScript::AddClipboardContent()
-	{
-		String ^text = Clipboard::GetText();
-		text = text->Replace("\n", ""); //TODO Keep this?
-		AddToInput(text);
-	}
 
+	void ConsoleScript::MoveCursorLeft()
+	{
+		if (_cursorPos < _input->Length)
+			_cursorPos++;
+	}
 	void ConsoleScript::MoveCursorRight()
 	{
 		if (_cursorPos > 0)
 			_cursorPos--;
 	}
-	void ConsoleScript::MoveCursorLeft()
+	void ConsoleScript::RemoveCharLeft()
 	{
-		if (_cursorPos < _input->Length)
-			_cursorPos++;
+		if (_input->Length > 0)
+		{
+			_input = _input->Remove(_input->Length - _cursorPos - 1, 1);
+		}
+	}
+	void ConsoleScript::RemoveCharRight()
+	{
+		if (_input->Length > 0)
+		{
+			_input = _input->Remove(_input->Length - _cursorPos, 1);
+		}
+
+		if (_cursorPos > 0)
+		{
+			_cursorPos--;
+		}
 	}
 	void ConsoleScript::PageUp()
 	{
@@ -548,7 +573,7 @@ namespace GTA
 
 		Native::Function::Call(Native::Hash::DRAW_RECT, xNew, yNew, w, h, color.R, color.G, color.B, color.A);
 	}
-	void ConsoleScript::DrawText(float x, float y, System::String ^text, float scale, int font, Color color)
+	void ConsoleScript::DrawText(float x, float y, String ^text, float scale, int font, Color color)
 	{
 		float xNew = (static_cast<float>(x) / WIDTH);
 		float yNew = (static_cast<float>(y) / HEIGHT);
@@ -563,26 +588,26 @@ namespace GTA
 
 		for (int i = 0; i < text->Length; i += maxStringLength)
 		{
-			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, System::Math::Min(maxStringLength, text->Length - i)));
+			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, Math::Min(maxStringLength, text->Length - i)));
 		}
 
 		Native::Function::Call(Native::Hash::_DRAW_TEXT, xNew, yNew);
 	}
 	float ConsoleScript::GetTextLength(String ^text, float scale, int font)
 	{
-		Function::Call(Hash::_SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
 
 		const int maxStringLength = 99;
 
 		for (int i = 0; i < text->Length; i += maxStringLength)
 		{
-			Function::Call(Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, System::Math::Min(maxStringLength, text->Length - i)));
+			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, Math::Min(maxStringLength, text->Length - i)));
 		}
 
-		Function::Call(Hash::SET_TEXT_FONT, font);
-		Function::Call(Hash::SET_TEXT_SCALE, scale, scale);
+		Native::Function::Call(Native::Hash::SET_TEXT_FONT, font);
+		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, scale, scale);
 
-		return Function::Call<float>(Hash::_GET_TEXT_SCREEN_WIDTH, 1);
+		return Native::Function::Call<float>(Native::Hash::_GET_TEXT_SCREEN_WIDTH, 1);
 	}
 
 	void ConsoleScript::DoUpdateCheck()
@@ -620,7 +645,7 @@ namespace GTA
 		delete webclient;
 	}
 
-	ConsoleArg::ConsoleArg(System::String ^ type, System::String ^ name) : _type(type), _name(name)
+	ConsoleArg::ConsoleArg(String ^ type, String ^ name) : _type(type), _name(name)
 	{
 		
 	}
@@ -658,7 +683,7 @@ namespace GTA
 
 		filename = IO::Path::GetFullPath(filename);
 
-		String ^extension = System::IO::Path::GetExtension(filename)->ToLower();
+		String ^extension = IO::Path::GetExtension(filename)->ToLower();
 
 		if (extension != ".cs" && extension != ".vb" && extension != ".dll")
 		{
