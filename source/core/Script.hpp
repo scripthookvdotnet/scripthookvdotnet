@@ -33,16 +33,13 @@ namespace GTA
 		System::Type ^_dependency;
 	};
 
-	public ref class StriptAttribute : System::Attribute
+	public ref class ScriptAttributes : System::Attribute
 	{
 	private:
 		System::String ^_author;
 		System::String ^_supportURL;
 	public:
-		StriptAttribute()
-		{
-
-		}
+		ScriptAttributes(){}
 		property System::String ^Author {
 			System::String ^get() { return _author; }
 			void set(System::String ^value) { _author = value; }

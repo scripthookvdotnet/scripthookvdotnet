@@ -111,7 +111,7 @@ namespace GTA
 
 	String ^ScriptDomain::GetScriptSupport(Type ^scriptType)
 	{
-		for each(StriptAttribute ^ attribute in scriptType->GetCustomAttributes(StriptAttribute::typeid, true))
+		for each(ScriptAttributes ^ attribute in scriptType->GetCustomAttributes(ScriptAttributes::typeid, true))
 		{
 			if (attribute->HasSupport)
 			{
