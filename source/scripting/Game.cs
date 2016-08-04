@@ -455,6 +455,15 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash._HAS_BUTTON_COMBINATION_JUST_BEEN_ENTERED, combination.Hash, combination.Length);
 		}
+		/// <summary>
+		/// Gets whether a cheat code was entered into the cheat text box
+		/// </summary>
+		/// <param name="cheat">The name of the cheat to check</param>
+		/// <returns><c>true</c> if the cheat was just entered; otherwise, <c>false</c></returns>
+		public static bool WasCheatStringJustEntered(string cheat)
+		{
+			return Function.Call<bool>((Hash) 0x557E43C447E700A8, GenerateHash(cheat));
+		}
 
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is currently pressed
