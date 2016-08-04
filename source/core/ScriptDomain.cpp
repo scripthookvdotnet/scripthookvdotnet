@@ -38,6 +38,18 @@ namespace
 
 namespace GTA
 {
+	String ^GetScriptSupportURL(Type ^scriptType)
+	{
+		for each (ScriptAttributes ^ attribute in scriptType->GetCustomAttributes(ScriptAttributes::typeid, true))
+		{
+			if (attribute->HasSupport)
+			{
+				return attribute->SupportURL;
+			}
+		}
+		return nullptr;
+	}
+
 	void Log(String ^logLevel, ... array<String ^> ^message)
 	{
 		DateTime now = DateTime::Now;
@@ -99,26 +111,27 @@ namespace GTA
 		{
 			Log("[ERROR]", "Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
-		if (sender->GetType()->IsInstanceOfType(Script::typeid))
-		{
-			String ^SupportURL = ScriptDomain::GetScriptSupport(sender->GetType());
-			if (SupportURL != nullptr)
-			{
-				Log("[INFO]", "Please check the website for details about the Error in: ", static_cast<Script ^>(sender)->Name, Environment::NewLine, SupportURL);
-			}
-		}
-	}
 
-	String ^ScriptDomain::GetScriptSupport(Type ^scriptType)
-	{
-		for each(ScriptAttributes ^ attribute in scriptType->GetCustomAttributes(ScriptAttributes::typeid, true))
+		if (sender == nullptr)
 		{
-			if (attribute->HasSupport)
-			{
-				return attribute->SupportURL;
-			}
+			return;
 		}
-		return nullptr;
+
+		auto scriptType = sender->GetType();
+
+		if (!scriptType->IsInstanceOfType(Script::typeid))
+		{
+			return;
+		}
+
+		Log("[INFO]", "The exception was thrown while executing the script '", scriptType->FullName, "'.");
+
+		String ^supportURL = GetScriptSupportURL(scriptType);
+
+		if (supportURL != nullptr)
+		{
+			Log("[INFO]", "Please check the following site for support on the issue: ", supportURL);
+		}
 	}
 
 	ScriptDomain::ScriptDomain() : _appdomain(System::AppDomain::CurrentDomain), _executingThreadId(Thread::CurrentThread->ManagedThreadId)
@@ -298,8 +311,9 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename, Assembly ^assembly)
 	{
+		String ^version = (IO::Path::GetExtension(filename) == ".dll" ? (" v" + assembly->GetName()->Version->ToString(3)) : String::Empty);
 		unsigned int count = 0;
-		String ^VersionInfo = (IO::Path::GetExtension(filename) == ".dll" ? (" v" + assembly->GetName()->Version->ToString(3)) : "");
+
 		try
 		{
 			for each (auto type in assembly->GetTypes())
@@ -315,12 +329,12 @@ namespace GTA
 		}
 		catch (ReflectionTypeLoadException ^ex)
 		{
-			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), VersionInfo, "':", Environment::NewLine, ex->ToString());
+			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), version, "':", Environment::NewLine, ex->ToString());
 
 			return false;
 		}
 
-		Log("[INFO]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), VersionInfo, "'.");
+		Log("[INFO]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), version, "'.");
 
 		return count != 0;
 	}
@@ -353,32 +367,31 @@ namespace GTA
 		{
 			return nullptr;
 		}
-	
+
 		Log("[INFO]", "Instantiating script '", scriptType->FullName,  "' in script domain '", Name, "' ...");
-		String^ SupportMessage = GetScriptSupport(scriptType);
-		if (SupportMessage == nullptr || SupportMessage->Length == 0)
-		{
-			SupportMessage = "";
-		}
-		else
-		{
-			SupportMessage = Environment::NewLine + "Check here for support on the issue: \"" + SupportMessage + "\"";
-		}
+
 		try
 		{
 			return static_cast<Script ^>(Activator::CreateInstance(scriptType));
 		}
 		catch (MissingMethodException ^)
 		{
-			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "' because no public default constructor was found.", SupportMessage);
+			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "' because no public default constructor was found.");
 		}
 		catch (TargetInvocationException ^ex)
 		{
-			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString(), SupportMessage);
+			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "' because constructor threw an exception:", Environment::NewLine, ex->InnerException->ToString());
 		}
 		catch (Exception ^ex)
 		{
-			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "':", Environment::NewLine, ex->ToString(), SupportMessage);
+			Log("[ERROR]", "Failed to instantiate script '", scriptType->FullName, "':", Environment::NewLine, ex->ToString());
+		}
+
+		String ^supportURL = GetScriptSupportURL(scriptType);
+
+		if (supportURL != nullptr)
+		{
+			Log("[INFO]", "Please check the following site for support on the issue: ", supportURL);
 		}
 
 		return nullptr;
