@@ -412,7 +412,7 @@ namespace GTA
 		bool MemoryAccess::IsModelAPed(int modelHash)
 		{
 			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
-			for (HashNode* cur = HashMap[*reinterpret_cast<unsigned int*>(&modelHash) % modelHashEntries]; cur; cur = cur->next)
+			for (HashNode* cur = HashMap[static_cast<unsigned int>(modelHash) % modelHashEntries]; cur; cur = cur->next)
 			{
 				if (cur->hash != modelHash)
 				{
