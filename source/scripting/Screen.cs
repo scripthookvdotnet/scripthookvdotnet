@@ -196,28 +196,30 @@ namespace GTA.UI
 		/// The base width of the screen used for all UI Calculations, unless ScaledDraw is used
 		/// </summary>
 		public const float Width = 1280f;
-
 		/// <summary>
 		/// The base height of the screen used for all UI Calculations
 		/// </summary>
 		public const float Height = 720f;
-
 		/// <summary>
 		/// Gets the current Screen Aspect Ratio
 		/// </summary>		   
 		public static float AspectRatio
 		{
-			get { return Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0); }
+			get
+			{
+				return Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
+			}
 		}
-
 		/// <summary>
 		/// Gets the width of the scaled against a 720pixel height base.
 		/// </summary>
 		public static float ScaledWidth
 		{
-			get { return Height*AspectRatio; }
+			get
+			{
+				return Height * AspectRatio; 
+			}
 		}
-
 		/// <summary>
 		/// Gets the actual Screen resolution the game is being rendered at
 		/// </summary>
@@ -246,8 +248,7 @@ namespace GTA.UI
 
 			for (int i = 0; i < message.Length; i += maxStringLength)
 			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME,
-					message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
 			}
 
 			Function.Call(Hash._DRAW_SUBTITLE_TIMED, duration, 1);
@@ -264,8 +265,7 @@ namespace GTA.UI
 
 			for (int i = 0; i < helpText.Length; i += maxStringLength)
 			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME,
-					helpText.Substring(i, System.Math.Min(maxStringLength, helpText.Length - i)));
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, helpText.Substring(i, System.Math.Min(maxStringLength, helpText.Length - i)));
 			}
 			Function.Call(Hash._DISPLAY_HELP_TEXT_FROM_STRING_LABEL, 0, 0, 1, -1);
 		}
@@ -284,8 +284,7 @@ namespace GTA.UI
 
 			for (int i = 0; i < message.Length; i += maxStringLength)
 			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME,
-					message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
 			}
 
 			return new Notification(Function.Call<int>(Hash._DRAW_NOTIFICATION, blinking, true));
@@ -301,7 +300,6 @@ namespace GTA.UI
 		{
 			return WorldToScreen(position, scaleWidth ? ScaledWidth : Width, Height);
 		}
-
 		private static PointF WorldToScreen(Vector3 position, float screenWidth, float screenHeight)
 		{
 			var pointX = new OutputArgument();
@@ -312,7 +310,7 @@ namespace GTA.UI
 				return PointF.Empty;
 			}
 
-			return new PointF(pointX.GetResult<float>()*screenWidth, pointY.GetResult<float>()*screenHeight);
+			return new PointF(pointX.GetResult<float>() * screenWidth, pointY.GetResult<float>() * screenHeight);
 		}
 
 
@@ -327,22 +325,21 @@ namespace GTA.UI
 			/// <see cref="LoadingSpinnerType.Clockwise1"/>, <see cref="LoadingSpinnerType.Clockwise2"/>, <see cref="LoadingSpinnerType.Clockwise3"/> and <see cref="LoadingSpinnerType.RegularClockwise"/> all see to be the same. 
 			/// But Rockstar always seem to use the <see cref="LoadingSpinnerType.RegularClockwise"/> in the scripts
 			/// </remarks>
-			public static void Show(string loadingText = null,
-				LoadingSpinnerType spinnerType = LoadingSpinnerType.RegularClockwise)
+			public static void Show(string loadingText = null, LoadingSpinnerType spinnerType = LoadingSpinnerType.RegularClockwise)
 			{
 				if (IsActive)
 					Hide();
 				if (loadingText == null)
 				{
-					Function.Call((Hash) 0xABA17D7CE615ADBF, MemoryAccess.NullString);
+					Function.Call((Hash)0xABA17D7CE615ADBF, MemoryAccess.NullString);
 				}
 				else
 				{
-					Function.Call((Hash) 0xABA17D7CE615ADBF, MemoryAccess.StringPtr);
+					Function.Call((Hash)0xABA17D7CE615ADBF, MemoryAccess.StringPtr);
 						//TO DO update this to Hash._SET_LOADING_PROMPT_TEXT_ENTRY when Hash enum next gets rebuilt
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
 				}
-				Function.Call((Hash) 0xBD12F8228410D9B4, spinnerType); //TO DO update to Hash._SHOW_LOADING_PROMPT
+				Function.Call((Hash)0xBD12F8228410D9B4, spinnerType); //TO DO update to Hash._SHOW_LOADING_PROMPT
 			}
 
 			/// <summary>
@@ -351,7 +348,7 @@ namespace GTA.UI
 			public static void Hide()
 			{
 				if (IsActive)
-					Function.Call((Hash) 0x10D373323E5B9C0D); //TO DO update to Hash._REMOVE_LOADING_PROMPT
+					Function.Call((Hash)0x10D373323E5B9C0D); //TO DO update to Hash._REMOVE_LOADING_PROMPT
 			}
 
 			/// <summary>
@@ -359,7 +356,10 @@ namespace GTA.UI
 			/// </summary>
 			public static bool IsActive
 			{
-				get { return Function.Call<bool>((Hash) 0xD422FCC5F239A915); }
+				get
+				{
+					return Function.Call<bool>((Hash)0xD422FCC5F239A915);
+				}
 				//TO DO update hash to Hash._IS_LOADING_PROMPT_BEING_DISPLAYED
 			}
 
@@ -376,7 +376,6 @@ namespace GTA.UI
 			{
 				return Function.Call<bool>(Hash.IS_HUD_COMPONENT_ACTIVE, component);
 			}
-
 			/// <summary>
 			/// Draws the specified <see cref="HudComponent"/> this frame.
 			/// </summary>
@@ -386,7 +385,6 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, component);
 			}
-
 			/// <summary>
 			/// Hides the specified <see cref="HudComponent"/> this frame.
 			/// </summary>
@@ -403,14 +401,19 @@ namespace GTA.UI
 			{
 				Function.Call(Hash._SHOW_CURSOR_THIS_FRAME);
 			}
-
 			/// <summary>
 			/// Gets or sets the sprite the cursor should used when drawn
 			/// </summary>
 			public static CursorSprite CursorSprite
 			{
-				get { return (CursorSprite) MemoryAccess.ReadCursorSprite(); }
-				set { Function.Call(Hash._SET_CURSOR_SPRITE, value); }
+				get
+				{
+					return (CursorSprite) MemoryAccess.ReadCursorSprite();
+				}
+				set
+				{
+					Function.Call(Hash._SET_CURSOR_SPRITE, value); 
+				}
 			}
 
 			/// <summary>
@@ -418,8 +421,14 @@ namespace GTA.UI
 			/// </summary>
 			public static bool IsVisible
 			{
-				get { return !Function.Call<bool>(Hash.IS_HUD_HIDDEN); }
-				set { Function.Call(Hash.DISPLAY_HUD, value); }
+				get
+				{
+					return !Function.Call<bool>(Hash.IS_HUD_HIDDEN);
+				}
+				set
+				{
+					Function.Call(Hash.DISPLAY_HUD, value); 
+				}
 			}
 
 			/// <summary>
@@ -453,7 +462,10 @@ namespace GTA.UI
 			/// </value>
 			public static bool IsFadedIn
 			{
-				get { return Function.Call<bool>(Hash.IS_SCREEN_FADED_IN); }
+				get
+				{
+					return Function.Call<bool>(Hash.IS_SCREEN_FADED_IN);
+				}
 			}
 
 			/// <summary>
@@ -464,7 +476,10 @@ namespace GTA.UI
 			/// </value>
 			public static bool IsFadedOut
 			{
-				get { return Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT); }
+				get
+				{
+					return Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
+				}
 			}
 
 			/// <summary>
@@ -475,7 +490,10 @@ namespace GTA.UI
 			/// </value>
 			public static bool IsFadingIn
 			{
-				get { return Function.Call<bool>(Hash.IS_SCREEN_FADING_IN); }
+				get
+				{
+					return Function.Call<bool>(Hash.IS_SCREEN_FADING_IN);
+				}
 			}
 
 			/// <summary>
@@ -486,7 +504,10 @@ namespace GTA.UI
 			/// </value>
 			public static bool IsFadingOut
 			{
-				get { return Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT); }
+				get
+				{
+					return Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
+				}
 			}
 
 			/// <summary>
@@ -595,11 +616,11 @@ namespace GTA.UI
 				"Dont_tazeme_bro"
 			};
 
-			private static string EffectToString(ScreenEffect effectName)
+			private static string EffectToString(ScreenEffect screenEffect)
 			{
-				if ((int) effectName >= 0 && (int) effectName <= _effects.Length)
+				if ((int)screenEffect >= 0 && (int)screenEffect <= _effects.Length)
 				{
-					return _effects[(int) effectName];
+					return _effects[(int)screenEffect];
 				}
 				return "INVALID";
 			}
@@ -614,14 +635,14 @@ namespace GTA.UI
 				Function.Call(Hash._STOP_ALL_SCREEN_EFFECTS);
 			}
 
-			public static void Stop(ScreenEffect effectName)
+			public static void Stop(ScreenEffect screenEffect)
 			{
-				Function.Call(Hash._STOP_SCREEN_EFFECT, EffectToString(effectName));
+				Function.Call(Hash._STOP_SCREEN_EFFECT, EffectToString(screenEffect));
 			}
 
-			public static bool IsActive(ScreenEffect effectName)
+			public static bool IsActive(ScreenEffect screenEffect)
 			{
-				return Function.Call<bool>(Hash._GET_SCREEN_EFFECT_IS_ACTIVE, EffectToString(effectName));
+				return Function.Call<bool>(Hash._GET_SCREEN_EFFECT_IS_ACTIVE, EffectToString(screenEffect));
 			}
 		}
 	}
