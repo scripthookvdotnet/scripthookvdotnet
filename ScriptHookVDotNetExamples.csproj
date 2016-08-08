@@ -7,13 +7,13 @@
     <ProjectGuid>{A717AD5D-C5B5-4769-BD40-F14C09F269BB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>GTA</RootNamespace>
-    <AssemblyName>examples</AssemblyName>
+    <AssemblyName>Examples</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
   <!-- Global compilation settings -->
   <PropertyGroup>
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\scripts\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
