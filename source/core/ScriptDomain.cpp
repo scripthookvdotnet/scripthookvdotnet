@@ -40,22 +40,22 @@ namespace GTA
 {
 	String ^GetScriptSupportURL(Type ^scriptType)
 	{
-		for each (ScriptAttributes ^ attribute in scriptType->GetCustomAttributes(ScriptAttributes::typeid, true))
+		for each (ScriptAttributes ^attribute in scriptType->GetCustomAttributes(ScriptAttributes::typeid, true))
 		{
-			if (attribute->HasSupport)
+			if (!String::IsNullOrEmpty(attribute->SupportURL))
 			{
 				return attribute->SupportURL;
 			}
 		}
+
 		return nullptr;
 	}
 
 	void Log(String ^logLevel, ... array<String ^> ^message)
 	{
-		DateTime now = DateTime::Now;
+		auto datetime = DateTime::Now;
 		String ^logpath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
-
-		logpath = logpath->Insert(logpath->IndexOf(".log"), "-" + now.ToString("yyyy-MM-dd"));
+		logpath = logpath->Insert(logpath->IndexOf(".log"), "-" + datetime.ToString("yyyy-MM-dd"));
 
 		try
 		{
@@ -64,7 +64,7 @@ namespace GTA
 
 			try
 			{
-				sw->Write(String::Concat("[", now.ToString("HH:mm:ss"), "] ", logLevel, " "));
+				sw->Write(String::Concat("[", datetime.ToString("HH:mm:ss"), "] ", logLevel, " "));
 
 				for each (String ^string in message)
 				{
@@ -79,9 +79,8 @@ namespace GTA
 				fs->Close();
 			}
 		}
-		catch (...)
+		catch (Exception ^)
 		{
-			return;
 		}
 	}
 	Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
@@ -168,14 +167,14 @@ namespace GTA
 		}
 		catch (Exception ^ex)
 		{
-			Log("[ERROR]", "Failed to create script domain '", appdomain->FriendlyName, "':", Environment::NewLine, ex->ToString());
+			Log("[ERROR]", "Failed to create script domain':", Environment::NewLine, ex->ToString());
 
 			System::AppDomain::Unload(appdomain);
 
 			return nullptr;
 		}
 
-		Log("[INFO]", "Loading scripts from '", path, "' into script domain '", appdomain->FriendlyName, "' ...");
+		Log("[INFO]", "Loading scripts from '", path, "' ...");
 
 		if (IO::Directory::Exists(path))
 		{
@@ -368,7 +367,7 @@ namespace GTA
 			return nullptr;
 		}
 
-		Log("[INFO]", "Instantiating script '", scriptType->FullName,  "' in script domain '", Name, "' ...");
+		Log("[INFO]", "Instantiating script '", scriptType->FullName,  "' ...");
 
 		try
 		{
