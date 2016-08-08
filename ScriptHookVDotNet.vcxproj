@@ -27,21 +27,24 @@
     <IntDir>$(SolutionDir)obj\</IntDir>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
     <ExtensionsToDeleteOnClean>*.netmodule;*.xdc;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
     <XDCMakeToolExe>XDCMake.exe</XDCMakeToolExe>
     <XDCMakeToolPath>$(SolutionDir)tools\</XDCMakeToolPath>
   </PropertyGroup>
   <!-- Specific configuration settings -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)' == 'Release'">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'NativeGen'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)' == 'NativeGen'">
     <ConfigurationType>Utility</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <!-- Global compilation settings -->
+  <PropertyGroup>
+    <TargetExt>.asi</TargetExt>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -175,9 +178,9 @@
   <!-- Rename and move output files -->
   <Target Name="MoveFiles" AfterTargets="AfterBuild">
     <MakeDir Directories="$(TargetDir)SDK" Condition="!Exists('$(TargetDir)SDK')" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)$(TargetName).asi"/>
-    <Move SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).xml" DestinationFolder="$(TargetDir)SDK\"/>
-    <Message Text="Moving output files..."/>
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)SDK\$(TargetName).dll" />
+    <Move SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="$(TargetDir)SDK\" />
+    <Message Text="Moving output files..." />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
