@@ -303,6 +303,9 @@ namespace GTA
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x33\xC9\x48\x85\xC0\x74\x3B", "xxx????xxxxxxx");
 			_playerAddressFunc = reinterpret_cast<uintptr_t(*)(int)>(*reinterpret_cast<int *>(address + 3) + address + 7);
 
+			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
+			_ptfxAddressFunc = reinterpret_cast<uintptr_t(*)(int)>(*reinterpret_cast<int*>(address) + address + 4);
+
 			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
 			_addEntityToPoolFunc = reinterpret_cast<int(*)(uintptr_t)>(address - 0x68);
 
@@ -581,6 +584,10 @@ namespace GTA
 			GenericTask ^task = gcnew GenericTask(_getCheckpointAddress, handle);
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 			return IntPtr((long long)task->GetResult());
+		}
+		IntPtr MemoryAccess::GetPtfxAddress(int handle)
+		{
+			return IntPtr((long long)_ptfxAddressFunc(handle));
 		}
 		
 		IntPtr MemoryAccess::GetEntityBoneMatrixAddress(int handle, int boneIndex)

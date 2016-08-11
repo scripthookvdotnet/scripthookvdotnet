@@ -134,6 +134,7 @@
     <CsCompile Include="source\scripting\Element.cs" />
     <CsCompile Include="source\scripting\Interfaces.cs" />
     <CsCompile Include="source\scripting\Model.cs" />
+    <CsCompile Include="source\scripting\ParticleEffects.cs" />
     <CsCompile Include="source\scripting\Ped.cs" />
     <CsCompile Include="source\scripting\PedGroup.cs" />
     <CsCompile Include="source\scripting\PedHash.cs" />

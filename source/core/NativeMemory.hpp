@@ -34,6 +34,7 @@ namespace GTA
 			static System::IntPtr GetPlayerAddress(int handle);
 			static System::IntPtr GetCheckpointAddress(int handle);
 			static System::IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex);
+			static System::IntPtr GetPtfxAddress(int handle);
 			static float ReadWorldGravity();
 			static void WriteWorldGravity(float value);
 
@@ -55,6 +56,7 @@ namespace GTA
 			static unsigned int(*_getHashKey)(char* stringPtr, unsigned int initialHash);
 			static System::UInt64(*_entityAddressFunc)(int handle);
 			static System::UInt64(*_playerAddressFunc)(int handle);
+			static System::UInt64(*_ptfxAddressFunc)(int handle);
 			static int(*_addEntityToPoolFunc)(System::UInt64 address);
 			static System::UInt64(*_entityPositionFunc)(System::UInt64 address, float *position);
 			static System::UInt64(*_entityModel1Func)(System::UInt64 address), (*_entityModel2Func)(System::UInt64 address);

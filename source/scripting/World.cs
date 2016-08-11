@@ -1261,5 +1261,10 @@ namespace GTA
 			Function.Call(Hash.DRAW_POLY, vertexA.X, vertexA.Y, vertexA.Z, vertexB.X, vertexB.Y, vertexB.Z, vertexC.X, vertexC.Y,
 				vertexC.Z, color.R, color.G, color.B, color.A);
 		}
+
+		public static void RemoveAllParticleEffectsInRange(Vector3 pos, float range)
+		{
+			Function.Call(Hash.REMOVE_PARTICLE_FX_IN_RANGE, pos.X, pos.Y, pos.Z, range);
+		}
 	}
 }

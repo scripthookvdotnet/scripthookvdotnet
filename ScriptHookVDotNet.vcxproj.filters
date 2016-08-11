@@ -242,5 +242,8 @@
     <CsCompile Include="source\scripting\ButtonCombination.cs">
       <Filter>scripting\Game</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\ParticleEffects.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>
