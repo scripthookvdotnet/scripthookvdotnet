@@ -41,6 +41,9 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets the memory address of this <see cref="Camera"/>.
+		/// </summary>
 		public IntPtr MemoryAddress
 		{
 			get { return MemoryAccess.GetCameraAddress(Handle); }
@@ -141,7 +144,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the forward vector of this <see cref="Camera"/>, <seealso cref="Direction"/>.
+		/// Gets the forward vector of this <see cref="Camera"/>, see also <seealso cref="Direction"/>.
 		/// </summary>
 		public Vector3 ForwardVector
 		{
@@ -449,6 +452,9 @@ namespace GTA
 	}
 	public static class GameplayCamera
 	{
+		/// <summary>
+		/// Gets the memory address of the <see cref="GameplayCamera"/>.
+		/// </summary>
 		public static IntPtr MemoryAddress
 		{
 			get { return MemoryAccess.GetGameplayCameraAddress(); }
@@ -496,7 +502,7 @@ namespace GTA
 			get { return MemoryAccess.ReadVector3(MemoryAddress + 0x210); }
 		}
 		/// <summary>
-		/// Gets the forward vector of the <see cref="GameplayCamera"/>, <seealso cref="Direction"/>.
+		/// Gets the forward vector of the <see cref="GameplayCamera"/>, see also <seealso cref="Direction"/>.
 		/// </summary>
 		public static Vector3 ForwardVector
 		{

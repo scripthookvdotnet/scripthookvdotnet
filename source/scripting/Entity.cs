@@ -989,7 +989,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Blip"/>s attached to this <see cref="Entity"/>.
+		/// Gets an <langword>array</langword> of all <see cref="Blip"/>s attached to this <see cref="Entity"/>.
 		/// </summary>
 		public Blip[] AttachedBlips
 		{

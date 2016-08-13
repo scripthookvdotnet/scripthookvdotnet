@@ -426,7 +426,7 @@ namespace GTA
 		/// The rendering <see cref="Camera"/>.
 		/// </value>
 		/// <remarks>
-		/// Setting to <see langword="null"/> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
+		/// Setting to <langword>null</langword> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
 		/// </remarks>
 		public static Camera RenderingCamera
 		{
@@ -496,7 +496,7 @@ namespace GTA
 		/// </summary>
 		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
 		/// <remarks>
-		/// Returns <see langword="null"/> if a waypoint <see cref="Blip"/> hasn't been set
+		/// Returns <langword>null</langword> if a waypoint <see cref="Blip"/> hasn't been set
 		/// </remarks>
 		public static Blip GetWaypointBlip()
 		{
@@ -568,7 +568,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <see langword="array"/> of all the <see cref="Blip"/>s on the map with a given <see cref="BlipSprite"/>.
+		/// Gets an <langword>array</langword> of all the <see cref="Blip"/>s on the map with a given <see cref="BlipSprite"/>.
 		/// </summary>
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetAllBlips(params BlipSprite[] blipTypes)
@@ -593,7 +593,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <see langword="array"/> of all the <see cref="Checkpoint"/>s.
+		/// Gets an <langword>array</langword> of all the <see cref="Checkpoint"/>s.
 		/// </summary>
 		public static Checkpoint[] GetAllCheckpoints()
 		{					   
@@ -606,7 +606,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Ped"/>s in the World.
+		/// Gets an <langword>array</langword>of all <see cref="Ped"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetAllPeds(params Model[] models)
@@ -615,7 +615,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Ped"/>s in a given region in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Ped"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
@@ -625,7 +625,7 @@ namespace GTA
 			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models)), handle => new Ped(handle));
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
+		/// Gets an <langword>array</langword> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
@@ -665,7 +665,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Vehicle"/>s in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Vehicle"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetAllVehicles(params Model[] models)
@@ -673,7 +673,7 @@ namespace GTA
 			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Vehicle"/>s in a given region in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Vehicle"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
@@ -683,7 +683,7 @@ namespace GTA
 			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
+		/// Gets an <langword>array</langword> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
@@ -726,7 +726,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Prop"/>s in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Prop"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetAllProps(params Model[] models)
@@ -734,7 +734,7 @@ namespace GTA
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(ModelListToHashList(models)), handle => new Prop(handle));
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Prop"/>s in a given region in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Prop"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
@@ -759,14 +759,14 @@ namespace GTA
 
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Entity"/>s in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Entity"/>s in the World.
 		/// </summary>
 		public static Entity[] GetAllEntities()
 		{									   
 			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(), Entity.FromHandle);
 		}
 		/// <summary>
-		/// Gets an <see langword="array"/> of all <see cref="Entity"/>s in a given region in the World.
+		/// Gets an <langword>array</langword> of all <see cref="Entity"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
@@ -1133,7 +1133,7 @@ namespace GTA
 		/// <summary>
 		/// Creates a <see cref="Checkpoint"/> in the world.
 		/// </summary>
-		/// <param name="icon">The icon to display inside the <see cref="Checkpoint"/>.</param>
+		/// <param name="icon">The <see cref="CheckpointIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
 		/// <param name="position">The position in the World.</param>
 		/// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
 		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
@@ -1144,6 +1144,26 @@ namespace GTA
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
 
 			if (handle == 0)
+			{
+				return null;
+			}
+
+			return new Checkpoint(handle);
+		}
+		/// <summary>
+		/// Creates a <see cref="Checkpoint"/> in the world.
+		/// </summary>
+		/// <param name="icon">The <see cref="CheckpointCustomIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
+		/// <param name="position">The position in the World.</param>
+		/// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
+		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
+		/// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
+		/// <remarks>returns <a>null</a> if the <see cref="Checkpoint"/> could not be created</remarks>
+		public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 42, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
+
+			if(handle == 0)
 			{
 				return null;
 			}
@@ -1275,7 +1295,7 @@ namespace GTA
 		/// <returns></returns>
 		public static RaycastResult GetCrosshairCoordinates()
 		{
-			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000f, IntersectOptions.Everything, null);
+			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptions.Everything, null);
 		}
 
 		/// <summary>

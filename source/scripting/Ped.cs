@@ -166,7 +166,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets how much money the <see cref="Ped"/> is carrying.
+		/// Gets or sets how much money this <see cref="Ped"/> is carrying.
 		/// </summary>
 		public int Money
 		{
@@ -180,7 +180,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the gender of the <see cref="Ped"/>.
+		/// Gets the gender of this <see cref="Ped"/>.
 		/// </summary>
 
 		public Gender Gender
@@ -191,7 +191,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of the <see cref="Ped"/>.
+		/// Gets or sets the maximum health of this <see cref="Ped"/>.
 		/// </summary>
 		public override int MaxHealth
 		{
@@ -205,7 +205,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets how much Armor the <see cref="Ped"/> is wearing.
+		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing.
 		/// </summary>
 		public int Armor
 		{
@@ -219,7 +219,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets how accurate the <see cref="Ped"/>s shooting ability is.
+		/// Gets or sets how accurate this <see cref="Ped"/>s shooting ability is.
 		/// </summary>
 		/// <value>
 		/// The accuracy from 0 to 100, 0 being very innacurate, 100 being perfectly accurate.
@@ -237,7 +237,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of <see cref="Tasks"/> that the <see cref="Ped"/> can carry out.
+		/// Opens a list of <see cref="Tasks"/> that this <see cref="Ped"/> can carry out.
 		/// </summary>
 		public Tasks Task
 		{
@@ -251,7 +251,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the stage of the <see cref="TaskSequence"/> the <see cref="Ped"/> is currently executing.
+		/// Gets the stage of the <see cref="TaskSequence"/> this <see cref="Ped"/> is currently executing.
 		/// </summary>
 		public int TaskSequenceProgress
 		{
@@ -262,7 +262,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of <see cref="GTA.NaturalMotion.Euphoria"/> Helpers which can be applie to the <see cref="Ped"/>.
+		/// Opens a list of <see cref="GTA.NaturalMotion.Euphoria"/> Helpers which can be applied to this <see cref="Ped"/>.
 		/// </summary>
 		public Euphoria Euphoria
 		{
@@ -277,7 +277,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a collection of all the <see cref="Ped"/>s <see cref="Weapon"/>s.
+		/// Gets a collection of all this <see cref="Ped"/>s <see cref="Weapon"/>s.
 		/// </summary>
 		public WeaponCollection Weapons
 		{
@@ -292,7 +292,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of clothing and prop configurations that the <see cref="Ped"/> can wear.
+		/// Opens a list of clothing and prop configurations that this <see cref="Ped"/> can wear.
 		/// </summary>
 		public Style Style
 		{
@@ -307,7 +307,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the last <see cref="Vehicle"/> the <see cref="Ped"/> used.
+		/// Gets the last <see cref="Vehicle"/> this <see cref="Ped"/> used.
 		/// </summary>
 		/// <remarks>returns <langword>null</langword> if the Last Vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle
@@ -325,9 +325,9 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the current <see cref="Vehicle"/> the <see cref="Ped"/> is using.
+		/// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is using.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if the <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <langword>null</langword> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
 		public Vehicle CurrentVehicle
 		{
 			get
@@ -341,9 +341,9 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the <see cref="Vehicle"/> the <see cref="Ped"/> is trying to enter.
+		/// Gets the <see cref="Vehicle"/> this <see cref="Ped"/> is trying to enter.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if the <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <langword>null</langword> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
 		public Vehicle VehicleTryingToEnter
 		{
 			get
@@ -352,7 +352,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the PedGroup the <see cref="Ped"/> is in.
+		/// Gets the PedGroup this <see cref="Ped"/> is in.
 		/// </summary>
 		public PedGroup PedGroup
 		{
@@ -368,7 +368,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the how much sweat should be rendered on the <see cref="Ped"/>.
+		/// Gets or sets the how much sweat should be rendered on this <see cref="Ped"/>.
 		/// </summary>
 		/// <value>
 		/// The sweat from 0 to 100, 0 being no sweat, 100 being saturated.
@@ -398,10 +398,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets how high up on the <see cref="Ped"/>s body water should be visible
+		/// Sets how high up on this <see cref="Ped"/>s body water should be visible.
 		/// </summary>
 		/// <value>
-		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water
+		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water.
 		/// </value>
 		public float WetnessHeight
 		{
@@ -419,7 +419,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the voice to use when the <see cref="Ped"/> speaks.
+		/// Sets the voice to use when this <see cref="Ped"/> speaks.
 		/// </summary>
 		public string Voice
 		{
@@ -430,10 +430,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the rate the <see cref="Ped"/> will shoot at.
+		/// Sets the rate this <see cref="Ped"/> will shoot at.
 		/// </summary>
 		/// <value>
-		/// The shoot rate from 0.0f to 1000.0f, 100.0f is the default value
+		/// The shoot rate from 0.0f to 1000.0f, 100.0f is the default value.
 		/// </value>
 		public int ShootRate
 		{
@@ -444,10 +444,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the <see cref="Ped"/> was killed by a stealth attack.
+		/// Gets a value indicating whether this <see cref="Ped"/> was killed by a stealth attack.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if <see cref="Ped"/> was killed by stealth; otherwise, <c>false</c>.
+		///   <c>true</c> if this <see cref="Ped"/> was killed by stealth; otherwise, <c>false</c>.
 		/// </value>
 		public bool WasKilledByStealth
 		{
@@ -457,10 +457,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets a value indicating whether the <see cref="Ped"/> was killed by a takedown.
+		/// Gets a value indicating whether this <see cref="Ped"/> was killed by a takedown.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if <see cref="Ped"/> was killed by a takedown; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Ped"/> was killed by a takedown; otherwise, <c>false</c>.
 		/// </value>
 		public bool WasKilledByTakedown
 		{
@@ -471,10 +471,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="VehicleSeat"/> the <see cref="Ped"/> is in
+		/// Gets the <see cref="VehicleSeat"/> this <see cref="Ped"/> is in.
 		/// </summary>
 		/// <value>
-		/// The <see cref="VehicleSeat"/> the <see cref="Ped"/> is in if the <see cref="Ped"/> is in a <see cref="Vehicle"/>; otherwise, <see cref="VehicleSeat.None"/>
+		/// The <see cref="VehicleSeat"/> this <see cref="Ped"/> is in if this <see cref="Ped"/> is in a <see cref="Vehicle"/>; otherwise, <see cref="VehicleSeat.None"/>.
 		/// </value>
 		public VehicleSeat SeatIndex
 		{
@@ -509,7 +509,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked
+		/// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if <see cref="Ped"/> stays in vehicle when jacked; otherwise, <c>false</c>.
@@ -523,7 +523,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the maximum driving speed the <see cref="Ped"/> can drive at.
+		/// Sets the maximum driving speed this <see cref="Ped"/> can drive at.
 		/// </summary>
 		public float MaxDrivingSpeed
 		{
