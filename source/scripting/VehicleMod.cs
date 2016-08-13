@@ -358,11 +358,11 @@ namespace GTA
 				if (index >= ModCount / 2)
 				{
 					return Game.GetGXTEntry("CHROME") + " " +
-						   Game.GetGXTEntry(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
+						   Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
 				}
 				else
 				{
-					return Game.GetGXTEntry(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
+					return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
 				}
 			}
 

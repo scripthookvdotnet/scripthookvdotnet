@@ -131,56 +131,56 @@ namespace GTA.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
 		/// </summary>
-		/// <param name="caption">The <see cref="Text"/> to draw</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
-		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>	
+		/// <param name="caption">The <see cref="Text"/> to draw.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/>.</param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f.</param>	
 		public Text(string caption, PointF position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
 		/// </summary>
-		/// <param name="caption">The <see cref="Text"/> to draw</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
-		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 	
+		/// <param name="caption">The <see cref="Text"/> to draw.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/>.</param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/>.</param>							 	
 		public Text(string caption, PointF position, float scale, Color color) : this(caption, position, scale, color, Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
 		/// </summary>
-		/// <param name="caption">The <see cref="Text"/> to draw</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
-		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
-		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>	
+		/// <param name="caption">The <see cref="Text"/> to draw.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/>.</param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/>.</param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>	
 		public Text(string caption, PointF position, float scale, Color color, Font font) : this(caption, position, scale, color, font, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
 		/// </summary>
-		/// <param name="caption">The <see cref="Text"/> to draw</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
-		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
-		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/></param>
+		/// <param name="caption">The <see cref="Text"/> to draw.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/>.</param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/>.</param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
 		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment) : this(caption, position, scale, color, font, alignment, false, false, 0.0f)
 		{
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
 		/// </summary>
-		/// <param name="caption">The <see cref="Text"/> to draw</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
-		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
-		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/></param>
-		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect</param>
-		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters</param>	
+		/// <param name="caption">The <see cref="Text"/> to draw.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/>.</param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/>.</param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
+		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect.</param>
+		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters.</param>	
 		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline) : this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
 		{
 		}
@@ -188,15 +188,15 @@ namespace GTA.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Text"/> class used for drawing text on the screen.
 		/// </summary>
-		/// <param name="caption">The <see cref="Text"/> to draw</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/></param>
-		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/></param>							 
-		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/></param>
-		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect</param>
-		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters</param>
-		/// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="Text"/> on the next line down</param>											 																	  
+		/// <param name="caption">The <see cref="Text"/> to draw.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Text"/>.</param>
+		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="Text"/>, for no scaling use 1.0f.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Text"/>.</param>							 
+		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
+		/// <param name="shadow">Sets whether or not to draw the <see cref="Text"/> with a <see cref="Shadow"/> effect.</param>
+		/// <param name="outline">Sets whether or not to draw the <see cref="Text"/> with an <see cref="Outline"/> around the letters.</param>
+		/// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="Text"/> on the next line down.</param>											 																	  
 		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline, float wrapWidth)
 		{
 			Enabled = true;
@@ -216,7 +216,7 @@ namespace GTA.UI
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
 		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
-		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling</param>
+		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled on a 1280 pixel width base
 		/// </returns>
@@ -241,7 +241,7 @@ namespace GTA.UI
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
 		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
-		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling</param>
+		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled by the pixel width base return in <see cref="Screen.ScaledWidth"/>
 		/// </returns>
@@ -274,7 +274,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws the <see cref="Text" /> this frame at the specified offset.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="Text" /> using a 1280*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Text" /> using a 1280*720 pixel base.</param>
 		public virtual void Draw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.Width, Screen.Height);
@@ -291,7 +291,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws the <see cref="Text" /> this frame at the specified offset using the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="Text" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Text" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base.</param>
 		public virtual void ScaledDraw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);

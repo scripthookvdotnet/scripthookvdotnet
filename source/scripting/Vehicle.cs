@@ -293,6 +293,10 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets the display name of this <see cref="Vehicle"/>.
+		/// <remarks>Use <see cref="Game.GetGXTEntry(string)"/> to get the localized name.</remarks>
+		/// </summary>
 		public string DisplayName
 		{
 			get
@@ -300,14 +304,21 @@ namespace GTA
 				return GetModelDisplayName(base.Model);
 			}
 		}
-		public string FriendlyName
+		/// <summary>
+		/// Gets the localized name of this <see cref="Vehicle"/>
+		/// </summary>
+		public string LocalizedName
 		{
 			get
 			{
-				return Game.GetGXTEntry(DisplayName);
+				return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, base.Model));
 			}
 		}
 
+		/// <summary>
+		/// Gets the display name of this <see cref="Vehicle"/>s <see cref="VehicleClass"/>.
+		/// <remarks>Use <see cref="Game.GetGXTEntry(string)"/> to get the localized class name.</remarks>
+		/// </summary>
 		public string ClassDisplayName
 		{
 			get
@@ -316,7 +327,10 @@ namespace GTA
 			}
 		}
 
-		public string ClassFriendlyName
+		/// <summary>
+		/// Gets the localized name of this <see cref="Vehicle"/>s <see cref="VehicleClass"/>.
+		/// </summary>
+		public string ClassLocalizedName
 		{
 			get
 			{
@@ -324,6 +338,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the class of this <see cref="Vehicle"/>.
+		/// </summary>
 		public VehicleClass ClassType
 		{
 			get
@@ -332,6 +349,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/>s body health.
+		/// </summary>
 		public float BodyHealth
 		{
 			get
@@ -343,6 +363,9 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_BODY_HEALTH, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> engine health.
+		/// </summary>
 		public float EngineHealth
 		{
 			get
@@ -354,6 +377,9 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_ENGINE_HEALTH, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> petrol tank health.
+		/// </summary>
 		public float PetrolTankHealth
 		{
 			get
@@ -365,6 +391,9 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_PETROL_TANK_HEALTH, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> fuel level.
+		/// </summary>
 		public float FuelLevel
 		{
 			get
@@ -391,6 +420,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/>s engine is running.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Vehicle"/>s engine is running; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsEngineRunning
 		{
 			get
@@ -402,6 +437,9 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_ENGINE_ON, Handle, value, true);
 			}
 		}
+		/// <summary>
+		/// Turns this <see cref="Vehicle"/>s radio on or off
+		/// </summary>
 		public bool IsRadioEnabled
 		{
 			set
@@ -409,6 +447,9 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets this <see cref="Vehicle"/>s radio station.
+		/// </summary>
 		public RadioStation RadioStation
 		{
 			set
@@ -424,6 +465,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/>s speed.
+		/// </summary>
+		/// <value>
+		/// The speed in m/s.
+		/// </value>
 		public float Speed
 		{
 			get
@@ -443,6 +490,9 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets the speed the drive wheels are turning at, This is the value used for the dashboard speedometers(after being converted to mph).
+		/// </summary>
 		public float WheelSpeed
 		{
 			get
@@ -498,7 +548,7 @@ namespace GTA
 			}
 		}
 
-		public int HighGear
+		public byte HighGear
 		{
 			get
 			{
@@ -509,15 +559,10 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
 
-				return (int)MemoryAccess.ReadByte(MemoryAddress + offset);
+				return MemoryAccess.ReadByte(MemoryAddress + offset);
 			}
 			set
 			{
-				if (value < 0 || value > byte.MaxValue)
-				{
-					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 255, inclusive.");
-				}
-
 				if (MemoryAddress == IntPtr.Zero)
 				{
 					return;
@@ -525,7 +570,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
 
-				MemoryAccess.WriteByte(MemoryAddress + offset, (byte)value);
+				MemoryAccess.WriteByte(MemoryAddress + offset, value);
 			}
 		}
 		public int CurrentGear
@@ -587,7 +632,7 @@ namespace GTA
 		{
 			get
 			{
-				return HasBone("forks");
+				return Bones.HasBone("forks");
 			}
 		}
 
@@ -614,7 +659,7 @@ namespace GTA
 		{
 			get
 			{
-				return HasBone("siren1");
+				return Bones.HasBone("siren1");
 			}
 		}
 		public bool SirenActive
@@ -1316,7 +1361,7 @@ namespace GTA
 		{
 			get
 			{
-				return HasBone("door_hatch_l") && HasBone("door_hatch_r");
+				return Bones.HasBone("door_hatch_l") && Bones.HasBone("door_hatch_r");
 			}
 		}
 		public void OpenBombBay()
@@ -1399,7 +1444,7 @@ namespace GTA
 		{
 			get
 			{
-				return HasBone("tow_arm");
+				return Bones.HasBone("tow_arm");
 			}
 		}
 		public float TowingCraneRaisedAmount

@@ -117,6 +117,7 @@ namespace GTA
 		Euphoria _euphoria;
 		WeaponCollection _weapons;
 		Style _style;
+		PedBoneCollection _pedBones;
 
 		internal static readonly string[] _speechModifierNames = {
 			"SPEECH_PARAMS_STANDARD",
@@ -1335,31 +1336,16 @@ namespace GTA
 			Function.Call(Hash.CLEAR_PED_LAST_WEAPON_DAMAGE, Handle);
 		}
 
-		public Bone GetLastDamagedBone()
+		public new PedBoneCollection Bones
 		{
-			OutputArgument outBone = new OutputArgument();
-			if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, Handle, outBone))
+			get
 			{
-				return outBone.GetResult<Bone>();
+				if (ReferenceEquals(_pedBones, null))
+				{
+					_pedBones = new PedBoneCollection(this);
+				}
+				return _pedBones;
 			}
-			return Bone.SKEL_ROOT;
-		}
-		public void ClearLastBoneDamage()
-		{
-			Function.Call(Hash.CLEAR_PED_LAST_DAMAGE_BONE, Handle);
-		}
-
-		public int GetBoneIndex(Bone boneID)
-		{
-			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, boneID);
-		}
-		public Vector3 GetBoneCoord(Bone boneID)
-		{
-			return GetBoneCoord(boneID, Vector3.Zero);
-		}
-		public Vector3 GetBoneCoord(Bone boneID, Vector3 offset)
-		{
-			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, boneID, offset.X, offset.Y, offset.Z);
 		}
 
 		public Vector3 GetLastWeaponImpactPosition()

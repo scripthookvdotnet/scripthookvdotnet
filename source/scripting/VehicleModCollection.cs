@@ -305,7 +305,7 @@ namespace GTA
 			{
 				return this[VehicleModType.Livery].GetLocalizedModName(index);
 			}
-			return Game.GetGXTEntry(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, index));
+			return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_LIVERY_NAME, _owner.Handle, index));
 		}
 
 		public VehicleWindowTint WindowTint
@@ -476,13 +476,13 @@ namespace GTA
 			switch (neonLight)
 			{
 				case VehicleNeonLight.Left:
-					return _owner.HasBone("neon_l");
+					return _owner.Bones.HasBone("neon_l");
 				case VehicleNeonLight.Right:
-					return _owner.HasBone("neon_r");
+					return _owner.Bones.HasBone("neon_r");
 				case VehicleNeonLight.Front:
-					return _owner.HasBone("neon_f");
+					return _owner.Bones.HasBone("neon_f");
 				case VehicleNeonLight.Back:
-					return _owner.HasBone("neon_b");
+					return _owner.Bones.HasBone("neon_b");
 				default:
 					return false;
 			}

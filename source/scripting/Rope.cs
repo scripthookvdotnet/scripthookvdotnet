@@ -6,7 +6,8 @@ namespace GTA
 {
 	public enum RopeType
 	{
-		Normal = 4
+		ThickRope = 4,
+		ThinMetalWire = 5,
 	}
 
 	public sealed class Rope : PoolObject, IEquatable<Rope>

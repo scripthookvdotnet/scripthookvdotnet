@@ -71,6 +71,14 @@ namespace GTA
 			{
 				return gcnew InputArgument(value);
 			}
+			static operator InputArgument ^ (long long value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (unsigned long long value)
+			{
+				return gcnew InputArgument(value);
+			}
 			static operator InputArgument ^ (float value)
 			{
 				return gcnew InputArgument(value);

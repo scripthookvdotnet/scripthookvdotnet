@@ -61,7 +61,7 @@ namespace GTA
 			}
 		}
 
-		public virtual string FriendlyName
+		public virtual string LocalizedName
 		{
 			get
 			{
@@ -287,7 +287,7 @@ namespace GTA
 			}
 		}
 
-		public override string FriendlyName
+		public override string LocalizedName
 		{
 			get
 			{

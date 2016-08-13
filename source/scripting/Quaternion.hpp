@@ -370,6 +370,13 @@ namespace GTA
 			virtual System::String ^ToString() override;
 
 			/// <summary>
+			/// Converts the value of the object to its equivalent string representation.
+			/// </summary>
+			/// <param name="numberFormat">The number format.</param>
+			/// <returns>The string representation of the value of this instance.</returns>
+			virtual System::String ^ToString(System::String ^numberFormat);
+
+			/// <summary>
 			/// Returns the hash code for this instance.
 			/// </summary>
 			/// <returns>A 32-bit signed integer hash code.</returns>

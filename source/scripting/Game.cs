@@ -445,7 +445,7 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="ButtonCombination"/> was entered.
 		/// </summary>
-		/// <param name="combination">The <see cref="ButtonCombination"/> to check against</param>
+		/// <param name="combination">The <see cref="ButtonCombination"/> to check against.</param>
 		/// <returns><c>true</c> if the <see cref="ButtonCombination"/> was just entered; otherwise, <c>false</c></returns>
 		/// <remarks>
 		/// Only works for Gamepad inputs
@@ -458,7 +458,7 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a cheat code was entered into the cheat text box
 		/// </summary>
-		/// <param name="cheat">The name of the cheat to check</param>
+		/// <param name="cheat">The name of the cheat to check.</param>
 		/// <returns><c>true</c> if the cheat was just entered; otherwise, <c>false</c></returns>
 		public static bool WasCheatStringJustEntered(string cheat)
 		{
@@ -468,8 +468,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is currently pressed
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
 		public static bool IsControlPressed(int index, Control control)
 		{
@@ -478,8 +478,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just pressed this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
 		public static bool IsControlJustPressed(int index, Control control)
 		{
@@ -488,8 +488,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just released this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
 		public static bool IsControlJustReleased(int index, Control control)
 		{
@@ -498,8 +498,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Enabled this frame and is currently pressed
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
 		public static bool IsEnabledControlPressed(int index, Control control)
 		{
@@ -508,8 +508,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Enabled and was just pressed this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
 		public static bool IsEnabledControlJustPressed(int index, Control control)
 		{
@@ -518,8 +518,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Enabled and was just released this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
 		public static bool IsEnabledControlJustReleased(int index, Control control)
 		{
@@ -528,8 +528,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Disabled this frame and is currently pressed
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
 		public static bool IsDisabledControlPressed(int index, Control control)
 		{
@@ -538,8 +538,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Disabled and was just pressed this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
 		public static bool IsDisabledControlJustPressed(int index, Control control)
 		{
@@ -548,8 +548,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Disabled and was just released this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
 		public static bool IsDisabledControlJustReleased(int index, Control control)
 		{
@@ -558,8 +558,8 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is Enabled ot Disabled this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns><c>true</c> if the <see cref="Control"/> is Enabled; otherwise, <c>false</c></returns>
 		public static bool IsControlEnabled(int index, Control control)
 		{
@@ -569,8 +569,8 @@ namespace GTA
 		/// <summary>
 		/// Makes the Game Engine respond to the given Control this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		public static void EnableControlThisFrame(int index, Control control)
 		{
 			Function.Call(Hash.ENABLE_CONTROL_ACTION, index, control, true);
@@ -578,8 +578,8 @@ namespace GTA
 		/// <summary>
 		/// Makes the Game Engine ignore to the given Control this frame
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		public static void DisableControlThisFrame(int index, Control control)
 		{
 			Function.Call(Hash.DISABLE_CONTROL_ACTION, index, control, true);
@@ -587,7 +587,7 @@ namespace GTA
 		/// <summary>
 		/// Disables all <see cref="Control"/>s this frame.
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
 		public static void DisableAllControlsThisFrame(int index)
 		{
 			Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, index);
@@ -595,7 +595,7 @@ namespace GTA
 		/// <summary>
 		/// Enables all <see cref="Control"/>s this frame.
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
 		public static void EnableAllControlsThisFrame(int index)
 		{
 			Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, index);
@@ -604,8 +604,8 @@ namespace GTA
 		/// <summary>
 		/// Gets an Analog value of a <see cref="Control"/> input between -1.0f and 1.0f
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns>The normalised <see cref="Control"/> value</returns>
 		public static float GetControlNormal(int index, Control control)
 		{
@@ -614,8 +614,8 @@ namespace GTA
 		/// <summary>
 		/// Gets an Analog value of a Disabled <see cref="Control"/> input between -1.0f and 1.0f
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns>The normalised <see cref="Control"/> value</returns>
 		public static float GetDisabledControlNormal(int index, Control control)
 		{
@@ -624,8 +624,8 @@ namespace GTA
 		/// <summary>
 		/// Gets an value of a <see cref="Control"/> input.
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
 		/// <returns>The <see cref="Control"/> value</returns>
 		public static int GetControlValue(int index, Control control)
 		{
@@ -634,9 +634,9 @@ namespace GTA
 		/// <summary>
 		/// Override a <see cref="Control"/> by giving it a user defined value this frame.
 		/// </summary>
-		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad)</param>
-		/// <param name="control">The <see cref="Control"/></param>
-		/// <param name="value">the value to set the control to</param>
+		/// <param name="index">The Input Method (0 = Mouse and Keyboard, 2 = GamePad).</param>
+		/// <param name="control">The <see cref="Control"/>.</param>
+		/// <param name="value">the value to set the control to.</param>
 		public static void SetControlNormal(int index, Control control, float value)
 		{
 			Function.Call(Hash._SET_CONTROL_NORMAL, index, control, value);
@@ -645,7 +645,7 @@ namespace GTA
 		/// <summary>
 		/// Pauses or Resumes the game
 		/// </summary>
-		/// <param name="value">if set to <c>true</c> Pause the game; otherwise, resume the game</param>
+		/// <param name="value">if set to <c>true</c> Pause the game; otherwise, resume the game.</param>
 		public static void Pause(bool value)
 		{
 			Function.Call(Hash.SET_GAME_PAUSED, value);
@@ -653,7 +653,7 @@ namespace GTA
 		/// <summary>
 		/// Pauses or Resumes the game clock
 		/// </summary>
-		/// <param name="value">if set to <c>true</c> Pause the game clock; otherwise, resume the game clock</param>
+		/// <param name="value">if set to <c>true</c> Pause the game clock; otherwise, resume the game clock.</param>
 		public static void PauseClock(bool value)
 		{
 			Function.Call(Hash.PAUSE_CLOCK, value);
@@ -677,7 +677,7 @@ namespace GTA
 		/// <summary>
 		/// Determines the game language files contain a entry for the specified GXT key
 		/// </summary>
-		/// <param name="entry">The GXT key</param>
+		/// <param name="entry">The GXT key.</param>
 		/// <returns><c>true</c> if GXT entry exists; otherwise, <c>false</c></returns>
 		public static bool DoesGXTEntryExist(string entry)
 		{
@@ -687,21 +687,26 @@ namespace GTA
 		/// <summary>
 		/// Returns a localised <see cref="string"/> from the games language files with a specified GXT key
 		/// </summary>
-		/// <param name="entry">The GXT key</param>
+		/// <param name="entry">The GXT key.</param>
 		/// <returns>The localised <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetGXTEntry(string entry)
 		{
-			if (DoesGXTEntryExist(entry))
-			{
-				return Function.Call<string>(Hash._GET_LABEL_TEXT, entry);
-			}
-			return "";
+			return DoesGXTEntryExist(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
+		}
+		internal static bool DoesGXTEntryExist(ulong entry)
+		{
+			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry);
+		}
+
+		internal static string GetGXTEntry(ulong entry)
+		{
+			return DoesGXTEntryExist(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
 		}
 
 		/// <summary>
 		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> which can then be used by any native function that takes a hash
 		/// </summary>
-		/// <param name="input">The input <see cref="string"/> to hash</param>
+		/// <param name="input">The input <see cref="string"/> to hash.</param>
 		/// <returns>The Jenkins hash of the <see cref="string"/></returns>
 		public static int GenerateHash(string input)
 		{
@@ -715,8 +720,8 @@ namespace GTA
 		/// <summary>
 		/// Plays a sound from the games sound files
 		/// </summary>
-		/// <param name="soundFile">The file the sound is stored in</param>
-		/// <param name="soundSet">The name of the sound inside the file</param>
+		/// <param name="soundFile">The file the sound is stored in.</param>
+		/// <param name="soundSet">The name of the sound inside the file.</param>
 		public static void PlaySound(string soundFile, string soundSet)
 		{
 			Audio.ReleaseSound(Audio.PlaySoundFrontend(soundFile, soundSet));
@@ -725,7 +730,7 @@ namespace GTA
 		/// <summary>
 		/// Plays music from the games music files
 		/// </summary>
-		/// <param name="musicFile">The music file to play</param>
+		/// <param name="musicFile">The music file to play.</param>
 		public static void PlayMusic(string musicFile)
 		{
 			Function.Call(Hash.TRIGGER_MUSIC_EVENT, musicFile);
@@ -733,7 +738,7 @@ namespace GTA
 		/// <summary>
 		/// Stops playing a music file
 		/// </summary>
-		/// <param name="musicFile">The music file to stop</param>
+		/// <param name="musicFile">The music file to stop.</param>
 		public static void StopMusic(string musicFile)
 		{
 			Function.Call(Hash.CANCEL_MUSIC_EVENT, musicFile);
@@ -741,7 +746,7 @@ namespace GTA
 		/// <summary>
 		/// Creates an input box for enabling a user to input text using the keyboard
 		/// </summary>
-		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <param name="maxLength">The maximum length of input allowed.</param>
 		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(int maxLength)
 		{
@@ -751,7 +756,7 @@ namespace GTA
 		/// Creates an input box for enabling a user to input text using the keyboard
 		/// </summary>
 		/// <param name="defaultText">The default text.</param>
-		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <param name="maxLength">The maximum length of input allowed.</param>
 		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(string defaultText, int maxLength)
 		{
@@ -761,7 +766,7 @@ namespace GTA
 		/// Creates an input box for enabling a user to input text using the keyboard
 		/// </summary>
 		/// <param name="windowTitle">The Title of the Window.</param>
-		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <param name="maxLength">The maximum length of input allowed.</param>
 		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(WindowTitle windowTitle, int maxLength)
 		{
@@ -772,7 +777,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="windowTitle">The Title of the Window.</param>
 		/// <param name="defaultText">The default text.</param>
-		/// <param name="maxLength">The maximum length of input allowed</param>
+		/// <param name="maxLength">The maximum length of input allowed.</param>
 		/// <returns>The <see cref="string"/> of what the user entered, If the user cancelled <see cref="string.Empty"/> is returned</returns>
 		public static string GetUserInput(WindowTitle windowTitle, string defaultText, int maxLength)
 		{

@@ -368,6 +368,10 @@ namespace GTA
 		{
 			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
 		}
+		String ^Vector3::ToString(String ^numberFormat)
+		{
+			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1} Z:{2}", X.ToString(numberFormat), Y.ToString(numberFormat), Z.ToString(numberFormat));
+		}
 		int Vector3::GetHashCode()
 		{
 			return X.GetHashCode() ^ Y.GetHashCode() << 2 ^ Z.GetHashCode() >> 2;

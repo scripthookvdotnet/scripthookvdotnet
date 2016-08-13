@@ -72,7 +72,7 @@ namespace GTA
 				return  GetDisplayNameFromHash(Hash);
 			}
 		}
-		public string FriendlyName
+		public string LocalizedName
 		{
 			get
 			{

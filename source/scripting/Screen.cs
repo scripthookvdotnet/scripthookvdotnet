@@ -172,8 +172,8 @@ namespace GTA.UI
 		/// <summary>
 		/// Creates a <see cref="Notification"/> above the minimap with the given message.
 		/// </summary>
-		/// <param name="message">The message in the notification</param>
-		/// <param name="blinking">if set to <c>true</c> the notification will blink</param>
+		/// <param name="message">The message in the notification.</param>
+		/// <param name="blinking">if set to <c>true</c> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide()"/></returns>
 		public static Notification ShowNotification(string message, bool blinking = false)
 		{
@@ -192,7 +192,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Determines whether a given <see cref="HudComponent"/> is Active.
 		/// </summary>
-		/// <param name="component">The <see cref="HudComponent"/> to check</param>
+		/// <param name="component">The <see cref="HudComponent"/> to check.</param>
 		/// <returns><c>true</c> if the <see cref="HudComponent"/> is Active; otherwise, <c>false</c></returns>
 		public static bool IsHudComponentActive(HudComponent component)
 		{
@@ -201,7 +201,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws the specified <see cref="HudComponent"/> this frame.
 		/// </summary>
-		/// <param name="component">The <see cref="HudComponent"/></param>
+		/// <param name="component">The <see cref="HudComponent"/>.</param>
 		///<remarks>This will only draw the <see cref="HudComponent"/> if the <see cref="HudComponent"/> can be drawn</remarks>
 		public static void ShowHudComponentThisFrame(HudComponent component)
 		{
@@ -219,8 +219,8 @@ namespace GTA.UI
 		/// <summary>
 		/// Translates a point in WorldSpace to its given Coordinates on the <see cref="Screen"/>
 		/// </summary>
-		/// <param name="position">The position in the World</param>
-		/// <param name="scaleWidth">if set to <c>true</c> Returns the screen position scaled by <see cref="ScaledWidth"/>; otherwise, returns the screen position scaled by <see cref="Width"/></param>
+		/// <param name="position">The position in the World.</param>
+		/// <param name="scaleWidth">if set to <c>true</c> Returns the screen position scaled by <see cref="ScaledWidth"/>; otherwise, returns the screen position scaled by <see cref="Width"/>.</param>
 		/// <returns></returns>
 		public static PointF WorldToScreen(Vector3 position, bool scaleWidth = false)
 		{
@@ -293,7 +293,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Fades the screen in over a specific time, useful for transitioning
 		/// </summary>
-		/// <param name="time">The time for the fade in to take</param>
+		/// <param name="time">The time for the fade in to take.</param>
 		public static void FadeIn(int time)
 		{
 			Function.Call(Hash.DO_SCREEN_FADE_IN, time);
@@ -301,7 +301,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Fades the screen out over a specific time, useful for transitioning
 		/// </summary>
-		/// <param name="time">The time for the fade out to take</param>
+		/// <param name="time">The time for the fade out to take.</param>
 		public static void FadeOut(int time)
 		{
 			Function.Call(Hash.DO_SCREEN_FADE_OUT, time);
@@ -310,8 +310,8 @@ namespace GTA.UI
 		/// <summary>
 		/// Creates a loading prompt at the bottom right of the screen with the given text and spinner type
 		/// </summary>
-		/// <param name="loadingText">The text to display next to the spinner</param>
-		/// <param name="spinnerType">The style of spinner to draw</param>
+		/// <param name="loadingText">The text to display next to the spinner.</param>
+		/// <param name="spinnerType">The style of spinner to draw.</param>
 		/// <remarks>
 		/// <see cref="BusySpinnerType.Clockwise1"/>, <see cref="BusySpinnerType.Clockwise2"/>, <see cref="BusySpinnerType.Clockwise3"/> and <see cref="BusySpinnerType.RegularClockwise"/> all see to be the same. 
 		/// But Rockstar always seem to use the <see cref="BusySpinnerType.RegularClockwise"/> in the scripts
