@@ -24,13 +24,16 @@ namespace GTA
 			_handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
 		}
 
-        public unsafe void Dispose()
+        public void Dispose()
 		{
 			if (IsLoaded)
 			{
-				fixed (int* handlePtr = &_handle)
+				unsafe
 				{
-					Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, handlePtr);
+					fixed (int* handlePtr = &_handle)
+					{
+						Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, handlePtr);
+					}
 				}
 			}
 

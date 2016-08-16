@@ -389,14 +389,17 @@ namespace GTA
 		/// <summary>
 		/// Gets the last damaged Bone for this <see cref="Ped"/>.
 		/// </summary>
-		public unsafe PedBone LastDamaged
+		public PedBone LastDamaged
 		{
 			get
 			{
 			    int outBone;
-				if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, &outBone))
+				unsafe
 				{
-					return this[(Bone)outBone];
+					if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, &outBone))
+					{
+						return this[(Bone) outBone];
+					}
 				}
 				return this[Bone.SKEL_ROOT];
 			}

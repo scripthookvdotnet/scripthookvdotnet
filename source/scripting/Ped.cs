@@ -1339,14 +1339,16 @@ namespace GTA
 			}
 		}
 
-		public unsafe Vector3 GetLastWeaponImpactPosition()
+		public Vector3 GetLastWeaponImpactPosition()
 		{
 		    NativeVector3 position;
 
-			if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, &position))
+			unsafe
 			{
-			    return position;
-
+				if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, &position))
+				{
+					return position;
+				}
 			}
 
 			return Vector3.Zero;

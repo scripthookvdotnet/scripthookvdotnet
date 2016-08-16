@@ -424,10 +424,13 @@ namespace GTA
 		static Ped _nullPed = null;
 		#endregion
 
-		public unsafe TaskSequence()
+		public TaskSequence()
 		{
 			int handle;
-			Function.Call(Hash.OPEN_SEQUENCE_TASK, &handle);
+			unsafe
+			{
+				Function.Call(Hash.OPEN_SEQUENCE_TASK, &handle);
+			}
 
 			Handle = handle;
 
@@ -446,10 +449,13 @@ namespace GTA
 			}
 		}
 
-        public unsafe void Dispose()
+        public void Dispose()
 		{
 		    int handle = Handle;
-			Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);
+	        unsafe
+	        {
+		        Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);
+	        }
 			Handle = handle;
 			GC.SuppressFinalize(this);
 		}

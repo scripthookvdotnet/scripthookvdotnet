@@ -5,13 +5,16 @@ namespace GTA
 {
 	public struct RaycastResult
 	{
-		public unsafe RaycastResult(int handle) : this()
+		public RaycastResult(int handle) : this()
 		{
 		    NativeVector3 hitPositionArg;
 		    bool hitSomethingArg;
 		    int entityHandleArg;
 		    NativeVector3 surfaceNormalArg;
-			Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &entityHandleArg);
+			unsafe
+			{
+				Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &entityHandleArg);
+			}
 
 			DitHit = hitSomethingArg;
 			HitPosition = hitPositionArg;

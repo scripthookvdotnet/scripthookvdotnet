@@ -5,10 +5,13 @@ namespace GTA
 {
 	public struct RelationshipGroup : IEquatable<RelationshipGroup>, INativeValue
 	{
-		unsafe RelationshipGroup(string name) : this()
+		RelationshipGroup(string name) : this()
 		{
 		    int hashArg;
-			Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, &hashArg);
+			unsafe
+			{
+				Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, &hashArg);
+			}
 
 			Hash = hashArg;
 		}

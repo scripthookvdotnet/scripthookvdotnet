@@ -333,7 +333,7 @@ namespace GTA
 		/// <value>
 		/// The next weather.
 		/// </value>
-		public static unsafe Weather NextWeather
+		public static Weather NextWeather
 		{
 			get
 			{
@@ -353,7 +353,10 @@ namespace GTA
 				{
 				    int currentWeatherHash, nextWeatherHash;
                     float weatherTransition;
-					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+					unsafe
+					{
+						Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+					}
 					Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, Game.GenerateHash(_weatherNames[(int)value]), 0.0f);
 				}
 			}
@@ -364,13 +367,16 @@ namespace GTA
 		/// <value>
 		/// The weather transition.
 		/// </value>
-		public static unsafe float WeatherTransition
+		public static float WeatherTransition
 		{
 			get
 			{
                 int currentWeatherHash, nextWeatherHash;
                 float weatherTransition;
-                Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+				unsafe
+				{
+					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+				}
 
 				return weatherTransition;
 			}
@@ -461,7 +467,7 @@ namespace GTA
 		/// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
 		/// If the game engine cant extract height information the Z component will be 0.0f
 		/// </remarks>
-		public static unsafe Vector3 WaypointPosition
+		public static Vector3 WaypointPosition
 		{
 			get
 			{
@@ -475,13 +481,16 @@ namespace GTA
 				Vector3 position = waypointBlip.Position;
 			    float heightResult;
 
-				if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &heightResult))
-				{
-				    position.Z = heightResult;
-					return position;
-				}
+			    unsafe
+			    {
+			        if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &heightResult))
+			        {
+			            position.Z = heightResult;
+			            return position;
+			        }
+			    }
 
-				return Vector3.Zero;
+			    return Vector3.Zero;
 			}
 			set
 			{
@@ -551,16 +560,20 @@ namespace GTA
 		{
 			return GetGroundHeight(new Vector2(position.X, position.Y));
 		}
+
 		/// <summary>
 		/// Gets the height of the ground at a given position.
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>
-		public static unsafe float GetGroundHeight(Vector2 position)
+		public static float GetGroundHeight(Vector2 position)
 		{
-		    float resultArg;
+			float resultArg;
 
-			Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &resultArg);
+			unsafe
+			{
+				Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &resultArg);
+			}
 
 			return resultArg;
 		}
@@ -822,15 +835,16 @@ namespace GTA
 			return (T)closest;
 		}
 
-		public static unsafe Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
+		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
 		{
-		    NativeVector3 outPos;
-
-			if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, &outPos, flags))
+			NativeVector3 outPos;
+			unsafe
 			{
-				return outPos;
+				if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, &outPos, flags))
+				{
+					return outPos;
+				}
 			}
-
 			return Vector3.Zero;
 		}
 
@@ -838,27 +852,33 @@ namespace GTA
 		{
 			return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
 		}
-		public static unsafe Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
+		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
 		{
             NativeVector3 outPos;
 
-            if (unoccupied)
+			unsafe
 			{
-				for (int i = 1; i < 40; i++)
+				if (unoccupied)
 				{
-					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, &outPos, 1, 0x40400000, 0);
-
-					position = outPos;
-
-					if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f, 5.0f, 5.0f, 0))
+					for (int i = 1; i < 40; i++)
 					{
-						return position;
+						Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, &outPos, 1, 0x40400000, 0);
+
+						position = outPos;
+
+						if (
+							!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f, 5.0f,
+								5.0f, 0))
+						{
+							return position;
+						}
 					}
 				}
-			}
-			else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, &outPos, 1, 0x40400000, 0))
-			{
-				return outPos;		
+				else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, &outPos, 1,
+					0x40400000, 0))
+				{
+					return outPos;
+				}
 			}
 
 			return Vector3.Zero;
@@ -867,17 +887,20 @@ namespace GTA
 		{
 			return GetNextPositionOnSidewalk(new Vector3(position.X, position.Y, 0f));
 		}
-		public static unsafe Vector3 GetNextPositionOnSidewalk(Vector3 position)
+		public static Vector3 GetNextPositionOnSidewalk(Vector3 position)
 		{
             NativeVector3 outPos;
 
-            if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, &outPos, 0))
-            {
-                return outPos;
-            }
-			else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
+			unsafe
 			{
-			    return outPos;
+				if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, &outPos, 0))
+				{
+					return outPos;
+				}
+				else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
+				{
+					return outPos;
+				}
 			}
 
 			return Vector3.Zero;
@@ -903,10 +926,13 @@ namespace GTA
 		{
 			return GetStreetName(new Vector3(position.X, position.Y, 0f));
 		}
-		public static unsafe string GetStreetName(Vector3 position)
+		public static string GetStreetName(Vector3 position)
 		{
 		    int streetHash, crossingHash;
-			Function.Call(Hash.GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, &streetHash, &crossingHash);
+			unsafe
+			{
+				Function.Call(Hash.GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, &streetHash, &crossingHash);
+			}
 
 			return Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, streetHash);
 		}
@@ -987,10 +1013,13 @@ namespace GTA
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
 		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
-		public static unsafe Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
+		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
 		{
 		    int outModel, outInt;
-			Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, &outModel, &outInt);
+			unsafe
+			{
+				Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, &outModel, &outInt);
+			}
 			Model model = outModel;
 			if (model.IsVehicle && model.IsLoaded)
 			{
@@ -1225,10 +1254,13 @@ namespace GTA
 		/// Creates a <see cref="RelationshipGroup"/> with the given name.
 		/// </summary>
 		/// <param name="name">The name of the relationship group.</param>
-		public static unsafe RelationshipGroup AddRelationshipGroup(string name)
+		public static RelationshipGroup AddRelationshipGroup(string name)
 		{
 		    int resultArg;
-			Function.Call(Hash.ADD_RELATIONSHIP_GROUP, name, &resultArg);
+			unsafe
+			{
+				Function.Call(Hash.ADD_RELATIONSHIP_GROUP, name, &resultArg);
+			}
 
 			return new RelationshipGroup(resultArg);
 		}

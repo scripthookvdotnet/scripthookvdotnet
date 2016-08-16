@@ -320,12 +320,15 @@ namespace GTA
 			}
 		}
 
-        public unsafe VehicleColor PrimaryColor
+        public VehicleColor PrimaryColor
 		{
 			get
 			{
                 int color1, color2;
-				Function.Call(Hash.GET_VEHICLE_COLOURS,_owner.Handle, &color1, &color2);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_COLOURS,_owner.Handle, &color1, &color2);
+				}
 
 				return (VehicleColor)color1;
 			}
@@ -334,12 +337,15 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_COLOURS,_owner.Handle, value, SecondaryColor);
 			}
 		}
-		public unsafe VehicleColor SecondaryColor
+		public VehicleColor SecondaryColor
 		{
 			get
 			{
                 int color1, color2;
-                Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
+				}
 
                 return (VehicleColor)color2;
             }
@@ -348,12 +354,15 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_COLOURS,_owner.Handle, PrimaryColor, value);
 			}
 		}
-		public unsafe VehicleColor RimColor
+		public VehicleColor RimColor
 		{
 			get
 			{
                 int color1, color2;
-                Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, &color1, &color2);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, &color1, &color2);
+				}
 
                 return (VehicleColor)color2;
             }
@@ -362,12 +371,15 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS,_owner.Handle, PearlescentColor, value);
 			}
 		}
-		public unsafe VehicleColor PearlescentColor
+		public VehicleColor PearlescentColor
 		{
 			get
 			{
                 int color1, color2;
-                Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, &color1, &color2);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, &color1, &color2);
+				}
 
                 return (VehicleColor)color1;
             }
@@ -376,12 +388,15 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS,_owner.Handle, value, RimColor);
 			}
 		}
-		public unsafe VehicleColor TrimColor
+		public VehicleColor TrimColor
 		{
 			get
 			{
 			    int color;
-				Function.Call((Hash)9012939617897488694uL,_owner.Handle, &color);
+				unsafe
+				{
+					Function.Call((Hash)9012939617897488694uL,_owner.Handle, &color);
+				}
 
                 return (VehicleColor)color;
             }
@@ -390,12 +405,15 @@ namespace GTA
 				Function.Call((Hash)17585947422526242585uL,_owner.Handle, value);
 			}
 		}
-		public unsafe VehicleColor DashboardColor
+		public VehicleColor DashboardColor
 		{
 			get
 			{
 			    int color;
-				Function.Call((Hash)13214509638265019391uL,_owner.Handle, &color);
+				unsafe
+				{
+					Function.Call((Hash)13214509638265019391uL,_owner.Handle, &color);
+				}
 
                 return (VehicleColor)color;
             }
@@ -422,12 +440,15 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_NUMBER_OF_VEHICLE_COLOURS,_owner.Handle);
 			}
 		}
-		public unsafe Color TireSmokeColor
+		public Color TireSmokeColor
 		{
 			get
 			{
 				int red, green, blue;
-				Function.Call(Hash.GET_VEHICLE_TYRE_SMOKE_COLOR,_owner.Handle, &red, &green, &blue);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_TYRE_SMOKE_COLOR,_owner.Handle, &red, &green, &blue);
+				}
 
 				return Color.FromArgb(red, green, blue);
 			}
@@ -436,12 +457,15 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_TYRE_SMOKE_COLOR,_owner.Handle, value.R, value.G, value.B);
 			}
 		}
-		public unsafe Color NeonLightsColor
+		public Color NeonLightsColor
 		{
 			get
 			{
                 int red, green, blue;
-                Function.Call(Hash._GET_VEHICLE_NEON_LIGHTS_COLOUR, _owner.Handle, &red, &green, &blue);
+				unsafe
+				{
+					Function.Call(Hash._GET_VEHICLE_NEON_LIGHTS_COLOUR, _owner.Handle, &red, &green, &blue);
+				}
 
                 return Color.FromArgb(red, green, blue);
             }
@@ -480,12 +504,15 @@ namespace GTA
 			}
 		}
 
-		public unsafe Color CustomPrimaryColor
+		public Color CustomPrimaryColor
 		{
 			get
 			{
                 int red, green, blue;
-                Function.Call(Hash.GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, _owner.Handle, &red, &green, &blue);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, _owner.Handle, &red, &green, &blue);
+				}
 
                 return Color.FromArgb(red, green, blue);
 
@@ -495,12 +522,15 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_CUSTOM_PRIMARY_COLOUR,_owner.Handle, value.R, value.G, value.B);
 			}
 		}
-		public unsafe Color CustomSecondaryColor
+		public Color CustomSecondaryColor
 		{
 			get
 			{
                 int red, green, blue;
-                Function.Call(Hash.GET_VEHICLE_CUSTOM_SECONDARY_COLOUR, _owner.Handle, &red, &green, &blue);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_CUSTOM_SECONDARY_COLOUR, _owner.Handle, &red, &green, &blue);
+				}
 
                 return Color.FromArgb(red, green, blue);
             }

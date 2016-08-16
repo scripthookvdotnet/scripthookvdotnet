@@ -155,7 +155,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the quaternion of this <see cref="Entity"/>.
 		/// </summary>
-		public unsafe Quaternion Quaternion
+		public Quaternion Quaternion
 		{
 			get
 			{
@@ -163,7 +163,10 @@ namespace GTA
 			    float y;
 			    float z;
 			    float w;
-				Function.Call(Hash.GET_ENTITY_QUATERNION, Handle, &x, &y, &z, &w);
+				unsafe
+				{
+					Function.Call(Hash.GET_ENTITY_QUATERNION, Handle, &x, &y, &z, &w);
+				}
 
 				return new Quaternion(x, y, z, w);
 			}
@@ -1088,21 +1091,27 @@ namespace GTA
 		/// <summary>
 		/// Deletes this <see cref="Entity"/>
 		/// </summary>
-		public unsafe void Delete()
+		public void Delete()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 		    int handle = Handle;
-			Function.Call(Hash.DELETE_ENTITY, &handle);
+			unsafe
+			{
+				Function.Call(Hash.DELETE_ENTITY, &handle);
+			}
 			Handle = handle;
 		}
 		/// <summary>
 		/// Marks this <see cref="Entity"/> as no longer needed letting the game delete it when its too far away.
 		/// </summary>
-		public unsafe void MarkAsNoLongerNeeded()
+		public void MarkAsNoLongerNeeded()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
             int handle = Handle;
-            Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+			unsafe
+			{
+				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+			}
 			Handle = handle;
 		}
 

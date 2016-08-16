@@ -64,7 +64,7 @@ namespace GTA
 		/// Gets or sets how much money this <see cref="Player"/> has.
 		/// <remarks>Only works if current player is <see cref="PedHash.Michael"/>, <see cref="PedHash.Franklin"/> or <see cref="PedHash.Trevor"/></remarks>
 		/// </summary>
-		public unsafe int Money
+		public int Money
 		{
 			get
 			{
@@ -86,7 +86,10 @@ namespace GTA
 				}
 
 			    int result;
-				Function.Call(Hash.STAT_GET_INT, stat, &result, -1);
+				unsafe
+				{
+					Function.Call(Hash.STAT_GET_INT, stat, &result, -1);
+				}
 
 				return result;
 			}
@@ -164,13 +167,16 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the primary parachute tint for this <see cref="Player"/>.
 		/// </summary>
-		public unsafe ParachuteTint PrimaryParachuteTint
+		public ParachuteTint PrimaryParachuteTint
 		{
 			get
 			{
 			    int result;
 
-                Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &result);
+				unsafe
+				{
+					Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &result);
+				}
 
 				return (ParachuteTint)result;
 			}
@@ -182,13 +188,16 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the reserve parachute tint for this <see cref="Player"/>.
 		/// </summary>
-		public unsafe ParachuteTint ReserveParachuteTint
+		public ParachuteTint ReserveParachuteTint
 		{
 			get
 			{
                 int result;
 
-                Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &result);
+				unsafe
+				{
+					Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &result);
+				}
 
                 return (ParachuteTint)result;
             }
@@ -217,12 +226,15 @@ namespace GTA
 		/// <value>
 		/// The color of the parachute smoke trail for this <see cref="Player"/>.
 		/// </value>
-		public unsafe Color ParachuteSmokeTrailColor
+		public Color ParachuteSmokeTrailColor
 		{
 			get
 			{
 			    int r, g, b;
-				Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, &r, &g, &b);
+				unsafe
+				{
+					Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, &r, &g, &b);
+				}
 
 				return Color.FromArgb(r, g, b);
 			}
@@ -593,15 +605,18 @@ namespace GTA
         /// Gets the <see cref="Entity"/> this <see cref="Player"/> is targetting.
         /// </summary>
         /// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targetting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
-        public unsafe Entity GetTargetedEntity()
+        public Entity GetTargetedEntity()
 		{
 			int entityHandle;
 
-			if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
-			{
-				return Entity.FromHandle(entityHandle);
-			}
-			return null;
+	        unsafe
+	        {
+		        if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
+		        {
+			        return Entity.FromHandle(entityHandle);
+		        }
+	        }
+	        return null;
 		}
 
         /// <summary>

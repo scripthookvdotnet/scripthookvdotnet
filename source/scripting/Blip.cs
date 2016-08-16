@@ -448,10 +448,13 @@ namespace GTA
 		/// <summary>
 		/// Removes this <see cref="Blip"/>.
 		/// </summary>
-		public unsafe void Remove()
+		public void Remove()
 		{
 		    int handle = Handle;
-			Function.Call(Hash.REMOVE_BLIP, &handle);
+			unsafe
+			{
+				Function.Call(Hash.REMOVE_BLIP, &handle);
+			}
 			Handle = handle;
 		}
 

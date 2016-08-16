@@ -888,12 +888,15 @@ namespace GTA
         /// <value>
         ///   <c>true</c> if this <see cref="Vehicle"/> has its lights on; otherwise, <c>false</c>.
         /// </value>
-        public unsafe bool LightsOn
+        public bool LightsOn
 		{
 			get
 			{
 			    bool lightState1, lightState2;
-				Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
+				}
 
 			    return lightState1;
 			}
@@ -908,12 +911,15 @@ namespace GTA
         /// <value>
         ///   <c>true</c> if this <see cref="Vehicle"/> has its high beams on; otherwise, <c>false</c>.
         /// </value>
-        public unsafe bool HighBeamsOn
+        public bool HighBeamsOn
 		{
 			get
 			{
 				bool lightState1, lightState2;
-				Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
+				}
 
 				return lightState2;
 			}
@@ -1453,7 +1459,7 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.SET_VEHICLE_ON_GROUND_PROPERLY, Handle);
 		}
-		public unsafe void PlaceOnNextStreet()
+		public void PlaceOnNextStreet()
 		{
 			Vector3 currentPosition = Position;
 		    NativeVector3 newPosition;
@@ -1462,7 +1468,10 @@ namespace GTA
 
 			for (int i = 1; i < 40; i++)
 			{
-				Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &unkn, 1, 0x40400000, 0);
+				unsafe
+				{
+					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &unkn, 1, 0x40400000, 0);
+				}
                 
 
 				if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPosition.X, newPosition.Y, newPosition.Z, 5.0f, 5.0f, 5.0f, 0))

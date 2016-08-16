@@ -78,17 +78,23 @@ namespace GTA
 			return Function.Call<Vector3>(Hash.GET_ROPE_VERTEX_COORD, Handle, vertex);
 		}
 
-		public unsafe void Delete()
+		public void Delete()
 		{
 		    int handle = Handle;
-			Function.Call(Hash.DELETE_ROPE, &handle);
+			unsafe
+			{
+				Function.Call(Hash.DELETE_ROPE, &handle);
+			}
 			Handle = handle;
 		}
 
-        public override unsafe bool Exists()
+        public override bool Exists()
 		{
             int handle = Handle;
-            return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);
+	        unsafe
+	        {
+		        return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);
+	        }
 		}
 		public static bool Exists(Rope rope)
 		{

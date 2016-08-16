@@ -87,13 +87,16 @@ namespace GTA
 			}
 		}
 
-		public unsafe int MemberCount
+		public int MemberCount
 		{
 			get
 			{
 			    long unkn;
 			    int count;
-				Function.Call(Hash.GET_GROUP_SIZE, Handle, &unkn, &count);
+				unsafe
+				{
+					Function.Call(Hash.GET_GROUP_SIZE, Handle, &unkn, &count);
+				}
 
 				return count;
 			}

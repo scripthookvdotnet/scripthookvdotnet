@@ -267,10 +267,13 @@ namespace GTA
 		/// </summary>
 		/// <param name="minimum">The minimum dimensions.</param>
 		/// <param name="maximum">The maximum dimensions.</param>
-		public unsafe void GetDimensions(out Vector3 minimum, out Vector3 maximum)
+		public void GetDimensions(out Vector3 minimum, out Vector3 maximum)
 		{
 		    NativeVector3 min, max;
-			Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
+			unsafe
+			{
+				Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
+			}
 
 		    minimum = min;
 		    maximum = max;

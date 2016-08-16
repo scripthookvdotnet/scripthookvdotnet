@@ -37,12 +37,15 @@ namespace GTA
 			}
 		}
 
-		public unsafe Weapon Current
+		public Weapon Current
 		{
 			get
 			{
 			    int currentWeapon;
-				Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, &currentWeapon, true);
+				unsafe
+				{
+					Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, &currentWeapon, true);
+				}
 
 			    WeaponHash hash = (WeaponHash)currentWeapon;
 
