@@ -309,46 +309,37 @@ namespace GTA
 		/// <summary>
 		/// Gets the last <see cref="Vehicle"/> this <see cref="Ped"/> used.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if the Last Vehicle doesn't exist.</remarks>
+		/// <remarks>returns <c>null</c> if the last vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true);
-
-				if (!Function.Call<bool>(Hash.DOES_ENTITY_EXIST, handle))
-				{
-					return null;
-				}
-
-				return new Vehicle(handle);
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true));
+				return veh.Exists() ? veh : null;
 			}
 		}
 		/// <summary>
 		/// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is using.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <c>null</c> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
 		public Vehicle CurrentVehicle
 		{
 			get
 			{
-				if (!IsInVehicle())
-				{
-					return null;
-				}
-
-				return new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
+				return veh.Exists() ? veh : null;
 			}
 		}
 		/// <summary>
 		/// Gets the <see cref="Vehicle"/> this <see cref="Ped"/> is trying to enter.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <c>null</c> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
 		public Vehicle VehicleTryingToEnter
 		{
 			get
 			{
-				return Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle));
+				return veh.Exists() ? veh : null;
 			}
 		}
 		/// <summary>
@@ -1348,13 +1339,14 @@ namespace GTA
 			}
 		}
 
-		public Vector3 GetLastWeaponImpactPosition()
+		public unsafe Vector3 GetLastWeaponImpactPosition()
 		{
-			var positionArg = new OutputArgument();
+		    NativeVector3 position;
 
-			if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, positionArg))
+			if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, &position))
 			{
-				return positionArg.GetResult<Vector3>();
+			    return position;
+
 			}
 
 			return Vector3.Zero;
@@ -1401,6 +1393,23 @@ namespace GTA
 		public Ped Clone(float heading = 0.0f)
 		{
 			return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, heading, false, false));
+		}
+		/// <summary>
+		/// Determines whether this <see cref="Ped"/> exists.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
+		public new bool Exists()
+		{
+			return Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle) == 2;
+		}
+		/// <summary>
+		/// Determines whether the <see cref="Ped"/> exists.
+		/// </summary>
+		/// <param name="ped">The <see cref="Ped"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
+		public static bool Exists(Ped ped)
+		{
+			return !ReferenceEquals(ped, null) && ped.Exists();
 		}
 	}
 }

@@ -21,20 +21,28 @@ namespace GTA
 	{
 		public Scaleform(string scaleformID)
 		{
-			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
+			_handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
 		}
 
-		public void Dispose()
+        public unsafe void Dispose()
 		{
 			if (IsLoaded)
 			{
-				Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, new OutputArgument(Handle));
+				fixed (int* handlePtr = &_handle)
+				{
+					Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, handlePtr);
+				}
 			}
 
 			GC.SuppressFinalize(this);
 		}
 
-		public int Handle { get; private set; }
+		public int Handle
+		{
+			get { return _handle; }
+		}
+
+		private int _handle;
 
 		public ulong NativeValue
 		{
@@ -44,7 +52,7 @@ namespace GTA
 			}
 			set
 			{
-				Handle = unchecked((int)value);
+				_handle = unchecked((int)value);
 			}
 		}
 

@@ -138,7 +138,7 @@ namespace GTA
 				}
 			}
 		}
-		public int AmmoInClip
+		public unsafe int AmmoInClip
 		{
 			get
 			{
@@ -152,10 +152,10 @@ namespace GTA
 					return 0;
 				}
 
-				var ammoInClip = new OutputArgument();
-				Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, Hash, ammoInClip);
+				int ammoInClip;
+				Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, Hash, &ammoInClip);
 
-				return ammoInClip.GetResult<int>();
+				return ammoInClip;
 			}
 			set
 			{
@@ -174,7 +174,7 @@ namespace GTA
 				}
 			}
 		}
-		public int MaxAmmo
+		public unsafe int MaxAmmo
 		{
 			get
 			{
@@ -183,10 +183,10 @@ namespace GTA
 					return 1;
 				}
 
-				var maxAmmo = new OutputArgument();
-				Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, maxAmmo);
+			    int maxAmmo;
+				Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, &maxAmmo);
 
-				return maxAmmo.GetResult<int>();
+				return maxAmmo;
 			}
 		}
 		public int MaxAmmoInClip

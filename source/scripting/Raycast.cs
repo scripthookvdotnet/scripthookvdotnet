@@ -5,18 +5,18 @@ namespace GTA
 {
 	public struct RaycastResult
 	{
-		public RaycastResult(int handle) : this()
+		public unsafe RaycastResult(int handle) : this()
 		{
-			var hitPositionArg = new OutputArgument();
-			var hitSomethingArg = new OutputArgument();
-			var entityHandleArg = new OutputArgument();
-			var surfaceNormalArg = new OutputArgument();
-			Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, hitSomethingArg, hitPositionArg, surfaceNormalArg, entityHandleArg);
+		    NativeVector3 hitPositionArg;
+		    bool hitSomethingArg;
+		    int entityHandleArg;
+		    NativeVector3 surfaceNormalArg;
+			Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &entityHandleArg);
 
-			DitHit = hitSomethingArg.GetResult<bool>();
-			HitPosition = hitPositionArg.GetResult<Vector3>();
-			SurfaceNormal = surfaceNormalArg.GetResult<Vector3>();
-			HitEntity = Entity.FromHandle(entityHandleArg.GetResult<int>());
+			DitHit = hitSomethingArg;
+			HitPosition = hitPositionArg;
+			SurfaceNormal = surfaceNormalArg;
+			HitEntity = Entity.FromHandle(entityHandleArg);
 		}
 
 		public Entity HitEntity { get; private set; }

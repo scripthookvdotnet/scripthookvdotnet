@@ -471,7 +471,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if this <see cref="Checkpoint"/> exists.
 		/// </summary>
-		/// <returns><a>true</a> if this <see cref="Checkpoint"/> exists; otherwise, <a>false</a>.</returns>
+		/// <returns><c>true</c> if this <see cref="Checkpoint"/> exists; otherwise, <c>false</c>.</returns>
 		public override bool Exists()
 		{
 			return Handle != 0 && MemoryAddress != IntPtr.Zero;
@@ -479,7 +479,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if a specific <see cref="Checkpoint"/> exists.
 		/// </summary>
-		/// <returns><a>true</a> if the <paramref name="checkpoint"/> exists; otherwise, <a>false</a>.</returns>
+		/// <returns><c>true</c> if the <paramref name="checkpoint"/> exists; otherwise, <c>false</c>.</returns>
 		public static bool Exists(Checkpoint checkpoint)
 		{
 			return !ReferenceEquals(checkpoint, null) && checkpoint.Exists();
@@ -489,7 +489,7 @@ namespace GTA
 		/// Determines if a <see cref="Checkpoint"/> refer to the same <see cref="Checkpoint"/> as this <see cref="Checkpoint"/>.
 		/// </summary>
 		/// <param name="checkpoint">The other <see cref="Checkpoint"/>.</param>
-		/// <returns><a>true</a> if the <paramref name="checkpoint"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <a>false</a>.</returns>
+		/// <returns><c>true</c> if the <paramref name="checkpoint"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <c>false</c>.</returns>
 		public bool Equals(Checkpoint checkpoint)
 		{
 			return !ReferenceEquals(checkpoint, null) && Handle == checkpoint.Handle;
@@ -498,7 +498,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refer to the same <see cref="Checkpoint"/> as this <see cref="Checkpoint"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><a>true</a> if the <paramref name="obj"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <a>false</a>.</returns>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
 			return !ReferenceEquals(obj, null) && obj.GetType() == GetType() && Equals((Checkpoint)obj);
@@ -514,7 +514,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Checkpoint"/>.</param>
 		/// <param name="right">The right <see cref="Checkpoint"/>.</param>
-		/// <returns><a>true</a> if <paramref name="left"/> is the same checkpoint as this <paramref name="right"/>; otherwise, <a>false</a>.</returns>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same checkpoint as this <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(Checkpoint left, Checkpoint right)
 		{
 			return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
@@ -524,7 +524,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Checkpoint"/>.</param>
 		/// <param name="right">The right <see cref="Checkpoint"/>.</param>
-		/// <returns><a>true</a> if <paramref name="left"/> is not the same checkpoint as this <paramref name="right"/>; otherwise, <a>false</a>.</returns>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same checkpoint as this <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Checkpoint left, Checkpoint right)
 		{
 			return !(left == right);

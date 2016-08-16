@@ -333,7 +333,7 @@ namespace GTA
 		/// <value>
 		/// The next weather.
 		/// </value>
-		public static Weather NextWeather
+		public static unsafe Weather NextWeather
 		{
 			get
 			{
@@ -351,11 +351,10 @@ namespace GTA
 			{
 				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
 				{
-					var currentWeatherHash = new OutputArgument();
-					var nextWeatherHash = new OutputArgument();
-					var weatherTransition = new OutputArgument();
-					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, currentWeatherHash, nextWeatherHash, weatherTransition);
-					Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash.GetResult<int>(), Game.GenerateHash(_weatherNames[(int)value]), 0.0f);
+				    int currentWeatherHash, nextWeatherHash;
+                    float weatherTransition;
+					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+					Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, Game.GenerateHash(_weatherNames[(int)value]), 0.0f);
 				}
 			}
 		}
@@ -365,16 +364,15 @@ namespace GTA
 		/// <value>
 		/// The weather transition.
 		/// </value>
-		public static float WeatherTransition
+		public static unsafe float WeatherTransition
 		{
 			get
 			{
-				var currentWeatherHash = new OutputArgument();
-				var nextWeatherHash = new OutputArgument();
-				var weatherTransition = new OutputArgument();
-				Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, currentWeatherHash, nextWeatherHash, weatherTransition);
+                int currentWeatherHash, nextWeatherHash;
+                float weatherTransition;
+                Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 
-				return weatherTransition.GetResult<float>();
+				return weatherTransition;
 			}
 			set
 			{
@@ -426,7 +424,7 @@ namespace GTA
 		/// The rendering <see cref="Camera"/>.
 		/// </value>
 		/// <remarks>
-		/// Setting to <langword>null</langword> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
+		/// Setting to <c>null</c> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
 		/// </remarks>
 		public static Camera RenderingCamera
 		{
@@ -463,7 +461,7 @@ namespace GTA
 		/// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
 		/// If the game engine cant extract height information the Z component will be 0.0f
 		/// </remarks>
-		public static Vector3 WaypointPosition
+		public static unsafe Vector3 WaypointPosition
 		{
 			get
 			{
@@ -475,11 +473,11 @@ namespace GTA
 				}
 
 				Vector3 position = waypointBlip.Position;
-				var heightResult = new OutputArgument();
+			    float heightResult;
 
-				if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, heightResult))
+				if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &heightResult))
 				{
-					position.Z = heightResult.GetResult<float>();
+				    position.Z = heightResult;
 					return position;
 				}
 
@@ -496,7 +494,7 @@ namespace GTA
 		/// </summary>
 		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
 		/// <remarks>
-		/// Returns <langword>null</langword> if a waypoint <see cref="Blip"/> hasn't been set
+		/// Returns <c>null</c> if a waypoint <see cref="Blip"/> hasn't been set
 		/// </remarks>
 		public static Blip GetWaypointBlip()
 		{
@@ -558,13 +556,13 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>
-		public static float GetGroundHeight(Vector2 position)
+		public static unsafe float GetGroundHeight(Vector2 position)
 		{
-			var resultArg = new OutputArgument();
+		    float resultArg;
 
-			Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, resultArg);
+			Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &resultArg);
 
-			return resultArg.GetResult<float>();
+			return resultArg;
 		}
 
 		/// <summary>
@@ -655,7 +653,7 @@ namespace GTA
 		/// <param name="position">The position to find the nearest <see cref="Ped"/>.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-		/// <remarks>Returns <a>null</a> if no <see cref="Ped"/> was in the given region.</remarks>
+		/// <remarks>Returns <c>null</c> if no <see cref="Ped"/> was in the given region.</remarks>
 		public static Ped GetClosestPed(Vector3 position, float radius, params Model[] models)
 		{
 			Ped[] peds =
@@ -715,7 +713,7 @@ namespace GTA
 		/// <param name="position">The position to find the nearest <see cref="Vehicle"/>.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-		/// <remarks>Returns <a>null</a> if no <see cref="Vehicle"/> was in the given region.</remarks>
+		/// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
 		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params Model[] models)
 		{
 			Vehicle[] vehicles = 
@@ -749,7 +747,7 @@ namespace GTA
 		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-		/// <remarks>Returns <a>null</a> if no <see cref="Prop"/> was in the given region.</remarks>
+		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
 		public static Prop GetClosestProp(Vector3 position, float radius, params Model[] models)
 		{
 			Prop[] vehicles =
@@ -824,13 +822,13 @@ namespace GTA
 			return (T)closest;
 		}
 
-		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
+		public static unsafe Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
 		{
-			var outPos = new OutputArgument();
+		    NativeVector3 outPos;
 
-			if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, outPos, flags))
+			if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, &outPos, flags))
 			{
-				return outPos.GetResult<Vector3>();
+				return outPos;
 			}
 
 			return Vector3.Zero;
@@ -840,17 +838,17 @@ namespace GTA
 		{
 			return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
 		}
-		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
+		public static unsafe Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
 		{
-			var outPos = new OutputArgument();
+            NativeVector3 outPos;
 
-			if (unoccupied)
+            if (unoccupied)
 			{
 				for (int i = 1; i < 40; i++)
 				{
-					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, outPos, 1, 0x40400000, 0);
+					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, &outPos, 1, 0x40400000, 0);
 
-					position = outPos.GetResult<Vector3>();
+					position = outPos;
 
 					if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f, 5.0f, 5.0f, 0))
 					{
@@ -858,9 +856,9 @@ namespace GTA
 					}
 				}
 			}
-			else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, outPos, 1, 0x40400000, 0))
+			else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, &outPos, 1, 0x40400000, 0))
 			{
-				return outPos.GetResult<Vector3>();		
+				return outPos;		
 			}
 
 			return Vector3.Zero;
@@ -869,17 +867,17 @@ namespace GTA
 		{
 			return GetNextPositionOnSidewalk(new Vector3(position.X, position.Y, 0f));
 		}
-		public static Vector3 GetNextPositionOnSidewalk(Vector3 position)
+		public static unsafe Vector3 GetNextPositionOnSidewalk(Vector3 position)
 		{
-			var outPos = new OutputArgument();
+            NativeVector3 outPos;
 
-			if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, outPos, 0))
+            if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, &outPos, 0))
+            {
+                return outPos;
+            }
+			else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
 			{
-				return outPos.GetResult<Vector3>();
-			}
-			else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, outPos, 0))
-			{
-				return outPos.GetResult<Vector3>();
+			    return outPos;
 			}
 
 			return Vector3.Zero;
@@ -905,13 +903,12 @@ namespace GTA
 		{
 			return GetStreetName(new Vector3(position.X, position.Y, 0f));
 		}
-		public static string GetStreetName(Vector3 position)
+		public static unsafe string GetStreetName(Vector3 position)
 		{
-			var streetHash = new OutputArgument();
-			var crossingHash = new OutputArgument();
-			Function.Call(Hash.GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, streetHash, crossingHash);
+		    int streetHash, crossingHash;
+			Function.Call(Hash.GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, &streetHash, &crossingHash);
 
-			return Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, streetHash.GetResult<int>());
+			return Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, streetHash);
 		}
 
 		/// <summary>
@@ -949,7 +946,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Ped"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Ped"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Ped"/> could not be spawned</remarks>
 		public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
 		{
 			if (!model.IsPed || !model.Request(1000))
@@ -974,7 +971,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Vehicle"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
 		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
 		{
 			if (!model.IsVehicle || !model.Request(1000))
@@ -989,12 +986,12 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Vehicle"/> could not be spawned</remarks>
-		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
+		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
+		public static unsafe Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
 		{
-			OutputArgument outModel = new OutputArgument(), outInt = new OutputArgument();
-			Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, outModel, outInt);
-			Model model = outModel.GetResult<Model>();
+		    int outModel, outInt;
+			Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, &outModel, &outInt);
+			Model model = outModel;
 			if (model.IsVehicle && model.IsLoaded)
 			{
 				return
@@ -1010,7 +1007,7 @@ namespace GTA
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
 		/// <param name="placeOnGround">if set to <c>true</c> place the prop on the ground nearest to the <paramref name="position"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
 		{
 			if (!model.Request(1000))
@@ -1033,7 +1030,7 @@ namespace GTA
 		/// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
 		/// <param name="placeOnGround">if set to <c>true</c> place the prop on the ground nearest to the <paramref name="position"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
 		{
 			Prop prop = CreateProp(model, position, dynamic, placeOnGround);
@@ -1051,7 +1048,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Prop"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
 		{
 			if (!model.Request(1000))
@@ -1068,7 +1065,7 @@ namespace GTA
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
 		/// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
 		{
 			Prop prop = CreatePropNoOffset(model, position, dynamic);
@@ -1138,7 +1135,7 @@ namespace GTA
 		/// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
 		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
 		/// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Checkpoint"/> could not be created</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Checkpoint"/> could not be created</remarks>
 		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
@@ -1158,7 +1155,7 @@ namespace GTA
 		/// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
 		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
 		/// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
-		/// <remarks>returns <a>null</a> if the <see cref="Checkpoint"/> could not be created</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Checkpoint"/> could not be created</remarks>
 		public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 42, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
@@ -1193,7 +1190,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="sourcePosition">Where the bullet is fired from.</param>
 		/// <param name="targetPosition">Where the bullet is fired to.</param>
-		/// <param name="owner">The <see cref="Ped"/> who fired the bullet, leave <a>null</a> for no one.</param>
+		/// <param name="owner">The <see cref="Ped"/> who fired the bullet, leave <c>null</c> for no one.</param>
 		/// <param name="weaponAsset">The weapon that the bullet is fired from.</param>
 		/// <param name="damage">The damage the bullet will cause.</param>
 		/// <param name="speed">The speed, only affects projectile weapons, leave -1 for default.</param>
@@ -1228,12 +1225,12 @@ namespace GTA
 		/// Creates a <see cref="RelationshipGroup"/> with the given name.
 		/// </summary>
 		/// <param name="name">The name of the relationship group.</param>
-		public static RelationshipGroup AddRelationshipGroup(string name)
+		public static unsafe RelationshipGroup AddRelationshipGroup(string name)
 		{
-			var resultArg = new OutputArgument();
-			Function.Call(Hash.ADD_RELATIONSHIP_GROUP, name, resultArg);
+		    int resultArg;
+			Function.Call(Hash.ADD_RELATIONSHIP_GROUP, name, &resultArg);
 
-			return new RelationshipGroup(resultArg.GetResult<int>());
+			return new RelationshipGroup(resultArg);
 		}
 
 		/// <summary>

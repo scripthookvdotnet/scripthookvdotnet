@@ -175,7 +175,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" AllowUnsafeBlocks="true" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Rename and move output files -->
   <Target Name="MoveFiles" AfterTargets="AfterBuild">

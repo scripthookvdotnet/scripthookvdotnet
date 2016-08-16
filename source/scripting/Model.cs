@@ -267,14 +267,13 @@ namespace GTA
 		/// </summary>
 		/// <param name="minimum">The minimum dimensions.</param>
 		/// <param name="maximum">The maximum dimensions.</param>
-		public void GetDimensions(out Vector3 minimum, out Vector3 maximum)
+		public unsafe void GetDimensions(out Vector3 minimum, out Vector3 maximum)
 		{
-			var minimumArg = new OutputArgument();
-			var maximumArg = new OutputArgument();
-			Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, minimumArg, maximumArg);
+		    NativeVector3 min, max;
+			Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
 
-			minimum = minimumArg.GetResult<Vector3>();
-			maximum = maximumArg.GetResult<Vector3>();
+		    minimum = min;
+		    maximum = max;
 		}
 
 		/// <summary>
@@ -288,7 +287,7 @@ namespace GTA
 		/// Attempt to load this <see cref="Model"/> into memory for a given period of time.
 		/// </summary>
 		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Model"/></param>
-		/// <returns><a>true</a> if this <see cref="Model"/> is loaded; otherwise, <a>false</a></returns>
+		/// <returns><c>true</c> if this <see cref="Model"/> is loaded; otherwise, <c>false</c></returns>
 		public bool Request(int timeout)
 		{
 			Request();

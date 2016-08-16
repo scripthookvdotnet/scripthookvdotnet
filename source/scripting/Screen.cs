@@ -122,15 +122,14 @@ namespace GTA.UI
 		/// <summary>
 		/// Gets the actual Screen resolution the game is being rendered at
 		/// </summary>
-		public static Size Resolution
+		public static unsafe Size Resolution
 		{
 			get
 			{
-				var width = new OutputArgument();
-				var height = new OutputArgument();
-				Function.Call(Hash._GET_SCREEN_ACTIVE_RESOLUTION, width, height);
+			    int width, height;
+				Function.Call(Hash._GET_SCREEN_ACTIVE_RESOLUTION, &width, &height);
 
-				return new Size(width.GetResult<int>(), height.GetResult<int>());
+				return new Size(width, height);
 			}
 		}
 
@@ -226,17 +225,16 @@ namespace GTA.UI
 		{
 			return WorldToScreen(position, scaleWidth ? ScaledWidth : Width, Height);
 		}
-		private static PointF WorldToScreen(Vector3 position, float screenWidth, float screenHeight)
+		private static unsafe PointF WorldToScreen(Vector3 position, float screenWidth, float screenHeight)
 		{
-			var pointX = new OutputArgument();
-			var pointY = new OutputArgument();
+			float pointX, pointY;
 
-			if (!Function.Call<bool>(Hash._WORLD3D_TO_SCREEN2D, position.X, position.Y, position.Z, pointX, pointY))
+			if (!Function.Call<bool>(Hash._WORLD3D_TO_SCREEN2D, position.X, position.Y, position.Z, &pointX, &pointY))
 			{
 				return PointF.Empty;
 			}
 
-			return new PointF(pointX.GetResult<float>() * screenWidth, pointY.GetResult<float>() * screenHeight);
+			return new PointF(pointX * screenWidth, pointY * screenHeight);
 		}
 		/// <summary>
 		/// Gets a value indicating whether the screen is faded in.

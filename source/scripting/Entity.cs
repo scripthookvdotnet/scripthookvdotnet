@@ -155,17 +155,17 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the quaternion of this <see cref="Entity"/>.
 		/// </summary>
-		public Quaternion Quaternion
+		public unsafe Quaternion Quaternion
 		{
 			get
 			{
-				var x = new OutputArgument();
-				var y = new OutputArgument();
-				var z = new OutputArgument();
-				var w = new OutputArgument();
-				Function.Call(Hash.GET_ENTITY_QUATERNION, Handle, x, y, z, w);
+			    float x;
+			    float y;
+			    float z;
+			    float w;
+				Function.Call(Hash.GET_ENTITY_QUATERNION, Handle, &x, &y, &z, &w);
 
-				return new Quaternion(x.GetResult<float>(), y.GetResult<float>(), z.GetResult<float>(), w.GetResult<float>());
+				return new Quaternion(x, y, z, w);
 			}
 			set
 			{
@@ -764,7 +764,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> has collided; otherwise, <c>false</c>.
 		/// </value>
-		/// <remarks><see cref="IsRecordingCollisions"/> must be <a>true</a> for this to work.</remarks>
+		/// <remarks><see cref="IsRecordingCollisions"/> must be <c>true</c> for this to work.</remarks>
 		public bool HasCollided
 		{
 			get
@@ -973,7 +973,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Blip"/> attached to this <see cref="Entity"/>
 		/// </summary>
-		/// <remarks>returns <a>null</a> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
+		/// <remarks>returns <c>null</c> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
 		public Blip AttachedBlip
 		{
 			get
@@ -1049,7 +1049,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
-		/// <remarks>returns <a>null</a> if this <see cref="Entity"/> isnt attached to any entity</remarks>
+		/// <remarks>returns <c>null</c> if this <see cref="Entity"/> isnt attached to any entity</remarks>
 		/// </summary>
 		public Entity GetEntityAttachedTo()
 		{
@@ -1088,28 +1088,32 @@ namespace GTA
 		/// <summary>
 		/// Deletes this <see cref="Entity"/>
 		/// </summary>
-		public void Delete()
+		public unsafe void Delete()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-			Function.Call(Hash.DELETE_ENTITY, new OutputArgument(Handle));
+		    int handle = Handle;
+			Function.Call(Hash.DELETE_ENTITY, &handle);
+			Handle = handle;
 		}
 		/// <summary>
 		/// Marks this <see cref="Entity"/> as no longer needed letting the game delete it when its too far away.
 		/// </summary>
-		public void MarkAsNoLongerNeeded()
+		public unsafe void MarkAsNoLongerNeeded()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-			Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, new OutputArgument(Handle));
+            int handle = Handle;
+            Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+			Handle = handle;
 		}
 
 		/// <summary>
 		/// Creates a new instance of an <see cref="Entity"/> from the given handle.
-		/// <remarks>Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
-		/// Returns a <see cref="Vehicle"/> if this handle corresponds to a Vehicle.
-		/// Returns a <see cref="Prop"/> if this handle corresponds to a Prop.
-		/// Returns <a>null</a> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></remarks>
 		/// </summary>
 		/// <param name="handle">The entity handle.</param>
+		/// <returns>Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
+		/// Returns a <see cref="Vehicle"/> if this handle corresponds to a Vehicle.
+		/// Returns a <see cref="Prop"/> if this handle corresponds to a Prop.
+		/// Returns <c>null</c> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
 		public static Entity FromHandle(int handle)
 		{
 			switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
@@ -1127,7 +1131,7 @@ namespace GTA
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> exists.
 		/// </summary>
-		/// <returns><a>true</a> if this <see cref="Entity"/> exists; otherwise, <a>false</a></returns>
+		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, Handle);
@@ -1136,13 +1140,17 @@ namespace GTA
 		/// Determines whether the <see cref="Entity"/> exists.
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to check.</param>
-		/// <returns><a>true</a> if the <see cref="Entity"/> exists; otherwise, <a>false</a></returns>
+		/// <returns><c>true</c> if the <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
 		public static bool Exists(Entity entity)
 		{
 			return !ReferenceEquals(entity, null) && entity.Exists();
 		}
-
-		public bool Equals(Entity entity)
+        /// <summary>
+        /// Checks if two <see cref="Entity"/>s refer to the same <see cref="Entity"/>
+        /// </summary>
+        /// <param name="entity">The other <see cref="Entity"/>.</param>
+        /// <returns><c>true</c> if they are the same <see cref="Entity"/>; otherwise, false</returns>
+        public bool Equals(Entity entity)
 		{
 			return !ReferenceEquals(entity, null) && Handle == entity.Handle;
 		}

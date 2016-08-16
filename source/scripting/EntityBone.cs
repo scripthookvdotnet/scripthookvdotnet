@@ -198,8 +198,8 @@ namespace GTA
 		/// <summary>
 		/// Checks if two <see cref="EntityBone"/>s refer to the same <see cref="EntityBone"/>
 		/// </summary>
-		/// <param name="entityBone">The entity bone.</param>
-		/// <returns><a>true</a> if they are the same bone of the same <see cref="Entity"/>; otherwise, false</returns>
+		/// <param name="entityBone">The other <see cref="EntityBone"/>.</param>
+		/// <returns><c>true</c> if they are the same bone of the same <see cref="Entity"/>; otherwise, false</returns>
 		public bool Equals(EntityBone entityBone)
 		{
 			return !ReferenceEquals(entityBone, null) && _owner == entityBone._owner && Index == entityBone.Index;
@@ -274,6 +274,14 @@ namespace GTA
 		{
 			_owner = owner;
 		}
+
+	    public new bool IsValid
+	    {
+	        get
+	        {
+	            return Ped.Exists(Owner) && Index != -1;
+	        }
+	    }
 
 	}
 
@@ -373,17 +381,22 @@ namespace GTA
 			get { return new PedBone(_owner, boneId); }
 		}
 
+	    public new PedBone Core
+	    {
+	        get { return new PedBone(_owner, -1); }
+	    }
+
 		/// <summary>
 		/// Gets the last damaged Bone for this <see cref="Ped"/>.
 		/// </summary>
-		public PedBone LastDamaged
+		public unsafe PedBone LastDamaged
 		{
 			get
 			{
-				OutputArgument outBone = new OutputArgument();
-				if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, outBone))
+			    int outBone;
+				if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, &outBone))
 				{
-					return this[outBone.GetResult<Bone>()];
+					return this[(Bone)outBone];
 				}
 				return this[Bone.SKEL_ROOT];
 			}
