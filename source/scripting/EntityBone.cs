@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -285,12 +286,49 @@ namespace GTA
 
 	}
 
-	public class EntityBoneCollection
+	public class EntityBoneCollection : IEnumerable<EntityBone>
 	{
-		#region Fields
-		protected readonly Entity _owner;
-		#endregion
-		internal EntityBoneCollection(Entity owner)
+        public class Enumerator : IEnumerator<EntityBone>
+        {
+            #region Fields
+            private readonly EntityBoneCollection _collection;
+            private int currentIndex = -1;// skip the CORE bone index(-1)
+            #endregion
+            public Enumerator(EntityBoneCollection collection)
+            {
+                _collection = collection;
+            }
+            public EntityBone Current
+            {
+                get { return _collection[currentIndex]; }
+            }
+
+            object IEnumerator.Current
+            {
+                get { return _collection[currentIndex]; }
+            }
+
+            public void Dispose()
+            {
+
+            }
+
+            public bool MoveNext()
+            {
+                return ++currentIndex < _collection.Count;
+            }
+
+            public void Reset()
+            {
+                currentIndex = -1;
+            }
+        }
+
+        #region Fields
+        protected readonly Entity _owner;
+        #endregion
+
+        internal EntityBoneCollection(Entity owner)
 		{
 			_owner = owner;
 		}
@@ -338,16 +376,62 @@ namespace GTA
 			get { return new EntityBone(_owner, -1); }
 		}
 
-		public override int GetHashCode()
+	    public IEnumerator<EntityBone> GetEnumerator()
+	    {
+	        return new Enumerator(this);
+	    }
+
+	    public override int GetHashCode()
 		{
 			return _owner.GetHashCode() ^ Count.GetHashCode();
 		}
+
+	    IEnumerator IEnumerable.GetEnumerator()
+	    {
+	        return GetEnumerator();
+	    }
 	}
 
-	public class PedBoneCollection : EntityBoneCollection
+	public class PedBoneCollection : EntityBoneCollection, IEnumerable<PedBone>
 	{
-		#region Fields
-		private new readonly Ped _owner;
+        public new class Enumerator : IEnumerator<PedBone>
+        {
+            #region Fields
+            private readonly PedBoneCollection _collection;
+            private int currentIndex = -1;// skip the CORE bone index(-1)
+            #endregion
+            public Enumerator(PedBoneCollection collection)
+            {
+                _collection = collection;
+            }
+            public PedBone Current
+            {
+                get { return _collection[currentIndex]; }
+            }
+
+            object IEnumerator.Current
+            {
+                get { return _collection[currentIndex]; }
+            }
+
+            public void Dispose()
+            {
+
+            }
+
+            public bool MoveNext()
+            {
+                return ++currentIndex < _collection.Count;
+            }
+
+            public void Reset()
+            {
+                currentIndex = -1;
+            }
+        }
+
+        #region Fields
+        private new readonly Ped _owner;
 		#endregion
 		internal PedBoneCollection(Ped owner) : base(owner)
 		{
@@ -372,11 +456,11 @@ namespace GTA
 			get { return new PedBone(_owner, boneIndex); }
 		}
 
-		/// <summary>
-		/// Gets the <see cref="EntityBone"/> with the specified boneId.
-		/// </summary>
-		/// <param name="boneId">The boneId.</param>
-		public PedBone this[Bone boneId]
+        /// <summary>
+        /// Gets the <see cref="PedBone"/> with the specified boneId.
+        /// </summary>
+        /// <param name="boneId">The boneId.</param>
+        public PedBone this[Bone boneId]
 		{
 			get { return new PedBone(_owner, boneId); }
 		}
@@ -412,5 +496,14 @@ namespace GTA
 		{
 			Function.Call(Hash.CLEAR_PED_LAST_DAMAGE_BONE, _owner.Handle);
 		}
-	}
+
+	    public new IEnumerator<PedBone> GetEnumerator()
+	    {
+	        return new Enumerator(this);
+	    }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 }

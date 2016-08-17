@@ -248,5 +248,8 @@
     <CsCompile Include="source\scripting\Bone.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
+    <CsCompile Include="source\scripting\DlcWeaponStructs.cs">
+      <Filter>scripting\World</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>

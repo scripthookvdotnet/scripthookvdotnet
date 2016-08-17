@@ -1319,12 +1319,22 @@ namespace GTA
 			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		/// <summary>
-		/// Gets a <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.
+		/// Determines where the crosshair intersects with the world.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
 		public static RaycastResult GetCrosshairCoordinates()
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptions.Everything, null);
+		}
+
+		/// <summary>
+		/// Determines where the crosshair intersects with the world.
+		/// </summary>
+		/// <param name="ignoreEntity">Prevent the raycast detecting a specific <see cref="Entity"/>.</param>
+		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
+		public static RaycastResult GetCrosshairCoordinates(Entity ignoreEntity)
+		{
+			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptions.Everything, ignoreEntity);
 		}
 
 		/// <summary>

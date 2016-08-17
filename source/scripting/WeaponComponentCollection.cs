@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Linq;
-using GTA;
 using GTA.Native;
 
 namespace GTA
@@ -573,35 +571,38 @@ namespace GTA
 						WeaponComponentHash.RevolverVarmodGoon,
 					};
 			}
-
-			IntPtr data = Marshal.AllocCoTaskMem(39*8);
+			
 			WeaponComponentHash[] result = null;
 
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
-				if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, data))
+				unsafe
 				{
-					if (MemoryAccess.ReadInt(data + 8) == (int) hash)
+					DlcWeaponData weaponData;
+					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &weaponData))
 					{
-						result = new WeaponComponentHash[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
-
-						for (int j = 0; j < result.Length; j++)
+						if (weaponData.Hash == hash)
 						{
-							if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, data))
+							result = new WeaponComponentHash[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
+							
+							for (int j = 0; j < result.Length; j++)
 							{
-								result[j] = (WeaponComponentHash) MemoryAccess.ReadInt(data + 3*8);
+								DlcWeaponComponentData componentData;
+								if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, &componentData))
+								{
+									result[j] = componentData.Hash;
+								}
+								else
+								{
+									result[j] = WeaponComponentHash.Invalid;
+								}
 							}
-							else
-							{
-								result[j] = WeaponComponentHash.Invalid;
-							}
+							return result;
 						}
-						break;
 					}
 				}
 			}
-
-			Marshal.FreeCoTaskMem(data);
+			
 
 			if (result == null)
 			{

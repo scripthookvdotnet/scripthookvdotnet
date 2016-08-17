@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using GTA;
 using GTA.Native;
 
 namespace GTA
@@ -228,36 +225,36 @@ namespace GTA
 						return "WCT_CLIP_BOX";
 				}
 			}
-
-			IntPtr data = Marshal.AllocCoTaskMem(39 * 8);
 			string result = "WCT_INVALID";
 
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
-				if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, data))
+				unsafe
 				{
-					if (MemoryAccess.ReadInt(data + 8) == (int)hash)
+					DlcWeaponData weaponData;
+					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &weaponData))
 					{
-						int maxComp = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
-
-						for (int j = 0; j < maxComp; j++)
+						if (weaponData.Hash == hash)
 						{
-							if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, data))
+							int maxComp = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
+
+							for (int j = 0; j < maxComp; j++)
 							{
-								if (MemoryAccess.ReadInt(data + 3 * 8) == (int)component)
+								DlcWeaponComponentData componentData;
+								if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, &componentData))
 								{
-									result = MemoryAccess.ReadString(data + 6 * 8);
-									break;
+									if (componentData.Hash == component)
+									{
+										return componentData.DisplayName;
+									}
 								}
 							}
+							break;
 						}
-						break;
 					}
 				}
 			}
-
-			Marshal.FreeCoTaskMem(data);
-
+			
 			return result;
 		}
 	}
