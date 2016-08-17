@@ -43,7 +43,7 @@ namespace GTA
 			{
 				fixed (char* ptr = simpleDesc)
 				{
-					return MemoryAccess.ReadString(new IntPtr(ptr));
+					return new string(ptr);
 				}
 			}
 		}
@@ -64,7 +64,7 @@ namespace GTA
 			{
 				fixed (char* ptr = desc)
 				{
-					return MemoryAccess.ReadString(new IntPtr(ptr));
+					return new string(ptr);
 				}
 			}
 		}
@@ -85,7 +85,7 @@ namespace GTA
 			{
 				fixed (char* ptr = name)
 				{
-					return MemoryAccess.ReadString(new IntPtr(ptr));
+					return new string(ptr);
 				}
 			}
 		}
@@ -107,7 +107,7 @@ namespace GTA
 			{
 				fixed (char* ptr = upperCaseName)
 				{
-					return MemoryAccess.ReadString(new IntPtr(ptr));
+					return new string(ptr);
 				}
 			}
 		}
@@ -148,7 +148,7 @@ namespace GTA
 			{
 				fixed (char* ptr = desc)
 				{
-					return MemoryAccess.ReadString(new IntPtr(ptr));
+					return new string(ptr);
 				}
 			}
 		}
@@ -170,7 +170,7 @@ namespace GTA
 			{
 				fixed (char* ptr = name)
 				{
-					return MemoryAccess.ReadString(new IntPtr(ptr));
+					return new string(ptr);
 				}
 			}
 		}
