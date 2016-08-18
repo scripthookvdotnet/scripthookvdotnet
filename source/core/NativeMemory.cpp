@@ -21,7 +21,8 @@ namespace GTA
 				{
 					Ped=1,
 					Object=2,
-					Vehicle=4
+					Vehicle=4,
+					PickupObject=8
 				};
 
 				[StructLayout(LayoutKind::Explicit)]
@@ -85,7 +86,7 @@ namespace GTA
 						float position[3];
 						MemoryAccess::_entityPositionFunc(address, position);
 
-						if (Math::Vector3::Subtract(_position, Math::Vector3(position[0], position[1], position[2])).LengthSquared() > _radiusSquared)
+						if(_position.DistanceToSquared(Math::Vector3(position[0], position[1], position[2])) > _radiusSquared)
 						{
 							return false;
 						}
@@ -116,71 +117,125 @@ namespace GTA
 
 					return true;
 				}
+
 				virtual void Run()
 				{
-					if(*MemoryAccess::_entityPoolAddress == 0 || *MemoryAccess::_vehiclePoolAddress == 0 || *MemoryAccess::_pedPoolAddress == 0 || *MemoryAccess::_objectPoolAddress == 0)
+					if(*MemoryAccess::_entityPoolAddress == 0)
 					{
 						return;
 					}
 					EntityPool* entityPool = reinterpret_cast<EntityPool*>(*MemoryAccess::_entityPoolAddress);
-					VehiclePool* vehiclePool = *reinterpret_cast<VehiclePool**>(*MemoryAccess::_vehiclePoolAddress);
-					GenericPool* pedPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_pedPoolAddress);
-					GenericPool* propPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_objectPoolAddress);
+					
+
+
 
 					if(_type.HasFlag(Type::Vehicle))
 					{
-						for(UInt32 i = 0; i < vehiclePool->size; i++)
+						if(*MemoryAccess::_vehiclePoolAddress)
 						{
-							if(entityPool->Full())
+							VehiclePool* vehiclePool = *reinterpret_cast<VehiclePool**>(*MemoryAccess::_vehiclePoolAddress);
+
+							for(UInt32 i = 0; i < vehiclePool->size; i++)
 							{
-								break;
-							}
-							if(vehiclePool->isValid(i))
-							{
-								UInt64 address = vehiclePool->getAddress(i);
-								if(address && CheckEntity(address))
+								if(entityPool->Full())
 								{
-									_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									break;
+								}
+								if(vehiclePool->isValid(i))
+								{
+									UInt64 address = vehiclePool->getAddress(i);
+									if(address && CheckEntity(address))
+									{
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
 								}
 							}
 						}
 					}
 					if(_type.HasFlag(Type::Ped))
 					{
-						for(UInt32 i = 0; i < pedPool->size; i++)
+						if(*MemoryAccess::_pedPoolAddress)
 						{
-							if(entityPool->Full())
+							GenericPool* pedPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_pedPoolAddress);
+
+							for(UInt32 i = 0; i < pedPool->size; i++)
 							{
-								break;
-							}
-							if(pedPool->isValid(i))
-							{
-								UInt64 address = pedPool->getAddress(i);
-								if(address && CheckEntity(address))
+								if(entityPool->Full())
 								{
-									_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									break;
+								}
+								if(pedPool->isValid(i))
+								{
+									UInt64 address = pedPool->getAddress(i);
+									if(address && CheckEntity(address))
+									{
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
 								}
 							}
 						}
 					}
 					if(_type.HasFlag(Type::Object))
 					{
-						for(UInt32 i = 0; i < propPool->size; i++)
+						if(*MemoryAccess::_objectPoolAddress)
 						{
-							if(entityPool->Full())
+							GenericPool* propPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_objectPoolAddress);
+							
+							for(UInt32 i = 0; i < propPool->size; i++)
 							{
-								break;
-							}
-							if(propPool->isValid(i))
-							{
-								UInt64 address = propPool->getAddress(i);
-								if(address && CheckEntity(address))
+								if(entityPool->Full())
 								{
-									_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									break;
+								}
+								if(propPool->isValid(i))
+								{
+									UInt64 address = propPool->getAddress(i);
+									if(address && CheckEntity(address))
+									{
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
 								}
 							}
 						}
 					}
+					if(_type.HasFlag(Type::PickupObject))
+					{
+						if(*MemoryAccess::_pickupObjectPoolAddress)
+						{
+							GenericPool* pickupPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_pickupObjectPoolAddress);
+
+							for(UInt32 i = 0; i < pickupPool->size; i++)
+							{
+								if(entityPool->Full())
+								{
+									break;
+								}
+								if(pickupPool->isValid(i))
+								{
+									UInt64 address = pickupPool->getAddress(i);
+									if(address)
+									{
+										if (_posCheck)
+										{
+											__int64 num1 = pickupPool->byteArray[i] & 0x80;
+											__int64 pickupAddress = address & ~((num1 | -num1) >> 63);
+											if (!pickupAddress)
+											{
+												continue;
+											}
+											float* position = (float*)(pickupAddress + 0x90);
+											if(_position.DistanceToSquared(Math::Vector3(position[0], position[1], position[2])) > _radiusSquared)
+											{
+												continue;
+											}
+										}
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
+								}
+							}
+						}
+					}
+
 				}
 
 				Type _type;
@@ -355,6 +410,8 @@ namespace GTA
 			_pedPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 3) + address + 7);
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
 			_objectPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 3) + address + 7);
+			address = FindPattern("\x8B\xF0\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6", "xxxxx????xxxx");
+			_pickupObjectPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 5) + address + 9);
 
 			CreateNmMessageFunc = FindPattern("\x33\xDB\x48\x89\x1D\x00\x00\x00\x00\x85\xFF", "xxxxx????xx") - 0x42;
 			GiveNmMessageFunc = FindPattern("\x0F\x84\x00\x00\x00\x00\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x41\x3B\xC5", "xx????xxxxx????xxx") - 0x78;
@@ -844,6 +901,25 @@ namespace GTA
 			memcpy(ptrBuffer, Handles, count * 4);
 			delete[] Handles;
 			return data_array;
+		}
+		array<int> ^MemoryAccess::GetPickupObjectHandles()
+		{
+			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::PickupObject);
+
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
+
+			return task->_handles->ToArray();
+		}
+		array<int> ^MemoryAccess::GetPickupObjectHandles(Math::Vector3 position, float radius)
+		{
+			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::PickupObject);
+			task->_position = position;
+			task->_radiusSquared = radius * radius;
+			task->_posCheck = true;
+
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
+
+			return task->_handles->ToArray();
 		}
 
 		void MemoryAccess::SendEuphoriaMessage(int targetHandle, String ^message, Dictionary<String ^, Object ^> ^arguments)

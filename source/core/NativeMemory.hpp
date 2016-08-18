@@ -50,6 +50,8 @@ namespace GTA
 			static array<int> ^GetPropHandles(array<int> ^modelhashes);
 			static array<int> ^GetPropHandles(Math::Vector3 position, float radius, array<int> ^modelhashes);
 			static array<int> ^GetCheckpointHandles();
+			static array<int> ^GetPickupObjectHandles();
+			static array<int> ^GetPickupObjectHandles(Math::Vector3 position, float radius);
 
 			static void SendEuphoriaMessage(int targetHandle, System::String ^message, System::Collections::Generic::Dictionary<System::String ^, System::Object ^> ^_arguments);
 
@@ -63,7 +65,7 @@ namespace GTA
 			static int(*_addEntityToPoolFunc)(System::UInt64 address);
 			static System::UInt64(*_entityPositionFunc)(System::UInt64 address, float *position);
 			static System::UInt64(*_entityModel1Func)(System::UInt64 address), (*_entityModel2Func)(System::UInt64 address);
-			static System::UInt64 *_entityPoolAddress, *_vehiclePoolAddress, *_pedPoolAddress, *_objectPoolAddress, *_cameraPoolAddress;
+			static System::UInt64 *_entityPoolAddress, *_vehiclePoolAddress, *_pedPoolAddress, *_objectPoolAddress, *_cameraPoolAddress, *_pickupObjectPoolAddress;
 			static unsigned char(*SetNmBoolAddress)(__int64, __int64, unsigned char);
 			static unsigned char(*SetNmIntAddress)(__int64, __int64, int);
 			static unsigned char(*SetNmFloatAddress)(__int64, __int64, float);

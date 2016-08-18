@@ -763,10 +763,10 @@ namespace GTA
 		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
 		public static Prop GetClosestProp(Vector3 position, float radius, params Model[] models)
 		{
-			Prop[] vehicles =
+			Prop[] props =
 				Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(position, radius, ModelListToHashList(models)),
 					handle => new Prop(handle));
-			return GetClosest<Prop>(position, vehicles);
+			return GetClosest<Prop>(position, props);
 
 		}
 		/// <summary>
@@ -784,6 +784,24 @@ namespace GTA
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
 			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(position, radius), Entity.FromHandle);
+		}
+
+		public static Prop[] GetAllPickupObjects()
+		{
+			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPickupObjectHandles(), handle => new Prop(handle));
+		}
+
+		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
+		{
+			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPickupObjectHandles(position, radius), handle => new Prop(handle));
+		}
+
+		public static Prop GetClosestPickupObject(Vector3 position, float radius)
+		{
+			Prop[] props =
+				Array.ConvertAll<int, Prop>(MemoryAccess.GetPickupObjectHandles(position, radius),
+					handle => new Prop(handle));
+			return GetClosest<Prop>(position, props);
 		}
 
 		/// <summary>
