@@ -579,7 +579,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <langword>array</langword> of all the <see cref="Blip"/>s on the map with a given <see cref="BlipSprite"/>.
+		/// Gets an <c>array</c> of all the <see cref="Blip"/>s on the map with a given <see cref="BlipSprite"/>.
 		/// </summary>
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetAllBlips(params BlipSprite[] blipTypes)
@@ -604,7 +604,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <langword>array</langword> of all the <see cref="Checkpoint"/>s.
+		/// Gets an <c>array</c> of all the <see cref="Checkpoint"/>s.
 		/// </summary>
 		public static Checkpoint[] GetAllCheckpoints()
 		{					   
@@ -617,7 +617,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <langword>array</langword>of all <see cref="Ped"/>s in the World.
+		/// Gets an <c>array</c>of all <see cref="Ped"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetAllPeds(params Model[] models)
@@ -626,7 +626,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Ped"/>s in a given region in the World.
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
@@ -636,7 +636,7 @@ namespace GTA
 			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, ModelListToHashList(models)), handle => new Ped(handle));
 		}
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
@@ -676,7 +676,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Vehicle"/>s in the World.
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetAllVehicles(params Model[] models)
@@ -684,7 +684,7 @@ namespace GTA
 			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Vehicle"/>s in a given region in the World.
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
@@ -694,7 +694,7 @@ namespace GTA
 			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, ModelListToHashList(models)), handle => new Vehicle(handle));
 		}
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
@@ -737,7 +737,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Prop"/>s in the World.
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetAllProps(params Model[] models)
@@ -745,7 +745,7 @@ namespace GTA
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(ModelListToHashList(models)), handle => new Prop(handle));
 		}
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Prop"/>s in a given region in the World.
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
@@ -770,14 +770,14 @@ namespace GTA
 
 		}
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Entity"/>s in the World.
+		/// Gets an <c>array</c> of all <see cref="Entity"/>s in the World.
 		/// </summary>
 		public static Entity[] GetAllEntities()
 		{									   
 			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(), Entity.FromHandle);
 		}
 		/// <summary>
-		/// Gets an <langword>array</langword> of all <see cref="Entity"/>s in a given region in the World.
+		/// Gets an <c>array</c> of all <see cref="Entity"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
@@ -786,16 +786,29 @@ namespace GTA
 			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(position, radius), Entity.FromHandle);
 		}
 
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World associated with a <see cref="Pickup"/>.
+		/// </summary>
 		public static Prop[] GetAllPickupObjects()
 		{
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPickupObjectHandles(), handle => new Prop(handle));
 		}
-
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World associated with a <see cref="Pickup"/>.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPickupObjectHandles(position, radius), handle => new Prop(handle));
 		}
 
+		/// <summary>
+		/// Gets the closest <see cref="Prop"/> to a given position in the World associated with a <see cref="Pickup"/>.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
 		public static Prop GetClosestPickupObject(Vector3 position, float radius)
 		{
 			Prop[] props =
