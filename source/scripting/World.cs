@@ -402,11 +402,11 @@ namespace GTA
 		/// Sets the gravity level for all <see cref="World"/> objects.
 		/// </summary>
 		/// <value>
-		/// The gravity level
-		/// 9.8f - Default gravity
-		/// 2.4f - Moon gravity
-		/// 0.1f - Very low gravity
-		/// 0.0f - No gravity 
+		/// The gravity level: 
+		/// 9.8f - Default gravity.
+		/// 2.4f - Moon gravity.
+		/// 0.1f - Very low gravity.
+		/// 0.0f - No gravity.
 		/// </value>
 		public static float GravityLevel
 		{
@@ -430,7 +430,7 @@ namespace GTA
 		/// The rendering <see cref="Camera"/>.
 		/// </value>
 		/// <remarks>
-		/// Setting to <c>null</c> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>
+		/// Setting to <c>null</c> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>.
 		/// </remarks>
 		public static Camera RenderingCamera
 		{
@@ -866,6 +866,12 @@ namespace GTA
 			return (T)closest;
 		}
 
+		/// <summary>
+		/// Gets the nearest safe coordinate to position a <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="sidewalk">if set to <c>true</c> Only find positions on the sidewalk.</param>
+		/// <param name="flags">The flags.</param>
 		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
 		{
 			NativeVector3 outPos;
@@ -879,13 +885,23 @@ namespace GTA
 			return Vector3.Zero;
 		}
 
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="unoccupied">if set to <c>true</c> only find positions that dont already have a vehicle in them.</param>
 		public static Vector3 GetNextPositionOnStreet(Vector2 position, bool unoccupied = false)
 		{
 			return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
 		}
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="unoccupied">if set to <c>true</c> only find positions that dont already have a vehicle in them.</param>
 		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
 		{
-            NativeVector3 outPos;
+			NativeVector3 outPos;
 
 			unsafe
 			{
@@ -897,9 +913,8 @@ namespace GTA
 
 						position = outPos;
 
-						if (
-							!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f, 5.0f,
-								5.0f, 0))
+						if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f,
+							5.0f, 5.0f, 0))
 						{
 							return position;
 						}
@@ -914,10 +929,19 @@ namespace GTA
 
 			return Vector3.Zero;
 		}
+
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Ped"/> can be placed.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
 		public static Vector3 GetNextPositionOnSidewalk(Vector2 position)
 		{
 			return GetNextPositionOnSidewalk(new Vector3(position.X, position.Y, 0f));
 		}
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Ped"/> can be placed.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
 		public static Vector3 GetNextPositionOnSidewalk(Vector3 position)
 		{
             NativeVector3 outPos;
@@ -937,19 +961,37 @@ namespace GTA
 			return Vector3.Zero;
 		}
 
-		public static string GetZoneName(Vector2 position)
+		/// <summary>
+		/// Gets the localized name of the a zone in the map.
+		/// </summary>
+		/// <param name="position">The position on the map.</param>
+		public static string GetZoneLocalizedName(Vector2 position)
 		{
-			return GetZoneName(new Vector3(position.X, position.Y, 0f));
+			return GetZoneLocalizedName(new Vector3(position.X, position.Y, 0f));
 		}
-		public static string GetZoneName(Vector3 position)
+		/// <summary>
+		/// Gets the localized name of the a zone in the map.
+		/// </summary>
+		/// <param name="position">The position on the map.</param>
+		public static string GetZoneLocalizedName(Vector3 position)
 		{
 			return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_NAME_OF_ZONE, position.X, position.Y, position.Z));
 		}
-		public static string GetZoneNameLabel(Vector2 position)
+		/// <summary>
+		/// Gets the display name of the a zone in the map.
+		/// Use <see cref="Game.GetGXTEntry(string)"/> to convert to the localized name.
+		/// </summary>
+		/// <param name="position">The position on the map.</param>
+		public static string GetZoneDisplayName(Vector2 position)
 		{
-			return GetZoneNameLabel(new Vector3(position.X, position.Y, 0f));
+			return GetZoneDisplayName(new Vector3(position.X, position.Y, 0f));
 		}
-		public static string GetZoneNameLabel(Vector3 position)
+		/// <summary>
+		/// Gets the display name of the a zone in the map.
+		/// Use <see cref="Game.GetGXTEntry(string)"/> to convert to the localized name.
+		/// </summary>
+		/// <param name="position">The position on the map.</param>
+		public static string GetZoneDisplayName(Vector3 position)
 		{
 			return Function.Call<string>(Hash.GET_NAME_OF_ZONE, position.X, position.Y, position.Z);
 		}
@@ -1399,6 +1441,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Draws light around a region.
+		/// </summary>
+		/// <param name="position">The position to center the light around.</param>
+		/// <param name="color">The color of the light.</param>
+		/// <param name="range">How far the light should extend to.</param>
+		/// <param name="intensity">The intensity: <c>0.0f</c> being no intensity, <c>1.0f</c> being full intensity.</param>
 		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
 		{
 			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range,

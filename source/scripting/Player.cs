@@ -618,6 +618,16 @@ namespace GTA
 	        }
 	        return null;
 		}
+		/// <summary>
+		/// Sets a value indicating whether ths player is forced to aim.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to make the player always be aiming; otherwise, <c>false</c>.
+		/// </value>
+		public bool ForcedAim
+		{
+			set { Function.Call(Hash.SET_PLAYER_FORCED_AIM, Handle, value); }
+		}
 
         /// <summary>
         /// Prevents this <see cref="Player"/> firing this frame.

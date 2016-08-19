@@ -113,6 +113,56 @@ namespace GTA
 			}
 		}
 
+		//Probably a nicer way to Get these Vectors but it works
+
+		/// <summary>
+		/// Gets the vector that points to the right of this <see cref="EntityBone"/> realtive to the world.
+		/// </summary>
+		public Vector3 RightVector
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(_owner.Handle, _index);
+				if(address == IntPtr.Zero)
+				{
+					return _owner.RightVector;
+				}
+				return _owner.Matrix.TransformPoint(MemoryAccess.ReadMatrix(address).TransformPoint(Vector3.RelativeRight)) - Position;
+			}
+		}
+
+		/// <summary>
+		/// Gets the vector that points infront of this <see cref="EntityBone"/> realtive to the world.
+		/// </summary>
+		public Vector3 ForwardVector
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return _owner.ForwardVector;
+				}
+				return _owner.Matrix.TransformPoint(MemoryAccess.ReadMatrix(address).TransformPoint(Vector3.RelativeFront)) - Position;
+			}
+		}
+
+		/// <summary>
+		/// Gets the vector that points above this <see cref="EntityBone"/> realtive to the world.
+		/// </summary>
+		public Vector3 UpVector
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBoneMatrixAddress(_owner.Handle, _index);
+				if(address == IntPtr.Zero)
+				{
+					return _owner.UpVector;
+				}
+				return _owner.Matrix.TransformPoint(MemoryAccess.ReadMatrix(address).TransformPoint(Vector3.RelativeTop)) - Position;
+			}
+		}
+
 		/// <summary>
 		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
