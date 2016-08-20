@@ -21,7 +21,7 @@ namespace GTA
 		Melee = 3566412244u,
 		Pistol = 416676503u,
 		SMG = 3337201093u,
-		AssaultRifle = 3352383570u,
+		AssaultRifle = 970310034u,
 		MG = 1159398588u,
 		Shotgun = 860033945u,
 		Sniper = 3082541095u,
