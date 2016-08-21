@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Text;
 using GTA.Native;
 
 namespace GTA.UI
@@ -13,6 +16,9 @@ namespace GTA.UI
 
 	public class Text : IElement
 	{
+		private string _caption;
+		private readonly List<IntPtr> _pinnedText;
+
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Text" /> will be drawn.
 		/// </summary>
@@ -51,13 +57,37 @@ namespace GTA.UI
 		/// The GTA Font use when drawing.
 		/// </value>
 		public Font Font { get; set; }
+
 		/// <summary>
 		/// Gets or sets the text to draw in this <see cref="Text"/>.
 		/// </summary>
 		/// <value>
 		/// The caption.
 		/// </value>
-		public string Caption { get; set; }
+		public string Caption
+		{
+			get { return _caption;}
+			set
+			{
+				_caption = value;
+				foreach (var ptr in _pinnedText)
+				{
+					Marshal.FreeCoTaskMem(ptr);//free any existing allocated text
+				}
+				_pinnedText.Clear();
+
+				const int maxStringLength = 99;
+
+				for (int i = 0; i < Caption.Length; i += maxStringLength)
+				{
+					byte[] data = Encoding.UTF8.GetBytes(Caption.Substring(i, System.Math.Min(maxStringLength, Caption.Length - i)) + "\0");
+					IntPtr next = Marshal.AllocCoTaskMem(data.Length);
+					Marshal.Copy(data, 0, next, data.Length);
+					_pinnedText.Add(next);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the alignment of this <see cref="Text"/>.
 		/// </summary>
@@ -114,7 +144,17 @@ namespace GTA.UI
 		{
 			get
 			{
-				return GetStringWidth(Caption, Font, Scale);
+				Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, MemoryAccess.CellEmailBcon);
+
+				foreach (IntPtr ptr in _pinnedText)
+				{
+					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
+				}
+
+				Function.Call(Hash.SET_TEXT_FONT, Font);
+				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
+
+				return Screen.Width*Function.Call<float>(Hash._GET_TEXT_SCREEN_WIDTH, 1);
 			}
 		}
 		/// <summary>
@@ -124,7 +164,17 @@ namespace GTA.UI
 		{
 			get
 			{
-				return GetScaledStringWidth(Caption, Font, Scale);
+				Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, MemoryAccess.CellEmailBcon);
+
+				foreach (IntPtr ptr in _pinnedText)
+				{
+					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
+				}
+
+				Function.Call(Hash.SET_TEXT_FONT, Font);
+				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
+
+				return Screen.ScaledWidth * Function.Call<float>(Hash._GET_TEXT_SCREEN_WIDTH, 1);
 			}
 		}
 
@@ -199,6 +249,7 @@ namespace GTA.UI
 		/// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="Text"/> on the next line down</param>											 																	  
 		public Text(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline, float wrapWidth)
 		{
+			_pinnedText = new List<IntPtr>();
 			Enabled = true;
 			Caption = caption;
 			Position = position;
@@ -209,6 +260,15 @@ namespace GTA.UI
 			Shadow = shadow;
 			Outline = outline;
 			WrapWidth = wrapWidth;
+		}
+
+		~Text()
+		{
+			foreach (var ptr in _pinnedText)
+			{
+				Marshal.FreeCoTaskMem(ptr);//free any existing allocated text
+			}
+			_pinnedText.Clear();
 		}
 
 		/// <summary>
@@ -222,7 +282,7 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 
@@ -247,7 +307,7 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_ENTRY_FOR_WIDTH, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 
@@ -342,13 +402,11 @@ namespace GTA.UI
 				Function.Call(Hash.SET_TEXT_WRAP, 0.0f, x);
 			}
 
-			Function.Call(Hash._SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_TEXT_ENTRY, MemoryAccess.CellEmailBcon);
 
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < Caption.Length; i += maxStringLength)
+			foreach (IntPtr ptr in _pinnedText)
 			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Caption.Substring(i, System.Math.Min(maxStringLength, Caption.Length - i)));
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 			}
 
 			Function.Call(Hash._DRAW_TEXT, x, y);

@@ -37,6 +37,7 @@ namespace GTA
 			static System::IntPtr GetPtfxAddress(int handle);
 			static float ReadWorldGravity();
 			static void WriteWorldGravity(float value);
+			static int ReadCursorSprite();
 
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
@@ -79,7 +80,21 @@ namespace GTA
 				}
 			}
 			static bool IsModelAPed(int modelHash);
+			static int* _cursorSpriteAddr;
+			static property System::IntPtr CellEmailBcon{
+				System::IntPtr get();
+			}
+			static property System::IntPtr StringPtr {
+				System::IntPtr get();
+			}
+			static property System::IntPtr NullString {
+				System::IntPtr get();
+			}
+
 		private:
+			static System::IntPtr _cellEmailBconPtr;
+			static System::IntPtr _stringPtr;
+			static System::IntPtr _nullString;
 			static MemoryAccess();
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;

@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
 using GTA.Native;
 
 namespace GTA.UI
@@ -30,8 +32,9 @@ namespace GTA.UI
 	public class Sprite : ISprite, IDisposable
 	{
 		#region Fields
-		string _textureDict, _textureName;
-		static Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
+		private readonly string _textureDict, _textureName;
+		private static readonly Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
+		private readonly IntPtr _pinnedDict, _pinnedName;
 		#endregion
 
 		/// <summary>
@@ -128,6 +131,13 @@ namespace GTA.UI
 		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/></param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
 		{
+			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
+			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
+			Marshal.Copy(data, 0, _pinnedDict, data.Length);
+			data = Encoding.UTF8.GetBytes(textureName + "\0");
+			_pinnedName = Marshal.AllocCoTaskMem(data.Length);
+			Marshal.Copy(data, 0, _pinnedName, data.Length);
+
 			_textureDict = textureDict;
 			_textureName = textureName;
 
@@ -138,7 +148,7 @@ namespace GTA.UI
 			Rotation = rotation;
 			Centered = centered;
 
-			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _textureDict);
+			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
 
 			if (_activeTextures.ContainsKey(textureDict.ToLower()))
 			{
@@ -152,6 +162,8 @@ namespace GTA.UI
 
 		public void Dispose()
 		{
+			Marshal.FreeCoTaskMem(_pinnedDict);
+			Marshal.FreeCoTaskMem(_pinnedName);
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
@@ -214,7 +226,7 @@ namespace GTA.UI
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
-			if (!Enabled || !Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
+			if (!Enabled || !Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, _pinnedDict))
 			{
 				return;
 			}
@@ -230,7 +242,7 @@ namespace GTA.UI
 				positionY += scaleY * 0.5f;
 			}
 
-			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+			Function.Call(Hash.DRAW_SPRITE, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
 	}
 	public class CustomSprite : ISprite

@@ -8,6 +8,10 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
 
+const char* const _cellEmailBcon = "CELL_EMAIL_BCON";
+const char* const _string = "STRING";
+const char* const _nullStr = "";
+
 namespace GTA
 {
 	namespace Native
@@ -348,8 +352,28 @@ namespace GTA
 			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
 			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
 			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
+
+			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
+			_cursorSpriteAddr = reinterpret_cast<int *>(*reinterpret_cast<int*>(address - 4) + address);
 			GenerateVehicleModelList();
+
+			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
+			_stringPtr = IntPtr((void*)_string);
+			_nullString = IntPtr((void*)_nullStr);
 		}
+		IntPtr MemoryAccess::CellEmailBcon::get()
+		{
+			return _cellEmailBconPtr;
+		}
+		IntPtr MemoryAccess::StringPtr::get()
+		{
+			return _stringPtr;
+		}
+		IntPtr MemoryAccess::NullString::get()
+		{
+			return _nullString;
+		}
+
 		struct HashNode
 		{
 			int hash;
@@ -639,6 +663,10 @@ namespace GTA
 		void MemoryAccess::WriteWorldGravity(float value)
 		{
 			*_writeWorldGravityAddr = value;
+		}
+		int MemoryAccess::ReadCursorSprite()
+		{
+			return *_cursorSpriteAddr;
 		}
 
 
