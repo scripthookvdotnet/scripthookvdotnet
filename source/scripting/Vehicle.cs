@@ -1170,6 +1170,12 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
 			}
 		}
+        public int GetVehicleWeapon(Ped Ped)
+        {
+            OutputArgument arg = new OutputArgument();
+            Function.Call(Hash.GET_CURRENT_PED_VEHICLE_WEAPON, Ped, arg);
+            return arg.GetResult<int>();
+        }
 
 		public VehicleDoorCollection Doors
 		{
