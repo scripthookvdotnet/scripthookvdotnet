@@ -93,6 +93,7 @@ namespace GTA
 		MarksmanPistolClip01 = 3416146413u,
 		MarksmanRifleClip01 = 3627761985u,
 		MarksmanRifleClip02 = 3439143621u,
+		MarksmanRifleVarmodLuxe = 371102273u,
 		MicroSMGClip01 = 3410538224u,
 		MicroSMGClip02 = 283556395u,
 		MicroSMGVarmodLuxe = 1215999497u,
@@ -221,7 +222,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_CLIP"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.Clip ||
+				    component.AttachmentPoint == ComponentAttachmentPoint.Clip2)
 				{
 					if (index-- == 0)
 					{
@@ -239,7 +241,8 @@ namespace GTA
 				int count = 0;
 				foreach (var component in this)
 				{
-					if (component.DisplayName.StartsWith("WCT_CLIP"))
+					if (component.AttachmentPoint == ComponentAttachmentPoint.Clip ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Clip2)
 					{
 						count++;
 					}
@@ -252,7 +255,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_SCOPE"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.Scope ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Scope2)
 				{
 					if (index-- == 0)
 					{
@@ -270,7 +274,8 @@ namespace GTA
 				int count = 0;
 				foreach (var component in this)
 				{
-					if (component.DisplayName.StartsWith("WCT_SCOPE"))
+					if (component.AttachmentPoint == ComponentAttachmentPoint.Scope ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Scope2)
 					{
 						count++;
 					}
@@ -283,7 +288,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_SUPP"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.Supp ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Supp2)
 				{
 					return component;
 				}
@@ -295,7 +301,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_FLASH"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.FlashLaser ||
+					component.AttachmentPoint == ComponentAttachmentPoint.FlashLaser2)
 				{
 					return component;
 				}
@@ -307,7 +314,7 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_VAR"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.GunRoot)
 				{
 					return component;
 				}

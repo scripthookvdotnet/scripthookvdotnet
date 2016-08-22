@@ -72,4 +72,19 @@ namespace GTA
 		NightVision = 2803906140u,
 		Parachute = 4222310262u
 	}
+
+	public enum VehicleWeaponHash : uint
+	{
+		Tank = 1945616459u,
+		SpaceRocket = 4171469727u,
+		PlaneRocket = 3473446624u,
+		PlayerLaser = 4026335563u,
+		PlayerBullet = 1259576109u,
+		PlayerBuzzard = 1186503822u,
+		PlayerHunter = 2669318622u,
+		PlayerLazer = 3800181289u,
+		EnemyLaser = 1566990507u,
+		SearchLight = 3450622333u,
+		Radar = 3530961278u
+	}
 }

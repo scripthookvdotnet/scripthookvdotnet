@@ -306,6 +306,22 @@ namespace GTA
 			}
 		}
 
+		public VehicleWeaponHash VehicleWeapon
+		{
+			get
+			{
+				int hash;
+				unsafe
+				{
+					if (Function.Call<bool>(Hash.GET_CURRENT_PED_VEHICLE_WEAPON, Handle, &hash))
+					{
+						return (VehicleWeaponHash)hash;
+					}
+				}
+				return VehicleWeaponHash.Invalid;
+			}
+		}
+
 		/// <summary>
 		/// Gets the last <see cref="Vehicle"/> this <see cref="Ped"/> used.
 		/// </summary>
