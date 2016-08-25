@@ -1418,7 +1418,7 @@ namespace GTA
 		/// <returns><c>true</c> if this <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
 		public new bool Exists()
 		{
-			return Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle) == 2;
+			return Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle) == 1;
 		}
 		/// <summary>
 		/// Determines whether the <see cref="Ped"/> exists.
