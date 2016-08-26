@@ -119,12 +119,15 @@
   <ItemGroup>
     <CsCompile Include="source\scripting\Audio.cs" />
     <CsCompile Include="source\scripting\Blip.cs" />
-    <CsCompile Include="source\scripting\Bone.cs" />
+    <CsCompile Include="source\scripting\BoneID.cs" />
     <CsCompile Include="source\scripting\Camera.cs" />
     <CsCompile Include="source\scripting\ButtonCombination.cs" />
     <CsCompile Include="source\scripting\Checkpoint.cs" />
     <CsCompile Include="source\scripting\DlcWeaponStructs.cs" />
     <CsCompile Include="source\scripting\EntityBone.cs" />
+    <CsCompile Include="source\scripting\EntityBoneCollection.cs" />
+    <CsCompile Include="source\scripting\PedBone.cs" />
+    <CsCompile Include="source\scripting\PedBoneCollection.cs" />
     <CsCompile Include="source\scripting\Style.cs" />
     <CsCompile Include="source\scripting\Controls.cs" />
     <CsCompile Include="source\scripting\Entity.cs" />
