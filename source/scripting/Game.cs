@@ -228,19 +228,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets how far the Minimap should be zoomed in
-		/// </summary>
-		/// <value>
-		/// The Radar zoom, Accepts values from 0 to 200
-		/// </value>
-		public static int RadarZoom
-		{
-			set
-			{
-				Function.Call(Hash.SET_RADAR_ZOOM, value);
-			}
-		}
-		/// <summary>
 		/// Sets a value indicating whether Police <see cref="Blip"/>s should be visible on the Minimap
 		/// </summary>
 		public static bool ShowsPoliceBlipsOnRadar
@@ -275,7 +262,7 @@ namespace GTA
 				}
 				else
 				{
-					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, string.Empty);
+					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, MemoryAccess.NullString);
 				}
 			}
 		}
@@ -783,7 +770,7 @@ namespace GTA
 		{
 			ScriptDomain.CurrentDomain.PauseKeyboardEvents(true);
 
-			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), string.Empty, defaultText, string.Empty, string.Empty, string.Empty, maxLength + 1);
+			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), MemoryAccess.NullString, defaultText, MemoryAccess.NullString, MemoryAccess.NullString, MemoryAccess.NullString, maxLength + 1);
 
 			while (Function.Call<int>(Hash.UPDATE_ONSCREEN_KEYBOARD) == 0)
 			{

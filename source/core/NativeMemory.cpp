@@ -9,6 +9,10 @@ using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
 using namespace System::Runtime::InteropServices;
 
+const char* const _cellEmailBcon = "CELL_EMAIL_BCON";
+const char* const _string = "STRING";
+const char* const _nullStr = "";
+
 namespace GTA
 {
 	namespace Native
@@ -437,6 +441,9 @@ namespace GTA
 			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
 			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
 
+			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
+			_cursorSpriteAddr = reinterpret_cast<int *>(*reinterpret_cast<int*>(address - 4) + address);
+
 			address = FindPattern("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
 			address = address + *reinterpret_cast<int*>(address) + 4;
 			_gamePlayCameraAddr = reinterpret_cast<UInt64*>(*reinterpret_cast<int*>(address + 3) + address + 7);
@@ -444,6 +451,22 @@ namespace GTA
 			_cameraPoolAddress = reinterpret_cast<UInt64*>(*reinterpret_cast<int*>(address) + address + 4);
 
 			GenerateVehicleModelList();
+
+			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
+			_stringPtr = IntPtr((void*)_string);
+			_nullString = IntPtr((void*)_nullStr);
+		}
+		IntPtr MemoryAccess::CellEmailBcon::get()
+		{
+		return _cellEmailBconPtr;
+		}
+		IntPtr MemoryAccess::StringPtr::get()
+		 {
+		return _stringPtr;
+		}
+		IntPtr MemoryAccess::NullString::get()
+		{
+			return _nullString;
 		}
 		struct HashNode
 		{
@@ -772,6 +795,11 @@ namespace GTA
 			*_writeWorldGravityAddr = value;
 		}
 
+		int MemoryAccess::ReadCursorSprite()
+		{
+			return *_cursorSpriteAddr;
+		}
+
 		IntPtr MemoryAccess::GetGameplayCameraAddress()
 		{
 			return IntPtr((long long)*_gamePlayCameraAddr);
@@ -892,12 +920,6 @@ namespace GTA
 			{
 				handles[count++] = item->handle;
 			}
-			
-			/*UInt64 i;
-			for (i = *(UInt64*)(addr + 48); i && count<64; i = *(UInt64*)(i+24))
-			{
-				handles[count++] = *(int*)(i + 12);
-			}*/
 			return count;
 		}
 		array<int> ^MemoryAccess::GetCheckpointHandles()
