@@ -15,6 +15,66 @@ namespace GTA
 	{
 		namespace
 		{
+			[StructLayout(LayoutKind::Explicit)]
+			private value class EntityPool
+			{
+			public:
+				[FieldOffset(0x10)]UInt32 num1;
+				[FieldOffset(0x20)]UInt32 num2;
+
+				inline bool Full()
+				{
+					return num1 - (num2 & 0x3FFFFFFF) <= 256;
+				}
+			};
+
+			[StructLayout(LayoutKind::Explicit)]
+			private value class VehiclePool
+			{
+			public:
+				[FieldOffset(0x00)]UInt64 *poolAddress;
+				[FieldOffset(0x08)]UInt32 size;
+				[FieldOffset(0x30)]UInt32* bitArray;
+				[FieldOffset(0x60)]UInt32 itemCount;
+
+				inline bool isValid(UInt32 i)
+				{
+					return (bitArray[i >> 5] >> (i & 0x1F)) & 1;
+				}
+
+				inline UInt64 getAddress(UInt32 i)
+				{
+					return poolAddress[i];
+				}
+			};
+
+			[StructLayout(LayoutKind::Explicit)]
+			private value class GenericPool{
+			public:
+				[FieldOffset(0x00)] UInt64 poolStartAddress;
+				[FieldOffset(0x08)] Byte* byteArray;
+				[FieldOffset(0x10)] UInt32 size;
+				[FieldOffset(0x14)] UInt32 itemSize;
+
+
+				inline bool isValid(UInt32 i)
+				{
+					return mask(i) != 0;
+				}
+
+				inline UInt64 getAddress(UInt32 i)
+				{
+					return mask(i) & (poolStartAddress + i * itemSize);
+				}
+			private:
+				inline long long mask(UInt32 i)
+				{
+					long long num1 = byteArray[i] & 0x80;
+					return ~((num1 | -num1) >> 63);
+				}
+			};
+
+
 			private ref struct EntityPoolTask : IScriptTask
 			{
 				enum class Type
@@ -23,58 +83,6 @@ namespace GTA
 					Object=2,
 					Vehicle=4,
 					PickupObject=8
-				};
-
-				[StructLayout(LayoutKind::Explicit)]
-				value class EntityPool
-				{
-				public:
-					[FieldOffset(0x10)]UInt32 num1;
-					[FieldOffset(0x20)]UInt32 num2;
-				
-					inline bool Full()
-					{
-						return num1 - (num2 & 0x3FFFFFFF) <= 256;
-					}
-				};
-
-				[StructLayout(LayoutKind::Explicit)]
-				value class VehiclePool
-				{
-				public:
-					[FieldOffset(0x00)]UInt64 *poolAddress;
-					[FieldOffset(0x08)]UInt32 size;
-					[FieldOffset(0x30)]UInt32* bitArray;
-					
-					inline bool isValid(UInt32 i)
-					{
-						return (bitArray[i >> 5] >> (i & 0x1F)) & 1;
-					}
-
-					inline UInt64 getAddress(UInt32 i)
-					{
-						return poolAddress[i];
-					}
-					
-				};
-
-				[StructLayout(LayoutKind::Explicit)]
-				value class GenericPool{
-				public:
-					[FieldOffset(0x00)] UInt64 poolStartAddress;
-					[FieldOffset(0x08)] Byte* byteArray;
-					[FieldOffset(0x10)] UInt32 size;
-					[FieldOffset(0x14)] UInt32 itemSize;
-
-					inline bool isValid(UInt32 i)
-					{
-						return ~(byteArray[i] >> 7) & 1;
-					}
-					
-					inline UInt64 getAddress(UInt32 i)
-					{
-						return poolStartAddress + i * itemSize;
-					}
 				};
 
 				EntityPoolTask(Type type) : _type(type) { }
@@ -125,10 +133,7 @@ namespace GTA
 						return;
 					}
 					EntityPool* entityPool = reinterpret_cast<EntityPool*>(*MemoryAccess::_entityPoolAddress);
-					
-
-
-
+	
 					if(_type.HasFlag(Type::Vehicle))
 					{
 						if(*MemoryAccess::_vehiclePoolAddress)
@@ -217,13 +222,7 @@ namespace GTA
 									{
 										if (_posCheck)
 										{
-											__int64 num1 = pickupPool->byteArray[i] & 0x80;
-											__int64 pickupAddress = address & ~((num1 | -num1) >> 63);
-											if (!pickupAddress)
-											{
-												continue;
-											}
-											float* position = (float*)(pickupAddress + 0x90);
+											float* position = (float*)(address + 0x90);
 											if(_position.DistanceToSquared(Math::Vector3(position[0], position[1], position[2])) > _radiusSquared)
 											{
 												continue;
@@ -878,28 +877,38 @@ namespace GTA
 
 			return task->_handles->ToArray();
 		}
+		struct checkpoint
+		{
+			char padding[0xC];
+			int handle;
+			char padding1[0x08];
+			checkpoint* next;
+		};
 		UInt64 _getCheckpoinHandles(UInt64 ArrayPtr)
 		{
-			UInt64 addr = MemoryAccess::CheckpointBaseAddr();
 			int* handles = (int*)ArrayPtr;
 			UInt64 count = 0;
-			UInt64 i;
+			for (checkpoint* item = *reinterpret_cast<checkpoint**>(MemoryAccess::CheckpointBaseAddr() + 48); item  && count < 64; item = item->next)
+			{
+				handles[count++] = item->handle;
+			}
+			
+			/*UInt64 i;
 			for (i = *(UInt64*)(addr + 48); i && count<64; i = *(UInt64*)(i+24))
 			{
 				handles[count++] = *(int*)(i + 12);
-			}
+			}*/
 			return count;
 		}
 		array<int> ^MemoryAccess::GetCheckpointHandles()
 		{
-			int* Handles = new int[64];
+			int Handles[64];
 			GenericTask ^task = gcnew GenericTask(_getCheckpoinHandles, (UInt64)Handles);
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 			int count = (int)task->GetResult();
 			array<int>^ data_array = gcnew array<int>(count);
-			pin_ptr<int> ptrBuffer = &data_array[data_array->GetLowerBound(0)];
+			pin_ptr<int> ptrBuffer = &data_array[0];
 			memcpy(ptrBuffer, Handles, count * 4);
-			delete[] Handles;
 			return data_array;
 		}
 		array<int> ^MemoryAccess::GetPickupObjectHandles()
@@ -920,6 +929,16 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
 			return task->_handles->ToArray();
+		}
+
+		int MemoryAccess::GetNumberOfVehicles()
+		{
+			if (*_vehiclePoolAddress)
+			{
+				VehiclePool* pool = *reinterpret_cast<VehiclePool**>(*_vehiclePoolAddress);
+				return pool->itemCount;
+			}
+			return 0;
 		}
 
 		void MemoryAccess::SendEuphoriaMessage(int targetHandle, String ^message, Dictionary<String ^, Object ^> ^arguments)

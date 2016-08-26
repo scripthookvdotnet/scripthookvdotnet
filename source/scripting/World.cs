@@ -675,6 +675,11 @@ namespace GTA
 			return GetClosest<Ped>(position, peds);
 		}
 
+
+		/// <summary>
+		/// A fast way to get the total number of vehicles spawned in the world.
+		/// </summary>
+		public static int VehicleCount { get { return MemoryAccess.GetNumberOfVehicles(); } }
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
 		/// </summary>

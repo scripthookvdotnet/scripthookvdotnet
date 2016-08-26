@@ -306,6 +306,10 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the vehicle weapon this <see cref="Ped"/> is using.
+		/// <remarks>The vehicle weapon, returns <see cref="VehicleWeaponHash.Invalid"/> if this <see cref="Ped"/> isnt using a vehicle weapon.</remarks>
+		/// </summary>
 		public VehicleWeaponHash VehicleWeapon
 		{
 			get

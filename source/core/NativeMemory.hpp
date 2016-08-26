@@ -52,6 +52,7 @@ namespace GTA
 			static array<int> ^GetCheckpointHandles();
 			static array<int> ^GetPickupObjectHandles();
 			static array<int> ^GetPickupObjectHandles(Math::Vector3 position, float radius);
+			static int GetNumberOfVehicles();
 
 			static void SendEuphoriaMessage(int targetHandle, System::String ^message, System::Collections::Generic::Dictionary<System::String ^, System::Object ^> ^_arguments);
 
