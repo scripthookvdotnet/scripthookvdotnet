@@ -300,6 +300,7 @@ namespace GTA
 			while (!IsLoaded)
 			{
 				Script.Yield();
+				Request();
 
 				if (DateTime.UtcNow >= endtime)
 				{
