@@ -690,7 +690,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has an alarm set; otherwise, <c>false</c>.
 		/// </value>
-		public bool HasAlarm
+		public bool IsAlarmSet
 		{
 			set
 			{
@@ -715,7 +715,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> is sounding its alarm; otherwise, <c>false</c>.
 		/// </value>
-		public bool AlarmActive
+		public bool IsAlarmSounding
 		{
 			get
 			{
@@ -794,7 +794,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <c>false</c>.
 		/// </value>
-		public bool SirenActive
+		public bool IsSirenActive
 		{
 			get
 			{
@@ -966,7 +966,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its lights on; otherwise, <c>false</c>.
 		/// </value>
-		public bool LightsOn
+		public bool AreLightsOn
 		{
 			get
 			{
@@ -989,7 +989,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its high beams on; otherwise, <c>false</c>.
 		/// </value>
-		public bool HighBeamsOn
+		public bool AreHighBeamsOn
 		{
 			get
 			{
@@ -1012,7 +1012,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its interior lights on; otherwise, <c>false</c>.
 		/// </value>
-		public bool InteriorLightOn
+		public bool IsInteriorLightOn
 		{
 			get
 			{
@@ -1036,7 +1036,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its search light on; otherwise, <c>false</c>.
 		/// </value>
-		public bool SearchLightOn
+		public bool IsSearchLightOn
 		{
 			get
 			{
@@ -1053,7 +1053,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its taxi light on; otherwise, <c>false</c>.
 		/// </value>
-		public bool TaxiLightOn
+		public bool IsTaxiLightOn
 		{
 			get
 			{
@@ -1070,7 +1070,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its left indicator light on; otherwise, <c>false</c>.
 		/// </value>
-		public bool LeftIndicatorLightOn
+		public bool IsLeftIndicatorLightOn
 		{
 			set
 			{
@@ -1083,7 +1083,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its right indicator light on; otherwise, <c>false</c>.
 		/// </value>
-		public bool RightIndicatorLightOn
+		public bool IsRightIndicatorLightOn
 		{
 			set
 			{
@@ -1091,12 +1091,12 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets a value indicating whether this <see cref="Vehicle"/> has its Handbrake activated.
+		/// Sets a value indicating whether the Handbrake on this <see cref="Vehicle"/> is forced on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its Handbrake activated; otherwise, <c>false</c>.
+		///   <c>true</c> if the Handbrake on this <see cref="Vehicle"/> is forced on; otherwise, <c>false</c>.
 		/// </value>
-		public bool HandbrakeOn
+		public bool IsHandbrakeForcedOn
 		{
 			set
 			{
@@ -1109,7 +1109,7 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Vehicle"/> has its brake light on; otherwise, <c>false</c>.
 		/// </value>
-		public bool BrakeLightsOn
+		public bool AreBrakeLightsOn
 		{
 			set
 			{
@@ -1712,7 +1712,7 @@ namespace GTA
 			}
 		}
 
-		public void ApplyDamage(Vector3 position, float damageAmount, float radius)
+		public void Deform(Vector3 position, float damageAmount, float radius)
 		{
 			Function.Call(Hash.SET_VEHICLE_DAMAGE, position.X, position.Y, position.Z, damageAmount, radius);
 		}
