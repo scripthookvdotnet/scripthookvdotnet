@@ -126,7 +126,6 @@
     <CsCompile Include="source\scripting\DlcWeaponStructs.cs" />
     <CsCompile Include="source\scripting\EntityBone.cs" />
     <CsCompile Include="source\scripting\EntityBoneCollection.cs" />
-    <CsCompile Include="source\scripting\HandlingData.cs" />
     <CsCompile Include="source\scripting\PedBone.cs" />
     <CsCompile Include="source\scripting\PedBoneCollection.cs" />
     <CsCompile Include="source\scripting\Style.cs" />
