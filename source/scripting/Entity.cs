@@ -37,37 +37,93 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the health of this <see cref="Entity"/>.
+		/// Gets or sets the health of this <see cref="Entity"/> in int.
 		/// </summary>
 		/// <value>
-		/// The health from 0 - 100.
+		/// The health in int.
 		/// </value>
+		/// <remarks>if you need to get or set the value strictly, use <see cref="HealthFloat"/> instead.</remarks>
 		public int Health
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle) - 100;
+				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value + 100);
+				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Entity"/>.
+		/// Gets or sets the health of this <see cref="Entity"/> in float.
 		/// </summary>
 		/// <value>
-		/// The maximum health from 0 - 100.
+		/// The health in float.
 		/// </value>
-		public virtual int MaxHealth
+		public float HealthFloat
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle) - 100;
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				return MemoryAccess.ReadFloat(MemoryAddress + 640);
 			}
 			set
 			{
-				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value + 100);
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				MemoryAccess.WriteFloat(MemoryAddress + 640, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the maximum health of this <see cref="Entity"/> in int.
+		/// </summary>
+		/// <value>
+		/// The maximum health in int.
+		/// </value>
+		/// <remarks>if you need to get or set the value strictly, use <see cref="MaxHealthFloat"/> instead.</remarks>
+		public int MaxHealth
+		{
+			get
+			{
+				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
+			}
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the maximum health of this <see cref="Entity"/> in float.
+		/// </summary>
+		/// <value>
+		/// The maximum health in float.
+		/// </value>
+		public float MaxHealthFloat
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				return MemoryAccess.ReadFloat(MemoryAddress + 644);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				MemoryAccess.WriteFloat(MemoryAddress + 644, value);
 			}
 		}
 		/// <summary>
@@ -159,10 +215,10 @@ namespace GTA
 		{
 			get
 			{
-			    float x;
-			    float y;
-			    float z;
-			    float w;
+				float x;
+				float y;
+				float z;
+				float w;
 				unsafe
 				{
 					Function.Call(Hash.GET_ENTITY_QUATERNION, Handle, &x, &y, &z, &w);
@@ -415,6 +471,24 @@ namespace GTA
 			get
 			{
 				return Function.Call<bool>(Hash.IS_ENTITY_ON_SCREEN, Handle);
+			}
+		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is rendered.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is rendered; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsRendered
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return MemoryAccess.IsBitSet(MemoryAddress + 176, 4);
 			}
 		}
 		/// <summary>
@@ -1094,7 +1168,7 @@ namespace GTA
 		public void Delete()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-		    int handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.DELETE_ENTITY, &handle);
@@ -1107,7 +1181,7 @@ namespace GTA
 		public void MarkAsNoLongerNeeded()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-            int handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -1154,12 +1228,12 @@ namespace GTA
 		{
 			return !ReferenceEquals(entity, null) && entity.Exists();
 		}
-        /// <summary>
-        /// Checks if two <see cref="Entity"/>s refer to the same <see cref="Entity"/>
-        /// </summary>
-        /// <param name="entity">The other <see cref="Entity"/>.</param>
-        /// <returns><c>true</c> if they are the same <see cref="Entity"/>; otherwise, false</returns>
-        public bool Equals(Entity entity)
+		/// <summary>
+		/// Checks if two <see cref="Entity"/>s refer to the same <see cref="Entity"/>
+		/// </summary>
+		/// <param name="entity">The other <see cref="Entity"/>.</param>
+		/// <returns><c>true</c> if they are the same <see cref="Entity"/>; otherwise, false</returns>
+		public bool Equals(Entity entity)
 		{
 			return !ReferenceEquals(entity, null) && Handle == entity.Handle;
 		}
