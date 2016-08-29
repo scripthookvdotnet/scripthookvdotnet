@@ -451,7 +451,7 @@ namespace GTA
 		/// <summary>
 		/// Removes this <see cref="Blip"/>.
 		/// </summary>
-		public void Remove()
+		public override void Delete()
 		{
 		    int handle = Handle;
 			unsafe

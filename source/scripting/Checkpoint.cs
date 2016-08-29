@@ -463,7 +463,7 @@ namespace GTA
 		/// <summary>
 		/// Removes this <see cref="Checkpoint"/>.
 		/// </summary>
-		public void Delete()
+		public override void Delete()
 		{
 			Function.Call(Hash.DELETE_CHECKPOINT, Handle);
 		}

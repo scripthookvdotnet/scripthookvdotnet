@@ -9,9 +9,19 @@ namespace GTA
 		Vector3 Rotation { get; set; }
 	}
 
-	public abstract class PoolObject : INativeValue
+	public interface IExistable
 	{
-		public PoolObject(int handle)
+		bool Exists();
+	}
+
+	public interface IDeletable : IExistable
+	{
+		void Delete();
+	}
+
+	public abstract class PoolObject : INativeValue, IDeletable
+	{
+		protected PoolObject(int handle)
 		{
 			Handle = handle;
 		}
@@ -24,5 +34,7 @@ namespace GTA
 		}
 
 		public abstract bool Exists();
+
+		public abstract void Delete();
 	}
 }

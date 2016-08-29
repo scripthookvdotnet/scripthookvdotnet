@@ -24,13 +24,23 @@ namespace GTA
 		Sunrise
 	}
 
-	public sealed class Player : PoolObject, IEquatable<Player>
+	public sealed class Player : INativeValue, IEquatable<Player>
 	{
-		public Player(int handle) : base(handle)
+		#region Fields
+		private int _handle;
+		Ped _ped;
+		#endregion
+		public Player(int handle)
 		{
+			_handle = handle;
 		}
 
-		Ped _ped;
+		public int Handle { get { return _handle; } }
+		public ulong NativeValue
+		{
+			get { return (ulong)_handle; }
+			set { _handle = unchecked((int)value); }
+		}
 
 		/// <summary>
 		/// Gets the <see cref="Ped"/> this <see cref="Player"/> is controling.
@@ -629,10 +639,10 @@ namespace GTA
 			set { Function.Call(Hash.SET_PLAYER_FORCED_AIM, Handle, value); }
 		}
 
-        /// <summary>
-        /// Prevents this <see cref="Player"/> firing this frame.
-        /// </summary>
-        public void DisableFiringThisFrame()
+		/// <summary>
+		/// Prevents this <see cref="Player"/> firing this frame.
+		/// </summary>
+		public void DisableFiringThisFrame()
 		{
 			Function.Call(Hash.DISABLE_PLAYER_FIRING, Handle, 0);
 		}
@@ -704,11 +714,6 @@ namespace GTA
         public void SetMayOnlyEnterThisVehicleThisFrame(Vehicle vehicle)
 		{
 			Function.Call(Hash.SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle.Handle);
-		}
-
-		public override bool Exists()
-		{
-			return true;
 		}
 
 		public bool Equals(Player player)

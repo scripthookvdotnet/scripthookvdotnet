@@ -413,7 +413,7 @@ namespace GTA
 		/// <summary>
 		/// Destroys this <see cref="Camera"/>.
 		/// </summary>
-		public void Destroy()
+		public override void Delete()
 		{
 			Function.Call(Hash.DESTROY_CAM, Handle, 0);
 		}

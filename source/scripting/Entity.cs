@@ -1165,7 +1165,7 @@ namespace GTA
 		/// <summary>
 		/// Deletes this <see cref="Entity"/>
 		/// </summary>
-		public void Delete()
+		public override void Delete()
 		{
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 			int handle = Handle;

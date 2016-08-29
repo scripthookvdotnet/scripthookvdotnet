@@ -91,11 +91,11 @@ namespace GTA
 		{
 			get
 			{
-			    long unkn;
+			    long unknBool;
 			    int count;
 				unsafe
 				{
-					Function.Call(Hash.GET_GROUP_SIZE, Handle, &unkn, &count);
+					Function.Call(Hash.GET_GROUP_SIZE, Handle, &unknBool, &count);
 				}
 
 				return count;
@@ -178,6 +178,11 @@ namespace GTA
 			}
 
 			return result;
+		}
+
+		public override void Delete()
+		{
+			Function.Call(Hash.REMOVE_GROUP, Handle);
 		}
 
 		public override bool Exists()

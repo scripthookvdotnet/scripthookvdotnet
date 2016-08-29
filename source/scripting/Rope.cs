@@ -78,7 +78,7 @@ namespace GTA
 			return Function.Call<Vector3>(Hash.GET_ROPE_VERTEX_COORD, Handle, vertex);
 		}
 
-		public void Delete()
+		public override void Delete()
 		{
 		    int handle = Handle;
 			unsafe
