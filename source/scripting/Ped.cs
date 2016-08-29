@@ -182,7 +182,6 @@ namespace GTA
 		/// <summary>
 		/// Gets the gender of this <see cref="Ped"/>.
 		/// </summary>
-
 		public Gender Gender
 		{
 			get
@@ -191,22 +190,9 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Ped"/>.
-		/// </summary>
-		public override int MaxHealth
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_PED_MAX_HEALTH, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
-			}
-		}
-		/// <summary>
 		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing.
 		/// </summary>
+		/// <remarks>if you need to get or set the value strictly, use <see cref="ArmorFloat"/> instead.</remarks>
 		public int Armor
 		{
 			get
@@ -216,6 +202,34 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.SET_PED_ARMOUR, Handle, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing in float.
+		/// </summary>
+		public float ArmorFloat
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 		/// <summary>
@@ -545,6 +559,75 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the injury health threshold for this <see cref="Ped"/>. 
+		/// The ped is considered injured when its health drops below this value.
+		/// </summary>
+		/// <value>
+		/// The injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
+		/// </value>
+		public float InjuryHealthThreshold
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the fatal injury health threshold for this <see cref="Ped"/>.
+		/// The ped is considered dead when its health drops below this value.
+		/// </summary>
+		/// <value>
+		/// The fatal injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
+		/// </value>
+		/// <remarks>
+		/// Note on player controlled peds: One of the game scripts will kill the player when their health drops below 100, regardless of this setting.
+		/// </remarks>
+		public float FatalInjuryHealthThreshold
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + 5248);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Ped"/> is human.
 		/// </summary>
 		/// <value>
@@ -855,6 +938,41 @@ namespace GTA
 				return Function.Call<bool>(Hash.GET_PED_STEALTH_MOVEMENT, Handle);
 			}
 		}
+		public bool IsAmbientSpeechplaying
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_AMBIENT_SPEECH_PLAYING, Handle);
+			}
+		}
+		public bool IsScriptedSpeechplaying
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_SCRIPTED_SPEECH_PLAYING, Handle);
+			}
+		}
+		public bool IsAnySpeechplaying
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_ANY_SPEECH_PLAYING, Handle);
+			}
+		}
+		public bool IsAmbientSpeechEnabled
+		{
+			get
+			{
+				return !Function.Call<bool>(Hash.IS_AMBIENT_SPEECH_DISABLED, Handle);
+			}
+		}
+		public bool IsPainAudioEnabled
+		{
+			set
+			{
+				Function.Call(Hash.DISABLE_PED_PAIN_AUDIO, Handle, !value);
+			}
+		}
 		public bool IsPlantingBomb
 		{
 
@@ -1134,8 +1252,10 @@ namespace GTA
 				{
 					return false;
 				}
-				
-				return (MemoryAccess.ReadByte(MemoryAddress + 0x13BC) & (1 << 2)) == 0;
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x13BC : 0x13AC;
+
+				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 2)) == 0;
 			}
 			set
 			{
@@ -1260,6 +1380,17 @@ namespace GTA
 		{
 			Health = -1;
 		}
+		public void Resurrect()
+		{
+			int maxHealth = MaxHealth;
+			bool isCollisionEnabled = IsCollisionEnabled;
+
+			Function.Call(Hash.RESURRECT_PED, Handle);
+			MaxHealth = maxHealth;
+			Health = maxHealth;
+			IsCollisionEnabled = isCollisionEnabled;
+		    Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, Handle);
+		}
 
 		public void ResetVisibleDamage()
 		{
@@ -1361,7 +1492,7 @@ namespace GTA
 
 		public Vector3 GetLastWeaponImpactPosition()
 		{
-		    NativeVector3 position;
+			NativeVector3 position;
 
 			unsafe
 			{

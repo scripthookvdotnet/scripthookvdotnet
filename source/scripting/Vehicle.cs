@@ -438,6 +438,27 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/>s engine is currently starting.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Vehicle"/>s engine is starting; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsEngineStarting
+		{
+			get
+			{
+				IntPtr memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+				//Unsure of the exact version this switched, but all others in the rangs are the same
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x842 : 0x832;
+
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 5);
+			}
+		}
+		/// <summary>
 		/// Turns this <see cref="Vehicle"/>s radio on or off
 		/// </summary>
 		public bool IsRadioEnabled
@@ -508,10 +529,10 @@ namespace GTA
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 		}
-        /// <summary>
-        /// Gets the acceleration of this <see cref="Vehicle"/>.
-        /// </summary>
-        public float Acceleration
+		/// <summary>
+		/// Gets the acceleration of this <see cref="Vehicle"/>.
+		/// </summary>
+		public float Acceleration
 		{
 			get
 			{
@@ -525,13 +546,13 @@ namespace GTA
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 		}
-        /// <summary>
-        /// Gets or sets the current RPM of this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <value>
-        /// The current RPM between <c>0.0f</c> and <c>1.0f</c>.
-        /// </value>
-        public float CurrentRPM
+		/// <summary>
+		/// Gets or sets the current RPM of this <see cref="Vehicle"/>.
+		/// </summary>
+		/// <value>
+		/// The current RPM between <c>0.0f</c> and <c>1.0f</c>.
+		/// </value>
+		public float CurrentRPM
 		{
 			get
 			{
@@ -582,10 +603,10 @@ namespace GTA
 				MemoryAccess.WriteByte(MemoryAddress + offset, value);
 			}
 		}
-        /// <summary>
-        /// Gets the current gear this <see cref="Vehicle"/> is using.
-        /// </summary>
-        public int CurrentGear
+		/// <summary>
+		/// Gets the current gear this <see cref="Vehicle"/> is using.
+		/// </summary>
+		public int CurrentGear
 		{
 			get
 			{
@@ -600,13 +621,13 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets the steering angle of this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <value>
-        /// The steering angle in degrees.
-        /// </value>
-        public float SteeringAngle
+		/// <summary>
+		/// Gets the steering angle of this <see cref="Vehicle"/>.
+		/// </summary>
+		/// <value>
+		/// The steering angle in degrees.
+		/// </value>
+		public float SteeringAngle
 		{
 			get
 			{
@@ -620,10 +641,10 @@ namespace GTA
 				return (float)(MemoryAccess.ReadFloat(MemoryAddress + offset) * (180.0 / System.Math.PI));
 			}
 		}
-        /// <summary>
-        /// Gets or sets the steering scale of this <see cref="Vehicle"/>.
-        /// </summary>
-        public float SteeringScale
+		/// <summary>
+		/// Gets or sets the steering scale of this <see cref="Vehicle"/>.
+		/// </summary>
+		public float SteeringScale
 		{
 			get
 			{
@@ -649,13 +670,13 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> has forks.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has forks; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasForks
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has forks.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has forks; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasForks
 		{
 			get
 			{
@@ -663,60 +684,117 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Sets a value indicating whether this <see cref="Vehicle"/> has an alarm set.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has an alarm set; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasAlarm
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Vehicle"/> has an alarm set.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has an alarm set; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAlarmSet
 		{
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_ALARM, Handle, value);
 			}
+
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 2456 : 2440;
+
+				return (ushort)MemoryAccess.ReadShort(MemoryAddress + offset) == ushort.MaxValue; //if the value is 0xFFFF, the alarm is set
+			}
 		}
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is sounding its alarm.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> is sounding its alarm; otherwise, <c>false</c>.
-        /// </value>
-        public bool AlarmActive
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is sounding its alarm.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> is sounding its alarm; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAlarmSounding
 		{
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_ALARM_ACTIVATED, Handle);
 			}
 		}
-        /// <summary>
-        /// Starts sounding the alarm on this <see cref="Vehicle"/>.
-        /// </summary>
-        public void StartAlarm()
+		/// <summary>
+		/// Gets or sets time left before this <see cref="Vehicle"/> alarm stops.
+		/// If greater than zero, the vehicle alarm will be sounding.
+		/// the value is up to 65534.
+		/// </summary>
+		/// <value>
+		/// The time left before this <see cref="Vehicle"/> alarm stops.
+		/// </value>
+		public int AlarmTimeLeft
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 2456 : 2440;
+
+				ushort alarmTime = (ushort)MemoryAccess.ReadShort(MemoryAddress + offset);
+				if (alarmTime == ushort.MaxValue)
+				{
+					return 0;
+				}
+
+				return (int) alarmTime;
+			}
+			set
+			{
+				ushort alarmTime = (ushort)value;
+				if (alarmTime == ushort.MaxValue)
+				{
+					return;
+				}
+
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 2456 : 2440;
+
+				MemoryAccess.WriteShort(MemoryAddress + offset, (short)alarmTime);
+			}
+		}
+		/// <summary>
+		/// Starts sounding the alarm on this <see cref="Vehicle"/>.
+		/// </summary>
+		public void StartAlarm()
 		{
 			Function.Call(Hash.START_VEHICLE_ALARM, Handle);
 		}
 
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> has a siren.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has a siren; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasSiren
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has a siren.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has a siren; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasSiren
 		{
 			get
 			{
 				return Bones.HasBone("siren1");
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <c>false</c>.
-        /// </value>
-        public bool SirenActive
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSirenActive
 		{
 			get
 			{
@@ -727,13 +805,13 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_SIREN, Handle, value);
 			}
 		}
-        /// <summary>
-        /// Sets a value indicating whether the siren on this <see cref="Vehicle"/> plays sounds.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the siren on this <see cref="Vehicle"/> plays sounds; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsSirenSilent
+		/// <summary>
+		/// Sets a value indicating whether the siren on this <see cref="Vehicle"/> plays sounds.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if the siren on this <see cref="Vehicle"/> plays sounds; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSirenSilent
 		{
 			set
 			{
@@ -741,21 +819,21 @@ namespace GTA
 				Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, Handle, value);
 			}
 		}
-        /// <summary>
-        /// Sounds the horn on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="duration">The duration to sound the horn for.</param>
-        public void SoundHorn(int duration)
+		/// <summary>
+		/// Sounds the horn on this <see cref="Vehicle"/>.
+		/// </summary>
+		/// <param name="duration">The duration to sound the horn for.</param>
+		public void SoundHorn(int duration)
 		{
 			Function.Call(Hash.START_VEHICLE_HORN, Handle, duration, Game.GenerateHash("HELDDOWN"), 0);
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> is wanted by the police.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> is wanted by the police; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsWanted
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> is wanted by the police.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> is wanted by the police; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsWanted
 		{
 			get
 			{
@@ -775,13 +853,13 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets a value indicating whether peds can use this <see cref="Vehicle"/> for cover.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if peds can use this <see cref="Vehicle"/> for cover; otherwise, <c>false</c>.
-        /// </value>
-        public bool ProvidesCover
+		/// <summary>
+		/// Gets or sets a value indicating whether peds can use this <see cref="Vehicle"/> for cover.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if peds can use this <see cref="Vehicle"/> for cover; otherwise, <c>false</c>.
+		/// </value>
+		public bool ProvidesCover
 		{
 			get
 			{
@@ -801,13 +879,13 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> drops money when destroyed.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this <see cref="Vehicle"/> drops money when destroyed; otherwise, <c>false</c>.
-        /// </value>
-        public bool DropsMoneyOnExplosion
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> drops money when destroyed.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Vehicle"/> drops money when destroyed; otherwise, <c>false</c>.
+		/// </value>
+		public bool DropsMoneyOnExplosion
 		{		   
 			get
 			{
@@ -832,13 +910,13 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>; otherwise, <c>false</c>.
-        /// </value>
-        public bool PreviouslyOwnedByPlayer
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>; otherwise, <c>false</c>.
+		/// </value>
+		public bool PreviouslyOwnedByPlayer
 		{
 			get
 			{
@@ -857,13 +935,13 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> needs to be hotwired to start.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> needs to be hotwired to start; otherwise, <c>false</c>.
-        /// </value>
-        public bool NeedsToBeHotwired
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> needs to be hotwired to start.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> needs to be hotwired to start; otherwise, <c>false</c>.
+		/// </value>
+		public bool NeedsToBeHotwired
 		{
 			get
 			{
@@ -882,36 +960,36 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its lights on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its lights on; otherwise, <c>false</c>.
-        /// </value>
-        public bool LightsOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its lights on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its lights on; otherwise, <c>false</c>.
+		/// </value>
+		public bool AreLightsOn
 		{
 			get
 			{
-			    bool lightState1, lightState2;
+				bool lightState1, lightState2;
 				unsafe
 				{
 					Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
 				}
 
-			    return lightState1;
+				return lightState1;
 			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle, value ? 3 : 4);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its high beams on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its high beams on; otherwise, <c>false</c>.
-        /// </value>
-        public bool HighBeamsOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its high beams on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its high beams on; otherwise, <c>false</c>.
+		/// </value>
+		public bool AreHighBeamsOn
 		{
 			get
 			{
@@ -928,13 +1006,13 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_FULLBEAM, Handle, value);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its interior lights on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its interior lights on; otherwise, <c>false</c>.
-        /// </value>
-        public bool InteriorLightOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its interior lights on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its interior lights on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsInteriorLightOn
 		{
 			get
 			{
@@ -952,13 +1030,13 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_INTERIORLIGHT, Handle, value);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its search light on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its search light on; otherwise, <c>false</c>.
-        /// </value>
-        public bool SearchLightOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its search light on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its search light on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSearchLightOn
 		{
 			get
 			{
@@ -969,13 +1047,13 @@ namespace GTA
 				Function.Call(Hash.SET_VEHICLE_SEARCHLIGHT, Handle, value, 0);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its taxi light on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its taxi light on; otherwise, <c>false</c>.
-        /// </value>
-        public bool TaxiLightOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its taxi light on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its taxi light on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsTaxiLightOn
 		{
 			get
 			{
@@ -986,52 +1064,52 @@ namespace GTA
 				Function.Call(Hash.SET_TAXI_LIGHTS, Handle, value);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its left indicator light on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its left indicator light on; otherwise, <c>false</c>.
-        /// </value>
-        public bool LeftIndicatorLightOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its left indicator light on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its left indicator light on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsLeftIndicatorLightOn
 		{
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, true, value);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its right indicator light on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its right indicator light on; otherwise, <c>false</c>.
-        /// </value>
-        public bool RightIndicatorLightOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its right indicator light on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its right indicator light on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsRightIndicatorLightOn
 		{
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, false, value);
 			}
 		}
-        /// <summary>
-        /// Sets a value indicating whether this <see cref="Vehicle"/> has its Handbrake activated.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its Handbrake activated; otherwise, <c>false</c>.
-        /// </value>
-        public bool HandbrakeOn
+		/// <summary>
+		/// Sets a value indicating whether the Handbrake on this <see cref="Vehicle"/> is forced on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if the Handbrake on this <see cref="Vehicle"/> is forced on; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsHandbrakeForcedOn
 		{
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_HANDBRAKE, Handle, value);
 			}
 		}
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its brake light on.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this <see cref="Vehicle"/> has its brake light on; otherwise, <c>false</c>.
-        /// </value>
-        public bool BrakeLightsOn
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its brake light on.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Vehicle"/> has its brake light on; otherwise, <c>false</c>.
+		/// </value>
+		public bool AreBrakeLightsOn
 		{
 			set
 			{
@@ -1462,9 +1540,9 @@ namespace GTA
 		public void PlaceOnNextStreet()
 		{
 			Vector3 currentPosition = Position;
-		    NativeVector3 newPosition;
-		    float heading;
-		    long unkn;
+			NativeVector3 newPosition;
+			float heading;
+			long unkn;
 
 			for (int i = 1; i < 40; i++)
 			{
@@ -1472,13 +1550,13 @@ namespace GTA
 				{
 					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &unkn, 1, 0x40400000, 0);
 				}
-                
+
 
 				if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPosition.X, newPosition.Y, newPosition.Z, 5.0f, 5.0f, 5.0f, 0))
 				{
 					Position = newPosition;
 					PlaceOnGround();
-				    Heading = heading;
+					Heading = heading;
 					break;
 				}
 			}
@@ -1634,7 +1712,7 @@ namespace GTA
 			}
 		}
 
-		public void ApplyDamage(Vector3 position, float damageAmount, float radius)
+		public void Deform(Vector3 position, float damageAmount, float radius)
 		{
 			Function.Call(Hash.SET_VEHICLE_DAMAGE, position.X, position.Y, position.Z, damageAmount, radius);
 		}
