@@ -37,25 +37,25 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the health of this <see cref="Entity"/> in int.
+		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
 		/// </summary>
 		/// <value>
-		/// The health in int.
+		/// The health from 0 - 100 as an integer.
 		/// </value>
 		/// <remarks>if you need to get or set the value strictly, use <see cref="HealthFloat"/> instead.</remarks>
 		public int Health
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
+				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle) - 100;
 			}
 			set
 			{
-				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
+				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value + 100);
 			}
 		}
 		/// <summary>
-		/// Gets or sets the health of this <see cref="Entity"/> in float.
+		/// Gets or sets the health of this <see cref="Entity"/> as a <see cref="float"/>.
 		/// </summary>
 		/// <value>
 		/// The health in float.
@@ -82,21 +82,21 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Entity"/> in int.
+		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
 		/// </summary>
 		/// <value>
-		/// The maximum health in int.
+		/// The maximum health from 0 - 100 as an integer.
 		/// </value>
 		/// <remarks>if you need to get or set the value strictly, use <see cref="MaxHealthFloat"/> instead.</remarks>
 		public int MaxHealth
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
+				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle) - 100;
 			}
 			set
 			{
-				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
+				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value + 100);
 			}
 		}
 		/// <summary>

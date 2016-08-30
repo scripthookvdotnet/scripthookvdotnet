@@ -349,9 +349,6 @@ namespace GTA
 				case WeaponHash.Revolver:
 					return "WT_REVOLVER";
 			}
-
-			
-			string result = string.Empty;
 			DlcWeaponData data;
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
@@ -366,7 +363,7 @@ namespace GTA
 					}
 				}
 			}
-			return result;
+			return "WT_INVALID";
 		}
 
 	}
