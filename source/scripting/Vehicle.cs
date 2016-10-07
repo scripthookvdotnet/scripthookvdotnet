@@ -375,6 +375,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x768 : 0x758;
+			    offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x788 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -386,8 +387,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x768 : 0x758;
+                offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x788 : offset;
 
-				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+                MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 
@@ -454,8 +456,9 @@ namespace GTA
 
 				//old game version hasnt been tested, just following the patterns above for old game ver
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x9A4 : 0x994;
+                offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x9C4 : offset;
 
-				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+                return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 		}
 		public float Acceleration
@@ -468,8 +471,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7E4 : 0x7D4;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x804 : offset;
 
-				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+                return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 		}
 		public float CurrentRPM
@@ -481,9 +485,11 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 2004 : 1988;
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7D4 : 0x7C4;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x7F4 : offset;
 
-				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+
+                return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -492,9 +498,11 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 2004 : 1988;
+                int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7D4 : 0x7C4;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x7F4 : offset;
 
-				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+
+                MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 
@@ -508,8 +516,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x7C6 : offset;
 
-				return (int)MemoryAccess.ReadByte(MemoryAddress + offset);
+                return (int)MemoryAccess.ReadByte(MemoryAddress + offset);
 			}
 			set
 			{
@@ -524,8 +533,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x7C6 : offset;
 
-				MemoryAccess.WriteByte(MemoryAddress + offset, (byte)value);
+                MemoryAccess.WriteByte(MemoryAddress + offset, (byte)value);
 			}
 		}
 		public int CurrentGear
@@ -538,8 +548,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A0 : 0x790;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x7C0 : offset;
 
-				return (int)MemoryAccess.ReadByte(MemoryAddress + offset);
+                return (int)MemoryAccess.ReadByte(MemoryAddress + offset);
 			}
 		}
 
@@ -553,8 +564,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8AC : 0x89C;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x8CC : offset;
 
-				return (float)(MemoryAccess.ReadFloat(MemoryAddress + offset) * (180.0 / System.Math.PI));
+                return (float)(MemoryAccess.ReadFloat(MemoryAddress + offset) * (180.0 / System.Math.PI));
 			}
 		}
 		public float SteeringScale
@@ -567,8 +579,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8A4 : 0x894;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x8C4 : offset;
 
-				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+                return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -578,8 +591,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8A4 : 0x894;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x8C4 : offset;
 
-				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+                MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 
@@ -651,8 +665,9 @@ namespace GTA
 				}
 				//Unsure of the exact version this switched, but all others in the rangs are the same
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x84C : 0x83C;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x86C : offset;
 
-				return MemoryAccess.IsBitSet(MemoryAddress + offset, 3);
+                return MemoryAccess.IsBitSet(MemoryAddress + offset, 3);
 			}
 			set
 			{
@@ -671,8 +686,9 @@ namespace GTA
 				}
 				//Unsure of the exact version this switched, but all others in the rangs are the same
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83C : 0x82C;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x85C : offset;
 
-				return MemoryAccess.IsBitSet(MemoryAddress + offset, 2);
+                return MemoryAccess.IsBitSet(MemoryAddress + offset, 2);
 			}
 			set
 			{
@@ -692,8 +708,9 @@ namespace GTA
 				//Unsure of the exact version this switched or if it switched over a few title updates
 				//as its shifted by 0x20 bytes where as rest are only 0x10 bytes
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xA98 : 0xA78;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0xAC8 : offset; // just a guess
 
-				if (MemoryAccess.ReadInt(memoryAddress + offset) <= 8)
+                if (MemoryAccess.ReadInt(memoryAddress + offset) <= 8)
 				{
 					return MemoryAccess.IsBitSet(memoryAddress + 0x12F9, 1);
 				}
@@ -715,8 +732,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x844 : 0x834;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x864 : offset;
 
-				return MemoryAccess.IsBitSet(MemoryAddress + offset, 1);
+                return MemoryAccess.IsBitSet(MemoryAddress + offset, 1);
 			}
 			set
 			{
@@ -734,8 +752,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x844 : 0x834;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x864 : offset;
 
-				return MemoryAccess.IsBitSet(MemoryAddress + offset, 2);
+                return MemoryAccess.IsBitSet(MemoryAddress + offset, 2);
 			}
 			set
 			{
@@ -783,8 +802,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x841 : 0x831;
+                offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x861 : offset;
 
-				return MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
+                return MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
 			}
 			set
 			{
