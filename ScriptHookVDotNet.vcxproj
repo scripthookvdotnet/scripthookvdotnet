@@ -177,7 +177,7 @@
     <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Rename and move output files -->
-  <Target Name="MoveFiles" AfterTargets="AfterBuild">
+  <Target Name="MoveFiles" AfterTargets="AfterBuild" Condition="'$(Configuration)' != 'NativeGen'">
     <MakeDir Directories="$(TargetDir)SDK" Condition="!Exists('$(TargetDir)SDK')" />
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)SDK\$(TargetName).dll" />
     <Move SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="$(TargetDir)SDK\" />
