@@ -397,7 +397,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Hash._IS_VEHICLE_ENGINE_ON, Handle);
+				return Function.Call<bool>(Hash.GET_IS_VEHICLE_ENGINE_RUNNING, Handle);
 			}
 			set
 			{
@@ -904,7 +904,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Hash._IS_HEADLIGHT_L_BROKEN, Handle);
+				return Function.Call<bool>(Hash.GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED, Handle);
 			}
 			set
 			{
@@ -914,6 +914,7 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress + 1916;
+
 				if (value)
 				{
 					MemoryAccess.SetBit(address, 0);
@@ -928,7 +929,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Hash._IS_HEADLIGHT_R_BROKEN, Handle);
+				return Function.Call<bool>(Hash.GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED, Handle);
 			}
 			set
 			{
@@ -937,7 +938,8 @@ namespace GTA
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 1916;	  
+				IntPtr address = MemoryAddress + 1916;
+
 				if (value)
 				{
 					MemoryAccess.SetBit(address, 1);
@@ -997,7 +999,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<VehicleLandingGearState>(Hash._GET_VEHICLE_LANDING_GEAR, Handle);
+				return Function.Call<VehicleLandingGearState>(Hash.GET_LANDING_GEAR_STATE, Handle);
 			}
 			set
 			{
@@ -1341,14 +1343,14 @@ namespace GTA
 		{
 			if (HasBombBay)
 			{
-				Function.Call(Hash._OPEN_VEHICLE_BOMB_BAY, Handle);
+				Function.Call(Hash.OPEN_BOMB_BAY_DOORS, Handle);
 			}
 		}
 		public void CloseBombBay()
 		{
 			if (HasBombBay)
 			{
-				Function.Call(Hash._CLOSE_VEHICLE_BOMB_BAY, Handle);
+				Function.Call(Hash.CLOSE_BOMB_BAY_DOORS, Handle);
 			}
 		}
 

@@ -11,7 +11,7 @@ namespace GTA
 			var hitSomethingArg = new OutputArgument();
 			var entityHandleArg = new OutputArgument();
 			var surfaceNormalArg = new OutputArgument();
-			Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, hitSomethingArg, hitPositionArg, surfaceNormalArg, entityHandleArg);
+			Result = Function.Call<int>(Hash.GET_SHAPE_TEST_RESULT, handle, hitSomethingArg, hitPositionArg, surfaceNormalArg, entityHandleArg);
 
 			DitHit = hitSomethingArg.GetResult<bool>();
 			HitPosition = hitPositionArg.GetResult<Vector3>();

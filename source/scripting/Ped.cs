@@ -1241,7 +1241,7 @@ namespace GTA
 		}
 		public Entity GetKiller()
 		{
-			return Entity.FromHandle(Function.Call<int>(Hash._GET_PED_KILLER, Handle));
+			return Entity.FromHandle(Function.Call<int>(Hash.GET_PED_SOURCE_OF_DEATH, Handle));
 		}
 
 		public void Kill()
