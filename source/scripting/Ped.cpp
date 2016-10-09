@@ -323,7 +323,9 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BC) & (1 << 2)) == 0;
+		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x13E4 : 0x13BC);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + offset) & (1 << 2)) == 0;
 	}
 	void Ped::CanSufferCriticalHits::set(bool value)
 	{
@@ -442,7 +444,9 @@ namespace GTA
 			return VehicleSeat::None;
 		}
 
-		int seatIndex = (*reinterpret_cast<char *>(address + 0x1542));
+		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x158A : 0x1542);
+
+		int seatIndex = (*reinterpret_cast<char *>(address + offset));
 
 		if (seatIndex == -1 || !IsInVehicle())
 		{
@@ -465,7 +469,9 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + 0x13BD) & (1 << 6)) == 0;
+		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x13E5 : 0x13BD);
+
+		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + offset) & (1 << 6)) == 0;
 	}
 	void Ped::DropsWeaponsOnDeath::set(bool value)
 	{
