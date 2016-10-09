@@ -181,7 +181,6 @@
     <MakeDir Directories="$(TargetDir)SDK" Condition="!Exists('$(TargetDir)SDK')" />
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)SDK\$(TargetName).dll" />
     <Move SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="$(TargetDir)SDK\" />
-    <Message Text="Moving output files..." />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
