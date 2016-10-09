@@ -484,7 +484,9 @@ namespace GTA
 					return VehicleSeat.None;
 				}
 
-				int seatIndex = MemoryAccess.ReadInt(MemoryAddress + 0x1542);
+				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x158A : 0x1542);
+
+				int seatIndex = MemoryAccess.ReadInt(MemoryAddress + offset);
 
 				if (seatIndex == -1 || !IsInVehicle())
 				{
@@ -1012,8 +1014,10 @@ namespace GTA
 				{
 					return false;
 				}
-				
-				return (MemoryAccess.ReadByte(MemoryAddress + 0x13BD) & (1 << 6)) == 0;
+
+				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E5 : 0x13BD);
+
+				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 6)) == 0;
 			}
 			set
 			{
@@ -1122,8 +1126,10 @@ namespace GTA
 				{
 					return false;
 				}
-				
-				return (MemoryAccess.ReadByte(MemoryAddress + 0x13BC) & (1 << 2)) == 0;
+
+				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E4 : 0x13BC);
+
+				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 2)) == 0;
 			}
 			set
 			{
