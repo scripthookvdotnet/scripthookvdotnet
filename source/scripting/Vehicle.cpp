@@ -519,8 +519,8 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x844 : 0x834);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x864 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x844 : 0x834);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x864 : offset);
 
 		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 2)) != 0;
 	}
@@ -548,8 +548,8 @@ namespace GTA
 	{
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x844 : 0x834);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x864 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x844 : 0x834);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x864 : offset);
 
 		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 1)) != 0;
 	}
@@ -678,8 +678,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A0: 0x790);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x7C0 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A0: 0x790);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C0 : offset);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -687,8 +687,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x7C6 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -706,8 +706,8 @@ namespace GTA
 			return;
 		}
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7A6 : 0x796);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x7C6 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
 
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
@@ -715,8 +715,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x768: 0x758);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x788 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x768: 0x758);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x788 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -729,8 +729,8 @@ namespace GTA
 			return;
 		}
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x768 : 0x758);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x788 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x768 : 0x758);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x788 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -738,8 +738,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7D4 : 0x7C4);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x7F4 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7D4 : 0x7C4);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7F4 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -747,8 +747,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7D4 : 0x7C4);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x7F4 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7D4 : 0x7C4);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7F4 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -756,8 +756,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x7E4 : 0x7D4);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x804 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7E4 : 0x7D4);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x804 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -765,8 +765,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 		//old game version hasnt been tested, just following the patterns above for old game ver
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x9A4 : 0x994);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x9C4 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x9A4 : 0x994);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x9C4 : offset);
 
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
@@ -775,8 +775,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8AC : 0x89C);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x8CC : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8AC : 0x89C);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8CC : offset);
 
 		if (!address == 0)
 		{
@@ -792,8 +792,8 @@ namespace GTA
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x8C4 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -806,8 +806,8 @@ namespace GTA
 			return;
 		}
 
-		int offset = (static_cast<int>(Game::Version) > 3 ? 0x8A4 : 0x894);
-		offset = (static_cast<int>(Game::Version) > 25 ? 0x8C4 : offset);
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
