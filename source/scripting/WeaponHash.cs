@@ -70,6 +70,13 @@ namespace GTA
 		Ball = 600439132u,
 		Flare = 1233104067u,
 		NightVision = 2803906140u,
-		Parachute = 4222310262u
+		Parachute = 4222310262u,
+		SweeperShotgun = 317205821u,
+		BattleAxe = 3441901897u,
+		CompactGrenadeLauncher = 125959754u,
+		MiniSMG = 3173288789u,
+		PipeBomb = 3125143736u,
+		PoolCue = 2484171525u,
+		Wrench = 419712736u
 	}
 }
