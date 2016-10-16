@@ -24,28 +24,28 @@ public class IndicatorControl : Script
 			{
 				if (vehicle.Speed < 10.0f)
 				{
-					vehicle.LeftIndicatorLightOn = _active[0] = true;
-					vehicle.RightIndicatorLightOn = _active[1] = false;
+					vehicle.IsLeftIndicatorLightOn = _active[0] = true;
+					vehicle.IsRightIndicatorLightOn = _active[1] = false;
 					_timeLeft[0] = DateTime.Now + TimeSpan.FromMilliseconds(3000);
 				}
 			}
 			else if (_active[0] && DateTime.Now > _timeLeft[0])
 			{
-				vehicle.LeftIndicatorLightOn = _active[0] = false;
+				vehicle.IsLeftIndicatorLightOn = _active[0] = false;
 			}
 
 			if (Game.IsControlPressed(2, Control.VehicleMoveRightOnly))
 			{
 				if (vehicle.Speed < 10.0f)
 				{
-					vehicle.LeftIndicatorLightOn = _active[0] = false;
-					vehicle.RightIndicatorLightOn = _active[1] = true;
+					vehicle.IsLeftIndicatorLightOn = _active[0] = false;
+					vehicle.IsRightIndicatorLightOn = _active[1] = true;
 					_timeLeft[1] = DateTime.Now + TimeSpan.FromMilliseconds(3000);
 				}
 			}
 			else if (_active[1] && DateTime.Now > _timeLeft[1])
 			{
-				vehicle.RightIndicatorLightOn = _active[1] = false;
+				vehicle.IsRightIndicatorLightOn = _active[1] = false;
 			}
 		}
 	}

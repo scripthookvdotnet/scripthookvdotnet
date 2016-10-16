@@ -21,20 +21,31 @@ namespace GTA
 	{
 		public Scaleform(string scaleformID)
 		{
-			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
+			_handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
 		}
 
-		public void Dispose()
+        public void Dispose()
 		{
 			if (IsLoaded)
 			{
-				Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, new OutputArgument(Handle));
+				unsafe
+				{
+					fixed (int* handlePtr = &_handle)
+					{
+						Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, handlePtr);
+					}
+				}
 			}
 
 			GC.SuppressFinalize(this);
 		}
 
-		public int Handle { get; private set; }
+		public int Handle
+		{
+			get { return _handle; }
+		}
+
+		private int _handle;
 
 		public ulong NativeValue
 		{
@@ -44,7 +55,7 @@ namespace GTA
 			}
 			set
 			{
-				Handle = unchecked((int)value);
+				_handle = unchecked((int)value);
 			}
 		}
 
@@ -75,13 +86,13 @@ namespace GTA
 				}
 				else if (argument is string)
 				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+					Function.Call(Hash._BEGIN_TEXT_COMPONENT, MemoryAccess.StringPtr);
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, (string)argument);
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}
 				else if (argument is char)
 				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+					Function.Call(Hash._BEGIN_TEXT_COMPONENT, MemoryAccess.StringPtr);
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, argument.ToString());
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}

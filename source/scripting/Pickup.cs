@@ -101,7 +101,7 @@ namespace GTA
 			}
 		}
 
-		public void Delete()
+		public override void Delete()
 		{
 			Function.Call(Hash.REMOVE_PICKUP, Handle);
 		}

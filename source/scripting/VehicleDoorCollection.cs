@@ -48,17 +48,17 @@ namespace GTA
 			switch (door)
 			{
 				case VehicleDoorIndex.FrontLeftDoor:
-					return _owner.HasBone("door_dside_f");
+					return _owner.Bones.HasBone("door_dside_f");
 				case VehicleDoorIndex.FrontRightDoor:
-					return _owner.HasBone("door_pside_f");
+					return _owner.Bones.HasBone("door_pside_f");
 				case VehicleDoorIndex.BackLeftDoor:
-					return _owner.HasBone("door_dside_r");
+					return _owner.Bones.HasBone("door_dside_r");
 				case VehicleDoorIndex.BackRightDoor:
-					return _owner.HasBone("door_pside_r");
+					return _owner.Bones.HasBone("door_pside_r");
 				case VehicleDoorIndex.Hood:
-					return _owner.HasBone("bonnet");
+					return _owner.Bones.HasBone("bonnet");
 				case VehicleDoorIndex.Trunk:
-					return _owner.HasBone("boot");
+					return _owner.Bones.HasBone("boot");
 			}
 			return false;
 		}

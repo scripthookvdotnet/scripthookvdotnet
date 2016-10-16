@@ -644,6 +644,14 @@ namespace GTA
 				M31.ToString(CultureInfo::CurrentCulture), M32.ToString(CultureInfo::CurrentCulture), M33.ToString(CultureInfo::CurrentCulture), M34.ToString(CultureInfo::CurrentCulture),
 				M41.ToString(CultureInfo::CurrentCulture), M42.ToString(CultureInfo::CurrentCulture), M43.ToString(CultureInfo::CurrentCulture), M44.ToString(CultureInfo::CurrentCulture));
 		}
+		String ^Matrix::ToString(String ^numberFormat)
+		{
+			return String::Format(CultureInfo::CurrentCulture, "[[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]]",
+				M11.ToString(numberFormat), M12.ToString(numberFormat), M13.ToString(numberFormat), M14.ToString(numberFormat),
+				M21.ToString(numberFormat), M22.ToString(numberFormat), M23.ToString(numberFormat), M24.ToString(numberFormat),
+				M31.ToString(numberFormat), M32.ToString(numberFormat), M33.ToString(numberFormat), M34.ToString(numberFormat),
+				M41.ToString(numberFormat), M42.ToString(numberFormat), M43.ToString(numberFormat), M44.ToString(numberFormat));
+		}
 		int Matrix::GetHashCode()
 		{
 			return M11.GetHashCode() + M12.GetHashCode() + M13.GetHashCode() + M14.GetHashCode() +

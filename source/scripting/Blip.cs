@@ -10,6 +10,9 @@ namespace GTA
 		Red,
 		Green,
 		Blue,
+		MichaelBlue = 42,
+		FranklinGreen,
+		TrevorOrange,
 		Yellow = 66
 	}
 	public enum BlipSprite
@@ -233,6 +236,9 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets or sets the position of this <see cref="Blip"/>.
+		/// </summary>
 		public Vector3 Position
 		{
 			get
@@ -244,6 +250,9 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_COORDS, Handle, value.X, value.Y, value.Z);
 			}
 		}
+		/// <summary>
+		/// Sets the rotation of this <see cref="Blip"/> on the map.
+		/// </summary>
 		public int Rotation
 		{
 			set
@@ -251,6 +260,9 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_ROTATION, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets the scale of this <see cref="Blip"/> on the map.
+		/// </summary>
 		public float Scale
 		{
 			set
@@ -259,6 +271,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of this <see cref="Blip"/>.
+		/// </summary>
 		public int Type
 		{
 			get
@@ -266,6 +281,9 @@ namespace GTA
 				return Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the alpha of this <see cref="Blip"/> on the map.
+		/// </summary>
 		public int Alpha
 		{
 			get
@@ -277,6 +295,9 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets the priority of this <see cref="Blip"/>.
+		/// </summary>
 		public int Priority
 		{
 			set
@@ -284,6 +305,9 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets this <see cref="Blip"/>s label to the given number.
+		/// </summary>
 		public int NumberLabel
 		{
 			set
@@ -291,6 +315,9 @@ namespace GTA
 				Function.Call(Hash.SHOW_NUMBER_ON_BLIP, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the color of this <see cref="Blip"/>.
+		/// </summary>
 		public BlipColor Color
 		{
 			get
@@ -302,6 +329,9 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_COLOUR, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the sprite of this <see cref="Blip"/>.
+		/// </summary>
 		public BlipSprite Sprite
 		{
 			get
@@ -313,15 +343,21 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_SPRITE, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets this <see cref="Blip"/>s label to the given string.
+		/// </summary>
 		public string Name
 		{
 			set
 			{
-				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, "STRING");
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, MemoryAccess.StringPtr);
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, value);
 				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets the <see cref="Entity"/> this <see cref="Blip"/> is attached to.
+		/// </summary>
 		public Entity Entity
 		{
 			get
@@ -330,6 +366,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether the route to this <see cref="Blip"/> should be shown on the map.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to show the route; otherwise, <c>false</c>.
+		/// </value>
 		public bool ShowRoute
 		{
 			set
@@ -337,6 +379,12 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_ROUTE, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Blip"/> is friendly.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Blip"/> is friendly; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsFriendly
 		{
 			set
@@ -344,6 +392,12 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_AS_FRIENDLY, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> is flashing.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Blip"/> is flashing; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsFlashing
 		{
 			get
@@ -355,6 +409,12 @@ namespace GTA
 				Function.Call(Hash.SET_BLIP_FLASHES, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Blip"/> is on minimap.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Blip"/> is on minimap; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsOnMinimap
 		{
 			get
@@ -362,6 +422,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> is short range.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Blip"/> is short range; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsShortRange
 		{
 			get
@@ -374,14 +440,25 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Removes the number label for this <see cref="Blip"/>.
+		/// </summary>
 		public void RemoveNumberLabel()
 		{
 			Function.Call(Hash.HIDE_NUMBER_ON_BLIP, Handle);
 		}
 
-		public void Remove()
+		/// <summary>
+		/// Removes this <see cref="Blip"/>.
+		/// </summary>
+		public override void Delete()
 		{
-			Function.Call(Hash.REMOVE_BLIP, new OutputArgument(Handle));
+		    int handle = Handle;
+			unsafe
+			{
+				Function.Call(Hash.REMOVE_BLIP, &handle);
+			}
+			Handle = handle;
 		}
 
 		public override bool Exists()
@@ -404,7 +481,7 @@ namespace GTA
 
 		public sealed override int GetHashCode()
 		{
-			return Handle;
+			return Handle.GetHashCode();
 		}
 
 		public static bool operator ==(Blip left, Blip right)

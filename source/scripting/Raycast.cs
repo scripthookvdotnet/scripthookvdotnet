@@ -7,23 +7,44 @@ namespace GTA
 	{
 		public RaycastResult(int handle) : this()
 		{
-			var hitPositionArg = new OutputArgument();
-			var hitSomethingArg = new OutputArgument();
-			var entityHandleArg = new OutputArgument();
-			var surfaceNormalArg = new OutputArgument();
-			Result = Function.Call<int>(Hash.GET_SHAPE_TEST_RESULT, handle, hitSomethingArg, hitPositionArg, surfaceNormalArg, entityHandleArg);
+		    NativeVector3 hitPositionArg;
+		    bool hitSomethingArg;
+		    int entityHandleArg;
+		    NativeVector3 surfaceNormalArg;
+			unsafe
+			{
+				Result = Function.Call<int>(Hash.GET_SHAPE_TEST_RESULT, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &entityHandleArg);
+			}
 
-			DitHit = hitSomethingArg.GetResult<bool>();
-			HitPosition = hitPositionArg.GetResult<Vector3>();
-			SurfaceNormal = surfaceNormalArg.GetResult<Vector3>();
-			HitEntity = Entity.FromHandle(entityHandleArg.GetResult<int>());
+			DitHit = hitSomethingArg;
+			HitPosition = hitPositionArg;
+			SurfaceNormal = surfaceNormalArg;
+			HitEntity = Entity.FromHandle(entityHandleArg);
 		}
 
+		/// <summary>
+		/// Gets the <see cref="Entity" /> this raycast collided with.
+		/// <remarks>Returns <c>null</c> if the raycast didnt collide with any <see cref="Entity"/>.</remarks>
+		/// </summary>
 		public Entity HitEntity { get; private set; }
+		/// <summary>
+		/// Gets the world coordinates where this raycast collided.
+		/// <remarks>Returns <see cref="Vector3.Zero"/> if the raycast didnt collide with anything.</remarks>
+		/// </summary>
 		public Vector3 HitPosition { get; private set; }
+		/// <summary>
+		/// Gets the normal of the surface where this raycast collided.
+		/// <remarks>Returns <see cref="Vector3.Zero"/> if the raycast didnt collide with anything.</remarks>
+		/// </summary>
 		public Vector3 SurfaceNormal { get; private set; }
 
+		/// <summary>
+		/// Gets a value indicating whether this raycast collided with anything.
+		/// </summary>
 		public bool DitHit { get; private set; }
+		/// <summary>
+		/// Gets a value indicating whether this raycast collided with any <see cref="Entity"/>.
+		/// </summary>
 		public bool DitHitEntity
 		{
 			get

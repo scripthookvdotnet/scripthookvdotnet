@@ -117,6 +117,7 @@ namespace GTA
 		Euphoria _euphoria;
 		WeaponCollection _weapons;
 		Style _style;
+		PedBoneCollection _pedBones;
 
 		internal static readonly string[] _speechModifierNames = {
 			"SPEECH_PARAMS_STANDARD",
@@ -165,7 +166,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets how much money the <see cref="Ped"/> is carrying.
+		/// Gets or sets how much money this <see cref="Ped"/> is carrying.
 		/// </summary>
 		public int Money
 		{
@@ -179,9 +180,8 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the gender of the <see cref="Ped"/>.
+		/// Gets the gender of this <see cref="Ped"/>.
 		/// </summary>
-
 		public Gender Gender
 		{
 			get
@@ -190,22 +190,9 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of the <see cref="Ped"/>.
+		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing.
 		/// </summary>
-		public override int MaxHealth
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_PED_MAX_HEALTH, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
-			}
-		}
-		/// <summary>
-		/// Gets or sets how much Armor the <see cref="Ped"/> is wearing.
-		/// </summary>
+		/// <remarks>if you need to get or set the value strictly, use <see cref="ArmorFloat"/> instead.</remarks>
 		public int Armor
 		{
 			get
@@ -218,7 +205,35 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets how accurate the <see cref="Ped"/>s shooting ability is.
+		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing in float.
+		/// </summary>
+		public float ArmorFloat
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets how accurate this <see cref="Ped"/>s shooting ability is.
 		/// </summary>
 		/// <value>
 		/// The accuracy from 0 to 100, 0 being very innacurate, 100 being perfectly accurate.
@@ -236,7 +251,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of <see cref="Tasks"/> that the <see cref="Ped"/> can carry out.
+		/// Opens a list of <see cref="Tasks"/> that this <see cref="Ped"/> can carry out.
 		/// </summary>
 		public Tasks Task
 		{
@@ -250,7 +265,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the stage of the <see cref="TaskSequence"/> the <see cref="Ped"/> is currently executing.
+		/// Gets the stage of the <see cref="TaskSequence"/> this <see cref="Ped"/> is currently executing.
 		/// </summary>
 		public int TaskSequenceProgress
 		{
@@ -261,7 +276,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of <see cref="GTA.NaturalMotion.Euphoria"/> Helpers which can be applie to the <see cref="Ped"/>.
+		/// Opens a list of <see cref="GTA.NaturalMotion.Euphoria"/> Helpers which can be applied to this <see cref="Ped"/>.
 		/// </summary>
 		public Euphoria Euphoria
 		{
@@ -276,7 +291,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a collection of all the <see cref="Ped"/>s <see cref="Weapon"/>s.
+		/// Gets a collection of all this <see cref="Ped"/>s <see cref="Weapon"/>s.
 		/// </summary>
 		public WeaponCollection Weapons
 		{
@@ -291,7 +306,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of clothing and prop configurations that the <see cref="Ped"/> can wear.
+		/// Opens a list of clothing and prop configurations that this <see cref="Ped"/> can wear.
 		/// </summary>
 		public Style Style
 		{
@@ -306,52 +321,63 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the last <see cref="Vehicle"/> the <see cref="Ped"/> used.
+		/// Gets the vehicle weapon this <see cref="Ped"/> is using.
+		/// <remarks>The vehicle weapon, returns <see cref="VehicleWeaponHash.Invalid"/> if this <see cref="Ped"/> isnt using a vehicle weapon.</remarks>
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if the Last Vehicle doesn't exist.</remarks>
+		public VehicleWeaponHash VehicleWeapon
+		{
+			get
+			{
+				int hash;
+				unsafe
+				{
+					if (Function.Call<bool>(Hash.GET_CURRENT_PED_VEHICLE_WEAPON, Handle, &hash))
+					{
+						return (VehicleWeaponHash)hash;
+					}
+				}
+				return VehicleWeaponHash.Invalid;
+			}
+		}
+
+		/// <summary>
+		/// Gets the last <see cref="Vehicle"/> this <see cref="Ped"/> used.
+		/// </summary>
+		/// <remarks>returns <c>null</c> if the last vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true);
-
-				if (!Function.Call<bool>(Hash.DOES_ENTITY_EXIST, handle))
-				{
-					return null;
-				}
-
-				return new Vehicle(handle);
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true));
+				return veh.Exists() ? veh : null;
 			}
 		}
 		/// <summary>
-		/// Gets the current <see cref="Vehicle"/> the <see cref="Ped"/> is using.
+		/// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is using.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if the <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <c>null</c> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
 		public Vehicle CurrentVehicle
 		{
 			get
 			{
-				if (!IsInVehicle())
-				{
-					return null;
-				}
-
-				return new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
+				return veh.Exists() ? veh : null;
 			}
 		}
 		/// <summary>
-		/// Gets the <see cref="Vehicle"/> the <see cref="Ped"/> is trying to enter.
+		/// Gets the <see cref="Vehicle"/> this <see cref="Ped"/> is trying to enter.
 		/// </summary>
-		/// <remarks>returns <langword>null</langword> if the <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <c>null</c> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
 		public Vehicle VehicleTryingToEnter
 		{
 			get
 			{
-				return Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle));
+				return veh.Exists() ? veh : null;
 			}
 		}
 		/// <summary>
-		/// Gets the PedGroup the <see cref="Ped"/> is in.
+		/// Gets the PedGroup this <see cref="Ped"/> is in.
 		/// </summary>
 		public PedGroup PedGroup
 		{
@@ -367,7 +393,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the how much sweat should be rendered on the <see cref="Ped"/>.
+		/// Gets or sets the how much sweat should be rendered on this <see cref="Ped"/>.
 		/// </summary>
 		/// <value>
 		/// The sweat from 0 to 100, 0 being no sweat, 100 being saturated.
@@ -397,10 +423,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets how high up on the <see cref="Ped"/>s body water should be visible
+		/// Sets how high up on this <see cref="Ped"/>s body water should be visible.
 		/// </summary>
 		/// <value>
-		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water
+		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water.
 		/// </value>
 		public float WetnessHeight
 		{
@@ -418,7 +444,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the voice to use when the <see cref="Ped"/> speaks.
+		/// Sets the voice to use when this <see cref="Ped"/> speaks.
 		/// </summary>
 		public string Voice
 		{
@@ -429,10 +455,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the rate the <see cref="Ped"/> will shoot at.
+		/// Sets the rate this <see cref="Ped"/> will shoot at.
 		/// </summary>
 		/// <value>
-		/// The shoot rate from 0.0f to 1000.0f, 100.0f is the default value
+		/// The shoot rate from 0.0f to 1000.0f, 100.0f is the default value.
 		/// </value>
 		public int ShootRate
 		{
@@ -443,10 +469,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the <see cref="Ped"/> was killed by a stealth attack.
+		/// Gets a value indicating whether this <see cref="Ped"/> was killed by a stealth attack.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if <see cref="Ped"/> was killed by stealth; otherwise, <c>false</c>.
+		///   <c>true</c> if this <see cref="Ped"/> was killed by stealth; otherwise, <c>false</c>.
 		/// </value>
 		public bool WasKilledByStealth
 		{
@@ -456,10 +482,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets a value indicating whether the <see cref="Ped"/> was killed by a takedown.
+		/// Gets a value indicating whether this <see cref="Ped"/> was killed by a takedown.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if <see cref="Ped"/> was killed by a takedown; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Ped"/> was killed by a takedown; otherwise, <c>false</c>.
 		/// </value>
 		public bool WasKilledByTakedown
 		{
@@ -470,10 +496,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="VehicleSeat"/> the <see cref="Ped"/> is in
+		/// Gets the <see cref="VehicleSeat"/> this <see cref="Ped"/> is in.
 		/// </summary>
 		/// <value>
-		/// The <see cref="VehicleSeat"/> the <see cref="Ped"/> is in if the <see cref="Ped"/> is in a <see cref="Vehicle"/>; otherwise, <see cref="VehicleSeat.None"/>
+		/// The <see cref="VehicleSeat"/> this <see cref="Ped"/> is in if this <see cref="Ped"/> is in a <see cref="Vehicle"/>; otherwise, <see cref="VehicleSeat.None"/>.
 		/// </value>
 		public VehicleSeat SeatIndex
 		{
@@ -510,7 +536,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked
+		/// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if <see cref="Ped"/> stays in vehicle when jacked; otherwise, <c>false</c>.
@@ -524,13 +550,82 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the maximum driving speed the <see cref="Ped"/> can drive at.
+		/// Sets the maximum driving speed this <see cref="Ped"/> can drive at.
 		/// </summary>
 		public float MaxDrivingSpeed
 		{
 			set
 			{
 				Function.Call(Hash.SET_DRIVE_TASK_MAX_CRUISE_SPEED, Handle, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the injury health threshold for this <see cref="Ped"/>. 
+		/// The ped is considered injured when its health drops below this value.
+		/// </summary>
+		/// <value>
+		/// The injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
+		/// </value>
+		public float InjuryHealthThreshold
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the fatal injury health threshold for this <see cref="Ped"/>.
+		/// The ped is considered dead when its health drops below this value.
+		/// </summary>
+		/// <value>
+		/// The fatal injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
+		/// </value>
+		/// <remarks>
+		/// Note on player controlled peds: One of the game scripts will kill the player when their health drops below 100, regardless of this setting.
+		/// </remarks>
+		public float FatalInjuryHealthThreshold
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + 5248);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 
@@ -845,6 +940,41 @@ namespace GTA
 				return Function.Call<bool>(Hash.GET_PED_STEALTH_MOVEMENT, Handle);
 			}
 		}
+		public bool IsAmbientSpeechplaying
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_AMBIENT_SPEECH_PLAYING, Handle);
+			}
+		}
+		public bool IsScriptedSpeechplaying
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_SCRIPTED_SPEECH_PLAYING, Handle);
+			}
+		}
+		public bool IsAnySpeechplaying
+		{
+			get
+			{
+				return Function.Call<bool>(Hash.IS_ANY_SPEECH_PLAYING, Handle);
+			}
+		}
+		public bool IsAmbientSpeechEnabled
+		{
+			get
+			{
+				return !Function.Call<bool>(Hash.IS_AMBIENT_SPEECH_DISABLED, Handle);
+			}
+		}
+		public bool IsPainAudioEnabled
+		{
+			set
+			{
+				Function.Call(Hash.DISABLE_PED_PAIN_AUDIO, Handle, !value);
+			}
+		}
 		public bool IsPlantingBomb
 		{
 
@@ -1127,7 +1257,8 @@ namespace GTA
 					return false;
 				}
 
-				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E4 : 0x13BC);
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x13BC : 0x13AC;
+				offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E4 : offset);
 
 				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 2)) == 0;
 			}
@@ -1254,6 +1385,17 @@ namespace GTA
 		{
 			Health = -1;
 		}
+		public void Resurrect()
+		{
+			int maxHealth = MaxHealth;
+			bool isCollisionEnabled = IsCollisionEnabled;
+
+			Function.Call(Hash.RESURRECT_PED, Handle);
+			MaxHealth = maxHealth;
+			Health = maxHealth;
+			IsCollisionEnabled = isCollisionEnabled;
+		    Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, Handle);
+		}
 
 		public void ResetVisibleDamage()
 		{
@@ -1341,40 +1483,28 @@ namespace GTA
 			Function.Call(Hash.CLEAR_PED_LAST_WEAPON_DAMAGE, Handle);
 		}
 
-		public Bone GetLastDamagedBone()
+		public new PedBoneCollection Bones
 		{
-			OutputArgument outBone = new OutputArgument();
-			if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, Handle, outBone))
+			get
 			{
-				return outBone.GetResult<Bone>();
+				if (ReferenceEquals(_pedBones, null))
+				{
+					_pedBones = new PedBoneCollection(this);
+				}
+				return _pedBones;
 			}
-			return Bone.SKEL_ROOT;
-		}
-		public void ClearLastBoneDamage()
-		{
-			Function.Call(Hash.CLEAR_PED_LAST_DAMAGE_BONE, Handle);
-		}
-
-		public int GetBoneIndex(Bone boneID)
-		{
-			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, boneID);
-		}
-		public Vector3 GetBoneCoord(Bone boneID)
-		{
-			return GetBoneCoord(boneID, Vector3.Zero);
-		}
-		public Vector3 GetBoneCoord(Bone boneID, Vector3 offset)
-		{
-			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, boneID, offset.X, offset.Y, offset.Z);
 		}
 
 		public Vector3 GetLastWeaponImpactPosition()
 		{
-			var positionArg = new OutputArgument();
+			NativeVector3 position;
 
-			if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, positionArg))
+			unsafe
 			{
-				return positionArg.GetResult<Vector3>();
+				if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, &position))
+				{
+					return position;
+				}
 			}
 
 			return Vector3.Zero;
@@ -1421,6 +1551,23 @@ namespace GTA
 		public Ped Clone(float heading = 0.0f)
 		{
 			return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, heading, false, false));
+		}
+		/// <summary>
+		/// Determines whether this <see cref="Ped"/> exists.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
+		public new bool Exists()
+		{
+			return Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle) == 1;
+		}
+		/// <summary>
+		/// Determines whether the <see cref="Ped"/> exists.
+		/// </summary>
+		/// <param name="ped">The <see cref="Ped"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
+		public static bool Exists(Ped ped)
+		{
+			return !ReferenceEquals(ped, null) && ped.Exists();
 		}
 	}
 }

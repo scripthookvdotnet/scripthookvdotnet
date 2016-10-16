@@ -17,6 +17,7 @@
 #pragma once
 
 #include "NativeHashes.hpp"
+#include "Vector3.hpp"
 
 namespace GTA
 {
@@ -29,6 +30,27 @@ namespace GTA
 				System::UInt64 get();
 				void set(System::UInt64 value);
 			};
+		};
+
+		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Explicit, Size = 0x18)]
+		private value class NativeVector3
+		{
+			//For natives that require pointers to Vectors and are called internally in the scripting section.
+			//Use this struct and pass a pointer to it, then after the nativecall this can be casted back to a GTA.Math.Vector3
+		public:
+			[System::Runtime::InteropServices::FieldOffset(0x00)] float X;
+			[System::Runtime::InteropServices::FieldOffset(0x08)] float Y;
+			[System::Runtime::InteropServices::FieldOffset(0x10)] float Z;
+			NativeVector3(float x, float y, float z):X(x), Y(y), Z(z){}
+			static operator GTA::Math::Vector3(NativeVector3 value)
+			{
+				return GTA::Math::Vector3(value.X, value.Y, value.Z);
+			}
+
+			static operator NativeVector3(GTA::Math::Vector3 value)
+			{
+				return NativeVector3(value.X, value.Y, value.Z);
+			}
 		};
 
 		#pragma region Functions
@@ -71,6 +93,14 @@ namespace GTA
 			{
 				return gcnew InputArgument(value);
 			}
+			static operator InputArgument ^ (long long value)
+			{
+				return gcnew InputArgument(value);
+			}
+			static operator InputArgument ^ (unsigned long long value)
+			{
+				return gcnew InputArgument(value);
+			}
 			static operator InputArgument ^ (float value)
 			{
 				return gcnew InputArgument(value);
@@ -103,19 +133,7 @@ namespace GTA
 			{
 				return gcnew InputArgument(value);
 			}
-			static operator InputArgument ^ (bool *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^ (int *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^ (unsigned int *value)
-			{
-				return gcnew InputArgument(System::IntPtr(value));
-			}
-			static operator InputArgument ^ (float *value)
+			static operator InputArgument ^ (void *value)
 			{
 				return gcnew InputArgument(System::IntPtr(value));
 			}
@@ -126,10 +144,20 @@ namespace GTA
 		public ref class OutputArgument : public InputArgument
 		{
 		public:
+			/// <summary>
+			/// Initializes a new instance of the <see cref="OutputArgument"/> class for natives that output data into pointers.
+			/// </summary>
 			OutputArgument();
+			/// <summary>
+			/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for natives that require the pointer to data instead of the actual data.
+			/// </summary>
+			/// <param name="initvalue">The value to set the data of this <see cref="OutputArgument"/> to.</param>
 			OutputArgument(System::Object ^initvalue);
 			~OutputArgument();
 
+			/// <summary>
+			/// Gets the value of data stored in this <see cref="OutputArgument"/>.
+			/// </summary>
 			generic <typename T>
 			T GetResult();
 

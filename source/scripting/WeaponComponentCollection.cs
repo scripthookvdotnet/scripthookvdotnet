@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Linq;
-using GTA;
 using GTA.Native;
 
 namespace GTA
@@ -95,6 +93,7 @@ namespace GTA
 		MarksmanPistolClip01 = 3416146413u,
 		MarksmanRifleClip01 = 3627761985u,
 		MarksmanRifleClip02 = 3439143621u,
+		MarksmanRifleVarmodLuxe = 371102273u,
 		MicroSMGClip01 = 3410538224u,
 		MicroSMGClip02 = 283556395u,
 		MicroSMGVarmodLuxe = 1215999497u,
@@ -223,7 +222,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_CLIP"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.Clip ||
+				    component.AttachmentPoint == ComponentAttachmentPoint.Clip2)
 				{
 					if (index-- == 0)
 					{
@@ -241,7 +241,8 @@ namespace GTA
 				int count = 0;
 				foreach (var component in this)
 				{
-					if (component.DisplayName.StartsWith("WCT_CLIP"))
+					if (component.AttachmentPoint == ComponentAttachmentPoint.Clip ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Clip2)
 					{
 						count++;
 					}
@@ -254,7 +255,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_SCOPE"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.Scope ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Scope2)
 				{
 					if (index-- == 0)
 					{
@@ -272,7 +274,8 @@ namespace GTA
 				int count = 0;
 				foreach (var component in this)
 				{
-					if (component.DisplayName.StartsWith("WCT_SCOPE"))
+					if (component.AttachmentPoint == ComponentAttachmentPoint.Scope ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Scope2)
 					{
 						count++;
 					}
@@ -285,7 +288,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_SUPP"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.Supp ||
+					component.AttachmentPoint == ComponentAttachmentPoint.Supp2)
 				{
 					return component;
 				}
@@ -297,7 +301,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_FLASH"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.FlashLaser ||
+					component.AttachmentPoint == ComponentAttachmentPoint.FlashLaser2)
 				{
 					return component;
 				}
@@ -309,7 +314,7 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.DisplayName.StartsWith("WCT_VAR"))
+				if (component.AttachmentPoint == ComponentAttachmentPoint.GunRoot)
 				{
 					return component;
 				}
@@ -573,35 +578,38 @@ namespace GTA
 						WeaponComponentHash.RevolverVarmodGoon,
 					};
 			}
-
-			IntPtr data = Marshal.AllocCoTaskMem(39*8);
+			
 			WeaponComponentHash[] result = null;
 
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
-				if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, data))
+				unsafe
 				{
-					if (MemoryAccess.ReadInt(data + 8) == (int) hash)
+					DlcWeaponData weaponData;
+					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &weaponData))
 					{
-						result = new WeaponComponentHash[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
-
-						for (int j = 0; j < result.Length; j++)
+						if (weaponData.Hash == hash)
 						{
-							if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, data))
+							result = new WeaponComponentHash[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
+							
+							for (int j = 0; j < result.Length; j++)
 							{
-								result[j] = (WeaponComponentHash) MemoryAccess.ReadInt(data + 3*8);
+								DlcWeaponComponentData componentData;
+								if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, &componentData))
+								{
+									result[j] = componentData.Hash;
+								}
+								else
+								{
+									result[j] = WeaponComponentHash.Invalid;
+								}
 							}
-							else
-							{
-								result[j] = WeaponComponentHash.Invalid;
-							}
+							return result;
 						}
-						break;
 					}
 				}
 			}
-
-			Marshal.FreeCoTaskMem(data);
+			
 
 			if (result == null)
 			{

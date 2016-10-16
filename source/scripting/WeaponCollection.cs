@@ -41,10 +41,13 @@ namespace GTA
 		{
 			get
 			{
-				var currentWeapon = new OutputArgument();
-				Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, currentWeapon, true);
+			    int currentWeapon;
+				unsafe
+				{
+					Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, &currentWeapon, true);
+				}
 
-				WeaponHash hash = currentWeapon.GetResult<WeaponHash>();
+			    WeaponHash hash = (WeaponHash)currentWeapon;
 
 				if (_weapons.ContainsKey(hash))
 				{
@@ -52,7 +55,7 @@ namespace GTA
 				}
 				else
 				{
-					var weapon = new Weapon(_owner, (WeaponHash)hash);
+					var weapon = new Weapon(_owner, hash);
 					_weapons.Add(hash, weapon);
 
 					return weapon;

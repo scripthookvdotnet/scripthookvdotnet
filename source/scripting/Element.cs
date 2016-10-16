@@ -52,7 +52,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws this <see cref="IElement"/> this frame at the specified offset.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="IElement"/> using a 1280*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="IElement"/> using a 1280*720 pixel base.</param>
 		void Draw(SizeF offset);
 
 
@@ -64,7 +64,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws this <see cref="IElement"/> this frame at the specified offset using the width returned in <see cref="Screen.ScaledWidth"/>.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="IElement"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="IElement"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base.</param>
 		void ScaledDraw(SizeF offset);
 	}
 
@@ -125,27 +125,27 @@ namespace GTA.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Rectangle"/> class used for grouping drawing Rectangles on screen.
 		/// </summary>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Rectangle"/></param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Container"/></param>						 							
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Rectangle"/>.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Container"/>.</param>						 							
 		public Rectangle(PointF position, SizeF size) : this(position, size, Color.Transparent, false)
 		{
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Rectangle"/> class used for grouping drawing Rectangles on screen.
 		/// </summary>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Rectangle"/></param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Container"/></param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Container"/></param>							 							
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Rectangle"/>.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Container"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Container"/>.</param>							 							
 		public Rectangle(PointF position, SizeF size, Color color) : this(position, size, color, false)
 		{
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Rectangle"/> class used for grouping drawing Rectangles on screen.
 		/// </summary>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Rectangle"/></param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Container"/></param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Container"/></param>							 
-		/// <param name="centered">Position the <see cref="Rectangle"/> based on its center instead of top left corner, see also <seealso cref="Centered"/></param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Rectangle"/>.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Container"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Container"/>.</param>							 
+		/// <param name="centered">Position the <see cref="Rectangle"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
 		public Rectangle(PointF position, SizeF size, Color color, bool centered)
 		{
 			Enabled = true;
@@ -168,7 +168,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws this <see cref="Rectangle" /> this frame at the specified offset.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="Rectangle" /> using a 1280*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Rectangle" /> using a 1280*720 pixel base.</param>
 		public virtual void Draw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.Width, Screen.Height);
@@ -185,7 +185,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws this <see cref="Rectangle" /> this frame at the specified offset using the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="Rectangle" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Rectangle" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base.</param>
 		public virtual void ScaledDraw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
@@ -229,8 +229,8 @@ namespace GTA.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Container"/> class used for grouping <see cref="IElement"/>s together.
 		/// </summary>
-		/// <param name="position">Set the <see cref="Rectangle.Position"/> on screen where to draw the <see cref="Container"/></param>
-		/// <param name="size">Set the <see cref="Rectangle.Size"/> of the <see cref="Container"/></param>																	   
+		/// <param name="position">Set the <see cref="Rectangle.Position"/> on screen where to draw the <see cref="Container"/>.</param>
+		/// <param name="size">Set the <see cref="Rectangle.Size"/> of the <see cref="Container"/>.</param>																	   
 		public Container(PointF position, SizeF size) : base(position, size)
 		{
 			Items = new List<IElement>();
@@ -238,9 +238,9 @@ namespace GTA.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Container"/> class used for grouping <see cref="IElement"/>s together.
 		/// </summary>
-		/// <param name="position">Set the <see cref="Rectangle.Position"/> on screen where to draw the <see cref="Container"/></param>
-		/// <param name="size">Set the <see cref="Rectangle.Size"/> of the <see cref="Container"/></param>
-		/// <param name="color">Set the <see cref="Rectangle.Color"/> used to draw the <see cref="Container"/></param>							 							   
+		/// <param name="position">Set the <see cref="Rectangle.Position"/> on screen where to draw the <see cref="Container"/>.</param>
+		/// <param name="size">Set the <see cref="Rectangle.Size"/> of the <see cref="Container"/>.</param>
+		/// <param name="color">Set the <see cref="Rectangle.Color"/> used to draw the <see cref="Container"/>.</param>							 							   
 		public Container(PointF position, SizeF size, Color color) : base(position, size, color)
 		{
 			Items = new List<IElement>();
@@ -248,10 +248,10 @@ namespace GTA.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Container"/> class used for grouping <see cref="IElement"/>s together.
 		/// </summary>
-		/// <param name="position">Set the <see cref="Rectangle.Position"/> on screen where to draw the <see cref="Container"/></param>
-		/// <param name="size">Set the <see cref="Rectangle.Size"/> of the <see cref="Container"/></param>
-		/// <param name="color">Set the <see cref="Rectangle.Color"/> used to draw the <see cref="Container"/></param>							 
-		/// <param name="centered">Position the <see cref="Container"/> based on its center instead of top left corner, see also <seealso cref="Rectangle.Centered"/></param>
+		/// <param name="position">Set the <see cref="Rectangle.Position"/> on screen where to draw the <see cref="Container"/>.</param>
+		/// <param name="size">Set the <see cref="Rectangle.Size"/> of the <see cref="Container"/>.</param>
+		/// <param name="color">Set the <see cref="Rectangle.Color"/> used to draw the <see cref="Container"/>.</param>							 
+		/// <param name="centered">Position the <see cref="Container"/> based on its center instead of top left corner, see also <seealso cref="Rectangle.Centered"/>.</param>
 		public Container(PointF position, SizeF size, Color color, bool centered) : base(position, size, color, centered)
 		{
 			Items = new List<IElement>();
@@ -269,7 +269,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws this <see cref="Container" /> this frame and all its <see cref="IElement"/>s at the specified offset.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="Rectangle" /> using a 1280*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Rectangle" /> using a 1280*720 pixel base.</param>
 		public override void Draw(SizeF offset)
 		{
 			if (!Enabled)
@@ -303,7 +303,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Draws this <see cref="Container" /> this frame and all its <see cref="IElement"/>s at the specified offset using the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </summary>
-		/// <param name="offset">The offset to shift the draw position of this <see cref="Container" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="Container" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base.</param>
 		public override void ScaledDraw(SizeF offset)
 		{
 			if (!Enabled)

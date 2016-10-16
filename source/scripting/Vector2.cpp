@@ -243,6 +243,10 @@ namespace GTA
 		{
 			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1}", X.ToString(), Y.ToString());
 		}
+		String ^Vector2::ToString(String ^numberFormat)
+		{
+			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1}", X.ToString(numberFormat), Y.ToString(numberFormat));
+		}
 		int Vector2::GetHashCode()
 		{
 			return X.GetHashCode() ^ Y.GetHashCode();

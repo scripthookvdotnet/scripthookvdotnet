@@ -530,7 +530,11 @@ namespace GTA
 
 		String ^Quaternion::ToString()
 		{
-			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1} Z:{2} W:{2}", X.ToString(), Y.ToString(), Z.ToString(), W.ToString());
+			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(), Y.ToString(), Z.ToString(), W.ToString());
+		}
+		String ^Quaternion::ToString(String ^numberFormat)
+		{
+			return String::Format(CultureInfo::InvariantCulture, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(numberFormat), Y.ToString(numberFormat), Z.ToString(numberFormat), W.ToString(numberFormat));
 		}
 		int Quaternion::GetHashCode()
 		{

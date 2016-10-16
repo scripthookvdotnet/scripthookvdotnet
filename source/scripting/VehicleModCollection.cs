@@ -305,7 +305,7 @@ namespace GTA
 			{
 				return this[VehicleModType.Livery].GetLocalizedModName(index);
 			}
-			return Game.GetGXTEntry(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, index));
+			return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_LIVERY_NAME, _owner.Handle, index));
 		}
 
 		public VehicleWindowTint WindowTint
@@ -320,15 +320,17 @@ namespace GTA
 			}
 		}
 
-		public VehicleColor PrimaryColor
+        public VehicleColor PrimaryColor
 		{
 			get
 			{
-				var color1 = new OutputArgument();
-				var color2 = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_COLOURS,_owner.Handle, color1, color2);
+                int color1, color2;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_COLOURS,_owner.Handle, &color1, &color2);
+				}
 
-				return color1.GetResult<VehicleColor>();
+				return (VehicleColor)color1;
 			}
 			set
 			{
@@ -339,12 +341,14 @@ namespace GTA
 		{
 			get
 			{
-				var color1 = new OutputArgument();
-				var color2 = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_COLOURS,_owner.Handle, color1, color2);
+                int color1, color2;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
+				}
 
-				return color2.GetResult<VehicleColor>();
-			}
+                return (VehicleColor)color2;
+            }
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_COLOURS,_owner.Handle, PrimaryColor, value);
@@ -354,12 +358,14 @@ namespace GTA
 		{
 			get
 			{
-				var color1 = new OutputArgument();
-				var color2 = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, color1, color2);
+                int color1, color2;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, &color1, &color2);
+				}
 
-				return color2.GetResult<VehicleColor>();
-			}
+                return (VehicleColor)color2;
+            }
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS,_owner.Handle, PearlescentColor, value);
@@ -369,12 +375,14 @@ namespace GTA
 		{
 			get
 			{
-				var color1 = new OutputArgument();
-				var color2 = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, color1, color2);
+                int color1, color2;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS,_owner.Handle, &color1, &color2);
+				}
 
-				return color1.GetResult<VehicleColor>();
-			}
+                return (VehicleColor)color1;
+            }
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS,_owner.Handle, value, RimColor);
@@ -384,11 +392,14 @@ namespace GTA
 		{
 			get
 			{
-				var color = new OutputArgument();
-				Function.Call((Hash)9012939617897488694uL,_owner.Handle, color);
+			    int color;
+				unsafe
+				{
+					Function.Call((Hash)9012939617897488694uL,_owner.Handle, &color);
+				}
 
-				return color.GetResult<VehicleColor>();
-			}
+                return (VehicleColor)color;
+            }
 			set
 			{
 				Function.Call((Hash)17585947422526242585uL,_owner.Handle, value);
@@ -398,11 +409,14 @@ namespace GTA
 		{
 			get
 			{
-				var color = new OutputArgument();
-				Function.Call((Hash)13214509638265019391uL,_owner.Handle, color);
+			    int color;
+				unsafe
+				{
+					Function.Call((Hash)13214509638265019391uL,_owner.Handle, &color);
+				}
 
-				return color.GetResult<VehicleColor>();
-			}
+                return (VehicleColor)color;
+            }
 			set
 			{
 				Function.Call((Hash)6956317558672667244uL,_owner.Handle, value);
@@ -430,12 +444,13 @@ namespace GTA
 		{
 			get
 			{
-				var red = new OutputArgument();
-				var green = new OutputArgument();
-				var blue = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_TYRE_SMOKE_COLOR,_owner.Handle, red, green, blue);
+				int red, green, blue;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_TYRE_SMOKE_COLOR,_owner.Handle, &red, &green, &blue);
+				}
 
-				return Color.FromArgb(red.GetResult<int>(), green.GetResult<int>(), blue.GetResult<int>());
+				return Color.FromArgb(red, green, blue);
 			}
 			set
 			{
@@ -446,13 +461,14 @@ namespace GTA
 		{
 			get
 			{
-				var red = new OutputArgument();
-				var green = new OutputArgument();
-				var blue = new OutputArgument();
-				Function.Call(Hash._GET_VEHICLE_NEON_LIGHTS_COLOUR,_owner.Handle, red, green, blue);
+                int red, green, blue;
+				unsafe
+				{
+					Function.Call(Hash._GET_VEHICLE_NEON_LIGHTS_COLOUR, _owner.Handle, &red, &green, &blue);
+				}
 
-				return Color.FromArgb(red.GetResult<int>(), green.GetResult<int>(), blue.GetResult<int>());
-			}
+                return Color.FromArgb(red, green, blue);
+            }
 			set
 			{
 				Function.Call(Hash._SET_VEHICLE_NEON_LIGHTS_COLOUR,_owner.Handle, value.R, value.G, value.B);
@@ -476,13 +492,13 @@ namespace GTA
 			switch (neonLight)
 			{
 				case VehicleNeonLight.Left:
-					return _owner.HasBone("neon_l");
+					return _owner.Bones.HasBone("neon_l");
 				case VehicleNeonLight.Right:
-					return _owner.HasBone("neon_r");
+					return _owner.Bones.HasBone("neon_r");
 				case VehicleNeonLight.Front:
-					return _owner.HasBone("neon_f");
+					return _owner.Bones.HasBone("neon_f");
 				case VehicleNeonLight.Back:
-					return _owner.HasBone("neon_b");
+					return _owner.Bones.HasBone("neon_b");
 				default:
 					return false;
 			}
@@ -492,13 +508,15 @@ namespace GTA
 		{
 			get
 			{
-				var red = new OutputArgument();
-				var green = new OutputArgument();
-				var blue = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_CUSTOM_PRIMARY_COLOUR,_owner.Handle, red, green, blue);
+                int red, green, blue;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_CUSTOM_PRIMARY_COLOUR, _owner.Handle, &red, &green, &blue);
+				}
 
-				return Color.FromArgb(red.GetResult<int>(), green.GetResult<int>(), blue.GetResult<int>());
-			}
+                return Color.FromArgb(red, green, blue);
+
+            }
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_CUSTOM_PRIMARY_COLOUR,_owner.Handle, value.R, value.G, value.B);
@@ -508,13 +526,14 @@ namespace GTA
 		{
 			get
 			{
-				var red = new OutputArgument();
-				var green = new OutputArgument();
-				var blue = new OutputArgument();
-				Function.Call(Hash.GET_VEHICLE_CUSTOM_SECONDARY_COLOUR,_owner.Handle, red, green, blue);
+                int red, green, blue;
+				unsafe
+				{
+					Function.Call(Hash.GET_VEHICLE_CUSTOM_SECONDARY_COLOUR, _owner.Handle, &red, &green, &blue);
+				}
 
-				return Color.FromArgb(red.GetResult<int>(), green.GetResult<int>(), blue.GetResult<int>());
-			}
+                return Color.FromArgb(red, green, blue);
+            }
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_CUSTOM_SECONDARY_COLOUR,_owner.Handle, value.R, value.G, value.B);

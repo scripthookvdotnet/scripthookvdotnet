@@ -6,7 +6,8 @@ namespace GTA
 {
 	public enum RopeType
 	{
-		Normal = 4
+		ThickRope = 4,
+		ThinMetalWire = 5,
 	}
 
 	public sealed class Rope : PoolObject, IEquatable<Rope>
@@ -57,7 +58,7 @@ namespace GTA
 		}
 		public void AttachEntities(Entity entityOne, Vector3 positionOne, Entity entityTwo, Vector3 positionTwo, float length)
 		{
-			Function.Call(Hash.ATTACH_ENTITIES_TO_ROPE, Handle, entityOne.Handle, entityTwo.Handle, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, new OutputArgument(), new OutputArgument());
+			Function.Call(Hash.ATTACH_ENTITIES_TO_ROPE, Handle, entityOne.Handle, entityTwo.Handle, positionOne.X, positionOne.Y, positionOne.Z, positionTwo.X, positionTwo.Y, positionTwo.Z, length, 0, 0, 0, 0);
 		}
 		public void DetachEntity(Entity entity)
 		{
@@ -77,14 +78,23 @@ namespace GTA
 			return Function.Call<Vector3>(Hash.GET_ROPE_VERTEX_COORD, Handle, vertex);
 		}
 
-		public void Delete()
+		public override void Delete()
 		{
-			Function.Call(Hash.DELETE_ROPE, new OutputArgument(Handle));
+		    int handle = Handle;
+			unsafe
+			{
+				Function.Call(Hash.DELETE_ROPE, &handle);
+			}
+			Handle = handle;
 		}
 
-		public override bool Exists()
+        public override bool Exists()
 		{
-			return Function.Call<bool>(Hash.DOES_ROPE_EXIST, new OutputArgument(Handle));
+            int handle = Handle;
+	        unsafe
+	        {
+		        return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);
+	        }
 		}
 		public static bool Exists(Rope rope)
 		{

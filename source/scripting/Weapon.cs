@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using GTA.Native;
 
 namespace GTA
@@ -77,7 +76,7 @@ namespace GTA
 				return  GetDisplayNameFromHash(Hash);
 			}
 		}
-		public string FriendlyName
+		public string LocalizedName
 		{
 			get
 			{
@@ -157,10 +156,13 @@ namespace GTA
 					return 0;
 				}
 
-				var ammoInClip = new OutputArgument();
-				Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, Hash, ammoInClip);
+				int ammoInClip;
+				unsafe
+				{
+					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, Hash, &ammoInClip);
+				}
 
-				return ammoInClip.GetResult<int>();
+				return ammoInClip;
 			}
 			set
 			{
@@ -188,10 +190,13 @@ namespace GTA
 					return 1;
 				}
 
-				var maxAmmo = new OutputArgument();
-				Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, maxAmmo);
+			    int maxAmmo;
+				unsafe
+				{
+					Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, &maxAmmo);
+				}
 
-				return maxAmmo.GetResult<int>();
+				return maxAmmo;
 			}
 		}
 		public int MaxAmmoInClip
@@ -263,111 +268,107 @@ namespace GTA
 			switch (hash)
 			{
 				case WeaponHash.Pistol:
-					return "WTT_PIST";
+					return "WT_PIST";
 				case WeaponHash.CombatPistol:
-					return "WTT_PIST_CBT";
+					return "WT_PIST_CBT";
 				case WeaponHash.APPistol:
-					return "WTT_PIST_AP";
+					return "WT_PIST_AP";
 				case WeaponHash.SMG:
-					return "WTT_SMG";
+					return "WT_SMG";
 				case WeaponHash.MicroSMG:
-					return "WTT_SMG_MCR";
+					return "WT_SMG_MCR";
 				case WeaponHash.AssaultRifle:
-					return "WTT_RIFLE_ASL";
+					return "WT_RIFLE_ASL";
 				case WeaponHash.CarbineRifle:
-					return "WTT_RIFLE_CBN";
+					return "WT_RIFLE_CBN";
 				case WeaponHash.AdvancedRifle:
-					return "WTT_RIFLE_ADV";
+					return "WT_RIFLE_ADV";
 				case WeaponHash.MG:
-					return "WTT_MG";
+					return "WT_MG";
 				case WeaponHash.CombatMG:
-					return "WTT_MG_CBT";
+					return "WT_MG_CBT";
 				case WeaponHash.PumpShotgun:
-					return "WTT_SG_PMP";
+					return "WT_SG_PMP";
 				case WeaponHash.SawnOffShotgun:
-					return "WTT_SG_SOF";
+					return "WT_SG_SOF";
 				case WeaponHash.AssaultShotgun:
-					return "WTT_SG_ASL";
+					return "WT_SG_ASL";
 				case WeaponHash.HeavySniper:
-					return "WTT_SNIP_HVY";
+					return "WT_SNIP_HVY";
 				case WeaponHash.SniperRifle:
-					return "WTT_SNIP_RIF";
+					return "WT_SNIP_RIF";
 				case WeaponHash.GrenadeLauncher:
-					return "WTT_GL";
+					return "WT_GL";
 				case WeaponHash.RPG:
-					return "WTT_RPG";
+					return "WT_RPG";
 				case WeaponHash.Minigun:
-					return "WTT_MINIGUN";
+					return "WT_MINIGUN";
 				case WeaponHash.AssaultSMG:
-					return "WTT_SMG_ASL";
+					return "WT_SMG_ASL";
 				case WeaponHash.BullpupShotgun:
-					return "WTT_SG_BLP";
+					return "WT_SG_BLP";
 				case WeaponHash.Pistol50:
-					return "WTT_PIST_50";
+					return "WT_PIST_50";
 				case WeaponHash.Bottle:
-					return "WTT_BOTTLE";
+					return "WT_BOTTLE";
 				case WeaponHash.Gusenberg:
-					return "WTT_GUSENBERG";
+					return "WT_GUSENBERG";
 				case WeaponHash.SNSPistol:
-					return "WTT_SNSPISTOL";
+					return "WT_SNSPISTOL";
 				case WeaponHash.VintagePistol:
-					return "WTT_VPISTOL";
+					return "TT_VPISTOL";
 				case WeaponHash.Dagger:
-					return "WTT_DAGGER";
+					return "WT_DAGGER";
 				case WeaponHash.FlareGun:
-					return "WTT_FLAREGUN";
+					return "WT_FLAREGUN";
 				case WeaponHash.Musket:
-					return "WTT_MUSKET";
+					return "WT_MUSKET";
 				case WeaponHash.Firework:
-					return "WTT_FWRKLNCHR";
+					return "WT_FWRKLNCHR";
 				case WeaponHash.MarksmanRifle:
-					return "WTT_HMKRIFLE";
+					return "WT_HMKRIFLE";
 				case WeaponHash.HeavyShotgun:
-					return "WTT_HVYSHOT";
+					return "WT_HVYSHOT";
 				case WeaponHash.ProximityMine:
-					return "WTT_PRXMINE";
+					return "WT_PRXMINE";
 				case WeaponHash.HomingLauncher:
-					return "WTT_HOMLNCH";
+					return "WT_HOMLNCH";
 				case WeaponHash.CombatPDW:
-					return "WTT_COMBATPDW";
+					return "WT_COMBATPDW";
 				case WeaponHash.KnuckleDuster:
-					return "WTT_KNUCKLE";
+					return "WT_KNUCKLE";
 				case WeaponHash.MarksmanPistol:
-					return "WTT_MKPISTOL";
+					return "WT_MKPISTOL";
 				case WeaponHash.Machete:
-					return "WTT_MACHETE";
+					return "WT_MACHETE";
 				case WeaponHash.MachinePistol:
-					return "WTT_MCHPIST";
+					return "WT_MCHPIST";
 				case WeaponHash.Flashlight:
-					return "WTT_FLASHLIGHT";
+					return "WT_FLASHLIGHT";
 				case WeaponHash.DoubleBarrelShotgun:
-					return "WTT_DBSHGN";
+					return "WT_DBSHGN";
 				case WeaponHash.CompactRifle:
-					return "WTT_CMPRIFLE";
+					return "WT_CMPRIFLE";
 				case WeaponHash.SwitchBlade:
-					return "WTT_SWBLADE";
+					return "WT_SWBLADE";
 				case WeaponHash.Revolver:
-					return "WTT_REVOLVER";
+					return "WT_REVOLVER";
 			}
-
-			IntPtr data = Marshal.AllocCoTaskMem(39 * 8);
-			string result = string.Empty;
-
+			DlcWeaponData data;
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
-				if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, data))
+				unsafe
 				{
-					if (MemoryAccess.ReadInt(data + 8) == (int)hash)
+					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data))
 					{
-						result = MemoryAccess.ReadString(data + 23 * 8);
-						break;
+						if (data.Hash == hash)
+						{
+							return data.DisplayName;
+						}
 					}
 				}
 			}
-
-			Marshal.FreeCoTaskMem(data);
-
-			return result;
+			return "WT_INVALID";
 		}
 
 	}

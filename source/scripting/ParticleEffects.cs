@@ -73,13 +73,12 @@ namespace GTA
 		/// </summary>
 		/// <param name="effectName">the name of the effect.</param>
 		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
-		/// <param name="boneIndex">The <see cref="Entity"/> bone index to attach the effect to, -1 for CORE.</param>
-		/// <param name="off">The offset from the bone to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the bone, the effect has.</param>
+		/// <param name="off">The offset from the <paramref name="entity"/> to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, Entity entity, int boneIndex = -1,
+		public bool StartNonLoopedOnEntity(string effectName, Entity entity,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None)
 		{
@@ -89,29 +88,51 @@ namespace GTA
 			}
 			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
-				rot.Y, rot.Z, boneIndex, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
+				rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
 		}
 
 		/// <summary>
-		/// Starts this <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
+		/// Starts a Particle Effect on an <see cref="EntityBone"/> that runs once then is destroyed.
+		/// </summary>
+		/// <param name="effectName">the name of the effect.</param>
+		/// <param name="entityBone">The <see cref="EntityBone"/> the effect is attached to.</param>
+		/// <param name="off">The offset from the <paramref name="entityBone"/> to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
+		public bool StartNonLoopedOnEntity(string effectName, EntityBone entityBone,
+			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
+			InvertAxis invertAxis = InvertAxis.None)
+		{
+			if(!SetNextCall())
+			{
+				return false;
+			}
+			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X,
+				rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
+				invertAxis.HasFlag(InvertAxis.Z));
+		}
+
+		/// <summary>
+		/// Creates a <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
 		/// </summary>
 		/// <param name="effectName">The name of the Effect</param>
 		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
-		/// <param name="boneIndex">The <see cref="Entity"/> bone index to attach the effect to, -1 for CORE.</param>
-		/// <param name="off">The offset from the bone to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the bone, the effect has.</param>
+		/// <param name="off">The offset from the <paramref name="entity"/> to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
 		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
 		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity, int boneIndex = -1,
+		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
 			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
 		{
 			var result = new EntityParticleEffect(this, effectName, entity)
 			{
-				BoneIndex = boneIndex,
 				Offset = off,
 				Rotation = rot,
 				Scale = scale,
@@ -123,9 +144,37 @@ namespace GTA
 			}
 			return result;
 		}
+		/// <summary>
+		/// Creates a <see cref="ParticleEffect"/> on an <see cref="EntityBone"/> that runs looped.
+		/// </summary>
+		/// <param name="effectName">The name of the Effect</param>
+		/// <param name="entityBone">The <see cref="EntityBone"/> the effect is attached to.</param>
+		/// <param name="off">The offset from the <paramref name="entityBone"/> to attach the effect.</param>
+		/// <param name="rot">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
+		/// <param name="scale">How much to scale the size of the effect by.</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
+		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
+		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
+		public EntityParticleEffect CreateEffectOnEntity(string effectName, EntityBone entityBone,
+			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
+			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+		{
+			var result = new EntityParticleEffect(this, effectName, entityBone)
+			{
+				Offset = off,
+				Rotation = rot,
+				Scale = scale,
+				InvertAxis = invertAxis
+			};
+			if(startNow)
+			{
+				result.Start();
+			}
+			return result;
+		}
 
 		/// <summary>
-		/// Starts this <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
+		/// Creates a <see cref="ParticleEffect"/> at a position that runs looped.
 		/// </summary>
 		/// <param name="effectName">The name of the effect.</param>
 		/// <param name="pos">The World position where the effect is.</param>
@@ -491,13 +540,17 @@ namespace GTA
 	public class EntityParticleEffect : ParticleEffect
 	{
 		#region Fields
-		private Entity _entity;
-		private int _boneIndex;
+		private EntityBone _entityBone;
 		#endregion
 		internal EntityParticleEffect(ParticleEffectsAsset asset, string effectName, Entity entity)
 			: base(asset, effectName)
 		{
-			_entity = entity;
+			_entityBone = entity.Bones.Core;
+		}
+		internal EntityParticleEffect(ParticleEffectsAsset asset, string effectName, EntityBone entitybone)
+			: base(asset, effectName)
+		{
+			_entityBone = entitybone;
 		}
 
 		/// <summary>
@@ -505,10 +558,10 @@ namespace GTA
 		/// </summary>
 		public Entity Entity
 		{
-			get { return _entity; }
+			get { return _entityBone.Owner; }
 			set
 			{
-				_entity = value;
+				_entityBone = value.Bones.Core;
 				if (IsActive)
 				{
 					Stop();
@@ -518,15 +571,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the bone index of this <see cref="Entity"/> that this <see cref="EntityParticleEffect"/> is attached to.
+		/// Gets or sets the <see cref="EntityBone"/> that this <see cref="EntityParticleEffect"/> is attached to.
 		/// </summary>
-		/// <remarks>If value == -1, use the <see cref="Entity"/> Core.</remarks>
-		public int BoneIndex
+		public EntityBone Bone
 		{
-			get { return _boneIndex;}
+			get { return _entityBone;}
 			set
 			{
-				_boneIndex = value;
+				_entityBone = value;
 				if (IsActive)
 				{
 					Stop();
@@ -545,10 +597,10 @@ namespace GTA
 			if (!_asset.SetNextCall())
 				return false;
 
-			Hash hash = _entity is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash._START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
+			Hash hash = _entityBone.Owner is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash._START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
 
-			Handle = Function.Call<int>(hash, _effectName, _entity.Handle, Offset.X, Offset.Y, Offset.Z, Rotation.X,
-				Rotation.Y, Rotation.Z, _boneIndex, _scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
+			Handle = Function.Call<int>(hash, _effectName, _entityBone.Owner.Handle, Offset.X, Offset.Y, Offset.Z, Rotation.X,
+				Rotation.Y, Rotation.Z, _entityBone.Index, _scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
 				InvertAxis.HasFlag(InvertAxis.Z));
 
 			if (IsActive)
@@ -567,7 +619,7 @@ namespace GTA
 		{
 			var result = new EntityParticleEffect(_asset, _effectName, entity)
 			{
-				BoneIndex = _boneIndex,
+				Bone = entity.Bones[_entityBone.Index],
 				Offset = _offset,
 				Rotation = _rotation,
 				Color = _color,
@@ -576,6 +628,28 @@ namespace GTA
 				InvertAxis = _InvertAxis
 			};
 			if (IsActive)
+			{
+				result.Start();
+			}
+			return result;
+		}
+		/// <summary>
+		/// Creates a copy of this <see cref="EntityParticleEffect"/> to another <see cref="GTA.EntityBone"/> to simplify applying the same effect to many Entities.
+		/// </summary>
+		/// <param name="entityBone">The <see cref="GTA.EntityBone"/> to copy to.</param>
+		/// <returns>An <see cref="EntityParticleEffect"/> that has all the same properties as this instance, but for a different <see cref="GTA.EntityBone"/>.</returns>
+		public EntityParticleEffect CopyTo(EntityBone entityBone)
+		{
+			var result = new EntityParticleEffect(_asset, _effectName, entityBone)
+			{
+				Offset = _offset,
+				Rotation = _rotation,
+				Color = _color,
+				Scale = _scale,
+				Range = _range,
+				InvertAxis = _InvertAxis
+			};
+			if(IsActive)
 			{
 				result.Start();
 			}

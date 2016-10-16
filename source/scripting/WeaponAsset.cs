@@ -51,6 +51,7 @@ namespace GTA
 			while (!IsLoaded)
 			{
 				Script.Yield();
+				Request();
 
 				if (DateTime.UtcNow >= endtime)
 				{
@@ -78,6 +79,17 @@ namespace GTA
 		{
 			return Hash;
 		}
+
+		public string DisplayName
+		{
+			get { return Weapon.GetDisplayNameFromHash((WeaponHash)Hash); }
+		}
+
+		public string LocalizedName
+		{
+			get { return Game.GetGXTEntry(Weapon.GetDisplayNameFromHash((WeaponHash)Hash)); }
+		}
+
 		public override string ToString()
 		{
 			return "0x" + Hash.ToString("X");

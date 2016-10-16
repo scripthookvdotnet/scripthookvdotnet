@@ -22,6 +22,18 @@
     <Filter Include="scripting\NaturalMotion">
       <UniqueIdentifier>{7d70b8bd-e3f7-4ac8-975f-9757c66b19bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scripting\World\Entities">
+      <UniqueIdentifier>{e41f2341-0089-48ca-961c-ce9fda4bc508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripting\World\Entities\Vehicles">
+      <UniqueIdentifier>{66b61d93-76a0-41f9-b846-287290bdb09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripting\World\Entities\Peds">
+      <UniqueIdentifier>{5708d695-4032-4e46-a5de-9172a28a5fdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripting\World\Weapons">
+      <UniqueIdentifier>{4de7cb45-112d-481b-811e-8d6f7e79fa27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\Main.cpp">
@@ -92,25 +104,7 @@
     <CsCompile Include="source\scripting\Blip.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\Bone.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Camera.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Entity.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Model.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Ped.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\PedGroup.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\PedHash.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
     <CsCompile Include="source\scripting\Pickup.cs">
@@ -119,40 +113,7 @@
     <CsCompile Include="source\scripting\Player.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\Prop.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Relationship.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Rope.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Tasks.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Vehicle.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleHash.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Weapon.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\WeaponComponent.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\WeaponComponentCollection.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\WeaponAsset.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\WeaponCollection.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\WeaponHash.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
     <CsCompile Include="source\scripting\World.cs">
@@ -203,40 +164,7 @@
     <CsCompile Include="source\scripting\EuphoriaHelpers.cs">
       <Filter>scripting\NaturalMotion</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\RelationshipGroup.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Checkpoint.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleModCollection.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleMod.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleToggleMod.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleDoor.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleDoorCollection.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleWheel.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleWheelCollection.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleWindow.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\VehicleWindowCollection.cs">
-      <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Style.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
     <CsCompile Include="source\scripting\ButtonCombination.cs">
@@ -244,6 +172,105 @@
     </CsCompile>
     <CsCompile Include="source\scripting\ParticleEffects.cs">
       <Filter>scripting\World</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Entity.cs">
+      <Filter>scripting\World\Entities</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\EntityBone.cs">
+      <Filter>scripting\World\Entities</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Ped.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\PedHash.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\PedGroup.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Vehicle.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleDoor.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleDoorCollection.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleHash.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleMod.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleModCollection.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleToggleMod.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWheel.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWheelCollection.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWindow.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\VehicleWindowCollection.cs">
+      <Filter>scripting\World\Entities\Vehicles</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Model.cs">
+      <Filter>scripting\World\Entities</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Prop.cs">
+      <Filter>scripting\World\Entities</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponHash.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Weapon.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponAsset.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponCollection.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponComponent.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WeaponComponentCollection.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\DlcWeaponStructs.cs">
+      <Filter>scripting\World\Weapons</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Tasks.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\RelationshipGroup.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Relationship.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Style.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\BoneID.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\PedBone.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\PedBoneCollection.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\EntityBoneCollection.cs">
+      <Filter>scripting\World\Entities</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>

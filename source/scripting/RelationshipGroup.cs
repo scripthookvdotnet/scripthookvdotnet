@@ -7,10 +7,13 @@ namespace GTA
 	{
 		RelationshipGroup(string name) : this()
 		{
-			var hashArg = new OutputArgument();
-			Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, hashArg);
+		    int hashArg;
+			unsafe
+			{
+				Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, &hashArg);
+			}
 
-			Hash = hashArg.GetResult<int>();
+			Hash = hashArg;
 		}
 		public RelationshipGroup(int hash) : this()
 		{

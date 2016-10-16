@@ -24,14 +24,27 @@ namespace GTA
 		Sunrise
 	}
 
-	public sealed class Player : PoolObject, IEquatable<Player>
+	public sealed class Player : INativeValue, IEquatable<Player>
 	{
-		public Player(int handle) : base(handle)
+		#region Fields
+		private int _handle;
+		Ped _ped;
+		#endregion
+		public Player(int handle)
 		{
+			_handle = handle;
 		}
 
-		Ped _ped;
+		public int Handle { get { return _handle; } }
+		public ulong NativeValue
+		{
+			get { return (ulong)_handle; }
+			set { _handle = unchecked((int)value); }
+		}
 
+		/// <summary>
+		/// Gets the <see cref="Ped"/> this <see cref="Player"/> is controling.
+		/// </summary>
 		public Ped Character
 		{
 			get
@@ -47,6 +60,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of this <see cref="Player"/>.
+		/// </summary>
 		public string Name
 		{
 			get
@@ -54,6 +70,10 @@ namespace GTA
 				return Function.Call<string>(Hash.GET_PLAYER_NAME, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets or sets how much money this <see cref="Player"/> has.
+		/// <remarks>Only works if current player is <see cref="PedHash.Michael"/>, <see cref="PedHash.Franklin"/> or <see cref="PedHash.Trevor"/></remarks>
+		/// </summary>
 		public int Money
 		{
 			get
@@ -75,10 +95,13 @@ namespace GTA
 						return 0;
 				}
 
-				var result = new OutputArgument();
-				Function.Call(Hash.STAT_GET_INT, stat, result, -1);
+			    int result;
+				unsafe
+				{
+					Function.Call(Hash.STAT_GET_INT, stat, &result, -1);
+				}
 
-				return result.GetResult<int>();
+				return result;
 			}
 			set
 			{
@@ -103,6 +126,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the wanted level for this <see cref="Player"/>.
+		/// </summary>
 		public int WantedLevel
 		{
 			get
@@ -115,6 +141,12 @@ namespace GTA
 				Function.Call(Hash.SET_PLAYER_WANTED_LEVEL_NOW, Handle, false);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the wanted center position for this <see cref="Player"/>.
+		/// </summary>
+		/// <value>
+		/// The place in world coords where the police think this <see cref="Player"/> is.
+		/// </value>
 		public Vector3 WantedCenterPosition
 		{
 			get
@@ -127,6 +159,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the maximum amount of armor this <see cref="Player"/> can carry.
+		/// </summary>
 		public int MaxArmor
 		{
 			get
@@ -139,35 +174,55 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the primary parachute tint for this <see cref="Player"/>.
+		/// </summary>
 		public ParachuteTint PrimaryParachuteTint
 		{
 			get
 			{
-				var result = new OutputArgument();
-				Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, result);
+			    int result;
 
-				return result.GetResult<ParachuteTint>();
+				unsafe
+				{
+					Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &result);
+				}
+
+				return (ParachuteTint)result;
 			}
 			set
 			{
 				Function.Call(Hash.SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the reserve parachute tint for this <see cref="Player"/>.
+		/// </summary>
 		public ParachuteTint ReserveParachuteTint
 		{
 			get
 			{
-				var result = new OutputArgument();
-				Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, result);
+                int result;
 
-				return result.GetResult<ParachuteTint>();
-			}
+				unsafe
+				{
+					Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &result);
+				}
+
+                return (ParachuteTint)result;
+            }
 			set
 			{
 				Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, value);
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Player"/> can leave a parachute smoke trail.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> can leave a parachute smoke trail; otherwise, <c>false</c>.
+		/// </value>
 		public bool CanLeaveParachuteSmokeTrail
 		{
 			set
@@ -175,16 +230,23 @@ namespace GTA
 				Function.Call(Hash.SET_PLAYER_CAN_LEAVE_PARACHUTE_SMOKE_TRAIL, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the color of the parachute smoke trail for this <see cref="Player"/>.
+		/// </summary>
+		/// <value>
+		/// The color of the parachute smoke trail for this <see cref="Player"/>.
+		/// </value>
 		public Color ParachuteSmokeTrailColor
 		{
 			get
 			{
-				var red = new OutputArgument();
-				var green = new OutputArgument();
-				var blue = new OutputArgument();
-				Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, red, green, blue);
+			    int r, g, b;
+				unsafe
+				{
+					Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, &r, &g, &b);
+				}
 
-				return Color.FromArgb(red.GetResult<int>(), green.GetResult<int>(), blue.GetResult<int>());
+				return Color.FromArgb(r, g, b);
 			}
 			set
 			{
@@ -192,6 +254,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is alive.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Player"/> is alive; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsAlive
 		{
 			get
@@ -199,6 +267,12 @@ namespace GTA
 				return !IsDead;
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is dead.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Player"/> is dead; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsDead
 		{
 			get
@@ -206,6 +280,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PLAYER_DEAD, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is aiming.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Player"/> is aiming; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsAiming
 		{
 			get
@@ -213,6 +293,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is climbing.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is climbing; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsClimbing
 		{
 			get
@@ -220,6 +306,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PLAYER_CLIMBING, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is riding a train.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is riding a train; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsRidingTrain
 		{
 			get
@@ -227,6 +319,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PLAYER_RIDING_TRAIN, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is pressing a horn.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is pressing a horn; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsPressingHorn
 		{
 			get
@@ -234,6 +332,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PLAYER_PRESSING_HORN, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is playing.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is playing; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsPlaying
 		{
 			get
@@ -241,6 +345,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PLAYER_PLAYING, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Player"/> is invincible.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is invincible; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsInvincible
 		{
 			get
@@ -253,6 +363,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Player"/> is ignored by the police.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Player"/> is ignored by the police; otherwise, <c>false</c>.
+		/// </value>
 		public bool IgnoredByPolice
 		{
 			set
@@ -260,6 +376,12 @@ namespace GTA
 				Function.Call(Hash.SET_POLICE_IGNORE_PLAYER, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Player"/> is ignored by everyone.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Player"/> is ignored by everyone; otherwise, <c>false</c>.
+		/// </value>
 		public bool IgnoredByEveryone
 		{
 			set
@@ -268,6 +390,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether cops will be dispatched for this <see cref="Player"/>
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if cops will be dispatched; otherwise, <c>false</c>.
+		/// </value>
 		public bool DispatchsCops
 		{
 			set
@@ -276,6 +404,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Player"/> can use cover.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> can use cover; otherwise, <c>false</c>.
+		/// </value>
 		public bool CanUseCover
 		{
 			set
@@ -283,6 +417,12 @@ namespace GTA
 				Function.Call(Hash.SET_PLAYER_CAN_USE_COVER, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> can start a mission.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> can start a mission; otherwise, <c>false</c>.
+		/// </value>
 		public bool CanStartMission
 		{
 			get
@@ -291,6 +431,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Player"/> can control ragdoll.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> can control ragdoll; otherwise, <c>false</c>.
+		/// </value>
 		public bool CanControlRagdoll
 		{
 			set
@@ -298,6 +444,12 @@ namespace GTA
 				Function.Call(Hash.GIVE_PLAYER_RAGDOLL_CONTROL, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Player"/> can control its <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> can control its <see cref="Ped"/>; otherwise, <c>false</c>.
+		/// </value>
 		public bool CanControlCharacter
 		{
 			get
@@ -310,6 +462,11 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Attempts to change the <see cref="Model"/> of this <see cref="Player"/>.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> to change this <see cref="Player"/> to.</param>
+		/// <returns><c>true</c> if the change was sucessful; otherwise, <c>false</c>.</returns>
 		public bool ChangeModel(Model model)
 		{
 			if (!model.IsInCdImage || !model.IsPed || !model.Request(1000))
@@ -324,21 +481,44 @@ namespace GTA
 			return true;
 		}
 
-		public int RemainingSprintTime
+		/// <summary>
+		/// Gets how long this <see cref="Player"/> can remain sprinting for.
+		/// </summary>
+		public float RemainingSprintTime
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_PLAYER_SPRINT_TIME_REMAINING, Handle);
-			}
-		}
-		public int RemainingUnderwaterTime
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_PLAYER_UNDERWATER_TIME_REMAINING, Handle);
+				return Function.Call<float>(Hash.GET_PLAYER_SPRINT_TIME_REMAINING, Handle);
 			}
 		}
 
+		/// <summary>
+		/// Gets how much sprint stamina this <see cref="Player"/> currently has. 
+		/// </summary>
+		public float RemainingSprintStamina
+		{
+			get
+			{
+				return Function.Call<float>(Hash.GET_PLAYER_SPRINT_STAMINA_REMAINING, Handle);
+			}
+		}
+		/// <summary>
+		/// Gets how long this <see cref="Player"/> can stay underwater before they start losing health.
+		/// </summary>
+		public float RemainingUnderwaterTime
+		{
+			get
+			{
+				return Function.Call<float>(Hash.GET_PLAYER_UNDERWATER_TIME_REMAINING, Handle);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is using their special ability.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is using their special ability; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsSpecialAbilityActive
 		{
 			get
@@ -346,6 +526,12 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_SPECIAL_ABILITY_ACTIVE, Handle);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Player"/> can use their special ability.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this  <see cref="Player"/> can use their special ability; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsSpecialAbilityEnabled
 		{
 			get
@@ -357,58 +543,114 @@ namespace GTA
 				Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Handle, value);
 			}
 		}
+		/// <summary>
+		/// Charges the special ability for this <see cref="Player"/>.
+		/// </summary>
+		/// <param name="absoluteAmount">The absolute amount.</param>
 		public void ChargeSpecialAbility(int absoluteAmount)
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_CHARGE_ABSOLUTE, Handle, absoluteAmount, true);
 		}
+		/// <summary>
+		/// Charges the special ability for this <see cref="Player"/>.
+		/// </summary>
+		/// <param name="normalizedRatio">The amount between <c>0.0f</c> and <c>1.0f</c></param>
 		public void ChargeSpecialAbility(float normalizedRatio)
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_CHARGE_NORMALIZED, Handle, normalizedRatio, true);
 		}
+		/// <summary>
+		/// Refills the special ability for this <see cref="Player"/>.
+		/// </summary>
 		public void RefillSpecialAbility()
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_FILL_METER, Handle, 1);
 		}
+		/// <summary>
+		/// Depletes the special ability for this <see cref="Player"/>.
+		/// </summary>
 		public void DepleteSpecialAbility()
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_DEPLETE_METER, Handle, 1);
 		}
 
+		/// <summary>
+		/// Gets the last <see cref="Vehicle"/> this <see cref="Player"/> used.
+		/// </summary>
+		/// <remarks>returns <c>null</c> if the last vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle
 		{
 			get
 			{
-				return new Vehicle(Function.Call<int>(Hash.GET_PLAYERS_LAST_VEHICLE));
+				Vehicle veh = new Vehicle(Function.Call<int>(Hash.GET_PLAYERS_LAST_VEHICLE));
+				return veh.Exists() ? veh : null;
 			}
 		}
 
-		public bool IsTargetting(Entity entity)
+        /// <summary>
+        /// Determines whether this <see cref="Player"/> is targetting the specified <see cref="Entity"/>.
+        /// </summary>
+        /// <param name="entity">The <see cref="Entity"/> to check.</param>
+        /// <returns>
+        ///   <c>true</c> if this <see cref="Player"/> is targetting the specified <see cref="Entity"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsTargetting(Entity entity)
 		{
 			return Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING_AT_ENTITY, Handle, entity.Handle);
 		}
-		public bool IsTargettingAnything
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Player"/> is targetting anything.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this <see cref="Player"/> is targetting anything; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsTargettingAnything
 		{
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
 			}
 		}
-		public Entity GetTargetedEntity()
+        /// <summary>
+        /// Gets the <see cref="Entity"/> this <see cref="Player"/> is targetting.
+        /// </summary>
+        /// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targetting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
+        public Entity GetTargetedEntity()
 		{
-			var entityArg = new OutputArgument();
+			int entityHandle;
 
-			if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, entityArg))
-			{
-				return Entity.FromHandle(entityArg.GetResult<int>());
-			}
-			return null;
+	        unsafe
+	        {
+		        if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
+		        {
+			        return Entity.FromHandle(entityHandle);
+		        }
+	        }
+	        return null;
+		}
+		/// <summary>
+		/// Sets a value indicating whether ths player is forced to aim.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to make the player always be aiming; otherwise, <c>false</c>.
+		/// </value>
+		public bool ForcedAim
+		{
+			set { Function.Call(Hash.SET_PLAYER_FORCED_AIM, Handle, value); }
 		}
 
+		/// <summary>
+		/// Prevents this <see cref="Player"/> firing this frame.
+		/// </summary>
 		public void DisableFiringThisFrame()
 		{
 			Function.Call(Hash.DISABLE_PLAYER_FIRING, Handle, 0);
 		}
-		public void SetRunSpeedMultThisFrame(float mult)
+        /// <summary>
+        /// Sets the run speed mult for this this <see cref="Player"/> this frame.
+        /// </summary>
+        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
+        public void SetRunSpeedMultThisFrame(float mult)
 		{
 			if (mult > 1.499f)
 			{
@@ -417,7 +659,11 @@ namespace GTA
 
 			Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Handle, mult);
 		}
-		public void SetSwimSpeedMultThisFrame(float mult)
+        /// <summary>
+        /// Sets the swim speed mult for this this <see cref="Player"/> this frame.
+        /// </summary>
+        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
+        public void SetSwimSpeedMultThisFrame(float mult)
 		{
 			if (mult > 1.499f)
 			{
@@ -426,34 +672,48 @@ namespace GTA
 
 			Function.Call(Hash.SET_SWIM_MULTIPLIER_FOR_PLAYER, Handle, mult);
 		}
-		public void SetFireAmmoThisFrame()
+        /// <summary>
+        /// Makes this <see cref="Player"/> shoot fire bullets this frame.
+        /// </summary>
+        public void SetFireAmmoThisFrame()
 		{
 			Function.Call(Hash.SET_FIRE_AMMO_THIS_FRAME, Handle);
 		}
-		public void SetExplosiveAmmoThisFrame()
+        /// <summary>
+        /// Makes this <see cref="Player"/> shoot explosive bullets this frame.
+        /// </summary>
+        public void SetExplosiveAmmoThisFrame()
 		{
 			Function.Call(Hash.SET_EXPLOSIVE_AMMO_THIS_FRAME, Handle);
 		}
-		public void SetExplosiveMeleeThisFrame()
+        /// <summary>
+        /// Makes this <see cref="Player"/> have an explosive melee attack this frame.
+        /// </summary>
+        public void SetExplosiveMeleeThisFrame()
 		{
 			Function.Call(Hash.SET_EXPLOSIVE_MELEE_THIS_FRAME, Handle);
 		}
-		public void SetSuperJumpThisFrame()
+        /// <summary>
+        /// Lets this <see cref="Player"/> jump really high this frame.
+        /// </summary>
+        public void SetSuperJumpThisFrame()
 		{
 			Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Handle);
 		}
-		public void SetMayNotEnterAnyVehicleThisFrame()
+        /// <summary>
+        /// Blocks this <see cref="Player"/> from entering any <see cref="Vehicle"/> this frame.
+        /// </summary>
+        public void SetMayNotEnterAnyVehicleThisFrame()
 		{
 			Function.Call(Hash.SET_PLAYER_MAY_NOT_ENTER_ANY_VEHICLE, Handle);
 		}
-		public void SetMayOnlyEnterThisVehicleThisFrame(Vehicle vehicle)
+        /// <summary>
+        /// Only lets this <see cref="Player"/> enter a specific <see cref="Vehicle"/> this frame.
+        /// </summary>
+        /// <param name="vehicle">The <see cref="Vehicle"/> this <see cref="Player"/> is allowed to enter.</param>
+        public void SetMayOnlyEnterThisVehicleThisFrame(Vehicle vehicle)
 		{
 			Function.Call(Hash.SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle.Handle);
-		}
-
-		public override bool Exists()
-		{
-			return true;
 		}
 
 		public bool Equals(Player player)
@@ -467,7 +727,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return Handle;
+			return Handle.GetHashCode();
 		}
 
 		public static bool operator ==(Player left, Player right)

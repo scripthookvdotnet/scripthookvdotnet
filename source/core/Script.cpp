@@ -41,6 +41,10 @@ namespace GTA
 
 		return _settings;
 	}
+	String^ Script::GetRelativeFilePath(System::String ^filePath)
+	{
+		return System::IO::Path::Combine(BaseDirectory, filePath);
+	}
 	int Script::Interval::get()
 	{
 		return _interval;

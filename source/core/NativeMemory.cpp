@@ -7,6 +7,11 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
+using namespace System::Runtime::InteropServices;
+
+const char* const _cellEmailBcon = "CELL_EMAIL_BCON";
+const char* const _string = "STRING";
+const char* const _nullStr = "";
 
 namespace GTA
 {
@@ -14,26 +19,86 @@ namespace GTA
 	{
 		namespace
 		{
+			[StructLayout(LayoutKind::Explicit)]
+			private value class EntityPool
+			{
+			public:
+				[FieldOffset(0x10)]UInt32 num1;
+				[FieldOffset(0x20)]UInt32 num2;
+
+				inline bool Full()
+				{
+					return num1 - (num2 & 0x3FFFFFFF) <= 256;
+				}
+			};
+
+			[StructLayout(LayoutKind::Explicit)]
+			private value class VehiclePool
+			{
+			public:
+				[FieldOffset(0x00)]UInt64 *poolAddress;
+				[FieldOffset(0x08)]UInt32 size;
+				[FieldOffset(0x30)]UInt32* bitArray;
+				[FieldOffset(0x60)]UInt32 itemCount;
+
+				inline bool isValid(UInt32 i)
+				{
+					return (bitArray[i >> 5] >> (i & 0x1F)) & 1;
+				}
+
+				inline UInt64 getAddress(UInt32 i)
+				{
+					return poolAddress[i];
+				}
+			};
+
+			[StructLayout(LayoutKind::Explicit)]
+			private value class GenericPool{
+			public:
+				[FieldOffset(0x00)] UInt64 poolStartAddress;
+				[FieldOffset(0x08)] Byte* byteArray;
+				[FieldOffset(0x10)] UInt32 size;
+				[FieldOffset(0x14)] UInt32 itemSize;
+
+
+				inline bool isValid(UInt32 i)
+				{
+					return mask(i) != 0;
+				}
+
+				inline UInt64 getAddress(UInt32 i)
+				{
+					return mask(i) & (poolStartAddress + i * itemSize);
+				}
+			private:
+				inline long long mask(UInt32 i)
+				{
+					long long num1 = byteArray[i] & 0x80;
+					return ~((num1 | -num1) >> 63);
+				}
+			};
+
+
 			private ref struct EntityPoolTask : IScriptTask
 			{
 				enum class Type
 				{
-					Ped,
-					Object,
-					Vehicle,
-					Entity
+					Ped=1,
+					Object=2,
+					Vehicle=4,
+					PickupObject=8
 				};
 
 				EntityPoolTask(Type type) : _type(type) { }
 
-				bool CheckEntity(uintptr_t address)
+				inline bool CheckEntity(uintptr_t address)
 				{
 					if (_posCheck)
 					{
 						float position[3];
 						MemoryAccess::_entityPositionFunc(address, position);
 
-						if (Math::Vector3::Subtract(_position, Math::Vector3(position[0], position[1], position[2])).LengthSquared() > _radiusSquared)
+						if(_position.DistanceToSquared(Math::Vector3(position[0], position[1], position[2])) > _radiusSquared)
 						{
 							return false;
 						}
@@ -64,84 +129,31 @@ namespace GTA
 
 					return true;
 				}
+
 				virtual void Run()
 				{
-					const uintptr_t EntityPool = *MemoryAccess::_entityPoolAddress;
-					const uintptr_t VehiclePool = *MemoryAccess::_vehiclePoolAddress;
-					const uintptr_t PedPool = *MemoryAccess::_pedPoolAddress;
-					const uintptr_t ObjectPool = *MemoryAccess::_objectPoolAddress;
-
-					if (EntityPool == 0 || VehiclePool == 0 || PedPool == 0 || ObjectPool == 0)
+					if(*MemoryAccess::_entityPoolAddress == 0)
 					{
 						return;
 					}
-
-					switch (_type)
+					EntityPool* entityPool = reinterpret_cast<EntityPool*>(*MemoryAccess::_entityPoolAddress);
+	
+					if(_type.HasFlag(Type::Vehicle))
 					{
-						case Type::Entity:
-						case Type::Vehicle:
+						if(*MemoryAccess::_vehiclePoolAddress)
 						{
-							const uintptr_t VehiclePoolInfo = *reinterpret_cast<UINT64 *>(VehiclePool);
-							for (unsigned int i = 0; i < *reinterpret_cast<UINT32 *>(VehiclePoolInfo + 8); i++)
+							VehiclePool* vehiclePool = *reinterpret_cast<VehiclePool**>(*MemoryAccess::_vehiclePoolAddress);
+
+							for(UInt32 i = 0; i < vehiclePool->size; i++)
 							{
-								if (*reinterpret_cast<UINT32 *>(EntityPool + 16) - (*reinterpret_cast<UINT32 *>(EntityPool + 32) & 0x3FFFFFFF) <= 256)
+								if(entityPool->Full())
 								{
 									break;
 								}
-
-								if ((*reinterpret_cast<UINT32 *>(*reinterpret_cast<UINT64 *>(VehiclePoolInfo + 48) + 4 * (static_cast<UINT64>(i) >> 5)) >> (i & 0x1F)) & 1)
+								if(vehiclePool->isValid(i))
 								{
-									const uintptr_t address = *reinterpret_cast<UINT64 *>(i * 8 + *reinterpret_cast<UINT64 *>(VehiclePoolInfo));
-
-									if (address && CheckEntity(address))
-									{
-										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
-									}
-								}
-							}
-							if (_type != Type::Entity)
-							{
-								break;
-							}
-						}
-						case Type::Ped:
-						{
-							for (unsigned int i = 0; i < *reinterpret_cast<UINT32 *>(PedPool + 16); i++)
-							{
-								if (*reinterpret_cast<UINT32 *>(EntityPool + 16) - (*reinterpret_cast<UINT32 *>(EntityPool + 32) & 0x3FFFFFFF) <= 256)
-								{
-									break;
-								}
-
-								if (~(*reinterpret_cast<UINT8 *>(*reinterpret_cast<UINT64 *>(PedPool + 8) + i) >> 7) & 1)
-								{
-									const uintptr_t address = *reinterpret_cast<UINT64 *>(PedPool) + i * *reinterpret_cast<UINT32 *>(PedPool + 20);
-
-									if (address && CheckEntity(address))
-									{
-										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
-									}
-								}
-							}
-							if (_type != Type::Entity)
-							{
-								break;
-							}
-						}
-						case Type::Object:
-						{
-							for (unsigned int i = 0; i < *reinterpret_cast<UINT32 *>(ObjectPool + 16); i++)
-							{
-								if (*reinterpret_cast<UINT32 *>(EntityPool + 16) - (*reinterpret_cast<UINT32 *>(EntityPool + 32) & 0x3FFFFFFF) <= 256)
-								{
-									break;
-								}
-
-								if (~(*reinterpret_cast<UINT8 *>(*reinterpret_cast<UINT64 *>(ObjectPool + 8) + i) >> 7) & 1)
-								{
-									const uintptr_t address = *reinterpret_cast<UINT64 *>(ObjectPool) + i * *reinterpret_cast<UINT32 *>(ObjectPool + 20);
-
-									if (address && CheckEntity(address))
+									UInt64 address = vehiclePool->getAddress(i);
+									if(address && CheckEntity(address))
 									{
 										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
 									}
@@ -149,6 +161,84 @@ namespace GTA
 							}
 						}
 					}
+					if(_type.HasFlag(Type::Ped))
+					{
+						if(*MemoryAccess::_pedPoolAddress)
+						{
+							GenericPool* pedPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_pedPoolAddress);
+
+							for(UInt32 i = 0; i < pedPool->size; i++)
+							{
+								if(entityPool->Full())
+								{
+									break;
+								}
+								if(pedPool->isValid(i))
+								{
+									UInt64 address = pedPool->getAddress(i);
+									if(address && CheckEntity(address))
+									{
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
+								}
+							}
+						}
+					}
+					if(_type.HasFlag(Type::Object))
+					{
+						if(*MemoryAccess::_objectPoolAddress)
+						{
+							GenericPool* propPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_objectPoolAddress);
+							
+							for(UInt32 i = 0; i < propPool->size; i++)
+							{
+								if(entityPool->Full())
+								{
+									break;
+								}
+								if(propPool->isValid(i))
+								{
+									UInt64 address = propPool->getAddress(i);
+									if(address && CheckEntity(address))
+									{
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
+								}
+							}
+						}
+					}
+					if(_type.HasFlag(Type::PickupObject))
+					{
+						if(*MemoryAccess::_pickupObjectPoolAddress)
+						{
+							GenericPool* pickupPool = reinterpret_cast<GenericPool*>(*MemoryAccess::_pickupObjectPoolAddress);
+
+							for(UInt32 i = 0; i < pickupPool->size; i++)
+							{
+								if(entityPool->Full())
+								{
+									break;
+								}
+								if(pickupPool->isValid(i))
+								{
+									UInt64 address = pickupPool->getAddress(i);
+									if(address)
+									{
+										if (_posCheck)
+										{
+											float* position = (float*)(address + 0x90);
+											if(_position.DistanceToSquared(Math::Vector3(position[0], position[1], position[2])) > _radiusSquared)
+											{
+												continue;
+											}
+										}
+										_handles->Add(MemoryAccess::_addEntityToPoolFunc(address));
+									}
+								}
+							}
+						}
+					}
+
 				}
 
 				Type _type;
@@ -323,6 +413,8 @@ namespace GTA
 			_pedPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 3) + address + 7);
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
 			_objectPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 3) + address + 7);
+			address = FindPattern("\x8B\xF0\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6", "xxxxx????xxxx");
+			_pickupObjectPoolAddress = reinterpret_cast<uintptr_t *>(*reinterpret_cast<int *>(address + 5) + address + 9);
 
 			CreateNmMessageFunc = FindPattern("\x33\xDB\x48\x89\x1D\x00\x00\x00\x00\x85\xFF", "xxxxx????xx") - 0x42;
 			GiveNmMessageFunc = FindPattern("\x0F\x84\x00\x00\x00\x00\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x41\x3B\xC5", "xx????xxxxx????xxx") - 0x78;
@@ -348,7 +440,33 @@ namespace GTA
 			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
 			_writeWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 6) + address + 10);
 			_readWorldGravityAddr = reinterpret_cast<float *>(*reinterpret_cast<int *>(address + 19) + address + 23);
+
+			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
+			_cursorSpriteAddr = reinterpret_cast<int *>(*reinterpret_cast<int*>(address - 4) + address);
+
+			address = FindPattern("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
+			address = address + *reinterpret_cast<int*>(address) + 4;
+			_gamePlayCameraAddr = reinterpret_cast<UInt64*>(*reinterpret_cast<int*>(address + 3) + address + 7);
+			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
+			_cameraPoolAddress = reinterpret_cast<UInt64*>(*reinterpret_cast<int*>(address) + address + 4);
+
 			GenerateVehicleModelList();
+
+			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
+			_stringPtr = IntPtr((void*)_string);
+			_nullString = IntPtr((void*)_nullStr);
+		}
+		IntPtr MemoryAccess::CellEmailBcon::get()
+		{
+		return _cellEmailBconPtr;
+		}
+		IntPtr MemoryAccess::StringPtr::get()
+		 {
+		return _stringPtr;
+		}
+		IntPtr MemoryAccess::NullString::get()
+		{
+			return _nullString;
 		}
 		struct HashNode
 		{
@@ -589,6 +707,42 @@ namespace GTA
 		{
 			return IntPtr((long long)_ptfxAddressFunc(handle));
 		}
+
+		int MemoryAccess::GetEntityBoneCount(int handle)
+		{
+			UInt64 MemAddress = _entityAddressFunc(handle);
+			UInt64 Addr2 = (*(UInt64(__fastcall **)(__int64))(*(UInt64 *)MemAddress + 88i64))(MemAddress);
+			UInt64 Addr3;
+			if(!Addr2)
+			{
+				Addr3 = *(UInt64*)(MemAddress + 80);
+				if(!Addr3)
+				{
+					return 0;
+				}
+				else
+				{
+					Addr3 = *(UInt64*)(Addr3 + 40);
+				}
+			}
+			else
+			{
+				Addr3 = *(UInt64*)(Addr2 + 104);
+				if(!Addr3 || !*(UInt64*)(Addr2 + 120))
+				{
+					return 0;
+				}
+				else
+				{
+					Addr3 = *(UInt64*)(Addr3 + 376);
+				}
+			}
+			if(!Addr3)
+			{
+				return 0;
+			}
+			return *(int*)(Addr3 + 32);
+		}
 		
 		IntPtr MemoryAccess::GetEntityBoneMatrixAddress(int handle, int boneIndex)
 		{
@@ -641,10 +795,31 @@ namespace GTA
 			*_writeWorldGravityAddr = value;
 		}
 
+		int MemoryAccess::ReadCursorSprite()
+		{
+			return *_cursorSpriteAddr;
+		}
+
+		IntPtr MemoryAccess::GetGameplayCameraAddress()
+		{
+			return IntPtr((long long)*_gamePlayCameraAddr);
+		}
+		
+		IntPtr MemoryAccess::GetCameraAddress(int handle)
+		{
+			unsigned int index = (unsigned int)(handle >> 8);
+			UInt64 poolAddr = *_cameraPoolAddress;
+			if(*(Byte *)(index + *(Int64*)(poolAddr + 8)) == (Byte)(handle & 0xFF))
+			{
+				return IntPtr(*(Int64*)poolAddr + (unsigned int)(index * *(UInt32 *)(poolAddr + 20)));
+			}
+			return IntPtr::Zero;
+			
+		}
 
 		array<int> ^MemoryAccess::GetEntityHandles()
 		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Entity);
+			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Ped | EntityPoolTask::Type::Object | EntityPoolTask::Type::Vehicle);
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
@@ -652,7 +827,7 @@ namespace GTA
 		}
 		array<int> ^MemoryAccess::GetEntityHandles(Math::Vector3 position, float radius)
 		{
-			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Entity);
+			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::Ped | EntityPoolTask::Type::Object | EntityPoolTask::Type::Vehicle);
 			task->_position = position;
 			task->_radiusSquared = radius * radius;
 			task->_posCheck = true;
@@ -730,29 +905,62 @@ namespace GTA
 
 			return task->_handles->ToArray();
 		}
+		struct checkpoint
+		{
+			char padding[0xC];
+			int handle;
+			char padding1[0x08];
+			checkpoint* next;
+		};
 		UInt64 _getCheckpoinHandles(UInt64 ArrayPtr)
 		{
-			UInt64 addr = MemoryAccess::CheckpointBaseAddr();
 			int* handles = (int*)ArrayPtr;
 			UInt64 count = 0;
-			UInt64 i;
-			for (i = *(UInt64*)(addr + 48); i && count<64; i = *(UInt64*)(i+24))
+			for (checkpoint* item = *reinterpret_cast<checkpoint**>(MemoryAccess::CheckpointBaseAddr() + 48); item  && count < 64; item = item->next)
 			{
-				handles[count++] = *(int*)(i + 12);
+				handles[count++] = item->handle;
 			}
 			return count;
 		}
 		array<int> ^MemoryAccess::GetCheckpointHandles()
 		{
-			int* Handles = new int[64];
+			int Handles[64];
 			GenericTask ^task = gcnew GenericTask(_getCheckpoinHandles, (UInt64)Handles);
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 			int count = (int)task->GetResult();
 			array<int>^ data_array = gcnew array<int>(count);
-			pin_ptr<int> ptrBuffer = &data_array[data_array->GetLowerBound(0)];
+			pin_ptr<int> ptrBuffer = &data_array[0];
 			memcpy(ptrBuffer, Handles, count * 4);
-			delete[] Handles;
 			return data_array;
+		}
+		array<int> ^MemoryAccess::GetPickupObjectHandles()
+		{
+			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::PickupObject);
+
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
+
+			return task->_handles->ToArray();
+		}
+		array<int> ^MemoryAccess::GetPickupObjectHandles(Math::Vector3 position, float radius)
+		{
+			auto task = gcnew EntityPoolTask(EntityPoolTask::Type::PickupObject);
+			task->_position = position;
+			task->_radiusSquared = radius * radius;
+			task->_posCheck = true;
+
+			ScriptDomain::CurrentDomain->ExecuteTask(task);
+
+			return task->_handles->ToArray();
+		}
+
+		int MemoryAccess::GetNumberOfVehicles()
+		{
+			if (*_vehiclePoolAddress)
+			{
+				VehiclePool* pool = *reinterpret_cast<VehiclePool**>(*_vehiclePoolAddress);
+				return pool->itemCount;
+			}
+			return 0;
 		}
 
 		void MemoryAccess::SendEuphoriaMessage(int targetHandle, String ^message, Dictionary<String ^, Object ^> ^arguments)

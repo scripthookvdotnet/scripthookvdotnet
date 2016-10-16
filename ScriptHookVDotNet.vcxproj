@@ -119,10 +119,15 @@
   <ItemGroup>
     <CsCompile Include="source\scripting\Audio.cs" />
     <CsCompile Include="source\scripting\Blip.cs" />
-    <CsCompile Include="source\scripting\Bone.cs" />
+    <CsCompile Include="source\scripting\BoneID.cs" />
     <CsCompile Include="source\scripting\Camera.cs" />
     <CsCompile Include="source\scripting\ButtonCombination.cs" />
     <CsCompile Include="source\scripting\Checkpoint.cs" />
+    <CsCompile Include="source\scripting\DlcWeaponStructs.cs" />
+    <CsCompile Include="source\scripting\EntityBone.cs" />
+    <CsCompile Include="source\scripting\EntityBoneCollection.cs" />
+    <CsCompile Include="source\scripting\PedBone.cs" />
+    <CsCompile Include="source\scripting\PedBoneCollection.cs" />
     <CsCompile Include="source\scripting\Style.cs" />
     <CsCompile Include="source\scripting\Controls.cs" />
     <CsCompile Include="source\scripting\Entity.cs" />
@@ -174,7 +179,7 @@
   <!-- Compile C# source files -->
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
-    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
+    <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" LangVersion="5" AllowUnsafeBlocks="true" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
   </Target>
   <!-- Rename and move output files -->
   <Target Name="MoveFiles" AfterTargets="AfterBuild" Condition="'$(Configuration)' != 'NativeGen'">
