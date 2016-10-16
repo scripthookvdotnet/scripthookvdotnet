@@ -95,7 +95,7 @@ namespace GTA
 						return 0;
 				}
 
-			    int result;
+				int result;
 				unsafe
 				{
 					Function.Call(Hash.STAT_GET_INT, stat, &result, -1);
@@ -181,7 +181,7 @@ namespace GTA
 		{
 			get
 			{
-			    int result;
+				int result;
 
 				unsafe
 				{
@@ -202,15 +202,15 @@ namespace GTA
 		{
 			get
 			{
-                int result;
+				int result;
 
 				unsafe
 				{
 					Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &result);
 				}
 
-                return (ParachuteTint)result;
-            }
+				return (ParachuteTint)result;
+			}
 			set
 			{
 				Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, value);
@@ -240,7 +240,7 @@ namespace GTA
 		{
 			get
 			{
-			    int r, g, b;
+				int r, g, b;
 				unsafe
 				{
 					Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, &r, &g, &b);
@@ -587,46 +587,46 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Determines whether this <see cref="Player"/> is targetting the specified <see cref="Entity"/>.
-        /// </summary>
-        /// <param name="entity">The <see cref="Entity"/> to check.</param>
-        /// <returns>
-        ///   <c>true</c> if this <see cref="Player"/> is targetting the specified <see cref="Entity"/>; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsTargetting(Entity entity)
+		/// <summary>
+		/// Determines whether this <see cref="Player"/> is targetting the specified <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="Entity"/> to check.</param>
+		/// <returns>
+		///   <c>true</c> if this <see cref="Player"/> is targetting the specified <see cref="Entity"/>; otherwise, <c>false</c>.
+		/// </returns>
+		public bool IsTargetting(Entity entity)
 		{
 			return Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING_AT_ENTITY, Handle, entity.Handle);
 		}
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Player"/> is targetting anything.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this <see cref="Player"/> is targetting anything; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsTargettingAnything
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Player"/> is targetting anything.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Player"/> is targetting anything; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsTargettingAnything
 		{
 			get
 			{
 				return Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
 			}
 		}
-        /// <summary>
-        /// Gets the <see cref="Entity"/> this <see cref="Player"/> is targetting.
-        /// </summary>
-        /// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targetting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
-        public Entity GetTargetedEntity()
+		/// <summary>
+		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is targetting.
+		/// </summary>
+		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targetting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
+		public Entity GetTargetedEntity()
 		{
 			int entityHandle;
 
-	        unsafe
-	        {
-		        if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
-		        {
-			        return Entity.FromHandle(entityHandle);
-		        }
-	        }
-	        return null;
+			unsafe
+			{
+				if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
+				{
+					return Entity.FromHandle(entityHandle);
+				}
+			}
+			return null;
 		}
 		/// <summary>
 		/// Sets a value indicating whether ths player is forced to aim.
@@ -646,11 +646,11 @@ namespace GTA
 		{
 			Function.Call(Hash.DISABLE_PLAYER_FIRING, Handle, 0);
 		}
-        /// <summary>
-        /// Sets the run speed mult for this this <see cref="Player"/> this frame.
-        /// </summary>
-        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
-        public void SetRunSpeedMultThisFrame(float mult)
+		/// <summary>
+		/// Sets the run speed mult for this this <see cref="Player"/> this frame.
+		/// </summary>
+		/// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
+		public void SetRunSpeedMultThisFrame(float mult)
 		{
 			if (mult > 1.499f)
 			{
@@ -659,11 +659,11 @@ namespace GTA
 
 			Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Handle, mult);
 		}
-        /// <summary>
-        /// Sets the swim speed mult for this this <see cref="Player"/> this frame.
-        /// </summary>
-        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
-        public void SetSwimSpeedMultThisFrame(float mult)
+		/// <summary>
+		/// Sets the swim speed mult for this this <see cref="Player"/> this frame.
+		/// </summary>
+		/// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
+		public void SetSwimSpeedMultThisFrame(float mult)
 		{
 			if (mult > 1.499f)
 			{
@@ -672,46 +672,46 @@ namespace GTA
 
 			Function.Call(Hash.SET_SWIM_MULTIPLIER_FOR_PLAYER, Handle, mult);
 		}
-        /// <summary>
-        /// Makes this <see cref="Player"/> shoot fire bullets this frame.
-        /// </summary>
-        public void SetFireAmmoThisFrame()
+		/// <summary>
+		/// Makes this <see cref="Player"/> shoot fire bullets this frame.
+		/// </summary>
+		public void SetFireAmmoThisFrame()
 		{
 			Function.Call(Hash.SET_FIRE_AMMO_THIS_FRAME, Handle);
 		}
-        /// <summary>
-        /// Makes this <see cref="Player"/> shoot explosive bullets this frame.
-        /// </summary>
-        public void SetExplosiveAmmoThisFrame()
+		/// <summary>
+		/// Makes this <see cref="Player"/> shoot explosive bullets this frame.
+		/// </summary>
+		public void SetExplosiveAmmoThisFrame()
 		{
 			Function.Call(Hash.SET_EXPLOSIVE_AMMO_THIS_FRAME, Handle);
 		}
-        /// <summary>
-        /// Makes this <see cref="Player"/> have an explosive melee attack this frame.
-        /// </summary>
-        public void SetExplosiveMeleeThisFrame()
+		/// <summary>
+		/// Makes this <see cref="Player"/> have an explosive melee attack this frame.
+		/// </summary>
+		public void SetExplosiveMeleeThisFrame()
 		{
 			Function.Call(Hash.SET_EXPLOSIVE_MELEE_THIS_FRAME, Handle);
 		}
-        /// <summary>
-        /// Lets this <see cref="Player"/> jump really high this frame.
-        /// </summary>
-        public void SetSuperJumpThisFrame()
+		/// <summary>
+		/// Lets this <see cref="Player"/> jump really high this frame.
+		/// </summary>
+		public void SetSuperJumpThisFrame()
 		{
 			Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Handle);
 		}
-        /// <summary>
-        /// Blocks this <see cref="Player"/> from entering any <see cref="Vehicle"/> this frame.
-        /// </summary>
-        public void SetMayNotEnterAnyVehicleThisFrame()
+		/// <summary>
+		/// Blocks this <see cref="Player"/> from entering any <see cref="Vehicle"/> this frame.
+		/// </summary>
+		public void SetMayNotEnterAnyVehicleThisFrame()
 		{
 			Function.Call(Hash.SET_PLAYER_MAY_NOT_ENTER_ANY_VEHICLE, Handle);
 		}
-        /// <summary>
-        /// Only lets this <see cref="Player"/> enter a specific <see cref="Vehicle"/> this frame.
-        /// </summary>
-        /// <param name="vehicle">The <see cref="Vehicle"/> this <see cref="Player"/> is allowed to enter.</param>
-        public void SetMayOnlyEnterThisVehicleThisFrame(Vehicle vehicle)
+		/// <summary>
+		/// Only lets this <see cref="Player"/> enter a specific <see cref="Vehicle"/> this frame.
+		/// </summary>
+		/// <param name="vehicle">The <see cref="Vehicle"/> this <see cref="Player"/> is allowed to enter.</param>
+		public void SetMayOnlyEnterThisVehicleThisFrame(Vehicle vehicle)
 		{
 			Function.Call(Hash.SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle.Handle);
 		}

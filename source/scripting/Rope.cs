@@ -80,7 +80,7 @@ namespace GTA
 
 		public override void Delete()
 		{
-		    int handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.DELETE_ROPE, &handle);
@@ -88,13 +88,13 @@ namespace GTA
 			Handle = handle;
 		}
 
-        public override bool Exists()
+		public override bool Exists()
 		{
-            int handle = Handle;
-	        unsafe
-	        {
-		        return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);
-	        }
+			int handle = Handle;
+			unsafe
+			{
+				return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);
+			}
 		}
 		public static bool Exists(Rope rope)
 		{

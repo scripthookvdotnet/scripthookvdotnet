@@ -351,8 +351,8 @@ namespace GTA
 			{
 				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
 				{
-				    int currentWeatherHash, nextWeatherHash;
-                    float weatherTransition;
+					int currentWeatherHash, nextWeatherHash;
+					float weatherTransition;
 					unsafe
 					{
 						Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
@@ -371,8 +371,8 @@ namespace GTA
 		{
 			get
 			{
-                int currentWeatherHash, nextWeatherHash;
-                float weatherTransition;
+				int currentWeatherHash, nextWeatherHash;
+				float weatherTransition;
 				unsafe
 				{
 					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
@@ -479,18 +479,18 @@ namespace GTA
 				}
 
 				Vector3 position = waypointBlip.Position;
-			    float heightResult;
+				float heightResult;
 
-			    unsafe
-			    {
-			        if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &heightResult))
-			        {
-			            position.Z = heightResult;
-			            return position;
-			        }
-			    }
+				unsafe
+				{
+					if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &heightResult))
+					{
+						position.Z = heightResult;
+						return position;
+					}
+				}
 
-			    return Vector3.Zero;
+				return Vector3.Zero;
 			}
 			set
 			{
@@ -949,7 +949,7 @@ namespace GTA
 		/// <param name="position">The position to check around.</param>
 		public static Vector3 GetNextPositionOnSidewalk(Vector3 position)
 		{
-            NativeVector3 outPos;
+			NativeVector3 outPos;
 
 			unsafe
 			{
@@ -1006,7 +1006,7 @@ namespace GTA
 		}
 		public static string GetStreetName(Vector3 position)
 		{
-		    int streetHash, crossingHash;
+			int streetHash, crossingHash;
 			unsafe
 			{
 				Function.Call(Hash.GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, &streetHash, &crossingHash);
@@ -1093,7 +1093,7 @@ namespace GTA
 		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
 		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
 		{
-		    int outModel, outInt;
+			int outModel, outInt;
 			unsafe
 			{
 				Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, &outModel, &outInt);
@@ -1334,7 +1334,7 @@ namespace GTA
 		/// <param name="name">The name of the relationship group.</param>
 		public static RelationshipGroup AddRelationshipGroup(string name)
 		{
-		    int resultArg;
+			int resultArg;
 			unsafe
 			{
 				Function.Call(Hash.ADD_RELATIONSHIP_GROUP, name, &resultArg);

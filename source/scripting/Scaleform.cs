@@ -24,7 +24,7 @@ namespace GTA
 			_handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
 		}
 
-        public void Dispose()
+		public void Dispose()
 		{
 			if (IsLoaded)
 			{
