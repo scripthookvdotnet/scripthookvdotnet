@@ -11,7 +11,16 @@
       <Category Name="General" DisplayName="General" />
       <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
     </Rule.Categories>
+    <EnumProperty Name="LangVersion" DisplayName="Language Version">
+      <EnumValue Name="default" DisplayName="Default" Description="Accept all valid language syntax." />
+      <EnumValue Name="ISO-1" DisplayName="ISO-1" Description="Accept only syntax that is included in the ISO/IEC 23270:2003 C# language specification." />
+      <EnumValue Name="ISO-2" DisplayName="ISO-2" Description="Accept only syntax that is included in the ISO/IEC 23270:2006 C# language specification." />
+      <EnumValue Name="3" DisplayName="3.0" Description="Accept only syntax that is included in the version 3.0 C# language Specification." />
+      <EnumValue Name="4" DisplayName="4.0" Description="Accept only syntax that is included in the version 4.0 C# language Specification." />
+      <EnumValue Name="5" DisplayName="5.0" Description="Accept only syntax that is included in the version 5.0 C# language Specification." />
+    </EnumProperty>
     <BoolProperty Name="Optimize" DisplayName="Optimize" Category="General" />
+    <BoolProperty Name="AllowUnsafeBlocks" DisplayName="Allow Unsafe Code" Category="General" />
     <StringListProperty Name="NoWarn" DisplayName="Disable Specific Warnings" Category="General" />
   </Rule>
 </ProjectSchemaDefinitions>
