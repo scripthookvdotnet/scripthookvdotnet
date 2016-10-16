@@ -393,6 +393,62 @@ namespace GTA
 			}
 		}
 
+		public float OilLevel
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+
+		public float Gravity
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+				
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x0B2C : 0x0B1C;
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x0B4C : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x0B2C : 0x0B1C;
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x0B4C : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+
 		public bool IsEngineRunning
 		{
 			get
