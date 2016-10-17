@@ -682,7 +682,7 @@ namespace GTA
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A0 : 0x790;
 				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x7C0 : offset;
 
-				return (byte)MemoryAccess.ReadByte(MemoryAddress + offset);
+				return MemoryAccess.ReadByte(MemoryAddress + offset);
 			}
 		}
 
