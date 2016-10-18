@@ -302,7 +302,7 @@ namespace GTA
 		RapidGT = 2360515092u,
 		RapidGT2 = 1737773231u,
 		Raptor = 3620039993u,
-		Ratbike = 1873600305u,
+		RatBike = 1873600305u,
 		RatLoader = 3627815886u,
 		RatLoader2 = 3705788919u,
 		Reaper = 234062309u,
@@ -466,7 +466,7 @@ namespace GTA
 		Washington = 1777363799u,
 		Windsor = 1581459400u,
 		Windsor2 = 2364918497u,
-		WolfSbane = 3676349299u,
+		Wolfsbane = 3676349299u,
 		XLS = 1203490606u,
 		XLS2 = 3862958888u,
 		Youga = 65402552u,
@@ -474,8 +474,8 @@ namespace GTA
 		Zentorno = 2891838741u,
 		Zion = 3172678083u,
 		Zion2 = 3101863448u,
-		Zombiea = 3285698347u,
-		Zombieb = 3724934023u,
+		ZombieA = 3285698347u,
+		ZombieB = 3724934023u,
 		ZType = 758895617u		
 	}
 }
