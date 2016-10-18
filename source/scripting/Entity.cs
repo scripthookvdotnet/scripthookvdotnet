@@ -114,7 +114,9 @@ namespace GTA
 					return 0.0f;
 				}
 
-				return MemoryAccess.ReadFloat(MemoryAddress + 644);
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -123,7 +125,9 @@ namespace GTA
 					return;
 				}
 
-				MemoryAccess.WriteFloat(MemoryAddress + 644, value);
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 		/// <summary>
