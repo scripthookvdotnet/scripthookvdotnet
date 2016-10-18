@@ -217,7 +217,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
-				offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x14A0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -229,7 +229,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
-				offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x14A0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -516,7 +516,7 @@ namespace GTA
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x158A : 0x1542);
 
-				int seatIndex = MemoryAccess.ReadByte(MemoryAddress + offset);
+				int seatIndex = MemoryAccess.ReadSByte(MemoryAddress + offset);
 
 				if (seatIndex == -1 || !IsInVehicle())
 				{
@@ -584,7 +584,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
-				offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x14C8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -596,7 +596,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
-				offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x14C8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -622,7 +622,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
-				offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x14CC : offset;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -634,7 +634,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
-				offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x14CC : offset;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
