@@ -560,6 +560,12 @@ namespace GTA
 			return getGameVersion();
 		}
 
+		char MemoryAccess::ReadSByte(IntPtr address)
+		{
+			const auto data = static_cast<const char *>(address.ToPointer());
+
+			return *data;
+		}
 		unsigned char MemoryAccess::ReadByte(IntPtr address)
 		{
 			const auto data = static_cast<const unsigned char *>(address.ToPointer());
@@ -572,9 +578,21 @@ namespace GTA
 
 			return *data;
 		}
+		unsigned short MemoryAccess::ReadUShort(IntPtr address)
+		{
+			const auto data = static_cast<const unsigned short *>(address.ToPointer());
+
+			return *data;
+		}
 		int MemoryAccess::ReadInt(IntPtr address)
 		{
 			const auto data = static_cast<const int *>(address.ToPointer());
+
+			return *data;
+		}
+		unsigned int MemoryAccess::ReadUInt(IntPtr address)
+		{
+			const auto data = static_cast<const unsigned int *>(address.ToPointer());
 
 			return *data;
 		}
@@ -608,6 +626,12 @@ namespace GTA
 
 			return Math::Matrix(*data);
 		}
+		void MemoryAccess::WriteSByte(System::IntPtr address, char value)
+		{
+			const auto data = static_cast<char *>(address.ToPointer());
+
+			*data = value;
+		}
 		void MemoryAccess::WriteByte(System::IntPtr address, unsigned char value)
 		{
 			const auto data = static_cast<unsigned char *>(address.ToPointer());
@@ -620,9 +644,21 @@ namespace GTA
 
 			*data = value;
 		}
+		void MemoryAccess::WriteUShort(System::IntPtr address, unsigned short value)
+		{
+			const auto data = static_cast<unsigned short *>(address.ToPointer());
+
+			*data = value;
+		}
 		void MemoryAccess::WriteInt(IntPtr address, int value)
 		{
 			const auto data = static_cast<int *>(address.ToPointer());
+
+			*data = value;
+		}
+		void MemoryAccess::WriteUInt(IntPtr address, unsigned int value)
+		{
+			const auto data = static_cast<unsigned int *>(address.ToPointer());
 
 			*data = value;
 		}

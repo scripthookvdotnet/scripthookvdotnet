@@ -217,6 +217,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -228,6 +229,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -406,7 +408,9 @@ namespace GTA
 				{
 					return 0;
 				}
-				return MemoryAccess.ReadInt(MemoryAddress + 4464);
+				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x11A0 : 0x1170);
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -512,7 +516,7 @@ namespace GTA
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x158A : 0x1542);
 
-				int seatIndex = MemoryAccess.ReadInt(MemoryAddress + offset);
+				int seatIndex = MemoryAccess.ReadSByte(MemoryAddress + offset);
 
 				if (seatIndex == -1 || !IsInVehicle())
 				{
@@ -567,6 +571,9 @@ namespace GTA
 		/// <value>
 		/// The injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
 		/// </value>
+		/// <remarks>
+		/// Note on player controlled peds: One of the game scripts will consider the player wasted when their health drops below this setting.
+		/// </remarks>
 		public float InjuryHealthThreshold
 		{
 			get
@@ -577,6 +584,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -588,6 +596,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -601,7 +610,7 @@ namespace GTA
 		/// The fatal injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
 		/// </value>
 		/// <remarks>
-		/// Note on player controlled peds: One of the game scripts will kill the player when their health drops below 100, regardless of this setting.
+		/// Note on player controlled peds: One of the game scripts will consider the player wasted when their health drops below <see cref="Ped.InjuryHealthThreshold"/>, regardless of this setting.
 		/// </remarks>
 		public float FatalInjuryHealthThreshold
 		{
@@ -613,8 +622,9 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
 
-				return MemoryAccess.ReadFloat(MemoryAddress + 5248);
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -624,6 +634,7 @@ namespace GTA
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -1394,7 +1405,7 @@ namespace GTA
 			MaxHealth = maxHealth;
 			Health = maxHealth;
 			IsCollisionEnabled = isCollisionEnabled;
-		    Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, Handle);
+			Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, Handle);
 		}
 
 		public void ResetVisibleDamage()
