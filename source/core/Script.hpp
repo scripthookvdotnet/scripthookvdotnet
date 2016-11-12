@@ -105,16 +105,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the Directory where this <see cref="Script"/> is stored.
-		/// </summary>
-		property System::String ^BaseDirectory
-		{
-			System::String ^get()
-			{
-				return System::IO::Path::GetDirectoryName(_filename);
-			}
-		}
-		/// <summary>
 		/// Gets an ini file associated with this <see cref="Script"/>.
 		/// The File will be in the same location as this <see cref="Script"/> but with an extension of .ini.
 		/// Use this to save and load settings for this <see cref="Script"/>.
@@ -125,16 +115,30 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Stops execution of this <see cref="Script"/> indefinitely.
+		/// Gets the Directory where this <see cref="Script"/> is stored.
 		/// </summary>
-		void Abort();
-
+		property System::String ^BaseDirectory
+		{
+			System::String ^get()
+			{
+				return System::IO::Path::GetDirectoryName(_filename);
+			}
+		}
 		/// <summary>
 		/// Gets the full file path for a file relative to this <see cref="Script"/>.
 		/// e.g: GetRelativeFilePath("ScriptFiles\texture1.png") may return "C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts\ScriptFiles\texture1.png"
 		/// </summary>
 		/// <param name="filePath">The file path relative to the location of this <see cref="Script"/>.</param>
 		System::String ^GetRelativeFilePath(System::String ^filePath);
+
+		/// <summary>
+		/// Stops execution of this <see cref="Script"/> indefinitely.
+		/// </summary>
+		void Abort();
+
+		/// <summary>
+		/// Returns a string that represents this <see cref="Script"/>.
+		/// </summary>
 		virtual System::String ^ToString() override
 		{
 			return Name;
@@ -152,6 +156,7 @@ namespace GTA
 		}
 
 	internal:
+		void Start();
 		void MainLoop();
 
 		int _interval = 0;

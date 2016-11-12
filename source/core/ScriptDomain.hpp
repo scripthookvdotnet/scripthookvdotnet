@@ -88,7 +88,9 @@ namespace GTA
 		void StartScript(System::String ^filename);
 		void Abort();
 		void AbortScript(System::String ^filename);
-		static void AbortScript(Script ^script);
+		static void OnStartScript(Script ^script);
+		static void OnAbortScript(Script ^script);
+
 		void DoTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
 

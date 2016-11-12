@@ -232,7 +232,7 @@ namespace GTA
 				auto filename = filenameAssemblies[i];
 				auto assemblyName = AssemblyName::GetAssemblyName(filename);
 
-				if (assemblyName->Name == "ScriptHookVDotNet")
+				if (assemblyName->Name->StartsWith("ScriptHookVDotNet", StringComparison::OrdinalIgnoreCase))
 				{
 					Log("[WARNING]", "Removing assembly file '", IO::Path::GetFileName(filename), "'.");
 
@@ -328,7 +328,7 @@ namespace GTA
 
 		try
 		{
-			assembly = Assembly::LoadFrom(filename);
+			assembly = Assembly::Load(IO::File::ReadAllBytes(filename));
 		}
 		catch (Exception ^ex)
 		{
@@ -359,7 +359,7 @@ namespace GTA
 		}
 		catch (ReflectionTypeLoadException ^ex)
 		{
-			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), version, "':", Environment::NewLine, ex->ToString());
+			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), version, "':", Environment::NewLine, ex->LoaderExceptions[0]->ToString());
 
 			return false;
 		}
@@ -485,12 +485,7 @@ namespace GTA
 		}
 
 		// Start console
-		_console->_running = true;
-		_console->_thread = gcnew Thread(gcnew ThreadStart(_console, &Script::MainLoop));
-
-		_console->_thread->Start();
-
-		_runningScripts->Add(_console);
+		_console->Start();
 
 		// Start script threads
 		Log("[INFO]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
@@ -500,27 +495,16 @@ namespace GTA
 			return;
 		}
 
-		for each (auto scriptType in _scriptTypes)
+		for (int i = 0; i < _scriptTypes->Count; i++)
 		{
-			GTA::Script ^script = InstantiateScript(scriptType->Item2);
+			GTA::Script ^script = InstantiateScript(_scriptTypes[i]->Item2);
 
 			if (Object::ReferenceEquals(script, nullptr))
 			{
 				continue;
 			}
 
-			script->_running = true;
-			script->_filename = scriptType->Item1;
-			script->_scriptdomain = this;
-			script->_thread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
-
-			script->_thread->Start();
-
-			Log("[INFO]", "Started script '", script->Name, "'.");
-
-			_runningScripts->Add(script);
-
-			_console->RegisterCommands(scriptType->Item2);
+			script->Start();
 		}
 	}
 	void ScriptDomain::StartScript(String ^filename)
@@ -530,63 +514,23 @@ namespace GTA
 		int offset = _scriptTypes->Count;
 		String ^extension = IO::Path::GetExtension(filename);
 
-		if (!extension->Equals(".dll", StringComparison::OrdinalIgnoreCase))
+		if (extension->Equals(".dll", StringComparison::OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
 		{
-			if (!LoadScript(filename))
-			{
-				return;
-			}
-		}
-		else
-		{
-			Assembly ^assembly = nullptr;
-
-			try
-			{
-				assembly = Assembly::Load(IO::File::ReadAllBytes(filename));
-			}
-			catch (Exception ^ex)
-			{
-				Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), "':", Environment::NewLine, ex->ToString());
-				return;
-			}
-
-			if (!LoadAssembly(filename, assembly))
-			{
-				return;
-			}
+			return;
 		}
 
-		auto types = gcnew List<Type ^>();
+		Log("[INFO]", "Starting ", (_scriptTypes->Count - offset).ToString(), " script(s) ...");
 
 		for (int i = offset; i < _scriptTypes->Count; i++)
 		{
-			types->Add(_scriptTypes[i]->Item2);
-		}
-
-		Log("[INFO]", "Starting ", types->Count.ToString(), " script(s) ...");
-
-		for each (auto type in types)
-		{
-			GTA::Script ^script = InstantiateScript(type);
+			GTA::Script ^script = InstantiateScript(_scriptTypes[i]->Item2);
 
 			if (Object::ReferenceEquals(script, nullptr))
 			{
 				continue;
 			}
 
-			script->_running = true;
-			script->_filename = filename;
-			script->_scriptdomain = this;
-			script->_thread = gcnew Thread(gcnew ThreadStart(script, &Script::MainLoop));
-
-			script->_thread->Start();
-
-			Log("[INFO]", "Started script '", script->Name, "'.");
-
-			_runningScripts->Add(script);
-
-			_console->RegisterCommands(type);
+			script->Start();
 		}
 	}
 	void ScriptDomain::Abort()
@@ -595,10 +539,8 @@ namespace GTA
 
 		Log("[INFO]", "Stopping ", _runningScripts->Count.ToString(), " script(s) ...");
 
-		for (int i = 0; i < _runningScripts->Count; i++)
+		for each (GTA::Script ^script in _runningScripts)
 		{
-			GTA::Script ^script = _runningScripts[i];
-
 			script->Abort();
 
 			delete script;
@@ -625,19 +567,31 @@ namespace GTA
 			script->Abort();
 		}
 	}
-	void ScriptDomain::AbortScript(GTA::Script ^script)
+	void ScriptDomain::OnStartScript(GTA::Script ^script)
 	{
-		if (Object::ReferenceEquals(script->_thread, nullptr))
+		ScriptDomain ^domain = script->_scriptdomain;
+
+		domain->_runningScripts->Add(script);
+
+		if (ReferenceEquals(script, domain->_console))
 		{
 			return;
 		}
 
-		script->_running = false;
+		domain->_console->RegisterCommands(script->GetType());
 
-		script->_thread->Abort();
-		script->_thread = nullptr;
+		Log("[INFO]", "Started script '", script->Name, "'.");
+	}
+	void ScriptDomain::OnAbortScript(GTA::Script ^script)
+	{
+		ScriptDomain ^domain = script->_scriptdomain;
 
-		script->_scriptdomain->_console->UnregisterCommands(script->GetType());
+		if (ReferenceEquals(script, domain->_console))
+		{
+			return;
+		}
+
+		domain->_console->UnregisterCommands(script->GetType());
 
 		Log("[INFO]", "Aborted script '", script->Name, "'.");
 	}
@@ -667,7 +621,7 @@ namespace GTA
 			{
 				Log("[ERROR]", "Script '", script->Name, "' is not responding! Aborting ...");
 
-				AbortScript(script);
+				OnAbortScript(script);
 				continue;
 			}
 		}
