@@ -94,6 +94,7 @@
   <!-- Core source files -->
   <ItemGroup>
     <ClCompile Include="source\AssemblyInfo.cpp" />
+    <ClCompile Include="source\core\Console.cpp" />
     <ClCompile Include="source\core\Main.cpp" />
     <ClCompile Include="source\core\Native.cpp" />
     <ClCompile Include="source\core\NativeMemory.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="source\core\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\core\Console.hpp" />
     <ClInclude Include="source\core\Native.hpp" />
     <ClInclude Include="source\core\NativeHashes.hpp" />
     <ClInclude Include="source\core\NativeMemory.hpp" />

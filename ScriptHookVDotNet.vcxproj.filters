@@ -36,6 +36,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\core\Console.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
     <ClCompile Include="source\core\Main.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -69,6 +72,9 @@
     <ClCompile Include="source\AssemblyInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\core\Console.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\Native.hpp">
       <Filter>core</Filter>
     </ClInclude>

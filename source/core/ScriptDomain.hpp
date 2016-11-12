@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Script.hpp"
+#include "Console.hpp"
 
 namespace GTA
 {
@@ -68,9 +69,25 @@ namespace GTA
 				return _appdomain;
 			}
 		}
+		property ConsoleScript ^Console
+		{
+			inline ConsoleScript ^get()
+			{
+				return _console;
+			}
+		}
+		property array<Script ^> ^RunningScripts
+		{
+			array<Script ^> ^get()
+			{
+				return _runningScripts->ToArray();
+			}
+		}
 
 		void Start();
+		void StartScript(System::String ^filename);
 		void Abort();
+		void AbortScript(System::String ^filename);
 		static void AbortScript(Script ^script);
 		void DoTick();
 		void DoKeyboardMessage(System::Windows::Forms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
@@ -98,6 +115,7 @@ namespace GTA
 
 		static ScriptDomain ^sCurrentDomain;
 		System::AppDomain ^_appdomain;
+		ConsoleScript ^_console;
 		int _executingThreadId;
 		Script ^_executingScript;
 		System::Collections::Generic::List<Script ^> ^_runningScripts = gcnew System::Collections::Generic::List<Script ^>();

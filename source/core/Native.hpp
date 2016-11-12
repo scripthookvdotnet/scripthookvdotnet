@@ -230,7 +230,7 @@ namespace GTA
 			/// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
 			/// <param name="maxSize">The maximum size of the string. Can be found for a given global variable by checking the decompiled scripts from the game.</param>
 			void WriteString(System::String ^value, int maxSize);
-			
+
 			/// <summary>
 			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to true.
 			/// </summary>
