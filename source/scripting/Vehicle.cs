@@ -392,6 +392,103 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets or sets the main rotor health for this heli.
+		/// </summary>
+		public float HeliMainRotorHealth
+		{
+			get
+			{
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+				
+				return Function.Call<float>(Hash._GET_HELI_MAIN_ROTOR_HEALTH, Handle);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+				
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x174C : 0x173C; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x176C : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the tail rotor health for this heli.
+		/// </summary>
+		public float HeliTailRotorHealth
+		{
+			get
+			{
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+				
+				return Function.Call<float>(Hash._GET_HELI_TAIL_ROTOR_HEALTH, Handle);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}				
+				
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1750 : 0x1740; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1770 : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the engine health for this heli.
+		/// </summary>
+		public float HeliEngineHealth
+		{
+			get
+			{
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+				
+				return Function.Call<float>(Hash._GET_HELI_ENGINE_HEALTH, Handle);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}				
+				
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1754 : 0x1744; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1774 : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		
+		/// <summary>
 		/// Gets or sets this <see cref="Vehicle"/> fuel level.
 		/// </summary>
 		public float FuelLevel
@@ -421,7 +518,9 @@ namespace GTA
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
-
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> oil level.
+		/// </summary>
 		public float OilLevel
 		{
 			get
@@ -459,8 +558,8 @@ namespace GTA
 					return 0.0f;
 				}
 				
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x0B2C : 0x0B1C;
-				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x0B4C : offset;
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xB2C : 0xB1C;
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0xB4C : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -471,8 +570,8 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x0B2C : 0x0B1C;
-				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x0B4C : offset;
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xB2C : 0xB1C;
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0xB4C : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -586,6 +685,38 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x9C4 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the blades speed for this heli.
+		/// </summary>
+		public float HeliBladesSpeed
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}				
+				
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1740 : 0x1730; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1760 : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+				
+				Function.Call(Hash.SET_HELI_BLADES_SPEED, Handle);
 			}
 		}
 		/// <summary>
