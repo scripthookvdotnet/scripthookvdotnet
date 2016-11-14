@@ -716,7 +716,7 @@ namespace GTA
 					return;
 				}
 				
-				Function.Call(Hash.SET_HELI_BLADES_SPEED, Handle);
+				Function.Call(Hash.SET_HELI_BLADES_SPEED, Handle, value);
 			}
 		}
 		/// <summary>
@@ -1801,7 +1801,7 @@ namespace GTA
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83B : 0x82B; // untested
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x85B : offset;
 
-				return MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
+				return !MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
 			}
 			set
 			{
