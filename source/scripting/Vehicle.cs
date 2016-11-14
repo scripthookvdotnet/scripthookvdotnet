@@ -1327,7 +1327,7 @@ namespace GTA
 			{
 				if (MemoryAddress == IntPtr.Zero)
 				{
-					return false;
+					return 0.0f;
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x90C : 0x8FC; // untested
@@ -1347,7 +1347,7 @@ namespace GTA
 			{
 				if (MemoryAddress == IntPtr.Zero)
 				{
-					return false;
+					return 0.0f;
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1204 : 0x11F4; // untested
@@ -1480,7 +1480,7 @@ namespace GTA
 			{
 				if (MemoryAddress == IntPtr.Zero)
 				{
-					return false;
+					return 0.0f;
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x9D0 : 0x9C0; // untested
