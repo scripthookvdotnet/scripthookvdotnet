@@ -1323,9 +1323,41 @@ namespace GTA
 		}
 		public float LightsMultiplier
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x90C : 0x8FC; // untested
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x92C : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_LIGHT_MULTIPLIER, Handle, value);
+			}
+		}
+
+		public float LodMultiplier
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1204 : 0x11F4; // untested
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x1224 : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 			}
 		}
 
@@ -1444,6 +1476,18 @@ namespace GTA
 		}
 		public float EnginePowerMultiplier
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x9D0 : 0x9C0; // untested
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x9F0 : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
 			set
 			{
 				Function.Call(Hash._SET_VEHICLE_ENGINE_POWER_MULTIPLIER, Handle, value);
@@ -1524,7 +1568,6 @@ namespace GTA
 
 		public bool IsOnAllWheels
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_ON_ALL_WHEELS, Handle);
@@ -1533,7 +1576,6 @@ namespace GTA
 
 		public bool IsStopped
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_STOPPED, Handle);
@@ -1541,7 +1583,6 @@ namespace GTA
 		}
 		public bool IsStoppedAtTrafficLights
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS, Handle);
@@ -1562,7 +1603,6 @@ namespace GTA
 
 		public bool IsConvertible
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
