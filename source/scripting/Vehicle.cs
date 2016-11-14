@@ -1791,6 +1791,18 @@ namespace GTA
 		}
 		public bool CanWheelsBreak
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83B : 0x82B; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x85B : offset;
+
+				return MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_WHEELS_CAN_BREAK, Handle, value);
