@@ -392,6 +392,103 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets or sets the main rotor health for this heli.
+		/// </summary>
+		public float HeliMainRotorHealth
+		{
+			get
+			{
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+				
+				return Function.Call<float>(Hash._GET_HELI_MAIN_ROTOR_HEALTH, Handle);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+				
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x174C : 0x173C; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x176C : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the tail rotor health for this heli.
+		/// </summary>
+		public float HeliTailRotorHealth
+		{
+			get
+			{
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+				
+				return Function.Call<float>(Hash._GET_HELI_TAIL_ROTOR_HEALTH, Handle);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}				
+				
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1750 : 0x1740; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1770 : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the engine health for this heli.
+		/// </summary>
+		public float HeliEngineHealth
+		{
+			get
+			{
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+				
+				return Function.Call<float>(Hash._GET_HELI_ENGINE_HEALTH, Handle);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}				
+				
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1754 : 0x1744; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1774 : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+		
+		/// <summary>
 		/// Gets or sets this <see cref="Vehicle"/> fuel level.
 		/// </summary>
 		public float FuelLevel
@@ -421,7 +518,9 @@ namespace GTA
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
-
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> oil level.
+		/// </summary>
 		public float OilLevel
 		{
 			get
@@ -459,8 +558,8 @@ namespace GTA
 					return 0.0f;
 				}
 				
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x0B2C : 0x0B1C;
-				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x0B4C : offset;
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xB2C : 0xB1C;
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0xB4C : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -471,8 +570,8 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x0B2C : 0x0B1C;
-				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x0B4C : offset;
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xB2C : 0xB1C;
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0xB4C : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -586,6 +685,38 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x9C4 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the blades speed for this heli.
+		/// </summary>
+		public float HeliBladesSpeed
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}				
+				
+				if (!Model.IsHelicopter)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1740 : 0x1730; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1760 : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (!Model.IsHelicopter)
+				{
+					return;
+				}
+				
+				Function.Call(Hash.SET_HELI_BLADES_SPEED, Handle, value);
 			}
 		}
 		/// <summary>
@@ -1192,9 +1323,41 @@ namespace GTA
 		}
 		public float LightsMultiplier
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x90C : 0x8FC; // untested
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x92C : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_LIGHT_MULTIPLIER, Handle, value);
+			}
+		}
+
+		public float LodMultiplier
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1204 : 0x11F4; // untested
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x1224 : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 			}
 		}
 
@@ -1313,6 +1476,18 @@ namespace GTA
 		}
 		public float EnginePowerMultiplier
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x9D0 : 0x9C0; // untested
+				offset = Game.Version > GameVersion.v1_0_877_1_Steam ? 0x9F0 : offset;
+
+				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
 			set
 			{
 				Function.Call(Hash._SET_VEHICLE_ENGINE_POWER_MULTIPLIER, Handle, value);
@@ -1393,7 +1568,6 @@ namespace GTA
 
 		public bool IsOnAllWheels
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_ON_ALL_WHEELS, Handle);
@@ -1402,7 +1576,6 @@ namespace GTA
 
 		public bool IsStopped
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_STOPPED, Handle);
@@ -1410,7 +1583,6 @@ namespace GTA
 		}
 		public bool IsStoppedAtTrafficLights
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS, Handle);
@@ -1431,7 +1603,6 @@ namespace GTA
 
 		public bool IsConvertible
 		{
-
 			get
 			{
 				return Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
@@ -1660,6 +1831,18 @@ namespace GTA
 		}
 		public bool CanWheelsBreak
 		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83B : 0x82B; // untested
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x85B : offset;
+
+				return !MemoryAccess.IsBitSet(MemoryAddress + offset, 6);
+			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_WHEELS_CAN_BREAK, Handle, value);
