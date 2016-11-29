@@ -16,7 +16,7 @@ namespace GTA
 				Result = Function.Call<int>(Hash.GET_SHAPE_TEST_RESULT, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &entityHandleArg);
 			}
 
-			DitHit = hitSomethingArg;
+			DidHit = hitSomethingArg;
 			HitPosition = hitPositionArg;
 			SurfaceNormal = surfaceNormalArg;
 			HitEntity = Entity.FromHandle(entityHandleArg);
@@ -41,11 +41,11 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether this raycast collided with anything.
 		/// </summary>
-		public bool DitHit { get; private set; }
+		public bool DidHit { get; private set; }
 		/// <summary>
 		/// Gets a value indicating whether this raycast collided with any <see cref="Entity"/>.
 		/// </summary>
-		public bool DitHitEntity
+		public bool DidHitEntity
 		{
 			get
 			{
