@@ -710,7 +710,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7C0 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E6 : offset);
 
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
