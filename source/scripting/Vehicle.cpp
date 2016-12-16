@@ -680,6 +680,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A0: 0x790);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C0 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E0 : offset);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -689,6 +690,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E6 : offset);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -708,6 +710,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7C0 : offset);
 
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
@@ -717,6 +720,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x768: 0x758);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x788 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7A8 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -731,6 +735,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x768 : 0x758);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x788 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7A8 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -740,6 +745,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7D4 : 0x7C4);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7F4 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x814 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -749,6 +755,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7D4 : 0x7C4);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7F4 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x814 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -758,6 +765,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7E4 : 0x7D4);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x804 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x824 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -767,7 +775,7 @@ namespace GTA
 		//old game version hasnt been tested, just following the patterns above for old game ver
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x9A4 : 0x994);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x9C4 : offset);
-
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x9F0 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -777,6 +785,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8AC : 0x89C);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8CC : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8F4 : offset);
 
 		if (!address == 0)
 		{
@@ -794,6 +803,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -808,6 +818,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
