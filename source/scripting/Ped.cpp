@@ -324,6 +324,7 @@ namespace GTA
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x13E4 : 0x13BC);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x13F4 : offset);
 
 		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + offset) & (1 << 2)) == 0;
 	}
@@ -445,6 +446,7 @@ namespace GTA
 		}
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x158A : 0x1542);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x159A : offset);
 
 		int seatIndex = (*reinterpret_cast<char *>(address + offset));
 
@@ -470,6 +472,7 @@ namespace GTA
 		System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x13E5 : 0x13BD);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x13F5 : offset);
 
 		return address == 0 ? false : (*reinterpret_cast<unsigned char *>(address + offset) & (1 << 6)) == 0;
 	}
