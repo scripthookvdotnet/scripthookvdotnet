@@ -218,6 +218,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -230,6 +231,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -409,6 +411,7 @@ namespace GTA
 					return 0;
 				}
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x11A0 : 0x1170);
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x11B0 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -515,6 +518,7 @@ namespace GTA
 				}
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x158A : 0x1542);
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x159A : offset;
 
 				int seatIndex = MemoryAccess.ReadSByte(MemoryAddress + offset);
 
@@ -572,7 +576,7 @@ namespace GTA
 		/// The injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
 		/// </value>
 		/// <remarks>
-		/// Note on player controlled peds: One of the game scripts will consider the player wasted when their health drops below this setting.
+		/// Note on player controlled peds: One of the game scripts will consider the player wasted when their health drops below this setting value.
 		/// </remarks>
 		public float InjuryHealthThreshold
 		{
@@ -585,6 +589,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14D8 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -597,6 +602,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1480 : 0x1470;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14D8 : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -604,7 +610,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the fatal injury health threshold for this <see cref="Ped"/>.
-		/// The ped is considered dead when its health drops below this value.
+		/// The ped health will be set to 0.0 when it drops below this value.
 		/// </summary>
 		/// <value>
 		/// The fatal injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
@@ -623,6 +629,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14DC : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -635,6 +642,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1484 : 0x1474;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14DC : offset;
 
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
@@ -1157,6 +1165,7 @@ namespace GTA
 				}
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E5 : 0x13BD);
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x13F5 : offset;
 
 				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 6)) == 0;
 			}
@@ -1270,6 +1279,7 @@ namespace GTA
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x13BC : 0x13AC;
 				offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E4 : offset);
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x13F4 : offset;
 
 				return (MemoryAccess.ReadByte(MemoryAddress + offset) & (1 << 2)) == 0;
 			}
