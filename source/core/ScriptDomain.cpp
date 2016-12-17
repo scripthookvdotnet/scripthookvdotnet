@@ -54,12 +54,11 @@ namespace GTA
 	void Log(String ^logLevel, ... array<String ^> ^message)
 	{
 		auto datetime = DateTime::Now;
-		String ^logpath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
-		logpath = logpath->Insert(logpath->IndexOf(".log"), "-" + datetime.ToString("yyyy-MM-dd"));
+		String ^logPath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
 
 		try
 		{
-			auto fs = gcnew IO::FileStream(logpath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
+			auto fs = gcnew IO::FileStream(logPath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
 			auto sw = gcnew IO::StreamWriter(fs);
 
 			try
@@ -182,6 +181,16 @@ namespace GTA
 
 		path = IO::Path::GetFullPath(path);
 
+		// Clear log
+		String ^logPath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
+
+		try
+		{
+			IO::File::WriteAllText(logPath, String::Empty);
+		}
+		catch (...) { }
+
+		// Create AppDomain
 		auto setup = gcnew AppDomainSetup();
 		setup->ApplicationBase = path;
 		setup->ShadowCopyFiles = "true";

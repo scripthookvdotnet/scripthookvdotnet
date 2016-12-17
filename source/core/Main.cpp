@@ -40,33 +40,7 @@ bool ManagedInit()
 		GTA::ScriptDomain::Unload(ScriptHook::Domain);
 	}
 
-	String ^assemblyPath = Assembly::GetExecutingAssembly()->Location;
-	String ^assemblyFilename = IO::Path::GetFileNameWithoutExtension(assemblyPath);
-	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(assemblyPath, ".ini"));
-
-	for each (String ^path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(assemblyPath), "*.log"))
-	{
-		if (!path->StartsWith(assemblyFilename))
-		{
-			continue;
-		}
-
-		try
-		{
-			TimeSpan logAge = DateTime::Now - DateTime::Parse(IO::Path::GetFileNameWithoutExtension(path)->Substring(path->IndexOf('-') + 1));
-
-			// Delete logs older than 5 days
-			if (logAge.Days >= 5)
-			{
-				IO::File::Delete(path);
-			}
-		}
-		catch (...)
-		{
-			continue;
-		}
-	}
-
+	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
 	ScriptHook::Domain = GTA::ScriptDomain::Load(settings->GetValue(String::Empty, "ScriptsLocation", "scripts"));
 	ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
