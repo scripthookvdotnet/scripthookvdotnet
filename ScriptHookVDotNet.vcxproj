@@ -11,6 +11,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>GTA</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!-- Global configuration settings -->
@@ -24,15 +25,16 @@
     <OutDir>bin\</OutDir>
     <IntDir>obj\</IntDir>
   </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <TargetExt>.asi</TargetExt>
+    <TargetName>ScriptHookVDotNet2</TargetName>
+  </PropertyGroup>
   <!-- Release configuration settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <!-- Global compilation settings -->
   <ItemDefinitionGroup>
     <ClCompile>
@@ -45,7 +47,9 @@
       <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(TargetDir)$(TargetName).asi"</Command>
+      <Command>mkdir "$(TargetDir)SDK"
+copy "$(TargetPath)" "$(TargetDir)SDK\$(TargetName).dll"
+move "$(TargetDir)$(TargetName).xml" ""$(TargetDir)SDK\$(TargetName).xml"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <!-- Release compilation settings -->
