@@ -444,15 +444,19 @@ namespace GTA
 			return;
 		}
 
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x77C : 0x76C);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x79C : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7BC : offset);
+
 		const unsigned char mask = 1 << 0;
 
 		if (value)
 		{
-			*(address + 1916) |= mask;
+			*(address + offset) |= mask;
 		}
 		else
 		{
-			*(address + 1916) &= ~mask;
+			*(address + offset) &= ~mask;
 		}
 	}
 	bool Vehicle::RightHeadLightBroken::get()
@@ -468,15 +472,19 @@ namespace GTA
 			return;
 		}
 
+		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x77C : 0x76C);
+		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x79C : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7BC : offset);
+
 		const unsigned char mask = 1 << 1;
 
 		if (value)
 		{
-			*(address + 1916) |= mask;
+			*(address + offset) |= mask;
 		}
 		else
 		{
-			*(address + 1916) &= ~mask;
+			*(address + offset) &= ~mask;
 		}
 	}
 	void Vehicle::BrakeLightsOn::set(bool value)
