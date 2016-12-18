@@ -40,19 +40,17 @@ namespace GTA
 {
 	void Log(String ^logLevel, ... array<String ^> ^message)
 	{
-		DateTime now = DateTime::Now;
-		String ^logpath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
-
-		logpath = logpath->Insert(logpath->IndexOf(".log"), "-" + now.ToString("yyyy-MM-dd"));
+		auto datetime = DateTime::Now;
+		String ^logPath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
 
 		try
 		{
-			auto fs = gcnew IO::FileStream(logpath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
+			auto fs = gcnew IO::FileStream(logPath, IO::FileMode::Append, IO::FileAccess::Write, IO::FileShare::Read);
 			auto sw = gcnew IO::StreamWriter(fs);
 
 			try
 			{
-				sw->Write(String::Concat("[", now.ToString("HH:mm:ss"), "] ", logLevel, " "));
+				sw->Write(String::Concat("[", datetime.ToString("HH:mm:ss"), "] ", logLevel, " "));
 
 				for each (String ^string in message)
 				{
@@ -67,10 +65,7 @@ namespace GTA
 				fs->Close();
 			}
 		}
-		catch (...)
-		{
-			return;
-		}
+		catch (...) { }
 	}
 	Assembly ^HandleResolve(Object ^sender, ResolveEventArgs ^args)
 	{
@@ -121,6 +116,16 @@ namespace GTA
 	{
 		path = IO::Path::GetFullPath(path);
 
+		// Clear log
+		String ^logPath = IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".log");
+
+		try
+		{
+			IO::File::WriteAllText(logPath, String::Empty);
+		}
+		catch (...) { }
+
+		// Create AppDomain
 		auto setup = gcnew AppDomainSetup();
 		setup->ApplicationBase = path;
 		setup->ShadowCopyFiles = "true";
@@ -398,32 +403,6 @@ namespace GTA
 		if (_runningScripts->Count != 0 || _scriptTypes->Count == 0)
 		{
 			return;
-		}
-
-		String ^assemblyPath = Assembly::GetExecutingAssembly()->Location;
-		String ^assemblyFilename = IO::Path::GetFileNameWithoutExtension(assemblyPath);
-
-		for each (String ^path in IO::Directory::GetFiles(IO::Path::GetDirectoryName(assemblyPath), "*.log"))
-		{
-			if (!path->StartsWith(assemblyFilename))
-			{
-				continue;
-			}
-
-			try
-			{
-				TimeSpan logAge = DateTime::Now - DateTime::Parse(IO::Path::GetFileNameWithoutExtension(path)->Substring(path->IndexOf('-') + 1));
-
-				// Delete logs older than 5 days
-				if (logAge.Days >= 5)
-				{
-					IO::File::Delete(path);
-				}
-			}
-			catch (...)
-			{
-				continue;
-			}
 		}
 
 		Log("[DEBUG]", "Starting ", _scriptTypes->Count.ToString(), " script(s) ...");
