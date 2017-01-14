@@ -572,7 +572,7 @@ namespace GTA
 
 			unsafe
 			{
-				Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &resultArg);
+				Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &resultArg, false);
 			}
 
 			return resultArg;
