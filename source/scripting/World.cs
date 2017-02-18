@@ -558,7 +558,14 @@ namespace GTA
 		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector3 position)
 		{
-			return GetGroundHeight(new Vector2(position.X, position.Y));
+			float resultArg;
+
+			unsafe
+			{
+				Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &resultArg, false);
+			}
+
+			return resultArg;
 		}
 
 		/// <summary>
@@ -568,14 +575,7 @@ namespace GTA
 		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector2 position)
 		{
-			float resultArg;
-
-			unsafe
-			{
-				Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &resultArg, false);
-			}
-
-			return resultArg;
+			return GetGroundHeight(new Vector3(position.X, position.Y, 1000f));
 		}
 
 		/// <summary>
