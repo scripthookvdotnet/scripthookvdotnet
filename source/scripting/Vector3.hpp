@@ -555,7 +555,7 @@ namespace GTA
 
 		private:
 			[System::Runtime::InteropServices::FieldOffset(12)]
-			float _padding = 0.0f;
+			float _padding;
 		};
 	}
 }
