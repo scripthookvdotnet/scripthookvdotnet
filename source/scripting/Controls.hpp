@@ -342,5 +342,8 @@ namespace GTA
 		VehicleSlowMoUpOnly = 335,
 		VehicleSlowMoDownOnly = 336,
 		MapPointOfInterest = 337,
+		VehicleCarJump = 338,
+		VehicleRocketBoost = 339,
+		VehicleParachute = 340,
 	};
 }
