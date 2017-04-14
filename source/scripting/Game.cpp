@@ -355,12 +355,16 @@ namespace GTA
 		System::UInt32 hash = 0;
 		array<System::Char>^ chars = input->ToCharArray();
 
-		//converts ascii uppercase to lowercase
+		//converts ascii uppercase to lowercase and replaces backslash with slash
 		for (int i = 0, length = chars->Length; i < length; i++)
 		{
 			if (chars[i] >= 'A' && chars[i] <= 'Z')
 			{
 				chars[i] = chars[i] + 32;
+			}
+			else if (chars[i] == '\\')
+			{
+				chars[i] = '/';
 			}
 		}
 
