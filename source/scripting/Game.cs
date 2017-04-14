@@ -38,6 +38,8 @@ namespace GTA
 		v1_0_944_2_Steam,
 		v1_0_944_2_NoSteam,
 		v1_0_1011_1_Steam,
+		v1_0_1011_1_NoSteam,
+		v1_0_1011_1_Steam,
 		v1_0_1011_1_NoSteam
 	}
 	public enum Language
