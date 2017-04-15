@@ -805,9 +805,9 @@ namespace GTA
 					return;
 				}
 
-				if (value < 0 || value > 8)
+				if (value < 0 || value > 7)
 				{
-					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 8, inclusive.");
+					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
