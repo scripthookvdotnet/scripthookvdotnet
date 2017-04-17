@@ -704,9 +704,9 @@ namespace GTA
 	}
 	void Vehicle::HighGear::set(int value)
 	{
-		if (value < 0 || value > 8)
+		if (value < 0 || value > 7)
 		{
-			throw gcnew System::ArgumentOutOfRangeException("value", "Values must be between 0 and 8, inclusive.");
+			throw gcnew System::ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 		}
 
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
