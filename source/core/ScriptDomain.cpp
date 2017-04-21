@@ -402,7 +402,7 @@ namespace GTA
 	}
 	GTA::Script ^ScriptDomain::InstantiateScript(Type ^scriptType)
 	{
-		if (!scriptType->IsSubclassOf(GTA::Script::typeid))
+		if (!scriptType->IsSubclassOf(GTA::Script::typeid) || scriptType->IsAbstract)
 		{
 			return nullptr;
 		}
