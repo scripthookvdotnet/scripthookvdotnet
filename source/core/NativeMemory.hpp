@@ -23,6 +23,8 @@ namespace GTA
 			static System::String ^ReadString(System::IntPtr address);
 			static System::IntPtr ReadPtr(System::IntPtr address);
 			static Math::Matrix ReadMatrix(System::IntPtr address);
+			static long long ReadLong(System::IntPtr address);
+			static unsigned long long ReadULong(System::IntPtr address);
 			static void WriteSByte(System::IntPtr address, char value);
 			static void WriteByte(System::IntPtr address, unsigned char value);
 			static void WriteShort(System::IntPtr address, short value);
@@ -31,6 +33,9 @@ namespace GTA
 			static void WriteUInt(System::IntPtr address, unsigned int value);
 			static void WriteFloat(System::IntPtr address, float value);
 			static void WriteVector3(System::IntPtr address, Math::Vector3 value);
+			static void WriteMatrix(System::IntPtr address, Math::Matrix value);
+			static void WriteLong(System::IntPtr address, long long value);
+			static void WriteULong(System::IntPtr address, unsigned long long value);
 			static void SetBit(System::IntPtr address, int bit);
 			static void ClearBit(System::IntPtr address, int bit);
 			static bool IsBitSet(System::IntPtr address, int bit);
@@ -40,6 +45,7 @@ namespace GTA
 			static System::IntPtr GetPlayerAddress(int handle);
 			static System::IntPtr GetCheckpointAddress(int handle);
 			static System::IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex);
+			static System::IntPtr GetEntityBonePoseAddress(int handle, int boneIndex);
 			static System::IntPtr GetPtfxAddress(int handle);
 			static int GetEntityBoneCount(int handle);
 			static float ReadWorldGravity();
@@ -108,6 +114,7 @@ namespace GTA
 			static System::IntPtr _stringPtr;
 			static System::IntPtr _nullString;
 			static MemoryAccess();
+			static unsigned long long GetEntitySkeletonData(int handle);
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;
 			static int modelNum1;

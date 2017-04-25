@@ -626,6 +626,18 @@ namespace GTA
 
 			return Math::Matrix(*data);
 		}
+		long long MemoryAccess::ReadLong(IntPtr address)
+		{
+			const auto data = static_cast<const long long *>(address.ToPointer());
+
+			return *data;
+		}
+		unsigned long long MemoryAccess::ReadULong(IntPtr address)
+		{
+			const auto data = static_cast<const unsigned long long *>(address.ToPointer());
+
+			return *data;
+		}
 		void MemoryAccess::WriteSByte(System::IntPtr address, char value)
 		{
 			const auto data = static_cast<char *>(address.ToPointer());
@@ -675,6 +687,28 @@ namespace GTA
 			data[0] = value.X;
 			data[1] = value.Y;
 			data[2] = value.Z;
+		}
+		void MemoryAccess::WriteMatrix(IntPtr address, Math::Matrix value)
+		{
+			const auto data = static_cast<float *>(address.ToPointer());
+
+			auto arr = value.ToArray();
+			for (int i = 0; i < arr->Length; i++)
+			{
+				data[i] = arr[i];
+			}	
+		}
+		void MemoryAccess::WriteLong(IntPtr address, long long value)
+		{
+			const auto data = static_cast<long long *>(address.ToPointer());
+
+			*data = value;
+		}
+		void MemoryAccess::WriteULong(IntPtr address, unsigned long long value)
+		{
+			const auto data = static_cast<unsigned long long *>(address.ToPointer());
+
+			*data = value;
 		}
 		void MemoryAccess::SetBit(IntPtr address, int bit)
 		{
@@ -739,6 +773,7 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 			return IntPtr((long long)task->GetResult());
 		}
+
 		IntPtr MemoryAccess::GetPtfxAddress(int handle)
 		{
 			return IntPtr((long long)_ptfxAddressFunc(handle));
@@ -746,38 +781,8 @@ namespace GTA
 
 		int MemoryAccess::GetEntityBoneCount(int handle)
 		{
-			UInt64 MemAddress = _entityAddressFunc(handle);
-			UInt64 Addr2 = (*(UInt64(__fastcall **)(__int64))(*(UInt64 *)MemAddress + 88i64))(MemAddress);
-			UInt64 Addr3;
-			if(!Addr2)
-			{
-				Addr3 = *(UInt64*)(MemAddress + 80);
-				if(!Addr3)
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(UInt64*)(Addr3 + 40);
-				}
-			}
-			else
-			{
-				Addr3 = *(UInt64*)(Addr2 + 104);
-				if(!Addr3 || !*(UInt64*)(Addr2 + 120))
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(UInt64*)(Addr3 + 376);
-				}
-			}
-			if(!Addr3)
-			{
-				return 0;
-			}
-			return *(int*)(Addr3 + 32);
+			auto fragSkeletonData = GetEntitySkeletonData(handle);
+			return fragSkeletonData ? *reinterpret_cast<int*>(fragSkeletonData + 32) : 0;
 		}
 		
 		IntPtr MemoryAccess::GetEntityBoneMatrixAddress(int handle, int boneIndex)
@@ -785,15 +790,46 @@ namespace GTA
 			if ((boneIndex & 0x80000000) != 0)//boneIndex cant be negative
 				return IntPtr::Zero;
 
+			auto fragSkeletonData = GetEntitySkeletonData(handle);
+
+			if (!fragSkeletonData) return IntPtr::Zero;
+
+			if (boneIndex < *reinterpret_cast<int*>(fragSkeletonData + 32))// boneIndex < max bones?
+			{
+				return IntPtr((long long)(*(UInt64*)(fragSkeletonData + 24) + (boneIndex * 0x40)));
+			}
+
+			return IntPtr::Zero;
+		}
+
+		IntPtr MemoryAccess::GetEntityBonePoseAddress(int handle, int boneIndex)
+		{
+			if ((boneIndex & 0x80000000) != 0)//boneIndex cant be negative
+				return IntPtr::Zero;
+
+			auto fragSkeletonData = GetEntitySkeletonData(handle);
+
+			if (!fragSkeletonData) return IntPtr::Zero;
+
+			if (boneIndex < *reinterpret_cast<int*>(fragSkeletonData + 32))// boneIndex < max bones?
+			{
+				return IntPtr((long long)(*(UInt64*)(fragSkeletonData + 16) + (boneIndex * 0x40)));
+			}
+
+			return IntPtr::Zero;
+		}
+
+		unsigned long long MemoryAccess::GetEntitySkeletonData(int handle)
+		{
 			UInt64 MemAddress = _entityAddressFunc(handle);
-			UInt64 Addr2 = (*(UInt64(__fastcall **)(__int64))(*(UInt64 *)MemAddress + 88i64))(MemAddress);
+			UInt64 Addr2 = (*(UInt64(__thiscall **)(__int64))(*(UInt64 *)MemAddress + 88i64))(MemAddress);
 			UInt64 Addr3;
 			if (!Addr2)
 			{
 				Addr3 = *(UInt64*)(MemAddress + 80);
 				if (!Addr3)
 				{
-					return IntPtr::Zero;
+					return 0;
 				}
 				else
 				{
@@ -805,7 +841,7 @@ namespace GTA
 				Addr3 = *(UInt64*)(Addr2 + 104);
 				if (!Addr3 || !*(UInt64*)(Addr2 + 120))
 				{
-					return IntPtr::Zero;
+					return 0;
 				}
 				else
 				{
@@ -814,14 +850,12 @@ namespace GTA
 			}
 			if (!Addr3)
 			{
-				return IntPtr::Zero;
+				return 0;
 			}
-			if (boneIndex < *(int*)(Addr3 + 32))
-			{
-				return IntPtr((long long)(*(UInt64*)(Addr3 + 24) +( (long long)boneIndex << 6)));
-			}
-			return IntPtr::Zero;
+
+			return Addr3;
 		}
+
 		float MemoryAccess::ReadWorldGravity()
 		{
 			return *_readWorldGravityAddr;
