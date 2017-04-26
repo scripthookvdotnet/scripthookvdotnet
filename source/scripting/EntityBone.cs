@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GTA.Math;
 using GTA.Native;
 
@@ -47,7 +47,62 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="Matrix"/> of this <see cref="EntityBone"/> realtive to the <see cref="Entity"/> its part of.
+		/// Gets or sets the current pose offset (dynamic position) of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		public Vector3 Pose
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return new Vector3();
+				}
+
+				return MemoryAccess.ReadVector3(address + 0x30);
+			}
+
+			set
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				MemoryAccess.WriteVector3(address + 0x30, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the dynamic <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		public Matrix PoseMatrix
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return new Matrix();
+				}
+				return MemoryAccess.ReadMatrix(address);
+			}
+
+			set
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				MemoryAccess.WriteMatrix(address, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
 		public Matrix RelativeMatrix
 		{
@@ -61,8 +116,9 @@ namespace GTA
 				return MemoryAccess.ReadMatrix(address);
 			}
 		}
+
 		/// <summary>
-		/// Gets the vector that points to the right of this <see cref="EntityBone"/> realtive to the <see cref="Entity"/> its part of.
+		/// Gets the vector that points to the right of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
 		public Vector3 RelativeRightVector
 		{
@@ -76,8 +132,9 @@ namespace GTA
 				return MemoryAccess.ReadVector3(address);
 			}
 		}
+
 		/// <summary>
-		/// Gets the vector that points infront of this <see cref="EntityBone"/> realtive to the <see cref="Entity"/> its part of.
+		/// Gets the vector that points infront of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
 		public Vector3 RelativeForwardVector
 		{
@@ -91,8 +148,9 @@ namespace GTA
 				return MemoryAccess.ReadVector3(address + 0x10);
 			}
 		}
+
 		/// <summary>
-		/// Gets the vector that points above this <see cref="EntityBone"/> realtive to the <see cref="Entity"/> its part of.
+		/// Gets the vector that points above this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
 		public Vector3 RelativeUpVector
 		{
@@ -110,7 +168,7 @@ namespace GTA
 		//Probably a nicer way to Get these Vectors but it works
 
 		/// <summary>
-		/// Gets the vector that points to the right of this <see cref="EntityBone"/> realtive to the world.
+		/// Gets the vector that points to the right of this <see cref="EntityBone"/> relative to the world.
 		/// </summary>
 		public Vector3 RightVector
 		{
@@ -126,7 +184,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the vector that points infront of this <see cref="EntityBone"/> realtive to the world.
+		/// Gets the vector that points infront of this <see cref="EntityBone"/> relative to the world.
 		/// </summary>
 		public Vector3 ForwardVector
 		{
@@ -142,7 +200,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the vector that points above this <see cref="EntityBone"/> realtive to the world.
+		/// Gets the vector that points above this <see cref="EntityBone"/> relative to the world.
 		/// </summary>
 		public Vector3 UpVector
 		{
@@ -253,7 +311,6 @@ namespace GTA
 		{
 			return !ReferenceEquals(obj, null) && obj.GetType() == GetType() && Equals((EntityBone)obj);
 		}
-
 
 		public static bool Exists(EntityBone entityBone)
 		{
