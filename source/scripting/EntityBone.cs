@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using GTA.Math;
 using GTA.Native;
 
