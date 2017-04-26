@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GTA.Math;
 using GTA.Native;
 
@@ -46,65 +46,65 @@ namespace GTA
 			}
 		}
 
-	    /// <summary>
-	    /// Gets or sets the current pose offset (dynamic position) of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
-	    /// </summary>
-	    public Vector3 Pose
-	    {
-	        get
-	        {
-	            IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
-	            if (address == IntPtr.Zero)
-	            {
-	                return new Vector3();
-	            }
+		/// <summary>
+		/// Gets or sets the current pose offset (dynamic position) of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		public Vector3 Pose
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return new Vector3();
+				}
 
-	            return MemoryAccess.ReadVector3(address + 0x30);
-	        }
+				return MemoryAccess.ReadVector3(address + 0x30);
+			}
 
-	        set
-	        {
-	            IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
-	            if (address == IntPtr.Zero)
-	            {
-	                return;
-	            }
+			set
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
 
-	            MemoryAccess.WriteVector3(address + 0x30, value);
-	        }
-	    }
+				MemoryAccess.WriteVector3(address + 0x30, value);
+			}
+		}
 
-	    /// <summary>
-	    /// Gets or sets the dynamic <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
-	    /// </summary>
-	    public Matrix PoseMatrix
-	    {
-	        get
-	        {
-	            IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
-	            if (address == IntPtr.Zero)
-	            {
-	                return new Matrix();
-	            }
-	            return MemoryAccess.ReadMatrix(address);
-	        }
+		/// <summary>
+		/// Gets or sets the dynamic <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		public Matrix PoseMatrix
+		{
+			get
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return new Matrix();
+				}
+				return MemoryAccess.ReadMatrix(address);
+			}
 
-	        set
-	        {
-	            IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
-	            if (address == IntPtr.Zero)
-	            {
-	                return;
-	            }
+			set
+			{
+				IntPtr address = MemoryAccess.GetEntityBonePoseAddress(_owner.Handle, _index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
 
-	            MemoryAccess.WriteMatrix(address, value);
-	        }
-	    }
+				MemoryAccess.WriteMatrix(address, value);
+			}
+		}
 
-        /// <summary>
-        /// Gets the <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
-        /// </summary>
-        public Matrix RelativeMatrix
+		/// <summary>
+		/// Gets the <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		public Matrix RelativeMatrix
 		{
 			get
 			{
@@ -115,7 +115,7 @@ namespace GTA
 				}
 				return MemoryAccess.ReadMatrix(address);
 			}
-        }
+		}
 
 		/// <summary>
 		/// Gets the vector that points to the right of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
