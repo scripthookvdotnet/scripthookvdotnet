@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Reflection;
+using System.Diagnostics;
 
 class Program
 {
@@ -22,13 +22,15 @@ class Program
 
 			if (arg[0] == '@')
 			{
-				string cmdline = File.ReadAllText(arg.Substring(1));
-				args = Regex.Matches(cmdline, @"\G(""((""""|[^""])+)""|(\S+)) *")
-					.Cast<Match>()
-					.Select(m => Regex.Replace(m.Groups[2].Success ? m.Groups[2].Value : m.Groups[4].Value, @"([-/].*)""(.*)""", "$1$2"))
-					.ToArray();
+				ProcessStartInfo startInfo = new ProcessStartInfo();
+				startInfo.FileName = Assembly.GetExecutingAssembly().Location;
+				startInfo.Arguments = File.ReadAllText(arg.Substring(1));
+				startInfo.UseShellExecute = false;
+				startInfo.RedirectStandardOutput = true;
 
-				Main(args);
+				Process process = Process.Start(startInfo);
+				Console.Write(process.StandardOutput.ReadToEnd());
+				process.WaitForExit();
 				return;
 			}
 
