@@ -479,18 +479,17 @@ namespace GTA
 				}
 
 				Vector3 position = waypointBlip.Position;
-				float heightResult;
+				float heightResult = 0.0f;
 
 				unsafe
 				{
 					if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, 1000f, &heightResult))
 					{
 						position.Z = heightResult;
-						return position;
 					}
 				}
 
-				return Vector3.Zero;
+				return position;
 			}
 			set
 			{
