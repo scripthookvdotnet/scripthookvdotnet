@@ -505,7 +505,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle);
+				return Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, 30.0f);
 			}
 		}
 		/// <summary>
