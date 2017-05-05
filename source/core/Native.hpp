@@ -17,7 +17,6 @@
 #pragma once
 
 #include "NativeHashes.hpp"
-#include "Vector3.hpp"
 
 namespace GTA
 {
@@ -30,27 +29,6 @@ namespace GTA
 				System::UInt64 get();
 				void set(System::UInt64 value);
 			};
-		};
-
-		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Explicit, Size = 0x18)]
-		private value class NativeVector3
-		{
-			//For natives that require pointers to Vectors and are called internally in the scripting section.
-			//Use this struct and pass a pointer to it, then after the nativecall this can be casted back to a GTA.Math.Vector3
-		public:
-			[System::Runtime::InteropServices::FieldOffset(0x00)] float X;
-			[System::Runtime::InteropServices::FieldOffset(0x08)] float Y;
-			[System::Runtime::InteropServices::FieldOffset(0x10)] float Z;
-			NativeVector3(float x, float y, float z):X(x), Y(y), Z(z){}
-			static operator GTA::Math::Vector3(NativeVector3 value)
-			{
-				return GTA::Math::Vector3(value.X, value.Y, value.Z);
-			}
-
-			static operator NativeVector3(GTA::Math::Vector3 value)
-			{
-				return NativeVector3(value.X, value.Y, value.Z);
-			}
 		};
 
 		#pragma region Functions

@@ -557,5 +557,29 @@ namespace GTA
 			[System::Runtime::InteropServices::FieldOffset(12)]
 			float _padding;
 		};
+
+		// For natives that require pointers to vectors and are called internally in the scripting section.
+		[System::Runtime::InteropServices::StructLayout(System::Runtime::InteropServices::LayoutKind::Explicit, Size = 0x18)]
+		private value class NativeVector3
+		{
+		public:
+			[System::Runtime::InteropServices::FieldOffset(0x00)]
+			float X;
+			[System::Runtime::InteropServices::FieldOffset(0x08)]
+			float Y;
+			[System::Runtime::InteropServices::FieldOffset(0x10)]
+			float Z;
+
+			NativeVector3(float x, float y, float z) :X(x), Y(y), Z(z) {}
+
+			static operator Vector3(NativeVector3 value)
+			{
+				return Vector3(value.X, value.Y, value.Z);
+			}
+			static operator NativeVector3(Vector3 value)
+			{
+				return NativeVector3(value.X, value.Y, value.Z);
+			}
+		};
 	}
 }
