@@ -115,10 +115,12 @@ namespace GTA
 		{
 			if (assemblyName->Version->Major != assembly->GetName()->Version->Major)
 			{
-				Log("[WARNING]", "A script references v", assemblyName->Version->ToString(3), " which may not be compatible with the current v" + assembly->GetName()->Version->ToString(3), ".");
+				Log("[WARNING]", "A script references v", assemblyName->Version->ToString(3), " which may not be compatible with the current v" + assembly->GetName()->Version->ToString(3), " and was therefore ignored.");
 			}
-
-			return assembly;
+			else
+			{
+				return assembly;
+			}
 		}
 
 		return nullptr;
@@ -333,6 +335,8 @@ namespace GTA
 	}
 	bool ScriptDomain::LoadAssembly(String ^filename)
 	{
+		Log("[INFO]", "Loading assembly '", IO::Path::GetFileName(filename), "' ...");
+
 		Assembly ^assembly = nullptr;
 
 		try
@@ -368,7 +372,12 @@ namespace GTA
 		}
 		catch (ReflectionTypeLoadException ^ex)
 		{
-			Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), version, "':", Environment::NewLine, ex->LoaderExceptions[0]->ToString());
+			auto fileNotFoundException = safe_cast<IO::FileNotFoundException ^>(ex->LoaderExceptions[0]);
+
+			if (ReferenceEquals(fileNotFoundException, nullptr) || fileNotFoundException->Message->IndexOf("ScriptHookVDotNet", StringComparison::OrdinalIgnoreCase) < 0)
+			{
+				Log("[ERROR]", "Failed to load assembly '", IO::Path::GetFileName(filename), version, "':", Environment::NewLine, ex->LoaderExceptions[0]->ToString());
+			}
 
 			return false;
 		}
