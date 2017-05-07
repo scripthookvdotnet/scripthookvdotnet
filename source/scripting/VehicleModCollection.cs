@@ -215,7 +215,7 @@ namespace GTA
 			}
 			if (_wheelNames.ContainsKey(wheelType))
 			{
-				if (Game.DoesGXTEntryExist(_wheelNames[wheelType].Item1))
+				if (Game.GXTEntryExists(_wheelNames[wheelType].Item1))
 				{
 					return Game.GetGXTEntry(_wheelNames[wheelType].Item1);
 				}
