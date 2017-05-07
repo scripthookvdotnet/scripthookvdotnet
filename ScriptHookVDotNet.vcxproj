@@ -80,6 +80,10 @@
       <Optimize>true</Optimize>
       <NoWarn>1591;%(NoWarn)</NoWarn>
     </CsCompile>
+    <PostBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">copy /Y "$(TargetPath)" "E:\Development\Code\VisualStudio\GTA\$(TargetName).dll"
+copy /Y "$(TargetPath)" "E:\Program Files (x86)\Grand Theft Auto V\$(TargetFileName)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)' == 'NativeGen'">
     <PreBuildEvent>

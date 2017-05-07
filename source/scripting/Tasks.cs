@@ -123,7 +123,12 @@ namespace GTA
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, style, radius);
 		}
 
-		public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 0f, int flag = 0)
+        public void FlyTo(Vehicle vehicle, Vector3 target, float speed, DrivingStyle style = DrivingStyle.Normal)
+        {
+            Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, 1, vehicle.Model.GetHashCode(), style, 5U, -1);
+        }
+
+        public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 0f, int flag = 0)
 		{
 			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, seat, speed, flag, 0);
 		}
