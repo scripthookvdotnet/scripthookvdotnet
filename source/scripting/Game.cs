@@ -674,7 +674,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="entry">The GXT key.</param>
 		/// <returns><c>true</c> if GXT entry exists; otherwise, <c>false</c></returns>
-		public static bool DoesGXTEntryExist(string entry)
+		public static bool GXTEntryExists(string entry)
 		{
 			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry);
 		}
@@ -686,16 +686,16 @@ namespace GTA
 		/// <returns>The localised <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetGXTEntry(string entry)
 		{
-			return DoesGXTEntryExist(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
+			return GXTEntryExists(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
 		}
-		internal static bool DoesGXTEntryExist(ulong entry)
+		internal static bool GXTEntryExists(ulong entry)
 		{
 			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry);
 		}
 
 		internal static string GetGXTEntry(ulong entry)
 		{
-			return DoesGXTEntryExist(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
+			return GXTEntryExists(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
 		}
 
 		/// <summary>

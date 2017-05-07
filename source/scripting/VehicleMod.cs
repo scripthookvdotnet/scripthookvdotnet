@@ -298,7 +298,7 @@ namespace GTA
 
 					default:
 						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, ModType);
-						if (Game.DoesGXTEntryExist(cur))
+						if (Game.GXTEntryExists(cur))
 						{
 							cur = Game.GetGXTEntry(cur);
 						}
@@ -334,7 +334,7 @@ namespace GTA
 			{
 				if (_hornNames.ContainsKey(index))
 				{
-					if (Game.DoesGXTEntryExist(_hornNames[index].Item1))
+					if (Game.GXTEntryExists(_hornNames[index].Item1))
 					{
 						return Game.GetGXTEntry(_hornNames[index].Item1);
 					}
@@ -387,7 +387,7 @@ namespace GTA
 			if (index > -1)
 			{
 				cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index);
-				if (Game.DoesGXTEntryExist(cur))
+				if (Game.GXTEntryExists(cur))
 				{
 					cur = Game.GetGXTEntry(cur);
 					if (cur == "" || cur == "NULL")
