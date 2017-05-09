@@ -29,56 +29,34 @@ namespace GTA
 		/// <summary>
 		/// Saves this <see cref="ScriptSettings"/> to file.
 		/// </summary>
-		/// <returns><c>true</c> if the file saved sucessfully; otherwise, <c>false</c></returns>
+		/// <returns><c>true</c> if the file saved successfully; otherwise, <c>false</c></returns>
 		bool Save();
 
 		/// <summary>
 		/// Reads a value from this <see cref="ScriptSettings"/>.
 		/// </summary>
 		/// <param name="section">The section where the value is.</param>
-		/// <param name="name">The name of the key the value is saved under.</param>
-		/// <param name="defaultvalue">The fall back value is the key doesnt exist or unable to be casted to the type: <typeparamref name="T"/>.</param>
-		/// <returns>The value called <see paramref="name"/> in <see paramref="section"/>.</returns>
+		/// <param name="name">The name of the key the value is saved at.</param>
+		/// <param name="defaultvalue">The fall-back value if the key doesn't exist or casting to type <typeparamref name="T"/> fails.</param>
+		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		generic <typename T>
 		T GetValue(System::String ^section, System::String ^name, T defaultvalue);
 		/// <summary>
-		/// Reads a value from this <see cref="ScriptSettings"/>.
-		/// </summary>
-		/// <param name="section">The section where the value is.</param>
-		/// <param name="name">The name of the key the value is saved under.</param>
-		/// <returns>The value called <see paramref="name"/> in <see paramref="section"/>.</returns>
-		System::String ^GetValue(System::String ^section, System::String ^name);
-		/// <summary>
-		/// Reads a value from this <see cref="ScriptSettings"/>.
-		/// </summary>
-		/// <param name="section">The section where the value is.</param>
-		/// <param name="name">The name of the key the value is saved under.</param>
-		/// <param name="defaultvalue">The fall back value is the key doesnt exist.</param>
-		/// <returns>The value called <see paramref="name"/> in <see paramref="section"/>.</returns>
-		System::String ^GetValue(System::String ^section, System::String ^name, System::String ^defaultvalue);
-
-		/// <summary>
-		/// Reads all the values under a specified name in a specified section from this <see cref="ScriptSettings"/>.
-		/// </summary>
-		/// <param name="section">The section where the value is.</param>
-		/// <param name="name">The name of the key the values are saved under.</param>
-		array<System::String ^> ^GetAllValues(System::String ^section, System::String ^name);
-
-		/// <summary>
 		/// Sets a value in this <see cref="ScriptSettings"/>.
 		/// </summary>
 		/// <param name="section">The section where the value is.</param>
-		/// <param name="name">The name of the key the value is saved under.</param>
+		/// <param name="name">The name of the key the value is saved at.</param>
 		/// <param name="value">The value to set the key to.</param>
 		generic <typename T>
 		void SetValue(System::String ^section, System::String ^name, T value);
+
 		/// <summary>
-		/// Sets a value in this <see cref="ScriptSettings"/>.
+		/// Reads all the values at a specified key and section from this <see cref="ScriptSettings"/>.
 		/// </summary>
 		/// <param name="section">The section where the value is.</param>
-		/// <param name="name">The name of the key the value is saved under.</param>
-		/// <param name="value">The value to set the key to.</param>
-		void SetValue(System::String ^section, System::String ^name, System::String ^value);
+		/// <param name="name">The name of the key the values are saved at.</param>
+		generic <typename T>
+		array<T> ^GetAllValues(System::String ^section, System::String ^name);
 
 	private:
 		ScriptSettings(System::String ^filename);

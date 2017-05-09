@@ -41,7 +41,7 @@ bool ManagedInit()
 	}
 
 	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
-	ScriptHook::Domain = GTA::ScriptDomain::Load(settings->GetValue(String::Empty, "ScriptsLocation", "scripts"));
+	ScriptHook::Domain = GTA::ScriptDomain::Load(settings->GetValue<String ^>(String::Empty, "ScriptsLocation", "scripts"));
 	ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
 	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
