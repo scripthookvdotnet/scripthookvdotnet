@@ -574,5 +574,14 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : string.Empty;
 		}
+		/// <summary>
+		/// Returns a localized <see cref="string"/> from the games language files with a specified GXT key hash.
+		/// </summary>
+		/// <param name="entryLabelHash">The GXT key hash.</param>
+		/// <returns>The localized <see cref="string"/> if the key hash exists; otherwise, <see cref="string.Empty"/></returns>
+		public static string GetLocalizedString(int entryLabelHash)
+		{
+			return MemoryAccess.GetGXTEntryByHash(entryLabelHash);
+		}
 	}
 }

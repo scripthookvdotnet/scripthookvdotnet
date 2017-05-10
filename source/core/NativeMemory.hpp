@@ -40,6 +40,7 @@ namespace GTA
 			static void ClearBit(System::IntPtr address, int bit);
 			static bool IsBitSet(System::IntPtr address, int bit);
 			static unsigned int GetHashKey(System::String ^toHash);
+			static System::String ^GetGXTEntryByHash(int Hash);
 
 			static System::IntPtr GetEntityAddress(int handle);
 			static System::IntPtr GetPlayerAddress(int handle);
@@ -85,6 +86,8 @@ namespace GTA
 			static unsigned char(*SetNmFloatAddress)(__int64, __int64, float);
 			static unsigned char(*SetNmVec3Address)(__int64, __int64, float, float, float);
 			static unsigned char(*SetNmStringAddress)(__int64, __int64, __int64);
+			static System::UInt64(*GetLabelTextByHashFunc)(System::UInt64 address, int labelHash);
+			static System::UInt64 GetLabelTextByHashAddr2;
 			static System::UInt64 CreateNmMessageFunc, GiveNmMessageFunc;
 			static System::UInt64(*CheckpointBaseAddr)();
 			static System::UInt64(*CheckpointHandleAddr)(System::UInt64 baseAddr, int Handle);
