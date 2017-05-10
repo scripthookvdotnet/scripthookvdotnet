@@ -76,39 +76,43 @@ PVOID sScriptFib = nullptr;
 
 static void ScriptMain()
 {
-	// Set up fibers
 	sGameReloaded = true;
+
+	// ScriptHookV already turned the current thread into a fiber, so we can safely retrieve it.
 	sMainFib = GetCurrentFiber();
 
+	// Check if our CLR fiber already exists. It should be created only once for the entire lifetime of the game process.
 	if (sScriptFib == nullptr)
 	{
-		const auto callback = [](LPVOID)
-		{
+		const LPFIBER_START_ROUTINE FiberMain = [](LPVOID lpFiberParameter) {
 			while (ManagedInit())
 			{
 				sGameReloaded = false;
 
-				// Run main loop
+				// If the game is reloaded, ScriptHookV will call the script main function again.
+				// This will set the global 'sGameReloaded' variable to 'true' and on the next fiber switch to our CLR fiber, run into this condition, therefore exiting the inner loop and re-initialize.
 				while (!sGameReloaded)
 				{
 					ManagedTick();
 
-					// Switch back to main script fiber used by Script Hook
+					// Switch back to main script fiber used by ScriptHookV.
+					// Code continues from here the next time the loop below switches back to our CLR fiber.
 					SwitchToFiber(sMainFib);
 				}
 			}
 		};
 
-		// Create our own fiber for the common language runtime once
-		sScriptFib = CreateFiber(0, callback, nullptr);
+		// Create our own fiber for the common language runtime, aka CLR, once.
+		// This is done because ScriptHookV switches its internal fibers sometimes, which would corrupt the CLR stack.
+		sScriptFib = CreateFiber(0, FiberMain, nullptr);
 	}
 
 	while (true)
 	{
-		// Yield execution
+		// Yield execution and give it back to ScriptHookV.
 		scriptWait(0);
 
-		// Switch to our own fiber and wait for it to switch back
+		// Switch to our CLR fiber and wait for it to switch back.
 		SwitchToFiber(sScriptFib);
 	}
 }
