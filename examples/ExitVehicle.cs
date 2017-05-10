@@ -1,5 +1,6 @@
 using System;
 using GTA;
+using GTA.Native;
 
 public class ExitVehicle : Script
 {
@@ -12,22 +13,22 @@ public class ExitVehicle : Script
 
 	void OnTick(object sender, EventArgs e)
 	{
-		Ped player = Game.Player.Character;
+		Ped playerPed = Game.Player.Character;
 
-		if (Game.IsControlPressed(2, Control.VehicleExit) && DateTime.Now > _lastExit && player.IsInVehicle())
+		if (Game.IsControlPressed(Control.VehicleExit) && DateTime.Now > _lastExit && playerPed.IsInVehicle())
 		{
 			Wait(250);
 
-			Vehicle vehicle = player.CurrentVehicle;
-			bool isPlayerTheDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == player;
+			Vehicle vehicle = playerPed.CurrentVehicle;
+			bool isPlayerTheDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == playerPed;
 
-			if (Game.IsControlPressed(2, Control.VehicleExit))
+			if (Game.IsControlPressed(Control.VehicleExit))
 			{
-				player.Task.LeaveVehicle(vehicle, true);
+				playerPed.Task.LeaveVehicle(vehicle, true);
 			}
 			else
 			{
-				player.Task.LeaveVehicle(vehicle, false);
+				playerPed.Task.LeaveVehicle(vehicle, false);
 
 				Wait(0);
 

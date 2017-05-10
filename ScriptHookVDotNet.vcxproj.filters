@@ -146,9 +146,6 @@
     <CsCompile Include="source\scripting\Interfaces.cs">
       <Filter>scripting</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\Controls.cs">
-      <Filter>scripting\Game</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Text.cs">
       <Filter>scripting\UI</Filter>
     </CsCompile>
@@ -172,9 +169,6 @@
     </CsCompile>
     <CsCompile Include="source\scripting\Checkpoint.cs">
       <Filter>scripting\World</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\ButtonCombination.cs">
-      <Filter>scripting\Game</Filter>
     </CsCompile>
     <CsCompile Include="source\scripting\ParticleEffects.cs">
       <Filter>scripting\World</Filter>
@@ -277,6 +271,24 @@
     </CsCompile>
     <CsCompile Include="source\scripting\EntityBoneCollection.cs">
       <Filter>scripting\World\Entities</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\WindowTitle.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\AudioFlags.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Button.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\GameVersion.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Language.cs">
+      <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Control.cs">
+      <Filter>scripting\Game</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>

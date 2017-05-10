@@ -51,10 +51,7 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = simpleDesc)
-				{
-					return Game.GetGXTEntry((ulong)ptr);
-				}
+				return Game.GetLocalizedString(DisplaySimpleDescription);
 			}
 		}
 
@@ -72,10 +69,7 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = desc)
-				{
-					return Game.GetGXTEntry((ulong)ptr);
-				}
+				return Game.GetLocalizedString(DisplayDescription);
 			}
 		}
 
@@ -93,10 +87,7 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = name)
-				{
-					return Game.GetGXTEntry((ulong)ptr);
-				}
+				return Game.GetLocalizedString(DisplayName);
 			}
 		}
 
@@ -115,10 +106,7 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = upperCaseName)
-				{
-					return Game.GetGXTEntry((ulong)ptr);
-				}
+				return Game.GetLocalizedString(DisplayUpperName);
 			}
 		}
 	}
@@ -167,10 +155,7 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = desc)
-				{
-					return Game.GetGXTEntry((ulong)ptr);
-				}
+				return Game.GetLocalizedString(DisplayDescription);
 			}
 		}
 
@@ -189,10 +174,7 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = name)
-				{
-					return Game.GetGXTEntry((ulong)ptr);
-				}
+				return Game.GetLocalizedString(DisplayName);
 			}
 		}
 	}

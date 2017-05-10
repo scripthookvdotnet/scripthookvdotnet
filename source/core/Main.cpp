@@ -30,7 +30,6 @@ namespace WinForms = System::Windows::Forms;
 ref struct ScriptHook
 {
 	static GTA::ScriptDomain ^Domain = nullptr;
-	static WinForms::Keys ReloadKey = WinForms::Keys::None;
 };
 
 bool ManagedInit()
@@ -41,28 +40,20 @@ bool ManagedInit()
 	}
 
 	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
-	ScriptHook::Domain = GTA::ScriptDomain::Load(settings->GetValue(String::Empty, "ScriptsLocation", "scripts"));
-	ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
+	ScriptHook::Domain = GTA::ScriptDomain::Load(settings->GetValue<String ^>(String::Empty, "ScriptsLocation", "scripts"));
 
-	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	if (!Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
-		return false;
+		ScriptHook::Domain->Start();
+
+		return true;
 	}
 
-	ScriptHook::Domain->Start();
-
-	return true;
+	return false;
 }
-bool ManagedTick()
+void ManagedTick()
 {
-	if (ScriptHook::Domain->IsKeyPressed(ScriptHook::ReloadKey))
-	{
-		return false;
-	}
-
 	ScriptHook::Domain->DoTick();
-
-	return true;
 }
 void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 {
@@ -80,45 +71,52 @@ void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusSh
 #include <Windows.h>
 
 bool sGameReloaded = false;
-PVOID sMainFib = nullptr, sScriptFib = nullptr;
+PVOID sMainFib = nullptr;
+PVOID sScriptFib = nullptr;
 
-void ScriptMain()
+static void ScriptMain()
 {
-	// Set up fibers
 	sGameReloaded = true;
+
+	// ScriptHookV already turned the current thread into a fiber, so we can safely retrieve it.
 	sMainFib = GetCurrentFiber();
 
+	// Check if our CLR fiber already exists. It should be created only once for the entire lifetime of the game process.
 	if (sScriptFib == nullptr)
 	{
-		const auto callback = [](LPVOID)
-		{
+		const LPFIBER_START_ROUTINE FiberMain = [](LPVOID lpFiberParameter) {
 			while (ManagedInit())
 			{
 				sGameReloaded = false;
 
-				// Run main loop
-				while (!sGameReloaded && ManagedTick())
+				// If the game is reloaded, ScriptHookV will call the script main function again.
+				// This will set the global 'sGameReloaded' variable to 'true' and on the next fiber switch to our CLR fiber, run into this condition, therefore exiting the inner loop and re-initialize.
+				while (!sGameReloaded)
 				{
-					// Switch back to main script fiber used by Script Hook
+					ManagedTick();
+
+					// Switch back to main script fiber used by ScriptHookV.
+					// Code continues from here the next time the loop below switches back to our CLR fiber.
 					SwitchToFiber(sMainFib);
 				}
 			}
 		};
 
-		// Create our own fiber for the common language runtime once
-		sScriptFib = CreateFiber(0, callback, nullptr);
+		// Create our own fiber for the common language runtime, aka CLR, once.
+		// This is done because ScriptHookV switches its internal fibers sometimes, which would corrupt the CLR stack.
+		sScriptFib = CreateFiber(0, FiberMain, nullptr);
 	}
 
 	while (true)
 	{
-		// Yield execution
+		// Yield execution and give it back to ScriptHookV.
 		scriptWait(0);
 
-		// Switch to our own fiber and wait for it to switch back
+		// Switch to our CLR fiber and wait for it to switch back.
 		SwitchToFiber(sScriptFib);
 	}
 }
-void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+static void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
 	ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
 }

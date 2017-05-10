@@ -297,7 +297,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the display name of this <see cref="Vehicle"/>.
-		/// <remarks>Use <see cref="Game.GetGXTEntry(string)"/> to get the localized name.</remarks>
+		/// <remarks>Use <see cref="Game.GetLocalizedString(string)"/> to get the localized name.</remarks>
 		/// </summary>
 		public string DisplayName
 		{
@@ -313,13 +313,13 @@ namespace GTA
 		{
 			get
 			{
-				return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, base.Model));
+				return Game.GetLocalizedString(DisplayName);
 			}
 		}
 
 		/// <summary>
 		/// Gets the display name of this <see cref="Vehicle"/>s <see cref="VehicleClass"/>.
-		/// <remarks>Use <see cref="Game.GetGXTEntry(string)"/> to get the localized class name.</remarks>
+		/// <remarks>Use <see cref="Game.GetLocalizedString(string)"/> to get the localized class name.</remarks>
 		/// </summary>
 		public string ClassDisplayName
 		{
@@ -336,7 +336,7 @@ namespace GTA
 		{
 			get
 			{
-				return Game.GetGXTEntry(ClassDisplayName);
+				return Game.GetLocalizedString(ClassDisplayName);
 			}
 		}
 

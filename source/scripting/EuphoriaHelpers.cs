@@ -1,6 +1,6 @@
 using System;
-using GTA.Math;
 using GTA;
+using GTA.Math;
 
 namespace GTA.NaturalMotion
 {

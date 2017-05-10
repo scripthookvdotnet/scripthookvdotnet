@@ -78,7 +78,7 @@ namespace GTA
 						value = value->Substring(1, value->Length - 2);
 					}
 
-					String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
+					String ^lookup = String::Format("[{0}]{1}//0", section, key)->ToUpper();
 
 					if (result->_values->ContainsKey(lookup))
 					{
@@ -161,17 +161,23 @@ namespace GTA
 	generic <typename T>
 	T ScriptSettings::GetValue(String ^section, String ^name, T defaultvalue)
 	{
-		String ^value = GetValue(section, name);
+		String ^lookup = String::Format("[{0}]{1}//0", section, name)->ToUpper();
+		String ^internalvalue;
+
+		if (!_values->TryGetValue(lookup, internalvalue))
+		{
+			return defaultvalue;
+		}
 
 		try
 		{
 			if (T::typeid->IsEnum)
 			{
-				return static_cast<T>(Enum::Parse(T::typeid, value, true));
+				return static_cast<T>(Enum::Parse(T::typeid, internalvalue, true));
 			}
 			else
 			{
-				return static_cast<T>(Convert::ChangeType(value, T::typeid));
+				return static_cast<T>(Convert::ChangeType(internalvalue, T::typeid));
 			}
 		}
 		catch (Exception ^)
@@ -179,57 +185,44 @@ namespace GTA
 			return defaultvalue;
 		}
 	}
-	String ^ScriptSettings::GetValue(String ^section, String ^key)
+	generic <typename T>
+	void ScriptSettings::SetValue(String ^section, String ^name, T value)
 	{
-		return GetValue(section, key, String::Empty);
-	}
-	String ^ScriptSettings::GetValue(String ^section, String ^key, String ^defaultvalue)
-	{
-		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper(), ^value;
+		String ^lookup = String::Format("[{0}]{1}//0", section, name)->ToUpper();
+		String ^internalvalue = reinterpret_cast<Object ^>(value)->ToString();
 
-		if (_values->TryGetValue(lookup, value))
+		if (!_values->ContainsKey(lookup))
 		{
-			return value;
+			_values->Add(lookup, internalvalue);
 		}
-		else
-		{
-			return defaultvalue;
-		}
+
+		_values->default[lookup] = internalvalue;
 	}
-	array<String ^> ^ScriptSettings::GetAllValues(String ^section, String ^key)
+
+	generic <typename T>
+	array<T> ^ScriptSettings::GetAllValues(String ^section, String ^name)
 	{
-		auto values = gcnew List<String ^>();
+		auto values = gcnew List<T>();
+		String ^internalvalue;
 
-		String ^value = GetValue(section, key, static_cast<String ^>(nullptr));
-
-		if (!ReferenceEquals(value, nullptr))
+		for (int i = 0; _values->TryGetValue(String::Format("[{0}]{1}//{2}", section, name, i)->ToUpper(), internalvalue); ++i)
 		{
-			values->Add(value);
-
-			for (int i = 1; _values->TryGetValue(String::Format("[{0}]{1}//{2}", section, key, i)->ToUpper(), value); ++i)
+			try
 			{
-				values->Add(value);
+				if (T::typeid->IsEnum)
+				{
+					values->Add(static_cast<T>(Enum::Parse(T::typeid, internalvalue, true)));
+				}
+				else
+				{
+					values->Add(static_cast<T>(Convert::ChangeType(internalvalue, T::typeid)));
+				}
+			}
+			catch (Exception ^)
+			{
 			}
 		}
 
 		return values->ToArray();
-	}
-	generic <typename T>
-	void ScriptSettings::SetValue(String ^section, String ^name, T value)
-	{
-		SetValue(section, name, reinterpret_cast<Object ^>(value)->ToString());
-	}
-	void ScriptSettings::SetValue(String ^section, String ^key, String ^value)
-	{
-		String ^lookup = String::Format("[{0}]{1}", section, key)->ToUpper();
-
-		if (!_values->ContainsKey(lookup))
-		{
-			_values->Add(lookup, value);
-		}
-		else
-		{
-			_values->default[lookup] = value;
-		}
 	}
 }

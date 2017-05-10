@@ -117,190 +117,190 @@ namespace GTA
 				switch (ModType)
 				{
 					case VehicleModType.Armor:
-						cur = Game.GetGXTEntry("CMOD_MOD_ARM");
+						cur = Game.GetLocalizedString("CMOD_MOD_ARM");
 						break;
 					case VehicleModType.Brakes:
-						cur = Game.GetGXTEntry("CMOD_MOD_BRA");
+						cur = Game.GetLocalizedString("CMOD_MOD_BRA");
 						break;
 					case VehicleModType.Engine:
-						cur = Game.GetGXTEntry("CMOD_MOD_ENG");
+						cur = Game.GetLocalizedString("CMOD_MOD_ENG");
 						break;
 					case VehicleModType.Suspension:
-						cur = Game.GetGXTEntry("CMOD_MOD_SUS");
+						cur = Game.GetLocalizedString("CMOD_MOD_SUS");
 						break;
 					case VehicleModType.Transmission:
-						cur = Game.GetGXTEntry("CMOD_MOD_TRN");
+						cur = Game.GetLocalizedString("CMOD_MOD_TRN");
 						break;
 					case VehicleModType.Horns:
-						cur = Game.GetGXTEntry("CMOD_MOD_HRN");
+						cur = Game.GetLocalizedString("CMOD_MOD_HRN");
 						break;
 					case VehicleModType.FrontWheel:
 						if (!_owner.Model.IsBike && _owner.Model.IsBicycle)
 						{
-							cur = Game.GetGXTEntry("CMOD_MOD_WHEM");
+							cur = Game.GetLocalizedString("CMOD_MOD_WHEM");
 							if (cur == "")
 								return "Wheels";
 						}
 						else
-							cur = Game.GetGXTEntry("CMOD_WHE0_0");
+							cur = Game.GetLocalizedString("CMOD_WHE0_0");
 						break;
 					case VehicleModType.RearWheel:
-						cur = Game.GetGXTEntry("CMOD_WHE0_1");
+						cur = Game.GetLocalizedString("CMOD_WHE0_1");
 						break;
 
 					  //Bennys
 					case VehicleModType.PlateHolder:
-						cur = Game.GetGXTEntry("CMM_MOD_S0");
+						cur = Game.GetLocalizedString("CMM_MOD_S0");
 						break;
 					case VehicleModType.VanityPlates:
-						cur = Game.GetGXTEntry("CMM_MOD_S1");
+						cur = Game.GetLocalizedString("CMM_MOD_S1");
 						break;
 					case VehicleModType.TrimDesign:
 						if (_owner.Model == VehicleHash.SultanRS)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S2b");
+							cur = Game.GetLocalizedString("CMM_MOD_S2b");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S2");
+							cur = Game.GetLocalizedString("CMM_MOD_S2");
 						}
 						break;
 					case VehicleModType.Ornaments:
-						cur = Game.GetGXTEntry("CMM_MOD_S3");
+						cur = Game.GetLocalizedString("CMM_MOD_S3");
 						break;
 					case VehicleModType.Dashboard:
-						cur = Game.GetGXTEntry("CMM_MOD_S4");
+						cur = Game.GetLocalizedString("CMM_MOD_S4");
 						break;
 					case VehicleModType.DialDesign:
-						cur = Game.GetGXTEntry("CMM_MOD_S5"); 
+						cur = Game.GetLocalizedString("CMM_MOD_S5"); 
 						break;
 					case VehicleModType.DoorSpeakers:
-						cur = Game.GetGXTEntry("CMM_MOD_S6");
+						cur = Game.GetLocalizedString("CMM_MOD_S6");
 						break;
 					case VehicleModType.Seats:
-						cur = Game.GetGXTEntry("CMM_MOD_S7");
+						cur = Game.GetLocalizedString("CMM_MOD_S7");
 						break;
 					case VehicleModType.SteeringWheels:
-						cur = Game.GetGXTEntry("CMM_MOD_S8");
+						cur = Game.GetLocalizedString("CMM_MOD_S8");
 						break;
 					case VehicleModType.ColumnShifterLevers:
-						cur = Game.GetGXTEntry("CMM_MOD_S9");
+						cur = Game.GetLocalizedString("CMM_MOD_S9");
 						break;
 					case VehicleModType.Plaques:
-						cur = Game.GetGXTEntry("CMM_MOD_S10");
+						cur = Game.GetLocalizedString("CMM_MOD_S10");
 						break;
 					case VehicleModType.Speakers:
-						cur = Game.GetGXTEntry("CMM_MOD_S11");
+						cur = Game.GetLocalizedString("CMM_MOD_S11");
 						break;
 					case VehicleModType.Trunk:
-						cur = Game.GetGXTEntry("CMM_MOD_S12");
+						cur = Game.GetLocalizedString("CMM_MOD_S12");
 						break;
 					case VehicleModType.Hydraulics:
-						cur = Game.GetGXTEntry("CMM_MOD_S13");
+						cur = Game.GetLocalizedString("CMM_MOD_S13");
 						break;
 					case VehicleModType.EngineBlock:
-						cur = Game.GetGXTEntry("CMM_MOD_S14");
+						cur = Game.GetLocalizedString("CMM_MOD_S14");
 						break;
 					case VehicleModType.AirFilter:
 						if (_owner.Model == VehicleHash.SultanRS)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S15b");
+							cur = Game.GetLocalizedString("CMM_MOD_S15b");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S15");
+							cur = Game.GetLocalizedString("CMM_MOD_S15");
 						}
 						break;
 					case VehicleModType.Struts:
 						if (_owner.Model == VehicleHash.SultanRS || _owner.Model == VehicleHash.Banshee2)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S16b");
+							cur = Game.GetLocalizedString("CMM_MOD_S16b");
 						}
 						else
-							cur = Game.GetGXTEntry("CMM_MOD_S16");
+							cur = Game.GetLocalizedString("CMM_MOD_S16");
 						break;
 					case VehicleModType.ArchCover:
 						if (_owner.Model == VehicleHash.SultanRS)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S17b");
+							cur = Game.GetLocalizedString("CMM_MOD_S17b");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S17");
+							cur = Game.GetLocalizedString("CMM_MOD_S17");
 						}
 						break;
 					case VehicleModType.Aerials:
 						if (_owner.Model == VehicleHash.SultanRS)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S18b");
+							cur = Game.GetLocalizedString("CMM_MOD_S18b");
 						}
 						else if (_owner.Model == VehicleHash.BType3)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S18c");
+							cur = Game.GetLocalizedString("CMM_MOD_S18c");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S18");
+							cur = Game.GetLocalizedString("CMM_MOD_S18");
 						}
 						break;
 					case VehicleModType.Trim:
 						if (_owner.Model == VehicleHash.SultanRS)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S19b");
+							cur = Game.GetLocalizedString("CMM_MOD_S19b");
 						}
 						else if (_owner.Model == VehicleHash.BType3)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S19c");
+							cur = Game.GetLocalizedString("CMM_MOD_S19c");
 						}
 						else if (_owner.Model == VehicleHash.Virgo2)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S19d");
+							cur = Game.GetLocalizedString("CMM_MOD_S19d");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S19");
+							cur = Game.GetLocalizedString("CMM_MOD_S19");
 						}
 						break;
 					case VehicleModType.Tank:
 						if (_owner.Model == VehicleHash.SlamVan3)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S27");
+							cur = Game.GetLocalizedString("CMM_MOD_S27");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S20");
+							cur = Game.GetLocalizedString("CMM_MOD_S20");
 						}
 						break;
 
 					case VehicleModType.Windows:
 						if (_owner.Model == VehicleHash.BType3)
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S21b");
+							cur = Game.GetLocalizedString("CMM_MOD_S21b");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S21");
+							cur = Game.GetLocalizedString("CMM_MOD_S21");
 						}
 						break;
 					case (VehicleModType)47:
 						if (_owner.Model == VehicleHash.SlamVan3)
 						{
-							cur = Game.GetGXTEntry("SLVAN3_RDOOR");
+							cur = Game.GetLocalizedString("SLVAN3_RDOOR");
 						}
 						else
 						{
-							cur = Game.GetGXTEntry("CMM_MOD_S22");
+							cur = Game.GetLocalizedString("CMM_MOD_S22");
 						}
 						break;
 					case VehicleModType.Livery:
-						cur = Game.GetGXTEntry("CMM_MOD_S23");
+						cur = Game.GetLocalizedString("CMM_MOD_S23");
 						break;
 
 					default:
 						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, ModType);
-						if (Game.GXTEntryExists(cur))
+						if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 						{
-							cur = Game.GetGXTEntry(cur);
+							cur = Game.GetLocalizedString(cur);
 						}
 						break;
 				}
@@ -334,9 +334,9 @@ namespace GTA
 			{
 				if (_hornNames.ContainsKey(index))
 				{
-					if (Game.GXTEntryExists(_hornNames[index].Item1))
+					if (!string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
 					{
-						return Game.GetGXTEntry(_hornNames[index].Item1);
+						return Game.GetLocalizedString(_hornNames[index].Item1);
 					}
 					return _hornNames[index].Item2;
 				}
@@ -348,48 +348,48 @@ namespace GTA
 				{
 					if (!_owner.Model.IsBike && _owner.Model.IsBicycle)
 					{
-						return Game.GetGXTEntry("CMOD_WHE_0");
+						return Game.GetLocalizedString("CMOD_WHE_0");
 					}
 					else
 					{
-						return Game.GetGXTEntry("CMOD_WHE_B_0");
+						return Game.GetLocalizedString("CMOD_WHE_B_0");
 					}
 				}
 				if (index >= ModCount / 2)
 				{
-					return Game.GetGXTEntry("CHROME") + " " +
-						   Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
+					return Game.GetLocalizedString("CHROME") + " " +
+						   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
 				}
 				else
 				{
-					return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
+					return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
 				}
 			}
 
 			switch (ModType)
 			{
 				case VehicleModType.Armor:
-					return Game.GetGXTEntry("CMOD_ARM_" + (index + 1).ToString());
+					return Game.GetLocalizedString("CMOD_ARM_" + (index + 1).ToString());
 				case VehicleModType.Brakes:
-					return Game.GetGXTEntry("CMOD_BRA_" + (index + 1).ToString());
+					return Game.GetLocalizedString("CMOD_BRA_" + (index + 1).ToString());
 				case VehicleModType.Engine:
 					if (index == -1)
 					{
 						//Engine doesn't list anything in LSC for no parts, but there is a setting with no part. so just use armours none
-						return Game.GetGXTEntry("CMOD_ARM_0");
+						return Game.GetLocalizedString("CMOD_ARM_0");
 					}
-					return Game.GetGXTEntry("CMOD_ENG_" + (index + 2).ToString());
+					return Game.GetLocalizedString("CMOD_ENG_" + (index + 2).ToString());
 				case VehicleModType.Suspension:
-					return Game.GetGXTEntry("CMOD_SUS_" + (index + 1).ToString());
+					return Game.GetLocalizedString("CMOD_SUS_" + (index + 1).ToString());
 				case VehicleModType.Transmission:
-					return Game.GetGXTEntry("CMOD_GBX_" + (index + 1).ToString());
+					return Game.GetLocalizedString("CMOD_GBX_" + (index + 1).ToString());
 			}
 			if (index > -1)
 			{
 				cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index);
-				if (Game.GXTEntryExists(cur))
+				if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 				{
-					cur = Game.GetGXTEntry(cur);
+					cur = Game.GetLocalizedString(cur);
 					if (cur == "" || cur == "NULL")
 					{
 						return LocalizedModTypeName + " " + (index + 1).ToString();
@@ -413,12 +413,12 @@ namespace GTA
 							case VehicleHash.Banshee:
 							case VehicleHash.Banshee2:
 							case VehicleHash.SultanRS:
-								return Game.GetGXTEntry("CMOD_COL5_41");
+								return Game.GetLocalizedString("CMOD_COL5_41");
 						}
 						break;
 
 				}
-				return Game.GetGXTEntry("CMOD_DEF_0");
+				return Game.GetLocalizedString("CMOD_DEF_0");
 			}			
 		}
 		public int ModCount

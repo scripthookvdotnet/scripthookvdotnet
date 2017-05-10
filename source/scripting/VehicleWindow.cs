@@ -3,7 +3,6 @@ using GTA.Native;
 
 namespace GTA
 {
-
 	public sealed class VehicleWindow
 	{
 		#region Fields
