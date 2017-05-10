@@ -14,13 +14,13 @@ public class IndicatorControl : Script
 
 	void OnTick(object sender, EventArgs e)
 	{
-		Ped player = Game.Player.Character;
+		Ped playerPed = Game.Player.Character;
 
-		if (player.IsInVehicle())
+		if (playerPed.IsInVehicle())
 		{
-			Vehicle vehicle = player.CurrentVehicle;
+			Vehicle vehicle = playerPed.CurrentVehicle;
 
-			if (Game.IsControlPressed(2, Control.VehicleMoveLeftOnly))
+			if (Game.IsControlPressed(Control.VehicleMoveLeftOnly))
 			{
 				if (vehicle.Speed < 10.0f)
 				{
@@ -34,7 +34,7 @@ public class IndicatorControl : Script
 				vehicle.IsLeftIndicatorLightOn = _active[0] = false;
 			}
 
-			if (Game.IsControlPressed(2, Control.VehicleMoveRightOnly))
+			if (Game.IsControlPressed(Control.VehicleMoveRightOnly))
 			{
 				if (vehicle.Speed < 10.0f)
 				{

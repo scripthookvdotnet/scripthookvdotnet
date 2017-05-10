@@ -215,9 +215,9 @@ namespace GTA
 			}
 			if (_wheelNames.ContainsKey(wheelType))
 			{
-				if (Game.GXTEntryExists(_wheelNames[wheelType].Item1))
+				if (!string.IsNullOrEmpty(Game.GetLocalizedString(_wheelNames[wheelType].Item1)))
 				{
-					return Game.GetGXTEntry(_wheelNames[wheelType].Item1);
+					return Game.GetLocalizedString(_wheelNames[wheelType].Item1);
 				}
 				return _wheelNames[wheelType].Item2;
 			}
@@ -305,7 +305,7 @@ namespace GTA
 			{
 				return this[VehicleModType.Livery].GetLocalizedModName(index);
 			}
-			return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_LIVERY_NAME, _owner.Handle, index));
+			return Game.GetLocalizedString(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, index));
 		}
 
 		public VehicleWindowTint WindowTint

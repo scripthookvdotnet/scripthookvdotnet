@@ -23,11 +23,6 @@ namespace GTA
 		{
 		}
 
-		/// <summary>
-		/// Gets the hash for this <see cref="Model"/>.
-		/// </summary>
-		public int Hash { get; private set; }
-
 		public ulong NativeValue
 		{
 			get
@@ -39,6 +34,11 @@ namespace GTA
 				Hash = unchecked((int)value);
 			}
 		}
+
+		/// <summary>
+		/// Gets the hash for this <see cref="Model"/>.
+		/// </summary>
+		public int Hash { get; private set; }
 
 		/// <summary>
 		/// Returns true if this <see cref="Model"/> is valid.
@@ -66,6 +66,7 @@ namespace GTA
 				return Function.Call<bool>(Native.Hash.IS_MODEL_IN_CDIMAGE, Hash);
 			}
 		}
+
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is loaded so it can be spawned.
 		/// </summary>

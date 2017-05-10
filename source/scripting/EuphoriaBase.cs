@@ -7,7 +7,7 @@ using GTA.Native;
 namespace GTA.NaturalMotion
 {
 	/// <summary>
-	/// A Base class for manually building a <see cref="GTA.NaturalMotion.Message"/>
+	/// A base class for manually building a <see cref="GTA.NaturalMotion.Message"/>.
 	/// </summary>
 	public class Message
 	{
@@ -20,7 +20,7 @@ namespace GTA.NaturalMotion
 		/// <summary>
 		/// Creates a class to manually build <see cref="Message"/>s that can be sent to any <see cref="Ped"/>.
 		/// </summary>
-		/// <param name="message">The name of the natual motion message.</param>
+		/// <param name="message">The name of the natural motion message.</param>
 		public Message(string message)
 		{
 			_message = message;
@@ -28,7 +28,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Stops this Natural Motion behavious on the given <see cref="Ped"/>
+		/// Stops this Natural Motion behavior on the given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
@@ -37,7 +37,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Starts this Natural Motion behaviour on the <see cref="Ped"/> that will loop until manually aborted
+		/// Starts this Natural Motion behavior on the <see cref="Ped"/> that will loop until manually aborted.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		public void SendTo(Ped target)
@@ -56,13 +56,11 @@ namespace GTA.NaturalMotion
 
 			MemoryAccess.SendEuphoriaMessage(target.Handle, _message, _arguments);
 		}
-
-
 		/// <summary>
-		///	Starts this Natural Motion behaviour on the <see cref="Ped"/> for a specified duration.
+		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
-		/// <param name="duration">How long to apply the behaviour for (-1 for looped).</param>
+		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void SendTo(Ped target, int duration)
 		{
 			if (!target.CanRagdoll)
@@ -76,7 +74,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -84,9 +82,8 @@ namespace GTA.NaturalMotion
 		{
 			_arguments[argName] = value;
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -94,9 +91,8 @@ namespace GTA.NaturalMotion
 		{
 			_arguments[argName] = value;
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -104,9 +100,8 @@ namespace GTA.NaturalMotion
 		{
 			_arguments[argName] = value;
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -114,9 +109,8 @@ namespace GTA.NaturalMotion
 		{
 			_arguments[argName] = value;
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -124,9 +118,8 @@ namespace GTA.NaturalMotion
 		{
 			_arguments[argName] = value;
 		}
-
 		/// <summary>
-		/// Resets all arguments to their default value's
+		/// Resets all arguments to their default values.
 		/// </summary>
 		public void ResetArguments()
 		{
@@ -140,7 +133,7 @@ namespace GTA.NaturalMotion
 	}
 
 	/// <summary>
-	/// A Helper class for building a <seealso cref="GTA.NaturalMotion.Message" /> and sending it to a given <see cref="Ped"/>
+	/// A helper class for building a <seealso cref="GTA.NaturalMotion.Message" /> and sending it to a given <see cref="Ped"/>.
 	/// </summary>
 	public abstract class CustomHelper
 	{
@@ -150,10 +143,10 @@ namespace GTA.NaturalMotion
 		#endregion
 
 		/// <summary>
-		/// Creates a Helper class for building Natural Motion messages to send to a given <see cref="Ped"/>
+		/// Creates a helper class for building Natural Motion messages to send to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> that the message will be applied to.</param>
-		/// <param name="message">The name of the natual motion message.</param>
+		/// <param name="message">The name of the natural motion message.</param>
 		protected CustomHelper(Ped target, string message)
 		{
 			_ped = target;
@@ -161,16 +154,15 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Starts this Natural Motion behaviour on the <see cref="Ped"/> that will loop until manually aborted
+		/// Starts this Natural Motion behavior on the <see cref="Ped"/> that will loop until manually aborted.
 		/// </summary>
 		public void Start()
 		{
 			_message.SendTo(_ped);
 			_message.ResetArguments();
 		}
-
 		/// <summary>
-		/// Starts this Natural Motion behaviour on the <see cref="Ped"/> for a specified duration.
+		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
 		/// </summary>
 		/// <param name="duration">How long to apply the behaviour for (-1 for looped).</param>
 		public void Start(int duration)
@@ -178,16 +170,16 @@ namespace GTA.NaturalMotion
 			_message.SendTo(_ped, duration);
 			_message.ResetArguments();
 		}
-
 		/// <summary>
-		/// Stops this Natural Motion behavious on the <see cref="Ped"/>
+		/// Stops this Natural Motion behavior on the <see cref="Ped"/>.
 		/// </summary>
 		public void Stop()
 		{
 			_message.Abort(_ped);
 		}
+
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -195,9 +187,8 @@ namespace GTA.NaturalMotion
 		{
 			_message.SetArgument(argName, value);
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -205,9 +196,8 @@ namespace GTA.NaturalMotion
 		{
 			_message.SetArgument(argName, value);
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -215,9 +205,8 @@ namespace GTA.NaturalMotion
 		{
 			_message.SetArgument(argName, value);
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -225,9 +214,8 @@ namespace GTA.NaturalMotion
 		{
 			_message.SetArgument(argName, value);
 		}
-
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value
+		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -235,9 +223,8 @@ namespace GTA.NaturalMotion
 		{
 			_message.SetArgument(argName, value);
 		}
-
 		/// <summary>
-		/// Resets all arguments to their default value's
+		/// Resets all arguments to their default values.
 		/// </summary>
 		public void ResetArguments()
 		{

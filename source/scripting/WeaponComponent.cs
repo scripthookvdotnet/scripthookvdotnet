@@ -81,7 +81,7 @@ namespace GTA
 		{
 			get
 			{
-				return Game.GetGXTEntry(DisplayName);
+				return Game.GetLocalizedString(DisplayName);
 			}
 		}
 
@@ -731,7 +731,7 @@ namespace GTA
 		{
 			get
 			{
-				return Game.GetGXTEntry(DisplayName);
+				return Game.GetLocalizedString(DisplayName);
 			}
 		}
 

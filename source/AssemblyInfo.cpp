@@ -4,7 +4,5 @@ using namespace System::Reflection;
 [assembly:AssemblyDescriptionAttribute("An ASI plugin for Grand Theft Auto V, which allows running scripts written in any .NET language in-game.")];
 [assembly:AssemblyCopyrightAttribute("Copyright © 2015 crosire")];
 
-#ifdef SHVDN_VERSION
-[assembly:AssemblyVersionAttribute(SHVDN_VERSION)];
-[assembly:AssemblyFileVersionAttribute(SHVDN_VERSION)];
-#endif
+[assembly:AssemblyVersionAttribute("3.0.0")];
+[assembly:AssemblyFileVersionAttribute("3.0.0")];

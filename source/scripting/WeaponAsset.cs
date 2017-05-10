@@ -87,7 +87,7 @@ namespace GTA
 
 		public string LocalizedName
 		{
-			get { return Game.GetGXTEntry(Weapon.GetDisplayNameFromHash((WeaponHash)Hash)); }
+			get { return Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash)); }
 		}
 
 		public override string ToString()

@@ -24,14 +24,12 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>bin\SDK\ScriptHookVDotNet3.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <ProjectReference Include="ScriptHookVDotNet.vcxproj">
-      <Project>{019193a7-50c0-444a-84ca-777595e702cd}</Project>
-      <Name>ScriptHookVDotNet</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="examples\EuphoriaDemo.cs" />

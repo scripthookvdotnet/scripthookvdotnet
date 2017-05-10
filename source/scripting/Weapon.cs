@@ -80,7 +80,7 @@ namespace GTA
 		{
 			get
 			{
-				return Game.GetGXTEntry(DisplayName);
+				return Game.GetLocalizedString(DisplayName);
 			}
 		}
 		public Model Model

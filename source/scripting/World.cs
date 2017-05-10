@@ -287,6 +287,15 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Pauses or resumes the in-game clock.
+		/// </summary>
+		/// <param name="value">Pauses the game clock if set to <c>true</c>; otherwise, resumes the game clock.</param>
+		public static void PauseClock(bool value)
+		{
+			Function.Call(Hash.PAUSE_CLOCK, value);
+		}
+
+		/// <summary>
 		/// Sets a value indicating whether lights in the <see cref="World"/> should be rendered.
 		/// </summary>
 		/// <value>
@@ -979,11 +988,11 @@ namespace GTA
 		/// <param name="position">The position on the map.</param>
 		public static string GetZoneLocalizedName(Vector3 position)
 		{
-			return Game.GetGXTEntry(Function.Call<ulong>(Hash.GET_NAME_OF_ZONE, position.X, position.Y, position.Z));
+			return Game.GetLocalizedString(GetZoneDisplayName(position));
 		}
 		/// <summary>
 		/// Gets the display name of the a zone in the map.
-		/// Use <see cref="Game.GetGXTEntry(string)"/> to convert to the localized name.
+		/// Use <see cref="Game.GetLocalizedString(string)"/> to convert to the localized name.
 		/// </summary>
 		/// <param name="position">The position on the map.</param>
 		public static string GetZoneDisplayName(Vector2 position)
@@ -992,7 +1001,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets the display name of the a zone in the map.
-		/// Use <see cref="Game.GetGXTEntry(string)"/> to convert to the localized name.
+		/// Use <see cref="Game.GetLocalizedString(string)"/> to convert to the localized name.
 		/// </summary>
 		/// <param name="position">The position on the map.</param>
 		public static string GetZoneDisplayName(Vector3 position)
