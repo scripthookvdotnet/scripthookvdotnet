@@ -71,9 +71,10 @@ void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusSh
 #include <Windows.h>
 
 bool sGameReloaded = false;
-PVOID sMainFib = nullptr, sScriptFib = nullptr;
+PVOID sMainFib = nullptr;
+PVOID sScriptFib = nullptr;
 
-void ScriptMain()
+static void ScriptMain()
 {
 	// Set up fibers
 	sGameReloaded = true;
@@ -94,7 +95,6 @@ void ScriptMain()
 
 					// Switch back to main script fiber used by Script Hook
 					SwitchToFiber(sMainFib);
-
 				}
 			}
 		};
@@ -112,7 +112,7 @@ void ScriptMain()
 		SwitchToFiber(sScriptFib);
 	}
 }
-void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
+static void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
 	ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
 }

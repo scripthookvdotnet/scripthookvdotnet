@@ -136,17 +136,12 @@ namespace GTA
 			Log("[ERROR]", "Caught fatal unhandled exception:", Environment::NewLine, args->ExceptionObject->ToString());
 		}
 
-		if (sender == nullptr)
+		if (sender == nullptr || !Script::typeid->IsInstanceOfType(sender))
 		{
 			return;
 		}
 
 		auto scriptType = sender->GetType();
-
-		if (!scriptType->IsInstanceOfType(Script::typeid))
-		{
-			return;
-		}
 
 		Log("[INFO]", "The exception was thrown while executing the script '", scriptType->FullName, "'.");
 
