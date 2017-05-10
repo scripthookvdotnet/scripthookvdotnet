@@ -680,10 +680,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Returns a localised <see cref="string"/> from the games language files with a specified GXT key
+		/// Returns a localized <see cref="string"/> from the games language files with a specified GXT key
 		/// </summary>
 		/// <param name="entry">The GXT key.</param>
-		/// <returns>The localised <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
+		/// <returns>The localized <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetGXTEntry(string entry)
 		{
 			return GXTEntryExists(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
@@ -696,6 +696,16 @@ namespace GTA
 		internal static string GetGXTEntry(ulong entry)
 		{
 			return GXTEntryExists(entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : String.Empty;
+		}
+
+		/// <summary>
+		/// Returns a localized <see cref="string"/> from the games language files with a specified GXT key hash
+		/// </summary>
+		/// <param name="entryLabelHash">The GXT key hash.</param>
+		/// <returns>The localized <see cref="string"/> if the key hash exists; otherwise, <see cref="string.Empty"/></returns>
+		public static string GetGXTEntry(int entryLabelHash)
+		{
+			return MemoryAccess.GetGXTEntryByHash(entryLabelHash);
 		}
 
 		/// <summary>

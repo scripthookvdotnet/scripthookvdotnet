@@ -429,6 +429,11 @@ namespace GTA
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmVec3Address = reinterpret_cast<unsigned char(*)(__int64, __int64, float, float, float)>(address);
 
+			address = FindPattern("\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x18\x89\x54\x24\x10\x56\x57\x41\x56\x48\x83\xEC\x20", "xxxxxxxxxxxxxxxxxxxxxx");
+			GetLabelTextByHashFunc = reinterpret_cast<UINT64(*)(UINT64, int)>(reinterpret_cast<int*>(address));
+			address = FindPattern("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
+			GetLabelTextByHashAddr2 = (*reinterpret_cast<int*>(address + 7) + address + 11);
+
 			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
 			CheckpointBaseAddr = reinterpret_cast<UINT64(*)()>(*reinterpret_cast<int*>(address - 19) + address - 15);
 			CheckpointHandleAddr = reinterpret_cast<UINT64(*)(UINT64, int)>(*reinterpret_cast<int*>(address - 9) + address - 5);
@@ -747,6 +752,18 @@ namespace GTA
 		{
 			IntPtr handle = ScriptDomain::CurrentDomain->PinString(toHash);
 			return _getHashKey((char*)handle.ToPointer(), 0);
+		}
+		String ^MemoryAccess::GetGXTEntryByHash(int entryLabelHash)
+		{
+			const char* entryText = reinterpret_cast<const char*>(GetLabelTextByHashFunc(GetLabelTextByHashAddr2, entryLabelHash));
+			if (entryText != nullptr)
+			{
+				int textLen = static_cast<int>(strlen(entryText));
+				array<Byte> ^textBytes = gcnew array<Byte>(textLen);
+				Marshal::Copy(IntPtr(const_cast<char *>(entryText)), textBytes, 0, textLen);
+				return Text::Encoding::UTF8->GetString(textBytes);
+			}
+			return String::Empty;
 		}
 
 		IntPtr MemoryAccess::GetEntityAddress(int handle)
