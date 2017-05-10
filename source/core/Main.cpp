@@ -30,7 +30,6 @@ namespace WinForms = System::Windows::Forms;
 ref struct ScriptHook
 {
 	static GTA::ScriptDomain ^Domain = nullptr;
-	static WinForms::Keys ReloadKey = WinForms::Keys::None;
 };
 
 bool ManagedInit()
@@ -42,27 +41,19 @@ bool ManagedInit()
 
 	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
 	ScriptHook::Domain = GTA::ScriptDomain::Load(settings->GetValue<String ^>(String::Empty, "ScriptsLocation", "scripts"));
-	ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
-	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+	if (!Object::ReferenceEquals(ScriptHook::Domain, nullptr))
 	{
-		return false;
+		ScriptHook::Domain->Start();
+
+		return true;
 	}
 
-	ScriptHook::Domain->Start();
-
-	return true;
+	return false;
 }
-bool ManagedTick()
+void ManagedTick()
 {
-	if (ScriptHook::Domain->IsKeyPressed(ScriptHook::ReloadKey))
-	{
-		return false;
-	}
-
 	ScriptHook::Domain->DoTick();
-
-	return true;
 }
 void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 {
@@ -97,10 +88,13 @@ void ScriptMain()
 				sGameReloaded = false;
 
 				// Run main loop
-				while (!sGameReloaded && ManagedTick())
+				while (!sGameReloaded)
 				{
+					ManagedTick();
+
 					// Switch back to main script fiber used by Script Hook
 					SwitchToFiber(sMainFib);
+
 				}
 			}
 		};
