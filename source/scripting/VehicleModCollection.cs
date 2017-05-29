@@ -253,13 +253,6 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = this[VehicleModType.Livery].ModCount;
-
-				if (modCount > 0)
-				{
-					return modCount;
-				}
-
 				return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
 			}
 			set
