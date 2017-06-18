@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 12.0.40629.0
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
@@ -17,6 +19,11 @@ Global
 		Run NativeGen|x64 = Run NativeGen|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.ActiveCfg = Release|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.Build.0 = Release|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.ActiveCfg = Release|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.Build.0 = Release|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.Build.0 = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.ActiveCfg = Release|x64

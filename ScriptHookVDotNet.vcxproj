@@ -26,7 +26,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>$(SolutionDir)obj\</IntDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\</IntDir>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
     <ExtensionsToDeleteOnClean>*.netmodule;*.xdc;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
@@ -45,7 +45,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <!-- Global compilation settings -->
   <PropertyGroup>
-    <TargetExt>.asi</TargetExt>
+    <TargetExt>.dll</TargetExt>
     <TargetName>ScriptHookVDotNet3</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup>
@@ -195,12 +195,6 @@
   <Target Name="CsCompile" DependsOnTargets="ClCompile" BeforeTargets="Link" AfterTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
     <Message Text="Compiling scripting API" />
     <Csc Sources="@(CsCompile)" AddModules="$(IntDir)Main.obj" TargetType="Module" Optimize="%(CsCompile.Optimize)" LangVersion="%(CsCompile.LangVersion)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" Condition="'@(CsCompile)' != ''" />
-  </Target>
-  <!-- Rename and move output files -->
-  <Target Name="MoveFiles" AfterTargets="AfterBuild" Condition="'$(Configuration)' != 'NativeGen'">
-    <MakeDir Directories="$(TargetDir)SDK" Condition="!Exists('$(TargetDir)SDK')" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)SDK\$(TargetName).dll" />
-    <Move SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="$(TargetDir)SDK\" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
