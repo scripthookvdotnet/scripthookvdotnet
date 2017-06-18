@@ -13,7 +13,7 @@
   <!-- Global compilation settings -->
   <PropertyGroup>
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\SDK\scripts\</OutputPath>
+    <OutputPath>bin\scripts</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
