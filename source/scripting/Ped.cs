@@ -34,6 +34,7 @@ namespace GTA
 		AllowGoingWrongWay = 512,
 		Reverse = 1024,
 		AllowMedianCrossing = 262144,
+        Emergency = 262710,
 		DriveBySight = 4194304,
 		IgnorePathFinding = 16777216,
 		TryToAvoidHighways = 536870912,
