@@ -42,9 +42,12 @@ void ManagedInit()
 
 		System::Type ^main = assembly->GetType("ScriptHookVDotNet");
 
-		LoaderData::InitMethods.Add(main->GetMethod("Init", BindingFlags::Public | BindingFlags::Static));
-		LoaderData::TickMethods.Add(main->GetMethod("Tick", BindingFlags::Public | BindingFlags::Static));
-		LoaderData::KeyboardMethods.Add(main->GetMethod("KeyboardMessage", BindingFlags::Public | BindingFlags::Static));
+		if (main && main->IsAbstract)
+		{
+			LoaderData::InitMethods.Add(main->GetMethod("Init", BindingFlags::Public | BindingFlags::Static));
+			LoaderData::TickMethods.Add(main->GetMethod("Tick", BindingFlags::Public | BindingFlags::Static));
+			LoaderData::KeyboardMethods.Add(main->GetMethod("KeyboardMessage", BindingFlags::Public | BindingFlags::Static));
+		}
 	}
 
 	for each (MethodInfo ^method in LoaderData::InitMethods)

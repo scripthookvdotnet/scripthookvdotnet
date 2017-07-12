@@ -27,10 +27,9 @@ using namespace System;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
-ref struct ScriptHookVDotNet
+ref class ScriptHookVDotNet abstract
 {
-	static GTA::ScriptDomain ^Domain = nullptr;
-
+public:
 	static bool Init()
 	{
 		if (Domain != nullptr)
@@ -65,4 +64,7 @@ ref struct ScriptHookVDotNet
 			Domain->DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
 		}
 	}
+
+private:
+	static GTA::ScriptDomain ^Domain = nullptr;
 };
