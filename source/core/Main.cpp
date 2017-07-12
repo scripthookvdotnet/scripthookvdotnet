@@ -26,15 +26,15 @@ ref class ScriptHookVDotNet abstract
 public:
 	static bool Init()
 	{
-		if (!Object::ReferenceEquals(Domain, nullptr))
+		if (Domain != nullptr)
 		{
 			GTA::ScriptDomain::Unload(Domain);
 		}
 
 		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
-		Domain = GTA::ScriptDomain::Load(settings->GetValue<String ^>(String::Empty, "ScriptsLocation", "scripts"));
+		Domain = GTA::ScriptDomain::Load(settings->GetValue(String::Empty, "ScriptsLocation", "scripts"));
 
-		if (!Object::ReferenceEquals(Domain, nullptr))
+		if (Domain != nullptr)
 		{
 			Domain->Start();
 
@@ -45,17 +45,18 @@ public:
 	}
 	static void Tick()
 	{
-		Domain->DoTick();
+		if (Domain != nullptr)
+		{
+			Domain->DoTick();
+		}
 	}
 
 	static void KeyboardMessage(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		if (Object::ReferenceEquals(Domain, nullptr))
+		if (Domain != nullptr)
 		{
-			return;
+			Domain->DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
 		}
-
-		Domain->DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
 	}
 
 private:

@@ -116,6 +116,11 @@ namespace GTA
 
 	ScriptDomain ^ScriptDomain::Load(String ^path)
 	{
+		if (!IO::Path::IsPathRooted(path))
+		{
+			path = IO::Path::Combine(IO::Path::GetDirectoryName(Assembly::GetExecutingAssembly()->Location), path);
+		}
+
 		path = IO::Path::GetFullPath(path);
 
 		// Clear log
