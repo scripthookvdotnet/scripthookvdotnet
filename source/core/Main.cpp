@@ -60,9 +60,14 @@ ref struct ScriptHookVDotNet
 
 	static void KeyboardMessage(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		if (Domain != nullptr)
-		{
-			Domain->DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
+		if (key == WinForms::Keys::Insert) {
+			Init();
+		}
+		else {
+			if (Domain != nullptr)
+			{
+				Domain->DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
+			}
 		}
 	}
 };
