@@ -33,6 +33,7 @@ public:
 
 		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
 		Domain = GTA::ScriptDomain::Load(settings->GetValue(String::Empty, "ScriptsLocation", "scripts"));
+		ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
 		if (Domain != nullptr)
 		{
@@ -47,7 +48,14 @@ public:
 	{
 		if (Domain != nullptr)
 		{
-			Domain->DoTick();
+			if (Domain->IsKeyPressed(ReloadKey))
+			{
+				Init();
+			}
+			else
+			{
+				Domain->DoTick();
+			}
 		}
 	}
 
@@ -60,5 +68,6 @@ public:
 	}
 
 private:
+	static WinForms::Keys ReloadKey = WinForms::Keys::None;
 	static GTA::ScriptDomain ^Domain = nullptr;
 };
