@@ -21,142 +21,53 @@ using namespace System;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
-ref struct ScriptHook
+ref class ScriptHookVDotNet abstract
 {
-	static GTA::ScriptDomain ^Domain = nullptr;
-	static WinForms::Keys ReloadKey = WinForms::Keys::None;
-};
-
-bool ManagedInit()
-{
-	if (!Object::ReferenceEquals(ScriptHook::Domain, nullptr))
+public:
+	static bool Init()
 	{
-		GTA::ScriptDomain::Unload(ScriptHook::Domain);
-	}
+		if (Domain != nullptr)
+		{
+			GTA::ScriptDomain::Unload(Domain);
+		}
 
-	auto location = Assembly::GetExecutingAssembly()->Location;
-	auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(location, ".ini"));
+		auto settings = GTA::ScriptSettings::Load(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
+		Domain = GTA::ScriptDomain::Load(settings->GetValue(String::Empty, "ScriptsLocation", "scripts"));
+		ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
 
-	ScriptHook::Domain = GTA::ScriptDomain::Load(IO::Path::Combine(IO::Path::GetDirectoryName(location), settings->GetValue(String::Empty, "ScriptsLocation", "scripts")));
-	ScriptHook::ReloadKey = settings->GetValue<WinForms::Keys>(String::Empty, "ReloadKey", WinForms::Keys::Insert);
+		if (Domain != nullptr)
+		{
+			Domain->Start();
 
-	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
-	{
+			return true;
+		}
+
 		return false;
 	}
-
-	ScriptHook::Domain->Start();
-
-	return true;
-}
-bool ManagedTick()
-{
-	if (ScriptHook::Domain->IsKeyPressed(ScriptHook::ReloadKey))
+	static void Tick()
 	{
-		return false;
-	}
-
-	ScriptHook::Domain->DoTick();
-
-	return true;
-}
-void ManagedKeyboardMessage(int key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
-{
-	if (Object::ReferenceEquals(ScriptHook::Domain, nullptr))
-	{
-		return;
-	}
-
-	ScriptHook::Domain->DoKeyboardMessage(static_cast<WinForms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
-}
-
-#pragma unmanaged
-
-#include <Main.h>
-#include <Windows.h>
-
-bool sGameReloaded = false;
-PVOID sMainFib = nullptr, sScriptFib = nullptr;
-
-void ScriptMain()
-{
-	const auto version = getGameVersion();
-
-	if (version >= 20)
-	{
-		// Disable mpexecutive and mplowrider2 car removing
-		const auto global2562051 = getGlobalPtr(2562051);
-
-		if (global2562051 != nullptr)
+		if (Domain != nullptr)
 		{
-			*global2562051 = 1;
-		}
-	}
-	else if (version >= 18)
-	{
-		// Disable mplowrider2 car removing
-		const auto global2558120 = getGlobalPtr(2558120);
-
-		if (global2558120 != nullptr)
-		{
-			*global2558120 = 1;
-		}
-	}
-
-	// Set up fibers
-	sGameReloaded = true;
-	sMainFib = GetCurrentFiber();
-
-	if (sScriptFib == nullptr)
-	{
-		const auto callback = [](LPVOID)
-		{
-			while (ManagedInit())
+			if (Domain->IsKeyPressed(ReloadKey))
 			{
-				sGameReloaded = false;
-
-				// Run main loop
-				while (!sGameReloaded && ManagedTick())
-				{
-					// Switch back to main script fiber used by Script Hook
-					SwitchToFiber(sMainFib);
-				}
+				Init();
 			}
-		};
-
-		// Create our own fiber for the common language runtime once
-		sScriptFib = CreateFiber(0, callback, nullptr);
+			else
+			{
+				Domain->DoTick();
+			}
+		}
 	}
 
-	while (true)
+	static void KeyboardMessage(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		// Yield execution
-		scriptWait(0);
-
-		// Switch to our own fiber and wait for it to switch back
-		SwitchToFiber(sScriptFib);
-	}
-}
-void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
-{
-	ManagedKeyboardMessage(static_cast<int>(key), isUpNow == FALSE, (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0, (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0, isWithAlt != FALSE);
-}
-
-BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
-{
-	switch (fdwReason)
-	{
-		case DLL_PROCESS_ATTACH:
-			DisableThreadLibraryCalls(hModule);
-			scriptRegister(hModule, &ScriptMain);
-			keyboardHandlerRegister(&ScriptKeyboardMessage);
-			break;
-		case DLL_PROCESS_DETACH:
-			DeleteFiber(sScriptFib);
-			scriptUnregister(hModule);
-			keyboardHandlerUnregister(&ScriptKeyboardMessage);
-			break;
+		if (Domain != nullptr)
+		{
+			Domain->DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
+		}
 	}
 
-	return TRUE;
-}
+private:
+	static WinForms::Keys ReloadKey = WinForms::Keys::None;
+	static GTA::ScriptDomain ^Domain = nullptr;
+};

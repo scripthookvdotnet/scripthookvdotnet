@@ -21,15 +21,15 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\</IntDir>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <OutDir>bin\</OutDir>
-    <IntDir>obj\</IntDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
-    <TargetExt>.asi</TargetExt>
-    <TargetName>ScriptHookVDotNet</TargetName>
+    <TargetExt>.dll</TargetExt>
+    <TargetName>ScriptHookVDotNet2</TargetName>
   </PropertyGroup>
   <!-- Release configuration settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -47,11 +47,6 @@
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>mkdir "$(TargetDir)SDK"
-copy "$(TargetPath)" "$(TargetDir)SDK\$(TargetName).dll"
-move "$(TargetDir)$(TargetName).xml" ""$(TargetDir)SDK\$(TargetName).xml"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <!-- Release compilation settings -->
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
