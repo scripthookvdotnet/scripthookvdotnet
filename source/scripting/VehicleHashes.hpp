@@ -522,7 +522,7 @@ namespace GTA
 			XLS = 1203490606u,
 			XLS2 = 3862958888u,
 			Youga = 65402552u,
-			Youga2 = 3685342204u,
+			Youga2 = 1026149675u,
 			Zentorno = 2891838741u,
 			Zion = 3172678083u,
 			Zion2 = 3101863448u,
