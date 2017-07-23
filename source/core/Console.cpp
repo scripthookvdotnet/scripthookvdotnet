@@ -578,11 +578,10 @@ namespace GTA
 		float xNew = (static_cast<float>(x) / WIDTH);
 		float yNew = (static_cast<float>(y) / HEIGHT);
 
-
 		Native::Function::Call(Native::Hash::SET_TEXT_FONT, font);
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, scale, scale);
 		Native::Function::Call(Native::Hash::SET_TEXT_COLOUR, color.R, color.G, color.B, color.A);
-		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
+		Native::Function::Call(Native::Hash::BEGIN_TEXT_COMMAND_DISPLAY_TEXT, "STRING");
 
 		const int maxStringLength = 99;
 
@@ -591,11 +590,11 @@ namespace GTA
 			Native::Function::Call(Native::Hash::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text->Substring(i, System::Math::Min(maxStringLength, text->Length - i)));
 		}
 
-		Native::Function::Call(Native::Hash::_DRAW_TEXT, xNew, yNew);
+		Native::Function::Call(Native::Hash::END_TEXT_COMMAND_DISPLAY_TEXT, xNew, yNew);
 	}
 	float ConsoleScript::GetTextLength(String ^text, float scale, int font)
 	{
-		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_FOR_WIDTH, "CELL_EMAIL_BCON");
+		Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMMAND_WIDTH, "CELL_EMAIL_BCON");
 
 		const int maxStringLength = 99;
 
@@ -607,7 +606,7 @@ namespace GTA
 		Native::Function::Call(Native::Hash::SET_TEXT_FONT, font);
 		Native::Function::Call(Native::Hash::SET_TEXT_SCALE, scale, scale);
 
-		return Native::Function::Call<float>(Native::Hash::_GET_TEXT_SCREEN_WIDTH, 1);
+		return Native::Function::Call<float>(Native::Hash::_END_TEXT_COMMAND_GET_WIDTH, 1);
 	}
 
 	void ConsoleScript::DoUpdateCheck()

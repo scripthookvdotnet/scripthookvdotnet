@@ -1590,7 +1590,7 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash._SET_VEHICLE_LANDING_GEAR, Handle, value);
+				Function.Call(Hash.CONTROL_LANDING_GEAR, Handle, value);
 			}
 		}
 		public VehicleRoofState RoofState
@@ -1966,21 +1966,21 @@ namespace GTA
 		{
 			if (Model.IsCargobob)
 			{
-				Function.Call(Hash._ENABLE_CARGOBOB_HOOK, Handle, hook);
+				Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, hook);
 			}
 		}
 		public void RetractCargobobHook()
 		{
 			if (Model.IsCargobob)
 			{
-				Function.Call(Hash._RETRACT_CARGOBOB_HOOK, Handle);
+				Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
 			}
 		}
 		public bool IsCargobobHookActive()
 		{
 			if (Model.IsCargobob)
 			{
-				return Function.Call<bool>(Hash._IS_CARGOBOB_HOOK_ACTIVE, Handle) || Function.Call<bool>(Hash._IS_CARGOBOB_MAGNET_ACTIVE, Handle);
+				return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash._DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 			}
 
 			return false;
@@ -1992,9 +1992,9 @@ namespace GTA
 				switch (hook)
 				{
 					case CargobobHook.Hook:
-						return Function.Call<bool>(Hash._IS_CARGOBOB_HOOK_ACTIVE, Handle);
+						return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle);
 					case CargobobHook.Magnet:
-						return Function.Call<bool>(Hash._IS_CARGOBOB_MAGNET_ACTIVE, Handle);
+						return Function.Call<bool>(Hash._DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 				}
 			}
 
@@ -2004,14 +2004,14 @@ namespace GTA
 		{
 			if (IsCargobobHookActive(CargobobHook.Magnet))
 			{
-				Function.Call(Hash._CARGOBOB_MAGNET_GRAB_VEHICLE, Handle, true);
+				Function.Call(Hash._SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, true);
 			}
 		}
 		public void CargoBobMagnetReleaseVehicle()
 		{
 			if (IsCargobobHookActive(CargobobHook.Magnet))
 			{
-				Function.Call(Hash._CARGOBOB_MAGNET_GRAB_VEHICLE, Handle, false);
+				Function.Call(Hash._SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, false);
 			}
 		}
 

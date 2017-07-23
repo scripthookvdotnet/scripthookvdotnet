@@ -32,7 +32,7 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, _owner.Handle, Index, value);
+				Function.Call(Hash._SET_VEHICLE_DOOR_CAN_BREAK, _owner.Handle, Index, value);
 			}
 		}
 		public bool IsOpen

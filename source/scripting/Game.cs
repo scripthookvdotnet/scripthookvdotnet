@@ -97,7 +97,7 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<Language>(Hash._GET_UI_LANGUAGE_ID);
+				return Function.Call<Language>(Hash._GET_CURRENT_LANGUAGE_ID);
 			}
 		}
 
@@ -219,7 +219,7 @@ namespace GTA
 		{
 			get
 			{
-				return !Function.Call<bool>(Hash._IS_NIGHTVISION_INACTIVE);
+				return Function.Call<bool>(Hash._IS_NIGHTVISION_ACTIVE);
 			}
 			set
 			{

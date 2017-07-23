@@ -863,7 +863,7 @@ namespace GTA
 		{
 			get
 			{
-				return !Function.Call<bool>(Hash._IS_ENTITY_COLLISON_DISABLED, Handle);
+				return !Function.Call<bool>(Hash._GET_ENTITY_COLLISON_DISABLED, Handle);
 			}
 			set
 			{

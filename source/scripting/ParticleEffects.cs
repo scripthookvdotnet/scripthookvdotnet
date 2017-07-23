@@ -56,14 +56,13 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
 		{
 			if (!SetNextCall())
 			{
 				return false;
 			}
-			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
+			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y,
 				rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
 		}
@@ -78,15 +77,13 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, Entity entity,
-			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedOnEntity(string effectName, Entity entity, Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
 		{
 			if (!SetNextCall())
 			{
 				return false;
 			}
-			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
+			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
 				rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
@@ -110,7 +107,7 @@ namespace GTA
 			{
 				return false;
 			}
-			Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
+			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X,
 				rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
@@ -249,7 +246,7 @@ namespace GTA
 			Request();
 			if (IsLoaded)
 			{
-				Function.Call(Hash._SET_PTFX_ASSET_NEXT_CALL, _assetName);
+				Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 				return true;
 			}
 			return false;

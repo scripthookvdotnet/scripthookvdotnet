@@ -207,7 +207,7 @@ namespace GTA.UI
 		{
 			get
 			{
-				return Function.Call<float>(Hash._GET_SCREEN_ASPECT_RATIO, 0);
+				return Function.Call<float>(Hash._GET_ASPECT_RATIO, 0);
 			}
 		}
 		/// <summary>
@@ -230,7 +230,7 @@ namespace GTA.UI
 			    int width, height;
 				unsafe
 				{
-					Function.Call(Hash._GET_SCREEN_ACTIVE_RESOLUTION, &width, &height);
+					Function.Call(Hash._GET_ACTIVE_SCREEN_RESOLUTION, &width, &height);
 				}
 
 				return new Size(width, height);
@@ -244,7 +244,7 @@ namespace GTA.UI
 		/// <param name="duration">The duration to display the subtitle in milliseconds.</param>
 		public static void ShowSubtitle(string message, int duration = 2500)
 		{
-			Function.Call(Hash._SET_TEXT_ENTRY_2, MemoryAccess.CellEmailBcon);
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_PRINT, MemoryAccess.CellEmailBcon);
 
 			const int maxStringLength = 99;
 
@@ -253,7 +253,7 @@ namespace GTA.UI
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
 			}
 
-			Function.Call(Hash._DRAW_SUBTITLE_TIMED, duration, 1);
+			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, 1);
 		}
 
 		/// <summary>
@@ -262,14 +262,14 @@ namespace GTA.UI
 		/// <param name="helpText">The text to display.</param>
 		public static void DisplayHelpTextThisFrame(string helpText)
 		{
-			Function.Call(Hash._SET_TEXT_COMPONENT_FORMAT, MemoryAccess.CellEmailBcon);
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_HELP, MemoryAccess.CellEmailBcon);
 			const int maxStringLength = 99;
 
 			for (int i = 0; i < helpText.Length; i += maxStringLength)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, helpText.Substring(i, System.Math.Min(maxStringLength, helpText.Length - i)));
 			}
-			Function.Call(Hash._DISPLAY_HELP_TEXT_FROM_STRING_LABEL, 0, 0, 1, -1);
+			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, 0, 1, -1);
 		}
 
 		/// <summary>
@@ -308,7 +308,7 @@ namespace GTA.UI
 
 			unsafe
 			{
-				if (!Function.Call<bool>(Hash._WORLD3D_TO_SCREEN2D, position.X, position.Y, position.Z, &pointX, &pointY))
+				if (!Function.Call<bool>(Hash.GET_SCREEN_COORD_FROM_WORLD_COORD, position.X, position.Y, position.Z, &pointX, &pointY))
 				{
 					return PointF.Empty;
 				}
