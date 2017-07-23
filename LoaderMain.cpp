@@ -18,6 +18,11 @@ using namespace System;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
+#pragma region Implicit PInvoke Definitions
+[Runtime::InteropServices::DllImport("kernel32", CharSet = Runtime::InteropServices::CharSet::Unicode, SetLastError = false)]
+extern int DeleteFile(String ^name);
+#pragma endregion
+
 ref struct LoaderData
 {
 	static Collections::Generic::List<MethodInfo ^> InitMethods, TickMethods, KeyboardMethods;
@@ -33,10 +38,20 @@ void ManagedInit()
 
 	for each (String ^filename in IO::Directory::EnumerateFiles(directory, "ScriptHookVDotNet*.dll"))
 	{
-		Assembly ^assembly = Assembly::LoadFrom(IO::Path::Combine(directory, filename));
+		Assembly ^assembly;
 
-		if (!assembly)
+		try
 		{
+			String ^path = IO::Path::Combine(directory, filename);
+
+			// Unblock file if it was downloaded from a network location
+			DeleteFile(path + ":Zone.Identifier");
+
+			assembly = Assembly::LoadFrom(path);
+		}
+		catch (Exception ^ex)
+		{
+			WinForms::MessageBox::Show(String::Concat("FATAL: Unable to load '", filename, "' due to the following exception:\n\n", ex->ToString()), "Community Script Hook V .NET");
 			continue;
 		}
 
