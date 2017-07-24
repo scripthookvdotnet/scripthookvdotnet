@@ -174,7 +174,7 @@ namespace GTA
 
         public PedComponents ComponentType { get { return _componentdId; } }
 
-        public string HashName { get { return _componentId.ToString(); } }
+        public string HashName { get { return _componentdId.ToString(); } }
 
         public int Count
 		{
