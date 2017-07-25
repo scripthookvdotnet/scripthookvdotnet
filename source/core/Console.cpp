@@ -706,6 +706,11 @@ namespace GTA
 		Abort(filename);
 		Load(filename);
 	}
+	void DefaultConsoleCommands::ReloadAllScripts()
+	{
+		AbortAllScripts();
+		ScriptDomain::CurrentDomain->StartAllScripts();
+	}
 	void DefaultConsoleCommands::List()
 	{
 		auto scripts = gcnew Collections::Generic::List<Script ^>(ScriptDomain::CurrentDomain->RunningScripts);
@@ -746,6 +751,10 @@ namespace GTA
 		}
 
 		ScriptDomain::CurrentDomain->AbortScript(filename);
+	}
+	void DefaultConsoleCommands::AbortAllScripts()
+	{
+		ScriptDomain::CurrentDomain->AbortAllScriptsExceptConsole();
 	}
 	void DefaultConsoleCommands::Clear()
 	{

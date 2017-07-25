@@ -546,6 +546,54 @@ namespace GTA
 			script->Start();
 		}
 	}
+	void ScriptDomain::StartAllScripts()
+	{
+		String ^basedirectory = ScriptDomain::CurrentDomain->AppDomain->BaseDirectory;
+
+		if (IO::Directory::Exists(basedirectory))
+		{
+			auto filenameScripts = gcnew Collections::Generic::List<String ^>();
+
+			try
+			{
+				filenameScripts->AddRange(IO::Directory::GetFiles(basedirectory, "*.vb", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(basedirectory, "*.cs", IO::SearchOption::AllDirectories));
+				filenameScripts->AddRange(IO::Directory::GetFiles(basedirectory, "*.dll", IO::SearchOption::AllDirectories));
+			}
+			catch (Exception ^ex)
+			{
+				Log("[ERROR]", "Failed to reload scripts:", Environment::NewLine, ex->ToString());
+			}
+
+			int offset = _scriptTypes->Count;
+
+			for each (auto filename in filenameScripts)
+			{
+				String ^extension = IO::Path::GetExtension(filename)->ToLower();
+
+				if (extension->Equals(".dll", StringComparison::OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
+				{
+					return;
+				}
+			}
+
+			int TotalScriptCount = _scriptTypes->Count;
+
+			Log("[INFO]", "Starting ", (TotalScriptCount - offset).ToString(), " script(s) ...");
+
+			for (int i = offset; i < TotalScriptCount; i++)
+			{
+				GTA::Script ^script = InstantiateScript(_scriptTypes[i]->Item2);
+
+				if (Object::ReferenceEquals(script, nullptr))
+				{
+					continue;
+				}
+
+				script->Start();
+			}
+		}
+	}
 	void ScriptDomain::Abort()
 	{
 		_runningScripts->Remove(_console);
@@ -579,6 +627,22 @@ namespace GTA
 
 			script->Abort();
 		}
+	}
+	void ScriptDomain::AbortAllScriptsExceptConsole()
+	{
+		for each (GTA::Script ^script in _runningScripts)
+		{
+			if (!script->ReferenceEquals(script, _console))
+			{
+				script->Abort();
+			}
+		}
+
+		_scriptTypes->Clear();
+		_runningScripts->Clear();
+		_runningScripts->Add(_console);
+
+		GC::Collect();
 	}
 	void ScriptDomain::OnStartScript(GTA::Script ^script)
 	{
