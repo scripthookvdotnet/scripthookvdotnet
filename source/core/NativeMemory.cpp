@@ -486,6 +486,27 @@ namespace GTA
 			return (data & (1 << index)) != 0;
 		}
 
+		unsigned long long MemoryAccess::GetCModelInfo(int modelHash)
+		{
+			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
+			for (HashNode* cur = HashMap[static_cast<unsigned int>(modelHash) % modelHashEntries]; cur; cur = cur->next)
+			{
+				if (cur->hash != modelHash)
+				{
+					continue;
+				}
+				UINT16 data = cur->data;
+				if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
+				{
+					UINT64 addr1 = modelNum4 + modelNum3 * data;
+					if (addr1)
+					{
+						return *reinterpret_cast<PUINT64>(addr1);
+					}
+				}
+			}
+		}
+
 		void MemoryAccess::GenerateVehicleModelList()
 		{
 			uintptr_t address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
@@ -537,26 +558,11 @@ namespace GTA
 
 		bool MemoryAccess::IsModelAPed(int modelHash)
 		{
-			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
-			for (HashNode* cur = HashMap[static_cast<unsigned int>(modelHash) % modelHashEntries]; cur; cur = cur->next)
+			UINT64 ModelInfo = GetCModelInfo(modelHash);
+
+			if (ModelInfo)
 			{
-				if (cur->hash != modelHash)
-				{
-					continue;
-				}
-				UINT16 data = cur->data;
-				if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
-				{
-					UINT64 addr1 = modelNum4 + modelNum3 * data;
-					if (addr1)
-					{
-						UINT64 addr2 = *reinterpret_cast<PUINT64>(addr1);
-						if (addr2)
-						{
-							return (*reinterpret_cast<PBYTE>(addr2 + 157) & 0x1F) == 6;
-						}
-					}
-				}
+				return (*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 6;
 			}
 			return false;
 		}
