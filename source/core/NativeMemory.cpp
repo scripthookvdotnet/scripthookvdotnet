@@ -572,7 +572,7 @@ namespace GTA
 
 			if (ModelInfo)
 			{
-				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) != 5) //checks if the model is a vehicle
+				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 5) //checks if the model is a vehicle
 				{
 					return *reinterpret_cast<int*>(ModelInfo + 792) == 7; //checks if the vehicle is an amphibious quad bike
 				}
@@ -585,7 +585,7 @@ namespace GTA
 
 			if (ModelInfo)
 			{
-				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) != 5) //checks if the model is a vehicle
+				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 5) //checks if the model is a vehicle
 				{
 					return *reinterpret_cast<int*>(ModelInfo + 792) == 9; //checks if the vehicle is a blimp
 				}
