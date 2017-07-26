@@ -146,6 +146,33 @@ namespace GTA
 				return Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_CAR, Hash);
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious car.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an amphibious car; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAmphibiousCar
+		{
+			get
+			{
+				return Function.Call<bool>((Native.Hash)0x633F6F44A537EBB6, Hash);
+			}
+		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a blimp.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a blimp; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsBlimp
+		{
+			get
+			{
+				return MemoryAccess.IsModelABlimp(Hash);
+			}
+		}
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a cargobob.
 		/// </summary>
@@ -226,6 +253,19 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious quadbike.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an amphibious quadbike; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAmphibiousQuadbike
+		{
+			get
+			{
+				return MemoryAccess.IsModelAnAmphibiousQuadBike(Hash);
+			}
+		}
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a train.
 		/// </summary>
 		/// <value>
@@ -249,6 +289,19 @@ namespace GTA
 			get
 			{
 				return Function.Call<bool>(Native.Hash.IS_MODEL_A_VEHICLE, Hash);
+			}
+		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious vehicle.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an amphibious vehicle; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAmphibiousVehicle
+		{
+			get
+			{
+				return IsAmphibiousCar || IsAmphibiousQuadbike;
 			}
 		}
 

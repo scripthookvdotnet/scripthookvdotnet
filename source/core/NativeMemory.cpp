@@ -566,6 +566,32 @@ namespace GTA
 			}
 			return false;
 		}
+		bool MemoryAccess::IsModelAnAmphibiousQuadBike(int modelHash)
+		{
+			UINT64 ModelInfo = GetCModelInfo(modelHash);
+
+			if (ModelInfo)
+			{
+				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) != 5) //checks if the model is a vehicle
+				{
+					return *reinterpret_cast<int*>(ModelInfo + 792) == 7; //checks if the vehicle is an amphibious quad bike
+				}
+			}
+			return false;
+		}
+		bool MemoryAccess::IsModelABlimp(int modelHash)
+		{
+			UINT64 ModelInfo = GetCModelInfo(modelHash);
+
+			if (ModelInfo)
+			{
+				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) != 5) //checks if the model is a vehicle
+				{
+					return *reinterpret_cast<int*>(ModelInfo + 792) == 9; //checks if the vehicle is a blimp
+				}
+			}
+			return false;
+		}
 		int MemoryAccess::GetGameVersion()
 		{
 			return getGameVersion();
