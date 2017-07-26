@@ -240,12 +240,12 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a quadbike.
+		/// Gets a value indicating whether this <see cref="Model"/> is a quad bike.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a quadbike; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsQuadbike
+		public bool IsQuadBike
 		{
 			get
 			{
@@ -253,12 +253,12 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious quadbike.
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious quad bike.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is an amphibious quadbike; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsAmphibiousQuadbike
+		public bool IsAmphibiousQuadBike
 		{
 			get
 			{
@@ -301,7 +301,7 @@ namespace GTA
 		{
 			get
 			{
-				return IsAmphibiousCar || IsAmphibiousQuadbike;
+				return IsAmphibiousCar || IsAmphibiousQuadBike;
 			}
 		}
 
