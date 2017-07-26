@@ -495,6 +495,7 @@ namespace GTA
 				{
 					continue;
 				}
+
 				UINT16 data = cur->data;
 				if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
 				{
@@ -505,6 +506,8 @@ namespace GTA
 					}
 				}
 			}
+
+			return 0;
 		}
 
 		void MemoryAccess::GenerateVehicleModelList()
