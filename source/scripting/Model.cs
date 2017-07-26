@@ -157,7 +157,12 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<bool>((Native.Hash)0x633F6F44A537EBB6, Hash);
+				if (Game.Version >= GameVersion.v1_0_944_2_Steam)
+				{
+					return Function.Call<bool>((Native.Hash)0x633F6F44A537EBB6, Hash);
+				}
+
+				return false;
 			}
 		}
 		/// <summary>
@@ -262,7 +267,12 @@ namespace GTA
 		{
 			get
 			{
-				return MemoryAccess.IsModelAnAmphibiousQuadBike(Hash);
+				if (Game.Version >= GameVersion.v1_0_944_2_Steam)
+				{
+					return MemoryAccess.IsModelAnAmphibiousQuadBike(Hash);
+				}
+
+				return false;
 			}
 		}
 		/// <summary>
@@ -301,7 +311,12 @@ namespace GTA
 		{
 			get
 			{
-				return IsAmphibiousCar || IsAmphibiousQuadBike;
+				if (Game.Version >= GameVersion.v1_0_944_2_Steam)
+				{
+					return IsAmphibiousCar || IsAmphibiousQuadBike;
+				}
+
+				return false;
 			}
 		}
 
