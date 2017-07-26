@@ -102,6 +102,8 @@ namespace GTA
 				}
 			}
 			static bool IsModelAPed(int modelHash);
+			static bool IsModelAnAmphibiousQuadBike(int modelHash);
+			static bool IsModelABlimp(int modelHash);
 			static int* _cursorSpriteAddr;
 			static property System::IntPtr CellEmailBcon{
 				System::IntPtr get();
@@ -118,6 +120,7 @@ namespace GTA
 			static System::IntPtr _nullString;
 			static MemoryAccess();
 			static unsigned long long GetEntitySkeletonData(int handle);
+			static unsigned long long GetCModelInfo(int modelHash);
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;
 			static int modelNum1;
