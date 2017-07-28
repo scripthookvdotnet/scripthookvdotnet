@@ -64,9 +64,9 @@ namespace GTA
 		static void Yield();
 
 		/// <summary>
-		/// 
+		/// Registers a ScriptInstance for the scriptDomains runningScripts.
 		/// </summary>
-		static void Instance(ScriptInstance ^_instance);
+		static void RegisterInstance(ScriptInstance ^_instance);
 
 		/// <summary>
 		/// An event that is raised every tick of the script. 
@@ -172,7 +172,6 @@ namespace GTA
 		System::Threading::Thread ^_thread;
 		System::Threading::AutoResetEvent ^_waitEvent = gcnew System::Threading::AutoResetEvent(false);
 		System::Threading::AutoResetEvent ^_continueEvent = gcnew System::Threading::AutoResetEvent(false);
-		System::Collections::Generic::List<GTA::ScriptInstance ^> ^_instanceScripts = gcnew System::Collections::Generic::List<GTA::ScriptInstance ^>();
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^_keyboardEvents = gcnew System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^>();
 		ScriptSettings ^_settings;
 	};

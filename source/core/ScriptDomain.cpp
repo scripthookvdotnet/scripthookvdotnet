@@ -556,11 +556,6 @@ namespace GTA
 		{
 			script->Abort();
 
-			//if (script->GetType()->IsSubclassOf(GTA::ScriptInstance::typeid))
-			//{
-
-			//}
-
 			delete script;
 		}
 

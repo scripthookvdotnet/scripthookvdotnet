@@ -116,7 +116,7 @@ namespace GTA
 		Wait(0);
 	}
 
-	void Script::Instance(ScriptInstance ^_instance)
+	void Script::RegisterInstance(ScriptInstance ^_instance)
 	{
 		GTA::Script ^_thisScript = ScriptDomain::ExecutingScript;
 

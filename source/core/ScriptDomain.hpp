@@ -107,14 +107,12 @@ namespace GTA
 		}
 		System::String ^LookupScriptFilename(System::Type ^scripttype);
 		System::Object ^InitializeLifetimeService() override;
-
-		Script ^InstantiateScript(System::Type ^scripttype);
 		System::Collections::Generic::List<Script ^> ^_runningScripts = gcnew System::Collections::Generic::List<Script ^>();
 	private:
 		bool LoadScript(System::String ^filename);
 		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
-		
+		Script ^InstantiateScript(System::Type ^scripttype);
 		void CleanupStrings();
 
 		static ScriptDomain ^sCurrentDomain;
@@ -122,7 +120,6 @@ namespace GTA
 		ConsoleScript ^_console;
 		int _executingThreadId;
 		Script ^_executingScript;
-		
 		System::Collections::Generic::Queue<IScriptTask ^> ^_taskQueue = gcnew System::Collections::Generic::Queue<IScriptTask ^>();
 		System::Collections::Generic::List<System::IntPtr> ^_pinnedStrings = gcnew System::Collections::Generic::List<System::IntPtr>();
 		System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^> ^_scriptTypes = gcnew System::Collections::Generic::List<System::Tuple<System::String ^, System::Type ^> ^>();

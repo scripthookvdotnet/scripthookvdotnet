@@ -31,5 +31,7 @@ namespace GTA
 	{
 		public:
 			ScriptInstance();
+		internal:
+			void Start();
 	};
 }

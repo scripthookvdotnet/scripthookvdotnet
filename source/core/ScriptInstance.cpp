@@ -32,4 +32,10 @@ namespace GTA
 	{
 
 	};
+
+	void ScriptInstance::Start()
+	{
+		_thread = gcnew Thread(gcnew ThreadStart(this, &Script::MainLoop));
+		_thread->Start();
+	}
 }
