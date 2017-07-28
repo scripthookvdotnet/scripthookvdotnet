@@ -30,6 +30,8 @@ namespace GTA
 			static array<int> ^GetEntityHandles();
 			static array<int> ^GetEntityHandles(Math::Vector3 position, float radius);
 
+			static bool IsModelAPed(int modelHash);
+
 			static int(*AddEntityToPool)(System::UInt64 address);
 			static System::UInt64(*GetEntityPos)(System::UInt64 address, float *position);
 			static System::UInt64(*GetEntityModel1)(System::UInt64 address), (*GetEntityModel2)(System::UInt64 address);
@@ -38,6 +40,11 @@ namespace GTA
 
 		private:
 			static System::UInt64 FindPattern(const char *pattern, const char *mask);
+			static System::UInt64 FindCModelInfo(int modelHash);
+			static int GetModelInfoClassType(System::UInt64 address);
+			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;
+			static int modelNum1;
+			static unsigned short modelHashEntries;
 		};
 	}
 }

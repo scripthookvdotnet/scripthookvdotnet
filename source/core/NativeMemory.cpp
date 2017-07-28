@@ -185,6 +185,15 @@ namespace GTA
 			SetNmIntAddress = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
 			SetNmStringAddress = FindPattern("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
 			SetNmVec3Address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
+
+			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
+			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address) + 4;
+			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
+			modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
+			modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
+			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
+			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
+			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
 		}
 
 		array<int> ^MemoryAccess::GetVehicleHandles()
@@ -331,6 +340,64 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(poolTask);
 
 			return poolTask->_handles->ToArray();
+		}
+
+		bool MemoryAccess::IsModelAPed(int modelHash)
+		{
+			UINT64 modelInfo = FindCModelInfo(modelHash);
+
+			if (modelInfo)
+			{
+				return GetModelInfoClassType(modelInfo) == 6;
+			}
+
+			return false;
+		}
+
+		struct HashNode
+		{
+			int hash;
+			UINT16 data;
+			UINT16 padding;
+			HashNode* next;
+		};
+
+		inline bool bittest(int data, unsigned char index)
+		{
+			return (data & (1 << index)) != 0;
+		}
+
+		uintptr_t MemoryAccess::FindCModelInfo(int modelHash)
+		{
+			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
+			for (HashNode* cur = HashMap[static_cast<unsigned int>(modelHash) % modelHashEntries]; cur; cur = cur->next)
+			{
+				if (cur->hash != modelHash)
+				{
+					continue;
+				}
+
+				UINT16 data = cur->data;
+				if ((int)data < modelNum1 && bittest(*reinterpret_cast<int*>(modelNum2 + (4 * data >> 5)), data & 0x1F))
+				{
+					UINT64 addr1 = modelNum4 + modelNum3 * data;
+					if (addr1)
+					{
+						return *reinterpret_cast<PUINT64>(addr1);
+					}
+				}
+			}
+
+			return 0;
+		}
+		int MemoryAccess::GetModelInfoClassType(System::UInt64 address)
+		{
+			if (address)
+			{
+				return (*reinterpret_cast<PBYTE>(address + 157) & 0x1F);
+			}
+
+			return 0;
 		}
 
 		uintptr_t MemoryAccess::FindPattern(const char *pattern, const char *mask)
