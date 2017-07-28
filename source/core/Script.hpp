@@ -20,6 +20,7 @@ namespace GTA
 {
 	#pragma region Forward Declarations
 	ref class ScriptDomain;
+	ref class ScriptInstance;
 	ref class ScriptSettings;
 	#pragma endregion
 
@@ -61,6 +62,11 @@ namespace GTA
 		/// Yields the execution of the script for 1 frame.
 		/// </summary>
 		static void Yield();
+
+		/// <summary>
+		/// Registers a ScriptInstance for the scriptDomains runningScripts.
+		/// </summary>
+		static void RegisterInstance(ScriptInstance ^_instance);
 
 		/// <summary>
 		/// An event that is raised every tick of the script. 

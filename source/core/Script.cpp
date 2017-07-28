@@ -15,6 +15,7 @@
  */
 
 #include "ScriptDomain.hpp"
+#include "ScriptInstance.hpp"
 #include "Settings.hpp"
 
 using namespace System;
@@ -113,6 +114,24 @@ namespace GTA
 	void Script::Yield()
 	{
 		Wait(0);
+	}
+
+	void Script::RegisterInstance(ScriptInstance ^_instance)
+	{
+		GTA::Script ^_thisScript = ScriptDomain::ExecutingScript;
+
+		try
+		{
+			_instance->Start();
+
+			_thisScript->_scriptdomain->_runningScripts->Add(_instance);
+		}
+		catch (Exception ^ex)
+		{
+			HandleUnhandledException(_thisScript, gcnew UnhandledExceptionEventArgs(ex, false));
+
+			return;
+		}
 	}
 
 	void Script::MainLoop()

@@ -70,6 +70,9 @@
       <Filter>scripting\Math</Filter>
     </ClCompile>
     <ClCompile Include="source\AssemblyInfo.cpp" />
+    <ClCompile Include="source\core\ScriptInstance.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\Console.hpp">
@@ -104,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="source\scripting\Vector3.hpp">
       <Filter>scripting\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\ScriptInstance.hpp">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
