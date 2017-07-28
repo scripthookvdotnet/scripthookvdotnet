@@ -518,11 +518,11 @@ namespace GTA
 
 			return ModelInfoClassType::Invalid;
 		}
-		VehicleStructClassType MemoryAccess::GetVehicleStructClass(System::UInt64 address)
+		VehicleStructClassType MemoryAccess::GetVehicleStructClass(System::UInt64 modelInfoAddress)
 		{
-			if (GetModelInfoClass(address) == ModelInfoClassType::Vehicle)
+			if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType::Vehicle)
 			{
-				return static_cast<VehicleStructClassType>(*reinterpret_cast<int*>(address + 792));
+				return static_cast<VehicleStructClassType>(*reinterpret_cast<int*>(modelInfoAddress + 792));
 			}
 
 			return VehicleStructClassType::Invalid;

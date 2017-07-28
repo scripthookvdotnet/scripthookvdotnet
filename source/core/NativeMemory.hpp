@@ -147,7 +147,7 @@ namespace GTA
 			static unsigned long long GetEntitySkeletonData(int handle);
 			static unsigned long long FindCModelInfo(int modelHash);
 			static ModelInfoClassType GetModelInfoClass(System::UInt64 address);
-			static VehicleStructClassType GetVehicleStructClass(System::UInt64 address);
+			static VehicleStructClassType GetVehicleStructClass(System::UInt64 modelInfoAddress);
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;
 			static int modelNum1;
