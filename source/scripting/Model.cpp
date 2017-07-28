@@ -1,5 +1,6 @@
 #include "Model.hpp"
 #include "Native.hpp"
+#include "NativeMemory.hpp"
 #include "Game.hpp"
 #include "Script.hpp"
 
@@ -63,7 +64,7 @@ namespace GTA
 	}
 	bool Model::IsPed::get()
 	{
-		return IsValid && !IsVehicle;
+		return Native::MemoryAccess::IsModelAPed(Hash);
 	}
 	bool Model::IsPlane::get()
 	{
