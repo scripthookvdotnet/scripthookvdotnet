@@ -457,6 +457,16 @@ namespace GTA
 
 			GenerateVehicleModelList();
 
+			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
+			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address) + 4;
+			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
+			modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
+			modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
+			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
+			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
+			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
+			vehClassOff = *reinterpret_cast<int*>(address + 0x31);
+
 			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
 			_stringPtr = IntPtr((void*)_string);
 			_nullString = IntPtr((void*)_nullStr);
@@ -530,17 +540,6 @@ namespace GTA
 
 		void MemoryAccess::GenerateVehicleModelList()
 		{
-			uintptr_t address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
-			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address)+4;
-			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
-			modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
-			modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
-			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
-			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
-			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
-			int vehClassOff = *reinterpret_cast<int*>(address + 0x31);
-
-	
 			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
 			array<List<int>^> ^hashes = gcnew array<List<int>^>(0x20);
 			for (int i = 0; i<0x20; i++)

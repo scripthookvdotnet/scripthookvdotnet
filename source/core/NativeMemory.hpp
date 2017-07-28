@@ -150,7 +150,7 @@ namespace GTA
 			static VehicleStructClassType GetVehicleStructClass(System::UInt64 modelInfoAddress);
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;
-			static int modelNum1;
+			static int modelNum1, vehClassOff;
 			static unsigned short modelHashEntries;
 			static System::Collections::ObjectModel::ReadOnlyCollection<System::Collections::ObjectModel::ReadOnlyCollection<int> ^> ^vehicleModels;
 			static System::UInt64 FindPattern(const char *pattern, const char *mask);
