@@ -579,32 +579,32 @@ namespace GTA
 
 		bool MemoryAccess::IsModelAPed(int modelHash)
 		{
-			UINT64 ModelInfo = FindCModelInfo(modelHash);
+			UINT64 modelInfo = FindCModelInfo(modelHash);
 
-			if (ModelInfo)
+			if (modelInfo)
 			{
-				return GetModelInfoClass(ModelInfo) == ModelInfoClassType::Ped;
+				return GetModelInfoClass(modelInfo) == ModelInfoClassType::Ped;
 			}
 			return false;
 		}
 		bool MemoryAccess::IsModelAnAmphibiousQuadBike(int modelHash)
 		{
-			UINT64 ModelInfo = FindCModelInfo(modelHash);
+			UINT64 modelInfo = FindCModelInfo(modelHash);
 
-			if (ModelInfo)
+			if (modelInfo)
 			{
-				return GetVehicleStructClass(ModelInfo) == VehicleStructClassType::AmphibiousQuadBike;
+				return GetVehicleStructClass(modelInfo) == VehicleStructClassType::AmphibiousQuadBike;
 			}
 
 			return false;
 		}
 		bool MemoryAccess::IsModelABlimp(int modelHash)
 		{
-			UINT64 ModelInfo = FindCModelInfo(modelHash);
+			UINT64 modelInfo = FindCModelInfo(modelHash);
 
-			if (ModelInfo)
+			if (modelInfo)
 			{
-				return GetVehicleStructClass(ModelInfo) == VehicleStructClassType::Blimp;
+				return GetVehicleStructClass(modelInfo) == VehicleStructClassType::Blimp;
 			}
 
 			return false;
