@@ -20,6 +20,7 @@ namespace GTA
 {
 	#pragma region Forward Declarations
 	ref class ScriptDomain;
+	ref class ScriptInstance;
 	ref class ScriptSettings;
 	#pragma endregion
 
@@ -61,6 +62,11 @@ namespace GTA
 		/// Yields the execution of the script for 1 frame.
 		/// </summary>
 		static void Yield();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static void Instance(ScriptInstance ^_instance);
 
 		/// <summary>
 		/// An event that is raised every tick of the script. 
@@ -166,6 +172,7 @@ namespace GTA
 		System::Threading::Thread ^_thread;
 		System::Threading::AutoResetEvent ^_waitEvent = gcnew System::Threading::AutoResetEvent(false);
 		System::Threading::AutoResetEvent ^_continueEvent = gcnew System::Threading::AutoResetEvent(false);
+		System::Collections::Generic::List<GTA::ScriptInstance ^> ^_instanceScripts = gcnew System::Collections::Generic::List<GTA::ScriptInstance ^>();
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^_keyboardEvents = gcnew System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^>();
 		ScriptSettings ^_settings;
 	};

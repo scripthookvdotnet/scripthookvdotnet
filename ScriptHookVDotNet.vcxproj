@@ -103,6 +103,7 @@
     <ClCompile Include="source\core\NativeMemory.cpp" />
     <ClCompile Include="source\core\Script.cpp" />
     <ClCompile Include="source\core\ScriptDomain.cpp" />
+    <ClCompile Include="source\core\ScriptInstance.cpp" />
     <ClCompile Include="source\core\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +113,7 @@
     <ClInclude Include="source\core\NativeMemory.hpp" />
     <ClInclude Include="source\core\Script.hpp" />
     <ClInclude Include="source\core\ScriptDomain.hpp" />
+    <ClInclude Include="source\core\ScriptInstance.hpp" />
     <ClInclude Include="source\core\Settings.hpp" />
   </ItemGroup>
   <!-- Additional source files -->

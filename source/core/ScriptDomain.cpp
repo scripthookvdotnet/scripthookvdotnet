@@ -406,7 +406,7 @@ namespace GTA
 	}
 	GTA::Script ^ScriptDomain::InstantiateScript(Type ^scriptType)
 	{
-		if (!scriptType->IsSubclassOf(GTA::Script::typeid) || scriptType->IsAbstract)
+		if (!scriptType->IsSubclassOf(GTA::Script::typeid) || scriptType->IsSubclassOf(GTA::ScriptInstance::typeid) || scriptType->IsAbstract)
 		{
 			return nullptr;
 		}
@@ -556,6 +556,11 @@ namespace GTA
 		{
 			script->Abort();
 
+			//if (script->GetType()->IsSubclassOf(GTA::ScriptInstance::typeid))
+			//{
+
+			//}
+
 			delete script;
 		}
 
@@ -642,6 +647,7 @@ namespace GTA
 		// Clean up pinned strings
 		CleanupStrings();
 	}
+
 	void ScriptDomain::DoKeyboardMessage(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
 		const int keycode = static_cast<int>(key);
