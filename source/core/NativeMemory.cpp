@@ -509,6 +509,24 @@ namespace GTA
 
 			return 0;
 		}
+		ModelInfoClassType MemoryAccess::GetModelInfoClass(System::UInt64 address)
+		{
+			if (address)
+			{
+				return static_cast<ModelInfoClassType>((*reinterpret_cast<PBYTE>(address + 157) & 0x1F));
+			}
+
+			return ModelInfoClassType::Invalid;
+		}
+		VehicleStructClassType MemoryAccess::GetVehicleStructClass(System::UInt64 address)
+		{
+			if (GetModelInfoClass(address) == ModelInfoClassType::Vehicle)
+			{
+				return static_cast<VehicleStructClassType>(*reinterpret_cast<int*>(address + 792));
+			}
+
+			return VehicleStructClassType::Invalid;
+		}
 
 		void MemoryAccess::GenerateVehicleModelList()
 		{
@@ -565,7 +583,7 @@ namespace GTA
 
 			if (ModelInfo)
 			{
-				return (*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 6;
+				return GetModelInfoClass(ModelInfo) == ModelInfoClassType::Ped;
 			}
 			return false;
 		}
@@ -575,11 +593,9 @@ namespace GTA
 
 			if (ModelInfo)
 			{
-				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 5) //checks if the model is a vehicle
-				{
-					return *reinterpret_cast<int*>(ModelInfo + 792) == 7; //checks if the vehicle is an amphibious quad bike
-				}
+				return GetVehicleStructClass(ModelInfo) == VehicleStructClassType::AmphibiousQuadBike;
 			}
+
 			return false;
 		}
 		bool MemoryAccess::IsModelABlimp(int modelHash)
@@ -588,11 +604,9 @@ namespace GTA
 
 			if (ModelInfo)
 			{
-				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 5) //checks if the model is a vehicle
-				{
-					return *reinterpret_cast<int*>(ModelInfo + 792) == 9; //checks if the vehicle is a blimp
-				}
+				return GetVehicleStructClass(ModelInfo) == VehicleStructClassType::Blimp;
 			}
+
 			return false;
 		}
 		int MemoryAccess::GetGameVersion()
