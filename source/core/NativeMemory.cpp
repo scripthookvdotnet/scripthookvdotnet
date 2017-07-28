@@ -486,7 +486,7 @@ namespace GTA
 			return (data & (1 << index)) != 0;
 		}
 
-		unsigned long long MemoryAccess::GetCModelInfo(int modelHash)
+		unsigned long long MemoryAccess::FindCModelInfo(int modelHash)
 		{
 			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
 			for (HashNode* cur = HashMap[static_cast<unsigned int>(modelHash) % modelHashEntries]; cur; cur = cur->next)
@@ -561,7 +561,7 @@ namespace GTA
 
 		bool MemoryAccess::IsModelAPed(int modelHash)
 		{
-			UINT64 ModelInfo = GetCModelInfo(modelHash);
+			UINT64 ModelInfo = FindCModelInfo(modelHash);
 
 			if (ModelInfo)
 			{
@@ -571,7 +571,7 @@ namespace GTA
 		}
 		bool MemoryAccess::IsModelAnAmphibiousQuadBike(int modelHash)
 		{
-			UINT64 ModelInfo = GetCModelInfo(modelHash);
+			UINT64 ModelInfo = FindCModelInfo(modelHash);
 
 			if (ModelInfo)
 			{
@@ -584,7 +584,7 @@ namespace GTA
 		}
 		bool MemoryAccess::IsModelABlimp(int modelHash)
 		{
-			UINT64 ModelInfo = GetCModelInfo(modelHash);
+			UINT64 ModelInfo = FindCModelInfo(modelHash);
 
 			if (ModelInfo)
 			{
