@@ -270,7 +270,7 @@ namespace GTA
 		/// <value>
 		/// The current time of day
 		/// </value>
-		public static TimeSpan CurrentDayTime
+		public static TimeSpan CurrentTimeOfDay
 		{
 			get
 			{
