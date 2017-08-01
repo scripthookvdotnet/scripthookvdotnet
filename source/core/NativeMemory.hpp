@@ -7,6 +7,31 @@ namespace GTA
 {
 	namespace Native
 	{
+		private enum class ModelInfoClassType
+		{
+			Invalid = 0,
+			Weapon = 4,
+			Vehicle = 5,
+			Ped = 6
+		};
+		private enum class VehicleStructClassType
+		{
+			Invalid = -1,
+			Automobile = 0x0,
+			Plane = 0x1,
+			Trailer = 0x2,
+			QuadBike = 0x3,
+			AmphibiousAutomobile = 0x6,
+			AmphibiousQuadBike = 0x7,
+			Heli = 0x8,
+			Blimp = 0x9,
+			Bike = 0xB,
+			Bycile = 0xC,
+			Boat = 0xD,
+			Train = 0xE,
+			Submarine = 0xF
+		};
+
 		private ref class MemoryAccess abstract sealed
 		{
 		internal:
@@ -120,10 +145,12 @@ namespace GTA
 			static System::IntPtr _nullString;
 			static MemoryAccess();
 			static unsigned long long GetEntitySkeletonData(int handle);
-			static unsigned long long GetCModelInfo(int modelHash);
+			static unsigned long long FindCModelInfo(int modelHash);
+			static ModelInfoClassType GetModelInfoClass(System::UInt64 address);
+			static VehicleStructClassType GetVehicleStructClass(System::UInt64 modelInfoAddress);
 			static void GenerateVehicleModelList();
 			static System::UInt64 modelHashTable, modelNum2, modelNum3, modelNum4;
-			static int modelNum1;
+			static int modelNum1, vehClassOff;
 			static unsigned short modelHashEntries;
 			static System::Collections::ObjectModel::ReadOnlyCollection<System::Collections::ObjectModel::ReadOnlyCollection<int> ^> ^vehicleModels;
 			static System::UInt64 FindPattern(const char *pattern, const char *mask);

@@ -457,6 +457,16 @@ namespace GTA
 
 			GenerateVehicleModelList();
 
+			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
+			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address) + 4;
+			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
+			modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
+			modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
+			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
+			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
+			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
+			vehClassOff = *reinterpret_cast<int*>(address + 0x31);
+
 			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
 			_stringPtr = IntPtr((void*)_string);
 			_nullString = IntPtr((void*)_nullStr);
@@ -486,7 +496,7 @@ namespace GTA
 			return (data & (1 << index)) != 0;
 		}
 
-		unsigned long long MemoryAccess::GetCModelInfo(int modelHash)
+		unsigned long long MemoryAccess::FindCModelInfo(int modelHash)
 		{
 			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
 			for (HashNode* cur = HashMap[static_cast<unsigned int>(modelHash) % modelHashEntries]; cur; cur = cur->next)
@@ -509,20 +519,27 @@ namespace GTA
 
 			return 0;
 		}
+		ModelInfoClassType MemoryAccess::GetModelInfoClass(System::UInt64 address)
+		{
+			if (address)
+			{
+				return static_cast<ModelInfoClassType>((*reinterpret_cast<PBYTE>(address + 157) & 0x1F));
+			}
+
+			return ModelInfoClassType::Invalid;
+		}
+		VehicleStructClassType MemoryAccess::GetVehicleStructClass(System::UInt64 modelInfoAddress)
+		{
+			if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType::Vehicle)
+			{
+				return static_cast<VehicleStructClassType>(*reinterpret_cast<int*>(modelInfoAddress + 792));
+			}
+
+			return VehicleStructClassType::Invalid;
+		}
 
 		void MemoryAccess::GenerateVehicleModelList()
 		{
-			uintptr_t address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
-			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address)+4;
-			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
-			modelNum1 = *reinterpret_cast<int*>(*reinterpret_cast<int*>(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
-			modelNum2 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
-			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
-			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
-			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
-			int vehClassOff = *reinterpret_cast<int*>(address + 0x31);
-
-	
 			HashNode** HashMap = reinterpret_cast<HashNode**>(modelHashTable);
 			array<List<int>^> ^hashes = gcnew array<List<int>^>(0x20);
 			for (int i = 0; i<0x20; i++)
@@ -561,38 +578,34 @@ namespace GTA
 
 		bool MemoryAccess::IsModelAPed(int modelHash)
 		{
-			UINT64 ModelInfo = GetCModelInfo(modelHash);
+			UINT64 modelInfo = FindCModelInfo(modelHash);
 
-			if (ModelInfo)
+			if (modelInfo)
 			{
-				return (*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 6;
+				return GetModelInfoClass(modelInfo) == ModelInfoClassType::Ped;
 			}
 			return false;
 		}
 		bool MemoryAccess::IsModelAnAmphibiousQuadBike(int modelHash)
 		{
-			UINT64 ModelInfo = GetCModelInfo(modelHash);
+			UINT64 modelInfo = FindCModelInfo(modelHash);
 
-			if (ModelInfo)
+			if (modelInfo)
 			{
-				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 5) //checks if the model is a vehicle
-				{
-					return *reinterpret_cast<int*>(ModelInfo + 792) == 7; //checks if the vehicle is an amphibious quad bike
-				}
+				return GetVehicleStructClass(modelInfo) == VehicleStructClassType::AmphibiousQuadBike;
 			}
+
 			return false;
 		}
 		bool MemoryAccess::IsModelABlimp(int modelHash)
 		{
-			UINT64 ModelInfo = GetCModelInfo(modelHash);
+			UINT64 modelInfo = FindCModelInfo(modelHash);
 
-			if (ModelInfo)
+			if (modelInfo)
 			{
-				if ((*reinterpret_cast<PBYTE>(ModelInfo + 157) & 0x1F) == 5) //checks if the model is a vehicle
-				{
-					return *reinterpret_cast<int*>(ModelInfo + 792) == 9; //checks if the vehicle is a blimp
-				}
+				return GetVehicleStructClass(modelInfo) == VehicleStructClassType::Blimp;
 			}
+
 			return false;
 		}
 		int MemoryAccess::GetGameVersion()
