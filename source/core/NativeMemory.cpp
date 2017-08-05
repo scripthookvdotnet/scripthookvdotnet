@@ -455,8 +455,6 @@ namespace GTA
 			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
 			_cameraPoolAddress = reinterpret_cast<UInt64*>(*reinterpret_cast<int*>(address) + address + 4);
 
-			GenerateVehicleModelList();
-
 			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
 			UINT64 baseFuncAddr = address + *reinterpret_cast<int*>(address) + 4;
 			modelHashEntries = *reinterpret_cast<PUINT16>(baseFuncAddr + *reinterpret_cast<int*>(baseFuncAddr + 3) + 7);
@@ -466,6 +464,8 @@ namespace GTA
 			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
 			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
 			vehClassOff = *reinterpret_cast<int*>(address + 0x31);
+
+			GenerateVehicleModelList();
 
 			_cellEmailBconPtr = IntPtr((void*)_cellEmailBcon);
 			_stringPtr = IntPtr((void*)_string);
