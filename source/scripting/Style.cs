@@ -156,7 +156,7 @@ namespace GTA
 		bool HasVariations { get; }
 		bool HasTextureVariations { get; }
 		bool HasAnyVariations { get; }
-        string HashName { get; }
+        string Name { get; }
     }
 
 	public class PedComponent : IPedVariation
@@ -174,7 +174,7 @@ namespace GTA
 
         public PedComponents ComponentType { get { return _componentdId; } }
 
-        public string HashName { get { return _componentdId.ToString(); } }
+        public string Name { get { return _componentdId.ToString(); } }
 
         public int Count
 		{
@@ -261,7 +261,7 @@ namespace GTA
 
         public PedProps PropType { get { return _propId; } }
 
-        public string HashName { get { return _propId.ToString(); } }
+        public string Name { get { return _propId.ToString(); } }
 
         public int Count
 		{
