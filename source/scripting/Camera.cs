@@ -366,6 +366,9 @@ namespace GTA
 			Function.Call(Hash.STOP_CAM_POINTING, Handle);
 		}
 
+		/// <summary>
+		/// Moves the to camera from this <see cref="Camera"/> position to the to cameras Poisition.
+		/// </summary>
 		public void InterpTo(Camera to, int duration, bool easePosition, bool easeRotation)
 		{
 			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);

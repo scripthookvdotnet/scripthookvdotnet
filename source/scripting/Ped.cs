@@ -1555,6 +1555,10 @@ namespace GTA
 		{
 			Function.Call(Hash.FORCE_PED_TO_OPEN_PARACHUTE, Handle);
 		}
+		public void ParachuteTo(Vector3 location)
+		{
+		    	Function.Call(Hash.SET_PARACHUTE_TASK_TARGET, Handle, location.X, location.Y, location.Z);
+		}
 
 		public bool GetConfigFlag(int flagID)
 		{
