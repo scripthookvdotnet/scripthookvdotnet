@@ -220,11 +220,17 @@ namespace GTA
 		[ConsoleCommand("Reloads scripts from a file")]
 		static void Reload(System::String ^filename);
 
+		[ConsoleCommand("Reloads all scripts found in the script folder")]
+		static void ReloadAllScripts();
+
 		[ConsoleCommand("List all loaded scripts")]
 		static void List();
 
 		[ConsoleCommand("Aborts all scripts from the specified file")]
 		static void Abort(System::String ^filename);
+
+		[ConsoleCommand("Aborts all scripts found in the script folder")]
+		static void AbortAllScripts();
 
 		[ConsoleCommand("Clears the console output")]
 		static void Clear();

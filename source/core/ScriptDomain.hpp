@@ -86,8 +86,10 @@ namespace GTA
 
 		void Start();
 		void StartScript(System::String ^filename);
+		void StartAllScripts();
 		void Abort();
 		void AbortScript(System::String ^filename);
+		void AbortAllScriptsExceptConsole();
 		static void OnStartScript(Script ^script);
 		static void OnAbortScript(Script ^script);
 
