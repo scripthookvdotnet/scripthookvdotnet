@@ -180,12 +180,12 @@ namespace GTA
 		{
 			FollowToOffsetFromEntity(target, offset, 1f, timeout, stoppingRange, true);
 		}
-        public void FollowToOffsetFromEntity(Entity target, Vector3 offset, float movementSpeed, int timeout, float stoppingRange, bool persistFollowing)
-        {
-            Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, stoppingRange, persistFollowing);
-        }
+		public void FollowToOffsetFromEntity(Entity target, Vector3 offset, float movementSpeed, int timeout, float stoppingRange, bool persistFollowing)
+		{
+			Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, stoppingRange, persistFollowing);
+		}
 
-        public void GoTo(Entity target)
+		public void GoTo(Entity target)
 		{
 			GoTo(target, Vector3.Zero, -1);
 		}
