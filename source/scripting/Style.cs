@@ -147,6 +147,7 @@ namespace GTA
 
 	public interface IPedVariation
 	{
+		string Name { get; }
 		int Count { get; }
 		int Index { get; set; }
 		int TextureCount { get; }
@@ -156,8 +157,7 @@ namespace GTA
 		bool HasVariations { get; }
 		bool HasTextureVariations { get; }
 		bool HasAnyVariations { get; }
-        string Name { get; }
-    }
+	}
 
 	public class PedComponent : IPedVariation
 	{
@@ -172,11 +172,11 @@ namespace GTA
 			_componentdId = componentId;
 		}
 
-        public PedComponents ComponentType { get { return _componentdId; } }
+		public PedComponents ComponentType { get { return _componentdId; } }
 
-        public string Name { get { return _componentdId.ToString(); } }
+		public string Name { get { return _componentdId.ToString(); } }
 
-        public int Count
+		public int Count
 		{
 			get { return Function.Call<int>(Hash.GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS, _ped.Handle, _componentdId); }
 		}
@@ -259,11 +259,11 @@ namespace GTA
 			_propId = propId;
 		}
 
-        public PedProps PropType { get { return _propId; } }
+		public PedProps PropType { get { return _propId; } }
 
-        public string Name { get { return _propId.ToString(); } }
+		public string Name { get { return _propId.ToString(); } }
 
-        public int Count
+		public int Count
 		{
 			get { return Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, _propId) + 1; }//+1 to accomodate for no prop selected(value = -1);
 		}
