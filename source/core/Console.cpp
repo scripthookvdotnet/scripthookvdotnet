@@ -525,7 +525,7 @@ namespace GTA
 	}
 	void ConsoleScript::RemoveCharRight()
 	{
-		if (_input->Length > 0)
+		if (_input->Length > 0 && _cursorPos < _input->Length)
 		{
 			_input = _input->Remove(_input->Length - _cursorPos, 1);
 		}
