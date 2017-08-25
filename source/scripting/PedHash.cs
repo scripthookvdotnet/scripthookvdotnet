@@ -294,7 +294,7 @@ namespace GTA
 		CarDesignFemale01 = 606876839u,
 		Chip = 610290475u,
 		Claude01 = 3237179831u,
-		ClubhouseBar01 = 1914945105u,
+		ClubhouseBar01 = 3287737221u,
 		CocaineFemale01 = 1264941816u,
 		CocaineMale01 = 1456705429u,
 		ComJane = 3064628686u,
