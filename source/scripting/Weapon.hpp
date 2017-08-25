@@ -28,7 +28,7 @@ namespace GTA
 		Melee = 0xD49321D4,
 		Pistol = 0x18D5FA97,
 		SMG = 0xC6E9A5C5,
-		AssaultRifle = 0xC7D15052,
+		AssaultRifle = 0x39D5C192,
 		MG = 0x451B04BC,
 		Shotgun = 0x33431399,
 		Sniper = 0xB7BBD827,
