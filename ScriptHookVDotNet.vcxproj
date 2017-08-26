@@ -150,9 +150,11 @@
     <CsCompile Include="source\scripting\EuphoriaHelpers.cs" />
     <CsCompile Include="source\scripting\Font.cs" />
     <CsCompile Include="source\scripting\Game.cs" />
-    <CsCompile Include="source\scripting\Element.cs" />
+    <CsCompile Include="source\scripting\Hud.cs" />
+    <CsCompile Include="source\scripting\Loading.cs" />
     <CsCompile Include="source\scripting\Interfaces.cs" />
     <CsCompile Include="source\scripting\Model.cs" />
+    <CsCompile Include="source\scripting\Notification.cs" />
     <CsCompile Include="source\scripting\ParticleEffects.cs" />
     <CsCompile Include="source\scripting\Ped.cs" />
     <CsCompile Include="source\scripting\PedGroup.cs" />
@@ -167,9 +169,10 @@
     <CsCompile Include="source\scripting\Rope.cs" />
     <CsCompile Include="source\scripting\Scaleform.cs" />
     <CsCompile Include="source\scripting\Screen.cs" />
-    <CsCompile Include="source\scripting\Sprite.cs" />
+    <CsCompile Include="source\scripting\ScreenElement.cs" />
+    <CsCompile Include="source\scripting\SpriteElement.cs" />
     <CsCompile Include="source\scripting\Tasks.cs" />
-    <CsCompile Include="source\scripting\Text.cs" />
+    <CsCompile Include="source\scripting\TextElement.cs" />
     <CsCompile Include="source\scripting\Vehicle.cs" />
     <CsCompile Include="source\scripting\VehicleDoor.cs" />
     <CsCompile Include="source\scripting\VehicleDoorCollection.cs" />

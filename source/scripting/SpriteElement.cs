@@ -8,10 +8,10 @@ using GTA.Native;
 
 namespace GTA.UI
 {
-	public interface ISprite : IElement
+	public interface ISpriteElement : IElement
 	{
 		/// <summary>
-		/// Gets or sets the size to draw the <see cref="ISprite"/>
+		/// Gets or sets the size to draw the <see cref="ISpriteElement"/>
 		/// </summary>
 		/// <value>
 		/// The size on a 1280*720 pixel base
@@ -21,7 +21,7 @@ namespace GTA.UI
 		/// </remarks>					 
 		SizeF Size { get; set; }
 		/// <summary>
-		/// Gets or sets the rotation to draw thie <see cref="ISprite"/>.
+		/// Gets or sets the rotation to draw thie <see cref="ISpriteElement"/>.
 		/// </summary>
 		/// <value>
 		/// The rotation measured in degrees, clockwise increasing, 0.0 at vertical
@@ -29,13 +29,127 @@ namespace GTA.UI
 		float Rotation { get; set; }
 	}
 
-	public class Sprite : ISprite, IDisposable
+	/// <summary>
+	/// A sprite element using a built-in texture.
+	/// </summary>
+	public class Sprite : ISpriteElement, IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
+		/// </summary>
+		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
+		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>											   
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position) :
+			this(textureDict, textureName, size, position, Color.WhiteSmoke, 0f, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
+		/// </summary>
+		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
+		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>														 
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color) :
+			this(textureDict, textureName, size, position, color, 0f, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
+		/// </summary>
+		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
+		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>						
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation) :
+			this(textureDict, textureName, size, position, color, rotation, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
+		/// </summary>
+		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
+		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
+		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
+		{
+			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
+			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
+			Marshal.Copy(data, 0, _pinnedDict, data.Length);
+			data = Encoding.UTF8.GetBytes(textureName + "\0");
+			_pinnedName = Marshal.AllocCoTaskMem(data.Length);
+			Marshal.Copy(data, 0, _pinnedName, data.Length);
+
+			_textureDict = textureDict;
+			_textureName = textureName;
+
+			Enabled = true;
+			Size = size;
+			Position = position;
+			Color = color;
+			Rotation = rotation;
+			Centered = centered;
+
+			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
+
+			if (_activeTextures.ContainsKey(textureDict.ToLower()))
+			{
+				_activeTextures[textureDict.ToLower()] += 1;
+			}
+			else
+			{
+				_activeTextures.Add(textureDict.ToLower(), 1);
+			}
+		}
+
 		#region Fields
 		private readonly string _textureDict, _textureName;
 		private static readonly Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
 		private readonly IntPtr _pinnedDict, _pinnedName;
 		#endregion
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (_activeTextures.ContainsKey(_textureDict.ToLower()))
+				{
+					int current = _activeTextures[_textureDict.ToLower()];
+
+					if (current == 1)
+					{
+						Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+						_activeTextures.Remove(_textureDict.ToLower());
+					}
+					else
+					{
+						_activeTextures[_textureDict.ToLower()] = current - 1;
+					}
+				}
+				else
+				{
+					// In practice this should never get executed
+					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+				}
+
+				Marshal.FreeCoTaskMem(_pinnedDict);
+				Marshal.FreeCoTaskMem(_pinnedName);
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Sprite" /> will be drawn.
@@ -87,112 +201,6 @@ namespace GTA.UI
 		public bool Centered { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
-		/// </summary>
-		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
-		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>											   
-		public Sprite(string textureDict, string textureName, SizeF size, PointF position) : this(textureDict, textureName, size, position, Color.WhiteSmoke, 0f, false)
-		{
-		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
-		/// </summary>
-		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
-		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>														 
-		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color) : this(textureDict, textureName, size, position, color, 0f, false)
-		{
-		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
-		/// </summary>
-		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
-		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>						
-		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation) : this(textureDict, textureName, size, position, color, rotation, false)
-		{
-		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
-		/// </summary>
-		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
-		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
-		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
-		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
-		{
-			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
-			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
-			Marshal.Copy(data, 0, _pinnedDict, data.Length);
-			data = Encoding.UTF8.GetBytes(textureName + "\0");
-			_pinnedName = Marshal.AllocCoTaskMem(data.Length);
-			Marshal.Copy(data, 0, _pinnedName, data.Length);
-
-			_textureDict = textureDict;
-			_textureName = textureName;
-
-			Enabled = true;
-			Size = size;
-			Position = position;
-			Color = color;
-			Rotation = rotation;
-			Centered = centered;
-
-			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
-
-			if (_activeTextures.ContainsKey(textureDict.ToLower()))
-			{
-				_activeTextures[textureDict.ToLower()] += 1;
-			}
-			else
-			{
-				_activeTextures.Add(textureDict.ToLower(), 1);
-			}
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (_activeTextures.ContainsKey(_textureDict.ToLower()))
-				{
-					int current = _activeTextures[_textureDict.ToLower()];
-					if (current == 1)
-					{
-						Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
-						_activeTextures.Remove(_textureDict.ToLower());
-					}
-					else
-					{
-						_activeTextures[_textureDict.ToLower()] = current - 1;
-					}
-				}
-				else
-				{
-					//In practice this should never get executed
-					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
-				}
-				Marshal.FreeCoTaskMem(_pinnedDict);
-				Marshal.FreeCoTaskMem(_pinnedName);
-			}
-		}
-
-		/// <summary>
 		/// Draws this <see cref="Sprite" />.
 		/// </summary>
 		public virtual void Draw()
@@ -207,6 +215,7 @@ namespace GTA.UI
 		{
 			InternalDraw(offset, Screen.Width, Screen.Height);
 		}
+
 		/// <summary>
 		/// Draws this <see cref="Sprite" /> using the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </summary>
@@ -244,8 +253,91 @@ namespace GTA.UI
 			Function.Call(Hash.DRAW_SPRITE, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
 	}
-	public class CustomSprite : ISprite
+	/// <summary>
+	/// A sprite element using a custom image texture.
+	/// </summary>
+	public class CustomSprite : ISpriteElement
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
+		/// </summary>																												
+		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>									
+		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
+		public CustomSprite(string filename, SizeF size, PointF position) :
+			this(filename, size, position, Color.WhiteSmoke, 0.0f, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
+		/// </summary>																												
+		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>														  
+		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
+		public CustomSprite(string filename, SizeF size, PointF position, Color color) :
+			this(filename, size, position, color, 0.0f, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
+		/// </summary>																												
+		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>							  
+		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
+		public CustomSprite(string filename, SizeF size, PointF position, Color color, float rotation) :
+			this(filename, size, position, color, rotation, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
+		/// </summary>																												
+		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
+		/// <param name="centered">Position the <see cref="CustomSprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
+		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
+		public CustomSprite(string filename, SizeF size, PointF position, Color color, float rotation, bool centered)
+		{
+			if (!File.Exists(filename))
+			{
+				throw new FileNotFoundException(filename);
+			}
+
+			if (_textures.ContainsKey(filename))
+			{
+				_id = _textures[filename];
+			}
+			else
+			{
+				_id = MemoryAccess.CreateTexture(filename);
+				_textures.Add(filename, _id);
+			}
+
+			if (!_indexes.ContainsKey(_id))
+			{
+				_indexes.Add(_id, 0);
+			}
+			if (!_lastDraw.ContainsKey(_id))
+			{
+				_lastDraw.Add(_id, 0);
+			}
+
+			Enabled = true;
+			Size = size;
+			Position = position;
+			Color = color;
+			Rotation = rotation;
+			Centered = centered;
+		}
+
 		#region Fields
 		int _id;
 		static int _globalLevel = 0, _globalLastDrawFrame = 0;
@@ -304,83 +396,6 @@ namespace GTA.UI
 		public bool Centered { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
-		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>									
-		/// <exception cref="FileNotFoundException">Thrown if the specified file doesnt exist</exception>
-		public CustomSprite(string filename, SizeF size, PointF position) : this(filename, size, position, Color.WhiteSmoke, 0.0f, false)
-		{
-		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
-		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>														  
-		/// <exception cref="FileNotFoundException">Thrown if the specified file doesnt exist</exception>
-		public CustomSprite(string filename, SizeF size, PointF position, Color color) : this(filename, size, position, color, 0.0f, false)
-		{
-		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
-		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>							  
-		/// <exception cref="FileNotFoundException">Thrown if the specified file doesnt exist</exception>
-		public CustomSprite(string filename, SizeF size, PointF position, Color color, float rotation) : this(filename, size, position, color, rotation, false)
-		{
-		}
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
-		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
-		/// <param name="centered">Position the <see cref="CustomSprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
-		/// <exception cref="FileNotFoundException">Thrown if the specified file doesnt exist</exception>
-		public CustomSprite(string filename, SizeF size, PointF position, Color color, float rotation, bool centered)
-		{
-			if (!File.Exists(filename))
-			{
-				throw new FileNotFoundException(filename);
-			}
-
-			if (_textures.ContainsKey(filename))
-			{
-				_id = _textures[filename];
-			}
-			else
-			{
-				_id = MemoryAccess.CreateTexture(filename);
-				_textures.Add(filename, _id);
-			}
-
-			if (!_indexes.ContainsKey(_id))
-			{
-				_indexes.Add(_id, 0);
-			}
-			if (!_lastDraw.ContainsKey(_id))
-			{
-				_lastDraw.Add(_id, 0);
-			}
-
-			Enabled = true;
-			Size = size;
-			Position = position;
-			Color = color;
-			Rotation = rotation;
-			Centered = centered;
-		}
-
-		/// <summary>
 		/// Draws this <see cref="CustomSprite" />.
 		/// </summary>
 		public void Draw()
@@ -395,6 +410,7 @@ namespace GTA.UI
 		{
 			InternalDraw(offset, Screen.Width, Screen.Height);
 		}
+
 		/// <summary>
 		/// Draws this <see cref="CustomSprite" /> using the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </summary>

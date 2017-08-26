@@ -3,6 +3,51 @@ using GTA.Native;
 
 namespace GTA
 {
+	/// <summary>
+	/// An enumeration of all possible audio flags.
+	/// </summary>
+	public enum AudioFlags
+	{
+		ActivateSwitchWheelAudio,
+		AllowCutsceneOverScreenFade,
+		AllowForceRadioAfterRetune,
+		AllowPainAndAmbientSpeechToPlayDuringCutscene,
+		AllowPlayerAIOnMission,
+		AllowPoliceScannerWhenPlayerHasNoControl,
+		AllowRadioDuringSwitch,
+		AllowRadioOverScreenFade,
+		AllowScoreAndRadio,
+		AllowScriptedSpeechInSlowMo,
+		AvoidMissionCompleteDelay,
+		DisableAbortConversationForDeathAndInjury,
+		DisableAbortConversationForRagdoll,
+		DisableBarks,
+		DisableFlightMusic,
+		DisableReplayScriptStreamRecording,
+		EnableHeadsetBeep,
+		ForceConversationInterrupt,
+		ForceSeamlessRadioSwitch,
+		ForceSniperAudio,
+		FrontendRadioDisabled,
+		HoldMissionCompleteWhenPrepared,
+		IsDirectorModeActive,
+		IsPlayerOnMissionForSpeech,
+		ListenerReverbDisabled,
+		LoadMPData,
+		MobileRadioInGame,
+		OnlyAllowScriptTriggerPoliceScanner,
+		PlayMenuMusic,
+		PoliceScannerDisabled,
+		ScriptedConvListenerMaySpeak,
+		SpeechDucksScore,
+		SuppressPlayerScubaBreathing,
+		WantedMusicDisabled,
+		WantedMusicOnMission
+	}
+
+	/// <summary>
+	/// Methods to manipulate audio.
+	/// </summary>
 	public static class Audio
 	{
 		#region Fields
@@ -46,6 +91,18 @@ namespace GTA
 		#endregion
 
 		/// <summary>
+		/// Sets an audio flag to modify subsequent sounds.
+		/// </summary>
+		/// <param name="flag"></param>
+		/// <param name="toggle"></param>
+		public static void SetAudioFlag(AudioFlags flag, bool toggle)
+		{
+			Function.Call(Hash.SET_AUDIO_FLAG, _audioFlags[(int)flag], toggle);
+		}
+
+		// Music
+
+		/// <summary>
 		/// Plays music from the game's music files.
 		/// </summary>
 		/// <param name="musicFile">The music file to play.</param>
@@ -61,6 +118,8 @@ namespace GTA
 		{
 			Function.Call(Hash.CANCEL_MUSIC_EVENT, musicFile);
 		}
+
+		// Sounds
 
 		/// <summary>
 		/// Plays a sound from the game's sound files at the specified <paramref name="entity"/>.
@@ -154,16 +213,6 @@ namespace GTA
 		public static bool HasSoundFinished(int id)
 		{
 			return Function.Call<bool>(Hash.HAS_SOUND_FINISHED, id);
-		}
-
-		/// <summary>
-		/// Sets an audio flag to modify subsequent sounds.
-		/// </summary>
-		/// <param name="flag"></param>
-		/// <param name="toggle"></param>
-		public static void SetAudioFlag(AudioFlags flag, bool toggle)
-		{
-			Function.Call(Hash.SET_AUDIO_FLAG, _audioFlags[(int)flag], toggle);
 		}
 	}
 }

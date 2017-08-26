@@ -146,15 +146,6 @@
     <CsCompile Include="source\scripting\Interfaces.cs">
       <Filter>scripting</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\Text.cs">
-      <Filter>scripting\UI</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Sprite.cs">
-      <Filter>scripting\UI</Filter>
-    </CsCompile>
-    <CsCompile Include="source\scripting\Element.cs">
-      <Filter>scripting\UI</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Raycast.cs">
       <Filter>scripting\World</Filter>
     </CsCompile>
@@ -289,6 +280,24 @@
     </CsCompile>
     <CsCompile Include="source\scripting\Control.cs">
       <Filter>scripting\Game</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Hud.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\TextElement.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\SpriteElement.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\ScreenElement.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Notification.cs">
+      <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\Loading.cs">
+      <Filter>scripting\UI</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>
