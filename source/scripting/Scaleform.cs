@@ -76,6 +76,18 @@ namespace GTA
 
 		public void CallFunction(string function, params object[] arguments)
 		{
+			this.CallFunctionHead(function, arguments);
+			Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
+		}
+
+		public dynamic CallFunctionReturn(string function, params object[] arguments)
+		{
+			this.CallFunctionHead(function, arguments);
+			return Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION);
+		}
+
+		internal void CallFunctionHead(string function, params object[] arguments)
+		{
 			Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, Handle, function);
 
 			foreach (var argument in arguments)
@@ -117,8 +129,6 @@ namespace GTA
 					throw new ArgumentException(string.Format("Unknown argument type {0} passed to scaleform with handle {1}.", argument.GetType().Name, Handle), "arguments");
 				}
 			}
-
-			Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
 		}
 
 		public void Render2D()
