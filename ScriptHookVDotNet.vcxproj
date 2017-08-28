@@ -129,7 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="source\scripting\Audio.cs" />
-    <CsCompile Include="source\scripting\AudioFlags.cs" />
     <CsCompile Include="source\scripting\Blip.cs" />
     <CsCompile Include="source\scripting\BoneID.cs" />
     <CsCompile Include="source\scripting\Camera.cs" />

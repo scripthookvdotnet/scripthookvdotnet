@@ -266,9 +266,6 @@
     <CsCompile Include="source\scripting\WindowTitle.cs">
       <Filter>scripting\Game</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\AudioFlags.cs">
-      <Filter>scripting\Game</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\Button.cs">
       <Filter>scripting\Game</Filter>
     </CsCompile>
