@@ -80,10 +80,10 @@ namespace GTA
 			Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
 		}
 
-		public dynamic CallFunctionReturn(string function, params object[] arguments)
+		public int CallFunctionReturn(string function, params object[] arguments)
 		{
 			this.CallFunctionHead(function, arguments);
-			return Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION);
+			return Function.Call<int>(Hash._POP_SCALEFORM_MOVIE_FUNCTION);
 		}
 
 		internal void CallFunctionHead(string function, params object[] arguments)
