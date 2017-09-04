@@ -842,7 +842,7 @@ namespace GTA
 		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
 		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7FC : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x8FC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x91C : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
