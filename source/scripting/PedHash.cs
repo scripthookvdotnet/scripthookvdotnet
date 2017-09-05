@@ -365,6 +365,7 @@ namespace GTA
 		RivalPaparazzi = 1624626906u,
 		SecuroGuardMale01 = 3660355662u,
 		ShopKeep01 = 416176080u,
+		SmugMech01 = 3446096293u,
 		SpyActor = 2886641112u,
 		SpyActress = 1535236204u,
 		StreetArt01 = 1813637474u,
