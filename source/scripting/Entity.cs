@@ -297,6 +297,90 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets a position directly to the left of this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 LeftPosition
+		{
+			get
+			{
+				Vector3 rearBottomLeft, frontTopRight;
+				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
+
+				return GetOffsetPosition(new Vector3(rearBottomLeft.X, 0, 0));
+			}
+		}
+
+		/// <summary>
+		/// Gets a position directly to the right of this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 RightPosition
+		{
+			get
+			{
+				Vector3 rearBottomLeft, frontTopRight;
+				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
+
+				return GetOffsetPosition(new Vector3(frontTopRight.X, 0, 0));
+			}
+		}
+
+		/// <summary>
+		/// Gets a position directly in front of this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 FrontPosition
+		{
+			get
+			{
+				Vector3 rearBottomLeft, frontTopRight;
+				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
+
+				return GetOffsetPosition(new Vector3(0, frontTopRight.Y, 0));
+			}
+		}
+
+		/// <summary>
+		/// Gets a position directly behind this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 RearPosition
+		{
+			get
+			{
+				Vector3 rearBottomLeft, frontTopRight;
+				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
+
+				return GetOffsetPosition(new Vector3(0, rearBottomLeft.Y, 0));
+			}
+		}
+
+		/// <summary>
+		/// Gets a position directly above this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 AbovePosition
+		{
+			get
+			{
+				Vector3 rearBottomLeft, frontTopRight;
+				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
+
+				return GetOffsetPosition(new Vector3(0, 0, frontTopRight.Z));
+			}
+		}
+
+		/// <summary>
+		/// Gets a position directly below this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 BelowPosition
+		{
+			get
+			{
+				Vector3 rearBottomLeft, frontTopRight;
+				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
+
+				return GetOffsetPosition(new Vector3(0, 0, rearBottomLeft.Z));
+			}
+		}
+
+		/// <summary>
 		/// Gets this <see cref="Entity"/>s matrix which stores position and rotation information.
 		/// </summary>
 		public Matrix Matrix
