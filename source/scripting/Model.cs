@@ -206,10 +206,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a jetski.
+		/// Gets a value indicating whether this <see cref="Model"/> is a jet ski.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is a jetski; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Model"/> is a jet ski; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsJetSki
 		{
