@@ -132,6 +132,7 @@ namespace GTA
 			static bool IsModelAPed(int modelHash);
 			static bool IsModelAnAmphibiousQuadBike(int modelHash);
 			static bool IsModelABlimp(int modelHash);
+			static bool IsModelATrailer(int modelHash);
 			static int* _cursorSpriteAddr;
 			static property System::IntPtr CellEmailBcon{
 				System::IntPtr get();

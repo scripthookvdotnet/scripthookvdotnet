@@ -206,6 +206,19 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a jetski.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a jetski; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsJetSki
+		{
+			get
+			{
+				return Function.Call<bool>(Native.Hash._IS_THIS_MODEL_A_JETSKI, Hash);
+			}
+		}
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a ped.
 		/// </summary>
 		/// <value>
@@ -286,6 +299,19 @@ namespace GTA
 			get
 			{
 				return Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_TRAIN, Hash);
+			}
+		}
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a trailer.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a trailer; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsTrailer
+		{
+			get
+			{
+				return MemoryAccess.IsModelATrailer(Hash);
 			}
 		}
 		/// <summary>
