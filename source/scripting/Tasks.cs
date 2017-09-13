@@ -98,17 +98,17 @@ namespace GTA
 			Function.Call(Hash.TASK_COWER, _ped.Handle, duration);
 		}
 
-		public void ChaseWithGroundVehicle(Entity target)
+		public void ChaseWithGroundVehicle(Ped target)
 		{
 			Function.Call(Hash.TASK_VEHICLE_CHASE, _ped.Handle, target.Handle);
 		}
 
-		public void ChaseWithHelicopter(Entity target, Vector3 offset)
+		public void ChaseWithHelicopter(Ped target, Vector3 offset)
 		{
 			Function.Call(Hash.TASK_HELI_CHASE, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z);
 		}
 
-		public void ChaseWithPlane(Entity target, Vector3 offset)
+		public void ChaseWithPlane(Ped target, Vector3 offset)
 		{
 			Function.Call(Hash.TASK_PLANE_CHASE, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z);
 		}
