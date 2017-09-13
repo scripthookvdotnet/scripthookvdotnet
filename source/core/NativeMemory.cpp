@@ -608,6 +608,17 @@ namespace GTA
 
 			return false;
 		}
+		bool MemoryAccess::IsModelATrailer(int modelHash)
+		{
+			UINT64 modelInfo = FindCModelInfo(modelHash);
+
+			if (modelInfo)
+			{
+				return GetVehicleStructClass(modelInfo) == VehicleStructClassType::Trailer;
+			}
+
+			return false;
+		}
 		int MemoryAccess::GetGameVersion()
 		{
 			return getGameVersion();
