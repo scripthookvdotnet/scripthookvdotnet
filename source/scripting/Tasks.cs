@@ -310,6 +310,11 @@ namespace GTA
 			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, 0, 0, 0);
 		}
 
+		public void RappelFromHelicopter()
+		{
+			Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);
+		}
+
 		public void ReactAndFlee(Ped ped)
 		{
 			Function.Call(Hash.TASK_REACT_AND_FLEE_PED, _ped.Handle, ped.Handle);
