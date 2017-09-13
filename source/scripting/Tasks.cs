@@ -166,6 +166,10 @@ namespace GTA
 
 		public void FollowPointRoute(params Vector3[] points)
 		{
+			FollowPointRoute(1f, points);
+		}
+		public void FollowPointRoute(float movementSpeed, params Vector3[] points)
+		{
 			Function.Call(Hash.TASK_FLUSH_ROUTE);
 
 			foreach (var point in points)
@@ -173,7 +177,7 @@ namespace GTA
 				Function.Call(Hash.TASK_EXTEND_ROUTE, point.X, point.Y, point.Z);
 			}
 
-			Function.Call(Hash.TASK_FOLLOW_POINT_ROUTE, _ped.Handle, 1f, 0);
+			Function.Call(Hash.TASK_FOLLOW_POINT_ROUTE, _ped.Handle, movementSpeed, 0);
 		}
 
 		public void FollowToOffsetFromEntity(Entity target, Vector3 offset, int timeout, float stoppingRange)
