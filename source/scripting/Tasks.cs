@@ -36,6 +36,16 @@ namespace GTA
 		RagdollOnCollision = 4194304
 	}
 	[Flags]
+	public enum EnterVehicleFlags
+	{
+		None = 0,
+		WarpToDoor = 2,
+		AllowJacking = 8,
+		WarpIn = 16,
+		EnterFromOppositeSide = 262144,
+		OnlyOpenDoor = 524288,
+	}
+	[Flags]
 	public enum LeaveVehicleFlags
 	{
 		None = 0,
