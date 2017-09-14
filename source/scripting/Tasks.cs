@@ -191,11 +191,7 @@ namespace GTA
 			Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, distanceToFollow, persistFollowing);
 		}
 
-		public void GoTo(Entity target)
-		{
-			GoTo(target, Vector3.Zero, -1);
-		}
-		public void GoTo(Entity target, Vector3 offset, int timeout = -1)
+		public void GoTo(Entity target, Vector3 offset = default(Vector3), int timeout = -1)
 		{
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
