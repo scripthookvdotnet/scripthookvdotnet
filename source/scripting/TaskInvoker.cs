@@ -54,13 +54,13 @@ namespace GTA
 		BailOut = 4096
 	}
 
-	public class Tasks
+	public class TaskInvoker
 	{
 		#region Fields
 		Ped _ped;
 		#endregion
 
-		internal Tasks(Ped ped)
+		internal TaskInvoker(Ped ped)
 		{
 			_ped = ped;
 		}
@@ -504,7 +504,7 @@ namespace GTA
 		public int Count { get; private set; }
 		public bool IsClosed { get; private set; }
 
-		public Tasks AddTask
+		public TaskInvoker AddTask
 		{
 			get
 			{

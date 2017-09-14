@@ -113,7 +113,7 @@ namespace GTA
 	public sealed class Ped : Entity
 	{
 		#region Fields
-		Tasks _tasks;
+		TaskInvoker _tasks;
 		Euphoria _euphoria;
 		WeaponCollection _weapons;
 		Style _style;
@@ -255,15 +255,15 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Opens a list of <see cref="Tasks"/> that this <see cref="Ped"/> can carry out.
+		/// Opens a list of <see cref="TaskInvoker"/> that this <see cref="Ped"/> can carry out.
 		/// </summary>
-		public Tasks Task
+		public TaskInvoker Task
 		{
 			get
 			{
 				if (ReferenceEquals(_tasks, null))
 				{
-					_tasks = new Tasks(this);
+					_tasks = new TaskInvoker(this);
 				}
 				return _tasks;
 			}
