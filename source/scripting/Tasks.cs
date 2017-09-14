@@ -337,7 +337,6 @@ namespace GTA
 			}
 		}
 
-
 		public void ShootAt(Ped target, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
 			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, pattern);
@@ -347,9 +346,13 @@ namespace GTA
 			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, pattern);
 		}
 
-		public void ShuffleToNextVehicleSeat(Vehicle vehicle)
+		public void ShuffleToNextVehicleSeat(Vehicle vehicle = null)
 		{
-			Function.Call(Hash.TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, _ped.Handle, vehicle.Handle);
+			if (vehicle == null)
+			{
+				vehicle = _ped.CurrentVehicle;
+			}
+			Function.Call(Hash.TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, _ped.Handle, vehicle);
 		}
 
 		public void Skydive()
