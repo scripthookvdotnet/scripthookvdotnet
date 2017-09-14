@@ -206,6 +206,19 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a jet ski.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a jet ski; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsJetSki
+		{
+			get
+			{
+				return Function.Call<bool>(Native.Hash._IS_THIS_MODEL_A_JETSKI, Hash);
+			}
+		}
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a ped.
 		/// </summary>
 		/// <value>
@@ -289,6 +302,19 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a trailer.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a trailer; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsTrailer
+		{
+			get
+			{
+				return MemoryAccess.IsModelATrailer(Hash);
+			}
+		}
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a vehicle.
 		/// </summary>
 		/// <value>
@@ -338,14 +364,14 @@ namespace GTA
 		/// <param name="maximum">The maximum dimensions.</param>
 		public void GetDimensions(out Vector3 minimum, out Vector3 maximum)
 		{
-		    NativeVector3 min, max;
+			NativeVector3 min, max;
 			unsafe
 			{
 				Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
 			}
 
-		    minimum = min;
-		    maximum = max;
+			minimum = min;
+			maximum = max;
 		}
 
 		/// <summary>
@@ -379,6 +405,39 @@ namespace GTA
 
 			return true;
 		}
+
+		/// <summary>
+		/// Attempt to load this <see cref="Model"/>'s collision into memory.
+		/// </summary>
+		public void RequestCollision()
+		{
+			Function.Call(Native.Hash.REQUEST_COLLISION_FOR_MODEL, Hash);
+		}
+		/// <summary>
+		/// Attempt to load this <see cref="Model"/>'s collision into memory for a given period of time.
+		/// </summary>
+		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Model"/></param>
+		/// <returns><c>true</c> if this <see cref="Model"/>'s collision is loaded; otherwise, <c>false</c></returns>
+		public bool RequestCollision(int timeout)
+		{
+			Request();
+
+			DateTime endtime = timeout >= 0 ? DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, timeout) : DateTime.MaxValue;
+
+			while (!IsLoaded)
+			{
+				Script.Yield();
+				RequestCollision();
+
+				if (DateTime.UtcNow >= endtime)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		/// <summary>
 		/// Frees this <see cref="Model"/> from memory.
 		/// </summary>
