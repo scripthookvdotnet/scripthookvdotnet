@@ -444,7 +444,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets this <see cref="Entity"/>s speed.
+		/// Gets or sets this <see cref="Entity"/>s speed.
 		/// </summary>
 		/// <value>
 		/// The speed in m/s.
@@ -454,6 +454,10 @@ namespace GTA
 			get
 			{
 				return Function.Call<float>(Hash.GET_ENTITY_SPEED, Handle);
+			}
+			set
+			{
+				Velocity = Velocity.Normalized * value;
 			}
 		}
 		/// <summary>
