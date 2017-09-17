@@ -444,6 +444,19 @@ namespace GTA
 			}
 		}
 		/// <summary>
+		/// Gets this <see cref="Entity"/>s speed.
+		/// </summary>
+		/// <value>
+		/// The speed in m/s.
+		/// </value>
+		public float Speed
+		{
+			get
+			{
+				return Function.Call<float>(Hash.GET_ENTITY_SPEED, Handle);
+			}
+		}
+		/// <summary>
 		/// Sets the maximum speed this <see cref="Entity"/> can move at.
 		/// </summary>
 		public float MaxSpeed

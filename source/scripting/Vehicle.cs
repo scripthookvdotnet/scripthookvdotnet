@@ -677,19 +677,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets this <see cref="Vehicle"/>s speed.
-		/// </summary>
-		/// <value>
-		/// The speed in m/s.
-		/// </value>
-		public float Speed
-		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_ENTITY_SPEED, Handle);
-			}
-		}
-		/// <summary>
 		/// Sets this <see cref="Vehicle"/>s forward speed.
 		/// </summary>
 		/// <value>
