@@ -677,17 +677,13 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/>s speed.
+		/// Sets this <see cref="Vehicle"/>s forward speed.
 		/// </summary>
 		/// <value>
-		/// The speed in m/s.
+		/// The forward speed in m/s.
 		/// </value>
-		public float Speed
+		public float ForwardSpeed
 		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_ENTITY_SPEED, Handle);
-			}
 			set
 			{
 				if (Model.IsTrain)
