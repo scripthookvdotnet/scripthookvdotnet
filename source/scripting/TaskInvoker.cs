@@ -36,6 +36,16 @@ namespace GTA
 		RagdollOnCollision = 4194304
 	}
 	[Flags]
+	public enum EnterVehicleFlags
+	{
+		None = 0,
+		WarpToDoor = 2,
+		AllowJacking = 8,
+		WarpIn = 16,
+		EnterFromOppositeSide = 262144,
+		OnlyOpenDoor = 524288,
+	}
+	[Flags]
 	public enum LeaveVehicleFlags
 	{
 		None = 0,
@@ -44,13 +54,13 @@ namespace GTA
 		BailOut = 4096
 	}
 
-	public class Tasks
+	public class TaskInvoker
 	{
 		#region Fields
 		Ped _ped;
 		#endregion
 
-		internal Tasks(Ped ped)
+		internal TaskInvoker(Ped ped)
 		{
 			_ped = ped;
 		}
@@ -98,17 +108,17 @@ namespace GTA
 			Function.Call(Hash.TASK_COWER, _ped.Handle, duration);
 		}
 
-		public void ChaseWithGroundVehicle(Entity target)
+		public void ChaseWithGroundVehicle(Ped target)
 		{
 			Function.Call(Hash.TASK_VEHICLE_CHASE, _ped.Handle, target.Handle);
 		}
 
-		public void ChaseWithHelicopter(Entity target, Vector3 offset)
+		public void ChaseWithHelicopter(Ped target, Vector3 offset)
 		{
 			Function.Call(Hash.TASK_HELI_CHASE, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z);
 		}
 
-		public void ChaseWithPlane(Entity target, Vector3 offset)
+		public void ChaseWithPlane(Ped target, Vector3 offset)
 		{
 			Function.Call(Hash.TASK_PLANE_CHASE, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z);
 		}
@@ -123,12 +133,12 @@ namespace GTA
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, style, radius);
 		}
 
-		public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 0f, int flag = 0)
+		public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
 		{
 			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, seat, speed, flag, 0);
 		}
 
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 0f, int flag = 0)
+		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
 		{
 			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, seat, speed, flag, 0);
 		}
@@ -180,20 +190,12 @@ namespace GTA
 			Function.Call(Hash.TASK_FOLLOW_POINT_ROUTE, _ped.Handle, movementSpeed, 0);
 		}
 
-		public void FollowToOffsetFromEntity(Entity target, Vector3 offset, int timeout, float stoppingRange)
+		public void FollowToOffsetFromEntity(Entity target, Vector3 offset, float movementSpeed, int timeout = -1, float distanceToFollow = 10f, bool persistFollowing = true)
 		{
-			FollowToOffsetFromEntity(target, offset, 1f, timeout, stoppingRange, true);
-		}
-		public void FollowToOffsetFromEntity(Entity target, Vector3 offset, float movementSpeed, int timeout, float stoppingRange, bool persistFollowing)
-		{
-			Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, stoppingRange, persistFollowing);
+			Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, distanceToFollow, persistFollowing);
 		}
 
-		public void GoTo(Entity target)
-		{
-			GoTo(target, Vector3.Zero, -1);
-		}
-		public void GoTo(Entity target, Vector3 offset, int timeout = -1)
+		public void GoTo(Entity target, Vector3 offset = default(Vector3), int timeout = -1)
 		{
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
@@ -304,6 +306,11 @@ namespace GTA
 			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, 0, 0, 0);
 		}
 
+		public void RappelFromHelicopter()
+		{
+			Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);
+		}
+
 		public void ReactAndFlee(Ped ped)
 		{
 			Function.Call(Hash.TASK_REACT_AND_FLEE_PED, _ped.Handle, ped.Handle);
@@ -326,7 +333,6 @@ namespace GTA
 			}
 		}
 
-
 		public void ShootAt(Ped target, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
 			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, pattern);
@@ -336,9 +342,13 @@ namespace GTA
 			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, pattern);
 		}
 
-		public void ShuffleToNextVehicleSeat(Vehicle vehicle)
+		public void ShuffleToNextVehicleSeat(Vehicle vehicle = null)
 		{
-			Function.Call(Hash.TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, _ped.Handle, vehicle.Handle);
+			if (vehicle == null)
+			{
+				vehicle = _ped.CurrentVehicle;
+			}
+			Function.Call(Hash.TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, _ped.Handle, vehicle);
 		}
 
 		public void Skydive()
@@ -498,7 +508,7 @@ namespace GTA
 		public int Count { get; private set; }
 		public bool IsClosed { get; private set; }
 
-		public Tasks AddTask
+		public TaskInvoker AddTask
 		{
 			get
 			{

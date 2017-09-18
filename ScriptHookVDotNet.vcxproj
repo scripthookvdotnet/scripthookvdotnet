@@ -170,7 +170,7 @@
     <CsCompile Include="source\scripting\Screen.cs" />
     <CsCompile Include="source\scripting\ScreenElement.cs" />
     <CsCompile Include="source\scripting\SpriteElement.cs" />
-    <CsCompile Include="source\scripting\Tasks.cs" />
+    <CsCompile Include="source\scripting\TaskInvoker.cs" />
     <CsCompile Include="source\scripting\TextElement.cs" />
     <CsCompile Include="source\scripting\Vehicle.cs" />
     <CsCompile Include="source\scripting\VehicleDoor.cs" />
