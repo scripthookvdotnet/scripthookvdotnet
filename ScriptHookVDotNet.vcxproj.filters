@@ -239,9 +239,6 @@
     <CsCompile Include="source\scripting\DlcWeaponStructs.cs">
       <Filter>scripting\World\Weapons</Filter>
     </CsCompile>
-    <CsCompile Include="source\scripting\Tasks.cs">
-      <Filter>scripting\World\Entities\Peds</Filter>
-    </CsCompile>
     <CsCompile Include="source\scripting\RelationshipGroup.cs">
       <Filter>scripting\World\Entities\Peds</Filter>
     </CsCompile>
@@ -295,6 +292,9 @@
     </CsCompile>
     <CsCompile Include="source\scripting\Loading.cs">
       <Filter>scripting\UI</Filter>
+    </CsCompile>
+    <CsCompile Include="source\scripting\TaskInvoker.cs">
+      <Filter>scripting\World\Entities\Peds</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>
