@@ -4,6 +4,8 @@
 #include <Main.h>
 #include <Psapi.h>
 
+#define VER_1_0_877_1_STEAM 26
+
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
@@ -305,13 +307,18 @@ namespace GTA
 						return;
 					if (*reinterpret_cast<__int64*>(_PedAddress + 48) == 0)
 						return;
-					int AddrOff = getGameVersion() < VER_1_0_573_1_NOSTEAM ? 0 : 16;
-					PedNmAddress = *reinterpret_cast<__int64*>(_PedAddress + 5016 + AddrOff); //
-					if (*reinterpret_cast<__int64*>(_PedAddress + 48) == PedNmAddress && *reinterpret_cast<float*>(_PedAddress + 5232 + AddrOff) <= *reinterpret_cast<float*>(_PedAddress + 640))
+					PedNmAddress = reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_PedAddress) + 88))(_PedAddress);
+
+					int MinHealthOffset = getGameVersion() < VER_1_0_877_1_STEAM ? *reinterpret_cast<int*>(BaseFunc + 78) : *reinterpret_cast<int*>(BaseFunc + 157 + *reinterpret_cast<int*>(BaseFunc + 76));
+
+					if (*reinterpret_cast<__int64*>(_PedAddress + 48) == PedNmAddress && *reinterpret_cast<float*>(_PedAddress + MinHealthOffset) <= *reinterpret_cast<float*>(_PedAddress + 640))
 					{
 						if ((*reinterpret_cast<int(**)(__int64)> (*reinterpret_cast<__int64*>(PedNmAddress) + 152))(PedNmAddress) != -1)
 						{
-							if (*(short *)(reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xA2) + BaseFunc + 0xA6)(*(__int64 *)(*(__int64 *)(_PedAddress + 4208 + AddrOff) + 864)) + 52) == 401)
+							__int64 PedIntelligenceAddr = *reinterpret_cast<__int64*>(_PedAddress + *reinterpret_cast<int*>(BaseFunc + 147));
+
+							// check whether the ped is currently performing the 'CTaskNMScriptControl' task
+							if (*(short *)(reinterpret_cast<__int64(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xA2) + BaseFunc + 0xA6)(*(__int64 *)(PedIntelligenceAddr + 864)) + 52) == 401)
 							{
 								v5 = true;
 							}
@@ -323,14 +330,14 @@ namespace GTA
 									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xD3) + BaseFunc + 0xD7)(UnkStrAddr);
 									v7 = *(__int8*)ByteAddr;
 								}
-								int count = *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208 + AddrOff) + 1064);
+								int count = *reinterpret_cast<int*>(PedIntelligenceAddr + 1064);
 								if (v7)
 								{
 									reinterpret_cast<void(*)(__int64)>(*reinterpret_cast<int*>(BaseFunc + 0xF0) + BaseFunc + 0xF4)(UnkStrAddr);
 								}
 								for (int i = 0; i < count; i++)
 								{
-									v11 = *reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(_PedAddress + 4208 + AddrOff) + 8 * ((i + *reinterpret_cast<int*>(*reinterpret_cast<__int64*>(_PedAddress + 4208 + AddrOff) + 1060) + 1) % 16) + 928);
+									v11 = *reinterpret_cast<__int64*>(PedIntelligenceAddr + 8 * ((i + *reinterpret_cast<int*>(PedIntelligenceAddr + 1060) + 1) % 16) + 928);
 									if (v11)
 									{
 										if ((*(int(__fastcall **)(__int64))(*reinterpret_cast<__int64*>(v11) + 24))(v11) == 132)
