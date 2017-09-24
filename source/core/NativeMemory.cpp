@@ -4,6 +4,8 @@
 #include <Main.h>
 #include <Psapi.h>
 
+#define VER_1_0_877_1_STEAM 26
+
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Collections::ObjectModel;
