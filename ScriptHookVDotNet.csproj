@@ -55,10 +55,13 @@
     <Compile Include="source\core\Script.cs" />
     <Compile Include="source\core\ScriptDomain.cs" />
     <Compile Include="source\core\Setting.cs" />
+    <Compile Include="source\scripting\Math\Matrix.cs" />
+    <Compile Include="source\scripting\Math\Quaternion.cs" />
+    <Compile Include="source\scripting\Math\Vector2.cs" />
+    <Compile Include="source\scripting\Math\Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="source\scripting\Game\" />
-    <Folder Include="source\scripting\Math\" />
     <Folder Include="source\scripting\NaturalMotion\" />
     <Folder Include="source\scripting\UI\" />
     <Folder Include="source\scripting\World\Entities\Peds\" />
