@@ -6,7 +6,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using ScriptHookWrapper;
 using static System.Runtime.InteropServices.Marshal;
+
 
 namespace GTA
 {
@@ -376,7 +378,7 @@ namespace GTA
 
 				PedNmAddress = GetDelegateForFunctionPointer<Func<ulong, ulong>>(ReadIntPtr(ReadIntPtr(new IntPtr((long)_PedAddress)) + 88))(_PedAddress);
 
-				uint MinHealthOffset = getGameVersion() < GameVersion.v1_0_877_1_Steam ? *(uint*)(BaseFunc + 78) : *(uint*)(BaseFunc + 157 + *(uint*)(BaseFunc + 76));
+				uint MinHealthOffset = Wrapper.GameVersion < (int)GameVersion.v1_0_877_1_Steam ? *(uint*)(BaseFunc + 78) : *(uint*)(BaseFunc + 157 + *(uint*)(BaseFunc + 76));
 
 				if (*(ulong*)(_PedAddress + 48) == PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
 				{
@@ -782,8 +784,7 @@ namespace GTA
 			}
 			internal static int GetGameVersion()
 			{
-				//return getGameVersion(); //needs wrapper
-				return 0;
+				return Wrapper.GameVersion;
 			}
 
 			internal static sbyte ReadSByte(IntPtr address)
@@ -1411,11 +1412,11 @@ namespace GTA
 
 			internal static int CreateTexture(string filename)
 			{
-				return createTexture((char*)(ScriptDomain.CurrentDomain.PinString(filename).ToPointer()));
+				return Wrapper.CreateTexture(filename);
 			}
 			internal static void DrawTexture(int id, int index, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation, float scaleFactor, System.Drawing.Color color)
 			{
-				drawTexture(id, index, level, time, sizeX, sizeY, centerX, centerY, posX, posY, rotation, scaleFactor, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
+				Wrapper.DrawTexture(id, index, level, time, sizeX, sizeY, centerX, centerY, posX, posY, rotation, scaleFactor, color);
 			}
 
 			private unsafe static byte* FindPattern(string pattern, string mask)

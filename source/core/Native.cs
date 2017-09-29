@@ -16,6 +16,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using ScriptHookWrapper;
 
 namespace GTA
 {
@@ -235,15 +236,15 @@ namespace GTA
 
                 public void Run()
                 {
-                    //nativeInit(_hash); //will be enabled after wrapping SHV functions
+					Wrapper.NativeInit(_hash);
 
                     foreach (var argument in _arguments)
                     {
-                        //nativePush64(argument->_data); //will be enabled after wrapping SHV functions
+						Wrapper.NativePush64(argument._data);
                     }
 
-                    //_result = nativeCall();  //will be enabled after wrapping SHV functions
-                }
+					_result = Wrapper.NativeCall();
+				}
             }
 
             /// <summary>
@@ -493,8 +494,7 @@ namespace GTA
             /// <returns>A <see cref="GlobalVariable"/> instance representing the global variable.</returns>
             public static GlobalVariable Get(int index)
             {
-                //IntPtr address = new IntPtr(getGlobalPtr(index)); will be enabled after making SHV wrapper
-                IntPtr address = IntPtr.Zero; // dummy
+				IntPtr address = Wrapper.GetGlobalPtr(index);
 
 			    if (address == IntPtr.Zero)
 			    {
