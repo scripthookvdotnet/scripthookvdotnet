@@ -189,7 +189,7 @@ namespace GTA
 
 		    try
 		    {
-		    	if (T.typeid.IsEnum)
+		    	if (typeof(T).IsEnum)
 		    	{
 		    		return (T)(Enum.Parse(typeof(T), internalValue, true));
 		    	}
