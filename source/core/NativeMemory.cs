@@ -639,7 +639,7 @@ namespace GTA
 				unsafe
 				{
 					HashNode** HashMap = (HashNode **) (modelHashTable);
-					for (HashNode* cur = HashMap[(uint)(modelHash) % modelHashEntries]; cur != null; cur = cur->next) //?
+					for (HashNode* cur = HashMap[(uint)(modelHash) % modelHashEntries]; cur != null; cur = cur->next)
 					{
 						if (cur->hash != modelHash)
 						{
