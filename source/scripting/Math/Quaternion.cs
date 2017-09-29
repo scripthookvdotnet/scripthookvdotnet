@@ -20,14 +20,11 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using GTA.Math;
 
 namespace GTA
 {
 	namespace Math
 	{
-
-
 		[Serializable]
 		[StructLayout(LayoutKind.Sequential)]
 		public struct Quaternion : IEquatable<Quaternion>
