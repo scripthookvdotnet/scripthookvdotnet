@@ -114,7 +114,7 @@ namespace GTA
             {
                 return new InputArgument(value.Handle);
             }
-            public static implicit operator InputArgument(CheckPoint value)
+            public static implicit operator InputArgument(Checkpoint value)
             {
                 return new InputArgument(value.Handle);
             }

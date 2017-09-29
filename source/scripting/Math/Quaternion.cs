@@ -22,7 +22,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using GTA.Math;
 
-namespace GTq
+namespace GTA
 {
 	namespace Math
 	{
