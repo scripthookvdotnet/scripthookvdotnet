@@ -8,6 +8,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet", "ScriptHookVDotNet.csproj", "{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D98F169-2298-4ECD-977E-24619104AF5D} = {5D98F169-2298-4ECD-977E-24619104AF5D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVWrapperDotNet", "ScriptHookVWrapperDotNet.vcxproj", "{5D98F169-2298-4ECD-977E-24619104AF5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +82,25 @@ Global
 		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Run NativeGen|Any CPU.Build.0 = Release|Any CPU
 		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Run NativeGen|x64.ActiveCfg = Release|Any CPU
 		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Run NativeGen|x64.Build.0 = Release|Any CPU
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Debug|Any CPU.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Debug|Any CPU.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Debug|x64.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Debug|x64.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.NativeGen|Any CPU.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.NativeGen|Any CPU.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.NativeGen|x64.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.NativeGen|x64.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release + Examples|Any CPU.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release + Examples|Any CPU.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release + Examples|x64.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release + Examples|x64.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release|Any CPU.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release|x64.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Release|x64.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Run NativeGen|Any CPU.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Run NativeGen|Any CPU.Build.0 = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{5D98F169-2298-4ECD-977E-24619104AF5D}.Run NativeGen|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
