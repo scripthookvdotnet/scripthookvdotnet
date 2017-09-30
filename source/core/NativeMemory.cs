@@ -480,15 +480,14 @@ namespace GTA
 			internal static ulong* _pickupObjectPoolAddress;
 			internal static ulong GetLabelTextByHashAddr;
 			internal static ulong CreateNmMessageFuncAddress;
-			internal static ulong GiveNmMessageFuncAddress;            
+			internal static ulong GiveNmMessageFuncAddress;
+			internal static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels => vehicleModels;
 
 			private static ulong modelHashTable, modelNum2, modelNum3, modelNum4;
 			private static int modelNum1;
 			private static uint vehClassOff;
 			private static ushort modelHashEntries;
 			private static ReadOnlyCollection<ReadOnlyCollection<int>> vehicleModels;
-
-
 			#endregion
 
 			#region Delegate Fields For Function Ponters
