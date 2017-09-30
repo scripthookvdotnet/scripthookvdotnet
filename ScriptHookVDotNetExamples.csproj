@@ -33,5 +33,11 @@
     <Compile Include="examples\ExitVehicle.cs" />
     <Compile Include="examples\IndicatorControl.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ScriptHookVDotNet.csproj">
+      <Project>{61165c1a-6bfe-4776-b371-5a3fdb1a2ed7}</Project>
+      <Name>ScriptHookVDotNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
