@@ -211,7 +211,7 @@ namespace GTA
 		{
 			get
 			{
-				return MemoryAccess.GetCheckpointAddress(Handle);
+				return MemoryAccess.GetCheckPointAddress(Handle);
 			}
 		}
 
