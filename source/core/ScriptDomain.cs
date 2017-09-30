@@ -770,7 +770,7 @@ namespace GTA
 			return null;
 		}
 
-		private bool IsKeyPressed(WinForms.Keys key)
+		internal bool IsKeyPressed(WinForms.Keys key)
 		{
 			return _keyboardState[(int)(key)];
 		}
