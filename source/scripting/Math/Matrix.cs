@@ -334,6 +334,63 @@ namespace GTA
 				M44 = tM44;
 			}
 
+			//This might need to be fixed
+			//This can get faster with something like System.Numerics.Vectors
+			/// <summary>
+			/// Apply the transformation matrix to a point in world space
+			/// </summary>
+			/// <param name="point">The original vertex location</param>
+			/// <returns>The vertex location transformed by the given <see cref="Matrix"/></returns>
+			public Vector3 TransformPoint(Vector3 vector)
+			{
+				unsafe
+				{
+					float[,] vectorFloat = new float[4, 4];
+					float* VTempX = stackalloc float[4];
+					float* VTempY = stackalloc float[4];
+					float* VTempZ = stackalloc float[4];
+
+					fixed (float* vectorFloatPtr = &vectorFloat[0, 0])
+					{
+						// Splat x,y and z
+						for (int i = 0; i < 4; i++)
+						{
+							VTempX[i] = vector.X;
+							VTempY[i] = vector.Y;
+							VTempZ[i] = vector.Z;
+						}
+
+						// Mul by the matrix
+						for (int i = 0; i < 4; i++)
+						{
+							VTempX[i] = this[0, i];
+							VTempY[i] = this[1, i];
+							VTempZ[i] = this[2, i];
+						}
+
+						// Add them all together
+						for (int i = 0; i < 4; i++)
+						{
+							VTempX[i] = VTempX[i] + VTempY[i] + VTempZ[i] + this[3, i];
+						}
+
+						return new Vector3(VTempX[0], VTempX[1], VTempX[2]);
+					}
+				}
+			}
+
+
+			/// <summary>
+			/// Calculates the position of a point before this transformation matrix gets applied
+			/// </summary>
+			/// <param name="point">The transformed vertex location</param>
+			/// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
+			public Vector3 InverseTransformPoint(Vector3 vector)
+			{
+				Invert();
+				return TransformPoint(vector);
+			}
+
 			/// <summary>
 			/// Determines the sum of two matrices.
 			/// </summary>
