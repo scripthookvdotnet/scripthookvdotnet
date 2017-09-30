@@ -1334,9 +1334,10 @@ namespace GTA
 			}
 			internal unsafe struct CheckPoint
 			{
-				internal fixed byte padding[0xC];
+				internal long padding;
+				internal int padding1;
 				internal int handle;
-				internal fixed byte padding1[0x08];
+				internal long padding2;
 				internal CheckPoint* next;
 			} 
 			internal static ulong _getCheckpointHandles(ulong ArrayPtr)
