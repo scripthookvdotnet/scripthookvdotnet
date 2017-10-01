@@ -28,7 +28,7 @@ namespace GTA
 		void Run();
 	}
 
-	internal class ScriptDomain : System.MarshalByRefObject , IDisposable
+	internal class ScriptDomain : MarshalByRefObject , IDisposable
 	{
 		#region Fields
 		private static ScriptDomain sCurrentDomain;
@@ -47,7 +47,7 @@ namespace GTA
 
 		public ScriptDomain()
 		{
-			this._appdomain = System.AppDomain.CurrentDomain;
+			this._appdomain = AppDomain.CurrentDomain;
 			this._executingThreadId = Thread.CurrentThread.ManagedThreadId;
 
 			sCurrentDomain = this;

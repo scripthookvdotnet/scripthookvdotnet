@@ -160,18 +160,18 @@ namespace GTA
 		System.CodeDom.Compiler.CodeDomProvider _compiler;
 		System.CodeDom.Compiler.CompilerParameters _compilerOptions;
 
-		System.Windows.Forms.Keys PageUpKey;
-		System.Windows.Forms.Keys PageDownKey;
-		System.Windows.Forms.Keys ToggleKey;
+		Keys PageUpKey;
+		Keys PageDownKey;
+		Keys ToggleKey;
 
 		static int DefaultFont = 0; //Chalet London :>
 
-		static readonly Color InputColor = System.Drawing.Color.White;
-		static readonly System.Drawing.Color InputColorBusy = System.Drawing.Color.DarkGray;
-		static readonly System.Drawing.Color OutputColor = System.Drawing.Color.White;
-		static readonly System.Drawing.Color PrefixColor = System.Drawing.Color.FromArgb(255, 52, 152, 219);
-		static readonly System.Drawing.Color BackgroundColor = System.Drawing.Color.FromArgb(200, System.Drawing.Color.Black);
-		static readonly System.Drawing.Color AltBackgroundColor = System.Drawing.Color.FromArgb(200, 52, 73, 94);
+		static readonly Color InputColor = Color.White;
+		static readonly Color InputColorBusy = Color.DarkGray;
+		static readonly Color OutputColor = Color.White;
+		static readonly Color PrefixColor = Color.FromArgb(255, 52, 152, 219);
+		static readonly Color BackgroundColor = Color.FromArgb(200, Color.Black);
+		static readonly Color AltBackgroundColor = Color.FromArgb(200, 52, 73, 94);
 
 		const int VersionWidth = 50;
 		const int InputHeight = 20;
@@ -481,7 +481,7 @@ namespace GTA
 				i++;
 			}
 		}
-		internal void OnKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		internal void OnKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == ToggleKey)
 			{
