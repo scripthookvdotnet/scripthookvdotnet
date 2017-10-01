@@ -131,9 +131,6 @@
     <Folder Include="source\scripting\World\Weapons\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="ScriptHookVWrapperDotNet.vcxproj">
       <Project>{5d98f169-2298-4ecd-977e-24619104af5d}</Project>
       <Name>ScriptHookVWrapperDotNet</Name>
