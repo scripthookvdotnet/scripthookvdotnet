@@ -51,7 +51,7 @@ namespace GTA
 	    	{
 	    		reader = new StreamReader(filename);
 	    	}
-	    	catch (IOException ex)
+	    	catch (IOException)
 	    	{
 	    		return result;
 	    	}
@@ -140,7 +140,7 @@ namespace GTA
 		    {
 		    	writer = File.CreateText(_fileName);
 		    }
-		    catch (IOException ex)
+		    catch (IOException)
 		    {
 		    	return false;
 		    }
@@ -159,7 +159,7 @@ namespace GTA
 		    		writer.WriteLine();
 		    	}
 		    }
-		    catch (IOException ex)
+		    catch (IOException)
 		    {
 		    	return false;
 		    }
@@ -198,7 +198,7 @@ namespace GTA
 		    		return (T)(Convert.ChangeType(internalValue, typeof(T)));
 		    	}
 		    }
-		    catch (Exception ex)
+		    catch (Exception)
 		    {
 		    	return defaultvalue;
 		    }
@@ -245,7 +245,7 @@ namespace GTA
 	    				values.Add((T)(Convert.ChangeType(internalValue, typeof(T))));
 	    			}
 	    		}
-	    		catch (Exception ex)
+	    		catch (Exception)
 	    		{
 	    		}
 	    	}

@@ -144,8 +144,9 @@ namespace GTA
 			{
 				System.IO.File.WriteAllText(logPath, string.Empty);
 			}
-			catch (Exception ignored)
-			{ }
+			catch (Exception)
+			{
+			}
 
 			// Create AppDomain
 			var setup = new AppDomainSetup();
@@ -830,7 +831,9 @@ namespace GTA
 					fs.Close();
 				}
 			}
-			catch (Exception ignored) {}
+			catch (Exception)
+			{
+			}
 
 			if (ReferenceEquals(CurrentDomain, null))
 			{
