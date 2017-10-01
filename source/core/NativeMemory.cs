@@ -474,11 +474,11 @@ namespace GTA
 											float scaleFactor, float colorR, float colorG, float colorB, float colorA);
 
 			#region Fields
-			internal static ulong* checkpointPoolAddress; //ulong*
-			internal static float* _readWorldGravityAddr; //float*
-			internal static float* _writeWorldGravityAddr; //float*
-			internal static ulong* _gamePlayCameraAddr; //ulong*
-			internal static int* _cursorSpriteAddr; //int*
+			internal static ulong* checkpointPoolAddress;
+			internal static float* _readWorldGravityAddr;
+			internal static float* _writeWorldGravityAddr;
+			internal static ulong* _gamePlayCameraAddr;
+			internal static int* _cursorSpriteAddr;
 			internal static ulong* _entityPoolAddress;
 			internal static ulong* _vehiclePoolAddress;
 			internal static ulong* _pedPoolAddress;
