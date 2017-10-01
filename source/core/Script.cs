@@ -38,6 +38,10 @@ namespace GTA
 		public string SupportURL;
 	}
 
+	/// <summary>
+	/// A base class for all user scripts to inherit.
+	/// The Hook will only detect and starts Scripts that inherit directly from this class and have a default(parameterless) public constructor.
+	/// </summary>
 	public abstract class Script
 	{
 		#region Fields
@@ -111,6 +115,11 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets an ini file associated with this <see cref="Script"/>.
+		/// The File will be in the same location as this <see cref="Script"/> but with an extension of .ini.
+		/// Use this to save and load settings for this <see cref="Script"/>.
+		/// </summary>
 		public ScriptSettings Settings
 		{
 			get
@@ -126,6 +135,10 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
+		/// Default value is 0 meaning the event will execute once each frame.
+		/// </summary>
 		protected int Interval
 		{
 			get
@@ -143,6 +156,11 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the full file path for a file relative to this <see cref="Script"/>.
+		/// e.g: GetRelativeFilePath("ScriptFiles\texture1.png") may return "C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts\ScriptFiles\texture1.png"
+		/// </summary>
+		/// <param name="filePath">The file path relative to the location of this <see cref="Script"/>.</param>
 		public string GetRelativeFilePath(string filePath)
 		{
 			return System.IO.Path.Combine(BaseDirectory, filePath);
@@ -181,6 +199,11 @@ namespace GTA
 			ScriptDomain.OnAbortScript(this);
 		}
 
+		/// <summary>
+		/// Pauses execution of the script for a specific amount of time.
+		/// Must be called inside the main script loop - The OnTick or any sub methods of it.
+		/// </summary>
+		/// <param name="ms">The time in ms to pause for</param>
 		public static void Wait(int ms)
 		{
 			Script script = ScriptDomain.ExecutingScript;
@@ -199,6 +222,9 @@ namespace GTA
 			}
 			while (DateTime.UtcNow < resume);
 		}
+		/// <summary>
+		/// Yields the execution of the script for 1 frame.
+		/// </summary>
 		public static void Yield()
 		{
 			Wait(0);
