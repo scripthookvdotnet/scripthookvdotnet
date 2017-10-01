@@ -34,82 +34,82 @@ namespace GTA
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class ScriptAttributes : Attribute
 	{
-        public string Author;
-        public string SupportURL;
+		public string Author;
+		public string SupportURL;
 	}
 
-    public abstract class Script
-    {
+	public abstract class Script
+	{
 		#region Fields
 		internal int _interval = 0;
-        internal bool _running = false;
-        internal string _filename;
-        internal ScriptDomain _scriptdomain;
-        internal Thread _thread;
-        internal AutoResetEvent _waitEvent = new AutoResetEvent(false);
-        internal AutoResetEvent _continueEvent = new AutoResetEvent(false);
-        internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> _keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
+		internal bool _running = false;
+		internal string _filename;
+		internal ScriptDomain _scriptdomain;
+		internal Thread _thread;
+		internal AutoResetEvent _waitEvent = new AutoResetEvent(false);
+		internal AutoResetEvent _continueEvent = new AutoResetEvent(false);
+		internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> _keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
 		internal ScriptSettings _settings;
-        #endregion
+		#endregion
 
-        public Script()
-        {
-            _filename = ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
-            _scriptdomain = ScriptDomain.CurrentDomain;
-        }
+		public Script()
+		{
+			_filename = ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
+			_scriptdomain = ScriptDomain.CurrentDomain;
+		}
 
-        /// <summary>
-        /// An event that is raised every tick of the script. 
-        /// Put code that needs to be looped each frame in here.
-        /// </summary>
-        public event EventHandler Tick;
-        /// <summary>
-        /// An event that is raised when a key is lifted.
-        /// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was lifted.
-        /// </summary>
-        public event WinForms.KeyEventHandler KeyUp;
-        /// <summary>
-        /// An event that is raised when a key is first pressed.
-        /// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was pressed.
-        /// </summary>
-        public event WinForms.KeyEventHandler KeyDown;
-        /// <summary>
-        /// An event that is raised when this script gets aborted for any reason.
-        /// This should be used for cleaning up anything created during this script
-        /// </summary>
-        public event EventHandler Aborted;
+		/// <summary>
+		/// An event that is raised every tick of the script. 
+		/// Put code that needs to be looped each frame in here.
+		/// </summary>
+		public event EventHandler Tick;
+		/// <summary>
+		/// An event that is raised when a key is lifted.
+		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was lifted.
+		/// </summary>
+		public event WinForms.KeyEventHandler KeyUp;
+		/// <summary>
+		/// An event that is raised when a key is first pressed.
+		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was pressed.
+		/// </summary>
+		public event WinForms.KeyEventHandler KeyDown;
+		/// <summary>
+		/// An event that is raised when this script gets aborted for any reason.
+		/// This should be used for cleaning up anything created during this script
+		/// </summary>
+		public event EventHandler Aborted;
 
-        /// <summary>
-        /// Gets the name of this <see cref="Script"/>.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return GetType().FullName;
-            }
-        }
-        /// <summary>
-        /// Gets the filename of this <see cref="Script"/>.
-        /// </summary>
-        public string Filename
-        {
-            get
-            {
-                return _filename;
-            }
-        }
+		/// <summary>
+		/// Gets the name of this <see cref="Script"/>.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return GetType().FullName;
+			}
+		}
+		/// <summary>
+		/// Gets the filename of this <see cref="Script"/>.
+		/// </summary>
+		public string Filename
+		{
+			get
+			{
+				return _filename;
+			}
+		}
 
-        /// <summary>
-        /// Gets the Directory where this <see cref="Script"/> is stored.
-        /// </summary>
-        public string BaseDirectory
-        {
-            get
-            {
-                return System.IO.Path.GetDirectoryName(_filename);
-            }
-        }
+		/// <summary>
+		/// Gets the Directory where this <see cref="Script"/> is stored.
+		/// </summary>
+		public string BaseDirectory
+		{
+			get
+			{
+				return System.IO.Path.GetDirectoryName(_filename);
+			}
+		}
 
 		public ScriptSettings Settings
 		{
@@ -150,11 +150,11 @@ namespace GTA
 
 		internal void Start()
 		{
-            ThreadStart threadDelegate = delegate { MainLoop(); };
-            _thread = new Thread(threadDelegate);
+			ThreadStart threadDelegate = delegate { MainLoop(); };
+			_thread = new Thread(threadDelegate);
 			_thread.Start();
 
-            ScriptDomain.OnStartScript(this);
+			ScriptDomain.OnStartScript(this);
 		}
 		public void Abort()
 		{
@@ -164,7 +164,7 @@ namespace GTA
 			}
 			catch (Exception ex)
 			{
-                ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 			}
 
 			_running = false;
@@ -178,7 +178,7 @@ namespace GTA
 			_thread.Abort();
 			_thread = null;
 
-            ScriptDomain.OnAbortScript(this);
+			ScriptDomain.OnAbortScript(this);
 		}
 
 		public static void Wait(int ms)
@@ -243,7 +243,7 @@ namespace GTA
 				}
 				catch (Exception ex)
 				{
-                    ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 
 					Abort();
 					break;
@@ -254,10 +254,10 @@ namespace GTA
 			}
 		}
 
-        /// <summary>
-        /// Returns a string that represents this <see cref="Script"/>.
-        /// </summary>
-        public override string ToString()
+		/// <summary>
+		/// Returns a string that represents this <see cref="Script"/>.
+		/// </summary>
+		public override string ToString()
 		{
 			return Name;
 		}
