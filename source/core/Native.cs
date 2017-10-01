@@ -347,58 +347,31 @@ namespace GTA
 
 				if (type == typeof(bool))
 				{
-					unsafe
-					{
-						return *(int*)(value) != 0;
-					}
+					return *(int*)(value) != 0;
 				}
 				if (type == typeof(int))
 				{
-					unsafe
-					{
-						return *(int*)(value);
-					}
-
+					return *(int*)(value);
 				}
 				if (type == typeof(uint))
 				{
-					unsafe
-					{
-						return *(uint*)(value);
-					}
-
+					return *(uint*)(value);
 				}
 				if (type == typeof(long))
 				{
-					unsafe
-					{
-						return *(long*)(value);
-					}
-
+					return *(long*)(value);
 				}
 				if (type == typeof(ulong))
 				{
-					unsafe
-					{
-						return *(value);
-					}
-
+					return *(value);
 				}
 				if (type == typeof(float))
 				{
-					unsafe
-					{
-						return *(float*)(value);
-					}
-
+					return *(float*)(value);
 				}
 				if (type == typeof(double))
 				{
-					unsafe
-					{
-						return (double)(*(float*)(value));
-					}
-   
+					return (double)(*(float*)(value));
 				}
 
 				if (type == typeof(string))
@@ -415,42 +388,32 @@ namespace GTA
 
 				if (type == typeof(IntPtr))
 				{
-					unsafe
-					{
-						return new IntPtr((long)(value));
-					}
+					return new IntPtr((long)(value));
 				}
 
 				if (type == typeof(Math.Vector2))
 				{
-					unsafe
-					{
-						var data = (float*)(value);
+					var data = (float*)(value);
 
-						return new Math.Vector2(data[0], data[2]);
-					}
+					return new Math.Vector2(data[0], data[2]);
+
 				}
 				if (type == typeof(Math.Vector3))
 				{
-					unsafe
-					{
-						var data = (float*)(value);
+					var data = (float*)(value);
 
-						return new Math.Vector3(data[0], data[2], data[4]);
-					}
+					return new Math.Vector3(data[0], data[2], data[4]);
+
 				}
 
 				if (typeof(INativeValue).IsAssignableFrom(type))
 				{
-					unsafe
-					{
-						// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
-						var result = (INativeValue)(System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type));
-						result.NativeValue = *value;
 
-						return result;
-					}
+					// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
+					var result = (INativeValue)(System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type));
+					result.NativeValue = *value;
 
+					return result;
 				}
 
 				throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
@@ -617,7 +580,7 @@ namespace GTA
 					throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
 				}
 
-			   unsafe { *(ulong*)(_address.ToPointer()) &= ~(1u << index); }
+				unsafe { *(ulong*)(_address.ToPointer()) &= ~(1u << index); }
 			}
 			/// <summary>
 			/// Gets a value indicating whether a specific bit of the <see cref="GlobalVariable"/> is set.
@@ -667,7 +630,7 @@ namespace GTA
 				{
 					throw new InvalidOperationException("The variable does not seem to be an array.");
 				}
-			
+
 				var result = new GlobalVariable[count];
 
 				for (int i = 0; i < count; i++)
