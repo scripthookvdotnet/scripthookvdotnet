@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using ScriptHookWrapper;
 using static System.Runtime.InteropServices.Marshal;
 
 
@@ -378,7 +377,7 @@ namespace GTA
 
 				PedNmAddress = GetDelegateForFunctionPointer<Func<ulong, ulong>>(ReadIntPtr(ReadIntPtr(new IntPtr((long)_PedAddress)) + 88))(_PedAddress);
 
-				uint MinHealthOffset = Wrapper.GameVersion < (int)GameVersion.v1_0_877_1_Steam ? *(uint*)(BaseFunc + 78) : *(uint*)(BaseFunc + 157 + *(uint*)(BaseFunc + 76));
+				uint MinHealthOffset = Game.Version < GameVersion.v1_0_877_1_Steam ? *(uint*)(BaseFunc + 78) : *(uint*)(BaseFunc + 157 + *(uint*)(BaseFunc + 76));
 
 				if (*(ulong*)(_PedAddress + 48) == PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
 				{
@@ -466,6 +465,14 @@ namespace GTA
 
 		internal unsafe static class MemoryAccess
 		{
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGameVersion@@YA")]
+			static extern int _GetGameVersion();
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?createTexture@@YAHPEBD@Z")]
+			static extern int CreateTexture(IntPtr fileNamePtr);
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?drawTexture@@YAXHHHHMMMMMMMMMMMM@Z")]
+			static extern int DrawTexture(int id, int index, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation,
+											float scaleFactor, float colorR, float colorG, float colorB, float colorA);
+
 			#region Fields
 			internal static ulong* checkpointPoolAddress; //ulong*
 			internal static float* _readWorldGravityAddr; //float*
@@ -780,7 +787,7 @@ namespace GTA
 			}
 			internal static int GetGameVersion()
 			{
-				return Wrapper.GameVersion;
+				return _GetGameVersion();
 			}
 
 			internal static sbyte ReadSByte(IntPtr address)
@@ -1409,11 +1416,11 @@ namespace GTA
 
 			internal static int CreateTexture(string filename)
 			{
-				return Wrapper.CreateTexture(filename);
+				return CreateTexture(ScriptDomain.CurrentDomain.PinString(filename));
 			}
 			internal static void DrawTexture(int id, int index, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation, float scaleFactor, System.Drawing.Color color)
 			{
-				Wrapper.DrawTexture(id, index, level, time, sizeX, sizeY, centerX, centerY, posX, posY, rotation, scaleFactor, color);
+				DrawTexture(id, index, level, time, sizeX, sizeY, centerX, centerY, posX, posY, rotation, scaleFactor, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 			}
 
 			private unsafe static byte* FindPattern(string pattern, string mask)

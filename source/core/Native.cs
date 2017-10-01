@@ -16,7 +16,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using ScriptHookWrapper;
 
 namespace GTA
 {
@@ -228,6 +227,14 @@ namespace GTA
 
 		public sealed class Function
 		{
+
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeInit@@YAX_K@Z")]
+			static extern void NativeInit(ulong hash);
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativePush64@@YAX_K@Z")]
+			static extern void NativePush64(ulong val);
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeCall@@YAPEA_KXZ")]
+			static unsafe extern ulong* NativeCall();
+
 			internal unsafe class NativeTask : IScriptTask
 			{
 				internal ulong _hash;
@@ -236,14 +243,14 @@ namespace GTA
 
 				public void Run()
 				{
-					Wrapper.NativeInit(_hash);
+					NativeInit(_hash);
 
 					foreach (var argument in _arguments)
 					{
-						Wrapper.NativePush64(argument._data);
+						NativePush64(argument._data);
 					}
 
-					_result = Wrapper.NativeCall();
+					_result = NativeCall();
 				}
 			}
 
@@ -443,6 +450,9 @@ namespace GTA
 		#region Global Variables
 		public struct GlobalVariable
 		{
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGlobalPtr@@YAPEA_KH@Z")]
+			static extern IntPtr GetGlobalPtr(int index);
+
 			private IntPtr _address;
 
 			private GlobalVariable(IntPtr address) : this()
@@ -457,7 +467,7 @@ namespace GTA
 			/// <returns>A <see cref="GlobalVariable"/> instance representing the global variable.</returns>
 			public static GlobalVariable Get(int index)
 			{
-				IntPtr address = Wrapper.GetGlobalPtr(index);
+				IntPtr address = GetGlobalPtr(index);
 
 				if (address == IntPtr.Zero)
 				{
