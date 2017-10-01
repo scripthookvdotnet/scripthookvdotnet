@@ -228,7 +228,7 @@ namespace GTA
 
 		public sealed class Function
 		{
-			internal unsafe struct NativeTask : IScriptTask
+			internal unsafe class NativeTask : IScriptTask
 			{
 				internal ulong _hash;
 				internal ulong* _result;
