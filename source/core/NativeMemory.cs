@@ -1390,12 +1390,12 @@ namespace GTA
 				return task._handles.ToArray();
 			}
 
-			internal static uint GetNumberOfVehicles()
+			internal static int GetNumberOfVehicles()
 			{
 				if (*_vehiclePoolAddress != 0)
 				{
 					VehiclePool* pool = *(VehiclePool**)(*_vehiclePoolAddress);
-					return pool->itemCount;
+					return (int)pool->itemCount;
 				}
 				return 0;
 			}

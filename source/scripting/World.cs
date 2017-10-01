@@ -687,7 +687,7 @@ namespace GTA
 		/// <summary>
 		/// A fast way to get the total number of vehicles spawned in the world.
 		/// </summary>
-		public static uint VehicleCount => MemoryAccess.GetNumberOfVehicles();
+		public static int VehicleCount => MemoryAccess.GetNumberOfVehicles();
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
 		/// </summary>
