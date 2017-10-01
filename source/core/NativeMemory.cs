@@ -1430,12 +1430,12 @@ namespace GTA
 					{
 						if (*(byte*)address == (byte)pattern[i] || mask[i] == '?')
 						{
+							i++;
+
 							if (i >= maskLength)
 							{
 								return (byte*)(address - maskLength);
 							}
-
-							i++;
 						}
 						else
 						{
