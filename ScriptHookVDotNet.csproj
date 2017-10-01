@@ -130,12 +130,6 @@
     <Folder Include="source\scripting\World\Entities\Vehicles\" />
     <Folder Include="source\scripting\World\Weapons\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="ScriptHookVWrapperDotNet.vcxproj">
-      <Project>{5d98f169-2298-4ecd-977e-24619104af5d}</Project>
-      <Name>ScriptHookVWrapperDotNet</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
