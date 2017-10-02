@@ -753,6 +753,10 @@ namespace GTA
 
 			_pinnedStrings.Clear();
 		}
+		public string LookupScriptFilename(Script script)
+		{
+			return LookupScriptFilename(script.GetType());
+		}
 		public string LookupScriptFilename(Type type)
 		{
 			foreach (var scriptType in _scriptTypes)
@@ -773,10 +777,6 @@ namespace GTA
 		internal bool IsKeyPressed(WinForms.Keys key)
 		{
 			return _keyboardState[(int)(key)];
-		}
-		private string LookupScriptFilename(Script script)
-		{
-			return LookupScriptFilename(script.GetType());
 		}
 
 		static private void SignalAndWait(AutoResetEvent toSignal, AutoResetEvent toWaitOn)

@@ -58,7 +58,7 @@ namespace GTA
 
 		public Script()
 		{
-			_filename = ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
+			_filename = ScriptDomain.CurrentDomain.LookupScriptFilename(this);
 			_scriptdomain = ScriptDomain.CurrentDomain;
 		}
 
