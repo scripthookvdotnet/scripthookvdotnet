@@ -1091,9 +1091,13 @@ namespace GTA
 				{
 					byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(s);
 					IntPtr dest = AllocCoTaskMem(utf8Bytes.Length + 1);
+					if (dest == IntPtr.Zero)
+					{
+						throw new OutOfMemoryException();
+					}
 
 					Copy(utf8Bytes, 0, dest, utf8Bytes.Length);
-					*((byte*)dest.ToPointer() + utf8Bytes.Length) = 0;
+					((byte*)dest.ToPointer())[utf8Bytes.Length] = 0;
 
 					return dest;
 				}
