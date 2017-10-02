@@ -1069,6 +1069,10 @@ namespace GTA
 			}
 			internal static string PtrToStringUTF8(IntPtr ptr)
 			{
+				if (IntPtr.Zero == ptr)
+				{
+					return null;
+				}
 				unsafe
 				{
 					byte* address = (byte*)ptr.ToPointer();
