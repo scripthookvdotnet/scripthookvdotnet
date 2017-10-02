@@ -621,9 +621,9 @@ namespace GTA
 				GenerateVehicleModelList();
 				
 			}
-			internal static IntPtr CellEmailBcon => StringToCoTaskMemUtf8("CELL_EMAIL_BCON");
-			internal static IntPtr StringPtr => StringToCoTaskMemUtf8("STRING");
-			internal static IntPtr NullString => StringToCoTaskMemUtf8(String.Empty);
+			internal static IntPtr CellEmailBcon => StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
+			internal static IntPtr StringPtr => StringToCoTaskMemUTF8("STRING");
+			internal static IntPtr NullString => StringToCoTaskMemUTF8(String.Empty);
 
 			internal unsafe struct HashNode
 			{
@@ -866,7 +866,7 @@ namespace GTA
 			}
 			internal static String ReadString(IntPtr address)
 			{
-				return PtrToStringUtf8(address);
+				return PtrToStringUTF8(address);
 			}
 			internal static IntPtr ReadPtr(IntPtr address)
 			{
@@ -1063,11 +1063,11 @@ namespace GTA
 				char* entryText = (char*)(GetLabelTextByHashFunc(GetLabelTextByHashAddr, entryLabelHash));
 				if (entryText != null)
 				{
-					return PtrToStringUtf8(new IntPtr(entryText));
+					return PtrToStringUTF8(new IntPtr(entryText));
 				}
 				return String.Empty;
 			}
-			internal static string PtrToStringUtf8(IntPtr utf8Ptr)
+			internal static string PtrToStringUTF8(IntPtr utf8Ptr)
 			{
 				unsafe
 				{
@@ -1085,7 +1085,7 @@ namespace GTA
 					return System.Text.Encoding.UTF8.GetString(buffer);
 				}
 			}
-			internal static IntPtr StringToCoTaskMemUtf8(string s)
+			internal static IntPtr StringToCoTaskMemUTF8(string s)
 			{
 				unsafe
 				{

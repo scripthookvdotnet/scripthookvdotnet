@@ -390,7 +390,7 @@ namespace GTA
 						return String.Empty;
 					}
 
-					return MemoryAccess.PtrToStringUtf8(new IntPtr(address));
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(address));
 				}
 
 				if (type == typeof(IntPtr))
@@ -475,7 +475,7 @@ namespace GTA
 			{
 				if (typeof(T) == typeof(string))
 				{
-					return (T)(object)MemoryAccess.PtrToStringUtf8(_address);
+					return (T)(object)MemoryAccess.PtrToStringUTF8(_address);
 				}
 
 				unsafe
