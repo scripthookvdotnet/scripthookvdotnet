@@ -168,7 +168,7 @@ namespace GTA
 
 		internal void Start()
 		{
-			ThreadStart threadDelegate = delegate { MainLoop(); };
+			ThreadStart threadDelegate = new ThreadStart(MainLoop);
 			_thread = new Thread(threadDelegate);
 			_thread.Start();
 
