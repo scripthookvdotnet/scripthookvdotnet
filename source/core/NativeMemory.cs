@@ -35,7 +35,7 @@ namespace GTA
 			Heli = 0x8,
 			Blimp = 0x9,
 			Bike = 0xB,
-			Bycile = 0xC,
+			Bycicle = 0xC,
 			Boat = 0xD,
 			Train = 0xE,
 			Submarine = 0xF
