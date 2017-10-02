@@ -736,10 +736,9 @@ namespace GTA
 		public IntPtr PinString(string str)
 		{
 			byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(str);
-			int size = utf8Bytes.Length + 1;
-			IntPtr handle = Marshal.AllocCoTaskMem(size);
+			IntPtr handle = Marshal.AllocCoTaskMem(utf8Bytes.Length + 1);
 
-			Marshal.Copy(utf8Bytes, 0, handle, size);
+			Marshal.Copy(utf8Bytes, 0, handle, utf8Bytes.Length);
 
 			_pinnedStrings.Add(handle);
 
