@@ -1067,22 +1067,37 @@ namespace GTA
 				}
 				return String.Empty;
 			}
-			internal static string PtrToStringUTF8(IntPtr utf8Ptr)
+			internal static string PtrToStringUTF8(IntPtr ptr)
 			{
 				unsafe
 				{
-					byte* address = (byte*)utf8Ptr.ToPointer();
+					byte* address = (byte*)ptr.ToPointer();
 					int len = 0;
 
-					while (*(address + len) != 0)
+					while (address[len] != 0)
 						++len;
 
-					if (len == 0)
-						return string.Empty;
-
-					byte[] buffer = new byte[len];
-					Copy(utf8Ptr, buffer, 0, buffer.Length);
-					return System.Text.Encoding.UTF8.GetString(buffer);
+					return PtrToStringUTF8(ptr, len);
+				}
+			}
+			internal static String PtrToStringUTF8(IntPtr ptr, int byteLen)
+			{
+				if (byteLen < 0)
+				{
+					throw new ArgumentException(null, nameof(byteLen));
+				}
+				else if (IntPtr.Zero == ptr)
+				{
+					return null;
+				}
+				else if (byteLen == 0)
+				{
+					return string.Empty;
+				}
+				else
+				{
+					byte* pByte = (byte*)ptr.ToPointer();
+					return System.Text.Encoding.UTF8.GetString(pByte, byteLen);
 				}
 			}
 			internal static IntPtr StringToCoTaskMemUTF8(string s)
