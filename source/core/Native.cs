@@ -390,7 +390,7 @@ namespace GTA
 						return String.Empty;
 					}
 
-					return StringFromNativeUtf8(new IntPtr(address));
+					return MemoryAccess.PtrToStringUtf8(new IntPtr(address));
 				}
 
 				if (type == typeof(IntPtr))
@@ -424,25 +424,6 @@ namespace GTA
 				}
 
 				throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
-			}
-
-			internal static string StringFromNativeUtf8(IntPtr nativeUtf8)
-			{
-				unsafe
-				{
-					byte* address = (byte*)nativeUtf8.ToPointer();
-					int len = 0;
-
-					while (*(address + len) != 0)
-						++len;
-
-					if (len == 0)
-						return string.Empty;
-
-					byte[] buffer = new byte[len];
-					Marshal.Copy(nativeUtf8, buffer, 0, buffer.Length);
-					return System.Text.Encoding.UTF8.GetString(buffer);
-				}
 			}
 		}
 		#endregion
@@ -494,7 +475,7 @@ namespace GTA
 			{
 				if (typeof(T) == typeof(string))
 				{
-					return (T)(object)Function.StringFromNativeUtf8(_address);
+					return (T)(object)MemoryAccess.PtrToStringUtf8(_address);
 				}
 
 				unsafe
