@@ -737,9 +737,16 @@ namespace GTA
 		{
 			IntPtr handle = Native.MemoryAccess.StringToCoTaskMemUTF8(str);
 
-			_pinnedStrings.Add(handle);
+			if (handle == IntPtr.Zero)
+			{
+				return Native.MemoryAccess.NullString;
+			}
+			else
+			{
+				_pinnedStrings.Add(handle);
 
-			return handle;
+				return handle;
+			}
 		}
 		private void CleanupStrings()
 		{
