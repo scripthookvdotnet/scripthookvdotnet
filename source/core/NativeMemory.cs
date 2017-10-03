@@ -1460,7 +1460,7 @@ namespace GTA
 				{
 					unsafe
 					{
-						if (*(byte*)address == (byte)pattern[i] || mask[i] == '?')
+						if (((byte*)address)[i] == (byte)pattern[i] || mask[i] == '?')
 						{
 							i++;
 
