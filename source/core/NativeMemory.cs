@@ -1106,19 +1106,26 @@ namespace GTA
 			}
 			internal static IntPtr StringToCoTaskMemUTF8(string s)
 			{
-				unsafe
+				if (s == null)
 				{
-					byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(s);
-					IntPtr dest = AllocCoTaskMem(utf8Bytes.Length + 1);
-					if (dest == IntPtr.Zero)
+					return IntPtr.Zero;
+				}
+				else
+				{
+					unsafe
 					{
-						throw new OutOfMemoryException();
+						byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(s);
+						IntPtr dest = AllocCoTaskMem(utf8Bytes.Length + 1);
+						if (dest == IntPtr.Zero)
+						{
+							throw new OutOfMemoryException();
+						}
+
+						Copy(utf8Bytes, 0, dest, utf8Bytes.Length);
+						((byte*)dest.ToPointer())[utf8Bytes.Length] = 0;
+
+						return dest;
 					}
-
-					Copy(utf8Bytes, 0, dest, utf8Bytes.Length);
-					((byte*)dest.ToPointer())[utf8Bytes.Length] = 0;
-
-					return dest;
 				}
 			}
 
