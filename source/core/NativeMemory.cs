@@ -541,7 +541,7 @@ namespace GTA
 				// Get relative address and add it to the instruction address.
 				// 3 bytes equal the size of the opcode and its first argument. 7 bytes are the length of opcode and all its parameters.
 				address = FindPattern("\x33\xFF\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x58", "xxx????xxxxx");
-				EntityAddressFunc = GetDelegateForFunctionPointer<EntityAddressFuncDelegate>(new IntPtr(address));
+				EntityAddressFunc = GetDelegateForFunctionPointer<EntityAddressFuncDelegate>(new IntPtr(*(int *)(address + 3) + address + 7));
 
 				address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x33\xC9\x48\x85\xC0\x74\x3B", "xxx????xxxxxxx");
 				PlayerAddressFunc = GetDelegateForFunctionPointer<PlayerAddressFuncDelegate>(new IntPtr(*(int*)(address + 3) + address + 7));
