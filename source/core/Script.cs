@@ -178,7 +178,7 @@ namespace GTA
 		{
 			try
 			{
-				Aborted(this, EventArgs.Empty);
+				Aborted?.Invoke(this, EventArgs.Empty);
 			}
 			catch (Exception ex)
 			{
@@ -249,11 +249,11 @@ namespace GTA
 					{
 						if (keyevent.Item1)
 						{
-							KeyDown(this, keyevent.Item2);
+							KeyDown?.Invoke(this, keyevent.Item2);
 						}
 						else
 						{
-							KeyUp(this, keyevent.Item2);
+							KeyUp?.Invoke(this, keyevent.Item2);
 						}
 					}
 					catch (Exception ex)
@@ -265,7 +265,7 @@ namespace GTA
 
 				try
 				{
-					Tick(this, EventArgs.Empty);
+					Tick?.Invoke(this, EventArgs.Empty);
 				}
 				catch (Exception ex)
 				{
