@@ -1455,30 +1455,24 @@ namespace GTA
 				DrawTexture(id, index, level, time, sizeX, sizeY, centerX, centerY, posX, posY, rotation, scaleFactor, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 			}
 
-			private unsafe static byte* FindPattern(string pattern, string mask)
+			public unsafe static byte* FindPattern(string pattern, string mask)
 			{
 				ProcessModule module = Process.GetCurrentProcess().MainModule;
 
 				ulong address = (ulong)module.BaseAddress.ToInt64();
 				ulong endAddress = address + (ulong)module.ModuleMemorySize;
-				uint maskLength = (uint)mask.Length;
 
-				for (int i = 0; address < endAddress; address++)
+				for (; address < endAddress; address++)
 				{
-					unsafe
+					for (int i = 0; i < pattern.Length; i++)
 					{
-						if (((byte*)address)[i] == (byte)pattern[i] || mask[i] == '?')
+						if (mask[i] != '?' && ((byte*)address)[i] != pattern[i])
 						{
-							i++;
-
-							if (i >= maskLength)
-							{
-								return (byte*)(address - maskLength);
-							}
+							break;
 						}
-						else
+						else if (i + 1 == pattern.Length)
 						{
-							i = 0;
+							return (byte*)address;
 						}
 					}
 				}
