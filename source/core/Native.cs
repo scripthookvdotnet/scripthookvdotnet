@@ -471,7 +471,7 @@ namespace GTA
 			/// <summary>
 			/// Gets the value stored in the <see cref="GlobalVariable"/>.
 			/// </summary>
-			public T Read<T>()
+			public unsafe T Read<T>()
 			{
 				if (typeof(T) == typeof(string))
 				{
@@ -487,7 +487,7 @@ namespace GTA
 			/// Set the value stored in the <see cref="GlobalVariable"/>.
 			/// </summary>
 			/// <param name="value">The new value to assign to the <see cref="GlobalVariable"/>.</param>
-			public void Write<T>(T value)
+			public unsafe void Write<T>(T value)
 			{
 				if (typeof(T) == typeof(string))
 				{
@@ -530,7 +530,7 @@ namespace GTA
 			/// </summary>
 			/// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
 			/// <param name="maxSize">The maximum size of the string. Can be found for a given global variable by checking the decompiled scripts from the game.</param>
-			public void WriteString(string value, int maxSize)
+			public unsafe void WriteString(string value, int maxSize)
 			{
 				if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
 				{
@@ -592,7 +592,7 @@ namespace GTA
 			/// </summary>
 			/// <param name="index">The index the <see cref="GlobalVariable"/> is stored in the structure. For example the Y component of a Vector3 is at index 1.</param>
 			/// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
-			public GlobalVariable GetStructField(int index)
+			public unsafe GlobalVariable GetStructField(int index)
 			{
 				if (index < 0)
 				{
@@ -607,7 +607,7 @@ namespace GTA
 			/// </summary>
 			/// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
 			/// <returns>The array of <see cref="GlobalVariable"/>s.</returns>
-			public GlobalVariable[] GetArray(int itemSize)
+			public unsafe GlobalVariable[] GetArray(int itemSize)
 			{
 				if (itemSize <= 0)
 				{
@@ -637,7 +637,7 @@ namespace GTA
 			/// <param name="index">The array index.</param>
 			/// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
 			/// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
-			public GlobalVariable GetArrayItem(int index, int itemSize)
+			public unsafe GlobalVariable GetArrayItem(int index, int itemSize)
 			{
 				if (itemSize <= 0)
 				{
