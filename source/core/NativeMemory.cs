@@ -477,7 +477,7 @@ namespace GTA
 
 		internal unsafe static class MemoryAccess
 		{
-			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGameVersion@@YA")]
+			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGameVersion@@YA?AW4eGameVersion@@XZ")]
 			static extern int _GetGameVersion();
 			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?createTexture@@YAHPEBD@Z")]
 			static extern int CreateTexture(IntPtr fileNamePtr);
