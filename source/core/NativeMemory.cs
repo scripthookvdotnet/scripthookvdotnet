@@ -315,6 +315,16 @@ namespace GTA
 			string _message;
 			Dictionary<string, object> _arguments;
 
+			#region Delegate Fields For Function Ponters
+			//GetDelegateForFunctionPointer doesn't allow generic types such as Func and Action
+			internal delegate void ActionUlongDelegate(ulong T);
+			internal delegate int FuncUlongIntDelegate(ulong T);
+			internal delegate ulong FuncUlongUlongDelegate(ulong T);
+			internal delegate ulong FuncUlongUlongIntUlongDelegate(ulong T1, ulong T2, int T3);
+			internal delegate void SendMessageToPedDelegate(ulong PedNmAddress, IntPtr messagePtr, ulong MessageAddress);
+			internal delegate void FreeMessageMemoryDelegate(ulong MessageAddress);
+			#endregion
+
 			internal EuphoriaMessageTask(int target, string message, Dictionary<string, object> arguments)
 			{
 				_targetHandle = target;
@@ -325,14 +335,14 @@ namespace GTA
 			public void Run()
 			{
 				ulong NativeFunc = MemoryAccess.CreateNmMessageFuncAddress;
-				ulong MessageAddress = GetDelegateForFunctionPointer<Func<ulong, ulong>>(new IntPtr((long)((uint)(*(int*)(NativeFunc + 0x22)) + NativeFunc + 0x26)))(4632);
+				ulong MessageAddress = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)((uint)(*(int*)(NativeFunc + 0x22)) + NativeFunc + 0x26)))(4632);
 
 				if (MessageAddress == 0)
 				{
 					return;
 				}
 
-				GetDelegateForFunctionPointer<Func<ulong, ulong, int, ulong>>(new IntPtr((long)((uint)(*(int*)(NativeFunc + 0x3C)) + NativeFunc + 0x40)))(MessageAddress, MessageAddress + 24, 64);
+				GetDelegateForFunctionPointer<FuncUlongUlongIntUlongDelegate>(new IntPtr((long)((uint)(*(int*)(NativeFunc + 0x3C)) + NativeFunc + 0x40)))(MessageAddress, MessageAddress + 24, 64);
 
 				foreach (var argument in _arguments)
 				{
@@ -377,18 +387,18 @@ namespace GTA
 				if (*(ulong*)(_PedAddress + 48) == 0)
 					return;
 
-				PedNmAddress = GetDelegateForFunctionPointer<Func<ulong, ulong>>(ReadIntPtr(ReadIntPtr(new IntPtr((long)_PedAddress)) + 88))(_PedAddress);
+				PedNmAddress = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)_PedAddress)) + 88))(_PedAddress);
 
 				uint MinHealthOffset = Game.Version < GameVersion.v1_0_877_1_Steam ? *(uint*)(BaseFunc + 78) : *(uint*)(BaseFunc + 157 + *(uint*)(BaseFunc + 76));
 
 				if (*(ulong*)(_PedAddress + 48) == PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
 				{
-					if (GetDelegateForFunctionPointer<Func<ulong, int>>(new IntPtr((long)(*(ulong*)PedNmAddress + 152)))(PedNmAddress) != -1)
+					if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)(*(ulong*)PedNmAddress + 152)))(PedNmAddress) != -1)
 					{
 						ulong PedIntelligenceAddr = *(ulong*)(_PedAddress + *(uint*)(BaseFunc + 147));
 
 						// check whether the ped is currently performing the 'CTaskNMScriptControl' task
-						if (*(short*)(GetDelegateForFunctionPointer<Func<ulong, ulong>>(new IntPtr((long)(*(uint*)(BaseFunc + 0xA2) + BaseFunc + 0xA6)))(*(ulong*)(PedIntelligenceAddr + 864)) + 52) == 401)
+						if (*(short*)(GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(uint*)(BaseFunc + 0xA2) + BaseFunc + 0xA6)))(*(ulong*)(PedIntelligenceAddr + 864)) + 52) == 401)
 						{
 							v5 = true;
 						}
@@ -397,20 +407,20 @@ namespace GTA
 							v7 = *(byte*)ByteAddr;
 							if (v7 != 0)
 							{
-								GetDelegateForFunctionPointer<Action<ulong>>(new IntPtr((long)(*(uint*)(BaseFunc + 0xD3) + BaseFunc + 0xD7)))(UnkStrAddr);
+								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(uint*)(BaseFunc + 0xD3) + BaseFunc + 0xD7)))(UnkStrAddr);
 								v7 = *(byte*)ByteAddr;
 							}
 							int count = *(int*)(PedIntelligenceAddr + 1064);
 							if (v7 != 0)
 							{
-								GetDelegateForFunctionPointer<Action<ulong>>(new IntPtr((long)(*(uint*)(BaseFunc + 0xF0) + BaseFunc + 0xF4)))(UnkStrAddr);
+								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(uint*)(BaseFunc + 0xF0) + BaseFunc + 0xF4)))(UnkStrAddr);
 							}
 							for (int i = 0; i < count; i++)
 							{
 								v11 = *(ulong*)(PedIntelligenceAddr + 8 * (uint)((i + *(int*)(PedIntelligenceAddr + 1060) + 1) % 16) + 928);
 								if (v11 != 0)
 								{    
-									if (GetDelegateForFunctionPointer<Func<ulong, int>>(ReadIntPtr(ReadIntPtr(new IntPtr((long)v11)) + 24))(v11) == 132)
+									if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)v11)) + 24))(v11) == 132)
 									{
 										v12 = *(ulong*)(v11 + 40);
 										if (v12 != 0)
@@ -422,12 +432,12 @@ namespace GTA
 								}
 							}
 						}               
-						if (v5 && GetDelegateForFunctionPointer<Func<ulong, int>>(ReadIntPtr(ReadIntPtr(new IntPtr((long)PedNmAddress)) + 152))(PedNmAddress) != -1)
+						if (v5 && GetDelegateForFunctionPointer<FuncUlongIntDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)PedNmAddress)) + 152))(PedNmAddress) != -1)
 						{
 							IntPtr messagePtr = ScriptDomain.CurrentDomain.PinString(_message);
-							GetDelegateForFunctionPointer<Action<ulong, IntPtr, ulong>>(new IntPtr((long)(*(uint*)(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)))(PedNmAddress, messagePtr, MessageAddress);//Send Message To Ped
+							GetDelegateForFunctionPointer<SendMessageToPedDelegate>(new IntPtr((long)(*(uint*)(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)))(PedNmAddress, messagePtr, MessageAddress);//Send Message To Ped
 						}
-						GetDelegateForFunctionPointer<Action<ulong>>(new IntPtr((long)(*(uint*)(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)))(MessageAddress);//Free Message Memory
+						GetDelegateForFunctionPointer<FreeMessageMemoryDelegate>(new IntPtr((long)(*(uint*)(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)))(MessageAddress);//Free Message Memory
 					}
 				}
 			}
@@ -514,7 +524,9 @@ namespace GTA
 			internal delegate void SetNmVec3AddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float x, float y, float z);
 			internal delegate void SetNmStringAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, IntPtr stringPtr);
 			internal delegate ulong CheckpointHandleAddrDelegate(ulong baseAddr, int handle);
+			internal delegate ulong GetCheckpointBaseAddrDelegate();
 			internal delegate ulong GetLabelTextByHashFuncDelegate(ulong address, int labelHash);
+
 
 			internal static GetHashKeyDelegate _getHashKey;
 			internal static EntityAddressFuncDelegate EntityAddressFunc;
@@ -530,7 +542,7 @@ namespace GTA
 			internal static SetNmVec3AddressDelegate SetNmVec3Address;
 			internal static SetNmStringAddressDelegate SetNmStringAddress;
 			internal static CheckpointHandleAddrDelegate CheckpointHandleAddr;
-			internal static Func<ulong> CheckpointBaseAddr;
+			internal static GetCheckpointBaseAddrDelegate CheckpointBaseAddr;
 			internal static GetLabelTextByHashFuncDelegate GetLabelTextByHashFunc;
 			#endregion
 
@@ -588,7 +600,7 @@ namespace GTA
 				GetLabelTextByHashAddr = (ulong)(*(int*)(address + 7) + address + 11);
 
 				address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
-				CheckpointBaseAddr = GetDelegateForFunctionPointer<Func<ulong>>(new IntPtr(*(int*)(address - 19) + address - 15));
+				CheckpointBaseAddr = GetDelegateForFunctionPointer<GetCheckpointBaseAddrDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
 				CheckpointHandleAddr = GetDelegateForFunctionPointer<CheckpointHandleAddrDelegate>(new IntPtr(*(int*)(address - 9) + address - 5));
 				checkpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
 
