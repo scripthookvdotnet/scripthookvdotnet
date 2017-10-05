@@ -349,5 +349,6 @@ namespace GTA
 
 	internal:
 		static initonly array<System::String ^> ^_weatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
+		static initonly System::Globalization::GregorianCalendar ^_gregorianCalendar = gcnew System::Globalization::GregorianCalendar();
 	};
 }
