@@ -18,18 +18,6 @@ namespace GTA
 
 	namespace
 	{
-		private ref class GTACalender : System::Globalization::GregorianCalendar
-		{
-		public:
-			int GetDaysInYear(int, int) override
-			{
-				return 31 * 12;
-			}
-			int GetDaysInMonth(int, int, int) override
-			{
-				return 31;
-			}
-		};
 		private enum class ZoneID
 		{
 			AIRP,
