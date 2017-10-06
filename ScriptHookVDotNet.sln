@@ -5,9 +5,12 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 12.0.25420.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet", "ScriptHookVDotNet.csproj", "{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7} = {61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,12 +30,12 @@ Global
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.ActiveCfg = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release|x64.ActiveCfg = Release|x64
-		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Debug|x64.Build.0 = Debug|Any CPU
-		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release + Examples|x64.ActiveCfg = Release|Any CPU
-		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release + Examples|x64.Build.0 = Release|Any CPU
-		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release|x64.ActiveCfg = Release|Any CPU
-		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release|x64.Build.0 = Release|Any CPU
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Debug|x64.ActiveCfg = Debug|x64
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Debug|x64.Build.0 = Debug|x64
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release + Examples|x64.ActiveCfg = Release|x64
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release + Examples|x64.Build.0 = Release|x64
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release|x64.ActiveCfg = Release|x64
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
