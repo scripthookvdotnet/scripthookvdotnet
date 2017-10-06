@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
@@ -28,12 +29,9 @@ namespace GTA
 		void Run();
 	}
 
-	internal class ScriptDomain : MarshalByRefObject , IDisposable
+	internal class ScriptDomain : MarshalByRefObject, IDisposable
 	{
 		#region Fields
-		private static ScriptDomain sCurrentDomain;
-		private AppDomain _appdomain;
-		private ConsoleScript _console;
 		private int _executingThreadId;
 		private Script _executingScript;
 		private List<Script> _runningScripts = new List<Script>();
@@ -47,18 +45,23 @@ namespace GTA
 
 		public ScriptDomain()
 		{
-			this._appdomain = AppDomain.CurrentDomain;
-			this._executingThreadId = Thread.CurrentThread.ManagedThreadId;
+			AppDomain = AppDomain.CurrentDomain;
+			AppDomain.AssemblyResolve += new ResolveEventHandler(HandleResolve);
+			AppDomain.UnhandledException += new UnhandledExceptionEventHandler(HandleUnhandledException);
 
-			sCurrentDomain = this;
+			CurrentDomain = this;
 
-			this._appdomain.AssemblyResolve += new ResolveEventHandler(HandleResolve);
-			this._appdomain.UnhandledException += new UnhandledExceptionEventHandler(HandleUnhandledException);
+			_executingThreadId = Thread.CurrentThread.ManagedThreadId;
 
 			Log("[INFO]", "Created new script domain with v", typeof(ScriptDomain).Assembly.GetName().Version.ToString(3), ".");
 
-			this._console = new ConsoleScript();
+			Console = new ConsoleScript();
 		}
+		~ScriptDomain()
+		{
+			Dispose(false);
+		}
+
 		public void Dispose()
 		{
 			Dispose(true);
@@ -66,85 +69,38 @@ namespace GTA
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!disposed)
-			{
-				if (disposing)
-				{
-				}
-				CleanupStrings();
-				disposed = true;
-			}
-		}
-		~ScriptDomain()
-		{
-			Dispose(false);
+			if (disposed)
+				return;
+
+			CleanupStrings();
+
+			disposed = true;
 		}
 
-		public static Script ExecutingScript
-		{
-			get
-			{
-				if (ReferenceEquals(sCurrentDomain, null))
-				{
-					return null;
-				}
-
-				return sCurrentDomain._executingScript;
-			}
-		}
-		public static ScriptDomain CurrentDomain
-		{
-			get
-			{
-				return sCurrentDomain;
-			}
-		}
-		public string Name
-		{
-			get
-			{
-				return _appdomain.FriendlyName;
-			}
-		}
-		public AppDomain AppDomain
-		{
-			get
-			{
-				return _appdomain;
-			}
-		}
-		public ConsoleScript Console
-		{
-			get
-			{
-				return _console;
-			}
-		}
-		public Script[] RunningScripts
-		{
-			get
-			{
-				return _runningScripts.ToArray();
-			}
-		}
+		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain._executingScript : null;
+		public static ScriptDomain CurrentDomain { get; private set; }
+		public string Name => AppDomain.FriendlyName;
+		public AppDomain AppDomain { get; private set; }
+		public ConsoleScript Console { get; private set; }
+		public Script[] RunningScripts => _runningScripts.ToArray();
 
 		public static ScriptDomain Load(string path)
 		{
-			if (!System.IO.Path.IsPathRooted(path))
+			if (!Path.IsPathRooted(path))
 			{
-				path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), path);
+				path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), path);
 			}
 
-			path = System.IO.Path.GetFullPath(path);
+			path = Path.GetFullPath(path);
 
 			// Clear log
-			string logPath = System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
+			string logPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
 
 			try
 			{
-				System.IO.File.WriteAllText(logPath, string.Empty);
+				File.WriteAllText(logPath, string.Empty);
 			}
-			catch (Exception)
+			catch
 			{
 			}
 
@@ -154,7 +110,7 @@ namespace GTA
 			setup.ShadowCopyFiles = "true";
 			setup.ShadowCopyDirectories = path;
 
-			var appdomain = System.AppDomain.CreateDomain("ScriptDomain_" + (path.GetHashCode() * Environment.TickCount).ToString("X"), null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
+			var appdomain = AppDomain.CreateDomain("ScriptDomain_" + (path.GetHashCode() * Environment.TickCount).ToString("X"), null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
 			appdomain.InitializeLifetimeService();
 
 			ScriptDomain scriptdomain = null;
@@ -174,16 +130,16 @@ namespace GTA
 
 			Log("[INFO]", "Loading scripts from '", path, "' ...");
 
-			if (System.IO.Directory.Exists(path))
+			if (Directory.Exists(path))
 			{
 				var filenameScripts = new List<string>();
 				var filenameAssemblies = new List<string>();
 
 				try
 				{
-					filenameScripts.AddRange(System.IO.Directory.GetFiles(path, "*.vb", System.IO.SearchOption.AllDirectories));
-					filenameScripts.AddRange(System.IO.Directory.GetFiles(path, "*.cs", System.IO.SearchOption.AllDirectories));
-					filenameAssemblies.AddRange(System.IO.Directory.GetFiles(path, "*.dll", System.IO.SearchOption.AllDirectories));
+					filenameScripts.AddRange(Directory.GetFiles(path, "*.vb", SearchOption.AllDirectories));
+					filenameScripts.AddRange(Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories));
+					filenameAssemblies.AddRange(Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories));
 				}
 				catch (Exception ex)
 				{
@@ -239,6 +195,7 @@ namespace GTA
 
 			return scriptdomain;
 		}
+
 		private bool LoadScript(string filename)
 		{
 			var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
@@ -466,7 +423,7 @@ namespace GTA
 			}
 
 			// Start console
-			_console.Start();
+			Console.Start();
 
 			// Start script threads
 			Log("[INFO]", "Starting ", _scriptTypes.Count.ToString(), " script(s) ...");
@@ -564,7 +521,7 @@ namespace GTA
 		}
 		public void Abort()
 		{
-			_runningScripts.Remove(_console);
+			_runningScripts.Remove(Console);
 
 			Log("[INFO]", "Stopping ", _runningScripts.Count.ToString(), " script(s) ...");
 
@@ -573,7 +530,7 @@ namespace GTA
 				script.Abort();
 			}
 
-			_console.Abort();
+			Console.Abort();
 
 			_scriptTypes.Clear();
 			_runningScripts.Clear();
@@ -598,7 +555,7 @@ namespace GTA
 		{
 			foreach (Script script in _runningScripts)
 			{
-				if (!ReferenceEquals(script, _console))
+				if (!ReferenceEquals(script, Console))
 				{
 					script.Abort();
 				}
@@ -606,7 +563,7 @@ namespace GTA
 
 			_scriptTypes.Clear();
 			_runningScripts.Clear();
-			_runningScripts.Add(_console);
+			_runningScripts.Add(Console);
 
 			GC.Collect();
 		}
@@ -616,12 +573,12 @@ namespace GTA
 
 			domain._runningScripts.Add(script);
 
-			if (ReferenceEquals(script, domain._console))
+			if (ReferenceEquals(script, domain.Console))
 			{
 				return;
 			}
 
-			domain._console.RegisterCommands(script.GetType());
+			domain.Console.RegisterCommands(script.GetType());
 
 			Log("[INFO]", "Started script '", script.Name, "'.");
 		}
@@ -629,12 +586,12 @@ namespace GTA
 		{
 			ScriptDomain domain = script._scriptdomain;
 
-			if (ReferenceEquals(script, domain._console))
+			if (ReferenceEquals(script, domain.Console))
 			{
 				return;
 			}
 
-			domain._console.UnregisterCommands(script.GetType());
+			domain.Console.UnregisterCommands(script.GetType());
 
 			Log("[INFO]", "Aborted script '", script.Name, "'.");
 		}
@@ -653,7 +610,7 @@ namespace GTA
 
 				_executingScript = script;
 
-				while ((script._running = SignalAndWait(script._continueEvent, script._waitEvent, 5000)) && _taskQueue.Count> 0)
+				while ((script._running = SignalAndWait(script._continueEvent, script._waitEvent, 5000)) && _taskQueue.Count > 0)
 				{
 					_taskQueue.Dequeue().Run();
 				}
@@ -676,7 +633,7 @@ namespace GTA
 		{
 			int keycode = (int)key;
 
-			if (keycode < 0 || keycode>= _keyboardState.Length)
+			if (keycode < 0 || keycode >= _keyboardState.Length)
 			{
 				return;
 			}
@@ -701,10 +658,10 @@ namespace GTA
 				var args = new WinForms.KeyEventArgs(key);
 				var eventinfo = new Tuple<bool, WinForms.KeyEventArgs>(status, args);
 
-				if (!ReferenceEquals(_console, null) && _console.IsOpen)
+				if (!ReferenceEquals(Console, null) && Console.IsOpen)
 				{
 					// Do not send keyboard events to other running scripts when console is open
-					_console._keyboardEvents.Enqueue(eventinfo);
+					Console._keyboardEvents.Enqueue(eventinfo);
 				}
 				else
 				{
@@ -798,7 +755,7 @@ namespace GTA
 		{
 			foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes(typeof(ScriptAttributes), true))
 			{
-				if (!string.IsNullOrEmpty(attribute.SupportURL))
+				if (!String.IsNullOrEmpty(attribute.SupportURL))
 				{
 					return attribute.SupportURL;
 				}

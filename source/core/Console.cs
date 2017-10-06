@@ -76,7 +76,7 @@ namespace GTA
 			this._consoleArgs = new List<ConsoleArg>();
 		}
 		public ConsoleCommand() : this("No help text available")
-		{			
+		{
 		}
 
 		internal string Help
@@ -176,7 +176,7 @@ namespace GTA
 		const int VersionWidth = 50;
 		const int InputHeight = 20;
 		const float DefaultScale = 0.35f;
-		
+
 		static string UpdateCheckUserAgent = "scripthookvdotnet"; //Oh my dear github-api, why you do this...
 		static string UpdateCheckUrl = "https://api.github.com/repos/crosire/scripthookvdotnet/releases/latest";
 		static string UpdateCheckPattern = "\"tag_name\":\"v(.*?)\"";
@@ -193,10 +193,10 @@ namespace GTA
 		{
 			Tick += OnTick;
 			KeyDown += OnKeyDown;
-	
+
 			_outputQueue = new ConcurrentQueue<string[]>();
 			_commands = new Dictionary<String, List<Tuple<ConsoleCommand, MethodInfo>>>();
-	
+
 			_input = "";
 			_isOpen = false;
 			_page = 1;
@@ -204,20 +204,20 @@ namespace GTA
 			_commandPos = -1;
 			_lines = new LinkedList<String>();
 			_commandHistory = new List<String>();
-	
+
 			Version version = Assembly.GetExecutingAssembly().GetName().Version;
 			Info("--- Community Script Hook V .NET {0} ---", version);
 			Info("--- Type \"Help()\" to print an overview of available commands ---");
-	
+
 			//Start a update check Task
 			Task.Factory.StartNew(DoUpdateCheck);
-	
+
 			RegisterCommands(typeof(DefaultConsoleCommands), true);
-	
+
 			String assemblyPath = Assembly.GetExecutingAssembly().Location;
 			String assemblyFilename = Path.GetFileNameWithoutExtension(assemblyPath);
 			ScriptSettings settings = ScriptSettings.Load(Path.ChangeExtension(assemblyPath, ".ini"));
-	
+
 			ToggleKey = settings.GetValue<Keys>("Console", "ToggleKey", Keys.F3);
 			PageDownKey = settings.GetValue<Keys>("Console", "PageDown", Keys.PageDown);
 			PageUpKey = settings.GetValue<Keys>("Console", "PageUp", Keys.PageUp);
@@ -279,7 +279,7 @@ namespace GTA
 			command.Name = defaultCommand ? methodInfo.Name : methodInfo.DeclaringType.FullName + "." + methodInfo.Name; //TODO FIX
 			command.Namespace = defaultCommand ? "Default Commands" : methodInfo.DeclaringType.FullName;
 
-			foreach(var args in methodInfo.GetParameters())
+			foreach (var args in methodInfo.GetParameters())
 			{
 				command.ConsoleArgs.Add(new ConsoleArg(args.ParameterType.Name, args.Name));
 			}
@@ -290,7 +290,7 @@ namespace GTA
 			}
 
 			_commands[command.Namespace].Add(new Tuple<ConsoleCommand, MethodInfo>(command, methodInfo));
-		}		
+		}
 		internal void RegisterCommands(Type type)
 		{
 			RegisterCommands(type, false);
@@ -307,9 +307,9 @@ namespace GTA
 		}
 		internal void UnregisterCommands(Type type)
 		{
-			foreach(var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
+			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
-				foreach(var attribute in method.GetCustomAttributes(typeof(ConsoleCommand), true))
+				foreach (var attribute in method.GetCustomAttributes(typeof(ConsoleCommand), true))
 				{
 					var command = (ConsoleCommand)(attribute);
 					command.Namespace = method.DeclaringType.FullName;
@@ -375,10 +375,10 @@ namespace GTA
 		{
 			StringBuilder help = new StringBuilder();
 			help.AppendLine("--- Help ---");
-			foreach(var namespaceS in _commands.Keys)
+			foreach (var namespaceS in _commands.Keys)
 			{
 				help.AppendLine(String.Format("[{0}]", namespaceS));
-				foreach(var command in _commands[namespaceS])
+				foreach (var command in _commands[namespaceS])
 				{
 					var consoleCommand = command.Item1;
 
@@ -414,7 +414,7 @@ namespace GTA
 			string[] outputLines;
 			if (_outputQueue.TryDequeue(out outputLines))
 			{
-				foreach(String outputLine in outputLines)
+				foreach (String outputLine in outputLines)
 				{
 					_lines.AddFirst(outputLine);
 				}
@@ -472,7 +472,7 @@ namespace GTA
 			int end = System.Math.Min(_lines.Count, _page * 16 - 1); //12
 
 			int i = 0;
-			foreach(String line in _lines)
+			foreach (String line in _lines)
 			{
 				if (i >= start && i <= end)
 				{
@@ -567,7 +567,7 @@ namespace GTA
 		}
 		private Assembly CompileInput()
 		{
-			String inputStr = String.Format(CompileTemplate, _input);
+			string inputStr = String.Format(CompileTemplate, _input);
 
 			_compiler = new Microsoft.CSharp.CSharpCodeProvider();
 			_compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
@@ -576,11 +576,11 @@ namespace GTA
 			_compilerOptions.ReferencedAssemblies.Add("System.dll");
 			_compilerOptions.ReferencedAssemblies.Add(typeof(Script).Assembly.Location);
 
-			foreach(Script script in ScriptDomain.CurrentDomain.RunningScripts)
+			foreach (Script script in ScriptDomain.CurrentDomain.RunningScripts)
 			{
-				if (!String.IsNullOrEmpty(script._filename))
+				if (!String.IsNullOrEmpty(script.Filename))
 				{
-					_compilerOptions.ReferencedAssemblies.Add(script._filename);
+					_compilerOptions.ReferencedAssemblies.Add(script.Filename);
 				}
 			}
 
@@ -633,7 +633,7 @@ namespace GTA
 				return;
 			}
 
-			_compilerTask = Task.Factory.StartNew(new Func <Assembly>(CompileInput));
+			_compilerTask = Task.Factory.StartNew(new Func<Assembly>(CompileInput));
 		}
 
 		private void PasteClipboard()
@@ -780,8 +780,8 @@ namespace GTA
 			Warn("SHV.NET Update-Check failed");
 
 			webclient.Dispose();
-			}
 		}
+	}
 
 	public class DefaultConsoleCommands
 	{
@@ -831,7 +831,7 @@ namespace GTA
 				return;
 			}
 
-			foreach(var script in ScriptDomain.CurrentDomain.RunningScripts)
+			foreach (var script in ScriptDomain.CurrentDomain.RunningScripts)
 			{
 				if (filename.Equals(script.Filename, StringComparison.OrdinalIgnoreCase) && script._running)
 				{
@@ -872,7 +872,7 @@ namespace GTA
 			String basedirectory = ScriptDomain.CurrentDomain.AppDomain.BaseDirectory;
 
 			Console.Info("---");
-			foreach(var script in scripts)
+			foreach (var script in scripts)
 			{
 				String filename = script.Filename;
 

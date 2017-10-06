@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Text;
 using System.Runtime.InteropServices;
 
 namespace GTA
@@ -27,20 +28,34 @@ namespace GTA
 		}
 
 		#region Functions
+		/// <summary>
+		/// An input argument passed to a script function.
+		/// </summary>
 		public class InputArgument
 		{
 			internal ulong _data;
 
+			/// <summary>
+			/// Initializes a new instance of the <see cref="InputArgument"/> class and converts a managed object to a script function input argument.
+			/// </summary>
+			/// <param name="value">The object to convert.</param>
 			public InputArgument(object value)
 			{
-				_data = Function.ObjectToNative(value);
+				unsafe
+				{
+					_data = Function.ObjectToNative(value);
+				}
 			}
 
+			/// <summary>
+			/// Converts the internal value of the argument to its equivalent string representation.
+			/// </summary>
 			public override string ToString()
 			{
 				return _data.ToString();
 			}
 
+			#region Implicit Conversion Operators
 			// Value types
 			public static implicit operator InputArgument(bool value)
 			{
@@ -91,7 +106,32 @@ namespace GTA
 				return new InputArgument(value);
 			}
 
-			//INativeValue types (Unfortunately, implicit interface conversion isn't allowed in C#)
+			// String types
+			public static implicit operator InputArgument(string value)
+			{
+				return new InputArgument(value);
+			}
+			public static unsafe implicit operator InputArgument(char* value)
+			{
+				return new InputArgument(new string(value));
+			}
+
+			// Pointer types
+			public static implicit operator InputArgument(IntPtr value)
+			{
+				return new InputArgument(value);
+			}
+			public static unsafe implicit operator InputArgument(void* value)
+			{
+				return new InputArgument(new IntPtr(value));
+			}
+
+			public static implicit operator InputArgument(OutputArgument value)
+			{
+				return new InputArgument(value._storage);
+			}
+
+			// INativeValue types
 			public static implicit operator InputArgument(Model value)
 			{
 				return new InputArgument(value.Hash);
@@ -104,7 +144,6 @@ namespace GTA
 			{
 				return new InputArgument(value.Hash);
 			}
-			//PoolObject types
 			public static implicit operator InputArgument(Blip value)
 			{
 				return new InputArgument(value.Handle);
@@ -141,47 +180,28 @@ namespace GTA
 			{
 				return new InputArgument(value.Handle);
 			}
-
-			// String types
-			public static implicit operator InputArgument(string value)
-			{
-				return new InputArgument(value);
-			}
-			public static unsafe implicit operator InputArgument(char* value)
-			{
-				return new InputArgument(new string(value));
-			}
-
-			// Pointer types
-			public static implicit operator InputArgument(IntPtr value)
-			{
-				return new InputArgument(value);
-			}
-			public static unsafe implicit operator InputArgument(void* value)
-			{
-				return new InputArgument(new IntPtr(value));
-			}
-
-			public static implicit operator InputArgument(OutputArgument value)
-			{
-				return new InputArgument(value._storage);
-			}
+			#endregion
 		}
 
-		public class OutputArgument
+		/// <summary>
+		/// An output argument passed to a script function.
+		/// </summary>
+		public class OutputArgument : IDisposable
 		{
-			internal IntPtr _storage = Marshal.AllocCoTaskMem(24);
-			private bool disposed;
+			#region Fields
+			private bool _disposed = false;
+			internal IntPtr _storage = IntPtr.Zero;
+			#endregion
 
 			/// <summary>
-			/// Initializes a new instance of the <see cref="OutputArgument"/> class for natives that output data into pointers.
+			/// Initializes a new instance of the <see cref="OutputArgument"/> class for script functions that output data into pointers.
 			/// </summary>
 			public OutputArgument()
 			{
+				_storage = Marshal.AllocCoTaskMem(24);
 			}
-
 			/// <summary>
-			/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for natives that require the pointer to data instead of the actual data.
+			/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions that require the pointer to data instead of the actual data.
 			/// </summary>
 			/// <param name="initvalue">The value to set the data of this <see cref="OutputArgument"/> to.</param>
 			public OutputArgument(object value) : this()
@@ -192,6 +212,14 @@ namespace GTA
 				}
 			}
 
+			/// <summary>
+			/// Frees the unmanaged resources associated with this <see cref="OutputArgument"/>.
+			/// </summary>
+			~OutputArgument()
+			{
+				Dispose(false);
+			}
+
 			public void Dispose()
 			{
 				Dispose(true);
@@ -199,18 +227,12 @@ namespace GTA
 			}
 			protected virtual void Dispose(bool disposing)
 			{
-				if (!disposed)
-				{
-					if (disposing)
-					{
-					}
-					Marshal.FreeCoTaskMem(_storage);
-					disposed = true;
-				}
-			}
-			~OutputArgument()
-			{
-				Dispose(false);
+				if (_disposed)
+					return;
+
+				Marshal.FreeCoTaskMem(_storage);
+
+				_disposed = true;
 			}
 
 			/// <summary>
@@ -225,9 +247,11 @@ namespace GTA
 			}
 		}
 
-		public sealed class Function
+		/// <summary>
+		/// A static class which handles script function execution.
+		/// </summary>
+		public static class Function
 		{
-
 			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeInit@@YAX_K@Z")]
 			static extern void NativeInit(ulong hash);
 			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativePush64@@YAX_K@Z")]
@@ -235,22 +259,25 @@ namespace GTA
 			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeCall@@YAPEA_KXZ")]
 			static unsafe extern ulong* NativeCall();
 
+			/// <summary>
+			/// Internal script task responsible for executing the script function.
+			/// </summary>
 			internal unsafe class NativeTask : IScriptTask
 			{
-				internal ulong _hash;
-				internal ulong* _result;
-				internal InputArgument[] _arguments;
+				internal ulong Hash;
+				internal ulong* Result;
+				internal InputArgument[] Arguments;
 
 				public void Run()
 				{
-					NativeInit(_hash);
+					NativeInit(Hash);
 
-					foreach (var argument in _arguments)
+					foreach (var argument in Arguments)
 					{
 						NativePush64(argument._data);
 					}
 
-					_result = NativeCall();
+					Result = NativeCall();
 				}
 			}
 
@@ -262,7 +289,13 @@ namespace GTA
 			/// <returns>The return value of the native</returns>
 			public static T Call<T>(Hash hash, params InputArgument[] arguments)
 			{
-				return Call<T>((ulong)hash, arguments);
+				var task = new NativeTask();
+				task.Hash = (ulong)hash;
+				task.Arguments = arguments;
+
+				ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+				unsafe { return (T)(ObjectFromNative(typeof(T), task.Result)); }
 			}
 			/// <summary>
 			/// Calls the specified native script function and ignores its return value.
@@ -271,21 +304,19 @@ namespace GTA
 			/// <param name="arguments">A list of input and output arguments to pass to the native script function.</param>
 			public static void Call(Hash hash, params InputArgument[] arguments)
 			{
-				Call<int>((ulong)hash, arguments);
-			}
-
-			internal static T Call<T>(ulong hash, params InputArgument[] arguments)
-			{
 				var task = new NativeTask();
-				task._hash = hash;
-				task._arguments = arguments;
+				task.Hash = (ulong)hash;
+				task.Arguments = arguments;
 
 				ScriptDomain.CurrentDomain.ExecuteTask(task);
-
-				unsafe { return (T)(ObjectFromNative(typeof(T), task._result)); }
 			}
 
-			internal static ulong ObjectToNative(object value)
+			/// <summary>
+			/// Converts a managed object to a native value.
+			/// </summary>
+			/// <param name="value">The object to convert.</param>
+			/// <returns>A native value representing the input <paramref name="value"/>.</returns>
+			internal static unsafe ulong ObjectToNative(object value)
 			{
 				if (ReferenceEquals(value, null))
 				{
@@ -323,12 +354,12 @@ namespace GTA
 				{
 					return BitConverter.ToUInt32(BitConverter.GetBytes((float)value), 0);
 				}
-				if (type == typeof(Double))
+				if (type == typeof(double))
 				{
 					return BitConverter.ToUInt32(BitConverter.GetBytes((float)((double)value)), 0);
 				}
 
-				if (type == typeof(String))
+				if (type == typeof(string))
 				{
 					return (ulong)ScriptDomain.CurrentDomain.PinString((string)(value)).ToInt64();
 				}
@@ -345,6 +376,12 @@ namespace GTA
 
 				throw new InvalidCastException(String.Concat("Unable to cast object of type '", type.FullName, "' to native value"));
 			}
+			/// <summary>
+			/// Converts a native value to a managed object.
+			/// </summary>
+			/// <param name="type">The type to convert to.</param>
+			/// <param name="value">The native value to convert.</param>
+			/// <returns>A managed object representing the input <paramref name="value"/>.</returns>
 			internal static unsafe object ObjectFromNative(Type type, ulong* value)
 			{
 				if (type.IsEnum)
@@ -415,7 +452,6 @@ namespace GTA
 
 				if (typeof(INativeValue).IsAssignableFrom(type))
 				{
-
 					// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
 					var result = (INativeValue)(System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type));
 					result.NativeValue = *value;
@@ -429,16 +465,21 @@ namespace GTA
 		#endregion
 
 		#region Global Variables
+		/// <summary>
+		/// A value class which handles access to global script variables.
+		/// </summary>
 		public struct GlobalVariable
 		{
 			[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGlobalPtr@@YAPEA_KH@Z")]
 			static extern IntPtr GetGlobalPtr(int index);
 
-			private IntPtr _address;
-
+			/// <summary>
+			/// Initializes a new instance of the <see cref="GlobalVariable"/> class with a variable address.
+			/// </summary>
+			/// <param name="address">The memory address of the global variable.</param>
 			private GlobalVariable(IntPtr address) : this()
 			{
-				_address = address;
+				MemoryAddress = address;
 			}
 
 			/// <summary>
@@ -457,16 +498,11 @@ namespace GTA
 
 				return new GlobalVariable(address);
 			}
+
 			/// <summary>
 			/// Gets the native memory address of the <see cref="GlobalVariable"/>.
 			/// </summary>
-			public IntPtr MemoryAddress
-			{
-				get
-				{
-					return _address;
-				}
-			}
+			public IntPtr MemoryAddress { get; private set; }
 
 			/// <summary>
 			/// Gets the value stored in the <see cref="GlobalVariable"/>.
@@ -475,14 +511,14 @@ namespace GTA
 			{
 				if (typeof(T) == typeof(string))
 				{
-					return (T)(object)MemoryAccess.PtrToStringUTF8(_address);
+					return (T)(object)MemoryAccess.PtrToStringUTF8(MemoryAddress);
 				}
-
-				unsafe
+				else
 				{
-					return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(_address.ToPointer())));
+					return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(MemoryAddress.ToPointer())));
 				}
 			}
+
 			/// <summary>
 			/// Set the value stored in the <see cref="GlobalVariable"/>.
 			/// </summary>
@@ -497,34 +533,25 @@ namespace GTA
 				if (typeof(T) == typeof(Math.Vector2))
 				{
 					var val = (Math.Vector2)(object)value;
-					unsafe
-					{
-						var data = (float*)(_address.ToPointer());
+					var data = (float*)(MemoryAddress.ToPointer());
 
-						data[0] = val.X;
-						data[2] = val.Y;
-						return;
-					}
+					data[0] = val.X;
+					data[2] = val.Y;
+					return;
 				}
 				if (typeof(T) == typeof(Math.Vector3))
 				{
 					var val = (Math.Vector3)(object)(value);
-					unsafe
-					{
-						var data = (float*)(_address.ToPointer());
+					var data = (float*)(MemoryAddress.ToPointer());
 
-						data[0] = val.X;
-						data[2] = val.Y;
-						data[4] = val.Z;
-						return;
-					}
+					data[0] = val.X;
+					data[2] = val.Y;
+					data[4] = val.Z;
+					return;
 				}
-				unsafe
-				{
-					*(ulong*)(_address.ToPointer()) = Function.ObjectToNative(value);
-				}
+
+				*(ulong*)(MemoryAddress.ToPointer()) = Function.ObjectToNative(value);
 			}
-
 			/// <summary>
 			/// Set the value stored in the <see cref="GlobalVariable"/> to a string.
 			/// </summary>
@@ -537,54 +564,58 @@ namespace GTA
 					throw new ArgumentException("The string maximum size should be one of 8, 16, 24, 32 or 64.", "maxSize");
 				}
 
-				var size = System.Text.Encoding.UTF8.GetByteCount(value);
+				// Null-terminate string
+				value += '\0';
+
+				// Write UTF-8 string to memory
+				var size = Encoding.UTF8.GetByteCount(value);
 
 				if (size >= maxSize)
 				{
 					size = maxSize - 1;
 				}
 
-				Marshal.Copy(System.Text.Encoding.UTF8.GetBytes(value), 0, _address, size);
-				unsafe { ((char*)(_address.ToPointer()))[size] = '\0'; }
+				Marshal.Copy(Encoding.UTF8.GetBytes(value), 0, MemoryAddress, size);
 			}
+
 			/// <summary>
 			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to true.
 			/// </summary>
 			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to set.</param>
-			public void SetBit(int index)
+			public unsafe void SetBit(int index)
 			{
 				if (index < 0 || index > 63)
 				{
 					throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
 				}
 
-				unsafe { *(ulong*)(_address.ToPointer()) |= (1u << index); }
+				*(ulong*)(MemoryAddress.ToPointer()) |= (1u << index);
 			}
 			/// <summary>
 			/// Set the value of a specific bit of the <see cref="GlobalVariable"/> to false.
 			/// </summary>
 			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to clear.</param>
-			public void ClearBit(int index)
+			public unsafe void ClearBit(int index)
 			{
 				if (index < 0 || index > 63)
 				{
 					throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
 				}
 
-				unsafe { *(ulong*)(_address.ToPointer()) &= ~(1u << index); }
+				*(ulong*)(MemoryAddress.ToPointer()) &= ~(1u << index);
 			}
 			/// <summary>
 			/// Gets a value indicating whether a specific bit of the <see cref="GlobalVariable"/> is set.
 			/// </summary>
 			/// <param name="index">The zero indexed bit of the <see cref="GlobalVariable"/> to check.</param>
-			public bool IsBitSet(int index)
+			public unsafe bool IsBitSet(int index)
 			{
 				if (index < 0 || index > 63)
 				{
 					throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
 				}
 
-				unsafe { return ((*(ulong*)(_address.ToPointer()) >> index) & 1) != 0; }
+				return ((*(ulong*)(MemoryAddress.ToPointer()) >> index) & 1) != 0;
 			}
 
 			/// <summary>

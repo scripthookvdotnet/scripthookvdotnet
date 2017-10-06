@@ -22,8 +22,10 @@ namespace GTA
 {
 	public sealed class ScriptSettings
 	{
+		#region Fields
 		private string _fileName;
 		private Dictionary<string, string> _values = new Dictionary<string, string>();
+		#endregion
 
 		private ScriptSettings(string fileName)
 		{
@@ -46,7 +48,7 @@ namespace GTA
 			string line = null;
 			string section = String.Empty;
 			StreamReader reader = null;
-			
+
 			try
 			{
 				reader = new StreamReader(filename);
@@ -108,6 +110,7 @@ namespace GTA
 
 			return result;
 		}
+
 		/// <summary>
 		/// Saves this <see cref="ScriptSettings"/> to file.
 		/// </summary>
@@ -170,6 +173,7 @@ namespace GTA
 
 			return true;
 		}
+
 		/// <summary>
 		/// Reads a value from this <see cref="ScriptSettings"/>.
 		/// </summary>
@@ -189,13 +193,15 @@ namespace GTA
 
 			try
 			{
-				if (typeof(T).IsEnum)
+				var type = typeof(T);
+
+				if (type.IsEnum)
 				{
-					return (T)(Enum.Parse(typeof(T), internalValue, true));
+					return (T)(Enum.Parse(type, internalValue, true));
 				}
 				else
 				{
-					return (T)(Convert.ChangeType(internalValue, typeof(T)));
+					return (T)(Convert.ChangeType(internalValue, type));
 				}
 			}
 			catch (Exception)
@@ -245,8 +251,9 @@ namespace GTA
 						values.Add((T)(Convert.ChangeType(internalValue, typeof(T))));
 					}
 				}
-				catch (Exception)
+				catch
 				{
+					continue;
 				}
 			}
 

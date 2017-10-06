@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Collections.Concurrent;
 using WinForms = System.Windows.Forms;
@@ -24,11 +25,13 @@ namespace GTA
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public class RequireScript : Attribute
 	{
+		#region Fields
 		internal Type _dependency;
+		#endregion
 
 		public RequireScript(Type dependency)
 		{
-			this._dependency = dependency;
+			_dependency = dependency;
 		}
 	}
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -40,14 +43,13 @@ namespace GTA
 
 	/// <summary>
 	/// A base class for all user scripts to inherit.
-	/// The Hook will only detect and starts Scripts that inherit directly from this class and have a default(parameterless) public constructor.
+	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
 	/// </summary>
 	public abstract class Script
 	{
 		#region Fields
 		internal int _interval = 0;
 		internal bool _running = false;
-		internal string _filename;
 		internal ScriptDomain _scriptdomain;
 		internal Thread _thread;
 		internal AutoResetEvent _waitEvent = new AutoResetEvent(false);
@@ -58,7 +60,7 @@ namespace GTA
 
 		public Script()
 		{
-			_filename = ScriptDomain.CurrentDomain.LookupScriptFilename(this);
+			Filename = ScriptDomain.CurrentDomain.LookupScriptFilename(this);
 			_scriptdomain = ScriptDomain.CurrentDomain;
 		}
 
@@ -78,55 +80,37 @@ namespace GTA
 		/// </summary>
 		public event WinForms.KeyEventHandler KeyDown;
 		/// <summary>
-		/// An event that is raised when this script gets aborted for any reason.
-		/// This should be used for cleaning up anything created during this script
+		/// An event that is raised when this <see cref="Script"/> gets aborted for any reason.
+		/// This should be used for cleaning up anything created during this <see cref="Script"/>.
 		/// </summary>
 		public event EventHandler Aborted;
 
 		/// <summary>
 		/// Gets the name of this <see cref="Script"/>.
 		/// </summary>
-		public string Name
-		{
-			get
-			{
-				return GetType().FullName;
-			}
-		}
+		public string Name => GetType().FullName;
 		/// <summary>
 		/// Gets the filename of this <see cref="Script"/>.
 		/// </summary>
-		public string Filename
-		{
-			get
-			{
-				return _filename;
-			}
-		}
+		public string Filename { get; internal set; }
 
 		/// <summary>
 		/// Gets the Directory where this <see cref="Script"/> is stored.
 		/// </summary>
-		public string BaseDirectory
-		{
-			get
-			{
-				return System.IO.Path.GetDirectoryName(_filename);
-			}
-		}
+		public string BaseDirectory => Path.GetDirectoryName(Filename);
 
 		/// <summary>
-		/// Gets an ini file associated with this <see cref="Script"/>.
-		/// The File will be in the same location as this <see cref="Script"/> but with an extension of .ini.
+		/// Gets an INI file associated with this <see cref="Script"/>.
+		/// The File will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
 		/// Use this to save and load settings for this <see cref="Script"/>.
 		/// </summary>
 		public ScriptSettings Settings
 		{
 			get
 			{
-				if (ReferenceEquals(_settings, null))
+				if (_settings == null)
 				{
-					string path = System.IO.Path.ChangeExtension(_filename, ".ini");
+					string path = Path.ChangeExtension(Filename, ".ini");
 
 					_settings = ScriptSettings.Load(path);
 				}
@@ -157,15 +141,26 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Returns a string that represents this <see cref="Script"/>.
+		/// </summary>
+		public override string ToString()
+		{
+			return Name;
+		}
+
+		/// <summary>
 		/// Gets the full file path for a file relative to this <see cref="Script"/>.
-		/// e.g: GetRelativeFilePath("ScriptFiles\texture1.png") may return "C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts\ScriptFiles\texture1.png"
+		/// e.g: <c>GetRelativeFilePath("ScriptFiles\texture1.png")</c> may return <c>"C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts\ScriptFiles\texture1.png"</c>.
 		/// </summary>
 		/// <param name="filePath">The file path relative to the location of this <see cref="Script"/>.</param>
 		public string GetRelativeFilePath(string filePath)
 		{
-			return System.IO.Path.Combine(BaseDirectory, filePath);
+			return Path.Combine(BaseDirectory, filePath);
 		}
 
+		/// <summary>
+		/// Starts execution of this <see cref="Script"/>.
+		/// </summary>
 		internal void Start()
 		{
 			ThreadStart threadDelegate = new ThreadStart(MainLoop);
@@ -174,6 +169,9 @@ namespace GTA
 
 			ScriptDomain.OnStartScript(this);
 		}
+		/// <summary>
+		/// Aborts execution of this <see cref="Script"/>.
+		/// </summary>
 		public void Abort()
 		{
 			try
@@ -188,22 +186,20 @@ namespace GTA
 			_running = false;
 			_waitEvent.Set();
 
-			if (ReferenceEquals(_thread, null))
+			if (_thread != null)
 			{
-				return;
+				_thread.Abort();
+				_thread = null;
+
+				ScriptDomain.OnAbortScript(this);
 			}
-
-			_thread.Abort();
-			_thread = null;
-
-			ScriptDomain.OnAbortScript(this);
 		}
 
 		/// <summary>
-		/// Pauses execution of the script for a specific amount of time.
-		/// Must be called inside the main script loop - The OnTick or any sub methods of it.
+		/// Pauses execution of the <see cref="Script"/> for a specific amount of time.
+		/// Must be called inside the main script loop (the <see cref="Tick"/> event or any sub methods called from it).
 		/// </summary>
-		/// <param name="ms">The time in ms to pause for</param>
+		/// <param name="ms">The time in milliseconds to pause for.</param>
 		public static void Wait(int ms)
 		{
 			Script script = ScriptDomain.ExecutingScript;
@@ -230,7 +226,10 @@ namespace GTA
 			Wait(0);
 		}
 
-		public void MainLoop()
+		/// <summary>
+		/// The main execution logic of all scripts.
+		/// </summary>
+		internal void MainLoop()
 		{
 			_running = true;
 
@@ -279,13 +278,5 @@ namespace GTA
 				Wait(_interval);
 			}
 		}
-
-		/// <summary>
-		/// Returns a string that represents this <see cref="Script"/>.
-		/// </summary>
-		public override string ToString()
-		{
-			return Name;
-		}
-}
+	}
 }

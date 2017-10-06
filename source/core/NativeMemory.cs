@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using static System.Runtime.InteropServices.Marshal;
-
 
 namespace GTA
 {
@@ -153,11 +150,11 @@ namespace GTA
 					if (_posCheck)
 					{
 						float[] position = new float[3];
-						
+
 						fixed (float* posPtr = &position[0])
 						{
 							MemoryAccess.EntityPositionFunc(address, posPtr);
-						}                                               
+						}
 
 						if (_position.DistanceToSquared(new Math.Vector3(position[0], position[1], position[2])) > _radiusSquared)
 						{
@@ -169,8 +166,8 @@ namespace GTA
 					{
 						uint v0 = *(uint*)(MemoryAccess.EntityModel1Func(*(ulong*)(address + 32)));
 						uint v1 = v0 & 0xFFFF;
-						uint v2 = ((v1 ^ v0) &0x0FFF0000 ^ v1) &0xDFFFFFFF;
-						uint v3 = ((v2 ^ v0) &0x10000000 ^ v2) &0x3FFFFFFF;
+						uint v2 = ((v1 ^ v0) & 0x0FFF0000 ^ v1) & 0xDFFFFFFF;
+						uint v3 = ((v2 ^ v0) & 0x10000000 ^ v2) & 0x3FFFFFFF;
 						ulong v5 = MemoryAccess.EntityModel2Func((ulong)(&v3));
 
 
@@ -193,7 +190,7 @@ namespace GTA
 			}
 
 			public void Run()
-			{               
+			{
 				if (*MemoryAccess._entityPoolAddress == 0)
 				{
 					return;
@@ -393,7 +390,7 @@ namespace GTA
 
 				if (*(ulong*)(_PedAddress + 48) == (ulong)PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
 				{
-					
+
 					if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
 					{
 						ulong PedIntelligenceAddr = *(ulong*)(_PedAddress + *(int*)(BaseFunc + 147));
@@ -443,7 +440,7 @@ namespace GTA
 				}
 			}
 		}
-		
+
 
 		internal class GenericTask : IScriptTask
 		{
@@ -552,7 +549,7 @@ namespace GTA
 				// Get relative address and add it to the instruction address.
 				// 3 bytes equal the size of the opcode and its first argument. 7 bytes are the length of opcode and all its parameters.
 				address = FindPattern("\x33\xFF\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x58", "xxx????xxxxx");
-				EntityAddressFunc = GetDelegateForFunctionPointer<EntityAddressFuncDelegate>(new IntPtr(*(int *)(address + 3) + address + 7));
+				EntityAddressFunc = GetDelegateForFunctionPointer<EntityAddressFuncDelegate>(new IntPtr(*(int*)(address + 3) + address + 7));
 
 				address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x33\xC9\x48\x85\xC0\x74\x3B", "xxx????xxxxxxx");
 				PlayerAddressFunc = GetDelegateForFunctionPointer<PlayerAddressFuncDelegate>(new IntPtr(*(int*)(address + 3) + address + 7));
@@ -630,12 +627,13 @@ namespace GTA
 				vehClassOff = *(uint*)(address + 0x31);
 
 				GenerateVehicleModelList();
-				
+
 			}
 			internal static IntPtr CellEmailBcon => StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
 			internal static IntPtr StringPtr => StringToCoTaskMemUTF8("STRING");
 			internal static IntPtr NullString => StringToCoTaskMemUTF8(String.Empty);
 
+			[StructLayout(LayoutKind.Sequential)]
 			internal unsafe struct HashNode
 			{
 				internal int hash;
@@ -654,7 +652,7 @@ namespace GTA
 			{
 				unsafe
 				{
-					HashNode** HashMap = (HashNode **) (modelHashTable);
+					HashNode** HashMap = (HashNode**)(modelHashTable);
 					for (HashNode* cur = HashMap[(uint)(modelHash) % modelHashEntries]; cur != null; cur = cur->next)
 					{
 						if (cur->hash != modelHash)
@@ -705,7 +703,7 @@ namespace GTA
 
 			private static unsafe void GenerateVehicleModelList()
 			{
-				HashNode** HashMap = (HashNode**) (modelHashTable);
+				HashNode** HashMap = (HashNode**)(modelHashTable);
 				List<int>[] hashes = new List<int>[0x20];
 				for (int i = 0; i < 0x20; i++)
 				{
@@ -1283,12 +1281,12 @@ namespace GTA
 			{
 				uint index = (uint)(handle >> 8);
 				ulong poolAddr = *_cameraPoolAddress;
-				if(*(byte*)(index + *(long*)(poolAddr + 8)) == (byte)(handle & 0xFF))
+				if (*(byte*)(index + *(long*)(poolAddr + 8)) == (byte)(handle & 0xFF))
 				{
 					return new IntPtr(*(long*)poolAddr + (index * *(uint*)(poolAddr + 20)));
 				}
 				return IntPtr.Zero;
-				
+
 			}
 
 			internal static int[] GetEntityHandles()
@@ -1379,6 +1377,7 @@ namespace GTA
 
 				return task._handles.ToArray();
 			}
+			[StructLayout(LayoutKind.Sequential)]
 			internal unsafe struct Checkpoint
 			{
 				internal long padding;
@@ -1386,7 +1385,7 @@ namespace GTA
 				internal int handle;
 				internal long padding2;
 				internal Checkpoint* next;
-			} 
+			}
 			internal static ulong _getCheckpointHandles(ulong ArrayPtr)
 			{
 				unsafe
@@ -1404,7 +1403,7 @@ namespace GTA
 			{
 				int[] handles = new int[64];
 
-				ulong count = 0;                                                        
+				ulong count = 0;
 				for (Checkpoint* item = *(Checkpoint**)(CheckpointBaseAddr() + 48); item != null && count < 64; item = item->next)
 				{
 					handles[count++] = item->handle;
@@ -1490,6 +1489,6 @@ namespace GTA
 
 				return null;
 			}
-		}        
+		}
 	}
 }

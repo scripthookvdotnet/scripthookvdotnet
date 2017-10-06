@@ -46,7 +46,7 @@
     <Compile Include="source\core\NativeMemory.cs" />
     <Compile Include="source\core\Script.cs" />
     <Compile Include="source\core\ScriptDomain.cs" />
-    <Compile Include="source\core\Setting.cs" />
+    <Compile Include="source\core\Settings.cs" />
     <Compile Include="source\scripting\Game\Audio.cs" />
     <Compile Include="source\scripting\World\Blip.cs" />
     <Compile Include="source\scripting\World\Entities\Peds\BoneID.cs" />

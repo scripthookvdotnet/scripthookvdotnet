@@ -15,12 +15,13 @@
  */
 
 using System;
+using System.IO;
 using System.Reflection;
 using WinForms = System.Windows.Forms;
 
 abstract class ScriptHookVDotNet
 {
-	private static GTA.ScriptDomain Domain = null;
+	static GTA.ScriptDomain Domain = null;
 
 	public static bool Init()
 	{
@@ -29,8 +30,8 @@ abstract class ScriptHookVDotNet
 			GTA.ScriptDomain.Unload(ref Domain);
 		}
 
-		var settings = GTA.ScriptSettings.Load(System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".ini"));
-		Domain = GTA.ScriptDomain.Load(settings.GetValue<string>(String.Empty, "ScriptsLocation", "scripts"));
+		var settings = GTA.ScriptSettings.Load(Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".ini"));
+		Domain = GTA.ScriptDomain.Load(settings.GetValue(String.Empty, "ScriptsLocation", "scripts"));
 
 		if (Domain != null)
 		{
