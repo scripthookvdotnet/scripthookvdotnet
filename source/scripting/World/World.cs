@@ -8,17 +8,6 @@ using System.Linq;
 
 namespace GTA
 {
-	class GTACalender : System.Globalization.GregorianCalendar
-	{
-		public override int GetDaysInYear(int year, int era)
-		{
-			return 31 * 12;
-		}
-		public override int GetDaysInMonth(int year, int month, int era)
-		{
-			return 31;
-		}
-	}
 	enum ZoneID
 	{
 		AIRP,
@@ -237,6 +226,7 @@ namespace GTA
 			"SNOWLIGHT",
 			"XMAS"
 		};
+		static readonly System.Globalization.GregorianCalendar _calender = new System.Globalization.GregorianCalendar();
 		#endregion
 
 		/// <summary>
@@ -251,12 +241,12 @@ namespace GTA
 			{
 				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
 				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH);
-				int day = Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH);
+				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), _calender.GetDaysInMonth(year, month));
 				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
 				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
 				int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
 
-				return new DateTime(year, month, day, hour, minute, second, new GTACalender());
+				return new DateTime(year, month, day, hour, minute, second);
 			}
 			set
 			{
