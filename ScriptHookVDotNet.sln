@@ -2,40 +2,42 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
-MinimumVisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 12.0.25420.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{019193A7-50C0-444A-84CA-777595E702CD} = {019193A7-50C0-444A-84CA-777595E702CD}
-	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet", "ScriptHookVDotNet.csproj", "{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Release + Examples|x64 = Release + Examples|x64
 		Release|x64 = Release|x64
-		Run NativeGen|x64 = Run NativeGen|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Debug|x64.ActiveCfg = Debug|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Debug|x64.Build.0 = Debug|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.Build.0 = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.Build.0 = Release|x64
-		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.ActiveCfg = Release|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.ActiveCfg = Release|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.Build.0 = Release|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.ActiveCfg = Release|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.Build.0 = Release|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Run NativeGen|x64.ActiveCfg = NativeGen|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Run NativeGen|x64.Build.0 = NativeGen|x64
+		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Debug|x64.ActiveCfg = Release|x64
+		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Debug|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.ActiveCfg = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release|x64.ActiveCfg = Release|x64
-		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Debug|x64.Build.0 = Debug|Any CPU
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release + Examples|x64.ActiveCfg = Release|Any CPU
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release + Examples|x64.Build.0 = Release|Any CPU
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release|x64.ActiveCfg = Release|Any CPU
+		{61165C1A-6BFE-4776-B371-5A3FDB1A2ED7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF9E4B99-B01B-4909-804F-7EECC61DC528}
 	EndGlobalSection
 EndGlobal
