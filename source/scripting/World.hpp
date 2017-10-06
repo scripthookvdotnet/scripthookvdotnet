@@ -216,6 +216,7 @@ namespace GTA
 		Blizzard,
 		Snowlight,
 		Christmas,
+		Halloween,
 	};
 
 	public ref class World sealed abstract
@@ -348,6 +349,7 @@ namespace GTA
 		static void TransitionToWeather(GTA::Weather weather, float duration);
 
 	internal:
-		static initonly array<System::String ^> ^_weatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS" };
+		static initonly array<System::String ^> ^_weatherNames = { "EXTRASUNNY", "CLEAR", "CLOUDS", "SMOG", "FOGGY", "OVERCAST", "RAIN", "THUNDER", "CLEARING", "NEUTRAL", "SNOW", "BLIZZARD", "SNOWLIGHT", "XMAS", "HALLOWEEN" };
+		static initonly System::Globalization::GregorianCalendar ^_gregorianCalendar = gcnew System::Globalization::GregorianCalendar();
 	};
 }

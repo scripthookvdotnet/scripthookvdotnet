@@ -18,18 +18,6 @@ namespace GTA
 
 	namespace
 	{
-		private ref class GTACalender : System::Globalization::GregorianCalendar
-		{
-		public:
-			int GetDaysInYear(int, int) override
-			{
-				return 31 * 12;
-			}
-			int GetDaysInMonth(int, int, int) override
-			{
-				return 31;
-			}
-		};
 		private enum class ZoneID
 		{
 			AIRP,
@@ -128,12 +116,12 @@ namespace GTA
 	{
 		int year = Native::Function::Call<int>(Native::Hash::GET_CLOCK_YEAR);
 		int month = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MONTH);
-		int day = Native::Function::Call<int>(Native::Hash::GET_CLOCK_DAY_OF_MONTH);
+		int day = System::Math::Min(Native::Function::Call<int>(Native::Hash::GET_CLOCK_DAY_OF_MONTH), _gregorianCalendar->GetDaysInMonth(year, month));
 		int hour = Native::Function::Call<int>(Native::Hash::GET_CLOCK_HOURS);
 		int minute = Native::Function::Call<int>(Native::Hash::GET_CLOCK_MINUTES);
 		int second = Native::Function::Call<int>(Native::Hash::GET_CLOCK_SECONDS);
 
-		return DateTime(year, month, day, hour, minute, second, gcnew GTACalender());
+		return DateTime(year, month, day, hour, minute, second);
 	}
 	void World::CurrentDate::set(DateTime value)
 	{

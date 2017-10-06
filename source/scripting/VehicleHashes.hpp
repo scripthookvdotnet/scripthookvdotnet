@@ -214,7 +214,7 @@ namespace GTA
 			Guardian = 2186977100u,
 			Habanero = 884422927u,
 			Hakuchou = 1265391242u,
-			Hakuchou2 = 3685342204u,
+			Hakuchou2 = 4039289119u,
 			HalfTrack = 4262731174u,
 			Handler = 444583674u,
 			Hauler = 1518533038u,
