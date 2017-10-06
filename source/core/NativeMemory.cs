@@ -1148,7 +1148,7 @@ namespace GTA
 			{
 				return new IntPtr((long)PlayerAddressFunc(handle));
 			}
-			internal static IntPtr GetCheckPointAddress(int handle)
+			internal static IntPtr GetCheckpointAddress(int handle)
 			{
 				ulong addr = CheckpointHandleAddr(CheckpointBaseAddr(), handle);
 				if (addr != 0)
@@ -1379,13 +1379,13 @@ namespace GTA
 
 				return task._handles.ToArray();
 			}
-			internal unsafe struct CheckPoint
+			internal unsafe struct Checkpoint
 			{
 				internal long padding;
 				internal int padding1;
 				internal int handle;
 				internal long padding2;
-				internal CheckPoint* next;
+				internal Checkpoint* next;
 			} 
 			internal static ulong _getCheckpointHandles(ulong ArrayPtr)
 			{
@@ -1393,7 +1393,7 @@ namespace GTA
 				{
 					int* handles = (int*)ArrayPtr;
 					ulong count = 0;
-					for (CheckPoint* item = *(CheckPoint**)(CheckpointBaseAddr() + 48); item != null && count < 64; item = item->next)
+					for (Checkpoint* item = *(Checkpoint**)(CheckpointBaseAddr() + 48); item != null && count < 64; item = item->next)
 					{
 						handles[count++] = item->handle;
 					}
@@ -1405,7 +1405,7 @@ namespace GTA
 				int[] handles = new int[64];
 
 				ulong count = 0;                                                        
-				for (CheckPoint* item = *(CheckPoint**)(CheckpointBaseAddr() + 48); item != null && count < 64; item = item->next)
+				for (Checkpoint* item = *(Checkpoint**)(CheckpointBaseAddr() + 48); item != null && count < 64; item = item->next)
 				{
 					handles[count++] = item->handle;
 				}
