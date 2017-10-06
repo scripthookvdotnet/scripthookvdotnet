@@ -159,13 +159,13 @@ namespace GTA
 					{
 						if (AssemblyName.GetAssemblyName(filename).Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 						{
-							Log("[WARNING]", "Removing assembly file '", System.IO.Path.GetFileName(filename), "'.");
+							Log("[WARNING]", "Removing assembly file '", Path.GetFileName(filename), "'.");
 
 							filenameAssemblies.RemoveAt(i--);
 
 							try
 							{
-								System.IO.File.Delete(filename);
+								File.Delete(filename);
 							}
 							catch (Exception ex)
 							{
@@ -175,7 +175,7 @@ namespace GTA
 					}
 					catch (Exception ex)
 					{
-						Log("[ERROR]", "Failed to load assembly file '", System.IO.Path.GetFileName(filename), "':", Environment.NewLine, ex.ToString());
+						Log("[ERROR]", "Failed to load assembly file '", Path.GetFileName(filename), "':", Environment.NewLine, ex.ToString());
 					}
 				}
 
@@ -210,7 +210,7 @@ namespace GTA
 			compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
 			compilerOptions.ReferencedAssemblies.Add(typeof(Script).Assembly.Location);
 
-			string extension = System.IO.Path.GetExtension(filename);
+			string extension = Path.GetExtension(filename);
 			System.CodeDom.Compiler.CodeDomProvider compiler = null;
 
 			if (extension.Equals(".cs", StringComparison.OrdinalIgnoreCase))
@@ -231,7 +231,7 @@ namespace GTA
 
 			if (!compilerResult.Errors.HasErrors)
 			{
-				Log("[INFO]", "Successfully compiled '", System.IO.Path.GetFileName(filename), "'.");
+				Log("[INFO]", "Successfully compiled '", Path.GetFileName(filename), "'.");
 
 				return LoadAssembly(filename, compilerResult.CompiledAssembly);
 			}
@@ -248,24 +248,24 @@ namespace GTA
 					errors.AppendLine();
 				}
 
-				Log("[ERROR]", "Failed to compile '", System.IO.Path.GetFileName(filename), "' with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
+				Log("[ERROR]", "Failed to compile '", Path.GetFileName(filename), "' with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
 
 				return false;
 			}
 		}
 		private bool LoadAssembly(string filename)
 		{
-			Log("[INFO]", "Loading assembly '", System.IO.Path.GetFileName(filename), "' ...");
+			Log("[INFO]", "Loading assembly '", Path.GetFileName(filename), "' ...");
 
 			Assembly assembly = null;
 
 			try
 			{
-				assembly = Assembly.Load(System.IO.File.ReadAllBytes(filename));
+				assembly = Assembly.Load(File.ReadAllBytes(filename));
 			}
 			catch (Exception ex)
 			{
-				Log("[ERROR]", "Failed to load assembly '", System.IO.Path.GetFileName(filename), "':", Environment.NewLine, ex.ToString());
+				Log("[ERROR]", "Failed to load assembly '", Path.GetFileName(filename), "':", Environment.NewLine, ex.ToString());
 
 				return false;
 			}
@@ -274,7 +274,7 @@ namespace GTA
 		}
 		private bool LoadAssembly(string filename, Assembly assembly)
 		{
-			string version = (System.IO.Path.GetExtension(filename) == ".dll" ? (" v" + assembly.GetName().Version.ToString(3)) : string.Empty);
+			string version = (Path.GetExtension(filename) == ".dll" ? (" v" + assembly.GetName().Version.ToString(3)) : string.Empty);
 			uint count = 0;
 
 			try
@@ -292,17 +292,17 @@ namespace GTA
 			}
 			catch (ReflectionTypeLoadException ex)
 			{
-				var fileNotFoundException = (System.IO.FileNotFoundException)(ex.LoaderExceptions[0]);
+				var fileNotFoundException = (FileNotFoundException)(ex.LoaderExceptions[0]);
 
 				if (ReferenceEquals(fileNotFoundException, null) || fileNotFoundException.Message.IndexOf("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) < 0)
 				{
-					Log("[ERROR]", "Failed to load assembly '", System.IO.Path.GetFileName(filename), version, "':", Environment.NewLine, ex.LoaderExceptions[0].ToString());
+					Log("[ERROR]", "Failed to load assembly '", Path.GetFileName(filename), version, "':", Environment.NewLine, ex.LoaderExceptions[0].ToString());
 				}
 
 				return false;
 			}
 
-			Log("[INFO]", "Found ", count.ToString(), " script(s) in '", System.IO.Path.GetFileName(filename), version, "'.");
+			Log("[INFO]", "Found ", count.ToString(), " script(s) in '", Path.GetFileName(filename), version, "'.");
 
 			return count != 0;
 		}
@@ -447,10 +447,10 @@ namespace GTA
 		}
 		public void StartScript(string filename)
 		{
-			filename = System.IO.Path.GetFullPath(filename);
+			filename = Path.GetFullPath(filename);
 
 			int offset = _scriptTypes.Count;
-			string extension = System.IO.Path.GetExtension(filename);
+			string extension = Path.GetExtension(filename);
 
 			if (extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
 			{
@@ -475,15 +475,15 @@ namespace GTA
 		{
 			string basedirectory = CurrentDomain.AppDomain.BaseDirectory;
 
-			if (System.IO.Directory.Exists(basedirectory))
+			if (Directory.Exists(basedirectory))
 			{
 				var filenameScripts = new List<string>();
 
 				try
 				{
-					filenameScripts.AddRange(System.IO.Directory.GetFiles(basedirectory, "*.vb", System.IO.SearchOption.AllDirectories));
-					filenameScripts.AddRange(System.IO.Directory.GetFiles(basedirectory, "*.cs", System.IO.SearchOption.AllDirectories));
-					filenameScripts.AddRange(System.IO.Directory.GetFiles(basedirectory, "*.dll", System.IO.SearchOption.AllDirectories));
+					filenameScripts.AddRange(Directory.GetFiles(basedirectory, "*.vb", SearchOption.AllDirectories));
+					filenameScripts.AddRange(Directory.GetFiles(basedirectory, "*.cs", SearchOption.AllDirectories));
+					filenameScripts.AddRange(Directory.GetFiles(basedirectory, "*.dll", SearchOption.AllDirectories));
 				}
 				catch (Exception ex)
 				{
@@ -494,7 +494,7 @@ namespace GTA
 
 				foreach (var filename in filenameScripts)
 				{
-					string extension = System.IO.Path.GetExtension(filename).ToLower();
+					string extension = Path.GetExtension(filename).ToLower();
 
 					if (extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
 					{
@@ -539,7 +539,7 @@ namespace GTA
 		}
 		public void AbortScript(string filename)
 		{
-			filename = System.IO.Path.GetFullPath(filename);
+			filename = Path.GetFullPath(filename);
 
 			foreach (Script script in _runningScripts)
 			{
@@ -767,12 +767,12 @@ namespace GTA
 		static private void Log(string logLevel, params string[] message)
 		{
 			var datetime = DateTime.Now;
-			string logPath = System.IO.Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
+			string logPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
 
 			try
 			{
-				var fs = new System.IO.FileStream(logPath, System.IO.FileMode.Append, System.IO.FileAccess.Write, System.IO.FileShare.Read);
-				var sw = new System.IO.StreamWriter(fs);
+				var fs = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Read);
+				var sw = new StreamWriter(fs);
 
 				try
 				{

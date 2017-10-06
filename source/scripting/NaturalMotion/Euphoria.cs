@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
-using GTA;
 
 namespace GTA.NaturalMotion
 {
 	public sealed class Euphoria
 	{
 		#region Fields
-
 		readonly Ped _ped;
 		readonly Dictionary<string, CustomHelper> _helperCache;
-
 		#endregion
 
 		internal Euphoria(Ped ped)
@@ -25,16 +22,16 @@ namespace GTA.NaturalMotion
 
 			if (!_helperCache.TryGetValue(message, out h))
 			{
-				h = (CustomHelper) Activator.CreateInstance(typeof(T), _ped);
+				h = (CustomHelper)Activator.CreateInstance(typeof(T), _ped);
 
 				_helperCache.Add(message, h);
 			}
 
-			return (T) h;
+			return (T)h;
 		}
 
 		/// <summary>
-		/// Gets a ActivePose Helper class for sending ActivePose <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ActivePose Helper class for sending ActivePose <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ActivePoseHelper ActivePose
 		{
@@ -42,7 +39,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ApplyImpulse Helper class for sending ApplyImpulse <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ApplyImpulse Helper class for sending ApplyImpulse <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ApplyImpulseHelper ApplyImpulse
 		{
@@ -50,7 +47,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ApplyBulletImpulse Helper class for sending ApplyBulletImpulse <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ApplyBulletImpulse Helper class for sending ApplyBulletImpulse <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ApplyBulletImpulseHelper ApplyBulletImpulse
 		{
@@ -58,7 +55,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BodyRelax Helper class for sending BodyRelax <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BodyRelax Helper class for sending BodyRelax <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Set the amount of relaxation across the whole body; Used to collapse the character into a rag-doll-like state.
@@ -69,10 +66,10 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureBalance Helper class for sending ConfigureBalance <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureBalance Helper class for sending ConfigureBalance <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
-		/// This single message allows you to configure various parameters used on any behaviour that uses the dynamic balance.
+		/// This single message allows you to configure various parameters used on any behavior that uses the dynamic balance.
 		/// </remarks>
 		public ConfigureBalanceHelper ConfigureBalance
 		{
@@ -80,7 +77,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureBalanceReset Helper class for sending ConfigureBalanceReset <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureBalanceReset Helper class for sending ConfigureBalanceReset <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// reset the values configurable by the Configure Balance message to their defaults.
@@ -91,7 +88,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureSelfAvoidance Helper class for sending ConfigureSelfAvoidance <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureSelfAvoidance Helper class for sending ConfigureSelfAvoidance <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// this single message allows to configure self avoidance for the character.BBDD Self avoidance tech.
@@ -102,7 +99,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureBullets Helper class for sending ConfigureBullets <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureBullets Helper class for sending ConfigureBullets <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ConfigureBulletsHelper ConfigureBullets
 		{
@@ -110,7 +107,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureBulletsExtra Helper class for sending ConfigureBulletsExtra <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureBulletsExtra Helper class for sending ConfigureBulletsExtra <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ConfigureBulletsExtraHelper ConfigureBulletsExtra
 		{
@@ -118,7 +115,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureLimits Helper class for sending ConfigureLimits <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureLimits Helper class for sending ConfigureLimits <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Enable/disable/edit character limits in real time.  This adjusts limits in RAGE-native space and will *not* reorient the joint.
@@ -129,7 +126,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureSoftLimit Helper class for sending ConfigureSoftLimit <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureSoftLimit Helper class for sending ConfigureSoftLimit <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ConfigureSoftLimitHelper ConfigureSoftLimit
 		{
@@ -137,7 +134,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureShotInjuredArm Helper class for sending ConfigureShotInjuredArm <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureShotInjuredArm Helper class for sending ConfigureShotInjuredArm <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// This single message allows you to configure the injured arm reaction during shot
@@ -148,7 +145,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureShotInjuredLeg Helper class for sending ConfigureShotInjuredLeg <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureShotInjuredLeg Helper class for sending ConfigureShotInjuredLeg <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// This single message allows you to configure the injured leg reaction during shot
@@ -159,7 +156,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a DefineAttachedObject Helper class for sending DefineAttachedObject <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a DefineAttachedObject Helper class for sending DefineAttachedObject <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public DefineAttachedObjectHelper DefineAttachedObject
 		{
@@ -167,7 +164,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ForceToBodyPart Helper class for sending ForceToBodyPart <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ForceToBodyPart Helper class for sending ForceToBodyPart <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Apply an impulse to a named body part
@@ -178,7 +175,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a LeanInDirection Helper class for sending LeanInDirection <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a LeanInDirection Helper class for sending LeanInDirection <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public LeanInDirectionHelper LeanInDirection
 		{
@@ -186,7 +183,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a LeanRandom Helper class for sending LeanRandom <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a LeanRandom Helper class for sending LeanRandom <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public LeanRandomHelper LeanRandom
 		{
@@ -194,7 +191,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a LeanToPosition Helper class for sending LeanToPosition <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a LeanToPosition Helper class for sending LeanToPosition <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public LeanToPositionHelper LeanToPosition
 		{
@@ -202,7 +199,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a LeanTowardsObject Helper class for sending LeanTowardsObject <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a LeanTowardsObject Helper class for sending LeanTowardsObject <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public LeanTowardsObjectHelper LeanTowardsObject
 		{
@@ -210,7 +207,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a HipsLeanInDirection Helper class for sending HipsLeanInDirection <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a HipsLeanInDirection Helper class for sending HipsLeanInDirection <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public HipsLeanInDirectionHelper HipsLeanInDirection
 		{
@@ -218,7 +215,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a HipsLeanRandom Helper class for sending HipsLeanRandom <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a HipsLeanRandom Helper class for sending HipsLeanRandom <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public HipsLeanRandomHelper HipsLeanRandom
 		{
@@ -226,7 +223,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a HipsLeanToPosition Helper class for sending HipsLeanToPosition <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a HipsLeanToPosition Helper class for sending HipsLeanToPosition <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public HipsLeanToPositionHelper HipsLeanToPosition
 		{
@@ -234,7 +231,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a HipsLeanTowardsObject Helper class for sending HipsLeanTowardsObject <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a HipsLeanTowardsObject Helper class for sending HipsLeanTowardsObject <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public HipsLeanTowardsObjectHelper HipsLeanTowardsObject
 		{
@@ -242,7 +239,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ForceLeanInDirection Helper class for sending ForceLeanInDirection <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ForceLeanInDirection Helper class for sending ForceLeanInDirection <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ForceLeanInDirectionHelper ForceLeanInDirection
 		{
@@ -250,7 +247,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ForceLeanRandom Helper class for sending ForceLeanRandom <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ForceLeanRandom Helper class for sending ForceLeanRandom <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ForceLeanRandomHelper ForceLeanRandom
 		{
@@ -258,7 +255,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ForceLeanToPosition Helper class for sending ForceLeanToPosition <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ForceLeanToPosition Helper class for sending ForceLeanToPosition <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ForceLeanToPositionHelper ForceLeanToPosition
 		{
@@ -266,7 +263,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ForceLeanTowardsObject Helper class for sending ForceLeanTowardsObject <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ForceLeanTowardsObject Helper class for sending ForceLeanTowardsObject <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ForceLeanTowardsObjectHelper ForceLeanTowardsObject
 		{
@@ -274,7 +271,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetStiffness Helper class for sending SetStiffness <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetStiffness Helper class for sending SetStiffness <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Use this message to manually set the body stiffness values -before using Active Pose to drive to an animated pose, for example.
@@ -285,7 +282,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetMuscleStiffness Helper class for sending SetMuscleStiffness <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetMuscleStiffness Helper class for sending SetMuscleStiffness <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Use this message to manually set the muscle stiffness values -before using Active Pose to drive to an animated pose, for example.
@@ -296,10 +293,10 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetWeaponMode Helper class for sending SetWeaponMode <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetWeaponMode Helper class for sending SetWeaponMode <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
-		/// Use this message to set the character's weapon mode.  This is an alternativeto the setWeaponMode public function.
+		/// Use this message to set the character's weapon mode. This is an alternative to the setWeaponMode public function.
 		/// </remarks>
 		public SetWeaponModeHelper SetWeaponMode
 		{
@@ -307,10 +304,10 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a RegisterWeapon Helper class for sending RegisterWeapon <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a RegisterWeapon Helper class for sending RegisterWeapon <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
-		/// Use this message to register weapon.  This is an alternativeto the registerWeapon public function.
+		/// Use this message to register weapon. This is an alternative to the registerWeapon public function.
 		/// </remarks>
 		public RegisterWeaponHelper RegisterWeapon
 		{
@@ -318,7 +315,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotRelax Helper class for sending ShotRelax <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotRelax Helper class for sending ShotRelax <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ShotRelaxHelper ShotRelax
 		{
@@ -326,7 +323,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a FireWeapon Helper class for sending FireWeapon <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a FireWeapon Helper class for sending FireWeapon <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// One shot message apply a force to the hand as we fire the gun that should be in this hand
@@ -337,7 +334,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ConfigureConstraints Helper class for sending ConfigureConstraints <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ConfigureConstraints Helper class for sending ConfigureConstraints <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// One shot to give state of constraints on character and response to constraints
@@ -348,7 +345,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a StayUpright Helper class for sending StayUpright <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a StayUpright Helper class for sending StayUpright <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public StayUprightHelper StayUpright
 		{
@@ -356,10 +353,10 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a StopAllBehaviours Helper class for sending StopAllBehaviours <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a StopAllBehaviours Helper class for sending StopAllBehaviours <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
-		/// Send this message to immediately stop all behaviours from executing.
+		/// Send this message to immediately stop all behaviors from executing.
 		/// </remarks>
 		public StopAllBehavioursHelper StopAllBehaviours
 		{
@@ -367,7 +364,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetCharacterStrength Helper class for sending SetCharacterStrength <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetCharacterStrength Helper class for sending SetCharacterStrength <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Sets character's strength on the dead-granny-to-healthy-terminator scale: [0..1]
@@ -378,7 +375,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetCharacterHealth Helper class for sending SetCharacterHealth <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetCharacterHealth Helper class for sending SetCharacterHealth <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Sets character's health on the dead-to-alive scale: [0..1]
@@ -389,7 +386,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetFallingReaction Helper class for sending SetFallingReaction <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetFallingReaction Helper class for sending SetFallingReaction <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Sets the type of reaction if catchFall is called
@@ -400,7 +397,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetCharacterUnderwater Helper class for sending SetCharacterUnderwater <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetCharacterUnderwater Helper class for sending SetCharacterUnderwater <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Sets viscosity applied to damping limbs
@@ -411,7 +408,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetCharacterCollisions Helper class for sending SetCharacterCollisions <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetCharacterCollisions Helper class for sending SetCharacterCollisions <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// setCharacterCollisions:
@@ -422,7 +419,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetCharacterDamping Helper class for sending SetCharacterDamping <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetCharacterDamping Helper class for sending SetCharacterDamping <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Damp out cartwheeling and somersaulting above a certain threshold
@@ -433,7 +430,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SetFrictionScale Helper class for sending SetFrictionScale <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SetFrictionScale Helper class for sending SetFrictionScale <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// setFrictionScale:
@@ -444,7 +441,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a AnimPose Helper class for sending AnimPose <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a AnimPose Helper class for sending AnimPose <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public AnimPoseHelper AnimPose
 		{
@@ -452,7 +449,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ArmsWindmill Helper class for sending ArmsWindmill <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ArmsWindmill Helper class for sending ArmsWindmill <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ArmsWindmillHelper ArmsWindmill
 		{
@@ -460,7 +457,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ArmsWindmillAdaptive Helper class for sending ArmsWindmillAdaptive <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ArmsWindmillAdaptive Helper class for sending ArmsWindmillAdaptive <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ArmsWindmillAdaptiveHelper ArmsWindmillAdaptive
 		{
@@ -468,7 +465,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BalancerCollisionsReaction Helper class for sending BalancerCollisionsReaction <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BalancerCollisionsReaction Helper class for sending BalancerCollisionsReaction <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public BalancerCollisionsReactionHelper BalancerCollisionsReaction
 		{
@@ -476,7 +473,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BodyBalance Helper class for sending BodyBalance <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BodyBalance Helper class for sending BodyBalance <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public BodyBalanceHelper BodyBalance
 		{
@@ -484,7 +481,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BodyFoetal Helper class for sending BodyFoetal <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BodyFoetal Helper class for sending BodyFoetal <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public BodyFoetalHelper BodyFoetal
 		{
@@ -492,7 +489,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BodyRollUp Helper class for sending BodyRollUp <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BodyRollUp Helper class for sending BodyRollUp <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public BodyRollUpHelper BodyRollUp
 		{
@@ -500,7 +497,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BodyWrithe Helper class for sending BodyWrithe <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BodyWrithe Helper class for sending BodyWrithe <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public BodyWritheHelper BodyWrithe
 		{
@@ -508,7 +505,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a BraceForImpact Helper class for sending BraceForImpact <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a BraceForImpact Helper class for sending BraceForImpact <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public BraceForImpactHelper BraceForImpact
 		{
@@ -516,7 +513,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Buoyancy Helper class for sending Buoyancy <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Buoyancy Helper class for sending Buoyancy <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Simple buoyancy model.  No character movement just fluid forces/torques added to parts.
@@ -527,7 +524,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a CatchFall Helper class for sending CatchFall <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a CatchFall Helper class for sending CatchFall <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public CatchFallHelper CatchFall
 		{
@@ -535,7 +532,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Electrocute Helper class for sending Electrocute <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Electrocute Helper class for sending Electrocute <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ElectrocuteHelper Electrocute
 		{
@@ -543,7 +540,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a FallOverWall Helper class for sending FallOverWall <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a FallOverWall Helper class for sending FallOverWall <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public FallOverWallHelper FallOverWall
 		{
@@ -551,7 +548,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Grab Helper class for sending Grab <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Grab Helper class for sending Grab <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public GrabHelper Grab
 		{
@@ -559,7 +556,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a HeadLook Helper class for sending HeadLook <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a HeadLook Helper class for sending HeadLook <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public HeadLookHelper HeadLook
 		{
@@ -567,7 +564,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a HighFall Helper class for sending HighFall <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a HighFall Helper class for sending HighFall <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public HighFallHelper HighFall
 		{
@@ -575,7 +572,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a IncomingTransforms Helper class for sending IncomingTransforms <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a IncomingTransforms Helper class for sending IncomingTransforms <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public IncomingTransformsHelper IncomingTransforms
 		{
@@ -583,7 +580,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a InjuredOnGround Helper class for sending InjuredOnGround <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a InjuredOnGround Helper class for sending InjuredOnGround <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// InjuredOnGround
@@ -594,7 +591,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Carried Helper class for sending Carried <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Carried Helper class for sending Carried <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Carried
@@ -605,7 +602,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Dangle Helper class for sending Dangle <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Dangle Helper class for sending Dangle <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Dangle
@@ -616,7 +613,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a OnFire Helper class for sending OnFire <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a OnFire Helper class for sending OnFire <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public OnFireHelper OnFire
 		{
@@ -624,7 +621,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a PedalLegs Helper class for sending PedalLegs <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a PedalLegs Helper class for sending PedalLegs <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public PedalLegsHelper PedalLegs
 		{
@@ -632,7 +629,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a PointArm Helper class for sending PointArm <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a PointArm Helper class for sending PointArm <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// BEHAVIOURS REFERENCED: AnimPose - allows animPose to overridebodyParts: Arms (useLeftArm, useRightArm)
@@ -643,7 +640,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a PointGun Helper class for sending PointGun <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a PointGun Helper class for sending PointGun <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public PointGunHelper PointGun
 		{
@@ -651,7 +648,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a PointGunExtra Helper class for sending PointGunExtra <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a PointGunExtra Helper class for sending PointGunExtra <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Seldom set parameters for pointGun - just to keep number of parameters in any message less than or equal to 64
@@ -662,7 +659,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a RollDownStairs Helper class for sending RollDownStairs <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a RollDownStairs Helper class for sending RollDownStairs <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public RollDownStairsHelper RollDownStairs
 		{
@@ -670,7 +667,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Shot Helper class for sending Shot <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Shot Helper class for sending Shot <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ShotHelper Shot
 		{
@@ -678,7 +675,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotNewBullet Helper class for sending ShotNewBullet <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotNewBullet Helper class for sending ShotNewBullet <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Send new wound information to the shot.  Can cause shot to restart it's performance in part or in whole.
@@ -689,7 +686,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotSnap Helper class for sending ShotSnap <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotSnap Helper class for sending ShotSnap <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ShotSnapHelper ShotSnap
 		{
@@ -697,7 +694,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotShockSpin Helper class for sending ShotShockSpin <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotShockSpin Helper class for sending ShotShockSpin <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// configure the shockSpin effect in shot.  Spin/Lift the character using cheat torques/forces
@@ -708,7 +705,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotFallToKnees Helper class for sending ShotFallToKnees <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotFallToKnees Helper class for sending ShotFallToKnees <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// configure the fall to knees shot.
@@ -719,7 +716,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotFromBehind Helper class for sending ShotFromBehind <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotFromBehind Helper class for sending ShotFromBehind <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// configure the shot from behind reaction
@@ -730,7 +727,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotInGuts Helper class for sending ShotInGuts <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotInGuts Helper class for sending ShotInGuts <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// configure the shot in guts reaction
@@ -741,7 +738,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotHeadLook Helper class for sending ShotHeadLook <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotHeadLook Helper class for sending ShotHeadLook <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public ShotHeadLookHelper ShotHeadLook
 		{
@@ -749,7 +746,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a ShotConfigureArms Helper class for sending ShotConfigureArms <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a ShotConfigureArms Helper class for sending ShotConfigureArms <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// configure the arm reactions in shot
@@ -760,7 +757,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a SmartFall Helper class for sending SmartFall <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a SmartFall Helper class for sending SmartFall <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Clone of High Fall with a wider range of operating conditions.
@@ -771,7 +768,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a StaggerFall Helper class for sending StaggerFall <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a StaggerFall Helper class for sending StaggerFall <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public StaggerFallHelper StaggerFall
 		{
@@ -779,7 +776,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Teeter Helper class for sending Teeter <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Teeter Helper class for sending Teeter <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public TeeterHelper Teeter
 		{
@@ -787,7 +784,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a UpperBodyFlinch Helper class for sending UpperBodyFlinch <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a UpperBodyFlinch Helper class for sending UpperBodyFlinch <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public UpperBodyFlinchHelper UpperBodyFlinch
 		{
@@ -795,7 +792,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a Yanked Helper class for sending Yanked <see cref="Message"/> to this <see cref="Ped"/>
+		/// Gets a Yanked Helper class for sending Yanked <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		public YankedHelper Yanked
 		{

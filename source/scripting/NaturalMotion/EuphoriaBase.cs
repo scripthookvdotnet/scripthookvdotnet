@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using GTA;
 using GTA.Math;
 using GTA.Native;
 
@@ -14,7 +12,7 @@ namespace GTA.NaturalMotion
 		#region Fields
 		readonly string _message;
 		readonly Dictionary<string, object> _arguments;
-		private static readonly Dictionary<string, object> _stopArgument = new Dictionary<string, object>() {{"start", false}};
+		private static readonly Dictionary<string, object> _stopArgument = new Dictionary<string, object>() { { "start", false } };
 		#endregion
 
 		/// <summary>
@@ -118,6 +116,7 @@ namespace GTA.NaturalMotion
 		{
 			_arguments[argName] = value;
 		}
+
 		/// <summary>
 		/// Resets all arguments to their default values.
 		/// </summary>
@@ -126,6 +125,9 @@ namespace GTA.NaturalMotion
 			_arguments.Clear();
 		}
 
+		/// <summary>
+		/// Returns the internal message name.
+		/// </summary>
 		public override string ToString()
 		{
 			return _message;
@@ -164,7 +166,7 @@ namespace GTA.NaturalMotion
 		/// <summary>
 		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
 		/// </summary>
-		/// <param name="duration">How long to apply the behaviour for (-1 for looped).</param>
+		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void Start(int duration)
 		{
 			_message.SendTo(_ped, duration);
@@ -223,6 +225,7 @@ namespace GTA.NaturalMotion
 		{
 			_message.SetArgument(argName, value);
 		}
+
 		/// <summary>
 		/// Resets all arguments to their default values.
 		/// </summary>
@@ -231,6 +234,9 @@ namespace GTA.NaturalMotion
 			_message.ResetArguments();
 		}
 
+		/// <summary>
+		/// Returns the internal message name.
+		/// </summary>
 		public override string ToString()
 		{
 			return _message.ToString();
