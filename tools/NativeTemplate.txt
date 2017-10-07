@@ -1,14 +1,9 @@
 // This file was generated with https://github.com/JohnnyCrazy/scripthookvdotnet-nativegen
 
-#pragma once
-
-namespace GTA
+namespace GTA.Native
 {{
-	namespace Native
+	public enum Hash : ulong
 	{{
-		public enum class Hash : System::UInt64
-		{{
 {0}
-		}};
 	}}
 }}
