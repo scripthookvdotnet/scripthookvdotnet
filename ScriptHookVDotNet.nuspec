@@ -14,4 +14,7 @@
     <licenseUrl>https://github.com/crosire/scripthookvdotnet/blob/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
   </metadata>
+  <files>
+    <file src="bin\ScriptHookVDotNet2.dll" target="lib\net452" />
+  </files>
 </package>
