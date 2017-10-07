@@ -11,8 +11,8 @@ Feel free to ask questions related to GTA V scripting or this project in the pub
 ## Requirements
 
 * [C++ ScriptHook by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
-* [.NET Framework ≥ 4.5.2](https://www.microsoft.com/download/details.aspx?id=42642)
-* [Visual C++ Redistributable for Visual Studio 2013 x64](https://www.microsoft.com/download/details.aspx?id=40784)
+* [.NET Framework ≥ 4.7](https://www.microsoft.com/download/details.aspx?id=55170)
+* [Visual C++ Redistributable for Visual Studio 2015 x64](https://www.microsoft.com/download/details.aspx?id=53587)
 
 ## Downloads
 
@@ -20,7 +20,7 @@ Pre-built binaries can be found on the [releases](https://github.com/crosire/scr
 
 ## Contributing
 
-You'll need Visual Studio 2013 or higher to open the project file and the [Script Hook V SDK](http://www.dev-c.com/gtav/scripthookv/) extracted into "[/sdk](/sdk)".
+You'll need Visual Studio 2015 or higher to open the project file and the [Script Hook V SDK](http://www.dev-c.com/gtav/scripthookv/) extracted into "[/sdk](/sdk)".
 
 Additionally, create an environment variable called `SHVDN_VERSION` and set it to version you are attempting to build.
 
