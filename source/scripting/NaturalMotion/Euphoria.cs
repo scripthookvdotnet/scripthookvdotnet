@@ -358,7 +358,7 @@ namespace GTA.NaturalMotion
 		/// <remarks>
 		/// Send this message to immediately stop all behaviors from executing.
 		/// </remarks>
-		public StopAllBehaviorsHelper StopAllBehaviours
+		public StopAllBehaviorsHelper StopAllBehaviors
 		{
 			get { return GetHelper<StopAllBehaviorsHelper>("stopAllBehaviours"); }
 		}

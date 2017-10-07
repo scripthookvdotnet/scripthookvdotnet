@@ -6007,7 +6007,7 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BespokeBehavior
 		{
-			set { SetArgument("bespokeBehavior", value); }
+			set { SetArgument("bespokeBehaviour", value); }
 		}
 
 		/// <summary>
@@ -6560,7 +6560,7 @@ namespace GTA.NaturalMotion
 		/// <remarks>
 		/// Send this message to immediately stop all behaviors from executing.
 		/// </remarks>
-		public StopAllBehaviorsHelper(Ped ped) : base(ped, "stopAllBehaviors")
+		public StopAllBehaviorsHelper(Ped ped) : base(ped, "stopAllBehaviours")
 		{
 		}
 	}
