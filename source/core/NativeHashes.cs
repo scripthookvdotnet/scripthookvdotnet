@@ -1,9 +1,11 @@
 // This file was generated with https://github.com/JohnnyCrazy/scripthookvdotnet-nativegen
 
-namespace GTA.Native
+namespace GTA
 {
-	public enum Hash : ulong
+	namespace Native
 	{
+		public enum Hash : ulong
+		{
 			/*
 				PLAYER
 			*/
@@ -3710,5 +3712,6 @@ namespace GTA.Native
 			_NETWORK_SHOP_SET_TELEMETRY_NONCE_SEED = 0x9507D4271988E1AE, // 
 			_GET_ONLINE_VERSION = 0xFCA9373EF340AC0A, // 
 
+		}
 	}
 }
