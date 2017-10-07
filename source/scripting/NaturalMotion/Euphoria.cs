@@ -353,14 +353,14 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Gets a StopAllBehaviours Helper class for sending StopAllBehaviours <see cref="Message"/> to this <see cref="Ped"/>.
+		/// Gets a StopAllBehaviorsHelper Helper class for sending StopAllBehaviorsHelper <see cref="Message"/> to this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Send this message to immediately stop all behaviors from executing.
 		/// </remarks>
-		public StopAllBehavioursHelper StopAllBehaviours
+		public StopAllBehaviorsHelper StopAllBehaviours
 		{
-			get { return GetHelper<StopAllBehavioursHelper>("stopAllBehaviours"); }
+			get { return GetHelper<StopAllBehaviorsHelper>("stopAllBehaviours"); }
 		}
 
 		/// <summary>
