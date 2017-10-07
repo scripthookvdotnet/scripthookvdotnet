@@ -179,7 +179,7 @@ namespace GTA
 		Felon2 = 4205676014u,
 		Feltzer2 = 2299640309u,
 		Feltzer3 = 2728226064u,
-		FireTruk = 1938952078u, // exact name of firetruck (except for case)
+		FireTruck = 1938952078u,
 		Fixter = 3458454463u,
 		Flatbed = 1353720154u,
 		Forklift = 1491375716u,
