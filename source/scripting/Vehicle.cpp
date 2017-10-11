@@ -868,11 +868,11 @@ namespace GTA
 	{
 		if (value == GTA::RadioStation::RadioOff)
 		{
-			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, "OFF");
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Handle, "OFF");
 		}
 		else if (System::Enum::IsDefined(value.GetType(), value))
 		{
-			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Game::_radioNames[static_cast<int>(value)]);
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Handle, Game::_radioNames[static_cast<int>(value)]);
 		}
 	}
 	VehicleClass Vehicle::ClassType::get()
