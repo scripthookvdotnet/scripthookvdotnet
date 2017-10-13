@@ -420,7 +420,7 @@ namespace GTA
 
 				if (type == typeof(string))
 				{
-					var address = (char*)(value);
+					var address = (char*)(*value);
 
 					if (address == null)
 					{
