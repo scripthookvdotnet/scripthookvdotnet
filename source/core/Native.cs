@@ -248,6 +248,21 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// An native collection item which can be called with CallCollection.
+		/// </summary>
+    		public class NativeCollectionItem
+	    	{
+			public Hash Hash { get; private set; }
+			public InputArgument[] Arguments { get; private set; }
+			
+			public NativeCollectionItem(Hash hash, params InputArgument[] arguments)
+			{
+		    		Hash = hash;
+		    		Arguments = arguments;
+			}
+		}
+
+		/// <summary>
 		/// A static class which handles script function execution.
 		/// </summary>
 		public static class Function
@@ -281,6 +296,19 @@ namespace GTA
 				}
 			}
 
+			/// <summary>
+            		/// Calls the specified collection of native script functions and ignores its return values.
+            		/// </summary>
+            		/// <param name="nativeCollection">The collection containing all native script functions.</param>
+            		public static void CallCollection(List<NativeCollectionItem> nativeCollection)
+			{
+				for (int index = 0; index < nativeCollection.Count; ++index)
+				{
+					    NativeCollectionItem native = nativeCollection[index];
+					    Call(native.Hash, native.Arguments);
+				}
+			}
+			
 			/// <summary>
 			/// Calls the specified native script function and returns its return value.
 			/// </summary>
