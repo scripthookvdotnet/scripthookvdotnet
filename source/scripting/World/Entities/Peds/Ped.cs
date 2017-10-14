@@ -1060,7 +1060,14 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PED_PERFORMING_STEALTH_KILL, Handle);
 			}
 		}
-
+	    	public Vector3 GetBoneCoord(Bone boneId)
+	    	{
+	        	return GetBoneCoord(boneId, Vector3.Zero);
+	    	}
+	    	public Vector3 GetBoneCoord(Bone boneId, Vector3 offset)
+	    	{
+	        	return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, boneId, offset.X, offset.Y, offset.Z);
+	    	}
 		public bool IsAimingFromCover
 		{
 			get
