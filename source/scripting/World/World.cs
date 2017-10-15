@@ -620,60 +620,60 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetAllPeds(params Model[] models)
 		{
-		    return GetAllPeds(ConvertModelListToHashList(models));
+			return GetAllPeds(ConvertModelListToHashList(models));
 		}
 
-	    /// <summary>
-	    /// Gets an <c>array</c>of all <see cref="Ped"/>s in the World.
-	    /// </summary>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-	    public static Ped[] GetAllPeds(params int[] models)
-	    {
-	        return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(models), handle => new Ped(handle));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c>of all <see cref="Ped"/>s in the World.
+		/// </summary>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
+		public static Ped[] GetAllPeds(params int[] models)
+		{
+			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(models), handle => new Ped(handle));
+		}
 
-        /// <summary>
-        /// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
-        /// </summary>
-        /// <param name="position">The position to check the <see cref="Ped"/> against.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-        public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
-        {
-            return GetNearbyPeds(position, radius, ConvertModelListToHashList(models));
-        }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
+		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
+		{
+			return GetNearbyPeds(position, radius, ConvertModelListToHashList(models));
+		}
 
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
-	    /// </summary>
-	    /// <param name="position">The position to check the <see cref="Ped"/> against.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-	    public static Ped[] GetNearbyPeds(Vector3 position, float radius, params int[] models)
-	    {
-	        return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, models), handle => new Ped(handle));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
+		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params int[] models)
+		{
+			return Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, models), handle => new Ped(handle));
+		}
 
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
-	    /// </summary>
-	    /// <param name="ped">The ped to check.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-	    /// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
-	    public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
-	    {
-	        return GetNearbyPeds(ped, radius, ConvertModelListToHashList(models));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
+		/// </summary>
+		/// <param name="ped">The ped to check.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
+		/// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
+		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
+		{
+			return GetNearbyPeds(ped, radius, ConvertModelListToHashList(models));
+		}
 
-        /// <summary>
-        /// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
-        /// </summary>
-        /// <param name="ped">The ped to check.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-        /// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
-        public static Ped[] GetNearbyPeds(Ped ped, float radius, params int[] models)
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
+		/// </summary>
+		/// <param name="ped">The ped to check.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
+		/// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
+		public static Ped[] GetNearbyPeds(Ped ped, float radius, params int[] models)
 		{
 			int[] handles = MemoryAccess.GetPedHandles(ped.Position, radius, models);
 
@@ -704,85 +704,85 @@ namespace GTA
 			return GetClosestPed(position,radius,ConvertModelListToHashList(models));
 		}
 
-	    /// <summary>
-	    /// Gets the closest <see cref="Ped"/> to a given position in the World.
-	    /// </summary>
-	    /// <param name="position">The position to find the nearest <see cref="Ped"/>.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
-	    /// <remarks>Returns <c>null</c> if no <see cref="Ped"/> was in the given region.</remarks>
-	    public static Ped GetClosestPed(Vector3 position, float radius, params int[] models)
-	    {
-	        Ped[] peds =
-	            Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, models),
-	                handle => new Ped(handle));
-	        return GetClosest<Ped>(position, peds);
-	    }
+		/// <summary>
+		/// Gets the closest <see cref="Ped"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Ped"/>.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
+		/// <remarks>Returns <c>null</c> if no <see cref="Ped"/> was in the given region.</remarks>
+		public static Ped GetClosestPed(Vector3 position, float radius, params int[] models)
+		{
+			Ped[] peds =
+				Array.ConvertAll<int, Ped>(MemoryAccess.GetPedHandles(position, radius, models),
+					handle => new Ped(handle));
+			return GetClosest<Ped>(position, peds);
+		}
 
 
-        /// <summary>
-        /// A fast way to get the total number of vehicles spawned in the world.
-        /// </summary>
-        public static int VehicleCount => MemoryAccess.GetNumberOfVehicles();
+		/// <summary>
+		/// A fast way to get the total number of vehicles spawned in the world.
+		/// </summary>
+		public static int VehicleCount => MemoryAccess.GetNumberOfVehicles();
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
 		/// </summary>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetAllVehicles(params Model[] models)
 		{
-		    return GetAllVehicles(ConvertModelListToHashList(models));
+			return GetAllVehicles(ConvertModelListToHashList(models));
 		}
 
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
-	    /// </summary>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-	    public static Vehicle[] GetAllVehicles(params int[] models)
-	    {
-	        return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(models), handle => new Vehicle(handle));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
+		/// </summary>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		public static Vehicle[] GetAllVehicles(params int[] models)
+		{
+			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(models), handle => new Vehicle(handle));
+		}
 
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
-	    /// </summary>
-	    /// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-	    public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
-	    {
-	        return GetNearbyVehicles(position, radius, ConvertModelListToHashList(models));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
+		{
+			return GetNearbyVehicles(position, radius, ConvertModelListToHashList(models));
+		}
 
-        /// <summary>
-        /// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
-        /// </summary>
-        /// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-        public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params int[] models)
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params int[] models)
 		{
 			return Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, models), handle => new Vehicle(handle));
 		}
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
-	    /// </summary>
-	    /// <param name="ped">The ped to check.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-	    /// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
-	    public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
-	    {
-	        return GetNearbyVehicles(ped, radius, ConvertModelListToHashList(models));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
+		/// </summary>
+		/// <param name="ped">The ped to check.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		/// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
+		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
+		{
+			return GetNearbyVehicles(ped, radius, ConvertModelListToHashList(models));
+		}
 
-        /// <summary>
-        /// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
-        /// </summary>
-        /// <param name="ped">The ped to check.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-        /// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
-        public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params int[] models)
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
+		/// </summary>
+		/// <param name="ped">The ped to check.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		/// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
+		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params int[] models)
 		{
 			int[] handles = MemoryAccess.GetVehicleHandles(ped.Position, radius, models);
 
@@ -803,26 +803,26 @@ namespace GTA
 			return result.ToArray();
 		}
 
-	    /// <summary>
-	    /// Gets the closest <see cref="Vehicle"/> to a given position in the World.
-	    /// </summary>
-	    /// <param name="position">The position to find the nearest <see cref="Vehicle"/>.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-	    /// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
-	    public static Vehicle GetClosestVehicle(Vector3 position, float radius, params Model[] models)
-	    {
-	        return GetClosestVehicle(position, radius, ConvertModelListToHashList(models));
-	    }
+		/// <summary>
+		/// Gets the closest <see cref="Vehicle"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Vehicle"/>.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		/// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
+		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params Model[] models)
+		{
+			return GetClosestVehicle(position, radius, ConvertModelListToHashList(models));
+		}
 
-        /// <summary>
-        /// Gets the closest <see cref="Vehicle"/> to a given position in the World.
-        /// </summary>
-        /// <param name="position">The position to find the nearest <see cref="Vehicle"/>.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-        /// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
-        public static Vehicle GetClosestVehicle(Vector3 position, float radius, params int[] models)
+		/// <summary>
+		/// Gets the closest <see cref="Vehicle"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Vehicle"/>.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
+		/// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
+		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params int[] models)
 		{
 			Vehicle[] vehicles = 
 				Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, models),
@@ -831,62 +831,62 @@ namespace GTA
 
 		}
 
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
-	    /// </summary>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-	    public static Prop[] GetAllProps(params Model[] models)
-	    {
-	        return GetAllProps(ConvertModelListToHashList(models));
-	    }
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
+		/// </summary>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
+		public static Prop[] GetAllProps(params Model[] models)
+		{
+			return GetAllProps(ConvertModelListToHashList(models));
+		}
 
-        /// <summary>
-        /// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
-        /// </summary>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-        public static Prop[] GetAllProps(params int[] models)
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
+		/// </summary>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
+		public static Prop[] GetAllProps(params int[] models)
 		{						
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(models), handle => new Prop(handle));
 		}
-	    /// <summary>
-	    /// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
-	    /// </summary>
-	    /// <param name="position">The position to check the <see cref="Prop"/> against.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-	    public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
-	    {
-	        return GetNearbyProps(position, radius, ConvertModelListToHashList(models));
-	    }
-        /// <summary>
-        /// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
-        /// </summary>
-        /// <param name="position">The position to check the <see cref="Prop"/> against.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-        public static Prop[] GetNearbyProps(Vector3 position, float radius, params int[] models)
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
+		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
+		{
+			return GetNearbyProps(position, radius, ConvertModelListToHashList(models));
+		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
+		public static Prop[] GetNearbyProps(Vector3 position, float radius, params int[] models)
 		{
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(position, radius, models), handle => new Prop(handle));
 		}
-	    /// <summary>
-	    /// Gets the closest <see cref="Prop"/> to a given position in the World.
-	    /// </summary>
-	    /// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
-	    /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
-	    /// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-	    /// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
-	    public static Prop GetClosestProp(Vector3 position, float radius, params Model[] models)
-	    {
-	        return GetClosestProp(position, radius, ConvertModelListToHashList(models));
-	    }
-        /// <summary>
-        /// Gets the closest <see cref="Prop"/> to a given position in the World.
-        /// </summary>
-        /// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
-        /// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
-        /// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
-        public static Prop GetClosestProp(Vector3 position, float radius, params int[] models)
+		/// <summary>
+		/// Gets the closest <see cref="Prop"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
+		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
+		public static Prop GetClosestProp(Vector3 position, float radius, params Model[] models)
+		{
+			return GetClosestProp(position, radius, ConvertModelListToHashList(models));
+		}
+		/// <summary>
+		/// Gets the closest <see cref="Prop"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
+		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
+		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
+		public static Prop GetClosestProp(Vector3 position, float radius, params int[] models)
 		{
 			Prop[] props =
 				Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(position, radius, models),
