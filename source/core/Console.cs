@@ -527,10 +527,16 @@ namespace GTA
 					GoDownCommandList();
 					break;
 				case Keys.V:
-					if (e.Control)
-						PasteClipboard();
-					break;
-				case Keys.Enter:
+			        if (e.Control)
+			        {
+			            PasteClipboard();
+			        }
+			        else
+			        {
+			            AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+                    }
+				    break;
+                case Keys.Enter:
 					ExecuteInput();
 					break;
 				case Keys.Escape:
