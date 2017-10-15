@@ -528,7 +528,13 @@ namespace GTA
 					break;
 				case Keys.V:
 					if (e.Control)
+					{
 						PasteClipboard();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
 					break;
 				case Keys.Enter:
 					ExecuteInput();
