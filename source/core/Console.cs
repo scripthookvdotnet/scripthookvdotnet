@@ -663,14 +663,22 @@ namespace GTA
 		{
 			if (_input.Length > 0)
 			{
-				_input = _input.Remove(_input.Length - _cursorPos - 1, 1);
+				int startIndex = _input.Length - _cursorPos - 1;
+				if (startIndex < _input.Length && startIndex >= 0)
+				{
+					_input = _input.Remove(startIndex, 1);
+				}
 			}
 		}
 		private void RemoveCharRight()
 		{
-			if (_input.Length > 0 && _cursorPos < _input.Length)
+			if (_input.Length > 0 && _cursorPos <= _input.Length)
 			{
-				_input = _input.Remove(_input.Length - _cursorPos, 1);
+				int startIndex = _input.Length - _cursorPos;
+				if (startIndex < _input.Length && startIndex >= 0)
+				{
+					_input = _input.Remove(_input.Length - _cursorPos, 1);
+				}
 			}
 
 			if (_cursorPos > 0)
