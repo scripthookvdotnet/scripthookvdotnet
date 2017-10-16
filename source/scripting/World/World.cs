@@ -605,14 +605,14 @@ namespace GTA
 		/// Gets an <c>array</c> of all the <see cref="Checkpoint"/>s.
 		/// </summary>
 		public static Checkpoint[] GetAllCheckpoints()
-		{					   
+		{
 			return Array.ConvertAll<int, Checkpoint>(MemoryAccess.GetCheckpointHandles(), element => new Checkpoint(element));
 		}
 
-        /// <summary>
-        /// Gets the hash of all <see cref="Model"/>s in a list
-        /// </summary>
-        /// <param name="models">A list of <see cref="Model"/>s</param>
+		/// <summary>
+		/// Gets the hash of all <see cref="Model"/>s in a list
+		/// </summary>
+		/// <param name="models">A list of <see cref="Model"/>s</param>
 		public static int[] ConvertModelListToHashList(Model[] models)
 		{
 			return Array.ConvertAll<Model, int>(models, model => model.Hash);
@@ -705,7 +705,7 @@ namespace GTA
 		/// <remarks>Returns <c>null</c> if no <see cref="Ped"/> was in the given region.</remarks>
 		public static Ped GetClosestPed(Vector3 position, float radius, params Model[] models)
 		{
-			return GetClosestPed(position,radius,ConvertModelListToHashList(models));
+			return GetClosestPed(position, radius, ConvertModelListToHashList(models));
 		}
 
 		/// <summary>
@@ -828,7 +828,7 @@ namespace GTA
 		/// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
 		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params int[] models)
 		{
-			Vehicle[] vehicles = 
+			Vehicle[] vehicles =
 				Array.ConvertAll<int, Vehicle>(MemoryAccess.GetVehicleHandles(position, radius, models),
 					handle => new Vehicle(handle));
 			return GetClosest<Vehicle>(position, vehicles);
@@ -849,7 +849,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="models">The hashlist of <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetAllProps(params int[] models)
-		{						
+		{
 			return Array.ConvertAll<int, Prop>(MemoryAccess.GetPropHandles(models), handle => new Prop(handle));
 		}
 		/// <summary>
@@ -901,7 +901,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Entity"/>s in the World.
 		/// </summary>
 		public static Entity[] GetAllEntities()
-		{									   
+		{
 			return Array.ConvertAll<int, Entity>(MemoryAccess.GetEntityHandles(), Entity.FromHandle);
 		}
 		/// <summary>
@@ -981,11 +981,11 @@ namespace GTA
 			ISpatial closest = null;
 			float closestDistance = 3e38f;
 			Vector3 pos = new Vector3(position.X, position.Y, 0.0f);
-			foreach(var spatial in spatials)
+			foreach (var spatial in spatials)
 			{
 				float distance = pos.DistanceToSquared2D(spatial.Position);
 
-				if(distance <= closestDistance)
+				if (distance <= closestDistance)
 				{
 					closest = spatial;
 					closestDistance = distance;
@@ -1390,7 +1390,7 @@ namespace GTA
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 42, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
 
-			if(handle == 0)
+			if (handle == 0)
 			{
 				return null;
 			}
