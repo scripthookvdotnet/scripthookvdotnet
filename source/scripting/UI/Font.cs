@@ -1,5 +1,8 @@
 namespace GTA.UI
 {
+	/// <summary>
+	/// An enumeration of fonts the game supports.
+	/// </summary>
 	public enum Font
 	{
 		ChaletLondon,

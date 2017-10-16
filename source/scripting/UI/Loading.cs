@@ -21,13 +21,18 @@ namespace GTA.UI
 	public static class LoadingPrompt
 	{
 		/// <summary>
+		/// Gets a value indicating whether the Loading Prompt is currently being displayed
+		/// </summary>
+		public static bool IsActive => Function.Call<bool>(Hash._IS_LOADING_PROMPT_BEING_DISPLAYED);
+
+		/// <summary>
 		/// Creates a loading prompt at the bottom right of the screen with the given text and spinner type
 		/// </summary>
 		/// <param name="loadingText">The text to display next to the spinner</param>
 		/// <param name="spinnerType">The style of spinner to draw</param>
 		/// <remarks>
 		/// <see cref="LoadingSpinnerType.Clockwise1"/>, <see cref="LoadingSpinnerType.Clockwise2"/>, <see cref="LoadingSpinnerType.Clockwise3"/> and <see cref="LoadingSpinnerType.RegularClockwise"/> all see to be the same. 
-		/// But Rockstar always seem to use the <see cref="LoadingSpinnerType.RegularClockwise"/> in the scripts
+		/// But Rockstar apparently always uses <see cref="LoadingSpinnerType.RegularClockwise"/> in their scripts.
 		/// </remarks>
 		public static void Show(string loadingText = null, LoadingSpinnerType spinnerType = LoadingSpinnerType.RegularClockwise)
 		{
@@ -55,14 +60,6 @@ namespace GTA.UI
 			{
 				Function.Call(Hash._REMOVE_LOADING_PROMPT);
 			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether the Loading Prompt is currently being displayed
-		/// </summary>
-		public static bool IsActive
-		{
-			get { return Function.Call<bool>(Hash._IS_LOADING_PROMPT_BEING_DISPLAYED); }
 		}
 	}
 }

@@ -202,7 +202,7 @@ namespace GTA.UI
 		{
 			get
 			{
-			    int width, height;
+				int width, height;
 				unsafe
 				{
 					Function.Call(Hash._GET_ACTIVE_SCREEN_RESOLUTION, &width, &height);
@@ -214,20 +214,11 @@ namespace GTA.UI
 		/// <summary>
 		/// Gets the current screen aspect ratio
 		/// </summary>		   
-		public static float AspectRatio
-		{
-			get { return Function.Call<float>(Hash._GET_ASPECT_RATIO, 0); }
-		}
+		public static float AspectRatio => Function.Call<float>(Hash._GET_ASPECT_RATIO, 0);
 		/// <summary>
 		/// Gets the screen width scaled against a 720pixel height base.
 		/// </summary>
-		public static float ScaledWidth
-		{
-			get
-			{
-				return Height * AspectRatio;
-			}
-		}
+		public static float ScaledWidth => Height * AspectRatio;
 
 		// Fading
 
@@ -237,52 +228,28 @@ namespace GTA.UI
 		/// <value>
 		/// <c>true</c> if the screen is faded in; otherwise, <c>false</c>.
 		/// </value>
-		public static bool IsFadedIn
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADED_IN);
-			}
-		}
+		public static bool IsFadedIn => Function.Call<bool>(Hash.IS_SCREEN_FADED_IN);
 		/// <summary>
 		/// Gets a value indicating whether the screen is faded out.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if the screen is faded out; otherwise, <c>false</c>.
 		/// </value>
-		public static bool IsFadedOut
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
-			}
-		}
+		public static bool IsFadedOut => Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
 		/// <summary>
 		/// Gets a value indicating whether the screen is fading in.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if the screen is fading in; otherwise, <c>false</c>.
 		/// </value>
-		public static bool IsFadingIn
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADING_IN);
-			}
-		}
+		public static bool IsFadingIn => Function.Call<bool>(Hash.IS_SCREEN_FADING_IN);
 		/// <summary>
 		/// Gets a value indicating whether the screen is fading out.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if the screen is fading out; otherwise, <c>false</c>.
 		/// </value>
-		public static bool IsFadingOut
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
-			}
-		}
+		public static bool IsFadingOut => Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
 
 		/// <summary>
 		/// Fades the screen in over a specific time, useful for transitioning

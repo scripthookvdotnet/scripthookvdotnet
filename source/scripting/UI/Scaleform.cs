@@ -17,6 +17,9 @@ namespace GTA
 		}
 	}
 
+	/// <summary>
+	/// A class which handles rendering of Scaleform elements.
+	/// </summary>
 	public sealed class Scaleform : IDisposable, INativeValue
 	{
 		public Scaleform(string scaleformID)
@@ -76,13 +79,13 @@ namespace GTA
 
 		public void CallFunction(string function, params object[] arguments)
 		{
-			this.CallFunctionHead(function, arguments);
+			CallFunctionHead(function, arguments);
 			Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
 		}
 
 		public int CallFunctionReturn(string function, params object[] arguments)
 		{
-			this.CallFunctionHead(function, arguments);
+			CallFunctionHead(function, arguments);
 			return Function.Call<int>(Hash._POP_SCALEFORM_MOVIE_FUNCTION);
 		}
 
