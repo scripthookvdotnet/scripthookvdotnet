@@ -157,7 +157,7 @@ namespace GTA
 
 					try
 					{
-						if (AssemblyName.GetAssemblyName(filename).Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+						if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 						{
 							Log("[WARNING]", "Removing assembly file '", Path.GetFileName(filename), "'.");
 
