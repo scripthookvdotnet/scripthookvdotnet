@@ -505,6 +505,36 @@ namespace GTA
 				PageDown();
 				return;
 			}
+			else if (e.Control)
+			{
+				switch (e.KeyCode)
+				{
+					case Keys.A:
+						MoveCursorToStartOfLine();
+						return;
+					case Keys.B:
+						MoveCursorLeft();
+						return;
+					case Keys.E:
+						MoveCursorToEndOfLine();
+						return;
+					case Keys.F:
+						MoveCursorRight();
+						return;
+					case Keys.L:
+						Clear();
+						return;
+					case Keys.N:
+						GoDownCommandList();
+						return;
+					case Keys.P:
+						GoUpCommandList();
+						return;
+					case Keys.V:
+						PasteClipboard();
+						return;
+				}
+			}
 
 			switch (e.KeyCode)
 			{
@@ -525,86 +555,6 @@ namespace GTA
 					break;
 				case Keys.Down:
 					GoDownCommandList();
-					break;
-				case Keys.A:
-					if (e.Control)
-					{
-						MoveCursorToStartOfLine();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.B:
-					if (e.Control)
-					{
-						MoveCursorLeft();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.E:
-					if (e.Control)
-					{
-						MoveCursorToEndOfLine();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.F:
-					if (e.Control)
-					{
-						MoveCursorRight();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.L:
-					if (e.Control)
-					{
-						Clear();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.N:
-					if (e.Control)
-					{
-						GoDownCommandList();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.P:
-					if (e.Control)
-					{
-						GoUpCommandList();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
-					break;
-				case Keys.V:
-					if (e.Control)
-					{
-						PasteClipboard();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
 					break;
 				case Keys.Enter:
 					ExecuteInput();
