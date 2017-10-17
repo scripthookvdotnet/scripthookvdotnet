@@ -526,10 +526,30 @@ namespace GTA
 				case Keys.Down:
 					GoDownCommandList();
 					break;
+				case Keys.A:
+					if (e.Control)
+					{
+						MoveCursorToStartOfLine();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
+					break;
 				case Keys.B:
 					if (e.Control)
 					{
 						MoveCursorLeft();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
+					break;
+				case Keys.E:
+					if (e.Control)
+					{
+						MoveCursorToEndOfLine();
 					}
 					else
 					{
@@ -678,6 +698,14 @@ namespace GTA
 		{
 			if (_cursorPos > 0)
 				_cursorPos--;
+		}
+		private void MoveCursorToStartOfLine()
+		{
+			_cursorPos = _input.Length;
+		}
+		private void MoveCursorToEndOfLine()
+		{
+			_cursorPos = 0;
 		}
 		private void RemoveCharLeft()
 		{
