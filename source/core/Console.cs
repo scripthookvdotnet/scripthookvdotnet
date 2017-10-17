@@ -505,6 +505,36 @@ namespace GTA
 				PageDown();
 				return;
 			}
+			else if (e.Control)
+			{
+				switch (e.KeyCode)
+				{
+					case Keys.A:
+						MoveCursorToStartOfLine();
+						return;
+					case Keys.B:
+						MoveCursorLeft();
+						return;
+					case Keys.E:
+						MoveCursorToEndOfLine();
+						return;
+					case Keys.F:
+						MoveCursorRight();
+						return;
+					case Keys.L:
+						Clear();
+						return;
+					case Keys.N:
+						GoDownCommandList();
+						return;
+					case Keys.P:
+						GoUpCommandList();
+						return;
+					case Keys.V:
+						PasteClipboard();
+						return;
+				}
+			}
 
 			switch (e.KeyCode)
 			{
@@ -525,16 +555,6 @@ namespace GTA
 					break;
 				case Keys.Down:
 					GoDownCommandList();
-					break;
-				case Keys.V:
-					if (e.Control)
-					{
-						PasteClipboard();
-					}
-					else
-					{
-						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
-					}
 					break;
 				case Keys.Enter:
 					ExecuteInput();
@@ -658,6 +678,14 @@ namespace GTA
 		{
 			if (_cursorPos > 0)
 				_cursorPos--;
+		}
+		private void MoveCursorToStartOfLine()
+		{
+			_cursorPos = _input.Length;
+		}
+		private void MoveCursorToEndOfLine()
+		{
+			_cursorPos = 0;
 		}
 		private void RemoveCharLeft()
 		{
