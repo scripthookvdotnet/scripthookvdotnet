@@ -732,7 +732,7 @@ namespace GTA
 			Native.Function.Call(Native.Hash.SET_TEXT_FONT, font);
 			Native.Function.Call(Native.Hash.SET_TEXT_SCALE, scale, scale);
 			Native.Function.Call(Native.Hash.SET_TEXT_COLOUR, color.R, color.G, color.B, color.A);
-			Native.Function.Call(Native.Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, "STRING");
+			Native.Function.Call(Native.Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, "CELL_EMAIL_BCON");
 
 			const int maxStringLength = 99;
 
