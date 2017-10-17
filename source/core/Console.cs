@@ -576,6 +576,26 @@ namespace GTA
 						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
 					}
 					break;
+				case Keys.N:
+					if (e.Control)
+					{
+						GoDownCommandList();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
+					break;
+				case Keys.P:
+					if (e.Control)
+					{
+						GoUpCommandList();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
+					break;
 				case Keys.V:
 					if (e.Control)
 					{
