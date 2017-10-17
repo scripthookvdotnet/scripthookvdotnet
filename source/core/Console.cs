@@ -526,6 +526,26 @@ namespace GTA
 				case Keys.Down:
 					GoDownCommandList();
 					break;
+				case Keys.B:
+					if (e.Control)
+					{
+						MoveCursorLeft();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
+					break;
+				case Keys.F:
+					if (e.Control)
+					{
+						MoveCursorRight();
+					}
+					else
+					{
+						AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					}
+					break;
 				case Keys.V:
 					if (e.Control)
 					{
