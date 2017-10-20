@@ -613,7 +613,7 @@ namespace GTA
 		/// Gets the hash of all <see cref="Model"/>s in a list
 		/// </summary>
 		/// <param name="models">A list of <see cref="Model"/>s</param>
-		public static int[] ConvertModelListToHashList(Model[] models)
+		static int[] ConvertModelListToHashList(Model[] models)
 		{
 			return Array.ConvertAll<Model, int>(models, model => model.Hash);
 		}
