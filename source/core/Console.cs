@@ -461,7 +461,7 @@ namespace GTA
 
 			if (now.Millisecond < 500)
 			{
-				float length = GetTextLength(_input.Substring(0, _input.Length - _cursorPos), DefaultScale, DefaultFont);
+				float length = GetTextLength(_input.Substring(0, _cursorPos), DefaultScale, DefaultFont);
 				DrawText(25 + (length * WIDTH) - 4, HEIGHT / 3, "~w~~h~|~w~", DefaultScale, DefaultFont, InputColor);
 			}
 
@@ -577,7 +577,8 @@ namespace GTA
 				return;
 			}
 
-			_input = _input.Insert(_input.Length - _cursorPos, input);
+			_input = _input.Insert(_cursorPos, input);
+			_cursorPos++;
 		}
 		private void AddClipboardContent()
 		{
@@ -671,47 +672,35 @@ namespace GTA
 
 		private void MoveCursorLeft()
 		{
-			if (_cursorPos < _input.Length)
-				_cursorPos++;
-		}
-		private void MoveCursorRight()
-		{
 			if (_cursorPos > 0)
 				_cursorPos--;
 		}
-		private void MoveCursorToStartOfLine()
+		private void MoveCursorRight()
 		{
-			_cursorPos = _input.Length;
+			if (_cursorPos < _input.Length)
+				_cursorPos++;
 		}
-		private void MoveCursorToEndOfLine()
+		private void MoveCursorToStartOfLine()
 		{
 			_cursorPos = 0;
 		}
+		private void MoveCursorToEndOfLine()
+		{
+			_cursorPos = _input.Length;
+		}
 		private void RemoveCharLeft()
 		{
-			if (_input.Length > 0)
+			if (_input.Length > 0 && _cursorPos > 0)
 			{
-				int startIndex = _input.Length - _cursorPos - 1;
-				if (startIndex < _input.Length && startIndex >= 0)
-				{
-					_input = _input.Remove(startIndex, 1);
-				}
+				_input = _input.Remove(_cursorPos - 1, 1);
+				_cursorPos--;
 			}
 		}
 		private void RemoveCharRight()
 		{
-			if (_input.Length > 0 && _cursorPos <= _input.Length)
+			if (_input.Length > 0 && _cursorPos < _input.Length)
 			{
-				int startIndex = _input.Length - _cursorPos;
-				if (startIndex < _input.Length && startIndex >= 0)
-				{
-					_input = _input.Remove(_input.Length - _cursorPos, 1);
-				}
-			}
-
-			if (_cursorPos > 0)
-			{
-				_cursorPos--;
+				_input = _input.Remove(_cursorPos, 1);
 			}
 		}
 		private void PageUp()
