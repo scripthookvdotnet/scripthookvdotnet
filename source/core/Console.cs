@@ -21,6 +21,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -153,7 +154,6 @@ namespace GTA
 		LinkedList<string> _lines;
 		List<string> _commandHistory;
 		Regex _getWordPattern = new Regex(@"[^\W_]+", RegexOptions.Compiled);
-		Regex _getWordPatternRightToLeft = new Regex(@"[^\W_]+", RegexOptions.Compiled & RegexOptions.RightToLeft);
 
 		Task<Assembly> _compilerTask;
 		ConcurrentQueue<string[]> _outputQueue;
@@ -712,10 +712,10 @@ namespace GTA
 		}
 		private void BackwardWord()
 		{
-			Match match = _getWordPatternRightToLeft.Match(_input, _cursorPos);
-			if (match.Success)
+			var matches = _getWordPattern.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos);
+			if (matches.Any())
 			{
-				_cursorPos = match.Index;
+				_cursorPos = matches.Last().Index;
 			}
 			else
 			{
