@@ -713,7 +713,7 @@ namespace GTA
 		}
 		private void BackwardWord()
 		{
-			var matches = _getWordPattern.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos);
+			var matches = _getWordPattern.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).ToList();
 
 			if (matches.Any())
 			{
