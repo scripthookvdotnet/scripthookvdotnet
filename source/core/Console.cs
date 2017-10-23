@@ -507,6 +507,12 @@ namespace GTA
 			{
 				switch (e.KeyCode)
 				{
+					case Keys.Left:
+						BackwardWord();
+						return;
+					case Keys.Right:
+						ForwardWord();
+						return;
 					case Keys.A:
 						MoveCursorToStartOfLine();
 						return;
