@@ -259,14 +259,10 @@ namespace GTA
 
 		private void SetControlsEnabled(bool enabled)
 		{
-			for (int i = 0; i < 338; i++)
+			Native.Function.Call(Native.Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
+			for (int i = 1; i <= 6; i++)
 			{
-				if (i >= 1 && i <= 6)
-				{
-					continue;
-				}
-
-				Native.Function.Call(Native.Hash.DISABLE_CONTROL_ACTION, 0, i, enabled);
+				Native.Function.Call(Native.Hash.ENABLE_CONTROL_ACTION, 0, i, enabled);
 			}
 		}
 
