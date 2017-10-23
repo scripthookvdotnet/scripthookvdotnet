@@ -701,6 +701,7 @@ namespace GTA
 		private void ForwardWord()
 		{
 			Match match = _getWordPattern.Match(_input, _cursorPos);
+
 			if (match.Success)
 			{
 				_cursorPos = match.Index + match.Length;
@@ -713,6 +714,7 @@ namespace GTA
 		private void BackwardWord()
 		{
 			var matches = _getWordPattern.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos);
+
 			if (matches.Any())
 			{
 				_cursorPos = matches.Last().Index;
