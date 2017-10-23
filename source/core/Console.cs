@@ -152,6 +152,8 @@ namespace GTA
 		DateTime _lastClosed;
 		LinkedList<string> _lines;
 		List<string> _commandHistory;
+		Regex _getWordPattern = new Regex(@"[^\W_]+", RegexOptions.Compiled);
+		Regex _getWordPatternRightToLeft = new Regex(@"[^\W_]+", RegexOptions.Compiled & RegexOptions.RightToLeft);
 
 		Task<Assembly> _compilerTask;
 		ConcurrentQueue<string[]> _outputQueue;
@@ -535,6 +537,18 @@ namespace GTA
 						return;
 				}
 			}
+			else if (e.Alt)
+			{
+				switch (e.KeyCode)
+				{
+					case Keys.B:
+						BackwardWord();
+						return;
+					case Keys.F:
+						ForwardWord();
+						return;
+				}
+			}
 
 			switch (e.KeyCode)
 			{
@@ -687,6 +701,30 @@ namespace GTA
 		private void MoveCursorToEndOfLine()
 		{
 			_cursorPos = _input.Length;
+		}
+		private void ForwardWord()
+		{
+			Match match = _getWordPattern.Match(_input, _cursorPos);
+			if (match.Success)
+			{
+				_cursorPos = match.Index + match.Length;
+			}
+			else
+			{
+				_cursorPos = _input.Length;
+			}
+		}
+		private void BackwardWord()
+		{
+			Match match = _getWordPatternRightToLeft.Match(_input, _cursorPos);
+			if (match.Success)
+			{
+				_cursorPos = match.Index;
+			}
+			else
+			{
+				_cursorPos = 0;
+			}
 		}
 		private void RemoveCharLeft()
 		{
