@@ -153,7 +153,7 @@ namespace GTA
 		DateTime _lastClosed;
 		LinkedList<string> _lines;
 		List<string> _commandHistory;
-		Regex _getWordPattern = new Regex(@"[^\W_]+", RegexOptions.Compiled);
+		Regex _getEachWordRegex = new Regex(@"[^\W_]+", RegexOptions.Compiled);
 
 		Task<Assembly> _compilerTask;
 		ConcurrentQueue<string[]> _outputQueue;
@@ -700,7 +700,7 @@ namespace GTA
 		}
 		private void ForwardWord()
 		{
-			Match match = _getWordPattern.Match(_input, _cursorPos);
+			Match match = _getEachWordRegex.Match(_input, _cursorPos);
 
 			if (match.Success)
 			{
@@ -713,7 +713,7 @@ namespace GTA
 		}
 		private void BackwardWord()
 		{
-			var matches = _getWordPattern.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).ToList();
+			var matches = _getEachWordRegex.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).ToList();
 
 			if (matches.Any())
 			{
