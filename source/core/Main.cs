@@ -44,17 +44,11 @@ abstract class ScriptHookVDotNet
 	}
 	public static void Tick()
 	{
-		if (Domain != null)
-		{
-			Domain.DoTick();
-		}
+		Domain?.DoTick();
 	}
 
 	public static void KeyboardMessage(WinForms.Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 	{
-		if (Domain != null)
-		{
-			Domain.DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
-		}
+		Domain?.DoKeyboardMessage(key, status, statusCtrl, statusShift, statusAlt);
 	}
 }
