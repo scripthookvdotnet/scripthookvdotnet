@@ -21,6 +21,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -152,6 +153,7 @@ namespace GTA
 		DateTime _lastClosed;
 		LinkedList<string> _lines;
 		List<string> _commandHistory;
+		Regex _getEachWordRegex = new Regex(@"[^\W_]+", RegexOptions.Compiled);
 
 		Task<Assembly> _compilerTask;
 		ConcurrentQueue<string[]> _outputQueue;
@@ -257,14 +259,10 @@ namespace GTA
 
 		private void SetControlsEnabled(bool enabled)
 		{
-			for (int i = 0; i < 338; i++)
+			Native.Function.Call(Native.Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
+			for (int i = 1; i <= 6; i++)
 			{
-				if (i >= 1 && i <= 6)
-				{
-					continue;
-				}
-
-				Native.Function.Call(Native.Hash.DISABLE_CONTROL_ACTION, 0, i, enabled);
+				Native.Function.Call(Native.Hash.ENABLE_CONTROL_ACTION, 0, i, enabled);
 			}
 		}
 
@@ -509,6 +507,12 @@ namespace GTA
 			{
 				switch (e.KeyCode)
 				{
+					case Keys.Left:
+						BackwardWord();
+						return;
+					case Keys.Right:
+						ForwardWord();
+						return;
 					case Keys.A:
 						MoveCursorToStartOfLine();
 						return;
@@ -532,6 +536,18 @@ namespace GTA
 						return;
 					case Keys.V:
 						PasteClipboard();
+						return;
+				}
+			}
+			else if (e.Alt)
+			{
+				switch (e.KeyCode)
+				{
+					case Keys.B:
+						BackwardWord();
+						return;
+					case Keys.F:
+						ForwardWord();
 						return;
 				}
 			}
@@ -687,6 +703,32 @@ namespace GTA
 		private void MoveCursorToEndOfLine()
 		{
 			_cursorPos = _input.Length;
+		}
+		private void ForwardWord()
+		{
+			Match match = _getEachWordRegex.Match(_input, _cursorPos);
+
+			if (match.Success)
+			{
+				_cursorPos = match.Index + match.Length;
+			}
+			else
+			{
+				_cursorPos = _input.Length;
+			}
+		}
+		private void BackwardWord()
+		{
+			var matches = _getEachWordRegex.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).ToList();
+
+			if (matches.Any())
+			{
+				_cursorPos = matches.Last().Index;
+			}
+			else
+			{
+				_cursorPos = 0;
+			}
 		}
 		private void RemoveCharLeft()
 		{
