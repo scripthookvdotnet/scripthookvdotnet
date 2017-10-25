@@ -543,8 +543,7 @@ namespace GTA
 			}
 
 			_scriptTypes.Clear();
-			_runningScripts.Clear();
-			_runningScripts.Add(Console);
+			_runningScripts.RemoveAll(x => x != Console);
 
 			GC.Collect();
 		}
