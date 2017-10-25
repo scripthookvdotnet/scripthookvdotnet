@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
@@ -279,13 +280,8 @@ namespace GTA
 
 			try
 			{
-				foreach (var type in assembly.GetTypes())
+				foreach (var type in assembly.GetTypes().Where(x => !x.IsSubclassOf(typeof(Script))))
 				{
-					if (!type.IsSubclassOf(typeof(Script)))
-					{
-						continue;
-					}
-
 					count++;
 					_scriptTypes.Add(new Tuple<string, Type>(filename, type));
 				}
@@ -433,15 +429,8 @@ namespace GTA
 				return;
 			}
 
-			for (int i = 0; i < _scriptTypes.Count; i++)
+			foreach (var script in _scriptTypes.Select(x => InstantiateScript(x.Item2)).Where(x => x != null))
 			{
-				Script script = InstantiateScript(_scriptTypes[i].Item2);
-
-				if (ReferenceEquals(script, null))
-				{
-					continue;
-				}
-
 				script.Start();
 			}
 		}
@@ -541,24 +530,16 @@ namespace GTA
 		{
 			filename = Path.GetFullPath(filename);
 
-			foreach (Script script in _runningScripts)
+			foreach (Script script in _runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
 			{
-				if (!filename.Equals(script.Filename, StringComparison.OrdinalIgnoreCase))
-				{
-					continue;
-				}
-
 				script.Abort();
 			}
 		}
 		public void AbortAllScriptsExceptConsole()
 		{
-			foreach (Script script in _runningScripts)
+			foreach (Script script in _runningScripts.Where(x => x != Console))
 			{
-				if (!ReferenceEquals(script, Console))
-				{
-					script.Abort();
-				}
+				script.Abort();
 			}
 
 			_scriptTypes.Clear();
@@ -720,15 +701,7 @@ namespace GTA
 		}
 		public string LookupScriptFilename(Type type)
 		{
-			foreach (var scriptType in _scriptTypes)
-			{
-				if (scriptType.Item2 == type)
-				{
-					return scriptType.Item1;
-				}
-			}
-
-			return string.Empty;
+			return _scriptTypes.FirstOrDefault(x => x.Item2 == type)?.Item1 ?? string.Empty;
 		}
 		public override object InitializeLifetimeService()
 		{
