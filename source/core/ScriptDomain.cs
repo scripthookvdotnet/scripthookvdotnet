@@ -369,7 +369,7 @@ namespace GTA
 			{
 				var dependencies = new List<Type>();
 
-				foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes(typeof(RequireScript), true))
+				foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes<RequireScript>(true))
 				{
 					dependencies.Add(attribute._dependency);
 				}
@@ -725,7 +725,7 @@ namespace GTA
 
 		static private string GetScriptSupportURL(Type scriptType)
 		{
-			foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes(typeof(ScriptAttributes), true))
+			foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes<ScriptAttributes>(true))
 			{
 				if (!String.IsNullOrEmpty(attribute.SupportURL))
 				{

@@ -289,9 +289,9 @@ namespace GTA
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
-				foreach (var attribute in method.GetCustomAttributes(typeof(ConsoleCommand), true))
+				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
 				{
-					RegisterCommand((ConsoleCommand)(attribute), method, defaultCommands);
+					RegisterCommand(attribute, method, defaultCommands);
 				}
 			}
 		}
@@ -299,9 +299,9 @@ namespace GTA
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
-				foreach (var attribute in method.GetCustomAttributes(typeof(ConsoleCommand), true))
+				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
 				{
-					var command = (ConsoleCommand)(attribute);
+					var command = attribute;
 					command.Namespace = method.DeclaringType.FullName;
 
 					if (_commands.ContainsKey(command.Namespace))
