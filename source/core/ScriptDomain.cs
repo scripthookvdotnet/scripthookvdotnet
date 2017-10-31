@@ -280,7 +280,7 @@ namespace GTA
 
 			try
 			{
-				foreach (var type in assembly.GetTypes().Where(x => !x.IsSubclassOf(typeof(Script))))
+				foreach (var type in assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(Script))))
 				{
 					count++;
 					_scriptTypes.Add(new Tuple<string, Type>(filename, type));
