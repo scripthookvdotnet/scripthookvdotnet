@@ -647,11 +647,11 @@ namespace GTA
 		}
 		private void BackwardWord()
 		{
-			var matches = _getEachWordRegex.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).ToList();
+			var lastMatch = _getEachWordRegex.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).LastOrDefault();
 
-			if (matches.Any())
+			if (lastMatch != null)
 			{
-				_cursorPos = matches.Last().Index;
+				_cursorPos = lastMatch.Index;
 			}
 			else
 			{
