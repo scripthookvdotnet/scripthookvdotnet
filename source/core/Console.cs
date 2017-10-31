@@ -34,107 +34,43 @@ namespace GTA
 	//Used to describe console args (Needed for creating a Help-func)
 	internal class ConsoleArg
 	{
-		#region Fields
-		string _type;
-		string _name;
-		#endregion
-
 		public ConsoleArg(string type, string name)
 		{
-			this._type = type;
-			this._name = type;
+			Type = type;
+			Name = type;
 		}
 
-		internal string Type
-		{
-			get
-			{
-				return _type;
-			}
-		}
-		internal string Name
-		{
-			get
-			{
-				return _name;
-			}
-		}
+		internal string Type { get; }
+		internal string Name { get; }
 	}
 
 	public class ConsoleCommand : Attribute
 	{
-		#region Fields
-		private string _help;
-		private string _name;
-		private string _namespace;
-		private List<ConsoleArg> _consoleArgs;
-		#endregion
-
-
 		public ConsoleCommand(string help)
 		{
-			this._help = help;
-			this._consoleArgs = new List<ConsoleArg>();
+			Help = help;
+			ConsoleArgs = new List<ConsoleArg>();
 		}
 		public ConsoleCommand() : this("No help text available")
 		{
 		}
 
-		internal string Help
-		{
-			get
-			{
-				return _help;
-			}
-		}
-
-		internal string Name
-		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				_name = value;
-			}
-		}
-
-		internal string Namespace
-		{
-			get
-			{
-				return _namespace;
-			}
-			set
-			{
-				_namespace = value;
-			}
-		}
-
-		internal List<ConsoleArg> ConsoleArgs
-		{
-			get
-			{
-				return _consoleArgs;
-			}
-			set
-			{
-				_consoleArgs = value;
-			}
-		}
+		internal string Help { get; set; }
+		internal string Name { get; set; }
+		internal string Namespace { get; set; }
+		internal List<ConsoleArg> ConsoleArgs { get; set; }
 
 		internal string BuildFormattedHelp()
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.Append("~h~" + Name + "~w~(");
 
-			foreach (var arg in _consoleArgs)
+			foreach (var arg in ConsoleArgs)
 			{
 				builder.Append(arg.Type + " " + arg.Name + ",");
 			}
 
-			if (_consoleArgs.Count > 0)
+			if (ConsoleArgs.Count > 0)
 				builder.Length--; //Remove last , if we have >0 Args
 
 			builder.Append(")");
