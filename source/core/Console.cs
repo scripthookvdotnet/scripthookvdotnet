@@ -145,7 +145,6 @@ namespace GTA
 	internal class ConsoleScript : Script
 	{
 		#region StaticFields
-		bool _isOpen;
 		int _page;
 		int _cursorPos;
 		int _commandPos;
@@ -200,7 +199,6 @@ namespace GTA
 			_commands = new Dictionary<String, List<Tuple<ConsoleCommand, MethodInfo>>>();
 
 			_input = "";
-			_isOpen = false;
 			_page = 1;
 			_cursorPos = 0;
 			_commandPos = -1;
@@ -225,13 +223,7 @@ namespace GTA
 			PageUpKey = settings.GetValue<Keys>("Console", "PageUp", Keys.PageUp);
 		}
 
-		internal bool IsOpen
-		{
-			get
-			{
-				return _isOpen;
-			}
-		}
+		internal bool IsOpen { get; private set; }
 
 		[DllImport("user32.dll")]
 		private static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState,
@@ -444,7 +436,7 @@ namespace GTA
 				return;
 			}
 
-			if (!_isOpen)
+			if (!IsOpen)
 				return;
 			if (Native.Function.Call<bool>(Native.Hash._IS_INPUT_DISABLED, 2))
 				SetControlsEnabled(false);
@@ -483,14 +475,14 @@ namespace GTA
 		{
 			if (e.KeyCode == ToggleKey)
 			{
-				_isOpen = !_isOpen;
+				IsOpen = !IsOpen;
 				SetControlsEnabled(false);
-				if (!_isOpen)
+				if (!IsOpen)
 					_lastClosed = DateTime.UtcNow.AddMilliseconds(200); //Hack so the input gets blocked long enogh
 				return;
 			}
 
-			if (!_isOpen)
+			if (!IsOpen)
 				return;
 
 			if (e.KeyCode == PageUpKey)
@@ -576,7 +568,7 @@ namespace GTA
 					ExecuteInput();
 					break;
 				case Keys.Escape:
-					_isOpen = false;
+					IsOpen = false;
 					SetControlsEnabled(false);
 					_lastClosed = DateTime.UtcNow.AddMilliseconds(200); //Hack so the input gets blocked long enogh
 					break;
