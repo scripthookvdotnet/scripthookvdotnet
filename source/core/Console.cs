@@ -367,7 +367,7 @@ namespace GTA
 			help.AppendLine("--- Help ---");
 			foreach (var namespaceS in _commands.Keys)
 			{
-				help.AppendLine(String.Format("[{0}]", namespaceS));
+				help.AppendLine($"[{namespaceS}]");
 				foreach (var command in _commands[namespaceS])
 				{
 					var consoleCommand = command.Item1;
@@ -391,7 +391,7 @@ namespace GTA
 		{
 			for (int i = 0; i < msgs.Length; i++)
 			{
-				msgs[i] = String.Format("~c~[{0}] ~w~{1} {2}{3}", DateTime.Now.ToString("HH:mm:ss"), prefix, textColor, msgs[i]); //Add proper styling
+				msgs[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {textColor}{msgs[i]}"; //Add proper styling
 			}
 
 			_outputQueue.Enqueue(msgs);
@@ -420,7 +420,7 @@ namespace GTA
 						Type type = compileResult.GetType("ConsoleInput");
 						object result = type.GetMethod("Execute").Invoke(null, null);
 						if (result != null)
-							Info(String.Format("[Return Value: {0}]", result));
+							Info($"[Return Value: {result}]");
 					}
 					ClearInput();
 					_compilerTask = null;
@@ -627,7 +627,7 @@ namespace GTA
 			}
 			else
 			{
-				Error(String.Format("Couldn't compile input-string: {0}", _input));
+				Error($"Couldn't compile input-string: {_input}");
 
 				StringBuilder errors = new StringBuilder();
 
