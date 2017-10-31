@@ -381,29 +381,29 @@ namespace GTA
 
 			while (graph.Count > 0)
 			{
-				Tuple<string, Type> scriptype = null;
+				Tuple<string, Type> scriptType = null;
 
 				foreach (var item in graph)
 				{
 					if (item.Value.Count == 0)
 					{
-						scriptype = item.Key;
+						scriptType = item.Key;
 						break;
 					}
 				}
 
-				if (scriptype == null)
+				if (scriptType == null)
 				{
 					Log("[ERROR]", "Detected a circular script dependency. Aborting ...");
 					return false;
 				}
 
-				result.Add(scriptype);
-				graph.Remove(scriptype);
+				result.Add(scriptType);
+				graph.Remove(scriptType);
 
 				foreach (var item in graph)
 				{
-					item.Value.Remove(scriptype.Item2);
+					item.Value.Remove(scriptType.Item2);
 				}
 			}
 
