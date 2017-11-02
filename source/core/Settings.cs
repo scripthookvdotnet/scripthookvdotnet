@@ -89,11 +89,11 @@ namespace GTA
 							value = value.Substring(1, value.Length - 2);
 						}
 
-						string lookup = String.Format("[{0}]{1}//0", section, key).ToUpper();
+						string lookup = $"[{section}]{key}//0".ToUpper();
 
 						if (result._values.ContainsKey(lookup))
 						{
-							for (int i = 1; result._values.ContainsKey(lookup = String.Format("[{0}]{1}//{2}", section, key, i).ToUpper()); ++i)
+							for (int i = 1; result._values.ContainsKey(lookup = $"[{section}]{key}//{i}".ToUpper()); ++i)
 							{
 								continue;
 							}
@@ -183,7 +183,7 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
-			string lookup = String.Format("[{0}]{1}//0", section, name).ToUpper();
+			string lookup = $"[{section}]{name}//0".ToUpper();
 			string internalValue;
 
 			if (!_values.TryGetValue(lookup, out internalValue))
@@ -217,7 +217,7 @@ namespace GTA
 		/// <param name="value">The value to set the key to.</param>
 		public void SetValue<T>(string section, string name, T value)
 		{
-			string lookup = String.Format("[{0}]{1}//0", section, name).ToUpper();
+			string lookup = $"[{section}]{name}//0".ToUpper();
 			string internalValue = value.ToString();
 
 			if (!_values.ContainsKey(lookup))
@@ -238,7 +238,7 @@ namespace GTA
 			var values = new List<T>();
 			string internalValue;
 
-			for (int i = 0; _values.TryGetValue(String.Format("[{0}]{1}//{2}", section, name, i).ToUpper(), out internalValue); ++i)
+			for (int i = 0; _values.TryGetValue($"[{section}]{name}//{i}".ToUpper(), out internalValue); ++i)
 			{
 				try
 				{

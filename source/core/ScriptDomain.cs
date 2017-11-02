@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
@@ -279,13 +280,8 @@ namespace GTA
 
 			try
 			{
-				foreach (var type in assembly.GetTypes())
+				foreach (var type in assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(Script))))
 				{
-					if (!type.IsSubclassOf(typeof(Script)))
-					{
-						continue;
-					}
-
 					count++;
 					_scriptTypes.Add(new Tuple<string, Type>(filename, type));
 				}
@@ -373,7 +369,7 @@ namespace GTA
 			{
 				var dependencies = new List<Type>();
 
-				foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes(typeof(RequireScript), true))
+				foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes<RequireScript>(true))
 				{
 					dependencies.Add(attribute._dependency);
 				}
@@ -385,29 +381,29 @@ namespace GTA
 
 			while (graph.Count > 0)
 			{
-				Tuple<string, Type> scriptype = null;
+				Tuple<string, Type> scriptType = null;
 
 				foreach (var item in graph)
 				{
 					if (item.Value.Count == 0)
 					{
-						scriptype = item.Key;
+						scriptType = item.Key;
 						break;
 					}
 				}
 
-				if (scriptype == null)
+				if (scriptType == null)
 				{
 					Log("[ERROR]", "Detected a circular script dependency. Aborting ...");
 					return false;
 				}
 
-				result.Add(scriptype);
-				graph.Remove(scriptype);
+				result.Add(scriptType);
+				graph.Remove(scriptType);
 
 				foreach (var item in graph)
 				{
-					item.Value.Remove(scriptype.Item2);
+					item.Value.Remove(scriptType.Item2);
 				}
 			}
 
@@ -433,15 +429,8 @@ namespace GTA
 				return;
 			}
 
-			for (int i = 0; i < _scriptTypes.Count; i++)
+			foreach (var script in _scriptTypes.Select(x => InstantiateScript(x.Item2)).Where(x => x != null))
 			{
-				Script script = InstantiateScript(_scriptTypes[i].Item2);
-
-				if (ReferenceEquals(script, null))
-				{
-					continue;
-				}
-
 				script.Start();
 			}
 		}
@@ -541,29 +530,20 @@ namespace GTA
 		{
 			filename = Path.GetFullPath(filename);
 
-			foreach (Script script in _runningScripts)
+			foreach (Script script in _runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
 			{
-				if (!filename.Equals(script.Filename, StringComparison.OrdinalIgnoreCase))
-				{
-					continue;
-				}
-
 				script.Abort();
 			}
 		}
 		public void AbortAllScriptsExceptConsole()
 		{
-			foreach (Script script in _runningScripts)
+			foreach (Script script in _runningScripts.Where(x => x != Console))
 			{
-				if (!ReferenceEquals(script, Console))
-				{
-					script.Abort();
-				}
+				script.Abort();
 			}
 
 			_scriptTypes.Clear();
-			_runningScripts.Clear();
-			_runningScripts.Add(Console);
+			_runningScripts.RemoveAll(x => x != Console);
 
 			GC.Collect();
 		}
@@ -599,10 +579,8 @@ namespace GTA
 		public void DoTick()
 		{
 			// Execute scripts
-			for (int i = 0; i < _runningScripts.Count; i++)
+			foreach (var script in _runningScripts)
 			{
-				Script script = _runningScripts[i];
-
 				if (!script._running)
 				{
 					continue;
@@ -720,15 +698,7 @@ namespace GTA
 		}
 		public string LookupScriptFilename(Type type)
 		{
-			foreach (var scriptType in _scriptTypes)
-			{
-				if (scriptType.Item2 == type)
-				{
-					return scriptType.Item1;
-				}
-			}
-
-			return string.Empty;
+			return _scriptTypes.FirstOrDefault(x => x.Item2 == type)?.Item1 ?? string.Empty;
 		}
 		public override object InitializeLifetimeService()
 		{
@@ -753,7 +723,7 @@ namespace GTA
 
 		static private string GetScriptSupportURL(Type scriptType)
 		{
-			foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes(typeof(ScriptAttributes), true))
+			foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes<ScriptAttributes>(true))
 			{
 				if (!String.IsNullOrEmpty(attribute.SupportURL))
 				{

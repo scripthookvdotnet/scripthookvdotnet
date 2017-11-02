@@ -493,7 +493,7 @@ namespace GTA
 
 				if (address == IntPtr.Zero)
 				{
-					throw new IndexOutOfRangeException(String.Format("The index {0} does not correspond to an existing global variable.", index));
+					throw new IndexOutOfRangeException($"The index {index} does not correspond to an existing global variable.");
 				}
 
 				return new GlobalVariable(address);
@@ -685,7 +685,7 @@ namespace GTA
 
 				if (index < 0 || index >= count)
 				{
-					throw new IndexOutOfRangeException(String.Format("The index {0} was outside the array bounds.", index));
+					throw new IndexOutOfRangeException($"The index {index} was outside the array bounds.");
 				}
 
 				return new GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
