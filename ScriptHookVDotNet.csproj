@@ -44,6 +44,7 @@
     <Compile Include="source\scripting\World\Camera.cs" />
     <Compile Include="source\scripting\World\Checkpoint.cs" />
     <Compile Include="source\scripting\Game\Control.cs" />
+    <Compile Include="source\scripting\World\Entities\Vehicles\HandlingData.cs" />
     <Compile Include="source\scripting\World\Weapons\DlcWeaponStructs.cs" />
     <Compile Include="source\scripting\World\Entities\Entity.cs" />
     <Compile Include="source\scripting\World\Entities\EntityBone.cs" />
