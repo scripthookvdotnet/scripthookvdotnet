@@ -1026,6 +1026,10 @@ namespace GTA
 		{
 			return new HandlingData(MemoryAccess.GetHandlingDataByHandlingNameHash(handlingNameHash));
 		}
+		public HandlingData GetByVehicleModel(Model VehicleModel)
+		{
+			return new HandlingData(MemoryAccess.GetHandlingDataByModelHash(VehicleModel.Hash));
+		}
 
 		public bool Equals(HandlingData handlingData)
 		{
