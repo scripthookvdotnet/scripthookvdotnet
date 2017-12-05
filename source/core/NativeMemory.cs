@@ -811,7 +811,7 @@ namespace GTA
 				{
 					IntPtr modelInfo = FindCModelInfo(modelHash);
 
-					if (modelInfo != IntPtr.Zero)
+					if (modelInfo != IntPtr.Zero && GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
 					{
 						int handlingIndex = *(int*)(modelInfo + 0x488).ToPointer();
 						return new IntPtr((long)GetHandlingDataByIndex(handlingIndex));
