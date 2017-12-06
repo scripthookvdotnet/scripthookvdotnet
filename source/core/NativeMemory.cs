@@ -500,6 +500,7 @@ namespace GTA
 
 			private static ulong modelHashTable, modelNum2, modelNum3, modelNum4;
 			private static int modelNum1;
+			private static int handlingIndexOffsetInModelInfo;
 			private static uint vehClassOff;
 			private static ushort modelHashEntries;
 			private static ReadOnlyCollection<ReadOnlyCollection<int>> vehicleModels;
@@ -572,6 +573,7 @@ namespace GTA
 
 				address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
 				GetHandlingDataByIndex = GetDelegateForFunctionPointer<GetHandlingDataByIndexDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
+				handlingIndexOffsetInModelInfo = *(int*)(address + 8);
 				address = FindPattern("\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x5A\xB2\x01", "x????xxxxxxx");
 				GetHandlingDataByHash = GetDelegateForFunctionPointer<GetHandlingDataByHashDelegate>(new IntPtr(*(int*)(address + 1) + address + 5));
 
@@ -813,7 +815,7 @@ namespace GTA
 
 					if (modelInfo != IntPtr.Zero && GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
 					{
-						int handlingIndex = *(int*)(modelInfo + 0x488).ToPointer();
+						int handlingIndex = *(int*)(modelInfo + handlingIndexOffsetInModelInfo).ToPointer();
 						return new IntPtr((long)GetHandlingDataByIndex(handlingIndex));
 					}
 
