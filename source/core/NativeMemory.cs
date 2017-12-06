@@ -570,8 +570,8 @@ namespace GTA
 				EntityModel1Func = GetDelegateForFunctionPointer<EntityModel1FuncDelegate>(new IntPtr((*(int*)address - 61) + address - 57));
 				EntityModel2Func = GetDelegateForFunctionPointer<EntityModel2FuncDelegate>(new IntPtr(*(int*)(address + 10) + address + 14));
 
-				address = FindPattern("\xE8\x00\x00\x00\x00\xBA\x00\x00\x00\x00\x48\x8B\xC8\x48\x8B\xE8\xE8\x00\x00\x00\x00\x48\x8B\xD0", "x????x????xxxxxxx????xxx");
-				GetHandlingDataByIndex = GetDelegateForFunctionPointer<GetHandlingDataByIndexDelegate>(new IntPtr(*(int*)(address + 1) + address + 5));
+				address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
+				GetHandlingDataByIndex = GetDelegateForFunctionPointer<GetHandlingDataByIndexDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
 				address = FindPattern("\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x5A\xB2\x01", "x????xxxxxxx");
 				GetHandlingDataByHash = GetDelegateForFunctionPointer<GetHandlingDataByHashDelegate>(new IntPtr(*(int*)(address + 1) + address + 5));
 
