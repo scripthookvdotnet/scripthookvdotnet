@@ -1022,11 +1022,11 @@ namespace GTA
 			}
 		}
 
-		public HandlingData GetByHash(int handlingNameHash)
+		static public HandlingData GetByHash(int handlingNameHash)
 		{
 			return new HandlingData(MemoryAccess.GetHandlingDataByHandlingNameHash(handlingNameHash));
 		}
-		public HandlingData GetByVehicleModel(Model VehicleModel)
+		static public HandlingData GetByVehicleModel(Model VehicleModel)
 		{
 			return new HandlingData(MemoryAccess.GetHandlingDataByModelHash(VehicleModel.Hash));
 		}
