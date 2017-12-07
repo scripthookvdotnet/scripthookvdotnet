@@ -579,8 +579,10 @@ namespace GTA
 		public void DoTick()
 		{
 			// Execute scripts
-			foreach (var script in _runningScripts)
+			for (int i = 0; i < _runningScripts.Count; i++)
 			{
+				Script script = _runningScripts[i];
+
 				if (!script._running)
 				{
 					continue;
