@@ -4,7 +4,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class HandlingData : IEquatable<HandlingData>
+	public struct HandlingData : IEquatable<HandlingData>
 	{
 		internal HandlingData(IntPtr address)
 		{
