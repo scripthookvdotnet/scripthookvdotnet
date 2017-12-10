@@ -500,6 +500,7 @@ namespace GTA
 
 			private static ulong modelHashTable, modelNum2, modelNum3, modelNum4;
 			private static int modelNum1;
+			private static int handlingIndexOffsetInModelInfo;
 			private static uint vehClassOff;
 			private static ushort modelHashEntries;
 			private static ReadOnlyCollection<ReadOnlyCollection<int>> vehicleModels;
@@ -514,6 +515,8 @@ namespace GTA
 			internal delegate ulong EntityPositionFuncDelegate(ulong address, float* position);
 			internal delegate ulong EntityModel1FuncDelegate(ulong address);
 			internal delegate ulong EntityModel2FuncDelegate(ulong address);
+			internal delegate ulong GetHandlingDataByIndexDelegate(int index);
+			internal delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
 			internal delegate byte SetNmBoolAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, [MarshalAs(UnmanagedType.I1)] bool value);
 			internal delegate byte SetNmIntAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, int value);
 			internal delegate byte SetNmFloatAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float value);
@@ -532,6 +535,8 @@ namespace GTA
 			internal static EntityPositionFuncDelegate EntityPositionFunc;
 			internal static EntityModel1FuncDelegate EntityModel1Func;
 			internal static EntityModel2FuncDelegate EntityModel2Func;
+			internal static GetHandlingDataByIndexDelegate GetHandlingDataByIndex;
+			internal static GetHandlingDataByHashDelegate GetHandlingDataByHash;
 			internal static SetNmBoolAddressDelegate SetNmBoolAddress;
 			internal static SetNmIntAddressDelegate SetNmIntAddress;
 			internal static SetNmFloatAddressDelegate SetNmFloatAddress;
@@ -565,6 +570,12 @@ namespace GTA
 				address = FindPattern("\x25\xFF\xFF\xFF\x3F\x89\x44\x24\x38\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x03", "xxxxxxxxxx????xxxxx");
 				EntityModel1Func = GetDelegateForFunctionPointer<EntityModel1FuncDelegate>(new IntPtr((*(int*)address - 61) + address - 57));
 				EntityModel2Func = GetDelegateForFunctionPointer<EntityModel2FuncDelegate>(new IntPtr(*(int*)(address + 10) + address + 14));
+
+				address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
+				GetHandlingDataByIndex = GetDelegateForFunctionPointer<GetHandlingDataByIndexDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
+				handlingIndexOffsetInModelInfo = *(int*)(address + 8);
+				address = FindPattern("\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x5A\xB2\x01", "x????xxxxxxx");
+				GetHandlingDataByHash = GetDelegateForFunctionPointer<GetHandlingDataByHashDelegate>(new IntPtr(*(int*)(address + 1) + address + 5));
 
 				address = FindPattern("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
 				_entityPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -794,6 +805,28 @@ namespace GTA
 					}
 
 					return false;
+				}
+			}
+			internal static IntPtr GetHandlingDataByModelHash(int modelHash)
+			{
+				unsafe
+				{
+					IntPtr modelInfo = FindCModelInfo(modelHash);
+
+					if (modelInfo != IntPtr.Zero && GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
+					{
+						int handlingIndex = *(int*)(modelInfo + handlingIndexOffsetInModelInfo).ToPointer();
+						return new IntPtr((long)GetHandlingDataByIndex(handlingIndex));
+					}
+
+					return IntPtr.Zero;
+				}
+			}
+			internal static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
+			{
+				unsafe
+				{
+					return new IntPtr((long)GetHandlingDataByHash(new IntPtr(&handlingNameHash)));
 				}
 			}
 			internal static int GetGameVersion()
