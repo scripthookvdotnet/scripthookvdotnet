@@ -109,7 +109,7 @@ namespace GTA
 			}
 		}
 
-		public float CamberStiffnesss
+		public float CamberStiffness
 		{
 			get
 			{
