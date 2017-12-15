@@ -1564,16 +1564,24 @@ namespace GTA
 				{
 					return false;
 				}
-				//Unsure of the exact version this switched or if it switched over a few title updates
-				//as its shifted by 0x20 bytes where as rest are only 0x10 bytes
+			
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xA98 : 0xA78;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0xAC8 : offset; // just a guess
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0xAD8 : offset; //just a guess but it's probably correct if the offset for v1.0.877.1 is correct
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0xAD8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0xB18 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xB58 : offset;
 
-				if (MemoryAccess.ReadInt(memoryAddress + offset) <= 8)
+				int maxVehType = Game.Version >= GameVersion.v1_0_944_2_Steam ? 10 : 8;
+
+				if (MemoryAccess.ReadInt(memoryAddress + offset) <= maxVehType)
 				{
-					return MemoryAccess.IsBitSet(memoryAddress + 0x12F9, 1);
+					offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1319 : 0x12F9;
+					offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1349 : offset;
+					offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x13B9 : offset;
+					offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x1409 : offset;
+	
+					return MemoryAccess.IsBitSet(memoryAddress + offset, 1);
 				}
+
 				return false;
 			}
 			set
