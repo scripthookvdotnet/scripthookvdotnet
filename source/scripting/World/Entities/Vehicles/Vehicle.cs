@@ -1936,11 +1936,11 @@ namespace GTA
 
 				if (value)
 				{
-					MemoryAccess.SetBit(MemoryAddress + offset, 0);
+					MemoryAccess.SetBit(MemoryAddress + offset, 1);
 				}
 				else
 				{
-					MemoryAccess.ClearBit(MemoryAddress + offset, 0);
+					MemoryAccess.ClearBit(MemoryAddress + offset, 1);
 				}
 			}
 		}
