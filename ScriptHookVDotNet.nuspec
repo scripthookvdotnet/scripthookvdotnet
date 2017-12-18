@@ -3,6 +3,8 @@
   <metadata>
     <!-- Package metadata -->
     <id>ScriptHookVDotNet2</id>
+    <version>2.10.4</version>
+    <tags>gta gta5 gtamod scripting scripthook</tags>
     <authors>crosire</authors>
 
     <!-- Package information -->
