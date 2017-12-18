@@ -93,6 +93,7 @@ namespace GTA
 		bool LoadScript(System::String ^filename);
 		bool LoadAssembly(System::String ^filename);
 		bool LoadAssembly(System::String ^filename, System::Reflection::Assembly ^assembly);
+		static bool IsManagedAssembly(System::String ^filename);
 		Script ^InstantiateScript(System::Type ^scripttype);
 		void CleanupStrings();
 

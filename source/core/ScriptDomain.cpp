@@ -184,7 +184,10 @@ namespace GTA
 			}
 			for each (String ^filename in filenameAssemblies)
 			{
-				scriptdomain->LoadAssembly(filename);
+				if (IsManagedAssembly(filename))
+				{
+					scriptdomain->LoadAssembly(filename);
+				}
 			}
 		}
 		else
@@ -309,6 +312,76 @@ namespace GTA
 		Log("[DEBUG]", "Found ", count.ToString(), " script(s) in '", IO::Path::GetFileName(filename), "'.");
 
 		return count != 0;
+	}
+	bool ScriptDomain::IsManagedAssembly(String ^filename)
+	{
+		System::IO::FileStream^ fileStream = gcnew System::IO::FileStream(filename, System::IO::FileMode::Open, System::IO::FileAccess::Read);
+		System::IO::BinaryReader^ binaryReader = gcnew System::IO::BinaryReader(fileStream);
+
+		try
+		{
+			if (fileStream->Length < 64)
+			{
+				return false;
+			}
+
+			//PE Header starts @ 0x3C (60). Its a 4 byte header.
+			fileStream->Position = 0x3C;
+			unsigned int peHeaderPointer = binaryReader->ReadUInt32();
+			if (peHeaderPointer == 0)
+			{
+				peHeaderPointer = 0x80;
+			}
+
+			// Ensure there is at least enough room for the following structures:
+			//     24 byte PE Signature & Header
+			//     28 byte Standard Fields         (24 bytes for PE32+)
+			//     68 byte NT Fields               (88 bytes for PE32+)
+			// >= 128 byte Data Dictionary Table
+			if (peHeaderPointer > fileStream->Length - 256)
+			{
+				return false;
+			}
+
+			// Check the PE signature.  Should equal 'PE\0\0'.
+			fileStream->Position = peHeaderPointer;
+			unsigned int peHeaderSignature = binaryReader->ReadUInt32();
+			if (peHeaderSignature != 0x00004550)
+			{
+				return false;
+			}
+
+			// skip over the PEHeader fields
+			fileStream->Position += 20;
+
+			const unsigned short PE32 = 0x10b;
+			const unsigned short PE32Plus = 0x20b;
+
+			// Read PE magic number from Standard Fields to determine format.
+			auto peFormat = binaryReader->ReadUInt16();
+			if (peFormat != PE32 && peFormat != PE32Plus)
+			{
+				return false;
+			}
+
+			// Read the 15th Data Dictionary RVA field which contains the CLI header RVA.
+			// When this is non-zero then the file contains CLI data otherwise not.
+			unsigned short dataDictionaryStart = static_cast<unsigned short>(peHeaderPointer + (peFormat == PE32 ? 232 : 248));
+			fileStream->Position = dataDictionaryStart;
+
+			unsigned int cliHeaderRva = binaryReader->ReadUInt32();
+			if (cliHeaderRva == 0)
+			{
+				return false;
+			}
+
+			return true;
+		}
+		finally
+		{
+			delete binaryReader;
+			delete fileStream;
+		}
 	}
 	void ScriptDomain::Unload(ScriptDomain ^%domain)
 	{

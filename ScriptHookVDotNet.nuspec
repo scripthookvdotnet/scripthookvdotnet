@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <!-- Package metadata -->
+    <id>ScriptHookVDotNet2</id>
+    <authors>crosire</authors>
+
+    <!-- Package information -->
+    <title>Community Script Hook V .NET</title>
+    <description>This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language in-game.</description>
+
+    <!-- Project and license links -->
+    <projectUrl>https://github.com/crosire/scripthookvdotnet</projectUrl>
+    <licenseUrl>https://github.com/crosire/scripthookvdotnet/blob/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+  </metadata>
+  <files>
+    <file src="bin\ScriptHookVDotNet2.dll" target="lib\net452" />
+  </files>
+</package>

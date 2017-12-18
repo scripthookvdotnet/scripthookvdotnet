@@ -449,6 +449,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7BC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7CC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7EC : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x80C : offset);
 
 		const unsigned char mask = 1 << 0;
 
@@ -479,6 +480,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7BC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7CC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7EC : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x80C : offset);
 
 		const unsigned char mask = 1 << 1;
 
@@ -536,6 +538,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x88C : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x89C : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x8BC : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x8DC : offset);
 
 		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 2)) != 0;
 	}
@@ -568,6 +571,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x88C : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x89C : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x8BC : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x8DC : offset);
 
 		return address == 0 ? false : (*reinterpret_cast<int *>(address + offset) & (1 << 1)) != 0;
 	}
@@ -701,6 +705,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E0 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7F0 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x810 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x830 : offset);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -713,6 +718,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E6 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7F6 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x816 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x836 : offset);
 
 		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
 	}
@@ -735,6 +741,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E6 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7F6 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x816 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x836 : offset);
 
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
@@ -747,6 +754,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7A8 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7B8 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7D4 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x7F4 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -764,6 +772,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7A8 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7B8 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7D4 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x7F4 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -776,6 +785,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x814 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x824 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x844 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x864 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -788,6 +798,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x814 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x824 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x844 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x864 : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -800,6 +811,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x824 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x834 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x854 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x874 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -812,6 +824,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x9F0 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0xA00 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0xA10 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0xA30 : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -824,6 +837,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8F4 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x904 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x924 : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x944 : offset);
 
 		if (!address == 0)
 		{
@@ -844,6 +858,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x8FC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x91C : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x93C : offset);
 
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
@@ -861,6 +876,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x8FC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x91C : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x93C : offset);
 
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
@@ -868,11 +884,11 @@ namespace GTA
 	{
 		if (value == GTA::RadioStation::RadioOff)
 		{
-			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, "OFF");
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Handle, "OFF");
 		}
 		else if (System::Enum::IsDefined(value.GetType(), value))
 		{
-			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Game::_radioNames[static_cast<int>(value)]);
+			Native::Function::Call(Native::Hash::SET_VEH_RADIO_STATION, Handle, Game::_radioNames[static_cast<int>(value)]);
 		}
 	}
 	VehicleClass Vehicle::ClassType::get()
