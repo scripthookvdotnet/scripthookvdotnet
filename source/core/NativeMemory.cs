@@ -565,7 +565,7 @@ namespace GTA
 				AddEntityToPoolFunc = GetDelegateForFunctionPointer<AddEntityToPoolFuncDelegate>(new IntPtr(address - 0x68));
 
 				address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
-				EntityPositionFunc = GetDelegateForFunctionPointer<EntityPositionFuncDelegate>(new IntPtr((address - 6));
+				EntityPositionFunc = GetDelegateForFunctionPointer<EntityPositionFuncDelegate>(new IntPtr((address - 6)));
 				address = FindPattern("\x0F\x85\x00\x00\x00\x00\x48\x8B\x4B\x20\xE8\x00\x00\x00\x00\x48\x8B\xC8", "xx????xxxxx????xxx");
 				EntityModel1Func = GetDelegateForFunctionPointer<EntityModel1FuncDelegate>(new IntPtr((*(int*)address + 11) + address + 15));
 				address = FindPattern("\x45\x33\xC9\x3B\x05", "xxxxx");
