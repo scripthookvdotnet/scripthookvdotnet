@@ -572,6 +572,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the injury health threshold for this <see cref="Ped"/>. 
 		/// The ped is considered injured when its health drops below this value.
+		/// The ped dies on attacks when its health is below this value.
 		/// </summary>
 		/// <value>
 		/// The injury health threshold. Should be below <see cref="Entity.MaxHealth"/>.
