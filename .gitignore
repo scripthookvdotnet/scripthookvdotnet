@@ -6,6 +6,7 @@
 [Rr]elease/
 
 # Visual Studio cache files
+.vs/
 ipch/
 *.aps
 *.cachefile
