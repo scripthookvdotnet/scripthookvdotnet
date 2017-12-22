@@ -557,7 +557,7 @@ namespace GTA
 
 					if (extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
 					{
-						return;
+						continue;
 					}
 				}
 
