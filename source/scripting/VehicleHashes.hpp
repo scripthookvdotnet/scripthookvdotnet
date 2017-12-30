@@ -114,7 +114,7 @@ namespace GTA
 			Cheetah = 2983812512u,
 			Cheetah2 = 223240013u,
 			Chernobog = 3602674979u,
-			Chimera = 1491277511u,
+			Chimera = 6774487u,
 			Chino = 349605904u,
 			Chino2 = 2933279331u,
 			Cliffhanger = 390201602u,
