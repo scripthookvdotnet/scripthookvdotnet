@@ -525,7 +525,7 @@ namespace GTA
 			internal delegate ulong CheckpointHandleAddrDelegate(ulong baseAddr, int handle);
 			internal delegate ulong GetCheckpointBaseAddrDelegate();
 			internal delegate ulong GetLabelTextByHashFuncDelegate(ulong address, int labelHash);
-
+			internal delegate ulong FuncUlongUlongDelegate(ulong T);
 
 			internal static GetHashKeyDelegate _getHashKey;
 			internal static EntityAddressFuncDelegate EntityAddressFunc;
@@ -1244,10 +1244,10 @@ namespace GTA
 			}
 
 			private unsafe static ulong GetEntitySkeletonData(int handle)
-			{
+			{				
 				ulong MemAddress = EntityAddressFunc(handle);
 
-				var func2 = GetDelegateForFunctionPointer<Func<ulong, ulong>>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + 88));
+				var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + 88));
 				ulong Addr2 = func2(MemAddress);
 				ulong Addr3;
 				if (Addr2 == 0)
