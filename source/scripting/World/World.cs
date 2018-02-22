@@ -1012,6 +1012,22 @@ namespace GTA
 
 			return Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, streetHash);
 		}
+		/// <summary>
+		/// Determines the name of the street which is the closest to the given coordinates.
+		/// </summary>
+		/// <param name="position">The coordinates of the street</param>
+		/// <param name="CrossingRoadName">If the coordinates are on an intersection, the name of the crossing road</param>
+		/// <returns>Returns the name of the street the coords are on</returns>
+		public static string GetStreetName(Vector3 position, out string CrossingRoadName)
+		{
+			int streetHash, crossingHash;
+			unsafe
+			{
+				Function.Call(Hash.GET_STREET_NAME_AT_COORD, position.X, position.Y, position.Z, &streetHash, &crossingHash);
+			}
+			CrossingRoadName = Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, crossingHash);
+			return Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, streetHash);
+		}
 
 		/// <summary>
 		/// Creates a <see cref="Blip"/> at the given position on the map.
