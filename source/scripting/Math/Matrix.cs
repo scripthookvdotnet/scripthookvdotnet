@@ -361,9 +361,9 @@ namespace GTA.Math
 					// Multiply by the matrix
 					for (int i = 0; i < 4; i++)
 					{
-						VTempX[i] = this[0, i];
-						VTempY[i] = this[1, i];
-						VTempZ[i] = this[2, i];
+						VTempX[i] *= this[0, i];
+						VTempY[i] *= this[1, i];
+						VTempZ[i] *= this[2, i];
 					}
 
 					// Add them all together
