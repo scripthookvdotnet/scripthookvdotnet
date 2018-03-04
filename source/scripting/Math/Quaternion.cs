@@ -192,12 +192,7 @@ namespace GTA.Math
 		/// <returns>The divided quaternion.</returns>
 		public static Quaternion Divide(Quaternion left, Quaternion right)
 		{
-			Quaternion result = Zero;
-			result.X = left.X / right.X;
-			result.Y = left.Y / right.Y;
-			result.Z = left.Z / right.Z;
-			result.W = left.W / right.W;
-			return result;
+			return Quaternion.Multiply(left, Quaternion.Invert(right)); 
 		}
 		/// <summary>
 		/// Calculates the dot product of two quaternions.
