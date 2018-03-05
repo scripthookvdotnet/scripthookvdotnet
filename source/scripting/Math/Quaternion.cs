@@ -643,6 +643,50 @@ namespace GTA.Math
 		}
 
 		/// <summary>
+		/// Reverses the direction of a given quaternion.
+		/// </summary>
+		/// <param name="quaternion">The quaternion to negate.</param>
+		/// <returns>A quaternion facing in the opposite direction.</returns>
+		public static Quaternion operator -(Quaternion quaternion)
+		{
+			Quaternion result = Zero;
+			result.X = -quaternion.X;
+			result.Y = -quaternion.Y;
+			result.Z = -quaternion.Z;
+			result.W = -quaternion.W;
+			return result;
+		}
+		/// <summary>
+		/// Adds two quaternions.
+		/// </summary>
+		/// <param name="left">The first quaternion to add.</param>
+		/// <param name="right">The second quaternion to add.</param>
+		/// <returns>The sum of the two quaternions.</returns>
+		public static Quaternion operator +(Quaternion left, Quaternion right)
+		{
+			Quaternion result = Zero;
+			result.X = left.X + right.X;
+			result.Y = left.Y + right.Y;
+			result.Z = left.Z + right.Z;
+			result.W = left.W + right.W;
+			return result;
+		}
+		/// <summary>
+		/// Subtracts two quaternions.
+		/// </summary>
+		/// <param name="left">The first quaternion to subtract.</param>
+		/// <param name="right">The second quaternion to subtract.</param>
+		/// <returns>The difference of the two quaternions.</returns>
+		public static Quaternion operator -(Quaternion left, Quaternion right)
+		{
+			Quaternion result = Zero;
+			result.X = left.X - right.X;
+			result.Y = left.Y - right.Y;
+			result.Z = left.Z - right.Z;
+			result.W = left.W - right.W;
+			return result;
+		}
+		/// <summary>
 		/// Multiplies a quaternion by another.
 		/// </summary>
 		/// <param name="left">The first quaternion to multiply.</param>
@@ -742,50 +786,6 @@ namespace GTA.Math
 			quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
 
 			return quaternion;
-		}
-		/// <summary>
-		/// Adds two quaternions.
-		/// </summary>
-		/// <param name="left">The first quaternion to add.</param>
-		/// <param name="right">The second quaternion to add.</param>
-		/// <returns>The sum of the two quaternions.</returns>
-		public static Quaternion operator +(Quaternion left, Quaternion right)
-		{
-			Quaternion result = Zero;
-			result.X = left.X + right.X;
-			result.Y = left.Y + right.Y;
-			result.Z = left.Z + right.Z;
-			result.W = left.W + right.W;
-			return result;
-		}
-		/// <summary>
-		/// Subtracts two quaternions.
-		/// </summary>
-		/// <param name="left">The first quaternion to subtract.</param>
-		/// <param name="right">The second quaternion to subtract.</param>
-		/// <returns>The difference of the two quaternions.</returns>
-		public static Quaternion operator -(Quaternion left, Quaternion right)
-		{
-			Quaternion result = Zero;
-			result.X = left.X - right.X;
-			result.Y = left.Y - right.Y;
-			result.Z = left.Z - right.Z;
-			result.W = left.W - right.W;
-			return result;
-		}
-		/// <summary>
-		/// Reverses the direction of a given quaternion.
-		/// </summary>
-		/// <param name="quaternion">The quaternion to negate.</param>
-		/// <returns>A quaternion facing in the opposite direction.</returns>
-		public static Quaternion operator -(Quaternion quaternion)
-		{
-			Quaternion result = Zero;
-			result.X = -quaternion.X;
-			result.Y = -quaternion.Y;
-			result.Z = -quaternion.Z;
-			result.W = -quaternion.W;
-			return result;
 		}
 		/// <summary>
 		/// Tests for equality between two objects.
