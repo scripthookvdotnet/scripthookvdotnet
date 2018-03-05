@@ -620,7 +620,7 @@ namespace GTA.Math
 		/// <param name="pitch">The pitch angle, in radians, around the X-axis.</param>
 		/// <param name="roll">The roll angle, in radians, around the Y-axis.</param>
 		/// <returns>The newly created quaternion.</returns>
-		public static Quaternion RotationYawPitchRoll(float roll, float pitch, float yaw)
+		public static Quaternion RotationYawPitchRoll(float yaw, float pitch, float roll)
 		{
 			Quaternion result = Zero;
 
