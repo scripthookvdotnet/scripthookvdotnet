@@ -69,14 +69,20 @@ namespace GTA.Math
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Quaternion"/> structure.
 		/// </summary>
-		/// <param name="value">A <see cref="Vector3"/> containing the first three values of the quaternion.</param>
-		/// <param name="w">The W component of the quaternion.</param>
-		public Quaternion(Vector3 value, float w) : this()
+		/// <param name="axis">The axis of rotation.</param>
+		/// <param name="angle">The angle of rotation in radians.</param>
+		public Quaternion(Vector3 axis, float angle) : this()
 		{
-			X = value.X;
-			Y = value.Y;
-			Z = value.Z;
-			W = w;
+			axis = Vector3.Normalize(axis);
+
+			float half = angle * 0.5f;
+			float sin = (float)(System.Math.Sin((double)(half)));
+			float cos = (float)(System.Math.Cos((double)(half)));
+
+			X = axis.X * sin;
+			Y = axis.Y * sin;
+			Z = axis.Z * sin;
+			W = cos;
 		}
 
 		/// <summary>
@@ -102,7 +108,10 @@ namespace GTA.Math
 		{
 			get
 			{
-				float length = (X * X) + (Y * Y) + (Z * Z);
+				if (Length() != 1.0f)
+					return new Vector3();
+
+				float length = 1.0f - (W * W);
 				if (length == 0f)
 					return Vector3.UnitX;
 
@@ -120,7 +129,7 @@ namespace GTA.Math
 		/// Calculates the length of the quaternion.
 		/// </summary>
 		/// <returns>The length of the quaternion.</returns>
-		public float Length() => (float)(System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z) + (W * W)));
+		public float Length() => (float)(System.Math.Sqrt((double)((X * X) + (Y * Y) + (Z * Z) + (W * W))));
 
 		/// <summary>
 		/// Calculates the squared length of the quaternion.
@@ -170,6 +179,20 @@ namespace GTA.Math
 		}
 
 		/// <summary>
+		/// Reverses the direction of a given quaternion.
+		/// </summary>
+		/// <param name="quaternion">The quaternion to negate.</param>
+		/// <returns>A quaternion facing in the opposite direction.</returns>
+		public static Quaternion Negate(Quaternion quaternion)
+		{
+			Quaternion result = Zero;
+			result.X = -quaternion.X;
+			result.Y = -quaternion.Y;
+			result.Z = -quaternion.Z;
+			result.W = -quaternion.W;
+			return result;
+		}
+		/// <summary>
 		/// Adds two quaternions.
 		/// </summary>
 		/// <param name="left">The first quaternion to add.</param>
@@ -185,6 +208,61 @@ namespace GTA.Math
 			return result;
 		}
 		/// <summary>
+		/// Subtracts two quaternions.
+		/// </summary>
+		/// <param name="left">The first quaternion to subtract.</param>
+		/// <param name="right">The second quaternion to subtract.</param>
+		/// <returns>The difference of the two quaternions.</returns>
+		public static Quaternion Subtract(Quaternion left, Quaternion right)
+		{
+			Quaternion result = Zero;
+			result.X = left.X - right.X;
+			result.Y = left.Y - right.Y;
+			result.Z = left.Z - right.Z;
+			result.W = left.W - right.W;
+			return result;
+		}
+		/// <summary>
+		/// Multiplies two Quaternions together.
+		/// </summary>
+		/// <param name="left">The Quaternion on the left side of the multiplication.</param>
+		/// <param name="right">The Quaternion on the right side of the multiplication.</param>
+		/// <returns>The result of the multiplication.</returns>
+		public static Quaternion Multiply(Quaternion left, Quaternion right)
+		{
+			Quaternion quaternion;
+			float lx = left.X;
+			float ly = left.Y;
+			float lz = left.Z;
+			float lw = left.W;
+			float rx = right.X;
+			float ry = right.Y;
+			float rz = right.Z;
+			float rw = right.W;
+
+			quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
+			quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
+			quaternion.Z = (lz * rw + rz * lw) + (lx * ry) - (ly * rx);
+			quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
+
+			return quaternion;
+		}
+		/// <summary>
+		/// Scales a quaternion by the given value.
+		/// </summary>
+		/// <param name="quaternion">The quaternion to scale.</param>
+		/// <param name="scale">The amount by which to scale the quaternion.</param>
+		/// <returns>The scaled quaternion.</returns>
+		public static Quaternion Multiply(Quaternion quaternion, float scale)
+		{
+			Quaternion result = Zero;
+			result.X = quaternion.X * scale;
+			result.Y = quaternion.Y * scale;
+			result.Z = quaternion.Z * scale;
+			result.W = quaternion.W * scale;
+			return result;
+		}
+		/// <summary>
 		/// Divides a quaternion by another.
 		/// </summary>
 		/// <param name="left">The first quaternion to divide.</param>
@@ -194,14 +272,33 @@ namespace GTA.Math
 		{
 			return Quaternion.Multiply(left, Quaternion.Invert(right)); 
 		}
+		
 		/// <summary>
-		/// Calculates the dot product of two quaternions.
+		/// Converts the quaternion into a unit quaternion.
 		/// </summary>
-		/// <param name="left">First source quaternion.</param>
-		/// <param name="right">Second source quaternion.</param>
-		/// <returns>The dot product of the two quaternions.</returns>
-		public static float Dot(Quaternion left, Quaternion right) => (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		/// <param name="quaternion">The quaternion to normalize.</param>
+		/// <returns>The normalized quaternion.</returns>
+		public static Quaternion Normalize(Quaternion quaternion)
+		{
+			quaternion.Normalize();
+			return quaternion;
+		}
+		/// <summary>
+		/// Creates the conjugate of a specified Quaternion.
+		/// </summary>
+		/// <param name="value">The Quaternion of which to return the conjugate.</param>
+		/// <returns>A new Quaternion that is the conjugate of the specified one.</returns>
+		public static Quaternion Conjugate(Quaternion value)
+		{
+			Quaternion ans;
 
+			ans.X = -value.X;
+			ans.Y = -value.Y;
+			ans.Z = -value.Z;
+			ans.W = value.W;
+
+			return ans;
+		}
 		/// <summary>
 		/// Conjugates and renormalizes the quaternion.
 		/// </summary>
@@ -219,6 +316,14 @@ namespace GTA.Math
 
 			return result;
 		}
+
+		/// <summary>
+		/// Calculates the dot product of two quaternions.
+		/// </summary>
+		/// <param name="left">First source quaternion.</param>
+		/// <param name="right">Second source quaternion.</param>
+		/// <returns>The dot product of the two quaternions.</returns>
+		public static float Dot(Quaternion left, Quaternion right) => (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
 		/// <summary>
 		/// Performs a linear interpolation between two quaternion.
 		/// </summary>
@@ -356,6 +461,7 @@ namespace GTA.Math
 			else
 				return Identity;
 		}
+		
 		/// <summary>
 		/// Creates a rotation which rotates from fromDirection to toDirection.
 		/// </summary>
@@ -398,70 +504,6 @@ namespace GTA.Math
 			return SlerpUnclamped(from, to, t);
 		}
 		/// <summary>
-		/// Modulates a quaternion by another.
-		/// </summary>
-		/// <param name="left">The first quaternion to modulate.</param>
-		/// <param name="right">The second quaternion to modulate.</param>
-		/// <returns>The modulated quaternion.</returns>
-		public static Quaternion Multiply(Quaternion left, Quaternion right)
-		{
-			Quaternion quaternion;
-			float lx = left.X;
-			float ly = left.Y;
-			float lz = left.Z;
-			float lw = left.W;
-			float rx = right.X;
-			float ry = right.Y;
-			float rz = right.Z;
-			float rw = right.W;
-
-			quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
-			quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
-			quaternion.Z = (lz * rw + rz * lw) + (lx * ry) - (ly * rx);
-			quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
-
-			return quaternion;
-		}
-		/// <summary>
-		/// Scales a quaternion by the given value.
-		/// </summary>
-		/// <param name="quaternion">The quaternion to scale.</param>
-		/// <param name="scale">The amount by which to scale the quaternion.</param>
-		/// <returns>The scaled quaternion.</returns>
-		public static Quaternion Multiply(Quaternion quaternion, float scale)
-		{
-			Quaternion result = Zero;
-			result.X = quaternion.X * scale;
-			result.Y = quaternion.Y * scale;
-			result.Z = quaternion.Z * scale;
-			result.W = quaternion.W * scale;
-			return result;
-		}
-		/// <summary>
-		/// Reverses the direction of a given quaternion.
-		/// </summary>
-		/// <param name="quaternion">The quaternion to negate.</param>
-		/// <returns>A quaternion facing in the opposite direction.</returns>
-		public static Quaternion Negate(Quaternion quaternion)
-		{
-			Quaternion result = Zero;
-			result.X = -quaternion.X;
-			result.Y = -quaternion.Y;
-			result.Z = -quaternion.Z;
-			result.W = -quaternion.W;
-			return result;
-		}
-		/// <summary>
-		/// Converts the quaternion into a unit quaternion.
-		/// </summary>
-		/// <param name="quaternion">The quaternion to normalize.</param>
-		/// <returns>The normalized quaternion.</returns>
-		public static Quaternion Normalize(Quaternion quaternion)
-		{
-			quaternion.Normalize();
-			return quaternion;
-		}
-		/// <summary>
 		/// Returns the angle in degrees between two rotations a and b.
 		/// </summary>
 		/// <param name="a">The first quaternion to calculate angle.</param>
@@ -472,31 +514,32 @@ namespace GTA.Math
 			float dot = Dot(a, b);
 			return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
 		}
+
 		/// <summary>
 		/// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
 		/// </summary>
-		/// <param name="x">X degrees.</param>
-		/// <param name ="y">Y degrees.</param>
-		/// <param name ="z">Z degrees.</param>
-		public static Quaternion Euler(float x, float y, float z)
+		/// <param name="zaxis">Z degrees.</param>
+		/// <param name ="xaxis">X degrees.</param>
+		/// <param name ="yaxis">Y degrees.</param>
+		public static Quaternion Euler(float zaxis, float xaxis, float yaxis)
 		{
 			float Deg2Rad = (float)((System.Math.PI / 180.0));
-			return RotationYawPitchRoll(x * Deg2Rad, y * Deg2Rad, z * Deg2Rad);
+			return RotationYawPitchRoll(zaxis * Deg2Rad, xaxis * Deg2Rad, yaxis * Deg2Rad);
 		}
 		/// <summary>
 		/// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
 		/// </summary>
-		/// <param name="euler">Euler angles in degrees.</param>
+		/// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
 		public static Quaternion Euler(Vector3 euler)
 		{
 			Vector3 eulerRad = euler * (float)((System.Math.PI / 180.0));
-			return RotationYawPitchRoll(eulerRad.X, eulerRad.Y, eulerRad.Z);
+			return RotationYawPitchRoll(eulerRad.Z, eulerRad.X, eulerRad.Y);
 		}
 		/// <summary>
 		/// Creates a quaternion given a rotation and an axis.
 		/// </summary>
 		/// <param name="axis">The axis of rotation.</param>
-		/// <param name="angle">The angle of rotation.</param>
+		/// <param name="angle">The angle of rotation in radians.</param>
 		/// <returns>The newly created quaternion.</returns>
 		public static Quaternion RotationAxis(Vector3 axis, float angle)
 		{
@@ -571,46 +614,31 @@ namespace GTA.Math
 			return result;
 		}
 		/// <summary>
-		/// Creates a quaternion given a yaw, pitch, and roll value.
+		/// Creates a Quaternion from the given yaw, pitch, and roll, in radians.
 		/// </summary>
-		/// <param name="yaw">The yaw of rotation.</param>
-		/// <param name="pitch">The pitch of rotation.</param>
-		/// <param name="roll">The roll of rotation.</param>
+		/// <param name="yaw">The yaw angle, in radians, around the Z-axis.</param>
+		/// <param name="pitch">The pitch angle, in radians, around the X-axis.</param>
+		/// <param name="roll">The roll angle, in radians, around the Y-axis.</param>
 		/// <returns>The newly created quaternion.</returns>
-		public static Quaternion RotationYawPitchRoll(float yaw, float pitch, float roll)
+		public static Quaternion RotationYawPitchRoll(float roll, float pitch, float yaw)
 		{
 			Quaternion result = Zero;
 
-			float halfRoll = roll * 0.5f;
-			float sinRoll = (float)(System.Math.Sin((double)(halfRoll)));
-			float cosRoll = (float)(System.Math.Cos((double)(halfRoll)));
-			float halfPitch = pitch * 0.5f;
-			float sinPitch = (float)(System.Math.Sin((double)(halfPitch)));
-			float cosPitch = (float)(System.Math.Cos((double)(halfPitch)));
 			float halfYaw = yaw * 0.5f;
 			float sinYaw = (float)(System.Math.Sin((double)(halfYaw)));
 			float cosYaw = (float)(System.Math.Cos((double)(halfYaw)));
+			float halfPitch = pitch * 0.5f;
+			float sinPitch = (float)(System.Math.Sin((double)(halfPitch)));
+			float cosPitch = (float)(System.Math.Cos((double)(halfPitch)));
+			float halfRoll = roll * 0.5f;
+			float sinRoll = (float)(System.Math.Sin((double)(halfRoll)));
+			float cosRoll = (float)(System.Math.Cos((double)(halfRoll)));
 
-			result.X = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
-			result.Y = (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll);
-			result.Z = (cosYaw * cosPitch * sinRoll) - (sinYaw * sinPitch * cosRoll);
-			result.W = (cosYaw * cosPitch * cosRoll) + (sinYaw * sinPitch * sinRoll);
+			result.X = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
+			result.Y = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
+			result.Z = (cosRoll * cosPitch * sinYaw) - (sinRoll * sinPitch * cosYaw);
+			result.W = (cosRoll * cosPitch * cosYaw) + (sinRoll * sinPitch * sinYaw);
 
-			return result;
-		}
-		/// <summary>
-		/// Subtracts two quaternions.
-		/// </summary>
-		/// <param name="left">The first quaternion to subtract.</param>
-		/// <param name="right">The second quaternion to subtract.</param>
-		/// <returns>The difference of the two quaternions.</returns>
-		public static Quaternion Subtract(Quaternion left, Quaternion right)
-		{
-			Quaternion result = Zero;
-			result.X = left.X - right.X;
-			result.Y = left.Y - right.Y;
-			result.Z = left.Z - right.Z;
-			result.W = left.W - right.W;
 			return result;
 		}
 
@@ -683,20 +711,37 @@ namespace GTA.Math
 			return result;
 		}
 		/// <summary>
-		/// Divides a quaternion by another.
+		/// Divides a Quaternion by another Quaternion.
 		/// </summary>
-		/// <param name="left">The first quaternion to divide.</param>
-		/// <param name="right">The second quaternion to divide.</param>
-		/// <returns>The divided quaternion.</returns>
-		public static Quaternion operator /(Quaternion left, float right)
+		/// <param name="left">The source Quaternion.</param>
+		/// <param name="right">The divisor.</param>
+		/// <returns>The result of the division.</returns>
+		public static Quaternion operator /(Quaternion left, Quaternion right)
 		{
-			Quaternion result = Zero;
-			float invRhs = 1.0f / right;
-			result.X = left.X * invRhs;
-			result.Y = left.Y * invRhs;
-			result.Z = left.Z * invRhs;
-			result.W = left.W * invRhs;
-			return result;
+			Quaternion quaternion;
+
+			float lx = left.X;
+			float ly = left.Y;
+			float lz = left.Z;
+			float lw = left.W;
+
+			// Inverse part.
+			float ls = right.X * right.X + right.Y * right.Y +
+					   right.Z * right.Z + right.W * right.W;
+			float invNorm = 1.0f / ls;
+
+			float rx = -right.X * invNorm;
+			float ry = -right.Y * invNorm;
+			float rz = -right.Z * invNorm;
+			float rw = right.W * invNorm;
+
+			// Multiply part.
+			quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
+			quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
+			quaternion.Z = (lz * rw + rz * lw) + (lx * ry) - (ly * rx);
+			quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
+
+			return quaternion;
 		}
 		/// <summary>
 		/// Adds two quaternions.
@@ -749,7 +794,6 @@ namespace GTA.Math
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(Quaternion left, Quaternion right) => Equals(left, right);
-
 		/// <summary>
 		/// Tests for inequality between two objects.
 		/// </summary>
@@ -783,14 +827,7 @@ namespace GTA.Math
 		/// <returns>A 32-bit signed integer hash code.</returns>
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				var hashCode = X.GetHashCode();
-				hashCode = (hashCode * 397) ^ Y.GetHashCode();
-				hashCode = (hashCode * 397) ^ Z.GetHashCode();
-				hashCode = (hashCode * 397) ^ W.GetHashCode();
-				return hashCode;
-			}
+			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
 		}
 
 		/// <summary>
