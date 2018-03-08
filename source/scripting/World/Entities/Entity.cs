@@ -15,6 +15,13 @@ namespace GTA
 		ForceRotPlusForce
 	}
 
+	public enum EntityType
+	{
+		Ped = 1,
+		Vehicle = 2,
+		Prop = 3
+	}
+
 	public abstract class Entity : PoolObject, IEquatable<Entity>, ISpatial
 	{
 		#region Fields
@@ -155,6 +162,25 @@ namespace GTA
 			{
 				return !IsDead;
 			}
+		}
+		/// <summary>
+		/// Gets the type of the current Entity
+		/// </summary>
+		public EntityType EntityType
+		{
+			get
+			{
+				return (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
+			}
+		}
+		/// <summary>
+		/// Gets the type of Entity
+		/// </summary>
+		/// <param name="Handle">Handle of the Entity</param>
+		/// <returns></returns>
+		public static EntityType GetEntityType(int handle)
+		{
+			return (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, handle);
 		}
 
 		public Model Model
@@ -1304,13 +1330,13 @@ namespace GTA
 		/// Returns <c>null</c> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
 		public static Entity FromHandle(int handle)
 		{
-			switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
+			switch (GetEntityType(handle))
 			{
-				case 1:
+				case EntityType.Ped:
 					return new Ped(handle);
-				case 2:
+				case EntityType.Vehicle:
 					return new Vehicle(handle);	
-				case 3:
+				case EntityType.Prop:
 					return new Prop(handle); 
 			}
 			return null;
