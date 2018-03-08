@@ -2560,7 +2560,7 @@ namespace GTA
 		/// <returns><c>true</c> if this <see cref="Vehicle"/> exists; otherwise, <c>false</c></returns>
 		public new bool Exists()
 		{
-			return Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle) == 2;
+			return EntityType == EntityType.Vehicle;
 		}
 		/// <summary>
 		/// Determines whether the <see cref="Vehicle"/> exists.
