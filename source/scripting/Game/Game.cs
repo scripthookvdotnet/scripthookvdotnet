@@ -270,7 +270,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or a value indicating whether the cutscene is active.
+		/// Gets a value indicating whether the cutscene is active.
 		/// </summary>
 		public static bool IsCutsceneActive
 		{
@@ -306,7 +306,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the pause menu is active.
+		/// Gets or sets a value indicating whether the pause menu is active.
 		/// </summary>
 		public static bool IsPaused
 		{
@@ -314,7 +314,21 @@ namespace GTA
 			{
 				return Function.Call<bool>(Hash.IS_PAUSE_MENU_ACTIVE);
 			}
+			set
+			{
+				Function.Call(Hash.SET_PAUSE_MENU_ACTIVE, value);
+			}
 		}
+		
+		/// <summary>
+		/// Pause/resume the game.
+		/// </summary>
+		/// <param name="value">True/false for pause/resume.</param>
+		public static void Pause(bool value)
+		{
+			GTA.Native.Function.Call(GTA.Native.Hash.SET_GAME_PAUSED, value);
+		}
+		
 		/// <summary>
 		/// Gets a value indicating whether there is a loading screen being displayed.
 		/// </summary>
