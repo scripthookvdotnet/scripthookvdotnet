@@ -1422,11 +1422,12 @@ namespace GTA
 		/// <summary>
 		/// Determines where the crosshair intersects with the world.
 		/// </summary>
+		/// <param name="intersectOptions">Type of <see cref="IntersectOptions">environment</see> the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Prevent the raycast detecting a specific <see cref="Entity"/>.</param>
 		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
-		public static RaycastResult GetCrosshairCoordinates(Entity ignoreEntity)
+		public static RaycastResult GetCrosshairCoordinates(IntersectOptions intersectOptions = IntersectOptions.Everything, Entity ignoreEntity = null)
 		{
-			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptions.Everything, ignoreEntity);
+			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), intersectOptions, ignoreEntity);
 		}
 
 		/// <summary>
