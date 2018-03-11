@@ -712,19 +712,6 @@ namespace GTA.Math
 			return quaternion;
 		}
 		/// <summary>
-		/// Rotates the point with rotation.
-		/// </summary>
-		/// <param name="rotation">The quaternion to rotate the vector.</param>
-		/// <param name="point">The vector to be rotated.</param>
-		/// <returns>The vector after rotation.</returns>
-		public static Vector3 operator *(Quaternion rotation, Vector3 point)
-		{
-			Vector3 q = new Vector3(rotation.X, rotation.Y, rotation.Z);
-			Vector3 t = 2.0f * Vector3.Cross(q, point);
-			Vector3 result = point + (rotation.W * t) + Vector3.Cross(q, t);
-			return result;
-		}
-		/// <summary>
 		/// Scales a quaternion by the given value.
 		/// </summary>
 		/// <param name="quaternion">The quaternion to scale.</param>
@@ -802,6 +789,61 @@ namespace GTA.Math
 		/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Quaternion left, Quaternion right) => !Equals(left, right);
 
+		#region RotateTransformOperators
+
+		/// <summary>
+		/// Rotates the point with rotation.
+		/// </summary>
+		/// <param name="rotation">The quaternion to rotate the vector.</param>
+		/// <param name="point">The vector to be rotated.</param>
+		/// <returns>The vector after rotation.</returns>
+		public static Vector3 operator *(Quaternion rotation, Vector3 point)
+		{
+			float q0 = rotation.W;
+			float q0Square = rotation.W * rotation.W;
+			Vector3 q = new Vector3(rotation.X, rotation.Y, rotation.Z);
+			return ((q0Square - q.LengthSquared()) * point) + (2 * Vector3.Dot(q, point) * q) + (2 * q0 * Vector3.Cross(q, point));
+		}
+
+		/// <summary>
+		/// Rotates the point with rotation.
+		/// </summary>
+		/// <param name="rotation">The quaternion to rotate the vector.</param>
+		/// <param name="point">The vector to be rotated.</param>
+		/// <returns>The vector after rotation.</returns>
+		public static Vector3 RotateTransform(Quaternion rotation, Vector3 point) => rotation * point;
+
+		/// <summary>
+		/// Rotates the point with rotation.
+		/// </summary>
+		/// <param name="rotation">The quaternion to rotate the vector.</param>
+		/// <param name="point">The vector to be rotated.</param>
+		/// <param name="center">The vector representing the origin of the new coordinate system.</param>
+		/// <returns>The vector after rotation in the original coordinate system.</returns>
+		public static Vector3 RotateTransform(Quaternion rotation, Vector3 point, Vector3 center)
+		{
+			Vector3 PointNewCenter = Vector3.Subtract(point, center);
+			Vector3 TransformedPoint = RotateTransform(rotation, PointNewCenter);
+			return Vector3.Add(TransformedPoint, center);
+		}
+
+		/// <summary>
+		/// Rotates the point with rotation.
+		/// </summary>
+		/// <param name="point">The vector to be rotated.</param>
+		/// <returns>The vector after rotation.</returns>
+		public Vector3 RotateTransform(Vector3 point) => RotateTransform(this, point);
+
+		/// <summary>
+		/// Rotates the point with rotation.
+		/// </summary>
+		/// <param name="point">The vector to be rotated.</param>
+		/// <param name="center">The vector representing the origin of the new coordinate system.</param>
+		/// <returns>The vector after rotation in the original coordinate system.</returns>
+		public Vector3 RotateTransform(Vector3 point, Vector3 center) => RotateTransform(this, point, center);
+
+		#endregion RotateTransformOperators
+		
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.
 		/// </summary>
