@@ -28,6 +28,14 @@ namespace GTA
 		RearPlate,
 		None
 	}
+    public enum VehicleSubmarineTransformationState
+    {
+        None = -1,
+        NotTransformed,
+        TransformingToSubmarine,
+        Transformed,
+        TransformingToNormal
+    }
 	public enum VehicleClass
 	{
 		Compacts,
@@ -501,11 +509,138 @@ namespace GTA
 				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
-		
-		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> fuel level.
-		/// </summary>
-		public float FuelLevel
+
+        /// <summary>
+        /// Gets or sets this <see cref="Vehicle"/> (deluxo hover) transformation value.
+        /// Seems like 1.0f equals fully transformed, 0.0f equals not transformed
+        /// </summary>
+        public float DeluxoTransformation
+	    {
+            get
+            {
+                if (MemoryAddress == IntPtr.Zero)
+                {
+                    return 0.0f;
+                }
+
+                int offset = 0x340; //GameVersion.v1_0_1290_1_Steam
+                
+                return MemoryAccess.ReadFloat(MemoryAddress + offset);
+            }
+            set
+            {
+                if (MemoryAddress == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int offset = 0x340; //GameVersion.v1_0_1290_1_Steam
+
+                MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+            }
+        }
+
+	    /// <summary>
+	    /// Gets or sets whether this <see cref="Vehicle"/> (submarine car) is transformed.
+	    /// </summary>
+	    public bool SubmarineCarTransformed
+	    {
+
+	        get
+	        {
+                return Function.Call<bool>((Hash)0xA77DC70BD689A1E5, Handle); //Returns whether transformed or not
+	        }
+            set
+            {
+                if (value)
+                {
+                    MemoryAccess.TransformSubmarineCarToSubmarineAddressFunc(MemoryAddress, false);
+                }
+                else
+                {
+                    Function.Call((Hash)0x2A69FFD1B42BFF9E, Handle, 0.0f);
+                }
+            }
+        }
+
+        /// <summary>
+	    /// Gets or sets this <see cref="Vehicle"/> (submarine car) transformation state.
+	    /// </summary>
+	    public VehicleSubmarineTransformationState SubmarineCarTransformationState
+        {
+
+            get
+            {
+                if (MemoryAddress == IntPtr.Zero)
+                {
+                    return VehicleSubmarineTransformationState.None;
+                }
+
+                //CVehicleIntelligence
+                IntPtr address = MemoryAccess.ReadPtr(MemoryAddress + 0xB40);
+                if (address == IntPtr.Zero)
+                    return VehicleSubmarineTransformationState.None;
+
+                //CVehicleTaskManager->CTaskTree
+                address = MemoryAccess.ReadPtr(address + 0x7C0);
+                if (address == IntPtr.Zero)
+                    return VehicleSubmarineTransformationState.None;
+
+                //CTask array
+                address += 0x20;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    IntPtr task = MemoryAccess.ReadPtr(address + i * 8);
+                    if (task == IntPtr.Zero)
+                        continue;
+
+                    //CTaskVehicleTransformToSubmarine
+                    Int16 taskId = MemoryAccess.ReadShort(task + 0x34);
+                    if (taskId == 528)
+                    {
+                        return (VehicleSubmarineTransformationState)MemoryAccess.ReadByte(task + 0x36);
+                    }
+                }
+                
+                return VehicleSubmarineTransformationState.None;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets this <see cref="Vehicle"/> (oppressor wings) transformation value.
+        /// Seems like 1.0f equals fully transformed, 0.0f equals not transformed
+        /// </summary>
+        public float OppressorTransformation
+	    {
+	        get
+	        {
+	            if (MemoryAddress == IntPtr.Zero)
+	            {
+	                return 0.0f;
+	            }
+
+	            int offset = 0x338; //GameVersion.v1_0_1290_1_Steam
+
+	            return MemoryAccess.ReadFloat(MemoryAddress + offset);
+	        }
+	        set
+	        {
+	            if (MemoryAddress == IntPtr.Zero)
+	            {
+	                return;
+	            }
+
+	            int offset = 0x338; //GameVersion.v1_0_1290_1_Steam
+
+	            MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+	        }
+	    }
+
+        /// <summary>
+        /// Gets or sets this <see cref="Vehicle"/> fuel level.
+        /// </summary>
+        public float FuelLevel
 		{
 			get
 			{
