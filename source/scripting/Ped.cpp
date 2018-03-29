@@ -447,6 +447,7 @@ namespace GTA
 
 		int offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x158A : 0x1542);
 		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x159A : offset);
+		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x15A2 : offset);
 
 		int seatIndex = (*reinterpret_cast<char *>(address + offset));
 
