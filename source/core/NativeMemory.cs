@@ -585,8 +585,8 @@ namespace GTA
 				_pedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 				address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
 				_objectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
-				address = FindPattern("\x8B\xF0\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6", "xxxxx????xxxx");
-				_pickupObjectPoolAddress = (ulong*)(*(int*)(address + 5) + address + 9);
+				address = FindPattern("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
+				_pickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 				CreateNmMessageFuncAddress = (ulong)FindPattern("\x33\xDB\x48\x89\x1D\x00\x00\x00\x00\x85\xFF", "xxxxx????xx") - 0x42;
 				GiveNmMessageFuncAddress = (ulong)FindPattern("\x48\x8b\xc4\x48\x89\x58\x08\x48\x89\x68\x10\x48\x89\x70\x18\x48\x89\x78\x20\x41\x55\x41\x56\x41\x57\x48\x83\xec\x20\xe8\x00\x00\x00\x00\x48\x8b\xd8\x48\x85\xc0\x0f", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxx");
