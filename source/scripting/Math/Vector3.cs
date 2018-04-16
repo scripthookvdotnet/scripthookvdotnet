@@ -324,15 +324,15 @@ namespace GTA.Math
 		/// </summary>
 		public Vector3 Around(float distance) => this + (RandomXY() * distance);
 
-        /// <summary>
-        /// Rounds each float inside the vector to a select amount of decimal places (2 by default).
-        /// </summary>
-        /// <param name="decimalPlaces">Number of decimal places to round to</param>
-        /// <returns>The vector containing rounded values</returns>
-        public Vector3 Round(int decimalPlaces = 2)
-        {
-            return new Vector3((float)System.Math.Round(this.X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
-        }
+		/// <summary>
+		/// Rounds each float inside the vector to a select amount of decimal places (2 by default).
+		/// </summary>
+		/// <param name="decimalPlaces">Number of decimal places to round to</param>
+		/// <returns>The vector containing rounded values</returns>
+		public Vector3 Round(int decimalPlaces = 2)
+		{
+		    return new Vector3((float)System.Math.Round(this.X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
+		}
 
 		/// <summary>
 		/// Returns a new normalized vector with random X and Y components.
