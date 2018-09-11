@@ -92,6 +92,8 @@ namespace GTA
 		VinewoodBoulevardRadio = 16,
 		SelfRadio = 17,
 		TheLab = 18,
+		BlondedLosSantos = 19,
+		LosSantosUndergroundRadio = 20,
 		RadioOff = 255,
 	};
 	public enum class WindowTitle
@@ -315,7 +317,7 @@ namespace GTA
 		static System::String ^GetUserInput(WindowTitle windowTitle, System::String^ defaultText, int maxLength);
 
 	internal:
-		static initonly array<System::String ^> ^_radioNames = { "RADIO_01_CLASS_ROCK", "RADIO_02_POP", "RADIO_03_HIPHOP_NEW", "RADIO_04_PUNK", "RADIO_05_TALK_01", "RADIO_06_COUNTRY", "RADIO_07_DANCE_01", "RADIO_08_MEXICAN", "RADIO_09_HIPHOP_OLD", "RADIO_11_TALK_02", "RADIO_12_REGGAE", "RADIO_13_JAZZ", "RADIO_14_DANCE_02", "RADIO_15_MOTOWN", "RADIO_16_SILVERLAKE", "RADIO_17_FUNK", "RADIO_18_90S_ROCK", "RADIO_19_USER", "RADIO_20_THELAB", "RADIO_OFF" };
+		static initonly array<System::String ^> ^_radioNames = { "RADIO_01_CLASS_ROCK", "RADIO_02_POP", "RADIO_03_HIPHOP_NEW", "RADIO_04_PUNK", "RADIO_05_TALK_01", "RADIO_06_COUNTRY", "RADIO_07_DANCE_01", "RADIO_08_MEXICAN", "RADIO_09_HIPHOP_OLD", "RADIO_11_TALK_02", "RADIO_12_REGGAE", "RADIO_13_JAZZ", "RADIO_14_DANCE_02", "RADIO_15_MOTOWN", "RADIO_16_SILVERLAKE", "RADIO_17_FUNK", "RADIO_18_90S_ROCK", "RADIO_19_USER", "RADIO_20_THELAB", "RADIO_21_DLC_XM17", "RADIO_22_DLC_BATTLE_MIX1_RADIO", "RADIO_OFF" };
 
 	private:
 		static GameVersion _gameVersion = GameVersion::Unknown;
