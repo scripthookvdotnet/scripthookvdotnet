@@ -175,7 +175,7 @@ namespace GTA
 	GTA::RadioStation Game::RadioStation::get()
 	{
 		System::String ^radioName = Native::Function::Call<System::String ^>(Native::Hash::GET_PLAYER_RADIO_STATION_NAME);
-		if (System::String::Equals(radioName, ""))
+		if (System::String::Equals(radioName, "OFF"))
 		{
 			return GTA::RadioStation::RadioOff;
 		}
@@ -192,7 +192,7 @@ namespace GTA
 		}
 		else
 		{
-			Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_NAME, "");
+			Native::Function::Call(Native::Hash::SET_RADIO_TO_STATION_NAME, "OFF");
 		}
 	}
 	System::Drawing::Size Game::ScreenResolution::get()
