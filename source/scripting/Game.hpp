@@ -69,6 +69,7 @@ namespace GTA
 		Chinese,
 		Japanese,
 		Mexican,
+		ChineseSimplified
 	};
 	public enum class RadioStation
 	{
