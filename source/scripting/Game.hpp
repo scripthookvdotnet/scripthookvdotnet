@@ -70,6 +70,7 @@ namespace GTA
 	};
 	public enum class RadioStation
 	{
+		Unknown = -1,
 		LosSantosRockRadio = 0,
 		NonStopPopFM = 1,
 		RadioLosSantos = 2,
