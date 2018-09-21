@@ -30,20 +30,29 @@ namespace GTA
 		void Run();
 	}
 
-	internal class TypePair : Tuple<string, Type>, IComparable<TypePair> {
+	internal class TypePair : Tuple<string, Type>, IComparable<TypePair>
+	{
 		public TypePair(string s, Type t) : base(s, t) { }
 
-		// sort based on a composite name that includes dependencies
-		private static string CompareKey(Type a, string prior) {
+		/* CompareKey sorts by a composite string key.
+		 * The key comes from the RequireScript dependencies.
+		 * The result is that a SortedList<TypePair> will always be in dependency order.
+		 */
+		private static string CompareKey(Type a, string prior)
+		{
 			string key = a.Name + "%%" + prior;
-			foreach( RequireScript attribute in a.GetCustomAttributes<RequireScript>(true) ) {
-				if( key.IndexOf("%%" + attribute._dependency.Name) == -1 ) { // ignore circular dependencies
+			foreach( RequireScript attribute in a.GetCustomAttributes<RequireScript>(true) )
+			{
+				if( key.IndexOf("%%" + attribute._dependency.Name) == -1 )
+				{
 					key = CompareKey(attribute._dependency, key);
 				}
+				// ignore circular dependencies
 			}
 			return key;
 		}
-		public int CompareTo(TypePair t) {
+		public int CompareTo(TypePair t)
+		{
 			return CompareKey(this.Item2, "").CompareTo(CompareKey(t.Item2, ""));
 		}
 	}
@@ -492,7 +501,8 @@ namespace GTA
 					continue;
 				}
 
-				if( Object.ReferenceEquals(script._thread, null) ) {
+				if( Object.ReferenceEquals(script._thread, null) )
+				{
 					script.Start();
 				}
 			}
