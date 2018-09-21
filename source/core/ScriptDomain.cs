@@ -30,6 +30,26 @@ namespace GTA
 		void Run();
 	}
 
+	internal class TypePair : Tuple<string, Type>, IComparable<TypePair> {
+		public TypePair(string s, Type t) : base(s, t) { }
+
+		// sort based on a composite name that includes dependencies
+		private static string CompareKey(Type a, string prior) {
+			string key = a.Name + "%%" + prior;
+			foreach( RequireScript attribute in a.GetCustomAttributes<RequireScript>(true) ) {
+				if( key.IndexOf("%%" + attribute._dependency.Name) == -1 ) { // ignore circular dependencies
+					key = CompareKey(attribute._dependency, key);
+				}
+			}
+			return key;
+		}
+		public int CompareTo(TypePair t) {
+			return CompareKey(this.Item2, "").CompareTo(CompareKey(t.Item2, ""));
+		}
+	}
+
+	internal class SortedList<T> : SortedList<T, T> { }
+
 	internal class ScriptDomain : MarshalByRefObject, IDisposable
 	{
 		#region Fields
@@ -38,7 +58,7 @@ namespace GTA
 		private List<Script> _runningScripts = new List<Script>();
 		private Queue<IScriptTask> _taskQueue = new Queue<IScriptTask>();
 		private List<IntPtr> _pinnedStrings = new List<IntPtr>();
-		private List<Tuple<string, Type>> _scriptTypes = new List<Tuple<string, Type>>();
+		private SortedList<TypePair> _scriptTypes = new SortedList<TypePair>();
 		private bool _recordKeyboardEvents = true;
 		private bool[] _keyboardState = new bool[256];
 		private bool disposed = false;
@@ -283,7 +303,7 @@ namespace GTA
 				foreach (var type in assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(Script))))
 				{
 					count++;
-					_scriptTypes.Add(new Tuple<string, Type>(filename, type));
+					_scriptTypes.Add(new TypePair(filename, type), null);
 				}
 			}
 			catch (ReflectionTypeLoadException ex)
@@ -423,57 +443,7 @@ namespace GTA
 
 			return null;
 		}
-
-		internal static bool SortScripts(ref List<Tuple<string, Type>> scriptTypes)
-		{
-			var graph = new Dictionary<Tuple<string, Type>, List<Type>>();
-
-			foreach (var scriptType in scriptTypes)
-			{
-				var dependencies = new List<Type>();
-
-				foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes<RequireScript>(true))
-				{
-					dependencies.Add(attribute._dependency);
-				}
-
-				graph.Add(scriptType, dependencies);
-			}
-
-			var result = new List<Tuple<string, Type>>(graph.Count);
-
-			while (graph.Count > 0)
-			{
-				Tuple<string, Type> scriptType = null;
-
-				foreach (var item in graph)
-				{
-					if (item.Value.Count == 0)
-					{
-						scriptType = item.Key;
-						break;
-					}
-				}
-
-				if (scriptType == null)
-				{
-					Log("[ERROR]", "Detected a circular script dependency. Aborting ...");
-					return false;
-				}
-
-				result.Add(scriptType);
-				graph.Remove(scriptType);
-
-				foreach (var item in graph)
-				{
-					item.Value.Remove(scriptType.Item2);
-				}
-			}
-
-			scriptTypes = result;
-
-			return true;
-		}
+		
 		public void Start()
 		{
 			if (_runningScripts.Count != 0)
@@ -487,12 +457,7 @@ namespace GTA
 			// Start script threads
 			Log("[INFO]", "Starting ", _scriptTypes.Count.ToString(), " script(s) ...");
 
-			if (_scriptTypes.Count == 0 || !SortScripts(ref _scriptTypes))
-			{
-				return;
-			}
-
-			foreach (var script in _scriptTypes.Select(x => InstantiateScript(x.Item2)).Where(x => x != null))
+			foreach (var script in _scriptTypes.Select(x => InstantiateScript(x.Key.Item2)).Where(x => x != null))
 			{
 				script.Start();
 			}
@@ -516,18 +481,20 @@ namespace GTA
 				return;
 			}
 
-			Log("[INFO]", "Starting ", (_scriptTypes.Count - offset).ToString(), " script(s) ...");
+			Log("[INFO]", "Starting ", (_scriptTypes.Count - offset).ToString(), " new script(s) ...");
 
-			for (int i = offset; i < _scriptTypes.Count; i++)
+			for (int i = 0; i < _scriptTypes.Count; i++)
 			{
-				Script script = InstantiateScript(_scriptTypes[i].Item2);
+				Script script = InstantiateScript(_scriptTypes.ElementAt(i).Key.Item2);
 
 				if (Object.ReferenceEquals(script, null))
 				{
 					continue;
 				}
 
-				script.Start();
+				if( Object.ReferenceEquals(script._thread, null) ) {
+					script.Start();
+				}
 			}
 		}
 		public void StartAllScripts()
@@ -567,7 +534,7 @@ namespace GTA
 
 				for (int i = offset; i < TotalScriptCount; i++)
 				{
-					Script script = InstantiateScript(_scriptTypes[i].Item2);
+					Script script = InstantiateScript(_scriptTypes.ElementAt(i).Key.Item2);
 
 					if (ReferenceEquals(script, null))
 					{
@@ -598,11 +565,18 @@ namespace GTA
 		}
 		public void AbortScript(string filename)
 		{
-			filename = Path.GetFullPath(filename);
+			string fullpath = Path.GetFullPath(filename);
 
-			foreach (Script script in _runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
+			foreach (Script script in _runningScripts.Where(x => fullpath.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)).ToArray() )
 			{
 				script.Abort();
+				_runningScripts.Remove(script);
+			}
+			foreach( var t in _scriptTypes
+				.Where( s => s.Key.Item1 == filename) // use the un-expanded filename
+				.ToArray()) // array so we dont have an open enumerator on _scriptTypes when we Remove()
+			{
+				_scriptTypes.Remove(t.Key);
 			}
 		}
 		public void AbortAllScriptsExceptConsole()
@@ -770,7 +744,7 @@ namespace GTA
 		}
 		public string LookupScriptFilename(Type type)
 		{
-			return _scriptTypes.FirstOrDefault(x => x.Item2 == type)?.Item1 ?? string.Empty;
+			return _scriptTypes.FirstOrDefault(x => x.Key.Item2 == type).Key?.Item1 ?? string.Empty;
 		}
 		public override object InitializeLifetimeService()
 		{
