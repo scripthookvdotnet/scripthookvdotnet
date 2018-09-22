@@ -641,6 +641,49 @@ namespace GTA.Math
 
 			return result;
 		}
+		/// <summary>
+		/// Creates a Quaternion from the given relative x, y, z axis
+		/// </summary>
+		/// The Vectors need to be perpendicular to each other
+		/// <param name="rightVector">Relative X axis</param>
+		/// <param name="forwardVector">Relative Y axis</param>
+		/// <param name="upVector">Relative Z axis</param>
+		/// <returns>The newly created quaternion.</returns>
+		public static Quaternion DirectionVectors(Vector3 rightVector, Vector3 forwardVector, Vector3 upVector)
+		{
+			rightVector.Normalize();
+			forwardVector.Normalize();
+			upVector.Normalize();
+			
+			Matrix rotationMatrix = new Matrix();
+			rotationMatrix[0, 0] = rightVector.X;
+			rotationMatrix[0, 1] = rightVector.Y;
+			rotationMatrix[0, 2] = rightVector.Z;
+			
+			rotationMatrix[1, 0] = forwardVector.X;
+			rotationMatrix[1, 1] = forwardVector.Y;
+			rotationMatrix[1, 2] = forwardVector.Z;
+			
+			rotationMatrix[2, 0] = upVector.X;
+			rotationMatrix[2, 1] = upVector.Y;
+			rotationMatrix[2, 2] = upVector.Z;
+			
+			return RotationMatrix(rotationMatrix);
+		}
+		/// <summary>
+		/// Get direction vectors from the given quaternion
+		/// </summary>
+		/// <param name="quaternion">The quaternion</param>
+		/// <param name="rightVector">RightVector = relative x axis</param>
+		/// <param name="forwardVector">ForwardVector = relative y axis</param>
+		/// <param name="upVector">UpVector = relative z axis</param>
+		public static void GetDirectionVectors(Quaternion quaternion, out Vector3 rightVector, out Vector3 forwardVector, out Vector3 upVector)
+		{
+			quaternion.Normalize();
+			rightVector = quaternion * Vector3.WorldEast;
+			forwardVector = quaternion * Vector3.WorldNorth;
+			upVector = quaternion * Vector3.WorldUp;
+		}
 
 		/// <summary>
 		/// Reverses the direction of a given quaternion.
