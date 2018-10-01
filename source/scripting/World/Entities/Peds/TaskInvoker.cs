@@ -199,16 +199,15 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
-		public void GoTo(Vector3 position, bool ignorePaths = false, int timeout = -1)
+
+	    public void GoTo(Vector3 position,int timeout = -1)
+	    {
+	        Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
+	    }
+
+        public void GoStraightTo(Vector3 position, bool ignorePaths = false, int timeout = -1, float targetHeading = 0f, float distanceToSlide = 0f)
 		{
-			if (ignorePaths)
-			{
-				Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0f);
-			}
-			else
-			{
-				Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
-			}
+			Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, targetHeading, distanceToSlide);
 		}
 
 		public void GuardCurrentPosition()
