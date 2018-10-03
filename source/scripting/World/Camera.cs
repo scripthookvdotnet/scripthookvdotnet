@@ -555,7 +555,7 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, value);
+				Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, value, 1F);
 			}
 		}
 		/// <summary>
