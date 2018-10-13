@@ -219,6 +219,7 @@ namespace GTA
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14B8 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
@@ -519,7 +520,7 @@ namespace GTA
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x158A : 0x1542);
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x159A : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x15A2 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x15A2 : offset;
 
 				int seatIndex = MemoryAccess.ReadSByte(MemoryAddress + offset);
 

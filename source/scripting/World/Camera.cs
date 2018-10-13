@@ -369,7 +369,7 @@ namespace GTA
 		/// <summary>
 		/// Moves the to camera from this <see cref="Camera"/> position to the to cameras Poisition.
 		/// </summary>
-		public void InterpTo(Camera to, int duration, bool easePosition, bool easeRotation)
+		public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
 		{
 			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);
 		}
@@ -555,7 +555,7 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, value);
+				Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, value, 1F);
 			}
 		}
 		/// <summary>

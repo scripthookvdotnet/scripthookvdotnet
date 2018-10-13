@@ -551,6 +551,8 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets the height of the ground at a given position.
+		/// Note : If the Vector3 is already below the ground, this will return 0.
+		/// You may want to use the other overloaded function to be safe.
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>

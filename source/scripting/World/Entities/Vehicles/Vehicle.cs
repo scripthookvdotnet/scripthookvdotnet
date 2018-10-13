@@ -2553,6 +2553,15 @@ namespace GTA
 			}
 			return allModels.ToArray();
 		}
+		public static int[] GetAllModelValues()
+		{
+		    List<int> allModels = new List<int>();
+		    for (int i = 0; i < 0x20; i++)
+		    {
+			allModels.AddRange(MemoryAccess.VehicleModels[i].ToArray());
+		    }
+		    return allModels.ToArray();
+		}
 
 		/// <summary>
 		/// Determines whether this <see cref="Vehicle"/> exists.
