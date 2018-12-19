@@ -450,6 +450,8 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7CC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7EC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x80C : offset);
+		// TODO: 1365, 1493.0/1
+		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x84C : offset);
 
 		const unsigned char mask = 1 << 0;
 
@@ -481,6 +483,8 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7CC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7EC : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x80C : offset);
+		// TODO: 1365, 1493.0/1
+		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x84C : offset);
 
 		const unsigned char mask = 1 << 1;
 
