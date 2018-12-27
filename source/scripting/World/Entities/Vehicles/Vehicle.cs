@@ -1391,7 +1391,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x9B8 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x9E4 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x9F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x1018 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0xA18 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xA38 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA88 : offset;
 
