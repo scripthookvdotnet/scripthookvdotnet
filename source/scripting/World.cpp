@@ -26,6 +26,7 @@ namespace GTA
 			ARMYB,
 			BANHAMC,
 			BANNING,
+			BAYTRE,
 			BEACH,
 			BHAMCA,
 			BRADP,
@@ -51,6 +52,7 @@ namespace GTA
 			ELGORL,
 			ELYSIAN,
 			GALFISH,
+			GALLI,
 			golf,
 			GRAPES,
 			GREATC,
@@ -693,6 +695,8 @@ namespace GTA
 					return "Banham Canyon";
 				case ZoneID::BANNING:
 					return "Banning";
+				case ZoneID::BAYTRE:
+					return "Baytree Canyon";
 				case ZoneID::BEACH:
 					return "Vespucci Beach";
 				case ZoneID::BHAMCA:
@@ -743,6 +747,8 @@ namespace GTA
 					return "Elysian Island";
 				case ZoneID::GALFISH:
 					return "Galilee";
+				case ZoneID::GALLI:
+					return "Galileo Park";
 				case ZoneID::golf:
 					return "GWC and Golfing Society";
 				case ZoneID::GRAPES:
