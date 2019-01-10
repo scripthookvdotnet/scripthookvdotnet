@@ -38,6 +38,7 @@ namespace GTA
 		public ref class InputArgument
 		{
 		public:
+			InputArgument(System::UInt64 value);
 			InputArgument(System::Object ^value);
 			inline InputArgument(bool value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(int value) : InputArgument(static_cast<System::Object ^>(value)) { }

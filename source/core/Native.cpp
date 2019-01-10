@@ -237,6 +237,9 @@ namespace GTA
 			}
 		}
 
+		InputArgument::InputArgument(System::UInt64 value) : _data(value)
+		{
+		}
 		InputArgument::InputArgument(Object ^value) : _data(ObjectToNative(value))
 		{
 		}
