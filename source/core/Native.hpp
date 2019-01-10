@@ -19,6 +19,8 @@
 #include "Model.hpp"
 #include "NativeHashes.hpp"
 
+using namespace System;
+
 namespace GTA
 {
 	#pragma region Forward Declarations
@@ -40,13 +42,13 @@ namespace GTA
 		public:
 			InputArgument(System::UInt64 value);
 			InputArgument(System::Object ^value);
-			inline InputArgument(bool value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(int value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(float value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(double value) : InputArgument(static_cast<System::Object ^>(value)) { }
+			inline InputArgument(bool value) : InputArgument(static_cast<bool>(value) ? 1 : 0) { }
+			inline InputArgument(int value) : InputArgument(static_cast<System::UInt64>(value)) { }
+			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::UInt64>(value)) { }
+			inline InputArgument(float value) : InputArgument(BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0)) { }
+			inline InputArgument(double value) : InputArgument(BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0)) { }
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Model value) : InputArgument(static_cast<System::Object ^>(value)) { }
+			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt64>(value.Hash)) { }
 			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Entity ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
