@@ -24,8 +24,6 @@
 #include "Player.hpp"
 #include "Prop.hpp"
 #include "Rope.hpp"
-#include "Vector2.hpp"
-#include "Vector3.hpp"
 #include "Vehicle.hpp"
 
 #include <NativeCaller.h>

@@ -18,6 +18,8 @@
 
 #include "Model.hpp"
 #include "NativeHashes.hpp"
+#include "Vector2.hpp"
+#include "Vector3.hpp"
 
 namespace GTA
 {
