@@ -157,27 +157,15 @@ namespace GTA
 					}
 				}
 
-#pragma pack(push, 1)
-				struct NativeVector3
-				{
-					float x;
-					DWORD _paddingx;
-					float y;
-					DWORD _paddingy;
-					float z;
-					DWORD _paddingz;
-				};
-#pragma pack(pop)
-
 				// Math types
 				if (type == Math::Vector2::typeid)
 				{
-					const auto vec = reinterpret_cast<NativeVector3 *>(value);
+					const auto vec = reinterpret_cast<NativeHelper::NativeVector3 *>(value);
 					return gcnew Math::Vector2(vec->x, vec->y);
 				}
 				if (type == Math::Vector3::typeid)
 				{
-					const auto vec = reinterpret_cast<NativeVector3 *>(value);
+					const auto vec = reinterpret_cast<NativeHelper::NativeVector3 *>(value);
 					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
 				}
 

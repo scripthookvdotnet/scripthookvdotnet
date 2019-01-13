@@ -214,6 +214,30 @@ namespace GTA
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
 		};
 
+		private ref class NativeHelper abstract sealed
+		{
+		internal:
+			value class NativeVector3
+			{
+			internal:
+				float x;
+				int _paddingx;
+				float y;
+				int _paddingy;
+				float z;
+				int _paddingz;
+
+				static explicit operator GTA::Math::Vector2(NativeVector3 val)
+				{
+					return GTA::Math::Vector2(val.x, val.y);
+				}
+				static explicit operator GTA::Math::Vector3(NativeVector3 val)
+				{
+					return GTA::Math::Vector3(val.x, val.y, val.z);
+				}
+			};
+		};
+
 		generic <typename T>
 		private ref class NativeHelperGeneric abstract sealed
 		{
