@@ -33,6 +33,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Linq::Expressions;
+using namespace System::Runtime::InteropServices;
 
 namespace GTA
 {
@@ -111,35 +112,6 @@ namespace GTA
 			}
 			Object ^ObjectFromNative(Type ^type, UInt64 *value)
 			{
-				// Fundamental types
-				if (type == Boolean::typeid)
-				{
-					return *reinterpret_cast<const int *>(value) != 0;
-				}
-				if (type == Int32::typeid)
-				{
-					return *reinterpret_cast<const int *>(value);
-				}
-				if (type == UInt32::typeid)
-				{
-					return *reinterpret_cast<const unsigned int *>(value);
-				}
-				if (type == Int64::typeid)
-				{
-					return *reinterpret_cast<const long long *>(value);
-				}
-				if (type == UInt64::typeid)
-				{
-					return *reinterpret_cast<const unsigned long long *>(value);
-				}
-				if (type == Single::typeid)
-				{
-					return *reinterpret_cast<const float *>(value);
-				}
-				if (type == Double::typeid)
-				{
-					return static_cast<double>(*reinterpret_cast<const float *>(value));
-				}
 				if (type == String::typeid)
 				{
 					if (*value != 0)
@@ -155,18 +127,6 @@ namespace GTA
 					{
 						return String::Empty;
 					}
-				}
-
-				// Math types
-				if (type == Math::Vector2::typeid)
-				{
-					const auto vec = reinterpret_cast<NativeHelper::NativeVector3 *>(value);
-					return gcnew Math::Vector2(vec->x, vec->y);
-				}
-				if (type == Math::Vector3::typeid)
-				{
-					const auto vec = reinterpret_cast<NativeHelper::NativeVector3 *>(value);
-					return gcnew Math::Vector3(vec->x, vec->y, vec->z);
 				}
 
 				const int handle = *reinterpret_cast<int *>(value);
@@ -225,6 +185,54 @@ namespace GTA
 				throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", type->FullName, "'"));
 			}
 		}
+		generic <typename T>
+		T NativeHelperGeneric<T>::ObjectFromNativeGeneric(UInt64 *value)
+		{
+			// Fundamental types
+			if (T::typeid == Boolean::typeid)
+			{
+				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+			}
+			if (T::typeid == Int32::typeid)
+			{
+				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+			}
+			if (T::typeid == UInt32::typeid)
+			{
+				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+			}
+			if (T::typeid == Int64::typeid)
+			{
+				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+			}
+			if (T::typeid == UInt64::typeid)
+			{
+				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+			}
+			if (T::typeid == Single::typeid)
+			{
+				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+			}
+			if (T::typeid == Double::typeid)
+			{
+				return NativeHelperGeneric<T>::Convert(Marshal::PtrToStructure<float>(System::IntPtr(value)));
+			}
+
+			// Math types
+			if (T::typeid == Math::Vector2::typeid)
+			{
+				const auto vec = *reinterpret_cast<NativeHelper::NativeVector3 *> (value);
+				return NativeHelperGeneric<T>::Convert(vec);
+			}
+			if (T::typeid == Math::Vector3::typeid)
+			{
+				const auto vec = *reinterpret_cast<NativeHelper::NativeVector3 *> (value);
+				return NativeHelperGeneric<T>::Convert(vec);
+			}
+
+			throw gcnew InvalidCastException(String::Concat("Unable to cast native value to object of type '", T::typeid, "'"));
+		}
+
 
 		InputArgument::InputArgument(System::UInt64 value) : _data(value)
 		{
@@ -251,7 +259,15 @@ namespace GTA
 		generic <typename T>
 		T OutputArgument::GetResult()
 		{
-			return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<UINT64 *>(_data)));
+			System::Type^ type = T::typeid;
+			if (type->IsPrimitive || type == Math::Vector3::typeid || type == Math::Vector2::typeid)
+			{
+				return NativeHelperGeneric<T>::ObjectFromNativeGeneric(reinterpret_cast<UINT64 *>(_data));
+			}
+			else
+			{
+				return static_cast<T>(ObjectFromNative(T::typeid, reinterpret_cast<UINT64 *>(_data)));
+			}
 		}
 
 		generic <typename T>
@@ -272,7 +288,15 @@ namespace GTA
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
-			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
+			System::Type^ type = T::typeid;
+			if (type->IsPrimitive || type == Math::Vector3::typeid || type == Math::Vector2::typeid)
+			{
+				return NativeHelperGeneric<T>::ObjectFromNativeGeneric(task->_result);
+			}
+			else
+			{
+				return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
+			}
 		}
 
 		generic<typename To>

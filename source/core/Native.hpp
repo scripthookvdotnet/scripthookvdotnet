@@ -242,6 +242,7 @@ namespace GTA
 		private ref class NativeHelperGeneric abstract sealed
 		{
 		internal:
+			static T ObjectFromNativeGeneric(System::UInt64 *value);
 			generic <typename T1>
 			static T Convert(T1 from);
 
