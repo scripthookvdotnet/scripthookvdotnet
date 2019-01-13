@@ -213,5 +213,21 @@ namespace GTA
 			generic <typename T>
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
 		};
+
+		generic <typename T>
+		private ref class NativeHelperGeneric abstract sealed
+		{
+		internal:
+			generic <typename T1>
+			static T Convert(T1 from);
+
+			generic <typename From>
+			ref class CastCache abstract sealed
+			{
+			internal:
+				static CastCache();
+				static initonly System::Func<From, T> ^Convert;
+			};
+		};
 	}
 }

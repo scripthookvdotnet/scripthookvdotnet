@@ -32,6 +32,7 @@
 
 using namespace System;
 using namespace System::Collections::Generic;
+using namespace System::Linq::Expressions;
 
 namespace GTA
 {
@@ -284,6 +285,21 @@ namespace GTA
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
+		}
+
+		generic<typename To>
+		generic<typename From>
+		To NativeHelperGeneric<To>::Convert(From from)
+		{
+			return NativeHelperGeneric<To>::CastCache<From>::Convert(from);
+		}
+		generic<typename To>
+		generic<typename From>
+		NativeHelperGeneric<To>::CastCache<From>::CastCache()
+		{
+			auto param = Expression::Parameter(From::typeid);
+			auto convert = Expression::Convert(param, To::typeid);
+			Convert = Expression::Lambda<System::Func<From, To>^>(convert, param)->Compile();
 		}
 	}
 }
