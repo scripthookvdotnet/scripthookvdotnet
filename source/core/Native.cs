@@ -350,43 +350,9 @@ namespace GTA
 					value = Convert.ChangeType(value, type = Enum.GetUnderlyingType(type));
 				}
 
-				if (type == typeof(bool))
-				{
-					return (ulong)(((bool)value) ? 1 : 0);
-				}
-				if (type == typeof(int))
-				{
-					return (ulong)((int)value);
-				}
-				if (type == typeof(uint))
-				{
-					return (uint)value;
-				}
-				if (type == typeof(long))
-				{
-					return (ulong)((long)value);
-				}
-				if (type == typeof(ulong))
-				{
-					return (ulong)value;
-				}
-				if (type == typeof(float))
-				{
-					return BitConverter.ToUInt32(BitConverter.GetBytes((float)value), 0);
-				}
-				if (type == typeof(double))
-				{
-					return BitConverter.ToUInt32(BitConverter.GetBytes((float)((double)value)), 0);
-				}
-
 				if (type == typeof(string))
 				{
 					return (ulong)ScriptDomain.CurrentDomain.PinString((string)(value)).ToInt64();
-				}
-
-				if (type == typeof(IntPtr))
-				{
-					return (ulong)((IntPtr)value).ToInt64();
 				}
 
 				if (typeof(INativeValue).IsAssignableFrom(type))
