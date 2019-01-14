@@ -15,6 +15,8 @@
  */
 
 using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Runtime.InteropServices;
 
@@ -25,6 +27,74 @@ namespace GTA
 		public interface INativeValue
 		{
 			ulong NativeValue { get; set; }
+		}
+
+		internal static class NativeHelper<T> 
+		{
+			internal static T Convert<TFrom>(TFrom from)
+			{
+				return CastCache<TFrom>.Cast(from);
+			}
+
+			internal static class CastCache<TFrom>
+			{
+				internal static readonly Func<TFrom, T> Cast;
+
+				static CastCache()
+				{
+					var paramExp = Expression.Parameter(typeof(TFrom));
+					var convertExp = Expression.Convert(paramExp, typeof(T));
+					Cast = Expression.Lambda<Func<TFrom, T>>(convertExp, paramExp).Compile();
+				}
+			}
+		}
+		internal static class InstanceCreator<T1, TInstance>
+		{
+			internal static Func<T1, TInstance> Create;
+
+			static InstanceCreator()
+			{
+				var constructorInfo = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
+					new[] { typeof(T1) }, null);
+				var arg1Exp = Expression.Parameter(typeof(T1));
+
+				var newExp = Expression.New(constructorInfo, arg1Exp);
+				var lambdaExp = Expression.Lambda<Func<T1, TInstance>>(newExp, arg1Exp);
+				Create = lambdaExp.Compile();
+			}
+		}
+		internal static class InstanceCreator<T1, T2, TInstance>
+		{
+			internal static Func<T1, T2, TInstance> Create;
+
+			static InstanceCreator()
+			{
+				var constructorInfo = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
+					new[] { typeof(T1), typeof(T2) }, null);
+				var arg1Exp = Expression.Parameter(typeof(T1));
+				var arg2Exp = Expression.Parameter(typeof(T2));
+
+				var newExp = Expression.New(constructorInfo, arg1Exp, arg2Exp);
+				var lambdaExp = Expression.Lambda<Func<T1, T2, TInstance>>(newExp, arg1Exp, arg2Exp);
+				Create = lambdaExp.Compile();
+			}
+		}
+		internal static class InstanceCreator<T1, T2, T3, TInstance>
+		{
+			internal static Func<T1, T2, T3, TInstance> Create;
+
+			static InstanceCreator()
+			{
+				var constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
+					new[] { typeof(T1), typeof(T2), typeof(T3) }, null);
+				var arg1 = Expression.Parameter(typeof(T1));
+				var arg2 = Expression.Parameter(typeof(T2));
+				var arg3 = Expression.Parameter(typeof(T3));
+
+				var newExp = Expression.New(constructor, arg1, arg2, arg3);
+				var lambdaExp = Expression.Lambda<Func<T1, T2, T3, TInstance>>(newExp, arg1, arg2, arg3);
+				Create = lambdaExp.Compile();
+			}
 		}
 
 		#region Functions
