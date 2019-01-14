@@ -157,11 +157,11 @@ namespace GTA
 			}
 			public static implicit operator InputArgument(sbyte value)
 			{
-				return new InputArgument(value);
+				return new InputArgument((ulong)value);
 			}
 			public static implicit operator InputArgument(short value)
 			{
-				return new InputArgument(value);
+				return new InputArgument((ulong)value);
 			}
 			public static implicit operator InputArgument(ushort value)
 			{
@@ -169,7 +169,7 @@ namespace GTA
 			}
 			public static implicit operator InputArgument(int value)
 			{
-				return new InputArgument(value);
+				return new InputArgument((ulong)value);
 			}
 			public static implicit operator InputArgument(uint value)
 			{
@@ -185,15 +185,21 @@ namespace GTA
 			}
 			public static implicit operator InputArgument(float value)
 			{
-				return new InputArgument(value);
+				unsafe
+				{
+					return new InputArgument(*(ulong*)&value);
+				}
 			}
 			public static implicit operator InputArgument(double value)
 			{
-				return new InputArgument((float)(value));
+				unsafe
+				{
+					return new InputArgument(*(ulong*)&value);
+				}
 			}
 			public static implicit operator InputArgument(Enum value)
 			{
-				return new InputArgument(value);
+				return new InputArgument(Convert.ToUInt64(value));
 			}
 
 			// String types
@@ -224,51 +230,51 @@ namespace GTA
 			// INativeValue types
 			public static implicit operator InputArgument(Model value)
 			{
-				return new InputArgument(value.Hash);
+				return new InputArgument((ulong)value.Hash);
 			}
 			public static implicit operator InputArgument(RelationshipGroup value)
 			{
-				return new InputArgument(value.Hash);
+				return new InputArgument((ulong)value.Hash);
 			}
 			public static implicit operator InputArgument(WeaponAsset value)
 			{
-				return new InputArgument(value.Hash);
+				return new InputArgument((ulong)value.Hash);
 			}
 			public static implicit operator InputArgument(Blip value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Camera value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Checkpoint value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Entity value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(PedGroup value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Pickup value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Player value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Rope value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			public static implicit operator InputArgument(Scaleform value)
 			{
-				return new InputArgument(value.Handle);
+				return new InputArgument((ulong)value.Handle);
 			}
 			#endregion
 		}
@@ -431,11 +437,6 @@ namespace GTA
 				}
 
 				var type = value.GetType();
-
-				if (type.IsEnum)
-				{
-					value = Convert.ChangeType(value, type = Enum.GetUnderlyingType(type));
-				}
 
 				if (type == typeof(string))
 				{
