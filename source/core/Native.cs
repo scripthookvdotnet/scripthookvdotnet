@@ -36,6 +36,25 @@ namespace GTA
 			internal ulong _data;
 
 			/// <summary>
+			/// Initializes a new instance of the <see cref="InputArgument"/> class to a script function input argument.
+			/// </summary>
+			/// <param name="value">The pointer value.</param>
+			public InputArgument(ulong value)
+			{
+				_data = value;
+			}
+			/// <summary>
+			/// Initializes a new instance of the <see cref="InputArgument"/> class to a script function input argument.
+			/// </summary>
+			/// <param name="value">The value.</param>
+			public InputArgument(IntPtr value)
+			{
+				unsafe
+				{
+					_data = (ulong)value.ToInt64();
+				}
+			}
+			/// <summary>
 			/// Initializes a new instance of the <see cref="InputArgument"/> class and converts a managed object to a script function input argument.
 			/// </summary>
 			/// <param name="value">The object to convert.</param>
@@ -59,7 +78,8 @@ namespace GTA
 			// Value types
 			public static implicit operator InputArgument(bool value)
 			{
-				return new InputArgument(value);
+				//"new InputArgument(value ? 1 : 0)" calls InputArgument constructor using object parameter, not ulong one
+				return value ? new InputArgument(1) : new InputArgument(0);
 			}
 			public static implicit operator InputArgument(byte value)
 			{
@@ -87,7 +107,7 @@ namespace GTA
 			}
 			public static implicit operator InputArgument(long value)
 			{
-				return new InputArgument(value);
+				return new InputArgument((ulong)value);
 			}
 			public static implicit operator InputArgument(ulong value)
 			{
