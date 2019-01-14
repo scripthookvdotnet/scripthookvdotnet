@@ -199,7 +199,7 @@ namespace GTA
 			}
 			public static implicit operator InputArgument(Enum value)
 			{
-				return new InputArgument(Convert.ToUInt64(value));
+				return new InputArgument((ulong)NativeHelper<int>.Convert(value));
 			}
 
 			// String types
@@ -338,7 +338,7 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (typeof(T).IsValueType)
+					if (typeof(T).IsValueType || typeof(T).IsEnum)
 					{
 						return Function.ObjectFromNative<T>((ulong*)(_storage.ToPointer()));
 					}
@@ -400,7 +400,7 @@ namespace GTA
 
 				unsafe
 				{
-					if (typeof(T).IsValueType)
+					if (typeof(T).IsValueType || typeof(T).IsEnum)
 					{
 						return Function.ObjectFromNative<T>(task.Result);
 					}
@@ -604,7 +604,7 @@ namespace GTA
 				}
 				else
 				{
-					if (typeof(T).IsValueType)
+					if (typeof(T).IsValueType || typeof(T).IsEnum)
 					{
 						return Function.ObjectFromNative<T>((ulong*)(MemoryAddress.ToPointer()));
 					}
