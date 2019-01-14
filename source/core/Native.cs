@@ -29,7 +29,7 @@ namespace GTA
 			ulong NativeValue { get; set; }
 		}
 
-		internal static class NativeHelper<T> 
+		internal static class NativeHelper<T>
 		{
 			internal static T Convert<TFrom>(TFrom from)
 			{
@@ -332,7 +332,14 @@ namespace GTA
 			{
 				unsafe
 				{
-					return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(_storage.ToPointer())));
+					if (typeof(T).IsValueType)
+					{
+						return Function.ObjectFromNative<T>((ulong*)(_storage.ToPointer()));
+					}
+					else
+					{
+						return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(_storage.ToPointer())));
+					}
 				}
 			}
 		}
@@ -385,7 +392,17 @@ namespace GTA
 
 				ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-				unsafe { return (T)(ObjectFromNative(typeof(T), task.Result)); }
+				unsafe
+				{
+					if (typeof(T).IsValueType)
+					{
+						return Function.ObjectFromNative<T>(task.Result);
+					}
+					else
+					{
+						return (T)(ObjectFromNative(typeof(T), task.Result));
+					}
+				}
 			}
 			/// <summary>
 			/// Calls the specified native script function and ignores its return value.
@@ -433,47 +450,13 @@ namespace GTA
 				throw new InvalidCastException(String.Concat("Unable to cast object of type '", type.FullName, "' to native value"));
 			}
 			/// <summary>
-			/// Converts a native value to a managed object.
+			/// Converts a native value to a managed object of a reference type.
 			/// </summary>
-			/// <param name="type">The type to convert to.</param>
+			/// <param name="type">The type to convert to. The type should be a reference type.</param>
 			/// <param name="value">The native value to convert.</param>
 			/// <returns>A managed object representing the input <paramref name="value"/>.</returns>
 			internal static unsafe object ObjectFromNative(Type type, ulong* value)
 			{
-				if (type.IsEnum)
-				{
-					type = Enum.GetUnderlyingType(type);
-				}
-
-				if (type == typeof(bool))
-				{
-					return *(int*)(value) != 0;
-				}
-				if (type == typeof(int))
-				{
-					return *(int*)(value);
-				}
-				if (type == typeof(uint))
-				{
-					return *(uint*)(value);
-				}
-				if (type == typeof(long))
-				{
-					return *(long*)(value);
-				}
-				if (type == typeof(ulong))
-				{
-					return *(value);
-				}
-				if (type == typeof(float))
-				{
-					return *(float*)(value);
-				}
-				if (type == typeof(double))
-				{
-					return (double)(*(float*)(value));
-				}
-
 				if (type == typeof(string))
 				{
 					var address = (char*)(*value);
@@ -486,26 +469,6 @@ namespace GTA
 					return MemoryAccess.PtrToStringUTF8(new IntPtr(address));
 				}
 
-				if (type == typeof(IntPtr))
-				{
-					return new IntPtr((long)(value));
-				}
-
-				if (type == typeof(Math.Vector2))
-				{
-					var data = (float*)(value);
-
-					return new Math.Vector2(data[0], data[2]);
-
-				}
-				if (type == typeof(Math.Vector3))
-				{
-					var data = (float*)(value);
-
-					return new Math.Vector3(data[0], data[2], data[4]);
-
-				}
-
 				if (typeof(INativeValue).IsAssignableFrom(type))
 				{
 					// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
@@ -516,6 +479,75 @@ namespace GTA
 				}
 
 				throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
+			}
+			/// <summary>
+			/// Converts a native value to a managed object of a value type.
+			/// </summary>
+			/// <typeparam name="T">The return type. The type should be a value type.</typeparam>
+			/// <param name="value">The native value to convert.</param>
+			/// <returns>A managed object representing the input <paramref name="value"/>.</returns>
+			internal static unsafe T ObjectFromNative<T>(ulong* value)
+			{
+				if (typeof(T).IsEnum)
+				{
+					return NativeHelper<T>.Convert(*value);
+				}
+
+				if (typeof(T) == typeof(bool))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+				if (typeof(T) == typeof(int))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+				if (typeof(T) == typeof(uint))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+				if (typeof(T) == typeof(long))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+				if (typeof(T) == typeof(ulong))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+				if (typeof(T) == typeof(float))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+				if (typeof(T) == typeof(double))
+				{
+					return Marshal.PtrToStructure<T>(new IntPtr(value));
+				}
+
+				if (typeof(T) == typeof(IntPtr))
+				{
+					return InstanceCreator<long, T>.Create((long)(*value));
+				}
+
+				if (typeof(T) == typeof(Math.Vector2))
+				{
+					var data = (float*)(value);
+
+					return InstanceCreator<float, float, T>.Create(data[0], data[2]);
+
+				}
+				if (typeof(T) == typeof(Math.Vector3))
+				{
+					var data = (float*)(value);
+
+					return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
+
+				}
+
+				if (typeof(T) == typeof(Model) || typeof(T) == typeof(WeaponAsset) || typeof(T) == typeof(RelationshipGroup))
+				{
+					return InstanceCreator<int, T>.Create((int)(*value));
+				}
+
+				throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
 			}
 		}
 		#endregion
@@ -571,7 +603,14 @@ namespace GTA
 				}
 				else
 				{
-					return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(MemoryAddress.ToPointer())));
+					if (typeof(T).IsValueType)
+					{
+						return Function.ObjectFromNative<T>((ulong*)(MemoryAddress.ToPointer()));
+					}
+					else
+					{
+						return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(MemoryAddress.ToPointer())));
+					}
 				}
 			}
 
