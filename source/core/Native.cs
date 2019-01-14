@@ -646,7 +646,30 @@ namespace GTA
 					return;
 				}
 
-				*(ulong*)(MemoryAddress.ToPointer()) = Function.ObjectToNative(value);
+				if (typeof(T) == typeof(bool))
+				{
+					*(ulong*)(MemoryAddress.ToPointer()) = NativeHelper<ulong>.Convert(value);
+				}
+				else if (typeof(T) == typeof(double))
+				{
+					*(ulong*)(MemoryAddress.ToPointer()) = 0; // padding
+					*(float*)(MemoryAddress.ToPointer()) = NativeHelper<float>.Convert(value);
+				}
+				else if (typeof(T).IsPrimitive)
+				{
+					if (typeof(T) == typeof(IntPtr))
+					{
+						*(long*)(MemoryAddress.ToPointer()) = NativeHelper<long>.Convert(value);
+					}
+					else
+					{
+						*(ulong*)(MemoryAddress.ToPointer()) = NativeHelper<ulong>.Convert(value);
+					}
+				}
+				else
+				{
+					*(ulong*)(MemoryAddress.ToPointer()) = Function.ObjectToNative(value);
+				}
 			}
 			/// <summary>
 			/// Set the value stored in the <see cref="GlobalVariable"/> to a string.
