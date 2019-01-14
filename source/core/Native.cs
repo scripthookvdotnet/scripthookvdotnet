@@ -83,19 +83,19 @@ namespace GTA
 			}
 			public static implicit operator InputArgument(byte value)
 			{
-				return new InputArgument((int)(value));
+				return new InputArgument(value);
 			}
 			public static implicit operator InputArgument(sbyte value)
 			{
-				return new InputArgument((int)(value));
+				return new InputArgument(value);
 			}
 			public static implicit operator InputArgument(short value)
 			{
-				return new InputArgument((int)(value));
+				return new InputArgument(value);
 			}
 			public static implicit operator InputArgument(ushort value)
 			{
-				return new InputArgument((int)(value));
+				return new InputArgument(value);
 			}
 			public static implicit operator InputArgument(int value)
 			{
