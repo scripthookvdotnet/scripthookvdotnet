@@ -336,7 +336,7 @@ namespace GTA
 			/// </summary>
 			/// <param name="value">The object to convert.</param>
 			/// <returns>A native value representing the input <paramref name="value"/>.</returns>
-			internal static unsafe ulong ObjectToNative(object value)
+			internal static ulong ObjectToNative(object value)
 			{
 				if (ReferenceEquals(value, null))
 				{
