@@ -71,14 +71,14 @@ namespace GTA
 			}
 			else if (argument->GetType() == String::typeid)
 			{
-				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "STRING");
-				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, static_cast<String ^>(argument));
+				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "CELL_EMAIL_BCON");
+				Native::Function::PushLongString(static_cast<String ^>(argument));
 				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
 			else if (argument->GetType() == Char::typeid)
 			{
-				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "STRING");
-				Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, static_cast<char>(argument).ToString());
+				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "CELL_EMAIL_BCON");
+				Native::Function::PushLongString(static_cast<String ^>(argument));
 				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
 			else if (argument->GetType() == Single::typeid)
