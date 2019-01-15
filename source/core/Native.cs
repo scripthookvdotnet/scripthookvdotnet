@@ -187,7 +187,9 @@ namespace GTA
 			{
 				unsafe
 				{
-					return new InputArgument(*(ulong*)&value);
+					ulong ulongValue = 0;
+					*(float*)&ulongValue = value;
+					return new InputArgument(ulongValue);
 				}
 			}
 			public static implicit operator InputArgument(double value)
