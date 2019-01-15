@@ -196,7 +196,10 @@ namespace GTA
 			{
 				unsafe
 				{
-					return new InputArgument(*(ulong*)&value);
+					//Native functions don't consider any arguments as double, so convert double values to float ones
+					ulong ulongValue = 0;
+					*(float*)&ulongValue = (float)value;
+					return new InputArgument(ulongValue);
 				}
 			}
 			public static implicit operator InputArgument(Enum value)
