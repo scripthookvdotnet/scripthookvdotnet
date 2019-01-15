@@ -287,15 +287,15 @@ namespace GTA
 		{
 			unsigned int chr = static_cast<unsigned int>(string[index]);
 
-			if (chr < 128)
+			if (chr < 0x80)
 			{
 				return 1;
 			}
-			else if (chr < 2048)
+			else if (chr < 0x800)
 			{
 				return 2;
 			}
-			else if (chr < 65536)
+			else if (chr < 0x10000)
 			{
 				return 3;
 			}
