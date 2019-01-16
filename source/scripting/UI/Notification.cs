@@ -16,7 +16,7 @@ namespace GTA.UI
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
 		public static int Show(string message, bool blinking = false)
 		{
-			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
+			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, MemoryAccess.CellEmailBcon);
 			Native.Function.PushLongString(message);
 			return Function.Call<int>(Hash._DRAW_NOTIFICATION, blinking, true);
 		}

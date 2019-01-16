@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using GTA.Native;
 
 namespace GTA
 {
@@ -719,14 +720,14 @@ namespace GTA
 			Native.Function.Call(Native.Hash.SET_TEXT_FONT, font);
 			Native.Function.Call(Native.Hash.SET_TEXT_SCALE, scale, scale);
 			Native.Function.Call(Native.Hash.SET_TEXT_COLOUR, color.R, color.G, color.B, color.A);
-			Native.Function.Call(Native.Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, "CELL_EMAIL_BCON");
+			Native.Function.Call(Native.Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, MemoryAccess.CellEmailBcon);
 			Native.Function.PushLongString(text);
 			Native.Function.Call(Native.Hash.END_TEXT_COMMAND_DISPLAY_TEXT, xNew, yNew);
 		}
 
 		private float GetTextLength(string text, float scale, int font) //TODO Maybe implement somewhere else?
 		{
-			Native.Function.Call(Native.Hash._BEGIN_TEXT_COMMAND_WIDTH, "CELL_EMAIL_BCON");
+			Native.Function.Call(Native.Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
 			Native.Function.PushLongString(text);
 			Native.Function.Call(Native.Hash.SET_TEXT_FONT, font);
 			Native.Function.Call(Native.Hash.SET_TEXT_SCALE, scale, scale);
