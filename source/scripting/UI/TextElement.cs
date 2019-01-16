@@ -172,16 +172,7 @@ namespace GTA.UI
 				}
 				_pinnedText.Clear();
 
-				const int maxStringLength = 99;
-
-				for (int i = 0; i < Caption.Length; i += maxStringLength)
-				{
-					byte[] data =
-						Encoding.UTF8.GetBytes(Caption.Substring(i, System.Math.Min(maxStringLength, Caption.Length - i)) + "\0");
-					IntPtr next = Marshal.AllocCoTaskMem(data.Length);
-					Marshal.Copy(data, 0, next, data.Length);
-					_pinnedText.Add(next);
-				}
+				ChunkAndPinString(value);
 			}
 		}
 
@@ -264,7 +255,7 @@ namespace GTA.UI
 			{
 				Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
 
-				foreach(IntPtr ptr in _pinnedText)
+				foreach (IntPtr ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
@@ -288,14 +279,7 @@ namespace GTA.UI
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
-
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < text.Length; i += maxStringLength)
-			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, System.Math.Min(maxStringLength, text.Length - i)));
-			}
-
+			Function.PushLongString(text);
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
@@ -313,14 +297,7 @@ namespace GTA.UI
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
-
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < text.Length; i += maxStringLength)
-			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, System.Math.Min(maxStringLength, text.Length - i)));
-			}
-
+			Function.PushLongString(text);
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
@@ -357,6 +334,60 @@ namespace GTA.UI
 		public virtual void ScaledDraw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+		}
+
+		void PinStringInternal(string str)
+		{
+			byte[] data =
+				Encoding.UTF8.GetBytes(str + "\0");
+			IntPtr next = Marshal.AllocCoTaskMem(data.Length);
+			Marshal.Copy(data, 0, next, data.Length);
+			_pinnedText.Add(next);
+		}
+		void ChunkAndPinString(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return;
+			}
+
+			int byteLengthUtf8 = Encoding.UTF8.GetByteCount(str);
+			const int maxLengthUtf8 = 99;
+
+			if (byteLengthUtf8 <= maxLengthUtf8)
+			{
+				PinStringInternal(str);
+				return;
+			}
+
+			int currentUtf8StrLength = 0;
+			int startPos = 0;
+			int currentPos;
+
+			for (currentPos = 0; currentPos < str.Length; currentPos++)
+			{
+				int codePointSize = Function.GetUtf8CodePointSize(str, currentPos);
+
+				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
+				{
+					PinStringInternal(str.Substring(startPos, currentPos - startPos));
+
+					currentUtf8StrLength = 0;
+					startPos = currentPos;
+				}
+				else
+				{
+					currentUtf8StrLength += codePointSize;
+				}
+
+				//if the code point size is 4, additional increment is needed
+				if (codePointSize == 4)
+				{
+					currentPos++;
+				}
+			}
+
+			PinStringInternal(str.Substring(startPos, str.Length - startPos));
 		}
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
@@ -406,7 +437,7 @@ namespace GTA.UI
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, MemoryAccess.CellEmailBcon);
 
-			foreach (IntPtr ptr in _pinnedText)
+			foreach(IntPtr ptr in _pinnedText)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 			}

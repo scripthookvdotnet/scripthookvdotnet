@@ -466,7 +466,7 @@ namespace GTA
 			/// Gets the UTF-8 code point size from the character of string at index.
 			/// </summary>
 			/// <returns>The UTF-8 code point size.</returns>
-			private static int GetUtf8CodePointSize(string str, int index)
+			internal static int GetUtf8CodePointSize(string str, int index)
 			{
 				uint chr = str[index];
 
