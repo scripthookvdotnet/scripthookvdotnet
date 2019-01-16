@@ -316,14 +316,7 @@ namespace GTA.UI
 		public static void ShowSubtitle(string message, int duration = 2500)
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_PRINT, MemoryAccess.CellEmailBcon);
-
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < message.Length; i += maxStringLength)
-			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, message.Substring(i, System.Math.Min(maxStringLength, message.Length - i)));
-			}
-
+			Function.PushLongString(message);
 			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, 1);
 		}
 		/// <summary>
@@ -333,12 +326,7 @@ namespace GTA.UI
 		public static void ShowHelpTextThisFrame(string helpText)
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_HELP, MemoryAccess.CellEmailBcon);
-			const int maxStringLength = 99;
-
-			for (int i = 0; i < helpText.Length; i += maxStringLength)
-			{
-				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, helpText.Substring(i, System.Math.Min(maxStringLength, helpText.Length - i)));
-			}
+			Function.PushLongString(helpText);
 			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, 0, 1, -1);
 		}
 
