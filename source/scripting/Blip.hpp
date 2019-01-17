@@ -210,7 +210,7 @@ namespace GTA
 		RaceAir = 314,
 		StreetRace = 315,
 		SeaRace = 316,
-		TowTruck = 317,
+		TowTruck2 = 317,
 		GarbageTruck = 318,
 		GetawayCar = 326,
 		GangBike = 348,
