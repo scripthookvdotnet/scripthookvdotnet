@@ -16,6 +16,7 @@
 
 using namespace System;
 using namespace System::Reflection;
+using namespace System::Linq::Expressions;
 namespace WinForms = System::Windows::Forms;
 
 #pragma region Implicit PInvoke Definitions
@@ -23,9 +24,13 @@ namespace WinForms = System::Windows::Forms;
 extern int DeleteFile(String ^name);
 #pragma endregion
 
+delegate void KeyboardMethodDelegate(WinForms::Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt);
+
 ref struct LoaderData
 {
-	static Collections::Generic::List<MethodInfo ^> InitMethods, TickMethods, KeyboardMethods;
+	static Collections::Generic::List<Func<bool> ^> InitMethods;
+	static Collections::Generic::List<Action ^> TickMethods;
+	static Collections::Generic::List<KeyboardMethodDelegate ^> KeyboardMethods;
 };
 
 void ManagedInit()
@@ -59,31 +64,32 @@ void ManagedInit()
 
 		if (main && main->IsAbstract)
 		{
-			LoaderData::InitMethods.Add(main->GetMethod("Init", BindingFlags::Public | BindingFlags::Static));
-			LoaderData::TickMethods.Add(main->GetMethod("Tick", BindingFlags::Public | BindingFlags::Static));
-			LoaderData::KeyboardMethods.Add(main->GetMethod("KeyboardMessage", BindingFlags::Public | BindingFlags::Static));
+			auto initMethod = safe_cast<Func<bool> ^>(main->GetMethod("Init", BindingFlags::Public | BindingFlags::Static)->CreateDelegate(Func<bool>::typeid));
+			LoaderData::InitMethods.Add(initMethod);
+			auto tickMethod = safe_cast<Action ^>(main->GetMethod("Tick", BindingFlags::Public | BindingFlags::Static)->CreateDelegate(Action::typeid));
+			LoaderData::TickMethods.Add(tickMethod);
+			auto keyboardMessageMethod = safe_cast<KeyboardMethodDelegate ^>(main->GetMethod("KeyboardMessage", BindingFlags::Public | BindingFlags::Static)->CreateDelegate(KeyboardMethodDelegate::typeid));
+			LoaderData::KeyboardMethods.Add(keyboardMessageMethod);
 		}
 	}
 
-	for each (MethodInfo ^method in LoaderData::InitMethods)
+	for each (Func<bool> ^Init in LoaderData::InitMethods)
 	{
-		method->Invoke(nullptr, nullptr);
+		Init();
 	}
 }
 void ManagedTick()
 {
-	for each (MethodInfo ^method in LoaderData::TickMethods)
+	for each (Action ^Tick in LoaderData::TickMethods)
 	{
-		method->Invoke(nullptr, nullptr);
+		Tick();
 	}
 }
 void ManagedKeyboardMessage(unsigned long key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
 {
-	array<Object ^> ^args = gcnew array<Object ^>(5) { static_cast<WinForms::Keys>(key), status, statusCtrl, statusShift, statusAlt };
-
-	for each (MethodInfo ^method in LoaderData::KeyboardMethods)
+	for each (KeyboardMethodDelegate ^KeyboardMethod in LoaderData::KeyboardMethods)
 	{
-		method->Invoke(nullptr, args);
+		KeyboardMethod(safe_cast<WinForms::Keys>(key), status, statusCtrl, statusShift, statusAlt);
 	}
 }
 
