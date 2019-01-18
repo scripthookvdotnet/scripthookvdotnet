@@ -12,8 +12,9 @@ namespace GTA
 		Red,
 		Green,
 		Blue,
+		Yellow = 66,
 		///<summary>The default RGB value of this color is the same as HUD_COLOUR_WHITE, whose default RGB value is #F0F0F0.</summary>
-		WhiteNotPure,
+		WhiteNotPure = 4,
 		///<summary>This color is always the same as <see cref="BlipColor::Yellow"></see>, the only difference is color index.</summary>
 		Yellow2,
 		NetPlayer1,
@@ -83,9 +84,8 @@ namespace GTA
 		Gang,
 		Gang2,
 		Gang3,
-		Yellow,
 		///<summary>This color is always the same as <see cref="BlipColor::Blue"></see>, the only difference is color index.</summary>
-		Blue3,
+		Blue3 = 67,
 		///<summary>This color is always the same as <see cref="BlipColor::Blue"></see>, the only difference is color index.</summary>
 		Blue4,
 		///<summary>This color is always the same as <see cref="BlipColor::Green"></see>, the only difference is color index.</summary>
