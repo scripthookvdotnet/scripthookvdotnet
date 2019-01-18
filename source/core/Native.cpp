@@ -282,5 +282,100 @@ namespace GTA
 
 			return static_cast<T>(ObjectFromNative(T::typeid, task->_result));
 		}
+
+		int GetUtf8CodePointSize(System::String ^string, int index)
+		{
+			unsigned int chr = static_cast<unsigned int>(string[index]);
+
+			if (chr < 0x80)
+			{
+				return 1;
+			}
+			else if (chr < 0x800)
+			{
+				return 2;
+			}
+			else if (chr < 0x10000)
+			{
+				return 3;
+			}
+			else
+			{
+#pragma region Surrogate check
+				int temp1 = static_cast<int>(chr) - HIGH_SURROGATE_START;
+				if (temp1 >= 0 && temp1 <= 0x7ff)
+				{
+					// Found a high surrogate
+					if (index < string->Length - 1)
+					{
+						int temp2 = (int)string[index + 1] - LOW_SURROGATE_START;
+						if (temp2 >= 0 && temp2 <= 0x3ff)
+						{
+							// Found a low surrogate
+							return 4;
+						}
+						else
+						{
+							return 0;
+						}
+					}
+					else
+					{
+						return 0;
+					}
+				}
+#pragma endregion
+			}
+
+			return 0;
+		}
+		void Function::PushLongString(System::String ^string)
+		{
+			PushLongString(string, 99);
+		}
+		void Function::PushLongString(System::String ^string, int maxLengthUtf8)
+		{
+			if (maxLengthUtf8 <= 0)
+			{
+				throw gcnew ArgumentOutOfRangeException("maxLengthUtf8");
+			}
+
+			const int size = Text::Encoding::UTF8->GetByteCount(string);
+
+			if (size <= maxLengthUtf8)
+			{
+				Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, string);
+				return;
+			}
+
+			int currentUtf8StrLength = 0;
+			int startPos = 0;
+			int currentPos;
+
+			for (currentPos = 0; currentPos < string->Length; currentPos++)
+			{
+				int codePointSize = GetUtf8CodePointSize(string, currentPos);
+
+				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
+				{
+					Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, string->Substring(startPos, currentPos - startPos));
+
+					currentUtf8StrLength = 0;
+					startPos = currentPos;
+				}
+				else
+				{
+					currentUtf8StrLength += codePointSize;
+				}
+
+				//if the code point size is 4, additional increment is needed
+				if (codePointSize == 4)
+				{
+					currentPos++;
+				}
+			}
+
+			Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, string->Substring(startPos, string->Length - startPos));
+		}
 	}
 }

@@ -53,8 +53,8 @@ namespace GTA
 	}
 	void Blip::Name::set(System::String ^value)
 	{
-		Native::Function::Call(Native::Hash::_0xF9113A30DE5C6670, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, value);
+		Native::Function::Call(Native::Hash::_0xF9113A30DE5C6670, "CELL_EMAIL_BCON");
+		Native::Function::PushLongString(value);
 		Native::Function::Call(Native::Hash::_0xBC38B49BCB83BC9B, Handle);
 	}
 	Math::Vector3 Blip::Position::get()

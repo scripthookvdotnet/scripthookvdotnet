@@ -211,6 +211,8 @@ namespace GTA
 		internal:
 			generic <typename T>
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
+			static void PushLongString(System::String ^string);
+			static void PushLongString(System::String ^string, int maxLengthUtf8);
 		};
 	}
 }
