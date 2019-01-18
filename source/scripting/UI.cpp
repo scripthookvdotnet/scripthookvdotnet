@@ -25,12 +25,7 @@ namespace GTA
 	Notification ^UI::Notify(String ^message, bool blinking)
 	{
 		Native::Function::Call(Native::Hash::_SET_NOTIFICATION_TEXT_ENTRY, "CELL_EMAIL_BCON");
-		const int strLen = 99;
-		for (int i = 0; i < message->Length; i += strLen)
-		{
-			System::String ^substr = message->Substring(i, System::Math::Min(strLen, message->Length - i));
-			Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, substr);
-		}
+		Native::Function::PushLongString(message);
 
 		return gcnew Notification(Native::Function::Call<int>(Native::Hash::_DRAW_NOTIFICATION, blinking, 1));
 	}
@@ -42,12 +37,7 @@ namespace GTA
 	void UI::ShowSubtitle(String ^message, int duration)
 	{
 		Native::Function::Call(Native::Hash::_SET_TEXT_ENTRY_2, "CELL_EMAIL_BCON");
-		const int strLen = 99;
-		for (int i = 0; i < message->Length; i += strLen)
-		{
-			System::String ^substr = message->Substring(i, System::Math::Min(strLen, message->Length - i));
-			Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, substr);
-		}
+		Native::Function::PushLongString(message);
 		Native::Function::Call(Native::Hash::_DRAW_SUBTITLE_TIMED, duration, 1);
 	}
 

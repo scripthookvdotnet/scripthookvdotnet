@@ -38,14 +38,15 @@ namespace GTA
 		public ref class InputArgument
 		{
 		public:
+			InputArgument(System::UInt64 value);
 			InputArgument(System::Object ^value);
-			inline InputArgument(bool value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(int value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(float value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(double value) : InputArgument(static_cast<System::Object ^>(value)) { }
+			inline InputArgument(bool value) : InputArgument(static_cast<bool>(value) ? 1 : 0) { }
+			inline InputArgument(int value) : InputArgument(static_cast<System::UInt64>(value)) { }
+			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::UInt64>(value)) { }
+			inline InputArgument(float value) : InputArgument(System::BitConverter::ToUInt32(System::BitConverter::GetBytes(static_cast<float>(value)), 0)) { }
+			inline InputArgument(double value) : InputArgument(System::BitConverter::ToUInt32(System::BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0)) { }
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Model value) : InputArgument(static_cast<System::Object ^>(value)) { }
+			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt64>(value.Hash)) { }
 			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Entity ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
@@ -211,6 +212,30 @@ namespace GTA
 		internal:
 			generic <typename T>
 			static T Call(System::UInt64 hash, ... array<InputArgument ^> ^arguments);
+			static void PushLongString(System::String ^string);
+			static void PushLongString(System::String ^string, int maxLengthUtf8);
+		};
+
+		generic <typename T>
+		private ref class NativeHelperGeneric abstract sealed
+		{
+		internal:
+			static NativeHelperGeneric();
+			static T ObjectFromNativeGeneric(System::UInt64 *value);
+			generic <typename T1>
+			static T Convert(T1 from);
+			static T PtrToStructure(System::IntPtr ptr);
+
+		private:
+			static initonly System::Func<System::IntPtr, T> ^_ptrToStrFunc;
+
+			generic <typename From>
+			ref class CastCache abstract sealed
+			{
+			internal:
+				static CastCache();
+				static initonly System::Func<From, T> ^Convert;
+			};
 		};
 	}
 }
