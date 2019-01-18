@@ -17,6 +17,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Runtime.InteropServices;
 
@@ -31,6 +32,25 @@ namespace GTA
 
 		internal static class NativeHelper<T>
 		{
+			private static readonly Func<IntPtr, T> _ptrToStrFunc;
+
+			internal static T PtrToStructure(IntPtr ptr)
+			{
+				return _ptrToStrFunc(ptr);
+			}
+			static NativeHelper()
+			{
+				var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
+					new Type[]{ typeof(IntPtr) }, typeof(NativeHelper<T>), true);
+				
+				ILGenerator generator = ptrToStrMethod.GetILGenerator();
+				generator.Emit(OpCodes.Ldarg_0);
+				generator.Emit(OpCodes.Ldobj, typeof(T));
+				generator.Emit(OpCodes.Ret);
+
+				_ptrToStrFunc = (Func<IntPtr, T>)ptrToStrMethod.CreateDelegate(typeof(Func<IntPtr, T>));
+			}
+
 			internal static T Convert<TFrom>(TFrom from)
 			{
 				return CastCache<TFrom>.Cast(from);
@@ -537,31 +557,31 @@ namespace GTA
 
 				if (typeof(T) == typeof(bool))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 				if (typeof(T) == typeof(int))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 				if (typeof(T) == typeof(uint))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 				if (typeof(T) == typeof(long))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 				if (typeof(T) == typeof(ulong))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 				if (typeof(T) == typeof(float))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 				if (typeof(T) == typeof(double))
 				{
-					return Marshal.PtrToStructure<T>(new IntPtr(value));
+					return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 				}
 
 				if (typeof(T) == typeof(IntPtr))
