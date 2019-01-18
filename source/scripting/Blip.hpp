@@ -7,12 +7,15 @@ namespace GTA
 {
 	public enum class BlipColor
 	{
-		PureWhite,
+		///<summary>The default RGB value of this color is the same as HUD_COLOUR_PURE_WHITE, whose default RGB value is #FFFFFF.</summary>
+		White,
 		Red,
 		Green,
 		Blue,
-		White,
-		Yellow,
+		///<summary>The default RGB value of this color is the same as HUD_COLOUR_WHITE, whose default RGB value is #F0F0F0.</summary>
+		WhiteNotPure,
+		///<summary>This color is always the same as <see cref="BlipColor::Yellow"></see>, the only difference is color index.</summary>
+		Yellow2,
 		NetPlayer1,
 		NetPlayer2,
 		NetPlayer3,
@@ -74,14 +77,13 @@ namespace GTA
 		///<summary>This color is always the same as <see cref="BlipColor::Red"></see>, the only difference is color index.</summary>
 		Red3,
 		///<summary>This color is always the same as <see cref="BlipColor::Yellow"></see>, the only difference is color index.</summary>
-		Yellow2,
+		Yellow3,
 		Pink,
 		GreyLight,
 		Gang,
 		Gang2,
 		Gang3,
-		///<summary>This color is always the same as <see cref="BlipColor::Yellow"></see>, the only difference is color index.</summary>
-		Yellow3,
+		Yellow,
 		///<summary>This color is always the same as <see cref="BlipColor::Blue"></see>, the only difference is color index.</summary>
 		Blue3,
 		///<summary>This color is always the same as <see cref="BlipColor::Blue"></see>, the only difference is color index.</summary>
@@ -92,8 +94,8 @@ namespace GTA
 		Yellow4,
 		///<summary>This color is always the same as <see cref="BlipColor::Yellow"></see>, the only difference is color index.</summary>
 		Yellow5,
-		///<summary>This color is always the same as <see cref="BlipColor::PureWhite"></see>, the only difference is color index.</summary>
-		PureWhite2,
+		///<summary>This color is always the same as <see cref="BlipColor::White"></see>, the only difference is color index.</summary>
+		White2,
 		///<summary>This color is always the same as <see cref="BlipColor::Yellow"></see>, the only difference is color index.</summary>
 		Yellow6,
 		///<summary>This color is always the same as <see cref="BlipColor::Blue"></see>, the only difference is color index.</summary>
