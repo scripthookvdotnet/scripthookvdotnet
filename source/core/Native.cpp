@@ -33,6 +33,7 @@
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Linq::Expressions;
+using namespace System::Reflection::Emit;
 using namespace System::Runtime::InteropServices;
 
 namespace GTA
@@ -214,31 +215,31 @@ namespace GTA
 			// Fundamental types
 			if (T::typeid == Boolean::typeid)
 			{
-				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+				return PtrToStructure(System::IntPtr(value));
 			}
 			if (T::typeid == Int32::typeid)
 			{
-				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+				return PtrToStructure(System::IntPtr(value));
 			}
 			if (T::typeid == UInt32::typeid)
 			{
-				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+				return PtrToStructure(System::IntPtr(value));
 			}
 			if (T::typeid == Int64::typeid)
 			{
-				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+				return PtrToStructure(System::IntPtr(value));
 			}
 			if (T::typeid == UInt64::typeid)
 			{
-				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+				return PtrToStructure(System::IntPtr(value));
 			}
 			if (T::typeid == Single::typeid)
 			{
-				return Marshal::PtrToStructure<T>(System::IntPtr(value));
+				return PtrToStructure(System::IntPtr(value));
 			}
 			if (T::typeid == Double::typeid)
 			{
-				return NativeHelperGeneric<T>::Convert(Marshal::PtrToStructure<float>(System::IntPtr(value)));
+				return NativeHelperGeneric<T>::Convert(NativeHelperGeneric<float>::PtrToStructure(System::IntPtr(value)));
 			}
 
 			// Math types
@@ -322,6 +323,24 @@ namespace GTA
 			}
 		}
 
+		generic<typename T>
+		T NativeHelperGeneric<T>::PtrToStructure(System::IntPtr ptr)
+		{
+			return _ptrToStrFunc(ptr);
+		}
+		generic<typename T>
+		NativeHelperGeneric<T>::NativeHelperGeneric()
+		{
+			auto ptrToStrMethod = gcnew DynamicMethod("PtrToStructure<" + T::typeid + ">", T::typeid,
+				gcnew array<Type ^>{ System::IntPtr::typeid }, NativeHelperGeneric<T>::typeid, true);
+
+			ILGenerator ^generator = ptrToStrMethod->GetILGenerator();
+			generator->Emit(OpCodes::Ldarg_0);
+			generator->Emit(OpCodes::Ldobj, T::typeid);
+			generator->Emit(OpCodes::Ret);
+
+			_ptrToStrFunc = (System::Func<System::IntPtr, T> ^)ptrToStrMethod->CreateDelegate(System::Func<System::IntPtr, T>::typeid);
+		}
 		generic<typename To>
 		generic<typename From>
 		To NativeHelperGeneric<To>::Convert(From from)

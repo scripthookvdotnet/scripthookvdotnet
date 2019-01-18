@@ -218,9 +218,14 @@ namespace GTA
 		private ref class NativeHelperGeneric abstract sealed
 		{
 		internal:
+			static NativeHelperGeneric();
 			static T ObjectFromNativeGeneric(System::UInt64 *value);
 			generic <typename T1>
 			static T Convert(T1 from);
+			static T PtrToStructure(System::IntPtr ptr);
+
+		private:
+			static initonly System::Func<System::IntPtr, T> ^_ptrToStrFunc;
 
 			generic <typename From>
 			ref class CastCache abstract sealed
