@@ -402,11 +402,14 @@ namespace GTA
 		Testosterone = 403,
 		Dinghy = 404,
 		Fanatic = 405,
+		///<summary>This blip sprite is invisible and the default English text for this value is "Invisible".</summary>
+		Invisible = 406,
 		Information = 407,
 		CaptureBriefcase = 408,
 		LastTeamStanding = 409,
 		Boat = 410,
 		CaptureHouse = 411,
+		GTAOCrew2 = 412,
 		JerryCan2 = 415,
 		RP = 416,
 		GTAOPlayerSafehouse = 417,
@@ -431,8 +434,9 @@ namespace GTA
 		StuntRace = 435,
 		HotProperty,
 		KillListCompetitive,
+		KingOfTheCastle,
 		///<summary>The default English text for this value is "Player King".</summary>
-		King = 439,
+		King,
 		DeadDrop,
 		PennedIn,
 		Beast,
@@ -549,8 +553,9 @@ namespace GTA
 		TargetG,
 		TargetH,
 		Juggernaut,
+		Repair2,
 		///<summary>The default English text for this value is "Special Vehicle Race Series".</summary>
-		SteeringWheel = 545,
+		SteeringWheel,
 		///<summary>The default English text for this value is "Challenge Series".</summary>
 		Cup,
 		RocketBoost,
@@ -570,6 +575,7 @@ namespace GTA
 		HalfTrack,
 		DuneFAV,
 		WeaponizedTampa,
+		///<summary>The default English text for this value is "Anti-Aircraft Trailer".</summary>
 		WeaponizedTrailer,
 		MobileOperationsCenter,
 		AdversaryBunker,
