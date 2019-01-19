@@ -63,7 +63,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(bool *value)
 			{
-				return gcnew InputArgument(System::IntPtr(value));
+				return gcnew InputArgument(reinterpret_cast<unsigned long long>(value));
 			}
 			static inline operator InputArgument ^(char value)
 			{
@@ -87,7 +87,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(int *value)
 			{
-				return gcnew InputArgument(System::IntPtr(value));
+				return gcnew InputArgument(reinterpret_cast<unsigned long long>(value));
 			}
 			static inline operator InputArgument ^(unsigned int value)
 			{
@@ -95,7 +95,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(unsigned int *value)
 			{
-				return gcnew InputArgument(System::IntPtr(value));
+				return gcnew InputArgument(reinterpret_cast<unsigned long long>(value));
 			}
 			static inline operator InputArgument ^(float value)
 			{
@@ -103,7 +103,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(float *value)
 			{
-				return gcnew InputArgument(System::IntPtr(value));
+				return gcnew InputArgument(reinterpret_cast<unsigned long long>(value));
 			}
 			static inline operator InputArgument ^(double value)
 			{
