@@ -871,7 +871,14 @@ namespace GTA
 					return;
 				}
 
-				if (value < 0 || value > 7)
+				if (Game.Version >= GameVersion.v1_0_1604_0_Steam)
+				{
+					if (value > 10)
+					{
+						throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 10, inclusive.");
+					}
+				}
+				else if (value > 7)
 				{
 					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 				}
