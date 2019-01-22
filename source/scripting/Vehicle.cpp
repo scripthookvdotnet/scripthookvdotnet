@@ -730,7 +730,14 @@ namespace GTA
 	}
 	void Vehicle::HighGear::set(int value)
 	{
-		if (value < 0 || value > 7)
+		if (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM)
+		{
+			if (value < 0 || value > 10)
+			{
+				throw gcnew System::ArgumentOutOfRangeException("value", "Values must be between 0 and 10, inclusive.");
+			}
+		}
+		else if (value < 0 || value > 7)
 		{
 			throw gcnew System::ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 		}
