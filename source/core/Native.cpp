@@ -48,9 +48,12 @@ namespace GTA
 				{
 					nativeInit(_hash);
 
-					for each (auto argument in _arguments)
+					if (_arguments != nullptr)
 					{
-						nativePush64(argument->_data);
+						for each (auto argument in _arguments)
+						{
+							nativePush64(argument->_data);
+						}
 					}
 
 					_result = nativeCall();
