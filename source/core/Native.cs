@@ -436,9 +436,12 @@ namespace GTA
 				{
 					NativeInit(Hash);
 
-					foreach (var argument in Arguments)
+					if (Arguments != null)
 					{
-						NativePush64(argument._data);
+						foreach (var argument in Arguments)
+						{
+							NativePush64(argument._data);
+						}
 					}
 
 					Result = NativeCall();
