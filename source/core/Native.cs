@@ -464,6 +464,12 @@ namespace GTA
 
 				unsafe
 				{
+					//The result will be null when this method is called from a thread other than the main thread 
+					if (task.Result == null)
+					{
+						throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+					}
+
 					if (typeof(T).IsValueType || typeof(T).IsEnum)
 					{
 						return Function.ObjectFromNative<T>(task.Result);
