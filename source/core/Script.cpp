@@ -82,7 +82,7 @@ namespace GTA
 			HandleUnhandledException(this, gcnew UnhandledExceptionEventArgs(ex, true));
 		}
 
-		_waitEvent->Set();
+		_waitEvent->Release();
 
 		_scriptdomain->AbortScript(this);
 	}
@@ -99,8 +99,8 @@ namespace GTA
 
 		do
 		{
-			script->_waitEvent->Set();
-			script->_continueEvent->WaitOne();
+			script->_waitEvent->Release();
+			script->_continueEvent->Wait();
 		}
 		while (DateTime::UtcNow < resume);
 	}
@@ -112,7 +112,7 @@ namespace GTA
 	void Script::MainLoop()
 	{
 		// Wait for domain to run scripts
-		_continueEvent->WaitOne();
+		_continueEvent->Wait();
 
 		// Run main loop
 		while (_running)

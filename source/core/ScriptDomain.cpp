@@ -24,15 +24,15 @@ namespace WinForms = System::Windows::Forms;
 
 namespace
 {
-	inline void SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn)
+	inline void SignalAndWait(SemaphoreSlim ^toSignal, SemaphoreSlim ^toWaitOn)
 	{
-		toSignal->Set();
-		toWaitOn->WaitOne();
+		toSignal->Release();
+		toWaitOn->Wait();
 	}
-	inline bool SignalAndWait(AutoResetEvent ^toSignal, AutoResetEvent ^toWaitOn, int timeout)
+	inline bool SignalAndWait(SemaphoreSlim ^toSignal, SemaphoreSlim ^toWaitOn, int timeout)
 	{
-		toSignal->Set();
-		return toWaitOn->WaitOne(timeout);
+		toSignal->Release();
+		return toWaitOn->Wait(timeout);
 	}
 }
 

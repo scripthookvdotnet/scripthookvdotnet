@@ -110,8 +110,8 @@ namespace GTA
 		System::String ^_filename;
 		ScriptDomain ^_scriptdomain;
 		System::Threading::Thread ^_thread;
-		System::Threading::AutoResetEvent ^_waitEvent = gcnew System::Threading::AutoResetEvent(false);
-		System::Threading::AutoResetEvent ^_continueEvent = gcnew System::Threading::AutoResetEvent(false);
+		System::Threading::SemaphoreSlim ^_waitEvent = gcnew System::Threading::SemaphoreSlim(0);
+		System::Threading::SemaphoreSlim ^_continueEvent = gcnew System::Threading::SemaphoreSlim(0);
 		System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^> ^_keyboardEvents = gcnew System::Collections::Concurrent::ConcurrentQueue<System::Tuple<bool, System::Windows::Forms::KeyEventArgs ^> ^>();
 		Viewport ^_viewport;
 		ScriptSettings ^_settings;
