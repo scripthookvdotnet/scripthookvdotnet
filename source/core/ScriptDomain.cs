@@ -782,15 +782,15 @@ namespace GTA
 			return _keyboardState[(int)(key)];
 		}
 
-		static private void SignalAndWait(AutoResetEvent toSignal, AutoResetEvent toWaitOn)
+		static private void SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn)
 		{
-			toSignal.Set();
-			toWaitOn.WaitOne();
+			toSignal.Release();
+			toWaitOn.Wait();
 		}
-		static private bool SignalAndWait(AutoResetEvent toSignal, AutoResetEvent toWaitOn, int timeout)
+		static private bool SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn, int timeout)
 		{
-			toSignal.Set();
-			return toWaitOn.WaitOne(timeout);
+			toSignal.Release();
+			return toWaitOn.Wait(timeout);
 		}
 
 		static private string GetScriptSupportURL(Type scriptType)

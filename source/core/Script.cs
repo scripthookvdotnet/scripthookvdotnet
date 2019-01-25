@@ -52,8 +52,8 @@ namespace GTA
 		internal bool _running = false;
 		internal ScriptDomain _scriptdomain;
 		internal Thread _thread;
-		internal AutoResetEvent _waitEvent = new AutoResetEvent(false);
-		internal AutoResetEvent _continueEvent = new AutoResetEvent(false);
+		internal SemaphoreSlim _waitEvent = new SemaphoreSlim(0);
+		internal SemaphoreSlim _continueEvent = new SemaphoreSlim(0);
 		internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> _keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
 		internal ScriptSettings _settings;
 		#endregion
@@ -184,12 +184,14 @@ namespace GTA
 			}
 
 			_running = false;
-			_waitEvent.Set();
+			_waitEvent.Release();
 
 			if (_thread != null)
 			{
 				_thread.Abort();
 				_thread = null;
+				_waitEvent.Dispose();
+				_continueEvent.Dispose();
 
 				ScriptDomain.OnAbortScript(this);
 			}
@@ -213,8 +215,8 @@ namespace GTA
 
 			do
 			{
-				script._waitEvent.Set();
-				script._continueEvent.WaitOne();
+				script._waitEvent.Release();
+				script._continueEvent.Wait();
 			}
 			while (DateTime.UtcNow < resume);
 		}
@@ -234,7 +236,7 @@ namespace GTA
 			_running = true;
 
 			// Wait for domain to run scripts
-			_continueEvent.WaitOne();
+			_continueEvent.Wait();
 
 			// Run main loop
 			while (_running)
