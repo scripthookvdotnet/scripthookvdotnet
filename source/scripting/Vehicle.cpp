@@ -756,7 +756,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x816 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x836 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x876 : offset);
-		
+
 		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
 	}
 	float Vehicle::FuelLevel::get()
@@ -770,7 +770,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7D4 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x7F4 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x834 : offset);
-		
+
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	void Vehicle::FuelLevel::set(float value)
@@ -789,7 +789,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7D4 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x7F4 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x834 : offset);
-		
+
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
 	float Vehicle::CurrentRPM::get()
@@ -803,7 +803,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x844 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x864 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x8B4 : offset);
-		
+
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	void Vehicle::CurrentRPM::set(float value)
@@ -817,7 +817,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x844 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x864 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x8B4 : offset);
-		
+
 		*reinterpret_cast<float *>(address + offset) = value;
 	}
 	float Vehicle::Acceleration::get()
@@ -831,7 +831,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x854 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x874 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x8C4 : offset);
-		
+
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	float Vehicle::WheelSpeed::get()
@@ -845,7 +845,7 @@ namespace GTA
 		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0xA10 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0xA30 : offset);
 		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0xA80 : offset);
-		
+
 		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
 	}
 	float Vehicle::SteeringAngle::get()
