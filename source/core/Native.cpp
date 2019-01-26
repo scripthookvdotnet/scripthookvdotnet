@@ -315,7 +315,7 @@ namespace GTA
 
 			ScriptDomain::CurrentDomain->ExecuteTask(task);
 
-			//The result will be null when this method is called from a thread other than the main thread 
+			//The result will be null when this method is called from a thread other than the main thread
 			if (task->_result == nullptr)
 			{
 				throw gcnew InvalidOperationException("Native.Function.Call can only be called from the main thread.");
