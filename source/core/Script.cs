@@ -190,8 +190,6 @@ namespace GTA
 			{
 				_thread.Abort();
 				_thread = null;
-				_waitEvent.Dispose();
-				_continueEvent.Dispose();
 
 				ScriptDomain.OnAbortScript(this);
 			}
