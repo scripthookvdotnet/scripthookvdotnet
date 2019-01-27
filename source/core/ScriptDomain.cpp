@@ -547,8 +547,6 @@ namespace GTA
 
 		script->_thread->Abort();
 		script->_thread = nullptr;
-		delete script->_waitEvent;
-		delete script->_continueEvent;
 
 		Log("[DEBUG]", "Aborted script '", script->Name, "'.");
 	}
