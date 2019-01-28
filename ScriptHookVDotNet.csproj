@@ -6,12 +6,15 @@
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <Platform>AnyCPU</Platform>
     <Configuration>Release</Configuration>
-    <ProjectGuid>{019193A7-50C0-444A-84CA-777595E702CD}</ProjectGuid>
+    <ProjectGuid>{A57A59F7-571A-44D5-9D2E-31DE080FC249}</ProjectGuid>
     <RootNamespace>GTA</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <OutputPath>bin</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="ScriptHookVDotNet.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
