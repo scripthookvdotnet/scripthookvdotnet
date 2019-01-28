@@ -4,10 +4,9 @@
 // Change these attribute values to modify the information associated with an assembly.
 [assembly: AssemblyTitle("Community Script Hook V .NET")]
 [assembly: AssemblyDescription("An ASI plugin for Grand Theft Auto V, which allows running scripts written in any .NET language in-game.")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("crosire & contributors")]
 [assembly: AssemblyProduct("ScriptHookVDotNet")]
 [assembly: AssemblyCopyright("Copyright © 2015 crosire")]
-[assembly: AssemblyTrademark("")]
 
 // Version information for an assembly consists of the following four values:
 //   Major Version . Minor Version . Build Number . Revision
