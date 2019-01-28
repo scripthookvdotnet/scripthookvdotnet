@@ -5,6 +5,11 @@ MinimumVisualStudioVersion = 12.0.40629.0
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A57A59F7-571A-44D5-9D2E-31DE080FC249} = {A57A59F7-571A-44D5-9D2E-31DE080FC249}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetNuGet", "ScriptHookVDotNet.csproj", "{A57A59F7-571A-44D5-9D2E-31DE080FC249}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
 EndProject
@@ -18,16 +23,22 @@ Global
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.Build.0 = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.Build.0 = Release|x64
-		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.Build.0 = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.Build.0 = Release|x64
+		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release + Examples|x64.ActiveCfg = Debug|Any CPU
+		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release + Examples|x64.Build.0 = Debug|Any CPU
+		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release|x64.ActiveCfg = Debug|Any CPU
+		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release|x64.Build.0 = Debug|Any CPU
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.ActiveCfg = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30B3D69A-FEF8-47E4-A34C-32EE7C4A5A31}
 	EndGlobalSection
 EndGlobal
