@@ -7,13 +7,10 @@
     <description>$description$</description>
     <tags>gta gta5 gtamod scripting scripthook</tags>
     <owners>crosire</owners>
-    <authors>$authors$</authors>
+    <authors>crosire &amp; constributors</authors>
     <copyright>$copyright$</copyright>
     <projectUrl>https://github.com/crosire/scripthookvdotnet</projectUrl>
     <licenseUrl>https://github.com/crosire/scripthookvdotnet/blob/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
   </metadata>
-  <files>
-    <file src="bin\ScriptHookVDotNet2.dll" target="lib\net452" />
-  </files>
 </package>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AssemblyName>ScriptHookVDotNet2</AssemblyName>
+    <Platform>AnyCPU</Platform>
+    <Configuration>Release</Configuration>
+    <ProjectGuid>{019193A7-50C0-444A-84CA-777595E702CD}</ProjectGuid>
+    <RootNamespace>GTA</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>bin</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
