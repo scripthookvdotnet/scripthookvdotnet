@@ -11,7 +11,7 @@ Feel free to ask questions related to GTA V scripting or this project in the pub
 ## Requirements
 
 * [C++ ScriptHook by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
-* [.NET Framework ≥ 4.7.2](https://www.microsoft.com/download/details.aspx?id=55170)
+* [.NET Framework ≥ 4.7.2](https://dotnet.microsoft.com/download/dotnet-framework-runtime)
 * [Visual C++ Redistributable for Visual Studio 2017 x64](https://visualstudio.microsoft.com/downloads/)
 
 ## Downloads
