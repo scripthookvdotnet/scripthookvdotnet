@@ -718,7 +718,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets the speed the drive wheels are turning at, This is the value used for the dashboard speedometers(after being converted to mph).
+		/// Gets or sets the speed the drive wheels are turning at, This is the value used for the dashboard speedometers(after being converted to mph).
 		/// </summary>
 		public float WheelSpeed
 		{
@@ -739,6 +739,24 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA80 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				//old game version hasnt been tested, just following the patterns above for old game ver
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x9A4 : 0x994;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x9C4 : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x9F0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0xA00 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0xA10 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xA30 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA80 : offset;
+
+				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 		/// <summary>
