@@ -22,7 +22,7 @@ namespace GTA
 		#region Fields
 
 		Vehicle _owner;
-		readonly Dictionary<VehicleWindowIndex, VehicleWindow> _vehicleWindows = new Dictionary<VehicleWindowIndex, VehicleWindow>();
+		readonly Dictionary<VehicleWindowIndex, VehicleWindow> _vehicleWindows = new Dictionary<VehicleWindowIndex, VehicleWindow>(new EnumComparer<VehicleWindowIndex>());
 
 		#endregion
 

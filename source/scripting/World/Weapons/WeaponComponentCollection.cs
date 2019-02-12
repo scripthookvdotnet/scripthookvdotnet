@@ -144,7 +144,7 @@ namespace GTA
 		readonly Weapon _weapon;
 
 		readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents =
-			new Dictionary<WeaponComponentHash, WeaponComponent>();
+			new Dictionary<WeaponComponentHash, WeaponComponent>(new EnumComparer<WeaponComponentHash>());
 
 		readonly WeaponComponentHash[] _components;
 		readonly static InvalidWeaponComponent _invalidComponent = new InvalidWeaponComponent();

@@ -18,7 +18,7 @@ namespace GTA
 		#region Fields
 
 		Vehicle _owner;
-		readonly Dictionary<VehicleDoorIndex, VehicleDoor> _vehicleDoors = new Dictionary<VehicleDoorIndex, VehicleDoor>();
+		readonly Dictionary<VehicleDoorIndex, VehicleDoor> _vehicleDoors = new Dictionary<VehicleDoorIndex, VehicleDoor>(new EnumComparer<VehicleDoorIndex>());
 
 		#endregion
 

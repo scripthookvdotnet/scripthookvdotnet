@@ -37,8 +37,8 @@ namespace GTA
 	{
 		#region Fields
 		Ped _ped;
-		Dictionary<PedComponents, PedComponent> _pedComponents = new Dictionary<PedComponents, PedComponent>();
-		Dictionary<PedProps, PedProp> _pedProps = new Dictionary<PedProps, PedProp>();
+		Dictionary<PedComponents, PedComponent> _pedComponents = new Dictionary<PedComponents, PedComponent>(new EnumComparer<PedComponents>());
+		Dictionary<PedProps, PedProp> _pedProps = new Dictionary<PedProps, PedProp>(new EnumComparer<PedProps>());
 		#endregion
 
 		internal Style(Ped ped)

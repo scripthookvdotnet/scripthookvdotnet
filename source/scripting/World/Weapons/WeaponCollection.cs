@@ -8,7 +8,7 @@ namespace GTA
 	{
 		#region Fields
 		Ped _owner;
-		readonly Dictionary<WeaponHash, Weapon> _weapons = new Dictionary<WeaponHash, Weapon>();
+		readonly Dictionary<WeaponHash, Weapon> _weapons = new Dictionary<WeaponHash, Weapon>(new EnumComparer<WeaponHash>());
 		#endregion
 
 		internal WeaponCollection(Ped owner)
