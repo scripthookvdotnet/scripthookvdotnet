@@ -61,7 +61,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the name of this <see cref="Player"/>.
+		/// Gets the Social Club name of this <see cref="Player"/>.
 		/// </summary>
 		public string Name
 		{
