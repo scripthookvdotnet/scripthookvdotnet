@@ -112,13 +112,17 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets the time scale of the game.
+		/// Gets or Sets the time scale of the game.
 		/// </summary>
 		/// <value>
 		/// The time scale, only accepts values in range 0.0f to 1.0f.
 		/// </value>
 		public static float TimeScale
 		{
+			get
+			{
+				return MemoryAccess.ReadTimeScale();
+			}
 			set
 			{
 				Function.Call(Hash.SET_TIME_SCALE, value);

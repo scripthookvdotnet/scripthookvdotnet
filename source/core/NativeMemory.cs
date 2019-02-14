@@ -487,6 +487,7 @@ namespace GTA
 			internal static float* _writeWorldGravityAddr;
 			internal static ulong* _gamePlayCameraAddr;
 			internal static int* _cursorSpriteAddr;
+			internal static float* _timeScaleAddress;
 			internal static ulong* _entityPoolAddress;
 			internal static ulong* _vehiclePoolAddress;
 			internal static ulong* _pedPoolAddress;
@@ -620,6 +621,14 @@ namespace GTA
 
 				address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
 				_cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
+
+				address = FindPattern("\xF3\x0F\x10\x0D\x00\x00\x00\x00\x41\x0F\x2F\xCB\x0F\x83", "xxxx????xxxxxx");
+				var timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
+				if (timeScaleArrayAddress != null)
+				{
+					// SET_TIME_SCALE changes the 3rd element, so obtain the address of it
+					_timeScaleAddress = timeScaleArrayAddress + 2;
+				}
 
 				address = FindPattern("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
 				address = address + *(int*)(address) + 4;
@@ -1302,6 +1311,14 @@ namespace GTA
 				unsafe
 				{
 					return *_cursorSpriteAddr;
+				}
+			}
+
+			internal static float ReadTimeScale()
+			{
+				unsafe
+				{
+					return *_timeScaleAddress;
 				}
 			}
 
