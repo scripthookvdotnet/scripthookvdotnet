@@ -13,6 +13,7 @@ namespace GTA
 		Korean,
 		Chinese,
 		Japanese,
-		Mexican
+		Mexican,
+		ChineseSimplified
 	}
 }
