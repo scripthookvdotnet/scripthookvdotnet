@@ -1276,6 +1276,13 @@ namespace GTA
 				Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, 32, value);
 			}
 		}
+		/// <summary>
+		/// Gets or Sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
+		///  If this <see cref="Ped"/> can't suffer critical hits, they will take base damage of weapons when bullets hit their head bone or its child bones.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Ped"/> can suffer critical damages; otherwise, <c>false</c>.
+		/// </value>
 		public bool CanSufferCriticalHits
 		{
 			get
