@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using GTA.Native;
 
@@ -19,13 +19,13 @@ namespace GTA
 
 		[FieldOffset(0x30)] private int defaultClipSize;
 
-		[FieldOffset(0x38)] private fixed char name [0x40];
+		[FieldOffset(0x38)] private fixed byte name [0x40];
 
-		[FieldOffset(0x78)] private fixed char desc [0x40];
+		[FieldOffset(0x78)] private fixed byte desc [0x40];
 
-		[FieldOffset(0xB8)] private fixed char simpleDesc [0x40]; //usually refers to "the " + name
+		[FieldOffset(0xB8)] private fixed byte simpleDesc [0x40]; //usually refers to "the " + name
 
-		[FieldOffset(0xF8)] private fixed char upperCaseName [0x40];
+		[FieldOffset(0xF8)] private fixed byte upperCaseName [0x40];
 
 		public bool IsValid
 		{
@@ -41,9 +41,9 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = simpleDesc)
+				fixed (byte* ptr = simpleDesc)
 				{
-					return new string(ptr);
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(ptr));
 				}
 			}
 		}
@@ -59,9 +59,9 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = desc)
+				fixed (byte* ptr = desc)
 				{
-					return new string(ptr);
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(ptr));
 				}
 			}
 		}
@@ -77,9 +77,9 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = name)
+				fixed (byte* ptr = name)
 				{
-					return new string(ptr);
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(ptr));
 				}
 			}
 		}
@@ -96,9 +96,9 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = upperCaseName)
+				fixed (byte* ptr = upperCaseName)
 				{
-					return new string(ptr);
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(ptr));
 				}
 			}
 		}
