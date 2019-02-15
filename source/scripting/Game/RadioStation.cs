@@ -21,6 +21,8 @@ namespace GTA
 		VinewoodBoulevardRadio,
 		SelfRadio,
 		TheLab,
+		BlondedLosSantos,
+		LosSantosUndergroundRadio,
 		RadioOff = 255
 	}
 }
