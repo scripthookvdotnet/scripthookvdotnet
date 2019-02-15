@@ -122,9 +122,9 @@ namespace GTA
 
 		[FieldOffset(0x28)] private int componentCost;
 
-		[FieldOffset(0x30)] private fixed char name [0x40];
+		[FieldOffset(0x30)] private fixed byte name [0x40];
 
-		[FieldOffset(0x70)] private fixed char desc [0x40];
+		[FieldOffset(0x70)] private fixed byte desc [0x40];
 
 		public WeaponComponentHash Hash
 		{
@@ -144,9 +144,9 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = desc)
+				fixed (byte* ptr = desc)
 				{
-					return new string(ptr);
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(ptr));
 				}
 			}
 		}
@@ -163,9 +163,9 @@ namespace GTA
 		{
 			get
 			{
-				fixed (char* ptr = name)
+				fixed (byte* ptr = name)
 				{
-					return new string(ptr);
+					return MemoryAccess.PtrToStringUTF8(new IntPtr(ptr));
 				}
 			}
 		}
