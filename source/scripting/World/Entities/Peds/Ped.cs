@@ -1278,10 +1278,10 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or Sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
-		///  If this <see cref="Ped"/> can't suffer critical hits, they will take base damage of weapons when bullets hit their head bone or its child bones.
+		///  If this <see cref="Ped"/> can't suffer critical damage, they will take base damage of weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Ped"/> can suffer critical damages; otherwise, <c>false</c>.
+		///   <c>true</c> if this <see cref="Ped"/> can suffer critical damage; otherwise, <c>false</c>.
 		/// </value>
 		public bool CanSufferCriticalHits
 		{
