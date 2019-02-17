@@ -1163,7 +1163,7 @@ namespace GTA
 			}
 		}
 
-		public bool DropsWeaponsOnDeath
+		public bool DropsEquippedWeaponOnDeath
 		{
 			get
 			{
