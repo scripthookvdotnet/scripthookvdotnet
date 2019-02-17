@@ -45,7 +45,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value strictly, since a health value of <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
+		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value strictly, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
 		/// The health as an integer.
