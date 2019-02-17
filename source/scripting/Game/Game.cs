@@ -221,7 +221,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets a value indicating whether to render the world with a night vision filter.
 		/// </summary>
-		public static bool Nightvision
+		public static bool IsNightVisionActive
 		{
 			get
 			{
@@ -235,7 +235,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets a value indicating whether to render the world with a thermal vision filter.
 		/// </summary>
-		public static bool ThermalVision
+		public static bool IsThermalVisionActive
 		{
 			get
 			{
