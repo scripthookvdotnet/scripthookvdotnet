@@ -1,21 +1,21 @@
-/**
- * Copyright (C) 2007-2010 SlimDX Group
- *
- * Permission is hereby granted, free  of charge, to any person obtaining a copy of this software  and
- * associated  documentation  files (the  "Software"), to deal  in the Software  without  restriction,
- * including  without  limitation  the  rights  to use,  copy,  modify,  merge,  publish,  distribute,
- * sublicense, and/or sell  copies of the  Software,  and to permit  persons to whom  the Software  is
- * furnished to do so, subject to the following conditions:
- *
- * The  above  copyright  notice  and this  permission  notice shall  be included  in  all  copies  or
- * substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF  ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT  LIMITED  TO  THE  WARRANTIES  OF  MERCHANTABILITY,  FITNESS  FOR  A   PARTICULAR  PURPOSE  AND
- * NONINFRINGEMENT.  IN  NO  EVENT SHALL THE  AUTHORS  OR COPYRIGHT HOLDERS  BE LIABLE FOR  ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  OUT
- * OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+//
+// Copyright (C) 2007-2010 SlimDX Group
+//
+// Permission is hereby granted, free  of charge, to any person obtaining a copy of this software  and
+// associated  documentation  files (the  "Software"), to deal  in the Software  without  restriction,
+// including  without  limitation  the  rights  to use,  copy,  modify,  merge,  publish,  distribute,
+// sublicense, and/or sell  copies of the  Software,  and to permit  persons to whom  the Software  is
+// furnished to do so, subject to the following conditions:
+//
+// The  above  copyright  notice  and this  permission  notice shall  be included  in  all  copies  or
+// substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF  ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+// NOT  LIMITED  TO  THE  WARRANTIES  OF  MERCHANTABILITY,  FITNESS  FOR  A   PARTICULAR  PURPOSE  AND
+// NONINFRINGEMENT.  IN  NO  EVENT SHALL THE  AUTHORS  OR COPYRIGHT HOLDERS  BE LIABLE FOR  ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  OUT
+// OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 using System;
 using System.Globalization;
@@ -339,7 +339,7 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="point">The original vertex location</param>
 		/// <returns>The vertex location transformed by the given <see cref="Matrix"/></returns>
-		public Vector3 TransformPoint(Vector3 vector)
+		public Vector3 TransformPoint(Vector3 point)
 		{
 			unsafe
 			{
@@ -353,9 +353,9 @@ namespace GTA.Math
 					// Splat x,y and z
 					for (int i = 0; i < 4; i++)
 					{
-						VTempX[i] = vector.X;
-						VTempY[i] = vector.Y;
-						VTempZ[i] = vector.Z;
+						VTempX[i] = point.X;
+						VTempY[i] = point.Y;
+						VTempZ[i] = point.Z;
 					}
 
 					// Multiply by the matrix
@@ -383,9 +383,9 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="point">The transformed vertex location</param>
 		/// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
-		public Vector3 InverseTransformPoint(Vector3 vector)
+		public Vector3 InverseTransformPoint(Vector3 point)
 		{
-			return Invert(this).TransformPoint(vector);
+			return Invert(this).TransformPoint(point);
 		}
 
 		/// <summary>
