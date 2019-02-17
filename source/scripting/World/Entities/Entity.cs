@@ -45,11 +45,12 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
+		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value strictly, since a health value of <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
-		/// The health from 0 - 100 as an integer.
+		/// The health as an integer.
 		/// </value>
-		/// <remarks>if you need to get or set the value strictly, use <see cref="HealthFloat"/> instead.</remarks>
+		/// <seealso cref="HealthFloat"/>
 		public int Health
 		{
 			get
