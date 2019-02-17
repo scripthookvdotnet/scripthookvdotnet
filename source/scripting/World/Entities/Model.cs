@@ -349,20 +349,8 @@ namespace GTA
 		/// <summary>
 		/// Gets the dimensions of this <see cref="Model"/>.
 		/// </summary>
-		/// <returns></returns>
-		public Vector3 GetDimensions()
-		{
-			Vector3 right, left;
-			GetDimensions(out right, out left);
-
-			return Vector3.Subtract(left, right);
-		}
-		/// <summary>
-		/// Gets the dimensions of this <see cref="Model"/>.
-		/// </summary>
-		/// <param name="minimum">The minimum dimensions.</param>
-		/// <param name="maximum">The maximum dimensions.</param>
-		public void GetDimensions(out Vector3 minimum, out Vector3 maximum)
+		/// <returns>minimum is the minimum dimensions, maximum is the maximum dimensions.</returns>
+		public (Vector3 minimum, Vector3 maximum) GetDimensions()
 		{
 			NativeVector3 min, max;
 			unsafe
@@ -370,8 +358,7 @@ namespace GTA
 				Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
 			}
 
-			minimum = min;
-			maximum = max;
+			return (min, max);
 		}
 
 		/// <summary>

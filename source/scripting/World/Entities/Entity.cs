@@ -330,9 +330,7 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rearBottomLeft, frontTopRight;
-				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
-
+				var (rearBottomLeft, _) = Model.GetDimensions();
 				return GetOffsetPosition(new Vector3(rearBottomLeft.X, 0, 0));
 			}
 		}
@@ -344,9 +342,7 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rearBottomLeft, frontTopRight;
-				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
-
+				var (_, frontTopRight) = Model.GetDimensions();
 				return GetOffsetPosition(new Vector3(frontTopRight.X, 0, 0));
 			}
 		}
@@ -358,9 +354,7 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rearBottomLeft, frontTopRight;
-				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
-
+				var (_, frontTopRight) = Model.GetDimensions();
 				return GetOffsetPosition(new Vector3(0, frontTopRight.Y, 0));
 			}
 		}
@@ -372,9 +366,7 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rearBottomLeft, frontTopRight;
-				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
-
+				var (rearBottomLeft, _) = Model.GetDimensions();
 				return GetOffsetPosition(new Vector3(0, rearBottomLeft.Y, 0));
 			}
 		}
@@ -386,9 +378,7 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rearBottomLeft, frontTopRight;
-				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
-
+				var (_, frontTopRight) = Model.GetDimensions();
 				return GetOffsetPosition(new Vector3(0, 0, frontTopRight.Z));
 			}
 		}
@@ -400,9 +390,7 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rearBottomLeft, frontTopRight;
-				Model.GetDimensions(out rearBottomLeft, out frontTopRight);
-
+				var (rearBottomLeft, _) = Model.GetDimensions();
 				return GetOffsetPosition(new Vector3(0, 0, rearBottomLeft.Z));
 			}
 		}
