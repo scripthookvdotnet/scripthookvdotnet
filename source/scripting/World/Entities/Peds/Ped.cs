@@ -1163,6 +1163,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets whether this <see cref="Ped"/> will drop the equipped weapon when they get killed.
+		///  Note that <see cref="Ped"/>s will drop only their equipped weapon when they get killed.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if <see cref="Ped"/> drops the equipped weapon when killed; otherwise, <c>false</c>.
+		/// </value>
 		public bool DropsEquippedWeaponOnDeath
 		{
 			get
