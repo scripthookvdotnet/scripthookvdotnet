@@ -385,8 +385,6 @@ namespace GTA
 			}
 
 			domain = null;
-
-			GC.Collect();
 		}
 		private Script InstantiateScript(Type scriptType)
 		{
@@ -593,8 +591,6 @@ namespace GTA
 
 			_scriptTypes.Clear();
 			_runningScripts.Clear();
-
-			GC.Collect();
 		}
 		public void AbortScript(string filename)
 		{
@@ -614,8 +610,6 @@ namespace GTA
 
 			_scriptTypes.Clear();
 			_runningScripts.RemoveAll(x => x != Console);
-
-			GC.Collect();
 		}
 		public static void OnStartScript(Script script)
 		{
