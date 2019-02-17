@@ -349,13 +349,11 @@ namespace GTA
 		/// <summary>
 		/// Gets the dimensions of this <see cref="Model"/>.
 		/// </summary>
-		/// <returns></returns>
-		public Vector3 GetDimensions()
+		/// <returns>minimum is the minimum dimensions, maximum is the maximum dimensions.</returns>
+		public (Vector3 minimum, Vector3 maximum) GetDimensions()
 		{
-			Vector3 right, left;
-			GetDimensions(out right, out left);
-
-			return Vector3.Subtract(left, right);
+			GetDimensions(out var min, out var max);
+			return (min, max);
 		}
 		/// <summary>
 		/// Gets the dimensions of this <see cref="Model"/>.
