@@ -91,20 +91,20 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
+		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value strictly, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
-		/// The maximum health from 0 - 100 as an integer.
+		/// The maximum health as an integer.
 		/// </value>
-		/// <remarks>if you need to get or set the value strictly, use <see cref="MaxHealthFloat"/> instead.</remarks>
 		public int MaxHealth
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle) - 100;
+				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value + 100);
+				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
 			}
 		}
 		/// <summary>
