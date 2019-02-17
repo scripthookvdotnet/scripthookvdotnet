@@ -176,7 +176,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the type of Entity
 		/// </summary>
-		/// <param name="Handle">Handle of the Entity</param>
+		/// <param name="handle">Handle of the Entity</param>
 		/// <returns></returns>
 		public static EntityType GetEntityType(int handle)
 		{

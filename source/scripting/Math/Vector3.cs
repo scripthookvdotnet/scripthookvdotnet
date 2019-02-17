@@ -250,7 +250,7 @@ namespace GTA.Math
 		/// <summary>
 		/// Calculates the distance between two vectors.
 		/// </summary>
-		/// <param name="position2">The first vector to calculate the distance to the second vector.</param>
+		/// <param name="position1">The first vector to calculate the distance to the second vector.</param>
 		/// <param name="position2">The second vector to calculate the distance to the first vector.</param>
 		/// <returns>The distance between the two vectors.</returns>
 		public static float Distance(Vector3 position1, Vector3 position2) => (position1 - position2).Length();
@@ -258,7 +258,7 @@ namespace GTA.Math
 		/// <summary>
 		/// Calculates the squared distance between two vectors.
 		/// </summary>
-		/// <param name="position2">The first vector to calculate the squared distance to the second vector.</param>
+		/// <param name="position1">The first vector to calculate the squared distance to the second vector.</param>
 		/// <param name="position2">The second vector to calculate the squared distance to the first vector.</param>
 		/// <returns>The squared distance between the two vectors.</returns>
 		public static float DistanceSquared(Vector3 position1, Vector3 position2) => (position1 - position2).LengthSquared();
@@ -266,7 +266,7 @@ namespace GTA.Math
 		/// <summary>
 		/// Calculates the distance between two vectors, ignoring the Z-component.
 		/// </summary>
-		/// <param name="position2">The first vector to calculate the distance to the second vector.</param>
+		/// <param name="position1">The first vector to calculate the distance to the second vector.</param>
 		/// <param name="position2">The second vector to calculate the distance to the first vector.</param>
 		/// <returns>The distance between the two vectors.</returns>
 		public static float Distance2D(Vector3 position1, Vector3 position2)
@@ -278,7 +278,7 @@ namespace GTA.Math
 		/// <summary>
 		/// Calculates the squared distance between two vectors, ignoring the Z-component.
 		/// </summary>
-		/// <param name="position2">The first vector to calculate the squared distance to the second vector.</param>
+		/// <param name="position1">The first vector to calculate the squared distance to the second vector.</param>
 		/// <param name="position2">The second vector to calculate the squared distance to the first vector.</param>
 		/// <returns>The squared distance between the two vectors.</returns>
 		public static float DistanceSquared2D(Vector3 position1, Vector3 position2)
@@ -629,7 +629,7 @@ namespace GTA.Math
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.
 		/// </summary>
-		/// <param name="numberFormat">The number format.</param>
+		/// <param name="format">The number format.</param>
 		/// <returns>The string representation of the value of this instance.</returns>
 		public string ToString(string format)
 		{

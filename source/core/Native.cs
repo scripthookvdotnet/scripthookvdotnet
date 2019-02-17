@@ -360,7 +360,7 @@ namespace GTA
 			/// <summary>
 			/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions that require the pointer to data instead of the actual data.
 			/// </summary>
-			/// <param name="initvalue">The value to set the data of this <see cref="OutputArgument"/> to.</param>
+			/// <param name="value">The value to set the data of this <see cref="OutputArgument"/> to.</param>
 			public OutputArgument(object value) : this()
 			{
 				unsafe

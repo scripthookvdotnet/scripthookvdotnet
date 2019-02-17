@@ -339,7 +339,7 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="point">The original vertex location</param>
 		/// <returns>The vertex location transformed by the given <see cref="Matrix"/></returns>
-		public Vector3 TransformPoint(Vector3 vector)
+		public Vector3 TransformPoint(Vector3 point)
 		{
 			unsafe
 			{
@@ -353,9 +353,9 @@ namespace GTA.Math
 					// Splat x,y and z
 					for (int i = 0; i < 4; i++)
 					{
-						VTempX[i] = vector.X;
-						VTempY[i] = vector.Y;
-						VTempZ[i] = vector.Z;
+						VTempX[i] = point.X;
+						VTempY[i] = point.Y;
+						VTempZ[i] = point.Z;
 					}
 
 					// Multiply by the matrix
@@ -383,9 +383,9 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="point">The transformed vertex location</param>
 		/// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
-		public Vector3 InverseTransformPoint(Vector3 vector)
+		public Vector3 InverseTransformPoint(Vector3 point)
 		{
-			return Invert(this).TransformPoint(vector);
+			return Invert(this).TransformPoint(point);
 		}
 
 		/// <summary>
