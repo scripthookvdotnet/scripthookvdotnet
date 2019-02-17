@@ -54,11 +54,11 @@ namespace GTA
 		{
 			get
 			{
-				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle) - 100;
+				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
 			}
 			set
 			{
-				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value + 100);
+				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
 			}
 		}
 		/// <summary>
