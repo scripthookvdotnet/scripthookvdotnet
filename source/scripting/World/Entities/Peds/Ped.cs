@@ -242,9 +242,11 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets how accurate this <see cref="Ped"/>s shooting ability is.
+		///  The higher the value of this property is, the more likely it is that this <see cref="Ped"/> will shoot at exactly where they are aiming at.
 		/// </summary>
 		/// <value>
-		/// The accuracy from 0 to 100, 0 being very innacurate, 100 being perfectly accurate.
+		/// The accuracy from 0 to 100, 0 being very inaccurate, which means this <see cref="Ped"/> cannot shoot at exactly where they are aiming at,
+		///  100 being perfectly accurate.
 		/// </value>
 		public int Accuracy
 		{
