@@ -72,21 +72,23 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
 
-				return MemoryAccess.ReadFloat(MemoryAddress + 640);
+				return MemoryAccess.ReadFloat(memoryAddress + 640);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
-				MemoryAccess.WriteFloat(MemoryAddress + 640, value);
+				MemoryAccess.WriteFloat(memoryAddress + 640, value);
 			}
 		}
 		/// <summary>
@@ -117,25 +119,27 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
 
-				return MemoryAccess.ReadFloat(MemoryAddress + offset);
+				return MemoryAccess.ReadFloat(memoryAddress + offset);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
 				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
 
-				MemoryAccess.WriteFloat(MemoryAddress + offset, value);
+				MemoryAccess.WriteFloat(memoryAddress + offset, value);
 			}
 		}
 		/// <summary>
@@ -287,11 +291,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
 				}
-				return MemoryAccess.ReadVector3(MemoryAddress + 0x80);
+
+				return MemoryAccess.ReadVector3(memoryAddress + 0x80);
 			}
 		}
 		/// <summary>
@@ -301,11 +307,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
 				}
-				return MemoryAccess.ReadVector3(MemoryAddress + 0x60);
+
+				return MemoryAccess.ReadVector3(memoryAddress + 0x60);
 			}
 		}
 		/// <summary>
@@ -315,11 +323,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
 				}
-				return MemoryAccess.ReadVector3(MemoryAddress + 0x70);
+
+				return MemoryAccess.ReadVector3(memoryAddress + 0x70);
 			}
 		}
 
@@ -402,11 +412,12 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
+				var memoryAddress = MemoryAddress;
 				if (memoryAddress == IntPtr.Zero)
 				{
 					return new Matrix();
 				}
+
 				return MemoryAccess.ReadMatrix(memoryAddress + 96);
 			}
 		}
@@ -421,12 +432,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 0x2E, 1);
+				return MemoryAccess.IsBitSet(memoryAddress + 0x2E, 1);
 			}
 			set
 			{
@@ -496,7 +508,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
+				var memoryAddress = MemoryAddress;
 				if (memoryAddress == IntPtr.Zero)
 				{
 					return true;
@@ -603,12 +615,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 176, 4);
+				return MemoryAccess.IsBitSet(memoryAddress + 176, 4);
 			}
 		}
 		/// <summary>
@@ -715,21 +728,23 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 5);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 5);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 392;
+				var address = memoryAddress + 392;
 
 				if (value)
 				{
@@ -751,21 +766,23 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 7);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 7);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 392;
+				var address = memoryAddress + 392;
 
 				if (value)
 				{
@@ -787,21 +804,23 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 4);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 4);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 392;
+				var address = memoryAddress + 392;
 
 				if (value)
 				{
@@ -823,21 +842,23 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 11);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 11);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 392;
+				var address = memoryAddress + 392;
 
 				if (value)
 				{
@@ -859,21 +880,23 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 6);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 6);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return;
 				}
 
-				IntPtr address = MemoryAddress + 392;
+				var address = memoryAddress + 392;
 
 				if (value)
 				{
@@ -895,12 +918,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 8);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 8);
 			}
 			set
 			{
@@ -917,12 +941,13 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
 				{
 					return false;
 				}
 
-				return MemoryAccess.IsBitSet(MemoryAddress + 392, 9);
+				return MemoryAccess.IsBitSet(memoryAddress + 392, 9);
 			}
 			set
 			{
