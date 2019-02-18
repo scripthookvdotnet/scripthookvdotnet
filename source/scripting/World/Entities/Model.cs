@@ -349,8 +349,11 @@ namespace GTA
 		/// <summary>
 		/// Gets the dimensions of this <see cref="Model"/>.
 		/// </summary>
-		/// <returns>minimum is the minimum dimensions, maximum is the maximum dimensions.</returns>
-		public (Vector3 minimum, Vector3 maximum) Dimensions
+		/// <returns>
+		/// rearBottomLeft is the minimum dimensions, which contains the rear bottom left relative offset from the origin of the model,
+		///  frontTopRight is the maximum dimensions, which contains the front top right relative offset from the origin of the model.
+		/// </returns>
+		public (Vector3 rearBottomLeft, Vector3 frontTopRight) Dimensions
 		{
 			get
 			{
