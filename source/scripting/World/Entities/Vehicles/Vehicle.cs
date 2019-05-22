@@ -2331,10 +2331,63 @@ namespace GTA
 		{
 			return new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, seat));
 		}
+
 		public bool IsSeatFree(VehicleSeat seat)
 		{
 			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, seat);
 		}
+
+        /// <summary>
+        /// Returns an empty seat.
+        /// </summary>
+        /// <returns>The VehicleSeat that is empty.</returns>
+        public VehicleSeat GetEmptySeat()
+        {
+            if (IsSeatFree(VehicleSeat.LeftFront))
+                return VehicleSeat.LeftFront;
+            if (IsSeatFree(VehicleSeat.RightFront))
+                return VehicleSeat.RightFront;
+            if (IsSeatFree(VehicleSeat.LeftRear))
+                return VehicleSeat.LeftRear;
+            if (IsSeatFree(VehicleSeat.RightRear))
+                return VehicleSeat.RightRear;
+
+            return VehicleSeat.None;
+        }
+
+        /// <summary>
+        /// Returns an empty extra seat.
+        /// </summary>
+        /// <returns>The VehicleSeat that is empty.</returns>
+        public VehicleSeat GetEmptyExtraSeat()
+        {
+            if (IsSeatFree(VehicleSeat.ExtraSeat1))
+                return VehicleSeat.ExtraSeat1;
+            if (IsSeatFree(VehicleSeat.ExtraSeat2))
+                return VehicleSeat.ExtraSeat2;
+            if (IsSeatFree(VehicleSeat.ExtraSeat3))
+                return VehicleSeat.ExtraSeat3;
+            if (IsSeatFree(VehicleSeat.ExtraSeat4))
+                return VehicleSeat.ExtraSeat4;
+            if (IsSeatFree(VehicleSeat.ExtraSeat5))
+                return VehicleSeat.ExtraSeat5;
+            if (IsSeatFree(VehicleSeat.ExtraSeat6))
+                return VehicleSeat.ExtraSeat6;
+            if (IsSeatFree(VehicleSeat.ExtraSeat7))
+                return VehicleSeat.ExtraSeat7;
+            if (IsSeatFree(VehicleSeat.ExtraSeat8))
+                return VehicleSeat.ExtraSeat8;
+            if (IsSeatFree(VehicleSeat.ExtraSeat9))
+                return VehicleSeat.ExtraSeat9;
+            if (IsSeatFree(VehicleSeat.ExtraSeat10))
+                return VehicleSeat.ExtraSeat10;
+            if (IsSeatFree(VehicleSeat.ExtraSeat11))
+                return VehicleSeat.ExtraSeat11;
+            if (IsSeatFree(VehicleSeat.ExtraSeat12))
+                return VehicleSeat.ExtraSeat12;
+
+            return VehicleSeat.None;
+        }
 
 		public void Wash()
 		{
