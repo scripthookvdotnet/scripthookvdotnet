@@ -44,7 +44,18 @@ abstract class ScriptHookVDotNet
 	}
 	public static void Tick()
 	{
-		Domain?.DoTick();
+        if (Domain != null)
+        {
+            if (Domain.IsKeyPressed(WinForms.Keys.Insert))
+            {
+                Init();
+            }
+            else
+            {
+                Domain?.DoTick();
+            }
+
+        }
 	}
 
 	public static void KeyboardMessage(WinForms.Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)

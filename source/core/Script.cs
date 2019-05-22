@@ -45,7 +45,7 @@ namespace GTA
 	/// A base class for all user scripts to inherit.
 	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
 	/// </summary>
-	public abstract class Script
+	public abstract class Script : IDisposable
 	{
 		#region Fields
 		internal int _interval = 0;
@@ -278,5 +278,22 @@ namespace GTA
 				Wait(_interval);
 			}
 		}
-	}
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _scriptdomain?.Dispose();
+                _waitEvent?.Dispose();
+                _continueEvent?.Dispose();
+            }
+
+            // Release unmanaged resources
+        }
+    }
 }
