@@ -2433,7 +2433,14 @@ namespace GTA
 				return Bones.HasBone("door_hatch_l") && Bones.HasBone("door_hatch_r");
 			}
 		}
-		public void OpenBombBay()
+
+        public Vector3 GetEntryPositionOfDoor(int doorIndex)
+        {
+                return Function.Call<Vector3>(Hash._GET_ENTRY_POSITION_OF_DOOR, Handle, doorIndex);
+        }
+
+
+        public void OpenBombBay()
 		{
 			if (HasBombBay)
 			{

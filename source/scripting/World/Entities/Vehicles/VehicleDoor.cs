@@ -1,4 +1,5 @@
 using System;
+using GTA.Math;
 using GTA.Native;
 
 namespace GTA
@@ -42,6 +43,15 @@ namespace GTA
 				return AngleRatio > 0;
 			}
 		}
+
+        public Vector3 GetEntryPosition
+        {
+            get
+            {
+                return Function.Call<Vector3>(Hash._GET_ENTRY_POSITION_OF_DOOR, _owner.Handle, Index);
+            }
+        }
+
 		public bool IsFullyOpen
 		{
 			get
@@ -73,5 +83,6 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, Index, !stayInTheWorld);
 		}
+
 	}
 }
