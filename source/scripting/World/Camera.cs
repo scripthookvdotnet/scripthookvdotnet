@@ -1,25 +1,11 @@
 using System;
 using GTA.Math;
+using GTA.Models.World.Enums;
 using GTA.Native;
 
 namespace GTA
 {
-	public enum CameraShake
-	{
-		Hand,
-		SmallExplosion,
-		MediumExplosion,
-		LargeExplosion,
-		Jolt,
-		Vibrate,
-		RoadVibration,
-		Drunk,
-		SkyDiving,
-		FamilyDrugTrip,
-		DeathFail
-	}
-
-	public sealed class Camera : PoolObject, IEquatable<Camera>, ISpatial
+    public sealed class Camera : PoolObject, IEquatable<Camera>, ISpatial
 	{
 		#region Fields
 		internal static readonly string[] _shakeNames = {
@@ -297,7 +283,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="shakeType">Type of the shake to apply.</param>
 		/// <param name="amplitude">The amplitude of the shaking.</param>
-		public void Shake(CameraShake shakeType, float amplitude)
+		public void Shake(CameraType shakeType, float amplitude)
 		{
 			Function.Call(Hash.SHAKE_CAM, Handle, _shakeNames[(int)shakeType], amplitude);
 		}
@@ -672,7 +658,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="shakeType">Type of the shake to apply.</param>
 		/// <param name="amplitude">The amplitude of the shaking.</param>
-		public static void Shake(CameraShake shakeType, float amplitude)
+		public static void Shake(CameraType shakeType, float amplitude)
 		{
 			Function.Call(Hash.SHAKE_GAMEPLAY_CAM, Camera._shakeNames[(int)shakeType], amplitude);
 		}

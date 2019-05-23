@@ -1,51 +1,10 @@
 using GTA.Math;
+using GTA.Models.Game.Enums;
 using GTA.Native;
 
 namespace GTA
 {
-	/// <summary>
-	/// An enumeration of all possible audio flags.
-	/// </summary>
-	public enum AudioFlags
-	{
-		ActivateSwitchWheelAudio,
-		AllowCutsceneOverScreenFade,
-		AllowForceRadioAfterRetune,
-		AllowPainAndAmbientSpeechToPlayDuringCutscene,
-		AllowPlayerAIOnMission,
-		AllowPoliceScannerWhenPlayerHasNoControl,
-		AllowRadioDuringSwitch,
-		AllowRadioOverScreenFade,
-		AllowScoreAndRadio,
-		AllowScriptedSpeechInSlowMo,
-		AvoidMissionCompleteDelay,
-		DisableAbortConversationForDeathAndInjury,
-		DisableAbortConversationForRagdoll,
-		DisableBarks,
-		DisableFlightMusic,
-		DisableReplayScriptStreamRecording,
-		EnableHeadsetBeep,
-		ForceConversationInterrupt,
-		ForceSeamlessRadioSwitch,
-		ForceSniperAudio,
-		FrontendRadioDisabled,
-		HoldMissionCompleteWhenPrepared,
-		IsDirectorModeActive,
-		IsPlayerOnMissionForSpeech,
-		ListenerReverbDisabled,
-		LoadMPData,
-		MobileRadioInGame,
-		OnlyAllowScriptTriggerPoliceScanner,
-		PlayMenuMusic,
-		PoliceScannerDisabled,
-		ScriptedConvListenerMaySpeak,
-		SpeechDucksScore,
-		SuppressPlayerScubaBreathing,
-		WantedMusicDisabled,
-		WantedMusicOnMission
-	}
-
-	/// <summary>
+    /// <summary>
 	/// Methods to manipulate audio.
 	/// </summary>
 	public static class Audio
@@ -106,7 +65,7 @@ namespace GTA
 		/// Plays music from the game's music files.
 		/// </summary>
 		/// <param name="musicFile">The music file to play.</param>
-		public static void PlayMusic(string musicFile)
+		public static void PlayMusic(MusicType musicFile)
 		{
 			Function.Call(Hash.TRIGGER_MUSIC_EVENT, musicFile);
 		}
@@ -114,7 +73,7 @@ namespace GTA
 		/// Cancels playing a music file.
 		/// </summary>
 		/// <param name="musicFile">The music file to stop.</param>
-		public static void StopMusic(string musicFile)
+		public static void StopMusic(MusicType musicFile)
 		{
 			Function.Call(Hash.CANCEL_MUSIC_EVENT, musicFile);
 		}

@@ -2,212 +2,14 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Drawing;
 using System.Linq;
+using GTA.Models.World;
+using GTA.Models.World.Enums;
 
 namespace GTA
 {
-	enum ZoneID
-	{
-		AIRP,
-		ALAMO,
-		ALTA,
-		ARMYB,
-		BANHAMC,
-		BANNING,
-		BEACH,
-		BHAMCA,
-		BRADP,
-		BRADT,
-		BURTON,
-		CALAFB,
-		CANNY,
-		CCREAK,
-		CHAMH,
-		CHIL,
-		CHU,
-		CMSW,
-		CYPRE,
-		DAVIS,
-		DELBE,
-		DELPE,
-		DELSOL,
-		DESRT,
-		DOWNT,
-		DTVINE,
-		EAST_V,
-		EBURO,
-		ELGORL,
-		ELYSIAN,
-		GALFISH,
-		golf,
-		GRAPES,
-		GREATC,
-		HARMO,
-		HAWICK,
-		HORS,
-		HUMLAB,
-		JAIL,
-		KOREAT,
-		LACT,
-		LAGO,
-		LDAM,
-		LEGSQU,
-		LMESA,
-		LOSPUER,
-		MIRR,
-		MORN,
-		MOVIE,
-		MTCHIL,
-		MTGORDO,
-		MTJOSE,
-		MURRI,
-		NCHU,
-		NOOSE,
-		OCEANA,
-		PALCOV,
-		PALETO,
-		PALFOR,
-		PALHIGH,
-		PALMPOW,
-		PBLUFF,
-		PBOX,
-		PROCOB,
-		RANCHO,
-		RGLEN,
-		RICHM,
-		ROCKF,
-		RTRAK,
-		SanAnd,
-		SANCHIA,
-		SANDY,
-		SKID,
-		SLAB,
-		STAD,
-		STRAW,
-		TATAMO,
-		TERMINA,
-		TEXTI,
-		TONGVAH,
-		TONGVAV,
-		VCANA,
-		VESP,
-		VINE,
-		WINDF,
-		WVINE,
-		ZANCUDO,
-		ZP_ORT,
-		ZQ_UAR
-	}
-
-	public enum Weather
-	{
-		Unknown = -1,
-		ExtraSunny,
-		Clear,
-		Clouds,
-		Smog,
-		Foggy,
-		Overcast,
-		Raining,
-		ThunderStorm,
-		Clearing,
-		Neutral,
-		Snowing,
-		Blizzard,
-		Snowlight,
-		Christmas
-	}
-	public enum IntersectOptions
-	{
-		Everything = -1,
-		Map = 1,
-		MissionEntities,
-		Peds1 = 12,
-		Objects = 16,
-		Unk1 = 32,
-		Unk2 = 64,
-		Unk3 = 128,
-		Vegetation = 256,
-		Unk4 = 512
-	}
-	public enum MarkerType
-	{
-		UpsideDownCone,
-		VerticalCylinder,
-		ThickChevronUp,
-		ThinChevronUp,
-		CheckeredFlagRect,
-		CheckeredFlagCircle,
-		VerticleCircle,
-		PlaneModel,
-		LostMCDark,
-		LostMCLight,
-		Number0,
-		Number1,
-		Number2,
-		Number3,
-		Number4,
-		Number5,
-		Number6,
-		Number7,
-		Number8,
-		Number9,
-		ChevronUpx1,
-		ChevronUpx2,
-		ChevronUpx3,
-		HorizontalCircleFat,
-		ReplayIcon,
-		HorizontalCircleSkinny,
-		HorizontalCircleSkinnyArrow,
-		HorizontalSplitArrowCircle,
-		DebugSphere
-	}
-	public enum ExplosionType
-	{
-		Grenade,
-		GrenadeL,
-		StickyBomb,
-		Molotov1,
-		Rocket,
-		TankShell,
-		HiOctane,
-		Car,
-		Plane,
-		PetrolPump,
-		Bike,
-		Steam,
-		Flame,
-		WaterHydrant,
-		GasCanister,
-		Boat,
-		ShipDestroy,
-		Truck,
-		Bullet,
-		SmokeGL,
-		SmokeG,
-		BZGas,
-		Flare,
-		GasCanister2,
-		Extinguisher,
-		ProgramAR,
-		Train,
-		Barrel,
-		Propane,
-		Blimp,
-		FlameExplode,
-		Tanker,
-		PlaneRocket,
-		VehicleBullet,
-		GasTank,
-		FireWork,
-		SnowBall,
-		ProxMine,
-		Valkyrie
-	}
-
-	public static class World
+    public static class World
 	{
 		#region Fields
 		internal static readonly string[] _weatherNames = {
@@ -304,7 +106,7 @@ namespace GTA
 		/// <value>
 		/// The weather.
 		/// </value>
-		public static Weather Weather
+		public static WeatherType WeatherType
 		{
 			get
 			{
@@ -312,15 +114,15 @@ namespace GTA
 				{
 					if (Function.Call<int>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == Game.GenerateHash(_weatherNames[i]))
 					{
-						return (Weather)i;
+						return (WeatherType)i;
 					}
 				}
 
-				return Weather.Unknown;
+				return WeatherType.Unknown;
 			}
 			set
 			{
-				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
+				if (Enum.IsDefined(typeof(WeatherType), value) && value != WeatherType.Unknown)
 				{
 					Function.Call(Hash.SET_WEATHER_TYPE_NOW, _weatherNames[(int)value]);
 				}
@@ -332,7 +134,7 @@ namespace GTA
 		/// <value>
 		/// The next weather.
 		/// </value>
-		public static Weather NextWeather
+		public static WeatherType NextWeather
 		{
 			get
 			{
@@ -340,15 +142,15 @@ namespace GTA
 				{
 					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, _weatherNames[i]))
 					{
-						return (Weather)i;
+						return (WeatherType)i;
 					}
 				}
 
-				return Weather.Unknown;
+				return WeatherType.Unknown;
 			}
 			set
 			{
-				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
+				if (Enum.IsDefined(typeof(WeatherType), value) && value != WeatherType.Unknown)
 				{
 					int currentWeatherHash, nextWeatherHash;
 					float weatherTransition;
@@ -389,9 +191,9 @@ namespace GTA
 		/// </summary>
 		/// <param name="weather">The weather.</param>
 		/// <param name="duration">The duration.</param>
-		public static void TransitionToWeather(Weather weather, float duration)
+		public static void TransitionToWeather(WeatherType weather, float duration)
 		{
-			if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
+			if (Enum.IsDefined(typeof(WeatherType), weather) && weather != WeatherType.Unknown)
 			{
 				Function.Call(Hash._SET_WEATHER_TYPE_OVER_TIME, _weatherNames[(int)weather], duration);
 			}
@@ -1253,13 +1055,13 @@ namespace GTA
 		/// <summary>
 		/// Creates a <see cref="Checkpoint"/> in the world.
 		/// </summary>
-		/// <param name="icon">The <see cref="CheckpointIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
+		/// <param name="icon">The <see cref="CheckpointIconType"/> to display inside the <see cref="Checkpoint"/>.</param>
 		/// <param name="position">The position in the World.</param>
 		/// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
 		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
 		/// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
 		/// <remarks>returns <c>null</c> if the <see cref="Checkpoint"/> could not be created</remarks>
-		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
+		public static Checkpoint CreateCheckpoint(CheckpointIconType icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
 
@@ -1366,7 +1168,7 @@ namespace GTA
 		/// <param name="target">The target of the raycast.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptionsType options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash._START_SHAPE_TEST_RAY, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1378,7 +1180,7 @@ namespace GTA
 		/// <param name="maxDistance">How far the raycast should go out to.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptionsType options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
 
@@ -1393,7 +1195,7 @@ namespace GTA
 		/// <param name="radius">The radius of the raycast.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptionsType options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1406,7 +1208,7 @@ namespace GTA
 		/// <param name="maxDistance">How far the raycast should go out to.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptionsType options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
 
@@ -1418,16 +1220,16 @@ namespace GTA
 		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
 		public static RaycastResult GetCrosshairCoordinates()
 		{
-			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptions.Everything, null);
+			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptionsType.Everything, null);
 		}
 
 		/// <summary>
 		/// Determines where the crosshair intersects with the world.
 		/// </summary>
-		/// <param name="intersectOptions">Type of <see cref="IntersectOptions">environment</see> the raycast should intersect with.</param>
+		/// <param name="intersectOptions">Type of <see cref="IntersectOptionsType">environment</see> the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Prevent the raycast detecting a specific <see cref="Entity"/>.</param>
 		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
-		public static RaycastResult GetCrosshairCoordinates(IntersectOptions intersectOptions = IntersectOptions.Everything, Entity ignoreEntity = null)
+		public static RaycastResult GetCrosshairCoordinates(IntersectOptionsType intersectOptions = IntersectOptionsType.Everything, Entity ignoreEntity = null)
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), intersectOptions, ignoreEntity);
 		}

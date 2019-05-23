@@ -41,14 +41,27 @@
     <Compile Include="source\core\ScriptDomain.cs" />
     <Compile Include="source\core\Settings.cs" />
     <Compile Include="source\scripting\Game\Audio.cs" />
-    <Compile Include="source\scripting\World\Blip.cs" />
+    <Compile Include="source\scripting\Models\Game\Enums\AudioFlags.cs" />
+    <Compile Include="source\scripting\Models\Game\Enums\MusicType.cs" />
+    <Compile Include="source\scripting\Models\World\Blip.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\BlipSprite.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\BlipColor.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\CameraType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\CheckpointCustomIconStyleType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\CheckpointIconType.cs" />
     <Compile Include="source\scripting\World\Entities\Peds\BoneID.cs" />
     <Compile Include="source\scripting\Game\Button.cs" />
     <Compile Include="source\scripting\World\Camera.cs" />
     <Compile Include="source\scripting\World\Checkpoint.cs" />
     <Compile Include="source\scripting\Game\Control.cs" />
     <Compile Include="source\scripting\World\Entities\Vehicles\HandlingData.cs" />
-    <Compile Include="source\scripting\World\MaterialHash.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\IntersectOptionsType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\MarkerType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\ExplosionType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\MaterialHash.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\InvertAxisType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\PickupType.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\ParachuteTintType.cs" />
     <Compile Include="source\scripting\World\Weapons\DlcWeaponStructs.cs" />
     <Compile Include="source\scripting\World\Entities\Entity.cs" />
     <Compile Include="source\scripting\World\Entities\EntityBone.cs" />
@@ -108,7 +121,9 @@
     <Compile Include="source\scripting\World\Weapons\WeaponComponentCollection.cs" />
     <Compile Include="source\scripting\World\Weapons\WeaponHash.cs" />
     <Compile Include="source\scripting\Game\WindowTitle.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\WeatherType.cs" />
     <Compile Include="source\scripting\World\World.cs" />
+    <Compile Include="source\scripting\Models\World\Enums\ZoneIdType.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

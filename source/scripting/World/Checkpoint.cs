@@ -1,82 +1,16 @@
 using System;
 using GTA.Math;
+using GTA.Models.World.Enums;
 using GTA.Native;
 
 namespace GTA
 {
-	public enum CheckpointIcon
+    public struct CheckpointCustomIcon
 	{
-		CylinderSingleArrow,
-		CylinderDoubleArrow,
-		CylinderTripleArrow,
-		CylinderCycleArrow,
-		CylinderCheckerboard,
-		CylinderSingleArrow2,
-		CylinderDoubleArrow2,
-		CylinderTripleArrow2,
-		CylinderCycleArrow2,
-		CylinderCheckerboard2,
-		RingSingleArrow,
-		RingDoubleArrow,
-		RingTripleArrow,
-		RingCycleArrow,
-		RingCheckerboard,
-		SingleArrow,
-		DoubleArrow,
-		TripleArrow,
-		CycleArrow,
-		Checkerboard,
-		CylinderSingleArrow3,
-		CylinderDoubleArrow3,
-		CylinderTripleArrow3,
-		CylinderCycleArrow3,
-		CylinderCheckerboard3,
-		CylinderSingleArrow4,
-		CylinderDoubleArrow4,
-		CylinderTripleArrow4,
-		CylinderCycleArrow4,
-		CylinderCheckerboard4,
-		CylinderSingleArrow5,
-		CylinderDoubleArrow5,
-		CylinderTripleArrow5,
-		CylinderCycleArrow5,
-		CylinderCheckerboard5,
-		RingPlaneUp,
-		RingPlaneLeft,
-		RingPlaneRight,
-		RingPlaneDown,
-		Empty,
-		Ring,
-		Empty2,
-		//CylinderCustomShape,
-		//CylinderCustomShape2,
-		//CylinderCustomShape3,
-		Cyclinder = 45,
-		Cyclinder2,
-		Cyclinder3,
-	}
-	public enum CheckpointCustomIconStyle
-	{
-		Number,
-		SingleArrow,
-		DoubleArrow,
-		TripleArrow,
-		Ring,
-		CycleArrow,
-		Ring2,
-		RingPointer,
-		SegmentedRing,
-		Sphere,
-		Dollar,
-		QuintupleLines,
-		BeastIcon,
-	}
-	public struct CheckpointCustomIcon
-	{
-		private CheckpointCustomIconStyle _style;
+		private CheckpointCustomIconStyleType _style;
 		private byte _number;
 
-		public CheckpointCustomIconStyle Style
+		public CheckpointCustomIconStyleType Style
 		{
 			get
 			{
@@ -85,7 +19,7 @@ namespace GTA
 			set
 			{
 				_style = value;
-				if (value != CheckpointCustomIconStyle.Number)
+				if (value != CheckpointCustomIconStyleType.Number)
 				{
 					if (_number > 9)
 					{
@@ -100,12 +34,12 @@ namespace GTA
 		/// </summary>
 		/// <param name="iconStyle">The icon style.</param>
 		/// <param name="iconNumber">The icon number, 
-		/// if <paramref name="iconStyle"/> is <see cref="CheckpointCustomIconStyle.Number"/> allowed range is 0 - 99
+		/// if <paramref name="iconStyle"/> is <see cref="CheckpointCustomIconStyleType.Number"/> allowed range is 0 - 99
 		/// otherwise allowed range is 0 - 9. </param>
-		public CheckpointCustomIcon(CheckpointCustomIconStyle iconStyle, byte iconNumber)
+		public CheckpointCustomIcon(CheckpointCustomIconStyleType iconStyle, byte iconNumber)
 		{
 			//initialise them so vs doesnt complain
-			_style = CheckpointCustomIconStyle.Number;
+			_style = CheckpointCustomIconStyleType.Number;
 			_number = 0;
 
 			Style = iconStyle;
@@ -117,7 +51,7 @@ namespace GTA
 		/// </summary>
 		/// <value>
 		/// The number.
-		/// if <see cref="Style"/> is <see cref="CheckpointCustomIconStyle.Number"/> allowed range is 0 - 99
+		/// if <see cref="Style"/> is <see cref="CheckpointCustomIconStyleType.Number"/> allowed range is 0 - 99
 		/// otherwise allowed range is 0 - 9. 
 		/// </value>
 		public byte Number
@@ -128,7 +62,7 @@ namespace GTA
 			}
 			set
 			{
-				if(_style == CheckpointCustomIconStyle.Number)
+				if(_style == CheckpointCustomIconStyleType.Number)
 				{
 					if(value > 99)
 					{
@@ -140,7 +74,7 @@ namespace GTA
 				{
 					if(value > 9)
 					{
-						throw new ArgumentOutOfRangeException("The maximum number value when not using CheckpointCustomIconStyle.Number is 9");
+						throw new ArgumentOutOfRangeException("The maximum number value when not using CheckpointCustomIconStyleType.Number is 9");
 					}
 					_number = value;
 				}
@@ -150,7 +84,7 @@ namespace GTA
 
 		private byte getValue()
 		{
-			if (_style == CheckpointCustomIconStyle.Number)
+			if (_style == CheckpointCustomIconStyleType.Number)
 			{
 				return _number;
 			}
@@ -177,12 +111,12 @@ namespace GTA
 			}
 			if(value < 100)
 			{
-				c._style = CheckpointCustomIconStyle.Number;
+				c._style = CheckpointCustomIconStyleType.Number;
 				c._number = value;
 			}
 			else
 			{
-				c._style = (CheckpointCustomIconStyle)(value/10 - 9);
+				c._style = (CheckpointCustomIconStyleType)(value/10 - 9);
 				c._number = (byte)(value%10);
 			}
 			return c;
@@ -267,16 +201,16 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the icon drawn in this <see cref="Checkpoint"/>.
 		/// </summary>
-		public CheckpointIcon Icon
+		public CheckpointIconType Icon
 		{
 			get
 			{
 				IntPtr memoryAddress = MemoryAddress;
 				if (memoryAddress == IntPtr.Zero)
 				{
-					return (CheckpointIcon)0;
+					return (CheckpointIconType)0;
 				}
-				return (CheckpointIcon)MemoryAccess.ReadInt(memoryAddress + 56);
+				return (CheckpointIconType)MemoryAccess.ReadInt(memoryAddress + 56);
 			}
 			set
 			{

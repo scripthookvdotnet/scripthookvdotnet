@@ -1,23 +1,13 @@
 ﻿using System;
 using System.Drawing;
-using System.Security.Policy;
-using GTA;
 using GTA.Native;
 using GTA.Math;
+using GTA.Models.World.Enums;
 using Hash = GTA.Native.Hash;
 
 namespace GTA
 {
-	[Flags]
-	public enum InvertAxis
-	{
-		None = 0,
-		X = 1,
-		Y = 2,
-		Z = 4
-	}
-
-	public class ParticleEffectsAsset
+    public class ParticleEffectsAsset
 	{
 		#region Fields
 		private readonly string _assetName;
@@ -56,7 +46,7 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxisType invertAxis = InvertAxisType.None)
 		{
 			if (!SetNextCall())
 			{
@@ -64,7 +54,7 @@ namespace GTA
 			}
 			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y,
-				rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
+				rot.Z, scale, invertAxis.HasFlag(InvertAxisType.X), invertAxis.HasFlag(InvertAxisType.Y), invertAxis.HasFlag(InvertAxisType.Z));
 		}
 
 		/// <summary>
@@ -77,7 +67,7 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, Entity entity, Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedOnEntity(string effectName, Entity entity, Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxisType invertAxis = InvertAxisType.None)
 		{
 			if (!SetNextCall())
 			{
@@ -85,8 +75,8 @@ namespace GTA
 			}
 			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
-				rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-				invertAxis.HasFlag(InvertAxis.Z));
+				rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxisType.X), invertAxis.HasFlag(InvertAxisType.Y),
+				invertAxis.HasFlag(InvertAxisType.Z));
 		}
 
 		/// <summary>
@@ -101,7 +91,7 @@ namespace GTA
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
 		public bool StartNonLoopedOnEntity(string effectName, EntityBone entityBone,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None)
+			InvertAxisType invertAxis = InvertAxisType.None)
 		{
 			if(!SetNextCall())
 			{
@@ -109,8 +99,8 @@ namespace GTA
 			}
 			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X,
-				rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-				invertAxis.HasFlag(InvertAxis.Z));
+				rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxisType.X), invertAxis.HasFlag(InvertAxisType.Y),
+				invertAxis.HasFlag(InvertAxisType.Z));
 		}
 
 		/// <summary>
@@ -126,7 +116,7 @@ namespace GTA
 		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
 		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+			InvertAxisType invertAxis = InvertAxisType.None, bool startNow = false)
 		{
 			var result = new EntityParticleEffect(this, effectName, entity)
 			{
@@ -154,7 +144,7 @@ namespace GTA
 		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
 		public EntityParticleEffect CreateEffectOnEntity(string effectName, EntityBone entityBone,
 			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+			InvertAxisType invertAxis = InvertAxisType.None, bool startNow = false)
 		{
 			var result = new EntityParticleEffect(this, effectName, entityBone)
 			{
@@ -181,7 +171,7 @@ namespace GTA
 		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
 		/// <returns>The <see cref="CoordinateParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
 		public CoordinateParticleEffect CreateEffectAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+			InvertAxisType invertAxis = InvertAxisType.None, bool startNow = false)
 		{
 			var result = new CoordinateParticleEffect(this, effectName, pos)
 			{
@@ -286,7 +276,7 @@ namespace GTA
 		protected Color _color;
 		protected float _scale;
 		protected float _range;
-		protected InvertAxis _InvertAxis;
+		protected InvertAxisType _InvertAxis;
 		#endregion
 		internal ParticleEffect(ParticleEffectsAsset asset, string effectName)
 		{
@@ -478,7 +468,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets which axis of this <see cref="ParticleEffect"/> should be inverted.
 		/// </summary>
-		public InvertAxis InvertAxis
+		public InvertAxisType InvertAxis
 		{
 			get
 			{
@@ -597,8 +587,8 @@ namespace GTA
 			Hash hash = _entityBone.Owner is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash._START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
 
 			Handle = Function.Call<int>(hash, _effectName, _entityBone.Owner.Handle, Offset.X, Offset.Y, Offset.Z, Rotation.X,
-				Rotation.Y, Rotation.Z, _entityBone.Index, _scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
-				InvertAxis.HasFlag(InvertAxis.Z));
+				Rotation.Y, Rotation.Z, _entityBone.Index, _scale, InvertAxis.HasFlag(InvertAxisType.X), InvertAxis.HasFlag(InvertAxisType.Y),
+				InvertAxis.HasFlag(InvertAxisType.Z));
 
 			if (IsActive)
 				return true;
@@ -672,8 +662,8 @@ namespace GTA
 				return false;
 
 			Handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, _effectName, Offset.X, Offset.Y, Offset.Z, Rotation.X,
-				Rotation.Y, Rotation.Z, Scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
-				InvertAxis.HasFlag(InvertAxis.Z), false);
+				Rotation.Y, Rotation.Z, Scale, InvertAxis.HasFlag(InvertAxisType.X), InvertAxis.HasFlag(InvertAxisType.Y),
+				InvertAxis.HasFlag(InvertAxisType.Z), false);
 
 			if (IsActive)
 				return true;

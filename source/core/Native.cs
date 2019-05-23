@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Runtime.InteropServices;
+using GTA.Models.World;
 
 namespace GTA
 {

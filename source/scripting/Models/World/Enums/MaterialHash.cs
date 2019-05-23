@@ -1,4 +1,4 @@
-namespace GTA
+namespace GTA.Models.World.Enums
 {
 	public enum MaterialHash : uint
 	{

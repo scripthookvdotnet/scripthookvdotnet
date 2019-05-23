@@ -2,29 +2,11 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Drawing;
+using GTA.Models.World.Enums;
 
 namespace GTA
 {
-	public enum ParachuteTint
-	{
-		None = -1,
-		Rainbow,
-		Red,
-		SeasideStripes,
-		WidowMaker,
-		Patriot,
-		Blue,
-		Black,
-		Hornet,
-		AirFocce,
-		Desert,
-		Shadow,
-		HighAltitude,
-		Airbone,
-		Sunrise
-	}
-
-	public sealed class Player : INativeValue, IEquatable<Player>
+    public sealed class Player : INativeValue, IEquatable<Player>
 	{
 		#region Fields
 		private int _handle;
@@ -177,7 +159,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the primary parachute tint for this <see cref="Player"/>.
 		/// </summary>
-		public ParachuteTint PrimaryParachuteTint
+		public ParachuteTintType PrimaryParachuteTint
 		{
 			get
 			{
@@ -188,7 +170,7 @@ namespace GTA
 					Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &result);
 				}
 
-				return (ParachuteTint)result;
+				return (ParachuteTintType)result;
 			}
 			set
 			{
@@ -198,7 +180,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the reserve parachute tint for this <see cref="Player"/>.
 		/// </summary>
-		public ParachuteTint ReserveParachuteTint
+		public ParachuteTintType ReserveParachuteTint
 		{
 			get
 			{
@@ -209,7 +191,7 @@ namespace GTA
 					Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &result);
 				}
 
-				return (ParachuteTint)result;
+				return (ParachuteTintType)result;
 			}
 			set
 			{
