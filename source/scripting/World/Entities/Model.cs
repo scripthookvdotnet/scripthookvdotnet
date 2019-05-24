@@ -1,4 +1,5 @@
 using System;
+using GTA.Enums;
 using GTA.Math;
 using GTA.Native;
 

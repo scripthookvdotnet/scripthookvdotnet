@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using GTA.Enums;
 using GTA.Math;
-using GTA.Models.NaturalMotion.Enums;
 
 namespace GTA.NaturalMotion
 {

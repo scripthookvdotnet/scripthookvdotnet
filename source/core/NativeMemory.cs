@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using GTA.Enums;
 using static System.Runtime.InteropServices.Marshal;
 
 namespace GTA

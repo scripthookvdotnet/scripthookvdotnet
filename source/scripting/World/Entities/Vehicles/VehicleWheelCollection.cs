@@ -1,6 +1,7 @@
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using GTA.Enums;
 
 namespace GTA
 {
