@@ -1,21 +1,9 @@
-using System;
+using GTA.Enums;
 using GTA.Native;
 
 namespace GTA.UI
 {
-	/// <summary>
-	/// An enumeration of possible loading spinner styles.
-	/// </summary>
-	public enum LoadingSpinnerType
-	{
-		Clockwise1 = 1,
-		Clockwise2,
-		Clockwise3,
-		SocialClubSaving,
-		RegularClockwise
-	}
-
-	/// <summary>
+    /// <summary>
 	/// Methods to manage the display of a loading spinner prompt.
 	/// </summary>
 	public static class LoadingPrompt

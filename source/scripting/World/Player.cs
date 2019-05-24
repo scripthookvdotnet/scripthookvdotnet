@@ -2,7 +2,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Drawing;
-using GTA.Models.World.Enums;
+using GTA.Enums;
 
 namespace GTA
 {

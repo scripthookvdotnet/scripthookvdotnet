@@ -1,16 +1,11 @@
 using System;
 using System.Windows.Forms;
+using GTA.Enums;
 using GTA.Native;
 
 namespace GTA
 {
-	public enum InputMethod
-	{
-		MouseAndKeyboard = 0,
-		GamePad = 2
-	}
-
-	public static class Game
+    public static class Game
 	{
 		#region Fields
 		internal static readonly string[] _radioNames = {
@@ -388,15 +383,15 @@ namespace GTA
 			return Function.Call<bool>((Hash)0x557E43C447E700A8, GenerateHash(cheat));
 		}
 		/// <summary>
-		/// Gets whether a specific sequence of <see cref="Button"/>s has been pressed.
+		/// Gets whether a specific sequence of <see cref="ButtonType"/>s has been pressed.
 		/// </summary>
-		/// <param name="buttons">The sequence of <see cref="Button"/>s in the order the user should enter them in-game.</param>
+		/// <param name="buttons">The sequence of <see cref="ButtonType"/>s in the order the user should enter them in-game.</param>
 		/// <returns><c>true</c> if the combination was just entered; otherwise, <c>false</c></returns>
 		/// <remarks>
-		/// There must be between 6 and 29 inclusive <see cref="Button"/>s otherwise an <see cref="ArgumentException"/> is thrown.
+		/// There must be between 6 and 29 inclusive <see cref="ButtonType"/>s otherwise an <see cref="ArgumentException"/> is thrown.
 		/// It only works for GamePad inputs. The in-game cheat combinations use the same system.
 		/// </remarks>
-		public static bool WasButtonCombinationJustEntered(params Button[] buttons)
+		public static bool WasButtonCombinationJustEntered(params ButtonType[] buttons)
 		{
 			if (buttons.Length < 6 || buttons.Length > 29)
 			{
@@ -405,7 +400,7 @@ namespace GTA
 
 			uint hash = 0;
 
-			foreach (Button button in buttons)
+			foreach (ButtonType button in buttons)
 			{
 				hash += (uint)button;
 				hash += (hash << 10);
@@ -430,39 +425,39 @@ namespace GTA
 			}
 		}
 
-		/// <summary>
-		/// Gets an analog value of a <see cref="Control"/> input.
-		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns>The <see cref="Control"/> value.</returns>
-		public static int GetControlValue(Control control)
+        /// <summary>
+        /// Gets an analog value of a <see cref="ControlType"/> input.
+        /// </summary>
+        /// <param name="control">The <see cref="ControlType"/> to check.</param>
+        /// <returns>The <see cref="ControlType"/> value.</returns>
+        public static int GetControlValue(ControlType control)
 		{
 			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, control);
 		}
 		/// <summary>
-		/// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
+		/// Gets an analog value of a <see cref="ControlType"/> input between -1.0f and 1.0f.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns>The normalized <see cref="Control"/> value.</returns>
-		public static float GetControlValueNormalized(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns>The normalized <see cref="ControlType"/> value.</returns>
+		public static float GetControlValueNormalized(ControlType control)
 		{
 			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, control);
 		}
 		/// <summary>
-		/// Gets an analog value of a disabled <see cref="Control"/> input between -1.0f and 1.0f.
+		/// Gets an analog value of a disabled <see cref="ControlType"/> input between -1.0f and 1.0f.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns>The normalized <see cref="Control"/> value.</returns>
-		public static float GetDisabledControlValueNormalized(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns>The normalized <see cref="ControlType"/> value.</returns>
+		public static float GetDisabledControlValueNormalized(ControlType control)
 		{
 			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, control);
 		}
 		/// <summary>
-		/// Override a <see cref="Control"/> by giving it a user-defined value this frame.
+		/// Override a <see cref="ControlType"/> by giving it a user-defined value this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
 		/// <param name="value">the value to set the control to.</param>
-		public static void SetControlValueNormalized(Control control, float value)
+		public static void SetControlValueNormalized(ControlType control, float value)
 		{
 			Function.Call(Hash._SET_CONTROL_NORMAL, 0, control, value);
 		}
@@ -476,94 +471,94 @@ namespace GTA
 			return ScriptDomain.CurrentDomain.IsKeyPressed(key);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> is currently pressed.
+		/// Gets whether a <see cref="ControlType"/> is currently pressed.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
-		public static bool IsControlPressed(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> is pressed; otherwise, <c>false</c></returns>
+		public static bool IsControlPressed(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> was just pressed this frame
+		/// Gets whether a <see cref="ControlType"/> was just pressed this frame
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
-		public static bool IsControlJustPressed(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> was just pressed this frame; otherwise, <c>false</c></returns>
+		public static bool IsControlJustPressed(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> was just released this frame
+		/// Gets whether a <see cref="ControlType"/> was just released this frame
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
-		public static bool IsControlJustReleased(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> was just released this frame; otherwise, <c>false</c></returns>
+		public static bool IsControlJustReleased(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> is enabled and currently pressed.
+		/// Gets whether a <see cref="ControlType"/> is enabled and currently pressed.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
-		public static bool IsEnabledControlPressed(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> is pressed; otherwise, <c>false</c></returns>
+		public static bool IsEnabledControlPressed(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
+		/// Gets whether a <see cref="ControlType"/> is enabled and was just pressed this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
-		public static bool IsEnabledControlJustPressed(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> was just pressed this frame; otherwise, <c>false</c></returns>
+		public static bool IsEnabledControlJustPressed(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
+		/// Gets whether a <see cref="ControlType"/> is enabled and was just released this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
-		public static bool IsEnabledControlJustReleased(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> was just released this frame; otherwise, <c>false</c></returns>
+		public static bool IsEnabledControlJustReleased(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, control);
 		}
 
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> is enabled or disabled this frame.
+		/// Gets whether a <see cref="ControlType"/> is enabled or disabled this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> is Enabled; otherwise, <c>false</c></returns>
-		public static bool IsControlEnabled(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to check.</param>
+		/// <returns><c>true</c> if the <see cref="ControlType"/> is Enabled; otherwise, <c>false</c></returns>
+		public static bool IsControlEnabled(ControlType control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, control);
 		}
 		/// <summary>
-		/// Makes the engine respond to the given <see cref="Control"/> this frame.
+		/// Makes the engine respond to the given <see cref="ControlType"/> this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to enable..</param>
-		public static void EnableControlThisFrame(Control control)
+		/// <param name="control">The <see cref="ControlType"/> to enable..</param>
+		public static void EnableControlThisFrame(ControlType control)
 		{
 			Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, control, true);
 		}
 		/// <summary>
-		/// Makes the engine ignore input from the given <see cref="Control"/> this frame.
+		/// Makes the engine ignore input from the given <see cref="ControlType"/> this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/>.</param>
-		public static void DisableControlThisFrame(Control control)
+		/// <param name="control">The <see cref="ControlType"/>.</param>
+		public static void DisableControlThisFrame(ControlType control)
 		{
 			Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, control, true);
 		}
 		/// <summary>
-		/// Enables all <see cref="Control"/>s this frame.
+		/// Enables all <see cref="ControlType"/>s this frame.
 		/// </summary>
 		public static void EnableAllControlsThisFrame()
 		{
 			Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, 0);
 		}
 		/// <summary>
-		/// Disables all <see cref="Control"/>s this frame.
+		/// Disables all <see cref="ControlType"/>s this frame.
 		/// </summary>
 		public static void DisableAllControlsThisFrame()
 		{

@@ -1,86 +1,9 @@
-using System;
+using GTA.Enums;
 using GTA.Native;
 
 namespace GTA.UI
 {
-	/// <summary>
-	/// An enumeration of all possible component of the HUD.
-	/// </summary>
-	public enum HudComponent
-	{
-		WantedStars = 1,
-		WeaponIcon,
-		Cash,
-		MpCash,
-		MpMessage,
-		VehicleName,
-		AreaName,
-		Unused,
-		StreetName,
-		HelpText,
-		FloatingHelpText1,
-		FloatingHelpText2,
-		CashChange,
-		Reticle,
-		SubtitleText,
-		RadioStationsWheel,
-		Saving,
-		GamingStreamUnusde,
-		WeaponWheel,
-		WeaponWheelStats,
-		DrugsPurse01,
-		DrugsPurse02,
-		DrugsPurse03,
-		DrugsPurse04,
-		MpTagCashFromBank,
-		MpTagPackages,
-		MpTagCuffKeys,
-		MpTagDownloadData,
-		MpTagIfPedFollowing,
-		MpTagKeyCard,
-		MpTagRandomObject,
-		MpTagRemoteControl,
-		MpTagCashFromSafe,
-		MpTagWeaponsPackage,
-		MpTagKeys,
-		MpVehicle,
-		MpVehicleHeli,
-		MpVehiclePlane,
-		PlayerSwitchAlert,
-		MpRankBar,
-		DirectorMode,
-		ReplayController,
-		ReplayMouse,
-		ReplayHeader,
-		ReplayOptions,
-		ReplayHelpText,
-		ReplayMiscText,
-		ReplayTopLine,
-		ReplayBottomLine,
-		ReplayLeftBar,
-		ReplayTimer
-	}
-
-	/// <summary>
-	/// An enumeration of all possible cursor sprites.
-	/// </summary>
-	public enum CursorSprite
-	{
-		Normal = 1,
-		LightArrow,
-		OpenHand,
-		GrabHand,
-		MiddleFinger,
-		LeftArrow,
-		RightArrow,
-		UpArrow,
-		DownArrow,
-		HorizontalDoubleArrow,
-		NormalWithPlus,
-		NormalWithMinus
-	}
-
-	/// <summary>
+    /// <summary>
 	/// Methods to manipulate the HUD (heads-up-display) of the game.
 	/// </summary>
 	public static class Hud

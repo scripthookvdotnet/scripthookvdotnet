@@ -1,105 +1,10 @@
-using System;
-using GTA;
+using System.Threading.Tasks;
 using GTA.Math;
+using GTA.Models.NaturalMotion.Enums;
 
 namespace GTA.NaturalMotion
 {
-	public enum ArmDirection
-	{
-		Backwards = -1,
-		Adaptive,
-		Forwards
-	}
-
-	public enum AnimSource
-	{
-		CurrentItems,
-		PreviousItems,
-		AnimItems
-	}
-
-	public enum FallType
-	{
-		RampDownStiffness,
-		DontChangeStep,
-		ForceBalance,
-		Slump
-	}
-
-	public enum Synchroisation
-	{
-		NotSynced,
-		AlwaysSynced,
-		SyncedAtStart
-	}
-
-	public enum TurnType
-	{
-		DontTurn,
-		ToTarget,
-		AwayFromTarget
-	}
-
-	public enum TorqueMode
-	{
-		Disabled,
-		Proportional,
-		Additive
-	}
-
-	public enum TorqueSpinMode
-	{
-		FromImpulse,
-		Random,
-		Flipping
-	}
-
-	public enum TorqueFilterMode
-	{
-		ApplyEveryBullet,
-		ApplyIfLastFinished,
-		ApplyIfSpinDifferent
-	}
-
-	public enum RbTwistAxis
-	{
-		WorldUp,
-		CharacterComUp
-	}
-
-	public enum WeaponMode
-	{
-		None = -1,
-		Pistol,
-		Dual,
-		Rifle,
-		SideArm,
-		PistolLeft,
-		PistolRight
-	}
-
-	public enum Hand
-	{
-		Left,
-		Right
-	}
-
-	public enum MirrorMode
-	{
-		Independant,
-		Mirrored,
-		Parallel
-	}
-
-	public enum AdaptiveMode
-	{
-		NotAdaptive,
-		OnlyDirection,
-		DirectionAndSpeed,
-		DirectionSpeedAndStrength
-	}
-
-	public sealed class ActivePoseHelper : CustomHelper
+    public sealed class ActivePoseHelper : CustomHelper
 	{
 		/// <summary>
 		/// Creates a new Instance of the ActivePoseHelper for sending a ActivePose <see cref="Message"/> to a given <see cref="Ped"/>. 
@@ -8533,7 +8438,7 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		/// <remarks>
 		/// Default value = <see cref="MirrorMode.Mirrored"/>.
-		/// If <see cref="MirrorMode.Parallel"/> leftArm parameters are used.
+		/// If <see cref="Parallel"/> leftArm parameters are used.
 		/// </remarks>
 		public MirrorMode MirrorMode
 		{

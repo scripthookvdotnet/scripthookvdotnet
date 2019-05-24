@@ -1,5 +1,5 @@
+using GTA.Enums;
 using GTA.Math;
-using GTA.Models.World.Enums;
 using GTA.Native;
 
 namespace GTA

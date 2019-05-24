@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
+using GTA.Enums;
+using GTA.Models.UI;
 using GTA.Native;
 
 namespace GTA.UI
 {
-	public enum Alignment
-	{
-		Center = 0,
-		Left = 1,
-		Right = 2,
-	}
-
-	public class TextElement : IElement
+    public class TextElement : IElement
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextElement"/> class used for drawing text on the screen.
@@ -23,7 +18,7 @@ namespace GTA.UI
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="TextElement"/>.</param>
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="TextElement"/>, for no scaling use 1.0f.</param>	
 		public TextElement(string caption, PointF position, float scale) :
-			this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
+			this(caption, position, scale, Color.WhiteSmoke, Enums.Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
@@ -34,7 +29,7 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="TextElement"/>, for no scaling use 1.0f.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>							 	
 		public TextElement(string caption, PointF position, float scale, Color color) :
-			this(caption, position, scale, color, Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
+			this(caption, position, scale, color, Enums.Font.ChaletLondon, Alignment.Left, false, false, 0.0f)
 		{
 		}
 		/// <summary>
@@ -45,7 +40,7 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="TextElement"/>, for no scaling use 1.0f.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>	
-		public TextElement(string caption, PointF position, float scale, Color color, Font font) :
+		public TextElement(string caption, PointF position, float scale, Color color, Enums.Font font) :
 			this(caption, position, scale, color, font, Alignment.Left, false, false, 0.0f)
 		{
 		}
@@ -57,8 +52,8 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="TextElement"/>, for no scaling use 1.0f.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
-		public TextElement(string caption, PointF position, float scale, Color color, Font font, Alignment alignment) :
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="Enums.Alignment.Left"/>,<see cref="Enums.Alignment.Center"/> or <see cref="Enums.Alignment.Right"/>.</param>
+		public TextElement(string caption, PointF position, float scale, Color color, Enums.Font font, Alignment alignment) :
 			this(caption, position, scale, color, font, alignment, false, false, 0.0f)
 		{
 		}
@@ -70,10 +65,10 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="TextElement"/>, for no scaling use 1.0f.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="Enums.Alignment.Left"/>,<see cref="Enums.Alignment.Center"/> or <see cref="Enums.Alignment.Right"/>.</param>
 		/// <param name="shadow">Sets whether or not to draw the <see cref="TextElement"/> with a <see cref="Shadow"/> effect.</param>
 		/// <param name="outline">Sets whether or not to draw the <see cref="TextElement"/> with an <see cref="Outline"/> around the letters.</param>	
-		public TextElement(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline) :
+		public TextElement(string caption, PointF position, float scale, Color color, Enums.Font font, Alignment alignment, bool shadow, bool outline) :
 			this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
 		{
 		}
@@ -85,11 +80,11 @@ namespace GTA.UI
 		/// <param name="scale">Sets a <see cref="Scale"/> used to increase of decrease the size of the <see cref="TextElement"/>, for no scaling use 1.0f.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>							 
 		/// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
-		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
+		/// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="Enums.Alignment.Left"/>,<see cref="Enums.Alignment.Center"/> or <see cref="Enums.Alignment.Right"/>.</param>
 		/// <param name="shadow">Sets whether or not to draw the <see cref="TextElement"/> with a <see cref="Shadow"/> effect.</param>
 		/// <param name="outline">Sets whether or not to draw the <see cref="TextElement"/> with an <see cref="Outline"/> around the letters.</param>
 		/// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="TextElement"/> on the next line down.</param>											 																	  
-		public TextElement(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline, float wrapWidth)
+		public TextElement(string caption, PointF position, float scale, Color color, Enums.Font font, Alignment alignment, bool shadow, bool outline, float wrapWidth)
 		{
 			_pinnedText = new List<IntPtr>();
 			Enabled = true;
@@ -153,7 +148,7 @@ namespace GTA.UI
 		/// <value>
 		/// The GTA Font use when drawing.
 		/// </value>
-		public Font Font { get; set; }
+		public Enums.Font Font { get; set; }
 		/// <summary>
 		/// Gets or sets the text to draw in this <see cref="TextElement"/>.
 		/// </summary>
@@ -271,12 +266,12 @@ namespace GTA.UI
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
-		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
+		/// <param name="font">The <see cref="Enums.Font"/> of the textu to measure.</param>
 		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled on a 1280 pixel width base
 		/// </returns>
-		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
+		public static float GetStringWidth(string text, Enums.Font font = Enums.Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
 			Function.PushLongString(text);
@@ -289,12 +284,12 @@ namespace GTA.UI
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
-		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
+		/// <param name="font">The <see cref="Enums.Font"/> of the textu to measure.</param>
 		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled by the pixel width base return in <see cref="Screen.ScaledWidth"/>
 		/// </returns>
-		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
+		public static float GetScaledStringWidth(string text, Enums.Font font = Enums.Font.ChaletLondon, float scale = 1.0f)
 		{
 			Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
 			Function.PushLongString(text);

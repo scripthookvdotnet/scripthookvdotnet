@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using GTA.Enums;
 using GTA.Math;
 using GTA.Native;
 

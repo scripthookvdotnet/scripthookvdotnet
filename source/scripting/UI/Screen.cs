@@ -1,99 +1,12 @@
 using System;
 using System.Drawing;
+using GTA.Enums;
 using GTA.Math;
 using GTA.Native;
 
 namespace GTA.UI
 {
-	/// <summary>
-	/// An enumeration of possible screen effects.
-	/// </summary>
-	public enum ScreenEffect
-	{
-		SwitchHudIn,
-		SwitchHudOut,
-		FocusIn,
-		FocusOut,
-		MinigameEndNeutral,
-		MinigameEndTrevor,
-		MinigameEndFranklin,
-		MinigameEndMichael,
-		MinigameTransitionOut,
-		MinigameTransitionIn,
-		SwitchShortNeutralIn,
-		SwitchShortFranklinIn,
-		SwitchShortTrevorIn,
-		SwitchShortMichaelIn,
-		SwitchOpenMichaelIn,
-		SwitchOpenFranklinIn,
-		SwitchOpenTrevorIn,
-		SwitchHudMichaelOut,
-		SwitchHudFranklinOut,
-		SwitchHudTrevorOut,
-		SwitchShortFranklinMid,
-		SwitchShortMichaelMid,
-		SwitchShortTrevorMid,
-		DeathFailOut,
-		CamPushInNeutral,
-		CamPushInFranklin,
-		CamPushInMichael,
-		CamPushInTrevor,
-		SwitchSceneFranklin,
-		SwitchSceneTrevor,
-		SwitchSceneMichael,
-		SwitchSceneNeutral,
-		MpCelebWin,
-		MpCelebWinOut,
-		MpCelebLose,
-		MpCelebLoseOut,
-		DeathFailNeutralIn,
-		DeathFailMpDark,
-		DeathFailMpIn,
-		MpCelebPreloadFade,
-		PeyoteEndOut,
-		PeyoteEndIn,
-		PeyoteIn,
-		PeyoteOut,
-		MpRaceCrash,
-		SuccessFranklin,
-		SuccessTrevor,
-		SuccessMichael,
-		DrugsMichaelAliensFightIn,
-		DrugsMichaelAliensFight,
-		DrugsMichaelAliensFightOut,
-		DrugsTrevorClownsFightIn,
-		DrugsTrevorClownsFight,
-		DrugsTrevorClownsFightOut,
-		HeistCelebPass,
-		HeistCelebPassBw,
-		HeistCelebEnd,
-		HeistCelebToast,
-		MenuMgHeistIn,
-		MenuMgTournamentIn,
-		MenuMgSelectionIn,
-		ChopVision,
-		DmtFlightIntro,
-		DmtFlight,
-		DrugsDrivingIn,
-		DrugsDrivingOut,
-		SwitchOpenNeutralFib5,
-		HeistLocate,
-		MpJobLoad,
-		RaceTurbo,
-		MpIntroLogo,
-		HeistTripSkipFade,
-		MenuMgHeistOut,
-		MpCoronaSwitch,
-		MenuMgSelectionTint,
-		SuccessNeutral,
-		ExplosionJosh3,
-		SniperOverlay,
-		RampageOut,
-		Rampage,
-		DontTazemeBro,
-	}
-
-	/// <summary>
+    /// <summary>
 	/// Methods to handle UI actions that affect the whole screen.
 	/// </summary>
 	public static class Screen

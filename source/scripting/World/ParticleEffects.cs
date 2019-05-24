@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using GTA.Enums;
 using GTA.Native;
 using GTA.Math;
-using GTA.Models.World.Enums;
 using Hash = GTA.Native.Hash;
 
 namespace GTA

@@ -4,8 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using GTA.Models.World;
-using GTA.Models.World.Enums;
+using GTA.Enums;
 
 namespace GTA
 {

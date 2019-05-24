@@ -65,7 +65,7 @@ namespace GTA
 		/// Plays music from the game's music files.
 		/// </summary>
 		/// <param name="musicFile">The music file to play.</param>
-		public static void PlayMusic(MusicType musicFile)
+		public static void PlayMusic(MusicFile musicFile)
 		{
 			Function.Call(Hash.TRIGGER_MUSIC_EVENT, musicFile);
 		}
@@ -73,7 +73,7 @@ namespace GTA
 		/// Cancels playing a music file.
 		/// </summary>
 		/// <param name="musicFile">The music file to stop.</param>
-		public static void StopMusic(MusicType musicFile)
+		public static void StopMusic(MusicFile musicFile)
 		{
 			Function.Call(Hash.CANCEL_MUSIC_EVENT, musicFile);
 		}
