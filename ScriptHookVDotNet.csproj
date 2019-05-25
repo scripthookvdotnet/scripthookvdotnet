@@ -39,6 +39,9 @@
     <Compile Include="source\core\NativeMemory.cs" />
     <Compile Include="source\core\Script.cs" />
     <Compile Include="source\core\ScriptDomain.cs" />
+    <Compile Include="source\core\ScriptHookVersion\InvalidVersionException.cs" />
+    <Compile Include="source\core\ScriptHookVersion\ScriptHookVersionAttribute.cs" />
+    <Compile Include="source\core\ScriptHookVersion\ScriptHookVersionComparer.cs" />
     <Compile Include="source\core\Settings.cs" />
     <Compile Include="source\scripting\Game\Audio.cs" />
     <Compile Include="source\scripting\Game\Enums\InputMethod.cs" />
@@ -146,7 +149,9 @@
     <Compile Include="source\scripting\World\World.cs" />
     <Compile Include="source\scripting\World\Enums\ZoneIdType.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -395,19 +395,26 @@ namespace GTA
 
 			Log("[INFO]", "Instantiating script '", scriptType.FullName, "' ...");
 
-			try
-			{
-				return (Script)(Activator.CreateInstance(scriptType));
-			}
-			catch (MissingMethodException)
-			{
-				Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "' because no public default constructor was found.");
-			}
-			catch (TargetInvocationException ex)
-			{
-				Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "' because constructor threw an exception:", Environment.NewLine, ex.InnerException.ToString());
-			}
-			catch (Exception ex)
+            try
+            {
+                
+                return (Script) (Activator.CreateInstance(scriptType));
+            }
+            catch (MissingMethodException)
+            {
+                Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName,
+                    "' because no public default constructor was found.");
+            }
+            catch (TargetInvocationException ex)
+            {
+                Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName,
+                    "' because constructor threw an exception:", Environment.NewLine, ex.InnerException.ToString());
+            }
+            catch (InvalidVersionException ex)
+            {
+                Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "':", Environment.NewLine, ex.ToString());
+            }
+            catch (Exception ex)
 			{
 				Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "':", Environment.NewLine, ex.ToString());
 			}
@@ -421,6 +428,23 @@ namespace GTA
 
 			return null;
 		}
+
+        internal static bool CheckRequiredVersionOfScript(Script script)
+        {
+            var scriptType = script.GetType();
+            var customAttribute = scriptType.GetCustomAttribute(typeof(ScriptHookVersionAttribute));
+            if (customAttribute != null)
+            {
+                Log("[INFO]", $"Attribute found: '{customAttribute.GetType()}'");
+                var versionAttribute = customAttribute as ScriptHookVersionAttribute;
+                if (versionAttribute != null)
+                {
+                    Log("[INFO]", $"Required version of the script is '{versionAttribute.MinRequiredVersion}'");
+                    return versionAttribute.CompareToAssemblyVersion() >= 0;
+                }
+            }
+            return false;
+        }
 
 		internal static bool SortScripts(ref List<Tuple<string, Type>> scriptTypes)
 		{
@@ -524,8 +548,8 @@ namespace GTA
 				{
 					continue;
 				}
-
-				script.Start();
+                
+                script.Start();
 			}
 		}
 		public void StartAllScripts()
@@ -572,7 +596,7 @@ namespace GTA
 						continue;
 					}
 
-					script.Start();
+                    script.Start();
 				}
 			}
 		}
@@ -622,7 +646,24 @@ namespace GTA
 				return;
 			}
 
-			domain.Console.RegisterCommands(script.GetType());
+            try
+            {
+                var scriptType = script.GetType();
+                Log("[INFO]", "Getting the required version of scripthookvdotnet of the script '", scriptType.FullName,
+                    "' ...");
+                if (!CheckRequiredVersionOfScript(script))
+                {
+                    Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName,
+                        "' because the required version of scripthookvdotnet is higher then the installed version of scripthookvdotnet.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("[ERROR]", ex.ToString());
+
+            }
+            domain.Console.RegisterCommands(script.GetType());
 
 			Log("[INFO]", "Started script '", script.Name, "'.");
 		}
