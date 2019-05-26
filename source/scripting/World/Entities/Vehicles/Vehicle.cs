@@ -791,13 +791,13 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7E4 : 0x7D4;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x804 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x824 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x834 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x854 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x874 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x8C4 : offset;
+                int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7E4 : 0x7D4;
+                offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x804 : offset;
+                offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x824 : offset;
+                offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x834 : offset;
+                offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x854 : offset;
+                offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x874 : offset;
+                offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x8C0 : offset;
 
 				return MemoryAccess.ReadFloat(MemoryAddress + offset);
 			}
