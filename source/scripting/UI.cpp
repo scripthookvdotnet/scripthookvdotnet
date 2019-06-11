@@ -30,6 +30,28 @@ namespace GTA
 		return gcnew Notification(Native::Function::Call<int>(Native::Hash::_DRAW_NOTIFICATION, blinking, 1));
 	}
 
+	void UI::ShowHelpMessage(String ^message)
+	{
+		ShowHelpMessage(message, 5000, true);
+	}
+
+	void UI::ShowHelpMessage(String ^message, bool sound)
+	{
+		ShowHelpMessage(message, 5000, sound);
+	}
+
+	void UI::ShowHelpMessage(String ^message, int duration)
+	{
+		ShowHelpMessage(message, duration, true);
+	}
+
+	void UI::ShowHelpMessage(String ^message, int duration, bool sound)
+	{
+		Native::Function::Call(Native::Hash::_SET_TEXT_COMPONENT_FORMAT, "STRING");
+		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, message);
+		Native::Function::Call(Native::Hash::_DISPLAY_HELP_TEXT_FROM_STRING_LABEL, 0, false, sound, duration);
+	}
+
 	void UI::ShowSubtitle(String ^message)
 	{
 		ShowSubtitle(message, 2500);
