@@ -48,7 +48,7 @@ namespace GTA
 	void UI::ShowHelpMessage(String ^message, int duration, bool sound)
 	{
 		Native::Function::Call(Native::Hash::_SET_TEXT_COMPONENT_FORMAT, "STRING");
-		Native::Function::Call(Native::Hash::_ADD_TEXT_COMPONENT_STRING, message);
+		Native::Function::PushLongString(message);
 		Native::Function::Call(Native::Hash::_DISPLAY_HELP_TEXT_FROM_STRING_LABEL, 0, false, sound, duration);
 	}
 
