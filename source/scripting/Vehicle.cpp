@@ -220,6 +220,9 @@ namespace GTA
 		case VehicleLandingGear::Retracted:
 			state = 3;
 			break;
+		case VehicleLandingGear::Broken:
+			state = 4;
+			break;
 		default:
 			return;
 		}

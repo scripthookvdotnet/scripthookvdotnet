@@ -199,6 +199,7 @@ namespace GTA
 		Closing = 1,
 		Opening = 3,
 		Retracted = 4,
+		Broken = 5,
 	};
 	public enum class VehicleMod
 	{
