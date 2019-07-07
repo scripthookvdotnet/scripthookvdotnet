@@ -220,7 +220,7 @@ namespace GTA
 	{
 		Deployed,
 		Closing,
-		Opening,
+		Opening = 3,
 		Retracted
 	}
 	public enum VehicleLockStatus
@@ -2081,7 +2081,26 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.CONTROL_LANDING_GEAR, Handle, value);
+				int state = 0;
+				switch (value)
+				{
+					case VehicleLandingGearState.Closing:
+						state = 0;
+						break;
+					case VehicleLandingGearState.Opening:
+						state = 1;
+						break;
+					case VehicleLandingGearState.Deployed:
+						state = 2;
+						break;
+					case VehicleLandingGearState.Retracted:
+						state = 3;
+						break;
+					default:
+						return;
+				}
+
+				Function.Call(Hash.CONTROL_LANDING_GEAR, Handle, state);
 			}
 		}
 		public VehicleRoofState RoofState
