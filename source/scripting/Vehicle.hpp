@@ -197,8 +197,8 @@ namespace GTA
 	{
 		Deployed = 0,
 		Closing = 1,
-		Opening = 2,
-		Retracted = 3,
+		Opening = 3,
+		Retracted = 4,
 	};
 	public enum class VehicleMod
 	{

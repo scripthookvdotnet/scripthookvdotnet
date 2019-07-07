@@ -205,7 +205,26 @@ namespace GTA
 	}
 	void Vehicle::LandingGear::set(VehicleLandingGear value)
 	{
-		Native::Function::Call(Native::Hash::_SET_VEHICLE_LANDING_GEAR, Handle, static_cast<int>(value));
+		int state = 0;
+		switch (value)
+		{
+		case VehicleLandingGear::Closing:
+			state = 0;
+			break;
+		case VehicleLandingGear::Opening:
+			state = 1;
+			break;
+		case VehicleLandingGear::Deployed:
+			state = 2;
+			break;
+		case VehicleLandingGear::Retracted:
+			state = 3;
+			break;
+		default:
+			return;
+		}
+
+		Native::Function::Call(Native::Hash::_SET_VEHICLE_LANDING_GEAR, Handle, state);
 	}
 	VehicleLockStatus Vehicle::LockStatus::get()
 	{
