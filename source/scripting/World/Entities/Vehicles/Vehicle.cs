@@ -221,7 +221,8 @@ namespace GTA
 		Deployed,
 		Retracting,
 		Deploying = 3,
-		Retracted
+		Retracted,
+		Broken
 	}
 	public enum VehicleLockStatus
 	{
@@ -2095,6 +2096,9 @@ namespace GTA
 						break;
 					case VehicleLandingGearState.Retracted:
 						state = 3;
+						break;
+					case VehicleLandingGearState.Broken:
+						state = 4;
 						break;
 					default:
 						return;
