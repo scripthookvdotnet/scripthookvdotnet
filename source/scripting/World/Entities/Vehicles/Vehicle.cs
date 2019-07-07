@@ -219,8 +219,8 @@ namespace GTA
 	public enum VehicleLandingGearState
 	{
 		Deployed,
-		Closing,
-		Opening = 3,
+		Retracting,
+		Deploying = 3,
 		Retracted
 	}
 	public enum VehicleLockStatus
@@ -2084,10 +2084,10 @@ namespace GTA
 				int state = 0;
 				switch (value)
 				{
-					case VehicleLandingGearState.Closing:
+					case VehicleLandingGearState.Deploying:
 						state = 0;
 						break;
-					case VehicleLandingGearState.Opening:
+					case VehicleLandingGearState.Retracting:
 						state = 1;
 						break;
 					case VehicleLandingGearState.Deployed:
