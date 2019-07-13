@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="NativeGen|x64">
+      <Configuration>NativeGen</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B2933D8F-F922-40BD-BB70-18622A81AB8F}</ProjectGuid>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>SHVDN</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- Global configuration settings -->
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <!-- Support for VS2017 and VS2019 -->
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+    <ExtensionsToDeleteOnClean>*.netmodule;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
+  </PropertyGroup>
+  <!-- Specific configuration settings -->
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Release'">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <LinkIncremental>false</LinkIncremental>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='NativeGen'">
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <!-- Global compilation settings -->
+  <PropertyGroup>
+    <TargetExt>.asi</TargetExt>
+    <TargetName>ScriptHookVDotNet</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalUsingDirectories>$(IntDir);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'==''">SHVDN_VERSION="0.0.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'!=''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <CsCompile>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </CsCompile>
+    <Link>
+      <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ScriptHookV.lib;$(IntDir)$(TargetName).netmodule;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Specific compilation settings -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <CsCompile>
+      <Optimize>false</Optimize>
+      <NoWarn>1591;%(NoWarn)</NoWarn>
+    </CsCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <CsCompile>
+      <Optimize>true</Optimize>
+      <NoWarn>1591;%(NoWarn)</NoWarn>
+    </CsCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='NativeGen|x64'">
+    <PreBuildEvent>
+      <Command>tools\NativeGen.exe source\core\NativeHashes.cs</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" />
+  </ItemGroup>
+  <!-- Assembly references and source files -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\core\DllMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="source\core\Console.cs" />
+    <CsCompile Include="source\core\Log.cs" />
+    <CsCompile Include="source\core\NativeFunc.cs" />
+    <CsCompile Include="source\core\NativeMemory.cs" />
+    <CsCompile Include="source\core\Script.cs" />
+    <CsCompile Include="source\core\ScriptDomain.cs" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Compile C# source files -->
+  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
+    <Csc Sources="@(CsCompile)" TargetType="Module" Optimize="%(CsCompile.Optimize)" LangVersion="%(CsCompile.LangVersion)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" />
+  </Target>
+  <!-- Verify SDK files exist before generating anything -->
+  <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
+    <ItemGroup>
+      <!-- Look for the header files and the library -->
+      <SDKFiles Include="sdk\inc\*.h" />
+      <SDKLib Include="sdk\lib\*.lib" />
+    </ItemGroup>
+    <PropertyGroup>
+      <!-- Make sure all necessary files are present -->
+      <SDKFilesMissing>false</SDKFilesMissing>
+      <SDKFilesMissing Condition="'@(SDKFiles)'=='' or '@(SDKLib)'==''">true</SDKFilesMissing>
+    </PropertyGroup>
+    <Error Text="ScriptHookV SDK files not found. Please copy the SDK files into the 'sdk' folder and try again." Condition="$(SDKFilesMissing)" />
+  </Target>
+</Project>

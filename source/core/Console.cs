@@ -28,9 +28,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using GTA.Native;
 
-namespace GTA
+namespace SHVDN
 {
 	//Used to describe console args (Needed for creating a Help-func)
 	internal class ConsoleArg
@@ -79,30 +78,29 @@ namespace GTA
 		}
 	};
 
-	internal class ConsoleScript : Script
+	public class Console
 	{
-		#region StaticFields
-		int _page;
-		int _cursorPos;
-		int _commandPos;
-		string _input;
+		internal static Console Instance { get; set; } = new Console();
+
+		int cursorPos = 0;
+		int commandPos = -1;
+		int currentPage = 1;
+		bool isOpen = false;
+		string input = string.Empty;
+
+		List<string> lineHistory = new List<String>();
+		List<string> commandHistory = new List<String>();
+
 		DateTime _lastClosed;
-		LinkedList<string> _lines;
-		List<string> _commandHistory;
 		Regex _getEachWordRegex = new Regex(@"[^\W_]+", RegexOptions.Compiled);
 
 		Task<Assembly> _compilerTask;
-		ConcurrentQueue<string[]> _outputQueue;
-		Dictionary<string, List<Tuple<ConsoleCommand, MethodInfo>>> _commands;
+		ConcurrentQueue<string[]> _outputQueue = new ConcurrentQueue<string[]>();
+		Dictionary<string, List<Tuple<ConsoleCommand, MethodInfo>>> _commands = new Dictionary<String, List<Tuple<ConsoleCommand, MethodInfo>>>();
 
-		System.CodeDom.Compiler.CodeDomProvider _compiler;
-		System.CodeDom.Compiler.CompilerParameters _compilerOptions;
-
-		Keys PageUpKey;
-		Keys PageDownKey;
-		Keys ToggleKey;
-
-		static int DefaultFont = 0; //Chalet London :>
+		Keys PageUpKey = Keys.F3;
+		Keys PageDownKey = Keys.PageDown;
+		Keys ToggleKey = Keys.PageUp;
 
 		static readonly Color InputColor = Color.White;
 		static readonly Color InputColorBusy = Color.DarkGray;
@@ -111,95 +109,33 @@ namespace GTA
 		static readonly Color BackgroundColor = Color.FromArgb(200, Color.Black);
 		static readonly Color AltBackgroundColor = Color.FromArgb(200, 52, 73, 94);
 
-		const int VersionWidth = 50;
-		const int InputHeight = 20;
-		const float DefaultScale = 0.35f;
-
-		static string UpdateCheckUserAgent = "scripthookvdotnet"; //Oh my dear github-api, why you do this...
-		static string UpdateCheckUrl = "https://api.github.com/repos/crosire/scripthookvdotnet/releases/latest";
-		static string UpdateCheckPattern = "\"tag_name\":\"v(.*?)\"";
-
-		static string CompileTemplate = "using System; using GTA; using GTA.Native; using Console = GTA.Console;" +
-			" public class ConsoleInput : GTA.DefaultConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
-
 		//TODO Temporary UI Stuff
 		const int WIDTH = 1280;
 		const int HEIGHT = 720;
-		#endregion
 
-		internal ConsoleScript()
+		internal Console()
 		{
-			Tick += OnTick;
-			KeyDown += OnKeyDown;
-
-			_outputQueue = new ConcurrentQueue<string[]>();
-			_commands = new Dictionary<String, List<Tuple<ConsoleCommand, MethodInfo>>>();
-
-			_input = "";
-			_page = 1;
-			_cursorPos = 0;
-			_commandPos = -1;
-			_lines = new LinkedList<String>();
-			_commandHistory = new List<String>();
-
-			Version version = Assembly.GetExecutingAssembly().GetName().Version;
-			Info("--- Community Script Hook V .NET {0} ---", version);
-			Info("--- Type \"Help()\" to print an overview of available commands ---");
-
-			//Start a update check Task
-			Task.Factory.StartNew(DoUpdateCheck);
+            AddLines("[~b~INFO~w~] ", new string[1] { "--- Community Script Hook V .NET " + Assembly.GetExecutingAssembly().GetName().Version + " ---" });
+			AddLines("[~b~INFO~w~] ", new string[1] { "--- Type \"Help()\" to print an overview of available commands ---" });
 
 			RegisterCommands(typeof(DefaultConsoleCommands), true);
-
-			String assemblyPath = Assembly.GetExecutingAssembly().Location;
-			String assemblyFilename = Path.GetFileNameWithoutExtension(assemblyPath);
-			ScriptSettings settings = ScriptSettings.Load(Path.ChangeExtension(assemblyPath, ".ini"));
-
-			ToggleKey = settings.GetValue<Keys>("Console", "ToggleKey", Keys.F3);
-			PageDownKey = settings.GetValue<Keys>("Console", "PageDown", Keys.PageDown);
-			PageUpKey = settings.GetValue<Keys>("Console", "PageUp", Keys.PageUp);
 		}
 
-		internal bool IsOpen { get; private set; }
+		internal bool IsOpen
+		{
+			get { return isOpen; }
+			set {
+				isOpen = value;
+				SetControlsEnabled(false);
+				if (!value)
+					_lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
+			}
+		}
 
 		[DllImport("user32.dll")]
-		private static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState,
-		[Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)]
-		StringBuilder receivingBuffer,
-		int bufferSize, uint flags);
+		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
 
-		private string GetCharsFromKeys(Keys keys, bool shift, bool alt)
-		{
-			var buf = new StringBuilder(256);
-			var keyboardState = new byte[256];
-
-			if (shift)
-				keyboardState[(int)Keys.ShiftKey] = 0xff;
-
-			if (alt)
-			{
-				keyboardState[(int)Keys.ControlKey] = 0xff;
-				keyboardState[(int)Keys.Menu] = 0xff;
-			}
-
-			ToUnicode((uint)keys, 0, keyboardState, buf, 256, 0);
-			return buf.ToString();
-		}
-
-		private void SetControlsEnabled(bool enabled)
-		{
-			Native.Function.Call(Native.Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
-			for (int i = 1; i <= 6; i++)
-			{
-				Native.Function.Call(Native.Hash.ENABLE_CONTROL_ACTION, 0, i, enabled);
-			}
-		}
-
-		internal void RegisterCommand(ConsoleCommand command, System.Reflection.MethodInfo methodInfo)
-		{
-			RegisterCommand(command, methodInfo, false);
-		}
-		internal void RegisterCommand(ConsoleCommand command, System.Reflection.MethodInfo methodInfo, bool defaultCommand)
+		internal void RegisterCommand(ConsoleCommand command, System.Reflection.MethodInfo methodInfo, bool defaultCommand = false)
 		{
 			File.WriteAllText("console.log", (command == null) + ":" + (methodInfo == null));
 
@@ -207,30 +143,17 @@ namespace GTA
 			command.Namespace = defaultCommand ? "Default Commands" : methodInfo.DeclaringType.FullName;
 
 			foreach (var args in methodInfo.GetParameters())
-			{
 				command.ConsoleArgs.Add(new ConsoleArg(args.ParameterType.Name, args.Name));
-			}
 
 			if (!_commands.ContainsKey(command.Namespace))
-			{
 				_commands[command.Namespace] = new List<Tuple<ConsoleCommand, MethodInfo>>();
-			}
-
 			_commands[command.Namespace].Add(new Tuple<ConsoleCommand, MethodInfo>(command, methodInfo));
 		}
-		internal void RegisterCommands(Type type)
-		{
-			RegisterCommands(type, false);
-		}
-		internal void RegisterCommands(Type type, bool defaultCommands)
+		internal void RegisterCommands(Type type, bool defaultCommands = false)
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
-			{
 				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
-				{
 					RegisterCommand(attribute, method, defaultCommands);
-				}
-			}
 		}
 		internal void UnregisterCommands(Type type)
 		{
@@ -262,41 +185,29 @@ namespace GTA
 			}
 		}
 
-		internal void Info(string msg, params object[] args)
+		public static void PrintInfo(string msg, params object[] args)
 		{
 			if (args.Length > 0)
-			{
 				msg = String.Format(msg, args);
-			}
-
-			AddLines("[~b~INFO~w~] ", msg.Split('\n'));
+			Instance.AddLines("[~b~INFO~w~] ", msg.Split('\n'));
 		}
-		internal void Error(string msg, params object[] args)
+		public static void PrintError(string msg, params object[] args)
 		{
 			if (args.Length > 0)
-			{
 				msg = String.Format(msg, args);
-			}
-
-			AddLines("[~r~ERROR~w~]", msg.Split('\n'), "~r~");
+			Instance.AddLines("[~r~ERROR~w~] ", msg.Split('\n'));
 		}
-		internal void Warn(string msg, params object[] args)
+		public static void PrintWarning(string msg, params object[] args)
 		{
 			if (args.Length > 0)
-			{
 				msg = String.Format(msg, args);
-			}
-
-			AddLines("[~o~WARN~w~] ", msg.Split('\n'));
+			Instance.AddLines("[~o~WARN~w~] ", msg.Split('\n'));
 		}
-		internal void Debug(string msg, params object[] args)
+		public static void PrintDebug(string msg, params object[] args)
 		{
 			if (args.Length > 0)
-			{
 				msg = String.Format(msg, args);
-			}
-
-			AddLines("[~c~DEBUG~w~] ", msg.Split('\n'), "~c~");
+			Instance.AddLines("[~c~DEBUG~w~] ", msg.Split('\n'));
 		}
 		internal void PrintHelpString()
 		{
@@ -312,113 +223,155 @@ namespace GTA
 					help.AppendLine("    " + consoleCommand.BuildFormattedHelp());
 				}
 			}
-			Info(help.ToString());
+			PrintInfo(help.ToString());
 		}
 
+        /// <summary>
+        /// Add text lines to the console. This call is thread-safe.
+        /// </summary>
+        /// <param name="prefix">The prefix for each line.</param>
+        /// <param name="messages">The lines to add to the console.</param>
+        void AddLines(string prefix, string[] messages)
+		{
+			AddLines(prefix, messages, "~w~");
+		}
+		/// <summary>
+		/// Add colored text lines to the console. This call is thread-safe.
+		/// </summary>
+		/// <param name="prefix">The prefix for each line.</param>
+		/// <param name="messages">The lines to add to the console.</param>
+		/// <param name="color">The color of those lines.</param>
+		void AddLines(string prefix, string[] messages, string color)
+		{
+			for (int i = 0; i < messages.Length; i++) // Add proper styling
+				messages[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {color}{messages[i]}";
+
+			_outputQueue.Enqueue(messages);
+		}
+		/// <summary>
+		/// Add text to the console input line.
+		/// </summary>
+		/// <param name="text">The text to add.</param>
+		void AddToInput(string text)
+		{
+			if (string.IsNullOrEmpty(text))
+				return;
+
+			input = input.Insert(cursorPos, text);
+			cursorPos++;
+		}
+		/// <summary>
+		/// Paste clipboard content into the console input line.
+		/// </summary>
+		void AddClipboardContent()
+		{
+			string text = Clipboard.GetText();
+			text = text.Replace("\n", string.Empty); // TODO Keep this?
+
+			AddToInput(text);
+		}
+
+		/// <summary>
+		/// Clear the console input line.
+		/// </summary>
+		void ClearInput()
+		{
+			input = string.Empty;
+			cursorPos = 0;
+		}
+		/// <summary>
+		/// Clear the console history lines.
+		/// </summary>
 		internal void Clear()
 		{
-			_lines.Clear();
+			lineHistory.Clear();
 		}
 
-		private void AddLines(string prefix, string[] msgs)
-		{
-			AddLines(prefix, msgs, "~w~");
-		}
-		private void AddLines(string prefix, string[] msgs, string textColor)
-		{
-			for (int i = 0; i < msgs.Length; i++)
-			{
-				msgs[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {textColor}{msgs[i]}"; //Add proper styling
-			}
-
-			_outputQueue.Enqueue(msgs);
-		}
-
-		internal void OnTick(object sender, EventArgs e)
+		/// <summary>
+		/// Main execution logic of the console.
+		/// </summary>
+		internal void DoTick()
 		{
 			DateTime now = DateTime.UtcNow;
 
-			string[] outputLines;
-			if (_outputQueue.TryDequeue(out outputLines))
+			// Execute compiled input line script
+			if (_compilerTask != null && _compilerTask.IsCompleted)
 			{
-				foreach (String outputLine in outputLines)
+				if (_compilerTask.Result != null)
 				{
-					_lines.AddFirst(outputLine);
+					var result = _compilerTask.Result.GetType("ConsoleInput").GetMethod("Execute").Invoke(null, null);
+					if (result != null)
+						PrintInfo($"[Return Value: {result}]");
 				}
+
+				ClearInput();
+
+				// Reset compiler task
+				_compilerTask = null;
 			}
 
-			if (_compilerTask != null)
-			{
-				if (_compilerTask.IsCompleted)
-				{
-					Assembly compileResult = _compilerTask.Result;
-					if (compileResult != null)
-					{
-						Type type = compileResult.GetType("ConsoleInput");
-						object result = type.GetMethod("Execute").Invoke(null, null);
-						if (result != null)
-							Info($"[Return Value: {result}]");
-					}
-					ClearInput();
-					_compilerTask = null;
-				}
-			}
+			// Add lines from concurrent queue to history
+			if (_outputQueue.TryDequeue(out string[] lines))
+				foreach (string line in lines)
+					lineHistory.Add(line);
 
-
-			//Hack so the input gets blocked long enogh
+			// Hack so the input gets blocked long enough
 			if (_lastClosed > now)
 			{
-				if (Native.Function.Call<bool>(Native.Hash._IS_INPUT_DISABLED, 2))
+				if (IsInputDisabled())
 					SetControlsEnabled(false);
 				return;
 			}
 
+			// Nothing more to do here when the console is not open
 			if (!IsOpen)
 				return;
-			if (Native.Function.Call<bool>(Native.Hash._IS_INPUT_DISABLED, 2))
+
+			if (IsInputDisabled())
 				SetControlsEnabled(false);
 
-			DrawRect(0, 0, WIDTH, HEIGHT / 3, BackgroundColor);
-			DrawRect(0, HEIGHT / 3, WIDTH, InputHeight, AltBackgroundColor);
-			DrawRect(0, HEIGHT / 3 + InputHeight, 80, InputHeight, AltBackgroundColor);
+			const int inputH = 20;
+			const int consoleW = WIDTH;
+			const int consoleH = HEIGHT / 3;
 
-			DrawText(0, HEIGHT / 3, "$>", DefaultScale, DefaultFont, PrefixColor);
-			DrawText(25, HEIGHT / 3, _input, DefaultScale, DefaultFont, _compilerTask == null ? InputColor : InputColorBusy);
-			DrawText(5, HEIGHT / 3 + InputHeight, "Page " + _page + "/" + (_lines.Count == 0 ? 0 : ((_lines.Count + 16 - 1) / 16)), DefaultScale, DefaultFont, InputColor); //TODO Nicer way for page-max
+			// Draw background
+			DrawRect(0, 0, consoleW, consoleH, BackgroundColor);
+			// Draw input field
+			DrawRect(0, consoleH, consoleW, inputH, AltBackgroundColor);
+			DrawRect(0, consoleH + inputH, 80, inputH, AltBackgroundColor);
+			// Draw input prefix
+			DrawText(0, consoleH, "$>", PrefixColor);
+			// Draw input text
+			DrawText(25, consoleH, input, _compilerTask == null ? InputColor : InputColorBusy);
+			// Draw page information
+			DrawText(5, consoleH + inputH, "Page " + currentPage + "/" + (lineHistory.Count == 0 ? 0 : ((lineHistory.Count + 16 - 1) / 16)), InputColor); //TODO Nicer way for page-max
 
+			// Draw blinking cursor
 			if (now.Millisecond < 500)
 			{
-				float length = GetTextLength(_input.Substring(0, _cursorPos), DefaultScale, DefaultFont);
-				DrawText(25 + (length * WIDTH) - 4, HEIGHT / 3, "~w~~h~|~w~", DefaultScale, DefaultFont, InputColor);
+				float length = GetTextLength(input.Substring(0, cursorPos));
+				DrawText(25 + (length * consoleW) - 4, consoleH, "~w~~h~|~w~", InputColor);
 			}
 
-			//We can't get the n-th, so let's do it with a counter
-			//page = 1 -. start: 0 end: 15
-			//page = 2 -. start: 16 end: 31
-			int start = (_page - 1) * 16; //0
-			int end = System.Math.Min(_lines.Count, _page * 16 - 1); //12
-
-			int i = 0;
-			foreach (String line in _lines)
+			// Draw console history text
+			for (int i = (currentPage - 1) * 16; i <= System.Math.Min(lineHistory.Count, currentPage * 16 - 1); ++i)
 			{
-				if (i >= start && i <= end)
-				{
-					DrawText(2, (float)((15 - (i % 16)) * 14), line, DefaultScale, DefaultFont, OutputColor);
-				}
-				i++;
+				DrawText(2, (float)((15 - (i % 16)) * 14), lineHistory[i], OutputColor);
 			}
 		}
-		internal void OnKeyDown(object sender, KeyEventArgs e)
+		/// <summary>
+		/// Keyboard handling logic of the console.
+		/// </summary>
+		/// <param name="e"></param>
+		internal void DoKeyDown(KeyEventArgs e)
 		{
 			if (e.KeyCode == ToggleKey)
 			{
 				IsOpen = !IsOpen;
-				SetControlsEnabled(false);
-				if (!IsOpen)
-					_lastClosed = DateTime.UtcNow.AddMilliseconds(200); //Hack so the input gets blocked long enogh
 				return;
 			}
 
+			// Nothing more to do here when the console is not open
 			if (!IsOpen)
 				return;
 
@@ -427,58 +380,10 @@ namespace GTA
 				PageUp();
 				return;
 			}
-			else if (e.KeyCode == PageDownKey)
+			if (e.KeyCode == PageDownKey)
 			{
 				PageDown();
 				return;
-			}
-			else if (e.Control)
-			{
-				switch (e.KeyCode)
-				{
-					case Keys.Left:
-						BackwardWord();
-						return;
-					case Keys.Right:
-						ForwardWord();
-						return;
-					case Keys.A:
-						MoveCursorToStartOfLine();
-						return;
-					case Keys.B:
-						MoveCursorLeft();
-						return;
-					case Keys.E:
-						MoveCursorToEndOfLine();
-						return;
-					case Keys.F:
-						MoveCursorRight();
-						return;
-					case Keys.L:
-						Clear();
-						return;
-					case Keys.N:
-						GoDownCommandList();
-						return;
-					case Keys.P:
-						GoUpCommandList();
-						return;
-					case Keys.V:
-						PasteClipboard();
-						return;
-				}
-			}
-			else if (e.Alt)
-			{
-				switch (e.KeyCode)
-				{
-					case Keys.B:
-						BackwardWord();
-						return;
-					case Keys.F:
-						ForwardWord();
-						return;
-				}
 			}
 
 			switch (e.KeyCode)
@@ -490,10 +395,16 @@ namespace GTA
 					RemoveCharRight();
 					break;
 				case Keys.Left:
-					MoveCursorLeft();
+					if (e.Control)
+						BackwardWord();
+					else
+						MoveCursorLeft();
 					break;
 				case Keys.Right:
-					MoveCursorRight();
+					if (e.Control)
+						ForwardWord();
+					else
+						MoveCursorRight();
 					break;
 				case Keys.Up:
 					GoUpCommandList();
@@ -506,280 +417,363 @@ namespace GTA
 					break;
 				case Keys.Escape:
 					IsOpen = false;
-					SetControlsEnabled(false);
-					_lastClosed = DateTime.UtcNow.AddMilliseconds(200); //Hack so the input gets blocked long enogh
+					break;
+				case Keys.B:
+					if (e.Control)
+						MoveCursorLeft();
+					else if (e.Alt)
+						BackwardWord();
+					else
+						goto default;
+					break;
+				case Keys.F:
+					if (e.Control)
+						MoveCursorRight();
+					else if (e.Alt)
+						ForwardWord();
+					else
+						goto default;
+					break;
+				case Keys.A:
+					if (e.Control)
+						MoveCursorToBegOfLine();
+					else
+						goto default;
+					break;
+				case Keys.E:
+					if (e.Control)
+						MoveCursorToEndOfLine();
+					else
+						goto default;
+					break;
+				case Keys.P:
+					if (e.Control)
+						GoUpCommandList();
+					else
+						goto default;
+					break;
+				case Keys.N:
+					if (e.Control)
+						GoDownCommandList();
+					else
+						goto default;
+					break;
+				case Keys.L:
+					if (e.Control)
+						Clear();
+					else
+						goto default;
+					break;
+				case Keys.V:
+					if (e.Control)
+						AddClipboardContent();
+					else
+						goto default;
 					break;
 				default:
-					AddToInput(GetCharsFromKeys(e.KeyCode, e.Shift, e.Alt));
+					// Translate key event to character for text input
+					var buf = new StringBuilder(256);
+					var keyboardState = new byte[256];
+					keyboardState[(int)Keys.Menu] = e.Alt ? (byte)0xff : (byte)0;
+					keyboardState[(int)Keys.ShiftKey] = e.Shift ? (byte)0xff : (byte)0;
+					keyboardState[(int)Keys.ControlKey] = e.Control ? (byte)0xff : (byte)0;
+					ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
+
+					AddToInput(buf.ToString());
 					break;
 			}
 		}
 
-		private void AddToInput(string input)
+		void PageUp()
 		{
-			if (String.IsNullOrEmpty(input))
-			{
+			if (currentPage + 1 <= ((lineHistory.Count + 16 - 1) / 16))
+				currentPage++;
+		}
+		void PageDown()
+		{
+			if (currentPage - 1 >= 1)
+				currentPage--;
+		}
+		void GoUpCommandList()
+		{
+			if (commandHistory.Count == 0 || commandPos >= commandHistory.Count - 1)
 				return;
-			}
 
-			_input = _input.Insert(_cursorPos, input);
-			_cursorPos++;
+			commandPos++;
+			input = commandHistory[commandHistory.Count - commandPos - 1];
 		}
-		private void AddClipboardContent()
+		void GoDownCommandList()
 		{
-			String text = Clipboard.GetText();
-			text = text.Replace("\n", ""); //TODO Keep this?
-
-			AddToInput(text);
-		}
-		private void ClearInput()
-		{
-			_input = "";
-			_cursorPos = 0;
-		}
-		private Assembly CompileInput()
-		{
-			string inputStr = String.Format(CompileTemplate, _input);
-
-			_compiler = new Microsoft.CSharp.CSharpCodeProvider();
-			_compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
-			_compilerOptions.GenerateInMemory = true;
-			_compilerOptions.IncludeDebugInformation = true;
-			_compilerOptions.ReferencedAssemblies.Add("System.dll");
-			_compilerOptions.ReferencedAssemblies.Add(typeof(Script).Assembly.Location);
-
-			foreach (Script script in ScriptDomain.CurrentDomain.RunningScripts)
-			{
-				if (!String.IsNullOrEmpty(script.Filename))
-				{
-					_compilerOptions.ReferencedAssemblies.Add(script.Filename);
-				}
-			}
-
-			System.CodeDom.Compiler.CompilerResults compilerResult = _compiler.CompileAssemblyFromSource(_compilerOptions, inputStr);
-
-			if (!compilerResult.Errors.HasErrors)
-			{
-				return compilerResult.CompiledAssembly;
-			}
-			else
-			{
-				Error($"Couldn't compile input-string: {_input}");
-
-				StringBuilder errors = new StringBuilder();
-
-				for (int i = 0; i < compilerResult.Errors.Count; ++i)
-				{
-					errors.Append("   at line ");
-					errors.Append(compilerResult.Errors[i].Line);
-					errors.Append(": ");
-					errors.Append(compilerResult.Errors[i].ErrorText);
-
-					if (i < compilerResult.Errors.Count - 1)
-					{
-						errors.AppendLine();
-					}
-				}
-
-				Error(errors.ToString());
-				return null;
-			}
-		}
-		private void ExecuteInput()
-		{
-			if (String.IsNullOrEmpty(_input))
-			{
+			if (commandHistory.Count == 0 || commandPos <= 0)
 				return;
-			}
 
-			_commandPos = -1;
+			commandPos--;
+			input = commandHistory[commandHistory.Count - commandPos - 1];
+		}
 
-			if (_commandHistory.Count == 0 || _commandHistory[_commandHistory.Count - 1] != _input)
+		void ForwardWord()
+		{
+			Match match = _getEachWordRegex.Match(input, cursorPos);
+			cursorPos = match.Success ? match.Index + match.Length : input.Length;
+		}
+		void BackwardWord()
+		{
+			cursorPos = _getEachWordRegex.Matches(input).Cast<Match>().Where(x => x.Index < cursorPos).Select(x => x.Index).LastOrDefault();
+		}
+		void RemoveCharLeft()
+		{
+			if (input.Length > 0 && cursorPos > 0)
 			{
-				_commandHistory.Add(_input);
+				input = input.Remove(cursorPos - 1, 1);
+				cursorPos--;
 			}
+		}
+		void RemoveCharRight()
+		{
+			if (input.Length > 0 && cursorPos < input.Length)
+			{
+				input = input.Remove(cursorPos, 1);
+			}
+		}
+
+		void MoveCursorLeft()
+		{
+			if (cursorPos > 0)
+				cursorPos--;
+		}
+		void MoveCursorRight()
+		{
+			if (cursorPos < input.Length)
+				cursorPos++;
+		}
+		void MoveCursorToBegOfLine()
+		{
+			cursorPos = 0;
+		}
+		void MoveCursorToEndOfLine()
+		{
+			cursorPos = input.Length;
+		}
+
+		void ExecuteInput()
+		{
+			if (string.IsNullOrEmpty(input))
+				return;
+
+			commandPos = -1;
+			if (commandHistory.LastOrDefault() != input)
+				commandHistory.Add(input);
 
 			if (_compilerTask != null)
 			{
-				Error("Can't compile input - Compiler is busy");
+				PrintError("Can't compile input - Compiler is busy");
 				return;
 			}
 
-			_compilerTask = Task.Factory.StartNew(new Func<Assembly>(CompileInput));
+			_compilerTask = Task.Factory.StartNew(new Func<Assembly>(() => {
+				var compiler = new Microsoft.CSharp.CSharpCodeProvider();
+				var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
+				compilerOptions.GenerateInMemory = true;
+				compilerOptions.IncludeDebugInformation = true;
+				compilerOptions.ReferencedAssemblies.Add("System.dll");
+				compilerOptions.ReferencedAssemblies.Add(typeof(Script).Assembly.Location); // TODO scriptAPI assembly
+
+				foreach (ScriptDomain domain in ScriptDomain.Instances)
+					foreach (Script script in domain.RunningScripts)
+						if (!string.IsNullOrEmpty(script.Filename))
+							compilerOptions.ReferencedAssemblies.Add(script.Filename);
+
+				const string template = "using System; using GTA; using GTA.Native; using Console = SHVDN.Console; public class ConsoleInput : GTA.DefaultConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
+
+				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
+
+				if (!compilerResult.Errors.HasErrors)
+				{
+					return compilerResult.CompiledAssembly;
+				}
+				else
+				{
+					PrintError($"Couldn't compile input-string: {input}");
+
+					StringBuilder errors = new StringBuilder();
+
+					for (int i = 0; i < compilerResult.Errors.Count; ++i)
+					{
+						errors.Append("   at line ");
+						errors.Append(compilerResult.Errors[i].Line);
+						errors.Append(": ");
+						errors.Append(compilerResult.Errors[i].ErrorText);
+
+						if (i < compilerResult.Errors.Count - 1)
+							errors.AppendLine();
+					}
+
+					PrintError(errors.ToString());
+					return null;
+				}
+			}));
 		}
 
-		private void PasteClipboard()
-		{
-			Thread thread = new Thread(AddClipboardContent);
-			thread.SetApartmentState(ApartmentState.STA);
-			thread.Start();
-		}
+        static int GetUtf8CodePointSize(string str, int index)
+        {
+            uint chr = str[index];
 
-		private void MoveCursorLeft()
-		{
-			if (_cursorPos > 0)
-				_cursorPos--;
-		}
-		private void MoveCursorRight()
-		{
-			if (_cursorPos < _input.Length)
-				_cursorPos++;
-		}
-		private void MoveCursorToStartOfLine()
-		{
-			_cursorPos = 0;
-		}
-		private void MoveCursorToEndOfLine()
-		{
-			_cursorPos = _input.Length;
-		}
-		private void ForwardWord()
-		{
-			Match match = _getEachWordRegex.Match(_input, _cursorPos);
+            if (chr < 0x80)
+            {
+                return 1;
+            }
+            if (chr < 0x800)
+            {
+                return 2;
+            }
+            if (chr < 0x10000)
+            {
+                return 3;
+            }
+            #region Surrogate check
+            const int HighSurrogateStart = 0xD800;
+            const int LowSurrogateStart = 0xD800;
 
-			if (match.Success)
-			{
-				_cursorPos = match.Index + match.Length;
-			}
-			else
-			{
-				_cursorPos = _input.Length;
-			}
-		}
-		private void BackwardWord()
-		{
-			var lastMatch = _getEachWordRegex.Matches(_input).Cast<Match>().Where(x => x.Index < _cursorPos).LastOrDefault();
+            var temp1 = (int)chr - HighSurrogateStart;
+            if (temp1 < 0 || temp1 > 0x7ff)
+            {
+                return 0;
+            }
+            // Found a high surrogate
+            if (index < str.Length - 1)
+            {
+                var temp2 = str[index + 1] - LowSurrogateStart;
+                if (temp2 >= 0 && temp2 <= 0x3ff)
+                {
+                    // Found a low surrogate
+                    return 4;
+                }
 
-			if (lastMatch != null)
-			{
-				_cursorPos = lastMatch.Index;
-			}
-			else
-			{
-				_cursorPos = 0;
-			}
-		}
-		private void RemoveCharLeft()
-		{
-			if (_input.Length > 0 && _cursorPos > 0)
-			{
-				_input = _input.Remove(_cursorPos - 1, 1);
-				_cursorPos--;
-			}
-		}
-		private void RemoveCharRight()
-		{
-			if (_input.Length > 0 && _cursorPos < _input.Length)
-			{
-				_input = _input.Remove(_cursorPos, 1);
-			}
-		}
-		private void PageUp()
-		{
-			if (_page + 1 <= ((_lines.Count + 16 - 1) / 16))
-				_page++;
-		}
-		private void PageDown()
-		{
-			if (_page - 1 >= 1)
-				_page--;
-		}
-		private void GoUpCommandList()
-		{
-			if (_commandHistory.Count == 0)
-				return;
-			if (_commandPos >= _commandHistory.Count - 1)
-				return;
-			_commandPos++;
-			_input = _commandHistory[_commandHistory.Count - _commandPos - 1];
-		}
-		private void GoDownCommandList()
-		{
-			if (_commandHistory.Count == 0)
-				return;
-			if (_commandPos <= 0)
-				return;
-			_commandPos--;
-			_input = _commandHistory[_commandHistory.Count - _commandPos - 1];
-		}
+                return 0;
+            }
+            else
+            {
+                return 0;
+            }
+            #endregion
+        }
+        static unsafe void PushLongString(string str, int maxLengthUtf8 = 99)
+        {
+            if (maxLengthUtf8 <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxLengthUtf8));
+            }
 
-		private void DrawRect(float x, float y, int width, int height, Color color)
+            int size = System.Text.Encoding.UTF8.GetByteCount(str);
+
+            if (size <= maxLengthUtf8)
+            {
+                NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+                    (ulong)ScriptDomain.Instances[0].PinString(str).ToInt64());
+                return;
+            }
+
+            int currentUtf8StrLength = 0;
+            int startPos = 0;
+            int currentPos;
+
+            for (currentPos = 0; currentPos < str.Length; currentPos++)
+            {
+                int codePointSize = GetUtf8CodePointSize(str, currentPos);
+
+                if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
+                {
+                    NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+                        (ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, currentPos - startPos)).ToInt64());
+
+                    currentUtf8StrLength = 0;
+                    startPos = currentPos;
+                }
+                else
+                {
+                    currentUtf8StrLength += codePointSize;
+                }
+
+                //if the code point size is 4, additional increment is needed
+                if (codePointSize == 4)
+                {
+                    currentPos++;
+                }
+            }
+
+            NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+                (ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, str.Length - startPos)).ToInt64());
+        }
+
+        void DrawRect(float x, float y, int width, int height, Color color)
 		{
 			float w = (float)(width) / WIDTH;
 			float h = (float)(height) / HEIGHT;
 			float xNew = (x / WIDTH) + w * 0.5f;
 			float yNew = (y / HEIGHT) + h * 0.5f;
 
-			Native.Function.Call(Native.Hash.DRAW_RECT, xNew, yNew, w, h, color.R, color.G, color.B, color.A);
+            unsafe
+            {
+                NativeFunc.Invoke(0x3A618A217E5154F0ul /*DRAW_RECT*/, *(ulong*)&xNew, *(ulong*)&yNew, *(ulong*)&w, *(ulong*)&h, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
+            }
 		}
-		private void DrawText(float x, float y, string text, float scale, int font, Color color)
+		void DrawText(float x, float y, string text, Color color)
 		{
 			float xNew = (x / WIDTH);
 			float yNew = (y / HEIGHT);
 
-			Native.Function.Call(Native.Hash.SET_TEXT_FONT, font);
-			Native.Function.Call(Native.Hash.SET_TEXT_SCALE, scale, scale);
-			Native.Function.Call(Native.Hash.SET_TEXT_COLOUR, color.R, color.G, color.B, color.A);
-			Native.Function.Call(Native.Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, MemoryAccess.CellEmailBcon);
-			Native.Function.PushLongString(text);
-			Native.Function.Call(Native.Hash.END_TEXT_COMMAND_DISPLAY_TEXT, xNew, yNew);
+            unsafe
+            {
+                NativeFunc.Invoke(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul); // Chalet London :>
+                NativeFunc.Invoke(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
+                NativeFunc.Invoke(0xBE6B23FFA53FB442ul /*SET_TEXT_COLOUR*/, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
+                NativeFunc.Invoke(0x25FBB336DF1804CBul /*BEGIN_TEXT_COMMAND_DISPLAY_TEXT*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+                PushLongString(text);
+                NativeFunc.Invoke(0xCD015E5BB0D96A57ul /*END_TEXT_COMMAND_DISPLAY_TEXT*/, *(ulong*)&xNew, *(ulong*)&yNew);
+            }
 		}
 
-		private float GetTextLength(string text, float scale, int font) //TODO Maybe implement somewhere else?
+        bool IsInputDisabled()
+        {
+            unsafe
+            {
+                return *NativeFunc.Invoke(0xA571D46727E2B718ul /*_IS_INPUT_DISABLED*/, 2ul) != 0;
+            }
+        }
+		void SetControlsEnabled(bool enabled)
 		{
-			Native.Function.Call(Native.Hash._BEGIN_TEXT_COMMAND_WIDTH, MemoryAccess.CellEmailBcon);
-			Native.Function.PushLongString(text);
-			Native.Function.Call(Native.Hash.SET_TEXT_FONT, font);
-			Native.Function.Call(Native.Hash.SET_TEXT_SCALE, scale, scale);
+            unsafe
+            {
+                NativeFunc.Invoke(0x5F4B6931816E599Bul /*DISABLE_ALL_CONTROL_ACTIONS*/, 0ul);
 
-			return Native.Function.Call<float>(Native.Hash._END_TEXT_COMMAND_GET_WIDTH, 1);
+                for (int i = 1; i <= 6; i++)
+                    NativeFunc.Invoke(0x351220255D64C155ul /*ENABLE_CONTROL_ACTION*/, 0ul, (ulong)i, enabled ? 1ul : 0ul);
+            }
 		}
 
-		private void DoUpdateCheck()
+		float GetTextLength(string text) //TODO Maybe implement somewhere else?
 		{
-			Version curVersion = Assembly.GetExecutingAssembly().GetName().Version;
-			WebClient webclient = new WebClient();
-			webclient.Headers.Add("user-agent", UpdateCheckUserAgent);
+            unsafe
+            {
+                NativeFunc.Invoke(0x54CE8AC98E120CABul /*_BEGIN_TEXT_COMMAND_WIDTH*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+                PushLongString(text);
+                NativeFunc.Invoke(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul);
+                NativeFunc.Invoke(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
 
-			try
-			{
-				String response = webclient.DownloadString(UpdateCheckUrl);
-				if (!String.IsNullOrEmpty(response))
-				{
-					Regex regex = new Regex(UpdateCheckPattern);
-					Match match = regex.Match(response);
-
-					if (match.Success)
-					{
-						Version fetchedVersion = new Version(match.Groups[1].Value);
-						if (fetchedVersion > curVersion)
-							Info("There is a new SHV.NET Version available: ~y~v{0}", fetchedVersion);
-						else
-							Info("You're running on the latest SHV.NET Version");
-						return;
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				Warn("SHV.NET Update-Check failed: {0}", e.Message);
-				return;
-			}
-			Warn("SHV.NET Update-Check failed");
-
-			webclient.Dispose();
+                return *(float*)NativeFunc.Invoke(0x85F061DA64ED2F67ul /*_END_TEXT_COMMAND_GET_WIDTH*/, 1ul);
+            }
 		}
 	}
 
 	public class DefaultConsoleCommands
 	{
-		[ConsoleCommand("Prints the default Help-Output")]
+		[ConsoleCommand("Prints the default help")]
 		public static void Help()
 		{
-			ScriptDomain.CurrentDomain.Console.PrintHelpString();
+			Console.Instance.PrintHelpString();
 		}
 
-		[ConsoleCommand("Prints the Help-Output for the specific command")]
+		[ConsoleCommand("Prints the help for the specific command")]
 		public static void Help(string command) //TODO Add all commands
 		{
 
@@ -788,7 +782,9 @@ namespace GTA
 		[ConsoleCommand("Loads scripts from a file")]
 		public static void Load(string filename)
 		{
-			String basedirectory = ScriptDomain.CurrentDomain.AppDomain.BaseDirectory;
+			var domain = ScriptDomain.Instances.Last();
+
+			string basedirectory = domain.AppDomain.BaseDirectory;
 
 			if (!File.Exists(Path.Combine(basedirectory, filename)))
 			{
@@ -796,11 +792,11 @@ namespace GTA
 
 				if (files.Length != 1)
 				{
-					Console.Error("The file '" + filename + "' was not found in '" + basedirectory + "'");
+					Console.PrintError("The file " + filename + " was not found in " + basedirectory);
 					return;
 				}
 
-				Console.Warn("The file '" + filename + "' was not found in '" + basedirectory + "', loading from '" + Path.GetDirectoryName(files[0].Substring(basedirectory.Length + 1)) + "' instead");
+				Console.PrintWarning("The file " + filename + " was not found in " + basedirectory + ", loading from " + Path.GetDirectoryName(files[0].Substring(basedirectory.Length + 1)) + " instead");
 
 				filename = files[0].Substring(basedirectory.Length + 1);
 			}
@@ -811,24 +807,24 @@ namespace GTA
 
 			filename = Path.GetFullPath(filename);
 
-			String extension = Path.GetExtension(filename).ToLower();
+			string extension = Path.GetExtension(filename).ToLower();
 
 			if (extension != ".cs" && extension != ".vb" && extension != ".dll")
 			{
-				Console.Error("The file '" + filename + "' was not recognized as a script file");
+				Console.PrintError("The file '" + filename + "' was not recognized as a script file");
 				return;
 			}
 
-			foreach (var script in ScriptDomain.CurrentDomain.RunningScripts)
+			foreach (var script in domain.RunningScripts)
 			{
-				if (filename.Equals(script.Filename, StringComparison.OrdinalIgnoreCase) && script._running)
+				if (filename.Equals(script.Filename, StringComparison.OrdinalIgnoreCase) && script.IsRunning)
 				{
-					Console.Error("The script is already running");
+					Console.PrintError("The script is already running");
 					return;
 				}
 			}
 
-			ScriptDomain.CurrentDomain.StartScript(filename);
+			domain.StartScripts(filename);
 		}
 
 		[ConsoleCommand("Reloads scripts from a file")]
@@ -841,86 +837,58 @@ namespace GTA
 		[ConsoleCommand("Reloads all scripts found in the script folder")]
 		public static void ReloadAllScripts()
 		{
-			AbortAllScripts();
-			ScriptDomain.CurrentDomain.StartAllScripts();
+			var domain = ScriptDomain.Instances.Last();
+
+			domain.Abort();
+			domain.StartAllScripts();
 		}
 
 		[ConsoleCommand("List all loaded scripts")]
 		public static void List()
 		{
-			var scripts = new List<Script>(ScriptDomain.CurrentDomain.RunningScripts);
-			scripts.Remove(ScriptDomain.CurrentDomain.Console);
-
-			if (scripts.Count == 0)
+			var scripts = ScriptDomain.CurrentDomain.RunningScripts;
+			if (scripts.Length == 0)
 			{
-				Console.Info("There are no scripts loaded");
+				Console.PrintInfo("There are no scripts loaded");
 				return;
 			}
 
-			String basedirectory = ScriptDomain.CurrentDomain.AppDomain.BaseDirectory;
-
-			Console.Info("---");
+			Console.PrintInfo("---");
 			foreach (var script in scripts)
-			{
-				String filename = script.Filename;
-
-				if (filename.StartsWith(basedirectory, StringComparison.OrdinalIgnoreCase))
-				{
-					filename = filename.Substring(basedirectory.Length + 1);
-				}
-
-				Console.Info("   " + filename + ": " + script.Name + (script._running ? " ~g~[running]" : " ~r~[aborted]"));
-			}
-			Console.Info("---");
+				Console.PrintInfo("   " + Path.GetFileName(script.Filename) + ": " + script.Name + (script.IsRunning ? " ~g~[running]" : " ~r~[aborted]"));
+			Console.PrintInfo("---");
 		}
 
 		[ConsoleCommand("Aborts all scripts from the specified file")]
 		public static void Abort(string filename)
 		{
-			String basedirectory = ScriptDomain.CurrentDomain.AppDomain.BaseDirectory;
+			var domain = ScriptDomain.Instances.Last();
+
+			string basedirectory = domain.AppDomain.BaseDirectory;
 
 			filename = Path.Combine(basedirectory, filename);
 
 			if (!File.Exists(filename))
 			{
-				Console.Error("The file '" + filename + "' was not found");
+				Console.PrintError("The file '" + filename + "' was not found");
 				return;
 			}
 
-			ScriptDomain.CurrentDomain.AbortScript(filename);
+			domain.AbortScripts(filename);
 		}
 
 		[ConsoleCommand("Aborts all scripts found in the script folder")]
 		public static void AbortAllScripts()
 		{
-			ScriptDomain.CurrentDomain.AbortAllScriptsExceptConsole();
+			var domain = ScriptDomain.Instances.Last();
+
+			domain.Abort();
 		}
 
 		[ConsoleCommand("Clears the console output")]
 		public static void Clear()
 		{
-			ScriptDomain.CurrentDomain.Console.Clear();
-		}
-	}
-
-	public struct Console
-	{
-		//TODO Maybe change the structure, we basically just create delegate methods?
-		public static void Info(string msg, params object[] args)
-		{
-			ScriptDomain.CurrentDomain.Console.Info(msg, args);
-		}
-		public static void Error(string msg, params object[] args)
-		{
-			ScriptDomain.CurrentDomain.Console.Error(msg, args);
-		}
-		public static void Warn(string msg, params object[] args)
-		{
-			ScriptDomain.CurrentDomain.Console.Warn(msg, args);
-		}
-		public static void Debug(string msg, params object[] args)
-		{
-			ScriptDomain.CurrentDomain.Console.Debug(msg, args);
+			Console.Instance.Clear();
 		}
 	}
 }

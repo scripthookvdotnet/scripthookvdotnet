@@ -17,243 +17,61 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Reflection;
 using System.Collections.Concurrent;
 using WinForms = System.Windows.Forms;
 
-namespace GTA
+namespace SHVDN
 {
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class RequireScript : Attribute
+	public class Script
 	{
-		#region Fields
-		internal Type _dependency;
-		#endregion
+		Thread thread;
+		internal SemaphoreSlim waitEvent = new SemaphoreSlim(0);
+		internal SemaphoreSlim continueEvent = new SemaphoreSlim(0);
+		internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
 
-		public RequireScript(Type dependency)
-		{
-			_dependency = dependency;
-		}
-	}
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class ScriptAttributes : Attribute
-	{
-		public string Author;
-		public string SupportURL;
-	}
+        public event EventHandler Tick;
+        public event EventHandler Aborted;
+        public event WinForms.KeyEventHandler KeyUp;
+        public event WinForms.KeyEventHandler KeyDown;
 
-	/// <summary>
-	/// A base class for all user scripts to inherit.
-	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
-	/// </summary>
-	public abstract class Script
-	{
-		#region Fields
-		internal int _interval = 0;
-		internal bool _running = false;
-		internal ScriptDomain _scriptdomain;
-		internal Thread _thread;
-		internal SemaphoreSlim _waitEvent = new SemaphoreSlim(0);
-		internal SemaphoreSlim _continueEvent = new SemaphoreSlim(0);
-		internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> _keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
-		internal ScriptSettings _settings;
-		#endregion
-
-		public Script()
-		{
-			Filename = ScriptDomain.CurrentDomain.LookupScriptFilename(this);
-			_scriptdomain = ScriptDomain.CurrentDomain;
-		}
+        /// <summary>
+        /// Gets the execution status of this script.
+        /// </summary>
+        public bool IsRunning { get; private set; }
 
 		/// <summary>
-		/// An event that is raised every tick of the script. 
-		/// Put code that needs to be looped each frame in here.
+		/// Gets the type name of this script.
 		/// </summary>
-		public event EventHandler Tick;
-		/// <summary>
-		/// An event that is raised when a key is lifted.
-		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was lifted.
-		/// </summary>
-		public event WinForms.KeyEventHandler KeyUp;
-		/// <summary>
-		/// An event that is raised when a key is first pressed.
-		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was pressed.
-		/// </summary>
-		public event WinForms.KeyEventHandler KeyDown;
-		/// <summary>
-		/// An event that is raised when this <see cref="Script"/> gets aborted for any reason.
-		/// This should be used for cleaning up anything created during this <see cref="Script"/>.
-		/// </summary>
-		public event EventHandler Aborted;
-
-		/// <summary>
-		/// Gets the name of this <see cref="Script"/>.
-		/// </summary>
-		public string Name => GetType().FullName;
-		/// <summary>
-		/// Gets the filename of this <see cref="Script"/>.
-		/// </summary>
+		public string Name => Instance.GetType().FullName;
 		public string Filename { get; internal set; }
 
 		/// <summary>
-		/// Gets the Directory where this <see cref="Script"/> is stored.
+		/// Get the object instance of the script.
 		/// </summary>
-		public string BaseDirectory => Path.GetDirectoryName(Filename);
-
-		/// <summary>
-		/// Gets an INI file associated with this <see cref="Script"/>.
-		/// The File will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
-		/// Use this to save and load settings for this <see cref="Script"/>.
-		/// </summary>
-		public ScriptSettings Settings
-		{
-			get
-			{
-				if (_settings == null)
-				{
-					string path = Path.ChangeExtension(Filename, ".ini");
-
-					_settings = ScriptSettings.Load(path);
-				}
-
-				return _settings;
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
-		/// Default value is 0 meaning the event will execute once each frame.
-		/// </summary>
-		protected int Interval
-		{
-			get
-			{
-				return _interval;
-			}
-			set
-			{
-				if (value < 0)
-				{
-					value = 0;
-				}
-
-				_interval = value;
-			}
-		}
-
-		/// <summary>
-		/// Returns a string that represents this <see cref="Script"/>.
-		/// </summary>
-		public override string ToString()
-		{
-			return Name;
-		}
-
-		/// <summary>
-		/// Gets the full file path for a file relative to this <see cref="Script"/>.
-		/// e.g: <c>GetRelativeFilePath("ScriptFiles\texture1.png")</c> may return <c>"C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts\ScriptFiles\texture1.png"</c>.
-		/// </summary>
-		/// <param name="filePath">The file path relative to the location of this <see cref="Script"/>.</param>
-		public string GetRelativeFilePath(string filePath)
-		{
-			return Path.Combine(BaseDirectory, filePath);
-		}
-
-		/// <summary>
-		/// Starts execution of this <see cref="Script"/>.
-		/// </summary>
-		internal void Start()
-		{
-			ThreadStart threadDelegate = new ThreadStart(MainLoop);
-			_thread = new Thread(threadDelegate);
-			_thread.Start();
-
-			ScriptDomain.OnStartScript(this);
-		}
-		/// <summary>
-		/// Aborts execution of this <see cref="Script"/>.
-		/// </summary>
-		public void Abort()
-		{
-			try
-			{
-				Aborted?.Invoke(this, EventArgs.Empty);
-			}
-			catch (Exception ex)
-			{
-				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-			}
-
-			_running = false;
-			_waitEvent.Release();
-
-			if (_thread != null)
-			{
-				_thread.Abort();
-				_thread = null;
-
-				ScriptDomain.OnAbortScript(this);
-			}
-		}
-
-		/// <summary>
-		/// Pauses execution of the <see cref="Script"/> for a specific amount of time.
-		/// Must be called inside the main script loop (the <see cref="Tick"/> event or any sub methods called from it).
-		/// </summary>
-		/// <param name="ms">The time in milliseconds to pause for.</param>
-		public static void Wait(int ms)
-		{
-			Script script = ScriptDomain.ExecutingScript;
-
-			if (ReferenceEquals(script, null) || !script._running)
-			{
-				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
-			}
-
-			var resume = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
-
-			do
-			{
-				script._waitEvent.Release();
-				script._continueEvent.Wait();
-			}
-			while (DateTime.UtcNow < resume);
-		}
-		/// <summary>
-		/// Yields the execution of the script for 1 frame.
-		/// </summary>
-		public static void Yield()
-		{
-			Wait(0);
-		}
+		public object Instance { get; internal set; }
 
 		/// <summary>
 		/// The main execution logic of all scripts.
 		/// </summary>
-		internal void MainLoop()
+		void MainLoop()
 		{
-			_running = true;
+			IsRunning = true;
 
-			// Wait for domain to run scripts
-			_continueEvent.Wait();
+			// Wait for script domain to continue this script
+			continueEvent.Wait();
 
-			// Run main loop
-			while (_running)
+			while (IsRunning)
 			{
-				Tuple<bool, WinForms.KeyEventArgs> keyevent = null;
-
-				// Process events
-				while (_keyboardEvents.TryDequeue(out keyevent))
+				// Process keyboard events
+				while (keyboardEvents.TryDequeue(out Tuple<bool, WinForms.KeyEventArgs> ev))
 				{
 					try
 					{
-						if (keyevent.Item1)
-						{
-							KeyDown?.Invoke(this, keyevent.Item2);
-						}
+						if (!ev.Item1)
+							KeyUp?.Invoke(this, ev.Item2);
 						else
-						{
-							KeyUp?.Invoke(this, keyevent.Item2);
-						}
+							KeyDown?.Invoke(this, ev.Item2);
 					}
 					catch (Exception ex)
 					{
@@ -269,13 +87,68 @@ namespace GTA
 				catch (Exception ex)
 				{
 					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-
-					Abort();
 					break;
 				}
 
-				// Yield execution to next tick
-				Wait(_interval);
+                // Yield execution to next tick
+                PropertyInfo Interval = Instance.GetType().GetProperty("Interval", BindingFlags.Instance | BindingFlags.NonPublic);
+                Wait(Interval != null ? (int)Interval.GetValue(Instance) : 0);
+			}
+
+			// Abort in case the script encountered an unhandled exception above
+			if (IsRunning)
+				Abort();
+		}
+
+		public void Wait(int ms)
+		{
+			DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
+
+			do
+			{
+				waitEvent.Release();
+				continueEvent.Wait();
+			}
+			while (DateTime.UtcNow < resumeTime);
+		}
+
+		/// <summary>
+		/// Starts execution of this script.
+		/// </summary>
+		public void Start()
+		{
+			thread = new Thread(new ThreadStart(MainLoop));
+			thread.Start();
+
+			SHVDN.Console.Instance.RegisterCommands(Instance.GetType());
+
+			Log.Message(Log.Level.Info, "Started script ", Name, ".");
+		}
+		/// <summary>
+		/// Aborts execution of this script.
+		/// </summary>
+		public void Abort()
+		{
+			try
+			{
+				Aborted?.Invoke(this, EventArgs.Empty);
+			}
+			catch (Exception ex)
+			{
+				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+			}
+
+			IsRunning = false;
+
+			waitEvent.Release();
+
+			if (thread != null)
+			{
+				thread.Abort(); thread = null;
+
+				SHVDN.Console.Instance.UnregisterCommands(Instance.GetType());
+
+				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
 			}
 		}
 	}

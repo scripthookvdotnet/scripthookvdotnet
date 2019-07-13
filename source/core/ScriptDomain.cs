@@ -21,48 +21,75 @@ using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using WinForms = System.Windows.Forms;
+using System.Windows.Forms;
 
-namespace GTA
+namespace SHVDN
 {
-	interface IScriptTask
+	public interface IScriptTask
 	{
 		void Run();
 	}
 
-	internal class ScriptDomain : MarshalByRefObject, IDisposable
+	public class ScriptDomain : MarshalByRefObject, IDisposable
 	{
-		#region Fields
-		private int _executingThreadId;
-		private Script _executingScript;
-		private List<Script> _runningScripts = new List<Script>();
-		private Queue<IScriptTask> _taskQueue = new Queue<IScriptTask>();
-		private List<IntPtr> _pinnedStrings = new List<IntPtr>();
-		private List<Tuple<string, Type>> _scriptTypes = new List<Tuple<string, Type>>();
-		private bool _recordKeyboardEvents = true;
-		private bool[] _keyboardState = new bool[256];
-		private bool disposed = false;
-		#endregion
+		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
+		Script executingScript = null;
+		List<IntPtr> pinnedStrings = new List<IntPtr>();
+		List<Script> runningScripts = new List<Script>();
+		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
+		List<Tuple<string, Type>> scriptTypes = new List<Tuple<string, Type>>();
+		bool disposed = false;
+		bool recordKeyboardEvents = true;
+		bool[] keyboardState = new bool[256];
+		Assembly scriptApi = null;
 
-		public ScriptDomain()
+		/// <summary>
+		/// Gets the friendly name of this script domain.
+		/// </summary>
+		public string Name => AppDomain.FriendlyName;
+		/// <summary>
+		/// Gets the application domain that is associated with this script domain.
+		/// </summary>
+		public AppDomain AppDomain { get; private set; } = AppDomain.CurrentDomain;
+		/// <summary>
+		/// Gets the current scripting domain for the current thread.
+		/// </summary>
+		public static ScriptDomain CurrentDomain { get; private set; }
+		/// <summary>
+		/// The global list of all existing scripting domains.
+		/// </summary>
+		public static List<ScriptDomain> Instances = new List<ScriptDomain>();
+
+		/// <summary>
+		/// Gets the list of currently running scripts in this script domain.
+		/// </summary>
+		public Script[] RunningScripts => runningScripts.ToArray();
+		/// <summary>
+		/// Gets the currently executing script or <c>null</c> if there is none.
+		/// </summary>
+		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
+
+		/// <summary>
+		/// Initializes the script domain inside its application domain.
+		/// </summary>
+		/// <param name="apiPath">The path to the scripting API assembly file.</param>
+		private ScriptDomain(string apiPath)
 		{
-			AppDomain = AppDomain.CurrentDomain;
-			AppDomain.AssemblyResolve += new ResolveEventHandler(HandleResolve);
-			AppDomain.UnhandledException += new UnhandledExceptionEventHandler(HandleUnhandledException);
+			AppDomain.AssemblyResolve += HandleResolve;
+			AppDomain.UnhandledException += HandleUnhandledException;
 
-			CurrentDomain = this;
+			Log.Message(Log.Level.Info, "Loading API from ", apiPath, " ...");
 
-			_executingThreadId = Thread.CurrentThread.ManagedThreadId;
+			// Load API assembly into this script domain
+			scriptApi = Assembly.LoadFrom(apiPath);
 
-			Log("[INFO]", "Created new script domain with v", typeof(ScriptDomain).Assembly.GetName().Version.ToString(3), ".");
-
-			Console = new ConsoleScript();
+			Log.Message(Log.Level.Info, "Created new script domain for script API v", scriptApi.GetName().Version.ToString(3), ".");
 		}
+
 		~ScriptDomain()
 		{
 			Dispose(false);
 		}
-
 		public void Dispose()
 		{
 			Dispose(true);
@@ -72,132 +99,140 @@ namespace GTA
 		{
 			if (disposed)
 				return;
-
-			CleanupStrings();
-
 			disposed = true;
+
+			// Need to free native strings when disposing the script domain
+			CleanupStrings();
 		}
 
-		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain._executingScript : null;
-		public static ScriptDomain CurrentDomain { get; private set; }
-		public string Name => AppDomain.FriendlyName;
-		public AppDomain AppDomain { get; private set; }
-		public ConsoleScript Console { get; private set; }
-		public Script[] RunningScripts => _runningScripts.ToArray();
-
-		public static ScriptDomain Load(string path)
+		/// <summary>
+		/// Creates a new script domain.
+		/// </summary>
+		/// <param name="apiPath">The path to the scripting API assembly file.</param>
+		/// <param name="scriptPath">The path to the directory containing scripts.</param>
+		/// <returns>The script domain or <c>null</c> in case of failure.</returns>
+		public static ScriptDomain Load(string apiPath, string scriptPath)
 		{
-			if (!Path.IsPathRooted(path))
-			{
-				path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), path);
-			}
+			// Make absolute path to scrips location
+			if (!Path.IsPathRooted(scriptPath))
+				scriptPath = Path.Combine(Path.GetDirectoryName(apiPath), scriptPath);
+			scriptPath = Path.GetFullPath(scriptPath);
 
-			path = Path.GetFullPath(path);
-
-			// Clear log
-			string logPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
-
-			try
-			{
-				File.WriteAllText(logPath, string.Empty);
-			}
-			catch
-			{
-			}
-
-			// Create AppDomain
+			// Create application and script domain for all the scripts to reside in
+			var name = "ScriptDomain_" + (apiPath.GetHashCode() ^ scriptPath.GetHashCode() ^ Environment.TickCount).ToString("X");
 			var setup = new AppDomainSetup();
-			setup.ApplicationBase = path;
 			setup.ShadowCopyFiles = "true";
-			setup.ShadowCopyDirectories = path;
+			setup.ShadowCopyDirectories = scriptPath;
+			setup.ApplicationBase = scriptPath;
 
-			var appdomain = AppDomain.CreateDomain("ScriptDomain_" + (path.GetHashCode() * Environment.TickCount).ToString("X"), null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
+			var appdomain = AppDomain.CreateDomain(name, null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
 			appdomain.InitializeLifetimeService();
 
 			ScriptDomain scriptdomain = null;
 
 			try
 			{
-				scriptdomain = (ScriptDomain)(appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName));
+				//object[] args = new object[] { apiPath };
+				//scriptdomain = (ScriptDomain)appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.Default, null, args, null, null);
+				scriptdomain = new ScriptDomain(apiPath);
 			}
 			catch (Exception ex)
 			{
-				Log("[ERROR]", "Failed to create script domain':", Environment.NewLine, ex.ToString());
-
+				Log.Message(Log.Level.Error, "Failed to create script domain: ", ex.ToString());
 				AppDomain.Unload(appdomain);
-
 				return null;
 			}
 
-			Log("[INFO]", "Loading scripts from '", path, "' ...");
+			Log.Message(Log.Level.Info, "Loading scripts from ", scriptPath, " ...");
 
-			if (Directory.Exists(path))
+			if (!Directory.Exists(scriptPath))
 			{
-				var filenameScripts = new List<string>();
-				var filenameAssemblies = new List<string>();
+				Log.Message(Log.Level.Warning, "Failed to reload scripts because the directory is missing.");
+				return scriptdomain;
+			}
+
+			// Find all script files and assemblies in the specified script directory
+			var filenameScripts = new List<string>();
+			var filenameAssemblies = new List<string>();
+
+			try
+			{
+				filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
+				filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+				filenameAssemblies.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
+			}
+			catch (Exception ex)
+			{
+				Log.Message(Log.Level.Error, "Failed to reload scripts: ", ex.ToString());
+				AppDomain.Unload(appdomain);
+				return null;
+			}
+
+			// Filter out non-script assemblies like copies of ScriptHookVDotNet
+			for (int i = 0; i < filenameAssemblies.Count; i++)
+			{
+				var filename = filenameAssemblies[i];
+				var assemblyName = AssemblyName.GetAssemblyName(filename);
 
 				try
 				{
-					filenameScripts.AddRange(Directory.GetFiles(path, "*.vb", SearchOption.AllDirectories));
-					filenameScripts.AddRange(Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories));
-					filenameAssemblies.AddRange(Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
+					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+					{
+						Log.Message(Log.Level.Warning, "Removing assembly file ", Path.GetFileName(filename), ".");
+
+						filenameAssemblies.RemoveAt(i--);
+
+						try
+						{
+							File.Delete(filename);
+						}
+						catch (Exception ex)
+						{
+							Log.Message(Log.Level.Error, "Failed to delete assembly file: ", ex.ToString());
+						}
+					}
 				}
 				catch (Exception ex)
 				{
-					Log("[ERROR]", "Failed to reload scripts:", Environment.NewLine, ex.ToString());
-
-					AppDomain.Unload(appdomain);
-
-					return null;
-				}
-
-				for (int i = 0; i < filenameAssemblies.Count; i++)
-				{
-					var filename = filenameAssemblies[i];
-					var assemblyName = AssemblyName.GetAssemblyName(filename);
-
-					try
-					{
-						if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
-						{
-							Log("[WARNING]", "Removing assembly file '", Path.GetFileName(filename), "'.");
-
-							filenameAssemblies.RemoveAt(i--);
-
-							try
-							{
-								File.Delete(filename);
-							}
-							catch (Exception ex)
-							{
-								Log("[ERROR]", "Failed to delete assembly file:", Environment.NewLine, ex.ToString());
-							}
-						}
-					}
-					catch (Exception ex)
-					{
-						Log("[ERROR]", "Failed to load assembly file '", Path.GetFileName(filename), "':", Environment.NewLine, ex.ToString());
-					}
-				}
-
-				foreach (string filename in filenameScripts)
-				{
-					scriptdomain.LoadScript(filename);
-				}
-				foreach (string filename in filenameAssemblies)
-				{
-					scriptdomain.LoadAssembly(filename);
+					Log.Message(Log.Level.Error, "Failed to load assembly file ", Path.GetFileName(filename), ": ", ex.ToString());
 				}
 			}
-			else
-			{
-				Log("[ERROR]", "Failed to reload scripts because the directory is missing.");
-			}
+
+			// Actually load scripts into the script domain
+			foreach (string filename in filenameScripts)
+				scriptdomain.LoadScript(filename);
+			foreach (string filename in filenameAssemblies)
+				scriptdomain.LoadAssembly(filename);
 
 			return scriptdomain;
 		}
+		/// <summary>
+		/// Unloads scripts and destroys an existing script domain.
+		/// </summary>
+		/// <param name="domain">The script domain to unload.</param>
+		public static void Unload(ScriptDomain domain)
+		{
+			Log.Message(Log.Level.Info, "Unloading script domain ...");
 
-		private bool LoadScript(string filename)
+			domain.Abort();
+			domain.Dispose();
+
+			try
+			{
+				AppDomain.Unload(domain.AppDomain);
+			}
+			catch (Exception ex)
+			{
+				Log.Message(Log.Level.Error, "Failed to unload script domain: ", ex.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Compiles and load scripts from a C# or VB.NET source code file.
+		/// </summary>
+		/// <param name="filename">The path to the code file to load.</param>
+		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
+		bool LoadScript(string filename)
 		{
 			var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
 			compilerOptions.CompilerOptions = "/optimize";
@@ -209,7 +244,7 @@ namespace GTA
 			compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
-			compilerOptions.ReferencedAssemblies.Add(typeof(Script).Assembly.Location);
+			compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
 			string extension = Path.GetExtension(filename);
 			System.CodeDom.Compiler.CodeDomProvider compiler = null;
@@ -232,8 +267,7 @@ namespace GTA
 
 			if (!compilerResult.Errors.HasErrors)
 			{
-				Log("[INFO]", "Successfully compiled '", Path.GetFileName(filename), "'.");
-
+				Log.Message(Log.Level.Info, "Successfully compiled ", Path.GetFileName(filename), ".");
 				return LoadAssembly(filename, compilerResult.CompiledAssembly);
 			}
 			else
@@ -249,14 +283,21 @@ namespace GTA
 					errors.AppendLine();
 				}
 
-				Log("[ERROR]", "Failed to compile '", Path.GetFileName(filename), "' with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
-
+				Log.Message(Log.Level.Error, "Failed to compile ", Path.GetFileName(filename), " with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
 				return false;
 			}
 		}
-		private bool LoadAssembly(string filename)
+		/// <summary>
+		/// Loads scripts from the specified file.
+		/// </summary>
+		/// <param name="filename">The path to the assembly file to load.</param>
+		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
+		bool LoadAssembly(string filename)
 		{
-			Log("[INFO]", "Loading assembly '", Path.GetFileName(filename), "' ...");
+			if (!IsManagedAssembly(filename))
+				return false;
+
+			Log.Message(Log.Level.Info, "Loading assembly ", Path.GetFileName(filename), " ...");
 
 			Assembly assembly = null;
 
@@ -266,24 +307,31 @@ namespace GTA
 			}
 			catch (Exception ex)
 			{
-				Log("[ERROR]", "Failed to load assembly '", Path.GetFileName(filename), "':", Environment.NewLine, ex.ToString());
-
+				Log.Message(Log.Level.Error, "Failed to load assembly ", Path.GetFileName(filename), ":", Environment.NewLine, ex.ToString());
 				return false;
 			}
 
 			return LoadAssembly(filename, assembly);
 		}
-		private bool LoadAssembly(string filename, Assembly assembly)
+		/// <summary>
+		/// Loads scripts from the specified assembly.
+		/// </summary>
+		/// <param name="filename">The path to the file associated with this assembly.</param>
+		/// <param name="assembly">The assembly to load.</param>
+		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
+		bool LoadAssembly(string filename, Assembly assembly)
 		{
-			string version = (Path.GetExtension(filename) == ".dll" ? (" v" + assembly.GetName().Version.ToString(3)) : string.Empty);
-			uint count = 0;
+			int count = 0;
+			string name = Path.GetFileName(filename) +
+				(Path.GetExtension(filename) == ".dll" ? (" v" + assembly.GetName().Version.ToString(3)) : string.Empty);
 
 			try
 			{
-				foreach (var type in assembly.GetTypes().Where(x => x.IsSubclassOf(typeof(Script))))
+				// Find all script types in the assembly
+				foreach (var type in assembly.GetTypes().Where(x => x.BaseType.Name == "Script"))
 				{
 					count++;
-					_scriptTypes.Add(new Tuple<string, Type>(filename, type));
+					scriptTypes.Add(new Tuple<string, Type>(filename, type));
 				}
 			}
 			catch (ReflectionTypeLoadException ex)
@@ -292,616 +340,440 @@ namespace GTA
 
 				if (ReferenceEquals(fileNotFoundException, null) || fileNotFoundException.Message.IndexOf("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) < 0)
 				{
-					Log("[ERROR]", "Failed to load assembly '", Path.GetFileName(filename), version, "':", Environment.NewLine, ex.LoaderExceptions[0].ToString());
+					Log.Message(Log.Level.Error, "Failed to load assembly ", name, ": ", ex.LoaderExceptions[0].ToString());
 				}
 
 				return false;
 			}
 
-			Log("[INFO]", "Found ", count.ToString(), " script(s) in '", Path.GetFileName(filename), version, "'.");
+			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", name, ".");
 
 			return count != 0;
 		}
-		public static bool IsManagedAssembly(string fileName)
+
+		/// <summary>
+		/// Creates an instance of a script.
+		/// </summary>
+		/// <param name="scriptType">The type of the script to instantiate.</param>
+		/// <returns>The script instance or <c>null</c> in case of failure.</returns>
+		Script InstantiateScript(Type scriptType)
 		{
-			using (Stream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-			using (BinaryReader binaryReader = new BinaryReader(fileStream))
-			{
-				if (fileStream.Length < 64)
-				{
-					return false;
-				}
-
-				//PE Header starts @ 0x3C (60). Its a 4 byte header.
-				fileStream.Position = 0x3C;
-				uint peHeaderPointer = binaryReader.ReadUInt32();
-				if (peHeaderPointer == 0)
-				{
-					peHeaderPointer = 0x80;
-				}
-
-				// Ensure there is at least enough room for the following structures:
-				//     24 byte PE Signature & Header
-				//     28 byte Standard Fields         (24 bytes for PE32+)
-				//     68 byte NT Fields               (88 bytes for PE32+)
-				// >= 128 byte Data Dictionary Table
-				if (peHeaderPointer > fileStream.Length - 256)
-				{
-					return false;
-				}
-
-				// Check the PE signature.  Should equal 'PE\0\0'.
-				fileStream.Position = peHeaderPointer;
-				uint peHeaderSignature = binaryReader.ReadUInt32();
-				if (peHeaderSignature != 0x00004550)
-				{
-					return false;
-				}
-
-				// skip over the PEHeader fields
-				fileStream.Position += 20;
-
-				const ushort PE32 = 0x10b;
-				const ushort PE32Plus = 0x20b;
-
-				// Read PE magic number from Standard Fields to determine format.
-				var peFormat = binaryReader.ReadUInt16();
-				if (peFormat != PE32 && peFormat != PE32Plus)
-				{
-					return false;
-				}
-
-				// Read the 15th Data Dictionary RVA field which contains the CLI header RVA.
-				// When this is non-zero then the file contains CLI data otherwise not.
-				ushort dataDictionaryStart = (ushort)(peHeaderPointer + (peFormat == PE32 ? 232 : 248));
-				fileStream.Position = dataDictionaryStart;
-
-				uint cliHeaderRva = binaryReader.ReadUInt32();
-				if (cliHeaderRva == 0)
-				{
-					return false;
-				}
-
-				return true;
-			}
-		}
-		public static void Unload(ref ScriptDomain domain)
-		{
-			Log("[INFO]", "Unloading script domain ...");
-
-			domain.Abort();
-
-			AppDomain appdomain = domain.AppDomain;
-
-			domain.Dispose();
-
-			try
-			{
-				AppDomain.Unload(appdomain);
-			}
-			catch (Exception ex)
-			{
-				Log("[ERROR]", "Failed to unload deleted script domain:", Environment.NewLine, ex.ToString());
-			}
-
-			domain = null;
-		}
-		private Script InstantiateScript(Type scriptType)
-		{
-			if (!scriptType.IsSubclassOf(typeof(Script)) || scriptType.IsAbstract)
-			{
+			if (scriptType.IsAbstract)
 				return null;
-			}
 
-			Log("[INFO]", "Instantiating script '", scriptType.FullName, "' ...");
+			Log.Message(Log.Level.Info, "Instantiating script '", scriptType.FullName, "' ...");
+
+			Script script = new Script();
+
+			// Update current domain, so that the script constructor has access to it
+			CurrentDomain = this;
+			executingScript = script;
 
 			try
 			{
-				return (Script)(Activator.CreateInstance(scriptType));
+				script.Instance = Activator.CreateInstance(scriptType);
+				script.Filename = LookupScriptFilename(scriptType);
+				return script;
 			}
 			catch (MissingMethodException)
 			{
-				Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "' because no public default constructor was found.");
+				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, " because no public default constructor was found.");
 			}
 			catch (TargetInvocationException ex)
 			{
-				Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "' because constructor threw an exception:", Environment.NewLine, ex.InnerException.ToString());
+				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, " because constructor threw an exception: ", ex.InnerException.ToString());
 			}
 			catch (Exception ex)
 			{
-				Log("[ERROR]", "Failed to instantiate script '", scriptType.FullName, "':", Environment.NewLine, ex.ToString());
+				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
 			}
 
 			string supportURL = GetScriptSupportURL(scriptType);
-
 			if (supportURL != null)
-			{
-				Log("[INFO]", "Please check the following site for support on the issue: ", supportURL);
-			}
+				Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
 
 			return null;
 		}
 
-		internal static bool SortScripts(ref List<Tuple<string, Type>> scriptTypes)
+		static bool SortScripts(ref List<Tuple<string, Type>> scriptTypes)
 		{
-			var graph = new Dictionary<Tuple<string, Type>, List<Type>>();
+			//var graph = new Dictionary<Tuple<string, Type>, List<Type>>();
 
-			foreach (var scriptType in scriptTypes)
-			{
-				var dependencies = new List<Type>();
+			//foreach (var scriptType in scriptTypes)
+			//{
+			//	var dependencies = new List<Type>();
+			//	foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes<RequireScript>(true))
+			//		dependencies.Add(attribute._dependency);
+			//	graph.Add(scriptType, dependencies);
+			//}
 
-				foreach (RequireScript attribute in (scriptType.Item2).GetCustomAttributes<RequireScript>(true))
-				{
-					dependencies.Add(attribute._dependency);
-				}
+			//var result = new List<Tuple<string, Type>>(graph.Count);
 
-				graph.Add(scriptType, dependencies);
-			}
+			//while (graph.Count > 0)
+			//{
+			//	Tuple<string, Type> scriptType = null;
 
-			var result = new List<Tuple<string, Type>>(graph.Count);
+			//	foreach (var item in graph)
+			//	{
+			//		if (item.Value.Count == 0)
+			//		{
+			//			scriptType = item.Key;
+			//			break;
+			//		}
+			//	}
 
-			while (graph.Count > 0)
-			{
-				Tuple<string, Type> scriptType = null;
+			//	if (scriptType == null)
+			//	{
+			//		Log.Message(Log.Level.Error, "Detected a circular script dependency. Aborting ...");
+			//		return false;
+			//	}
 
-				foreach (var item in graph)
-				{
-					if (item.Value.Count == 0)
-					{
-						scriptType = item.Key;
-						break;
-					}
-				}
+			//	result.Add(scriptType);
+			//	graph.Remove(scriptType);
 
-				if (scriptType == null)
-				{
-					Log("[ERROR]", "Detected a circular script dependency. Aborting ...");
-					return false;
-				}
+			//	foreach (var item in graph)
+			//		item.Value.Remove(scriptType.Item2);
+			//}
 
-				result.Add(scriptType);
-				graph.Remove(scriptType);
-
-				foreach (var item in graph)
-				{
-					item.Value.Remove(scriptType.Item2);
-				}
-			}
-
-			scriptTypes = result;
+			//scriptTypes = result;
 
 			return true;
 		}
+
+		/// <summary>
+		/// Instantiates and starts all loaded scripts. 
+		/// </summary>
 		public void Start()
 		{
-			if (_runningScripts.Count != 0)
-			{
-				return;
-			}
+			if (runningScripts.Count != 0)
+				return; // Scripts are already running, so there is nothing to do.
 
-			// Start console
-			Console.Start();
+			Log.Message(Log.Level.Info, "Starting ", scriptTypes.Count.ToString(), " script(s) ...");
 
-			// Start script threads
-			Log("[INFO]", "Starting ", _scriptTypes.Count.ToString(), " script(s) ...");
+			if (scriptTypes.Count == 0 || !SortScripts(ref scriptTypes))
+				return; // No scripts are loaded.
 
-			if (_scriptTypes.Count == 0 || !SortScripts(ref _scriptTypes))
-			{
-				return;
-			}
-
-			foreach (var script in _scriptTypes.Select(x => InstantiateScript(x.Item2)).Where(x => x != null))
+			foreach (var script in scriptTypes.Select(x => InstantiateScript(x.Item2)).Where(x => x != null))
 			{
 				script.Start();
+
+				runningScripts.Add(script);
 			}
 		}
-		public void StartScript(string filename)
+		/// <summary>
+		/// Reloads, instantiates and starts all scripts from the specified file.
+		/// </summary>
+		/// <param name="filename"></param>
+		public void StartScripts(string filename)
 		{
 			filename = Path.GetFullPath(filename);
 
-			int offset = _scriptTypes.Count;
-			string extension = Path.GetExtension(filename);
+			int offset = scriptTypes.Count;
 
-			if (extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
-			{
-				if (!(IsManagedAssembly(filename) && LoadAssembly(filename)))
-				{
-					return;
-				}
-			}
-			else if (!LoadScript(filename))
-			{
+			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
 				return;
-			}
 
-			Log("[INFO]", "Starting ", (_scriptTypes.Count - offset).ToString(), " script(s) ...");
+			Log.Message(Log.Level.Info, "Starting ", (scriptTypes.Count - offset).ToString(), " script(s) in ", filename, " ...");
 
-			for (int i = offset; i < _scriptTypes.Count; i++)
+			for (int i = offset; i < scriptTypes.Count; i++)
 			{
-				Script script = InstantiateScript(_scriptTypes[i].Item2);
+				Script script = InstantiateScript(scriptTypes[i].Item2);
 
-				if (Object.ReferenceEquals(script, null))
-				{
+				if (ReferenceEquals(script, null))
 					continue;
-				}
 
 				script.Start();
+
+				runningScripts.Add(script);
 			}
 		}
+		/// <summary>
+		/// Reloads, instantiates and starts all scripts.
+		/// </summary>
 		public void StartAllScripts()
 		{
-			string basedirectory = CurrentDomain.AppDomain.BaseDirectory;
+			string scriptPath = AppDomain.BaseDirectory;
+			if (!Directory.Exists(scriptPath))
+				return;
 
-			if (Directory.Exists(basedirectory))
+			var filenames = new List<string>();
+
+			try
 			{
-				var filenameScripts = new List<string>();
-
-				try
-				{
-					filenameScripts.AddRange(Directory.GetFiles(basedirectory, "*.vb", SearchOption.AllDirectories));
-					filenameScripts.AddRange(Directory.GetFiles(basedirectory, "*.cs", SearchOption.AllDirectories));
-					filenameScripts.AddRange(Directory.GetFiles(basedirectory, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
-				}
-				catch (Exception ex)
-				{
-					Log("[ERROR]", "Failed to reload scripts:", Environment.NewLine, ex.ToString());
-				}
-
-				int offset = _scriptTypes.Count;
-
-				foreach (var filename in filenameScripts)
-				{
-					string extension = Path.GetExtension(filename).ToLower();
-
-					if (extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
-					{
-						continue;
-					}
-				}
-
-				int TotalScriptCount = _scriptTypes.Count;
-
-				Log("[INFO]", "Starting ", (TotalScriptCount - offset).ToString(), " script(s) ...");
-
-				for (int i = offset; i < TotalScriptCount; i++)
-				{
-					Script script = InstantiateScript(_scriptTypes[i].Item2);
-
-					if (ReferenceEquals(script, null))
-					{
-						continue;
-					}
-
-					script.Start();
-				}
+				filenames.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
+				filenames.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+				filenames.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
 			}
+			catch (Exception ex)
+			{
+				Log.Message(Log.Level.Error, "Failed to reload scripts:", Environment.NewLine, ex.ToString());
+			}
+
+			foreach (var filename in filenames)
+				StartScripts(filename);
 		}
+		/// <summary>
+		/// Aborts all running scripts.
+		/// </summary>
 		public void Abort()
 		{
-			_runningScripts.Remove(Console);
+			Log.Message(Log.Level.Info, "Stopping ", runningScripts.Count.ToString(), " script(s) ...");
 
-			Log("[INFO]", "Stopping ", _runningScripts.Count.ToString(), " script(s) ...");
-
-			foreach (Script script in _runningScripts)
-			{
+			foreach (Script script in runningScripts)
 				script.Abort();
-			}
 
-			Console.Abort();
-
-			_scriptTypes.Clear();
-			_runningScripts.Clear();
+			scriptTypes.Clear();
+			runningScripts.Clear();
 		}
-		public void AbortScript(string filename)
+		/// <summary>
+		/// Aborts a single running script.
+		/// </summary>
+		/// <param name="script">The script instance to abort.</param>
+		public void AbortScript(object script)
+		{
+			runningScripts.Single(x => x.Instance == script).Abort();
+		}
+		/// <summary>
+		/// Aborts all running scripts from the specified file.
+		/// </summary>
+		/// <param name="filename"></param>
+		public void AbortScripts(string filename)
 		{
 			filename = Path.GetFullPath(filename);
 
-			foreach (Script script in _runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
-			{
+			foreach (Script script in runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
 				script.Abort();
-			}
-		}
-		public void AbortAllScriptsExceptConsole()
-		{
-			foreach (Script script in _runningScripts.Where(x => x != Console))
-			{
-				script.Abort();
-			}
-
-			_scriptTypes.Clear();
-			_runningScripts.RemoveAll(x => x != Console);
-		}
-		public static void OnStartScript(Script script)
-		{
-			ScriptDomain domain = script._scriptdomain;
-
-			domain._runningScripts.Add(script);
-
-			if (ReferenceEquals(script, domain.Console))
-			{
-				return;
-			}
-
-			domain.Console.RegisterCommands(script.GetType());
-
-			Log("[INFO]", "Started script '", script.Name, "'.");
-		}
-		public static void OnAbortScript(Script script)
-		{
-			ScriptDomain domain = script._scriptdomain;
-
-			if (ReferenceEquals(script, domain.Console))
-			{
-				return;
-			}
-
-			domain.Console.UnregisterCommands(script.GetType());
-
-			Log("[INFO]", "Aborted script '", script.Name, "'.");
 		}
 
-		public void DoTick()
-		{
-			// Execute scripts
-			for (int i = 0; i < _runningScripts.Count; i++)
-			{
-				Script script = _runningScripts[i];
-
-				if (!script._running)
-				{
-					continue;
-				}
-
-				_executingScript = script;
-
-				while ((script._running = SignalAndWait(script._continueEvent, script._waitEvent, 5000)) && _taskQueue.Count > 0)
-				{
-					_taskQueue.Dequeue().Run();
-				}
-
-				_executingScript = null;
-
-				if (!script._running)
-				{
-					Log("[ERROR]", "Script '", script.Name, "' is not responding! Aborting ...");
-
-					OnAbortScript(script);
-					continue;
-				}
-			}
-
-			// Clean up pinned strings
-			CleanupStrings();
-		}
-		public void DoKeyboardMessage(WinForms.Keys key, bool status, bool statusCtrl, bool statusShift, bool statusAlt)
-		{
-			int keycode = (int)key;
-
-			if (keycode < 0 || keycode >= _keyboardState.Length)
-			{
-				return;
-			}
-
-			_keyboardState[keycode] = status;
-
-			if (_recordKeyboardEvents)
-			{
-				if (statusCtrl)
-				{
-					key = key | WinForms.Keys.Control;
-				}
-				if (statusShift)
-				{
-					key = key | WinForms.Keys.Shift;
-				}
-				if (statusAlt)
-				{
-					key = key | WinForms.Keys.Alt;
-				}
-
-				var args = new WinForms.KeyEventArgs(key);
-				var eventinfo = new Tuple<bool, WinForms.KeyEventArgs>(status, args);
-
-				if (!ReferenceEquals(Console, null) && Console.IsOpen)
-				{
-					// Do not send keyboard events to other running scripts when console is open
-					Console._keyboardEvents.Enqueue(eventinfo);
-				}
-				else
-				{
-					foreach (Script script in _runningScripts)
-					{
-						script._keyboardEvents.Enqueue(eventinfo);
-					}
-				}
-			}
-		}
-
-		public void PauseKeyboardEvents(bool pause)
-		{
-			_recordKeyboardEvents = !pause;
-		}
+		/// <summary>
+		/// Execute a script task in this script domain.
+		/// </summary>
+		/// <param name="task">The task to execute.</param>
 		public void ExecuteTask(IScriptTask task)
 		{
-			if (Thread.CurrentThread.ManagedThreadId == _executingThreadId)
+			if (Thread.CurrentThread.ManagedThreadId == executingThreadId)
 			{
+				// Request came from the main thread, so can just execute it right away
 				task.Run();
 			}
 			else
 			{
-				_taskQueue.Enqueue(task);
+				// Request came from the script thread, so need to pass it to the domain thread and execute there
+				taskQueue.Enqueue(task);
 
-				SignalAndWait(ExecutingScript._waitEvent, ExecutingScript._continueEvent);
+				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
 			}
 		}
+
+		/// <summary>
+		/// Gets the key down status of the specified key.
+		/// </summary>
+		/// <param name="key">The key to check.</param>
+		/// <returns><c>true</c> if the key is currently pressed or <c>false</c> otherwise</returns>
+		public bool IsKeyPressed(Keys key)
+		{
+			return keyboardState[(int)key];
+		}
+		/// <summary>
+		/// Pauses or resumes handling of keyboard events in this script domain.
+		/// </summary>
+		/// <param name="pause"><c>true</c> to pause or <c>false</c> to resume</param>
+		public void PauseKeyboardEvents(bool pause)
+		{
+			recordKeyboardEvents = !pause;
+		}
+
+		/// <summary>
+		/// Main execution logic of the script domain.
+		/// </summary>
+		internal void DoTick()
+		{
+			// Execute running scripts
+			for (int i = 0; i < runningScripts.Count; i++)
+			{
+				Script script = runningScripts[i];
+
+				// Ignore terminated scripts
+				if (!script.IsRunning)
+					continue;
+
+				// Update current domain, so that the script has access to it
+				CurrentDomain = this;
+				executingScript = script;
+
+				// Resume script thread and execute any incoming tasks from it
+				bool finishedInTime = false;
+				while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
+					taskQueue.Dequeue().Run();
+
+				executingScript = null;
+
+				if (!finishedInTime)
+				{
+					Log.Message(Log.Level.Error, "Script '", script.Name, "' is not responding! Aborting ...");
+
+					// Wait operation above timed out, which means that the script did not send any task for some time, so abort it
+					script.Abort();
+					continue;
+				}
+			}
+
+			// Clean up any pinned strings of this frame
+			CleanupStrings();
+		}
+		/// <summary>
+		/// Keyboard handling logic of the script domain.
+		/// </summary>
+		/// <param name="e">The event arguments of this key event.</param>
+		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
+		internal void DoKeyboardMessage(KeyEventArgs e, bool status)
+		{
+			keyboardState[e.KeyValue] = status;
+
+			if (recordKeyboardEvents)
+			{
+				var eventinfo = new Tuple<bool, KeyEventArgs>(status, e);
+
+				foreach (Script script in runningScripts)
+					script.keyboardEvents.Enqueue(eventinfo);
+			}
+		}
+
+		/// <summary>
+		/// Pins the memory of a string so that it can be used in native calls without worrying about the GC invalidating its pointer.
+		/// </summary>
+		/// <param name="str">The string to pin to a fixed pointer.</param>
+		/// <returns>A pointer to the pinned memory containing the string.</returns>
 		public IntPtr PinString(string str)
 		{
-			IntPtr handle = Native.MemoryAccess.StringToCoTaskMemUTF8(str);
+			IntPtr handle = NativeMemory.StringToCoTaskMemUTF8(str);
 
 			if (handle == IntPtr.Zero)
 			{
-				return Native.MemoryAccess.NullString;
+				return NativeMemory.NullString;
 			}
 			else
 			{
-				_pinnedStrings.Add(handle);
-
+				pinnedStrings.Add(handle);
 				return handle;
 			}
 		}
-		private void CleanupStrings()
-		{
-			foreach (IntPtr handle in _pinnedStrings)
-			{
-				Marshal.FreeCoTaskMem(handle);
-			}
 
-			_pinnedStrings.Clear();
-		}
-		public string LookupScriptFilename(Script script)
+		void CleanupStrings()
 		{
-			return LookupScriptFilename(script.GetType());
+			foreach (IntPtr handle in pinnedStrings)
+				Marshal.FreeCoTaskMem(handle);
+			pinnedStrings.Clear();
 		}
-		public string LookupScriptFilename(Type type)
+
+		public string LookupScriptFilename(Type scriptType)
 		{
-			return _scriptTypes.FirstOrDefault(x => x.Item2 == type)?.Item1 ?? string.Empty;
+			return scriptTypes.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
 		}
+
 		public override object InitializeLifetimeService()
 		{
+			// Return null to avoid lifetime restriction on the marshaled object.
 			return null;
 		}
 
-		internal bool IsKeyPressed(WinForms.Keys key)
-		{
-			return _keyboardState[(int)(key)];
-		}
-
-		static private void SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn)
+		static void SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn)
 		{
 			toSignal.Release();
 			toWaitOn.Wait();
 		}
-		static private bool SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn, int timeout)
+		static bool SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn, int timeout)
 		{
 			toSignal.Release();
 			return toWaitOn.Wait(timeout);
 		}
 
-		static private string GetScriptSupportURL(Type scriptType)
+		static bool IsManagedAssembly(string filename)
 		{
-			foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes<ScriptAttributes>(true))
+			using (Stream file = new FileStream(filename, FileMode.Open, FileAccess.Read))
 			{
-				if (!String.IsNullOrEmpty(attribute.SupportURL))
+				if (file.Length < 64)
+					return false;
+
+				using (BinaryReader bin = new BinaryReader(file))
 				{
-					return attribute.SupportURL;
+					// PE header starts at offset 0x3C (60). Its a 4 byte header.
+					file.Position = 0x3C;
+					uint offset = bin.ReadUInt32();
+					if (offset == 0)
+						offset = 0x80;
+
+					// Ensure there is at least enough room for the following structures:
+					//     24 byte PE Signature & Header
+					//     28 byte Standard Fields         (24 bytes for PE32+)
+					//     68 byte NT Fields               (88 bytes for PE32+)
+					// >= 128 byte Data Dictionary Table
+					if (offset > file.Length - 256)
+						return false;
+
+					// Check the PE signature. Should equal 'PE\0\0'.
+					file.Position = offset;
+					if (bin.ReadUInt32() != 0x00004550)
+						return false;
+
+					// Read PE magic number from Standard Fields to determine format.
+					file.Position += 20;
+					var peFormat = bin.ReadUInt16();
+					if (peFormat != 0x10b /* PE32 */ && peFormat != 0x20b /* PE32Plus */)
+						return false;
+
+					// Read the 15th Data Dictionary RVA field which contains the CLI header RVA.
+					// When this is non-zero then the file contains CLI data otherwise not.
+					file.Position = offset + (peFormat == 0x10b ? 232 : 248);
+					return bin.ReadUInt32() != 0;
 				}
 			}
+		}
+
+		static string GetScriptSupportURL(Type scriptType)
+		{
+			//foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes<ScriptAttributes>(true))
+			//	if (!string.IsNullOrEmpty(attribute.SupportURL))
+			//		return attribute.SupportURL;
 
 			return null;
 		}
 
-		static private void Log(string logLevel, params string[] message)
+		Assembly HandleResolve(object sender, ResolveEventArgs args)
 		{
-			var datetime = DateTime.Now;
-			string logPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
-
-			try
-			{
-				var fs = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Read);
-				var sw = new StreamWriter(fs);
-
-				try
-				{
-					sw.Write(string.Concat("[", datetime.ToString("HH:mm:ss"), "] ", logLevel, " "));
-
-					foreach (string str in message)
-					{
-						sw.Write(str);
-					}
-
-					sw.WriteLine();
-				}
-				finally
-				{
-					sw.Close();
-					fs.Close();
-				}
-			}
-			catch (Exception)
-			{
-			}
-
-			if (ReferenceEquals(CurrentDomain, null))
-			{
-				return;
-			}
-
-			var console = CurrentDomain.Console;
-
-			if (!ReferenceEquals(console, null))
-			{
-				if (logLevel == "[INFO]")
-				{
-					console.Info(string.Join(string.Empty, message));
-					return;
-				}
-				if (logLevel == "[ERROR]")
-				{
-					console.Error(string.Join(string.Empty, message));
-					return;
-				}
-				if (logLevel == "[WARNING]")
-				{
-					console.Warn(string.Join(string.Empty, message));
-					return;
-				}
-			}
-		}
-		static private Assembly HandleResolve(Object sender, ResolveEventArgs args)
-		{
-			var assembly = typeof(Script).Assembly;
 			var assemblyName = new AssemblyName(args.Name);
+
+			Log.Message(Log.Level.Info, "Resolving ", args.Name);
 
 			if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 			{
-				if (assemblyName.Version.Major != assembly.GetName().Version.Major)
-				{
-					Log("[WARNING]", "A script references v", assemblyName.Version.ToString(3), " which may not be compatible with the current v" + assembly.GetName().Version.ToString(3), " and was therefore ignored.");
-				}
+				// Special case for the main loader assembly
+				if (assemblyName.Name == "ScriptHookVDotNet")
+					return Assembly.GetExecutingAssembly();
+
+				// Check that the referenced script API assembly version is compatible
+				if (assemblyName.Version.Major != scriptApi.GetName().Version.Major)
+					Log.Message(Log.Level.Warning, "A script references v", assemblyName.Version.ToString(3), " which may not be compatible with the current v" + scriptApi.GetName().Version.ToString(3), " and was therefore ignored.");
 				else
-				{
-					return assembly;
-				}
+					return scriptApi;
 			}
 
 			return null;
 		}
-		static internal void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
+		static public void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
 		{
-			if (!args.IsTerminating)
-			{
-				Log("[ERROR]", "Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
-			}
-			else
-			{
-				Log("[ERROR]", "Caught fatal unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
-			}
+			Log.Message(Log.Level.Error, args.IsTerminating ? "Caught fatal unhandled exception:" : "Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
 
 			if (sender == null || !typeof(Script).IsInstanceOfType(sender))
-			{
 				return;
-			}
 
-			var scriptType = sender.GetType();
+			var script = (Script)sender;
 
-			Log("[INFO]", "The exception was thrown while executing the script '", scriptType.FullName, "'.");
+			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
 
-			string supportURL = GetScriptSupportURL(scriptType);
-
+			string supportURL = GetScriptSupportURL(script.Instance.GetType());
 			if (supportURL != null)
-			{
-				Log("[INFO]", "Please check the following site for support on the issue: ", supportURL);
-			}
+				Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
 		}
 	}
 }
