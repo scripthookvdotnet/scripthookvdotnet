@@ -23,7 +23,6 @@ using WinForms = System.Windows.Forms;
 
 namespace SHVDN
 {
-	[Serializable]
 	public class Script
 	{
 		Thread thread;
@@ -121,7 +120,7 @@ namespace SHVDN
 			thread = new Thread(new ThreadStart(MainLoop));
 			thread.Start();
 
-			SHVDN.Console.Instance.RegisterCommands(Instance.GetType());
+			SHVDN.Console.RegisterCommands(Instance.GetType());
 
 			Log.Message(Log.Level.Info, "Started script ", Name, ".");
 		}
@@ -147,7 +146,7 @@ namespace SHVDN
 			{
 				thread.Abort(); thread = null;
 
-				SHVDN.Console.Instance.UnregisterCommands(Instance.GetType());
+				SHVDN.Console.UnregisterCommands(Instance.GetType());
 
 				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
 			}

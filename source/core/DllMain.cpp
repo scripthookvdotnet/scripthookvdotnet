@@ -63,8 +63,7 @@ static void ScriptHookVDotnet_ManagedInit()
 
 static void ScriptHookVDotnet_ManagedTick(unsigned int index)
 {
-	SHVDN::Console ^console = SHVDN::Console::Instance;
-	console->DoTick();
+	SHVDN::Console::DoTick();
 
 	for each (ScriptDomain ^domain in ScriptDomain::Instances)
 		domain->DoTick();
@@ -82,12 +81,11 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	if (shift) keys = keys | WinForms::Keys::Shift;
 	if (alt)   keys = keys | WinForms::Keys::Alt;
 
-	SHVDN::Console ^console = SHVDN::Console::Instance;
 	if (keydown) // Send key down events to console
-		console->DoKeyDown(keys);
+		SHVDN::Console::DoKeyDown(keys);
 
 	// Do not send keyboard events to other running scripts when console is open
-	if (!console->IsOpen)
+	if (!SHVDN::Console::IsOpen)
 		for each (ScriptDomain ^domain in ScriptDomain::Instances)
 			domain->DoKeyEvent(keys, keydown);
 }

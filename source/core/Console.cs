@@ -31,74 +31,51 @@ using System.Runtime.InteropServices;
 
 namespace SHVDN
 {
-	//Used to describe console args (Needed for creating a Help-func)
-	internal class ConsoleArg
+	public static class Console
 	{
-		public ConsoleArg(string type, string name)
+		static Console()
 		{
-			Type = type;
-			Name = type;
+			PrintInfo("--- Community Script Hook V .NET " + Assembly.GetExecutingAssembly().GetName().Version + " ---");
+			PrintInfo("--- Type \"Help()\" to print an overview of available commands ---");
+
+			// Add default console commands
+			RegisterCommands(typeof(ConsoleCommands));
 		}
 
-		internal string Type { get; }
-		internal string Name { get; }
-	}
-
-	public class ConsoleCommand : Attribute
-	{
-		public ConsoleCommand(string help)
+		public static bool IsOpen
 		{
-			Help = help;
-			ConsoleArgs = new List<ConsoleArg>();
-		}
-		public ConsoleCommand() : this("No help text available")
-		{
-		}
-
-		internal string Help { get; set; }
-		internal string Name { get; set; }
-		internal string Namespace { get; set; }
-		internal List<ConsoleArg> ConsoleArgs { get; set; }
-
-		internal string BuildFormattedHelp()
-		{
-			StringBuilder builder = new StringBuilder();
-			builder.Append("~h~" + Name + "~w~(");
-
-			foreach (var arg in ConsoleArgs)
+			get { return isOpen; }
+			set
 			{
-				builder.Append(arg.Type + " " + arg.Name + ",");
+				isOpen = value;
+				SetControlsEnabled(false);
+				if (!value)
+					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 			}
-
-			if (ConsoleArgs.Count > 0)
-				builder.Length--; //Remove last , if we have >0 Args
-
-			builder.Append(")");
-			return builder.ToString();
 		}
-	};
 
-	public class Console
-	{
-		internal static Console Instance { get; set; } = new Console();
+		static int cursorPos = 0;
+		static int commandPos = -1;
+		static int currentPage = 1;
+		static bool isOpen = false;
+		static string input = string.Empty;
+		static List<string> lineHistory = new List<string>();
+		static List<string> commandHistory = new List<string>();
+		static ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
+		static Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
+		static DateTime lastClosed;
+		static Task<Assembly> compilerTask;
+		static Keys ToggleKey = Keys.F3;
 
-		int cursorPos = 0;
-		int commandPos = -1;
-		int currentPage = 1;
-		bool isOpen = false;
-		string input = string.Empty;
+		[DllImport("user32.dll")]
+		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
 
-		List<string> lineHistory = new List<String>();
-		List<string> commandHistory = new List<String>();
-
-		DateTime _lastClosed;
-		Regex _getEachWordRegex = new Regex(@"[^\W_]+", RegexOptions.Compiled);
-
-		Task<Assembly> _compilerTask;
-		ConcurrentQueue<string[]> _outputQueue = new ConcurrentQueue<string[]>();
-		Dictionary<string, List<Tuple<ConsoleCommand, MethodInfo>>> _commands = new Dictionary<String, List<Tuple<ConsoleCommand, MethodInfo>>>();
-
-		Keys ToggleKey = Keys.F3;
+		const int BASE_WIDTH = 1280;
+		const int BASE_HEIGHT = 720;
+		const int CONSOLE_WIDTH = BASE_WIDTH;
+		const int CONSOLE_HEIGHT = BASE_HEIGHT / 3;
+		const int INPUT_HEIGHT = 20;
+		const int LINES_PER_PAGE = 16;
 
 		static readonly Color InputColor = Color.White;
 		static readonly Color InputColorBusy = Color.DarkGray;
@@ -107,129 +84,57 @@ namespace SHVDN
 		static readonly Color BackgroundColor = Color.FromArgb(200, Color.Black);
 		static readonly Color AltBackgroundColor = Color.FromArgb(200, 52, 73, 94);
 
-		//TODO Temporary UI Stuff
-		const int WIDTH = 1280;
-		const int HEIGHT = 720;
-
-		internal Console()
+		/// <summary>
+		/// Register the specified method as a console command.
+		/// </summary>
+		/// <param name="command">The command attribute of the method.</param>
+		/// <param name="methodInfo">The method information.</param>
+		internal static void RegisterCommand(ConsoleCommand command, MethodInfo methodInfo)
 		{
-            AddLines("[~b~INFO~w~] ", new string[1] { "--- Community Script Hook V .NET " + Assembly.GetExecutingAssembly().GetName().Version + " ---" });
-			AddLines("[~b~INFO~w~] ", new string[1] { "--- Type \"Help()\" to print an overview of available commands ---" });
+			command.MethodInfo = methodInfo;
 
-			RegisterCommands(typeof(DefaultConsoleCommands), true);
+			if (!commands.ContainsKey(command.Namespace))
+				commands[command.Namespace] = new List<ConsoleCommand>();
+			commands[command.Namespace].Add(command);
 		}
-
-		internal bool IsOpen
-		{
-			get { return isOpen; }
-			set {
-				isOpen = value;
-				SetControlsEnabled(false);
-				if (!value)
-					_lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
-			}
-		}
-
-		[DllImport("user32.dll")]
-		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
-
-		internal void RegisterCommand(ConsoleCommand command, System.Reflection.MethodInfo methodInfo, bool defaultCommand = false)
-		{
-			File.WriteAllText("console.log", (command == null) + ":" + (methodInfo == null));
-
-			command.Name = defaultCommand ? methodInfo.Name : methodInfo.DeclaringType.FullName + "." + methodInfo.Name; //TODO FIX
-			command.Namespace = defaultCommand ? "Default Commands" : methodInfo.DeclaringType.FullName;
-
-			foreach (var args in methodInfo.GetParameters())
-				command.ConsoleArgs.Add(new ConsoleArg(args.ParameterType.Name, args.Name));
-
-			if (!_commands.ContainsKey(command.Namespace))
-				_commands[command.Namespace] = new List<Tuple<ConsoleCommand, MethodInfo>>();
-			_commands[command.Namespace].Add(new Tuple<ConsoleCommand, MethodInfo>(command, methodInfo));
-		}
-		internal void RegisterCommands(Type type, bool defaultCommands = false)
+		/// <summary>
+		/// Register all methods with a <see cref="ConsoleCommand"/> attribute in the specified type as console commands.
+		/// </summary>
+		/// <param name="type">The type to search for console command methods.</param>
+		internal static void RegisterCommands(Type type)
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
-					RegisterCommand(attribute, method, defaultCommands);
+					RegisterCommand(attribute, method);
 		}
-		internal void UnregisterCommands(Type type)
+		/// <summary>
+		/// Unregister all methods with a <see cref="ConsoleCommand"/> attribute that were previously registered.
+		/// </summary>
+		/// <param name="type">The type to search for console command methods.</param>
+		internal static void UnregisterCommands(Type type)
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
 				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
 				{
-					var command = attribute;
-					command.Namespace = method.DeclaringType.FullName;
+					string space = method.DeclaringType.FullName;
 
-					if (_commands.ContainsKey(command.Namespace))
+					if (commands.ContainsKey(space))
 					{
-						List<Tuple<ConsoleCommand, MethodInfo>> Namespace = _commands[command.Namespace];
-
-						for (int i = 0; i < Namespace.Count; i++)
-						{
-							if (Namespace[i].Item1 == command || Namespace[i].Item2 == method)
-							{
-								Namespace.RemoveAt(i--);
-							}
-						}
-
-						if (Namespace.Count == 0)
-						{
-							_commands.Remove(command.Namespace);
-						}
+						commands[space].RemoveAll(x => x.MethodInfo == method);
+						if (commands[space].Count == 0)
+							commands.Remove(space);
 					}
 				}
 			}
 		}
 
-		public static void PrintInfo(string msg, params object[] args)
-		{
-			if (args.Length > 0)
-				msg = String.Format(msg, args);
-			Instance.AddLines("[~b~INFO~w~] ", msg.Split('\n'));
-		}
-		public static void PrintError(string msg, params object[] args)
-		{
-			if (args.Length > 0)
-				msg = String.Format(msg, args);
-			Instance.AddLines("[~r~ERROR~w~] ", msg.Split('\n'));
-		}
-		public static void PrintWarning(string msg, params object[] args)
-		{
-			if (args.Length > 0)
-				msg = String.Format(msg, args);
-			Instance.AddLines("[~o~WARN~w~] ", msg.Split('\n'));
-		}
-		public static void PrintDebug(string msg, params object[] args)
-		{
-			if (args.Length > 0)
-				msg = String.Format(msg, args);
-			Instance.AddLines("[~c~DEBUG~w~] ", msg.Split('\n'));
-		}
-		internal void PrintHelpString()
-		{
-			StringBuilder help = new StringBuilder();
-			help.AppendLine("--- Help ---");
-			foreach (var namespaceS in _commands.Keys)
-			{
-				help.AppendLine($"[{namespaceS}]");
-				foreach (var command in _commands[namespaceS])
-				{
-					var consoleCommand = command.Item1;
-
-					help.AppendLine("    " + consoleCommand.BuildFormattedHelp());
-				}
-			}
-			PrintInfo(help.ToString());
-		}
-
-        /// <summary>
-        /// Add text lines to the console. This call is thread-safe.
-        /// </summary>
-        /// <param name="prefix">The prefix for each line.</param>
-        /// <param name="messages">The lines to add to the console.</param>
-        void AddLines(string prefix, string[] messages)
+		/// <summary>
+		/// Add text lines to the console. This call is thread-safe.
+		/// </summary>
+		/// <param name="prefix">The prefix for each line.</param>
+		/// <param name="messages">The lines to add to the console.</param>
+		static void AddLines(string prefix, string[] messages)
 		{
 			AddLines(prefix, messages, "~w~");
 		}
@@ -239,18 +144,18 @@ namespace SHVDN
 		/// <param name="prefix">The prefix for each line.</param>
 		/// <param name="messages">The lines to add to the console.</param>
 		/// <param name="color">The color of those lines.</param>
-		void AddLines(string prefix, string[] messages, string color)
+		static void AddLines(string prefix, string[] messages, string color)
 		{
 			for (int i = 0; i < messages.Length; i++) // Add proper styling
 				messages[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {color}{messages[i]}";
 
-			_outputQueue.Enqueue(messages);
+			outputQueue.Enqueue(messages);
 		}
 		/// <summary>
 		/// Add text to the console input line.
 		/// </summary>
 		/// <param name="text">The text to add.</param>
-		void AddToInput(string text)
+		static void AddToInput(string text)
 		{
 			if (string.IsNullOrEmpty(text))
 				return;
@@ -261,7 +166,7 @@ namespace SHVDN
 		/// <summary>
 		/// Paste clipboard content into the console input line.
 		/// </summary>
-		void AddClipboardContent()
+		static void AddClipboardContent()
 		{
 			string text = Clipboard.GetText();
 			text = text.Replace("\n", string.Empty); // TODO Keep this?
@@ -272,97 +177,178 @@ namespace SHVDN
 		/// <summary>
 		/// Clear the console input line.
 		/// </summary>
-		void ClearInput()
+		static void ClearInput()
 		{
 			input = string.Empty;
 			cursorPos = 0;
 		}
 		/// <summary>
-		/// Clear the console history lines.
+		/// Clears the console output.
 		/// </summary>
-		internal void Clear()
+		public static void Clear()
 		{
 			lineHistory.Clear();
 		}
 
 		/// <summary>
+		/// Writes an info message to the console.
+		/// </summary>
+		/// <param name="msg">The composite format string.</param>
+		/// <param name="args">The formatting arguments.</param>
+		public static void PrintInfo(string msg, params object[] args)
+		{
+			if (args.Length > 0)
+				msg = String.Format(msg, args);
+			AddLines("[~b~INFO~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		}
+		/// <summary>
+		/// Writes an error message to the console.
+		/// </summary>
+		/// <param name="msg">The composite format string.</param>
+		/// <param name="args">The formatting arguments.</param>
+		public static void PrintError(string msg, params object[] args)
+		{
+			if (args.Length > 0)
+				msg = String.Format(msg, args);
+			AddLines("[~r~ERROR~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		}
+		/// <summary>
+		/// Writes a warning message to the console.
+		/// </summary>
+		/// <param name="msg">The composite format string.</param>
+		/// <param name="args">The formatting arguments.</param>
+		public static void PrintWarning(string msg, params object[] args)
+		{
+			if (args.Length > 0)
+				msg = String.Format(msg, args);
+			AddLines("[~o~WARNING~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		}
+
+		/// <summary>
+		/// Writes the help text for all commands to the console.
+		/// </summary>
+		internal static void PrintHelpText()
+		{
+			StringBuilder help = new StringBuilder();
+			foreach (var space in commands.Keys)
+			{
+				help.AppendLine($"[{space}]");
+				foreach (var command in commands[space])
+				{
+					help.Append("    ~h~" + command.Name + "~w~(");
+					foreach (var arg in command.MethodInfo.GetParameters())
+						help.Append(arg.ParameterType.Name + " " + arg.Name + ",");
+					if (command.MethodInfo.GetParameters().Length > 0)
+						help.Length--; // Remove trailing comma
+					help.AppendLine(")");
+
+					if (command.Help.Length > 0)
+						help.AppendLine("       " + command.Help);
+				}
+			}
+
+			PrintInfo(help.ToString());
+		}
+		/// <summary>
+		/// Writes the help text for the specified command to the console.
+		/// </summary>
+		/// <param name="commandName">The command name to check.</param>
+		internal static void PrintHelpText(string commandName)
+		{
+			foreach (var space in commands.Keys)
+			{
+				foreach (var command in commands[space])
+				{
+					if (command.Name == commandName)
+					{
+						PrintInfo("    " + command.Help);
+						return;
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Main execution logic of the console.
 		/// </summary>
-		internal void DoTick()
+		internal static void DoTick()
 		{
 			DateTime now = DateTime.UtcNow;
 
 			// Execute compiled input line script
-			if (_compilerTask != null && _compilerTask.IsCompleted)
+			if (compilerTask != null && compilerTask.IsCompleted)
 			{
-				if (_compilerTask.Result != null)
+				if (compilerTask.Result != null)
 				{
-					var result = _compilerTask.Result.GetType("ConsoleInput").GetMethod("Execute").Invoke(null, null);
-					if (result != null)
-						PrintInfo($"[Return Value: {result}]");
+					try
+					{
+						var result = compilerTask.Result.GetType("ConsoleInput").GetMethod("Execute").Invoke(null, null);
+						if (result != null)
+							PrintInfo($"[Return Value]: {result}");
+					}
+					catch (Exception ex)
+					{
+						PrintError($"[Exception]: {ex.ToString()}");
+					}
 				}
 
 				ClearInput();
 
 				// Reset compiler task
-				_compilerTask = null;
+				compilerTask = null;
 			}
 
 			// Add lines from concurrent queue to history
-			if (_outputQueue.TryDequeue(out string[] lines))
+			if (outputQueue.TryDequeue(out string[] lines))
 				foreach (string line in lines)
 					lineHistory.Add(line);
 
 			// Hack so the input gets blocked long enough
-			if (_lastClosed > now)
+			if (lastClosed > now)
 			{
 				if (IsInputDisabled())
 					SetControlsEnabled(false);
 				return;
 			}
 
-			// Nothing more to do here when the console is not open
 			if (!IsOpen)
-				return;
+				return; // Nothing more to do here when the console is not open
 
 			if (IsInputDisabled())
 				SetControlsEnabled(false);
 
-			const int inputH = 20;
-			const int consoleW = WIDTH;
-			const int consoleH = HEIGHT / 3;
-			const int linesPerPage = 16;
-
 			// Draw background
-			DrawRect(0, 0, consoleW, consoleH, BackgroundColor);
+			DrawRect(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGHT, BackgroundColor);
 			// Draw input field
-			DrawRect(0, consoleH, consoleW, inputH, AltBackgroundColor);
-			DrawRect(0, consoleH + inputH, 80, inputH, AltBackgroundColor);
+			DrawRect(0, CONSOLE_HEIGHT, CONSOLE_WIDTH, INPUT_HEIGHT, AltBackgroundColor);
+			DrawRect(0, CONSOLE_HEIGHT + INPUT_HEIGHT, 80, INPUT_HEIGHT, AltBackgroundColor);
 			// Draw input prefix
-			DrawText(0, consoleH, "$>", PrefixColor);
+			DrawText(0, CONSOLE_HEIGHT, "$>", PrefixColor);
 			// Draw input text
-			DrawText(25, consoleH, input, _compilerTask == null ? InputColor : InputColorBusy);
+			DrawText(25, CONSOLE_HEIGHT, input, compilerTask == null ? InputColor : InputColorBusy);
 			// Draw page information
-			DrawText(5, consoleH + inputH, "Page " + currentPage + "/" + (lineHistory.Count == 0 ? 0 : ((lineHistory.Count + linesPerPage - 1) / linesPerPage)), InputColor); // TODO Nicer way for page-max
+			DrawText(5, CONSOLE_HEIGHT + INPUT_HEIGHT, "Page " + currentPage + "/" + System.Math.Max(1, ((lineHistory.Count + (LINES_PER_PAGE - 1)) / LINES_PER_PAGE)), InputColor);
 
 			// Draw blinking cursor
 			if (now.Millisecond < 500)
 			{
 				float length = GetTextLength(input.Substring(0, cursorPos));
-				DrawText(25 + (length * consoleW) - 4, consoleH, "~w~~h~|~w~", InputColor);
+				DrawText(25 + (length * CONSOLE_WIDTH) - 4, CONSOLE_HEIGHT, "~w~~h~|~w~", InputColor);
 			}
 
 			// Draw console history text
-			for (int i = (currentPage - 1) * linesPerPage; i < System.Math.Min(lineHistory.Count, currentPage * linesPerPage); ++i)
+			int historyOffset = lineHistory.Count - (LINES_PER_PAGE * currentPage);
+			int historyLength = historyOffset + LINES_PER_PAGE;
+			for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
 			{
-				DrawText(2, (float)((15 - (i % linesPerPage)) * 14), lineHistory[i], OutputColor);
+				DrawText(2, (float)((i - historyOffset) * 14), lineHistory[i], OutputColor);
 			}
 		}
 		/// <summary>
 		/// Keyboard handling logic of the console.
 		/// </summary>
 		/// <param name="keys">The key that was pressed down and its modifiers.</param>
-		internal void DoKeyDown(Keys keys)
+		internal static void DoKeyDown(Keys keys)
 		{
 			var e = new KeyEventArgs(keys);
 
@@ -417,7 +403,7 @@ namespace SHVDN
 					GoDownCommandList();
 					break;
 				case Keys.Enter:
-					ExecuteInput();
+					CompileExpression();
 					break;
 				case Keys.Escape:
 					IsOpen = false;
@@ -488,17 +474,17 @@ namespace SHVDN
 			}
 		}
 
-		void PageUp()
+		static void PageUp()
 		{
-			if (currentPage < ((lineHistory.Count + 16 - 1) / 16))
+			if (currentPage < ((lineHistory.Count + LINES_PER_PAGE - 1) / LINES_PER_PAGE))
 				currentPage++;
 		}
-		void PageDown()
+		static void PageDown()
 		{
 			if (currentPage > 1)
 				currentPage--;
 		}
-		void GoUpCommandList()
+		static void GoUpCommandList()
 		{
 			if (commandHistory.Count == 0 || commandPos >= commandHistory.Count - 1)
 				return;
@@ -506,7 +492,7 @@ namespace SHVDN
 			commandPos++;
 			input = commandHistory[commandHistory.Count - commandPos - 1];
 		}
-		void GoDownCommandList()
+		static void GoDownCommandList()
 		{
 			if (commandHistory.Count == 0 || commandPos <= 0)
 				return;
@@ -515,16 +501,19 @@ namespace SHVDN
 			input = commandHistory[commandHistory.Count - commandPos - 1];
 		}
 
-		void ForwardWord()
+		static void ForwardWord()
 		{
-			Match match = _getEachWordRegex.Match(input, cursorPos);
+			var regex = new Regex(@"[^\W_]+");
+			Match match = regex.Match(input, cursorPos);
 			cursorPos = match.Success ? match.Index + match.Length : input.Length;
 		}
-		void BackwardWord()
+		static void BackwardWord()
 		{
-			cursorPos = _getEachWordRegex.Matches(input).Cast<Match>().Where(x => x.Index < cursorPos).Select(x => x.Index).LastOrDefault();
+			var regex = new Regex(@"[^\W_]+");
+			MatchCollection matches = regex.Matches(input);
+			cursorPos = matches.Cast<Match>().Where(x => x.Index < cursorPos).Select(x => x.Index).LastOrDefault();
 		}
-		void RemoveCharLeft()
+		static void RemoveCharLeft()
 		{
 			if (input.Length > 0 && cursorPos > 0)
 			{
@@ -532,7 +521,7 @@ namespace SHVDN
 				cursorPos--;
 			}
 		}
-		void RemoveCharRight()
+		static void RemoveCharRight()
 		{
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
@@ -540,26 +529,26 @@ namespace SHVDN
 			}
 		}
 
-		void MoveCursorLeft()
+		static void MoveCursorLeft()
 		{
 			if (cursorPos > 0)
 				cursorPos--;
 		}
-		void MoveCursorRight()
+		static void MoveCursorRight()
 		{
 			if (cursorPos < input.Length)
 				cursorPos++;
 		}
-		void MoveCursorToBegOfLine()
+		static void MoveCursorToBegOfLine()
 		{
 			cursorPos = 0;
 		}
-		void MoveCursorToEndOfLine()
+		static void MoveCursorToEndOfLine()
 		{
 			cursorPos = input.Length;
 		}
 
-		void ExecuteInput()
+		static void CompileExpression()
 		{
 			if (string.IsNullOrEmpty(input))
 				return;
@@ -568,26 +557,31 @@ namespace SHVDN
 			if (commandHistory.LastOrDefault() != input)
 				commandHistory.Add(input);
 
-			if (_compilerTask != null)
+			if (compilerTask != null)
 			{
 				PrintError("Can't compile input - Compiler is busy");
 				return;
 			}
 
-			_compilerTask = Task.Factory.StartNew(new Func<Assembly>(() => {
+			compilerTask = Task.Factory.StartNew(new Func<Assembly>(() => {
 				var compiler = new Microsoft.CSharp.CSharpCodeProvider();
 				var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
 				compilerOptions.GenerateInMemory = true;
 				compilerOptions.IncludeDebugInformation = true;
 				compilerOptions.ReferencedAssemblies.Add("System.dll");
-				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location); // TODO scriptAPI assembly
+				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
-				foreach (ScriptDomain domain in ScriptDomain.Instances)
-					foreach (Script script in domain.RunningScripts)
-						if (!string.IsNullOrEmpty(script.Filename))
-							compilerOptions.ReferencedAssemblies.Add(script.Filename);
+				// Just add the last API (which should be the most recent one)
+				if (ScriptDomain.Instances.Count != 0)
+					compilerOptions.ReferencedAssemblies.Add(ScriptDomain.Instances.Last().ApiPath);
 
-				const string template = "using System; using GTA; using GTA.Native; using Console = SHVDN.Console; public class ConsoleInput : GTA.DefaultConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
+				// TODO: Add script assemblies
+				//foreach (ScriptDomain domain in ScriptDomain.Instances)
+				//	foreach (Script script in domain.RunningScripts)
+				//		if (!string.IsNullOrEmpty(script.Filename))
+				//			compilerOptions.ReferencedAssemblies.Add(script.Filename);
+
+				const string template = "using System; using GTA; using GTA.Native; using Console = SHVDN.Console; public class ConsoleInput : SHVDN.ConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
 
 				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
@@ -597,7 +591,7 @@ namespace SHVDN
 				}
 				else
 				{
-					PrintError($"Couldn't compile input-string: {input}");
+					PrintError($"Couldn't compile input expression: {input}");
 
 					StringBuilder errors = new StringBuilder();
 
@@ -618,169 +612,158 @@ namespace SHVDN
 			}));
 		}
 
-        static int GetUtf8CodePointSize(string str, int index)
-        {
-            uint chr = str[index];
-
-            if (chr < 0x80)
-            {
-                return 1;
-            }
-            if (chr < 0x800)
-            {
-                return 2;
-            }
-            if (chr < 0x10000)
-            {
-                return 3;
-            }
-            #region Surrogate check
-            const int HighSurrogateStart = 0xD800;
-            const int LowSurrogateStart = 0xD800;
-
-            var temp1 = (int)chr - HighSurrogateStart;
-            if (temp1 < 0 || temp1 > 0x7ff)
-            {
-                return 0;
-            }
-            // Found a high surrogate
-            if (index < str.Length - 1)
-            {
-                var temp2 = str[index + 1] - LowSurrogateStart;
-                if (temp2 >= 0 && temp2 <= 0x3ff)
-                {
-                    // Found a low surrogate
-                    return 4;
-                }
-
-                return 0;
-            }
-            else
-            {
-                return 0;
-            }
-            #endregion
-        }
-        static unsafe void PushLongString(string str, int maxLengthUtf8 = 99)
-        {
-            if (maxLengthUtf8 <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(maxLengthUtf8));
-            }
-
-            int size = System.Text.Encoding.UTF8.GetByteCount(str);
-
-            if (size <= maxLengthUtf8)
-            {
-                NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-                    (ulong)ScriptDomain.Instances[0].PinString(str).ToInt64());
-                return;
-            }
-
-            int currentUtf8StrLength = 0;
-            int startPos = 0;
-            int currentPos;
-
-            for (currentPos = 0; currentPos < str.Length; currentPos++)
-            {
-                int codePointSize = GetUtf8CodePointSize(str, currentPos);
-
-                if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
-                {
-                    NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-                        (ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, currentPos - startPos)).ToInt64());
-
-                    currentUtf8StrLength = 0;
-                    startPos = currentPos;
-                }
-                else
-                {
-                    currentUtf8StrLength += codePointSize;
-                }
-
-                //if the code point size is 4, additional increment is needed
-                if (codePointSize == 4)
-                {
-                    currentPos++;
-                }
-            }
-
-            NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-                (ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, str.Length - startPos)).ToInt64());
-        }
-
-        void DrawRect(float x, float y, int width, int height, Color color)
+		static unsafe void DrawRect(float x, float y, int width, int height, Color color)
 		{
-			float w = (float)(width) / WIDTH;
-			float h = (float)(height) / HEIGHT;
-			float xNew = (x / WIDTH) + w * 0.5f;
-			float yNew = (y / HEIGHT) + h * 0.5f;
+			float w = (float)(width) / BASE_WIDTH;
+			float h = (float)(height) / BASE_HEIGHT;
+			float xNew = (x / BASE_WIDTH) + w * 0.5f;
+			float yNew = (y / BASE_HEIGHT) + h * 0.5f;
 
-            unsafe
-            {
-                NativeFunc.Invoke(0x3A618A217E5154F0ul /*DRAW_RECT*/, *(ulong*)&xNew, *(ulong*)&yNew, *(ulong*)&w, *(ulong*)&h, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
-            }
+			NativeFunc.Invoke(0x3A618A217E5154F0ul /*DRAW_RECT*/, *(ulong*)&xNew, *(ulong*)&yNew, *(ulong*)&w, *(ulong*)&h, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
 		}
-		void DrawText(float x, float y, string text, Color color)
+		static unsafe void DrawText(float x, float y, string text, Color color)
 		{
-			float xNew = (x / WIDTH);
-			float yNew = (y / HEIGHT);
+			float xNew = (x / BASE_WIDTH);
+			float yNew = (y / BASE_HEIGHT);
 
-            unsafe
-            {
-                NativeFunc.Invoke(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul); // Chalet London :>
-                NativeFunc.Invoke(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
-                NativeFunc.Invoke(0xBE6B23FFA53FB442ul /*SET_TEXT_COLOUR*/, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
-                NativeFunc.Invoke(0x25FBB336DF1804CBul /*BEGIN_TEXT_COMMAND_DISPLAY_TEXT*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
-                PushLongString(text);
-                NativeFunc.Invoke(0xCD015E5BB0D96A57ul /*END_TEXT_COMMAND_DISPLAY_TEXT*/, *(ulong*)&xNew, *(ulong*)&yNew);
-            }
+			NativeFunc.Invoke(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul); // Chalet London :>
+			NativeFunc.Invoke(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
+			NativeFunc.Invoke(0xBE6B23FFA53FB442ul /*SET_TEXT_COLOUR*/, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
+			NativeFunc.Invoke(0x25FBB336DF1804CBul /*BEGIN_TEXT_COMMAND_DISPLAY_TEXT*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+			PushLongString(text);
+			NativeFunc.Invoke(0xCD015E5BB0D96A57ul /*END_TEXT_COMMAND_DISPLAY_TEXT*/, *(ulong*)&xNew, *(ulong*)&yNew);
 		}
 
-        bool IsInputDisabled()
-        {
-            unsafe
-            {
-                return *NativeFunc.Invoke(0xA571D46727E2B718ul /*_IS_INPUT_DISABLED*/, 2ul) != 0;
-            }
-        }
-		void SetControlsEnabled(bool enabled)
+		static unsafe bool IsInputDisabled()
 		{
-            unsafe
-            {
-                NativeFunc.Invoke(0x5F4B6931816E599Bul /*DISABLE_ALL_CONTROL_ACTIONS*/, 0ul);
+			return *NativeFunc.Invoke(0xA571D46727E2B718ul /*_IS_INPUT_DISABLED*/, 2ul) != 0;
+		}
+		static unsafe void SetControlsEnabled(bool enabled)
+		{
+			NativeFunc.Invoke(0x5F4B6931816E599Bul /*DISABLE_ALL_CONTROL_ACTIONS*/, 0ul);
 
-                for (int i = 1; i <= 6; i++)
-                    NativeFunc.Invoke(0x351220255D64C155ul /*ENABLE_CONTROL_ACTION*/, 0ul, (ulong)i, enabled ? 1ul : 0ul);
-            }
+			for (int i = 1; i <= 6; i++)
+				NativeFunc.Invoke(0x351220255D64C155ul /*ENABLE_CONTROL_ACTION*/, 0ul, (ulong)i, enabled ? 1ul : 0ul);
 		}
 
-		float GetTextLength(string text)
+		static int GetUtf8CodePointSize(string str, int index)
 		{
-            unsafe
-            {
-                NativeFunc.Invoke(0x54CE8AC98E120CABul /*_BEGIN_TEXT_COMMAND_WIDTH*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
-                PushLongString(text);
-                NativeFunc.Invoke(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul);
-                NativeFunc.Invoke(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
+			var chr = str[index];
+			if (chr < 0x80)
+				return 1;
+			if (chr < 0x800)
+				return 2;
+			if (chr < 0x10000)
+				return 3;
 
-                return *(float*)NativeFunc.Invoke(0x85F061DA64ED2F67ul /*_END_TEXT_COMMAND_GET_WIDTH*/, 1ul);
-            }
+			#region Surrogate check
+			const int LowSurrogateStart = 0xD800;
+			const int HighSurrogateStart = 0xD800;
+
+			var temp1 = (int)chr - HighSurrogateStart;
+			if (temp1 >= 0 && temp1 <= 0x7ff)
+			{
+				// Found a high surrogate
+				if (index < str.Length - 1)
+				{
+					var temp2 = str[index + 1] - LowSurrogateStart;
+					if (temp2 >= 0 && temp2 <= 0x3ff)
+					{
+						// Found a low surrogate
+						return 4;
+					}
+				}
+			}
+			#endregion
+
+			return 0;
+		}
+		static unsafe void PushLongString(string str, int maxLengthUtf8 = 99)
+		{
+			if (maxLengthUtf8 <= 0)
+				throw new ArgumentOutOfRangeException(nameof(maxLengthUtf8));
+
+			int size = System.Text.Encoding.UTF8.GetByteCount(str);
+			if (size <= maxLengthUtf8)
+			{
+				NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+					(ulong)ScriptDomain.Instances[0].PinString(str).ToInt64());
+				return;
+			}
+
+			int startPos = 0;
+			int currentUtf8StrLength = 0;
+
+			for (int currentPos = 0; currentPos < str.Length; currentPos++)
+			{
+				int codePointSize = GetUtf8CodePointSize(str, currentPos);
+
+				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
+				{
+					NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+						(ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, currentPos - startPos)).ToInt64());
+
+					currentUtf8StrLength = 0;
+					startPos = currentPos;
+				}
+				else
+				{
+					currentUtf8StrLength += codePointSize;
+				}
+
+				if (codePointSize == 4)
+					currentPos++; // If the code point size is 4, additional increment is needed
+			}
+
+			NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+				(ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, str.Length - startPos)).ToInt64());
+		}
+		static unsafe float GetTextLength(string text)
+		{
+			NativeFunc.Invoke(0x54CE8AC98E120CABul /*_BEGIN_TEXT_COMMAND_WIDTH*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+			PushLongString(text);
+			NativeFunc.Invoke(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul);
+			NativeFunc.Invoke(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
+
+			return *(float*)NativeFunc.Invoke(0x85F061DA64ED2F67ul /*_END_TEXT_COMMAND_GET_WIDTH*/, 1ul);
 		}
 	}
 
-	public class DefaultConsoleCommands
+	public class ConsoleCommand : Attribute
+	{
+		public ConsoleCommand() : this(string.Empty)
+		{
+		}
+		public ConsoleCommand(string help)
+		{
+			Help = help;
+		}
+
+		public string Help { get; private set; }
+		internal string Name => MethodInfo.Name;
+		internal string Namespace => MethodInfo.DeclaringType.FullName;
+		internal MethodInfo MethodInfo { get; set; }
+	}
+
+	public class ConsoleCommands
 	{
 		[ConsoleCommand("Prints the default help")]
 		public static void Help()
 		{
-			Console.Instance.PrintHelpString();
+			Console.PrintInfo("--- Help ---");
+			Console.PrintHelpText();
+		}
+		[ConsoleCommand("Prints the help for the specific command")]
+		public static void Help(string command)
+		{
+			Console.PrintInfo("--- Help for \"" + command + "\" ---");
+			Console.PrintHelpText(command);
 		}
 
-		[ConsoleCommand("Prints the help for the specific command")]
-		public static void Help(string command) //TODO Add all commands
+		[ConsoleCommand("Clears the console output")]
+		public static void Clear()
 		{
-
+			Console.Clear();
 		}
 
 		[ConsoleCommand("Loads scripts from a file")]
@@ -819,80 +802,59 @@ namespace SHVDN
 				return;
 			}
 
-			foreach (var script in domain.RunningScripts)
-			{
-				if (filename.Equals(script.Filename, StringComparison.OrdinalIgnoreCase) && script.IsRunning)
-				{
-					Console.PrintError("The script is already running");
-					return;
-				}
-			}
-
 			domain.StartScripts(filename);
 		}
-
 		[ConsoleCommand("Reloads scripts from a file")]
 		public static void Reload(string filename)
 		{
 			Abort(filename);
 			Load(filename);
 		}
-
 		[ConsoleCommand("Reloads all scripts found in the script folder")]
-		public static void ReloadAllScripts()
+		public static void ReloadAll()
 		{
-			var domain = ScriptDomain.Instances.Last();
-
-			domain.Abort();
-			domain.StartAllScripts();
+			foreach (var domain in ScriptDomain.Instances)
+			{
+				domain.Abort();
+				domain.StartAllScripts();
+			}
 		}
 
 		[ConsoleCommand("List all loaded scripts")]
 		public static void List()
 		{
-			var scripts = ScriptDomain.CurrentDomain.RunningScripts;
-			if (scripts.Length == 0)
-			{
-				Console.PrintInfo("There are no scripts loaded");
-				return;
-			}
+			Console.PrintInfo("--- List ---");
 
-			Console.PrintInfo("---");
-			foreach (var script in scripts)
-				Console.PrintInfo("   " + Path.GetFileName(script.Filename) + ": " + script.Name + (script.IsRunning ? " ~g~[running]" : " ~r~[aborted]"));
-			Console.PrintInfo("---");
+			foreach (var domain in ScriptDomain.Instances)
+				foreach (var info in domain.RunningScripts)
+					Console.PrintInfo("   " + info);
 		}
 
 		[ConsoleCommand("Aborts all scripts from the specified file")]
 		public static void Abort(string filename)
 		{
-			var domain = ScriptDomain.Instances.Last();
-
-			string basedirectory = domain.AppDomain.BaseDirectory;
-
-			filename = Path.Combine(basedirectory, filename);
-
-			if (!File.Exists(filename))
+			foreach (var domain in ScriptDomain.Instances)
 			{
-				Console.PrintError("The file '" + filename + "' was not found");
-				return;
+				string basedirectory = domain.AppDomain.BaseDirectory;
+
+				filename = Path.Combine(basedirectory, filename);
+
+				if (!File.Exists(filename))
+				{
+					Console.PrintError("The file '" + filename + "' was not found");
+					return;
+				}
+
+				domain.AbortScripts(filename);
 			}
-
-			domain.AbortScripts(filename);
 		}
-
 		[ConsoleCommand("Aborts all scripts found in the script folder")]
-		public static void AbortAllScripts()
+		public static void AbortAll()
 		{
-			var domain = ScriptDomain.Instances.Last();
-
-			domain.Abort();
-		}
-
-		[ConsoleCommand("Clears the console output")]
-		public static void Clear()
-		{
-			Console.Instance.Clear();
+			foreach (var domain in ScriptDomain.Instances)
+			{
+				domain.Abort();
+			}
 		}
 	}
 }

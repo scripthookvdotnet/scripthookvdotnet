@@ -48,13 +48,19 @@ namespace SHVDN
 		/// </summary>
 		public string Name => AppDomain.FriendlyName;
 		/// <summary>
+		/// Gets the path to the scripting API assembly file.
+		/// </summary>
+		public string ApiPath { get; private set; }
+		/// <summary>
 		/// Gets the application domain that is associated with this script domain.
 		/// </summary>
 		public AppDomain AppDomain { get; private set; } = AppDomain.CurrentDomain;
+		
 		/// <summary>
 		/// Gets the current scripting domain for the current thread.
 		/// </summary>
 		public static ScriptDomain CurrentDomain { get; private set; }
+
 		/// <summary>
 		/// The global list of all existing scripting domains.
 		/// </summary>
@@ -63,7 +69,7 @@ namespace SHVDN
 		/// <summary>
 		/// Gets the list of currently running scripts in this script domain.
 		/// </summary>
-		public Script[] RunningScripts => runningScripts.ToArray();
+		public string[] RunningScripts => runningScripts.Select(script => Path.GetFileName(script.Filename) + ": " + script.Name + (script.IsRunning ? " ~g~[running]" : " ~r~[aborted]")).ToArray();
 		/// <summary>
 		/// Gets the currently executing script or <c>null</c> if there is none.
 		/// </summary>
@@ -71,11 +77,12 @@ namespace SHVDN
 
 		/// <summary>
 		/// Initializes the script domain inside its application domain.
-		/// This constructor is public so that it is found by <c>AppDomain.CreateInstanceFromAndUnwrap</c>.
+		/// This constructor is public so that it is found by <see cref="System.AppDomain.CreateInstanceAndUnwrap(string, string)"/>.
 		/// </summary>
 		/// <param name="apiPath">The path to the scripting API assembly file.</param>
 		public ScriptDomain(string apiPath)
 		{
+			ApiPath = apiPath;
 			CurrentDomain = this;
 
 			// Attach resolve handler to new domain
