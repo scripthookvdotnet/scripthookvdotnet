@@ -98,9 +98,7 @@ namespace SHVDN
 		ConcurrentQueue<string[]> _outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<Tuple<ConsoleCommand, MethodInfo>>> _commands = new Dictionary<String, List<Tuple<ConsoleCommand, MethodInfo>>>();
 
-		Keys PageUpKey = Keys.F3;
-		Keys PageDownKey = Keys.PageDown;
-		Keys ToggleKey = Keys.PageUp;
+		Keys ToggleKey = Keys.F3;
 
 		static readonly Color InputColor = Color.White;
 		static readonly Color InputColorBusy = Color.DarkGray;
@@ -333,6 +331,7 @@ namespace SHVDN
 			const int inputH = 20;
 			const int consoleW = WIDTH;
 			const int consoleH = HEIGHT / 3;
+			const int linesPerPage = 16;
 
 			// Draw background
 			DrawRect(0, 0, consoleW, consoleH, BackgroundColor);
@@ -344,7 +343,7 @@ namespace SHVDN
 			// Draw input text
 			DrawText(25, consoleH, input, _compilerTask == null ? InputColor : InputColorBusy);
 			// Draw page information
-			DrawText(5, consoleH + inputH, "Page " + currentPage + "/" + (lineHistory.Count == 0 ? 0 : ((lineHistory.Count + 16 - 1) / 16)), InputColor); //TODO Nicer way for page-max
+			DrawText(5, consoleH + inputH, "Page " + currentPage + "/" + (lineHistory.Count == 0 ? 0 : ((lineHistory.Count + linesPerPage - 1) / linesPerPage)), InputColor); // TODO Nicer way for page-max
 
 			// Draw blinking cursor
 			if (now.Millisecond < 500)
@@ -354,9 +353,9 @@ namespace SHVDN
 			}
 
 			// Draw console history text
-			for (int i = (currentPage - 1) * 16; i <= System.Math.Min(lineHistory.Count, currentPage * 16 - 1); ++i)
+			for (int i = (currentPage - 1) * linesPerPage; i < System.Math.Min(lineHistory.Count, currentPage * linesPerPage); ++i)
 			{
-				DrawText(2, (float)((15 - (i % 16)) * 14), lineHistory[i], OutputColor);
+				DrawText(2, (float)((15 - (i % linesPerPage)) * 14), lineHistory[i], OutputColor);
 			}
 		}
 		/// <summary>
@@ -369,20 +368,23 @@ namespace SHVDN
 
 			if (e.KeyCode == ToggleKey)
 			{
+				// Toggle open state
 				IsOpen = !IsOpen;
+				return; // The toggle key does not need any additional handling
+			}
+
+			if (!IsOpen)
+			{
+				// Do not need to handle keyboard events when the console is not open
 				return;
 			}
 
-			// Nothing more to do here when the console is not open
-			if (!IsOpen)
-				return;
-
-			if (e.KeyCode == PageUpKey)
+			if (e.KeyCode == Keys.PageUp)
 			{
 				PageUp();
 				return;
 			}
-			if (e.KeyCode == PageDownKey)
+			if (e.KeyCode == Keys.PageDown)
 			{
 				PageDown();
 				return;
@@ -473,14 +475,14 @@ namespace SHVDN
 						goto default;
 					break;
 				default:
-					// Translate key event to character for text input
 					var buf = new StringBuilder(256);
 					var keyboardState = new byte[256];
 					keyboardState[(int)Keys.Menu] = e.Alt ? (byte)0xff : (byte)0;
 					keyboardState[(int)Keys.ShiftKey] = e.Shift ? (byte)0xff : (byte)0;
 					keyboardState[(int)Keys.ControlKey] = e.Control ? (byte)0xff : (byte)0;
-					ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
 
+					// Translate key event to character for text input
+					ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
 					AddToInput(buf.ToString());
 					break;
 			}
@@ -488,12 +490,12 @@ namespace SHVDN
 
 		void PageUp()
 		{
-			if (currentPage + 1 <= ((lineHistory.Count + 16 - 1) / 16))
+			if (currentPage < ((lineHistory.Count + 16 - 1) / 16))
 				currentPage++;
 		}
 		void PageDown()
 		{
-			if (currentPage - 1 >= 1)
+			if (currentPage > 1)
 				currentPage--;
 		}
 		void GoUpCommandList()
@@ -578,7 +580,7 @@ namespace SHVDN
 				compilerOptions.GenerateInMemory = true;
 				compilerOptions.IncludeDebugInformation = true;
 				compilerOptions.ReferencedAssemblies.Add("System.dll");
-				compilerOptions.ReferencedAssemblies.Add(typeof(Script).Assembly.Location); // TODO scriptAPI assembly
+				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location); // TODO scriptAPI assembly
 
 				foreach (ScriptDomain domain in ScriptDomain.Instances)
 					foreach (Script script in domain.RunningScripts)
@@ -753,7 +755,7 @@ namespace SHVDN
             }
 		}
 
-		float GetTextLength(string text) //TODO Maybe implement somewhere else?
+		float GetTextLength(string text)
 		{
             unsafe
             {

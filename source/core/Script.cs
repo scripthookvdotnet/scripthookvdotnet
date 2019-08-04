@@ -23,6 +23,7 @@ using WinForms = System.Windows.Forms;
 
 namespace SHVDN
 {
+	[Serializable]
 	public class Script
 	{
 		Thread thread;
