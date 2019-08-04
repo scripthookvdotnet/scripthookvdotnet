@@ -65,7 +65,7 @@ namespace SHVDN
 		static Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
 		static DateTime lastClosed;
 		static Task<Assembly> compilerTask;
-		static Keys ToggleKey = Keys.F3;
+		public static Keys ToggleKey = Keys.F3;
 
 		[DllImport("user32.dll")]
 		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
@@ -261,7 +261,7 @@ namespace SHVDN
 				{
 					if (command.Name == commandName)
 					{
-						PrintInfo("    " + command.Help);
+						PrintInfo(command.Name + ": " + command.Help);
 						return;
 					}
 				}
@@ -286,9 +286,9 @@ namespace SHVDN
 						if (result != null)
 							PrintInfo($"[Return Value]: {result}");
 					}
-					catch (Exception ex)
+					catch (TargetInvocationException ex)
 					{
-						PrintError($"[Exception]: {ex.ToString()}");
+						PrintError($"[Exception]: {ex.InnerException.ToString()}");
 					}
 				}
 
@@ -765,7 +765,6 @@ namespace SHVDN
 		[ConsoleCommand("Prints the help for the specific command")]
 		public static void Help(string command)
 		{
-			Console.PrintInfo("--- Help for \"" + command + "\" ---");
 			Console.PrintHelpText(command);
 		}
 
