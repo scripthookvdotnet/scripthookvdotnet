@@ -47,7 +47,10 @@ static void ScriptHookVDotnet_ManagedInit()
 
 	for each (String ^apiPath in IO::Directory::EnumerateFiles(".", "ScriptHookVDotNet*.dll", IO::SearchOption::TopDirectoryOnly))
 	{
-		ScriptDomain ^domain = ScriptDomain::Load(apiPath, "scripts");
+		// Only load source code scripts in the domain for the highest API version
+		const bool matchingVersion = AssemblyName::GetAssemblyName(apiPath)->Version->Major == Assembly::GetExecutingAssembly()->GetName()->Version->Major;
+
+		ScriptDomain ^domain = ScriptDomain::Load(apiPath, "scripts", matchingVersion);
 		if (domain == nullptr)
 			continue;
 
@@ -74,7 +77,7 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 		return;
 
 	// Convert message into a key event
-	WinForms::Keys keys = safe_cast<WinForms::Keys>(keycode);
+	auto keys = safe_cast<WinForms::Keys>(keycode);
 	if (ctrl)  keys = keys | WinForms::Keys::Control;
 	if (shift) keys = keys | WinForms::Keys::Shift;
 	if (alt)   keys = keys | WinForms::Keys::Alt;
@@ -86,7 +89,7 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	// Do not send keyboard events to other running scripts when console is open
 	if (!console->IsOpen)
 		for each (ScriptDomain ^domain in ScriptDomain::Instances)
-			domain->DoKeyboardMessage(keys, keydown);
+			domain->DoKeyEvent(keys, keydown);
 }
 
 #pragma unmanaged

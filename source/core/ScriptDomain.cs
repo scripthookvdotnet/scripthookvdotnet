@@ -71,6 +71,7 @@ namespace SHVDN
 
 		/// <summary>
 		/// Initializes the script domain inside its application domain.
+		/// This constructor is public so that it is found by <c>AppDomain.CreateInstanceFromAndUnwrap</c>.
 		/// </summary>
 		/// <param name="apiPath">The path to the scripting API assembly file.</param>
 		public ScriptDomain(string apiPath)
@@ -113,16 +114,21 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="apiPath">The path to the scripting API assembly file.</param>
 		/// <param name="scriptPath">The path to the directory containing scripts.</param>
+		/// <param name="allowSourceScripts">Whether to allow this script domain to compile and load scripts from source code.</param>
 		/// <returns>The script domain or <c>null</c> in case of failure.</returns>
-		public static ScriptDomain Load(string apiPath, string scriptPath)
+		public static ScriptDomain Load(string apiPath, string scriptPath, bool allowSourceScripts = false)
 		{
 			// Make absolute path to scrips location
 			if (!Path.IsPathRooted(scriptPath))
 				scriptPath = Path.Combine(Path.GetDirectoryName(apiPath), scriptPath);
 			scriptPath = Path.GetFullPath(scriptPath);
 
+			// Remove handlers first if they already exist, so that the handles are only added once
+			AppDomain.CurrentDomain.AssemblyResolve -= HandleResolve;
+			AppDomain.CurrentDomain.UnhandledException -= HandleUnhandledException;
 			// Need to attach the resolve handler to the current domain too, so that the .NET framework finds this assembly in the ASI file
 			AppDomain.CurrentDomain.AssemblyResolve += HandleResolve;
+			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
 			// Create application and script domain for all the scripts to reside in
 			var name = "ScriptDomain_" + (apiPath.GetHashCode() ^ scriptPath.GetHashCode() ^ Environment.TickCount).ToString("X");
@@ -161,9 +167,13 @@ namespace SHVDN
 
 			try
 			{
-				filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
-				filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
 				filenameAssemblies.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
+
+				if (allowSourceScripts)
+				{
+					filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
+					filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+				}
 			}
 			catch (Exception ex)
 			{
@@ -176,29 +186,21 @@ namespace SHVDN
 			for (int i = 0; i < filenameAssemblies.Count; i++)
 			{
 				var filename = filenameAssemblies[i];
-				var assemblyName = AssemblyName.GetAssemblyName(filename);
 
 				try
 				{
+					var assemblyName = AssemblyName.GetAssemblyName(filename);
+
 					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 					{
-						Log.Message(Log.Level.Warning, "Removing assembly file ", Path.GetFileName(filename), ".");
+						Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filename), ".");
 
 						filenameAssemblies.RemoveAt(i--);
-
-						try
-						{
-							File.Delete(filename);
-						}
-						catch (Exception ex)
-						{
-							Log.Message(Log.Level.Error, "Failed to delete assembly file: ", ex.ToString());
-						}
 					}
 				}
 				catch (Exception ex)
 				{
-					Log.Message(Log.Level.Error, "Failed to load assembly file ", Path.GetFileName(filename), ": ", ex.ToString());
+					Log.Message(Log.Level.Warning, "Could not check assembly file ", Path.GetFileName(filename), ": ", ex.ToString());
 				}
 			}
 
@@ -250,6 +252,7 @@ namespace SHVDN
 			compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
 			compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
+			compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
 			string extension = Path.GetExtension(filename);
 			System.CodeDom.Compiler.CodeDomProvider compiler = null;
@@ -293,7 +296,7 @@ namespace SHVDN
 			}
 		}
 		/// <summary>
-		/// Loads scripts from the specified file.
+		/// Loads scripts from the specified assembly file.
 		/// </summary>
 		/// <param name="filename">The path to the assembly file to load.</param>
 		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
@@ -319,7 +322,7 @@ namespace SHVDN
 			return LoadAssembly(filename, assembly);
 		}
 		/// <summary>
-		/// Loads scripts from the specified assembly.
+		/// Loads scripts from the specified assembly object.
 		/// </summary>
 		/// <param name="filename">The path to the file associated with this assembly.</param>
 		/// <param name="assembly">The assembly to load.</param>
@@ -631,7 +634,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="keys">The key that was originated this event and its modifiers.</param>
 		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
-		internal void DoKeyboardMessage(Keys keys, bool status)
+		internal void DoKeyEvent(Keys keys, bool status)
 		{
 			var e = new KeyEventArgs(keys);
 
