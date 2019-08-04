@@ -73,8 +73,11 @@ namespace SHVDN
 		/// Initializes the script domain inside its application domain.
 		/// </summary>
 		/// <param name="apiPath">The path to the scripting API assembly file.</param>
-		private ScriptDomain(string apiPath)
+		public ScriptDomain(string apiPath)
 		{
+			CurrentDomain = this;
+
+			// Attach resolve handler to new domain
 			AppDomain.AssemblyResolve += HandleResolve;
 			AppDomain.UnhandledException += HandleUnhandledException;
 
@@ -118,11 +121,14 @@ namespace SHVDN
 				scriptPath = Path.Combine(Path.GetDirectoryName(apiPath), scriptPath);
 			scriptPath = Path.GetFullPath(scriptPath);
 
+			// Need to attach the resolve handler to the current domain too, so that the .NET framework finds this assembly in the ASI file
+			AppDomain.CurrentDomain.AssemblyResolve += HandleResolve;
+
 			// Create application and script domain for all the scripts to reside in
 			var name = "ScriptDomain_" + (apiPath.GetHashCode() ^ scriptPath.GetHashCode() ^ Environment.TickCount).ToString("X");
 			var setup = new AppDomainSetup();
-			setup.ShadowCopyFiles = "true";
-			setup.ShadowCopyDirectories = scriptPath;
+			setup.ShadowCopyFiles = "true"; // Copy assemblies into memory rather than locking the file, so they can be updated while the domain is still loaded
+			setup.ShadowCopyDirectories = scriptPath; // Only shadow copy files in the scripts directory
 			setup.ApplicationBase = scriptPath;
 
 			var appdomain = AppDomain.CreateDomain(name, null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
@@ -132,9 +138,7 @@ namespace SHVDN
 
 			try
 			{
-				//object[] args = new object[] { apiPath };
-				//scriptdomain = (ScriptDomain)appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.Default, null, args, null, null);
-				scriptdomain = new ScriptDomain(apiPath);
+				scriptdomain = (ScriptDomain)appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.Default, null, new object[] { apiPath }, null, null);
 			}
 			catch (Exception ex)
 			{
@@ -206,6 +210,7 @@ namespace SHVDN
 
 			return scriptdomain;
 		}
+
 		/// <summary>
 		/// Unloads scripts and destroys an existing script domain.
 		/// </summary>
@@ -624,10 +629,12 @@ namespace SHVDN
 		/// <summary>
 		/// Keyboard handling logic of the script domain.
 		/// </summary>
-		/// <param name="e">The event arguments of this key event.</param>
+		/// <param name="keys">The key that was originated this event and its modifiers.</param>
 		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
-		internal void DoKeyboardMessage(KeyEventArgs e, bool status)
+		internal void DoKeyboardMessage(Keys keys, bool status)
 		{
+			var e = new KeyEventArgs(keys);
+
 			keyboardState[e.KeyValue] = status;
 
 			if (recordKeyboardEvents)
@@ -739,17 +746,20 @@ namespace SHVDN
 			return null;
 		}
 
-		Assembly HandleResolve(object sender, ResolveEventArgs args)
+		static Assembly HandleResolve(object sender, ResolveEventArgs args)
 		{
 			var assemblyName = new AssemblyName(args.Name);
 
-			Log.Message(Log.Level.Info, "Resolving ", args.Name);
-
-			if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup)
+			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 			{
-				// Special case for the main loader assembly
-				if (assemblyName.Name == "ScriptHookVDotNet")
-					return Assembly.GetExecutingAssembly();
+				return typeof(ScriptDomain).Assembly;
+			}
+
+			// Handle resolve of the scripting API assembly
+			if (CurrentDomain != null && assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+			{
+				var scriptApi = CurrentDomain.scriptApi;
 
 				// Check that the referenced script API assembly version is compatible
 				if (assemblyName.Version.Major != scriptApi.GetName().Version.Major)
@@ -760,6 +770,7 @@ namespace SHVDN
 
 			return null;
 		}
+
 		static public void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
 		{
 			Log.Message(Log.Level.Error, args.IsTerminating ? "Caught fatal unhandled exception:" : "Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());

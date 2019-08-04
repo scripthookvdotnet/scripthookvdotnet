@@ -362,9 +362,11 @@ namespace SHVDN
 		/// <summary>
 		/// Keyboard handling logic of the console.
 		/// </summary>
-		/// <param name="e"></param>
-		internal void DoKeyDown(KeyEventArgs e)
+		/// <param name="keys">The key that was pressed down and its modifiers.</param>
+		internal void DoKeyDown(Keys keys)
 		{
+			var e = new KeyEventArgs(keys);
+
 			if (e.KeyCode == ToggleKey)
 			{
 				IsOpen = !IsOpen;

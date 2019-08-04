@@ -74,21 +74,19 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 		return;
 
 	// Convert message into a key event
-	WinForms::Keys key = safe_cast<WinForms::Keys>(keycode);
-	if (ctrl)  key = key | WinForms::Keys::Control;
-	if (shift) key = key | WinForms::Keys::Shift;
-	if (alt)   key = key | WinForms::Keys::Alt;
-
-	auto args = gcnew WinForms::KeyEventArgs(key);
+	WinForms::Keys keys = safe_cast<WinForms::Keys>(keycode);
+	if (ctrl)  keys = keys | WinForms::Keys::Control;
+	if (shift) keys = keys | WinForms::Keys::Shift;
+	if (alt)   keys = keys | WinForms::Keys::Alt;
 
 	SHVDN::Console ^console = SHVDN::Console::Instance;
 	if (keydown) // Send key down events to console
-		console->DoKeyDown(args);
+		console->DoKeyDown(keys);
 
 	// Do not send keyboard events to other running scripts when console is open
 	if (!console->IsOpen)
 		for each (ScriptDomain ^domain in ScriptDomain::Instances)
-			domain->DoKeyboardMessage(args, keydown);
+			domain->DoKeyboardMessage(keys, keydown);
 }
 
 #pragma unmanaged
