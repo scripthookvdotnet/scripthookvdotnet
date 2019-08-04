@@ -37,6 +37,7 @@ namespace GTA
 			static System::UInt64(*GetEntityModel1)(System::UInt64 address), (*GetEntityModel2)(System::UInt64 address);
 			static System::UInt64 *EntityPoolAddress, *VehiclePoolAddress, *PedPoolAddress, *ObjectPoolAddress;
 			static System::UInt64 SetNmIntAddress, SetNmFloatAddress, SetNmBoolAddress, SetNmStringAddress, SetNmVec3Address, CreateNmMessageFunc, GiveNmMessageFunc;
+			static int currentGearOffset, highGearOffset, fuelLevelOffset, currentRPMOffset, accelerationOffset, steeringScaleOffset, steeringAngleOffset, wheelSpeedOffset;
 
 		private:
 			static System::UInt64 FindPattern(const char *pattern, const char *mask);

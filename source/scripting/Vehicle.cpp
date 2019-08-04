@@ -725,30 +725,26 @@ namespace GTA
 	int Vehicle::CurrentGear::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int currentGearOffset = Native::MemoryAccess::currentGearOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A0: 0x790);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C0 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E0 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7F0 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x810 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x830 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x870 : offset);
+		if (address == 0 || currentGearOffset == 0)
+		{
+			return;
+		}
 
-		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
+		return static_cast<int>(*reinterpret_cast<const unsigned char *>(address + currentGearOffset));
 	}
 	int Vehicle::HighGear::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int highGearOffset = Native::MemoryAccess::highGearOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7F6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x816 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x836 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x876 : offset);
+		if (address == 0 || highGearOffset == 0)
+		{
+			return;
+		}
 
-		return address == 0 ? 0 : static_cast<int>(*reinterpret_cast<const unsigned char *>(address + offset));
+		return static_cast<int>(*reinterpret_cast<const unsigned char *>(address + highGearOffset));
 	}
 	void Vehicle::HighGear::set(int value)
 	{
@@ -765,126 +761,95 @@ namespace GTA
 		}
 
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int highGearOffset = Native::MemoryAccess::highGearOffset;
 
-		if (address == 0)
+		if (address == 0 || highGearOffset == 0)
 		{
 			return;
 		}
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7A6 : 0x796);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7C6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7E6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7F6 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x816 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x836 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x876 : offset);
-
-		*reinterpret_cast<unsigned char *>(address + offset) = static_cast<unsigned char>(value);
+		*reinterpret_cast<unsigned char *>(address + highGearOffset) = static_cast<unsigned char>(value);
 	}
 	float Vehicle::FuelLevel::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int fuelLevelOffset = Native::MemoryAccess::fuelLevelOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x768: 0x758);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x788 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7A8 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7B8 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7D4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x7F4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x834 : offset);
-
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
-	}
-	void Vehicle::FuelLevel::set(float value)
-	{
-		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
-
-		if (address == 0)
+		if (address == 0 || fuelLevelOffset == 0)
 		{
 			return;
 		}
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x768 : 0x758);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x788 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x7A8 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x7B8 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x7D4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x7F4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x834 : offset);
+		return *reinterpret_cast<const float *>(address + fuelLevelOffset);
+	}
+	void Vehicle::FuelLevel::set(float value)
+	{
+		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int fuelLevelOffset = Native::MemoryAccess::fuelLevelOffset;
 
-		*reinterpret_cast<float *>(address + offset) = value;
+		if (address == 0 || fuelLevelOffset == 0)
+		{
+			return;
+		}
+
+		*reinterpret_cast<float *>(address + fuelLevelOffset) = value;
 	}
 	float Vehicle::CurrentRPM::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int currentRPMOffset = Native::MemoryAccess::currentRPMOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7D4 : 0x7C4);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7F4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x814 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x824 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x844 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x864 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x8B4 : offset);
+		if (address == 0 || currentRPMOffset == 0)
+		{
+			return 0.0f;
+		}
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+		return *reinterpret_cast<const float *>(address + currentRPMOffset);
 	}
 	void Vehicle::CurrentRPM::set(float value)
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int currentRPMOffset = Native::MemoryAccess::currentRPMOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7D4 : 0x7C4);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x7F4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x814 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x824 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x844 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x864 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x8B4 : offset);
+		if (address == 0 || currentRPMOffset == 0)
+		{
+			return;
+		}
 
-		*reinterpret_cast<float *>(address + offset) = value;
+		*reinterpret_cast<float *>(address + currentRPMOffset) = value;
 	}
 	float Vehicle::Acceleration::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int accelerationOffset = Native::MemoryAccess::accelerationOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x7E4 : 0x7D4);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x804 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x824 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x834 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x854 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x874 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x8C4 : offset);
+		if (address == 0 || accelerationOffset == 0)
+		{
+			return 0.0f;
+		}
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+		return *reinterpret_cast<const float *>(address + accelerationOffset);
 	}
 	float Vehicle::WheelSpeed::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
-		//old game version hasnt been tested, just following the patterns above for old game ver
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x9A4 : 0x994);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x9C4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x9F0 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0xA00 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0xA10 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0xA30 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0xA80 : offset);
+		const int wheelSpeedOffset = Native::MemoryAccess::wheelSpeedOffset;
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+		if (address == 0 || wheelSpeedOffset == 0)
+		{
+			return 0.0f;
+		}
+
+		return *reinterpret_cast<const float *>(address + wheelSpeedOffset);
 	}
 	float Vehicle::SteeringAngle::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int steeringAngleOffset = Native::MemoryAccess::steeringAngleOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8AC : 0x89C);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8CC : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8F4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x904 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x924 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x944 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x994 : offset);
-
-		if (!address == 0)
+		if (address != 0 && steeringAngleOffset != 0)
 		{
-			float steeringRadian = *reinterpret_cast<const float *>(address + offset);
+			float steeringRadian = *reinterpret_cast<const float *>(address + steeringAngleOffset);
 			return static_cast<float>(steeringRadian * (180.0 / System::Math::PI));
 		}
 		else
@@ -895,35 +860,26 @@ namespace GTA
 	float Vehicle::SteeringScale::get()
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int steeringScaleOffset = Native::MemoryAccess::steeringScaleOffset;
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x8FC : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x91C : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x93C : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x98C : offset);
+		if (address == 0 || steeringScaleOffset == 0)
+		{
+			return 0.0f;
+		}
 
-		return address == 0 ? 0.0f : *reinterpret_cast<const float *>(address + offset);
+		return  *reinterpret_cast<const float *>(address + steeringScaleOffset);
 	}
 	void Vehicle::SteeringScale::set(float value)
 	{
 		const System::UInt64 address = Native::MemoryAccess::GetAddressOfEntity(Handle);
+		const int steeringScaleOffset = Native::MemoryAccess::steeringScaleOffset;
 
-		if (address == 0)
+		if (address == 0 || steeringScaleOffset == 0)
 		{
 			return;
 		}
 
-		int offset = (Game::Version >= GameVersion::VER_1_0_372_2_STEAM ? 0x8A4 : 0x894);
-		offset = (Game::Version >= GameVersion::VER_1_0_877_1_STEAM ? 0x8C4 : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_944_2_STEAM ? 0x8EC : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1103_2_STEAM ? 0x8FC : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1180_2_STEAM ? 0x91C : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1290_1_STEAM ? 0x93C : offset);
-		offset = (Game::Version >= GameVersion::VER_1_0_1604_0_STEAM ? 0x98C : offset);
-
-		*reinterpret_cast<float *>(address + offset) = value;
+		*reinterpret_cast<float *>(address + steeringScaleOffset) = value;
 	}
 	void Vehicle::RadioStation::set(GTA::RadioStation value)
 	{
