@@ -163,62 +163,7 @@ namespace SHVDN
 				return null;
 			}
 
-			Log.Message(Log.Level.Info, "Loading scripts from ", scriptPath, " ...");
-
-			if (!Directory.Exists(scriptPath))
-			{
-				Log.Message(Log.Level.Warning, "Failed to reload scripts because the directory is missing.");
-				return scriptdomain;
-			}
-
-			// Find all script files and assemblies in the specified script directory
-			var filenameScripts = new List<string>();
-			var filenameAssemblies = new List<string>();
-
-			try
-			{
-				filenameAssemblies.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
-
-				if (allowSourceScripts)
-				{
-					filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
-					filenameScripts.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Message(Log.Level.Error, "Failed to reload scripts: ", ex.ToString());
-				AppDomain.Unload(appdomain);
-				return null;
-			}
-
-			// Filter out non-script assemblies like copies of ScriptHookVDotNet
-			for (int i = 0; i < filenameAssemblies.Count; i++)
-			{
-				var filename = filenameAssemblies[i];
-
-				try
-				{
-					var assemblyName = AssemblyName.GetAssemblyName(filename);
-
-					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
-					{
-						Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filename), ".");
-
-						filenameAssemblies.RemoveAt(i--);
-					}
-				}
-				catch (Exception ex)
-				{
-					Log.Message(Log.Level.Warning, "Could not check assembly file ", Path.GetFileName(filename), ": ", ex.ToString());
-				}
-			}
-
-			// Actually load scripts into the script domain
-			foreach (string filename in filenameScripts)
-				scriptdomain.LoadScript(filename);
-			foreach (string filename in filenameAssemblies)
-				scriptdomain.LoadAssembly(filename);
+			scriptdomain.StartAllScripts();
 
 			return scriptdomain;
 		}
@@ -457,9 +402,6 @@ namespace SHVDN
 		{
 			if (runningScripts.Count != 0)
 				return; // Scripts are already running, so there is nothing to do.
-
-			Log.Message(Log.Level.Info, "Starting ", scriptTypes.Count.ToString(), " script(s) ...");
-
 			if (scriptTypes.Count == 0 || !SortScripts(ref scriptTypes))
 				return; // No scripts are loaded.
 
@@ -483,8 +425,6 @@ namespace SHVDN
 			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
 				return;
 
-			Log.Message(Log.Level.Info, "Starting ", (scriptTypes.Count - offset).ToString(), " script(s) in ", filename, " ...");
-
 			for (int i = offset; i < scriptTypes.Count; i++)
 			{
 				Script script = InstantiateScript(scriptTypes[i].Item2);
@@ -503,20 +443,48 @@ namespace SHVDN
 		public void StartAllScripts()
 		{
 			string scriptPath = AppDomain.BaseDirectory;
-			if (!Directory.Exists(scriptPath))
-				return;
 
+			Log.Message(Log.Level.Info, "Loading scripts from ", scriptPath, " ...");
+
+			if (!Directory.Exists(scriptPath))
+			{
+				Log.Message(Log.Level.Warning, "Failed to reload scripts because the directory is missing.");
+				return;
+			}
+
+			// Find all script files and assemblies in the specified script directory
 			var filenames = new List<string>();
 
 			try
 			{
 				filenames.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
 				filenames.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+
 				filenames.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
 			{
-				Log.Message(Log.Level.Error, "Failed to reload scripts:", Environment.NewLine, ex.ToString());
+				Log.Message(Log.Level.Error, "Failed to reload scripts: ", ex.ToString());
+			}
+
+			// Filter out non-script assemblies like copies of ScriptHookVDotNet
+			for (int i = 0; i < filenames.Count; i++)
+			{
+				try
+				{
+					var assemblyName = AssemblyName.GetAssemblyName(filenames[i]);
+
+					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+					{
+						Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenames[i]), ".");
+
+						filenames.RemoveAt(i--);
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Message(Log.Level.Warning, "Could not check assembly file ", Path.GetFileName(filenames[i]), ": ", ex.ToString());
+				}
 			}
 
 			foreach (var filename in filenames)
@@ -750,9 +718,7 @@ namespace SHVDN
 				var scriptApi = CurrentDomain.scriptApi;
 
 				// Check that the referenced script API assembly version is compatible
-				if (assemblyName.Version.Major != scriptApi.GetName().Version.Major)
-					Log.Message(Log.Level.Warning, "A script references v", assemblyName.Version.ToString(3), " which may not be compatible with the current v" + scriptApi.GetName().Version.ToString(3), " and was therefore ignored.");
-				else
+				if (assemblyName.Version.Major == scriptApi.GetName().Version.Major)
 					return scriptApi;
 			}
 
