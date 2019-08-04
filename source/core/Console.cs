@@ -491,6 +491,8 @@ namespace SHVDN
 
 			commandPos++;
 			input = commandHistory[commandHistory.Count - commandPos - 1];
+			// Reset cursor position to end of input text
+			cursorPos = input.Length;
 		}
 		static void GoDownCommandList()
 		{
@@ -499,6 +501,7 @@ namespace SHVDN
 
 			commandPos--;
 			input = commandHistory[commandHistory.Count - commandPos - 1];
+			cursorPos = input.Length;
 		}
 
 		static void ForwardWord()
