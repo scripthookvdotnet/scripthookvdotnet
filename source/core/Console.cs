@@ -396,6 +396,12 @@ namespace SHVDN
 					else
 						MoveCursorRight();
 					break;
+				case Keys.Home:
+					MoveCursorToBegOfLine();
+					break;
+				case Keys.End:
+					MoveCursorToEndOfLine();
+					break;
 				case Keys.Up:
 					GoUpCommandList();
 					break;
