@@ -32,7 +32,6 @@ namespace SHVDN
 
 	public class ScriptDomain : MarshalByRefObject, IDisposable
 	{
-		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
 		List<Script> runningScripts = new List<Script>();
@@ -57,17 +56,17 @@ namespace SHVDN
 		public AppDomain AppDomain { get; private set; } = AppDomain.CurrentDomain;
 		
 		/// <summary>
-		/// Gets the current scripting domain for the current thread.
+		/// Gets the scripting domain for the current application domain.
 		/// </summary>
 		public static ScriptDomain CurrentDomain { get; private set; }
 
 		/// <summary>
-		/// The global list of all existing scripting domains.
+		/// The global list of all existing scripting domains. This is only valid in the main application domain.
 		/// </summary>
 		public static List<ScriptDomain> Instances = new List<ScriptDomain>();
 
 		/// <summary>
-		/// Gets the list of currently running scripts in this script domain.
+		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
 		/// </summary>
 		public string[] RunningScripts => runningScripts.Select(script => Path.GetFileName(script.Filename) + ": " + script.Name + (script.IsRunning ? " ~g~[running]" : " ~r~[aborted]")).ToArray();
 		/// <summary>
@@ -83,6 +82,7 @@ namespace SHVDN
 		public ScriptDomain(string apiPath)
 		{
 			ApiPath = apiPath;
+			// Each application domain has its own copy of this static variable, so only need to set it once
 			CurrentDomain = this;
 
 			// Attach resolve handler to new domain
@@ -145,7 +145,10 @@ namespace SHVDN
 			setup.ApplicationBase = scriptPath;
 
 			var appdomain = AppDomain.CreateDomain(name, null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
-			appdomain.InitializeLifetimeService();
+			appdomain.InitializeLifetimeService(); // Give the application domain an infinite lifetime
+
+			// Store default domain reference, so it can be used to call back into it (see Log implementation for example)
+			appdomain.SetData("DefaultDomain", AppDomain.CurrentDomain);
 
 			ScriptDomain scriptdomain = null;
 
@@ -219,7 +222,6 @@ namespace SHVDN
 
 			return scriptdomain;
 		}
-
 		/// <summary>
 		/// Unloads scripts and destroys an existing script domain.
 		/// </summary>
@@ -379,9 +381,6 @@ namespace SHVDN
 			Log.Message(Log.Level.Info, "Instantiating script '", scriptType.FullName, "' ...");
 
 			Script script = new Script();
-
-			// Update current domain, so that the script constructor has access to it
-			CurrentDomain = this;
 			executingScript = script;
 
 			try
@@ -402,10 +401,6 @@ namespace SHVDN
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
 			}
-
-			string supportURL = GetScriptSupportURL(scriptType);
-			if (supportURL != null)
-				Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
 
 			return null;
 		}
@@ -566,18 +561,10 @@ namespace SHVDN
 		/// <param name="task">The task to execute.</param>
 		public void ExecuteTask(IScriptTask task)
 		{
-			if (Thread.CurrentThread.ManagedThreadId == executingThreadId)
-			{
-				// Request came from the main thread, so can just execute it right away
-				task.Run();
-			}
-			else
-			{
-				// Request came from the script thread, so need to pass it to the domain thread and execute there
-				taskQueue.Enqueue(task);
+			// Request came from the script thread, so need to pass it to the domain thread and execute there
+			taskQueue.Enqueue(task);
 
-				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
-			}
+			SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
 		}
 
 		/// <summary>
@@ -612,8 +599,6 @@ namespace SHVDN
 				if (!script.IsRunning)
 					continue;
 
-				// Update current domain, so that the script has access to it
-				CurrentDomain = this;
 				executingScript = script;
 
 				// Resume script thread and execute any incoming tasks from it
@@ -675,7 +660,9 @@ namespace SHVDN
 				return handle;
 			}
 		}
-
+		/// <summary>
+		/// Free memory for all pinned strings.
+		/// </summary>
 		void CleanupStrings()
 		{
 			foreach (IntPtr handle in pinnedStrings)
@@ -747,15 +734,6 @@ namespace SHVDN
 			}
 		}
 
-		static string GetScriptSupportURL(Type scriptType)
-		{
-			//foreach (ScriptAttributes attribute in scriptType.GetCustomAttributes<ScriptAttributes>(true))
-			//	if (!string.IsNullOrEmpty(attribute.SupportURL))
-			//		return attribute.SupportURL;
-
-			return null;
-		}
-
 		static Assembly HandleResolve(object sender, ResolveEventArgs args)
 		{
 			var assemblyName = new AssemblyName(args.Name);
@@ -780,8 +758,7 @@ namespace SHVDN
 
 			return null;
 		}
-
-		static public void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
+		static internal void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
 		{
 			Log.Message(Log.Level.Error, args.IsTerminating ? "Caught fatal unhandled exception:" : "Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
 
@@ -791,10 +768,6 @@ namespace SHVDN
 			var script = (Script)sender;
 
 			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
-
-			string supportURL = GetScriptSupportURL(script.Instance.GetType());
-			if (supportURL != null)
-				Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
 		}
 	}
 }

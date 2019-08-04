@@ -29,7 +29,7 @@ namespace SHVDN
 			Warning
 		}
 
-		static string FilePath => Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".log");
+		static string FilePath => Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log");
 
 		public static void Clear()
 		{
@@ -71,6 +71,21 @@ namespace SHVDN
 		}
 		static void WriteToConsole(Level level, params string[] message)
 		{
+			// The console lives in the default application domain, so always call into that
+			var DefaultDomain = (AppDomain)AppDomain.CurrentDomain.GetData("DefaultDomain");
+			if (DefaultDomain != null)
+			{
+				DefaultDomain.SetData("WriteToConsole.level", level);
+				DefaultDomain.SetData("WriteToConsole.message", message);
+				DefaultDomain.DoCallBack(() =>
+				{
+					var level2 = (Level)AppDomain.CurrentDomain.GetData("WriteToConsole.level");
+					var message2 = (string[])AppDomain.CurrentDomain.GetData("WriteToConsole.message");
+					WriteToConsole(level2, message2);
+				});
+				return;
+			}
+
 			switch (level)
 			{
 				case Level.Info:
