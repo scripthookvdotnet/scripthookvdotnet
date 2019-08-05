@@ -30,21 +30,26 @@ namespace SHVDN
 		internal SemaphoreSlim continueEvent = new SemaphoreSlim(0);
 		internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
 
-        public event EventHandler Tick;
-        public event EventHandler Aborted;
-        public event WinForms.KeyEventHandler KeyUp;
-        public event WinForms.KeyEventHandler KeyDown;
+		public event EventHandler Tick;
+		public event EventHandler Aborted;
+		public event WinForms.KeyEventHandler KeyUp;
+		public event WinForms.KeyEventHandler KeyDown;
 
-        /// <summary>
-        /// Gets the execution status of this script.
-        /// </summary>
-        public bool IsRunning { get; private set; }
+		/// <summary>
+		/// Gets the execution status of this script.
+		/// </summary>
+		public bool IsRunning { get; private set; }
 
 		/// <summary>
 		/// Gets the type name of this script.
 		/// </summary>
 		public string Name => Instance.GetType().FullName;
 		public string Filename { get; internal set; }
+
+		/// <summary>
+		/// Gets or sets the interval in ms between each <see cref="Tick"/>.
+		/// </summary>
+		public int Interval { get; set; }
 
 		/// <summary>
 		/// Get the object instance of the script.
@@ -90,9 +95,8 @@ namespace SHVDN
 					break;
 				}
 
-                // Yield execution to next tick
-                PropertyInfo Interval = Instance.GetType().GetProperty("Interval", BindingFlags.Instance | BindingFlags.NonPublic);
-                Wait(Interval != null ? (int)Interval.GetValue(Instance) : 0);
+				// Yield execution to next tick
+				Wait(Interval);
 			}
 
 			// Abort in case the script encountered an unhandled exception above

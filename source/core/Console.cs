@@ -64,7 +64,7 @@ namespace SHVDN
 		static ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		static Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
 		static DateTime lastClosed;
-		static Task<Assembly> compilerTask;
+		static Task<MethodInfo> compilerTask;
 		public static Keys ToggleKey = Keys.F3;
 
 		[DllImport("user32.dll")]
@@ -282,7 +282,7 @@ namespace SHVDN
 				{
 					try
 					{
-						var result = compilerTask.Result.GetType("ConsoleInput").GetMethod("Execute").Invoke(null, null);
+						var result = compilerTask.Result.Invoke(null, null);
 						if (result != null)
 							PrintInfo($"[Return Value]: {result}");
 					}
@@ -559,20 +559,14 @@ namespace SHVDN
 
 		static void CompileExpression()
 		{
-			if (string.IsNullOrEmpty(input))
+			if (string.IsNullOrEmpty(input) || compilerTask != null)
 				return;
 
 			commandPos = -1;
 			if (commandHistory.LastOrDefault() != input)
 				commandHistory.Add(input);
 
-			if (compilerTask != null)
-			{
-				PrintError("Can't compile input - Compiler is busy");
-				return;
-			}
-
-			compilerTask = Task.Factory.StartNew(new Func<Assembly>(() => {
+			compilerTask = Task.Factory.StartNew(new Func<MethodInfo>(() => {
 				var compiler = new Microsoft.CSharp.CSharpCodeProvider();
 				var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
 				compilerOptions.GenerateInMemory = true;
@@ -590,13 +584,13 @@ namespace SHVDN
 				//		if (!string.IsNullOrEmpty(script.Filename))
 				//			compilerOptions.ReferencedAssemblies.Add(script.Filename);
 
-				const string template = "using System; using GTA; using GTA.Native; using Console = SHVDN.Console; public class ConsoleInput : SHVDN.ConsoleCommands {{ public static Object Execute(){{ {0}; return null; }} }}";
+				const string template = "using System; using GTA; using GTA.Native; using Console = SHVDN.Console; public class ConsoleInput : SHVDN.ConsoleCommands {{ public static object Execute() {{ {0}; return null; }} }}";
 
 				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
 				if (!compilerResult.Errors.HasErrors)
 				{
-					return compilerResult.CompiledAssembly;
+					return compilerResult.CompiledAssembly.GetType("ConsoleInput").GetMethod("Execute");
 				}
 				else
 				{
@@ -779,7 +773,7 @@ namespace SHVDN
 		{
 			var domain = ScriptDomain.Instances.Last();
 
-			string basedirectory = domain.AppDomain.BaseDirectory;
+			string basedirectory = domain.ScriptPath;
 
 			if (!File.Exists(Path.Combine(basedirectory, filename)))
 			{
@@ -803,7 +797,6 @@ namespace SHVDN
 			filename = Path.GetFullPath(filename);
 
 			string extension = Path.GetExtension(filename).ToLower();
-
 			if (extension != ".cs" && extension != ".vb" && extension != ".dll")
 			{
 				Console.PrintError("The file '" + filename + "' was not recognized as a script file");
@@ -816,7 +809,7 @@ namespace SHVDN
 		public static void Reload(string filename)
 		{
 			Abort(filename);
-			Load(filename);
+			 Load(filename);
 		}
 		[ConsoleCommand("Reloads all scripts found in the script folder")]
 		public static void ReloadAll()
@@ -824,7 +817,7 @@ namespace SHVDN
 			foreach (var domain in ScriptDomain.Instances)
 			{
 				domain.Abort();
-				domain.StartAllScripts();
+				domain.Start();
 			}
 		}
 
@@ -843,17 +836,7 @@ namespace SHVDN
 		{
 			foreach (var domain in ScriptDomain.Instances)
 			{
-				string basedirectory = domain.AppDomain.BaseDirectory;
-
-				filename = Path.Combine(basedirectory, filename);
-
-				if (!File.Exists(filename))
-				{
-					Console.PrintError("The file '" + filename + "' was not found");
-					return;
-				}
-
-				domain.AbortScripts(filename);
+				domain.AbortScripts(Path.Combine(domain.AppDomain.BaseDirectory, filename));
 			}
 		}
 		[ConsoleCommand("Aborts all scripts found in the script folder")]

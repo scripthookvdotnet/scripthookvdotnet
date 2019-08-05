@@ -48,7 +48,6 @@ namespace GTA
 	public abstract class Script
 	{
 		#region Fields
-		internal int _interval = 0;
 		internal ScriptSettings _settings;
 		#endregion
 
@@ -134,11 +133,11 @@ namespace GTA
 		/// </summary>
 		protected int Interval
 		{
-			get { return _interval; }
+			get { return SHVDN.ScriptDomain.ExecutingScript.Interval; }
 			set {
 				if (value < 0)
 					value = 0;
-				_interval = value;
+				SHVDN.ScriptDomain.ExecutingScript.Interval = value;
 			}
 		}
 

@@ -364,7 +364,7 @@ namespace GTA
 		/// <returns>The <see cref="string"/> of what the user entered or <see cref="string.Empty"/> if the user canceled.</returns>
 		public static string GetUserInput(WindowTitle windowTitle, string defaultText, int maxLength)
 		{
-			SHVDN.ScriptDomain.CurrentDomain.PauseKeyboardEvents(true);
+			SHVDN.ScriptDomain.CurrentDomain.PauseKeyEvents(true);
 
 			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, _windowTitles[(int)windowTitle], SHVDN.NativeMemory.NullString, defaultText, SHVDN.NativeMemory.NullString, SHVDN.NativeMemory.NullString, SHVDN.NativeMemory.NullString, maxLength + 1);
 
@@ -373,7 +373,7 @@ namespace GTA
 				Script.Yield();
 			}
 
-			SHVDN.ScriptDomain.CurrentDomain.PauseKeyboardEvents(false);
+			SHVDN.ScriptDomain.CurrentDomain.PauseKeyEvents(false);
 
 			return Function.Call<string>(Hash.GET_ONSCREEN_KEYBOARD_RESULT);
 		}

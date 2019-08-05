@@ -32,12 +32,14 @@ namespace SHVDN
 
 	public class ScriptDomain : MarshalByRefObject, IDisposable
 	{
+		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
 		List<Script> runningScripts = new List<Script>();
 		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
 		List<Tuple<string, Type>> scriptTypes = new List<Tuple<string, Type>>();
 		bool disposed = false;
+		bool sourceScripts = false;
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		Assembly scriptApi = null;
@@ -50,6 +52,10 @@ namespace SHVDN
 		/// Gets the path to the scripting API assembly file.
 		/// </summary>
 		public string ApiPath { get; private set; }
+		/// <summary>
+		/// Gets the path to the directory containing scripts.
+		/// </summary>
+		public string ScriptPath => AppDomain.BaseDirectory;
 		/// <summary>
 		/// Gets the application domain that is associated with this script domain.
 		/// </summary>
@@ -76,10 +82,10 @@ namespace SHVDN
 
 		/// <summary>
 		/// Initializes the script domain inside its application domain.
-		/// This constructor is public so that it is found by <see cref="System.AppDomain.CreateInstanceAndUnwrap(string, string)"/>.
 		/// </summary>
 		/// <param name="apiPath">The path to the scripting API assembly file.</param>
-		public ScriptDomain(string apiPath)
+		/// <param name="allowSourceScripts">Whether to allow this script domain to compile and load scripts from source code.</param>
+		internal ScriptDomain(string apiPath, bool allowSourceScripts)
 		{
 			ApiPath = apiPath;
 			// Each application domain has its own copy of this static variable, so only need to set it once
@@ -93,6 +99,7 @@ namespace SHVDN
 
 			// Load API assembly into this script domain
 			scriptApi = Assembly.LoadFrom(apiPath);
+			sourceScripts = allowSourceScripts;
 
 			Log.Message(Log.Level.Info, "Created new script domain for script API v", scriptApi.GetName().Version.ToString(3), ".");
 		}
@@ -154,16 +161,13 @@ namespace SHVDN
 
 			try
 			{
-				scriptdomain = (ScriptDomain)appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.Default, null, new object[] { apiPath }, null, null);
+				scriptdomain = (ScriptDomain)appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { apiPath, allowSourceScripts }, null, null);
 			}
 			catch (Exception ex)
 			{
 				Log.Message(Log.Level.Error, "Failed to create script domain: ", ex.ToString());
 				AppDomain.Unload(appdomain);
-				return null;
 			}
-
-			scriptdomain.StartAllScripts();
 
 			return scriptdomain;
 		}
@@ -396,51 +400,9 @@ namespace SHVDN
 		}
 
 		/// <summary>
-		/// Instantiates and starts all loaded scripts. 
+		/// Loads and starts all scripts.
 		/// </summary>
 		public void Start()
-		{
-			if (runningScripts.Count != 0)
-				return; // Scripts are already running, so there is nothing to do.
-			if (scriptTypes.Count == 0 || !SortScripts(ref scriptTypes))
-				return; // No scripts are loaded.
-
-			foreach (var script in scriptTypes.Select(x => InstantiateScript(x.Item2)).Where(x => x != null))
-			{
-				script.Start();
-
-				runningScripts.Add(script);
-			}
-		}
-		/// <summary>
-		/// Reloads, instantiates and starts all scripts from the specified file.
-		/// </summary>
-		/// <param name="filename"></param>
-		public void StartScripts(string filename)
-		{
-			filename = Path.GetFullPath(filename);
-
-			int offset = scriptTypes.Count;
-
-			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
-				return;
-
-			for (int i = offset; i < scriptTypes.Count; i++)
-			{
-				Script script = InstantiateScript(scriptTypes[i].Item2);
-
-				if (ReferenceEquals(script, null))
-					continue;
-
-				script.Start();
-
-				runningScripts.Add(script);
-			}
-		}
-		/// <summary>
-		/// Reloads, instantiates and starts all scripts.
-		/// </summary>
-		public void StartAllScripts()
 		{
 			string scriptPath = AppDomain.BaseDirectory;
 
@@ -457,10 +419,14 @@ namespace SHVDN
 
 			try
 			{
-				filenames.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
-				filenames.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+				filenames.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories)
+					.Where(x => IsManagedAssembly(x)));
 
-				filenames.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories).Where(x => IsManagedAssembly(x)));
+				if (sourceScripts)
+				{
+					filenames.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
+					filenames.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+				}
 			}
 			catch (Exception ex)
 			{
@@ -491,12 +457,35 @@ namespace SHVDN
 				StartScripts(filename);
 		}
 		/// <summary>
+		/// Loads and starts all scripts in the specified file.
+		/// </summary>
+		/// <param name="filename"></param>
+		public void StartScripts(string filename)
+		{
+			filename = Path.GetFullPath(filename);
+
+			int offset = scriptTypes.Count;
+
+			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadAssembly(filename) : !LoadScript(filename))
+				return;
+
+			for (int i = offset; i < scriptTypes.Count; i++)
+			{
+				Script script = InstantiateScript(scriptTypes[i].Item2);
+
+				if (ReferenceEquals(script, null))
+					continue;
+
+				script.Start();
+
+				runningScripts.Add(script);
+			}
+		}
+		/// <summary>
 		/// Aborts all running scripts.
 		/// </summary>
 		public void Abort()
 		{
-			Log.Message(Log.Level.Info, "Stopping ", runningScripts.Count.ToString(), " script(s) ...");
-
 			foreach (Script script in runningScripts)
 				script.Abort();
 
@@ -529,10 +518,18 @@ namespace SHVDN
 		/// <param name="task">The task to execute.</param>
 		public void ExecuteTask(IScriptTask task)
 		{
-			// Request came from the script thread, so need to pass it to the domain thread and execute there
-			taskQueue.Enqueue(task);
+			if (Thread.CurrentThread.ManagedThreadId == executingThreadId)
+			{
+				// Request came from the main thread, so can just execute it right away
+				task.Run();
+			}
+			else
+			{
+				// Request came from the script thread, so need to pass it to the domain thread and execute there
+				taskQueue.Enqueue(task);
 
-			SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
+				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
+			}
 		}
 
 		/// <summary>
@@ -548,7 +545,7 @@ namespace SHVDN
 		/// Pauses or resumes handling of keyboard events in this script domain.
 		/// </summary>
 		/// <param name="pause"><c>true</c> to pause or <c>false</c> to resume</param>
-		public void PauseKeyboardEvents(bool pause)
+		public void PauseKeyEvents(bool pause)
 		{
 			recordKeyboardEvents = !pause;
 		}
@@ -610,6 +607,15 @@ namespace SHVDN
 		}
 
 		/// <summary>
+		/// Free memory for all pinned strings.
+		/// </summary>
+		void CleanupStrings()
+		{
+			foreach (IntPtr handle in pinnedStrings)
+				Marshal.FreeCoTaskMem(handle);
+			pinnedStrings.Clear();
+		}
+		/// <summary>
 		/// Pins the memory of a string so that it can be used in native calls without worrying about the GC invalidating its pointer.
 		/// </summary>
 		/// <param name="str">The string to pin to a fixed pointer.</param>
@@ -627,15 +633,6 @@ namespace SHVDN
 				pinnedStrings.Add(handle);
 				return handle;
 			}
-		}
-		/// <summary>
-		/// Free memory for all pinned strings.
-		/// </summary>
-		void CleanupStrings()
-		{
-			foreach (IntPtr handle in pinnedStrings)
-				Marshal.FreeCoTaskMem(handle);
-			pinnedStrings.Clear();
 		}
 
 		public string LookupScriptFilename(Type scriptType)
