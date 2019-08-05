@@ -34,10 +34,13 @@ namespace WinForms = System::Windows::Forms;
 
 static void ScriptHookVDotnet_ManagedInit()
 {
+	// Initialize default domain (used by console)
+	gcnew SHVDN::ScriptDomain(nullptr, false);
+
 	// Unload any previous instances
-	for each (ScriptDomain ^domain in ScriptDomain::Instances)
+	for each (ScriptDomain ^domain in SHVDN::Console::ScriptDomains)
 		ScriptDomain::Unload(domain);
-	ScriptDomain::Instances->Clear();
+	SHVDN::Console::ScriptDomains->Clear();
 
 	// Clear log from previous ScriptHookVDotNet runs
 	Log::Clear();
@@ -57,7 +60,7 @@ static void ScriptHookVDotnet_ManagedInit()
 		// Start scripts in the newly created domain
 		domain->Start();
 
-		ScriptDomain::Instances->Add(domain);
+		SHVDN::Console::ScriptDomains->Add(domain);
 	}
 }
 
@@ -65,7 +68,7 @@ static void ScriptHookVDotnet_ManagedTick(unsigned int index)
 {
 	SHVDN::Console::DoTick();
 
-	for each (ScriptDomain ^domain in ScriptDomain::Instances)
+	for each (ScriptDomain ^domain in SHVDN::Console::ScriptDomains)
 		domain->DoTick();
 }
 
@@ -86,7 +89,7 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 
 	// Do not send keyboard events to other running scripts when console is open
 	if (!SHVDN::Console::IsOpen)
-		for each (ScriptDomain ^domain in ScriptDomain::Instances)
+		for each (ScriptDomain ^domain in SHVDN::Console::ScriptDomains)
 			domain->DoKeyEvent(keys, keydown);
 }
 

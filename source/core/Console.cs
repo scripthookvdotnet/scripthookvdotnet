@@ -42,6 +42,11 @@ namespace SHVDN
 			RegisterCommands(typeof(ConsoleCommands));
 		}
 
+		/// <summary>
+		/// The global list of all existing scripting domains. This is only valid in the default application domain.
+		/// </summary>
+		public static List<ScriptDomain> ScriptDomains = new List<ScriptDomain>();
+
 		public static bool IsOpen
 		{
 			get { return isOpen; }
@@ -575,11 +580,11 @@ namespace SHVDN
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
 				// Just add the last API (which should be the most recent one)
-				if (ScriptDomain.Instances.Count != 0)
-					compilerOptions.ReferencedAssemblies.Add(ScriptDomain.Instances.Last().ApiPath);
+				if (ScriptDomains.Count != 0)
+					compilerOptions.ReferencedAssemblies.Add(ScriptDomains.Last().ApiPath);
 
 				// TODO: Add script assemblies
-				//foreach (ScriptDomain domain in ScriptDomain.Instances)
+				//foreach (ScriptDomain domain in ScriptDomains)
 				//	foreach (Script script in domain.RunningScripts)
 				//		if (!string.IsNullOrEmpty(script.Filename))
 				//			compilerOptions.ReferencedAssemblies.Add(script.Filename);
@@ -690,7 +695,7 @@ namespace SHVDN
 			if (size <= maxLengthUtf8)
 			{
 				NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-					(ulong)ScriptDomain.Instances[0].PinString(str).ToInt64());
+					(ulong)ScriptDomain.CurrentDomain.PinString(str).ToInt64());
 				return;
 			}
 
@@ -704,7 +709,7 @@ namespace SHVDN
 				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
 				{
 					NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-						(ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, currentPos - startPos)).ToInt64());
+						(ulong)ScriptDomain.CurrentDomain.PinString(str.Substring(startPos, currentPos - startPos)).ToInt64());
 
 					currentUtf8StrLength = 0;
 					startPos = currentPos;
@@ -719,7 +724,7 @@ namespace SHVDN
 			}
 
 			NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-				(ulong)ScriptDomain.Instances[0].PinString(str.Substring(startPos, str.Length - startPos)).ToInt64());
+				(ulong)ScriptDomain.CurrentDomain.PinString(str.Substring(startPos, str.Length - startPos)).ToInt64());
 		}
 		static unsafe float GetTextLength(string text)
 		{
@@ -771,7 +776,7 @@ namespace SHVDN
 		[ConsoleCommand("Loads scripts from a file")]
 		public static void Load(string filename)
 		{
-			var domain = ScriptDomain.Instances.Last();
+			var domain = Console.ScriptDomains.Last();
 
 			string basedirectory = domain.ScriptPath;
 
@@ -814,7 +819,7 @@ namespace SHVDN
 		[ConsoleCommand("Reloads all scripts found in the script folder")]
 		public static void ReloadAll()
 		{
-			foreach (var domain in ScriptDomain.Instances)
+			foreach (var domain in Console.ScriptDomains)
 			{
 				domain.Abort();
 				domain.Start();
@@ -826,7 +831,7 @@ namespace SHVDN
 		{
 			Console.PrintInfo("--- List ---");
 
-			foreach (var domain in ScriptDomain.Instances)
+			foreach (var domain in Console.ScriptDomains)
 				foreach (var info in domain.RunningScripts)
 					Console.PrintInfo("   " + info);
 		}
@@ -834,7 +839,7 @@ namespace SHVDN
 		[ConsoleCommand("Aborts all scripts from the specified file")]
 		public static void Abort(string filename)
 		{
-			foreach (var domain in ScriptDomain.Instances)
+			foreach (var domain in Console.ScriptDomains)
 			{
 				domain.AbortScripts(Path.Combine(domain.AppDomain.BaseDirectory, filename));
 			}
@@ -842,7 +847,7 @@ namespace SHVDN
 		[ConsoleCommand("Aborts all scripts found in the script folder")]
 		public static void AbortAll()
 		{
-			foreach (var domain in ScriptDomain.Instances)
+			foreach (var domain in Console.ScriptDomains)
 			{
 				domain.Abort();
 			}

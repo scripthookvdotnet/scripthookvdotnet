@@ -67,11 +67,6 @@ namespace SHVDN
 		public static ScriptDomain CurrentDomain { get; private set; }
 
 		/// <summary>
-		/// The global list of all existing scripting domains. This is only valid in the main application domain.
-		/// </summary>
-		public static List<ScriptDomain> Instances = new List<ScriptDomain>();
-
-		/// <summary>
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
 		/// </summary>
 		public string[] RunningScripts => runningScripts.Select(script => Path.GetFileName(script.Filename) + ": " + script.Name + (script.IsRunning ? " ~g~[running]" : " ~r~[aborted]")).ToArray();
@@ -90,6 +85,10 @@ namespace SHVDN
 			ApiPath = apiPath;
 			// Each application domain has its own copy of this static variable, so only need to set it once
 			CurrentDomain = this;
+
+			// Do not initialize when no API assembly path was passed in
+			if (apiPath == null)
+				return;
 
 			// Attach resolve handler to new domain
 			AppDomain.AssemblyResolve += HandleResolve;
