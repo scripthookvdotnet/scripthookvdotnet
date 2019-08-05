@@ -57,7 +57,13 @@ namespace GTA
 		VER_1_0_1493_1_STEAM,
 		VER_1_0_1493_1_NOSTEAM,
 		VER_1_0_1604_0_STEAM,
-		VER_1_0_1604_0_NOSTEAM
+		VER_1_0_1604_0_NOSTEAM,
+		VER_1_0_1604_1_STEAM,
+		VER_1_0_1604_1_NOSTEAM,
+		///<summary>This value also represents the exe version 1.0.1734.0 for Steam version. 1.0.1737.0 basically works in the same way as 1.0.1734.0 but with bug fixes.</summary>
+		VER_1_0_1737_0_STEAM,
+		///<summary>This value also represents the exe version 1.0.1734.0 for non-Steam version. 1.0.1737.0 basically works in the same way as 1.0.1734.0 but with bug fixes.</summary>
+		VER_1_0_1737_0_NOSTEAM
 	};
 	public enum class Language
 	{

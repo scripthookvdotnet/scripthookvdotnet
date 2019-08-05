@@ -1,0 +1,60 @@
+version: '{branch}/{build}'
+image: Visual Studio 2019
+configuration: Release
+platform: x64
+install:
+- cmd: >-
+    cd sdk/
+
+    echo Downloading C++ ScriptHook...
+
+    appveyor DownloadFile http://reshade.me/downloads/ScriptHookV_SDK_1.0.617.1a.zip -FileName sdk.zip
+
+    echo Download completed. Extracting...
+
+    7z x sdk.zip
+
+    echo Extraction completed. Compiling...
+
+    cd ../
+
+    if defined APPVEYOR_REPO_TAG_NAME (set SHVDN_VERSION_TAG=%APPVEYOR_REPO_TAG_NAME%) else (for /f %%i in ('git describe --abbrev^=0 --tags') do set SHVDN_VERSION_TAG=%%i)
+
+    set SHVDN_VERSION=%SHVDN_VERSION_TAG:~1%
+
+    echo Version: "%SHVDN_VERSION%"
+
+build:
+  project: ScriptHookVDotNet.sln
+  publish_nuget: true
+  parallel: true
+  verbosity: minimal
+before_package:
+- cmd: >-
+    del bin\ScriptHookVDotNet*.metagen
+
+    type README.md | more /P > bin\README.txt
+
+    type LICENSE.txt | more /P > bin\LICENSE.txt
+
+test: off
+artifacts:
+- path: bin/
+  name: ScriptHookVDotNet
+deploy:
+- provider: GitHub
+  tag: $(appveyor_repo_tag_name)
+  release: ScriptHookVDotNet $(appveyor_repo_tag_name)
+  auth_token:
+    secure: K1OU6FfCqm6FfpDYZexM5t6legoDpJs+PtRwVbnuSuuGsXO/jDcA7wGUWj5JSx5H
+  artifact: ScriptHookVDotNet
+  draft: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
+- provider: NuGet
+  api_key:
+    secure: Ie7b6b7OQSE7vQ0BCJsvAh6lTPQpRLuzQARYWshaBensB91SheFAAkyCHA0RUv0t
+  on:
+    branch: master
+    appveyor_repo_tag: true

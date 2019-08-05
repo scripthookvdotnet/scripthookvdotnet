@@ -194,6 +194,24 @@ namespace GTA
 			modelNum3 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
 			modelNum4 = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
 			modelHashTable = *reinterpret_cast<PUINT64>(*reinterpret_cast<int*>(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
+
+			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
+			currentGearOffset = address == 0 ? 0 : *(int*)(address + 3) + 2;
+			highGearOffset = address == 0 ? 0 : *(int*)(address + 3) + 6;
+
+			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83\x24\x08\x00\x00", "x?xxxxxx????x?xxxx????");
+			fuelLevelOffset = address == 0 ? 0 : *(int*)(address + 8);
+
+			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
+			currentRPMOffset = address == 0 ? 0 : *(int*)(address + 10);
+			accelerationOffset = address == 0 ? 0 : *(int*)(address + 10) + 0x10;
+
+			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
+			steeringScaleOffset = address == 0 ? 0 : *(int*)(address + 6);
+			steeringAngleOffset = address == 0 ? 0 : *(int*)(address + 6) + 8;
+
+			address = FindPattern("\xF3\x0F\x10\x8F\x10\x0A\x00\x00\xF3\x0F\x59\x05\x5E\x30\x8D\x00", "xxxx????xxxx????");
+			wheelSpeedOffset = address == 0 ? 0 : *(int*)(address + 4);
 		}
 
 		array<int> ^MemoryAccess::GetVehicleHandles()

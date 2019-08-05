@@ -39,12 +39,21 @@ namespace GTA
 		{
 		public:
 			InputArgument(System::UInt64 value);
-			InputArgument(System::Object ^value);
-			inline InputArgument(bool value) : InputArgument(static_cast<bool>(value) ? 1 : 0) { }
-			inline InputArgument(int value) : InputArgument(static_cast<System::UInt64>(value)) { }
+			InputArgument(System::Object^ value);
+			inline InputArgument(bool value) : InputArgument(static_cast<bool>(value) ? System::UInt64(1) : System::UInt64(0)) { }
+			inline InputArgument(int value) : InputArgument(static_cast<System::UInt32>(value)) { }
 			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::UInt64>(value)) { }
-			inline InputArgument(float value) : InputArgument(System::BitConverter::ToUInt32(System::BitConverter::GetBytes(static_cast<float>(value)), 0)) { }
-			inline InputArgument(double value) : InputArgument(System::BitConverter::ToUInt32(System::BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0)) { }
+			inline InputArgument(float value)
+			{
+				unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(value);
+				_data = valueUInt32;
+			}
+			inline InputArgument(double value) 
+			{
+				float valueFloat = static_cast<float>(value);
+				unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(valueFloat);
+				_data = valueUInt32;
+			}
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt64>(value.Hash)) { }
 			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
