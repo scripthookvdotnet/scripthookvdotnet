@@ -729,7 +729,7 @@ namespace GTA
 
 		if (address == 0 || currentGearOffset == 0)
 		{
-			return 0.0f;
+			return 0;
 		}
 
 		return static_cast<int>(*reinterpret_cast<const unsigned char *>(address + currentGearOffset));
@@ -741,7 +741,7 @@ namespace GTA
 
 		if (address == 0 || highGearOffset == 0)
 		{
-			return 0.0f;
+			return 0;
 		}
 
 		return static_cast<int>(*reinterpret_cast<const unsigned char *>(address + highGearOffset));
