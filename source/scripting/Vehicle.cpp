@@ -216,7 +216,7 @@ namespace GTA
 		case 5:
 			return VehicleLandingGear::Broken;
 		default:
-			return static_cast<VehicleLandingGear>(retrurnValue);
+			return static_cast<VehicleLandingGear>(returnValue);
 		}
 	}
 	void Vehicle::LandingGear::set(VehicleLandingGear value)
