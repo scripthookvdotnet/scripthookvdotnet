@@ -223,7 +223,19 @@ namespace GTA
 			// Fundamental types
 			if (T::typeid == Boolean::typeid)
 			{
-				return PtrToStructure(System::IntPtr(value));
+				auto valueUInt64 = NativeHelperGeneric<UInt64>::PtrToStructure(System::IntPtr(value));
+
+				// Return proper bool values (don't return true whose internal value is not 1)
+				if (valueUInt64 != 0)
+				{
+					bool properTrueValue = true;
+					return PtrToStructure(System::IntPtr(&properTrueValue));
+				}
+				else
+				{
+					// The value is 0 so direct convert to bool won't be a problem
+					return PtrToStructure(System::IntPtr(value));
+				}
 			}
 			if (T::typeid == Int32::typeid)
 			{
