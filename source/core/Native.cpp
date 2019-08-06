@@ -79,7 +79,8 @@ namespace GTA
 				}
 				if (type == Int32::typeid)
 				{
-					return static_cast<int>(value);
+					//As long as the type is correct this won't be problem but prevent value from changing memory expression, in case the type is incorrect
+					return static_cast<unsigned int>(static_cast<int>(value));
 				}
 				if (type == UInt32::typeid)
 				{
