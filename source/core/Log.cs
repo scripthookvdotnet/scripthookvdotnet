@@ -24,9 +24,10 @@ namespace SHVDN
 	{
 		public enum Level
 		{
-			Info,
 			Error,
-			Warning
+			Warning,
+			Info,
+			Debug,
 		}
 
 		static string FilePath => Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log");
@@ -60,6 +61,9 @@ namespace SHVDN
 							break;
 						case Level.Warning:
 							sw.Write("[WARNING] ");
+							break;
+						case Level.Debug:
+							sw.Write("[DEBUG] ");
 							break;
 					}
 

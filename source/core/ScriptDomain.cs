@@ -93,7 +93,7 @@ namespace SHVDN
 			// Load API assemblies into this script domain
 			foreach (string apiPath in Directory.EnumerateFiles(apiBasePath, "ScriptHookVDotNet*.dll", SearchOption.TopDirectoryOnly))
 			{
-				Log.Message(Log.Level.Info, "Loading API from ", apiPath, " ...");
+				Log.Message(Log.Level.Debug, "Loading API from ", apiPath, " ...");
 
 				scriptApis.Add(Assembly.LoadFrom(apiPath));
 			}
@@ -227,7 +227,7 @@ namespace SHVDN
 
 			if (!compilerResult.Errors.HasErrors)
 			{
-				Log.Message(Log.Level.Info, "Successfully compiled ", Path.GetFileName(filename), ".");
+				Log.Message(Log.Level.Debug, "Successfully compiled ", Path.GetFileName(filename), ".");
 				return LoadScriptsFromAssembly(compilerResult.CompiledAssembly, filename);
 			}
 			else
@@ -257,7 +257,7 @@ namespace SHVDN
 			if (!IsManagedAssembly(filename))
 				return false;
 
-			Log.Message(Log.Level.Info, "Loading assembly ", Path.GetFileName(filename), " ...");
+			Log.Message(Log.Level.Debug, "Loading assembly ", Path.GetFileName(filename), " ...");
 
 			Assembly assembly = null;
 
@@ -284,6 +284,7 @@ namespace SHVDN
 			int count = 0;
 			string name = Path.GetFileName(filename) +
 				(Path.GetExtension(filename) == ".dll" ? (" v" + assembly.GetName().Version.ToString(3)) : string.Empty);
+			Version apiVersion = null;
 
 			try
 			{
@@ -292,6 +293,9 @@ namespace SHVDN
 				{
 					count++;
 					scriptTypes.Add(new Tuple<string, Type>(filename, type));
+
+					if (apiVersion == null) // Check API version for one of the types (should be the same for all)
+						apiVersion = type.BaseType.Assembly.GetName().Version;
 				}
 			}
 			catch (ReflectionTypeLoadException ex)
@@ -305,7 +309,7 @@ namespace SHVDN
 				return false;
 			}
 
-			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", name, ".");
+			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", name, (apiVersion != null ? " using API version " + apiVersion.ToString(3) : string.Empty), ".");
 
 			return count != 0;
 		}
@@ -320,7 +324,7 @@ namespace SHVDN
 			if (scriptType.IsAbstract)
 				return null;
 
-			Log.Message(Log.Level.Info, "Instantiating script '", scriptType.FullName, "' ...");
+			Log.Message(Log.Level.Debug, "Instantiating script '", scriptType.FullName, "' ...");
 
 			Script script = new Script();
 			executingScript = script;
@@ -352,13 +356,11 @@ namespace SHVDN
 		/// </summary>
 		public void Start()
 		{
-			string scriptPath = AppDomain.BaseDirectory;
+			Log.Message(Log.Level.Debug, "Loading scripts from ", ScriptPath, " ...");
 
-			Log.Message(Log.Level.Info, "Loading scripts from ", scriptPath, " ...");
-
-			if (!Directory.Exists(scriptPath))
+			if (!Directory.Exists(ScriptPath))
 			{
-				Log.Message(Log.Level.Warning, "Failed to reload scripts because the directory is missing.");
+				Log.Message(Log.Level.Warning, "Failed to reload scripts because the ", ScriptPath, " directory is missing.");
 				return;
 			}
 
@@ -367,10 +369,10 @@ namespace SHVDN
 
 			try
 			{
-				filenames.AddRange(Directory.GetFiles(scriptPath, "*.vb", SearchOption.AllDirectories));
-				filenames.AddRange(Directory.GetFiles(scriptPath, "*.cs", SearchOption.AllDirectories));
+				filenames.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
+				filenames.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
 
-				filenames.AddRange(Directory.GetFiles(scriptPath, "*.dll", SearchOption.AllDirectories)
+				filenames.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
 					.Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
@@ -394,7 +396,9 @@ namespace SHVDN
 				}
 				catch (Exception ex)
 				{
-					Log.Message(Log.Level.Warning, "Could not check assembly file ", Path.GetFileName(filenames[i]), ": ", ex.ToString());
+					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenames[i]), " because of exception: ", ex.ToString());
+
+					filenames.RemoveAt(i--);
 				}
 			}
 
@@ -418,7 +422,7 @@ namespace SHVDN
 			{
 				Script script = InstantiateScript(scriptTypes[i].Item2);
 
-				if (ReferenceEquals(script, null))
+				if (script == null)
 					continue;
 
 				script.Start();
@@ -673,7 +677,7 @@ namespace SHVDN
 
 				// Write a warning message if no compatible scripting API version was found
 				if (compatibleApi == null)
-					Log.Message(Log.Level.Warning, "Unable to resolve ScriptHookVDotNet API version ", assemblyName.Version.ToString(), " used in ", assemblyName.Name);
+					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3), " used in ", assemblyName.Name);
 
 				return compatibleApi;
 			}

@@ -46,8 +46,6 @@ static void ScriptHookVDotnet_ManagedInit()
 	Log::Clear();
 
 	// Create a separate script domain
-	Log::Message(Log::Level::Info, "Loading ScriptHookVDotNet API versions ...");
-
 	domain = ScriptDomain::Load(".", "scripts");
 	if (domain == nullptr)
 		return;

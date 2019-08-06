@@ -35,7 +35,7 @@ namespace SHVDN
 	{
 		static Console()
 		{
-			PrintInfo("--- Community Script Hook V .NET " + Assembly.GetExecutingAssembly().GetName().Version + " ---");
+			PrintInfo("--- Community Script Hook V .NET " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " ---");
 			PrintInfo("--- Type \"Help()\" to print an overview of available commands ---");
 
 			// Add default console commands
