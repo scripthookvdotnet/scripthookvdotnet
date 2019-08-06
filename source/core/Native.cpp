@@ -88,8 +88,8 @@ namespace GTA
 				}
 				if (type == Single::typeid)
 				{
-					float value = static_cast<float>(value);
-					unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(value);
+					float valueFloat = static_cast<float>(value);
+					unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(valueFloat);
 					return valueUInt32;
 				}
 				if (type == Double::typeid)
