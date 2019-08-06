@@ -76,7 +76,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(char value)
 			{
-				return gcnew InputArgument(static_cast<int>(value));
+				return gcnew InputArgument(static_cast<unsigned char>(value));
 			}
 			static inline operator InputArgument ^(unsigned char value)
 			{
@@ -84,7 +84,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(short value)
 			{
-				return gcnew InputArgument(static_cast<int>(value));
+				return gcnew InputArgument(static_cast<unsigned short>(value));
 			}
 			static inline operator InputArgument ^(unsigned short value)
 			{
