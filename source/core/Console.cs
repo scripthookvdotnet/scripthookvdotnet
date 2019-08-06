@@ -45,7 +45,7 @@ namespace SHVDN
 		/// <summary>
 		/// The global list of all existing scripting domains. This is only valid in the default application domain.
 		/// </summary>
-		public static List<ScriptDomain> ScriptDomains = new List<ScriptDomain>();
+		public static ScriptDomain MainDomain = null;
 
 		public static bool IsOpen
 		{
@@ -577,11 +577,8 @@ namespace SHVDN
 				compilerOptions.GenerateInMemory = true;
 				compilerOptions.IncludeDebugInformation = true;
 				compilerOptions.ReferencedAssemblies.Add("System.dll");
+				compilerOptions.ReferencedAssemblies.Add(MainDomain.ApiPath);
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
-
-				// Just add the last API (which should be the most recent one)
-				if (ScriptDomains.Count != 0)
-					compilerOptions.ReferencedAssemblies.Add(ScriptDomains.Last().ApiPath);
 
 				// TODO: Add script assemblies
 				//foreach (ScriptDomain domain in ScriptDomains)
@@ -776,9 +773,7 @@ namespace SHVDN
 		[ConsoleCommand("Loads scripts from a file")]
 		public static void Load(string filename)
 		{
-			var domain = Console.ScriptDomains.Last();
-
-			string basedirectory = domain.ScriptPath;
+			string basedirectory = Console.MainDomain.ScriptPath;
 
 			if (!File.Exists(Path.Combine(basedirectory, filename)))
 			{
@@ -808,7 +803,7 @@ namespace SHVDN
 				return;
 			}
 
-			domain.StartScripts(filename);
+			Console.MainDomain.StartScripts(filename);
 		}
 		[ConsoleCommand("Reloads scripts from a file")]
 		public static void Reload(string filename)
@@ -819,11 +814,8 @@ namespace SHVDN
 		[ConsoleCommand("Reloads all scripts found in the script folder")]
 		public static void ReloadAll()
 		{
-			foreach (var domain in Console.ScriptDomains)
-			{
-				domain.Abort();
-				domain.Start();
-			}
+			Console.MainDomain.Abort();
+			Console.MainDomain.Start();
 		}
 
 		[ConsoleCommand("List all loaded scripts")]
@@ -831,26 +823,19 @@ namespace SHVDN
 		{
 			Console.PrintInfo("--- List ---");
 
-			foreach (var domain in Console.ScriptDomains)
-				foreach (var info in domain.RunningScripts)
-					Console.PrintInfo("   " + info);
+			foreach (var info in Console.MainDomain.RunningScripts)
+				Console.PrintInfo("   " + info);
 		}
 
 		[ConsoleCommand("Aborts all scripts from the specified file")]
 		public static void Abort(string filename)
 		{
-			foreach (var domain in Console.ScriptDomains)
-			{
-				domain.AbortScripts(Path.Combine(domain.AppDomain.BaseDirectory, filename));
-			}
+			Console.MainDomain.AbortScripts(Path.Combine(Console.MainDomain.ScriptPath, filename));
 		}
 		[ConsoleCommand("Aborts all scripts found in the script folder")]
 		public static void AbortAll()
 		{
-			foreach (var domain in Console.ScriptDomains)
-			{
-				domain.Abort();
-			}
+			Console.MainDomain.Abort();
 		}
 	}
 }

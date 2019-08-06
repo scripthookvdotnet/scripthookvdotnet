@@ -35,41 +35,32 @@ namespace WinForms = System::Windows::Forms;
 static void ScriptHookVDotnet_ManagedInit()
 {
 	// Initialize default domain (used by console)
-	gcnew SHVDN::ScriptDomain(nullptr, false);
+	gcnew SHVDN::ScriptDomain(nullptr);
 
 	// Unload any previous instances
-	for each (ScriptDomain ^domain in SHVDN::Console::ScriptDomains)
+	ScriptDomain ^%domain = SHVDN::Console::MainDomain;
+	if (domain != nullptr)
 		ScriptDomain::Unload(domain);
-	SHVDN::Console::ScriptDomains->Clear();
 
 	// Clear log from previous ScriptHookVDotNet runs
 	Log::Clear();
 
-	// Create a separate script domain for each API version
+	// Create a separate script domain
 	Log::Message(Log::Level::Info, "Loading ScriptHookVDotNet API versions ...");
 
-	for each (String ^apiPath in IO::Directory::EnumerateFiles(".", "ScriptHookVDotNet*.dll", IO::SearchOption::TopDirectoryOnly))
-	{
-		// Only load source code scripts in the domain for the highest API version
-		const bool matchingVersion = AssemblyName::GetAssemblyName(apiPath)->Version->Major == Assembly::GetExecutingAssembly()->GetName()->Version->Major;
+	domain = ScriptDomain::Load(".", "scripts");
+	if (domain == nullptr)
+		return;
 
-		ScriptDomain ^domain = ScriptDomain::Load(apiPath, "scripts", matchingVersion);
-		if (domain == nullptr)
-			continue;
-
-		// Start scripts in the newly created domain
-		domain->Start();
-
-		SHVDN::Console::ScriptDomains->Add(domain);
-	}
+	// Start scripts in the newly created domain
+	domain->Start();
 }
 
 static void ScriptHookVDotnet_ManagedTick(unsigned int index)
 {
 	SHVDN::Console::DoTick();
 
-	for each (ScriptDomain ^domain in SHVDN::Console::ScriptDomains)
-		domain->DoTick();
+	SHVDN::Console::MainDomain->DoTick();
 }
 
 static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
@@ -89,8 +80,7 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 
 	// Do not send keyboard events to other running scripts when console is open
 	if (!SHVDN::Console::IsOpen)
-		for each (ScriptDomain ^domain in SHVDN::Console::ScriptDomains)
-			domain->DoKeyEvent(keys, keydown);
+		SHVDN::Console::MainDomain->DoKeyEvent(keys, keydown);
 }
 
 #pragma unmanaged
