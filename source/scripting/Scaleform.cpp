@@ -78,7 +78,7 @@ namespace GTA
 			else if (argument->GetType() == Char::typeid)
 			{
 				Native::Function::Call(Native::Hash::_BEGIN_TEXT_COMPONENT, "CELL_EMAIL_BCON");
-				Native::Function::PushLongString(static_cast<String ^>(argument));
+				Native::Function::PushLongString(static_cast<Char>(argument).ToString());
 				Native::Function::Call(Native::Hash::_END_TEXT_COMPONENT);
 			}
 			else if (argument->GetType() == Single::typeid)
