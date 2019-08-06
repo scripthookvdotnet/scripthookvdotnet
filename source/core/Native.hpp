@@ -55,7 +55,7 @@ namespace GTA
 				_data = valueUInt32;
 			}
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt64>(value.Hash)) { }
+			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt32>(value.Hash)) { }
 			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Entity ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
@@ -76,7 +76,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(char value)
 			{
-				return gcnew InputArgument(static_cast<int>(value));
+				return gcnew InputArgument(static_cast<unsigned char>(value));
 			}
 			static inline operator InputArgument ^(unsigned char value)
 			{
@@ -84,7 +84,7 @@ namespace GTA
 			}
 			static inline operator InputArgument ^(short value)
 			{
-				return gcnew InputArgument(static_cast<int>(value));
+				return gcnew InputArgument(static_cast<unsigned short>(value));
 			}
 			static inline operator InputArgument ^(unsigned short value)
 			{
