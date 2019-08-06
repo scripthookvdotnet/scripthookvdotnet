@@ -55,7 +55,7 @@ namespace GTA
 				_data = valueUInt32;
 			}
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
-			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt64>(value.Hash)) { }
+			inline InputArgument(Model value) : InputArgument(static_cast<System::UInt32>(value.Hash)) { }
 			inline InputArgument(Blip ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Camera ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
 			inline InputArgument(Entity ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
