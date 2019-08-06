@@ -88,8 +88,8 @@ namespace GTA
 				}
 				if (type == Single::typeid)
 				{
-					float value = static_cast<float>(value);
-					unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(value);
+					float valueFloat = static_cast<float>(value);
+					unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(valueFloat);
 					return valueUInt32;
 				}
 				if (type == Double::typeid)
@@ -223,7 +223,19 @@ namespace GTA
 			// Fundamental types
 			if (T::typeid == Boolean::typeid)
 			{
-				return PtrToStructure(System::IntPtr(value));
+				auto valueUInt64 = NativeHelperGeneric<UInt64>::PtrToStructure(System::IntPtr(value));
+
+				// Return proper bool values (don't return true whose internal value is not 1)
+				if (valueUInt64 != 0)
+				{
+					bool properTrueValue = true;
+					return PtrToStructure(System::IntPtr(&properTrueValue));
+				}
+				else
+				{
+					// The value is 0 so direct convert to bool won't be a problem
+					return PtrToStructure(System::IntPtr(value));
+				}
 			}
 			if (T::typeid == Int32::typeid)
 			{
