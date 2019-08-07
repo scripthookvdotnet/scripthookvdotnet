@@ -9,9 +9,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{019193A7-50C0-444A-84CA-777595E702CD}</ProjectGuid>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>GTA</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!-- Global configuration settings -->
