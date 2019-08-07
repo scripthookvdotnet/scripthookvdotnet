@@ -174,6 +174,24 @@ namespace SHVDN
 			modelHashTable = *(ulong*)(*(int*)(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
 			vehClassOff = *(uint*)(address + 0x31);
 
+			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
+			currentGearOffset = address == null ? 0 : *(int*)(address + 3) + 2;
+			highGearOffset = address == null ? 0 : *(int*)(address + 3) + 6;
+
+			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83\x24\x08\x00\x00", "x?xxxxxx????x?xxxx????");
+			fuelLevelOffset = address == null ? 0 : *(int*)(address + 8);
+
+			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
+			currentRPMOffset = address == null ? 0 : *(int*)(address + 10);
+			accelerationOffset = address == null ? 0 : *(int*)(address + 10) + 0x10;
+
+			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
+			steeringScaleOffset = address == null ? 0 : *(int*)(address + 6);
+			steeringAngleOffset = address == null ? 0 : *(int*)(address + 6) + 8;
+
+			address = FindPattern("\xF3\x0F\x10\x8F\x10\x0A\x00\x00\xF3\x0F\x59\x05\x5E\x30\x8D\x00", "xxxx????xxxx????");
+			wheelSpeedOffset = address == null ? 0 : *(int*)(address + 4);
+
 			// Generate vehicle model list
 			HashNode** HashMap = (HashNode**)(modelHashTable);
 			List<int>[] hashes = new List<int>[0x20];
@@ -391,6 +409,8 @@ namespace SHVDN
 		private static int handlingIndexOffsetInModelInfo;
 		private static uint vehClassOff;
 		private static ushort modelHashEntries;
+		// TODO: Convert these to properties
+		public static int currentGearOffset, highGearOffset, fuelLevelOffset, currentRPMOffset, accelerationOffset, steeringScaleOffset, steeringAngleOffset, wheelSpeedOffset;
 
 		internal delegate uint GetHashKeyDelegate(IntPtr stringPtr, uint initialHash);
 		internal delegate ulong EntityAddressFuncDelegate(int handle);

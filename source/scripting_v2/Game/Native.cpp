@@ -55,11 +55,12 @@ namespace GTA
 				// Fundamental types
 				if (type == Boolean::typeid)
 				{
-					return static_cast<bool>(value) ? 1 : 0;
+					return static_cast<bool>(value) ? System::UInt64(1) : System::UInt64(0);
 				}
 				if (type == Int32::typeid)
 				{
-					return static_cast<int>(value);
+					//As long as the type is correct this won't be problem but prevent value from changing memory expression, in case the type is incorrect
+					return static_cast<unsigned int>(static_cast<int>(value));
 				}
 				if (type == UInt32::typeid)
 				{
@@ -67,11 +68,15 @@ namespace GTA
 				}
 				if (type == Single::typeid)
 				{
-					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(value)), 0);
+					float valueFloat = static_cast<float>(value);
+					unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(valueFloat);
+					return valueUInt32;
 				}
 				if (type == Double::typeid)
 				{
-					return BitConverter::ToUInt32(BitConverter::GetBytes(static_cast<float>(static_cast<double>(value))), 0);
+					float valueFloat = static_cast<float>(static_cast<double>(value));
+					unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(valueFloat);
+					return valueUInt32;
 				}
 				if (type == IntPtr::typeid)
 				{
@@ -198,7 +203,19 @@ namespace GTA
 			// Fundamental types
 			if (T::typeid == Boolean::typeid)
 			{
-				return PtrToStructure(System::IntPtr(value));
+				auto valueUInt64 = NativeHelperGeneric<UInt64>::PtrToStructure(System::IntPtr(value));
+
+				// Return proper bool values (don't return true whose internal value is not 1)
+				if (valueUInt64 != 0)
+				{
+					bool properTrueValue = true;
+					return PtrToStructure(System::IntPtr(&properTrueValue));
+				}
+				else
+				{
+					// The value is 0 so direct convert to bool won't be a problem
+					return PtrToStructure(System::IntPtr(value));
+				}
 			}
 			if (T::typeid == Int32::typeid)
 			{

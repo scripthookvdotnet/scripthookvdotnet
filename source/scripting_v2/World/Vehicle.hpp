@@ -197,9 +197,9 @@ namespace GTA
 	{
 		Deployed = 0,
 		Closing = 1,
-		Opening = 3,
-		Retracted = 4,
-		Broken = 5,
+		Opening = 2,
+		Retracted = 3,
+		Broken = 4,
 	};
 	public enum class VehicleMod
 	{
@@ -301,7 +301,9 @@ namespace GTA
 		Offroad = 4,
 		Tuner = 5,
 		BikeWheels = 6,
-		HighEnd = 7
+		HighEnd = 7,
+		BennysOriginals = 8,
+		BennysBespoke = 9
 	};
 	public enum class VehicleWindow
 	{
