@@ -289,7 +289,7 @@ namespace SHVDN
 			try
 			{
 				// Find all script types in the assembly
-				foreach (var type in assembly.GetTypes().Where(x => x.BaseType.Name == "Script"))
+				foreach (var type in assembly.GetTypes().Where(x => x.BaseType != null && x.BaseType.Name == "Script"))
 				{
 					count++;
 					scriptTypes.Add(new Tuple<string, Type>(filename, type));
@@ -300,6 +300,7 @@ namespace SHVDN
 			}
 			catch (ReflectionTypeLoadException ex)
 			{
+				// Filter out failure if unable to resolve SHVDN API, since this was already logged in 'HandleResolve'
 				var fileNotFoundException = ex.LoaderExceptions[0] as FileNotFoundException;
 				if (fileNotFoundException == null || fileNotFoundException.Message.IndexOf("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) < 0)
 				{
@@ -653,7 +654,9 @@ namespace SHVDN
 			var assemblyName = new AssemblyName(args.Name);
 
 			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup)
-			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase)
+				// Some scripts were written against old SHVDN versions where everything was still in the ASI, so make sure those are not caught here
+				&& assemblyName.Version.Major >= 3)
 			{
 				return typeof(ScriptDomain).Assembly;
 			}
