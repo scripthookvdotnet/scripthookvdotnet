@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GTA.Properties")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyProduct("ScriptHookVDotNet")]
+[assembly: AssemblyCopyright("Copyright © 2015 crosire")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
