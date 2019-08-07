@@ -15,19 +15,17 @@
 // 
 
 using System;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Drawing;
 using System.Linq;
-using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.Reflection;
+using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace SHVDN
 {
@@ -42,27 +40,13 @@ namespace SHVDN
 			RegisterCommands(typeof(ConsoleCommands));
 		}
 
-		/// <summary>
-		/// The global list of all existing scripting domains. This is only valid in the default application domain.
-		/// </summary>
 		public static ScriptDomain MainDomain = null;
 
-		public static bool IsOpen
-		{
-			get { return isOpen; }
-			set
-			{
-				isOpen = value;
-				SetControlsEnabled(false);
-				if (!value)
-					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
-			}
-		}
+		public static bool IsOpen { get; set; }
 
 		static int cursorPos = 0;
 		static int commandPos = -1;
 		static int currentPage = 1;
-		static bool isOpen = false;
 		static string input = string.Empty;
 		static List<string> lineHistory = new List<string>();
 		static List<string> commandHistory = new List<string>();
@@ -361,6 +345,9 @@ namespace SHVDN
 			{
 				// Toggle open state
 				IsOpen = !IsOpen;
+				SetControlsEnabled(false);
+				if (!IsOpen)
+					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 				return; // The toggle key does not need any additional handling
 			}
 
@@ -418,6 +405,8 @@ namespace SHVDN
 					break;
 				case Keys.Escape:
 					IsOpen = false;
+					SetControlsEnabled(false);
+					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 					break;
 				case Keys.B:
 					if (e.Control)
@@ -758,13 +747,13 @@ namespace SHVDN
 			Console.PrintInfo("--- Help ---");
 			Console.PrintHelpText();
 		}
-		[ConsoleCommand("Prints the help for the specific command")]
+		[ConsoleCommand("Prints the help for a specific command")]
 		public static void Help(string command)
 		{
 			Console.PrintHelpText(command);
 		}
 
-		[ConsoleCommand("Clears the console output")]
+		[ConsoleCommand("Clears the console history")]
 		public static void Clear()
 		{
 			Console.Clear();
@@ -784,8 +773,10 @@ namespace SHVDN
 					Console.PrintError("The file " + filename + " was not found in " + basedirectory);
 					return;
 				}
-
-				Console.PrintWarning("The file " + filename + " was not found in " + basedirectory + ", loading from " + Path.GetDirectoryName(files[0].Substring(basedirectory.Length + 1)) + " instead");
+				else
+				{
+					Console.PrintWarning("The file " + filename + " was not found in " + basedirectory + ", loading from " + Path.GetDirectoryName(files[0].Substring(basedirectory.Length + 1)) + " instead");
+				}
 
 				filename = files[0].Substring(basedirectory.Length + 1);
 			}
@@ -811,7 +802,7 @@ namespace SHVDN
 			Abort(filename);
 			 Load(filename);
 		}
-		[ConsoleCommand("Reloads all scripts found in the script folder")]
+		[ConsoleCommand("Reloads all scripts found in the scripts directory")]
 		public static void ReloadAll()
 		{
 			Console.MainDomain.Abort();
@@ -821,10 +812,8 @@ namespace SHVDN
 		[ConsoleCommand("List all loaded scripts")]
 		public static void List()
 		{
-			Console.PrintInfo("--- List ---");
-
 			foreach (var info in Console.MainDomain.RunningScripts)
-				Console.PrintInfo("   " + info);
+				Console.PrintInfo(info);
 		}
 
 		[ConsoleCommand("Aborts all scripts from the specified file")]
@@ -832,7 +821,7 @@ namespace SHVDN
 		{
 			Console.MainDomain.AbortScripts(Path.Combine(Console.MainDomain.ScriptPath, filename));
 		}
-		[ConsoleCommand("Aborts all scripts found in the script folder")]
+		[ConsoleCommand("Aborts all scripts found in the scripts directory")]
 		public static void AbortAll()
 		{
 			Console.MainDomain.Abort();

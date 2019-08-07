@@ -530,7 +530,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x159A : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x15A2 : offset;
 
-				int seatIndex = SHVDN.NativeMemory.ReadSByte(memoryAddress + offset);
+				int seatIndex = (sbyte)SHVDN.NativeMemory.ReadByte(memoryAddress + offset);
 
 				if (seatIndex == -1 || !IsInVehicle())
 				{

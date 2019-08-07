@@ -15,15 +15,7 @@
 //
 
 using System;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.Linq;
 
 namespace SHVDN
 {
@@ -51,10 +43,7 @@ namespace SHVDN
 
 		public void Run()
 		{
-			NativeInit(Hash);
-			foreach (var arg in Arguments)
-				NativePush64(arg);
-			Result = NativeCall();
+			Result = Invoke(Hash, Arguments);
 		}
 
 		internal static ulong* Invoke(ulong hash, params ulong[] args)

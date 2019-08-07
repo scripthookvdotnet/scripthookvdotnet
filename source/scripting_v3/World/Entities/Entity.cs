@@ -513,7 +513,7 @@ namespace GTA
 				{
 					return true;
 				}
-				memoryAddress = SHVDN.NativeMemory.ReadPtr(memoryAddress + 48);
+				memoryAddress = SHVDN.NativeMemory.ReadAddress(memoryAddress + 48);
 				if (memoryAddress == IntPtr.Zero)
 				{
 					return true;

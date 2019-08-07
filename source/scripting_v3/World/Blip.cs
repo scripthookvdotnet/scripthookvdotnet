@@ -745,7 +745,7 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, SHVDN.NativeMemory.StringPtr);
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, SHVDN.NativeMemory.String);
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, value);
 				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
 			}

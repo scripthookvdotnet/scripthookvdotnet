@@ -274,9 +274,9 @@ namespace GTA
 				IntPtr memoryAddress = MemoryAddress;
 				if (memoryAddress == IntPtr.Zero)
 				{
-					return (CheckpointIcon)0;
+					return 0;
 				}
-				return (CheckpointIcon)SHVDN.NativeMemory.ReadInt(memoryAddress + 56);
+				return (CheckpointIcon)SHVDN.NativeMemory.ReadInt32(memoryAddress + 56);
 			}
 			set
 			{
@@ -285,7 +285,7 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteInt(memoryAddress + 56, (int)value);
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + 56, (int)value);
 			}
 		}
 
@@ -308,7 +308,7 @@ namespace GTA
 					return;
 				}
 				SHVDN.NativeMemory.WriteByte(memoryAddress + 52, value);
-				SHVDN.NativeMemory.WriteInt(memoryAddress + 56, 42);//sets the icon to a custom icon
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + 56, 42);//sets the icon to a custom icon
 			}
 		}
 
@@ -349,7 +349,7 @@ namespace GTA
 				{
 					return System.Drawing.Color.Transparent;
 				}
-				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt(memoryAddress + 80));
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + 80));
 			}
 			set
 			{
@@ -358,7 +358,7 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteInt(memoryAddress + 80, Color.ToArgb());
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + 80, Color.ToArgb());
 			}
 		}
 		/// <summary>
@@ -373,7 +373,7 @@ namespace GTA
 				{
 					return System.Drawing.Color.Transparent;
 				}
-				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt(memoryAddress + 84));
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + 84));
 			}
 			set
 			{
@@ -382,7 +382,7 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteInt(memoryAddress + 84, Color.ToArgb());
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + 84, Color.ToArgb());
 			}
 		}
 

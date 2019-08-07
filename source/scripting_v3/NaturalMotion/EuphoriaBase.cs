@@ -114,7 +114,7 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string argName, Vector3 value)
 		{
-			_arguments[argName] = value;
+			_arguments[argName] = value.ToArray();
 		}
 
 		/// <summary>

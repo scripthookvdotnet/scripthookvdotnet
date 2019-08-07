@@ -393,7 +393,7 @@ namespace GTA
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadInt(MemoryAddress + 0x50);
+				return SHVDN.NativeMemory.ReadInt32(MemoryAddress + 0x50);
 			}
 			set
 			{
@@ -402,7 +402,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteInt(MemoryAddress + 0x50, value);
+				SHVDN.NativeMemory.WriteInt32(MemoryAddress + 0x50, value);
 			}
 		}
 
@@ -443,7 +443,7 @@ namespace GTA
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadInt(MemoryAddress + 0x118);
+				return SHVDN.NativeMemory.ReadInt32(MemoryAddress + 0x118);
 			}
 			set
 			{
@@ -452,7 +452,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteInt(MemoryAddress + 0x118, value);
+				SHVDN.NativeMemory.WriteInt32(MemoryAddress + 0x118, value);
 			}
 		}
 

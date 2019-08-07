@@ -1092,7 +1092,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x830 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x870 : offset;
 
-				return SHVDN.NativeMemory.ReadInt(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadInt32(MemoryAddress + offset);
 			}
 			set
 			{
@@ -1109,7 +1109,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x870 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x870 : offset;
 
-				SHVDN.NativeMemory.WriteInt(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteInt32(MemoryAddress + offset, value);
 			}
 		}
 
@@ -1403,7 +1403,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xA38 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA88 : offset;
 
-				return (ushort)SHVDN.NativeMemory.ReadShort(MemoryAddress + offset) == ushort.MaxValue; //The alarm is set when the value is 0xFFFF
+				return (ushort)SHVDN.NativeMemory.ReadInt16(MemoryAddress + offset) == ushort.MaxValue; //The alarm is set when the value is 0xFFFF
 			}
 		}
 		/// <summary>
@@ -1444,7 +1444,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xA38 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA88 : offset;
 
-				ushort alarmTime = (ushort)SHVDN.NativeMemory.ReadShort(MemoryAddress + offset);
+				ushort alarmTime = (ushort)SHVDN.NativeMemory.ReadInt16(MemoryAddress + offset);
 				if (alarmTime == ushort.MaxValue)
 				{
 					return 0;
@@ -1473,7 +1473,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xA38 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA88 : offset;
 
-				SHVDN.NativeMemory.WriteShort(MemoryAddress + offset, (short)alarmTime);
+				SHVDN.NativeMemory.WriteInt16(MemoryAddress + offset, (short)alarmTime);
 			}
 		}
 		/// <summary>
@@ -1624,7 +1624,7 @@ namespace GTA
 
 				int maxVehType = Game.Version >= GameVersion.v1_0_944_2_Steam ? 10 : 8;
 
-				if (SHVDN.NativeMemory.ReadInt(memoryAddress + offset) <= maxVehType)
+				if (SHVDN.NativeMemory.ReadInt32(memoryAddress + offset) <= maxVehType)
 				{
 					offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1319 : 0x12F9;
 					offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1349 : offset;

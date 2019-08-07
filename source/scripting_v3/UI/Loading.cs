@@ -44,7 +44,7 @@ namespace GTA.UI
 			}
 			else
 			{
-				Function.Call(Hash._SET_LOADING_PROMPT_TEXT_ENTRY, SHVDN.NativeMemory.StringPtr);
+				Function.Call(Hash._SET_LOADING_PROMPT_TEXT_ENTRY, SHVDN.NativeMemory.String);
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
 			}
 

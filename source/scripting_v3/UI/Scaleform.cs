@@ -101,13 +101,13 @@ namespace GTA
 				}
 				else if (argument is string)
 				{
-					Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, SHVDN.NativeMemory.StringPtr);
+					Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, SHVDN.NativeMemory.String);
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, (string)argument);
 					Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 				}
 				else if (argument is char)
 				{
-					Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, SHVDN.NativeMemory.StringPtr);
+					Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, SHVDN.NativeMemory.String);
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, argument.ToString());
 					Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 				}

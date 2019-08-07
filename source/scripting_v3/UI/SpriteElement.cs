@@ -459,7 +459,7 @@ namespace GTA.UI
 				positionY += scaleY * 0.5f;
 			}
 
-			SHVDN.NativeMemory.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation * 0.00277777778f, aspectRatio, Color);
+			SHVDN.NativeMemory.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation * 0.00277777778f, aspectRatio, Color.R / 255f, Color.G / 255f, Color.B / 255f, Color.A / 255f);
 		}
 	}
 }

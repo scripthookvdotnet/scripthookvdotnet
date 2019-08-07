@@ -679,7 +679,7 @@ namespace GTA
 		/// <summary>
 		/// A fast way to get the total number of vehicles spawned in the world.
 		/// </summary>
-		public static int VehicleCount => SHVDN.NativeMemory.GetNumberOfVehicles();
+		public static int VehicleCount => SHVDN.NativeMemory.GetVehicleCount();
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
 		/// </summary>

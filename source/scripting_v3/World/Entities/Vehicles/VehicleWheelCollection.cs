@@ -47,7 +47,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0xAE8 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0xB18 : offset;
 
-				return SHVDN.NativeMemory.ReadInt(_owner.MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadInt32(_owner.MemoryAddress + offset);
 			}
 		}
 	}

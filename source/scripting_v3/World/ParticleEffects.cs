@@ -349,7 +349,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					address = SHVDN.NativeMemory.ReadPtr(address + 32);
+					address = SHVDN.NativeMemory.ReadAddress(address + 32);
 					if (address != IntPtr.Zero)
 					{
 						return _offset = new Vector3(SHVDN.NativeMemory.ReadVector3(address + 144));
@@ -363,7 +363,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					address = SHVDN.NativeMemory.ReadPtr(address + 32);
+					address = SHVDN.NativeMemory.ReadAddress(address + 32);
 					if (address != IntPtr.Zero)
 					{
 						SHVDN.NativeMemory.WriteVector3(address + 144, value.ToArray());
@@ -403,7 +403,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					address = SHVDN.NativeMemory.ReadPtr(address + 32) + 320;
+					address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
 					byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address)*255f);
 					byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address+4)*255f);
 					byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address+8) * 255f);
@@ -418,7 +418,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					address = SHVDN.NativeMemory.ReadPtr(address + 32) + 320;
+					address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
 					SHVDN.NativeMemory.WriteFloat(address, value.R / 255f);
 					SHVDN.NativeMemory.WriteFloat(address + 4, value.G / 255f);
 					SHVDN.NativeMemory.WriteFloat(address + 8, value.B / 255f);
@@ -442,7 +442,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					return _scale = SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadPtr(address + 32) + 336);
+					return _scale = SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336);
 				}
 				return _scale;
 			}
@@ -452,7 +452,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					SHVDN.NativeMemory.WriteFloat(SHVDN.NativeMemory.ReadPtr(address + 32) + 336, value);
+					SHVDN.NativeMemory.WriteFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336, value);
 				}
 			}
 		}
@@ -464,7 +464,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address != IntPtr.Zero)
 				{
-					return _range = SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadPtr(address + 32) + 384);
+					return _range = SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 384);
 				}
 				return _range;
 			}
