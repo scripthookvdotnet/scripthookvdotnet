@@ -263,7 +263,7 @@ namespace SHVDN
 
 			try
 			{
-				assembly = Assembly.Load(File.ReadAllBytes(filename));
+				assembly = Assembly.LoadFrom(filename);
 			}
 			catch (Exception ex)
 			{
