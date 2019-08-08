@@ -264,6 +264,7 @@ namespace SHVDN
 
 			try
 			{
+				// Note: This loads the assembly only the first time and afterwards returns the already loaded assembly!
 				assembly = Assembly.LoadFrom(filename);
 			}
 			catch (Exception ex)
@@ -283,8 +284,6 @@ namespace SHVDN
 		bool LoadScriptsFromAssembly(Assembly assembly, string filename)
 		{
 			int count = 0;
-			string name = Path.GetFileName(filename) +
-				(Path.GetExtension(filename) == ".dll" ? (" v" + assembly.GetName().Version.ToString(3)) : string.Empty);
 			Version apiVersion = null;
 
 			try
@@ -319,13 +318,13 @@ namespace SHVDN
 				var fileNotFoundException = ex.LoaderExceptions[0] as FileNotFoundException;
 				if (fileNotFoundException == null || fileNotFoundException.Message.IndexOf("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) < 0)
 				{
-					Log.Message(Log.Level.Error, "Failed to load assembly ", name, ": ", ex.LoaderExceptions[0].ToString());
+					Log.Message(Log.Level.Error, "Failed to load assembly ", Path.GetFileName(filename), ": ", ex.LoaderExceptions[0].ToString());
 				}
 
 				return false;
 			}
 
-			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", name, (apiVersion != null ? " using API version " + apiVersion.ToString(3) : string.Empty), ".");
+			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " using API " + apiVersion.ToString(3) : string.Empty), ".");
 
 			return count != 0;
 		}
