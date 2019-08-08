@@ -37,7 +37,7 @@ namespace SHVDN
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
 		List<Script> runningScripts = new List<Script>();
 		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
-		List<Tuple<string, Type>> scriptTypes = new List<Tuple<string, Type>>();
+		SortedList<string, Tuple<string, Type>> scriptTypes = new SortedList<string, Tuple<string, Type>>();
 		bool disposed = false;
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
@@ -203,7 +203,8 @@ namespace SHVDN
 			compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
-			compilerOptions.ReferencedAssemblies.Add(ApiPath); // Reference the scripting API
+			// Reference the oldest scripting API to stay compatible with existing scripts
+			compilerOptions.ReferencedAssemblies.Add(scriptApis.First().Location);
 			compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
 			string extension = Path.GetExtension(filename);
@@ -289,10 +290,24 @@ namespace SHVDN
 			try
 			{
 				// Find all script types in the assembly
-				foreach (var type in assembly.GetTypes().Where(x => x.BaseType != null && x.BaseType.Name == "Script"))
+				foreach (var type in assembly.GetTypes().Where(x => x.BaseType != null && x.BaseType.FullName == "GTA.Script"))
 				{
+					// This function builds a composite key of all dependencies of a script
+					Func<Type, string, string> BuildCompareKey = null;
+					BuildCompareKey = (a, key) => {
+						key = a.FullName + "%%" + key;
+						foreach (var attribute in a.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.RequireScript"))
+						{
+							var dependency = attribute.ConstructorArguments[0].Value as Type;
+							// Ignore circular dependencies
+							if (dependency != null && !key.Contains("%%" + dependency.FullName))
+								key = BuildCompareKey(dependency, key);
+						}
+						return key;
+					};
+
 					count++;
-					scriptTypes.Add(new Tuple<string, Type>(filename, type));
+					scriptTypes.Add(BuildCompareKey(type, string.Empty), new Tuple<string, Type>(filename, type));
 
 					if (apiVersion == null) // Check API version for one of the types (should be the same for all)
 						apiVersion = type.BaseType.Assembly.GetName().Version;
@@ -333,23 +348,28 @@ namespace SHVDN
 			try
 			{
 				script.Instance = Activator.CreateInstance(scriptType);
-				script.Filename = LookupScriptFilename(scriptType);
-				return script;
 			}
 			catch (MissingMethodException)
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, " because no public default constructor was found.");
+				return null;
 			}
 			catch (TargetInvocationException ex)
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, " because constructor threw an exception: ", ex.InnerException.ToString());
+				return null;
 			}
 			catch (Exception ex)
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
+				return null;
 			}
 
-			return null;
+			script.Filename = LookupScriptFilename(scriptType);
+
+			runningScripts.Add(script);
+
+			return script;
 		}
 
 		/// <summary>
@@ -357,6 +377,9 @@ namespace SHVDN
 		/// </summary>
 		public void Start()
 		{
+			if (scriptTypes.Count != 0 || runningScripts.Count != 0)
+				return; // Cannot start script domain if scripts are already running
+
 			Log.Message(Log.Level.Debug, "Loading scripts from ", ScriptPath, " ...");
 
 			if (!Directory.Exists(ScriptPath))
@@ -366,14 +389,15 @@ namespace SHVDN
 			}
 
 			// Find all script files and assemblies in the specified script directory
-			var filenames = new List<string>();
+			var filenamesSource = new List<string>();
+			var filenamesAssembly = new List<string>();
 
 			try
 			{
-				filenames.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
-				filenames.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
+				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
+				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
 
-				filenames.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
+				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
 					.Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
@@ -382,29 +406,39 @@ namespace SHVDN
 			}
 
 			// Filter out non-script assemblies like copies of ScriptHookVDotNet
-			for (int i = 0; i < filenames.Count; i++)
+			for (int i = 0; i < filenamesAssembly.Count; i++)
 			{
 				try
 				{
-					var assemblyName = AssemblyName.GetAssemblyName(filenames[i]);
+					var assemblyName = AssemblyName.GetAssemblyName(filenamesAssembly[i]);
 
 					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 					{
-						Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenames[i]), ".");
-
-						filenames.RemoveAt(i--);
+						filenamesAssembly.RemoveAt(i--);
 					}
 				}
 				catch (Exception ex)
 				{
-					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenames[i]), " because of exception: ", ex.ToString());
+					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenamesAssembly[i]), " because of exception: ", ex.ToString());
 
-					filenames.RemoveAt(i--);
+					filenamesAssembly.RemoveAt(i--);
 				}
 			}
 
-			foreach (var filename in filenames)
-				StartScripts(filename);
+			foreach (var filename in filenamesSource)
+				LoadScriptsFromSource(filename);
+			foreach (var filename in filenamesAssembly)
+				LoadScriptsFromAssembly(filename);
+
+			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
+			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
+			{
+				Script script = InstantiateScript(type);
+				
+				if (script != null)
+					// Start the script
+					script.Start();
+			}
 		}
 		/// <summary>
 		/// Loads and starts all scripts in the specified file.
@@ -414,21 +448,21 @@ namespace SHVDN
 		{
 			filename = Path.GetFullPath(filename);
 
-			int offset = scriptTypes.Count;
-
-			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ? !LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
+			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ?
+				!LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
 				return;
 
-			for (int i = offset; i < scriptTypes.Count; i++)
+			foreach (var type in scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
 			{
-				Script script = InstantiateScript(scriptTypes[i].Item2);
+				// First try to find an existing instance of the script
+				Script script = runningScripts.Find(x => x.Filename == filename);
 
-				if (script == null)
-					continue;
+				if (script == null) // If that does not exist, create a new one
+					script = InstantiateScript(type);
 
-				script.Start();
-
-				runningScripts.Add(script);
+				if (script != null)
+					// Restart the script
+					script.Start();
 			}
 		}
 		/// <summary>
@@ -587,7 +621,7 @@ namespace SHVDN
 
 		public string LookupScriptFilename(Type scriptType)
 		{
-			return scriptTypes.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
+			return scriptTypes.Values.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
 		}
 
 		public override object InitializeLifetimeService()

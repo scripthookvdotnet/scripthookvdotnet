@@ -34,12 +34,6 @@ namespace GTA
 			_dependency = dependency;
 		}
 	}
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class ScriptAttributes : Attribute
-	{
-		public string Author;
-		public string SupportURL;
-	}
 
 	/// <summary>
 	/// A base class for all user scripts to inherit.

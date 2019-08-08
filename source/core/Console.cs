@@ -560,7 +560,7 @@ namespace SHVDN
 			if (commandHistory.LastOrDefault() != input)
 				commandHistory.Add(input);
 
-			compilerTask = Task.Factory.StartNew(new Func<MethodInfo>(() => {
+			compilerTask = Task.Factory.StartNew(() => {
 				var compiler = new Microsoft.CSharp.CSharpCodeProvider();
 				var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
 				compilerOptions.GenerateInMemory = true;
@@ -603,7 +603,7 @@ namespace SHVDN
 					PrintError(errors.ToString());
 					return null;
 				}
-			}));
+			});
 		}
 
 		static unsafe void DrawRect(float x, float y, int width, int height, Color color)
