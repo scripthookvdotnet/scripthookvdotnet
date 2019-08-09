@@ -284,22 +284,27 @@ namespace SHVDN
 				// Find all script types in the assembly
 				foreach (var type in assembly.GetTypes().Where(x => x.BaseType != null && x.BaseType.FullName == "GTA.Script"))
 				{
+					count++;
+
 					// This function builds a composite key of all dependencies of a script
 					Func<Type, string, string> BuildCompareKey = null;
-					BuildCompareKey = (a, key) => {
-						key = a.FullName + "%%" + key;
+					BuildCompareKey = (a, b) => {
+						b = a.FullName + "%%" + b;
 						foreach (var attribute in a.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.RequireScript"))
 						{
 							var dependency = attribute.ConstructorArguments[0].Value as Type;
 							// Ignore circular dependencies
-							if (dependency != null && !key.Contains("%%" + dependency.FullName))
-								key = BuildCompareKey(dependency, key);
+							if (dependency != null && !b.Contains("%%" + dependency.FullName))
+								b = BuildCompareKey(dependency, b);
 						}
-						return key;
+						return b;
 					};
 
-					count++;
-					scriptTypes.Add(BuildCompareKey(type, string.Empty), new Tuple<string, Type>(filename, type));
+					var key = BuildCompareKey(type, string.Empty);
+					if (scriptTypes.ContainsKey(key))
+						continue; // Skip types that were already added previously
+
+					scriptTypes.Add(key, new Tuple<string, Type>(filename, type));
 
 					if (apiVersion == null) // Check API version for one of the types (should be the same for all)
 						apiVersion = type.BaseType.Assembly.GetName().Version;
@@ -425,11 +430,8 @@ namespace SHVDN
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
-				Script script = InstantiateScript(type);
-				
-				if (script != null)
-					// Start the script
-					script.Start();
+				// Start the script
+				InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -444,17 +446,14 @@ namespace SHVDN
 				!LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
 				return;
 
+			// Instantiate only those scripts that are from the this assembly
 			foreach (var type in scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
 			{
-				// First try to find an existing instance of the script
-				Script script = runningScripts.Find(x => x.Filename == filename);
+				// Make sure there are no others instances of this script
+				runningScripts.RemoveAll(x => x.Filename == filename);
 
-				if (script == null) // If that does not exist, create a new one
-					script = InstantiateScript(type);
-
-				if (script != null)
-					// Restart the script
-					script.Start();
+				// Start the script
+				InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
