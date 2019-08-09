@@ -212,15 +212,15 @@ namespace SHVDN
 				help.AppendLine($"[{space}]");
 				foreach (var command in commands[space])
 				{
-					help.Append("    ~h~" + command.Name + "~w~(");
+					help.Append("    ~h~" + command.Name + "(");
 					foreach (var arg in command.MethodInfo.GetParameters())
 						help.Append(arg.ParameterType.Name + " " + arg.Name + ",");
 					if (command.MethodInfo.GetParameters().Length > 0)
 						help.Length--; // Remove trailing comma
-					help.AppendLine(")");
-
 					if (command.Help.Length > 0)
-						help.AppendLine("       " + command.Help);
+						help.AppendLine(")~h~: " + command.Help);
+					else
+						help.AppendLine(")~h~");
 				}
 			}
 
@@ -558,13 +558,17 @@ namespace SHVDN
 				compilerOptions.GenerateInMemory = true;
 				compilerOptions.IncludeDebugInformation = true;
 				compilerOptions.ReferencedAssemblies.Add("System.dll");
+				compilerOptions.ReferencedAssemblies.Add("System.Core.dll");
+				compilerOptions.ReferencedAssemblies.Add("System.Drawing.dll");
+				compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+				// Reference the newest scripting API
 				compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
 				foreach (var assembly in ScriptDomain.CurrentDomain.LoadedAssemblies)
 					compilerOptions.ReferencedAssemblies.Add(assembly.Location);
 
-				const string template = "using System; using GTA; using GTA.Native; public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ {0}; return null; }} }}";
+				const string template = "using System; using System.Linq; using GTA; using GTA.Native; public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ {0}; return null; }} }}";
 
 				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 

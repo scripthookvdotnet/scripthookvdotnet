@@ -39,7 +39,7 @@ public:
 	[SHVDN::ConsoleCommand("Print the default help")]
 	static void Help()
 	{
-		console->PrintInfo("--- Help ---");
+		console->PrintInfo("~c~--- Help ---");
 		console->PrintHelpText();
 	}
 	[SHVDN::ConsoleCommand("Print the help for a specific command")]
@@ -54,76 +54,61 @@ public:
 		console->Clear();
 	}
 
-	[SHVDN::ConsoleCommand("Load scripts from a file")]
-	static void Load(String ^filename)
-	{
-		if (!IO::Path::IsPathRooted(filename))
-		{
-			String ^basedirectory = domain->ScriptPath;
-
-			if (!IO::File::Exists(IO::Path::Combine(basedirectory, filename)))
-			{
-				array<String ^> ^files = IO::Directory::GetFiles(basedirectory, filename, IO::SearchOption::AllDirectories);
-
-				if (files->Length != 1)
-				{
-					console->PrintError("The file " + filename + " was not found in " + basedirectory);
-					return;
-				}
-				else
-				{
-					console->PrintWarning("The file " + filename + " was not found in " + basedirectory + ", loading from " + IO::Path::GetDirectoryName(files[0]->Substring(basedirectory->Length + 1)) + " instead");
-				}
-
-				filename = files[0]->Substring(basedirectory->Length + 1);
-			}
-			else
-			{
-				filename = IO::Path::Combine(basedirectory, filename);
-			}
-		}
-
-		if (IO::Path::HasExtension(filename))
-		{
-			String ^extension = IO::Path::GetExtension(filename)->ToLower();
-			if (extension != ".cs" && extension != ".vb" && extension != ".dll")
-			{
-				console->PrintError("The file '" + filename + "' was not recognized as a script file");
-				return;
-			}
-		}
-		else
-		{
-			filename += ".dll";
-		}
-
-		domain->StartScripts(filename);
-	}
 	[SHVDN::ConsoleCommand("Reload all scripts from the scripts directory")]
 	static void Reload()
 	{
-		console->PrintInfo("Reloading ...");
+		console->PrintInfo("~y~Reloading ...");
 
 		// Force a reload on next tick
 		sGameReloaded = true;
 	}
 
+	[SHVDN::ConsoleCommand("Load scripts from a file")]
+	static void Start(String ^filename)
+	{
+		if (!IO::Path::IsPathRooted(filename))
+			filename = IO::Path::Combine(domain->ScriptPath, filename);
+		if (!IO::Path::HasExtension(filename))
+			filename += ".dll";
+
+		String ^ext = IO::Path::GetExtension(filename)->ToLower();
+		if (!IO::File::Exists(filename) || (ext != ".cs" && ext != ".vb" && ext != ".dll")) {
+			console->PrintError(IO::Path::GetFileName(filename) + " is not a script file!");
+			return;
+		}
+
+		domain->StartScripts(filename);
+	}
 	[SHVDN::ConsoleCommand("Abort all scripts from a file")]
 	static void Abort(String ^filename)
 	{
-		domain->AbortScripts(IO::Path::Combine(domain->ScriptPath, filename));
+		if (!IO::Path::IsPathRooted(filename))
+			filename = IO::Path::Combine(domain->ScriptPath, filename);
+		if (!IO::Path::HasExtension(filename))
+			filename += ".dll";
+
+		String ^ext = IO::Path::GetExtension(filename)->ToLower();
+		if (!IO::File::Exists(filename) || (ext != ".cs" && ext != ".vb" && ext != ".dll")) {
+			console->PrintError(IO::Path::GetFileName(filename) + " is not a script file!");
+			return;
+		}
+
+		domain->AbortScripts(filename);
 	}
 	[SHVDN::ConsoleCommand("Abort all scripts currently running")]
 	static void AbortAll()
 	{
 		domain->Abort();
+
+		console->PrintInfo("Stopped all running scripts. Use \"Start(filename)\" to start them again.");
 	}
 
 	[SHVDN::ConsoleCommand("List all loaded scripts")]
 	static void ListScripts()
 	{
+		console->PrintInfo("~c~--- Loaded Scripts ---");
 		for each (auto script in domain->RunningScripts)
-			console->PrintInfo(IO::Path::GetFileName(script->Filename) + ": " + script->Name + (script->IsRunning ? " ~g~[running]" : " ~r~[aborted]"));
+			console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? " ~g~[running]" : " ~r~[aborted]"));
 	}
 
 internal:

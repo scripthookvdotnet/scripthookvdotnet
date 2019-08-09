@@ -337,7 +337,7 @@ namespace SHVDN
 			if (scriptType.IsAbstract)
 				return null;
 
-			Log.Message(Log.Level.Debug, "Instantiating script '", scriptType.FullName, "' ...");
+			Log.Message(Log.Level.Debug, "Instantiating script ", scriptType.FullName, " ...");
 
 			Script script = new Script();
 			executingScript = script;
@@ -450,7 +450,7 @@ namespace SHVDN
 			foreach (var type in scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
 			{
 				// Make sure there are no others instances of this script
-				runningScripts.RemoveAll(x => x.Filename == filename);
+				runningScripts.RemoveAll(x => filename == x.Filename && type == x.Instance.GetType());
 
 				// Start the script
 				InstantiateScript(type)?.Start();
