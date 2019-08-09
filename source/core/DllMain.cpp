@@ -145,8 +145,8 @@ static void ScriptHookVDotnet_ManagedInit()
 			SHVDN::Console::typeid->Assembly->Location, SHVDN::Console::typeid->FullName);
 
 		// Print welcome message
-		console->PrintInfo("--- Community Script Hook V .NET " SHVDN_VERSION " ---");
-		console->PrintInfo("--- Type \"Help()\" to print an overview of available commands ---");
+		console->PrintInfo("~c~--- Community Script Hook V .NET " SHVDN_VERSION " ---");
+		console->PrintInfo("~c~--- Type \"Help()\" to print an overview of available commands ---");
 
 		// Update console pointer in script domain
 		domain->AppDomain->SetData("Console", console);
