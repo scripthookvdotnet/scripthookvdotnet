@@ -48,17 +48,13 @@ namespace SHVDN
 		/// </summary>
 		public string Name => AppDomain.FriendlyName;
 		/// <summary>
-		/// Gets path to the newest API assembly (which should be the last one).
-		/// </summary>
-		public string ApiPath => scriptApis.Last().Location;
-		/// <summary>
 		/// Gets the path to the directory containing scripts.
 		/// </summary>
 		public string ScriptPath => AppDomain.BaseDirectory;
 		/// <summary>
 		/// Gets the application domain that is associated with this script domain.
 		/// </summary>
-		public AppDomain AppDomain { get; private set; } = AppDomain.CurrentDomain;
+		public AppDomain AppDomain { get; } = AppDomain.CurrentDomain;
 		
 		/// <summary>
 		/// Gets the scripting domain for the current application domain.
@@ -68,7 +64,11 @@ namespace SHVDN
 		/// <summary>
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
 		/// </summary>
-		public string[] RunningScripts => runningScripts.Select(script => Path.GetFileName(script.Filename) + ": " + script.Name + (script.IsRunning ? " ~g~[running]" : " ~r~[aborted]")).ToArray();
+		public Script[] RunningScripts => runningScripts.ToArray();
+		/// <summary>
+		/// Gets the list of script assemblies loaded in this script domain.
+		/// </summary>
+		public Assembly[] LoadedAssemblies => scriptTypes.Values.Select(x => x.Item2.Assembly).Distinct().ToArray();
 		/// <summary>
 		/// Gets the currently executing script or <c>null</c> if there is none.
 		/// </summary>
@@ -78,13 +78,10 @@ namespace SHVDN
 		/// Initializes the script domain inside its application domain.
 		/// </summary>
 		/// <param name="apiBasePath">The path to the root directory containing the scripting API assemblies.</param>
-		internal ScriptDomain(string apiBasePath)
+		private ScriptDomain(string apiBasePath)
 		{
 			// Each application domain has its own copy of this static variable, so only need to set it once
 			CurrentDomain = this;
-
-			if (apiBasePath == null)
-				return;
 
 			// Attach resolve handler to new domain
 			AppDomain.AssemblyResolve += HandleResolve;
@@ -151,13 +148,6 @@ namespace SHVDN
 				scriptPath = Path.Combine(Path.GetDirectoryName(basePath), scriptPath);
 			scriptPath = Path.GetFullPath(scriptPath);
 
-			// Remove handlers first if they already exist, so that the handles are only added once
-			AppDomain.CurrentDomain.AssemblyResolve -= HandleResolve;
-			AppDomain.CurrentDomain.UnhandledException -= HandleUnhandledException;
-			// Need to attach the resolve handler to the current domain too, so that the .NET framework finds this assembly in the ASI file
-			AppDomain.CurrentDomain.AssemblyResolve += HandleResolve;
-			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
-
 			// Create application and script domain for all the scripts to reside in
 			var name = "ScriptDomain_" + (scriptPath.GetHashCode() ^ Environment.TickCount).ToString("X");
 			var setup = new AppDomainSetup();
@@ -168,8 +158,8 @@ namespace SHVDN
 			var appdomain = AppDomain.CreateDomain(name, null, setup, new System.Security.PermissionSet(System.Security.Permissions.PermissionState.Unrestricted));
 			appdomain.InitializeLifetimeService(); // Give the application domain an infinite lifetime
 
-			// Store default domain reference, so it can be used to call back into it (see Log implementation for example)
-			appdomain.SetData("DefaultDomain", AppDomain.CurrentDomain);
+			// Need to attach the resolve handler to the current domain too, so that the .NET framework finds this assembly in the ASI file
+			AppDomain.CurrentDomain.AssemblyResolve += HandleResolve;
 
 			ScriptDomain scriptdomain = null;
 
@@ -182,6 +172,9 @@ namespace SHVDN
 				Log.Message(Log.Level.Error, "Failed to create script domain: ", ex.ToString());
 				AppDomain.Unload(appdomain);
 			}
+
+			// Remove resolve handler again
+			AppDomain.CurrentDomain.AssemblyResolve -= HandleResolve;
 
 			return scriptdomain;
 		}

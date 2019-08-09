@@ -124,9 +124,6 @@ namespace SHVDN
 			thread = new Thread(new ThreadStart(MainLoop));
 			thread.Start();
 
-			// TODO: Marshal to default script domain
-			//SHVDN.Console.RegisterCommands(Instance.GetType());
-
 			Log.Message(Log.Level.Info, "Started script ", Name, ".");
 		}
 		/// <summary>
@@ -150,8 +147,6 @@ namespace SHVDN
 			if (thread != null)
 			{
 				thread.Abort(); thread = null;
-
-				//SHVDN.Console.UnregisterCommands(Instance.GetType());
 
 				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
 			}

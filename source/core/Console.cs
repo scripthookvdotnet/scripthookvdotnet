@@ -15,7 +15,6 @@
 // 
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -29,32 +28,21 @@ using System.Threading.Tasks;
 
 namespace SHVDN
 {
-	public static class Console
+	public class Console : MarshalByRefObject
 	{
-		static Console()
-		{
-			PrintInfo("--- Community Script Hook V .NET " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " ---");
-			PrintInfo("--- Type \"Help()\" to print an overview of available commands ---");
+		public bool IsOpen { get; set; }
 
-			// Add default console commands
-			RegisterCommands(typeof(ConsoleCommands));
-		}
-
-		public static ScriptDomain MainDomain = null;
-
-		public static bool IsOpen { get; set; }
-
-		static int cursorPos = 0;
-		static int commandPos = -1;
-		static int currentPage = 1;
-		static string input = string.Empty;
-		static List<string> lineHistory = new List<string>();
-		static List<string> commandHistory = new List<string>();
-		static ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
-		static Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
-		static DateTime lastClosed;
-		static Task<MethodInfo> compilerTask;
-		public static Keys ToggleKey = Keys.F3;
+		int cursorPos = 0;
+		int commandPos = -1;
+		int currentPage = 1;
+		string input = string.Empty;
+		List<string> lineHistory = new List<string>();
+		List<string> commandHistory = new List<string>();
+		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
+		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
+		DateTime lastClosed;
+		Task<MethodInfo> compilerTask;
+		public Keys ToggleKey = Keys.F3;
 
 		[DllImport("user32.dll")]
 		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
@@ -78,7 +66,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="command">The command attribute of the method.</param>
 		/// <param name="methodInfo">The method information.</param>
-		internal static void RegisterCommand(ConsoleCommand command, MethodInfo methodInfo)
+		public void RegisterCommand(ConsoleCommand command, MethodInfo methodInfo)
 		{
 			command.MethodInfo = methodInfo;
 
@@ -90,7 +78,7 @@ namespace SHVDN
 		/// Register all methods with a <see cref="ConsoleCommand"/> attribute in the specified type as console commands.
 		/// </summary>
 		/// <param name="type">The type to search for console command methods.</param>
-		internal static void RegisterCommands(Type type)
+		public void RegisterCommands(Type type)
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
@@ -100,7 +88,7 @@ namespace SHVDN
 		/// Unregister all methods with a <see cref="ConsoleCommand"/> attribute that were previously registered.
 		/// </summary>
 		/// <param name="type">The type to search for console command methods.</param>
-		internal static void UnregisterCommands(Type type)
+		public void UnregisterCommands(Type type)
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
@@ -123,7 +111,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="prefix">The prefix for each line.</param>
 		/// <param name="messages">The lines to add to the console.</param>
-		static void AddLines(string prefix, string[] messages)
+		void AddLines(string prefix, string[] messages)
 		{
 			AddLines(prefix, messages, "~w~");
 		}
@@ -133,7 +121,7 @@ namespace SHVDN
 		/// <param name="prefix">The prefix for each line.</param>
 		/// <param name="messages">The lines to add to the console.</param>
 		/// <param name="color">The color of those lines.</param>
-		static void AddLines(string prefix, string[] messages, string color)
+		void AddLines(string prefix, string[] messages, string color)
 		{
 			for (int i = 0; i < messages.Length; i++) // Add proper styling
 				messages[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {color}{messages[i]}";
@@ -144,7 +132,7 @@ namespace SHVDN
 		/// Add text to the console input line.
 		/// </summary>
 		/// <param name="text">The text to add.</param>
-		static void AddToInput(string text)
+		void AddToInput(string text)
 		{
 			if (string.IsNullOrEmpty(text))
 				return;
@@ -155,7 +143,7 @@ namespace SHVDN
 		/// <summary>
 		/// Paste clipboard content into the console input line.
 		/// </summary>
-		static void AddClipboardContent()
+		void AddClipboardContent()
 		{
 			string text = Clipboard.GetText();
 			text = text.Replace("\n", string.Empty); // TODO Keep this?
@@ -166,7 +154,7 @@ namespace SHVDN
 		/// <summary>
 		/// Clear the console input line.
 		/// </summary>
-		static void ClearInput()
+		void ClearInput()
 		{
 			input = string.Empty;
 			cursorPos = 0;
@@ -174,7 +162,7 @@ namespace SHVDN
 		/// <summary>
 		/// Clears the console output.
 		/// </summary>
-		public static void Clear()
+		public void Clear()
 		{
 			lineHistory.Clear();
 		}
@@ -184,7 +172,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="msg">The composite format string.</param>
 		/// <param name="args">The formatting arguments.</param>
-		public static void PrintInfo(string msg, params object[] args)
+		public void PrintInfo(string msg, params object[] args)
 		{
 			if (args.Length > 0)
 				msg = String.Format(msg, args);
@@ -195,7 +183,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="msg">The composite format string.</param>
 		/// <param name="args">The formatting arguments.</param>
-		public static void PrintError(string msg, params object[] args)
+		public void PrintError(string msg, params object[] args)
 		{
 			if (args.Length > 0)
 				msg = String.Format(msg, args);
@@ -206,7 +194,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="msg">The composite format string.</param>
 		/// <param name="args">The formatting arguments.</param>
-		public static void PrintWarning(string msg, params object[] args)
+		public void PrintWarning(string msg, params object[] args)
 		{
 			if (args.Length > 0)
 				msg = String.Format(msg, args);
@@ -216,7 +204,7 @@ namespace SHVDN
 		/// <summary>
 		/// Writes the help text for all commands to the console.
 		/// </summary>
-		internal static void PrintHelpText()
+		internal void PrintHelpText()
 		{
 			StringBuilder help = new StringBuilder();
 			foreach (var space in commands.Keys)
@@ -242,7 +230,7 @@ namespace SHVDN
 		/// Writes the help text for the specified command to the console.
 		/// </summary>
 		/// <param name="commandName">The command name to check.</param>
-		internal static void PrintHelpText(string commandName)
+		internal void PrintHelpText(string commandName)
 		{
 			foreach (var space in commands.Keys)
 			{
@@ -260,7 +248,7 @@ namespace SHVDN
 		/// <summary>
 		/// Main execution logic of the console.
 		/// </summary>
-		internal static void DoTick()
+		internal void DoTick()
 		{
 			DateTime now = DateTime.UtcNow;
 
@@ -336,9 +324,13 @@ namespace SHVDN
 		/// <summary>
 		/// Keyboard handling logic of the console.
 		/// </summary>
-		/// <param name="keys">The key that was pressed down and its modifiers.</param>
-		internal static void DoKeyDown(Keys keys)
+		/// <param name="keys">The key that was originated this event and its modifiers.</param>
+		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
+		internal void DoKeyEvent(Keys keys, bool status)
 		{
+			if (!status)
+				return; // Only interested in key down events
+
 			var e = new KeyEventArgs(keys);
 
 			if (e.KeyCode == ToggleKey)
@@ -474,17 +466,17 @@ namespace SHVDN
 			}
 		}
 
-		static void PageUp()
+		void PageUp()
 		{
 			if (currentPage < ((lineHistory.Count + LINES_PER_PAGE - 1) / LINES_PER_PAGE))
 				currentPage++;
 		}
-		static void PageDown()
+		void PageDown()
 		{
 			if (currentPage > 1)
 				currentPage--;
 		}
-		static void GoUpCommandList()
+		void GoUpCommandList()
 		{
 			if (commandHistory.Count == 0 || commandPos >= commandHistory.Count - 1)
 				return;
@@ -494,7 +486,7 @@ namespace SHVDN
 			// Reset cursor position to end of input text
 			cursorPos = input.Length;
 		}
-		static void GoDownCommandList()
+		void GoDownCommandList()
 		{
 			if (commandHistory.Count == 0 || commandPos <= 0)
 				return;
@@ -504,19 +496,19 @@ namespace SHVDN
 			cursorPos = input.Length;
 		}
 
-		static void ForwardWord()
+		void ForwardWord()
 		{
 			var regex = new Regex(@"[^\W_]+");
 			Match match = regex.Match(input, cursorPos);
 			cursorPos = match.Success ? match.Index + match.Length : input.Length;
 		}
-		static void BackwardWord()
+		void BackwardWord()
 		{
 			var regex = new Regex(@"[^\W_]+");
 			MatchCollection matches = regex.Matches(input);
 			cursorPos = matches.Cast<Match>().Where(x => x.Index < cursorPos).Select(x => x.Index).LastOrDefault();
 		}
-		static void RemoveCharLeft()
+		void RemoveCharLeft()
 		{
 			if (input.Length > 0 && cursorPos > 0)
 			{
@@ -524,7 +516,7 @@ namespace SHVDN
 				cursorPos--;
 			}
 		}
-		static void RemoveCharRight()
+		void RemoveCharRight()
 		{
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
@@ -532,26 +524,26 @@ namespace SHVDN
 			}
 		}
 
-		static void MoveCursorLeft()
+		void MoveCursorLeft()
 		{
 			if (cursorPos > 0)
 				cursorPos--;
 		}
-		static void MoveCursorRight()
+		void MoveCursorRight()
 		{
 			if (cursorPos < input.Length)
 				cursorPos++;
 		}
-		static void MoveCursorToBegOfLine()
+		void MoveCursorToBegOfLine()
 		{
 			cursorPos = 0;
 		}
-		static void MoveCursorToEndOfLine()
+		void MoveCursorToEndOfLine()
 		{
 			cursorPos = input.Length;
 		}
 
-		static void CompileExpression()
+		void CompileExpression()
 		{
 			if (string.IsNullOrEmpty(input) || compilerTask != null)
 				return;
@@ -566,16 +558,13 @@ namespace SHVDN
 				compilerOptions.GenerateInMemory = true;
 				compilerOptions.IncludeDebugInformation = true;
 				compilerOptions.ReferencedAssemblies.Add("System.dll");
-				compilerOptions.ReferencedAssemblies.Add(MainDomain.ApiPath);
+				compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
-				// TODO: Add script assemblies
-				//foreach (ScriptDomain domain in ScriptDomains)
-				//	foreach (Script script in domain.RunningScripts)
-				//		if (!string.IsNullOrEmpty(script.Filename))
-				//			compilerOptions.ReferencedAssemblies.Add(script.Filename);
+				foreach (var assembly in ScriptDomain.CurrentDomain.LoadedAssemblies)
+					compilerOptions.ReferencedAssemblies.Add(assembly.Location);
 
-				const string template = "using System; using GTA; using GTA.Native; using Console = SHVDN.Console; public class ConsoleInput : SHVDN.ConsoleCommands {{ public static object Execute() {{ {0}; return null; }} }}";
+				const string template = "using System; using GTA; using GTA.Native; public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ {0}; return null; }} }}";
 
 				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
@@ -737,94 +726,5 @@ namespace SHVDN
 		internal string Name => MethodInfo.Name;
 		internal string Namespace => MethodInfo.DeclaringType.FullName;
 		internal MethodInfo MethodInfo { get; set; }
-	}
-
-	public class ConsoleCommands
-	{
-		[ConsoleCommand("Prints the default help")]
-		public static void Help()
-		{
-			Console.PrintInfo("--- Help ---");
-			Console.PrintHelpText();
-		}
-		[ConsoleCommand("Prints the help for a specific command")]
-		public static void Help(string command)
-		{
-			Console.PrintHelpText(command);
-		}
-
-		[ConsoleCommand("Clears the console history")]
-		public static void Clear()
-		{
-			Console.Clear();
-		}
-
-		[ConsoleCommand("Loads scripts from a file")]
-		public static void Load(string filename)
-		{
-			string basedirectory = Console.MainDomain.ScriptPath;
-
-			if (!File.Exists(Path.Combine(basedirectory, filename)))
-			{
-				string[] files = Directory.GetFiles(basedirectory, filename, SearchOption.AllDirectories);
-
-				if (files.Length != 1)
-				{
-					Console.PrintError("The file " + filename + " was not found in " + basedirectory);
-					return;
-				}
-				else
-				{
-					Console.PrintWarning("The file " + filename + " was not found in " + basedirectory + ", loading from " + Path.GetDirectoryName(files[0].Substring(basedirectory.Length + 1)) + " instead");
-				}
-
-				filename = files[0].Substring(basedirectory.Length + 1);
-			}
-			else
-			{
-				filename = Path.Combine(basedirectory, filename);
-			}
-
-			filename = Path.GetFullPath(filename);
-
-			string extension = Path.GetExtension(filename).ToLower();
-			if (extension != ".cs" && extension != ".vb" && extension != ".dll")
-			{
-				Console.PrintError("The file '" + filename + "' was not recognized as a script file");
-				return;
-			}
-
-			Console.MainDomain.StartScripts(filename);
-		}
-		[ConsoleCommand("Reloads scripts from a file")]
-		public static void Reload(string filename)
-		{
-			Abort(filename);
-			 Load(filename);
-		}
-		[ConsoleCommand("Reloads all scripts found in the scripts directory")]
-		public static void ReloadAll()
-		{
-			Console.MainDomain.Abort();
-			Console.MainDomain.Start();
-		}
-
-		[ConsoleCommand("List all loaded scripts")]
-		public static void List()
-		{
-			foreach (var info in Console.MainDomain.RunningScripts)
-				Console.PrintInfo(info);
-		}
-
-		[ConsoleCommand("Aborts all scripts from the specified file")]
-		public static void Abort(string filename)
-		{
-			Console.MainDomain.AbortScripts(Path.Combine(Console.MainDomain.ScriptPath, filename));
-		}
-		[ConsoleCommand("Aborts all scripts found in the scripts directory")]
-		public static void AbortAll()
-		{
-			Console.MainDomain.Abort();
-		}
 	}
 }

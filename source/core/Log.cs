@@ -75,31 +75,20 @@ namespace SHVDN
 		}
 		static void WriteToConsole(Level level, params string[] message)
 		{
-			// The console lives in the default application domain, so always call into that
-			var DefaultDomain = (AppDomain)AppDomain.CurrentDomain.GetData("DefaultDomain");
-			if (DefaultDomain != null)
-			{
-				DefaultDomain.SetData("WriteToConsole.level", level);
-				DefaultDomain.SetData("WriteToConsole.message", message);
-				DefaultDomain.DoCallBack(() =>
-				{
-					var level2 = (Level)AppDomain.CurrentDomain.GetData("WriteToConsole.level");
-					var message2 = (string[])AppDomain.CurrentDomain.GetData("WriteToConsole.message");
-					WriteToConsole(level2, message2);
-				});
+			Console console = AppDomain.CurrentDomain.GetData("Console") as Console;
+			if (console == null)
 				return;
-			}
 
 			switch (level)
 			{
 				case Level.Info:
-					SHVDN.Console.PrintInfo(string.Join(string.Empty, message));
+					console.PrintInfo(string.Join(string.Empty, message));
 					break;
 				case Level.Error:
-					SHVDN.Console.PrintError(string.Join(string.Empty, message));
+					console.PrintError(string.Join(string.Empty, message));
 					break;
 				case Level.Warning:
-					SHVDN.Console.PrintWarning(string.Join(string.Empty, message));
+					console.PrintWarning(string.Join(string.Empty, message));
 					break;
 			}
 		}

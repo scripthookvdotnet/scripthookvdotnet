@@ -14,12 +14,13 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
+bool sGameReloaded = false;
+
 #pragma managed
 
 // Import C# code base
 #using "ScriptHookVDotNet.netmodule"
 
-using namespace SHVDN;
 using namespace System;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
@@ -32,33 +33,163 @@ namespace WinForms = System::Windows::Forms;
 [assembly:AssemblyVersion(SHVDN_VERSION)];
 [assembly:AssemblyFileVersion(SHVDN_VERSION)];
 
+public ref class ScriptHookVDotNet
+{
+public:
+	[SHVDN::ConsoleCommand("Print the default help")]
+	static void Help()
+	{
+		console->PrintInfo("--- Help ---");
+		console->PrintHelpText();
+	}
+	[SHVDN::ConsoleCommand("Print the help for a specific command")]
+	static void Help(String ^command)
+	{
+		console->PrintHelpText(command);
+	}
+
+	[SHVDN::ConsoleCommand("Clear the console history and pages")]
+	static void Clear()
+	{
+		console->Clear();
+	}
+
+	[SHVDN::ConsoleCommand("Load scripts from a file")]
+	static void Load(String ^filename)
+	{
+		if (!IO::Path::IsPathRooted(filename))
+		{
+			String ^basedirectory = domain->ScriptPath;
+
+			if (!IO::File::Exists(IO::Path::Combine(basedirectory, filename)))
+			{
+				array<String ^> ^files = IO::Directory::GetFiles(basedirectory, filename, IO::SearchOption::AllDirectories);
+
+				if (files->Length != 1)
+				{
+					console->PrintError("The file " + filename + " was not found in " + basedirectory);
+					return;
+				}
+				else
+				{
+					console->PrintWarning("The file " + filename + " was not found in " + basedirectory + ", loading from " + IO::Path::GetDirectoryName(files[0]->Substring(basedirectory->Length + 1)) + " instead");
+				}
+
+				filename = files[0]->Substring(basedirectory->Length + 1);
+			}
+			else
+			{
+				filename = IO::Path::Combine(basedirectory, filename);
+			}
+		}
+
+		if (IO::Path::HasExtension(filename))
+		{
+			String ^extension = IO::Path::GetExtension(filename)->ToLower();
+			if (extension != ".cs" && extension != ".vb" && extension != ".dll")
+			{
+				console->PrintError("The file '" + filename + "' was not recognized as a script file");
+				return;
+			}
+		}
+		else
+		{
+			filename += ".dll";
+		}
+
+		domain->StartScripts(filename);
+	}
+	[SHVDN::ConsoleCommand("Reload all scripts from the scripts directory")]
+	static void Reload()
+	{
+		console->PrintInfo("Reloading ...");
+
+		// Force a reload on next tick
+		sGameReloaded = true;
+	}
+
+	[SHVDN::ConsoleCommand("Abort all scripts from a file")]
+	static void Abort(String ^filename)
+	{
+		domain->AbortScripts(IO::Path::Combine(domain->ScriptPath, filename));
+	}
+	[SHVDN::ConsoleCommand("Abort all scripts currently running")]
+	static void AbortAll()
+	{
+		domain->Abort();
+	}
+
+	[SHVDN::ConsoleCommand("List all loaded scripts")]
+	static void ListScripts()
+	{
+		for each (auto script in domain->RunningScripts)
+			console->PrintInfo(IO::Path::GetFileName(script->Filename) + ": " + script->Name + (script->IsRunning ? " ~g~[running]" : " ~r~[aborted]"));
+	}
+
+internal:
+	static SHVDN::Console ^console = nullptr;
+	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
+
+	static void SetConsole()
+	{
+		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
+	}
+};
+
 static void ScriptHookVDotnet_ManagedInit()
 {
-	// Initialize default domain (used by console)
-	gcnew SHVDN::ScriptDomain(nullptr);
+	AppDomain::CurrentDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&SHVDN::ScriptDomain::HandleUnhandledException);
 
-	// Unload any previous instances
-	ScriptDomain ^%domain = SHVDN::Console::MainDomain;
+	SHVDN::Console ^%console = ScriptHookVDotNet::console;
+	SHVDN::ScriptDomain ^%domain = ScriptHookVDotNet::domain;
+
+	// Unload previous domain (this unloads all script assemblies too)
 	if (domain != nullptr)
-		ScriptDomain::Unload(domain);
+		SHVDN::ScriptDomain::Unload(domain);
 
-	// Clear log from previous ScriptHookVDotNet runs
-	Log::Clear();
+	// Clear log from previous runs
+	SHVDN::Log::Clear();
 
 	// Create a separate script domain
-	domain = ScriptDomain::Load(".", "scripts");
+	domain = SHVDN::ScriptDomain::Load(".", "scripts");
 	if (domain == nullptr)
 		return;
+
+	// Initialize console
+	try
+	{
+		console = (SHVDN::Console ^)domain->AppDomain->CreateInstanceFromAndUnwrap(
+			SHVDN::Console::typeid->Assembly->Location, SHVDN::Console::typeid->FullName);
+
+		// Print welcome message
+		console->PrintInfo("--- Community Script Hook V .NET " SHVDN_VERSION " ---");
+		console->PrintInfo("--- Type \"Help()\" to print an overview of available commands ---");
+
+		// Update console pointer in script domain
+		domain->AppDomain->SetData("Console", console);
+		domain->AppDomain->DoCallBack(gcnew CrossAppDomainDelegate(&ScriptHookVDotNet::SetConsole));
+
+		// Add default console commands
+		console->RegisterCommands(ScriptHookVDotNet::typeid);
+	}
+	catch (Exception ^ex)
+	{
+		SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to create console: ", ex->ToString());
+	}
 
 	// Start scripts in the newly created domain
 	domain->Start();
 }
 
-static void ScriptHookVDotnet_ManagedTick(unsigned int index)
+static void ScriptHookVDotnet_ManagedTick()
 {
-	SHVDN::Console::DoTick();
+	SHVDN::Console ^console = ScriptHookVDotNet::console;
+	if (console != nullptr)
+		console->DoTick();
 
-	SHVDN::Console::MainDomain->DoTick();
+	SHVDN::ScriptDomain ^scriptdomain = ScriptHookVDotNet::domain;
+	if (scriptdomain != nullptr)
+		scriptdomain->DoTick();
 }
 
 static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
@@ -73,12 +204,20 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	if (shift) keys = keys | WinForms::Keys::Shift;
 	if (alt)   keys = keys | WinForms::Keys::Alt;
 
-	if (keydown) // Send key down events to console
-		SHVDN::Console::DoKeyDown(keys);
+	SHVDN::Console ^console = ScriptHookVDotNet::console;
+	if (console != nullptr) {
+		// Send key events to console
+		console->DoKeyEvent(keys, keydown);
 
-	// Do not send keyboard events to other running scripts when console is open
-	if (!SHVDN::Console::IsOpen)
-		SHVDN::Console::MainDomain->DoKeyEvent(keys, keydown);
+		// Do not send keyboard events to other running scripts when console is open
+		if (console->IsOpen)
+			return;
+	}
+
+	SHVDN::ScriptDomain ^scriptdomain = ScriptHookVDotNet::domain;
+	if (scriptdomain != nullptr)
+		// Send key events to all scripts
+		scriptdomain->DoKeyEvent(keys, keydown);
 }
 
 #pragma unmanaged
@@ -86,7 +225,6 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 #include <Main.h>
 #include <Windows.h>
 
-bool sGameReloaded = false;
 PVOID sGameFiber = nullptr;
 PVOID sScriptFiber = nullptr;
 
@@ -104,15 +242,15 @@ static void ScriptMain()
 			// Main script execution loop
 			while (true)
 			{
-				ScriptHookVDotnet_ManagedInit();
-
 				sGameReloaded = false;
+
+				ScriptHookVDotnet_ManagedInit();
 
 				// If the game is reloaded, ScriptHookV will call the script main function again.
 				// This will set the global 'sGameReloaded' variable to 'true' and on the next fiber switch to our CLR fiber, run into this condition, therefore exiting the inner loop and re-initialize.
 				while (!sGameReloaded)
 				{
-					ScriptHookVDotnet_ManagedTick(0);
+					ScriptHookVDotnet_ManagedTick();
 
 					// Switch back to main script fiber used by ScriptHookV.
 					// Code continues from here the next time the loop below switches back to our CLR fiber.
@@ -135,26 +273,6 @@ static void ScriptMain()
 		SwitchToFiber(sScriptFiber);
 	}
 }
-
-//template <unsigned int index>
-//static void ScriptThread()
-//{
-//	const LPFIBER_START_ROUTINE FiberMain = [](LPVOID lpFiberParameter) {
-//		while (true)
-//		{
-//			ScriptHookVDotnet_ManagedTick(index);
-//		}
-//	};
-//
-//	PVOID fiber = CreateFiber(0, FiberMain, nullptr);
-//
-//	while (true)
-//	{
-//		scriptWait(0);
-//
-//		SwitchToFiber(fiber);
-//	}
-//}
 
 static void ScriptCleanup()
 {
@@ -180,11 +298,6 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 		DisableThreadLibraryCalls(hModule);
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
-		// Register a few additional threads for faster script execution
-		//scriptRegisterAdditionalThread(hModule, ScriptThread<1>);
-		//scriptRegisterAdditionalThread(hModule, ScriptThread<2>);
-		//scriptRegisterAdditionalThread(hModule, ScriptThread<3>);
-		//scriptRegisterAdditionalThread(hModule, ScriptThread<4>);
 		// Register handler for keyboard messages
 		keyboardHandlerRegister(ScriptKeyboardMessage);
 		break;
