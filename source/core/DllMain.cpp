@@ -123,8 +123,6 @@ internal:
 
 static void ScriptHookVDotnet_ManagedInit()
 {
-	AppDomain::CurrentDomain->UnhandledException += gcnew UnhandledExceptionEventHandler(&SHVDN::ScriptDomain::HandleUnhandledException);
-
 	SHVDN::Console ^%console = ScriptHookVDotNet::console;
 	SHVDN::ScriptDomain ^%domain = ScriptHookVDotNet::domain;
 
