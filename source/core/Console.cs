@@ -15,23 +15,21 @@
 // 
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Drawing;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SHVDN
 {
 	public class Console : MarshalByRefObject
 	{
-		public bool IsOpen { get; set; }
-
 		int cursorPos = 0;
 		int commandPos = -1;
 		int currentPage = 1;
@@ -42,11 +40,6 @@ namespace SHVDN
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
 		DateTime lastClosed;
 		Task<MethodInfo> compilerTask;
-		public Keys ToggleKey = Keys.F3;
-
-		[DllImport("user32.dll")]
-		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
-
 		const int BASE_WIDTH = 1280;
 		const int BASE_HEIGHT = 720;
 		const int CONSOLE_WIDTH = BASE_WIDTH;
@@ -60,6 +53,19 @@ namespace SHVDN
 		static readonly Color PrefixColor = Color.FromArgb(255, 52, 152, 219);
 		static readonly Color BackgroundColor = Color.FromArgb(200, Color.Black);
 		static readonly Color AltBackgroundColor = Color.FromArgb(200, 52, 73, 94);
+
+		[DllImport("user32.dll")]
+		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
+
+		/// <summary>
+		/// Gets or sets whether the console is open.
+		/// </summary>
+		public bool IsOpen { get; set; }
+
+		/// <summary>
+		/// Gets or sets the key used to open or close the console.
+		/// </summary>
+		public Keys ToggleKey { get; set; } = Keys.F3;
 
 		/// <summary>
 		/// Register the specified method as a console command.
@@ -670,13 +676,10 @@ namespace SHVDN
 
 			return 0;
 		}
-		static unsafe void PushLongString(string str, int maxLengthUtf8 = 99)
+		static unsafe void PushLongString(string str)
 		{
-			if (maxLengthUtf8 <= 0)
-				throw new ArgumentOutOfRangeException(nameof(maxLengthUtf8));
-
 			int size = System.Text.Encoding.UTF8.GetByteCount(str);
-			if (size <= maxLengthUtf8)
+			if (size <= 99)
 			{
 				NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
 					(ulong)ScriptDomain.CurrentDomain.PinString(str).ToInt64());
@@ -690,7 +693,7 @@ namespace SHVDN
 			{
 				int codePointSize = GetUtf8CodePointSize(str, currentPos);
 
-				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
+				if (currentUtf8StrLength + codePointSize > 99)
 				{
 					NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
 						(ulong)ScriptDomain.CurrentDomain.PinString(str.Substring(startPos, currentPos - startPos)).ToInt64());
@@ -731,7 +734,8 @@ namespace SHVDN
 			Help = help;
 		}
 
-		public string Help { get; private set; }
+		public string Help { get; }
+
 		internal string Name => MethodInfo.Name;
 		internal string Namespace => MethodInfo.DeclaringType.FullName;
 		internal MethodInfo MethodInfo { get; set; }

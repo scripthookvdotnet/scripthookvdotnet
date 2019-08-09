@@ -15,36 +15,18 @@
 //
 
 using System;
-using System.IO;
-using System.Threading;
-using System.Reflection;
 using System.Collections.Concurrent;
-using WinForms = System.Windows.Forms;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace SHVDN
 {
 	public class Script
 	{
-		Thread thread;
+		Thread thread; // The thread hosting the execution of the script
 		internal SemaphoreSlim waitEvent = new SemaphoreSlim(0);
 		internal SemaphoreSlim continueEvent = new SemaphoreSlim(0);
-		internal ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, WinForms.KeyEventArgs>>();
-
-		public event EventHandler Tick;
-		public event EventHandler Aborted;
-		public event WinForms.KeyEventHandler KeyUp;
-		public event WinForms.KeyEventHandler KeyDown;
-
-		/// <summary>
-		/// Gets the execution status of this script.
-		/// </summary>
-		public bool IsRunning { get; private set; }
-
-		/// <summary>
-		/// Gets the type name of this script.
-		/// </summary>
-		public string Name => Instance.GetType().FullName;
-		public string Filename { get; internal set; }
+		internal ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, KeyEventArgs>>();
 
 		/// <summary>
 		/// Gets or sets the interval in ms between each <see cref="Tick"/>.
@@ -52,9 +34,42 @@ namespace SHVDN
 		public int Interval { get; set; }
 
 		/// <summary>
-		/// Get the object instance of the script.
+		/// Gets the execution status of this script.
 		/// </summary>
-		public object Instance { get; internal set; }
+		public bool IsRunning { get; private set; }
+
+		/// <summary>
+		/// An event that is raised every tick of the script. 
+		/// </summary>
+		public event EventHandler Tick;
+		/// <summary>
+		/// An event that is raised when this script gets aborted for any reason.
+		/// </summary>
+		public event EventHandler Aborted;
+
+		/// <summary>
+		/// An event that is raised when a key is lifted.
+		/// </summary>
+		public event KeyEventHandler KeyUp;
+		/// <summary>
+		/// An event that is raised when a key is first pressed.
+		/// </summary>
+		public event KeyEventHandler KeyDown;
+
+		/// <summary>
+		/// Gets the type name of this script.
+		/// </summary>
+		public string Name => ScriptInstance.GetType().FullName;
+
+		/// <summary>
+		/// Gets the path to the file that contains this script.
+		/// </summary>
+		public string Filename { get; internal set; }
+
+		/// <summary>
+		/// Gets the instance of the script.
+		/// </summary>
+		public object ScriptInstance { get; internal set; }
 
 		/// <summary>
 		/// The main execution logic of all scripts.
@@ -69,7 +84,7 @@ namespace SHVDN
 			while (IsRunning)
 			{
 				// Process keyboard events
-				while (keyboardEvents.TryDequeue(out Tuple<bool, WinForms.KeyEventArgs> ev))
+				while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
 				{
 					try
 					{
@@ -102,18 +117,6 @@ namespace SHVDN
 			// Abort in case the script encountered an unhandled exception above
 			if (IsRunning)
 				Abort();
-		}
-
-		public void Wait(int ms)
-		{
-			DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
-
-			do
-			{
-				waitEvent.Release();
-				continueEvent.Wait();
-			}
-			while (DateTime.UtcNow < resumeTime);
 		}
 
 		/// <summary>
@@ -150,6 +153,22 @@ namespace SHVDN
 
 				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
 			}
+		}
+
+		/// <summary>
+		/// Pause execution of this script for the specified time.
+		/// </summary>
+		/// <param name="ms">The time in milliseconds to pause.</param>
+		public void Wait(int ms)
+		{
+			DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
+
+			do
+			{
+				waitEvent.Release();
+				continueEvent.Wait();
+			}
+			while (DateTime.UtcNow < resumeTime);
 		}
 	}
 }

@@ -15,12 +15,12 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Reflection;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SHVDN
@@ -344,7 +344,7 @@ namespace SHVDN
 
 			try
 			{
-				script.Instance = Activator.CreateInstance(scriptType);
+				script.ScriptInstance = Activator.CreateInstance(scriptType);
 			}
 			catch (MissingMethodException)
 			{
@@ -450,7 +450,7 @@ namespace SHVDN
 			foreach (var type in scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
 			{
 				// Make sure there are no others instances of this script
-				runningScripts.RemoveAll(x => filename == x.Filename && type == x.Instance.GetType());
+				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
 				// Start the script
 				InstantiateScript(type)?.Start();
@@ -473,7 +473,7 @@ namespace SHVDN
 		/// <param name="script">The script instance to abort.</param>
 		public void AbortScript(object script)
 		{
-			runningScripts.Single(x => x.Instance == script).Abort();
+			runningScripts.Single(x => x.ScriptInstance == script).Abort();
 		}
 		/// <summary>
 		/// Aborts all running scripts from the specified file.
