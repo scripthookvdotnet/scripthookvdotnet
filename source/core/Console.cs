@@ -595,6 +595,11 @@ namespace SHVDN
 			});
 		}
 
+		public override object InitializeLifetimeService()
+		{
+			return null;
+		}
+
 		static unsafe void DrawRect(float x, float y, int width, int height, Color color)
 		{
 			float w = (float)(width) / BASE_WIDTH;
