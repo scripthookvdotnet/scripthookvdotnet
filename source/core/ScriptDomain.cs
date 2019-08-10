@@ -412,7 +412,7 @@ namespace SHVDN
 				Log.Message(Log.Level.Error, "Failed to reload scripts: ", ex.ToString());
 			}
 
-			// Filter out non-script assemblies like copies of ScriptHookVDotNet
+			// Filter out non-script assemblies
 			for (int i = 0; i < filenamesAssembly.Count; i++)
 			{
 				try
@@ -421,6 +421,9 @@ namespace SHVDN
 
 					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 					{
+						// Delete copies of ScriptHookVDotNet, since these can cause issues with the assembly binder loading multiple copies
+						File.Delete(filenamesAssembly[i]);
+
 						filenamesAssembly.RemoveAt(i--);
 					}
 				}
