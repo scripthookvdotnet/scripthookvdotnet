@@ -138,9 +138,9 @@ static void ScriptHookVDotnet_ManagedInit()
 	if (domain == nullptr)
 		return;
 
-	// Initialize console
 	try
 	{
+		// Instantiate console inside script domain, so that it can access the scripting API
 		console = (SHVDN::Console ^)domain->AppDomain->CreateInstanceFromAndUnwrap(
 			SHVDN::Console::typeid->Assembly->Location, SHVDN::Console::typeid->FullName);
 

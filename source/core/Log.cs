@@ -38,38 +38,45 @@ namespace SHVDN
 
 		public static void Message(Level level, params string[] message)
 		{
+			WriteToFile(level, message);
 			WriteToConsole(level, message);
-			try { WriteToFile(level, message); } catch { }
 		}
 
 		static void WriteToFile(Level level, params string[] message)
 		{
-			using (var fs = new FileStream(FilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+			try
 			{
-				using (var sw = new StreamWriter(fs))
+				using (var fs = new FileStream(FilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
 				{
-					sw.Write(string.Concat("[", DateTime.Now.ToString("HH:mm:ss"), "] "));
-
-					switch (level)
+					using (var sw = new StreamWriter(fs))
 					{
-						case Level.Info:
-							sw.Write("[INFO] ");
-							break;
-						case Level.Error:
-							sw.Write("[ERROR] ");
-							break;
-						case Level.Warning:
-							sw.Write("[WARNING] ");
-							break;
-						case Level.Debug:
-							sw.Write("[DEBUG] ");
-							break;
-					}
+						sw.Write(string.Concat("[", DateTime.Now.ToString("HH:mm:ss"), "] "));
 
-					foreach (string str in message)
-						sw.Write(str);
-					sw.WriteLine();
+						switch (level)
+						{
+							case Level.Info:
+								sw.Write("[INFO] ");
+								break;
+							case Level.Error:
+								sw.Write("[ERROR] ");
+								break;
+							case Level.Warning:
+								sw.Write("[WARNING] ");
+								break;
+							case Level.Debug:
+								sw.Write("[DEBUG] ");
+								break;
+						}
+
+						foreach (string str in message)
+							sw.Write(str);
+						sw.WriteLine();
+					}
 				}
+			}
+			catch (Exception ex)
+			{
+				WriteToConsole(Level.Error, "Failed to write to log file: ", ex.ToString());
 			}
 		}
 		static void WriteToConsole(Level level, params string[] message)
