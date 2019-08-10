@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\Audio.cs" />
+    <Compile Include="Game\ConsoleCommand.cs" />
     <Compile Include="Game\Native.cs" />
     <Compile Include="Game\NativeHashes.cs" />
     <Compile Include="Game\Script.cs" />

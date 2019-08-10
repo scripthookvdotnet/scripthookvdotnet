@@ -87,8 +87,31 @@ namespace SHVDN
 		public void RegisterCommands(Type type)
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
-				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
-					RegisterCommand(attribute, method);
+			{
+				try
+				{
+					foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
+					{
+						RegisterCommand(attribute, method);
+					}
+
+					foreach (var attribute in method.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ConsoleCommand"))
+					{
+						if (attribute.ConstructorArguments.Count != 1)
+						{
+							RegisterCommand(new ConsoleCommand(), method);
+						}
+						else
+						{
+							RegisterCommand(new ConsoleCommand(attribute.ConstructorArguments[0].Value.ToString()), method);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Message(Log.Level.Error, "Failed to search for console commands in ", type.FullName, ".", method.Name, ": ", ex.ToString());
+				}
+			}
 		}
 		/// <summary>
 		/// Unregister all methods with a <see cref="ConsoleCommand"/> attribute that were previously registered.
@@ -98,16 +121,14 @@ namespace SHVDN
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
-				foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
-				{
-					string space = method.DeclaringType.FullName;
+				string space = method.DeclaringType.FullName;
 
-					if (commands.ContainsKey(space))
-					{
-						commands[space].RemoveAll(x => x.MethodInfo == method);
-						if (commands[space].Count == 0)
-							commands.Remove(space);
-					}
+				if (commands.ContainsKey(space))
+				{
+					commands[space].RemoveAll(x => x.MethodInfo == method);
+
+					if (commands[space].Count == 0)
+						commands.Remove(space);
 				}
 			}
 		}
