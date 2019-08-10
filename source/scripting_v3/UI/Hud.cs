@@ -126,7 +126,7 @@ namespace GTA.UI
 		/// </summary>
 		public static CursorSprite CursorSprite
 		{
-			get { return (CursorSprite)SHVDN.NativeMemory.ReadCursorSprite(); }
+			get { return (CursorSprite)SHVDN.NativeMemory.CursorSprite; }
 			set { Function.Call(Hash._SET_CURSOR_SPRITE, value); }
 		}
 

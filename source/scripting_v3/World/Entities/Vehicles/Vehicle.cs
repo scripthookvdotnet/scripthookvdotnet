@@ -513,37 +513,21 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x768 : 0x758;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x788 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7A8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7B8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x834 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.FuelLevelOffset);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x768 : 0x758;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x788 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7A8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7B8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x834 : offset;
-
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.FuelLevelOffset, value);
 			}
 		}
 		/// <summary>
@@ -725,21 +709,12 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.WheelSpeedOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				//old game version hasnt been tested, just following the patterns above for old game ver
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x9A4 : 0x994;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x9C4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x9F0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0xA00 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0xA10 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xA30 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xA80 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.WheelSpeedOffset);
 			}
 		}
 		/// <summary>
@@ -786,20 +761,12 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.AccelerationOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7E4 : 0x7D4;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x804 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x824 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x834 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x854 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x874 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x8C4 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.AccelerationOffset);
 			}
 		}
 		/// <summary>
@@ -812,37 +779,21 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.CurrentRPMOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7D4 : 0x7C4;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x814 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x824 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x844 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x864 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x8B4 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.CurrentRPMOffset);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.CurrentRPMOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7D4 : 0x7C4;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x814 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x824 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x844 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x864 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x8B4 : offset;
-
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.CurrentRPMOffset, value);
 			}
 		}
 
@@ -850,24 +801,16 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
 				{
 					return 0;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7C6 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7E6 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7F6 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x816 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x836 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x876 : offset;
-
-				return SHVDN.NativeMemory.ReadByte(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadByte(MemoryAddress + SHVDN.NativeMemory.HighGearOffset);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
 				{
 					return;
 				}
@@ -884,15 +827,7 @@ namespace GTA
 					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A6 : 0x796;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7C6 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7E6 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7F6 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x816 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x836 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x876 : offset;
-
-				SHVDN.NativeMemory.WriteByte(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteByte(MemoryAddress + SHVDN.NativeMemory.HighGearOffset, value);
 			}
 		}
 		/// <summary>
@@ -902,37 +837,21 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.GearOffset == 0)
 				{
 					return 0;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A2 : 0x792;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7C2 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7E2 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7F2 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x812 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x832 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x872 : offset;
-
-				return SHVDN.NativeMemory.ReadByte(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadByte(MemoryAddress + SHVDN.NativeMemory.GearOffset);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.GearOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A2 : 0x792;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7C2 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7E2 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7F2 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x812 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x832 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x872 : offset;
-
-				SHVDN.NativeMemory.WriteByte(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteByte(MemoryAddress + SHVDN.NativeMemory.GearOffset, value);
 			}
 		}
 
@@ -1287,37 +1206,21 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.SteeringAngleOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8AC : 0x89C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x8CC : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x8F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x904 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x924 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x944 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x994 : offset;
-
-				return (float)(SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset) * (180.0 / System.Math.PI));
+				return (float)(SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SteeringAngleOffset) * (180.0 / System.Math.PI));
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.SteeringAngleOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8AC : 0x89C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x8CC : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x8F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x904 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x924 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x944 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x994 : offset;
-
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.SteeringAngleOffset, value);
 			}
 		}
 		/// <summary>
@@ -1327,37 +1230,21 @@ namespace GTA
 		{
 			get
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.SteeringScaleOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8A4 : 0x894;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x8C4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x8EC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x8FC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x91C : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x93C : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x98C : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SteeringScaleOffset);
 			}
 			set
 			{
-				if (MemoryAddress == IntPtr.Zero)
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.SteeringScaleOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x8A4 : 0x894;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x8C4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x8EC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x8FC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x91C : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x93C : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x98C : offset;
-
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.SteeringScaleOffset, value);
 			}
 		}
 

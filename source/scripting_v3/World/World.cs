@@ -409,16 +409,16 @@ namespace GTA
 		/// </value>
 		public static float GravityLevel
 		{
-			get { return SHVDN.NativeMemory.ReadWorldGravity(); }
+			get { return SHVDN.NativeMemory.WorldGravity; }
 			set
 			{
-				//write the value you want to the first item in the array where the native reads the gravity level choices from
-				SHVDN.NativeMemory.WriteWorldGravity(value);
-				//call set_gravity_level normally using 0 as gravity type
-				//the native will then set the gravity level to what we just wrote
+				// Write the value you want to the first item in the array where the native reads the gravity level choices from
+				SHVDN.NativeMemory.WorldGravity = value;
+				// Call set_gravity_level normally using 0 as gravity type
+				// The native will then set the gravity level to what we just wrote
 				Function.Call(Hash.SET_GRAVITY_LEVEL, 0);
-				//reset the array item back to 9.8 so as to restore behaviour of the native
-				SHVDN.NativeMemory.WriteWorldGravity(9.800000f);
+				// Reset the array item back to 9.8 so as to restore behavior of the native
+				SHVDN.NativeMemory.WorldGravity = 9.800000f;
 			}
 		}
 

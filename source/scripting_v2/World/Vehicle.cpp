@@ -720,7 +720,7 @@ namespace GTA
 	int Vehicle::CurrentGear::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int currentGearOffset = SHVDN::NativeMemory::currentGearOffset;
+		const int currentGearOffset = SHVDN::NativeMemory::GearOffset;
 
 		if (address == 0 || currentGearOffset == 0)
 		{
@@ -732,7 +732,7 @@ namespace GTA
 	int Vehicle::HighGear::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int highGearOffset = SHVDN::NativeMemory::highGearOffset;
+		const int highGearOffset = SHVDN::NativeMemory::HighGearOffset;
 
 		if (address == 0 || highGearOffset == 0)
 		{
@@ -756,7 +756,7 @@ namespace GTA
 		}
 
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int highGearOffset = SHVDN::NativeMemory::highGearOffset;
+		const int highGearOffset = SHVDN::NativeMemory::HighGearOffset;
 
 		if (address == 0 || highGearOffset == 0)
 		{
@@ -768,7 +768,7 @@ namespace GTA
 	float Vehicle::FuelLevel::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int fuelLevelOffset = SHVDN::NativeMemory::fuelLevelOffset;
+		const int fuelLevelOffset = SHVDN::NativeMemory::FuelLevelOffset;
 
 		if (address == 0 || fuelLevelOffset == 0)
 		{
@@ -780,7 +780,7 @@ namespace GTA
 	void Vehicle::FuelLevel::set(float value)
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int fuelLevelOffset = SHVDN::NativeMemory::fuelLevelOffset;
+		const int fuelLevelOffset = SHVDN::NativeMemory::FuelLevelOffset;
 
 		if (address == 0 || fuelLevelOffset == 0)
 		{
@@ -792,7 +792,7 @@ namespace GTA
 	float Vehicle::CurrentRPM::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int currentRPMOffset = SHVDN::NativeMemory::currentRPMOffset;
+		const int currentRPMOffset = SHVDN::NativeMemory::CurrentRPMOffset;
 
 		if (address == 0 || currentRPMOffset == 0)
 		{
@@ -804,7 +804,7 @@ namespace GTA
 	void Vehicle::CurrentRPM::set(float value)
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int currentRPMOffset = SHVDN::NativeMemory::currentRPMOffset;
+		const int currentRPMOffset = SHVDN::NativeMemory::CurrentRPMOffset;
 
 		if (address == 0 || currentRPMOffset == 0)
 		{
@@ -816,7 +816,7 @@ namespace GTA
 	float Vehicle::Acceleration::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int accelerationOffset = SHVDN::NativeMemory::accelerationOffset;
+		const int accelerationOffset = SHVDN::NativeMemory::AccelerationOffset;
 
 		if (address == 0 || accelerationOffset == 0)
 		{
@@ -828,7 +828,7 @@ namespace GTA
 	float Vehicle::WheelSpeed::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int wheelSpeedOffset = SHVDN::NativeMemory::wheelSpeedOffset;
+		const int wheelSpeedOffset = SHVDN::NativeMemory::WheelSpeedOffset;
 
 		if (address == 0 || wheelSpeedOffset == 0)
 		{
@@ -840,7 +840,7 @@ namespace GTA
 	float Vehicle::SteeringAngle::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int steeringAngleOffset = SHVDN::NativeMemory::steeringAngleOffset;
+		const int steeringAngleOffset = SHVDN::NativeMemory::SteeringAngleOffset;
 
 		if (address != 0 && steeringAngleOffset != 0)
 		{
@@ -855,7 +855,7 @@ namespace GTA
 	float Vehicle::SteeringScale::get()
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int steeringScaleOffset = SHVDN::NativeMemory::steeringScaleOffset;
+		const int steeringScaleOffset = SHVDN::NativeMemory::SteeringScaleOffset;
 
 		if (address == 0 || steeringScaleOffset == 0)
 		{
@@ -867,7 +867,7 @@ namespace GTA
 	void Vehicle::SteeringScale::set(float value)
 	{
 		const System::UInt64 address = SHVDN::NativeMemory::GetEntityAddress(Handle).ToInt64();
-		const int steeringScaleOffset = SHVDN::NativeMemory::steeringScaleOffset;
+		const int steeringScaleOffset = SHVDN::NativeMemory::SteeringScaleOffset;
 
 		if (address == 0 || steeringScaleOffset == 0)
 		{

@@ -123,7 +123,7 @@ namespace GTA
 		{
 			get
 			{
-				return SHVDN.NativeMemory.ReadTimeScale();
+				return SHVDN.NativeMemory.TimeScale;
 			}
 			set
 			{

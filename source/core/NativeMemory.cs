@@ -15,12 +15,12 @@
 //
 
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
 using static System.Runtime.InteropServices.Marshal;
 
 namespace SHVDN
@@ -28,49 +28,32 @@ namespace SHVDN
 	/// <summary>
 	/// Internal class responsible for managing all access to game memory.
 	/// </summary>
-	public unsafe static class NativeMemory
+	public static unsafe class NativeMemory
 	{
-		unsafe static byte* FindPattern(string pattern, string mask)
-		{
-			ProcessModule module = Process.GetCurrentProcess().MainModule;
-
-			ulong address = (ulong)module.BaseAddress.ToInt64();
-			ulong endAddress = address + (ulong)module.ModuleMemorySize;
-
-			for (; address < endAddress; address++)
-			{
-				for (int i = 0; i < pattern.Length; i++)
-				{
-					if (mask[i] != '?' && ((byte*)address)[i] != pattern[i])
-						break;
-					else if (i + 1 == pattern.Length)
-						return (byte*)address;
-				}
-			}
-
-			return null;
-		}
-
 		static NativeMemory()
 		{
 			byte* address;
 
 			// Get relative address and add it to the instruction address.
 			address = FindPattern("\xE8\x00\x00\x00\x00\x48\x8B\xD8\x48\x85\xC0\x74\x2E\x48\x83\x3D", "x????xxxxxxxxxxx");
-			EntityAddressFunc = GetDelegateForFunctionPointer<EntityAddressFuncDelegate>(
+			GetEntityAddressFunc = GetDelegateForFunctionPointer<GetEntityAddressFuncDelegate>(
 				new IntPtr(*(int*)(address + 1) + address + 5));
 
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
-			PlayerAddressFunc = GetDelegateForFunctionPointer<PlayerAddressFuncDelegate>(
+			GetPlayerAddressFunc = GetDelegateForFunctionPointer<GetPlayerAddressFuncDelegate>(
 				new IntPtr(*(int*)(address + 3) + address + 7));
 
 			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
-			PtfxAddressFunc = GetDelegateForFunctionPointer<PtfxAddressFuncDelegate>(
+			GetPtfxAddressFunc = GetDelegateForFunctionPointer<GetPtfxAddressFuncDelegate>(
 				new IntPtr(*(int*)(address) + address + 4));
 
 			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
 			AddEntityToPoolFunc = GetDelegateForFunctionPointer<AddEntityToPoolFuncDelegate>(
 				new IntPtr(address - 0x68));
+
+			address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
+			EntityPosFunc = GetDelegateForFunctionPointer<EntityPosFuncDelegate>(
+				new IntPtr((address - 6)));
 
 			address = FindPattern("\x0F\x85\x00\x00\x00\x00\x48\x8B\x4B\x20\xE8\x00\x00\x00\x00\x48\x8B\xC8", "xx????xxxxx????xxx");
 			EntityModel1Func = GetDelegateForFunctionPointer<EntityModel1FuncDelegate>(
@@ -80,10 +63,7 @@ namespace SHVDN
 			EntityModel2Func = GetDelegateForFunctionPointer<EntityModel2FuncDelegate>(
 				new IntPtr(address - 0x46));
 
-			address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
-			EntityPositionFunc = GetDelegateForFunctionPointer<EntityPositionFuncDelegate>(
-				new IntPtr((address - 6)));
-
+			// Find handling data functions
 			address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
 			GetHandlingDataByIndex = GetDelegateForFunctionPointer<GetHandlingDataByIndexDelegate>(
 				new IntPtr(*(int*)(address + 13) + address + 17));
@@ -93,14 +73,15 @@ namespace SHVDN
 			GetHandlingDataByHash = GetDelegateForFunctionPointer<GetHandlingDataByHashDelegate>(
 				new IntPtr(*(int*)(address + 1) + address + 5));
 
-			address = FindPattern("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
-			EntityPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
-
+			// Find entity pools
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
 			PedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
 			ObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+
+			address = FindPattern("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
+			EntityPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
 			VehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -108,6 +89,7 @@ namespace SHVDN
 			address = FindPattern("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
 			PickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
+			// Find euphoria functions
 			address = FindPattern("\x48\x8b\xc4\x48\x89\x58\x08\x48\x89\x68\x10\x48\x89\x70\x18\x48\x89\x78\x20\x41\x55\x41\x56\x41\x57\x48\x83\xec\x20\xe8\x00\x00\x00\x00\x48\x8b\xd8\x48\x85\xc0\x0f", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxx");
 			GiveNmMessageFuncAddress = (ulong)address;
 
@@ -130,81 +112,95 @@ namespace SHVDN
 			SetNmVector3Address = GetDelegateForFunctionPointer<SetNmVector3AddressDelegate>(new IntPtr(address));
 
 			address = FindPattern("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
-			GetLabelTextByHashAddr = (ulong)(*(int*)(address + 7) + address + 11);
+			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
 
 			address = FindPattern("\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x18\x89\x54\x24\x10\x56\x57\x41\x56\x48\x83\xEC\x20", "xxxxxxxxxxxxxxxxxxxxxx");
 			GetLabelTextByHashFunc = GetDelegateForFunctionPointer<GetLabelTextByHashFuncDelegate>(new IntPtr(address));
 
 			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
-			CheckpointBaseAddr = GetDelegateForFunctionPointer<GetCheckpointBaseAddrDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
-			CheckpointHandleAddr = GetDelegateForFunctionPointer<CheckpointHandleAddrDelegate>(new IntPtr(*(int*)(address - 9) + address - 5));
 			CheckpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
+			GetCheckpointBaseAddress = GetDelegateForFunctionPointer<GetCheckpointBaseAddressDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
+			GetCheckpointHandleAddress = GetDelegateForFunctionPointer<GetCheckpointHandleAddressDelegate>(new IntPtr(*(int*)(address - 9) + address - 5));
 
 			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
-			_getHashKey = GetDelegateForFunctionPointer<GetHashKeyDelegate>(new IntPtr(*(int*)(address + 6) + address + 10));
-
-			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
-			_writeWorldGravityAddr = (float*)(*(int*)(address + 6) + address + 10);
-			_readWorldGravityAddr = (float*)(*(int*)(address + 19) + address + 23);
+			GetHashKeyFunc = GetDelegateForFunctionPointer<GetHashKeyDelegate>(new IntPtr(*(int*)(address + 6) + address + 10));
 
 			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
-			_cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
+			cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
+
+			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
+			readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
+			writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
 
 			address = FindPattern("\xF3\x0F\x10\x0D\x00\x00\x00\x00\x41\x0F\x2F\xCB\x0F\x83", "xxxx????xxxxxx");
 			var timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
 			if (timeScaleArrayAddress != null)
-			{
 				// SET_TIME_SCALE changes the 3rd element, so obtain the address of it
-				_timeScaleAddress = timeScaleArrayAddress + 2;
-			}
+				timeScaleAddress = timeScaleArrayAddress + 2;
 
-			address = FindPattern("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
-			address = address + *(int*)(address) + 4;
-			_gamePlayCameraAddr = (ulong*)(*(int*)(address + 3) + address + 7);
+			// Find camera objects
 			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
 			CameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
+			address = FindPattern("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
+			address = address + *(int*)(address) + 4;
+			GameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
+			// Find model hash table
 			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
-			byte* baseFuncAddr = address + *(int*)(address) + 4;
-			modelHashEntries = *(ushort*)(baseFuncAddr + *(int*)(baseFuncAddr + 3) + 7);
-			modelNum1 = *(int*)(*(int*)(baseFuncAddr + 0x52) + baseFuncAddr + 0x56);
-			modelNum2 = *(ulong*)(*(int*)(baseFuncAddr + 0x63) + baseFuncAddr + 0x67);
-			modelNum3 = *(ulong*)(*(int*)(baseFuncAddr + 0x7A) + baseFuncAddr + 0x7E);
-			modelNum4 = *(ulong*)(*(int*)(baseFuncAddr + 0x81) + baseFuncAddr + 0x85);
-			modelHashTable = *(ulong*)(*(int*)(baseFuncAddr + 0x24) + baseFuncAddr + 0x28);
-			vehClassOff = *(uint*)(address + 0x31);
+			uint vehicleClassOffset = *(uint*)(address + 0x31);
+			address = address + *(int*)(address) + 4;
+			modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
+			modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
+			modelNum3 = *(UInt64*)(*(int*)(address + 0x7A) + address + 0x7E);
+			modelNum4 = *(UInt64*)(*(int*)(address + 0x81) + address + 0x85);
+			modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
+			modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
 
+			// Find vehicle data offsets
 			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
-			currentGearOffset = address == null ? 0 : *(int*)(address + 3) + 2;
-			highGearOffset = address == null ? 0 : *(int*)(address + 3) + 6;
+			if (address != null)
+			{
+				GearOffset = *(int*)(address + 3) + 2;
+				HighGearOffset = *(int*)(address + 3) + 6;
+			}
 
 			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83\x24\x08\x00\x00", "x?xxxxxx????x?xxxx????");
-			fuelLevelOffset = address == null ? 0 : *(int*)(address + 8);
-
-			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
-			currentRPMOffset = address == null ? 0 : *(int*)(address + 10);
-			accelerationOffset = address == null ? 0 : *(int*)(address + 10) + 0x10;
-
-			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
-			steeringScaleOffset = address == null ? 0 : *(int*)(address + 6);
-			steeringAngleOffset = address == null ? 0 : *(int*)(address + 6) + 8;
+			if (address != null)
+			{
+				FuelLevelOffset = *(int*)(address + 8);
+			}
 
 			address = FindPattern("\xF3\x0F\x10\x8F\x10\x0A\x00\x00\xF3\x0F\x59\x05\x5E\x30\x8D\x00", "xxxx????xxxx????");
-			wheelSpeedOffset = address == null ? 0 : *(int*)(address + 4);
+			if (address != null)
+			{
+				WheelSpeedOffset = *(int*)(address + 4);
+			}
+
+			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
+			if (address != null)
+			{
+				CurrentRPMOffset = *(int*)(address + 10);
+				AccelerationOffset = *(int*)(address + 10) + 0x10;
+			}
+
+			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
+			if (address != null)
+			{
+				SteeringScaleOffset = *(int*)(address + 6);
+				SteeringAngleOffset = *(int*)(address + 6) + 8;
+			}
 
 			// Generate vehicle model list
-			HashNode** HashMap = (HashNode**)(modelHashTable);
 			List<int>[] hashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-			{
 				hashes[i] = new List<int>();
-			}
+
 			for (int i = 0; i < modelHashEntries; i++)
 			{
-				for (HashNode* cur = HashMap[i]; cur != null; cur = cur->next)
+				for (HashNode* cur = ((HashNode**)modelHashTable)[i]; cur != null; cur = cur->next)
 				{
 					ushort data = cur->data;
-					bool bitTest = BitTest(*(int*)(modelNum2 + (uint)(4 * data >> 5)), (byte)(data & 0x1F));
+					bool bitTest = ((*(int*)(modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
 					if (data < modelNum1 && bitTest)
 					{
 						ulong addr1 = modelNum4 + modelNum3 * data;
@@ -215,21 +211,52 @@ namespace SHVDN
 							{
 								if ((*(byte*)(addr2 + 157) & 0x1F) == 5)
 								{
-									hashes[*(byte*)(addr2 + vehClassOff) & 0x1F].Add(cur->hash);
+									hashes[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
 								}
 							}
 						}
 					}
 				}
 			}
-			ReadOnlyCollection<int>[] result = new ReadOnlyCollection<int>[0x20];
-			for (int i = 0; i < 0x20; i++)
-			{
-				result[i] = Array.AsReadOnly(hashes[i].ToArray());
-			}
 
+			var result = new ReadOnlyCollection<int>[0x20];
+			for (int i = 0; i < 0x20; i++)
+				result[i] = Array.AsReadOnly(hashes[i].ToArray());
 			VehicleModels = Array.AsReadOnly(result);
 		}
+
+		static unsafe byte* FindPattern(string pattern, string mask)
+		{
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
+
+			ulong address = (ulong)module.BaseAddress.ToInt64();
+			ulong endAddress = address + (ulong)module.ModuleMemorySize;
+
+			for (; address < endAddress; address++)
+			{
+				for (int i = 0; i < pattern.Length; i++)
+				{
+					if (mask[i] != '?' && ((byte*)address)[i] != pattern[i])
+						break;
+					else if (i + 1 == pattern.Length)
+						return (byte*)address;
+				}
+			}
+
+			return null;
+		}
+
+		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?createTexture@@YAHPEBD@Z")]
+		public static extern int CreateTexture([MarshalAs(UnmanagedType.LPStr)] string filename);
+
+		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?drawTexture@@YAXHHHHMMMMMMMMMMMM@Z")]
+		public static extern void DrawTexture(int id, int index, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation, float scaleFactor, float colorR, float colorG, float colorB, float colorA);
+
+		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGameVersion@@YA?AW4eGameVersion@@XZ")]
+		public static extern int GetGameVersion();
+
+		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGlobalPtr@@YAPEA_KH@Z")]
+		public static extern IntPtr GetGlobalPtr(int index);
 
 		public static byte ReadByte(IntPtr address)
 		{
@@ -372,107 +399,180 @@ namespace SHVDN
 			return dest;
 		}
 
-		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
+		#region -- Cameras --
 
-		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGameVersion@@YA?AW4eGameVersion@@XZ")]
-		public static extern int GetGameVersion();
+		static ulong* CameraPoolAddress;
+		static ulong* GameplayCameraAddress;
 
-		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGlobalPtr@@YAPEA_KH@Z")]
-		public static extern IntPtr GetGlobalPtr(int index);
+		public static IntPtr GetCameraAddress(int handle)
+		{
+			uint index = (uint)(handle >> 8);
+			ulong poolAddr = *CameraPoolAddress;
+			if (*(byte*)(index + *(long*)(poolAddr + 8)) == (byte)(handle & 0xFF))
+			{
+				return new IntPtr(*(long*)poolAddr + (index * *(uint*)(poolAddr + 20)));
+			}
+			return IntPtr.Zero;
 
-		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?drawTexture@@YAXHHHHMMMMMMMMMMMM@Z")]
-		public static extern void DrawTexture(int id, int index, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation, float scaleFactor, float colorR, float colorG, float colorB, float colorA);
-		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?createTexture@@YAHPEBD@Z")]
-		public static extern  int CreateTexture([MarshalAs(UnmanagedType.LPStr)] string filename);
+		}
+		public static IntPtr GetGameplayCameraAddress()
+		{
+			return new IntPtr((long)*GameplayCameraAddress);
+		}
 
-		#region Fields
-		internal static ulong* CheckpointPoolAddress;
-		internal static float* _readWorldGravityAddr;
-		internal static float* _writeWorldGravityAddr;
-		internal static ulong* _gamePlayCameraAddr;
-		internal static int* _cursorSpriteAddr;
-		internal static float* _timeScaleAddress;
-
-		internal static ulong* PedPoolAddress;
-		internal static ulong* CameraPoolAddress;
-		internal static ulong* EntityPoolAddress;
-		internal static ulong* ObjectPoolAddress;
-		internal static ulong* PickupObjectPoolAddress;
-		internal static ulong* VehiclePoolAddress;
-
-		internal static ulong GetLabelTextByHashAddr;
-		internal static ulong CreateNmMessageFuncAddress;
-		internal static ulong GiveNmMessageFuncAddress;
-
-		private static ulong modelHashTable, modelNum2, modelNum3, modelNum4;
-		private static int modelNum1;
-		private static int handlingIndexOffsetInModelInfo;
-		private static uint vehClassOff;
-		private static ushort modelHashEntries;
-		// TODO: Convert these to properties
-		public static int currentGearOffset, highGearOffset, fuelLevelOffset, currentRPMOffset, accelerationOffset, steeringScaleOffset, steeringAngleOffset, wheelSpeedOffset;
-
-		internal delegate uint GetHashKeyDelegate(IntPtr stringPtr, uint initialHash);
-		internal delegate ulong EntityAddressFuncDelegate(int handle);
-		internal delegate ulong PlayerAddressFuncDelegate(int handle);
-		internal delegate ulong PtfxAddressFuncDelegate(int handle);
-		internal delegate int AddEntityToPoolFuncDelegate(ulong address);
-		internal delegate ulong EntityPositionFuncDelegate(ulong address, float* position);
-		internal delegate ulong EntityModel1FuncDelegate(ulong address);
-		internal delegate ulong EntityModel2FuncDelegate(ulong address);
-		internal delegate ulong GetHandlingDataByIndexDelegate(int index);
-		internal delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
-		internal delegate byte SetNmBoolAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, [MarshalAs(UnmanagedType.I1)] bool value);
-		internal delegate byte SetNmIntAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, int value);
-		internal delegate byte SetNmFloatAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float value);
-		internal delegate byte SetNmVector3AddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float x, float y, float z);
-		internal delegate byte SetNmStringAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, IntPtr stringPtr);
-		internal delegate ulong CheckpointHandleAddrDelegate(ulong baseAddr, int handle);
-		internal delegate ulong GetCheckpointBaseAddrDelegate();
-		internal delegate ulong GetLabelTextByHashFuncDelegate(ulong address, int labelHash);
-		internal delegate ulong FuncUlongUlongDelegate(ulong T);
-
-		internal static GetHashKeyDelegate _getHashKey;
-		internal static EntityAddressFuncDelegate EntityAddressFunc;
-		internal static PlayerAddressFuncDelegate PlayerAddressFunc;
-		internal static PtfxAddressFuncDelegate PtfxAddressFunc;
-		internal static AddEntityToPoolFuncDelegate AddEntityToPoolFunc;
-		internal static EntityPositionFuncDelegate EntityPositionFunc;
-		internal static EntityModel1FuncDelegate EntityModel1Func;
-		internal static EntityModel2FuncDelegate EntityModel2Func;
-		internal static GetHandlingDataByIndexDelegate GetHandlingDataByIndex;
-		internal static GetHandlingDataByHashDelegate GetHandlingDataByHash;
-		internal static SetNmBoolAddressDelegate SetNmBoolAddress;
-		internal static SetNmIntAddressDelegate SetNmIntAddress;
-		internal static SetNmFloatAddressDelegate SetNmFloatAddress;
-		internal static SetNmVector3AddressDelegate SetNmVector3Address;
-		internal static SetNmStringAddressDelegate SetNmStringAddress;
-		internal static CheckpointHandleAddrDelegate CheckpointHandleAddr;
-		internal static GetCheckpointBaseAddrDelegate CheckpointBaseAddr;
-		internal static GetLabelTextByHashFuncDelegate GetLabelTextByHashFunc;
 		#endregion
 
-		public static float ReadTimeScale()
+		#region -- Game Data --
+
+		delegate uint GetHashKeyDelegate(IntPtr stringPtr, uint initialHash);
+		static GetHashKeyDelegate GetHashKeyFunc;
+
+		public static uint GetHashKey(string key)
 		{
-			return *_timeScaleAddress;
+			IntPtr keyPtr = ScriptDomain.CurrentDomain.PinString(key);
+			return GetHashKeyFunc(keyPtr, 0);
 		}
 
-		public static float ReadWorldGravity()
+		static ulong GetLabelTextByHashAddress;
+		delegate ulong GetLabelTextByHashFuncDelegate(ulong address, int labelHash);
+		static GetLabelTextByHashFuncDelegate GetLabelTextByHashFunc;
+
+		public static string GetGXTEntryByHash(int entryLabelHash)
 		{
-			return *_readWorldGravityAddr;
-		}
-		public static  void WriteWorldGravity(float value)
-		{
-			*_writeWorldGravityAddr = value;
+			var entryText = (char*)GetLabelTextByHashFunc(GetLabelTextByHashAddress, entryLabelHash);
+			return entryText != null ? PtrToStringUTF8(new IntPtr(entryText)) : string.Empty;
 		}
 
-		public static   int ReadCursorSprite()
+		#endregion
+
+		#region -- World Data --
+
+		static int* cursorSpriteAddr;
+
+		public static int CursorSprite
 		{
-			return *_cursorSpriteAddr;
+			get { return *cursorSpriteAddr; }
 		}
+
+		static float* timeScaleAddress;
+
+		public static float TimeScale
+		{
+			get { return *timeScaleAddress; }
+		}
+
+		static float* readWorldGravityAddress;
+		static float* writeWorldGravityAddress;
+
+		public static float WorldGravity
+		{
+			get { return *readWorldGravityAddress; }
+			set { *writeWorldGravityAddress = value; }
+		}
+
+		#endregion
+
+		#region -- Skeleton Data --
+
+		static ulong GetEntitySkeletonData(int handle)
+		{
+			ulong MemAddress = GetEntityAddressFunc(handle);
+
+			var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + 88));
+			ulong Addr2 = func2(MemAddress);
+			ulong Addr3;
+			if (Addr2 == 0)
+			{
+				Addr3 = *(ulong*)(MemAddress + 80);
+				if (Addr3 == 0)
+				{
+					return 0;
+				}
+				else
+				{
+					Addr3 = *(ulong*)(Addr3 + 40);
+				}
+			}
+			else
+			{
+				Addr3 = *(ulong*)(Addr2 + 104);
+				if (Addr3 == 0 || *(ulong*)(Addr2 + 120) == 0)
+				{
+					return 0;
+				}
+				else
+				{
+					Addr3 = *(ulong*)(Addr3 + 376);
+				}
+			}
+			if (Addr3 == 0)
+			{
+				return 0;
+			}
+
+			return Addr3;
+		}
+
+		public static int GetEntityBoneCount(int handle)
+		{
+			var fragSkeletonData = GetEntitySkeletonData(handle);
+			return fragSkeletonData != 0 ? *(int*)(fragSkeletonData + 32) : 0;
+		}
+		public static IntPtr GetEntityBonePoseAddress(int handle, int boneIndex)
+		{
+			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
+				return IntPtr.Zero;
+
+			var fragSkeletonData = GetEntitySkeletonData(handle);
+			if (fragSkeletonData == 0)
+				return IntPtr.Zero;
+
+			if (boneIndex < *(int*)(fragSkeletonData + 32)) // boneIndex < max bones?
+			{
+				return new IntPtr((long)(*(ulong*)(fragSkeletonData + 16) + ((uint)boneIndex * 0x40)));
+			}
+
+			return IntPtr.Zero;
+		}
+		public static IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex)
+		{
+			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
+				return IntPtr.Zero;
+
+			var fragSkeletonData = GetEntitySkeletonData(handle);
+			if (fragSkeletonData == 0)
+				return IntPtr.Zero;
+
+			if (boneIndex < *(int*)(fragSkeletonData + 32)) // boneIndex < max bones?
+			{
+				return new IntPtr((long)(*(ulong*)(fragSkeletonData + 24) + ((uint)boneIndex * 0x40)));
+			}
+
+			return IntPtr.Zero;
+		}
+
+		#endregion
+
+		#region -- Vehicle Offsets --
+
+		public static int GearOffset { get; }
+		public static int HighGearOffset { get; }
+
+		public static int CurrentRPMOffset { get; }
+		public static int AccelerationOffset { get; }
+
+		public static int FuelLevelOffset { get; }
+		public static int WheelSpeedOffset { get; }
+
+		public static int SteeringAngleOffset { get; }
+		public static int SteeringScaleOffset { get; }
+
+		#endregion
+
+		#region -- Model Info --
 
 		[StructLayout(LayoutKind.Sequential)]
-		internal unsafe struct HashNode
+		struct HashNode
 		{
 			internal int hash;
 			internal ushort data;
@@ -480,13 +580,7 @@ namespace SHVDN
 			internal HashNode* next;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static bool BitTest(int data, byte index)
-		{
-			return (data & (1 << index)) != 0;
-		}
-
-		internal enum ModelInfoClassType
+		enum ModelInfoClassType
 		{
 			Invalid = 0,
 			Object = 1,
@@ -496,7 +590,7 @@ namespace SHVDN
 			Vehicle = 5,
 			Ped = 6
 		}
-		internal enum VehicleStructClassType
+		enum VehicleStructClassType
 		{
 			Invalid = -1,
 			Automobile = 0x0,
@@ -516,8 +610,104 @@ namespace SHVDN
 			Submarine = 0xF
 		}
 
+		static int handlingIndexOffsetInModelInfo;
+		static UInt32 modelNum1;
+		static UInt64 modelNum2;
+		static UInt64 modelNum3;
+		static UInt64 modelNum4;
+		static UInt64 modelHashTable;
+		static UInt16 modelHashEntries;
+
+		static IntPtr FindCModelInfo(int modelHash)
+		{
+			for (HashNode* cur = ((HashNode**)modelHashTable)[(uint)(modelHash) % modelHashEntries]; cur != null; cur = cur->next)
+			{
+				if (cur->hash != modelHash)
+					continue;
+
+				ushort data = cur->data;
+				bool bitTest = ((*(int*)(modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
+				if (data < modelNum1 && bitTest)
+				{
+					ulong addr1 = modelNum4 + modelNum3 * data;
+					if (addr1 != 0)
+					{
+						long* address = (long*)(*(ulong*)(addr1));
+						return new IntPtr(address);
+					}
+				}
+			}
+
+			return IntPtr.Zero;
+		}
+		static ModelInfoClassType GetModelInfoClass(IntPtr address)
+		{
+			if (address != IntPtr.Zero)
+			{
+				return ((ModelInfoClassType)((*(byte*)((ulong)address.ToInt64() + 157) & 0x1F)));
+			}
+
+			return ModelInfoClassType.Invalid;
+		}
+		static VehicleStructClassType GetVehicleStructClass(IntPtr modelInfoAddress)
+		{
+			if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType.Vehicle)
+			{
+				return (VehicleStructClassType)(*(int*)((ulong)modelInfoAddress.ToInt64() + 792));
+			}
+
+			return VehicleStructClassType.Invalid;
+		}
+
+		public static bool IsModelAPed(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped;
+		}
+		public static bool IsModelAnAmphibiousQuadBike(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.AmphibiousQuadBike;
+		}
+		public static bool IsModelABlimp(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Blimp;
+		}
+		public static bool IsModelATrailer(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
+		}
+
+		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
+
+		delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
+		delegate ulong GetHandlingDataByIndexDelegate(int index);
+
+		static GetHandlingDataByHashDelegate GetHandlingDataByHash;
+		static GetHandlingDataByIndexDelegate GetHandlingDataByIndex;
+
+		public static IntPtr GetHandlingDataByModelHash(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			if (GetModelInfoClass(modelInfo) != ModelInfoClassType.Vehicle)
+				return IntPtr.Zero;
+
+			int handlingIndex = *(int*)(modelInfo + handlingIndexOffsetInModelInfo).ToPointer();
+			return new IntPtr((long)GetHandlingDataByIndex(handlingIndex));
+		}
+		public static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
+		{
+			return new IntPtr((long)GetHandlingDataByHash(new IntPtr(&handlingNameHash)));
+		}
+
+		#endregion
+
+		#region -- Entity Pools --
+
 		[StructLayout(LayoutKind.Sequential)]
-		internal struct Checkpoint
+		struct Checkpoint
 		{
 			internal long padding;
 			internal int padding1;
@@ -527,7 +717,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		internal struct EntityPool
+		struct EntityPool
 		{
 			[FieldOffset(0x10)]
 			internal uint num1;
@@ -542,7 +732,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		internal struct VehiclePool
+		struct VehiclePool
 		{
 			[FieldOffset(0x00)]
 			internal ulong* poolAddress;
@@ -567,7 +757,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		internal struct GenericPool
+		struct GenericPool
 		{
 			[FieldOffset(0x00)]
 			public ulong poolStartAddress;
@@ -602,10 +792,27 @@ namespace SHVDN
 			}
 		}
 
+		static ulong* PedPoolAddress;
+		static ulong* EntityPoolAddress;
+		static ulong* ObjectPoolAddress;
+		static ulong* PickupObjectPoolAddress;
+		static ulong* VehiclePoolAddress;
+		static ulong* CheckpointPoolAddress;
+
+		delegate ulong EntityPosFuncDelegate(ulong address, float* position);
+		delegate ulong EntityModel1FuncDelegate(ulong address);
+		delegate ulong EntityModel2FuncDelegate(ulong address);
+		delegate int AddEntityToPoolFuncDelegate(ulong address);
+
+		static EntityPosFuncDelegate EntityPosFunc;
+		static EntityModel1FuncDelegate EntityModel1Func;
+		static EntityModel2FuncDelegate EntityModel2Func;
+		static AddEntityToPoolFuncDelegate AddEntityToPoolFunc;
+
 		internal class EntityPoolTask : IScriptTask
 		{
 			#region Fields
-			internal Type _type;
+			internal Type poolType;
 			internal List<int> handles = new List<int>();
 			internal bool doPosCheck;
 			internal bool doModelCheck;
@@ -624,7 +831,7 @@ namespace SHVDN
 
 			internal EntityPoolTask(Type type)
 			{
-				_type = type;
+				poolType = type;
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -639,7 +846,7 @@ namespace SHVDN
 
 					fixed (float* posPtr = &position[0])
 					{
-						NativeMemory.EntityPositionFunc(address, posPtr);
+						NativeMemory.EntityPosFunc(address, posPtr);
 					}
 
 					float x = this.position[0] - position[0];
@@ -697,7 +904,7 @@ namespace SHVDN
 
 				EntityPool* entityPool = (EntityPool*)(*NativeMemory.EntityPoolAddress);
 
-				if (_type.HasFlag(Type.Vehicle) && *NativeMemory.VehiclePoolAddress != 0)
+				if (poolType.HasFlag(Type.Vehicle) && *NativeMemory.VehiclePoolAddress != 0)
 				{
 					VehiclePool* vehiclePool = *(VehiclePool**)(*NativeMemory.VehiclePoolAddress);
 
@@ -715,7 +922,7 @@ namespace SHVDN
 					}
 				}
 
-				if (_type.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
+				if (poolType.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
 
@@ -733,7 +940,7 @@ namespace SHVDN
 					}
 				}
 
-				if (_type.HasFlag(Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
+				if (poolType.HasFlag(Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
 				{
 					GenericPool* propPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
 
@@ -751,7 +958,7 @@ namespace SHVDN
 					}
 				}
 
-				if (_type.HasFlag(Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
+				if (poolType.HasFlag(Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
 				{
 					GenericPool* pickupPool = (GenericPool*)(*NativeMemory.PickupObjectPoolAddress);
 
@@ -771,394 +978,15 @@ namespace SHVDN
 			}
 		}
 
-		internal class EuphoriaMessageTask : IScriptTask
+		public static int GetPedCount()
 		{
-			#region Fields
-			int targetHandle;
-			string message;
-			Dictionary<string, object> arguments;
-
-			// GetDelegateForFunctionPointer doesn't allow generic types such as Func and Action
-			internal delegate void ActionUlongDelegate(ulong T);
-			internal delegate int FuncUlongIntDelegate(ulong T);
-			internal delegate ulong FuncUlongUlongDelegate(ulong T);
-			internal delegate ulong FuncUlongUlongIntUlongDelegate(ulong T1, ulong T2, int T3);
-			internal delegate void SendMessageToPedDelegate(ulong PedNmAddress, IntPtr messagePtr, ulong MessageAddress);
-			internal delegate void FreeMessageMemoryDelegate(ulong MessageAddress);
-			#endregion
-
-			internal EuphoriaMessageTask(int target, string message, Dictionary<string, object> arguments)
+			if (*PedPoolAddress != 0)
 			{
-				targetHandle = target;
-				this.message = message;
-				this.arguments = arguments;
+				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
+				return (int)pool->itemSize;
 			}
-
-			public void Run()
-			{
-				byte* NativeFunc = (byte*)NativeMemory.CreateNmMessageFuncAddress;
-				ulong MessageAddress = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(NativeFunc + 0x22) + NativeFunc + 0x26)))(4632);
-
-				if (MessageAddress == 0)
-					return;
-
-				GetDelegateForFunctionPointer<FuncUlongUlongIntUlongDelegate>(new IntPtr((long)((*(int*)(NativeFunc + 0x3C)) + NativeFunc + 0x40)))(MessageAddress, MessageAddress + 24, 64);
-
-				foreach (var arg in arguments)
-				{
-					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
-
-					if (arg.Value is int)
-						NativeMemory.SetNmIntAddress(MessageAddress, name, (int)arg.Value);
-					if (arg.Value is bool)
-						NativeMemory.SetNmBoolAddress(MessageAddress, name, (bool)arg.Value);
-					if (arg.Value is float)
-						NativeMemory.SetNmFloatAddress(MessageAddress, name, (float)arg.Value);
-					if (arg.Value is string)
-						NativeMemory.SetNmStringAddress(MessageAddress, name, ScriptDomain.CurrentDomain.PinString((string)arg.Value));
-					if (arg.Value is float[])
-						NativeMemory.SetNmVector3Address(MessageAddress, name, ((float[])arg.Value)[0], ((float[])arg.Value)[1], ((float[])arg.Value)[2]);
-				}
-
-				byte* BaseFunc = (byte*)NativeMemory.GiveNmMessageFuncAddress;
-				byte* ByteAddr = (*(int*)(BaseFunc + 0xBC) + BaseFunc + 0xC0);
-				byte* UnkStrAddr = (*(int*)(BaseFunc + 0xCE) + BaseFunc + 0xD2);
-				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
-				byte* PedNmAddress;
-				bool v5 = false;
-				byte v7;
-				ulong v11;
-				ulong v12;
-
-				if (_PedAddress == null || *(ulong*)(_PedAddress + 48) == 0)
-					return;
-
-				PedNmAddress = (byte*)GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(ulong*)(*(ulong*)(_PedAddress) + 88))))((ulong)_PedAddress);
-
-				int MinHealthOffset = NativeMemory.GetGameVersion() < 26 /*v1_0_877_1_Steam*/ ? *(int*)(BaseFunc + 78) : *(int*)(BaseFunc + 157 + *(int*)(BaseFunc + 76));
-
-				if (*(ulong*)(_PedAddress + 48) == (ulong)PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
-				{
-					if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
-					{
-						ulong PedIntelligenceAddr = *(ulong*)(_PedAddress + *(int*)(BaseFunc + 147));
-
-						// check whether the ped is currently performing the 'CTaskNMScriptControl' task
-						if (*(short*)(GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xA2) + BaseFunc + 0xA6)))(*(ulong*)(PedIntelligenceAddr + 864)) + 52) == 401)
-						{
-							v5 = true;
-						}
-						else
-						{
-							v7 = *ByteAddr;
-							if (v7 != 0)
-							{
-								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xD3) + BaseFunc + 0xD7)))((ulong)UnkStrAddr);
-								v7 = *ByteAddr;
-							}
-							int count = *(int*)(PedIntelligenceAddr + 1064);
-							if (v7 != 0)
-							{
-								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xF0) + BaseFunc + 0xF4)))((ulong)UnkStrAddr);
-							}
-							for (int i = 0; i < count; i++)
-							{
-								v11 = *(ulong*)((byte*)PedIntelligenceAddr + 8 * ((i + *(int*)(PedIntelligenceAddr + 1060) + 1) % 16) + 928);
-								if (v11 != 0)
-								{
-									if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)v11 + 24)))(v11) == 132)
-									{
-										v12 = *(ulong*)(v11 + 40);
-										if (v12 != 0)
-										{
-											if (*(short*)(v12 + 52) == 401)
-												v5 = true;
-										}
-									}
-								}
-							}
-						}
-						if (v5 && GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
-						{
-							IntPtr messagePtr = ScriptDomain.CurrentDomain.PinString(message);
-							GetDelegateForFunctionPointer<SendMessageToPedDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)))((ulong)PedNmAddress, messagePtr, MessageAddress);
-						}
-						GetDelegateForFunctionPointer<FreeMessageMemoryDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)))(MessageAddress);
-					}
-				}
-			}
+			return 0;
 		}
-
-		private static IntPtr FindCModelInfo(int modelHash)
-		{
-			unsafe
-			{
-				HashNode** HashMap = (HashNode**)(modelHashTable);
-				for (HashNode* cur = HashMap[(uint)(modelHash) % modelHashEntries]; cur != null; cur = cur->next)
-				{
-					if (cur->hash != modelHash)
-					{
-						continue;
-					}
-
-					ushort data = cur->data;
-					if (data < modelNum1 && BitTest(*(int*)(modelNum2 + (ulong)(4 * data >> 5)), (byte)(data & 0x1F)))
-
-					{
-						ulong addr1 = modelNum4 + modelNum3 * data;
-						if (addr1 != 0)
-						{
-							long* address = (long*)(*(ulong*)(addr1));
-							return new IntPtr(address);
-						}
-					}
-				}
-			}
-
-			return IntPtr.Zero;
-		}
-		private static ModelInfoClassType GetModelInfoClass(IntPtr address)
-		{
-			unsafe
-			{
-				if (address != IntPtr.Zero)
-				{
-					return ((ModelInfoClassType)((*(byte*)((ulong)address.ToInt64() + 157) & 0x1F)));
-				}
-
-				return ModelInfoClassType.Invalid;
-			}
-		}
-		private static VehicleStructClassType GetVehicleStructClass(IntPtr modelInfoAddress)
-		{
-			unsafe
-			{
-				if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType.Vehicle)
-				{
-					return (VehicleStructClassType)(*(int*)((ulong)modelInfoAddress.ToInt64() + 792));
-				}
-
-				return VehicleStructClassType.Invalid;
-			}
-		}
-
-		public static bool IsModelAPed(int modelHash)
-		{
-			unsafe
-			{
-				IntPtr modelInfo = FindCModelInfo(modelHash);
-
-				if (modelInfo != IntPtr.Zero)
-				{
-					return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped;
-				}
-				return false;
-			}
-		}
-		public static bool IsModelAnAmphibiousQuadBike(int modelHash)
-		{
-			unsafe
-			{
-				IntPtr modelInfo = FindCModelInfo(modelHash);
-
-				if (modelInfo != IntPtr.Zero)
-				{
-					return GetVehicleStructClass(modelInfo) == VehicleStructClassType.AmphibiousQuadBike;
-				}
-
-				return false;
-			}
-		}
-		public static bool IsModelABlimp(int modelHash)
-		{
-			unsafe
-			{
-				IntPtr modelInfo = FindCModelInfo(modelHash);
-
-				if (modelInfo != IntPtr.Zero)
-				{
-					return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Blimp;
-				}
-
-				return false;
-			}
-		}
-		public static bool IsModelATrailer(int modelHash)
-		{
-			unsafe
-			{
-				IntPtr modelInfo = FindCModelInfo(modelHash);
-
-				if (modelInfo != IntPtr.Zero)
-				{
-					return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
-				}
-
-				return false;
-			}
-		}
-
-		public static IntPtr GetHandlingDataByModelHash(int modelHash)
-		{
-			unsafe
-			{
-				IntPtr modelInfo = FindCModelInfo(modelHash);
-
-				if (modelInfo != IntPtr.Zero && GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
-				{
-					int handlingIndex = *(int*)(modelInfo + handlingIndexOffsetInModelInfo).ToPointer();
-					return new IntPtr((long)GetHandlingDataByIndex(handlingIndex));
-				}
-
-				return IntPtr.Zero;
-			}
-		}
-		public static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
-		{
-			unsafe
-			{
-				return new IntPtr((long)GetHandlingDataByHash(new IntPtr(&handlingNameHash)));
-			}
-		}
-
-		public static IntPtr GetPtfxAddress(int handle)
-		{
-			return new IntPtr((long)PtfxAddressFunc(handle));
-		}
-
-		public static uint   GetHashKey(string key)
-		{
-			IntPtr keyPtr = ScriptDomain.CurrentDomain.PinString(key);
-			return _getHashKey(keyPtr, 0);
-		}
-		public static string GetGXTEntryByHash(int entryLabelHash)
-		{
-			char* entryText = (char*)(GetLabelTextByHashFunc(GetLabelTextByHashAddr, entryLabelHash));
-			if (entryText != null)
-			{
-				return PtrToStringUTF8(new IntPtr(entryText));
-			}
-			return string.Empty;
-		}
-
-		public static IntPtr GetEntityAddress(int handle)
-		{
-			return new IntPtr((long)EntityAddressFunc(handle));
-		}
-		public static IntPtr GetPlayerAddress(int handle)
-		{
-			return new IntPtr((long)PlayerAddressFunc(handle));
-		}
-		public static IntPtr GetCheckpointAddress(int handle)
-		{
-			ulong addr = CheckpointHandleAddr(CheckpointBaseAddr(), handle);
-			if (addr != 0)
-			{
-				return new IntPtr((long)((ulong)(CheckpointPoolAddress) + 96 * ((ulong)*(int*)(addr + 16))));
-			}
-			return IntPtr.Zero;
-		}
-
-		public static int GetEntityBoneCount(int handle)
-		{
-			var fragSkeletonData = GetEntitySkeletonData(handle);
-			return fragSkeletonData != 0 ? *(int*)(fragSkeletonData + 32) : 0;
-		}
-
-		private static ulong GetEntitySkeletonData(int handle)
-		{				
-			ulong MemAddress = EntityAddressFunc(handle);
-
-			var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + 88));
-			ulong Addr2 = func2(MemAddress);
-			ulong Addr3;
-			if (Addr2 == 0)
-			{
-				Addr3 = *(ulong*)(MemAddress + 80);
-				if (Addr3 == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(ulong*)(Addr3 + 40);
-				}
-			}
-			else
-			{
-				Addr3 = *(ulong*)(Addr2 + 104);
-				if (Addr3 == 0 || *(ulong*)(Addr2 + 120) == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(ulong*)(Addr3 + 376);
-				}
-			}
-			if (Addr3 == 0)
-			{
-				return 0;
-			}
-
-			return Addr3;
-		}
-
-		public static IntPtr GetEntityBonePoseAddress(int handle, int boneIndex)
-		{
-			if ((boneIndex & 0x80000000) != 0)//boneIndex cant be negative
-				return IntPtr.Zero;
-
-			var fragSkeletonData = GetEntitySkeletonData(handle);
-
-			if (fragSkeletonData == 0) return IntPtr.Zero;
-
-			unsafe
-			{
-				if (boneIndex < *(int*)(fragSkeletonData + 32))// boneIndex < max bones?
-				{
-					return new IntPtr((long)(*(ulong*)(fragSkeletonData + 16) + ((uint)boneIndex * 0x40)));
-				}
-			}
-
-			return IntPtr.Zero;
-		}
-		public static IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex)
-		{
-			if ((boneIndex & 0x80000000) != 0)//boneIndex cant be negative
-				return IntPtr.Zero;
-
-			var fragSkeletonData = GetEntitySkeletonData(handle);
-
-			if (fragSkeletonData == 0) return IntPtr.Zero;
-
-			unsafe
-			{
-				if (boneIndex < *(int*)(fragSkeletonData + 32))// boneIndex < max bones?
-				{
-					return new IntPtr((long)(*(ulong*)(fragSkeletonData + 24) + ((uint)boneIndex * 0x40)));
-				}
-			}
-
-			return IntPtr.Zero;
-		}
-
-		public static IntPtr GetCameraAddress(int handle)
-		{
-			uint index = (uint)(handle >> 8);
-			ulong poolAddr = *CameraPoolAddress;
-			if (*(byte*)(index + *(long*)(poolAddr + 8)) == (byte)(handle & 0xFF))
-			{
-				return new IntPtr(*(long*)poolAddr + (index * *(uint*)(poolAddr + 20)));
-			}
-			return IntPtr.Zero;
-
-		}
-		public static IntPtr GetGameplayCameraAddress()
-		{
-			return new IntPtr((long)*_gamePlayCameraAddr);
-		}
-
 		public static int GetVehicleCount()
 		{
 			if (*VehiclePoolAddress != 0)
@@ -1266,7 +1094,7 @@ namespace SHVDN
 			int[] handles = new int[64];
 
 			ulong count = 0;
-			for (Checkpoint* item = *(Checkpoint**)(CheckpointBaseAddr() + 48); item != null && count < 64; item = item->next)
+			for (Checkpoint* item = *(Checkpoint**)(GetCheckpointBaseAddress() + 48); item != null && count < 64; item = item->next)
 			{
 				handles[count++] = item->handle;
 			}
@@ -1301,11 +1129,189 @@ namespace SHVDN
 			return task.handles.ToArray();
 		}
 
+		#endregion
+
+		#region -- Entity Addresses --
+
+		delegate ulong GetPtfxAddressFuncDelegate(int handle);
+		static GetPtfxAddressFuncDelegate GetPtfxAddressFunc;
+
+		public static IntPtr GetPtfxAddress(int handle)
+		{
+			return new IntPtr((long)GetPtfxAddressFunc(handle));
+		}
+
+		delegate ulong GetEntityAddressFuncDelegate(int handle);
+		static GetEntityAddressFuncDelegate GetEntityAddressFunc;
+
+		public static IntPtr GetEntityAddress(int handle)
+		{
+			return new IntPtr((long)GetEntityAddressFunc(handle));
+		}
+
+		delegate ulong GetPlayerAddressFuncDelegate(int handle);
+		static GetPlayerAddressFuncDelegate GetPlayerAddressFunc;
+
+		public static IntPtr GetPlayerAddress(int handle)
+		{
+			return new IntPtr((long)GetPlayerAddressFunc(handle));
+		}
+
+		delegate ulong GetCheckpointBaseAddressDelegate();
+		static GetCheckpointBaseAddressDelegate GetCheckpointBaseAddress;
+		delegate ulong GetCheckpointHandleAddressDelegate(ulong baseAddr, int handle);
+		static GetCheckpointHandleAddressDelegate GetCheckpointHandleAddress;
+
+		public static IntPtr GetCheckpointAddress(int handle)
+		{
+			var addr = GetCheckpointHandleAddress(GetCheckpointBaseAddress(), handle);
+			if (addr == 0) return IntPtr.Zero;
+			return new IntPtr((long)((ulong)(CheckpointPoolAddress) + 96 * ((ulong)*(int*)(addr + 16))));
+		}
+
+		#endregion
+
+		#region -- NaturalMotion Euphoria --
+
+		delegate byte SetNmBoolAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, [MarshalAs(UnmanagedType.I1)] bool value);
+		delegate byte SetNmIntAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, int value);
+		delegate byte SetNmFloatAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float value);
+		delegate byte SetNmVector3AddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float x, float y, float z);
+		delegate byte SetNmStringAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, IntPtr stringPtr);
+
+		delegate void SendMessageToPedDelegate(ulong pedNmAddress, IntPtr messagePtr, ulong messageAddress);
+		delegate void FreeMessageMemoryDelegate(ulong messageAddress);
+
+		delegate void ActionUlongDelegate(ulong T);
+		delegate Int32 FuncUlongIntDelegate(ulong T);
+		delegate ulong FuncUlongUlongDelegate(ulong T);
+		delegate ulong FuncUlongUlongIntUlongDelegate(ulong T1, ulong T2, int T3);
+
+		static ulong GiveNmMessageFuncAddress;
+		static ulong CreateNmMessageFuncAddress;
+		static SetNmIntAddressDelegate SetNmIntAddress;
+		static SetNmBoolAddressDelegate SetNmBoolAddress;
+		static SetNmFloatAddressDelegate SetNmFloatAddress;
+		static SetNmStringAddressDelegate SetNmStringAddress;
+		static SetNmVector3AddressDelegate SetNmVector3Address;
+
+		internal class EuphoriaMessageTask : IScriptTask
+		{
+			#region Fields
+			int targetHandle;
+			string message;
+			Dictionary<string, object> arguments;
+			#endregion
+
+			internal EuphoriaMessageTask(int target, string message, Dictionary<string, object> arguments)
+			{
+				targetHandle = target;
+				this.message = message;
+				this.arguments = arguments;
+			}
+
+			public void Run()
+			{
+				byte* NativeFunc = (byte*)NativeMemory.CreateNmMessageFuncAddress;
+				ulong MessageAddress = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(NativeFunc + 0x22) + NativeFunc + 0x26)))(4632);
+
+				if (MessageAddress == 0)
+					return;
+
+				GetDelegateForFunctionPointer<FuncUlongUlongIntUlongDelegate>(new IntPtr((long)((*(int*)(NativeFunc + 0x3C)) + NativeFunc + 0x40)))(MessageAddress, MessageAddress + 24, 64);
+
+				foreach (var arg in arguments)
+				{
+					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+
+					if (arg.Value is int)
+						NativeMemory.SetNmIntAddress(MessageAddress, name, (int)arg.Value);
+					if (arg.Value is bool)
+						NativeMemory.SetNmBoolAddress(MessageAddress, name, (bool)arg.Value);
+					if (arg.Value is float)
+						NativeMemory.SetNmFloatAddress(MessageAddress, name, (float)arg.Value);
+					if (arg.Value is string)
+						NativeMemory.SetNmStringAddress(MessageAddress, name, ScriptDomain.CurrentDomain.PinString((string)arg.Value));
+					if (arg.Value is float[])
+						NativeMemory.SetNmVector3Address(MessageAddress, name, ((float[])arg.Value)[0], ((float[])arg.Value)[1], ((float[])arg.Value)[2]);
+				}
+
+				byte* BaseFunc = (byte*)NativeMemory.GiveNmMessageFuncAddress;
+				byte* ByteAddr = (*(int*)(BaseFunc + 0xBC) + BaseFunc + 0xC0);
+				byte* UnkStrAddr = (*(int*)(BaseFunc + 0xCE) + BaseFunc + 0xD2);
+				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
+				byte* PedNmAddress;
+				bool v5 = false;
+				byte v7;
+				ulong v11;
+				ulong v12;
+
+				if (_PedAddress == null || *(ulong*)(_PedAddress + 48) == 0)
+					return;
+
+				PedNmAddress = (byte*)GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(ulong*)(*(ulong*)(_PedAddress) + 88))))((ulong)_PedAddress);
+
+				int MinHealthOffset = NativeMemory.GetGameVersion() < 26 /*v1_0_877_1_Steam*/ ? *(int*)(BaseFunc + 78) : *(int*)(BaseFunc + 157 + *(int*)(BaseFunc + 76));
+
+				if (*(ulong*)(_PedAddress + 48) == (ulong)PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
+				{
+					if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
+					{
+						ulong PedIntelligenceAddr = *(ulong*)(_PedAddress + *(int*)(BaseFunc + 147));
+
+						// check whether the ped is currently performing the 'CTaskNMScriptControl' task
+						if (*(short*)(GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xA2) + BaseFunc + 0xA6)))(*(ulong*)(PedIntelligenceAddr + 864)) + 52) == 401)
+						{
+							v5 = true;
+						}
+						else
+						{
+							v7 = *ByteAddr;
+							if (v7 != 0)
+							{
+								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xD3) + BaseFunc + 0xD7)))((ulong)UnkStrAddr);
+								v7 = *ByteAddr;
+							}
+							int count = *(int*)(PedIntelligenceAddr + 1064);
+							if (v7 != 0)
+							{
+								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xF0) + BaseFunc + 0xF4)))((ulong)UnkStrAddr);
+							}
+							for (int i = 0; i < count; i++)
+							{
+								v11 = *(ulong*)((byte*)PedIntelligenceAddr + 8 * ((i + *(int*)(PedIntelligenceAddr + 1060) + 1) % 16) + 928);
+								if (v11 != 0)
+								{
+									if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)v11 + 24)))(v11) == 132)
+									{
+										v12 = *(ulong*)(v11 + 40);
+										if (v12 != 0)
+										{
+											if (*(short*)(v12 + 52) == 401)
+												v5 = true;
+										}
+									}
+								}
+							}
+						}
+						if (v5 && GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
+						{
+							IntPtr messagePtr = ScriptDomain.CurrentDomain.PinString(message);
+							GetDelegateForFunctionPointer<SendMessageToPedDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)))((ulong)PedNmAddress, messagePtr, MessageAddress);
+						}
+						GetDelegateForFunctionPointer<FreeMessageMemoryDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)))(MessageAddress);
+					}
+				}
+			}
+		}
+
 		public static void SendEuphoriaMessage(int targetHandle, string message, Dictionary<string, object> arguments)
 		{
 			var task = new EuphoriaMessageTask(targetHandle, message, arguments);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
+
+		#endregion
 	}
 }
