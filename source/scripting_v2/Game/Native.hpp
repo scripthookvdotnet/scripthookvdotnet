@@ -45,13 +45,13 @@ namespace GTA
 			inline InputArgument(unsigned int value) : InputArgument(static_cast<System::UInt64>(value)) { }
 			inline InputArgument(float value)
 			{
-				unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(value);
+				unsigned int valueUInt32 = *reinterpret_cast<System::UInt32*>(&value);
 				_data = valueUInt32;
 			}
 			inline InputArgument(double value) 
 			{
 				float valueFloat = static_cast<float>(value);
-				unsigned int valueUInt32 = reinterpret_cast<System::UInt32&>(valueFloat);
+				unsigned int valueUInt32 = *reinterpret_cast<System::UInt32*>(&valueFloat);
 				_data = valueUInt32;
 			}
 			inline InputArgument(System::String ^value) : InputArgument(static_cast<System::Object ^>(value)) { }
@@ -208,7 +208,7 @@ namespace GTA
 		protected:
 			!OutputArgument();
 
-			unsigned char *_storage;
+			System::IntPtr _storage;
 		};
 
 		public ref class Function abstract sealed

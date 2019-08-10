@@ -26,29 +26,18 @@
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.dll</TargetExt>
     <TargetName>ScriptHookVDotNet2</TargetName>
-  </PropertyGroup>
-  <!-- Release configuration settings -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <UseDebugLibraries>false</UseDebugLibraries>
-    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <!-- Global compilation settings -->
-  <ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalUsingDirectories>$(OutDir);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Game;$(ProjectDir)Math;$(ProjectDir)NaturalMotion;$(ProjectDir)UI;$(ProjectDir)World;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <!-- Release compilation settings -->
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)' != ''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -106,7 +95,7 @@
     <ClInclude Include="NaturalMotion\EuphoriaBase.hpp" />
     <ClInclude Include="NaturalMotion\EuphoriaHelpers.hpp" />
     <ClInclude Include="Game\Game.hpp" />
-    <ClInclude Include="Interface.hpp" />
+    <ClInclude Include="Game\Interface.hpp" />
     <ClInclude Include="Math\Matrix.hpp" />
     <ClInclude Include="UI\Menu.hpp" />
     <ClInclude Include="World\Model.hpp" />

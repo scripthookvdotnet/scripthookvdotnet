@@ -27,8 +27,6 @@
 #include "Vector3.hpp"
 #include "Vehicle.hpp"
 
-#include <string.h>
-
 #using "ScriptHookVDotNet.asi"
 
 using namespace System;
@@ -105,7 +103,10 @@ namespace GTA
 				{
 					if (*value != 0)
 					{
-						const auto size = static_cast<int>(strlen(reinterpret_cast<const char *>(*value)));
+						int size = 0;
+						for (const char *c = reinterpret_cast<const char *>(*value); *c; ++c)
+							++size;
+
 						const auto bytes = gcnew array<Byte>(size);
 
 						Runtime::InteropServices::Marshal::Copy(static_cast<IntPtr>(static_cast<Int64>(*value)), bytes, 0, size);
@@ -264,12 +265,12 @@ namespace GTA
 		InputArgument::InputArgument(Object ^value) : _data(ObjectToNative(value))
 		{
 		}
-		OutputArgument::OutputArgument() : _storage(new unsigned char[24]()), InputArgument(IntPtr(_storage))
+		OutputArgument::OutputArgument() : _storage(Marshal::AllocCoTaskMem(24)), InputArgument(_storage)
 		{
 		}
 		OutputArgument::OutputArgument(Object ^value) : OutputArgument()
 		{
-			*reinterpret_cast<UInt64 *>(_storage) = ObjectToNative(value);
+			*static_cast<UInt64 *>(_storage.ToPointer()) = ObjectToNative(value);
 		}
 		OutputArgument::~OutputArgument()
 		{
@@ -277,7 +278,7 @@ namespace GTA
 		}
 		OutputArgument::!OutputArgument()
 		{
-			delete[] _storage;
+			Marshal::FreeCoTaskMem(_storage);
 		}
 
 		generic <typename T>

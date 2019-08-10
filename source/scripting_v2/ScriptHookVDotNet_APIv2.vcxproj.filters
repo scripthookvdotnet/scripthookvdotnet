@@ -221,6 +221,8 @@
     <ClInclude Include="Game\Settings.hpp">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Interface.hpp" />
+    <ClInclude Include="Game\Interface.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
