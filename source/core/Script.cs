@@ -93,10 +93,15 @@ namespace SHVDN
 						else
 							KeyDown?.Invoke(this, ev.Item2);
 					}
+					catch (ThreadAbortException)
+					{
+						// Stop main loop immediately on a thread abort exception
+						return;
+					}
 					catch (Exception ex)
 					{
 						ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
-						break;
+						break; // Break out of key event loop, but continue to run script
 					}
 				}
 
@@ -104,19 +109,22 @@ namespace SHVDN
 				{
 					Tick?.Invoke(this, EventArgs.Empty);
 				}
+				catch (ThreadAbortException)
+				{
+					// Stop main loop immediately on a thread abort exception
+					return;
+				}
 				catch (Exception ex)
 				{
 					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-					break;
+
+					// An exception during tick is fatal, so abort the script and stop main loop
+					Abort(); return;
 				}
 
 				// Yield execution to next tick
 				Wait(Interval);
 			}
-
-			// Abort in case the script encountered an unhandled exception above
-			if (IsRunning)
-				Abort();
 		}
 
 		/// <summary>
@@ -138,6 +146,10 @@ namespace SHVDN
 		/// </summary>
 		public void Abort()
 		{
+			IsRunning = false;
+
+			waitEvent.Release();
+
 			try
 			{
 				Aborted?.Invoke(this, EventArgs.Empty);
@@ -146,10 +158,6 @@ namespace SHVDN
 			{
 				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 			}
-
-			IsRunning = false;
-
-			waitEvent.Release();
 
 			if (thread != null)
 			{

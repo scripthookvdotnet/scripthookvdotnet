@@ -542,10 +542,21 @@ namespace SHVDN
 
 				executingScript = script;
 
-				// Resume script thread and execute any incoming tasks from it
-				bool finishedInTime = false;
-				while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
-					taskQueue.Dequeue().Run();
+				bool finishedInTime = true;
+
+				try
+				{
+					// Resume script thread and execute any incoming tasks from it
+					while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
+						taskQueue.Dequeue().Run();
+				}
+				catch (Exception ex)
+				{
+					HandleUnhandledException(script, new UnhandledExceptionEventArgs(ex, true));
+
+					// Stop script in case of an unhandled exception during task execution
+					script.Abort();
+				}
 
 				executingScript = null;
 
