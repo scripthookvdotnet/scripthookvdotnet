@@ -92,7 +92,14 @@ namespace SHVDN
 			{
 				Log.Message(Log.Level.Debug, "Loading API from ", apiPath, " ...");
 
-				scriptApis.Add(Assembly.LoadFrom(apiPath));
+				try
+				{
+					scriptApis.Add(Assembly.LoadFrom(apiPath));
+				}
+				catch (Exception ex)
+				{
+					Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(apiPath), ": ", ex.ToString());
+				}
 			}
 		}
 
@@ -262,7 +269,7 @@ namespace SHVDN
 			}
 			catch (Exception ex)
 			{
-				Log.Message(Log.Level.Error, "Failed to load assembly ", Path.GetFileName(filename), ":", Environment.NewLine, ex.ToString());
+				Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(filename), ": ", ex.ToString());
 				return false;
 			}
 
@@ -706,7 +713,7 @@ namespace SHVDN
 
 				// Write a warning message if no compatible scripting API version was found
 				if (compatibleApi == null)
-					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3), " used in ", assemblyName.Name);
+					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3), " used in ", assemblyName.Name, ".");
 
 				return compatibleApi;
 			}
