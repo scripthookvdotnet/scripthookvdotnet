@@ -171,6 +171,7 @@ namespace SHVDN
 		public void Clear()
 		{
 			lineHistory.Clear();
+			currentPage = 1;
 		}
 
 		/// <summary>
