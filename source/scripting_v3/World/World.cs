@@ -295,7 +295,7 @@ namespace GTA
 		{
 			set
 			{
-				Function.Call(Hash._SET_BLACKOUT, value);
+				Function.Call(Hash.SET_ARTIFICIAL_LIGHTS_STATE, value);
 			}
 		}
 		/// <summary>

@@ -101,7 +101,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='NativeGen|x64'">
     <PreBuildEvent>
-      <Command>tools\NativeGen.exe source\core\NativeHashes.cs</Command>
+      <Command>tools\NativeGen.exe source\scripting_v3\Game\NativeHashes.cs</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

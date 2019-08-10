@@ -62,7 +62,7 @@ namespace GTA
 			{
 				return false;
 			}
-			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
+			Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y,
 				rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
 		}
@@ -83,7 +83,7 @@ namespace GTA
 			{
 				return false;
 			}
-			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
+			Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
 				rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
@@ -107,7 +107,7 @@ namespace GTA
 			{
 				return false;
 			}
-			Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
+			Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X,
 				rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
 				invertAxis.HasFlag(InvertAxis.Z));
@@ -246,7 +246,7 @@ namespace GTA
 			Request();
 			if (IsLoaded)
 			{
-				Function.Call(Hash._USE_PARTICLE_FX_ASSET_NEXT_CALL, _assetName);
+				Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
 				return true;
 			}
 			return false;
@@ -471,7 +471,7 @@ namespace GTA
 			set
 			{
 				_range = value;
-				Function.Call(Hash._SET_PARTICLE_FX_LOOPED_RANGE, Handle, value);
+				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_FAR_CLIP_DIST, Handle, value);
 			}
 		}
 

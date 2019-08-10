@@ -277,7 +277,7 @@ namespace GTA.UI
 		/// <returns><c>true</c> if the screen effect is active; otherwise, <c>false</c>.</returns>
 		public static bool IsEffectActive(ScreenEffect effectName)
 		{
-			return Function.Call<bool>(Hash._GET_SCREEN_EFFECT_IS_ACTIVE, _effects[(int)effectName]);
+			return Function.Call<bool>(Hash.ANIMPOSTFX_IS_RUNNING, _effects[(int)effectName]);
 		}
 
 		/// <summary>
@@ -288,7 +288,7 @@ namespace GTA.UI
 		/// <param name="looped">If <c>true</c> the effect won't stop until <see cref="Screen.StopEffect(ScreenEffect)"/> is called.</param>
 		public static void StartEffect(ScreenEffect effectName, int duration = 0, bool looped = false)
 		{
-			Function.Call(Hash._START_SCREEN_EFFECT, _effects[(int)effectName], duration, looped);
+			Function.Call(Hash.ANIMPOSTFX_PLAY, _effects[(int)effectName], duration, looped);
 		}
 		/// <summary>
 		/// Stops applying the specified effect to the screen.
@@ -296,14 +296,14 @@ namespace GTA.UI
 		/// <param name="effectName">The <see cref="ScreenEffect"/> to stop playing.</param>
 		public static void StopEffect(ScreenEffect effectName)
 		{
-			Function.Call(Hash._STOP_SCREEN_EFFECT, _effects[(int)effectName]);
+			Function.Call(Hash.ANIMPOSTFX_STOP, _effects[(int)effectName]);
 		}
 		/// <summary>
 		/// Stops all currently running effects.
 		/// </summary>
 		public static void StopEffects()
 		{
-			Function.Call(Hash._STOP_ALL_SCREEN_EFFECTS);
+			Function.Call(Hash.ANIMPOSTFX_STOP_ALL);
 		}
 
 		// Text

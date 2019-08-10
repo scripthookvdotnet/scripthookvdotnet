@@ -2362,7 +2362,7 @@ namespace GTA
 		{
 			if (Model.IsHelicopter && mult >= 0 && mult <= 1)
 			{
-				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT, Handle, mult);
+				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT_HEALTH, Handle, mult);
 			}
 		}
 

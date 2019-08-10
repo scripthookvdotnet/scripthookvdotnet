@@ -29,7 +29,6 @@ Global
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.Build.0 = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Run NativeGen|x64.ActiveCfg = Release|x64
-		{019193A7-50C0-444A-84CA-777595E702CD}.Run NativeGen|x64.Build.0 = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release + Examples|x64.ActiveCfg = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release + Examples|x64.Build.0 = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.ActiveCfg = Release|x64

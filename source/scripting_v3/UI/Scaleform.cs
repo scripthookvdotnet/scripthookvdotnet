@@ -80,24 +80,24 @@ namespace GTA
 		public void CallFunction(string function, params object[] arguments)
 		{
 			CallFunctionHead(function, arguments);
-			Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
+			Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
 		}
 
 		public int CallFunctionReturn(string function, params object[] arguments)
 		{
 			CallFunctionHead(function, arguments);
-			return Function.Call<int>(Hash._POP_SCALEFORM_MOVIE_FUNCTION);
+			return Function.Call<int>(Hash._END_SCALEFORM_MOVIE_METHOD_RETURN);
 		}
 
 		internal void CallFunctionHead(string function, params object[] arguments)
 		{
-			Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, Handle, function);
+			Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, Handle, function);
 
 			foreach (var argument in arguments)
 			{
 				if (argument is int)
 				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, (int)argument);
+					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT, (int)argument);
 				}
 				else if (argument is string)
 				{
@@ -113,19 +113,19 @@ namespace GTA
 				}
 				else if (argument is float)
 				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, (float)argument);
+					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_FLOAT, (float)argument);
 				}
 				else if (argument is double)
 				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, (float)(double)argument);
+					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_FLOAT, (float)(double)argument);
 				}
 				else if (argument is bool)
 				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, (bool)argument);
+					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_BOOL, (bool)argument);
 				}
 				else if (argument is ScaleformArgumentTXD)
 				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, ((ScaleformArgumentTXD)argument)._txd);
+					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_STRING, ((ScaleformArgumentTXD)argument)._txd);
 				}
 				else
 				{

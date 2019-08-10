@@ -40,15 +40,15 @@ namespace GTA.UI
 
 			if (loadingText == null)
 			{
-				Function.Call(Hash._SET_LOADING_PROMPT_TEXT_ENTRY, SHVDN.NativeMemory.NullString);
+				Function.Call(Hash._BEGIN_TEXT_COMMAND_BUSY_STRING, SHVDN.NativeMemory.NullString);
 			}
 			else
 			{
-				Function.Call(Hash._SET_LOADING_PROMPT_TEXT_ENTRY, SHVDN.NativeMemory.String);
+				Function.Call(Hash._BEGIN_TEXT_COMMAND_BUSY_STRING, SHVDN.NativeMemory.String);
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
 			}
 
-			Function.Call(Hash._SHOW_LOADING_PROMPT, spinnerType);
+			Function.Call(Hash._END_TEXT_COMMAND_BUSY_STRING, spinnerType);
 		}
 
 		/// <summary>
