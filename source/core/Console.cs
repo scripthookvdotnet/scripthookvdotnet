@@ -65,7 +65,7 @@ namespace SHVDN
 		/// <summary>
 		/// Gets or sets the key used to open or close the console.
 		/// </summary>
-		public Keys ToggleKey { get; set; } = Keys.F3;
+		public Keys ToggleKey { get; set; } = Keys.F1;
 
 		/// <summary>
 		/// Register the specified method as a console command.
