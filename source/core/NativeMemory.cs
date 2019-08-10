@@ -1212,6 +1212,8 @@ namespace SHVDN
 
 			public void Run()
 			{
+				throw new NotImplementedException("Euphoria is not currently supported on latest game versions.");
+
 				byte* NativeFunc = (byte*)NativeMemory.CreateNmMessageFuncAddress;
 				ulong MessageAddress = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(NativeFunc + 0x22) + NativeFunc + 0x26)))(4632);
 
