@@ -604,7 +604,9 @@ namespace SHVDN
 
 		public Script LookupScript(object scriptInstance)
 		{
-			return runningScripts.Where(x => x.ScriptInstance == scriptInstance).FirstOrDefault();
+			// Return matching script in running script list if one is found
+			// Otherwise return the executing script, since during constructor execution the running script list was not yet updated
+			return runningScripts.Where(x => x.ScriptInstance == scriptInstance).FirstOrDefault() ?? executingScript;
 		}
 		public string LookupScriptFilename(Type scriptType)
 		{
