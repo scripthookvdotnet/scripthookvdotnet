@@ -302,7 +302,10 @@ namespace SHVDN
 
 					var key = BuildCompareKey(type, string.Empty);
 					if (scriptTypes.ContainsKey(key))
-						continue; // Skip types that were already added previously
+					{
+						Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptTypes[key].Item1), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
+						continue; // Skip types that were already added previously are ignored
+					}
 
 					scriptTypes.Add(key, new Tuple<string, Type>(filename, type));
 
