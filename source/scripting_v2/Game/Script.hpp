@@ -63,17 +63,11 @@ namespace GTA
 			void remove(System::EventHandler ^value);
 		}
 
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys ActivateKey = System::Windows::Forms::Keys::NumPad5;
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys BackKey = System::Windows::Forms::Keys::NumPad0;
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys LeftKey = System::Windows::Forms::Keys::NumPad4;
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys RightKey = System::Windows::Forms::Keys::NumPad6;
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys UpKey = System::Windows::Forms::Keys::NumPad8;
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 		System::Windows::Forms::Keys DownKey = System::Windows::Forms::Keys::NumPad2;
 
 		property System::String ^Name
@@ -90,7 +84,7 @@ namespace GTA
 				return _filename;
 			}
 		}
-		[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+
 		property Viewport ^View
 		{
 			Viewport ^get();

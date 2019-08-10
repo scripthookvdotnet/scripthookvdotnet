@@ -107,7 +107,8 @@ namespace GTA
 		property System::Drawing::Point TextOffset;
 		property System::String ^Caption;
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class Menu : MenuBase
 	{
 	public:
@@ -223,7 +224,7 @@ namespace GTA
 
 		System::String ^mFooterDescription = "footer description";
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class MessageBox : MenuBase
 	{
 	public:
@@ -288,7 +289,8 @@ namespace GTA
 
 		property System::String ^Description;
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class MenuButton : IMenuItem
 	{
 	public:
@@ -330,7 +332,7 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class MenuToggle : IMenuItem
 	{
 	public:
@@ -375,7 +377,7 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class MenuNumericScroller : IMenuItem
 	{
 	public:
@@ -431,7 +433,7 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class MenuEnumScroller : IMenuItem
 	{
 	public:
@@ -481,7 +483,7 @@ namespace GTA
 		System::Drawing::Point mOrigin = System::Drawing::Point();
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
+	[System::ObsoleteAttribute("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public ref class MenuLabel : IMenuItem
 	{
 	public:
@@ -526,7 +528,6 @@ namespace GTA
 		System::Drawing::Size mSize = System::Drawing::Size(100, 100);
 	};
 
-	[System::ObsoleteAttribute("The built-in menu implementation is obsolete and will be removed soon. Please consider using external alternatives instead.")]
 	public ref class Viewport sealed
 	{
 	public:
