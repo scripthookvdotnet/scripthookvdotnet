@@ -385,7 +385,7 @@ namespace GTA
 		/// <returns><c>true</c> if the cheat was just entered; otherwise, <c>false</c></returns>
 		public static bool WasCheatStringJustEntered(string cheat)
 		{
-			return Function.Call<bool>((Hash)0x557E43C447E700A8, GenerateHash(cheat));
+			return Function.Call<bool>(Hash._HAS_CHEAT_STRING_JUST_BEEN_ENTERED, GenerateHash(cheat));
 		}
 		/// <summary>
 		/// Gets whether a specific sequence of <see cref="Button"/>s has been pressed.

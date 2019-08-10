@@ -287,19 +287,16 @@ namespace SHVDN
 				foreach (string line in lines)
 					lineHistory.Add(line);
 
-			// Hack so the input gets blocked long enough
-			if (lastClosed > now)
+			if (!IsOpen)
 			{
-				if (IsInputDisabled())
-					SetControlsEnabled(false);
-				return;
+				// Hack so the input gets blocked long enough
+				if (lastClosed > now)
+					DisableControlsThisFrame();
+				return; // Nothing more to do here when the console is not open
 			}
 
-			if (!IsOpen)
-				return; // Nothing more to do here when the console is not open
-
-			if (IsInputDisabled())
-				SetControlsEnabled(false);
+			// Disable controls while the console is open
+			DisableControlsThisFrame();
 
 			// Draw background
 			DrawRect(0, 0, CONSOLE_WIDTH, CONSOLE_HEIGHT, BackgroundColor);
@@ -344,7 +341,7 @@ namespace SHVDN
 			{
 				// Toggle open state
 				IsOpen = !IsOpen;
-				SetControlsEnabled(false);
+				DisableControlsThisFrame();
 				if (!IsOpen)
 					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 				return; // The toggle key does not need any additional handling
@@ -404,7 +401,7 @@ namespace SHVDN
 					break;
 				case Keys.Escape:
 					IsOpen = false;
-					SetControlsEnabled(false);
+					DisableControlsThisFrame();
 					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 					break;
 				case Keys.B:
@@ -633,16 +630,13 @@ namespace SHVDN
 			NativeFunc.Invoke(0xCD015E5BB0D96A57ul /*END_TEXT_COMMAND_DISPLAY_TEXT*/, *(ulong*)&xNew, *(ulong*)&yNew);
 		}
 
-		static unsafe bool IsInputDisabled()
-		{
-			return *NativeFunc.Invoke(0xA571D46727E2B718ul /*_IS_INPUT_DISABLED*/, 2ul) != 0;
-		}
-		static unsafe void SetControlsEnabled(bool enabled)
+		static unsafe void DisableControlsThisFrame()
 		{
 			NativeFunc.Invoke(0x5F4B6931816E599Bul /*DISABLE_ALL_CONTROL_ACTIONS*/, 0ul);
 
+			// LookLeftRight .. LookRightOnly
 			for (int i = 1; i <= 6; i++)
-				NativeFunc.Invoke(0x351220255D64C155ul /*ENABLE_CONTROL_ACTION*/, 0ul, (ulong)i, enabled ? 1ul : 0ul);
+				NativeFunc.Invoke(0x351220255D64C155ul /*ENABLE_CONTROL_ACTION*/, 0ul, (ulong)i, 0ul);
 		}
 
 		static int GetUtf8CodePointSize(string str, int index)
@@ -714,6 +708,7 @@ namespace SHVDN
 			NativeFunc.Invoke(0x6C188BE134E074AAul /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
 				(ulong)ScriptDomain.CurrentDomain.PinString(str.Substring(startPos, str.Length - startPos)).ToInt64());
 		}
+
 		static unsafe float GetTextLength(string text)
 		{
 			NativeFunc.Invoke(0x54CE8AC98E120CABul /*_BEGIN_TEXT_COMMAND_WIDTH*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
