@@ -47,8 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
-      <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
       <Name>ScriptHookVDotNet</Name>
+      <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
