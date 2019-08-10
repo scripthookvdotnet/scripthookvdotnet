@@ -593,7 +593,9 @@ namespace SHVDN
 				foreach (var assembly in ScriptDomain.CurrentDomain.LoadedAssemblies)
 					compilerOptions.ReferencedAssemblies.Add(assembly.Location);
 
-				const string template = "using System; using System.Linq; using GTA; using GTA.Native; public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ {0}; return null; }} }}";
+				const string template =
+					"using System; using System.Linq; using System.Drawing; using System.Windows.Forms; using GTA; using GTA.Math; using GTA.Native; " +
+					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ {0}; return null; }} }}";
 
 				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
