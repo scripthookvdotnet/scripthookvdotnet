@@ -66,10 +66,6 @@ namespace SHVDN
 		/// </summary>
 		public Script[] RunningScripts => runningScripts.ToArray();
 		/// <summary>
-		/// Gets the list of script assemblies loaded in this script domain.
-		/// </summary>
-		public Assembly[] LoadedAssemblies => scriptTypes.Values.Select(x => x.Item2.Assembly).Distinct().ToArray();
-		/// <summary>
 		/// Gets the currently executing script or <c>null</c> if there is none.
 		/// </summary>
 		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;

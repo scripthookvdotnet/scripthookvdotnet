@@ -590,12 +590,14 @@ namespace SHVDN
 				compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
-				foreach (var assembly in ScriptDomain.CurrentDomain.LoadedAssemblies)
-					compilerOptions.ReferencedAssemblies.Add(assembly.Location);
+				foreach (var script in ScriptDomain.CurrentDomain.RunningScripts)
+					if (System.IO.Path.GetExtension(script.Filename) == ".dll")
+						compilerOptions.ReferencedAssemblies.Add(script.Filename);
 
 				const string template =
 					"using System; using System.Linq; using System.Drawing; using System.Windows.Forms; using GTA; using GTA.Math; using GTA.Native; " +
-					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ {0}; return null; }} }}";
+					// Define some shortcut variables to simplify commands
+					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.Player.Character; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
 				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
