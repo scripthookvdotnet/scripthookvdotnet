@@ -289,25 +289,25 @@ namespace SHVDN
 			try
 			{
 				// Find all script types in the assembly
-				foreach (var type in assembly.GetTypes().Where(x => x.BaseType != null && x.BaseType.FullName == "GTA.Script"))
+				foreach (var type in assembly.GetTypes().Where(x => IsSubclassOf(x, "GTA.Script")))
 				{
 					count++;
 
 					// This function builds a composite key of all dependencies of a script
-					Func<Type, string, string> BuildCompareKey = null;
-					BuildCompareKey = (a, b) => {
+					Func<Type, string, string> BuildComparisonString = null;
+					BuildComparisonString = (a, b) => {
 						b = a.FullName + "%%" + b;
 						foreach (var attribute in a.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.RequireScript"))
 						{
 							var dependency = attribute.ConstructorArguments[0].Value as Type;
 							// Ignore circular dependencies
 							if (dependency != null && !b.Contains("%%" + dependency.FullName))
-								b = BuildCompareKey(dependency, b);
+								b = BuildComparisonString(dependency, b);
 						}
 						return b;
 					};
 
-					var key = BuildCompareKey(type, string.Empty);
+					var key = BuildComparisonString(type, string.Empty);
 					if (scriptTypes.ContainsKey(key))
 					{
 						Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptTypes[key].Item1), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
@@ -638,6 +638,14 @@ namespace SHVDN
 		{
 			toSignal.Release();
 			return toWaitOn.Wait(timeout);
+		}
+
+		static bool IsSubclassOf(Type type, string baseTypeName)
+		{
+			for (Type t = type.BaseType; t != null; t = t.BaseType)
+				if (t.FullName == baseTypeName)
+					return true;
+			return false;
 		}
 
 		static bool IsManagedAssembly(string filename)
