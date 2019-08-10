@@ -56,8 +56,8 @@ namespace GTA
 		/// </summary>
 		public event EventHandler Tick
 		{
-			add { SHVDN.ScriptDomain.ExecutingScript.Tick += value; }
-			remove { SHVDN.ScriptDomain.ExecutingScript.Tick -= value; }
+			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Tick += value; }
+			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Tick -= value; }
 		}
 		/// <summary>
 		/// An event that is raised when a key is lifted.
@@ -65,8 +65,8 @@ namespace GTA
 		/// </summary>
 		public event WinForms.KeyEventHandler KeyUp
 		{
-			add { SHVDN.ScriptDomain.ExecutingScript.KeyUp += value; }
-			remove { SHVDN.ScriptDomain.ExecutingScript.KeyUp -= value; }
+			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyUp += value; }
+			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyUp -= value; }
 		}
 		/// <summary>
 		/// An event that is raised when a key is first pressed.
@@ -74,8 +74,8 @@ namespace GTA
 		/// </summary>
 		public event WinForms.KeyEventHandler KeyDown
 		{
-			add { SHVDN.ScriptDomain.ExecutingScript.KeyDown += value; }
-			remove { SHVDN.ScriptDomain.ExecutingScript.KeyDown -= value; }
+			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyDown += value; }
+			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyDown -= value; }
 		}
 		/// <summary>
 		/// An event that is raised when this <see cref="Script"/> gets aborted for any reason.
@@ -83,8 +83,8 @@ namespace GTA
 		/// </summary>
 		public event EventHandler Aborted
 		{
-			add { SHVDN.ScriptDomain.ExecutingScript.Aborted += value; }
-			remove { SHVDN.ScriptDomain.ExecutingScript.Aborted -= value; }
+			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Aborted += value; }
+			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Aborted -= value; }
 		}
 
 		/// <summary>
@@ -127,11 +127,11 @@ namespace GTA
 		/// </summary>
 		protected int Interval
 		{
-			get { return SHVDN.ScriptDomain.ExecutingScript.Interval; }
+			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval; }
 			set {
 				if (value < 0)
 					value = 0;
-				SHVDN.ScriptDomain.ExecutingScript.Interval = value;
+				SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval = value;
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace GTA
 		/// </summary>
 		public void Abort()
 		{
-			SHVDN.ScriptDomain.CurrentDomain.AbortScript(this);
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Abort();
 		}
 
 		/// <summary>

@@ -468,14 +468,6 @@ namespace SHVDN
 			runningScripts.Clear();
 		}
 		/// <summary>
-		/// Aborts a single running script.
-		/// </summary>
-		/// <param name="script">The script instance to abort.</param>
-		public void AbortScript(object script)
-		{
-			runningScripts.Single(x => x.ScriptInstance == script).Abort();
-		}
-		/// <summary>
 		/// Aborts all running scripts from the specified file.
 		/// </summary>
 		/// <param name="filename"></param>
@@ -610,6 +602,10 @@ namespace SHVDN
 			}
 		}
 
+		public Script LookupScript(object scriptInstance)
+		{
+			return runningScripts.Where(x => x.ScriptInstance == scriptInstance).FirstOrDefault();
+		}
 		public string LookupScriptFilename(Type scriptType)
 		{
 			return scriptTypes.Values.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;

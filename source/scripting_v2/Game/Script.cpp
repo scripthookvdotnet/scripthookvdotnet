@@ -62,16 +62,18 @@ namespace GTA
 	}
 	int Script::Interval::get()
 	{
-		return SHVDN::ScriptDomain::ExecutingScript->Interval;
+		return SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Interval;
 	}
 	void Script::Interval::set(int value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->Interval = value;
+		if (value < 0)
+			value = 0;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Interval = value;
 	}
 
 	void Script::Abort()
 	{
-		SHVDN::ScriptDomain::CurrentDomain->AbortScript(this);
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Abort();
 	}
 	void Script::Wait(int ms)
 	{
@@ -103,37 +105,37 @@ namespace GTA
 
 	void Script::Tick::add(System::EventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->Tick += value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Tick += value;
 	}
 	void Script::Tick::remove(System::EventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->Tick -= value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Tick -= value;
 	}
 
 	void Script::KeyUp::add(System::Windows::Forms::KeyEventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->KeyUp += value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->KeyUp += value;
 	}
 	void Script::KeyUp::remove(System::Windows::Forms::KeyEventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->KeyUp -= value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->KeyUp -= value;
 	}
 
 	void Script::KeyDown::add(System::Windows::Forms::KeyEventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->KeyDown += value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->KeyDown += value;
 	}
 	void Script::KeyDown::remove(System::Windows::Forms::KeyEventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->KeyDown -= value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->KeyDown -= value;
 	}
 
 	void Script::Aborted::add(System::EventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->Aborted += value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Aborted += value;
 	}
 	void Script::Aborted::remove(System::EventHandler ^value)
 	{
-		SHVDN::ScriptDomain::ExecutingScript->Aborted -= value;
+		SHVDN::ScriptDomain::CurrentDomain->LookupScript(this)->Aborted -= value;
 	}
 }
