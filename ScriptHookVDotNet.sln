@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 15.0.26228.04
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.csproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv3", "source\scripting_v3\ScriptHookVDotNet_APIv3.csproj", "{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}"
 EndProject

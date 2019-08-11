@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <ProjectGuid>{019193A7-50C0-444A-84CA-777595E702CD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GTA</RootNamespace>
+    <AssemblyName>ScriptHookVDotNet2</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>..\..\bin\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
+    <DocumentationFile>..\..\bin\ScriptHookVDotNet2.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+    <NoWarn>1591</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\bin\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
+    <DocumentationFile>..\..\bin\ScriptHookVDotNet2.xml</DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <NoWarn>1591</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
+      <Name>ScriptHookVDotNet</Name>
+      <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GTA.NaturalMotion\Euphoria.cs" />
+    <Compile Include="GTA.NaturalMotion\EuphoriaBase.cs" />
+    <Compile Include="GTA.NaturalMotion\EuphoriaHelpers.cs" />
+    <Compile Include="GTA\AnimationFlags.cs" />
+    <Compile Include="GTA\AudioFlag.cs" />
+    <Compile Include="GTA\BlipColor.cs" />
+    <Compile Include="GTA\BlipSprite.cs" />
+    <Compile Include="GTA\Bone.cs" />
+    <Compile Include="GTA\CargobobHook.cs" />
+    <Compile Include="GTA\DlcWeaponComponentData.cs" />
+    <Compile Include="GTA\DlcWeaponData.cs" />
+    <Compile Include="GTA\DrivingStyle.cs" />
+    <Compile Include="GTA\ExplosionType.cs" />
+    <Compile Include="GTA\FiringPattern.cs" />
+    <Compile Include="GTA\Font.cs" />
+    <Compile Include="GTA\FormationType.cs" />
+    <Compile Include="GTA\GameplayCamera.cs" />
+    <Compile Include="GTA.Native\WeaponComponent.cs" />
+    <Compile Include="GTA\Audio.cs" />
+    <Compile Include="GTA\CameraShake.cs" />
+    <Compile Include="GTA\Control.cs" />
+    <Compile Include="GTA\ForceType.cs" />
+    <Compile Include="GTA\Game.cs" />
+    <Compile Include="GTA.Native\Native.cs" />
+    <Compile Include="GTA.Native\NativeHashes.cs" />
+    <Compile Include="GTA\GameVersion.cs" />
+    <Compile Include="GTA\Gender.cs" />
+    <Compile Include="GTA\Global.cs" />
+    <Compile Include="GTA\GlobalCollection.cs" />
+    <Compile Include="GTA\HelmetType.cs" />
+    <Compile Include="GTA\HudComponent.cs" />
+    <Compile Include="GTA\IMenuItem.cs" />
+    <Compile Include="GTA\InputMode.cs" />
+    <Compile Include="GTA\IntersectOptions.cs" />
+    <Compile Include="GTA\ISpatial.cs" />
+    <Compile Include="GTA\Language.cs" />
+    <Compile Include="GTA\LeaveVehicleFlags.cs" />
+    <Compile Include="GTA\MarkerType.cs" />
+    <Compile Include="GTA\MenuBase.cs" />
+    <Compile Include="GTA\MenuButton.cs" />
+    <Compile Include="GTA\MenuEnumScroller.cs" />
+    <Compile Include="GTA\MenuItemDoubleValueArgs.cs" />
+    <Compile Include="GTA\MenuItemIndexArgs.cs" />
+    <Compile Include="GTA\MenuLabel.cs" />
+    <Compile Include="GTA\MenuNumericScroller.cs" />
+    <Compile Include="GTA\MenuToggle.cs" />
+    <Compile Include="GTA\MessageBox.cs" />
+    <Compile Include="GTA\Notification.cs" />
+    <Compile Include="GTA\NumberPlateMounting.cs" />
+    <Compile Include="GTA\NumberPlateType.cs" />
+    <Compile Include="GTA\ParachuteTint.cs" />
+    <Compile Include="GTA\PedGroup.cs" />
+    <Compile Include="GTA\PickupType.cs" />
+    <Compile Include="GTA\RadioStation.cs" />
+    <Compile Include="GTA\Relationship.cs" />
+    <Compile Include="GTA\RequireScript.cs" />
+    <Compile Include="GTA\RopeType.cs" />
+    <Compile Include="GTA\ScaleformArgumentTXD.cs" />
+    <Compile Include="GTA\Script.cs" />
+    <Compile Include="GTA\IHandleable.cs" />
+    <Compile Include="GTA.Math\Matrix.cs" />
+    <Compile Include="GTA.Math\Quaternion.cs" />
+    <Compile Include="GTA.Math\Vector2.cs" />
+    <Compile Include="GTA.Math\Vector3.cs" />
+    <Compile Include="GTA\Menu.cs" />
+    <Compile Include="GTA\ScriptSettings.cs" />
+    <Compile Include="GTA\SelectedIndexChangedArgs.cs" />
+    <Compile Include="GTA\TaskSequence.cs" />
+    <Compile Include="GTA\UIContainer.cs" />
+    <Compile Include="GTA\UIRectangle.cs" />
+    <Compile Include="GTA\UISprite.cs" />
+    <Compile Include="GTA\UIText.cs" />
+    <Compile Include="GTA\VehicleClass.cs" />
+    <Compile Include="GTA\VehicleColor.cs" />
+    <Compile Include="GTA\VehicleDoor.cs" />
+    <Compile Include="GTA\VehicleLandingGear.cs" />
+    <Compile Include="GTA\VehicleLockStatus.cs" />
+    <Compile Include="GTA\VehicleMod.cs" />
+    <Compile Include="GTA\VehicleNeonLight.cs" />
+    <Compile Include="GTA\VehicleRoofState.cs" />
+    <Compile Include="GTA\VehicleSeat.cs" />
+    <Compile Include="GTA\VehicleToggleMod.cs" />
+    <Compile Include="GTA\VehicleWheelType.cs" />
+    <Compile Include="GTA\VehicleWindow.cs" />
+    <Compile Include="GTA\VehicleWindowTint.cs" />
+    <Compile Include="GTA\Viewport.cs" />
+    <Compile Include="GTA\WeaponCollection.cs" />
+    <Compile Include="GTA\WeaponGroup.cs" />
+    <Compile Include="GTA\WeaponTint.cs" />
+    <Compile Include="GTA\Weather.cs" />
+    <Compile Include="GTA\WindowTitle.cs" />
+    <Compile Include="GTA\ZoneID.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GTA\Scaleform.cs" />
+    <Compile Include="GTA\UI.cs" />
+    <Compile Include="GTA\UIElement.cs" />
+    <Compile Include="GTA\Blip.cs" />
+    <Compile Include="GTA\Camera.cs" />
+    <Compile Include="GTA\Entity.cs" />
+    <Compile Include="GTA\Model.cs" />
+    <Compile Include="GTA\Ped.cs" />
+    <Compile Include="GTA.Native\PedHash.cs" />
+    <Compile Include="GTA\Tasks.cs" />
+    <Compile Include="GTA\Prop.cs" />
+    <Compile Include="GTA\Vehicle.cs" />
+    <Compile Include="GTA.Native\VehicleHash.cs" />
+    <Compile Include="GTA\Pickup.cs" />
+    <Compile Include="GTA\Player.cs" />
+    <Compile Include="GTA\RaycastResult.cs" />
+    <Compile Include="GTA\Rope.cs" />
+    <Compile Include="GTA\Weapon.cs" />
+    <Compile Include="GTA\WeaponAsset.cs" />
+    <Compile Include="GTA.Native\WeaponHash.cs" />
+    <Compile Include="GTA\World.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
