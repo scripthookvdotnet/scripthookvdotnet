@@ -3,43 +3,47 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 15.0.26228.04
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A57A59F7-571A-44D5-9D2E-31DE080FC249} = {A57A59F7-571A-44D5-9D2E-31DE080FC249}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetNuGet", "ScriptHookVDotNet.csproj", "{A57A59F7-571A-44D5-9D2E-31DE080FC249}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv3", "source\scripting_v3\ScriptHookVDotNet_APIv3.csproj", "{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNetExamples", "ScriptHookVDotNetExamples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release + Examples|x64 = Release + Examples|x64
 		Release|x64 = Release|x64
+		Run NativeGen|x64 = Run NativeGen|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.Build.0 = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.Build.0 = Release|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.ActiveCfg = NativeGen|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.Build.0 = NativeGen|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.Build.0 = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.Build.0 = Release|x64
-		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release + Examples|x64.ActiveCfg = Debug|Any CPU
-		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release + Examples|x64.Build.0 = Debug|Any CPU
-		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release|x64.ActiveCfg = Debug|Any CPU
-		{A57A59F7-571A-44D5-9D2E-31DE080FC249}.Release|x64.Build.0 = Debug|Any CPU
+		{019193A7-50C0-444A-84CA-777595E702CD}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release + Examples|x64.ActiveCfg = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release + Examples|x64.Build.0 = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.ActiveCfg = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.Build.0 = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Run NativeGen|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.ActiveCfg = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release|x64.ActiveCfg = Release|x64
+		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Run NativeGen|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {30B3D69A-FEF8-47E4-A34C-32EE7C4A5A31}
+		SolutionGuid = {DF9E4B99-B01B-4909-804F-7EECC61DC528}
 	EndGlobalSection
 EndGlobal

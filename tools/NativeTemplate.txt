@@ -1,0 +1,12 @@
+// This file was generated with https://github.com/JohnnyCrazy/scripthookvdotnet-nativegen
+
+namespace GTA
+{{
+	namespace Native
+	{{
+		public enum Hash : ulong
+		{{
+{0}
+		}}
+	}}
+}}

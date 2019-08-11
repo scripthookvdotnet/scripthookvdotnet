@@ -22,6 +22,8 @@ Pre-built binaries can be found on the [releases](https://github.com/crosire/scr
 
 You'll need Visual Studio 2017 or higher to open the project file and the [Script Hook V SDK](http://www.dev-c.com/gtav/scripthookv/) extracted into "[/sdk](/sdk)".
 
+Additionally, create an environment variable called `SHVDN_VERSION` and set it to version you are attempting to build.
+
 Any contributions to the project are welcomed, it's recommended to use GitHub [pull requests](https://help.github.com/articles/using-pull-requests/).
 
 ## License

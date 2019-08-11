@@ -1,151 +1,134 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="NativeGen|x64">
+      <Configuration>NativeGen</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{019193A7-50C0-444A-84CA-777595E702CD}</ProjectGuid>
+    <ProjectGuid>{B2933D8F-F922-40BD-BB70-18622A81AB8F}</ProjectGuid>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>GTA</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>SHVDN</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!-- Global configuration settings -->
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <!-- Support for VS2017 and VS2019 -->
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16.0'">v142</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <IntDir>$(SolutionDir)obj\$(ProjectName)\</IntDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
+    <ExtensionsToDeleteOnClean>*.netmodule;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <PropertyGroup>
-    <TargetExt>.dll</TargetExt>
-    <TargetName>ScriptHookVDotNet2</TargetName>
+  <!-- Specific configuration settings -->
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
-  <!-- Release configuration settings -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Release'">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='NativeGen'">
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <!-- Global compilation settings -->
+  <PropertyGroup>
+    <TargetExt>.asi</TargetExt>
+    <TargetName>ScriptHookVDotNet</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>source\core;source\scripting;sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <AdditionalUsingDirectories>$(IntDir);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories>sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'==''">SHVDN_VERSION="3.0.0.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'!=''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <CsCompile>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </CsCompile>
     <Link>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ScriptHookV.lib;$(IntDir)$(TargetName).netmodule;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <!-- Release compilation settings -->
+  <!-- Specific compilation settings -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <CsCompile>
+      <Optimize>false</Optimize>
+      <NoWarn>1591;%(NoWarn)</NoWarn>
+    </CsCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)' != ''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <CsCompile>
+      <Optimize>true</Optimize>
+      <NoWarn>1591;%(NoWarn)</NoWarn>
+    </CsCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='NativeGen|x64'">
+    <PreBuildEvent>
+      <Command>tools\NativeGen.exe source\scripting_v3\Game\NativeHashes.cs</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" />
+  </ItemGroup>
+  <!-- Assembly references and source files -->
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
-  <!-- Core source files -->
   <ItemGroup>
-    <ClCompile Include="source\AssemblyInfo.cpp" />
-    <ClCompile Include="source\core\Main.cpp" />
-    <ClCompile Include="source\core\Native.cpp" />
-    <ClCompile Include="source\core\NativeMemory.cpp" />
-    <ClCompile Include="source\core\Script.cpp" />
-    <ClCompile Include="source\core\ScriptDomain.cpp" />
-    <ClCompile Include="source\core\Settings.cpp" />
+    <ClCompile Include="source\core\DllMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\core\Native.hpp" />
-    <ClInclude Include="source\core\NativeHashes.hpp" />
-    <ClInclude Include="source\core\NativeMemory.hpp" />
-    <ClInclude Include="source\core\Script.hpp" />
-    <ClInclude Include="source\core\ScriptDomain.hpp" />
-    <ClInclude Include="source\core\Settings.hpp" />
-  </ItemGroup>
-  <!-- Additional source files -->
-  <ItemGroup>
-    <ClCompile Include="source\scripting\Audio.cpp" />
-    <ClCompile Include="source\scripting\Blip.cpp" />
-    <ClCompile Include="source\scripting\Camera.cpp" />
-    <ClCompile Include="source\scripting\Entity.cpp" />
-    <ClCompile Include="source\scripting\Euphoria.cpp" />
-    <ClCompile Include="source\scripting\EuphoriaBase.cpp" />
-    <ClCompile Include="source\scripting\Game.cpp" />
-    <ClCompile Include="source\scripting\Matrix.cpp" />
-    <ClCompile Include="source\scripting\Menu.cpp" />
-    <ClCompile Include="source\scripting\Model.cpp" />
-    <ClCompile Include="source\scripting\Ped.cpp" />
-    <ClCompile Include="source\scripting\Pickup.cpp" />
-    <ClCompile Include="source\scripting\Player.cpp" />
-    <ClCompile Include="source\scripting\Quaternion.cpp" />
-    <ClCompile Include="source\scripting\Raycast.cpp" />
-    <ClCompile Include="source\scripting\Rope.cpp" />
-    <ClCompile Include="source\scripting\Scaleform.cpp" />
-    <ClCompile Include="source\scripting\Tasks.cpp" />
-    <ClCompile Include="source\scripting\UI.cpp" />
-    <ClCompile Include="source\scripting\UIElement.cpp" />
-    <ClCompile Include="source\scripting\Vector2.cpp" />
-    <ClCompile Include="source\scripting\Vector3.cpp" />
-    <ClCompile Include="source\scripting\Vehicle.cpp" />
-    <ClCompile Include="source\scripting\WeaponAsset.cpp" />
-    <ClCompile Include="source\scripting\World.cpp" />
-    <ClCompile Include="source\scripting\Weapon.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="source\scripting\Audio.hpp" />
-    <ClInclude Include="source\scripting\Blip.hpp" />
-    <ClInclude Include="source\scripting\Controls.hpp" />
-    <ClInclude Include="source\scripting\Camera.hpp" />
-    <ClInclude Include="source\scripting\Entity.hpp" />
-    <ClInclude Include="source\scripting\Euphoria.hpp" />
-    <ClInclude Include="source\scripting\EuphoriaBase.hpp" />
-    <ClInclude Include="source\scripting\EuphoriaHelpers.hpp" />
-    <ClInclude Include="source\scripting\Game.hpp" />
-    <ClInclude Include="source\scripting\Interface.hpp" />
-    <ClInclude Include="source\scripting\Matrix.hpp" />
-    <ClInclude Include="source\scripting\Menu.hpp" />
-    <ClInclude Include="source\scripting\Model.hpp" />
-    <ClInclude Include="source\scripting\Ped.hpp" />
-    <ClInclude Include="source\scripting\PedHashes.hpp" />
-    <ClInclude Include="source\scripting\Pickup.hpp" />
-    <ClInclude Include="source\scripting\Player.hpp" />
-    <ClInclude Include="source\scripting\Prop.hpp" />
-    <ClInclude Include="source\scripting\Quaternion.hpp" />
-    <ClInclude Include="source\scripting\Raycast.hpp" />
-    <ClInclude Include="source\scripting\Rope.hpp" />
-    <ClInclude Include="source\scripting\Scaleform.hpp" />
-    <ClInclude Include="source\scripting\Tasks.hpp" />
-    <ClInclude Include="source\scripting\UI.hpp" />
-    <ClInclude Include="source\scripting\UIElement.hpp" />
-    <ClInclude Include="source\scripting\Vector2.hpp" />
-    <ClInclude Include="source\scripting\Vector3.hpp" />
-    <ClInclude Include="source\scripting\Vehicle.hpp" />
-    <ClInclude Include="source\scripting\VehicleHashes.hpp" />
-    <ClInclude Include="source\scripting\WeaponAsset.hpp" />
-    <ClInclude Include="source\scripting\WeaponHashes.hpp" />
-    <ClInclude Include="source\scripting\World.hpp" />
-    <ClInclude Include="source\scripting\Weapon.hpp" />
+    <CsCompile Include="source\core\Console.cs" />
+    <CsCompile Include="source\core\Log.cs" />
+    <CsCompile Include="source\core\NativeFunc.cs" />
+    <CsCompile Include="source\core\NativeMemory.cs" />
+    <CsCompile Include="source\core\Script.cs" />
+    <CsCompile Include="source\core\ScriptDomain.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Compile C# source files -->
+  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
+    <Csc Sources="@(CsCompile)" TargetType="Module" Optimize="%(CsCompile.Optimize)" LangVersion="%(CsCompile.LangVersion)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" />
+  </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>
@@ -156,7 +139,7 @@
     <PropertyGroup>
       <!-- Make sure all necessary files are present -->
       <SDKFilesMissing>false</SDKFilesMissing>
-      <SDKFilesMissing Condition="'@(SDKFiles)' == '' or '@(SDKLib)' == ''">true</SDKFilesMissing>
+      <SDKFilesMissing Condition="'@(SDKFiles)'=='' or '@(SDKLib)'==''">true</SDKFilesMissing>
     </PropertyGroup>
     <Error Text="ScriptHookV SDK files not found. Please copy the SDK files into the 'sdk' folder and try again." Condition="$(SDKFilesMissing)" />
   </Target>

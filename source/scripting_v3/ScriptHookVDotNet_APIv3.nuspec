@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ScriptHookVDotNet3</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <description>$description$</description>
+    <tags>gta gta5 gtamod scripting scripthook</tags>
+    <owners>crosire</owners>
+    <authors>crosire &amp; contributors</authors>
+    <copyright>$copyright$</copyright>
+    <projectUrl>https://github.com/crosire/scripthookvdotnet</projectUrl>
+    <licenseUrl>https://github.com/crosire/scripthookvdotnet/blob/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+  </metadata>
+</package>
