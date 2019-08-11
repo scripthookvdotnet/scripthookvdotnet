@@ -163,13 +163,7 @@ namespace GTA
 			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash);
 			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash, (int)value);
 		}
-		public WeaponGroup Group
-		{
-			get
-			{
-				return Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, (uint)Hash);
-			}
-		}
+		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, (uint)Hash);
 
 		public WeaponComponent GetComponent(int index)
 		{

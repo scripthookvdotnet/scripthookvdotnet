@@ -1,15 +1,15 @@
-using System.IO;
-using System.Drawing;
-using System.Collections.Generic;
 using GTA.Math;
 using GTA.Native;
-using System.Runtime.InteropServices;
-using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Drawing;
+using System.IO;
 
 namespace GTA
 {
 	public static class UI
 	{
+		// TODO: These need the System.Runtime.CompilerServices.IsConst modopt
 		public static int WIDTH = 1280;
 		public static int HEIGHT = 720;
 
@@ -55,7 +55,9 @@ namespace GTA
 			unsafe
 			{
 				if (!Function.Call<bool>(Hash._WORLD3D_TO_SCREEN2D, position.X, position.Y, position.Z, &pointX, &pointY))
+				{
 					return default;
+				}
 			}
 
 			return new Point((int)(pointX * WIDTH), (int)(pointY * HEIGHT));
@@ -76,7 +78,9 @@ namespace GTA
 		public static void DrawTexture(string filename, int index, int level, int time, Point pos, PointF center, Size size, float rotation, Color color, float aspectRatio)
 		{
 			if (!File.Exists(filename))
+			{
 				throw new FileNotFoundException(filename);
+			}
 
 			int id;
 
@@ -99,6 +103,6 @@ namespace GTA
 			SHVDN.NativeMemory.DrawTexture(id, index, level, time, w, h, center.X, center.Y, x, y, rotation, aspectRatio, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 		}
 
-		internal static Dictionary<string , int> _textures = new Dictionary<string , int>();
-}
+		internal static Dictionary<string, int> _textures = new Dictionary<string, int>();
+	}
 }

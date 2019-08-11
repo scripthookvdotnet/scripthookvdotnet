@@ -16,7 +16,7 @@ namespace GTA.NaturalMotion
 			_helperCache = new Dictionary<string, CustomHelper>();
 		}
 
-		internal T GetHelper<T>(string message) where T : CustomHelper
+		T GetHelper<T>(string message) where T : CustomHelper
 		{
 			CustomHelper h;
 

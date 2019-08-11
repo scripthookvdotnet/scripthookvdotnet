@@ -13,21 +13,9 @@ namespace GTA
 		{
 		}
 
-		public bool HasRoof
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.DOES_VEHICLE_HAVE_ROOF, Handle);
-			}
-		}
+		public bool HasRoof => Function.Call<bool>(Hash.DOES_VEHICLE_HAVE_ROOF, Handle);
 
-		public Ped Driver
-		{
-			get
-			{
-				return GetPedOnSeat(VehicleSeat.Driver);
-			}
-		}
+		public Ped Driver => GetPedOnSeat(VehicleSeat.Driver);
 
 		public Ped[] Occupants
 		{
@@ -106,21 +94,9 @@ namespace GTA
 			}
 		}
 
-		public int PassengerCount
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
-			}
-		}
+		public int PassengerCount => Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle);
 
-		public int PassengerSeats
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
-			}
-		}
+		public int PassengerSeats => Function.Call<int>(Hash.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
 
 		public string DisplayName => Function.Call<string>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, Model.Hash);
 		public string FriendlyName => Game.GetGXTEntry(DisplayName);
@@ -153,51 +129,15 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_UNDRIVEABLE, Handle, !value);
 		}
 
-		public bool IsStopped
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_STOPPED, Handle);
-			}
-		}
-		public bool IsStoppedAtTrafficLights
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS, Handle);
-			}
-		}
+		public bool IsStopped => Function.Call<bool>(Hash.IS_VEHICLE_STOPPED, Handle);
+		public bool IsStoppedAtTrafficLights => Function.Call<bool>(Hash.IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS, Handle);
 
-		public bool IsOnAllWheels
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_ON_ALL_WHEELS, Handle);
-			}
-		}
+		public bool IsOnAllWheels => Function.Call<bool>(Hash.IS_VEHICLE_ON_ALL_WHEELS, Handle);
 
-		public bool IsFrontBumperBrokenOff
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, true);
-			}
-		}
-		public bool IsRearBumperBrokenOff
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, false);
-			}
-		}
+		public bool IsFrontBumperBrokenOff => Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, true);
+		public bool IsRearBumperBrokenOff => Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, false);
 
-		public bool IsDamaged
-		{
-			get
-			{
-				return Function.Call<bool>(Hash._IS_VEHICLE_DAMAGED, Handle);
-			}
-		}
+		public bool IsDamaged => Function.Call<bool>(Hash._IS_VEHICLE_DAMAGED, Handle);
 
 		public float Speed
 		{
@@ -216,21 +156,9 @@ namespace GTA
 			}
 		}
 
-		public float MaxTraction
-		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_VEHICLE_MAX_TRACTION, Handle);
-			}
-		}
+		public float MaxTraction => Function.Call<float>(Hash.GET_VEHICLE_MAX_TRACTION, Handle);
 
-		public float MaxBraking
-		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_VEHICLE_MAX_BRAKING, Handle);
-			}
-		}
+		public float MaxBraking => Function.Call<float>(Hash.GET_VEHICLE_MAX_BRAKING, Handle);
 
 		public float DirtLevel
 		{
@@ -401,10 +329,7 @@ namespace GTA
 			get => Function.Call<int>(Hash.GET_VEHICLE_COLOUR_COMBINATION, Handle);
 			set => Function.Call(Hash.SET_VEHICLE_COLOUR_COMBINATION, Handle, value);
 		}
-		public int ColorCombinationCount
-		{
-			get { return Function.Call<int>(Hash.GET_NUMBER_OF_VEHICLE_COLOURS, Handle); }
-		}
+		public int ColorCombinationCount => Function.Call<int>(Hash.GET_NUMBER_OF_VEHICLE_COLOURS, Handle);
 
 		public VehicleWheelType WheelType
 		{
@@ -967,13 +892,7 @@ namespace GTA
 			}
 		}
 
-		public VehicleClass ClassType
-		{
-			get
-			{
-				return Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS, Handle);
-			}
-		}
+		public VehicleClass ClassType => Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS, Handle);
 
 		public void InstallModKit()
 		{

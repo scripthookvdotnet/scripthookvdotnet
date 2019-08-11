@@ -35,13 +35,7 @@ namespace GTA
 			get => Function.Call<bool>(Hash.IS_CAM_ACTIVE, Handle);
 			set => Function.Call(Hash.SET_CAM_ACTIVE, Handle, value);
 		}
-		public bool IsInterpolating
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
-			}
-		}
+		public bool IsInterpolating => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
 
 		public Vector3 Position
 		{

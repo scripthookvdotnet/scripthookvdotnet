@@ -60,13 +60,7 @@ namespace GTA
 
 		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
 
-		public Vector3 UpVector
-		{
-			get
-			{
-				return Vector3.Cross(RightVector, ForwardVector);
-			}
-		}
+		public Vector3 UpVector => Vector3.Cross(RightVector, ForwardVector);
 
 		public Vector3 RightVector
 		{

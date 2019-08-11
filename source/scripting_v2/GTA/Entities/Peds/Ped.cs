@@ -153,13 +153,7 @@ namespace GTA
 			set => SetConfigFlag(281, !value);
 		}
 
-		public PedGroup CurrentPedGroup
-		{
-			get
-			{
-				return IsInGroup ? Function.Call<PedGroup>(Hash.GET_PED_GROUP_INDEX, Handle, false) : null;
-			}
-		}
+		public PedGroup CurrentPedGroup => IsInGroup ? Function.Call<PedGroup>(Hash.GET_PED_GROUP_INDEX, Handle, false) : null;
 
 		public Vehicle CurrentVehicle => Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false);
 
@@ -244,52 +238,16 @@ namespace GTA
 			}
 		}
 
-		public bool IsAimingFromCover
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_AIMING_FROM_COVER, Handle);
-			}
-		}
+		public bool IsAimingFromCover => Function.Call<bool>(Hash.IS_PED_AIMING_FROM_COVER, Handle);
 
-		public bool IsCuffed
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_CUFFED, Handle);
-			}
-		}
+		public bool IsCuffed => Function.Call<bool>(Hash.IS_PED_CUFFED, Handle);
 
-		public bool IsBeingJacked
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_BEING_JACKED, Handle);
-			}
-		}
+		public bool IsBeingJacked => Function.Call<bool>(Hash.IS_PED_BEING_JACKED, Handle);
 
-		public bool IsBeingStealthKilled
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_BEING_STEALTH_KILLED, Handle);
-			}
-		}
-		public bool IsBeingStunned
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_BEING_STUNNED, Handle);
-			}
-		}
+		public bool IsBeingStealthKilled => Function.Call<bool>(Hash.IS_PED_BEING_STEALTH_KILLED, Handle);
+		public bool IsBeingStunned => Function.Call<bool>(Hash.IS_PED_BEING_STUNNED, Handle);
 
-		public bool IsDoingDriveBy
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_DOING_DRIVEBY, Handle);
-			}
-		}
+		public bool IsDoingDriveBy => Function.Call<bool>(Hash.IS_PED_DOING_DRIVEBY, Handle);
 
 		public bool IsDucking
 		{
@@ -302,362 +260,98 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_AS_ENEMY, Handle, value);
 		}
 
-		public bool IsHuman
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_HUMAN, Handle);
-			}
-		}
+		public bool IsHuman => Function.Call<bool>(Hash.IS_PED_HUMAN, Handle);
 
-		public bool IsIdle
-		{
-			get
-			{
-				return !IsInjured && !IsRagdoll && !IsInAir && !IsOnFire && !IsDucking && !IsGettingIntoAVehicle && !IsInCombat && !IsInMeleeCombat && !(IsInVehicle() && !IsSittingInVehicle());
-			}
-		}
+		public bool IsIdle => !IsInjured && !IsRagdoll && !IsInAir && !IsOnFire && !IsDucking && !IsGettingIntoAVehicle && !IsInCombat && !IsInMeleeCombat && !(IsInVehicle() && !IsSittingInVehicle());
 
-		public bool IsProne
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_PRONE, Handle);
-			}
-		}
+		public bool IsProne => Function.Call<bool>(Hash.IS_PED_PRONE, Handle);
 
-		public bool IsGettingUp
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_GETTING_UP, Handle);
-			}
-		}
+		public bool IsGettingUp => Function.Call<bool>(Hash.IS_PED_GETTING_UP, Handle);
 
-		public bool IsGettingIntoAVehicle
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
-			}
-		}
+		public bool IsGettingIntoAVehicle => Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
 
-		public bool IsFalling
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_FALLING, Handle);
-			}
-		}
+		public bool IsFalling => Function.Call<bool>(Hash.IS_PED_FALLING, Handle);
 
-		public bool IsJumping
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_JUMPING, Handle);
-			}
-		}
+		public bool IsJumping => Function.Call<bool>(Hash.IS_PED_JUMPING, Handle);
 
-		public bool IsClimbing
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_CLIMBING, Handle);
-			}
-		}
+		public bool IsClimbing => Function.Call<bool>(Hash.IS_PED_CLIMBING, Handle);
 
-		public bool IsVaulting
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_VAULTING, Handle);
-			}
-		}
+		public bool IsVaulting => Function.Call<bool>(Hash.IS_PED_VAULTING, Handle);
 
-		public bool IsDiving
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_DIVING, Handle);
-			}
-		}
+		public bool IsDiving => Function.Call<bool>(Hash.IS_PED_DIVING, Handle);
 
-		public bool IsGoingIntoCover
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_GOING_INTO_COVER, Handle);
-			}
-		}
+		public bool IsGoingIntoCover => Function.Call<bool>(Hash.IS_PED_GOING_INTO_COVER, Handle);
 
-		public bool IsFleeing
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_FLEEING, Handle);
-			}
-		}
+		public bool IsFleeing => Function.Call<bool>(Hash.IS_PED_FLEEING, Handle);
 
-		public bool IsInjured
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_INJURED, Handle);
-			}
-		}
+		public bool IsInjured => Function.Call<bool>(Hash.IS_PED_INJURED, Handle);
 
-		public bool IsInBoat
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_BOAT, Handle);
-			}
-		}
+		public bool IsInBoat => Function.Call<bool>(Hash.IS_PED_IN_ANY_BOAT, Handle);
 
-		public bool IsInCombat
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle);
-			}
-		}
+		public bool IsInCombat => Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle);
 
-		public bool IsInCoverFacingLeft
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_COVER_FACING_LEFT, Handle);
-			}
-		}
+		public bool IsInCoverFacingLeft => Function.Call<bool>(Hash.IS_PED_IN_COVER_FACING_LEFT, Handle);
 
-		public bool IsInGroup
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_GROUP, Handle);
-			}
-		}
+		public bool IsInGroup => Function.Call<bool>(Hash.IS_PED_IN_GROUP, Handle);
 
-		public bool IsInFlyingVehicle
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_FLYING_VEHICLE, Handle);
-			}
-		}
+		public bool IsInFlyingVehicle => Function.Call<bool>(Hash.IS_PED_IN_FLYING_VEHICLE, Handle);
 
-		public bool IsInHeli
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_HELI, Handle);
-			}
-		}
+		public bool IsInHeli => Function.Call<bool>(Hash.IS_PED_IN_ANY_HELI, Handle);
 
-		public bool IsInMeleeCombat
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, Handle);
-			}
-		}
+		public bool IsInMeleeCombat => Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, Handle);
 
-		public bool IsInPlane
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_PLANE, Handle);
-			}
-		}
+		public bool IsInPlane => Function.Call<bool>(Hash.IS_PED_IN_ANY_PLANE, Handle);
 
-		public bool IsInPoliceVehicle
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
-			}
-		}
+		public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
 
-		public bool IsInParachuteFreeFall
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
-			}
-		}
+		public bool IsInParachuteFreeFall => Function.Call<bool>(Hash.IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
 
-		public bool IsInSub
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_SUB, Handle);
-			}
-		}
+		public bool IsInSub => Function.Call<bool>(Hash.IS_PED_IN_ANY_SUB, Handle);
 
-		public bool IsInTrain
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_TRAIN, Handle);
-			}
-		}
+		public bool IsInTrain => Function.Call<bool>(Hash.IS_PED_IN_ANY_TRAIN, Handle);
 
-		public bool IsInTaxi
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_IN_ANY_TAXI, Handle);
-			}
-		}
+		public bool IsInTaxi => Function.Call<bool>(Hash.IS_PED_IN_ANY_TAXI, Handle);
 
-		public bool IsJacking
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_JACKING, Handle);
-			}
-		}
+		public bool IsJacking => Function.Call<bool>(Hash.IS_PED_JACKING, Handle);
 
-		public bool IsOnFoot
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_ON_FOOT, Handle);
-			}
-		}
+		public bool IsOnFoot => Function.Call<bool>(Hash.IS_PED_ON_FOOT, Handle);
 
-		public bool IsOnBike
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_ON_ANY_BIKE, Handle);
-			}
-		}
+		public bool IsOnBike => Function.Call<bool>(Hash.IS_PED_ON_ANY_BIKE, Handle);
 
-		public bool IsPerformingStealthKill
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_PERFORMING_STEALTH_KILL, Handle);
-			}
-		}
+		public bool IsPerformingStealthKill => Function.Call<bool>(Hash.IS_PED_PERFORMING_STEALTH_KILL, Handle);
 
-		public bool IsPlayer
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_A_PLAYER, Handle);
-			}
-		}
+		public bool IsPlayer => Function.Call<bool>(Hash.IS_PED_A_PLAYER, Handle);
 
 		public bool IsPriorityTargetForEnemies
 		{
 			set => Function.Call(Hash.SET_ENTITY_IS_TARGET_PRIORITY, Handle, value, 0);
 		}
 
-		public bool IsRagdoll
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
-			}
-		}
+		public bool IsRagdoll => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
 
-		public bool IsReloading
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_RELOADING, Handle);
-			}
-		}
+		public bool IsReloading => Function.Call<bool>(Hash.IS_PED_RELOADING, Handle);
 
-		public bool IsRunning
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_RUNNING, Handle);
-			}
-		}
+		public bool IsRunning => Function.Call<bool>(Hash.IS_PED_RUNNING, Handle);
 
-		public bool IsShooting
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_SHOOTING, Handle);
-			}
-		}
+		public bool IsShooting => Function.Call<bool>(Hash.IS_PED_SHOOTING, Handle);
 
-		public bool IsSprinting
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_SPRINTING, Handle);
-			}
-		}
+		public bool IsSprinting => Function.Call<bool>(Hash.IS_PED_SPRINTING, Handle);
 
-		public bool IsStopped
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_STOPPED, Handle);
-			}
-		}
+		public bool IsStopped => Function.Call<bool>(Hash.IS_PED_STOPPED, Handle);
 
-		public bool IsSwimming
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_SWIMMING, Handle);
-			}
-		}
+		public bool IsSwimming => Function.Call<bool>(Hash.IS_PED_SWIMMING, Handle);
 
-		public bool IsSwimmingUnderWater
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_SWIMMING_UNDER_WATER, Handle);
-			}
-		}
+		public bool IsSwimmingUnderWater => Function.Call<bool>(Hash.IS_PED_SWIMMING_UNDER_WATER, Handle);
 
-		public bool IsTryingToEnterALockedVehicle
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
-			}
-		}
+		public bool IsTryingToEnterALockedVehicle => Function.Call<bool>(Hash.IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
 
-		public bool IsWalking
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_WALKING, Handle);
-			}
-		}
+		public bool IsWalking => Function.Call<bool>(Hash.IS_PED_WALKING, Handle);
 
-		public bool IsWearingHelmet
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_WEARING_HELMET, Handle);
-			}
-		}
+		public bool IsWearingHelmet => Function.Call<bool>(Hash.IS_PED_WEARING_HELMET, Handle);
 
-		public bool IsJumpingOutOfVehicle
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
-			}
-		}
+		public bool IsJumpingOutOfVehicle => Function.Call<bool>(Hash.IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
 
-		public Vehicle LastVehicle
-		{
-			get
-			{
-				return Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true);
-			}
-		}
+		public Vehicle LastVehicle => Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true);
 
 		public float MaxDrivingSpeed
 		{
@@ -751,34 +445,16 @@ namespace GTA
 			}
 		}
 
-		public int TaskSequenceProgress
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_SEQUENCE_PROGRESS, Handle);
-			}
-		}
+		public int TaskSequenceProgress => Function.Call<int>(Hash.GET_SEQUENCE_PROGRESS, Handle);
 
 		public string Voice
 		{
 			set => Function.Call(Hash.SET_AMBIENT_VOICE_NAME, Handle, value);
 		}
 
-		public bool WasKilledByStealth
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.WAS_PED_KILLED_BY_STEALTH, Handle);
-			}
-		}
+		public bool WasKilledByStealth => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_STEALTH, Handle);
 
-		public bool WasKilledByTakedown
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
-			}
-		}
+		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
 
 		public WeaponCollection Weapons
 		{
