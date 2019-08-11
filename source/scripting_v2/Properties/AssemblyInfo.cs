@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ScriptHookVDotNet2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The .NET scripting API for Grand Theft Auto V.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GTA.Properties")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyProduct("ScriptHookVDotNet")]
+[assembly: AssemblyCopyright("Copyright © 2015 crosire")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.10.11.0")]
-[assembly: AssemblyFileVersion("2.10.11.0")]
+[assembly: AssemblyVersion("2.10.10.0")]
+[assembly: AssemblyFileVersion("2.10.10.0")]
