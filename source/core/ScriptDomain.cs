@@ -38,7 +38,6 @@ namespace SHVDN
 		List<Script> runningScripts = new List<Script>();
 		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
 		SortedList<string, Tuple<string, Type>> scriptTypes = new SortedList<string, Tuple<string, Type>>();
-		bool disposed = false;
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
@@ -110,10 +109,6 @@ namespace SHVDN
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposed)
-				return;
-			disposed = true;
-
 			// Need to free native strings when disposing the script domain
 			CleanupStrings();
 		}
