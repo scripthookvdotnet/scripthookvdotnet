@@ -253,14 +253,14 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = this[VehicleModType.Livery].ModCount;
-
-				if (modCount > 0)
+				if (this[VehicleModType.Livery].ModCount > 0)
 				{
-					return modCount;
+					return this[VehicleModType.Livery].Index;
 				}
-
-				return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
+				else
+				{
+					return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
+				}
 			}
 			set
 			{
