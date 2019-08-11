@@ -91,6 +91,11 @@ namespace GTA
 		static void ShowSubtitle(System::String ^message);
 		static void ShowSubtitle(System::String ^message, int duration);
 
+		static void ShowHelpMessage(System::String ^message);
+		static void ShowHelpMessage(System::String ^message, bool sound);
+		static void ShowHelpMessage(System::String ^message, int duration);
+		static void ShowHelpMessage(System::String ^message, int duration, bool sound);
+
 		static bool IsHudComponentActive(HudComponent component);
 		static void ShowHudComponentThisFrame(HudComponent component);
 		static void HideHudComponentThisFrame(HudComponent component);
