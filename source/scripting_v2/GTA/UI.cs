@@ -10,8 +10,8 @@ namespace GTA
 {
 	public static class UI
 	{
-		public const int WIDTH = 1280;
-		public const int HEIGHT = 720;
+		public static int WIDTH = 1280;
+		public static int HEIGHT = 720;
 
 		public static Notification Notify(string message)
 		{
