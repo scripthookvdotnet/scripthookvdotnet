@@ -85,13 +85,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_BLIP_FLASHES, Handle, value);
 		}
 
-		public bool IsOnMinimap
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
-			}
-		}
+		public bool IsOnMinimap => Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
 
 		public bool IsShortRange
 		{
@@ -136,7 +130,7 @@ namespace GTA
 			return !(blip is null) && blip.GetType() == GetType() && Equals((Blip)blip);
 		}
 
-		public override int GetHashCode()
+		public sealed override int GetHashCode()
 		{
 			return Handle.GetHashCode();
 		}
