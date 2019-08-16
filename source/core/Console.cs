@@ -590,8 +590,8 @@ namespace SHVDN
 				compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
-				foreach (var script in ScriptDomain.CurrentDomain.RunningScripts)
-					if (System.IO.Path.GetExtension(script.Filename) == ".dll")
+				foreach (var script in ScriptDomain.CurrentDomain.RunningScripts.Where(x => x.IsRunning))
+					if (System.IO.File.Exists(script.Filename) && System.IO.Path.GetExtension(script.Filename) == ".dll")
 						compilerOptions.ReferencedAssemblies.Add(script.Filename);
 
 				const string template =
