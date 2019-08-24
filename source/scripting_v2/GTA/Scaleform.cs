@@ -7,6 +7,11 @@ namespace GTA
 {
 	public sealed class Scaleform : IDisposable
 	{
+		// Keep in sync with UI.WIDTH
+		const float WIDTH = 1280;
+		// Keep in sync with UI.HEIGHT
+		const float HEIGHT = 720;
+
 		string scaleformID;
 
 		[Obsolete("Scaleform(int handle) is obselete, Please Use Scaleform(string scaleformID) instead")]
@@ -117,10 +122,10 @@ namespace GTA
 		}
 		public void Render2DScreenSpace(PointF location, PointF size)
 		{
-			float x = location.X / UI.WIDTH;
-			float y = location.Y / UI.HEIGHT;
-			float width = size.X / UI.WIDTH;
-			float height = size.Y / UI.HEIGHT;
+			float x = location.X / WIDTH;
+			float y = location.Y / HEIGHT;
+			float width = size.X / WIDTH;
+			float height = size.Y / HEIGHT;
 
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
 		}

@@ -6,6 +6,11 @@ namespace GTA
 {
 	public class UISprite : UIElement, IDisposable
 	{
+		// Keep in sync with UI.WIDTH
+		const int WIDTH = 1280;
+		// Keep in sync with UI.HEIGHT
+		const int HEIGHT = 720;
+
 		string _textureDict;
 		string _textureName;
 
@@ -66,10 +71,10 @@ namespace GTA
 				return;
 			}
 
-			float scaleX = (float)Scale.Width / UI.WIDTH;
-			float scaleY = (float)Scale.Height / UI.HEIGHT;
-			float positionX = (((float)Position.X + offset.Width) / UI.WIDTH) + scaleX * 0.5f;
-			float positionY = (((float)Position.Y + offset.Height) / UI.HEIGHT) + scaleY * 0.5f;
+			float scaleX = (float)Scale.Width / WIDTH;
+			float scaleY = (float)Scale.Height / HEIGHT;
+			float positionX = (((float)Position.X + offset.Width) / WIDTH) + scaleX * 0.5f;
+			float positionY = (((float)Position.Y + offset.Height) / HEIGHT) + scaleY * 0.5f;
 
 			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}

@@ -6,9 +6,14 @@ using System.Drawing;
 
 namespace GTA
 {
-	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
+	//[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class Menu : MenuBase
 	{
+		// Keep in sync with UI.WIDTH
+		const float WIDTH = 1280;
+		// Keep in sync with UI.HEIGHT
+		const float HEIGHT = 720;
+
 		UIRectangle rectHeader = null;
 		UIRectangle rectFooter = null;
 		UIText textHeader = null;
@@ -103,18 +108,18 @@ namespace GTA
 				Vector2 Resolution = Function.Call<Vector2>(Hash.GET_TEXTURE_RESOLUTION, "CommonMenu", "arrowright");
 				if (up)
 				{
-					float xscale = Resolution.X / (float)UI.WIDTH;
-					float yscale = Resolution.Y / (float)UI.HEIGHT;
-					float xpos = ((float)(Width + offset.Width)) / (float)UI.WIDTH - xscale * 0.5f;
-					float ypos = ((float)(HeaderHeight + offset.Height + ItemHeight / 2)) / (float)UI.HEIGHT;
+					float xscale = Resolution.X / WIDTH;
+					float yscale = Resolution.Y / HEIGHT;
+					float xpos = (Width + offset.Width) / WIDTH - xscale * 0.5f;
+					float ypos = (HeaderHeight + offset.Height + ItemHeight / 2) / HEIGHT;
 					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", xpos, ypos, xscale, yscale, -90.0f, 255, 255, 255, 255);
 				}
 				if (down)
 				{
-					float xscale = Resolution.X / (float)UI.WIDTH;
-					float yscale = Resolution.Y / (float)UI.HEIGHT;
-					float xpos = ((float)(Width + offset.Width)) / (float)UI.WIDTH - xscale * 0.5f;
-					float ypos = ((float)(HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2)) / (float)UI.HEIGHT;
+					float xscale = Resolution.X / WIDTH;
+					float yscale = Resolution.Y / HEIGHT;
+					float xpos = (Width + offset.Width) / WIDTH - xscale * 0.5f;
+					float ypos = (HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / HEIGHT;
 					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", xpos, ypos, xscale, yscale, 90.0f, 255, 255, 255, 255);
 				}
 			}
