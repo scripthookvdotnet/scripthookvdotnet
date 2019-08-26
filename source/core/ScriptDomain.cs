@@ -41,6 +41,7 @@ namespace SHVDN
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
+		Assembly defaultScriptApi = null;
 
 		/// <summary>
 		/// Gets the friendly name of this script domain.
@@ -89,7 +90,15 @@ namespace SHVDN
 
 				try
 				{
-					scriptApis.Add(Assembly.LoadFrom(apiPath));
+					var assembly = Assembly.LoadFrom(apiPath);
+					scriptApis.Add(assembly);
+
+					// set the default script api to use.
+					if (assembly.GetName().Version.Major == 2)
+					{
+						Log.Message(Log.Level.Info, "Found default script api: ", assembly.GetName().FullName);
+						defaultScriptApi = assembly;
+					}
 				}
 				catch (Exception ex)
 				{
@@ -133,6 +142,7 @@ namespace SHVDN
 				Log.Message(Log.Level.Error, "Failed to unload script domain: ", ex.ToString());
 			}
 		}
+
 		/// <summary>
 		/// Creates a new script domain.
 		/// </summary>
@@ -163,17 +173,18 @@ namespace SHVDN
 
 			try
 			{
-				scriptdomain = (ScriptDomain)appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { basePath }, null, null);
+				var loaded = appdomain.CreateInstanceFromAndUnwrap(typeof(ScriptDomain).Assembly.Location, typeof(ScriptDomain).FullName, false, BindingFlags.NonPublic | BindingFlags.Instance, null, new object[] { basePath }, null, null);
+				Log.Message(Log.Level.Info, "Loaded: ", loaded.GetType().ToString());
+				scriptdomain = (ScriptDomain)loaded;
 			}
 			catch (Exception ex)
 			{
-				Log.Message(Log.Level.Error, "Failed to create script domain: ", ex.ToString());
+				Log.Message(Log.Level.Error, "Failed to create script domain: ", ex.ToString(), ex.StackTrace);
 				AppDomain.Unload(appdomain);
 			}
 
 			// Remove resolve handler again
 			AppDomain.CurrentDomain.AssemblyResolve -= HandleResolve;
-
 			return scriptdomain;
 		}
 
@@ -710,36 +721,58 @@ namespace SHVDN
 			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup)
 			// But some scripts were written against old SHVDN versions where everything was still in the ASI, so make sure those are not caught here
 			// See also https://github.com/crosire/scripthookvdotnet/releases/tag/v2.10.0
-			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) && assemblyName.Version >= new Version(2, 10, 0, 0))
-			{
+			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) && assemblyName.Version >= new Version(2, 10, 0, 0)) {
 				return typeof(ScriptDomain).Assembly;
 			}
 
-			// Handle resolve of the scripting API assembly
-			if (CurrentDomain != null && assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+			// For the rest of the code we need access to the current domain if we are resolving ScriptHookVDotNet* assemblies.
+			if (!assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) || CurrentDomain == null)
 			{
-				Assembly compatibleApi = null;
-
-				foreach (Assembly api in CurrentDomain.scriptApis)
-				{
-					Version apiVersion = api.GetName().Version;
-
-					// Find a compatible scripting API version
-					if (assemblyName.Version.Major == apiVersion.Major && apiVersion >= assemblyName.Version)
-					{
-						compatibleApi = api;
-						break; // Just take the first one for now
-					}
-				}
-
-				// Write a warning message if no compatible scripting API version was found
-				if (compatibleApi == null)
-					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3), " used in ", assemblyName.Name, ".");
-
-				return compatibleApi;
+				return null;
 			}
 
-			return null;
+			var api = CurrentDomain.ResolveBestApi(assemblyName);
+
+			if (api == null)
+			{
+				Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3), " used in ", args.RequestingAssembly.FullName, ".");
+			}
+
+			return api;
+		}
+
+		/// <summary>
+		/// Resolve the best API version for the given assembly.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public Assembly ResolveBestApi(AssemblyName name)
+		{
+			// Test for a versionless linking, which defaults to major version 2.
+			if (name.Version == new Version(0, 0, 0, 0))
+			{
+				return defaultScriptApi;
+			}
+
+			Assembly bestApi = null;
+			var bestVersion = new Version(0, 0, 0, 0);
+
+			foreach (Assembly api in scriptApis)
+			{
+				Version version = api.GetName().Version;
+
+				// Find a compatible scripting API version
+				if (name.Version.Major == version.Major && version >= name.Version)
+				{
+					if (version > bestVersion)
+					{
+						bestApi = api;
+						bestVersion = version;
+					}
+				}
+			}
+
+			return bestApi;
 		}
 
 		static internal void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
