@@ -133,6 +133,7 @@ namespace SHVDN
 				Log.Message(Log.Level.Error, "Failed to unload script domain: ", ex.ToString());
 			}
 		}
+
 		/// <summary>
 		/// Creates a new script domain.
 		/// </summary>
@@ -707,34 +708,46 @@ namespace SHVDN
 		{
 			var assemblyName = new AssemblyName(args.Name);
 
-			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup)
-			// But some scripts were written against old SHVDN versions where everything was still in the ASI, so make sure those are not caught here
-			// See also https://github.com/crosire/scripthookvdotnet/releases/tag/v2.10.0
+			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup), so is unable to load the ScriptDomain type when creating it in a new application domain
+			// Some scripts were written against old SHVDN versions where everything was still in the ASI, so make sure those are not caught here (see also https://github.com/crosire/scripthookvdotnet/releases/tag/v2.10.0)
 			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) && assemblyName.Version >= new Version(2, 10, 0, 0))
 			{
 				return typeof(ScriptDomain).Assembly;
 			}
 
-			// Handle resolve of the scripting API assembly
+			// Handle resolve of the scripting API assembly (ScriptHookVDotNet*.dll)
 			if (CurrentDomain != null && assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 			{
+				var bestVersion = new Version(0, 0, 0, 0);
+
+				// Some scripts reference a version-less SHVDN, do default those to major version 2
+				if (assemblyName.Version == bestVersion)
+				{
+					Log.Message(Log.Level.Warning, "Found API version 0.0.0", args.RequestingAssembly != null ? " referenced in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
+
+					return CurrentDomain.scriptApis.Where(x => x.GetName().Version.Major == 2).FirstOrDefault();
+				}
+
 				Assembly compatibleApi = null;
 
 				foreach (Assembly api in CurrentDomain.scriptApis)
 				{
 					Version apiVersion = api.GetName().Version;
 
-					// Find a compatible scripting API version
-					if (assemblyName.Version.Major == apiVersion.Major && apiVersion >= assemblyName.Version)
+					// Find the newest compatible scripting API version
+					if (assemblyName.Version.Major == apiVersion.Major && apiVersion >= assemblyName.Version && apiVersion > bestVersion)
 					{
+						bestVersion = apiVersion;
 						compatibleApi = api;
-						break; // Just take the first one for now
 					}
 				}
 
 				// Write a warning message if no compatible scripting API version was found
 				if (compatibleApi == null)
-					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3), " used in ", assemblyName.Name, ".");
+				{
+					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3),
+						args.RequestingAssembly != null ? " used in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
+				}
 
 				return compatibleApi;
 			}
