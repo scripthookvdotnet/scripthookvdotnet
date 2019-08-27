@@ -300,6 +300,8 @@ namespace SHVDN
 					};
 
 					var key = BuildComparisonString(type, string.Empty);
+					key = assembly.GetName().Name + "-" + assembly.GetName().Version + key;
+
 					if (scriptTypes.ContainsKey(key))
 					{
 						Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptTypes[key].Item1), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
