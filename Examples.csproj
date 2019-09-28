@@ -35,6 +35,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="examples\AddScript.cs" />
     <Compile Include="examples\EuphoriaDemo.cs" />
     <Compile Include="examples\ExitVehicle.cs" />
     <Compile Include="examples\IndicatorControl.cs" />
