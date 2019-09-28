@@ -24,8 +24,8 @@ namespace SHVDN
 	public class Script
 	{
 		Thread thread; // The thread hosting the execution of the script
-        private int _wait = -1;
-        internal SemaphoreSlim waitEvent = new SemaphoreSlim(0);
+		private int _wait = -1;
+		internal SemaphoreSlim waitEvent = new SemaphoreSlim(0);
 		internal SemaphoreSlim continueEvent = new SemaphoreSlim(0);
 		internal ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, KeyEventArgs>>();
 
@@ -39,15 +39,15 @@ namespace SHVDN
 		/// </summary>
 		public bool IsRunning { get; private set; }
 
-        /// <summary>
-        /// Gets the execution status of this script.
-        /// </summary>
-        public bool IsPaused { get; private set; }
+		/// <summary>
+		/// Gets the execution status of this script.
+		/// </summary>
+		public bool IsPaused { get; private set; }
 
-        /// <summary>
-        /// An event that is raised every tick of the script. 
-        /// </summary>
-        public event EventHandler Tick;
+		/// <summary>
+		/// An event that is raised every tick of the script. 
+		/// </summary>
+		public event EventHandler Tick;
 		/// <summary>
 		/// An event that is raised when this script gets aborted for any reason.
 		/// </summary>
@@ -67,28 +67,28 @@ namespace SHVDN
 		/// </summary>
 		public string Name { get; internal set; }
 
-        /// <summary>
-        /// Gets the path to the file that contains this script.
-        /// </summary>
-        public string Filename { get; internal set; }
+		/// <summary>
+		/// Gets the path to the file that contains this script.
+		/// </summary>
+		public string Filename { get; internal set; }
 
 		/// <summary>
 		/// Gets the instance of the script.
 		/// </summary>
 		public object ScriptInstance { get; internal set; }
 
-        /// <summary>
-        /// Pause execution of this script.
-        /// </summary>
-        public void Pause(bool toggle)
-        {
-            IsPaused = toggle;
-        }
+		/// <summary>
+		/// Pause execution of this script.
+		/// </summary>
+		public void Pause(bool toggle)
+		{
+		    IsPaused = toggle;
+		}
 
-        /// <summary>
-        /// The main execution logic of all scripts.
-        /// </summary>
-        void MainLoop()
+		/// <summary>
+		/// The main execution logic of all scripts.
+		/// </summary>
+		void MainLoop()
 		{
 			IsRunning = true;
 
@@ -119,34 +119,34 @@ namespace SHVDN
 					}
 				}
 
-                if (_wait > -1)
-                {
-                    Wait(_wait);
+				if (_wait > -1)
+				{
+				    Wait(_wait);
 
-                    _wait = -1;
-                }
-                else
-                {
-                    try
-                    {
-                        Tick?.Invoke(this, EventArgs.Empty);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        // Stop main loop immediately on a thread abort exception
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+				    _wait = -1;
+				}
+				else
+				{
+				    try
+				    {
+					Tick?.Invoke(this, EventArgs.Empty);
+				    }
+				    catch (ThreadAbortException)
+				    {
+					// Stop main loop immediately on a thread abort exception
+					return;
+				    }
+				    catch (Exception ex)
+				    {
+					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 
-                        // An exception during tick is fatal, so abort the script and stop main loop
-                        Abort(); return;
-                    }
+					// An exception during tick is fatal, so abort the script and stop main loop
+					Abort(); return;
+				    }
 
-                    // Yield execution to next tick
-                    Wait(Interval);
-                }
+				    // Yield execution to next tick
+				    Wait(Interval);
+				}
 			}
 		}
 
@@ -178,19 +178,19 @@ namespace SHVDN
 			catch (Exception ex)
 			{
 				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-            }
+		   	}
 
-            waitEvent.Release();
+		    	waitEvent.Release();
 
-            // Unregister any console commands attached to this script
-            var console = AppDomain.CurrentDomain.GetData("Console") as Console;
-            console?.UnregisterCommands(ScriptInstance.GetType());
+		    	// Unregister any console commands attached to this script
+		    	var console = AppDomain.CurrentDomain.GetData("Console") as Console;
+		    	console?.UnregisterCommands(ScriptInstance.GetType());
 
-            if (thread != null)
-            {
-                Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
+		    	if (thread != null)
+		    	{
+				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
 
-                thread.Abort(); thread = null;
+				thread.Abort(); thread = null;
 			}
 		}
 
@@ -210,24 +210,24 @@ namespace SHVDN
 			while (DateTime.UtcNow < resumeTime);
 		}
 
-        /// <summary>
-        /// Adds a Wait time for referenced script.
-        /// </summary>
-        /// <param name="ms">The time in milliseconds to pause.</param>
-        public void SetWait(int ms)
-        {
-            Script script = ScriptDomain.ExecutingScript;
+		/// <summary>
+		/// Adds a Wait time for referenced script.
+		/// </summary>
+		/// <param name="ms">The time in milliseconds to pause.</param>
+		public void SetWait(int ms)
+		{
+		    Script script = ScriptDomain.ExecutingScript;
 
-            if (!ReferenceEquals(script, null) && ReferenceEquals(script.ScriptInstance, ScriptInstance))
-            {
-                if (_wait > -1) _wait = -1;
+		    if (!ReferenceEquals(script, null) && ReferenceEquals(script.ScriptInstance, ScriptInstance))
+		    {
+			if (_wait > -1) _wait = -1;
 
-                Wait(ms);
-            }
-            else if (ms > _wait)
-            {
-                _wait = ms;
-            }
-        }
-    }
+			Wait(ms);
+		    }
+		    else if (ms > _wait)
+		    {
+			_wait = ms;
+		    }
+		}
+    	}
 }
