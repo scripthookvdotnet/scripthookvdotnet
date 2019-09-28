@@ -38,8 +38,8 @@ namespace SHVDN
 		List<Script> runningScripts = new List<Script>();
 		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
 		SortedList<string, Tuple<string, Type>> scriptTypes = new SortedList<string, Tuple<string, Type>>();
-        Dictionary<string, int> scriptCounter = new Dictionary<string, int>();
-        bool recordKeyboardEvents = true;
+        	Dictionary<string, int> scriptCounter = new Dictionary<string, int>();
+        	bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
 
@@ -346,16 +346,16 @@ namespace SHVDN
 
 			Script script = new Script();
 
-            Script _executingScript = executingScript;
+			Script _executingScript = executingScript;
 
-            executingScript = script;
+			executingScript = script;
 
-            script.Filename = LookupScriptFilename(scriptType);
+			script.Filename = LookupScriptFilename(scriptType);
 
-            script.Name = ScriptName(scriptType);
+			script.Name = ScriptName(scriptType);
 
-            try
-            {
+			try
+			{
 				script.ScriptInstance = Activator.CreateInstance(scriptType);
 			}
 			catch (MissingMethodException)
@@ -374,9 +374,9 @@ namespace SHVDN
 				return null;
 			}
 
-            executingScript = _executingScript;
+            		executingScript = _executingScript;
 
-            runningScripts.Add(script);
+            		runningScripts.Add(script);
 
 			return script;
 		}
@@ -445,8 +445,8 @@ namespace SHVDN
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
-                // Start the script
-                if (GetAttributeAutoStart(type)) InstantiateScript(type)?.Start();
+				// Start the script
+				if (GetAttributeAutoStart(type)) InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -467,8 +467,8 @@ namespace SHVDN
 				// Make sure there are no others instances of this script
 				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
-                // Start the script
-                if (GetAttributeAutoStart(type)) InstantiateScript(type)?.Start();
+				// Start the script
+				if (GetAttributeAutoStart(type)) InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -775,72 +775,72 @@ namespace SHVDN
 			var script = (Script)sender;
 
 			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
-        }
+        	}
 
-        /// <summary>
-        /// Adds a new <see cref="Script"/> to the CurrentDomain threads.
-        /// </summary>
-        public Script AddScript(Type scriptType)
-        {
-            try
-            {
-                Script script = InstantiateScript(scriptType);
+		/// <summary>
+		/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
+		/// </summary>
+		public Script AddScript(Type scriptType)
+		{
+		    try
+		    {
+			Script script = InstantiateScript(scriptType);
 
-                if (script != null)
-                {
-                    script.Start();
+			if (script != null)
+			{
+			    script.Start();
 
-                    return script;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Message(Log.Level.Error, "AddScript: ", scriptType.Name, new UnhandledExceptionEventArgs(ex, false).ToString());
-            }
+			    return script;
+			}
+		    }
+		    catch (Exception ex)
+		    {
+			Log.Message(Log.Level.Error, "AddScript: ", scriptType.Name, new UnhandledExceptionEventArgs(ex, false).ToString());
+		    }
 
-            return null;
-        }
+		    return null;
+		}
 
-        /// <summary>
-        /// Checks if a script should be autostarted.
-        /// </summary>
-        /// <param name="script">The script to check for attribute.</param>
-        /// <returns>Bool <c>true</c>by default.</returns>
-        bool GetAttributeAutoStart(Type scriptType)
-        {
-            bool autoStart = true;
+		/// <summary>
+		/// Checks if a script should be autostarted.
+		/// </summary>
+		/// <param name="script">The script to check for attribute.</param>
+		/// <returns>Bool <c>true</c>by default.</returns>
+		bool GetAttributeAutoStart(Type scriptType)
+		{
+		    bool autoStart = true;
 
-            if (scriptType != null)
-            {
-                foreach (var attribute in scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.AutoStart"))
-                {
-                    autoStart = (bool)attribute.ConstructorArguments[0].Value;
+		    if (scriptType != null)
+		    {
+			foreach (var attribute in scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.AutoStart"))
+			{
+			    autoStart = (bool)attribute.ConstructorArguments[0].Value;
 
-                    break;
-                }
-            }
+			    break;
+			}
+		    }
 
-            return autoStart;
-        }
+		    return autoStart;
+		}
 
-        string ScriptName(Type scriptType)
-        {
-            int increase = 1;
+		string ScriptName(Type scriptType)
+		{
+		    int increase = 1;
 
-            string typeName = scriptType.Name;
+		    string typeName = scriptType.Name;
 
-            if (scriptCounter.ContainsKey(typeName))
-            {
-                increase = scriptCounter[typeName] + increase;
+		    if (scriptCounter.ContainsKey(typeName))
+		    {
+			increase = scriptCounter[typeName] + increase;
 
-                scriptCounter[typeName] = increase;
-            }
-            else
-            {
-                scriptCounter.Add(typeName, increase);
-            }
+			scriptCounter[typeName] = increase;
+		    }
+		    else
+		    {
+			scriptCounter.Add(typeName, increase);
+		    }
 
-            return typeName + increase.ToString();
-        }
-    }
+		    return typeName + increase.ToString();
+		}
+    	}
 }
