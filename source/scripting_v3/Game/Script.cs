@@ -35,24 +35,24 @@ namespace GTA
 		}
 	}
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class AutoStart : Attribute
-    {
-        #region Fields
-        internal bool _active = true;
-        #endregion
+    	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    	public class AutoStart : Attribute
+    	{
+        	#region Fields
+        	internal bool _active = true;
+        	#endregion
 
-        public AutoStart(bool active)
-        {
-            _active = active;
-        }
-    }
+        	public AutoStart(bool active)
+        	{
+            		_active = active;
+        	}
+    	}
 
-    /// <summary>
-    /// A base class for all user scripts to inherit.
-    /// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
-    /// </summary>
-    public abstract class Script
+    	/// <summary>
+    	/// A base class for all user scripts to inherit.
+    	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
+    	/// </summary>
+    	public abstract class Script
 	{
 		#region Fields
 		internal ScriptSettings _settings;
@@ -62,8 +62,8 @@ namespace GTA
 		{
 			Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
 
-            Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
-        }
+            		Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
+        	}
 
 		/// <summary>
 		/// An event that is raised every tick of the script. 
@@ -106,38 +106,38 @@ namespace GTA
 		/// Gets the name of this <see cref="Script"/>.
 		/// </summary>
 		public string Name { get; internal set; }
-        /// <summary>
-        /// Gets the filename of this <see cref="Script"/>.
-        /// </summary>
-        public string Filename { get; internal set; }
+        	/// <summary>
+        	/// Gets the filename of this <see cref="Script"/>.
+        	/// </summary>
+        	public string Filename { get; internal set; }
 
 		/// <summary>
 		/// Gets the Directory where this <see cref="Script"/> is stored.
 		/// </summary>
 		public string BaseDirectory => Path.GetDirectoryName(Filename);
 
-        /// <summary>
-        /// Checks if this <see cref="Script"/> IsRunning.
-        /// </summary>
-        public bool IsRunning
-        {
-            get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning; }
-        }
+        	/// <summary>
+        	/// Checks if this <see cref="Script"/> IsRunning.
+        	/// </summary>
+        	public bool IsRunning
+        	{
+            		get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning; }
+        	}
 
-        /// <summary>
-        /// Checks if this <see cref="Script"/> IsRunning.
-        /// </summary>
-        public bool IsPaused
-        {
-            get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused; }
-        }
+        	/// <summary>
+        	/// Checks if this <see cref="Script"/> IsRunning.
+        	/// </summary>
+       		public bool IsPaused
+        	{
+            		get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused; }
+        	}
 
-        /// <summary>
-        /// Gets an INI file associated with this <see cref="Script"/>.
-        /// The File will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
-        /// Use this to save and load settings for this <see cref="Script"/>.
-        /// </summary>
-        public ScriptSettings Settings
+        	/// <summary>
+       	 	/// Gets an INI file associated with this <see cref="Script"/>.
+        	/// The File will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
+        	/// Use this to save and load settings for this <see cref="Script"/>.
+        	/// </summary>
+        	public ScriptSettings Settings
 		{
 			get
 			{
@@ -184,26 +184,26 @@ namespace GTA
 			return Path.Combine(BaseDirectory, filePath);
 		}
 
-        /// <summary>
-        /// Pause execution of this <see cref="Script"/>.
-        /// </summary>
-        public void Pause()
-        {
-            SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(true);
-        }
+		/// <summary>
+		/// Pause execution of this <see cref="Script"/>.
+		/// </summary>
+		public void Pause()
+		{
+		    SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(true);
+		}
 
-        /// <summary>
-        /// Starts execution of this <see cref="Script"/> after it has been Paused.
-        /// </summary>
-        public void Start()
-        {
-            SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(false);
-        }
+		/// <summary>
+		/// Starts execution of this <see cref="Script"/> after it has been Paused.
+		/// </summary>
+		public void Start()
+		{
+		    SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(false);
+		}
 
-        /// <summary>
-        /// Aborts execution of this <see cref="Script"/>.
-        /// </summary>
-        public void Abort()
+		/// <summary>
+		/// Aborts execution of this <see cref="Script"/>.
+		/// </summary>
+		public void Abort()
 		{
 			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Abort();
 		}
@@ -228,26 +228,26 @@ namespace GTA
 		public static void Yield()
 		{
 			Wait(0);
-        }
-        /// <summary>
-        /// Adds a Wait time for the referenced <see cref="Script"/>.
-        /// </summary>
-        /// <param name="ms">The time in milliseconds to pause for.</param>
-        public void SetWait(int ms)
-        {
-            SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).SetWait(ms);
-        }
+		}
+		/// <summary>
+		/// Adds a Wait time for the referenced <see cref="Script"/>.
+		/// </summary>
+		/// <param name="ms">The time in milliseconds to pause for.</param>
+		public void SetWait(int ms)
+		{
+		    SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).SetWait(ms);
+		}
 
-        /// <summary>
-        /// Adds a new <see cref="Script"/> to the CurrentDomain threads.
-        /// </summary>
-        public static Script AddScript(Type scriptType)
-        {
-            SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.AddScript(scriptType);
+		/// <summary>
+		/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
+		/// </summary>
+		public static Script AddScript(Type scriptType)
+		{
+		    SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.AddScript(scriptType);
 
-            if (script != null) return (Script)script.ScriptInstance;
+		    if (script != null) return (Script)script.ScriptInstance;
 
-            return null;
-        }
-    }
+		    return null;
+		}
+    	}
 }
