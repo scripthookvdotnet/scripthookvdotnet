@@ -6,15 +6,9 @@ install:
 - cmd: >-
     cd sdk/
 
-    echo Downloading C++ ScriptHook...
-
     appveyor DownloadFile http://reshade.me/downloads/ScriptHookV_SDK_1.0.617.1a.zip -FileName sdk.zip
 
-    echo Download completed. Extracting...
-
     7z x sdk.zip
-
-    echo Extraction completed. Compiling...
 
     cd ../
 
@@ -26,9 +20,14 @@ install:
 
 build:
   project: ScriptHookVDotNet.sln
-  publish_nuget: true
   parallel: true
   verbosity: minimal
+after_build:
+- ps: >-
+    Get-ChildItem ".\source\**\ScriptHookVDotNet*.csproj" | % { nuget pack $_.FullName }
+
+    Get-ChildItem ".\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
 before_package:
 - cmd: >-
     del bin\ScriptHookVDotNet*.metagen
