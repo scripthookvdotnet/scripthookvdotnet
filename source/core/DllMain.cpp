@@ -108,7 +108,7 @@ public:
 	{
 		console->PrintInfo("~c~--- Loaded Scripts ---");
 		for each (auto script in domain->RunningScripts)
-			console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? " ~g~[running]" : " ~r~[aborted]"));
+			console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? (script->IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
 	}
 
 internal:
