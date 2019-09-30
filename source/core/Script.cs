@@ -34,14 +34,24 @@ namespace SHVDN
 		public int Interval { get; set; }
 
 		/// <summary>
-		/// Gets the execution status of this script.
+		/// Checks this script has not been aborted.
 		/// </summary>
 		public bool IsRunning { get; private set; }
 
-		/// <summary>
-		/// An event that is raised every tick of the script. 
-		/// </summary>
-		public event EventHandler Tick;
+        /// <summary>
+        /// Checks if this script is not executing.
+        /// </summary>
+        public bool IsPaused { get; private set; }
+
+        /// <summary>
+        /// Gets the execution status of this script.
+        /// </summary>
+        public bool IsExecuting => ScriptDomain.ExecutingScript == this;
+
+        /// <summary>
+        /// An event that is raised every tick of the script. 
+        /// </summary>
+        public event EventHandler Tick;
 		/// <summary>
 		/// An event that is raised when this script gets aborted for any reason.
 		/// </summary>
@@ -59,7 +69,7 @@ namespace SHVDN
 		/// <summary>
 		/// Gets the type name of this script.
 		/// </summary>
-		public string Name => ScriptInstance.GetType().FullName;
+		public string Name { get; internal set; };
 
 		/// <summary>
 		/// Gets the path to the file that contains this script.
@@ -71,10 +81,18 @@ namespace SHVDN
 		/// </summary>
 		public object ScriptInstance { get; internal set; }
 
-		/// <summary>
-		/// The main execution logic of all scripts.
-		/// </summary>
-		void MainLoop()
+        /// <summary>
+        /// Pause execution of this script.
+        /// </summary>
+        public void Pause(bool toggle)
+        {
+            IsPaused = toggle;
+        }
+
+        /// <summary>
+        /// The main execution logic of all scripts.
+        /// </summary>
+        void MainLoop()
 		{
 			IsRunning = true;
 
@@ -148,8 +166,6 @@ namespace SHVDN
 		{
 			IsRunning = false;
 
-			waitEvent.Release();
-
 			try
 			{
 				Aborted?.Invoke(this, EventArgs.Empty);
@@ -159,16 +175,18 @@ namespace SHVDN
 				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 			}
 
-			if (thread != null)
-			{
-				thread.Abort(); thread = null;
+            waitEvent.Release();
 
-				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
+            // Unregister any console commands attached to this script
+            var console = AppDomain.CurrentDomain.GetData("Console") as Console;
+            console?.UnregisterCommands(ScriptInstance.GetType());
+
+            if (thread != null)
+            {
+                Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
+
+                thread.Abort(); thread = null;
 			}
-
-			// Unregister any console commands attached to this script
-			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
-			console?.UnregisterCommands(ScriptInstance.GetType());
 		}
 
 		/// <summary>
