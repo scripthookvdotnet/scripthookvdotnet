@@ -372,9 +372,9 @@ namespace SHVDN
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
 
-                string supportURL = GetScriptAttributes(scriptType, "SupportURL");
+                var supportURL = GetScriptAttributes(scriptType, "SupportURL");
 
-                if (supportURL != "") Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+                if (supportURL != null) Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", (string)supportURL);
 
                 return null;
 			}
@@ -450,9 +450,12 @@ namespace SHVDN
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
-                // Start the script
-                if (GetScriptAttributes(type, "NoDefaultInstance") == "") InstantiateScript(type)?.Start();
-			}
+                // Check if script set Attribute NoDefaultInstance
+                var noDefault = GetScriptAttributes(type, "NoDefaultInstance");
+
+                if (noDefault == null || !(bool)noDefault)
+                    InstantiateScript(type)?.Start(); // Start the script
+            }
 		}
 		/// <summary>
 		/// Loads and starts all scripts in the specified file.
@@ -472,9 +475,12 @@ namespace SHVDN
 				// Make sure there are no others instances of this script
 				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
-                // Start the script
-                if (GetScriptAttributes(type, "NoDefaultInstance") == "") InstantiateScript(type)?.Start();
-			}
+                // Check if script set Attribute NoDefaultInstance
+                var noDefault = GetScriptAttributes(type, "NoDefaultInstance");
+
+                if (noDefault == null || !(bool)noDefault)
+                    InstantiateScript(type)?.Start(); // Start the script
+            }
 		}
 		/// <summary>
 		/// Aborts all running scripts.
@@ -810,16 +816,20 @@ namespace SHVDN
         /// </summary>
         /// <param name="script">The script to check for attribute.</param>
         /// <returns>string <c>empty</c>by default.</returns>
-        static private string GetScriptAttributes(Type scriptType, string name)
+        static private object GetScriptAttributes(Type scriptType, string name)
         {
             var attribute = scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ScriptAttributes").FirstOrDefault();
 
-            foreach (var arg in attribute.NamedArguments)
+            if (attribute != null)
             {
-                if (arg.MemberName == name) return (string) arg.TypedValue.Value;
-            }
+                foreach (var arg in attribute.NamedArguments)
+                {
+                    if (arg.MemberName == name)
+                        return arg.TypedValue.Value;
+                }
+            }            
 
-            return "";
+            return null;
         }
 
         string CreateScriptName(Type scriptType)

@@ -86,6 +86,9 @@ namespace SHVDN
         /// </summary>
         public void Pause(bool toggle)
         {
+            if (toggle) Log.Message(Log.Level.Info, "Paused script ", Name, ".");
+            else Log.Message(Log.Level.Info, "Started script ", Name, ".");
+
             IsPaused = toggle;
         }
 
