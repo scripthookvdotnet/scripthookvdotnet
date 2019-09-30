@@ -352,7 +352,7 @@ namespace SHVDN
 
             script.Filename = LookupScriptFilename(scriptType);
 
-            script.Name = LookupScriptName(scriptType);
+            script.Name = CreateScriptName(scriptType);
 
             try
             {
@@ -780,10 +780,6 @@ namespace SHVDN
 			var script = (Script)sender;
 
 			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
-
-            string supportURL = GetScriptAttributes(scriptType, "SupportURL");
-
-            if (supportURL != "") Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
         }
         /// <summary>
         /// Adds a new <see cref="Script"/> to the CurrentDomain threads.
@@ -826,7 +822,7 @@ namespace SHVDN
             return "";
         }
 
-        string LookupScriptName(Type scriptType)
+        string CreateScriptName(Type scriptType)
         {
             int increase = 1;
 
