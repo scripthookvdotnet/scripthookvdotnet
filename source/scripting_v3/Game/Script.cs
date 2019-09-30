@@ -36,16 +36,11 @@ namespace GTA
 	}
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class AutoStart : Attribute
+    public class ScriptAttributes : Attribute
     {
-        #region Fields
-        internal bool _active = true;
-        #endregion
-
-        public AutoStart(bool active)
-        {
-            _active = active;
-        }
+        public string Author;
+        public string SupportURL;
+        public bool NoDefaultInstance;
     }
 
     /// <summary>

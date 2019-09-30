@@ -352,7 +352,7 @@ namespace SHVDN
 
             script.Filename = LookupScriptFilename(scriptType);
 
-            script.Name = ScriptName(scriptType);
+            script.Name = LookupScriptName(scriptType);
 
             try
             {
@@ -371,7 +371,12 @@ namespace SHVDN
 			catch (Exception ex)
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
-				return null;
+
+                string supportURL = GetScriptAttributes(scriptType, "SupportURL");
+
+                if (supportURL != "") Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+
+                return null;
 			}
 
             executingScript = _executingScript;
@@ -446,7 +451,7 @@ namespace SHVDN
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
                 // Start the script
-                if (GetAttributeAutoStart(type)) IInstantiateScript(type)?.Start();
+                if (GetScriptAttributes(type, "NoDefaultInstance") == "") InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -468,7 +473,7 @@ namespace SHVDN
 				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
                 // Start the script
-                if (GetAttributeAutoStart(type)) IInstantiateScript(type)?.Start();
+                if (GetScriptAttributes(type, "NoDefaultInstance") == "") InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -775,7 +780,11 @@ namespace SHVDN
 			var script = (Script)sender;
 
 			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
-		}
+
+            string supportURL = GetScriptAttributes(scriptType, "SupportURL");
+
+            if (supportURL != "") Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+        }
         /// <summary>
         /// Adds a new <see cref="Script"/> to the CurrentDomain threads.
         /// </summary>
@@ -801,28 +810,23 @@ namespace SHVDN
         }
 
         /// <summary>
-        /// Checks if a script should be autostarted.
+        /// Checks if a ScriptAttributes contains <name>.
         /// </summary>
         /// <param name="script">The script to check for attribute.</param>
-        /// <returns>Bool <c>true</c>by default.</returns>
-        bool GetAttributeAutoStart(Type scriptType)
+        /// <returns>string <c>empty</c>by default.</returns>
+        static private string GetScriptAttributes(Type scriptType, string name)
         {
-            bool autoStart = true;
+            var attribute = scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ScriptAttributes").FirstOrDefault();
 
-            if (scriptType != null)
+            foreach (var arg in attribute.NamedArguments)
             {
-                foreach (var attribute in scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.AutoStart"))
-                {
-                    autoStart = (bool)attribute.ConstructorArguments[0].Value;
-
-                    break;
-                }
+                if (arg.MemberName == name) return (string) arg.TypedValue.Value;
             }
 
-            return autoStart;
+            return "";
         }
 
-        string ScriptName(Type scriptType)
+        string LookupScriptName(Type scriptType)
         {
             int increase = 1;
 

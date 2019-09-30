@@ -69,7 +69,7 @@ namespace SHVDN
 		/// <summary>
 		/// Gets the type name of this script.
 		/// </summary>
-		public string Name { get; internal set; };
+		public string Name { get; internal set; }
 
 		/// <summary>
 		/// Gets the path to the file that contains this script.
