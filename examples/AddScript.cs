@@ -27,6 +27,45 @@ namespace ScriptInstance
 
         private void OnTick(object sender, EventArgs e) { }
 
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e != null)
+            {
+
+
+            }
+            if (e.KeyCode == Keys.T) // Create AI Script and store as AIone
+            {
+                SpawnAIone();
+            }
+            else if (e.KeyCode == Keys.Y) // Create AI Script and store as AItwo
+            {
+                SpawnAItwo();
+            }
+            else if (e.KeyCode == Keys.G) // Changes AIone animation
+            {
+                if (AIone != null)
+                {
+                    if (AIone.animation == "Jump")
+                    {
+                        AIone.animation = "HandsUp";
+                    }
+                    else AIone.animation = "Jump";
+
+                    GTA.UI.Notification.Show("SpawnAI: Animation(" + AIone.animation + ");");
+                }
+            }
+            else if (e.KeyCode == Keys.H) // Sets Wait() for AItwo
+            {
+                AItwo.SetWait(6000);
+            }
+            else if (e.KeyCode == Keys.J) // Toggles Pause() for AIone
+            {
+                if (AIone.IsPaused) AIone.Start();
+                else AIone.Pause();
+            }
+        }
+
         private void SpawnAIone()
         {
             if (AIone == null)
@@ -68,55 +107,9 @@ namespace ScriptInstance
                 GTA.UI.Notification.Show("SpawnAI: Ped(2).Abort();");
             }
         }
-
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (KeyPress(Keys.T, e)) // Create AI Script and store as AIone
-            {
-                SpawnAIone();
-            }
-            else if (KeyPress(Keys.Y, e)) // Create AI Script and store as AItwo
-            {
-                SpawnAItwo();
-            }
-            else if (KeyPress(Keys.G, e)) // Changes AIone animation
-            {
-                if (AIone != null)
-                {
-                    if (AIone.animation == "Jump")
-                    {
-                        AIone.animation = "HandsUp";
-                    }
-                    else AIone.animation = "Jump";
-
-                    GTA.UI.Notification.Show("SpawnAI: Animation(" + AIone.animation + ");");
-                }
-            }
-            else if (KeyPress(Keys.H, e)) // Sets Wait() for AItwo
-            {
-                AItwo.SetWait(6000);
-            }
-            else if (KeyPress(Keys.J, e)) // Toggles Pause() for AIone
-            {
-                if (AIone.IsPaused) AIone.Start();
-                else AIone.Pause();
-            }
-        }
-
-        private bool KeyPress(Keys key, KeyEventArgs e = null)
-        {
-            if (e != null && e.KeyCode == key)
-            {
-                e.Handled = true;
-
-                return true;
-            }
-
-            return false;
-        }
     }
 
-    [AutoStart(false)]
+    [ScriptAttributes(NoDefaultInstance = true)]
     public class AI : Script
     {
         public AI()
@@ -130,12 +123,24 @@ namespace ScriptInstance
 
         private Ped ped = null;
         public string animation = "HandsUp";
+        private int _Wait = -1;
+
+        public void SetWait(int ms)
+        {
+            if (ms > _Wait) _Wait = ms;
+        }
 
         private void OnTick(object sender, EventArgs e)
         {
+            if (_Wait > -1)
+            {
+                Wait(_Wait);
+                _Wait = -1;
+            }
+
             if (ped == null || !ped.Exists())
             {
-                Model model = new Model(PedHash.Stripper01Cutscene);
+                Model model = new Model(PedHash.Beach01AMY);
 
                 ped = World.CreatePed(model, Game.Player.Character.Position + (GTA.Math.Vector3.RelativeFront * 3));
             }
@@ -162,24 +167,6 @@ namespace ScriptInstance
                 ped.MarkAsNoLongerNeeded();
 
                 ped.Delete();
-            }
-        }
-    }
-
-    public class KeyFilter : Script
-    {
-        public KeyFilter()
-        {
-            KeyDown += OnKey;
-        }
-
-        private void OnKey(object sender, KeyEventArgs e)
-        {
-            Yield();
-
-            if (e != null && !e.Handled)
-            {
-                e.Handled = true;
             }
         }
     }
