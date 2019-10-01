@@ -38,20 +38,20 @@ namespace SHVDN
 		/// </summary>
 		public bool IsRunning { get; private set; }
 
-        /// <summary>
-        /// Checks if this script is not executing.
-        /// </summary>
-        public bool IsPaused { get; private set; }
+		/// <summary>
+		/// Checks if this script is not executing.
+		/// </summary>
+		public bool IsPaused { get; private set; }
 
-        /// <summary>
-        /// Gets the execution status of this script.
-        /// </summary>
-        public bool IsExecuting => ScriptDomain.ExecutingScript == this;
+		/// <summary>
+		/// Gets the execution status of this script.
+		/// </summary>
+		public bool IsExecuting => ScriptDomain.ExecutingScript == this;
 
-        /// <summary>
-        /// An event that is raised every tick of the script. 
-        /// </summary>
-        public event EventHandler Tick;
+		/// <summary>
+		/// An event that is raised every tick of the script. 
+		/// </summary>
+		public event EventHandler Tick;
 		/// <summary>
 		/// An event that is raised when this script gets aborted for any reason.
 		/// </summary>
@@ -81,24 +81,24 @@ namespace SHVDN
 		/// </summary>
 		public object ScriptInstance { get; internal set; }
 
-        /// <summary>
-        /// Pause execution of this script.
-        /// </summary>
-        public void Pause(bool toggle)
-        {
-            if (IsPaused != toggle)
-            {
-                if (toggle) Log.Message(Log.Level.Info, "Paused script ", Name, ".");
-                else Log.Message(Log.Level.Info, "Started script ", Name, ".");
+		/// <summary>
+		/// Pause execution of this script.
+		/// </summary>
+		public void Pause(bool toggle)
+		{
+            		if (IsPaused != toggle)
+            		{
+                		if (toggle) Log.Message(Log.Level.Info, "Paused script ", Name, ".");
+                		else Log.Message(Log.Level.Info, "Started script ", Name, ".");
 
-                IsPaused = toggle;
-            }
-        }
+                		IsPaused = toggle;
+            		}
+        	}
 
-        /// <summary>
-        /// The main execution logic of all scripts.
-        /// </summary>
-        void MainLoop()
+		/// <summary>
+		/// The main execution logic of all scripts.
+		/// </summary>
+		void MainLoop()
 		{
 			IsRunning = true;
 
@@ -181,17 +181,17 @@ namespace SHVDN
 				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 			}
 
-            waitEvent.Release();
+            		waitEvent.Release();
 
-            // Unregister any console commands attached to this script
-            var console = AppDomain.CurrentDomain.GetData("Console") as Console;
-            console?.UnregisterCommands(ScriptInstance.GetType());
+			// Unregister any console commands attached to this script
+			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
+			console?.UnregisterCommands(ScriptInstance.GetType());
 
-            if (thread != null)
-            {
-                Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
+            		if (thread != null)
+            		{
+                		Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
 
-                thread.Abort(); thread = null;
+                		thread.Abort(); thread = null;
 			}
 		}
 
