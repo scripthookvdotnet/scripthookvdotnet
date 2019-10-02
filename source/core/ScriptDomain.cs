@@ -351,20 +351,21 @@ namespace SHVDN
 			executingScript = script;
 
 			// Create a name for the new script instance
-			int instanceIndex = 1;
-
 			if (scriptInstances.ContainsKey(scriptType.FullName))
 			{
-				instanceIndex = scriptInstances[scriptType.FullName] + 1;
-
+				int instanceIndex = scriptInstances[scriptType.FullName] + 1;
 				scriptInstances[scriptType.FullName] = instanceIndex;
+
+				script.Name = scriptType.FullName + instanceIndex.ToString();
 			}
 			else
 			{
-				scriptInstances.Add(scriptType.FullName, instanceIndex);
+				scriptInstances.Add(scriptType.FullName, 0);
+
+				// Do not append instance index to the default instance name
+				script.Name = scriptType.FullName;
 			}
 
-			script.Name = scriptType.FullName + instanceIndex.ToString();
 			script.Filename = LookupScriptFilename(scriptType);
 
 			try
