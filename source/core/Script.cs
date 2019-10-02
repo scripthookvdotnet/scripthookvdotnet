@@ -34,9 +34,20 @@ namespace SHVDN
 		public int Interval { get; set; }
 
 		/// <summary>
-		/// Gets the execution status of this script.
+		/// Gets whether executing of this script is paused or not.
+		/// </summary>
+		public bool IsPaused { get; private set; }
+
+		/// <summary>
+		/// Gets the status of this script.
+		/// So <c>true</c> if it is running and <c>false</c> if it was aborted.
 		/// </summary>
 		public bool IsRunning { get; private set; }
+
+		/// <summary>
+		/// Gets whether this is the currently executing script.
+		/// </summary>
+		public bool IsExecuting => ScriptDomain.ExecutingScript == this;
 
 		/// <summary>
 		/// An event that is raised every tick of the script. 
@@ -57,9 +68,9 @@ namespace SHVDN
 		public event KeyEventHandler KeyDown;
 
 		/// <summary>
-		/// Gets the type name of this script.
+		/// Gets the instance name of this script.
 		/// </summary>
-		public string Name => ScriptInstance.GetType().FullName;
+		public string Name { get; internal set; }
 
 		/// <summary>
 		/// Gets the path to the file that contains this script.
@@ -148,8 +159,6 @@ namespace SHVDN
 		{
 			IsRunning = false;
 
-			waitEvent.Release();
-
 			try
 			{
 				Aborted?.Invoke(this, EventArgs.Empty);
@@ -159,16 +168,43 @@ namespace SHVDN
 				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 			}
 
-			if (thread != null)
-			{
-				thread.Abort(); thread = null;
-
-				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
-			}
+			waitEvent.Release();
 
 			// Unregister any console commands attached to this script
 			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
 			console?.UnregisterCommands(ScriptInstance.GetType());
+
+			if (thread != null)
+			{
+				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
+
+				thread.Abort(); thread = null;
+			}
+		}
+
+		/// <summary>
+		/// Pauses execution of this script.
+		/// </summary>
+		public void Pause()
+		{
+			if (IsPaused)
+				return; // Pause status has not changed, so nothing to do
+
+			IsPaused = true;
+
+			Log.Message(Log.Level.Info, "Paused script ", Name, ".");
+		}
+		/// <summary>
+		/// Resumes execution of this script.
+		/// </summary>
+		public void Resume()
+		{
+			if (!IsPaused)
+				return;
+
+			IsPaused = false;
+
+			Log.Message(Log.Level.Info, "Resumed script ", Name, ".");
 		}
 
 		/// <summary>

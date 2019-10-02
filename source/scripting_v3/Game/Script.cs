@@ -35,6 +35,14 @@ namespace GTA
 		}
 	}
 
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	public class ScriptAttributes : Attribute
+	{
+		public string Author;
+		public string SupportURL;
+		public bool NoDefaultInstance;
+	}
+
 	/// <summary>
 	/// A base class for all user scripts to inherit.
 	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
@@ -47,6 +55,7 @@ namespace GTA
 
 		public Script()
 		{
+			Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
 			Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
 		}
 
@@ -90,7 +99,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the name of this <see cref="Script"/>.
 		/// </summary>
-		public string Name => GetType().FullName;
+		public string Name { get; internal set; }
 		/// <summary>
 		/// Gets the filename of this <see cref="Script"/>.
 		/// </summary>
@@ -100,6 +109,30 @@ namespace GTA
 		/// Gets the Directory where this <see cref="Script"/> is stored.
 		/// </summary>
 		public string BaseDirectory => Path.GetDirectoryName(Filename);
+
+		/// <summary>
+		/// Checks if this <see cref="Script"/> is paused.
+		/// </summary>
+		public bool IsPaused
+		{
+			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused; }
+		}
+
+		/// <summary>
+		/// Checks if this <see cref="Script"/> is running.
+		/// </summary>
+		public bool IsRunning
+		{
+			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning; }
+		}
+
+		/// <summary>
+		/// Checks if this <see cref="Script"/> is executing.
+		/// </summary>
+		public bool IsExecuting
+		{
+			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting; }
+		}
 
 		/// <summary>
 		/// Gets an INI file associated with this <see cref="Script"/>.
@@ -162,6 +195,22 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Pause execution of this <see cref="Script"/>.
+		/// </summary>
+		public void Pause()
+		{
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause();
+		}
+
+		/// <summary>
+		/// Starts execution of this <see cref="Script"/> after it has been Paused.
+		/// </summary>
+		public void Resume()
+		{
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Resume();
+		}
+
+		/// <summary>
 		/// Pauses execution of the <see cref="Script"/> for a specific amount of time.
 		/// Must be called inside the main script loop (the <see cref="Tick"/> event or any sub methods called from it).
 		/// </summary>
@@ -181,6 +230,20 @@ namespace GTA
 		public static void Yield()
 		{
 			Wait(0);
+		}
+
+		/// <summary>
+		/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
+		/// </summary>
+		public static Script AddScript(Type scriptType)
+		{
+			SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(scriptType);
+			if (script == null)
+				return null;
+
+			script.Start();
+
+			return (Script)script.ScriptInstance;
 		}
 	}
 }

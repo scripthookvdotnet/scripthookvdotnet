@@ -37,6 +37,7 @@ namespace SHVDN
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
 		List<Script> runningScripts = new List<Script>();
 		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
+		Dictionary<string, int> scriptInstances = new Dictionary<string, int>();
 		SortedList<string, Tuple<string, Type>> scriptTypes = new SortedList<string, Tuple<string, Type>>();
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
@@ -336,15 +337,36 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="scriptType">The type of the script to instantiate.</param>
 		/// <returns>The script instance or <c>null</c> in case of failure.</returns>
-		Script InstantiateScript(Type scriptType)
+		public Script InstantiateScript(Type scriptType)
 		{
-			if (scriptType.IsAbstract)
+			if (scriptType.IsAbstract || !IsSubclassOf(scriptType, "GTA.Script"))
 				return null;
 
 			Log.Message(Log.Level.Debug, "Instantiating script ", scriptType.FullName, " ...");
 
 			Script script = new Script();
+			// Keep track of current script, so it can be restored down below
+			Script previousScript = executingScript;
+
 			executingScript = script;
+
+			// Create a name for the new script instance
+			if (scriptInstances.ContainsKey(scriptType.FullName))
+			{
+				int instanceIndex = scriptInstances[scriptType.FullName] + 1;
+				scriptInstances[scriptType.FullName] = instanceIndex;
+
+				script.Name = scriptType.FullName + instanceIndex.ToString();
+			}
+			else
+			{
+				scriptInstances.Add(scriptType.FullName, 0);
+
+				// Do not append instance index to the default instance name
+				script.Name = scriptType.FullName;
+			}
+
+			script.Filename = LookupScriptFilename(scriptType);
 
 			try
 			{
@@ -363,12 +385,17 @@ namespace SHVDN
 			catch (Exception ex)
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
+
+				if (GetScriptAttribute(scriptType, "SupportURL") is string supportURL)
+					Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+
 				return null;
 			}
 
-			script.Filename = LookupScriptFilename(scriptType);
-
 			runningScripts.Add(script);
+
+			// Restore previously executing script
+			executingScript = previousScript;
 
 			return script;
 		}
@@ -437,8 +464,9 @@ namespace SHVDN
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
-				// Start the script
-				InstantiateScript(type)?.Start();
+				// Start the script unless script does not want a default instance
+				if (!(GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance) || !NoDefaultInstance)
+					InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -459,8 +487,9 @@ namespace SHVDN
 				// Make sure there are no others instances of this script
 				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
-				// Start the script
-				InstantiateScript(type)?.Start();
+				// Start the script unless script does not want a default instance
+				if (!(GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance) || !NoDefaultInstance)
+					InstantiateScript(type)?.Start();
 			}
 		}
 		/// <summary>
@@ -535,7 +564,7 @@ namespace SHVDN
 				Script script = runningScripts[i];
 
 				// Ignore terminated scripts
-				if (!script.IsRunning)
+				if (!script.IsRunning || script.IsPaused)
 					continue;
 
 				executingScript = script;
@@ -620,6 +649,10 @@ namespace SHVDN
 			}
 		}
 
+		/// <summary>
+		/// Finds the script object representing the specified <paramref name="scriptInstance"/> object.
+		/// </summary>
+		/// <param name="scriptInstance">The 'GTA.Script' instance to check.</param>
 		public Script LookupScript(object scriptInstance)
 		{
 			// Return matching script in running script list if one is found
@@ -629,6 +662,27 @@ namespace SHVDN
 		public string LookupScriptFilename(Type scriptType)
 		{
 			return scriptTypes.Values.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
+		}
+
+		/// <summary>
+		/// Checks if the script has a 'GTA.ScriptAttributes' attribute with the specified argument attached to it and returns it.
+		/// </summary>
+		/// <param name="scriptType">The script type to check for the attribute.</param>
+		/// <param name="name">The named argument to search.</param>
+		static object GetScriptAttribute(Type scriptType, string name)
+		{
+			var attribute = scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ScriptAttributes").FirstOrDefault();
+
+			if (attribute != null)
+			{
+				foreach (var arg in attribute.NamedArguments)
+				{
+					if (arg.MemberName == name)
+						return arg.TypedValue.Value;
+				}
+			}            
+
+			return null;
 		}
 
 		public override object InitializeLifetimeService()
