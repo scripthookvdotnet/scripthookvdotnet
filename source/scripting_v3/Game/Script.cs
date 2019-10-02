@@ -111,15 +111,7 @@ namespace GTA
 		public string BaseDirectory => Path.GetDirectoryName(Filename);
 
 		/// <summary>
-		/// Checks if this <see cref="Script"/> IsRunning.
-		/// </summary>
-		public bool IsRunning
-		{
-			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning; }
-		}
-
-		/// <summary>
-		/// Checks if this <see cref="Script"/> IsPaused.
+		/// Checks if this <see cref="Script"/> is paused.
 		/// </summary>
 		public bool IsPaused
 		{
@@ -127,7 +119,15 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Checks if this <see cref="Script"/> IsRunning.
+		/// Checks if this <see cref="Script"/> is running.
+		/// </summary>
+		public bool IsRunning
+		{
+			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning; }
+		}
+
+		/// <summary>
+		/// Checks if this <see cref="Script"/> is executing.
 		/// </summary>
 		public bool IsExecuting
 		{
@@ -187,27 +187,27 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Pause execution of this <see cref="Script"/>.
-		/// </summary>
-		public void Pause()
-		{
-			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(true);
-		}
-
-		/// <summary>
-		/// Starts execution of this <see cref="Script"/> after it has been Paused.
-		/// </summary>
-		public void Start()
-		{
-			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(false);
-		}
-
-		/// <summary>
 		/// Aborts execution of this <see cref="Script"/>.
 		/// </summary>
 		public void Abort()
 		{
 			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Abort();
+		}
+
+		/// <summary>
+		/// Pause execution of this <see cref="Script"/>.
+		/// </summary>
+		public void Pause()
+		{
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause();
+		}
+
+		/// <summary>
+		/// Starts execution of this <see cref="Script"/> after it has been Paused.
+		/// </summary>
+		public void Resume()
+		{
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Resume();
 		}
 
 		/// <summary>
@@ -237,11 +237,13 @@ namespace GTA
 		/// </summary>
 		public static Script AddScript(Type scriptType)
 		{
-			SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.AddScript(scriptType);
+			SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(scriptType);
+			if (script == null)
+				return null;
 
-			if (script != null) return (Script)script.ScriptInstance;
+			script.Start();
 
-			return null;
+			return (Script)script.ScriptInstance;
 		}
 	}
 }

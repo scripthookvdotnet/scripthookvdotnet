@@ -61,7 +61,7 @@ namespace ScriptInstance
 			}
 			else if (e.KeyCode == Keys.J) // Toggles Pause() for AIone
 			{
-				if (AIone.IsPaused) AIone.Start();
+				if (AIone.IsPaused) AIone.Resume();
 				else AIone.Pause();
 			}
 		}

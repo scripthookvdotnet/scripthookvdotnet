@@ -34,17 +34,18 @@ namespace SHVDN
 		public int Interval { get; set; }
 
 		/// <summary>
-		/// Checks this script has not been aborted.
-		/// </summary>
-		public bool IsRunning { get; private set; }
-
-		/// <summary>
-		/// Checks if this script is not executing.
+		/// Gets whether executing of this script is paused or not.
 		/// </summary>
 		public bool IsPaused { get; private set; }
 
 		/// <summary>
-		/// Gets the execution status of this script.
+		/// Gets the status of this script.
+		/// So <c>true</c> if it is running and <c>false</c> if it was aborted.
+		/// </summary>
+		public bool IsRunning { get; private set; }
+
+		/// <summary>
+		/// Gets whether this is the currently executing script.
 		/// </summary>
 		public bool IsExecuting => ScriptDomain.ExecutingScript == this;
 
@@ -67,7 +68,7 @@ namespace SHVDN
 		public event KeyEventHandler KeyDown;
 
 		/// <summary>
-		/// Gets the type name of this script.
+		/// Gets the instance name of this script.
 		/// </summary>
 		public string Name { get; internal set; }
 
@@ -80,20 +81,6 @@ namespace SHVDN
 		/// Gets the instance of the script.
 		/// </summary>
 		public object ScriptInstance { get; internal set; }
-
-		/// <summary>
-		/// Pause execution of this script.
-		/// </summary>
-		public void Pause(bool toggle)
-		{
-			if (IsPaused != toggle)
-			{
-				if (toggle) Log.Message(Log.Level.Info, "Paused script ", Name, ".");
-				else Log.Message(Log.Level.Info, "Started script ", Name, ".");
-
-				IsPaused = toggle;
-			}
-		}
 
 		/// <summary>
 		/// The main execution logic of all scripts.
@@ -193,6 +180,31 @@ namespace SHVDN
 
 				thread.Abort(); thread = null;
 			}
+		}
+
+		/// <summary>
+		/// Pauses execution of this script.
+		/// </summary>
+		public void Pause()
+		{
+			if (IsPaused)
+				return; // Pause status has not changed, so nothing to do
+
+			IsPaused = true;
+
+			Log.Message(Log.Level.Info, "Paused script ", Name, ".");
+		}
+		/// <summary>
+		/// Resumes execution of this script.
+		/// </summary>
+		public void Resume()
+		{
+			if (!IsPaused)
+				return;
+
+			IsPaused = false;
+
+			Log.Message(Log.Level.Info, "Resumed script ", Name, ".");
 		}
 
 		/// <summary>
