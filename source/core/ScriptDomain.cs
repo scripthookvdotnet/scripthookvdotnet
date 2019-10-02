@@ -38,8 +38,8 @@ namespace SHVDN
 		List<Script> runningScripts = new List<Script>();
 		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
 		SortedList<string, Tuple<string, Type>> scriptTypes = new SortedList<string, Tuple<string, Type>>();
-        	Dictionary<string, int> scriptCounter = new Dictionary<string, int>();
-        	bool recordKeyboardEvents = true;
+		Dictionary<string, int> scriptCounter = new Dictionary<string, int>();
+		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
 
@@ -346,16 +346,16 @@ namespace SHVDN
 
 			Script script = new Script();
 
-            		Script _executingScript = executingScript;
+			Script _executingScript = executingScript;
 
-            		executingScript = script;
+			executingScript = script;
 
-            		script.Filename = LookupScriptFilename(scriptType);
+			script.Filename = LookupScriptFilename(scriptType);
 
-            		script.Name = CreateScriptName(scriptType);
+			script.Name = CreateScriptName(scriptType);
 
-            		try
-            		{
+			try
+			{
 				script.ScriptInstance = Activator.CreateInstance(scriptType);
 			}
 			catch (MissingMethodException)
@@ -372,16 +372,16 @@ namespace SHVDN
 			{
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
 
-                		var supportURL = GetScriptAttributes(scriptType, "SupportURL");
+				var supportURL = GetScriptAttributes(scriptType, "SupportURL");
 
-                		if (supportURL != null) Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", (string)supportURL);
+				if (supportURL != null) Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", (string)supportURL);
 
-                		return null;
+				return null;
 			}
 
-            		executingScript = _executingScript;
+			executingScript = _executingScript;
 
-            		runningScripts.Add(script);
+			runningScripts.Add(script);
 
 			return script;
 		}
@@ -450,12 +450,12 @@ namespace SHVDN
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
-                		// Check if script set Attribute NoDefaultInstance
-                		var noDefault = GetScriptAttributes(type, "NoDefaultInstance");
+				// Check if script set Attribute NoDefaultInstance
+				var noDefault = GetScriptAttributes(type, "NoDefaultInstance");
 
-                		if (noDefault == null || !(bool)noDefault)
-                    			InstantiateScript(type)?.Start(); // Start the script
-            		}
+				if (noDefault == null || !(bool)noDefault)
+					InstantiateScript(type)?.Start(); // Start the script
+			}
 		}
 		/// <summary>
 		/// Loads and starts all scripts in the specified file.
@@ -478,9 +478,9 @@ namespace SHVDN
 				// Check if script set Attribute NoDefaultInstance
 				var noDefault = GetScriptAttributes(type, "NoDefaultInstance");
 
-                		if (noDefault == null || !(bool)noDefault)
-                    			InstantiateScript(type)?.Start(); // Start the script
-            		}
+				if (noDefault == null || !(bool)noDefault)
+					InstantiateScript(type)?.Start(); // Start the script
+			}
 		}
 		/// <summary>
 		/// Aborts all running scripts.
@@ -786,71 +786,71 @@ namespace SHVDN
 			var script = (Script)sender;
 
 			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
-        	}
+		}
 		
-       		/// <summary>
-        	/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
-        	/// </summary>
-        	public Script AddScript(Type scriptType)
-        	{
-            		try
-            		{
-                		Script script = InstantiateScript(scriptType);
+		/// <summary>
+		/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
+		/// </summary>
+		public Script AddScript(Type scriptType)
+		{
+			try
+			{
+				Script script = InstantiateScript(scriptType);
 
-                		if (script != null)
-                		{
-                    			script.Start();
+				if (script != null)
+				{
+						script.Start();
 
-                    			return script;
-                		}
-            		}
-            		catch (Exception ex)
-            		{
-                		Log.Message(Log.Level.Error, "AddScript: ", scriptType.Name, new UnhandledExceptionEventArgs(ex, false).ToString());
-            		}
+						return script;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Message(Log.Level.Error, "AddScript: ", scriptType.Name, new UnhandledExceptionEventArgs(ex, false).ToString());
+			}
 
-           		return null;
-        	}
+			return null;
+		}
 
-        	/// <summary>
-        	/// Checks if a ScriptAttributes contains <name>.
-        	/// </summary>
-        	/// <param name="script">The script to check for attribute.</param>
-        	/// <returns>string <c>empty</c>by default.</returns>
-        	static private object GetScriptAttributes(Type scriptType, string name)
-        	{
-            		var attribute = scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ScriptAttributes").FirstOrDefault();
+		/// <summary>
+		/// Checks if a ScriptAttributes contains <name>.
+		/// </summary>
+		/// <param name="script">The script to check for attribute.</param>
+		/// <returns>string <c>empty</c>by default.</returns>
+		static private object GetScriptAttributes(Type scriptType, string name)
+		{
+			var attribute = scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ScriptAttributes").FirstOrDefault();
 
-            		if (attribute != null)
-            		{
+			if (attribute != null)
+			{
 				foreach (var arg in attribute.NamedArguments)
 				{
-                    			if (arg.MemberName == name)
-                        			return arg.TypedValue.Value;
-                		}
-            		}            
+					if (arg.MemberName == name)
+						return arg.TypedValue.Value;
+				}
+			}            
 
-            		return null;
-        	}
+			return null;
+		}
 
-        	string CreateScriptName(Type scriptType)
-        	{
-            		int increase = 1;
+		string CreateScriptName(Type scriptType)
+		{
+			int increase = 1;
 
-            		string typeName = scriptType.FullName;
+			string typeName = scriptType.FullName;
 
-            		if (scriptCounter.ContainsKey(typeName))
-            		{
-                		increase = scriptCounter[typeName] + increase;
+			if (scriptCounter.ContainsKey(typeName))
+			{
+				increase = scriptCounter[typeName] + increase;
 
-                		scriptCounter[typeName] = increase;
-            		}
-            		else
-            		{
-                		scriptCounter.Add(typeName, increase);
-            		}
+				scriptCounter[typeName] = increase;
+			}
+			else
+			{
+				scriptCounter.Add(typeName, increase);
+			}
 
-            		return typeName + increase.ToString();
-        	}
+			return typeName + increase.ToString();
+		}
 	}
 }

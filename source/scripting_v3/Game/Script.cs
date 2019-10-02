@@ -35,19 +35,19 @@ namespace GTA
 		}
 	}
 
-    	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    	public class ScriptAttributes : Attribute
-    	{
-        	public string Author;
-        	public string SupportURL;
-        	public bool NoDefaultInstance;
-    	}
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	public class ScriptAttributes : Attribute
+	{
+		public string Author;
+		public string SupportURL;
+		public bool NoDefaultInstance;
+	}
 
-    	/// <summary>
-    	/// A base class for all user scripts to inherit.
-    	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
-    	/// </summary>
-    	public abstract class Script
+	/// <summary>
+	/// A base class for all user scripts to inherit.
+	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
+	/// </summary>
+	public abstract class Script
 	{
 		#region Fields
 		internal ScriptSettings _settings;
@@ -55,10 +55,9 @@ namespace GTA
 
 		public Script()
 		{
+			Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
 			Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
-
-            		Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
-        	}
+		}
 
 		/// <summary>
 		/// An event that is raised every tick of the script. 
@@ -132,8 +131,8 @@ namespace GTA
 		/// </summary>
 		public bool IsExecuting
 		{
-            		get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting; }
-        	}
+			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting; }
+		}
 
 		/// <summary>
 		/// Gets an INI file associated with this <see cref="Script"/>.
@@ -192,16 +191,16 @@ namespace GTA
 		/// </summary>
 		public void Pause()
 		{
-            		SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(true);
-        	}
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(true);
+		}
 
 		/// <summary>
 		/// Starts execution of this <see cref="Script"/> after it has been Paused.
 		/// </summary>
 		public void Start()
 		{
-            		SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(false);
-        	}
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Pause(false);
+		}
 
 		/// <summary>
 		/// Aborts execution of this <see cref="Script"/>.
@@ -231,18 +230,18 @@ namespace GTA
 		public static void Yield()
 		{
 			Wait(0);
-        	}
+		}
 
 		/// <summary>
 		/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
 		/// </summary>
 		public static Script AddScript(Type scriptType)
 		{
-            		SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.AddScript(scriptType);
+			SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.AddScript(scriptType);
 
-            		if (script != null) return (Script)script.ScriptInstance;
+			if (script != null) return (Script)script.ScriptInstance;
 
-            		return null;
-        	}
-    	}
+			return null;
+		}
+	}
 }
