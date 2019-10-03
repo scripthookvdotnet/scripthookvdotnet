@@ -14,6 +14,20 @@
     <FileAlignment>512</FileAlignment>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>..\..\bin\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
+    <DocumentationFile>..\..\bin\ScriptHookVDotNet2.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+    <NoWarn>1591</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\</OutputPath>
     <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
@@ -22,7 +36,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <NoWarn>1591</NoWarn>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
@@ -191,13 +205,21 @@
     <CSC
       Sources="@(Compile)"
       AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
+      BaseAddress="$(BaseAddress)"
+      DebugType="$(DebugType)"
+      DefineConstants="$(DefineConstants)"
       DisabledWarnings="$(NoWarn)"
+      DocumentationFile="@(DocFileItem)"
+      EmitDebugInformation="$(DebugSymbols)"
+      EnvironmentVariables="$(CscEnvironment)"
+      FileAlignment="$(FileAlignment)"
       HighEntropyVA="$(HighEntropyVA)"
       LangVersion="$(LangVersion)"
       NoLogo="$(NoLogo)"
       NoStandardLib="$(NoCompilerStandardLib)"
       Optimize="$(Optimize)"
       OutputAssembly="$(IntermediateOutputPath)$(TargetName).csharp.netmodule"
+      PdbFile="$(PdbFile)"
       References="@(ReferencePathWithRefAssemblies)"
       TargetType="Module"
       Utf8Output="$(Utf8Output)"
