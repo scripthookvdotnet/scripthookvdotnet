@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <NoLogo>true</NoLogo>
     <FileAlignment>512</FileAlignment>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\</OutputPath>
@@ -158,9 +159,12 @@
   <ItemGroup>
     <CppCompile Include="GTA\UI.cpp" />
   </ItemGroup>
-  <!-- Overwrite core build logic to support a mixed C++/CLI and C# code base -->
+  <!-- Import Cpp targets -->
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props" Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props')" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Common.props" />
+  <!-- Import CSharp targets-->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- Overwrite core build logic to support a mixed C++/CLI and C# code base -->
   <UsingTask TaskName="CL" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <UsingTask TaskName="Link" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <Target
@@ -171,12 +175,10 @@
     <!-- First build all C++/CLI files -->
     <CL
       Sources="@(CppCompile)"
-      AdditionalOptions="/clr:nostdlib"
       AdditionalUsingDirectories="$(TargetFrameworkDirectory);$(OutputPath)"
       CompileAsManaged="true"
       ForcedUsingFiles="@(ReferencePathWithRefAssemblies);ScriptHookVDotNet.asi"
       ObjectFileName="$(IntermediateOutputPath)$(TargetName).cpp.netmodule"
-      OmitDefaultLibName="true"
       SuppressStartupBanner="$(NoLogo)"
       ToolExe="cl.exe"
       ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
@@ -202,11 +204,9 @@
     <!-- Finally link the two modules together into a single assembly -->
     <Link
       Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule"
-      AdditionalLibraryDirectories="$(TargetFrameworkDirectory);$(OutputPath)"
-      IgnoreAllDefaultLibraries="true"
+      AdditionalLibraryDirectories="$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(OutputPath)"
       LinkDLL="true"
       LinkTimeCodeGeneration="UseLinkTimeCodeGeneration"
-      NoEntryPoint="true"
       OutputFile="@(IntermediateAssembly)"
       RandomizedBaseAddress="$(HighEntropyVA)"
       SuppressStartupBanner="$(NoLogo)"
