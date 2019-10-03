@@ -815,12 +815,13 @@ namespace SHVDN
 		{
 			Log.Message(Log.Level.Error, args.IsTerminating ? "Caught fatal unhandled exception:" : "Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
 
-			if (sender == null || !typeof(Script).IsInstanceOfType(sender))
-				return;
+			if (sender is Script script)
+			{
+				Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
 
-			var script = (Script)sender;
-
-			Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
+				if (GetScriptAttribute(script.ScriptInstance.GetType(), "SupportURL") is string supportURL)
+					Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+			}
 		}
 	}
 }
