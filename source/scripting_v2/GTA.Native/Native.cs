@@ -77,6 +77,11 @@ namespace GTA.Native
 
 		internal static T ObjectFromNativeGeneric(ulong *value)
 		{
+			if (typeof(T).IsEnum)
+			{
+				return Convert(*value);
+			}
+
 			// Fundamental types
 			if (typeof(T) == typeof(bool))
 			{
@@ -392,7 +397,7 @@ namespace GTA.Native
 			unsafe
 			{
 				var type = typeof(T);
-				if (type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
+				if (type.IsEnum || type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
 					return NativeHelperGeneric<T>.ObjectFromNativeGeneric((ulong*)data);
 				else
 					return (T)Function.ObjectFromNative(type, (ulong*)data);
@@ -419,7 +424,7 @@ namespace GTA.Native
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
 
 				var type = typeof(T);
-				if (type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
+				if (type.IsEnum || type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
 					return NativeHelperGeneric<T>.ObjectFromNativeGeneric(task.Result);
 				else
 					return (T)ObjectFromNative(type, task.Result);
