@@ -159,6 +159,11 @@
   <ItemGroup>
     <CppCompile Include="GTA\UI.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="GTA\HudComponent.h" />
+    <None Include="GTA\Notification.h" />
+    <None Include="GTA\UI.h" />
+  </ItemGroup>
   <!-- Import Cpp targets -->
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props" Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props')" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Common.props" />
