@@ -597,7 +597,7 @@ namespace GTA
 				}
 				else
 				{
-					MarkAsNoLongerNeeded();
+					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 				}
 			}
 		}
