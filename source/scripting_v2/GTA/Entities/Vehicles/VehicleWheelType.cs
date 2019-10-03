@@ -9,6 +9,8 @@ namespace GTA
 		Offroad = 4,
 		Tuner = 5,
 		BikeWheels = 6,
-		HighEnd = 7
+		HighEnd = 7,
+		BennysOriginals = 8,
+		BennysBespoke = 9,
 	}
 }

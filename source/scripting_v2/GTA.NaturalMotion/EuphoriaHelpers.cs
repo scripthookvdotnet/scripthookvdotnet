@@ -4,7 +4,7 @@ using GTA.Math;
 
 namespace GTA.NaturalMotion
 {
-	public enum ArmDirection
+	public enum ArmDirections
 	{
 		Backwards = -1,
 		Adaptive,
@@ -6533,7 +6533,7 @@ namespace GTA.NaturalMotion
 	/// <summary>
 	/// Send this message to immediately stop all behaviors from executing.
 	/// </summary>
-	public sealed class StopAllBehaviorsHelper : CustomHelper
+	public sealed class StopAllBehavioursHelper : CustomHelper
 	{
 		/// <summary>
 		/// Creates a new Instance of the StopAllBehaviorsHelper for sending a StopAllBehaviors <see cref="Message"/> to a given <see cref="Ped"/>. 
@@ -6542,7 +6542,7 @@ namespace GTA.NaturalMotion
 		/// <remarks>
 		/// Send this message to immediately stop all behaviors from executing.
 		/// </remarks>
-		public StopAllBehaviorsHelper(Ped ped) : base(ped, "stopAllBehaviours")
+		public StopAllBehavioursHelper(Ped ped) : base(ped, "stopAllBehaviours")
 		{
 		}
 	}
@@ -8790,9 +8790,9 @@ namespace GTA.NaturalMotion
 		/// <summary>
 		/// </summary>
 		/// <remarks>
-		/// Default value = <see cref="ArmDirection.Adaptive"/>.
+		/// Default value = <see cref="ArmDirections.Adaptive"/>.
 		/// </remarks>
-		public ArmDirection ArmDirection
+		public ArmDirections ArmDirection
 		{
 			set => SetArgument("armDirection", (int)value);
 		}

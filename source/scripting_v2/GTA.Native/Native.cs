@@ -43,23 +43,24 @@ namespace GTA.Native
 				Z = z;
 			}
 
-			public static explicit operator Vector3(NativeVector3 value) => new Vector3(value.X, value.Y, value.Z);
-			public static explicit operator NativeVector3(Vector3 value) => new NativeVector3(value.X, value.Y, value.Z);
+			public static explicit operator Vector2(NativeVector3 val) => new Vector2(val.X, val.Y);
+			public static explicit operator Vector3(NativeVector3 val) => new Vector3(val.X, val.Y, val.Z);
 		}
 	}
 	internal unsafe static class NativeHelperGeneric<T>
 	{
-		static class CastCache<TFrom>
+		static class CastCache<From>
 		{
-			internal static readonly Func<TFrom, T> Cast;
+			internal static readonly Func<From, T> Convert;
 
 			static CastCache()
 			{
-				var paramExp = Expression.Parameter(typeof(TFrom));
+				var paramExp = Expression.Parameter(typeof(From));
 				var convertExp = Expression.Convert(paramExp, typeof(T));
-				Cast = Expression.Lambda<Func<TFrom, T>>(convertExp, paramExp).Compile();
+				Convert = Expression.Lambda<Func<From, T>>(convertExp, paramExp).Compile();
 			}
 		}
+
 		private static readonly Func<IntPtr, T> _ptrToStrFunc;
 
 		static NativeHelperGeneric()
@@ -121,9 +122,9 @@ namespace GTA.Native
 			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
 		}
 
-		internal static T Convert<TFrom>(TFrom from)
+		internal static T Convert<T1>(T1 from)
 		{
-			return CastCache<TFrom>.Cast(from);
+			return CastCache<T1>.Convert(from);
 		}
 
 		internal static T PtrToStructure(IntPtr ptr)
@@ -145,7 +146,7 @@ namespace GTA.Native
 			data = Function.ObjectToNative(value);
 		}
 
-		public InputArgument(bool value) : this(value ? 1ul : 0ul)
+		public InputArgument([MarshalAs(UnmanagedType.U1)] bool value) : this(value ? 1ul : 0ul)
 		{
 		}
 		public InputArgument(int value) : this((ulong)value)
@@ -195,7 +196,7 @@ namespace GTA.Native
 		{
 		}
 
-		public static implicit operator InputArgument(bool value)
+		public static implicit operator InputArgument([MarshalAs(UnmanagedType.U1)] bool value)
 		{
 			return value ? new InputArgument(1ul) : new InputArgument(0ul);
 		}
@@ -387,7 +388,7 @@ namespace GTA.Native
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-		protected virtual void Dispose(bool disposing)
+		protected virtual void Dispose([MarshalAs(UnmanagedType.U1)] bool disposing)
 		{
 			Marshal.FreeCoTaskMem((IntPtr)(long)data);
 		}

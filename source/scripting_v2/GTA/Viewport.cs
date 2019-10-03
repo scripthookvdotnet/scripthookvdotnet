@@ -183,6 +183,12 @@ namespace GTA
 		/** Number of active menus */
 		public int ActiveMenus => mMenuStack.Count;
 
+		/** Have more than one menu on the screen on the time and transition them */
+		public bool MenuTransitions
+		{
+			get; set;
+		}
+
 		/** The offset each menu in the stack has from the one above it */
 		public Point MenuOffset
 		{
@@ -191,12 +197,6 @@ namespace GTA
 
 		/** The top left position of the current menu */
 		public Point MenuPosition
-		{
-			get; set;
-		}
-
-		/** Have more than one menu on the screen on the time and transition them */
-		public bool MenuTransitions
 		{
 			get; set;
 		}

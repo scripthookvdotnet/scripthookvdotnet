@@ -3,7 +3,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public readonly struct RaycastResult
+	public struct RaycastResult
 	{
 		internal RaycastResult(int handle)
 		{

@@ -253,7 +253,7 @@ namespace GTA.NaturalMotion
 		/// <remarks>
 		/// Send this message to immediately stop all behaviors from executing.
 		/// </remarks>
-		public StopAllBehaviorsHelper StopAllBehaviors => GetHelper<StopAllBehaviorsHelper>("stopAllBehaviours");
+		public StopAllBehavioursHelper StopAllBehaviours => GetHelper<StopAllBehavioursHelper>("stopAllBehaviours");
 
 		/// <summary>
 		/// Gets a SetCharacterStrength Helper class for sending SetCharacterStrength <see cref="Message"/> to this <see cref="Ped"/>.
