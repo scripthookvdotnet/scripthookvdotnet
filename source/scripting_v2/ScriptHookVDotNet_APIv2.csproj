@@ -10,6 +10,7 @@
     <RootNamespace>GTA</RootNamespace>
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <NoLogo>true</NoLogo>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -184,12 +185,12 @@
       Sources="@(Compile)"
       AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
       DisabledWarnings="$(NoWarn)"
+      HighEntropyVA="$(HighEntropyVA)"
       LangVersion="$(LangVersion)"
       NoLogo="$(NoLogo)"
       NoStandardLib="$(NoCompilerStandardLib)"
       Optimize="$(Optimize)"
       OutputAssembly="$(IntermediateOutputPath)$(TargetName).csharp.netmodule"
-      Platform="$(PlatformTarget)"
       References="@(ReferencePathWithRefAssemblies)"
       TargetType="Module"
       Utf8Output="$(Utf8Output)"
@@ -207,7 +208,9 @@
       LinkTimeCodeGeneration="UseLinkTimeCodeGeneration"
       NoEntryPoint="true"
       OutputFile="@(IntermediateAssembly)"
+      RandomizedBaseAddress="$(HighEntropyVA)"
       SuppressStartupBanner="$(NoLogo)"
+      TargetMachine="Machine$(PlatformTarget)"
       ToolExe="link.exe"
       ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
   </Target>
