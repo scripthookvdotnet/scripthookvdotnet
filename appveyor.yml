@@ -3,15 +3,8 @@ image: Visual Studio 2019
 configuration: Release
 platform: x64
 install:
+- ps: ".\\tools\\install_sdk.ps1"
 - cmd: >-
-    cd sdk/
-
-    appveyor DownloadFile http://reshade.me/downloads/ScriptHookV_SDK_1.0.617.1a.zip -FileName sdk.zip
-
-    7z x sdk.zip
-
-    cd ../
-
     if defined APPVEYOR_REPO_TAG_NAME (set SHVDN_VERSION_TAG=%APPVEYOR_REPO_TAG_NAME%) else (for /f %%i in ('git describe --abbrev^=0 --tags') do set SHVDN_VERSION_TAG=%%i)
 
     set SHVDN_VERSION=%SHVDN_VERSION_TAG:~1%
@@ -20,25 +13,20 @@ install:
 
 build:
   project: ScriptHookVDotNet.sln
+  publish_nuget: true
   parallel: true
   verbosity: minimal
-after_build:
-- ps: >-
-    Get-ChildItem ".\source\**\ScriptHookVDotNet*.csproj" | % { nuget pack $_.FullName }
-
-    Get-ChildItem ".\*.nupkg" | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-
 before_package:
 - cmd: >-
-    del bin\ScriptHookVDotNet*.metagen
+    del bin\Release\ScriptHookVDotNet*.metagen
 
-    type README.md | more /P > bin\README.txt
+    type README.md | more /P > bin\Release\README.txt
 
-    type LICENSE.txt | more /P > bin\LICENSE.txt
+    type LICENSE.txt | more /P > bin\Release\LICENSE.txt
 
 test: off
 artifacts:
-- path: bin/
+- path: bin/Release/
   name: ScriptHookVDotNet
 deploy:
 - provider: GitHub

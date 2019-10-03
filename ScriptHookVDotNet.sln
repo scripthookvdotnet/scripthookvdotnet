@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 15.0.26228.04
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.vcxproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.csproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv3", "source\scripting_v3\ScriptHookVDotNet_APIv3.csproj", "{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}"
 EndProject
@@ -13,28 +13,36 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples.csproj
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Release + Examples|x64 = Release + Examples|x64
 		Release|x64 = Release|x64
 		Run NativeGen|x64 = Run NativeGen|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Debug|x64.ActiveCfg = Debug|x64
+		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Debug|x64.Build.0 = Debug|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release + Examples|x64.Build.0 = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.ActiveCfg = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Release|x64.Build.0 = Release|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.ActiveCfg = NativeGen|x64
 		{B2933D8F-F922-40BD-BB70-18622A81AB8F}.Run NativeGen|x64.Build.0 = NativeGen|x64
+		{019193A7-50C0-444A-84CA-777595E702CD}.Debug|x64.ActiveCfg = Debug|x64
+		{019193A7-50C0-444A-84CA-777595E702CD}.Debug|x64.Build.0 = Debug|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release + Examples|x64.Build.0 = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.ActiveCfg = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Release|x64.Build.0 = Release|x64
 		{019193A7-50C0-444A-84CA-777595E702CD}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Debug|x64.ActiveCfg = Debug|x64
+		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Debug|x64.Build.0 = Debug|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release + Examples|x64.ActiveCfg = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release + Examples|x64.Build.0 = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.ActiveCfg = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.Build.0 = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Run NativeGen|x64.ActiveCfg = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Run NativeGen|x64.Build.0 = Release|x64
+		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Debug|x64.ActiveCfg = Debug|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.ActiveCfg = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release|x64.ActiveCfg = Release|x64
