@@ -9,6 +9,7 @@
     </Rule.DataSource>
     <Rule.Categories>
       <Category Name="General" DisplayName="General" />
+      <Category Name="Advanced" DisplayName="Advanced" />
       <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
     </Rule.Categories>
     <EnumProperty Name="LangVersion" DisplayName="Language Version">
@@ -21,6 +22,15 @@
     </EnumProperty>
     <BoolProperty Name="Optimize" DisplayName="Optimize" Category="General" />
     <BoolProperty Name="AllowUnsafeBlocks" DisplayName="Allow Unsafe Code" Category="General" />
-    <StringListProperty Name="NoWarn" DisplayName="Disable Specific Warnings" Category="General" />
+    <EnumProperty Name="WarningLevel" DisplayName="Warning Level" Category="General" >
+      <EnumValue Name="0" DisplayName="Turn Off All Warnings" />
+      <EnumValue Name="1" DisplayName="Level1" />
+      <EnumValue Name="2" DisplayName="Level2" />
+      <EnumValue Name="3" DisplayName="Level3" />
+      <EnumValue Name="4" DisplayName="Level4" />
+    </EnumProperty>
+    <StringListProperty Name="NoWarn" DisplayName="Disable Specific Warnings" Category="Advanced" />
+    <StringListProperty Name="WarningsAsErrors" DisplayName="Treat Specific Warnings As Errors" Category="Advanced" />
+    <StringListProperty Name="WarningsNotAsErrors" DisplayName="Treat Specific Warnings Not As Errors" Category="Advanced" />
   </Rule>
 </ProjectSchemaDefinitions>

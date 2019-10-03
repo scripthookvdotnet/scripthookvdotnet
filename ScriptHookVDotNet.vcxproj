@@ -65,6 +65,7 @@
     </ClCompile>
     <CsCompile>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <Utf8Output>true</Utf8Output>
     </CsCompile>
     <Link>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -79,7 +80,8 @@
     </ClCompile>
     <CsCompile>
       <Optimize>false</Optimize>
-      <NoWarn>1591;%(NoWarn)</NoWarn>
+      <NoWarn>1591;1668;%(NoWarn)</NoWarn>
+      <WarningLevel>3</WarningLevel>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,7 +95,8 @@
     </ClCompile>
     <CsCompile>
       <Optimize>true</Optimize>
-      <NoWarn>1591;%(NoWarn)</NoWarn>
+      <NoWarn>1591;1668;%(NoWarn)</NoWarn>
+      <WarningLevel>3</WarningLevel>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -126,11 +129,31 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->
-  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
-    <Csc Sources="@(CsCompile)" TargetType="Module" Optimize="%(CsCompile.Optimize)" LangVersion="%(CsCompile.LangVersion)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DisabledWarnings="%(CsCompile.NoWarn)" OutputAssembly="$(IntDir)$(TargetName).netmodule" DocumentationFile="$(IntDir)$(TargetName).xdc" />
+  <Target
+    Name="CsCompile"
+    BeforeTargets="ClCompile"
+    Inputs="@(CsCompile)"
+    Outputs="$(IntDir)$(TargetName).netmodule">
+    <Csc
+      Sources="@(CsCompile)"
+      AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)"
+      DisabledWarnings="%(CsCompile.NoWarn)"
+      DocumentationFile="$(IntDir)$(TargetName).xdc"
+      LangVersion="%(CsCompile.LangVersion)"
+      Optimize="%(CsCompile.Optimize)"
+      OutputAssembly="$(IntDir)$(TargetName).netmodule"
+      TargetType="Module"
+      Utf8Output="%(CsCompile.Utf8Output)"
+      WarningLevel="%(CsCompile.WarningLevel)"
+      WarningsAsErrors="%(CsCompile.WarningsAsErrors)"
+      WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)"
+      ToolExe="$(CscToolExe)"
+      ToolPath="$(CscToolPath)" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
-  <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
+  <Target
+    Name="VerifySDKFiles"
+    BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>
       <!-- Look for the header files and the library -->
       <SDKFiles Include="sdk\inc\*.h" />
