@@ -13,21 +13,20 @@ install:
 
 build:
   project: ScriptHookVDotNet.sln
+  publish_nuget: true
   parallel: true
   verbosity: minimal
-after_build:
-- ps: ".\\tools\\package.ps1"
-- ps: ".\\tools\\upload_artifact.ps1"
-
 before_package:
 - cmd: >-
-    del bin\ScriptHookVDotNet*.metagen
-    type README.md | more /P > bin\README.txt
-    type LICENSE.txt | more /P > bin\LICENSE.txt
+    del bin\Release\ScriptHookVDotNet*.metagen
+
+    type README.md | more /P > bin\Release\README.txt
+
+    type LICENSE.txt | more /P > bin\Release\LICENSE.txt
 
 test: off
 artifacts:
-- path: bin/
+- path: bin/Release/
   name: ScriptHookVDotNet
 deploy:
 - provider: GitHub
