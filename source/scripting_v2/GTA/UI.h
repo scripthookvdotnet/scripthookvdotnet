@@ -12,6 +12,8 @@ namespace GTA
 	public ref class UI sealed abstract
 	{
 	public:
+		// These two definitions have a 'modopt(System.Runtime.Compilerservices.IsConst)', which only C++/CLI can generate
+		// Therefore need to compile this whole class with C++/CLI and cannot use C# here
 		static const int WIDTH = 1280;
 		static const int HEIGHT = 720;
 
