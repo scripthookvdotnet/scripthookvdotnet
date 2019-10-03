@@ -30,15 +30,15 @@ after_build:
 
 before_package:
 - cmd: >-
-    del bin\ScriptHookVDotNet*.metagen
+    del bin\Release\ScriptHookVDotNet*.metagen
 
-    type README.md | more /P > bin\README.txt
+    type README.md | more /P > bin\Release\README.txt
 
-    type LICENSE.txt | more /P > bin\LICENSE.txt
+    type LICENSE.txt | more /P > bin\Release\LICENSE.txt
 
 test: off
 artifacts:
-- path: bin/
+- path: bin/Release/
   name: ScriptHookVDotNet
 deploy:
 - provider: GitHub

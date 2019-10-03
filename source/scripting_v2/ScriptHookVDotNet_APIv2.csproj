@@ -10,14 +10,13 @@
     <RootNamespace>GTA</RootNamespace>
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <NoLogo>true</NoLogo>
     <FileAlignment>512</FileAlignment>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
-    <DocumentationFile>..\..\bin\ScriptHookVDotNet2.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Debug\ScriptHookVDotNet2.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>false</Optimize>
@@ -29,9 +28,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
-    <DocumentationFile>..\..\bin\ScriptHookVDotNet2.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Release\ScriptHookVDotNet2.xml</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
@@ -189,8 +188,18 @@
   <Target
     Name="CoreCompile"
     Inputs="@(Compile);@(CppCompile);$(ReferencePathWithRefAssemblies)"
-    Outputs="@(IntermediateAssembly)"
+    Outputs="@(IntermediateAssembly);$(IntermediateOutputPath)$(TargetName).cpp.netmodule;$(IntermediateOutputPath)$(TargetName).csharp.netmodule"
     DependsOnTargets="$(CoreCompileDependsOn)">
+    <!-- Keep track of the generated intermediate files so that they are properly cleaned on rebuilds -->
+    <ItemGroup>
+      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).cpp.netmodule;"/>
+      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).csharp.netmodule"/>
+    </ItemGroup>
+    <PropertyGroup>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(DebugType)'=='none'">false</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(DebugType)'=='full'">DebugFull</GenerateDebugInformation>
+    </PropertyGroup>
     <!-- First build all C++/CLI files -->
     <CL
       Sources="@(CppCompile)"
@@ -198,7 +207,7 @@
       CompileAsManaged="true"
       ForcedUsingFiles="@(ReferencePathWithRefAssemblies);ScriptHookVDotNet.asi"
       ObjectFileName="$(IntermediateOutputPath)$(TargetName).cpp.netmodule"
-      SuppressStartupBanner="$(NoLogo)"
+      SuppressStartupBanner="true"
       ToolExe="cl.exe"
       ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
     <!-- After that build all the C# files -->
@@ -215,7 +224,6 @@
       FileAlignment="$(FileAlignment)"
       HighEntropyVA="$(HighEntropyVA)"
       LangVersion="$(LangVersion)"
-      NoLogo="$(NoLogo)"
       NoStandardLib="$(NoCompilerStandardLib)"
       Optimize="$(Optimize)"
       OutputAssembly="$(IntermediateOutputPath)$(TargetName).csharp.netmodule"
@@ -232,11 +240,12 @@
     <Link
       Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule"
       AdditionalLibraryDirectories="$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(OutputPath)"
+      GenerateDebugInformation="$(GenerateDebugInformation)"
       LinkDLL="true"
       LinkTimeCodeGeneration="UseLinkTimeCodeGeneration"
       OutputFile="@(IntermediateAssembly)"
       RandomizedBaseAddress="$(HighEntropyVA)"
-      SuppressStartupBanner="$(NoLogo)"
+      SuppressStartupBanner="true"
       TargetMachine="Machine$(PlatformTarget)"
       ToolExe="link.exe"
       ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
