@@ -6,7 +6,9 @@ install:
 - ps: ".\\tools\\install_sdk.ps1"
 - cmd: >-
     if defined APPVEYOR_REPO_TAG_NAME (set SHVDN_VERSION_TAG=%APPVEYOR_REPO_TAG_NAME%) else (for /f %%i in ('git describe --abbrev^=0 --tags') do set SHVDN_VERSION_TAG=%%i)
+
     set SHVDN_VERSION=%SHVDN_VERSION_TAG:~1%
+
     echo Version: "%SHVDN_VERSION%"
 
 build:
