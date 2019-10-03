@@ -387,7 +387,7 @@ namespace GTA
 				}
 				else
 				{
-					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
+					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 				}
 			}
 		}
