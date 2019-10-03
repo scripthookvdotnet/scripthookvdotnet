@@ -77,6 +77,6 @@ namespace GTA
 		AmmoMinigun = 0xF25A01B9,
 		AmmoMissileMP = 0xF99E15D0,
 		AmmoBulletMP = 0x550447A9,
-		AmmoGrenadeLauncherMP = 0xA421A532
+		AmmoGrenadeLauncherMP = 0xA421A532,
 	}
 }

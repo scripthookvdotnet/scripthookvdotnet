@@ -7,6 +7,6 @@ namespace GTA
 		MinForce2 = 2,
 		MaxForceRot2 = 3, // Stable, good for custom handling
 		ForceNoRot = 4,
-		ForceRotPlusForce = 5
+		ForceRotPlusForce = 5,
 	}
 }

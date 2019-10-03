@@ -6,6 +6,6 @@ namespace GTA
 		HouseScript,
 		Monospace,
 		ChaletComprimeCologne = 4,
-		Pricedown = 7
+		Pricedown = 7,
 	}
 }

@@ -66,7 +66,6 @@ namespace GTA
 		{
 			return ToList(includingLeader).ToArray();
 		}
-
 		public List<Ped> ToList(bool includingLeader)
 		{
 			var list = new List<Ped>();

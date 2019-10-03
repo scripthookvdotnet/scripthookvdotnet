@@ -10,25 +10,18 @@ namespace GTA
 		public TaskSequence()
 		{
 			int handle;
-			unsafe
-			{
-				Function.Call(Hash.OPEN_SEQUENCE_TASK, &handle);
-			}
+			unsafe { Function.Call(Hash.OPEN_SEQUENCE_TASK, &handle); }
 			Handle = handle;
 
 			if (nullPed is null)
-			{
 				nullPed = new Ped(0);
-			}
 		}
 		public TaskSequence(int handle)
 		{
 			Handle = handle;
 
 			if (nullPed is null)
-			{
 				nullPed = new Ped(0);
-			}
 		}
 
 		public int Handle
@@ -51,9 +44,7 @@ namespace GTA
 			get
 			{
 				if (IsClosed)
-				{
 					throw new Exception("You can't add tasks to a closed sequence!");
-				}
 
 				Count++;
 				return nullPed.Task;
@@ -67,9 +58,7 @@ namespace GTA
 		public void Close(bool repeat)
 		{
 			if (IsClosed)
-			{
 				return;
-			}
 
 			Function.Call(Hash.SET_SEQUENCE_TO_REPEAT, Handle, repeat);
 			Function.Call(Hash.CLOSE_SEQUENCE_TASK, Handle);
@@ -80,10 +69,7 @@ namespace GTA
 		public void Dispose()
 		{
 			int handle = Handle;
-			unsafe
-			{
-				Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);
-			}
+			unsafe { Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle); }
 			Handle = handle;
 			GC.SuppressFinalize(this);
 		}

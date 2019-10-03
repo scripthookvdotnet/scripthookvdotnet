@@ -12,6 +12,6 @@ namespace GTA
 		Drunk,
 		SkyDiving,
 		FamilyDrugTrip,
-		DeathFail
+		DeathFail,
 	}
 }

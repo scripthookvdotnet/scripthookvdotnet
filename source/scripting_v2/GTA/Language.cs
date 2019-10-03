@@ -14,6 +14,6 @@ namespace GTA
 		Chinese,
 		Japanese,
 		Mexican,
-		ChineseSimplified
+		ChineseSimplified,
 	}
 }

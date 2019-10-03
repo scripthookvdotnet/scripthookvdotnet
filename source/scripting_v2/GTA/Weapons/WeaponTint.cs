@@ -9,6 +9,6 @@ namespace GTA
 		Army = 4,
 		LSPD = 5,
 		Orange = 6,
-		Platinum = 7
+		Platinum = 7,
 	}
 }

@@ -30,6 +30,6 @@ namespace GTA
 		HorizontalCircleSkinny = 25,
 		HorizontalCircleSkinny_Arrow = 26,
 		HorizontalSplitArrowCircle = 27,
-		DebugSphere = 28
+		DebugSphere = 28,
 	}
 }

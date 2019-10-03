@@ -54,6 +54,6 @@ namespace GTA
 		ReplayTopLine = 48,
 		ReplayBottomLine = 49,
 		ReplayLeftBar = 50,
-		ReplayTimer = 51
+		ReplayTimer = 51,
 	};
 }

@@ -3,6 +3,6 @@ namespace GTA
 	public enum InputMode
 	{
 		MouseAndKeyboard,
-		GamePad
+		GamePad,
 	}
 }

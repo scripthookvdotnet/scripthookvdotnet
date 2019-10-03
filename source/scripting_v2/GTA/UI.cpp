@@ -92,10 +92,10 @@ void GTA::UI::HideHudComponentThisFrame(HudComponent component)
 //Point GTA::UI::WorldToScreen(Math::Vector3 position)
 //{
 //	float pointX, pointY;
-
+//
 //	auto task = gcnew SHVDN::NativeFunc(0x34E82F05DF2974F5ull /*_WORLD3D_TO_SCREEN2D*/, (UInt64)*(UInt32*)&position.X, (UInt64)*(UInt32*)&position.Y, (UInt64)*(UInt32*)&position.Z, (UInt64)&pointX, (UInt64)&pointY);
 //	SHVDN::ScriptDomain::CurrentDomain->ExecuteTask(task);
-
+//
 //	if (task->Result != nullptr && *task->Result != 0)
 //		return Point(static_cast<int>(pointX * UI::WIDTH), static_cast<int>(pointY * UI::HEIGHT));
 //	else

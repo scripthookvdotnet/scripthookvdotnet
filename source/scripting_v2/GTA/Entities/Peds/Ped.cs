@@ -453,7 +453,6 @@ namespace GTA
 		}
 
 		public bool WasKilledByStealth => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_STEALTH, Handle);
-
 		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
 
 		public WeaponCollection Weapons
@@ -489,14 +488,16 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_PED_SITTING_IN_VEHICLE, Handle, vehicle.Handle);
 		}
-		public Relationship GetRelationshipWithPed(Ped ped)
-		{
-			return (Relationship)Function.Call<int>(Hash.GET_RELATIONSHIP_BETWEEN_PEDS, Handle, ped.Handle);
-		}
 		public void SetIntoVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
 			Function.Call(Hash.SET_PED_INTO_VEHICLE, Handle, vehicle.Handle, (int)seat);
 		}
+
+		public Relationship GetRelationshipWithPed(Ped ped)
+		{
+			return (Relationship)Function.Call<int>(Hash.GET_RELATIONSHIP_BETWEEN_PEDS, Handle, ped.Handle);
+		}
+
 		public bool IsInCover()
 		{
 			return IsInCover(false);
@@ -505,13 +506,13 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_PED_IN_COVER, Handle, expectUseWeapon);
 		}
-		public bool IsInCombatAgainst(Ped target)
-		{
-			return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle, target);
-		}
 		public bool IsHeadtracking(Entity entity)
 		{
 			return Function.Call<bool>(Hash.IS_PED_HEADTRACKING_ENTITY, Handle, entity);
+		}
+		public bool IsInCombatAgainst(Ped target)
+		{
+			return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle, target);
 		}
 
 		public Ped GetJacker()
@@ -526,10 +527,12 @@ namespace GTA
 		{
 			return Function.Call<Ped>(Hash.GET_MELEE_TARGET_FOR_PED, Handle);
 		}
+
 		public Entity GetKiller()
 		{
 			return Function.Call<Entity>(Hash._GET_PED_KILLER, Handle);
 		}
+
 		public Vehicle GetVehicleIsTryingToEnter()
 		{
 			return Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
@@ -539,26 +542,31 @@ namespace GTA
 		{
 			Health = -1;
 		}
-		public void ResetVisibleDamage()
-		{
-			Function.Call(Hash.RESET_PED_VISIBLE_DAMAGE, Handle);
-		}
+
 		public void ClearBloodDamage()
 		{
 			Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, Handle);
 		}
+		public void ResetVisibleDamage()
+		{
+			Function.Call(Hash.RESET_PED_VISIBLE_DAMAGE, Handle);
+		}
+
 		public void RandomizeOutfit()
 		{
 			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, Handle, false);
 		}
+
 		public void SetDefaultClothes()
 		{
 			Function.Call(Hash.SET_PED_DEFAULT_COMPONENT_VARIATION, Handle);
 		}
+
 		public void LeaveGroup()
 		{
 			Function.Call(Hash.REMOVE_PED_FROM_GROUP, Handle);
 		}
+
 		public void Clone()
 		{
 			Clone(0.0F);
@@ -567,10 +575,12 @@ namespace GTA
 		{
 			Function.Call(Hash.CLONE_PED, Handle, heading, false, false);
 		}
+
 		public void ApplyDamage(int damageAmount)
 		{
 			Function.Call(Hash.APPLY_DAMAGE_TO_PED, Handle, damageAmount, true);
 		}
+
 		public Vector3 GetBoneCoord(Bone BoneID)
 		{
 			return GetBoneCoord(BoneID, Vector3.Zero);
@@ -579,6 +589,7 @@ namespace GTA
 		{
 			return Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, Handle, (int)BoneID, Offset.X, Offset.Y, Offset.Z);
 		}
+
 		public int GetBoneIndex(Bone BoneID)
 		{
 			return Function.Call<int>(Hash.GET_PED_BONE_INDEX, Handle, (int)BoneID);

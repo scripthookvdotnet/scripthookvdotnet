@@ -105,10 +105,7 @@ namespace GTA
 		public void Remove()
 		{
 			int handle = Handle;
-			unsafe
-			{
-				Function.Call(Hash.REMOVE_BLIP, &handle);
-			}
+			unsafe { Function.Call(Hash.REMOVE_BLIP, &handle); }
 			Handle = handle;
 		}
 

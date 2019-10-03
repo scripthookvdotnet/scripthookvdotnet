@@ -8,6 +8,6 @@ namespace GTA
 		LightSmoke = 3,
 		Stock = 4,
 		Limo = 5,
-		Green = 6
+		Green = 6,
 	}
 }

@@ -5,6 +5,6 @@ namespace GTA
 		FrontRightWindow = 1,
 		FrontLeftWindow = 0,
 		BackRightWindow = 3,
-		BackLeftWindow = 2
+		BackLeftWindow = 2,
 	}
 }

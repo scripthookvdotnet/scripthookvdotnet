@@ -92,6 +92,6 @@ namespace GTA
 		WVINE,
 		ZANCUDO,
 		ZP_ORT,
-		ZQ_UAR
+		ZQ_UAR,
 	}
 }

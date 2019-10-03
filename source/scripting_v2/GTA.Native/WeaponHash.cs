@@ -93,6 +93,6 @@ namespace GTA.Native
 		Ball = 0x23C9F95C,
 		Flare = 0x497FACC3,
 		NightVision = 0xA720365C,
-		Parachute = 0xFBAB5776
+		Parachute = 0xFBAB5776,
 	}
 }

@@ -61,10 +61,7 @@ namespace GTA
 			get
 			{
 				int w, h;
-				unsafe
-				{
-					Function.Call(Hash._GET_SCREEN_ACTIVE_RESOLUTION, &w, &h);
-				}
+				unsafe { Function.Call(Hash._GET_SCREEN_ACTIVE_RESOLUTION, &w, &h); }
 				return new Size(w, h);
 			}
 		}
@@ -74,12 +71,8 @@ namespace GTA
 			get
 			{
 				int handle = Function.Call<int>(Hash.PLAYER_ID);
-
 				if (cachedPlayer is null || handle != cachedPlayer.Handle)
-				{
 					cachedPlayer = new Player(handle);
-				}
-
 				return cachedPlayer;
 			}
 		}

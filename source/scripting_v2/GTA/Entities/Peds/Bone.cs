@@ -99,6 +99,6 @@ namespace GTA
 		FB_R_Lip_Bot_000 = 0xc33b,
 		FB_Tongue_000 = 0xb987,
 		RB_Neck_1 = 0x8b93,
-		IK_Root = 0xdd1c
+		IK_Root = 0xdd1c,
 	}
 }

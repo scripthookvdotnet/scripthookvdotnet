@@ -5,6 +5,6 @@ namespace GTA
 		Default = 0,
 		Circle1 = 1,
 		Circle2 = 2,
-		Line = 3
+		Line = 3,
 	}
 }

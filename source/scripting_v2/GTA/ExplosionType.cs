@@ -40,6 +40,6 @@ namespace GTA
 		FireWork = 35,
 		SnowBall = 36,
 		ProxMine = 37,
-		Valkyrie = 38
+		Valkyrie = 38,
 	}
 }

@@ -898,6 +898,7 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_MOD_KIT, Handle, 0);
 		}
+
 		public int GetMod(VehicleMod modType)
 		{
 			return Function.Call<int>(Hash.GET_VEHICLE_MOD, Handle, (int)(modType));
@@ -930,6 +931,7 @@ namespace GTA
 		{
 			return Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Handle, (int)(modType), modValue);
 		}
+
 		public bool ExtraExists(int extra)
 		{
 			return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
@@ -942,6 +944,7 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
 		}
+
 		public void ClearCustomPrimaryColor()
 		{
 			Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, Handle);
@@ -950,6 +953,7 @@ namespace GTA
 		{
 			Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, Handle);
 		}
+
 		public Ped GetPedOnSeat(VehicleSeat seat)
 		{
 			return Function.Call<Ped>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)(seat));
@@ -959,18 +963,21 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)(seat));
 		}
 
-		public void Repair()
-		{
-			Function.Call(Hash.SET_VEHICLE_FIXED, Handle);
-		}
 		public void Wash()
 		{
 			DirtLevel = 0.0f;
 		}
+
+		public void Repair()
+		{
+			Function.Call(Hash.SET_VEHICLE_FIXED, Handle);
+		}
+
 		public void Explode()
 		{
 			Function.Call(Hash.EXPLODE_VEHICLE, Handle, true, false);
 		}
+
 		public bool PlaceOnGround()
 		{
 			return Function.Call<bool>(Hash.SET_VEHICLE_ON_GROUND_PROPERLY, Handle);
@@ -996,6 +1003,7 @@ namespace GTA
 				}
 			}
 		}
+
 		public VehicleDoor[] GetDoors()
 		{
 			System.Collections.Generic.List<VehicleDoor> Doors = new System.Collections.Generic.List<VehicleDoor>();
@@ -1013,6 +1021,7 @@ namespace GTA
 				Doors.Add(VehicleDoor.Trunk);
 			return Doors.ToArray();
 		}
+
 		public void OpenDoor(VehicleDoor door, bool loose, bool instantly)
 		{
 			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, Handle, (int)(door), loose, instantly);
@@ -1041,6 +1050,7 @@ namespace GTA
 		{
 			Function.Call(Hash._SET_VEHICLE_DOOR_BREAKABLE, Handle, (int)(door), isBreakable);
 		}
+
 		public void OpenBombBay()
 		{
 			if (HasBombBay)
@@ -1051,6 +1061,7 @@ namespace GTA
 			if (HasBombBay)
 				Function.Call(Hash._0x3556041742A0DC74, Handle);
 		}
+
 		public void FixWindow(VehicleWindow window)
 		{
 			Function.Call(Hash.FIX_VEHICLE_WINDOW, Handle, (int)(window));
@@ -1075,6 +1086,7 @@ namespace GTA
 		{
 			Function.Call(Hash.REMOVE_VEHICLE_WINDOW, Handle, (int)(window));
 		}
+
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
 			Function.Call(Hash._SET_VEHICLE_NEON_LIGHT_ENABLED, Handle, (int)(light), on);
@@ -1101,6 +1113,7 @@ namespace GTA
 				}
 			}
 		}
+
 		public void DropCargobobHook(CargobobHook hookType)
 		{
 			if (Model.IsCargobob)
@@ -1151,6 +1164,7 @@ namespace GTA
 				Function.Call(Hash._0x9A665550F8DA349B, Handle, false);
 			}
 		}
+
 		public void TowVehicle(Vehicle vehicle, bool rear)
 		{
 			Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle.Handle, rear, 0.0f, 0.0f, 0.0f);
@@ -1167,26 +1181,29 @@ namespace GTA
 			}
 		}
 
-		public bool IsTireBurst(int wheel)
+		public void FixTire(int wheel)
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_TYRE_BURST, Handle, wheel, false);
+			Function.Call(Hash.SET_VEHICLE_TYRE_FIXED, Handle, wheel);
 		}
 		public void BurstTire(int wheel)
 		{
 			Function.Call(Hash.SET_VEHICLE_TYRE_BURST, Handle, wheel, 1, 1000.0f);
 		}
-		public void FixTire(int wheel)
+		public bool IsTireBurst(int wheel)
 		{
-			Function.Call(Hash.SET_VEHICLE_TYRE_FIXED, Handle, wheel);
+			return Function.Call<bool>(Hash.IS_VEHICLE_TYRE_BURST, Handle, wheel, false);
 		}
+
 		public bool IsInBurnout()
 		{
 			return Function.Call<bool>(Hash.IS_VEHICLE_IN_BURNOUT, Handle);
 		}
+
 		public void StartAlarm()
 		{
 			Function.Call(Hash.START_VEHICLE_ALARM, Handle);
 		}
+
 		public void ApplyDamage(Vector3 loc, float damageAmount, float radius)
 		{
 			Function.Call(Hash.SET_VEHICLE_DAMAGE, loc.X, loc.Y, loc.Z, damageAmount, radius, true);

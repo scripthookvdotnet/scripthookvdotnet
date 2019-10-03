@@ -11,6 +11,6 @@ namespace GTA
 		Unk2 = 64,
 		Unk3 = 128,
 		Vegetation = 256,
-		Unk4 = 512
+		Unk4 = 512,
 	}
 }
