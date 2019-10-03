@@ -603,9 +603,9 @@ namespace GTA.Math
 		public static bool operator !=(Vector3 left, Vector3 right) => !Equals(left, right);
 
         /// <summary>
-        /// Converts a Vector3 to a Vector2 implicitly.
-        /// </summary>
-        public static implicit operator Vector2(Vector3 vector) => new Vector2(vector.X, vector.Y);
+		/// Converts a Vector3 to a Vector2 implicitly.
+		/// </summary>
+		public static implicit operator Vector2(Vector3 vector) => new Vector2(vector.X, vector.Y);
 
         /// <summary>
         /// Converts the matrix to an array of floats.

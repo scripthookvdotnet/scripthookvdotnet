@@ -440,10 +440,10 @@ namespace GTA.Math
 		/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Vector2 left, Vector2 right) => !Equals(left, right);
 
-        /// <summary>
-        /// Converts a Vector2 to a Vector3 implicitly.
-        /// </summary>
-        public static implicit operator Vector3(Vector2 vector) => new Vector3(vector.X, vector.Y, 0);
+		/// <summary>
+		/// Converts a Vector2 to a Vector3 implicitly.
+		/// </summary>
+		public static implicit operator Vector3(Vector2 vector) => new Vector3(vector.X, vector.Y, 0);
 
         /// <summary>
         /// Converts the value of the object to its equivalent string representation.
