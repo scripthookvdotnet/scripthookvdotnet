@@ -89,7 +89,7 @@ namespace GTA
 						return this[(Bone)outBone];
 					}
 				}
-				return this[Bone.SKEL_ROOT];
+				return this[Bone.SkelRoot];
 			}
 		}
 
