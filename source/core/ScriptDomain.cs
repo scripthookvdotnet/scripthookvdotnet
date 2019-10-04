@@ -655,9 +655,27 @@ namespace SHVDN
 		/// <param name="scriptInstance">The 'GTA.Script' instance to check.</param>
 		public Script LookupScript(object scriptInstance)
 		{
+			if (scriptInstance == null)
+				return null;
+
 			// Return matching script in running script list if one is found
+			var script = runningScripts.Where(x => x.ScriptInstance == scriptInstance).FirstOrDefault();
+
 			// Otherwise return the executing script, since during constructor execution the running script list was not yet updated
-			return runningScripts.Where(x => x.ScriptInstance == scriptInstance).FirstOrDefault() ?? executingScript;
+			if (script == null && executingScript != null && executingScript.ScriptInstance == null)
+			{
+				// Handle the case where a script creates a custom instance of a script class that is not managed by SHVDN
+				// These may attempt to set events, but are not allowed to do so, since SHVDN will never call them, so just return null
+				if (!executingScript.Name.Contains(scriptInstance.GetType().FullName))
+				{
+					Log.Message(Log.Level.Warning, "A script tried to use a custom script instance of type ", scriptInstance.GetType().FullName, " that was not instantiated by ScriptHookVDotNet.");
+					return null;
+				}
+
+				script = executingScript;
+			}
+
+			return script;
 		}
 		public string LookupScriptFilename(Type scriptType)
 		{
