@@ -7,7 +7,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class WeaponComponent
+	public sealed class WeaponComponent
 	{
 		#region Fields
 		protected readonly Ped _owner;
@@ -29,7 +29,7 @@ namespace GTA
 			return weaponComponent.ComponentHash;
 		}
 
-		public virtual bool Active
+		public bool Active
 		{
 			get => Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, _component);
 			set
@@ -45,11 +45,11 @@ namespace GTA
 			}
 		}
 
-		public virtual string DisplayName => GetComponentDisplayNameFromHash(_weapon.Hash, _component);
+		public string DisplayName => GetComponentDisplayNameFromHash(_weapon.Hash, _component);
 
-		public virtual string LocalizedName => Game.GetLocalizedString(DisplayName);
+		public string LocalizedName => Game.GetLocalizedString(DisplayName);
 
-		public virtual ComponentAttachmentPoint AttachmentPoint => GetAttachmentPoint(_weapon.Hash, _component);
+		public WeaponAttachmentPoint AttachmentPoint => GetAttachmentPoint(_weapon.Hash, _component);
 
 		public static string GetComponentDisplayNameFromHash(WeaponHash hash, WeaponComponentHash component)
 		{
@@ -243,7 +243,7 @@ namespace GTA
 			return result;
 		}
 
-		public static ComponentAttachmentPoint GetAttachmentPoint(WeaponHash hash, WeaponComponentHash componentHash)
+		public static WeaponAttachmentPoint GetAttachmentPoint(WeaponHash hash, WeaponComponentHash componentHash)
 		{
 			switch (hash)
 			{
@@ -252,79 +252,79 @@ namespace GTA
 					{
 						case WeaponComponentHash.PistolClip01:
 						case WeaponComponentHash.PistolClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtPiFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtPiSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.PistolVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.CombatPistol:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.CombatPistolClip01:
 						case WeaponComponentHash.CombatPistolClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtPiFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtPiSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.CombatPistolVarmodLowrider:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.APPistol:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.APPistolClip01:
 						case WeaponComponentHash.APPistolClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtPiFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtPiSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.APPistolVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.MicroSMG:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.MicroSMGClip01:
 						case WeaponComponentHash.MicroSMGClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtPiFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeMacro:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.AtArSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.MicroSMGVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.SMG:
 					switch (componentHash)
@@ -332,22 +332,22 @@ namespace GTA
 						case WeaponComponentHash.SMGClip01:
 						case WeaponComponentHash.SMGClip02:
 						case WeaponComponentHash.SMGClip03:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeMacro02:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.AtPiSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.SMGVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.AssaultRifle:
 					switch (componentHash)
@@ -355,25 +355,25 @@ namespace GTA
 						case WeaponComponentHash.AssaultRifleClip01:
 						case WeaponComponentHash.AssaultRifleClip02:
 						case WeaponComponentHash.AssaultRifleClip03:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArAfGrip:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeMacro:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.AtArSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.AssaultRifleVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.CarbineRifle:
 					switch (componentHash)
@@ -381,50 +381,50 @@ namespace GTA
 						case WeaponComponentHash.CarbineRifleClip01:
 						case WeaponComponentHash.CarbineRifleClip02:
 						case WeaponComponentHash.CarbineRifleClip03:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtRailCover01:
-							return ComponentAttachmentPoint.Rail;
+							return WeaponAttachmentPoint.Rail;
 
 						case WeaponComponentHash.AtArAfGrip:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeMedium:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.AtArSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.CarbineRifleVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.AdvancedRifle:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.AdvancedRifleClip01:
 						case WeaponComponentHash.AdvancedRifleClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeSmall:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.AtArSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.AdvancedRifleVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 
 				case WeaponHash.MG:
@@ -432,202 +432,202 @@ namespace GTA
 					{
 						case WeaponComponentHash.MGClip01:
 						case WeaponComponentHash.MGClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtScopeSmall02:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.MGVarmodLowrider:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.CombatMG:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.CombatMGClip01:
 						case WeaponComponentHash.CombatMGClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArAfGrip:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtScopeMedium:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.CombatMGVarmodLowrider:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.PumpShotgun:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.PumpShotgunClip01:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtArSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.PumpShotgunVarmodLowrider:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.AssaultShotgun:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.AssaultShotgunClip01:
 						case WeaponComponentHash.AssaultShotgunClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArAfGrip:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtArSupp:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.SniperRifle:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.SniperRifleClip01:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.AtScopeLarge:
 						case WeaponComponentHash.AtScopeMax:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.SniperRifleVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.HeavySniper:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.HeavySniperClip01:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtScopeLarge:
 						case WeaponComponentHash.AtScopeMax:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.GrenadeLauncher:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.GrenadeLauncherClip01:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtArAfGrip:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeSmall:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.Minigun:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.MinigunClip01:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.AssaultSMG:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.AssaultSMGClip01:
 						case WeaponComponentHash.AssaultSMGClip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtScopeMacro:
-							return ComponentAttachmentPoint.Scope;
+							return WeaponAttachmentPoint.Scope;
 
 						case WeaponComponentHash.AtArSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.AssaultSMGVarmodLowrider:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.BullpupShotgun:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.BullpupShotgunClip01:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtArAfGrip:
-							return ComponentAttachmentPoint.Grip;
+							return WeaponAttachmentPoint.Grip;
 
 						case WeaponComponentHash.AtArFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtArSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.Pistol50:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.Pistol50Clip01:
 						case WeaponComponentHash.Pistol50Clip02:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.AtPiFlsh:
-							return ComponentAttachmentPoint.FlashLaser;
+							return WeaponAttachmentPoint.FlashLaser;
 
 						case WeaponComponentHash.AtArSupp02:
-							return ComponentAttachmentPoint.Supp;
+							return WeaponAttachmentPoint.Supp;
 
 						case WeaponComponentHash.Pistol50VarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 				case WeaponHash.SawnOffShotgun:
 					switch (componentHash)
 					{
 						case WeaponComponentHash.SawnoffShotgunClip01:
-							return ComponentAttachmentPoint.Clip;
+							return WeaponAttachmentPoint.Clip;
 
 						case WeaponComponentHash.SawnoffShotgunVarmodLuxe:
-							return ComponentAttachmentPoint.GunRoot;
+							return WeaponAttachmentPoint.GunRoot;
 
 						default:
-							return ComponentAttachmentPoint.Invalid;
+							return WeaponAttachmentPoint.Invalid;
 					}
 
 			}
@@ -658,7 +658,7 @@ namespace GTA
 					}
 				}
 			}
-			return ComponentAttachmentPoint.Invalid;
+			return WeaponAttachmentPoint.Invalid;
 		}
 	}
 }

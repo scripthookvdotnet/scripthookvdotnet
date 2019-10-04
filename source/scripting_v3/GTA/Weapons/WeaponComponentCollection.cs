@@ -11,18 +11,11 @@ namespace GTA
 {
 	public class WeaponComponentCollection
 	{
-		#region Fields
-
 		readonly Ped _owner;
 		readonly Weapon _weapon;
-
-		readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents =
-			new Dictionary<WeaponComponentHash, WeaponComponent>();
-
+		readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents = new Dictionary<WeaponComponentHash, WeaponComponent>();
 		readonly WeaponComponentHash[] _components;
-		readonly static InvalidWeaponComponent _invalidComponent = new InvalidWeaponComponent();
-
-		#endregion
+		readonly static WeaponComponent _invalidComponent = new WeaponComponent(null, null, WeaponComponentHash.Invalid);
 
 		internal WeaponComponentCollection(Ped owner, Weapon weapon)
 		{
@@ -92,8 +85,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.AttachmentPoint == ComponentAttachmentPoint.Clip ||
-				    component.AttachmentPoint == ComponentAttachmentPoint.Clip2)
+				if (component.AttachmentPoint == WeaponAttachmentPoint.Clip ||
+				    component.AttachmentPoint == WeaponAttachmentPoint.Clip2)
 				{
 					if (index-- == 0)
 					{
@@ -111,8 +104,8 @@ namespace GTA
 				int count = 0;
 				foreach (var component in this)
 				{
-					if (component.AttachmentPoint == ComponentAttachmentPoint.Clip ||
-					component.AttachmentPoint == ComponentAttachmentPoint.Clip2)
+					if (component.AttachmentPoint == WeaponAttachmentPoint.Clip ||
+					component.AttachmentPoint == WeaponAttachmentPoint.Clip2)
 					{
 						count++;
 					}
@@ -125,8 +118,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.AttachmentPoint == ComponentAttachmentPoint.Scope ||
-					component.AttachmentPoint == ComponentAttachmentPoint.Scope2)
+				if (component.AttachmentPoint == WeaponAttachmentPoint.Scope ||
+					component.AttachmentPoint == WeaponAttachmentPoint.Scope2)
 				{
 					if (index-- == 0)
 					{
@@ -144,8 +137,8 @@ namespace GTA
 				int count = 0;
 				foreach (var component in this)
 				{
-					if (component.AttachmentPoint == ComponentAttachmentPoint.Scope ||
-					component.AttachmentPoint == ComponentAttachmentPoint.Scope2)
+					if (component.AttachmentPoint == WeaponAttachmentPoint.Scope ||
+					component.AttachmentPoint == WeaponAttachmentPoint.Scope2)
 					{
 						count++;
 					}
@@ -158,8 +151,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.AttachmentPoint == ComponentAttachmentPoint.Supp ||
-					component.AttachmentPoint == ComponentAttachmentPoint.Supp2)
+				if (component.AttachmentPoint == WeaponAttachmentPoint.Supp ||
+					component.AttachmentPoint == WeaponAttachmentPoint.Supp2)
 				{
 					return component;
 				}
@@ -171,8 +164,8 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.AttachmentPoint == ComponentAttachmentPoint.FlashLaser ||
-					component.AttachmentPoint == ComponentAttachmentPoint.FlashLaser2)
+				if (component.AttachmentPoint == WeaponAttachmentPoint.FlashLaser ||
+					component.AttachmentPoint == WeaponAttachmentPoint.FlashLaser2)
 				{
 					return component;
 				}
@@ -184,7 +177,7 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
-				if (component.AttachmentPoint == ComponentAttachmentPoint.GunRoot)
+				if (component.AttachmentPoint == WeaponAttachmentPoint.GunRoot)
 				{
 					return component;
 				}

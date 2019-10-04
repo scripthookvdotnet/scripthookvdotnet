@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum ComponentAttachmentPoint : uint
+	public enum WeaponAttachmentPoint : uint
 	{
 		Invalid = 4294967295u,
 		Clip = 3723347892u,

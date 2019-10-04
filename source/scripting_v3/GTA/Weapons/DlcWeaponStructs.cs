@@ -103,7 +103,7 @@ namespace GTA
 
 		public WeaponComponentHash Hash => (WeaponComponentHash)componentHash;
 
-		public ComponentAttachmentPoint AttachPoint => (ComponentAttachmentPoint)attachBone;
+		public WeaponAttachmentPoint AttachPoint => (WeaponAttachmentPoint)attachBone;
 
 		public bool ActiveByDefault => bActiveByDefault != 0;
 		public string DisplayDescription
