@@ -147,10 +147,6 @@ namespace SHVDN
 			thread.Start();
 
 			Log.Message(Log.Level.Info, "Started script ", Name, ".");
-
-			// Register any console commands attached to this script
-			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
-			console?.RegisterCommands(ScriptInstance.GetType());
 		}
 		/// <summary>
 		/// Aborts execution of this script.
@@ -169,10 +165,6 @@ namespace SHVDN
 			}
 
 			waitEvent.Release();
-
-			// Unregister any console commands attached to this script
-			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
-			console?.UnregisterCommands(ScriptInstance.GetType());
 
 			if (thread != null)
 			{

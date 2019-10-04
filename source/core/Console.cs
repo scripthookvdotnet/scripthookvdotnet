@@ -55,7 +55,9 @@ namespace SHVDN
 		static readonly Color AltBackgroundColor = Color.FromArgb(200, 52, 73, 94);
 
 		[DllImport("user32.dll")]
-		static extern int ToUnicode(uint virtualKeyCode, uint scanCode, byte[] keyboardState, [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
+		static extern int ToUnicode(
+			uint virtualKeyCode, uint scanCode, byte[] keyboardState,
+			[Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
 
 		/// <summary>
 		/// Gets or sets whether the console is open.
@@ -93,18 +95,6 @@ namespace SHVDN
 					foreach (var attribute in method.GetCustomAttributes<ConsoleCommand>(true))
 					{
 						RegisterCommand(attribute, method);
-					}
-
-					foreach (var attribute in method.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ConsoleCommand"))
-					{
-						if (attribute.ConstructorArguments.Count != 1)
-						{
-							RegisterCommand(new ConsoleCommand(), method);
-						}
-						else
-						{
-							RegisterCommand(new ConsoleCommand(attribute.ConstructorArguments[0].Value.ToString()), method);
-						}
 					}
 				}
 				catch (Exception ex)
