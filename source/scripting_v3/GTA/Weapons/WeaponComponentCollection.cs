@@ -9,7 +9,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class WeaponComponentCollection
+	public sealed class WeaponComponentCollection
 	{
 		readonly Ped _owner;
 		readonly Weapon _weapon;
@@ -185,7 +185,7 @@ namespace GTA
 			return _invalidComponent;
 		}
 
-		public static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
+		static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
 		{
 			switch (hash)
 			{

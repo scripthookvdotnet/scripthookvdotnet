@@ -11,10 +11,8 @@ namespace GTA
 {
 	public sealed class WeaponCollection
 	{
-		#region Fields
-		Ped _owner;
+		readonly Ped _owner;
 		readonly Dictionary<WeaponHash, Weapon> _weapons = new Dictionary<WeaponHash, Weapon>();
-		#endregion
 
 		internal WeaponCollection(Ped owner)
 		{
@@ -25,9 +23,7 @@ namespace GTA
 		{
 			get
 			{
-				Weapon weapon = null;
-
-				if (!_weapons.TryGetValue(hash, out weapon))
+				if (!_weapons.TryGetValue(hash, out Weapon weapon))
 				{
 					if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, _owner.Handle, hash, 0))
 					{
@@ -52,7 +48,7 @@ namespace GTA
 					Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, &currentWeapon, true);
 				}
 
-			    WeaponHash hash = (WeaponHash)currentWeapon;
+			    var hash = (WeaponHash)currentWeapon;
 
 				if (_weapons.ContainsKey(hash))
 				{
@@ -67,7 +63,7 @@ namespace GTA
 				}
 			}
 		}
-		public Prop CurrentWeaponObject
+		public Prop   CurrentWeaponObject
 		{
 			get
 			{
@@ -79,6 +75,7 @@ namespace GTA
 				return new Prop(Function.Call<int>(Hash.GET_CURRENT_PED_WEAPON_ENTITY_INDEX, _owner.Handle));
 			}
 		}
+
 		public Weapon BestWeapon
 		{
 			get
@@ -108,27 +105,6 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_WEAPON_VALID, hash);
 		}
 
-		public Weapon Give(WeaponHash hash, int ammoCount, bool equipNow, bool isAmmoLoaded)
-		{
-			Weapon weapon = null;
-
-			if (!_weapons.TryGetValue(hash, out weapon))
-			{
-				weapon = new Weapon(_owner, hash);
-				_weapons.Add(hash, weapon);
-			}
-
-			if (weapon.IsPresent)
-			{
-				Select(weapon);
-			}
-			else
-			{
-				Function.Call(Hash.GIVE_WEAPON_TO_PED, _owner.Handle, weapon.Hash, ammoCount, equipNow, isAmmoLoaded);
-			}
-
-			return weapon;
-		}
 		public bool Select(Weapon weapon)
 		{
 			if (!weapon.IsPresent)
@@ -156,10 +132,31 @@ namespace GTA
 			return true;
 		}
 
+		public Weapon Give(WeaponHash weaponHash, int ammoCount, bool equipNow, bool isAmmoLoaded)
+		{
+			if (!_weapons.TryGetValue(weaponHash, out Weapon weapon))
+			{
+				weapon = new Weapon(_owner, weaponHash);
+				_weapons.Add(weaponHash, weapon);
+			}
+
+			if (weapon.IsPresent)
+			{
+				Select(weapon);
+			}
+			else
+			{
+				Function.Call(Hash.GIVE_WEAPON_TO_PED, _owner.Handle, weapon.Hash, ammoCount, equipNow, isAmmoLoaded);
+			}
+
+			return weapon;
+		}
+
 		public void Drop()
 		{
 			Function.Call(Hash.SET_PED_DROPS_WEAPON, _owner.Handle);
 		}
+
 		public void Remove(Weapon weapon)
 		{
 			WeaponHash hash = weapon.Hash;

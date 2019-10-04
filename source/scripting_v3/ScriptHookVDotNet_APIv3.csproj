@@ -183,7 +183,7 @@
     <Compile Include="GTA\ScriptAttributes.cs" />
     <Compile Include="GTA\ScriptSettings.cs" />
     <Compile Include="GTA\Weapons\WeaponAttachmentPoint.cs" />
-    <Compile Include="GTA\Weapons\DlcWeaponStructs.cs" />
+    <Compile Include="GTA\Weapons\DlcWeaponData.cs" />
     <Compile Include="GTA\Weapons\Weapon.cs" />
     <Compile Include="GTA\Weapons\WeaponAsset.cs" />
     <Compile Include="GTA\Weapons\WeaponCollection.cs" />

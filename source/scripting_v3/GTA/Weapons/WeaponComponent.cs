@@ -9,49 +9,39 @@ namespace GTA
 {
 	public sealed class WeaponComponent
 	{
-		#region Fields
-		protected readonly Ped _owner;
-		protected readonly Weapon _weapon;
-		protected readonly WeaponComponentHash _component;
-		#endregion
+		readonly Ped _owner;
+		readonly Weapon _weapon;
 
 		internal WeaponComponent(Ped owner, Weapon weapon, WeaponComponentHash component)
 		{
 			_owner = owner;
 			_weapon = weapon;
-			_component = component;
+			ComponentHash = component;
 		}
 
-		public WeaponComponentHash ComponentHash => _component;
+		public bool Active
+		{
+			get => Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, ComponentHash);
+			set => Function.Call(value ? Hash.GIVE_WEAPON_COMPONENT_TO_PED : Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, _weapon.Hash, ComponentHash);
+		}
+
+		public string DisplayName => GetComponentDisplayNameFromHash(_weapon.Hash, ComponentHash);
+
+		public string LocalizedName => Game.GetLocalizedString(DisplayName);
+
+		public WeaponComponentHash ComponentHash
+		{
+			get;
+		}
+
+		public WeaponAttachmentPoint AttachmentPoint => GetAttachmentPoint(_weapon.Hash, ComponentHash);
 
 		public static implicit operator WeaponComponentHash(WeaponComponent weaponComponent)
 		{
 			return weaponComponent.ComponentHash;
 		}
 
-		public bool Active
-		{
-			get => Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, _component);
-			set
-			{
-				if (value)
-				{
-					Function.Call(Hash.GIVE_WEAPON_COMPONENT_TO_PED, _owner.Handle, _weapon.Hash, _component);
-				}
-				else
-				{
-					Function.Call(Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, _weapon.Hash, _component);
-				}
-			}
-		}
-
-		public string DisplayName => GetComponentDisplayNameFromHash(_weapon.Hash, _component);
-
-		public string LocalizedName => Game.GetLocalizedString(DisplayName);
-
-		public WeaponAttachmentPoint AttachmentPoint => GetAttachmentPoint(_weapon.Hash, _component);
-
-		public static string GetComponentDisplayNameFromHash(WeaponHash hash, WeaponComponentHash component)
+		static string GetComponentDisplayNameFromHash(WeaponHash hash, WeaponComponentHash component)
 		{
 			if (hash == WeaponHash.KnuckleDuster)
 			{
@@ -243,7 +233,7 @@ namespace GTA
 			return result;
 		}
 
-		public static WeaponAttachmentPoint GetAttachmentPoint(WeaponHash hash, WeaponComponentHash componentHash)
+		static WeaponAttachmentPoint GetAttachmentPoint(WeaponHash hash, WeaponComponentHash componentHash)
 		{
 			switch (hash)
 			{
@@ -649,7 +639,7 @@ namespace GTA
 								{
 									if (componentData.Hash == componentHash)
 									{
-										return componentData.AttachPoint;
+										return componentData.AttachmentPoint;
 									}
 								}
 							}
