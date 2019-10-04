@@ -459,7 +459,7 @@ namespace GTA.Math
 		/// <remarks>
 		/// This method performs the linear interpolation based on the following formula.
 		/// <code>start + (end - start) * amount</code>
-		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
 		/// </remarks>
 		public static Vector3 Lerp(Vector3 start, Vector3 end, float amount)
 		{
@@ -522,12 +522,12 @@ namespace GTA.Math
 		public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal) => (vector - Project(vector, planeNormal));
 
 		/// <summary>
-		/// Returns the reflection of a vector off a surface that has the specified normal. 
+		/// Returns the reflection of a vector off a surface that has the specified normal.
 		/// </summary>
 		/// <param name="vector">The vector to project onto the plane.</param>
 		/// <param name="normal">Normal of the surface.</param>
 		/// <returns>The reflected vector.</returns>
-		/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 
+		/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine
 		/// whether the original vector was close enough to the surface to hit it.</remarks>
 		public static Vector3 Reflect(Vector3 vector, Vector3 normal)
 		{
@@ -684,7 +684,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to a specified object. 
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
@@ -697,7 +697,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to the specified object. 
+		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>

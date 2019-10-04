@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using GTA.Native;
 
 namespace GTA.UI
@@ -18,7 +23,7 @@ namespace GTA.UI
 		/// <param name="loadingText">The text to display next to the spinner</param>
 		/// <param name="spinnerType">The style of spinner to draw</param>
 		/// <remarks>
-		/// <see cref="LoadingSpinnerType.Clockwise1"/>, <see cref="LoadingSpinnerType.Clockwise2"/>, <see cref="LoadingSpinnerType.Clockwise3"/> and <see cref="LoadingSpinnerType.RegularClockwise"/> all see to be the same. 
+		/// <see cref="LoadingSpinnerType.Clockwise1"/>, <see cref="LoadingSpinnerType.Clockwise2"/>, <see cref="LoadingSpinnerType.Clockwise3"/> and <see cref="LoadingSpinnerType.RegularClockwise"/> all see to be the same.
 		/// But Rockstar apparently always uses <see cref="LoadingSpinnerType.RegularClockwise"/> in their scripts.
 		/// </remarks>
 		public static void Show(string loadingText = null, LoadingSpinnerType spinnerType = LoadingSpinnerType.RegularClockwise)

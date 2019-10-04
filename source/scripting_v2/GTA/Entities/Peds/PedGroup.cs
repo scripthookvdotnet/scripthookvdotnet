@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +19,7 @@ namespace GTA
 		{
 			Handle = handle;
 		}
-		
+
 		public void Dispose()
 		{
 			Function.Call(Native.Hash.REMOVE_GROUP, Handle);

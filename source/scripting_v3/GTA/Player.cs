@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using GTA.Math;
 using GTA.Native;
 using System;
@@ -376,7 +381,7 @@ namespace GTA
 		public float RemainingSprintTime => Function.Call<float>(Hash.GET_PLAYER_SPRINT_TIME_REMAINING, Handle);
 
 		/// <summary>
-		/// Gets how much sprint stamina this <see cref="Player"/> currently has. 
+		/// Gets how much sprint stamina this <see cref="Player"/> currently has.
 		/// </summary>
 		public float RemainingSprintStamina => Function.Call<float>(Hash.GET_PLAYER_SPRINT_STAMINA_REMAINING, Handle);
 

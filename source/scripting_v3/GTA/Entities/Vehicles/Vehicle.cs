@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,7 +85,7 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				
+
 				return Function.Call<float>(Hash.GET_HELI_MAIN_ROTOR_HEALTH, Handle);
 			}
 			set
@@ -89,7 +94,7 @@ namespace GTA
 				{
 					return;
 				}
-				
+
 				if (!Model.IsHelicopter)
 				{
 					return;
@@ -117,7 +122,7 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				
+
 				return Function.Call<float>(Hash.GET_HELI_TAIL_ROTOR_HEALTH, Handle);
 			}
 			set
@@ -125,8 +130,8 @@ namespace GTA
 				if (MemoryAddress == IntPtr.Zero)
 				{
 					return;
-				}				
-				
+				}
+
 				if (!Model.IsHelicopter)
 				{
 					return;
@@ -154,7 +159,7 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				
+
 				return Function.Call<float>(Hash._GET_HELI_ENGINE_HEALTH, Handle);
 			}
 			set
@@ -162,8 +167,8 @@ namespace GTA
 				if (MemoryAddress == IntPtr.Zero)
 				{
 					return;
-				}				
-				
+				}
+
 				if (!Model.IsHelicopter)
 				{
 					return;
@@ -180,7 +185,7 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets or sets this <see cref="Vehicle"/> fuel level.
 		/// </summary>
@@ -254,7 +259,7 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				
+
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xB2C : 0xB1C;
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0xB4C : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0xB7C : offset;
@@ -393,8 +398,8 @@ namespace GTA
 				if (MemoryAddress == IntPtr.Zero)
 				{
 					return 0.0f;
-				}				
-				
+				}
+
 				if (!Model.IsHelicopter)
 				{
 					return 0.0f;
@@ -416,7 +421,7 @@ namespace GTA
 				{
 					return;
 				}
-				
+
 				Function.Call(Hash.SET_HELI_BLADES_SPEED, Handle, value);
 			}
 		}
@@ -1589,7 +1594,7 @@ namespace GTA
 				result[0] = driver;
 
 				for (int i = 0, j = 0, seats = PassengerCapacity; i < seats && j < result.Length; i++)
-				{												  
+				{
 					if (!IsSeatFree((VehicleSeat)i))
 					{
 						result[j++ + 1] = GetPedOnSeat((VehicleSeat)i);

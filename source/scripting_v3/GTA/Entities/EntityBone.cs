@@ -1,14 +1,14 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using GTA.Math;
 using GTA.Native;
 
 namespace GTA
 {
-	//public class ExtensionMethods
-	//{
-	//	public static implicit operator InputArgument(Entity e) => new InputArgument(e.NativeValue);
-	//}
-
 	public class EntityBone
 	{
 		#region Fields

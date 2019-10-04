@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using GTA.Math;
 using GTA.Native;
@@ -214,7 +219,7 @@ namespace GTA
 		{
 			set => Function.Call(Hash.SET_CAM_NEAR_DOF, Handle, value);
 		}
-		
+
 		/// <summary>
 		/// Sets the strenght of the motion blur for this <see cref="Camera"/>
 		/// </summary>

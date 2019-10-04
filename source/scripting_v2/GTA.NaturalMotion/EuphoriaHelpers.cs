@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using GTA;
 using GTA.Math;
@@ -102,7 +107,7 @@ namespace GTA.NaturalMotion
 	public sealed class ActivePoseHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ActivePoseHelper for sending a ActivePose <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ActivePoseHelper for sending a ActivePose <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ActivePose <see cref="Message"/> to.</param>
 		public ActivePoseHelper(Ped ped) : base(ped, "activePose")
@@ -143,7 +148,7 @@ namespace GTA.NaturalMotion
 	public sealed class ApplyImpulseHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ApplyImpulseHelper for sending a ApplyImpulse <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ApplyImpulseHelper for sending a ApplyImpulse <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ApplyImpulse <see cref="Message"/> to.</param>
 		public ApplyImpulseHelper(Ped ped) : base(ped, "applyImpulse")
@@ -251,7 +256,7 @@ namespace GTA.NaturalMotion
 	public sealed class ApplyBulletImpulseHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ApplyBulletImpulseHelper for sending a ApplyBulletImpulse <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ApplyBulletImpulseHelper for sending a ApplyBulletImpulse <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ApplyBulletImpulse <see cref="Message"/> to.</param>
 		public ApplyBulletImpulseHelper(Ped ped) : base(ped, "applyBulletImpulse")
@@ -360,7 +365,7 @@ namespace GTA.NaturalMotion
 	public sealed class BodyRelaxHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BodyRelaxHelper for sending a BodyRelax <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BodyRelaxHelper for sending a BodyRelax <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BodyRelax <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -449,7 +454,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureBalanceHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureBalanceHelper for sending a ConfigureBalance <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureBalanceHelper for sending a ConfigureBalance <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureBalance <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -1582,7 +1587,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureBalanceResetHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureBalanceResetHelper for sending a ConfigureBalanceReset <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureBalanceResetHelper for sending a ConfigureBalanceReset <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureBalanceReset <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -1599,7 +1604,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureSelfAvoidanceHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureSelfAvoidanceHelper for sending a ConfigureSelfAvoidance <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureSelfAvoidanceHelper for sending a ConfigureSelfAvoidance <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureSelfAvoidance <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -1748,7 +1753,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureBulletsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureBulletsHelper for sending a ConfigureBullets <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureBulletsHelper for sending a ConfigureBullets <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureBullets <see cref="Message"/> to.</param>
 		public ConfigureBulletsHelper(Ped ped) : base(ped, "configureBullets")
@@ -2803,7 +2808,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureBulletsExtraHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureBulletsExtraHelper for sending a ConfigureBulletsExtra <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureBulletsExtraHelper for sending a ConfigureBulletsExtra <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureBulletsExtra <see cref="Message"/> to.</param>
 		public ConfigureBulletsExtraHelper(Ped ped) : base(ped, "configureBulletsExtra")
@@ -3790,7 +3795,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureLimitsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureLimitsHelper for sending a ConfigureLimits <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureLimitsHelper for sending a ConfigureLimits <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureLimits <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -3954,7 +3959,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureSoftLimitHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureSoftLimitHelper for sending a ConfigureSoftLimit <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureSoftLimitHelper for sending a ConfigureSoftLimit <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureSoftLimit <see cref="Message"/> to.</param>
 		public ConfigureSoftLimitHelper(Ped ped) : base(ped, "configureSoftLimit")
@@ -4086,7 +4091,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureShotInjuredArmHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureShotInjuredArmHelper for sending a ConfigureShotInjuredArm <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureShotInjuredArmHelper for sending a ConfigureShotInjuredArm <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureShotInjuredArm <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -4297,7 +4302,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureShotInjuredLegHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureShotInjuredLegHelper for sending a ConfigureShotInjuredLeg <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureShotInjuredLegHelper for sending a ConfigureShotInjuredLeg <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureShotInjuredLeg <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -4506,7 +4511,7 @@ namespace GTA.NaturalMotion
 	public sealed class DefineAttachedObjectHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the DefineAttachedObjectHelper for sending a DefineAttachedObject <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the DefineAttachedObjectHelper for sending a DefineAttachedObject <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the DefineAttachedObject <see cref="Message"/> to.</param>
 		public DefineAttachedObjectHelper(Ped ped) : base(ped, "defineAttachedObject")
@@ -4568,7 +4573,7 @@ namespace GTA.NaturalMotion
 	public sealed class ForceToBodyPartHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ForceToBodyPartHelper for sending a ForceToBodyPart <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ForceToBodyPartHelper for sending a ForceToBodyPart <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ForceToBodyPart <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -4626,7 +4631,7 @@ namespace GTA.NaturalMotion
 	public sealed class LeanInDirectionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the LeanInDirectionHelper for sending a LeanInDirection <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the LeanInDirectionHelper for sending a LeanInDirection <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the LeanInDirection <see cref="Message"/> to.</param>
 		public LeanInDirectionHelper(Ped ped) : base(ped, "leanInDirection")
@@ -4669,7 +4674,7 @@ namespace GTA.NaturalMotion
 	public sealed class LeanRandomHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the LeanRandomHelper for sending a LeanRandom <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the LeanRandomHelper for sending a LeanRandom <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the LeanRandom <see cref="Message"/> to.</param>
 		public LeanRandomHelper(Ped ped) : base(ped, "leanRandom")
@@ -4760,7 +4765,7 @@ namespace GTA.NaturalMotion
 	public sealed class LeanToPositionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the LeanToPositionHelper for sending a LeanToPosition <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the LeanToPositionHelper for sending a LeanToPosition <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the LeanToPosition <see cref="Message"/> to.</param>
 		public LeanToPositionHelper(Ped ped) : base(ped, "leanToPosition")
@@ -4802,7 +4807,7 @@ namespace GTA.NaturalMotion
 	public sealed class LeanTowardsObjectHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the LeanTowardsObjectHelper for sending a LeanTowardsObject <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the LeanTowardsObjectHelper for sending a LeanTowardsObject <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the LeanTowardsObject <see cref="Message"/> to.</param>
 		public LeanTowardsObjectHelper(Ped ped) : base(ped, "leanTowardsObject")
@@ -4881,7 +4886,7 @@ namespace GTA.NaturalMotion
 	public sealed class HipsLeanInDirectionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the HipsLeanInDirectionHelper for sending a HipsLeanInDirection <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the HipsLeanInDirectionHelper for sending a HipsLeanInDirection <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the HipsLeanInDirection <see cref="Message"/> to.</param>
 		public HipsLeanInDirectionHelper(Ped ped) : base(ped, "hipsLeanInDirection")
@@ -4924,7 +4929,7 @@ namespace GTA.NaturalMotion
 	public sealed class HipsLeanRandomHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the HipsLeanRandomHelper for sending a HipsLeanRandom <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the HipsLeanRandomHelper for sending a HipsLeanRandom <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the HipsLeanRandom <see cref="Message"/> to.</param>
 		public HipsLeanRandomHelper(Ped ped) : base(ped, "hipsLeanRandom")
@@ -5015,7 +5020,7 @@ namespace GTA.NaturalMotion
 	public sealed class HipsLeanToPositionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the HipsLeanToPositionHelper for sending a HipsLeanToPosition <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the HipsLeanToPositionHelper for sending a HipsLeanToPosition <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the HipsLeanToPosition <see cref="Message"/> to.</param>
 		public HipsLeanToPositionHelper(Ped ped) : base(ped, "hipsLeanToPosition")
@@ -5057,7 +5062,7 @@ namespace GTA.NaturalMotion
 	public sealed class HipsLeanTowardsObjectHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the HipsLeanTowardsObjectHelper for sending a HipsLeanTowardsObject <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the HipsLeanTowardsObjectHelper for sending a HipsLeanTowardsObject <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the HipsLeanTowardsObject <see cref="Message"/> to.</param>
 		public HipsLeanTowardsObjectHelper(Ped ped) : base(ped, "hipsLeanTowardsObject")
@@ -5136,7 +5141,7 @@ namespace GTA.NaturalMotion
 	public sealed class ForceLeanInDirectionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ForceLeanInDirectionHelper for sending a ForceLeanInDirection <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ForceLeanInDirectionHelper for sending a ForceLeanInDirection <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ForceLeanInDirection <see cref="Message"/> to.</param>
 		public ForceLeanInDirectionHelper(Ped ped) : base(ped, "forceLeanInDirection")
@@ -5199,7 +5204,7 @@ namespace GTA.NaturalMotion
 	public sealed class ForceLeanRandomHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ForceLeanRandomHelper for sending a ForceLeanRandom <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ForceLeanRandomHelper for sending a ForceLeanRandom <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ForceLeanRandom <see cref="Message"/> to.</param>
 		public ForceLeanRandomHelper(Ped ped) : base(ped, "forceLeanRandom")
@@ -5310,7 +5315,7 @@ namespace GTA.NaturalMotion
 	public sealed class ForceLeanToPositionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ForceLeanToPositionHelper for sending a ForceLeanToPosition <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ForceLeanToPositionHelper for sending a ForceLeanToPosition <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ForceLeanToPosition <see cref="Message"/> to.</param>
 		public ForceLeanToPositionHelper(Ped ped) : base(ped, "forceLeanToPosition")
@@ -5372,7 +5377,7 @@ namespace GTA.NaturalMotion
 	public sealed class ForceLeanTowardsObjectHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ForceLeanTowardsObjectHelper for sending a ForceLeanTowardsObject <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ForceLeanTowardsObjectHelper for sending a ForceLeanTowardsObject <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ForceLeanTowardsObject <see cref="Message"/> to.</param>
 		public ForceLeanTowardsObjectHelper(Ped ped) : base(ped, "forceLeanTowardsObject")
@@ -5474,7 +5479,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetStiffnessHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetStiffnessHelper for sending a SetStiffness <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetStiffnessHelper for sending a SetStiffness <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetStiffness <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -5542,7 +5547,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetMuscleStiffnessHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetMuscleStiffnessHelper for sending a SetMuscle stiffness <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetMuscleStiffnessHelper for sending a SetMuscle stiffness <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetMuscle stiffness <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -5590,7 +5595,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetWeaponModeHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetWeaponModeHelper for sending a SetWeaponMode <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetWeaponModeHelper for sending a SetWeaponMode <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetWeaponMode <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -5617,7 +5622,7 @@ namespace GTA.NaturalMotion
 	public sealed class RegisterWeaponHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the RegisterWeaponHelper for sending a RegisterWeapon <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the RegisterWeaponHelper for sending a RegisterWeapon <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the RegisterWeapon <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -5745,7 +5750,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotRelaxHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotRelaxHelper for sending a ShotRelax <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotRelaxHelper for sending a ShotRelax <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotRelax <see cref="Message"/> to.</param>
 		public ShotRelaxHelper(Ped ped) : base(ped, "shotRelax")
@@ -5799,7 +5804,7 @@ namespace GTA.NaturalMotion
 	public sealed class FireWeaponHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the FireWeaponHelper for sending a FireWeapon <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the FireWeaponHelper for sending a FireWeapon <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the FireWeapon <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -5909,7 +5914,7 @@ namespace GTA.NaturalMotion
 	public sealed class ConfigureConstraintsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ConfigureConstraintsHelper for sending a ConfigureConstraints <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ConfigureConstraintsHelper for sending a ConfigureConstraints <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ConfigureConstraints <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -6016,7 +6021,7 @@ namespace GTA.NaturalMotion
 	public sealed class StayUprightHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the StayUprightHelper for sending a StayUpright <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the StayUprightHelper for sending a StayUpright <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the StayUpright <see cref="Message"/> to.</param>
 		public StayUprightHelper(Ped ped) : base(ped, "stayUpright")
@@ -6536,7 +6541,7 @@ namespace GTA.NaturalMotion
 	public sealed class StopAllBehavioursHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the StopAllBehaviorsHelper for sending a StopAllBehaviors <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the StopAllBehaviorsHelper for sending a StopAllBehaviors <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the StopAllBehaviors <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -6553,7 +6558,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetCharacterStrengthHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetCharacterStrengthHelper for sending a SetCharacterStrength <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetCharacterStrengthHelper for sending a SetCharacterStrength <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetCharacterStrength <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -6590,7 +6595,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetCharacterHealthHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetCharacterHealthHelper for sending a SetCharacterHealth <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetCharacterHealthHelper for sending a SetCharacterHealth <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetCharacterHealth <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -6627,7 +6632,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetFallingReactionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetFallingReactionHelper for sending a SetFallingReaction <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetFallingReactionHelper for sending a SetFallingReaction <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetFallingReaction <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -6980,7 +6985,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetCharacterUnderwaterHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetCharacterUnderwaterHelper for sending a SetCharacterUnderwater <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetCharacterUnderwaterHelper for sending a SetCharacterUnderwater <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetCharacterUnderwater <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -7079,7 +7084,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetCharacterCollisionsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetCharacterCollisionsHelper for sending a SetCharacterCollisions <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetCharacterCollisionsHelper for sending a SetCharacterCollisions <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetCharacterCollisions <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -7217,7 +7222,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetCharacterDampingHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetCharacterDampingHelper for sending a SetCharacterDamping <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetCharacterDampingHelper for sending a SetCharacterDamping <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetCharacterDamping <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -7345,7 +7350,7 @@ namespace GTA.NaturalMotion
 	public sealed class SetFrictionScaleHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SetFrictionScaleHelper for sending a SetFrictionScale <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SetFrictionScaleHelper for sending a SetFrictionScale <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SetFrictionScale <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -7430,7 +7435,7 @@ namespace GTA.NaturalMotion
 	public sealed class AnimPoseHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the AnimPoseHelper for sending a AnimPose <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the AnimPoseHelper for sending a AnimPose <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the AnimPose <see cref="Message"/> to.</param>
 		public AnimPoseHelper(Ped ped) : base(ped, "animPose")
@@ -8080,7 +8085,7 @@ namespace GTA.NaturalMotion
 	public sealed class ArmsWindmillHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ArmsWindmillHelper for sending a ArmsWindmill <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ArmsWindmillHelper for sending a ArmsWindmill <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ArmsWindmill <see cref="Message"/> to.</param>
 		public ArmsWindmillHelper(Ped ped) : base(ped, "armsWindmill")
@@ -8580,7 +8585,7 @@ namespace GTA.NaturalMotion
 	public sealed class ArmsWindmillAdaptiveHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ArmsWindmillAdaptiveHelper for sending a ArmsWindmillAdaptive <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ArmsWindmillAdaptiveHelper for sending a ArmsWindmillAdaptive <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ArmsWindmillAdaptive <see cref="Message"/> to.</param>
 		public ArmsWindmillAdaptiveHelper(Ped ped) : base(ped, "armsWindmillAdaptive")
@@ -8867,7 +8872,7 @@ namespace GTA.NaturalMotion
 	public sealed class BalancerCollisionsReactionHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BalancerCollisionsReactionHelper for sending a BalancerCollisionsReaction <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BalancerCollisionsReactionHelper for sending a BalancerCollisionsReaction <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BalancerCollisionsReaction <see cref="Message"/> to.</param>
 		public BalancerCollisionsReactionHelper(Ped ped) : base(ped, "balancerCollisionsReaction")
@@ -9654,7 +9659,7 @@ namespace GTA.NaturalMotion
 	public sealed class BodyBalanceHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BodyBalanceHelper for sending a BodyBalance <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BodyBalanceHelper for sending a BodyBalance <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BodyBalance <see cref="Message"/> to.</param>
 		public BodyBalanceHelper(Ped ped) : base(ped, "bodyBalance")
@@ -10613,7 +10618,7 @@ namespace GTA.NaturalMotion
 	public sealed class BodyFoetalHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BodyFoetalHelper for sending a BodyFoetal <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BodyFoetalHelper for sending a BodyFoetal <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BodyFoetal <see cref="Message"/> to.</param>
 		public BodyFoetalHelper(Ped ped) : base(ped, "bodyFoetal")
@@ -10732,7 +10737,7 @@ namespace GTA.NaturalMotion
 	public sealed class BodyRollUpHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BodyRollUpHelper for sending a BodyRollUp <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BodyRollUpHelper for sending a BodyRollUp <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BodyRollUp <see cref="Message"/> to.</param>
 		public BodyRollUpHelper(Ped ped) : base(ped, "bodyRollUp")
@@ -10965,7 +10970,7 @@ namespace GTA.NaturalMotion
 	public sealed class BodyWritheHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BodyWritheHelper for sending a BodyWrithe <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BodyWritheHelper for sending a BodyWrithe <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BodyWrithe <see cref="Message"/> to.</param>
 		public BodyWritheHelper(Ped ped) : base(ped, "bodyWrithe")
@@ -11495,7 +11500,7 @@ namespace GTA.NaturalMotion
 	public sealed class BraceForImpactHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BraceForImpactHelper for sending a BraceForImpact <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BraceForImpactHelper for sending a BraceForImpact <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the BraceForImpact <see cref="Message"/> to.</param>
 		public BraceForImpactHelper(Ped ped) : base(ped, "braceForImpact")
@@ -12320,7 +12325,7 @@ namespace GTA.NaturalMotion
 	public sealed class BuoyancyHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the BuoyancyHelper for sending a Buoyancy <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the BuoyancyHelper for sending a Buoyancy <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Buoyancy <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -12453,7 +12458,7 @@ namespace GTA.NaturalMotion
 	public sealed class CatchFallHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the CatchFallHelper for sending a CatchFall <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the CatchFallHelper for sending a CatchFall <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the CatchFall <see cref="Message"/> to.</param>
 		public CatchFallHelper(Ped ped) : base(ped, "catchFall")
@@ -12626,7 +12631,7 @@ namespace GTA.NaturalMotion
 	public sealed class ElectrocuteHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ElectrocuteHelper for sending a Electrocute <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ElectrocuteHelper for sending a Electrocute <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Electrocute <see cref="Message"/> to.</param>
 		public ElectrocuteHelper(Ped ped) : base(ped, "electrocute")
@@ -12976,7 +12981,7 @@ namespace GTA.NaturalMotion
 	public sealed class FallOverWallHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the FallOverWallHelper for sending a FallOverWall <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the FallOverWallHelper for sending a FallOverWall <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the FallOverWall <see cref="Message"/> to.</param>
 		public FallOverWallHelper(Ped ped) : base(ped, "fallOverWall")
@@ -13466,7 +13471,7 @@ namespace GTA.NaturalMotion
 	public sealed class GrabHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the GrabHelper for sending a Grab <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the GrabHelper for sending a Grab <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Grab <see cref="Message"/> to.</param>
 		public GrabHelper(Ped ped) : base(ped, "grab")
@@ -14078,7 +14083,7 @@ namespace GTA.NaturalMotion
 	public sealed class HeadLookHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the HeadLookHelper for sending a HeadLook <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the HeadLookHelper for sending a HeadLook <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the HeadLook <see cref="Message"/> to.</param>
 		public HeadLookHelper(Ped ped) : base(ped, "headLook")
@@ -14224,7 +14229,7 @@ namespace GTA.NaturalMotion
 	public sealed class HighFallHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the HighFallHelper for sending a HighFall <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the HighFallHelper for sending a HighFall <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the HighFall <see cref="Message"/> to.</param>
 		public HighFallHelper(Ped ped) : base(ped, "highFall")
@@ -14891,7 +14896,7 @@ namespace GTA.NaturalMotion
 	public sealed class IncomingTransformsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the IncomingTransformsHelper for sending a IncomingTransforms <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the IncomingTransformsHelper for sending a IncomingTransforms <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the IncomingTransforms <see cref="Message"/> to.</param>
 		public IncomingTransformsHelper(Ped ped) : base(ped, "incomingTransforms")
@@ -14905,7 +14910,7 @@ namespace GTA.NaturalMotion
 	public sealed class InjuredOnGroundHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the InjuredOnGroundHelper for sending a InjuredOnGround <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the InjuredOnGroundHelper for sending a InjuredOnGround <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the InjuredOnGround <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -15058,7 +15063,7 @@ namespace GTA.NaturalMotion
 	public sealed class CarriedHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the CarriedHelper for sending a Carried <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the CarriedHelper for sending a Carried <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Carried <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -15075,7 +15080,7 @@ namespace GTA.NaturalMotion
 	public sealed class DangleHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the DangleHelper for sending a Dangle <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the DangleHelper for sending a Dangle <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Dangle <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -15118,7 +15123,7 @@ namespace GTA.NaturalMotion
 	public sealed class OnFireHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the OnFireHelper for sending a OnFire <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the OnFireHelper for sending a OnFire <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the OnFire <see cref="Message"/> to.</param>
 		public OnFireHelper(Ped ped) : base(ped, "onFire")
@@ -15422,7 +15427,7 @@ namespace GTA.NaturalMotion
 	public sealed class PedalLegsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the PedalLegsHelper for sending a PedalLegs <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the PedalLegsHelper for sending a PedalLegs <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the PedalLegs <see cref="Message"/> to.</param>
 		public PedalLegsHelper(Ped ped) : base(ped, "pedalLegs")
@@ -15788,7 +15793,7 @@ namespace GTA.NaturalMotion
 	public sealed class PointArmHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the PointArmHelper for sending a PointArm <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the PointArmHelper for sending a PointArm <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the PointArm <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -16098,7 +16103,7 @@ namespace GTA.NaturalMotion
 	public sealed class PointGunHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the PointGunHelper for sending a PointGun <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the PointGunHelper for sending a PointGun <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the PointGun <see cref="Message"/> to.</param>
 		public PointGunHelper(Ped ped) : base(ped, "pointGun")
@@ -17206,7 +17211,7 @@ namespace GTA.NaturalMotion
 	public sealed class PointGunExtraHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the PointGunExtraHelper for sending a PointGunExtra <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the PointGunExtraHelper for sending a PointGunExtra <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the PointGunExtra <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -17388,7 +17393,7 @@ namespace GTA.NaturalMotion
 	public sealed class RollDownStairsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the RollDownStairsHelper for sending a RollDownStairs <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the RollDownStairsHelper for sending a RollDownStairs <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the RollDownStairs <see cref="Message"/> to.</param>
 		public RollDownStairsHelper(Ped ped) : base(ped, "rollDownStairs")
@@ -17964,7 +17969,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotHelper for sending a Shot <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotHelper for sending a Shot <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Shot <see cref="Message"/> to.</param>
 		public ShotHelper(Ped ped) : base(ped, "shot")
@@ -18961,7 +18966,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotNewBulletHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotNewBulletHelper for sending a ShotNewBullet <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotNewBulletHelper for sending a ShotNewBullet <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotNewBullet <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -19044,7 +19049,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotSnapHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotSnapHelper for sending a ShotSnap <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotSnapHelper for sending a ShotSnap <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotSnap <see cref="Message"/> to.</param>
 		public ShotSnapHelper(Ped ped) : base(ped, "shotSnap")
@@ -19359,7 +19364,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotShockSpinHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotShockSpinHelper for sending a ShotShockSpin <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotShockSpinHelper for sending a ShotShockSpin <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotShockSpin <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -19620,7 +19625,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotFallToKneesHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotFallToKneesHelper for sending a ShotFallToKnees <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotFallToKneesHelper for sending a ShotFallToKnees <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotFallToKnees <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -20070,7 +20075,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotFromBehindHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotFromBehindHelper for sending a ShotFromBehind <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotFromBehindHelper for sending a ShotFromBehind <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotFromBehind <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -20301,7 +20306,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotInGutsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotInGutsHelper for sending a ShotInGuts <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotInGutsHelper for sending a ShotInGuts <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotInGuts <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -20466,7 +20471,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotHeadLookHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotHeadLookHelper for sending a ShotHeadLook <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotHeadLookHelper for sending a ShotHeadLook <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotHeadLook <see cref="Message"/> to.</param>
 		public ShotHeadLookHelper(Ped ped) : base(ped, "shotHeadLook")
@@ -20584,7 +20589,7 @@ namespace GTA.NaturalMotion
 	public sealed class ShotConfigureArmsHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the ShotConfigureArmsHelper for sending a ShotConfigureArms <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the ShotConfigureArmsHelper for sending a ShotConfigureArms <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the ShotConfigureArms <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -21267,7 +21272,7 @@ namespace GTA.NaturalMotion
 	public sealed class SmartFallHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the SmartFallHelper for sending a SmartFall <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the SmartFallHelper for sending a SmartFall <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the SmartFall <see cref="Message"/> to.</param>
 		/// <remarks>
@@ -22283,7 +22288,7 @@ namespace GTA.NaturalMotion
 	public sealed class StaggerFallHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the StaggerFallHelper for sending a StaggerFall <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the StaggerFallHelper for sending a StaggerFall <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the StaggerFall <see cref="Message"/> to.</param>
 		public StaggerFallHelper(Ped ped) : base(ped, "staggerFall")
@@ -23095,7 +23100,7 @@ namespace GTA.NaturalMotion
 	public sealed class TeeterHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the TeeterHelper for sending a Teeter <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the TeeterHelper for sending a Teeter <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Teeter <see cref="Message"/> to.</param>
 		public TeeterHelper(Ped ped) : base(ped, "teeter")
@@ -23254,7 +23259,7 @@ namespace GTA.NaturalMotion
 	public sealed class UpperBodyFlinchHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the UpperBodyFlinchHelper for sending a UpperBodyFlinch <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the UpperBodyFlinchHelper for sending a UpperBodyFlinch <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the UpperBodyFlinch <see cref="Message"/> to.</param>
 		public UpperBodyFlinchHelper(Ped ped) : base(ped, "upperBodyFlinch")
@@ -23526,7 +23531,7 @@ namespace GTA.NaturalMotion
 	public sealed class YankedHelper : CustomHelper
 	{
 		/// <summary>
-		/// Creates a new Instance of the YankedHelper for sending a Yanked <see cref="Message"/> to a given <see cref="Ped"/>. 
+		/// Creates a new Instance of the YankedHelper for sending a Yanked <see cref="Message"/> to a given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="ped">The <see cref="Ped"/> to send the Yanked <see cref="Message"/> to.</param>
 		public YankedHelper(Ped ped) : base(ped, "yanked")

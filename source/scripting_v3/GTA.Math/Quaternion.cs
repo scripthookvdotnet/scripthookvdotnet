@@ -276,9 +276,9 @@ namespace GTA.Math
 		/// <returns>The divided quaternion.</returns>
 		public static Quaternion Divide(Quaternion left, Quaternion right)
 		{
-			return Multiply(left, Invert(right)); 
+			return Multiply(left, Invert(right));
 		}
-		
+
 		/// <summary>
 		/// Converts the quaternion into a unit quaternion.
 		/// </summary>
@@ -343,7 +343,7 @@ namespace GTA.Math
 		/// <remarks>
 		/// This method performs the linear interpolation based on the following formula.
 		/// <code>start + (end - start) * amount</code>
-		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
 		/// </remarks>
 		public static Quaternion Lerp(Quaternion start, Quaternion end, float amount)
 		{
@@ -472,7 +472,7 @@ namespace GTA.Math
 			else
 				return Identity;
 		}
-		
+
 		/// <summary>
 		/// Creates a rotation which rotates from fromDirection to toDirection.
 		/// </summary>
@@ -672,20 +672,20 @@ namespace GTA.Math
 			rightVector.Normalize();
 			forwardVector.Normalize();
 			upVector.Normalize();
-			
+
 			Matrix rotationMatrix = new Matrix();
 			rotationMatrix[0, 0] = rightVector.X;
 			rotationMatrix[0, 1] = rightVector.Y;
 			rotationMatrix[0, 2] = rightVector.Z;
-			
+
 			rotationMatrix[1, 0] = forwardVector.X;
 			rotationMatrix[1, 1] = forwardVector.Y;
 			rotationMatrix[1, 2] = forwardVector.Z;
-			
+
 			rotationMatrix[2, 0] = upVector.X;
 			rotationMatrix[2, 1] = upVector.Y;
 			rotationMatrix[2, 2] = upVector.Z;
-			
+
 			return RotationMatrix(rotationMatrix);
 		}
 
@@ -913,7 +913,7 @@ namespace GTA.Math
 		public Vector3 RotateTransform(Vector3 point, Vector3 center) => RotateTransform(this, point, center);
 
 		#endregion RotateTransformOperators
-		
+
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.
 		/// </summary>
@@ -940,7 +940,7 @@ namespace GTA.Math
 		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to a specified object. 
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
@@ -953,7 +953,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to the specified object. 
+		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>

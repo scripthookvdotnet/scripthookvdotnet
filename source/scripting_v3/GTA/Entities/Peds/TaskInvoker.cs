@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using GTA.Math;
 using GTA.Native;
@@ -24,7 +29,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_AIM_GUN_AT_ENTITY, _ped.Handle, target.Handle, duration, 0);
 		}
-		
+
 		public void AimAt(Vector3 target, int duration)
 		{
 			Function.Call(Hash.TASK_AIM_GUN_AT_COORD, _ped.Handle, target.X, target.Y, target.Z, duration, 0, 0);
@@ -44,7 +49,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_JUMP, _ped.Handle, true);
 		}
-		
+
 		public void Climb()
 		{
 			Function.Call(Hash.TASK_CLIMB, _ped.Handle, true);
@@ -104,17 +109,17 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, 0, 16);
 		}
-		
+
 		public void FightAgainst(Ped target, int duration)
 		{
 			Function.Call(Hash.TASK_COMBAT_PED_TIMED, _ped.Handle, target.Handle, duration, 0);
 		}
-		
+
 		public void FightAgainstHatedTargets(float radius)
 		{
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED, _ped.Handle, radius, 0);
 		}
-		
+
 		public void FightAgainstHatedTargets(float radius, int duration)
 		{
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, duration, 0);
@@ -124,7 +129,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, ped.Handle, 100f, duration, 0, 0);
 		}
-		
+
 		public void FleeFrom(Vector3 position, int duration = -1)
 		{
 			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, 100f, duration, 0, 0);
@@ -134,7 +139,7 @@ namespace GTA
 		{
 			FollowPointRoute(1f, points);
 		}
-		
+
 		public void FollowPointRoute(float movementSpeed, params Vector3[] points)
 		{
 			Function.Call(Hash.TASK_FLUSH_ROUTE);
@@ -190,12 +195,12 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_LEAVE_ANY_VEHICLE, _ped.Handle, 0, flags);
 		}
-		
+
 		public void LeaveVehicle(Vehicle vehicle, bool closeDoor)
 		{
 			LeaveVehicle(vehicle, closeDoor ? LeaveVehicleFlags.None : LeaveVehicleFlags.LeaveDoorOpen);
 		}
-		
+
 		public void LeaveVehicle(Vehicle vehicle, LeaveVehicleFlags flags)
 		{
 			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, flags);
@@ -205,7 +210,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, 0, 2);
 		}
-		
+
 		public void LookAt(Vector3 position, int duration = -1)
 		{
 			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, 0, 2);
@@ -238,17 +243,17 @@ namespace GTA
 		{
 			PlayAnimation(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f);
 		}
-		
+
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
 			PlayAnimation(animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate);
 		}
-		
+
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
 			PlayAnimation(animDict, animName, blendInSpeed, -8f, duration, flags, 0f);
 		}
-		
+
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
@@ -299,7 +304,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, pattern);
 		}
-		
+
 		public void ShootAt(Vector3 position, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
 			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, pattern);
@@ -353,22 +358,22 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_PARACHUTE, _ped.Handle, true);
 		}
-		
+
 		public void UseMobilePhone()
 		{
 			Function.Call(Hash.TASK_USE_MOBILE_PHONE, _ped.Handle, true);
 		}
-		
+
 		public void UseMobilePhone(int duration)
 		{
 			Function.Call(Hash.TASK_USE_MOBILE_PHONE_TIMED, _ped.Handle, duration);
 		}
-		
+
 		public void PutAwayParachute()
 		{
 			Function.Call(Hash.TASK_PARACHUTE, _ped.Handle, false);
 		}
-		
+
 		public void PutAwayMobilePhone()
 		{
 			Function.Call(Hash.TASK_USE_MOBILE_PHONE, _ped.Handle, false);
@@ -378,7 +383,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_VEHICLE_CHASE, _ped.Handle, target.Handle);
 		}
-		
+
 		public void VehicleShootAtPed(Ped target)
 		{
 			Function.Call(Hash.TASK_VEHICLE_SHOOT_AT_PED, _ped.Handle, target.Handle, 20f);
@@ -393,7 +398,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, 0, 0);
 		}
-		
+
 		public void WanderAround(Vector3 position, float radius)
 		{
 			Function.Call(Hash.TASK_WANDER_IN_AREA, _ped.Handle, position.X, position.Y, position.Z, radius, 0, 0);
@@ -403,7 +408,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, _ped.Handle, vehicle.Handle, seat);
 		}
-		
+
 		public void WarpOutOfVehicle(Vehicle vehicle)
 		{
 			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, 16);
@@ -413,22 +418,22 @@ namespace GTA
 		{
 			Function.Call(Hash.CLEAR_PED_TASKS, _ped.Handle);
 		}
-		
+
 		public void ClearAllImmediately()
 		{
 			Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, _ped.Handle);
 		}
-		
+
 		public void ClearLookAt()
 		{
 			Function.Call(Hash.TASK_CLEAR_LOOK_AT, _ped.Handle);
 		}
-		
+
 		public void ClearSecondary()
 		{
 			Function.Call(Hash.CLEAR_PED_SECONDARY_TASK, _ped.Handle);
 		}
-		
+
 		public void ClearAnimation(string animSet, string animName)
 		{
 			Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, animSet, animName, -4f);

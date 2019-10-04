@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using GTA.Native;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,10 +17,10 @@ namespace GTA.UI
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
+		/// </summary>
 		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>									
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
 		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
 		public CustomSprite(string filename, SizeF size, PointF position) :
 			this(filename, size, position, Color.WhiteSmoke, 0.0f, false)
@@ -23,11 +28,11 @@ namespace GTA.UI
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
+		/// </summary>
 		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>														  
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>
 		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
 		public CustomSprite(string filename, SizeF size, PointF position, Color color) :
 			this(filename, size, position, color, 0.0f, false)
@@ -35,12 +40,12 @@ namespace GTA.UI
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
+		/// </summary>
 		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="CustomSprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>							  
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
 		/// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
 		public CustomSprite(string filename, SizeF size, PointF position, Color color, float rotation) :
 			this(filename, size, position, color, rotation, false)
@@ -48,7 +53,7 @@ namespace GTA.UI
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
-		/// </summary>																												
+		/// </summary>
 		/// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="CustomSprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="CustomSprite"/>.</param>

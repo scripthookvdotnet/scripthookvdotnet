@@ -1,17 +1,6 @@
 //
-// Copyright (C) 2015 crosire
-//
-// This software is  provided 'as-is', without any express  or implied  warranty. In no event will the
-// authors be held liable for any damages arising from the use of this software.
-// Permission  is granted  to anyone  to use  this software  for  any  purpose,  including  commercial
-// applications, and to alter it and redistribute it freely, subject to the following restrictions:
-//
-//   1. The origin of this software must not be misrepresented; you must not claim that you  wrote the
-//      original  software. If you use this  software  in a product, an  acknowledgment in the product
-//      documentation would be appreciated but is not required.
-//   2. Altered source versions must  be plainly  marked as such, and  must not be  misrepresented  as
-//      being the original software.
-//   3. This notice may not be removed or altered from any source distribution.
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
 //
 
 using System;
@@ -40,7 +29,7 @@ namespace GTA.Native
 		{
 			var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
 				new Type[]{ typeof(IntPtr) }, typeof(NativeHelper<T>), true);
-				
+
 			ILGenerator generator = ptrToStrMethod.GetILGenerator();
 			generator.Emit(OpCodes.Ldarg_0);
 			generator.Emit(OpCodes.Ldobj, typeof(T));
@@ -432,7 +421,7 @@ namespace GTA.Native
 
 			unsafe
 			{
-				// The result will be null when this method is called from a thread other than the main thread 
+				// The result will be null when this method is called from a thread other than the main thread
 				if (task.Result == null)
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
 

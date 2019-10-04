@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System.Collections.Generic;
 using System.Linq;
 using GTA.Native;
@@ -443,7 +448,7 @@ namespace GTA
 						WeaponComponentHash.RevolverVarmodGoon,
 					};
 			}
-			
+
 			WeaponComponentHash[] result = null;
 
 			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
@@ -456,7 +461,7 @@ namespace GTA
 						if (weaponData.Hash == hash)
 						{
 							result = new WeaponComponentHash[Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i)];
-							
+
 							for (int j = 0; j < result.Length; j++)
 							{
 								DlcWeaponComponentData componentData;
@@ -474,7 +479,7 @@ namespace GTA
 					}
 				}
 			}
-			
+
 
 			if (result == null)
 			{

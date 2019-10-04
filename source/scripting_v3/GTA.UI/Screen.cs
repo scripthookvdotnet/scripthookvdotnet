@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System.Drawing;
 using GTA.Math;
 using GTA.Native;
@@ -124,7 +129,7 @@ namespace GTA.UI
 		}
 		/// <summary>
 		/// Gets the current screen aspect ratio
-		/// </summary>		   
+		/// </summary>
 		public static float AspectRatio => Function.Call<float>(Hash._GET_ASPECT_RATIO, 0);
 		/// <summary>
 		/// Gets the screen width scaled against a 720pixel height base.
@@ -192,7 +197,7 @@ namespace GTA.UI
 		}
 
 		/// <summary>
-		/// Starts applying the specified effect to the screen. 
+		/// Starts applying the specified effect to the screen.
 		/// </summary>
 		/// <param name="effectName">The <see cref="ScreenEffect"/> to start playing.</param>
 		/// <param name="duration">The duration of the effect in milliseconds or zero to use the default length.</param>

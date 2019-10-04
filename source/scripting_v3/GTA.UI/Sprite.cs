@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Drawing;
 using System.Collections.Generic;
@@ -18,7 +23,7 @@ namespace GTA.UI
 		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
 		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
-		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>											   
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position) :
 			this(textureDict, textureName, size, position, Color.WhiteSmoke, 0f, false)
 		{
@@ -30,7 +35,7 @@ namespace GTA.UI
 		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>														 
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color) :
 			this(textureDict, textureName, size, position, color, 0f, false)
 		{
@@ -43,7 +48,7 @@ namespace GTA.UI
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>						
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation) :
 			this(textureDict, textureName, size, position, color, rotation, false)
 		{

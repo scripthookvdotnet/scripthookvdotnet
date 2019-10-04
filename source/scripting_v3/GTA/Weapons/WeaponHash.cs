@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 
 namespace GTA
@@ -84,7 +89,7 @@ namespace GTA
 
 	public enum VehicleWeaponHash
 	{
-		Invalid = -1, 
+		Invalid = -1,
 		Tank = 1945616459,
 		SpaceRocket = -123497569,
 		PlaneRocket = -821520672,

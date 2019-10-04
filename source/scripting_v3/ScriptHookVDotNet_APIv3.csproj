@@ -183,7 +183,7 @@
     <Compile Include="GTA\ScaleformArgumentTXD.cs" />
     <Compile Include="GTA\Script.cs" />
     <Compile Include="GTA\ScriptAttributes.cs" />
-    <Compile Include="GTA\Settings.cs" />
+    <Compile Include="GTA\ScriptSettings.cs" />
     <Compile Include="GTA\Weapons\ComponentAttachmentPoint.cs" />
     <Compile Include="GTA\Weapons\DlcWeaponStructs.cs" />
     <Compile Include="GTA\Weapons\InvalidWeaponComponent.cs" />

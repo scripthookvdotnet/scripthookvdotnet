@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using GTA.Math;
 using GTA.Native;
 using System;
@@ -197,7 +202,7 @@ namespace GTA
 		/// Sets the gravity level for all <see cref="World"/> objects.
 		/// </summary>
 		/// <value>
-		/// The gravity level: 
+		/// The gravity level:
 		/// 9.8f - Default gravity.
 		/// 2.4f - Moon gravity.
 		/// 0.1f - Very low gravity.

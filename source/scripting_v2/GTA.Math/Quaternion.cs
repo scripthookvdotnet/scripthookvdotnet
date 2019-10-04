@@ -265,7 +265,7 @@ namespace GTA.Math
 		/// <returns>The divided quaternion.</returns>
 		public static Quaternion Divide(Quaternion left, Quaternion right)
 		{
-			return Multiply(left, Invert(right)); 
+			return Multiply(left, Invert(right));
 		}
 
 		/// <summary>
@@ -332,7 +332,7 @@ namespace GTA.Math
 		/// <remarks>
 		/// This method performs the linear interpolation based on the following formula.
 		/// <code>start + (end - start) * amount</code>
-		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
 		/// </remarks>
 		public static Quaternion Lerp(Quaternion start, Quaternion end, float amount)
 		{
@@ -461,7 +461,7 @@ namespace GTA.Math
 			else
 				return Identity;
 		}
-		
+
 		/// <summary>
 		/// Creates a rotation which rotates from fromDirection to toDirection.
 		/// </summary>
@@ -802,7 +802,7 @@ namespace GTA.Math
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Quaternion left, Quaternion right) => !Equals(left, right);
-		
+
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.
 		/// </summary>
@@ -832,7 +832,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to a specified object. 
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
@@ -845,18 +845,18 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to the specified object. 
+		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
 		public bool Equals(Quaternion other) => (X == other.X && Y == other.Y && Z == other.Z && W == other.W);
 
 		/// <summary>
-		/// Determines whether the specified object instances are considered equal. 
+		/// Determines whether the specified object instances are considered equal.
 		/// </summary>
 		/// <param name="value1"></param>
 		/// <param name="value2"></param>
-		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
+		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
 		/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
 		public static bool Equals(ref Quaternion value1, ref Quaternion value2) => value1.Equals(value2);
 	}

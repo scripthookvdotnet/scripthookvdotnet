@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Linq;
 using GTA.Math;
@@ -1243,9 +1248,9 @@ namespace GTA
 				case EntityType.Ped:
 					return new Ped(handle);
 				case EntityType.Vehicle:
-					return new Vehicle(handle);	
+					return new Vehicle(handle);
 				case EntityType.Prop:
-					return new Prop(handle); 
+					return new Prop(handle);
 			}
 			return null;
 		}

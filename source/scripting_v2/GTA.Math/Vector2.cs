@@ -1,15 +1,15 @@
 //
 // Copyright (C) 2007-2010 SlimDX Group
-// 
+//
 // Permission is hereby granted, free  of charge, to any person obtaining a copy of this software  and
 // associated  documentation  files (the  "Software"), to deal  in the Software  without  restriction,
 // including  without  limitation  the  rights  to use,  copy,  modify,  merge,  publish,  distribute,
 // sublicense, and/or sell  copies of the  Software,  and to permit  persons to whom  the Software  is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The  above  copyright  notice  and this  permission  notice shall  be included  in  all  copies  or
 // substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF  ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 // NOT  LIMITED  TO  THE  WARRANTIES  OF  MERCHANTABILITY,  FITNESS  FOR  A   PARTICULAR  PURPOSE  AND
 // NONINFRINGEMENT.  IN  NO  EVENT SHALL THE  AUTHORS  OR COPYRIGHT HOLDERS  BE LIABLE FOR  ANY CLAIM,
@@ -299,7 +299,7 @@ namespace GTA.Math
 		/// <remarks>
 		/// This method performs the linear interpolation based on the following formula.
 		/// <code>start + (end - start) * amount</code>
-		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
 		/// </remarks>
 		public static Vector2 Lerp(Vector2 start, Vector2 end, float amount)
 		{
@@ -331,12 +331,12 @@ namespace GTA.Math
 		public static float Dot(Vector2 left, Vector2 right) => (left.X * right.X + left.Y * right.Y);
 
 		/// <summary>
-		/// Returns the reflection of a vector off a surface that has the specified normal. 
+		/// Returns the reflection of a vector off a surface that has the specified normal.
 		/// </summary>
 		/// <param name="vector">The source vector.</param>
 		/// <param name="normal">Normal of the surface.</param>
 		/// <returns>The reflected vector.</returns>
-		/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 
+		/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine
 		/// whether the original vector was close enough to the surface to hit it.</remarks>
 		public static Vector2 Reflect(Vector2 vector, Vector2 normal)
 		{
@@ -480,7 +480,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to a specified object. 
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; otherwise, <c>false</c>.</returns>
@@ -493,18 +493,18 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to the specified object. 
+		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
 		public bool Equals(Vector2 other) => (X == other.X && Y == other.Y);
 
 		/// <summary>
-		/// Determines whether the specified object instances are considered equal. 
+		/// Determines whether the specified object instances are considered equal.
 		/// </summary>
 		/// <param name="value1">The first value to compare.</param>
 		/// <param name="value2">The second value to compare.</param>
-		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
+		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
 		/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
 		public static bool Equals(ref Vector2 value1, ref Vector2 value2) => value1.Equals(value1);
 	}

@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Drawing;
 using System.Collections.Generic;
@@ -230,7 +235,7 @@ namespace GTA
 		public bool IsSirenSilent
 		{
 			set =>
-				// Sets if the siren is silent actually 
+				// Sets if the siren is silent actually
 				Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, Handle, value);
 		}
 

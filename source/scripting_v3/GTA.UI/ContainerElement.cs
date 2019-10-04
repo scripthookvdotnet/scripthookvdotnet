@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System.Drawing;
 using System.Collections.Generic;
 using GTA.Native;
@@ -8,7 +13,7 @@ namespace GTA.UI
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ContainerElement"/> class used for grouping items on screen.
-		/// </summary>	 
+		/// </summary>
 		public ContainerElement() :
 			this(PointF.Empty, new SizeF(Screen.Width, Screen.Height), Color.Transparent, false)
 		{
@@ -17,7 +22,7 @@ namespace GTA.UI
 		/// Initializes a new instance of the <see cref="ContainerElement"/> class used for grouping items on screen.
 		/// </summary>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="ContainerElement"/>.</param>
-		/// <param name="size">Set the <see cref="Size"/> of the <see cref="ContainerElement"/>.</param>						 							
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="ContainerElement"/>.</param>
 		public ContainerElement(PointF position, SizeF size) :
 			this(position, size, Color.Transparent, false)
 		{
@@ -27,7 +32,7 @@ namespace GTA.UI
 		/// </summary>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="ContainerElement"/>.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="ContainerElement"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="ContainerElement"/>.</param>							 							
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="ContainerElement"/>.</param>
 		public ContainerElement(PointF position, SizeF size, Color color) :
 			this(position, size, color, false)
 		{
@@ -37,7 +42,7 @@ namespace GTA.UI
 		/// </summary>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="ContainerElement"/>.</param>
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="ContainerElement"/>.</param>
-		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="ContainerElement"/>.</param>							 
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="ContainerElement"/>.</param>
 		/// <param name="centered">Position the <see cref="ContainerElement"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
 		public ContainerElement(PointF position, SizeF size, Color color, bool centered)
 		{

@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using GTA.Math;
 
@@ -147,7 +152,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the clutch speed multiplier on down shifts. 
+		/// Gets or sets the clutch speed multiplier on down shifts.
 		/// </summary>
 		/// <value>
 		/// The clutch speed multiplier on down shifts.
@@ -175,7 +180,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the clutch speed multiplier on up shifts. 
+		/// Gets or sets the clutch speed multiplier on up shifts.
 		/// </summary>
 		/// <value>
 		/// The clutch speed multiplier on up shifts.
@@ -247,13 +252,13 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the drive inertia that determines how fast the engine acceleration is. 
+		/// Gets or sets the drive inertia that determines how fast the engine acceleration is.
 		/// </summary>
 		/// <value>
 		/// The drive inertia.
 		/// </value>
 		/// <remarks>
-		/// If you want a vehicle with high torque but slow acceleration (e.g. a truck), lower the driver inertia and specify a high drive force. 
+		/// If you want a vehicle with high torque but slow acceleration (e.g. a truck), lower the driver inertia and specify a high drive force.
 		/// </remarks>
 		public float DriveInertia
 		{
@@ -731,7 +736,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the suspension force. 
+		/// Gets or sets the suspension force.
 		/// Lower limit for zero force at full extension is calculated using (1.0f / (force * number of wheels)).
 		/// </summary>
 		/// <value>

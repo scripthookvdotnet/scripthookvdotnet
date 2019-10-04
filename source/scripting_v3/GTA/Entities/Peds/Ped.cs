@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using GTA.Math;
 using GTA.Native;
@@ -422,7 +427,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the injury health threshold for this <see cref="Ped"/>. 
+		/// Gets or sets the injury health threshold for this <see cref="Ped"/>.
 		/// The ped is considered injured when its health drops below this value.
 		/// The ped dies on attacks when its health is below this value.
 		/// </summary>
@@ -647,7 +652,7 @@ namespace GTA
 								return;
 							}
 						}
-					}			 
+					}
 					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 0.25f);
 				}
 			}

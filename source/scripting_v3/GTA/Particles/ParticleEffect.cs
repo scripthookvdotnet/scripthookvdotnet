@@ -1,4 +1,9 @@
-﻿using GTA.Math;
+﻿//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
+using GTA.Math;
 using GTA.Native;
 using System;
 using System.Drawing;
@@ -65,7 +70,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the offset.
-		/// If this <see cref="ParticleEffect"/> is attached to an <see cref="Entity"/>, this refers to the offset from the <see cref="Entity"/>; 
+		/// If this <see cref="ParticleEffect"/> is attached to an <see cref="Entity"/>, this refers to the offset from the <see cref="Entity"/>;
 		/// otherwise, this refers to its position in World coords
 		/// </summary>
 		public Vector3 Offset
@@ -157,7 +162,7 @@ namespace GTA
 		/// Gets or sets the size scaling factor of this <see cref="ParticleEffect"/>
 		/// </summary>
 		/// <value>
-		/// The scale, default = 1.0f; 
+		/// The scale, default = 1.0f;
 		/// To Decrease the size use a value less than 1.0f;
 		/// To Increase the size use a value greater than 1.0f;
 		/// </value>

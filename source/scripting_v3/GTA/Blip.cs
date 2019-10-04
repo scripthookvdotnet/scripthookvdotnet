@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using GTA.Math;
 using GTA.Native;
 using System;
@@ -48,7 +53,7 @@ namespace GTA
 			get => (BlipColor)Function.Call<int>(Hash.GET_BLIP_COLOUR, Handle);
 			set => Function.Call(Hash.SET_BLIP_COLOUR, Handle, value);
 		}
-	
+
 		/// <summary>
 		/// Gets or sets the sprite of this <see cref="Blip"/>.
 		/// </summary>

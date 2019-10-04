@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -93,13 +98,13 @@ namespace GTA
 		public bool Variation
 		{
 			get
-			{				  
+			{
 				return Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, _owner.Handle, ModType);
 			}
 			set
 			{
 				Function.Call(Hash.SET_VEHICLE_MOD, _owner.Handle, ModType, Index, value);
-			}	 
+			}
 
 		}
 
@@ -171,7 +176,7 @@ namespace GTA
 						cur = Game.GetLocalizedString("CMM_MOD_S4");
 						break;
 					case VehicleModType.DialDesign:
-						cur = Game.GetLocalizedString("CMM_MOD_S5"); 
+						cur = Game.GetLocalizedString("CMM_MOD_S5");
 						break;
 					case VehicleModType.DoorSpeakers:
 						cur = Game.GetLocalizedString("CMM_MOD_S6");
@@ -415,7 +420,7 @@ namespace GTA
 
 				}
 				return Game.GetLocalizedString("CMOD_DEF_0");
-			}			
+			}
 		}
 		public int ModCount => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, _owner.Handle, ModType);
 		public Vehicle Vehicle => _owner;

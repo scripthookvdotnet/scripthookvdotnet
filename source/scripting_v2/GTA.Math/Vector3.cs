@@ -423,7 +423,7 @@ namespace GTA.Math
 		/// <remarks>
 		/// This method performs the linear interpolation based on the following formula.
 		/// <code>start + (end - start) * amount</code>
-		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
 		/// </remarks>
 		public static Vector3 Lerp(Vector3 start, Vector3 end, float amount)
 		{
@@ -486,12 +486,12 @@ namespace GTA.Math
 		public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal) => (vector - Project(vector, planeNormal));
 
 		/// <summary>
-		/// Returns the reflection of a vector off a surface that has the specified normal. 
+		/// Returns the reflection of a vector off a surface that has the specified normal.
 		/// </summary>
 		/// <param name="vector">The vector to project onto the plane.</param>
 		/// <param name="normal">Normal of the surface.</param>
 		/// <returns>The reflected vector.</returns>
-		/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine 
+		/// <remarks>Reflect only gives the direction of a reflection off a surface, it does not determine
 		/// whether the original vector was close enough to the surface to hit it.</remarks>
 		public static Vector3 Reflect(Vector3 vector, Vector3 normal)
 		{
@@ -634,7 +634,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to a specified object. 
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
@@ -647,18 +647,18 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to the specified object. 
+		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
 		public bool Equals(Vector3 other) => (X == other.X && Y == other.Y && Z == other.Z);
 
 		/// <summary>
-		/// Determines whether the specified object instances are considered equal. 
+		/// Determines whether the specified object instances are considered equal.
 		/// </summary>
 		/// <param name="value1">The first value to compare.</param>
 		/// <param name="value2">The second value to compare.</param>
-		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
+		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
 		/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
 		public static bool Equals(ref Vector3 value1, ref Vector3 value2) => value1.Equals(value2);
 	}

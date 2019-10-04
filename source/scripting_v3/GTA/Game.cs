@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System;
 using System.Windows.Forms;
 using GTA.Native;
@@ -79,7 +84,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the version of the game.
-		/// </summary>	
+		/// </summary>
 		public static GameVersion Version
 		{
 			get;
@@ -88,12 +93,12 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the current game language.
-		/// </summary>		
+		/// </summary>
 		public static Language Language => Function.Call<Language>(Hash.GET_CURRENT_LANGUAGE);
 
 		/// <summary>
 		/// Gets how many milliseconds the game has been open in this session
-		/// </summary> 
+		/// </summary>
 		public static int GameTime => Function.Call<int>(Hash.GET_GAME_TIMER);
 
 		/// <summary>

@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using GTA.Native;
 using System;
 
@@ -31,7 +36,7 @@ namespace GTA
 		/// Initializes a new instance of the <see cref="CheckpointCustomIcon" /> struct.
 		/// </summary>
 		/// <param name="iconStyle">The icon style.</param>
-		/// <param name="iconNumber">The icon number, 
+		/// <param name="iconNumber">The icon number,
 		/// if <paramref name="iconStyle"/> is <see cref="CheckpointCustomIconStyle.Number"/> allowed range is 0 - 99
 		/// otherwise allowed range is 0 - 9. </param>
 		public CheckpointCustomIcon(CheckpointCustomIconStyle iconStyle, byte iconNumber)
@@ -50,7 +55,7 @@ namespace GTA
 		/// <value>
 		/// The number.
 		/// if <see cref="Style"/> is <see cref="CheckpointCustomIconStyle.Number"/> allowed range is 0 - 99
-		/// otherwise allowed range is 0 - 9. 
+		/// otherwise allowed range is 0 - 9.
 		/// </value>
 		public byte Number
 		{

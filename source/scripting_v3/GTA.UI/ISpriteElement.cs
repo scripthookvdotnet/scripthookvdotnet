@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
+
 using System.Drawing;
 
 namespace GTA.UI
@@ -12,7 +17,7 @@ namespace GTA.UI
 		/// </value>
 		/// <remarks>
 		/// If ScaledDraw is called, the size will be scaled by the width returned in <see cref="Screen.ScaledWidth"/>.
-		/// </remarks>					 
+		/// </remarks>
 		SizeF Size
 		{
 			get; set;

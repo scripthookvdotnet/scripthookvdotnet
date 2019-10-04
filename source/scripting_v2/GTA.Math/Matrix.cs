@@ -31,82 +31,82 @@ namespace GTA.Math
 	public struct Matrix : IEquatable<Matrix>
 	{
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the first row and first column. 
+		/// Gets or sets the element of the matrix that exists in the first row and first column.
 		/// </summary>
 		public float M11;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the first row and second column. 
+		/// Gets or sets the element of the matrix that exists in the first row and second column.
 		/// </summary>
 		public float M12;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the first row and third column. 
+		/// Gets or sets the element of the matrix that exists in the first row and third column.
 		/// </summary>
 		public float M13;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the first row and fourth column. 
+		/// Gets or sets the element of the matrix that exists in the first row and fourth column.
 		/// </summary>
 		public float M14;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the second row and first column. 
+		/// Gets or sets the element of the matrix that exists in the second row and first column.
 		/// </summary>
 		public float M21;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the second row and second column. 
+		/// Gets or sets the element of the matrix that exists in the second row and second column.
 		/// </summary>
 		public float M22;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the second row and third column. 
+		/// Gets or sets the element of the matrix that exists in the second row and third column.
 		/// </summary>
 		public float M23;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the second row and fourth column. 
+		/// Gets or sets the element of the matrix that exists in the second row and fourth column.
 		/// </summary>
 		public float M24;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the third row and first column. 
+		/// Gets or sets the element of the matrix that exists in the third row and first column.
 		/// </summary>
 		public float M31;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the third row and second column. 
+		/// Gets or sets the element of the matrix that exists in the third row and second column.
 		/// </summary>
 		public float M32;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the third row and third column. 
+		/// Gets or sets the element of the matrix that exists in the third row and third column.
 		/// </summary>
 		public float M33;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the third row and fourth column. 
+		/// Gets or sets the element of the matrix that exists in the third row and fourth column.
 		/// </summary>
 		public float M34;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the fourth row and first column. 
+		/// Gets or sets the element of the matrix that exists in the fourth row and first column.
 		/// </summary>
 		public float M41;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the fourth row and second column. 
+		/// Gets or sets the element of the matrix that exists in the fourth row and second column.
 		/// </summary>
 		public float M42;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the fourth row and third column. 
+		/// Gets or sets the element of the matrix that exists in the fourth row and third column.
 		/// </summary>
 		public float M43;
 
 		/// <summary>
-		/// Gets or sets the element of the matrix that exists in the fourth row and fourth column. 
+		/// Gets or sets the element of the matrix that exists in the fourth row and fourth column.
 		/// </summary>
 		public float M44;
 
@@ -531,7 +531,7 @@ namespace GTA.Math
 		/// <remarks>
 		/// This method performs the linear interpolation based on the following formula.
 		/// <code>start + (end - start) * amount</code>
-		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned. 
+		/// Passing <paramref name="amount"/> a value of 0 will cause <paramref name="start"/> to be returned; a value of 1 will cause <paramref name="end"/> to be returned.
 		/// </remarks>
 		public static Matrix Lerp(Matrix start, Matrix end, float amount)
 		{
@@ -1146,7 +1146,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to a specified object. 
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
@@ -1159,7 +1159,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns a value that indicates whether the current instance is equal to the specified object. 
+		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
@@ -1172,11 +1172,11 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Determines whether the specified object instances are considered equal. 
+		/// Determines whether the specified object instances are considered equal.
 		/// </summary>
 		/// <param name="value1"></param>
 		/// <param name="value2"></param>
-		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or 
+		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
 		/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
 		public static bool Equals(ref Matrix value1, ref Matrix value2) => value1.Equals(value2);
 	}
