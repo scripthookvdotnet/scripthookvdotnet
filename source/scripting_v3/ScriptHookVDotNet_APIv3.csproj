@@ -176,11 +176,13 @@
     <Compile Include="GTA\PoolObject.cs" />
     <Compile Include="GTA\RadioStation.cs" />
     <Compile Include="GTA\RaycastResult.cs" />
+    <Compile Include="GTA\RequireScript.cs" />
     <Compile Include="GTA\Rope.cs" />
     <Compile Include="GTA\RopeType.cs" />
     <Compile Include="GTA\Scaleform.cs" />
     <Compile Include="GTA\ScaleformArgumentTXD.cs" />
     <Compile Include="GTA\Script.cs" />
+    <Compile Include="GTA\ScriptAttributes.cs" />
     <Compile Include="GTA\Settings.cs" />
     <Compile Include="GTA\Weapons\ComponentAttachmentPoint.cs" />
     <Compile Include="GTA\Weapons\DlcWeaponStructs.cs" />

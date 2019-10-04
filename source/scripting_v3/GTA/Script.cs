@@ -20,27 +20,6 @@ using WinForms = System.Windows.Forms;
 
 namespace GTA
 {
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class RequireScript : Attribute
-	{
-		#region Fields
-		internal Type _dependency;
-		#endregion
-
-		public RequireScript(Type dependency)
-		{
-			_dependency = dependency;
-		}
-	}
-
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class ScriptAttributes : Attribute
-	{
-		public string Author;
-		public string SupportURL;
-		public bool NoDefaultInstance;
-	}
-
 	/// <summary>
 	/// A base class for all user scripts to inherit.
 	/// Only scripts that inherit directly from this class and have a default (parameterless) public constructor will be detected and started.
