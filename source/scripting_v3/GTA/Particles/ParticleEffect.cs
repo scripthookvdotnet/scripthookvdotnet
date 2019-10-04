@@ -71,7 +71,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the offset.
 		/// If this <see cref="ParticleEffect"/> is attached to an <see cref="Entity"/>, this refers to the offset from the <see cref="Entity"/>;
-		/// otherwise, this refers to its position in World coords
+		/// otherwise, this refers to its position in World coordinates
 		/// </summary>
 		public Vector3 Offset
 		{
@@ -159,7 +159,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the size scaling factor of this <see cref="ParticleEffect"/>
+		/// Gets or sets the size scaling factor of this <see cref="ParticleEffect"/>.
 		/// </summary>
 		/// <value>
 		/// The scale, default = 1.0f;
@@ -188,6 +188,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the range of this <see cref="ParticleEffect"/>.
+		/// </summary>
 		public float Range
 		{
 			get
@@ -249,15 +252,18 @@ namespace GTA
 		/// </summary>
 		public string EffectName => _effectName;
 
-		public override string ToString()
-		{
-			return string.Format("{0}\\{1}", AssetName, EffectName);
-		}
-
+		/// <summary>
+		/// Converts a <see cref="RelationshipGroup"/> to a native input argument.
+		/// </summary>
 		public static implicit operator InputArgument(ParticleEffect effect)
 		{
 			//we only need to worry about supplying a particle effect to a native, never returning one
 			return new InputArgument(effect.Handle);
+		}
+
+		public override string ToString()
+		{
+			return string.Format("{0}\\{1}", AssetName, EffectName);
 		}
 	}
 }

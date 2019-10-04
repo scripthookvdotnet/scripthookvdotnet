@@ -70,7 +70,7 @@ namespace GTA
 		public override bool Start()
 		{
 			Stop();
-			if (!_asset.SetNextCall())
+			if (!_asset.UseNext())
 			{
 				return false;
 			}

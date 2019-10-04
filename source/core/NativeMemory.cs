@@ -653,11 +653,6 @@ namespace SHVDN
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped;
 		}
-		public static bool IsModelAnAmphibiousQuadBike(int modelHash)
-		{
-			IntPtr modelInfo = FindCModelInfo(modelHash);
-			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.AmphibiousQuadBike;
-		}
 		public static bool IsModelABlimp(int modelHash)
 		{
 			IntPtr modelInfo = FindCModelInfo(modelHash);

@@ -9,7 +9,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public sealed class Checkpoint : PoolObject, IEquatable<Checkpoint>
+	public sealed class Checkpoint : PoolObject
 	{
 		public Checkpoint(int handle) : base(handle)
 		{
@@ -286,48 +286,49 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if a <see cref="Checkpoint"/> refer to the same <see cref="Checkpoint"/> as this <see cref="Checkpoint"/>.
+		/// Determines if an <see cref="object"/> refers to the same checkpoint as this <see cref="Checkpoint"/>.
 		/// </summary>
-		/// <param name="checkpoint">The other <see cref="Checkpoint"/>.</param>
-		/// <returns><c>true</c> if the <paramref name="checkpoint"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <c>false</c>.</returns>
-		public bool Equals(Checkpoint checkpoint)
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
 		{
-			return !(checkpoint is null) && Handle == checkpoint.Handle;
-		}
-		/// <summary>
-		/// Determines if an <see cref="object"/> refer to the same <see cref="Checkpoint"/> as this <see cref="Checkpoint"/>.
-		/// </summary>
-		/// <param name="checkpoint">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="checkpoint"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <c>false</c>.</returns>
-		public override bool Equals(object checkpoint)
-		{
-			return !(checkpoint is null) && checkpoint.GetType() == GetType() && Equals((Checkpoint)checkpoint);
-		}
-
-		public sealed override int GetHashCode()
-		{
-			return Handle.GetHashCode();
+			if (obj is Checkpoint checkpoint)
+				return Handle == checkpoint.Handle;
+			return false;
 		}
 
 		/// <summary>
-		/// Determines if 2 <see cref="Checkpoint"/>s refer to the same checkpoint
+		/// Determines if two <see cref="Checkpoint"/>s refer to the same checkpoint.
 		/// </summary>
 		/// <param name="left">The left <see cref="Checkpoint"/>.</param>
 		/// <param name="right">The right <see cref="Checkpoint"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same checkpoint as this <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same checkpoint as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(Checkpoint left, Checkpoint right)
 		{
 			return left is null ? right is null : left.Equals(right);
 		}
 		/// <summary>
-		/// Determines if 2 <see cref="Checkpoint"/>s don't refer to the same checkpoint
+		/// Determines if two <see cref="Checkpoint"/>s don't refer to the same checkpoint.
 		/// </summary>
 		/// <param name="left">The left <see cref="Checkpoint"/>.</param>
 		/// <param name="right">The right <see cref="Checkpoint"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same checkpoint as this <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same checkpoint as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Checkpoint left, Checkpoint right)
 		{
 			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Checkpoint"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(Checkpoint value)
+		{
+			return new InputArgument((ulong)value.Handle);
+		}
+
+		public override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

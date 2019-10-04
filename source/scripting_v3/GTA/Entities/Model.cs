@@ -21,23 +21,17 @@ namespace GTA
 		public Model(PedHash hash) : this((int)hash)
 		{
 		}
-		public Model(VehicleHash hash) : this((int)hash)
+		public Model(WeaponHash hash) : this((int)hash)
 		{
 		}
-		public Model(WeaponHash hash) : this((int)hash)
+		public Model(VehicleHash hash) : this((int)hash)
 		{
 		}
 
 		public ulong NativeValue
 		{
-			get
-			{
-				return (ulong)Hash;
-			}
-			set
-			{
-				Hash = unchecked((int)value);
-			}
+			get => (ulong)Hash;
+			set => Hash = unchecked((int)value);
 		}
 
 		/// <summary>
@@ -46,17 +40,17 @@ namespace GTA
 		public int Hash { get; private set; }
 
 		/// <summary>
-		/// Returns true if this <see cref="Model"/> is valid.
+		/// Gets if this <see cref="Model"/> is valid.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if this <see cref="Model"/> is valid; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_MODEL_VALID, Hash);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is in the cd image.
+		/// Gets a value indicating whether this <see cref="Model"/> is in the CD image.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is in the cd image; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Model"/> is in the CD image; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsInCdImage => Function.Call<bool>(Native.Hash.IS_MODEL_IN_CDIMAGE, Hash);
 
@@ -76,6 +70,27 @@ namespace GTA
 		public bool IsCollisionLoaded => Function.Call<bool>(Native.Hash.HAS_COLLISION_FOR_MODEL_LOADED, Hash);
 
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious car.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an amphibious car; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAmphibiousCar => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Native.Hash._IS_THIS_MODEL_AN_AMPHIBIOUS_CAR, Hash);
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious quad bike.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an amphibious quad bike; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAmphibiousQuadBike => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Native.Hash._IS_THIS_MODEL_AN_AMPHIBIOUS_QUADBIKE, Hash);
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious vehicle.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an amphibious vehicle; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAmphibiousVehicle => IsAmphibiousCar || IsAmphibiousQuadBike;
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a bicycle.
 		/// </summary>
 		/// <value>
@@ -90,6 +105,13 @@ namespace GTA
 		/// </value>
 		public bool IsBike => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_BIKE, Hash);
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a blimp.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a blimp; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsBlimp => SHVDN.NativeMemory.IsModelABlimp(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a boat.
 		/// </summary>
 		/// <value>
@@ -103,46 +125,13 @@ namespace GTA
 		/// <c>true</c> if this <see cref="Model"/> is a car; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsCar => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_CAR, Hash);
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious car.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is an amphibious car; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsAmphibiousCar
-		{
-			get
-			{
-				if (Game.Version >= GameVersion.v1_0_944_2_Steam)
-				{
-					return Function.Call<bool>((Native.Hash)0x633F6F44A537EBB6, Hash);
-				}
-
-				return false;
-			}
-		}
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a blimp.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is a blimp; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsBlimp => SHVDN.NativeMemory.IsModelABlimp(Hash);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a cargobob.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a cargobob; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsCargobob
-		{
-			get
-			{
-				VehicleHash hash = (VehicleHash)Hash;
-				return hash == VehicleHash.Cargobob || hash == VehicleHash.Cargobob2 || hash == VehicleHash.Cargobob3 || hash == VehicleHash.Cargobob4;
-			}
-		}
+		public bool IsCargobob => (VehicleHash)Hash == VehicleHash.Cargobob || (VehicleHash)Hash == VehicleHash.Cargobob2 || (VehicleHash)Hash == VehicleHash.Cargobob3 || (VehicleHash)Hash == VehicleHash.Cargobob4;
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a helicopter.
 		/// </summary>
@@ -158,10 +147,10 @@ namespace GTA
 		/// </value>
 		public bool IsJetSki => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_JETSKI, Hash);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a ped.
+		/// Gets a value indicating whether this <see cref="Model"/> is a pedestrian.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is a ped; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Model"/> is a pedestrian; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsPed => SHVDN.NativeMemory.IsModelAPed(Hash);
 		/// <summary>
@@ -182,27 +171,9 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Model"/> is a quad bike.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is a quadbike; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Model"/> is a quad bike; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsQuadBike => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_QUADBIKE, Hash);
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious quad bike.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is an amphibious quadbike; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsAmphibiousQuadBike
-		{
-			get
-			{
-				if (Game.Version >= GameVersion.v1_0_944_2_Steam)
-				{
-					return SHVDN.NativeMemory.IsModelAnAmphibiousQuadBike(Hash);
-				}
-
-				return false;
-			}
-		}
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a train.
 		/// </summary>
@@ -224,24 +195,6 @@ namespace GTA
 		/// <c>true</c> if this <see cref="Model"/> is a vehicle; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsVehicle => Function.Call<bool>(Native.Hash.IS_MODEL_A_VEHICLE, Hash);
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious vehicle.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is an amphibious vehicle; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsAmphibiousVehicle
-		{
-			get
-			{
-				if (Game.Version >= GameVersion.v1_0_944_2_Steam)
-				{
-					return IsAmphibiousCar || IsAmphibiousQuadBike;
-				}
-
-				return false;
-			}
-		}
 
 		/// <summary>
 		/// Gets the dimensions of this <see cref="Model"/>.
@@ -265,17 +218,17 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Attempt to load this <see cref="Model"/> into memory.
+		/// Attempts to load this <see cref="Model"/> into memory.
 		/// </summary>
 		public void Request()
 		{
 			Function.Call(Native.Hash.REQUEST_MODEL, Hash);
 		}
 		/// <summary>
-		/// Attempt to load this <see cref="Model"/> into memory for a given period of time.
+		/// Attempts to load this <see cref="Model"/> into memory for a given period of time.
 		/// </summary>
-		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Model"/></param>
-		/// <returns><c>true</c> if this <see cref="Model"/> is loaded; otherwise, <c>false</c></returns>
+		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Model"/>.</param>
+		/// <returns><c>true</c> if this <see cref="Model"/> is loaded; otherwise, <c>false</c>.</returns>
 		public bool Request(int timeout)
 		{
 			Request();
@@ -297,17 +250,17 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Attempt to load this <see cref="Model"/>'s collision into memory.
+		/// Attempts to load this <see cref="Model"/>'s collision into memory.
 		/// </summary>
 		public void RequestCollision()
 		{
 			Function.Call(Native.Hash.REQUEST_COLLISION_FOR_MODEL, Hash);
 		}
 		/// <summary>
-		/// Attempt to load this <see cref="Model"/>'s collision into memory for a given period of time.
+		/// Attempts to load this <see cref="Model"/>'s collision into memory for a given period of time.
 		/// </summary>
-		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Model"/></param>
-		/// <returns><c>true</c> if this <see cref="Model"/>'s collision is loaded; otherwise, <c>false</c></returns>
+		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Model"/>.</param>
+		/// <returns><c>true</c> if this <see cref="Model"/>'s collision is loaded; otherwise, <c>false</c>.</returns>
 		public bool RequestCollision(int timeout)
 		{
 			Request();
@@ -329,7 +282,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Frees this <see cref="Model"/> from memory.
+		/// Tells the game we have finished using this <see cref="Model"/> and it can be freed from memory.
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
@@ -342,16 +295,18 @@ namespace GTA
 		}
 		public override bool Equals(object obj)
 		{
-			return obj != null && Equals((Model)obj);
+			if (obj is Model model)
+				return Equals(model);
+			return false;
 		}
 
-		public override int GetHashCode()
+		public static bool operator ==(Model left, Model right)
 		{
-			return Hash;
+			return left.Equals(right);
 		}
-		public override string ToString()
+		public static bool operator !=(Model left, Model right)
 		{
-			return "0x" + Hash.ToString("X");
+			return !left.Equals(right);
 		}
 
 		public static implicit operator Model(int source)
@@ -366,11 +321,11 @@ namespace GTA
 		{
 			return new Model(source);
 		}
-		public static implicit operator Model(VehicleHash source)
+		public static implicit operator Model(WeaponHash source)
 		{
 			return new Model(source);
 		}
-		public static implicit operator Model(WeaponHash source)
+		public static implicit operator Model(VehicleHash source)
 		{
 			return new Model(source);
 		}
@@ -383,22 +338,28 @@ namespace GTA
 		{
 			return (PedHash)source.Hash;
 		}
-		public static implicit operator VehicleHash(Model source)
-		{
-			return (VehicleHash)source.Hash;
-		}
 		public static implicit operator WeaponHash(Model source)
 		{
 			return (WeaponHash)source.Hash;
 		}
-
-		public static bool operator ==(Model left, Model right)
+		public static implicit operator VehicleHash(Model source)
 		{
-			return left.Equals(right);
+			return (VehicleHash)source.Hash;
 		}
-		public static bool operator !=(Model left, Model right)
+
+		public static implicit operator InputArgument(Model value)
 		{
-			return !left.Equals(right);
+			return new InputArgument((ulong)value.Hash);
+		}
+
+		public override int GetHashCode()
+		{
+			return Hash;
+		}
+
+		public override string ToString()
+		{
+			return "0x" + Hash.ToString("X");
 		}
 	}
 }

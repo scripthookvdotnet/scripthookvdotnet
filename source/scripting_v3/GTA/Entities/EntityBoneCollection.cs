@@ -28,7 +28,6 @@ namespace GTA
 
 			public void Dispose()
 			{
-
 			}
 
 			public bool MoveNext()

@@ -8,29 +8,10 @@ using System;
 
 namespace GTA
 {
-	public struct CheckpointCustomIcon
+	public struct CheckpointCustomIcon : INativeValue
 	{
-		private CheckpointCustomIconStyle _style;
-		private byte _number;
-
-		public CheckpointCustomIconStyle Style
-		{
-			get
-			{
-				return _style;
-			}
-			set
-			{
-				_style = value;
-				if (value != CheckpointCustomIconStyle.Number)
-				{
-					if (_number > 9)
-					{
-						_number = 0;
-					}
-				}
-			}
-		}
+		byte _number;
+		CheckpointCustomIconStyle _style;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CheckpointCustomIcon" /> struct.
@@ -49,90 +30,100 @@ namespace GTA
 			Number = iconNumber;
 		}
 
+		public ulong NativeValue
+		{
+			get
+			{
+				if (_style == CheckpointCustomIconStyle.Number)
+					return Number;
+
+				return (byte)(90 + (int)_style * 10 + Number);
+			}
+			set
+			{
+				if (value > 219)
+					throw new ArgumentOutOfRangeException("The Range of possible values is 0 to 219");
+
+				if (value < 100)
+				{
+					_style = CheckpointCustomIconStyle.Number;
+					_number = (byte)value;
+				}
+				else
+				{
+					_style = (CheckpointCustomIconStyle)(value / 10 - 9);
+					_number = (byte)(value % 10);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the number to display inside the icon.
 		/// </summary>
 		/// <value>
-		/// The number.
-		/// if <see cref="Style"/> is <see cref="CheckpointCustomIconStyle.Number"/> allowed range is 0 - 99
-		/// otherwise allowed range is 0 - 9.
+		/// If <see cref="Style"/> is <see cref="CheckpointCustomIconStyle.Number"/>, allowed range is 0 - 99; otherwise allowed range is 0 - 9.
 		/// </value>
 		public byte Number
 		{
-			get
-			{
-				return _number;
-			}
+			get => _number;
 			set
 			{
 				if (_style == CheckpointCustomIconStyle.Number)
 				{
 					if (value > 99)
-					{
 						throw new ArgumentOutOfRangeException("The maximum number value is 99");
-					}
 					_number = value;
 				}
 				else
 				{
 					if (value > 9)
-					{
 						throw new ArgumentOutOfRangeException("The maximum number value when not using CheckpointCustomIconStyle.Number is 9");
-					}
 					_number = value;
 				}
-
 			}
 		}
 
-		private byte getValue()
+		/// <summary>
+		/// Gets or sets the icon style.
+		/// </summary>
+		public CheckpointCustomIconStyle Style
 		{
-			if (_style == CheckpointCustomIconStyle.Number)
+			get => _style;
+			set
 			{
-				return _number;
+				_style = value;
+				if (value != CheckpointCustomIconStyle.Number && _number > 9)
+					_number = 0;
 			}
-			return (byte)(90 + (int)_style * 10 + _number);
-		}
-
-
-		public static implicit operator InputArgument(CheckpointCustomIcon icon)
-		{
-			return new InputArgument((int)icon.getValue());
 		}
 
 		public static implicit operator byte(CheckpointCustomIcon icon)
 		{
-			return icon.getValue();
+			return (byte)icon.NativeValue;
 		}
-
 		public static implicit operator CheckpointCustomIcon(byte value)
 		{
 			var c = new CheckpointCustomIcon();
-			if (value > 219)
-			{
-				throw new ArgumentOutOfRangeException("The Range of possible values is 0 to 219");
-			}
-			if (value < 100)
-			{
-				c._style = CheckpointCustomIconStyle.Number;
-				c._number = value;
-			}
-			else
-			{
-				c._style = (CheckpointCustomIconStyle)(value / 10 - 9);
-				c._number = (byte)(value % 10);
-			}
+			c.NativeValue = value;
 			return c;
+		}
+
+		/// <summary>
+		/// Converts a <see cref="CheckpointCustomIcon"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(CheckpointCustomIcon value)
+		{
+			return new InputArgument(value.NativeValue);
+		}
+
+		public override int GetHashCode()
+		{
+			return NativeValue.GetHashCode();
 		}
 
 		public override string ToString()
 		{
 			return Style.ToString() + Number.ToString();
-		}
-
-		public override int GetHashCode()
-		{
-			return getValue().GetHashCode();
 		}
 	}
 }

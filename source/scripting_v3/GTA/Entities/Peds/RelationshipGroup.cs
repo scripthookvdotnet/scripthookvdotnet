@@ -8,7 +8,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public struct RelationshipGroup : IEquatable<RelationshipGroup>, INativeValue
+	public struct RelationshipGroup : INativeValue
 	{
 		RelationshipGroup(string name) : this()
 		{
@@ -70,22 +70,20 @@ namespace GTA
 			Function.Call(Native.Hash.REMOVE_RELATIONSHIP_GROUP, Hash);
 		}
 
-		public bool Equals(RelationshipGroup obj)
-		{
-			return Hash == obj.Hash;
-		}
 		public override bool Equals(object obj)
 		{
-			return obj != null && Equals((RelationshipGroup)obj);
+			if (obj is RelationshipGroup group)
+				return Hash == group.Hash;
+			return false;
 		}
 
-		public override int GetHashCode()
+		public static bool operator ==(RelationshipGroup left, RelationshipGroup right)
 		{
-			return Hash;
+			return left.Equals(right);
 		}
-		public override string ToString()
+		public static bool operator !=(RelationshipGroup left, RelationshipGroup right)
 		{
-			return "0x" + Hash.ToString("X");
+			return !(left == right);
 		}
 
 		public static implicit operator RelationshipGroup(int source)
@@ -101,13 +99,19 @@ namespace GTA
 			return new RelationshipGroup(source);
 		}
 
-		public static bool operator ==(RelationshipGroup left, RelationshipGroup right)
+		public static implicit operator InputArgument(RelationshipGroup value)
 		{
-			return left.Equals(right);
+			return new InputArgument((ulong)value.Hash);
 		}
-		public static bool operator !=(RelationshipGroup left, RelationshipGroup right)
+
+		public override int GetHashCode()
 		{
-			return !(left == right);
+			return Hash;
+		}
+
+		public override string ToString()
+		{
+			return "0x" + Hash.ToString("X");
 		}
 	}
 }

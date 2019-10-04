@@ -517,7 +517,7 @@ namespace GTA
 
 			var result = new List<Vehicle>();
 			Vehicle ignore = ped.CurrentVehicle;
-			int ignoreHandle = Vehicle.Exists(ignore) ? ignore.Handle : 0;
+			int ignoreHandle = ignore?.Exists() == true ? ignore.Handle : 0;
 
 			foreach (int handle in handles)
 			{
@@ -831,7 +831,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The coordinates of the street</param>
 		/// <param name="CrossingRoadName">If the coordinates are on an intersection, the name of the crossing road</param>
-		/// <returns>Returns the name of the street the coords are on</returns>
+		/// <returns>Returns the name of the street the coordinates are on.</returns>
 		public static string GetStreetName(Vector3 position, out string CrossingRoadName)
 		{
 			int streetHash, crossingHash;
@@ -1145,7 +1145,7 @@ namespace GTA
 		/// <param name="invisible">if set to <c>true</c> explosion is invisible.</param>
 		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, Ped owner = null, bool aubidble = true, bool invisible = false)
 		{
-			if (Entity.Exists(owner))
+			if (owner?.Exists() == true)
 			{
 				Function.Call(Hash.ADD_OWNED_EXPLOSION, owner.Handle, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 			}

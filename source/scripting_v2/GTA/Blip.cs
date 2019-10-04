@@ -23,6 +23,12 @@ namespace GTA
 
 		public int Type => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
 
+		public int Alpha
+		{
+			get => Function.Call<int>(Hash.GET_BLIP_ALPHA, Handle);
+			set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
+		}
+
 		public int Priority
 		{
 			set => Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
@@ -36,12 +42,6 @@ namespace GTA
 				Function.PushLongString(value);
 				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
 			}
-		}
-
-		public int Alpha
-		{
-			get => Function.Call<int>(Hash.GET_BLIP_ALPHA, Handle);
-			set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
 		}
 
 		public BlipColor Color

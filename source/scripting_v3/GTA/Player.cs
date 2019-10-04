@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace GTA
 {
-	public sealed class Player : INativeValue, IEquatable<Player>
+	public sealed class Player : INativeValue
 	{
 		Ped _ped;
 
@@ -127,7 +127,7 @@ namespace GTA
 		/// Gets or sets the wanted center position for this <see cref="Player"/>.
 		/// </summary>
 		/// <value>
-		/// The place in world coords where the police think this <see cref="Player"/> is.
+		/// The place in world coordinates where the police think this <see cref="Player"/> is.
 		/// </value>
 		public Vector3 WantedCenterPosition
 		{
@@ -584,27 +584,50 @@ namespace GTA
 			Function.Call(Hash.SET_PLAYER_MAY_ONLY_ENTER_THIS_VEHICLE, Handle, vehicle.Handle);
 		}
 
-		public bool Equals(Player player)
+		/// <summary>
+		/// Determines if an <see cref="object"/> refers to the same player as this <see cref="Player"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same player as this <see cref="Player"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
 		{
-			return !(player is null) && Handle == player.Handle;
+			if (obj is Player player)
+				return Handle == player.Handle;
+			return false;
 		}
-		public override bool Equals(object player)
+
+		/// <summary>
+		/// Determines if two <see cref="Player"/>s refer to the same player.
+		/// </summary>
+		/// <param name="left">The left <see cref="Player"/>.</param>
+		/// <param name="right">The right <see cref="Player"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same player as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		public static bool operator ==(Player left, Player right)
 		{
-			return !(player is null) && player.GetType() == GetType() && Equals((Entity)player);
+			return left is null ? right is null : left.Equals(right);
+		}
+		/// <summary>
+		/// Determines if two <see cref="Player"/>s don't refer to the same player.
+		/// </summary>
+		/// <param name="left">The left <see cref="Player"/>.</param>
+		/// <param name="right">The right <see cref="Player"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same player as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		public static bool operator !=(Player left, Player right)
+		{
+			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Player"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(Player value)
+		{
+			return new InputArgument((ulong)value.Handle);
 		}
 
 		public override int GetHashCode()
 		{
 			return Handle.GetHashCode();
-		}
-
-		public static bool operator ==(Player left, Player right)
-		{
-			return left is null ? right is null : left.Equals(right);
-		}
-		public static bool operator !=(Player left, Player right)
-		{
-			return !(left == right);
 		}
 	}
 }

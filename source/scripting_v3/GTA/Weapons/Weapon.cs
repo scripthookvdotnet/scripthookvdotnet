@@ -25,31 +25,25 @@ namespace GTA
 		}
 
 		public WeaponHash Hash { get; private set; }
+
 		public static implicit operator WeaponHash(Weapon weapon)
 		{
 			return weapon.Hash;
 		}
 
-		public bool IsPresent
-		{
-			get
-			{
-				if (Hash == WeaponHash.Unarmed)
-				{
-					return true;
-				}
+		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, Hash);
 
-				return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, Hash);
-			}
-		}
 		public string DisplayName => GetDisplayNameFromHash(Hash);
 		public string LocalizedName => Game.GetLocalizedString(DisplayName);
+
 		public Model Model => new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
+
 		public WeaponTint Tint
 		{
 			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, _owner.Handle, Hash);
 			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, _owner.Handle, Hash, value);
 		}
+
 		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, Hash);
 
 		public int Ammo
@@ -124,6 +118,7 @@ namespace GTA
 				}
 			}
 		}
+
 		public int MaxAmmo
 		{
 			get
@@ -159,7 +154,9 @@ namespace GTA
 				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, _owner.Handle, Hash, true);
 			}
 		}
+
 		public int DefaultClipSize => Function.Call<int>(Native.Hash.GET_WEAPON_CLIP_SIZE, Hash);
+
 		public bool InfiniteAmmo
 		{
 			set
@@ -298,6 +295,5 @@ namespace GTA
 			}
 			return "WT_INVALID";
 		}
-
 	}
 }

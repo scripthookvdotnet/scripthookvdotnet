@@ -39,7 +39,6 @@ namespace GTA
 		/// <remarks>Use <see cref="Game.GetLocalizedString(string)"/> to get the localized class name.</remarks>
 		/// </summary>
 		public string ClassDisplayName => GetClassDisplayName(ClassType);
-
 		/// <summary>
 		/// Gets the localized name of this <see cref="Vehicle"/>s <see cref="VehicleClass"/>.
 		/// </summary>
@@ -1585,7 +1584,7 @@ namespace GTA
 			{
 				Ped driver = Driver;
 
-				if (!Ped.Exists(driver))
+				if (driver is null || !driver.Exists())
 				{
 					return Passengers;
 				}
@@ -1870,7 +1869,7 @@ namespace GTA
 		{
 			Vehicle vehicle = TowedVehicle;
 
-			if (Exists(vehicle))
+			if (vehicle?.Exists() == true)
 			{
 				Function.Call(Hash.DETACH_VEHICLE_FROM_TOW_TRUCK, Handle, vehicle.Handle);
 			}
@@ -1953,7 +1952,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines whether this <see cref="Vehicle"/> exists.
+		/// Determines if this <see cref="Vehicle"/> exists.
 		/// </summary>
 		/// <returns><c>true</c> if this <see cref="Vehicle"/> exists; otherwise, <c>false</c></returns>
 		public new bool Exists()

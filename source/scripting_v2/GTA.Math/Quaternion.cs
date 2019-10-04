@@ -826,10 +826,7 @@ namespace GTA.Math
 		/// Returns the hash code for this instance.
 		/// </summary>
 		/// <returns>A 32-bit signed integer hash code.</returns>
-		public override int GetHashCode()
-		{
-			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
-		}
+		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
 
 		/// <summary>
 		/// Returns a value that indicates whether the current instance is equal to a specified object.

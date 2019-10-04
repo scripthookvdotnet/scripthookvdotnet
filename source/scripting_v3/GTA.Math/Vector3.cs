@@ -239,8 +239,8 @@ namespace GTA.Math
 		/// <returns>The distance to the other vector.</returns>
 		public float DistanceTo2D(Vector3 position)
 		{
-			Vector3 lhs = new Vector3(X, Y, 0.0f);
-			Vector3 rhs = new Vector3(position.X, position.Y, 0.0f);
+			var lhs = new Vector3(X, Y, 0.0f);
+			var rhs = new Vector3(position.X, position.Y, 0.0f);
 
 			return Distance(lhs, rhs);
 		}
@@ -252,8 +252,8 @@ namespace GTA.Math
 		/// <returns>The distance to the other vector.</returns>
 		public float DistanceToSquared2D(Vector3 position)
 		{
-			Vector3 lhs = new Vector3(X, Y, 0.0f);
-			Vector3 rhs = new Vector3(position.X, position.Y, 0.0f);
+			var lhs = new Vector3(X, Y, 0.0f);
+			var rhs = new Vector3(position.X, position.Y, 0.0f);
 
 			return DistanceSquared(lhs, rhs);
 		}
@@ -282,8 +282,9 @@ namespace GTA.Math
 		/// <returns>The distance between the two vectors.</returns>
 		public static float Distance2D(Vector3 position1, Vector3 position2)
 		{
-			Vector3 pos1 = new Vector3(position1.X, position1.Y, 0);
-			Vector3 pos2 = new Vector3(position2.X, position2.Y, 0);
+			var pos1 = new Vector3(position1.X, position1.Y, 0);
+			var pos2 = new Vector3(position2.X, position2.Y, 0);
+
 			return (pos1 - pos2).Length();
 		}
 
@@ -295,8 +296,9 @@ namespace GTA.Math
 		/// <returns>The squared distance between the two vectors.</returns>
 		public static float DistanceSquared2D(Vector3 position1, Vector3 position2)
 		{
-			Vector3 pos1 = new Vector3(position1.X, position1.Y, 0);
-			Vector3 pos2 = new Vector3(position2.X, position2.Y, 0);
+			var pos1 = new Vector3(position1.X, position1.Y, 0);
+			var pos2 = new Vector3(position2.X, position2.Y, 0);
+
 			return (pos1 - pos2).LengthSquared();
 		}
 
@@ -344,7 +346,7 @@ namespace GTA.Math
 		/// <returns>The vector containing rounded values</returns>
 		public Vector3 Round(int decimalPlaces = 2)
 		{
-		    return new Vector3((float)System.Math.Round(this.X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
+		    return new Vector3((float)System.Math.Round(X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
 		}
 
 		/// <summary>

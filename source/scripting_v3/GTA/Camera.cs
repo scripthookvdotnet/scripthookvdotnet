@@ -9,9 +9,8 @@ using GTA.Native;
 
 namespace GTA
 {
-	public sealed class Camera : PoolObject, IEquatable<Camera>, ISpatial
+	public sealed class Camera : PoolObject, ISpatial
 	{
-		#region Fields
 		internal static readonly string[] _shakeNames = {
 			"HAND_SHAKE",
 			"SMALL_EXPLOSION_SHAKE",
@@ -25,7 +24,6 @@ namespace GTA
 			"FAMILY5_DRUG_TRIP_SHAKE",
 			"DEATH_FAIL_IN_EFFECT_SHAKE"
 		};
-		#endregion
 
 		public Camera(int handle) : base(handle)
 		{
@@ -36,15 +34,16 @@ namespace GTA
 		/// </summary>
 		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetCameraAddress(Handle);
 
-		private IntPtr MatrixAddress
+		/// <summary>
+		/// Gets the memory address of the matrix for this <see cref="Camera"/>.
+		/// </summary>
+		IntPtr MatrixAddress
 		{
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if(address == IntPtr.Zero)
-				{
+				if (address == IntPtr.Zero)
 					return IntPtr.Zero;
-				}
 				return (SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
 			}
 		}
@@ -119,9 +118,7 @@ namespace GTA
 			{
 				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
-				{
 					return Vector3.RelativeTop;
-				}
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20));
 			}
 		}
@@ -134,10 +131,8 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				if(address == IntPtr.Zero)
-				{
+				if (address == IntPtr.Zero)
 					return Vector3.RelativeRight;
-				}
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
 			}
 		}
@@ -150,16 +145,14 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				if(address == IntPtr.Zero)
-				{
+				if (address == IntPtr.Zero)
 					return Vector3.RelativeFront;
-				}
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10));
 			}
 		}
 
 		/// <summary>
-		/// Gets the position in world coords of an offset relative to this <see cref="Camera"/>
+		/// Gets the position in world coordinates of an offset relative to this <see cref="Camera"/>
 		/// </summary>
 		/// <param name="offset">The offset from this <see cref="Camera"/>.</param>
 		public Vector3 GetOffsetPosition(Vector3 offset)
@@ -168,9 +161,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the relative offset of this <see cref="Camera"/> from a world coords position
+		/// Gets the relative offset of this <see cref="Camera"/> from a world coordinates position
 		/// </summary>
-		/// <param name="worldCoords">The world coords.</param>
+		/// <param name="worldCoords">The world coordinates.</param>
 		public Vector3 GetPositionOffset(Vector3 worldCoords)
 		{
 			return Matrix.InverseTransformPoint(worldCoords);
@@ -221,7 +214,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the strenght of the motion blur for this <see cref="Camera"/>
+		/// Sets the strength of the motion blur for this <see cref="Camera"/>
 		/// </summary>
 		public float MotionBlurStrength
 		{
@@ -245,6 +238,7 @@ namespace GTA
 		{
 			Function.Call(Hash.SHAKE_CAM, Handle, _shakeNames[(int)shakeType], amplitude);
 		}
+
 		/// <summary>
 		/// Stops shaking this <see cref="Camera"/>.
 		/// </summary>
@@ -305,7 +299,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Moves the to camera from this <see cref="Camera"/> position to the to cameras Poisition.
+		/// Moves this <see cref="Camera"/> to the <paramref name="to"/> position.
 		/// </summary>
 		public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
 		{
@@ -355,32 +349,59 @@ namespace GTA
 			Function.Call(Hash.DESTROY_CAM, Handle, 0);
 		}
 
+		/// <summary>
+		/// Determines if this <see cref="Camera"/> exists.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="Camera"/> exists; otherwise, <c>false</c>.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_CAM_EXIST, Handle);
 		}
 
-		public bool Equals(Camera camera)
+		/// <summary>
+		/// Determines if an <see cref="object"/> refers to the same camera as this <see cref="Camera"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same camera as this <see cref="Camera"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
 		{
-			return !(camera is null) && Handle == camera.Handle;
-		}
-		public override bool Equals(object camera)
-		{
-			return !(camera is null) && camera.GetType() == GetType() && Equals((Camera)camera);
-		}
-
-		public sealed override int GetHashCode()
-		{
-			return Handle;
+			if (obj is Camera camera)
+				return Handle == camera.Handle;
+			return false;
 		}
 
+		/// <summary>
+		/// Determines if two <see cref="Camera"/>s refer to the same camera.
+		/// </summary>
+		/// <param name="left">The left <see cref="Camera"/>.</param>
+		/// <param name="right">The right <see cref="Camera"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same camera as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(Camera left, Camera right)
 		{
 			return left is null ? right is null : left.Equals(right);
 		}
+		/// <summary>
+		/// Determines if two <see cref="Checkpoint"/>s don't refer to the same camera.
+		/// </summary>
+		/// <param name="left">The left <see cref="Camera"/>.</param>
+		/// <param name="right">The right <see cref="Camera"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same camera as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Camera left, Camera right)
 		{
 			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Camera"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(Camera value)
+		{
+			return new InputArgument((ulong)value.Handle);
+		}
+
+		public override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

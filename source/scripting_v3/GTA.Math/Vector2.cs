@@ -500,6 +500,7 @@ namespace GTA.Math
 
 			return Equals((Vector2)(obj));
 		}
+
 		/// <summary>
 		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>

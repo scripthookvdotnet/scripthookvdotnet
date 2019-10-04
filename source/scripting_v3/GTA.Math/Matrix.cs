@@ -250,13 +250,12 @@ namespace GTA.Math
 		/// <value>
 		/// <c>true</c> if this instance is an identity matrix; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsIdentity => this.Equals(Identity);
+		public bool IsIdentity => Equals(Identity);
 
 		/// <summary>
 		/// Gets a value indicating whether this instance has an inverse matrix.
 		/// </summary>
 		public bool HasInverse => Determinant() != 0.0f;
-
 
 		/// <summary>
 		/// Calculates the determinant of the matrix.
@@ -1249,6 +1248,7 @@ namespace GTA.Math
 
 			return Equals((Matrix)obj);
 		}
+
 		/// <summary>
 		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>

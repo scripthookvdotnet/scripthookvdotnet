@@ -1016,7 +1016,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines whether this <see cref="Ped"/> exists.
+		/// Determines if this <see cref="Ped"/> exists.
 		/// </summary>
 		/// <returns><c>true</c> if this <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
 		public new bool Exists()

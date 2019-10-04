@@ -8,7 +8,7 @@ using GTA.Math;
 
 namespace GTA
 {
-	public class HandlingData : IEquatable<HandlingData>
+	public class HandlingData
 	{
 		internal HandlingData(IntPtr address)
 		{
@@ -1029,18 +1029,11 @@ namespace GTA
 			return new HandlingData(SHVDN.NativeMemory.GetHandlingDataByModelHash(VehicleModel.Hash));
 		}
 
-		public bool Equals(HandlingData handlingData)
-		{
-			return MemoryAddress == handlingData.MemoryAddress;
-		}
 		public override bool Equals(object obj)
 		{
-			return obj != null && Equals((HandlingData)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return MemoryAddress.GetHashCode();
+			if (obj is HandlingData data)
+				return MemoryAddress == data.MemoryAddress;
+			return false;
 		}
 
 		public static bool operator ==(HandlingData left, HandlingData right)
@@ -1050,6 +1043,11 @@ namespace GTA
 		public static bool operator !=(HandlingData left, HandlingData right)
 		{
 			return !left.Equals(right);
+		}
+
+		public override int GetHashCode()
+		{
+			return MemoryAddress.GetHashCode();
 		}
 	}
 }

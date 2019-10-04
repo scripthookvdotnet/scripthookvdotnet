@@ -10,20 +10,45 @@ using GTA.Native;
 
 namespace GTA
 {
-	public abstract class Entity : PoolObject, IEquatable<Entity>, ISpatial
+	public abstract class Entity : PoolObject, ISpatial
 	{
-		#region Fields
-		private EntityBoneCollection _bones;
-		#endregion
+		EntityBoneCollection _bones;
 
 		public Entity(int handle) : base(handle)
 		{
 		}
 
 		/// <summary>
+		/// Creates a new instance of an <see cref="Entity"/> from the given handle.
+		/// </summary>
+		/// <param name="handle">The entity handle.</param>
+		/// <returns>Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
+		/// Returns a <see cref="Vehicle"/> if this handle corresponds to a Vehicle.
+		/// Returns a <see cref="Prop"/> if this handle corresponds to a Prop.
+		/// Returns <c>null</c> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
+		public static Entity FromHandle(int handle)
+		{
+			switch ((EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
+			{
+				case EntityType.Ped:
+					return new Ped(handle);
+				case EntityType.Vehicle:
+					return new Vehicle(handle);
+				case EntityType.Prop:
+					return new Prop(handle);
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Gets the memory address where the <see cref="Entity"/> is stored in memory.
 		/// </summary>
 		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetEntityAddress(Handle);
+
+		/// <summary>
+		/// Gets the type of the current <see cref="Entity"/>.
+		/// </summary>
+		public EntityType EntityType => (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
 
 		/// <summary>
 		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
@@ -35,14 +60,8 @@ namespace GTA
 		/// <seealso cref="HealthFloat"/>
 		public int Health
 		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
-			}
+			get => Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
+			set => Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
 		}
 		/// <summary>
 		/// Gets or sets the health of this <see cref="Entity"/> as a <see cref="float"/>.
@@ -73,6 +92,7 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(memoryAddress + 640, value);
 			}
 		}
+
 		/// <summary>
 		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
 		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value strictly, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
@@ -82,14 +102,8 @@ namespace GTA
 		/// </value>
 		public int MaxHealth
 		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
-			}
+			get => Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
+			set => Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
 		}
 		/// <summary>
 		/// Gets or sets the maximum health of this <see cref="Entity"/> in float.
@@ -124,6 +138,12 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
 			}
 		}
+
+		/// <summary>
+		/// Gets the model of the current <see cref="Entity"/>.
+		/// </summary>
+		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
+
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead.
 		/// </summary>
@@ -138,21 +158,23 @@ namespace GTA
 		///   <c>true</c> if this <see cref="Entity"/> is alive; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsAlive => !IsDead;
-		/// <summary>
-		/// Gets the type of the current Entity
-		/// </summary>
-		public EntityType EntityType => (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
-		/// <summary>
-		/// Gets the type of Entity
-		/// </summary>
-		/// <param name="handle">Handle of the Entity</param>
-		/// <returns></returns>
-		public static EntityType GetEntityType(int handle)
-		{
-			return (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, handle);
-		}
 
-		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
+		/// <summary>
+		/// Gets this <see cref="Entity"/>s matrix which stores position and rotation information.
+		/// </summary>
+		public Matrix Matrix
+		{
+			get
+			{
+				var memoryAddress = MemoryAddress;
+				if (memoryAddress == IntPtr.Zero)
+				{
+					return new Matrix();
+				}
+
+				return new Matrix(SHVDN.NativeMemory.ReadMatrix(memoryAddress + 96));
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the position of this <see cref="Entity"/>.
@@ -171,6 +193,7 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_COORDS, Handle, value.X, value.Y, value.Z, 0, 0, 0, 1);
 			}
 		}
+
 		/// <summary>
 		/// Sets the position of this <see cref="Entity"/> without any offset.
 		/// </summary>
@@ -184,6 +207,7 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, Handle, value.X, value.Y, value.Z, 1, 1, 1);
 			}
 		}
+
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Entity"/>.
 		/// </summary>
@@ -201,6 +225,25 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_ROTATION, Handle, value.X, value.Y, value.Z, 2, 1);
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the heading of this <see cref="Entity"/>.
+		/// </summary>
+		/// <value>
+		/// The heading in degrees.
+		/// </value>
+		public float Heading
+		{
+			get
+			{
+				return Function.Call<float>(Hash.GET_ENTITY_HEADING, Handle);
+			}
+			set
+			{
+				Function.Call<float>(Hash.SET_ENTITY_HEADING, Handle, value);
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the quaternion of this <see cref="Entity"/>.
 		/// </summary>
@@ -224,27 +267,10 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_QUATERNION, Handle, value.X, value.Y, value.Z, value.W);
 			}
 		}
-		/// <summary>
-		/// Gets or sets the heading of this <see cref="Entity"/>.
-		/// </summary>
-		/// <value>
-		/// The heading in degrees.
-		/// </value>
-		public float Heading
-		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_ENTITY_HEADING, Handle);
-			}
-			set
-			{
-				Function.Call<float>(Hash.SET_ENTITY_HEADING, Handle, value);
-			}
-		}
+
 		/// <summary>
 		/// Gets the vector that points above this <see cref="Entity"/>
 		/// </summary>
-
 		public Vector3 UpVector
 		{
 			get
@@ -258,6 +284,7 @@ namespace GTA
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 0x80));
 			}
 		}
+
 		/// <summary>
 		/// Gets the vector that points to the right of this <see cref="Entity"/>
 		/// </summary>
@@ -274,6 +301,7 @@ namespace GTA
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 0x60));
 			}
 		}
+
 		/// <summary>
 		/// Gets the vector that points in front of this <see cref="Entity"/>
 		/// </summary>
@@ -290,6 +318,44 @@ namespace GTA
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 0x70));
 			}
 		}
+
+		/// <summary>
+		/// Gets the position in world coordinates of an offset relative this <see cref="Entity"/>
+		/// </summary>
+		/// <param name="offset">The offset from this <see cref="Entity"/>.</param>
+		public Vector3 GetOffsetPosition(Vector3 offset)
+		{
+			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
+		}
+
+		/// <summary>
+		/// Gets the relative offset of this <see cref="Entity"/> from a world coordinates position
+		/// </summary>
+		/// <param name="worldCoords">The world coordinates.</param>
+		public Vector3 GetPositionOffset(Vector3 worldCoords)
+		{
+			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
+		}
+
+		/// <summary>
+		/// Gets or sets the velocity of this <see cref="Entity"/>.
+		/// </summary>
+		public Vector3 Velocity
+		{
+			get
+			{
+				return Function.Call<Vector3>(Hash.GET_ENTITY_VELOCITY, Handle);
+			}
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
+			}
+		}
+
+		/// <summary>
+		/// Gets the rotation velocity of this <see cref="Entity"/>.
+		/// </summary>
+		public Vector3 RotationVelocity => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
 
 		/// <summary>
 		/// Gets a position directly to the left of this <see cref="Entity"/>
@@ -316,18 +382,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly in front of this <see cref="Entity"/>
-		/// </summary>
-		public Vector3 FrontPosition
-		{
-			get
-			{
-				var (_, frontTopRight) = Model.Dimensions;
-				return GetOffsetPosition(new Vector3(0, frontTopRight.Y, 0));
-			}
-		}
-
-		/// <summary>
 		/// Gets a position directly behind this <see cref="Entity"/>
 		/// </summary>
 		public Vector3 RearPosition
@@ -336,6 +390,18 @@ namespace GTA
 			{
 				var (rearBottomLeft, _) = Model.Dimensions;
 				return GetOffsetPosition(new Vector3(0, rearBottomLeft.Y, 0));
+			}
+		}
+
+		/// <summary>
+		/// Gets a position directly in front of this <see cref="Entity"/>
+		/// </summary>
+		public Vector3 FrontPosition
+		{
+			get
+			{
+				var (_, frontTopRight) = Model.Dimensions;
+				return GetOffsetPosition(new Vector3(0, frontTopRight.Y, 0));
 			}
 		}
 
@@ -364,23 +430,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets this <see cref="Entity"/>s matrix which stores position and rotation information.
-		/// </summary>
-		public Matrix Matrix
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return new Matrix();
-				}
-
-				return new Matrix(SHVDN.NativeMemory.ReadMatrix(memoryAddress + 96));
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is frozen.
 		/// </summary>
 		/// <value>
@@ -405,24 +454,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the velocity of this <see cref="Entity"/>.
-		/// </summary>
-		public Vector3 Velocity
-		{
-			get
-			{
-				return Function.Call<Vector3>(Hash.GET_ENTITY_VELOCITY, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
-			}
-		}
-		/// <summary>
-		/// Gets the rotation velocity of this <see cref="Entity"/>.
-		/// </summary>
-		public Vector3 RotationVelocity => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
-		/// <summary>
 		/// Gets or sets this <see cref="Entity"/>s speed.
 		/// </summary>
 		/// <value>
@@ -439,6 +470,7 @@ namespace GTA
 				Velocity = Velocity.Normalized * value;
 			}
 		}
+
 		/// <summary>
 		/// Sets the maximum speed this <see cref="Entity"/> can move at.
 		/// </summary>
@@ -449,6 +481,16 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_MAX_SPEED, Handle, value);
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating how submersed this <see cref="Entity"/> is, 1.0f means the whole entity is submerged.
+		/// </summary>
+		public float SubmersionLevel => Function.Call<float>(Hash.GET_ENTITY_SUBMERGED_LEVEL, Handle);
+
+		/// <summary>
+		/// Gets how high above ground this <see cref="Entity"/> is.
+		/// </summary>
+		public float HeightAboveGround => Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> has gravity.
@@ -476,29 +518,6 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
-			}
-		}
-		/// <summary>
-		/// Gets how high above ground this <see cref="Entity"/> is.
-		/// </summary>
-		public float HeightAboveGround => Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
-		/// <summary>
-		/// Gets a value indicating how submersed this <see cref="Entity"/> is, 1.0f means the whole entity is submerged.
-		/// </summary>
-		public float SubmersionLevel => Function.Call<float>(Hash.GET_ENTITY_SUBMERGED_LEVEL, Handle);
-
-		/// <summary>
-		/// Gets or sets the level of detail distance of this <see cref="Entity"/>.
-		/// </summary>
-		public int LodDistance
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_ENTITY_LOD_DIST, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_LOD_DIST, Handle, value);
 			}
 		}
 
@@ -868,8 +887,24 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_ALPHA, Handle, value, false);
 			}
 		}
+
 		/// <summary>
-		/// Resets the opacity, <seealso cref="Opacity"/>.
+		/// Gets or sets the level of detail distance of this <see cref="Entity"/>.
+		/// </summary>
+		public int LodDistance
+		{
+			get
+			{
+				return Function.Call<int>(Hash.GET_ENTITY_LOD_DIST, Handle);
+			}
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_LOD_DIST, Handle, value);
+			}
+		}
+
+		/// <summary>
+		/// Resets the <seealso cref="Opacity"/>.
 		/// </summary>
 		public void ResetOpacity()
 		{
@@ -926,6 +961,7 @@ namespace GTA
 				Function.Call(Hash.SET_ENTITY_RECORDS_COLLISIONS, Handle, value);
 			}
 		}
+
 		/// <summary>
 		/// Sets the collision between this <see cref="Entity"/> and another <see cref="Entity"/>
 		/// </summary>
@@ -978,6 +1014,7 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, 0, 1);
 		}
+
 		/// <summary>
 		/// Clears the last weapon damage this <see cref="Entity"/> received.
 		/// </summary>
@@ -1035,6 +1072,7 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_ENTITY_AT_ENTITY, Handle, entity.Handle, bounds.X, bounds.Y, bounds.Z, false, true, false);
 		}
+
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is touching an <see cref="Entity"/> with the <see cref="Model"/> <paramref name="model"/>.
 		/// </summary>
@@ -1059,23 +1097,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position in world coords of an offset relative this <see cref="Entity"/>
-		/// </summary>
-		/// <param name="offset">The offset from this <see cref="Entity"/>.</param>
-		public Vector3 GetOffsetPosition(Vector3 offset)
-		{
-			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
-		}
-		/// <summary>
-		/// Gets the relative offset of this <see cref="Entity"/> from a world coords position
-		/// </summary>
-		/// <param name="worldCoords">The world coords.</param>
-		public Vector3 GetPositionOffset(Vector3 worldCoords)
-		{
-			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
-		}
-
-		/// <summary>
 		/// Gets a collection of the <see cref="EntityBone"/>s in this <see cref="Entity"/>
 		/// </summary>
 		public virtual EntityBoneCollection Bones
@@ -1093,10 +1114,11 @@ namespace GTA
 		/// <summary>
 		/// Creates a <see cref="Blip"/> on this <see cref="Entity"/>
 		/// </summary>
-		public Blip AttachBlip()
+		public Blip AddBlip()
 		{
 			return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_ENTITY, Handle));
 		}
+
 		/// <summary>
 		/// Gets the <see cref="Blip"/> attached to this <see cref="Entity"/>
 		/// </summary>
@@ -1126,7 +1148,7 @@ namespace GTA
 		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="position">The position relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/></param>
-		public void AttachTo(Entity entity, Vector3 position = default(Vector3), Vector3 rotation = default(Vector3))
+		public void Attach(Entity entity, Vector3 position = default, Vector3 rotation = default)
 		{
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, -1, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
 		}
@@ -1136,7 +1158,7 @@ namespace GTA
 		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="position">The position relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
-		public void AttachTo(EntityBone entityBone, Vector3 position = default(Vector3), Vector3 rotation = default(Vector3))
+		public void Attach(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
 		{
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entityBone.Owner.Handle, entityBone, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
 		}
@@ -1147,6 +1169,7 @@ namespace GTA
 		{
 			Function.Call(Hash.DETACH_ENTITY, Handle, true, true);
 		}
+
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is attached to any other <see cref="Entity"/>.
 		/// </summary>
@@ -1168,6 +1191,7 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_ENTITY_ATTACHED_TO_ENTITY, Handle, entity.Handle);
 		}
+
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
 		/// <remarks>returns <c>null</c> if this <see cref="Entity"/> isnt attached to any entity</remarks>
@@ -1180,10 +1204,10 @@ namespace GTA
 		/// <summary>
 		/// Applies a force to this <see cref="Entity"/>.
 		/// </summary>
-		/// <param name="direction">The direction to apply the force relative to world coords.</param>
+		/// <param name="direction">The direction to apply the force relative to world coordinates.</param>
 		/// <param name="rotation">The rotation force to apply</param>
 		/// <param name="forceType">Type of the force to apply.</param>
-		public void ApplyForce(Vector3 direction, Vector3 rotation = default(Vector3), ForceType forceType = ForceType.MaxForceRot2)
+		public void ApplyForce(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.MaxForceRot2)
 		{
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
 		}
@@ -1193,7 +1217,7 @@ namespace GTA
 		/// <param name="direction">The direction to apply the force relative to this <see cref="Entity"/>s rotation</param>
 		/// <param name="rotation">The rotation force to apply</param>
 		/// <param name="forceType">Type of the force to apply.</param>
-		public void ApplyForceRelative(Vector3 direction, Vector3 rotation = default(Vector3), ForceType forceType = ForceType.MaxForceRot2)
+		public void ApplyForceRelative(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.MaxForceRot2)
 		{
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 		}
@@ -1201,24 +1225,11 @@ namespace GTA
 		/// <summary>
 		/// Stops all particle effects attached to this <see cref="Entity"/>
 		/// </summary>
-		public void RemoveAllParticleEffects()
+		public void RemoveParticleFX()
 		{
 			Function.Call(Hash.REMOVE_PARTICLE_FX_FROM_ENTITY, Handle);
 		}
 
-		/// <summary>
-		/// Deletes this <see cref="Entity"/>
-		/// </summary>
-		public override void Delete()
-		{
-			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-			int handle = Handle;
-			unsafe
-			{
-				Function.Call(Hash.DELETE_ENTITY, &handle);
-			}
-			Handle = handle;
-		}
 		/// <summary>
 		/// Marks this <see cref="Entity"/> as no longer needed letting the game delete it when its too far away.
 		/// </summary>
@@ -1234,70 +1245,72 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Creates a new instance of an <see cref="Entity"/> from the given handle.
+		/// Destroys this <see cref="Entity"/>.
 		/// </summary>
-		/// <param name="handle">The entity handle.</param>
-		/// <returns>Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
-		/// Returns a <see cref="Vehicle"/> if this handle corresponds to a Vehicle.
-		/// Returns a <see cref="Prop"/> if this handle corresponds to a Prop.
-		/// Returns <c>null</c> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
-		public static Entity FromHandle(int handle)
+		public override void Delete()
 		{
-			switch (GetEntityType(handle))
+			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
+			int handle = Handle;
+			unsafe
 			{
-				case EntityType.Ped:
-					return new Ped(handle);
-				case EntityType.Vehicle:
-					return new Vehicle(handle);
-				case EntityType.Prop:
-					return new Prop(handle);
+				Function.Call(Hash.DELETE_ENTITY, &handle);
 			}
-			return null;
+			Handle = handle;
 		}
 
 		/// <summary>
-		/// Determines whether this <see cref="Entity"/> exists.
+		/// Determines if this <see cref="Entity"/> exists.
 		/// </summary>
 		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, Handle);
 		}
+
 		/// <summary>
-		/// Determines whether the <see cref="Entity"/> exists.
+		/// Determines if an <see cref="object"/> refers to the same entity as this <see cref="Entity"/>.
 		/// </summary>
-		/// <param name="entity">The <see cref="Entity"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
-		public static bool Exists(Entity entity)
-		{
-			return !ReferenceEquals(entity, null) && entity.Exists();
-		}
-		/// <summary>
-		/// Checks if two <see cref="Entity"/>s refer to the same <see cref="Entity"/>
-		/// </summary>
-		/// <param name="entity">The other <see cref="Entity"/>.</param>
-		/// <returns><c>true</c> if they are the same <see cref="Entity"/>; otherwise, false</returns>
-		public bool Equals(Entity entity)
-		{
-			return !ReferenceEquals(entity, null) && Handle == entity.Handle;
-		}
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same entity as this <see cref="Entity"/>; otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
-			return !ReferenceEquals(obj, null) && obj.GetType() == GetType() && Equals((Entity)obj);
+			if (obj is Entity entity)
+				return Handle == entity.Handle;
+			return false;
+		}
+
+		/// <summary>
+		/// Determines if two <see cref="Entity"/>s refer to the same entity.
+		/// </summary>
+		/// <param name="left">The left <see cref="Entity"/>.</param>
+		/// <param name="right">The right <see cref="Entity"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same entity as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		public static bool operator ==(Entity left, Entity right)
+		{
+			return left is null ? right is null : left.Equals(right);
+		}
+		/// <summary>
+		/// Determines if two <see cref="Entity"/>s don't refer to the same entity.
+		/// </summary>
+		/// <param name="left">The left <see cref="Entity"/>.</param>
+		/// <param name="right">The right <see cref="Entity"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same entity as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		public static bool operator !=(Entity left, Entity right)
+		{
+			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts an <see cref="Entity"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(Entity value)
+		{
+			return new InputArgument((ulong)value.Handle);
 		}
 
 		public override int GetHashCode()
 		{
 			return Handle.GetHashCode();
-		}
-
-		public static bool operator ==(Entity left, Entity right)
-		{
-			return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
-		}
-		public static bool operator !=(Entity left, Entity right)
-		{
-			return !(left == right);
 		}
 	}
 }

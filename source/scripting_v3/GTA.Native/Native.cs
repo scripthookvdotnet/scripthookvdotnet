@@ -155,7 +155,7 @@ namespace GTA.Native
 		// Value types
 		public static implicit operator InputArgument(bool value)
 		{
-			//"new InputArgument(value ? 1 : 0)" calls InputArgument constructor using object parameter, not ulong one
+			// "new InputArgument(value ? 1 : 0)" calls InputArgument constructor using object parameter, not ulong one
 			return value ? new InputArgument(1) : new InputArgument(0);
 		}
 		public static implicit operator InputArgument(byte value)
@@ -273,56 +273,6 @@ namespace GTA.Native
 		public static implicit operator InputArgument(OutputArgument value)
 		{
 			return new InputArgument(value._storage);
-		}
-
-		// INativeValue types
-		public static implicit operator InputArgument(Model value)
-		{
-			return new InputArgument((ulong)value.Hash);
-		}
-		public static implicit operator InputArgument(RelationshipGroup value)
-		{
-			return new InputArgument((ulong)value.Hash);
-		}
-		public static implicit operator InputArgument(WeaponAsset value)
-		{
-			return new InputArgument((ulong)value.Hash);
-		}
-		public static implicit operator InputArgument(Blip value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Camera value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Checkpoint value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Entity value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(PedGroup value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Pickup value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Player value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Rope value)
-		{
-			return new InputArgument((ulong)value.Handle);
-		}
-		public static implicit operator InputArgument(Scaleform value)
-		{
-			return new InputArgument((ulong)value.Handle);
 		}
 		#endregion
 	}

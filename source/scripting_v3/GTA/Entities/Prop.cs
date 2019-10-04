@@ -12,9 +12,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines whether this <see cref="Prop"/> exists.
+		/// Determines if this <see cref="Prop"/> exists.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Prop"/> exists; otherwise, <c>false</c></returns>
+		/// <returns><c>true</c> if this <see cref="Prop"/> exists; otherwise, <c>false</c>.</returns>
 		public new bool Exists()
 		{
 			return EntityType == EntityType.Prop;

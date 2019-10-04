@@ -133,5 +133,10 @@ namespace GTA
 		{
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE_3D, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 		}
+
+		public static implicit operator InputArgument(Scaleform value)
+		{
+			return new InputArgument((ulong)value.Handle);
+		}
 	}
 }

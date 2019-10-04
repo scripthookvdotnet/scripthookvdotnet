@@ -5,59 +5,95 @@
 
 using GTA.Math;
 using GTA.Native;
-using System;
 
 namespace GTA
 {
-	public sealed class Pickup : PoolObject, IEquatable<Pickup>
+	public sealed class Pickup : PoolObject
 	{
 		public Pickup(int handle) : base(handle)
 		{
 		}
 
+		/// <summary>
+		/// The position of this <see cref="Pickup"/>.
+		/// </summary>
 		public Vector3 Position => Function.Call<Vector3>(Hash.GET_PICKUP_COORDS, Handle);
 
+		/// <summary>
+		/// Gets if this <see cref="Pickup"/> has been collected.
+		/// </summary>
 		public bool IsCollected => Function.Call<bool>(Hash.HAS_PICKUP_BEEN_COLLECTED, Handle);
 
+		/// <summary>
+		/// Determines if the object of this <see cref="Pickup"/> exists.
+		/// </summary>
+		/// <returns></returns>
+		public bool ObjectExists()
+		{
+			return Function.Call<bool>(Hash.DOES_PICKUP_OBJECT_EXIST, Handle);
+		}
+
+		/// <summary>
+		/// Destroys this <see cref="Pickup"/>.
+		/// </summary>
 		public override void Delete()
 		{
 			Function.Call(Hash.REMOVE_PICKUP, Handle);
 		}
 
-		public bool ObjectExists()
-		{
-			return Function.Call<bool>(Hash.DOES_PICKUP_OBJECT_EXIST, Handle);
-		}
+		/// <summary>
+		/// Determines if this <see cref="Pickup"/> exists.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="Pickup"/> exists; otherwise, <c>false</c>.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_PICKUP_EXIST, Handle);
 		}
-		public static bool Exists(Pickup pickup)
+
+		/// <summary>
+		/// Determines if an <see cref="object"/> refers to the same pickup as this <see cref="Pickup"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same pickup as this <see cref="Pickup"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
 		{
-			return !ReferenceEquals(pickup, null) && pickup.Exists();
+			if (obj is Pickup pickup)
+				return Handle == pickup.Handle;
+			return false;
 		}
 
-		public bool Equals(Pickup pickup)
-		{
-			return !ReferenceEquals(pickup, null) && Handle == pickup.Handle;
-		}
-		public sealed override bool Equals(object obj)
-		{
-			return !ReferenceEquals(obj, null) && obj.GetType() == GetType() && Equals((Pickup)obj);
-		}
-
-		public sealed override int GetHashCode()
-		{
-			return Handle;
-		}
-
+		/// <summary>
+		/// Determines if two <see cref="Pickup"/>s refer to the same pickup.
+		/// </summary>
+		/// <param name="left">The left <see cref="Pickup"/>.</param>
+		/// <param name="right">The right <see cref="Pickup"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same pickup as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(Pickup left, Pickup right)
 		{
-			return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
+			return left is null ? right is null : left.Equals(right);
 		}
+		/// <summary>
+		/// Determines if two <see cref="Pickup"/>s don't refer to the same pickup.
+		/// </summary>
+		/// <param name="left">The left <see cref="Pickup"/>.</param>
+		/// <param name="right">The right <see cref="Pickup"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same pickup as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Pickup left, Pickup right)
 		{
 			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Pickup"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(Pickup value)
+		{
+			return new InputArgument((ulong)value.Handle);
+		}
+
+		public override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

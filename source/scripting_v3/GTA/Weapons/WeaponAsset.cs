@@ -21,20 +21,41 @@ namespace GTA
 		{
 		}
 
-		public int Hash { get; private set; }
 		public ulong NativeValue
 		{
-			get { return (ulong)Hash; }
-			set { Hash = unchecked((int)value); }
+			get => (ulong)Hash;
+			set => Hash = unchecked((int)value);
 		}
 
+		/// <summary>
+		/// Gets the hash for this <see cref="WeaponAsset"/>.
+		/// </summary>
+		public int Hash { get; private set; }
+
+		/// <summary>
+		/// Gets if this <see cref="WeaponAsset"/> is valid.
+		/// </summary>
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_WEAPON_VALID, Hash);
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is loaded so it can be spawned.
+		/// </summary>
 		public bool IsLoaded => Function.Call<bool>(Native.Hash.HAS_WEAPON_ASSET_LOADED, Hash);
 
+		public string DisplayName => Weapon.GetDisplayNameFromHash((WeaponHash)Hash);
+		public string LocalizedName => Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash));
+
+		/// <summary>
+		/// Attempts to load this <see cref="WeaponAsset"/> into memory.
+		/// </summary>
 		public void Request()
 		{
 			Function.Call(Native.Hash.REQUEST_WEAPON_ASSET, Hash, 31, 0);
 		}
+		/// <summary>
+		/// Attempts to load this <see cref="WeaponAsset"/> into memory for a given period of time.
+		/// </summary>
+		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="WeaponAsset"/>.</param>
+		/// <returns><c>true</c> if this <see cref="WeaponAsset"/> is loaded; otherwise, <c>false</c>.</returns>
 		public bool Request(int timeout)
 		{
 			Request();
@@ -54,7 +75,11 @@ namespace GTA
 
 			return true;
 		}
-		public void Dismiss()
+
+		/// <summary>
+		/// Tells the game we have finished using this <see cref="WeaponAsset"/> and it can be freed from memory.
+		/// </summary>
+		public void MarkAsNoLongerNeeded()
 		{
 			Function.Call(Native.Hash.REMOVE_WEAPON_ASSET, Hash);
 		}
@@ -65,17 +90,24 @@ namespace GTA
 		}
 		public override bool Equals(object obj)
 		{
-			return obj != null && obj.GetType() == GetType() && Equals((WeaponAsset)obj);
+			if (obj is WeaponAsset asset)
+				return Equals(asset);
+			return false;
+		}
+
+		public static bool operator ==(WeaponAsset left, WeaponAsset right)
+		{
+			return left.Equals(right);
+		}
+		public static bool operator !=(WeaponAsset left, WeaponAsset right)
+		{
+			return !left.Equals(right);
 		}
 
 		public override int GetHashCode()
 		{
 			return Hash;
 		}
-
-		public string DisplayName => Weapon.GetDisplayNameFromHash((WeaponHash)Hash);
-
-		public string LocalizedName => Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash));
 
 		public override string ToString()
 		{
@@ -95,13 +127,9 @@ namespace GTA
 			return new WeaponAsset(hash);
 		}
 
-		public static bool operator ==(WeaponAsset left, WeaponAsset right)
+		public static implicit operator InputArgument(WeaponAsset value)
 		{
-			return left.Equals(right);
-		}
-		public static bool operator !=(WeaponAsset left, WeaponAsset right)
-		{
-			return !left.Equals(right);
+			return new InputArgument((ulong)value.Hash);
 		}
 	}
 }

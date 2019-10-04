@@ -5,11 +5,10 @@
 
 using GTA.Math;
 using GTA.Native;
-using System;
 
 namespace GTA
 {
-	public sealed class Blip : PoolObject, IEquatable<Blip>
+	public sealed class Blip : PoolObject
 	{
 		public Blip(int handle) : base(handle)
 		{
@@ -43,6 +42,14 @@ namespace GTA
 		public int NumberLabel
 		{
 			set => Function.Call(Hash.SHOW_NUMBER_ON_BLIP, Handle, value);
+		}
+
+		/// <summary>
+		/// Removes the number label from this <see cref="Blip"/>.
+		/// </summary>
+		public void RemoveNumberLabel()
+		{
+			Function.Call(Hash.HIDE_NUMBER_ON_BLIP, Handle);
 		}
 
 		/// <summary>
@@ -104,7 +111,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Blip"/> is attached to.
 		/// </summary>
-		public Entity Entity => GTA.Entity.FromHandle(Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, Handle));
+		public Entity Entity => Entity.FromHandle(Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, Handle));
 
 		/// <summary>
 		/// Sets a value indicating whether the route to this <see cref="Blip"/> should be shown on the map.
@@ -161,14 +168,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Removes the number label for this <see cref="Blip"/>.
-		/// </summary>
-		public void RemoveNumberLabel()
-		{
-			Function.Call(Hash.HIDE_NUMBER_ON_BLIP, Handle);
-		}
-
-		/// <summary>
 		/// Removes this <see cref="Blip"/>.
 		/// </summary>
 		public override void Delete()
@@ -181,32 +180,59 @@ namespace GTA
 			Handle = handle;
 		}
 
+		/// <summary>
+		/// Determines if this <see cref="Blip"/> exists.
+		/// </summary>
+		/// <returns><c>true</c> if this <see cref="Blip"/> exists; otherwise, <c>false</c>.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_BLIP_EXIST, Handle);
 		}
 
-		public bool Equals(Blip blip)
+		/// <summary>
+		/// Determines if an <see cref="object"/> refers to the same blip as this <see cref="Blip"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same blip as this <see cref="Blip"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
 		{
-			return !(blip is null) && Handle == blip.Handle;
-		}
-		public override bool Equals(object blip)
-		{
-			return !(blip is null) && blip.GetType() == GetType() && Equals((Blip)blip);
-		}
-
-		public sealed override int GetHashCode()
-		{
-			return Handle.GetHashCode();
+			if (obj is Blip blip)
+				return Handle == blip.Handle;
+			return false;
 		}
 
+		/// <summary>
+		/// Determines if two <see cref="Blip"/>s refer to the same blip.
+		/// </summary>
+		/// <param name="left">The left <see cref="Pickup"/>.</param>
+		/// <param name="right">The right <see cref="Pickup"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same blip as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(Blip left, Blip right)
 		{
 			return left is null ? right is null : left.Equals(right);
 		}
+		/// <summary>
+		/// Determines if two <see cref="Blip"/>s don't refer to the same blip.
+		/// </summary>
+		/// <param name="left">The left <see cref="Pickup"/>.</param>
+		/// <param name="right">The right <see cref="Pickup"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same blip as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Blip left, Blip right)
 		{
 			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="Blip"/> to a native input argument.
+		/// </summary>
+		public static implicit operator InputArgument(Blip value)
+		{
+			return new InputArgument((ulong)value.Handle);
+		}
+
+		public override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

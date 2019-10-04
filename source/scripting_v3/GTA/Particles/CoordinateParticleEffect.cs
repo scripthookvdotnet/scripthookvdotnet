@@ -22,19 +22,13 @@ namespace GTA
 		public override bool Start()
 		{
 			Stop();
-			if (!_asset.SetNextCall())
-			{
+			if (!_asset.UseNext())
 				return false;
-			}
 
-			Handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, _effectName, Offset.X, Offset.Y, Offset.Z, Rotation.X,
-				Rotation.Y, Rotation.Z, Scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),
-				InvertAxis.HasFlag(InvertAxis.Z), false);
+			Handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, _effectName, Offset.X, Offset.Y, Offset.Z, Rotation.X, Rotation.Y, Rotation.Z, Scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y), InvertAxis.HasFlag(InvertAxis.Z), false);
 
 			if (IsActive)
-			{
 				return true;
-			}
 
 			Handle = -1;
 			return false;
@@ -55,9 +49,7 @@ namespace GTA
 				InvertAxis = _InvertAxis
 			};
 			if (IsActive)
-			{
 				result.Start();
-			}
 			return result;
 		}
 	}

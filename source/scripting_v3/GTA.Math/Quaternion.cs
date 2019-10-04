@@ -108,7 +108,7 @@ namespace GTA.Math
 			get
 			{
 				if (Length() != 1.0f)
-					return new Vector3();
+					return Vector3.Zero;
 
 				float length = 1.0f - (W * W);
 				if (length == 0f)

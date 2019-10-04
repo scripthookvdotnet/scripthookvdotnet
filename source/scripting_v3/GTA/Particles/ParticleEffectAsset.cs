@@ -10,12 +10,8 @@ using System.Drawing;
 
 namespace GTA
 {
-	public class ParticleEffectAsset
+	public struct ParticleEffectAsset : IEquatable<ParticleEffectAsset>
 	{
-		#region Fields
-		private readonly string _assetName;
-		#endregion
-
 		/// <summary>
 		/// Creates a class used for loading <see cref="ParticleEffectAsset"/>s than can be used to start <see cref="ParticleEffect"/>s from inside the Asset
 		/// </summary>
@@ -23,18 +19,33 @@ namespace GTA
 		/// <remarks>The files have the extension *.ypt in OpenIV, use the file name withouth the extension for the <paramref name="assetName"/></remarks>
 		public ParticleEffectAsset(string assetName)
 		{
-			_assetName = assetName;
+			AssetName = assetName;
 		}
 
-		/// <summary>
-		/// Gets the name of the this <see cref="ParticleEffectAsset"/> file
-		/// </summary>
-		public string AssetName => _assetName;
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="ParticleEffectAsset"/> is Loaded
 		/// </summary>
 		/// <remarks>Use <see cref="Request()"/> or <see cref="Request(int)"/> to load the asset</remarks>
-		public bool IsLoaded => Function.Call<bool>(Hash.HAS_NAMED_PTFX_ASSET_LOADED, _assetName);
+		public bool IsLoaded => Function.Call<bool>(Hash.HAS_NAMED_PTFX_ASSET_LOADED, AssetName);
+
+		/// <summary>
+		/// Gets the name of the this <see cref="ParticleEffectAsset"/> file.
+		/// </summary>
+		public string AssetName
+		{
+			get;
+		}
+
+		internal bool UseNext()
+		{
+			Request();
+			if (IsLoaded)
+			{
+				Function.Call(Hash.USE_PARTICLE_FX_ASSET, AssetName);
+				return true;
+			}
+			return false;
+		}
 
 		/// <summary>
 		/// Starts a Particle Effect that runs once at a given position then is destroyed.
@@ -45,15 +56,11 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
 		{
-			if (!SetNextCall())
-			{
+			if (!UseNext())
 				return false;
-			}
-			Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y,
-				rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
 		}
 
 		/// <summary>
@@ -66,18 +73,12 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, Entity entity, Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedOnEntity(string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
 		{
-			if (!SetNextCall())
-			{
+			if (!UseNext())
 				return false;
-			}
-			Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X,
-				rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-				invertAxis.HasFlag(InvertAxis.Z));
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
 		}
-
 		/// <summary>
 		/// Starts a Particle Effect on an <see cref="EntityBone"/> that runs once then is destroyed.
 		/// </summary>
@@ -88,18 +89,11 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, EntityBone entityBone,
-			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None)
+		public bool StartNonLoopedOnEntity(string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
 		{
-			if (!SetNextCall())
-			{
+			if (!UseNext())
 				return false;
-			}
-			Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X,
-				rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y),
-				invertAxis.HasFlag(InvertAxis.Z));
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
 		}
 
 		/// <summary>
@@ -113,9 +107,7 @@ namespace GTA
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
 		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
 		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity,
-			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
 		{
 			var result = new EntityParticleEffect(this, effectName, entity) {
 				Offset = off,
@@ -140,9 +132,7 @@ namespace GTA
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
 		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
 		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public EntityParticleEffect CreateEffectOnEntity(string effectName, EntityBone entityBone,
-			Vector3 off = default(Vector3), Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+		public EntityParticleEffect CreateEffectOnEntity(string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
 		{
 			var result = new EntityParticleEffect(this, effectName, entityBone) {
 				Offset = off,
@@ -167,8 +157,7 @@ namespace GTA
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
 		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
 		/// <returns>The <see cref="CoordinateParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public CoordinateParticleEffect CreateEffectAtCoord(string effectName, Vector3 pos, Vector3 rot = default(Vector3), float scale = 1.0f,
-			InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
+		public CoordinateParticleEffect CreateEffectAtCoord(string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
 		{
 			var result = new CoordinateParticleEffect(this, effectName, pos) {
 				Rotation = rot,
@@ -199,9 +188,8 @@ namespace GTA
 		/// </summary>
 		public void Request()
 		{
-			Function.Call(Hash.REQUEST_NAMED_PTFX_ASSET, _assetName);
+			Function.Call(Hash.REQUEST_NAMED_PTFX_ASSET, AssetName);
 		}
-
 		/// <summary>
 		/// Attempts to load this <see cref="ParticleEffectAsset"/> into memory so it can be used for starting <see cref="ParticleEffect"/>s.
 		/// </summary>
@@ -216,49 +204,52 @@ namespace GTA
 			while (!IsLoaded)
 			{
 				Script.Yield();
+				Request();
 
 				if (DateTime.UtcNow >= endtime)
 				{
 					return false;
 				}
-				Request();
 			}
 
 			return true;
 		}
 
-		internal bool SetNextCall()
+		/// <summary>
+		/// Tells the game we have finished using this <see cref="ParticleEffectAsset"/> and it can be freed from memory.
+		/// </summary>
+		public void MarkAsNoLongerNeeded()
 		{
-			Request();
-			if (IsLoaded)
-			{
-				Function.Call(Hash.USE_PARTICLE_FX_ASSET, _assetName);
-				return true;
-			}
+			Function.Call(Hash.REMOVE_NAMED_PTFX_ASSET, AssetName);
+		}
+
+		public bool Equals(ParticleEffectAsset asset)
+		{
+			return AssetName == asset.AssetName;
+		}
+		public override bool Equals(object obj)
+		{
+			if (obj is ParticleEffectAsset asset)
+				return Equals(asset);
 			return false;
 		}
 
 		/// <summary>
-		/// Tells the game we have finished using this <see cref="ParticleEffectAsset"/> and it can be freed from memory
+		/// Converts a <see cref="ParticleEffectAsset"/> to a native input argument.
 		/// </summary>
-		public void MarkAsNoLongerNeeded()
+		public static implicit operator InputArgument(ParticleEffectAsset asset)
 		{
-			Function.Call(Hash.REMOVE_NAMED_PTFX_ASSET, _assetName);
-		}
-
-		public override string ToString()
-		{
-			return _assetName;
+			return new InputArgument(asset.AssetName);
 		}
 
 		public override int GetHashCode()
 		{
-			return _assetName.GetHashCode();
+			return AssetName.GetHashCode();
 		}
 
-		public static implicit operator InputArgument(ParticleEffectAsset asset)
+		public override string ToString()
 		{
-			return new InputArgument(asset._assetName);
+			return AssetName;
 		}
 	}
 }
