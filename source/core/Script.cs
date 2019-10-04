@@ -168,7 +168,7 @@ namespace SHVDN
 
 			if (thread != null)
 			{
-				Log.Message(Log.Level.Info, "Aborted script ", Name, ".");
+				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".");
 
 				thread.Abort(); thread = null;
 			}

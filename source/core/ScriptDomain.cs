@@ -387,7 +387,7 @@ namespace SHVDN
 				Log.Message(Log.Level.Error, "Failed to instantiate script ", scriptType.FullName, ": ", ex.ToString());
 
 				if (GetScriptAttribute(scriptType, "SupportURL") is string supportURL)
-					Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+					Log.Message(Log.Level.Error, "Please check the following site for support on the issue: ", supportURL);
 
 				return null;
 			}
@@ -835,10 +835,10 @@ namespace SHVDN
 
 			if (sender is Script script)
 			{
-				Log.Message(Log.Level.Info, "The exception was thrown while executing the script ", script.Name, ".");
+				Log.Message(Log.Level.Error, "The exception was thrown while executing the script ", script.Name, ".");
 
 				if (GetScriptAttribute(script.ScriptInstance.GetType(), "SupportURL") is string supportURL)
-					Log.Message(Log.Level.Info, "Please check the following site for support on the issue: ", supportURL);
+					Log.Message(Log.Level.Error, "Please check the following site for support on the issue: ", supportURL);
 			}
 		}
 	}

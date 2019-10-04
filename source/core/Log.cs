@@ -79,6 +79,7 @@ namespace SHVDN
 				WriteToConsole(Level.Error, "Failed to write to log file: ", ex.ToString());
 			}
 		}
+
 		static void WriteToConsole(Level level, params string[] message)
 		{
 			Console console = AppDomain.CurrentDomain.GetData("Console") as Console;
@@ -87,9 +88,6 @@ namespace SHVDN
 
 			switch (level)
 			{
-				case Level.Info:
-					console.PrintInfo(string.Join(string.Empty, message));
-					break;
 				case Level.Error:
 					console.PrintError(string.Join(string.Empty, message));
 					break;
