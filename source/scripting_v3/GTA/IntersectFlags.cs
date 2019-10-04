@@ -8,11 +8,13 @@ using System;
 namespace GTA
 {
 	[Flags]
-	public enum InvertAxis
+	public enum IntersectFlags
 	{
-		None = 0,
-		X = 1,
-		Y = 2,
-		Z = 4
+		Everything = -1,
+		Map = 1,
+		MissionEntities = 2,
+		Peds = 12,
+		Objects = 16,
+		Vegetation = 256,
 	}
 }

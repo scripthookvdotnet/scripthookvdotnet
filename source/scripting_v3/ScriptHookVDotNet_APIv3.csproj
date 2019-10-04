@@ -160,8 +160,8 @@
     <Compile Include="GTA\GameplayCamera.cs" />
     <Compile Include="GTA\GameVersion.cs" />
     <Compile Include="GTA\InputMethod.cs" />
-    <Compile Include="GTA\IntersectOptions.cs" />
-    <Compile Include="GTA\InvertAxis.cs" />
+    <Compile Include="GTA\IntersectFlags.cs" />
+    <Compile Include="GTA\InvertAxisFlags.cs" />
     <Compile Include="GTA\Language.cs" />
     <Compile Include="GTA\MarkerType.cs" />
     <Compile Include="GTA\MaterialHash.cs" />

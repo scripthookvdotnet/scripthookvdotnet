@@ -1066,11 +1066,11 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
 				return false;
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 		}
 		/// <summary>
 		/// Starts a Particle Effect on an <see cref="Entity"/> that runs once then is destroyed.
@@ -1083,11 +1083,11 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
 				return false;
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 		}
 		/// <summary>
 		/// Starts a Particle Effect on an <see cref="EntityBone"/> that runs once then is destroyed.
@@ -1100,11 +1100,11 @@ namespace GTA
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
 		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
 				return false;
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 		}
 
 		/// <summary>
@@ -1117,7 +1117,7 @@ namespace GTA
 		/// <param name="rotation">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exhaust you may need to flip in the Y Axis.</param>
-		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 offset = default, Vector3 rotation = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 offset = default, Vector3 rotation = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			return CreateParticleEffect(asset, effectName, entity.Bones.Core, offset, rotation, scale, invertAxis);
 		}
@@ -1131,13 +1131,13 @@ namespace GTA
 		/// <param name="rotation">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exhaust you may need to flip in the Y Axis.</param>
-		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 offset = default, Vector3 rotation = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 offset = default, Vector3 rotation = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
 				return null;
 
 			int handle = Function.Call<int>((entityBone.Owner is Ped) ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE,
-				effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
+				effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 			if (handle == 0)
 				return null;
 
@@ -1152,12 +1152,12 @@ namespace GTA
 		/// <param name="rotation">What rotation to apply to the effect.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
 		/// <param name="invertAxis">Which axis to flip the effect in.</param>
-		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, Vector3 position, Vector3 rotation = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
+		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, Vector3 position, Vector3 rotation = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
 				return null;
 
-			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z), false);
+			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z), false);
 			if (handle == 0)
 				return null;
 
@@ -1248,7 +1248,7 @@ namespace GTA
 		/// <param name="target">The target of the raycast.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash._START_SHAPE_TEST_RAY, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1260,7 +1260,7 @@ namespace GTA
 		/// <param name="maxDistance">How far the raycast should go out to.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
 
@@ -1275,7 +1275,7 @@ namespace GTA
 		/// <param name="radius">The radius of the raycast.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1288,7 +1288,7 @@ namespace GTA
 		/// <param name="maxDistance">How far the raycast should go out to.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity = null)
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
 
@@ -1300,16 +1300,16 @@ namespace GTA
 		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
 		public static RaycastResult GetCrosshairCoordinates()
 		{
-			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectOptions.Everything, null);
+			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectFlags.Everything, null);
 		}
 
 		/// <summary>
 		/// Determines where the crosshair intersects with the world.
 		/// </summary>
-		/// <param name="intersectOptions">Type of <see cref="IntersectOptions">environment</see> the raycast should intersect with.</param>
+		/// <param name="intersectOptions">Type of <see cref="IntersectFlags">environment</see> the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Prevent the raycast detecting a specific <see cref="Entity"/>.</param>
 		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
-		public static RaycastResult GetCrosshairCoordinates(IntersectOptions intersectOptions = IntersectOptions.Everything, Entity ignoreEntity = null)
+		public static RaycastResult GetCrosshairCoordinates(IntersectFlags intersectOptions = IntersectFlags.Everything, Entity ignoreEntity = null)
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), intersectOptions, ignoreEntity);
 		}
