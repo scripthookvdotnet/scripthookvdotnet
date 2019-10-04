@@ -11,9 +11,7 @@ namespace GTA
 {
 	public class TaskInvoker
 	{
-		#region Fields
-		Ped _ped;
-		#endregion
+		readonly Ped _ped;
 
 		internal TaskInvoker(Ped ped)
 		{
@@ -334,9 +332,14 @@ namespace GTA
 			Function.Call(Hash.TASK_STAND_STILL, _ped.Handle, duration);
 		}
 
-		public void StartScenario(string name, Vector3 position)
+		public void StartScenario(string name, float heading)
 		{
-			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, name, position.X, position.Y, position.Z, 0f, 0, 0, 1);
+			Function.Call(Hash.TASK_START_SCENARIO_IN_PLACE, _ped.Handle, name, 0, 1);
+		}
+
+		public void StartScenario(string name, Vector3 position, float heading)
+		{
+			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, name, position.X, position.Y, position.Z, heading, 0, 0, 1);
 		}
 
 		public void SwapWeapon()

@@ -350,9 +350,17 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_STAND_STILL, _ped.Handle, duration);
 		}
+		public void StartScenario(string name)
+		{
+			Function.Call(Hash.TASK_START_SCENARIO_IN_PLACE, _ped.Handle, name, 0, 1);
+		}
 		public void StartScenario(string name, Vector3 position)
 		{
-			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, name, position.X, position.Y, position.Z, 0.0f, 0, 0, 1);
+			StartScenario(name, position, 0.0f);
+		}
+		public void StartScenario(string name, Vector3 position, float heading)
+		{
+			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, name, position.X, position.Y, position.Z, heading, 0, 0, 1);
 		}
 		public void SwapWeapon()
 		{
