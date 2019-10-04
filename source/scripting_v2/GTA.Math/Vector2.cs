@@ -445,11 +445,11 @@ namespace GTA.Math
 		/// </summary>
 		public static implicit operator Vector3(Vector2 vector) => new Vector3(vector.X, vector.Y, 0);
 
-        /// <summary>
-        /// Converts the value of the object to its equivalent string representation.
-        /// </summary>
-        /// <returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+		/// <summary>
+		/// Converts the value of the object to its equivalent string representation.
+		/// </summary>
+		/// <returns>The string representation of the value of this instance.</returns>
+		public override string ToString()
 		{
 			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1}", X, Y);
 		}

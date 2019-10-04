@@ -602,15 +602,15 @@ namespace GTA.Math
 		/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator !=(Vector3 left, Vector3 right) => !Equals(left, right);
 
-        /// <summary>
+		/// <summary>
 		/// Converts a Vector3 to a Vector2 implicitly.
 		/// </summary>
 		public static implicit operator Vector2(Vector3 vector) => new Vector2(vector.X, vector.Y);
 
-        /// <summary>
-        /// Converts the matrix to an array of floats.
-        /// </summary>
-        internal float[] ToArray() => new[] { X, Y, Z };
+		/// <summary>
+		/// Converts the matrix to an array of floats.
+		/// </summary>
+		internal float[] ToArray() => new[] { X, Y, Z };
 
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.
