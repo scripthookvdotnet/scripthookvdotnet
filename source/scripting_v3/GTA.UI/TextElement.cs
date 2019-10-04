@@ -256,7 +256,7 @@ namespace GTA.UI
 		{
 			get
 			{
-				Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+				Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
 
 				foreach (IntPtr ptr in _pinnedText)
 				{
@@ -276,7 +276,7 @@ namespace GTA.UI
 		{
 			get
 			{
-				Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+				Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
 
 				foreach (IntPtr ptr in _pinnedText)
 				{
@@ -301,7 +301,7 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+			Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
 			Function.PushLongString(text);
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
@@ -319,7 +319,7 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._BEGIN_TEXT_COMMAND_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+			Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
 			Function.PushLongString(text);
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);

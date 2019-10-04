@@ -151,7 +151,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a jet ski; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsJetSki => Function.Call<bool>(Native.Hash._IS_THIS_MODEL_A_JETSKI, Hash);
+		public bool IsJetSki => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_JETSKI, Hash);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a ped.
 		/// </summary>

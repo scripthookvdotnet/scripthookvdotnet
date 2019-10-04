@@ -104,7 +104,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='NativeGen|x64'">
     <PreBuildEvent>
-      <Command>tools\NativeGen.exe source\scripting_v3\GTA.Native\NativeHashes.cs</Command>
+      <Command>tools\NativeGen.exe http://github.com/UnknownModder/gta5-nativedb-data/raw/master/natives.json source\scripting_v3\GTA.Native\NativeHashes.cs</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

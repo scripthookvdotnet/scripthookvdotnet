@@ -58,7 +58,7 @@ namespace GTA
 			{
 				if (argument is int argInt)
 				{
-					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_INT, argInt);
+					Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, argInt);
 				}
 				else if (argument is string argString)
 				{
@@ -74,19 +74,19 @@ namespace GTA
 				}
 				else if (argument is float argFloat)
 				{
-					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_FLOAT, argFloat);
+					Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT, argFloat);
 				}
 				else if (argument is double argDouble)
 				{
-					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_FLOAT, (float)argDouble);
+					Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT, (float)argDouble);
 				}
 				else if (argument is bool argBool)
 				{
-					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_BOOL, (bool)argBool);
+					Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL, (bool)argBool);
 				}
 				else if (argument is ScaleformArgumentTXD argTxd)
 				{
-					Function.Call(Hash._ADD_SCALEFORM_MOVIE_METHOD_PARAMETER_STRING, argTxd.txd);
+					Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_TEXTURE_NAME_STRING, argTxd.txd);
 				}
 				else
 				{
@@ -103,7 +103,7 @@ namespace GTA
 		public int  CallFunctionReturn(string function, params object[] arguments)
 		{
 			CallFunctionHead(function, arguments);
-			return Function.Call<int>(Hash._END_SCALEFORM_MOVIE_METHOD_RETURN);
+			return Function.Call<int>(Hash.END_SCALEFORM_MOVIE_METHOD_RETURN_VALUE);
 		}
 
 		public void Render2D()
@@ -122,7 +122,7 @@ namespace GTA
 
 		public void Render3D(Vector3 position, Vector3 rotation, Vector3 scale)
 		{
-			Function.Call(Hash._DRAW_SCALEFORM_MOVIE_3D_NON_ADDITIVE, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
+			Function.Call(Hash.DRAW_SCALEFORM_MOVIE_3D_SOLID, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 		}
 		public void Render3DAdditive(Vector3 position, Vector3 rotation, Vector3 scale)
 		{

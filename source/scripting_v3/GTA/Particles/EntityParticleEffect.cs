@@ -70,7 +70,7 @@ namespace GTA
 				return false;
 			}
 
-			Hash hash = _entityBone.Owner is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash._START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
+			Hash hash = _entityBone.Owner is Ped ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE;
 
 			Handle = Function.Call<int>(hash, _effectName, _entityBone.Owner.Handle, Offset.X, Offset.Y, Offset.Z, Rotation.X,
 				Rotation.Y, Rotation.Z, _entityBone.Index, _scale, InvertAxis.HasFlag(InvertAxis.X), InvertAxis.HasFlag(InvertAxis.Y),

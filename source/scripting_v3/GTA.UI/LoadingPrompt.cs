@@ -10,7 +10,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Gets a value indicating whether the Loading Prompt is currently being displayed
 		/// </summary>
-		public static bool IsActive => Function.Call<bool>(Hash._IS_LOADING_PROMPT_BEING_DISPLAYED);
+		public static bool IsActive => Function.Call<bool>(Hash.BUSYSPINNER_IS_ON);
 
 		/// <summary>
 		/// Creates a loading prompt at the bottom right of the screen with the given text and spinner type
@@ -27,15 +27,15 @@ namespace GTA.UI
 
 			if (loadingText == null)
 			{
-				Function.Call(Hash._BEGIN_TEXT_COMMAND_BUSY_STRING, SHVDN.NativeMemory.NullString);
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_BUSYSPINNER_ON, SHVDN.NativeMemory.NullString);
 			}
 			else
 			{
-				Function.Call(Hash._BEGIN_TEXT_COMMAND_BUSY_STRING, SHVDN.NativeMemory.String);
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_BUSYSPINNER_ON, SHVDN.NativeMemory.String);
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
 			}
 
-			Function.Call(Hash._END_TEXT_COMMAND_BUSY_STRING, spinnerType);
+			Function.Call(Hash.END_TEXT_COMMAND_BUSYSPINNER_ON, spinnerType);
 		}
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace GTA.UI
 		{
 			if (IsActive)
 			{
-				Function.Call(Hash._REMOVE_LOADING_PROMPT);
+				Function.Call(Hash.BUSYSPINNER_OFF);
 			}
 		}
 	}

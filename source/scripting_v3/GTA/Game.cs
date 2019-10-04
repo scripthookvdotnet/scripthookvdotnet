@@ -89,7 +89,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the current game language.
 		/// </summary>		
-		public static Language Language => Function.Call<Language>(Hash._GET_CURRENT_LANGUAGE_ID);
+		public static Language Language => Function.Call<Language>(Hash.GET_CURRENT_LANGUAGE);
 
 		/// <summary>
 		/// Gets how many milliseconds the game has been open in this session
@@ -180,7 +180,7 @@ namespace GTA
 		/// </summary>
 		public static bool IsNightVisionActive
 		{
-			get => Function.Call<bool>(Hash._IS_NIGHTVISION_ACTIVE);
+			get => Function.Call<bool>(Hash.GET_USINGNIGHTVISION);
 			set => Function.Call(Hash.SET_NIGHTVISION, value);
 		}
 		/// <summary>
@@ -188,7 +188,7 @@ namespace GTA
 		/// </summary>
 		public static bool IsThermalVisionActive
 		{
-			get => Function.Call<bool>(Hash._IS_SEETHROUGH_ACTIVE);
+			get => Function.Call<bool>(Hash.GET_USINGSEETHROUGH);
 			set => Function.Call(Hash.SET_SEETHROUGH, value);
 		}
 

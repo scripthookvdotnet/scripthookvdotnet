@@ -27,7 +27,7 @@ namespace GTA
 
 		[FieldOffset(0xF8)] private fixed byte upperCaseName [0x40];
 
-		public bool IsValid => !Function.Call<bool>(Native.Hash._IS_DLC_DATA_EMPTY, validCheck);
+		public bool IsValid => !Function.Call<bool>(Native.Hash.IS_CONTENT_ITEM_LOCKED, validCheck);
 
 		public WeaponHash Hash => (WeaponHash)weaponHash;
 

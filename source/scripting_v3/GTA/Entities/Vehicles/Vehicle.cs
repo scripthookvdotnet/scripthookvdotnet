@@ -81,7 +81,7 @@ namespace GTA
 					return 0.0f;
 				}
 				
-				return Function.Call<float>(Hash._GET_HELI_MAIN_ROTOR_HEALTH, Handle);
+				return Function.Call<float>(Hash.GET_HELI_MAIN_ROTOR_HEALTH, Handle);
 			}
 			set
 			{
@@ -118,7 +118,7 @@ namespace GTA
 					return 0.0f;
 				}
 				
-				return Function.Call<float>(Hash._GET_HELI_TAIL_ROTOR_HEALTH, Handle);
+				return Function.Call<float>(Hash.GET_HELI_TAIL_ROTOR_HEALTH, Handle);
 			}
 			set
 			{
@@ -1048,9 +1048,7 @@ namespace GTA
 		/// </value>
 		public bool IsSirenSilent
 		{
-			set =>
-				// Sets if the siren is silent actually 
-				Function.Call(Hash.DISABLE_VEHICLE_IMPACT_EXPLOSION_ACTIVATION, Handle, value);
+			set => Function.Call(Hash._SET_DISABLE_VEHICLE_SIREN_SOUND, Handle, value);
 		}
 		/// <summary>
 		/// Sounds the horn on this <see cref="Vehicle"/>.
@@ -1155,7 +1153,7 @@ namespace GTA
 
 				return false;
 			}
-			set => Function.Call(Hash._SET_VEHICLE_CREATES_MONEY_PICKUPS_WHEN_EXPLODED, Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_DROPS_MONEY_WHEN_BLOWN_UP, Handle, value);
 		}
 
 		/// <summary>
@@ -1486,7 +1484,7 @@ namespace GTA
 
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
-			set => Function.Call(Hash._SET_VEHICLE_ENGINE_POWER_MULTIPLIER, Handle, value);
+			set => Function.Call(Hash.MODIFY_VEHICLE_TOP_SPEED, Handle, value);
 		}
 		public float EngineTorqueMultiplier
 		{
@@ -1792,7 +1790,7 @@ namespace GTA
 		{
 			if (Model.IsHelicopter && mult >= 0 && mult <= 1)
 			{
-				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT_HEALTH, Handle, mult);
+				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT, Handle, mult);
 			}
 		}
 
@@ -1814,7 +1812,7 @@ namespace GTA
 		{
 			if (Model.IsCargobob)
 			{
-				return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash._DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
+				return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 			}
 
 			return false;
@@ -1828,7 +1826,7 @@ namespace GTA
 					case CargobobHook.Hook:
 						return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle);
 					case CargobobHook.Magnet:
-						return Function.Call<bool>(Hash._DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
+						return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 				}
 			}
 
@@ -1838,21 +1836,21 @@ namespace GTA
 		{
 			if (IsCargobobHookActive(CargobobHook.Magnet))
 			{
-				Function.Call(Hash._SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, true);
+				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, true);
 			}
 		}
 		public void CargoBobMagnetReleaseVehicle()
 		{
 			if (IsCargobobHookActive(CargobobHook.Magnet))
 			{
-				Function.Call(Hash._SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, false);
+				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, false);
 			}
 		}
 
 		public bool HasTowArm => Bones.HasBone("tow_arm");
 		public float TowingCraneRaisedAmount
 		{
-			set => Function.Call(Hash._SET_TOW_TRUCK_CRANE_HEIGHT, Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_TOW_TRUCK_ARM_POSITION, Handle, value);
 		}
 		public Vehicle TowedVehicle => new Vehicle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle));
 		public void TowVehicle(Vehicle vehicle, bool rear)

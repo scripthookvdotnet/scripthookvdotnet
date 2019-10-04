@@ -97,7 +97,7 @@ namespace GTA
 			}
 		}
 
-		public Ped Leader => new Ped(Function.Call<int>(Hash._GET_PED_AS_GROUP_LEADER, Handle));
+		public Ped Leader => new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle));
 
 		public void Add(Ped ped, bool leader)
 		{

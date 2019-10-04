@@ -189,7 +189,7 @@ namespace GTA
 		{
 			if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
 			{
-				Function.Call(Hash._SET_WEATHER_TYPE_OVER_TIME, _weatherNames[(int)weather], duration);
+				Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, _weatherNames[(int)weather], duration);
 			}
 		}
 

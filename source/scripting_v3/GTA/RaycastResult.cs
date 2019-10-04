@@ -14,7 +14,7 @@ namespace GTA
 			NativeVector3 surfaceNormalArg;
 			unsafe
 			{
-				Result = Function.Call<int>(Hash._GET_SHAPE_TEST_RESULT_EX, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &materialHashArg, &entityHandleArg);
+				Result = Function.Call<int>(Hash.GET_SHAPE_TEST_RESULT_INCLUDING_MATERIAL, handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &materialHashArg, &entityHandleArg);
 			}
 
 			DidHit = hitSomethingArg;

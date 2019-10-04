@@ -238,7 +238,7 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			Function.Call(Hash._REMOVE_NAMED_PTFX_ASSET, _assetName);
+			Function.Call(Hash.REMOVE_NAMED_PTFX_ASSET, _assetName);
 		}
 
 		public override string ToString()

@@ -904,7 +904,7 @@ namespace GTA
 		{
 			get
 			{
-				return !Function.Call<bool>(Hash._GET_ENTITY_COLLISON_DISABLED, Handle);
+				return !Function.Call<bool>(Hash.GET_ENTITY_COLLISION_DISABLED, Handle);
 			}
 			set
 			{

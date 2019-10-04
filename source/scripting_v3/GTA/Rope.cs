@@ -12,7 +12,7 @@ namespace GTA
 
 		public float Length
 		{
-			get => Function.Call<float>(Hash._GET_ROPE_LENGTH, Handle);
+			get => Function.Call<float>(Hash.ROPE_GET_DISTANCE_BETWEEN_ENDS, Handle);
 			set => Function.Call(Hash.ROPE_FORCE_LENGTH, Handle, value);
 		}
 

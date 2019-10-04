@@ -40,7 +40,7 @@ namespace GTA.UI
 		/// </summary>
 		public static void ShowCursorThisFrame()
 		{
-			Function.Call(Hash._SHOW_CURSOR_THIS_FRAME);
+			Function.Call(Hash._SET_MOUSE_CURSOR_ACTIVE_THIS_FRAME);
 		}
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace GTA.UI
 		public static CursorSprite CursorSprite
 		{
 			get { return (CursorSprite)SHVDN.NativeMemory.CursorSprite; }
-			set { Function.Call(Hash._SET_CURSOR_SPRITE, value); }
+			set { Function.Call(Hash._SET_MOUSE_CURSOR_SPRITE, value); }
 		}
 
 		/// <summary>
