@@ -46,23 +46,24 @@ namespace GTA
 
 		public event EventHandler Tick
 		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Tick += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Tick -= value; }
-		}
-		public event KeyEventHandler KeyUp
-		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyUp += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyUp -= value; }
-		}
-		public event KeyEventHandler KeyDown
-		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyDown += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyDown -= value; }
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick -= value; }
 		}
 		public event EventHandler Aborted
 		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Aborted += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Aborted -= value; }
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted -= value; }
+		}
+
+		public event KeyEventHandler KeyUp
+		{
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp -= value; }
+		}
+		public event KeyEventHandler KeyDown
+		{
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown -= value; }
 		}
 
 		public Keys ActivateKey = Keys.NumPad5;
@@ -126,7 +127,9 @@ namespace GTA
 			{
 				if (value < 0)
 					value = 0;
-				SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval = value;
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+					s.Interval = value;
 			}
 		}
 

@@ -16,8 +16,6 @@
 
 using System;
 using System.IO;
-using System.Threading;
-using System.Collections.Concurrent;
 using WinForms = System.Windows.Forms;
 
 namespace GTA
@@ -65,26 +63,8 @@ namespace GTA
 		/// </summary>
 		public event EventHandler Tick
 		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Tick += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Tick -= value; }
-		}
-		/// <summary>
-		/// An event that is raised when a key is lifted.
-		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was lifted.
-		/// </summary>
-		public event WinForms.KeyEventHandler KeyUp
-		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyUp += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyUp -= value; }
-		}
-		/// <summary>
-		/// An event that is raised when a key is first pressed.
-		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was pressed.
-		/// </summary>
-		public event WinForms.KeyEventHandler KeyDown
-		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyDown += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).KeyDown -= value; }
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick -= value; }
 		}
 		/// <summary>
 		/// An event that is raised when this <see cref="Script"/> gets aborted for any reason.
@@ -92,8 +72,27 @@ namespace GTA
 		/// </summary>
 		public event EventHandler Aborted
 		{
-			add { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Aborted += value; }
-			remove { SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Aborted -= value; }
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted -= value; }
+		}
+
+		/// <summary>
+		/// An event that is raised when a key is lifted.
+		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was lifted.
+		/// </summary>
+		public event WinForms.KeyEventHandler KeyUp
+		{
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp -= value; }
+		}
+		/// <summary>
+		/// An event that is raised when a key is first pressed.
+		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was pressed.
+		/// </summary>
+		public event WinForms.KeyEventHandler KeyDown
+		{
+			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown += value; }
+			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown -= value; }
 		}
 
 		/// <summary>
@@ -164,7 +163,9 @@ namespace GTA
 			set {
 				if (value < 0)
 					value = 0;
-				SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval = value;
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+					s.Interval = value;
 			}
 		}
 
