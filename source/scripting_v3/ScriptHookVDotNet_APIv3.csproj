@@ -166,8 +166,6 @@
     <Compile Include="GTA\MarkerType.cs" />
     <Compile Include="GTA\MaterialHash.cs" />
     <Compile Include="GTA\ParachuteTint.cs" />
-    <Compile Include="GTA\Particles\CoordinateParticleEffect.cs" />
-    <Compile Include="GTA\Particles\EntityParticleEffect.cs" />
     <Compile Include="GTA\Particles\ParticleEffect.cs" />
     <Compile Include="GTA\Particles\ParticleEffectAsset.cs" />
     <Compile Include="GTA\Pickup.cs" />

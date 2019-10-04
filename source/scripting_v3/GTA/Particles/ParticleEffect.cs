@@ -10,63 +10,51 @@ using System.Drawing;
 
 namespace GTA
 {
-	public abstract class ParticleEffect
+	public sealed class ParticleEffect : PoolObject
 	{
-		#region Fields
-		protected readonly ParticleEffectAsset _asset;
-		protected readonly string _effectName;
-		protected Vector3 _offset;
-		protected Vector3 _rotation;
-		protected Color _color;
-		protected float _scale;
-		protected float _range;
-		protected InvertAxis _InvertAxis;
-		#endregion
-
-		internal ParticleEffect(ParticleEffectAsset asset, string effectName)
+		internal ParticleEffect(int handle, string assetName, string effectName, EntityBone entityBone) : base(handle)
 		{
-			Handle = -1;
-			_asset = asset;
-			_effectName = effectName;
-		}
-
-		/// <summary>
-		/// Gets the Handle of this <see cref="ParticleEffect"/>
-		/// </summary>
-		/// <value>
-		/// The handle, will return -1 when the this <see cref="ParticleEffect"/> is not active
-		/// </value>
-		public int Handle
-		{
-			get; protected set;
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="ParticleEffect"/> is active.
-		/// </summary>
-		/// <value>
-		///   <c>true</c> if this <see cref="ParticleEffect"/> is active; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsActive => Handle != -1 && Function.Call<bool>(Hash.DOES_PARTICLE_FX_LOOPED_EXIST, Handle);
-
-		public abstract bool Start();
-
-		/// <summary>
-		/// Deletes this <see cref="ParticleEffect"/>.
-		/// </summary>
-		public void Stop()
-		{
-			if (IsActive)
-			{
-				Function.Call(Hash.REMOVE_PARTICLE_FX, Handle, false);
-			}
-			Handle = -1;
+			AssetName = assetName;
+			EffectName = effectName;
+			Bone = entityBone;
 		}
 
 		/// <summary>
 		/// Gets the memory address where this <see cref="ParticleEffect"/> is located in game memory.
 		/// </summary>
-		public IntPtr MemoryAddress => IsActive ? SHVDN.NativeMemory.GetPtfxAddress(Handle) : IntPtr.Zero;
+		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetPtfxAddress(Handle);
+
+		/// <summary>
+		/// Gets the <see cref="GTA.Entity"/> this <see cref="ParticleEffect"/> is attached to or <c>null</c> if there is none.
+		/// </summary>
+		public Entity Entity
+		{
+			get => Bone?.Owner;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="EntityBone"/> that this <see cref="ParticleEffect"/> is attached to or <c>null</c> if there is none.
+		/// </summary>
+		public EntityBone Bone
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the name of the asset used for this <see cref="ParticleEffect"/>.
+		/// </summary>
+		public string AssetName
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the name of the effect used for this <see cref="ParticleEffect"/>.
+		/// </summary>
+		public string EffectName
+		{
+			get;
+		}
 
 		/// <summary>
 		/// Gets or sets the offset.
@@ -78,49 +66,35 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					address = SHVDN.NativeMemory.ReadAddress(address + 32);
-					if (address != IntPtr.Zero)
-					{
-						return _offset = new Vector3(SHVDN.NativeMemory.ReadVector3(address + 144));
-					}
-				}
-				return _offset;
+				if (address == IntPtr.Zero)
+					return Vector3.Zero;
+				address = SHVDN.NativeMemory.ReadAddress(address + 32);
+				if (address == IntPtr.Zero)
+					return Vector3.Zero;
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 144));
 			}
 			set
 			{
-				_offset = value;
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					address = SHVDN.NativeMemory.ReadAddress(address + 32);
-					if (address != IntPtr.Zero)
-					{
-						SHVDN.NativeMemory.WriteVector3(address + 144, value.ToArray());
-					}
-				}
+				if (address == IntPtr.Zero)
+					return;
+				address = SHVDN.NativeMemory.ReadAddress(address + 32);
+				if (address == IntPtr.Zero)
+					return;
+				SHVDN.NativeMemory.WriteVector3(address + 144, value.ToArray());
 			}
 		}
 
 		/// <summary>
-		/// Gets or Sets the rotation of this <see cref="ParticleEffect"/>
+		/// Sets the rotation of this <see cref="ParticleEffect"/>
 		/// </summary>
 		public Vector3 Rotation
 		{
-			get
-			{
-				return _rotation;
-			}
 			set
 			{
-				_rotation = value;
-				if (IsActive)
-				{
-					//rotation information is stored in a matrix
-					Vector3 off = Offset;
-					Function.Call(Hash.SET_PARTICLE_FX_LOOPED_OFFSETS, Handle, off.X, off.Y, off.Z, value.X, value.Y, value.Z);
-				}
+				// Rotation information is stored in a matrix
+				var currentOffset = Offset;
+				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_OFFSETS, Handle, currentOffset.X, currentOffset.Y, currentOffset.Z, value.X, value.Y, value.Z);
 			}
 		}
 
@@ -132,29 +106,25 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
-					byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
-					byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
-					byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
-					byte a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
-					return _color = Color.FromArgb(a, r, g, b);
-				}
-				return _color;
+				if (address == IntPtr.Zero)
+					return default;
+				address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
+				byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
+				byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
+				byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
+				byte a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
+				return  Color.FromArgb(a, r, g, b);
 			}
 			set
 			{
-				_color = value;
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
-					SHVDN.NativeMemory.WriteFloat(address, value.R / 255f);
-					SHVDN.NativeMemory.WriteFloat(address + 4, value.G / 255f);
-					SHVDN.NativeMemory.WriteFloat(address + 8, value.B / 255f);
-					SHVDN.NativeMemory.WriteFloat(address + 12, value.A / 255f);
-				}
+				if (address == IntPtr.Zero)
+					return;
+				address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
+				SHVDN.NativeMemory.WriteFloat(address, value.R / 255f);
+				SHVDN.NativeMemory.WriteFloat(address + 4, value.G / 255f);
+				SHVDN.NativeMemory.WriteFloat(address + 8, value.B / 255f);
+				SHVDN.NativeMemory.WriteFloat(address + 12, value.A / 255f);
 			}
 		}
 
@@ -171,20 +141,16 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					return _scale = SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336);
-				}
-				return _scale;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+				return SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336);
 			}
 			set
 			{
-				_scale = value;
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					SHVDN.NativeMemory.WriteFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336, value);
-				}
+				if (address == IntPtr.Zero)
+					return;
+				SHVDN.NativeMemory.WriteFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336, value);
 			}
 		}
 
@@ -196,37 +162,11 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address != IntPtr.Zero)
-				{
-					return _range = SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 384);
-				}
-				return _range;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+				return SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 384);
 			}
-			set
-			{
-				_range = value;
-				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_FAR_CLIP_DIST, Handle, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets which axis of this <see cref="ParticleEffect"/> should be inverted.
-		/// </summary>
-		public InvertAxis InvertAxis
-		{
-			get
-			{
-				return _InvertAxis;
-			}
-			set
-			{
-				_InvertAxis = value;
-				if (IsActive)
-				{
-					Stop();
-					Start();
-				}
-			}
+			set => Function.Call(Hash.SET_PARTICLE_FX_LOOPED_FAR_CLIP_DIST, Handle, value);
 		}
 
 		/// <summary>
@@ -236,29 +176,71 @@ namespace GTA
 		/// <param name="value">The new value for the parameter.</param>
 		public void SetParameter(string parameterName, float value)
 		{
-			if (IsActive)
-			{
-				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, parameterName, value, 0);
-			}
+			Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, parameterName, value, 0);
 		}
 
 		/// <summary>
-		/// Gets the name of the asset this effect is stored in.
+		/// Stops and removes this <see cref="ParticleEffect"/>.
 		/// </summary>
-		public string AssetName => _asset.AssetName;
+		public override void Delete()
+		{
+			Function.Call(Hash.REMOVE_PARTICLE_FX, Handle, false);
+		}
 
 		/// <summary>
-		/// Gets the name of this effect.
+		/// Determines if this <see cref="Checkpoint"/> exists.
 		/// </summary>
-		public string EffectName => _effectName;
+		/// <returns><c>true</c> if this <see cref="Checkpoint"/> exists; otherwise, <c>false</c>.</returns>
+		public override bool Exists()
+		{
+			return Function.Call<bool>(Hash.DOES_PARTICLE_FX_LOOPED_EXIST, Handle);
+		}
 
 		/// <summary>
-		/// Converts a <see cref="RelationshipGroup"/> to a native input argument.
+		/// Determines if an <see cref="object"/> refers to the same effect as this <see cref="ParticleEffect"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is the same effect as this <see cref="ParticleEffect"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj)
+		{
+			if (obj is ParticleEffect effect)
+				return Handle == effect.Handle;
+			return false;
+		}
+
+		/// <summary>
+		/// Determines if two <see cref="ParticleEffect"/>s refer to the same effect.
+		/// </summary>
+		/// <param name="left">The left <see cref="ParticleEffect"/>.</param>
+		/// <param name="right">The right <see cref="ParticleEffect"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is the same effect as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		public static bool operator ==(ParticleEffect left, ParticleEffect right)
+		{
+			return left is null ? right is null : left.Equals(right);
+		}
+		/// <summary>
+		/// Determines if two <see cref="ParticleEffect"/>s don't refer to the same effect.
+		/// </summary>
+		/// <param name="left">The left <see cref="ParticleEffect"/>.</param>
+		/// <param name="right">The right <see cref="ParticleEffect"/>.</param>
+		/// <returns><c>true</c> if <paramref name="left"/> is not the same effect as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		public static bool operator !=(ParticleEffect left, ParticleEffect right)
+		{
+			return !(left == right);
+		}
+
+		/// <summary>
+		/// Converts a <see cref="ParticleEffect"/> to a native input argument.
 		/// </summary>
 		public static implicit operator InputArgument(ParticleEffect effect)
 		{
 			//we only need to worry about supplying a particle effect to a native, never returning one
 			return new InputArgument(effect.Handle);
+		}
+
+		public override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 
 		public override string ToString()

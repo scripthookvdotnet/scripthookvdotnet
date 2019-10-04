@@ -36,6 +36,21 @@ namespace GTA
 			get;
 		}
 
+		/// <summary>
+		/// Sets the <see cref="Color"/> for all NonLooped Particle Effects
+		/// </summary>
+		public static Color NonLoopedColor
+		{
+			set
+			{
+				Function.Call(Hash.SET_PARTICLE_FX_NON_LOOPED_COLOUR, value.R / 255f, value.G / 255f, value.B / 255f);
+				Function.Call(Hash.SET_PARTICLE_FX_NON_LOOPED_ALPHA, value.A / 255f);
+			}
+		}
+
+		/// <summary>
+		/// Make this the current particle asset.
+		/// </summary>
 		internal bool UseNext()
 		{
 			Request();
@@ -45,142 +60,6 @@ namespace GTA
 				return true;
 			}
 			return false;
-		}
-
-		/// <summary>
-		/// Starts a Particle Effect that runs once at a given position then is destroyed.
-		/// </summary>
-		/// <param name="effectName">The name of the effect.</param>
-		/// <param name="pos">The World position where the effect is.</param>
-		/// <param name="rot">What rotation to apply to the effect.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in.</param>
-		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedAtCoord(string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
-		{
-			if (!UseNext())
-				return false;
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
-		}
-
-		/// <summary>
-		/// Starts a Particle Effect on an <see cref="Entity"/> that runs once then is destroyed.
-		/// </summary>
-		/// <param name="effectName">the name of the effect.</param>
-		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
-		/// <param name="off">The offset from the <paramref name="entity"/> to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
-		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
-		{
-			if (!UseNext())
-				return false;
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
-		}
-		/// <summary>
-		/// Starts a Particle Effect on an <see cref="EntityBone"/> that runs once then is destroyed.
-		/// </summary>
-		/// <param name="effectName">the name of the effect.</param>
-		/// <param name="entityBone">The <see cref="EntityBone"/> the effect is attached to.</param>
-		/// <param name="off">The offset from the <paramref name="entityBone"/> to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
-		/// <returns><c>true</c>If the effect was able to start; otherwise, <c>false</c>.</returns>
-		public bool StartNonLoopedOnEntity(string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None)
-		{
-			if (!UseNext())
-				return false;
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxis.X), invertAxis.HasFlag(InvertAxis.Y), invertAxis.HasFlag(InvertAxis.Z));
-		}
-
-		/// <summary>
-		/// Creates a <see cref="ParticleEffect"/> on an <see cref="Entity"/> that runs looped.
-		/// </summary>
-		/// <param name="effectName">The name of the Effect</param>
-		/// <param name="entity">The <see cref="Entity"/> the effect is attached to.</param>
-		/// <param name="off">The offset from the <paramref name="entity"/> to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
-		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
-		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public EntityParticleEffect CreateEffectOnEntity(string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
-		{
-			var result = new EntityParticleEffect(this, effectName, entity) {
-				Offset = off,
-				Rotation = rot,
-				Scale = scale,
-				InvertAxis = invertAxis
-			};
-			if (startNow)
-			{
-				result.Start();
-			}
-			return result;
-		}
-		/// <summary>
-		/// Creates a <see cref="ParticleEffect"/> on an <see cref="EntityBone"/> that runs looped.
-		/// </summary>
-		/// <param name="effectName">The name of the Effect</param>
-		/// <param name="entityBone">The <see cref="EntityBone"/> the effect is attached to.</param>
-		/// <param name="off">The offset from the <paramref name="entityBone"/> to attach the effect.</param>
-		/// <param name="rot">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis.</param>
-		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
-		/// <returns>The <see cref="EntityParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public EntityParticleEffect CreateEffectOnEntity(string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
-		{
-			var result = new EntityParticleEffect(this, effectName, entityBone) {
-				Offset = off,
-				Rotation = rot,
-				Scale = scale,
-				InvertAxis = invertAxis
-			};
-			if (startNow)
-			{
-				result.Start();
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// Creates a <see cref="ParticleEffect"/> at a position that runs looped.
-		/// </summary>
-		/// <param name="effectName">The name of the effect.</param>
-		/// <param name="pos">The World position where the effect is.</param>
-		/// <param name="rot">What rotation to apply to the effect.</param>
-		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in.</param>
-		/// <param name="startNow">if <c>true</c> attempt to start this effect now; otherwise, the effect will start when <see cref="ParticleEffect.Start"/> is called.</param>
-		/// <returns>The <see cref="CoordinateParticleEffect"/> represented by this that can be used to start/stop/modify this effect</returns>
-		public CoordinateParticleEffect CreateEffectAtCoord(string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxis invertAxis = InvertAxis.None, bool startNow = false)
-		{
-			var result = new CoordinateParticleEffect(this, effectName, pos) {
-				Rotation = rot,
-				Scale = scale,
-				InvertAxis = invertAxis
-			};
-			if (startNow)
-			{
-				result.Start();
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// Sets the <see cref="Color"/> for all NonLooped Particle Effects
-		/// </summary>
-		static Color NonLoopedColor
-		{
-			set
-			{
-				Function.Call(Hash.SET_PARTICLE_FX_NON_LOOPED_COLOUR, value.R / 255f, value.G / 255f, value.B / 255f);
-				Function.Call(Hash.SET_PARTICLE_FX_NON_LOOPED_ALPHA, value.A / 255f);
-			}
 		}
 
 		/// <summary>
