@@ -111,11 +111,11 @@
     <Compile Include="GTA\Entities\Peds\PedBone.cs" />
     <Compile Include="GTA\Entities\Peds\PedBoneCollection.cs" />
     <Compile Include="GTA\Entities\Peds\PedComponent.cs" />
-    <Compile Include="GTA\Entities\Peds\PedComponents.cs" />
+    <Compile Include="GTA\Entities\Peds\PedComponentType.cs" />
     <Compile Include="GTA\Entities\Peds\PedGroup.cs" />
     <Compile Include="GTA\Entities\Peds\PedHash.cs" />
     <Compile Include="GTA\Entities\Peds\PedProp.cs" />
-    <Compile Include="GTA\Entities\Peds\PedProps.cs" />
+    <Compile Include="GTA\Entities\Peds\PedPropType.cs" />
     <Compile Include="GTA\Entities\Peds\PedVariation.cs" />
     <Compile Include="GTA\Entities\Peds\RagdollType.cs" />
     <Compile Include="GTA\Entities\Peds\Relationship.cs" />

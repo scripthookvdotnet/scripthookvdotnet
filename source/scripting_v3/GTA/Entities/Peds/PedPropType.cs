@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum PedProps
+	public enum PedPropType
 	{
 		Hats,
 		Glasses,

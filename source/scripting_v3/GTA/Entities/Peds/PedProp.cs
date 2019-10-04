@@ -11,16 +11,16 @@ namespace GTA
 	{
 		#region Fields
 		readonly Ped _ped;
-		readonly PedProps _propId;
+		readonly PedPropType _propId;
 		#endregion
 
-		internal PedProp(Ped ped, PedProps propId)
+		internal PedProp(Ped ped, PedPropType propId)
 		{
 			_ped = ped;
 			_propId = propId;
 		}
 
-		public PedProps PropType => _propId;
+		public PedPropType PropType => _propId;
 
 		public string Name => _propId.ToString();
 

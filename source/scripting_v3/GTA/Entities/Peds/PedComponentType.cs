@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum PedComponents
+	public enum PedComponentType
 	{
 		Face,
 		Head,

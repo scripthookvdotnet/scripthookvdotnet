@@ -13,8 +13,8 @@ namespace GTA
 	{
 		#region Fields
 		Ped _ped;
-		Dictionary<PedComponents, PedComponent> _pedComponents = new Dictionary<PedComponents, PedComponent>();
-		Dictionary<PedProps, PedProp> _pedProps = new Dictionary<PedProps, PedProp>();
+		Dictionary<PedComponentType, PedComponent> _pedComponents = new Dictionary<PedComponentType, PedComponent>();
+		Dictionary<PedPropType, PedProp> _pedProps = new Dictionary<PedPropType, PedProp>();
 		#endregion
 
 		internal Style(Ped ped)
@@ -22,7 +22,7 @@ namespace GTA
 			_ped = ped;
 		}
 
-		public PedComponent this[PedComponents componentId]
+		public PedComponent this[PedComponentType componentId]
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace GTA
 			}
 		}
 
-		public PedProp this[PedProps propId]
+		public PedProp this[PedPropType propId]
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace GTA
 		public PedComponent[] GetAllComponents()
 		{
 			List<PedComponent> components = new List<PedComponent>();
-			foreach (PedComponents componentId in Enum.GetValues(typeof(PedComponents)))
+			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
 			{
 				PedComponent component = this[componentId];
 				if (component.HasAnyVariations)
@@ -67,7 +67,7 @@ namespace GTA
 		public PedProp[] GetAllProps()
 		{
 			List<PedProp> props = new List<PedProp>();
-			foreach (PedProps propId in Enum.GetValues(typeof(PedProps)))
+			foreach (PedPropType propId in Enum.GetValues(typeof(PedPropType)))
 			{
 				PedProp prop = this[propId];
 				if (prop.HasAnyVariations)

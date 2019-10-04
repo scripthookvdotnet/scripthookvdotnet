@@ -11,16 +11,16 @@ namespace GTA
 	{
 		#region Fields
 		readonly Ped _ped;
-		readonly PedComponents _componentdId;
+		readonly PedComponentType _componentdId;
 		#endregion
 
-		internal PedComponent(Ped ped, PedComponents componentId)
+		internal PedComponent(Ped ped, PedComponentType componentId)
 		{
 			_ped = ped;
 			_componentdId = componentId;
 		}
 
-		public PedComponents ComponentType => _componentdId;
+		public PedComponentType ComponentType => _componentdId;
 
 		public string Name => _componentdId.ToString();
 
