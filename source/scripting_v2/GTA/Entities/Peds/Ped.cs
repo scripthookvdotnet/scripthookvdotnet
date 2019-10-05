@@ -160,7 +160,7 @@ namespace GTA
 
 		public PedGroup CurrentPedGroup => IsInGroup ? Function.Call<PedGroup>(Hash.GET_PED_GROUP_INDEX, Handle, false) : null;
 
-		public Vehicle CurrentVehicle => Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false);
+		public Vehicle CurrentVehicle => IsInVehicle() ? Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false) : null;
 
 		public bool DiesInstantlyInWater
 		{
