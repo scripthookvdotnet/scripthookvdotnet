@@ -13,8 +13,14 @@ namespace GTA
 	/// </summary>
 	public interface ISpatial
 	{
-		Vector3 Position { get; set; }
-		Vector3 Rotation { get; set; }
+		Vector3 Position
+		{
+			get; set;
+		}
+		Vector3 Rotation
+		{
+			get; set;
+		}
 	}
 
 	/// <summary>
@@ -46,15 +52,18 @@ namespace GTA
 		/// <summary>
 		/// The handle of the object.
 		/// </summary>
-		public int Handle { get; protected set; }
+		public int Handle
+		{
+			get; protected set;
+		}
 
 		/// <summary>
 		/// The handle of the object translated to a native value.
 		/// </summary>
 		public ulong NativeValue
 		{
-			get { return (ulong)Handle; }
-			set { Handle = unchecked((int)value); }
+			get => (ulong)Handle;
+			set => Handle = unchecked((int)value);
 		}
 
 		public abstract bool Exists();

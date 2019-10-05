@@ -3,50 +3,55 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using GTA.Native;
 
 namespace GTA
 {
-	public class PedGroup : PoolObject,IEnumerable<Ped>, IDisposable
+	public class PedGroup : PoolObject, IEnumerable<Ped>, IDisposable
 	{
 		public class Enumerator : IEnumerator<Ped>
 		{
+			#region Fields
+			readonly PedGroup collection;
+			Ped current;
+			int currentIndex = -2;
+			#endregion
+
 			public Enumerator(PedGroup group)
 			{
-				_group = group;
+				collection = group;
 			}
 
-			PedGroup _group;
-			Ped _current;
-			int _currentIndex = -2;
+			public Ped Current => current;
 
-			Ped IEnumerator<Ped>.Current => _current;
-			object IEnumerator.Current => _current;
+			object IEnumerator.Current => current;
 
-			public virtual bool MoveNext()
-			{
-				if (_currentIndex < (_group.MemberCount - 1))
-				{
-					_currentIndex++;
-					_current = _currentIndex < 0 ? _group.Leader : _group.GetMember(_currentIndex);
-
-					if (_current?.Exists() == true)
-						return true;
-
-					return MoveNext();
-				}
-
-				return false;
-			}
-			public virtual void Reset()
+			public void Reset()
 			{
 			}
 
 			public void Dispose()
 			{
+			}
+
+			public bool MoveNext()
+			{
+				if (currentIndex++ < (collection.MemberCount - 1))
+				{
+					current = currentIndex < 0 ? collection.Leader : collection.GetMember(currentIndex);
+
+					if (current?.Exists() == true)
+					{
+						return true;
+					}
+
+					return MoveNext();
+				}
+
+				return false;
 			}
 		}
 
@@ -74,42 +79,29 @@ namespace GTA
 		{
 			get
 			{
-			    long unknBool;
-			    int count;
+				long unknBool;
+				int count;
 				unsafe
 				{
 					Function.Call(Hash.GET_GROUP_SIZE, Handle, &unknBool, &count);
 				}
-
 				return count;
 			}
 		}
 
 		public float SeparationRange
 		{
-			set
-			{
-				Function.Call(Hash.SET_GROUP_SEPARATION_RANGE, Handle, value);
-			}
+			set => Function.Call(Hash.SET_GROUP_SEPARATION_RANGE, Handle, value);
 		}
-		public FormationType FormationType
+
+		public Formation Formation
 		{
-			set
-			{
-				Function.Call(Hash.SET_GROUP_FORMATION, Handle, value);
-			}
+			set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, value);
 		}
 
 		public void Add(Ped ped, bool leader)
 		{
-			if (leader)
-			{
-				Function.Call(Hash.SET_PED_AS_GROUP_LEADER, ped.Handle, Handle);
-			}
-			else
-			{
-				Function.Call(Hash.SET_PED_AS_GROUP_MEMBER, ped.Handle, Handle);
-			}
+			Function.Call(leader ? Hash.SET_PED_AS_GROUP_LEADER : Hash.SET_PED_AS_GROUP_MEMBER, ped.Handle, Handle);
 		}
 		public void Remove(Ped ped)
 		{
@@ -128,11 +120,12 @@ namespace GTA
 			return new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index));
 		}
 
-		public Ped[] ToArray(bool includingLeader)
+		public Ped[] ToArray(bool includingLeader = true)
 		{
 			return ToList(includingLeader).ToArray();
 		}
-		public List<Ped> ToList(bool includingLeader)
+
+		public List<Ped> ToList(bool includingLeader = true)
 		{
 			var result = new List<Ped>();
 
@@ -184,7 +177,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is PedGroup group)
+			{
 				return Handle == group.Handle;
+			}
+
 			return false;
 		}
 

@@ -15,6 +15,7 @@ namespace GTA
 		{
 			get; set;
 		}
+
 		int TextureCount
 		{
 			get;
@@ -24,8 +25,13 @@ namespace GTA
 			get; set;
 		}
 
-		bool IsVariationValid(int index, int textureIndex = 0);
+		string Name
+		{
+			get;
+		}
+
 		bool SetVariation(int index, int textureIndex = 0);
+		bool IsVariationValid(int index, int textureIndex = 0);
 
 		bool HasVariations
 		{
@@ -36,10 +42,6 @@ namespace GTA
 			get;
 		}
 		bool HasAnyVariations
-		{
-			get;
-		}
-		string Name
 		{
 			get;
 		}

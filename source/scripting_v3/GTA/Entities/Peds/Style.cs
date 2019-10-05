@@ -3,18 +3,18 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System;
 using System.Collections.Generic;
-using GTA.Native;
 
 namespace GTA
 {
-	public class Style
+	public sealed class Style
 	{
 		#region Fields
-		Ped _ped;
-		Dictionary<PedComponentType, PedComponent> _pedComponents = new Dictionary<PedComponentType, PedComponent>();
+		readonly Ped _ped;
 		Dictionary<PedPropType, PedProp> _pedProps = new Dictionary<PedPropType, PedProp>();
+		Dictionary<PedComponentType, PedComponent> _pedComponents = new Dictionary<PedComponentType, PedComponent>();
 		#endregion
 
 		internal Style(Ped ped)
@@ -22,26 +22,11 @@ namespace GTA
 			_ped = ped;
 		}
 
-		public PedComponent this[PedComponentType componentId]
-		{
-			get
-			{
-				PedComponent variation = null;
-				if (!_pedComponents.TryGetValue(componentId, out variation))
-				{
-					variation = new PedComponent(_ped, componentId);
-					_pedComponents.Add(componentId, variation);
-				}
-				return variation;
-			}
-		}
-
 		public PedProp this[PedPropType propId]
 		{
 			get
 			{
-				PedProp prop = null;
-				if (!_pedProps.TryGetValue(propId, out prop))
+				if (!_pedProps.TryGetValue(propId, out PedProp prop))
 				{
 					prop = new PedProp(_ped, propId);
 					_pedProps.Add(propId, prop);
@@ -50,23 +35,22 @@ namespace GTA
 			}
 		}
 
-		public PedComponent[] GetAllComponents()
+		public PedComponent this[PedComponentType componentId]
 		{
-			List<PedComponent> components = new List<PedComponent>();
-			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
+			get
 			{
-				PedComponent component = this[componentId];
-				if (component.HasAnyVariations)
+				if (!_pedComponents.TryGetValue(componentId, out PedComponent variation))
 				{
-					components.Add(component);
+					variation = new PedComponent(_ped, componentId);
+					_pedComponents.Add(componentId, variation);
 				}
+				return variation;
 			}
-			return components.ToArray();
 		}
 
 		public PedProp[] GetAllProps()
 		{
-			List<PedProp> props = new List<PedProp>();
+			var props = new List<PedProp>();
 			foreach (PedPropType propId in Enum.GetValues(typeof(PedPropType)))
 			{
 				PedProp prop = this[propId];
@@ -78,9 +62,23 @@ namespace GTA
 			return props.ToArray();
 		}
 
+		public PedComponent[] GetAllComponents()
+		{
+			var components = new List<PedComponent>();
+			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
+			{
+				PedComponent component = this[componentId];
+				if (component.HasAnyVariations)
+				{
+					components.Add(component);
+				}
+			}
+			return components.ToArray();
+		}
+
 		public IPedVariation[] GetAllVariations()
 		{
-			List<IPedVariation> variations = new List<IPedVariation>();
+			var variations = new List<IPedVariation>();
 			variations.AddRange(GetAllComponents());
 			variations.AddRange(GetAllProps());
 			return variations.ToArray();
@@ -89,6 +87,16 @@ namespace GTA
 		public IEnumerator<IPedVariation> GetEnumerator()
 		{
 			return (GetAllVariations() as IEnumerable<IPedVariation>).GetEnumerator();
+		}
+
+		public void ClearProps()
+		{
+			Function.Call(Hash.CLEAR_ALL_PED_PROPS, _ped.Handle);
+		}
+
+		public void RandomizeProps()
+		{
+			Function.Call(Hash.SET_PED_RANDOM_PROPS, _ped.Handle);
 		}
 
 		public void RandomizeOutfit()
@@ -104,19 +112,10 @@ namespace GTA
 			}
 			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, _ped.Handle, false);
 		}
+
 		public void SetDefaultClothes()
 		{
 			Function.Call(Hash.SET_PED_DEFAULT_COMPONENT_VARIATION, _ped.Handle);
-		}
-
-		public void RandomizeProps()
-		{
-			Function.Call(Hash.SET_PED_RANDOM_PROPS, _ped.Handle);
-		}
-
-		public void ClearProps()
-		{
-			Function.Call(Hash.CLEAR_ALL_PED_PROPS, _ped.Handle);
 		}
 	}
 }

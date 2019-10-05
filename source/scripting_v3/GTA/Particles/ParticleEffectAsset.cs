@@ -3,7 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using GTA.Math;
 using GTA.Native;
 using System;
 using System.Drawing;
@@ -109,8 +108,20 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is ParticleEffectAsset asset)
+			{
 				return Equals(asset);
+			}
+
 			return false;
+		}
+
+		public static bool operator ==(ParticleEffectAsset left, ParticleEffectAsset right)
+		{
+			return left.Equals(right);
+		}
+		public static bool operator !=(ParticleEffectAsset left, ParticleEffectAsset right)
+		{
+			return !left.Equals(right);
 		}
 
 		/// <summary>

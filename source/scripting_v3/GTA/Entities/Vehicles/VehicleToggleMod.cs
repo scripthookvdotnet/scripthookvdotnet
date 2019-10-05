@@ -9,33 +9,33 @@ namespace GTA
 {
 	public sealed class VehicleToggleMod
 	{
-		#region Fields
-
-		Vehicle _owner;
-
-		#endregion
-
 		internal VehicleToggleMod(Vehicle owner, VehicleToggleModType modType)
 		{
-			_owner = owner;
-			ModType = modType;
+			Vehicle = owner;
+			Type = modType;
 		}
 
-		public VehicleToggleModType ModType { get; private set; }
-
-		public bool IsInstalled
+		public Vehicle Vehicle
 		{
-			get { return Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, _owner.Handle, ModType); }
-			set { Function.Call(Hash.TOGGLE_VEHICLE_MOD, _owner.Handle, ModType, value); }
+			get;
 		}
 
-		public string LocalizedModTypeName => Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, ModType);
-
-		public Vehicle Vehicle => _owner;
+		public VehicleToggleModType Type
+		{
+			get;
+		}
 
 		public void Remove()
 		{
-			Function.Call(Hash.REMOVE_VEHICLE_MOD, _owner.Handle, ModType);
+			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, Type);
 		}
+
+		public bool IsInstalled
+		{
+			get => Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Vehicle.Handle, Type);
+			set => Function.Call(Hash.TOGGLE_VEHICLE_MOD, Vehicle.Handle, Type, value);
+		}
+
+		public string LocalizedTypeName => Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, Type);
 	}
 }

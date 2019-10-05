@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum FormationType
+	public enum Formation
 	{
 		Default,
 		Circle1,

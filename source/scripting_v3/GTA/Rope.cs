@@ -3,7 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
 
@@ -148,7 +147,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Rope rope)
+			{
 				return Handle == rope.Handle;
+			}
+
 			return false;
 		}
 

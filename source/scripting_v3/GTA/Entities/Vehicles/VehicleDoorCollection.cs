@@ -11,10 +11,8 @@ namespace GTA
 	public sealed class VehicleDoorCollection
 	{
 		#region Fields
-
-		Vehicle _owner;
+		readonly Vehicle _owner;
 		readonly Dictionary<VehicleDoorIndex, VehicleDoor> _vehicleDoors = new Dictionary<VehicleDoorIndex, VehicleDoor>();
-
 		#endregion
 
 		internal VehicleDoorCollection(Vehicle owner)
@@ -26,9 +24,7 @@ namespace GTA
 		{
 			get
 			{
-				VehicleDoor vehicleDoor = null;
-
-				if (!_vehicleDoors.TryGetValue(index, out vehicleDoor))
+				if (!_vehicleDoors.TryGetValue(index, out VehicleDoor vehicleDoor))
 				{
 					vehicleDoor = new VehicleDoor(_owner, index);
 					_vehicleDoors.Add(index, vehicleDoor);
@@ -38,40 +34,42 @@ namespace GTA
 			}
 		}
 
-		public bool HasDoor(VehicleDoorIndex door)
+		public bool Contains(VehicleDoorIndex door)
 		{
 			switch (door)
 			{
 				case VehicleDoorIndex.FrontLeftDoor:
-					return _owner.Bones.HasBone("door_dside_f");
+					return _owner.Bones.Contains("door_dside_f");
 				case VehicleDoorIndex.FrontRightDoor:
-					return _owner.Bones.HasBone("door_pside_f");
+					return _owner.Bones.Contains("door_pside_f");
 				case VehicleDoorIndex.BackLeftDoor:
-					return _owner.Bones.HasBone("door_dside_r");
+					return _owner.Bones.Contains("door_dside_r");
 				case VehicleDoorIndex.BackRightDoor:
-					return _owner.Bones.HasBone("door_pside_r");
+					return _owner.Bones.Contains("door_pside_r");
 				case VehicleDoorIndex.Hood:
-					return _owner.Bones.HasBone("bonnet");
+					return _owner.Bones.Contains("bonnet");
 				case VehicleDoorIndex.Trunk:
-					return _owner.Bones.HasBone("boot");
+					return _owner.Bones.Contains("boot");
 			}
 			return false;
 		}
 
-		public VehicleDoor[] GetAll()
+		public VehicleDoor[] ToArray()
 		{
 			var result = new List<VehicleDoor>();
 			foreach (VehicleDoorIndex doorindex in Enum.GetValues(typeof(VehicleDoorIndex)))
 			{
-				if (HasDoor(doorindex))
+				if (Contains(doorindex))
+				{
 					result.Add(this[doorindex]);
+				}
 			}
 			return result.ToArray();
 		}
 
 		public IEnumerator<VehicleDoor> GetEnumerator()
 		{
-			return (GetAll() as IEnumerable<VehicleDoor>).GetEnumerator();
+			return (ToArray() as IEnumerable<VehicleDoor>).GetEnumerator();
 		}
 
 	}

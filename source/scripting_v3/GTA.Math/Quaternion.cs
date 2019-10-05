@@ -108,11 +108,15 @@ namespace GTA.Math
 			get
 			{
 				if (Length() != 1.0f)
+				{
 					return Vector3.Zero;
+				}
 
 				float length = 1.0f - (W * W);
 				if (length == 0f)
+				{
 					return Vector3.UnitX;
+				}
 
 				float inv = 1.0f / (float)System.Math.Sqrt(length);
 				return new Vector3(X * inv, Y * inv, Z * inv);
@@ -468,9 +472,13 @@ namespace GTA.Math
 
 			Quaternion result = new Quaternion(blendA * a.Axis + blendB * b.Axis, blendA * a.W + blendB * b.W);
 			if (result.LengthSquared() > 0.0f)
+			{
 				return Normalize(result);
+			}
 			else
+			{
 				return Identity;
+			}
 		}
 
 		/// <summary>
@@ -947,7 +955,9 @@ namespace GTA.Math
 		public override bool Equals(object obj)
 		{
 			if (obj == null || obj.GetType() != GetType())
+			{
 				return false;
+			}
 
 			return Equals((Quaternion)(obj));
 		}

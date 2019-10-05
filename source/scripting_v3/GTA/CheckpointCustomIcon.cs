@@ -35,14 +35,18 @@ namespace GTA
 			get
 			{
 				if (_style == CheckpointCustomIconStyle.Number)
+				{
 					return Number;
+				}
 
 				return (byte)(90 + (int)_style * 10 + Number);
 			}
 			set
 			{
 				if (value > 219)
+				{
 					throw new ArgumentOutOfRangeException("The Range of possible values is 0 to 219");
+				}
 
 				if (value < 100)
 				{
@@ -71,13 +75,19 @@ namespace GTA
 				if (_style == CheckpointCustomIconStyle.Number)
 				{
 					if (value > 99)
+					{
 						throw new ArgumentOutOfRangeException("The maximum number value is 99");
+					}
+
 					_number = value;
 				}
 				else
 				{
 					if (value > 9)
+					{
 						throw new ArgumentOutOfRangeException("The maximum number value when not using CheckpointCustomIconStyle.Number is 9");
+					}
+
 					_number = value;
 				}
 			}
@@ -93,7 +103,9 @@ namespace GTA
 			{
 				_style = value;
 				if (value != CheckpointCustomIconStyle.Number && _number > 9)
+				{
 					_number = 0;
+				}
 			}
 		}
 

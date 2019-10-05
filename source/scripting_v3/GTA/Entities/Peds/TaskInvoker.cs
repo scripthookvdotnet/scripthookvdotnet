@@ -3,15 +3,17 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
 	public class TaskInvoker
 	{
+		#region Fields
 		readonly Ped _ped;
+		#endregion
 
 		internal TaskInvoker(Ped ped)
 		{

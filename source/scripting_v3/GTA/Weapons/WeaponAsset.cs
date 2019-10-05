@@ -3,8 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -21,6 +21,17 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets the hash for this <see cref="WeaponAsset"/>.
+		/// </summary>
+		public int Hash
+		{
+			get; private set;
+		}
+
+		/// <summary>
+		/// Gets the native representation of this <see cref="WeaponAsset"/>.
+		/// </summary>
 		public ulong NativeValue
 		{
 			get => (ulong)Hash;
@@ -28,21 +39,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the hash for this <see cref="WeaponAsset"/>.
-		/// </summary>
-		public int Hash { get; private set; }
-
-		/// <summary>
 		/// Gets if this <see cref="WeaponAsset"/> is valid.
 		/// </summary>
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_WEAPON_VALID, Hash);
+
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is loaded so it can be spawned.
 		/// </summary>
 		public bool IsLoaded => Function.Call<bool>(Native.Hash.HAS_WEAPON_ASSET_LOADED, Hash);
-
-		public string DisplayName => Weapon.GetDisplayNameFromHash((WeaponHash)Hash);
-		public string LocalizedName => Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash));
 
 		/// <summary>
 		/// Attempts to load this <see cref="WeaponAsset"/> into memory.
@@ -84,6 +88,10 @@ namespace GTA
 			Function.Call(Native.Hash.REMOVE_WEAPON_ASSET, Hash);
 		}
 
+		public string DisplayName => Weapon.GetDisplayNameFromHash((WeaponHash)Hash);
+
+		public string LocalizedName => Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash));
+
 		public bool Equals(WeaponAsset weaponAsset)
 		{
 			return Hash == weaponAsset.Hash;
@@ -91,7 +99,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is WeaponAsset asset)
+			{
 				return Equals(asset);
+			}
+
 			return false;
 		}
 
@@ -102,16 +113,6 @@ namespace GTA
 		public static bool operator !=(WeaponAsset left, WeaponAsset right)
 		{
 			return !left.Equals(right);
-		}
-
-		public override int GetHashCode()
-		{
-			return Hash;
-		}
-
-		public override string ToString()
-		{
-			return "0x" + Hash.ToString("X");
 		}
 
 		public static implicit operator WeaponAsset(int hash)
@@ -130,6 +131,16 @@ namespace GTA
 		public static implicit operator InputArgument(WeaponAsset value)
 		{
 			return new InputArgument((ulong)value.Hash);
+		}
+
+		public override int GetHashCode()
+		{
+			return Hash;
+		}
+
+		public override string ToString()
+		{
+			return "0x" + Hash.ToString("X");
 		}
 	}
 }

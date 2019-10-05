@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -28,16 +28,22 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets the hash for this <see cref="Model"/>.
+		/// </summary>
+		public int Hash
+		{
+			get; private set;
+		}
+
+		/// <summary>
+		/// Gets the native representation of this <see cref="Model"/>.
+		/// </summary>
 		public ulong NativeValue
 		{
 			get => (ulong)Hash;
 			set => Hash = unchecked((int)value);
 		}
-
-		/// <summary>
-		/// Gets the hash for this <see cref="Model"/>.
-		/// </summary>
-		public int Hash { get; private set; }
 
 		/// <summary>
 		/// Gets if this <see cref="Model"/> is valid.
@@ -296,7 +302,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Model model)
+			{
 				return Equals(model);
+			}
+
 			return false;
 		}
 

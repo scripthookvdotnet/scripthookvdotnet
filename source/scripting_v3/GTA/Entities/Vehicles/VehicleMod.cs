@@ -3,23 +3,17 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Collections.ObjectModel;
-using GTA.Native;
 
 namespace GTA
 {
 	public sealed class VehicleMod
 	{
 		#region Fields
-
-		Vehicle _owner;
-
-		private static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new ReadOnlyDictionary
-			<int, Tuple<string, string>>(
+		static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new ReadOnlyDictionary<int, Tuple<string, string>>(
 			new Dictionary<int, Tuple<string, string>>
 			{
 				{-1,  new Tuple<string, string>("CMOD_HRN_0", "Stock Horn")},
@@ -77,38 +71,156 @@ namespace GTA
 
 		internal VehicleMod(Vehicle owner, VehicleModType modType)
 		{
-			_owner = owner;
-			ModType = modType;
+			Vehicle = owner;
+			Type = modType;
 		}
 
-		public VehicleModType ModType { get; private set; }
+		public Vehicle Vehicle
+		{
+			get;
+		}
+
+		public VehicleModType Type
+		{
+			get;
+		}
+
+		public int Count => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Vehicle.Handle, Type);
 
 		public int Index
 		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_VEHICLE_MOD, _owner.Handle, ModType);
-			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_MOD, _owner.Handle, ModType, value, Variation);
-			}
+			get => Function.Call<int>(Hash.GET_VEHICLE_MOD, Vehicle.Handle, Type);
+			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, Type, value, Variation);
+		}
+
+		public void Remove()
+		{
+			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, Type);
 		}
 
 		public bool Variation
 		{
-			get
-			{
-				return Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, _owner.Handle, ModType);
-			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_MOD, _owner.Handle, ModType, Index, value);
-			}
-
+			get => Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, Vehicle.Handle, Type);
+			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, Type, Index, value);
 		}
 
-		public string LocalizedModTypeName
+		public string LocalizedName
+		{
+			get
+			{
+				int index = Index;
+				int count = Count;
+				// This still needs a little more work, but its better than what it used to be
+				if (count == 0)
+				{
+					return string.Empty;
+				}
+
+				if (index < -1 || index >= count)
+				{
+					return string.Empty;
+				}
+
+				if (!Function.Call<bool>(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10))
+				{
+					Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
+					Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
+				}
+				string cur;
+				if (Type == VehicleModType.Horns)
+				{
+					if (_hornNames.ContainsKey(index))
+					{
+						if (!string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
+						{
+							return Game.GetLocalizedString(_hornNames[index].Item1);
+						}
+						return _hornNames[index].Item2;
+					}
+					return string.Empty;
+				}
+				if (Type == VehicleModType.FrontWheel || Type == VehicleModType.RearWheel)
+				{
+					if (index == -1)
+					{
+						if (!Vehicle.Model.IsBike && Vehicle.Model.IsBicycle)
+						{
+							return Game.GetLocalizedString("CMOD_WHE_0");
+						}
+						else
+						{
+							return Game.GetLocalizedString("CMOD_WHE_B_0");
+						}
+					}
+					if (index >= count / 2)
+					{
+						return Game.GetLocalizedString("CHROME") + " " +
+							   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index));
+					}
+					else
+					{
+						return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index));
+					}
+				}
+
+				switch (Type)
+				{
+					case VehicleModType.Armor:
+						return Game.GetLocalizedString("CMOD_ARM_" + (index + 1).ToString());
+					case VehicleModType.Brakes:
+						return Game.GetLocalizedString("CMOD_BRA_" + (index + 1).ToString());
+					case VehicleModType.Engine:
+						if (index == -1)
+						{
+							//Engine doesn't list anything in LSC for no parts, but there is a setting with no part. so just use armours none
+							return Game.GetLocalizedString("CMOD_ARM_0");
+						}
+						return Game.GetLocalizedString("CMOD_ENG_" + (index + 2).ToString());
+					case VehicleModType.Suspension:
+						return Game.GetLocalizedString("CMOD_SUS_" + (index + 1).ToString());
+					case VehicleModType.Transmission:
+						return Game.GetLocalizedString("CMOD_GBX_" + (index + 1).ToString());
+				}
+				if (index > -1)
+				{
+					cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index);
+					if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
+					{
+						cur = Game.GetLocalizedString(cur);
+						if (cur == "" || cur == "NULL")
+						{
+							return LocalizedTypeName + " " + (index + 1).ToString();
+						}
+						return cur;
+					}
+					return LocalizedTypeName + " " + (index + 1).ToString();
+				}
+				else
+				{
+					switch (Type)
+					{
+						case VehicleModType.AirFilter:
+							if (Vehicle.Model == VehicleHash.Tornado)
+							{
+							}
+							break;
+						case VehicleModType.Struts:
+							switch ((VehicleHash)Vehicle.Model)
+							{
+								case VehicleHash.Banshee:
+								case VehicleHash.Banshee2:
+								case VehicleHash.SultanRS:
+									return Game.GetLocalizedString("CMOD_COL5_41");
+							}
+							break;
+
+					}
+					return Game.GetLocalizedString("CMOD_DEF_0");
+				}
+			}
+		}
+
+		public string LocalizedTypeName
 		{
 			get
 			{
@@ -117,8 +229,8 @@ namespace GTA
 					Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 					Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
 				}
-				string cur = "";
-				switch (ModType)
+				string cur = string.Empty;
+				switch (Type)
 				{
 					case VehicleModType.Armor:
 						cur = Game.GetLocalizedString("CMOD_MOD_ARM");
@@ -139,20 +251,25 @@ namespace GTA
 						cur = Game.GetLocalizedString("CMOD_MOD_HRN");
 						break;
 					case VehicleModType.FrontWheel:
-						if (!_owner.Model.IsBike && _owner.Model.IsBicycle)
+						if (!Vehicle.Model.IsBike && Vehicle.Model.IsBicycle)
 						{
 							cur = Game.GetLocalizedString("CMOD_MOD_WHEM");
-							if (cur == "")
+							if (cur == string.Empty)
+							{
 								return "Wheels";
+							}
 						}
 						else
+						{
 							cur = Game.GetLocalizedString("CMOD_WHE0_0");
+						}
+
 						break;
 					case VehicleModType.RearWheel:
 						cur = Game.GetLocalizedString("CMOD_WHE0_1");
 						break;
 
-					  //Bennys
+					//Bennys
 					case VehicleModType.PlateHolder:
 						cur = Game.GetLocalizedString("CMM_MOD_S0");
 						break;
@@ -160,7 +277,7 @@ namespace GTA
 						cur = Game.GetLocalizedString("CMM_MOD_S1");
 						break;
 					case VehicleModType.TrimDesign:
-						if (_owner.Model == VehicleHash.SultanRS)
+						if (Vehicle.Model == VehicleHash.SultanRS)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S2b");
 						}
@@ -206,7 +323,7 @@ namespace GTA
 						cur = Game.GetLocalizedString("CMM_MOD_S14");
 						break;
 					case VehicleModType.AirFilter:
-						if (_owner.Model == VehicleHash.SultanRS)
+						if (Vehicle.Model == VehicleHash.SultanRS)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S15b");
 						}
@@ -216,15 +333,18 @@ namespace GTA
 						}
 						break;
 					case VehicleModType.Struts:
-						if (_owner.Model == VehicleHash.SultanRS || _owner.Model == VehicleHash.Banshee2)
+						if (Vehicle.Model == VehicleHash.SultanRS || Vehicle.Model == VehicleHash.Banshee2)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S16b");
 						}
 						else
+						{
 							cur = Game.GetLocalizedString("CMM_MOD_S16");
+						}
+
 						break;
 					case VehicleModType.ArchCover:
-						if (_owner.Model == VehicleHash.SultanRS)
+						if (Vehicle.Model == VehicleHash.SultanRS)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S17b");
 						}
@@ -234,11 +354,11 @@ namespace GTA
 						}
 						break;
 					case VehicleModType.Aerials:
-						if (_owner.Model == VehicleHash.SultanRS)
+						if (Vehicle.Model == VehicleHash.SultanRS)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S18b");
 						}
-						else if (_owner.Model == VehicleHash.BType3)
+						else if (Vehicle.Model == VehicleHash.BType3)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S18c");
 						}
@@ -248,15 +368,15 @@ namespace GTA
 						}
 						break;
 					case VehicleModType.Trim:
-						if (_owner.Model == VehicleHash.SultanRS)
+						if (Vehicle.Model == VehicleHash.SultanRS)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S19b");
 						}
-						else if (_owner.Model == VehicleHash.BType3)
+						else if (Vehicle.Model == VehicleHash.BType3)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S19c");
 						}
-						else if (_owner.Model == VehicleHash.Virgo2)
+						else if (Vehicle.Model == VehicleHash.Virgo2)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S19d");
 						}
@@ -266,7 +386,7 @@ namespace GTA
 						}
 						break;
 					case VehicleModType.Tank:
-						if (_owner.Model == VehicleHash.SlamVan3)
+						if (Vehicle.Model == VehicleHash.SlamVan3)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S27");
 						}
@@ -277,7 +397,7 @@ namespace GTA
 						break;
 
 					case VehicleModType.Windows:
-						if (_owner.Model == VehicleHash.BType3)
+						if (Vehicle.Model == VehicleHash.BType3)
 						{
 							cur = Game.GetLocalizedString("CMM_MOD_S21b");
 						}
@@ -287,7 +407,7 @@ namespace GTA
 						}
 						break;
 					case (VehicleModType)47:
-						if (_owner.Model == VehicleHash.SlamVan3)
+						if (Vehicle.Model == VehicleHash.SlamVan3)
 						{
 							cur = Game.GetLocalizedString("SLVAN3_RDOOR");
 						}
@@ -301,133 +421,20 @@ namespace GTA
 						break;
 
 					default:
-						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, _owner.Handle, ModType);
+						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, Type);
 						if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 						{
 							cur = Game.GetLocalizedString(cur);
 						}
 						break;
 				}
-				if (cur == "")
+				if (cur == string.Empty)
 				{
-					cur = ModType.ToString();  //would only happen if the text isnt loaded
+					cur = Type.ToString();  //would only happen if the text isnt loaded
 				}
 				return cur;
 
 			}
-		}
-		public string LocalizedModName => GetLocalizedModName(Index);
-
-		public string GetLocalizedModName(int index)
-		{
-			//this still needs a little more work, but its better than what it used to be
-			if (ModCount == 0)
-				return "";
-			if (index < -1 || index >= ModCount)
-				return "";
-			if (!Function.Call<bool>(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10))
-			{
-				Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
-				Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
-			}
-			string cur;
-			if (ModType == VehicleModType.Horns)
-			{
-				if (_hornNames.ContainsKey(index))
-				{
-					if (!string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
-					{
-						return Game.GetLocalizedString(_hornNames[index].Item1);
-					}
-					return _hornNames[index].Item2;
-				}
-				return "";
-			}
-			if (ModType == VehicleModType.FrontWheel || ModType == VehicleModType.RearWheel)
-			{
-				if (index == -1)
-				{
-					if (!_owner.Model.IsBike && _owner.Model.IsBicycle)
-					{
-						return Game.GetLocalizedString("CMOD_WHE_0");
-					}
-					else
-					{
-						return Game.GetLocalizedString("CMOD_WHE_B_0");
-					}
-				}
-				if (index >= ModCount / 2)
-				{
-					return Game.GetLocalizedString("CHROME") + " " +
-						   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
-				}
-				else
-				{
-					return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index));
-				}
-			}
-
-			switch (ModType)
-			{
-				case VehicleModType.Armor:
-					return Game.GetLocalizedString("CMOD_ARM_" + (index + 1).ToString());
-				case VehicleModType.Brakes:
-					return Game.GetLocalizedString("CMOD_BRA_" + (index + 1).ToString());
-				case VehicleModType.Engine:
-					if (index == -1)
-					{
-						//Engine doesn't list anything in LSC for no parts, but there is a setting with no part. so just use armours none
-						return Game.GetLocalizedString("CMOD_ARM_0");
-					}
-					return Game.GetLocalizedString("CMOD_ENG_" + (index + 2).ToString());
-				case VehicleModType.Suspension:
-					return Game.GetLocalizedString("CMOD_SUS_" + (index + 1).ToString());
-				case VehicleModType.Transmission:
-					return Game.GetLocalizedString("CMOD_GBX_" + (index + 1).ToString());
-			}
-			if (index > -1)
-			{
-				cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, _owner.Handle, ModType, index);
-				if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
-				{
-					cur = Game.GetLocalizedString(cur);
-					if (cur == "" || cur == "NULL")
-					{
-						return LocalizedModTypeName + " " + (index + 1).ToString();
-					}
-					return cur;
-				}
-				return LocalizedModTypeName + " " + (index + 1).ToString();
-			}
-			else
-			{
-				switch (ModType)
-				{
-					case VehicleModType.AirFilter:
-						if (_owner.Model == VehicleHash.Tornado)
-						{
-						}
-						break;
-					case VehicleModType.Struts:
-						switch ((VehicleHash) _owner.Model)
-						{
-							case VehicleHash.Banshee:
-							case VehicleHash.Banshee2:
-							case VehicleHash.SultanRS:
-								return Game.GetLocalizedString("CMOD_COL5_41");
-						}
-						break;
-
-				}
-				return Game.GetLocalizedString("CMOD_DEF_0");
-			}
-		}
-		public int ModCount => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, _owner.Handle, ModType);
-		public Vehicle Vehicle => _owner;
-
-		public void Remove()
-		{
-			Function.Call(Hash.REMOVE_VEHICLE_MOD, _owner.Handle, ModType);
 		}
 	}
 }

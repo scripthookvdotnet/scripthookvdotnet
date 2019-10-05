@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System.Collections.Generic;
 using GTA.Math;
 using GTA.Native;
+using System.Collections.Generic;
 
 namespace GTA.NaturalMotion
 {

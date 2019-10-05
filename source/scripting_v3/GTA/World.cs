@@ -241,7 +241,9 @@ namespace GTA
 			get
 			{
 				if (!Game.IsWaypointActive)
+				{
 					return null;
+				}
 
 				for (int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR), blip = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, blip); blip = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
 				{
@@ -268,7 +270,10 @@ namespace GTA
 			{
 				Blip waypointBlip = WaypointBlip;
 				if (waypointBlip is null)
+				{
 					return Vector3.Zero;
+				}
+
 				Vector3 position = waypointBlip.Position;
 				position.Z = GetGroundHeight((Vector2)position);
 				return position;
@@ -399,7 +404,7 @@ namespace GTA
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		/// <remarks>Returns <c>null</c> if no <see cref="Ped"/> was in the given region.</remarks>
-		public static Ped   GetClosestPed(Vector3 position, float radius, params Model[] models)
+		public static Ped GetClosestPed(Vector3 position, float radius, params Model[] models)
 		{
 			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			var entities = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius, hashes), handle => new Ped(handle));
@@ -461,7 +466,7 @@ namespace GTA
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		/// <remarks>Returns <c>null</c> if no <see cref="Vehicle"/> was in the given region.</remarks>
-		public static Vehicle   GetClosestVehicle(Vector3 position, float radius, params Model[] models)
+		public static Vehicle GetClosestVehicle(Vector3 position, float radius, params Model[] models)
 		{
 			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			var entities = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius, hashes), handle => new Vehicle(handle));
@@ -496,7 +501,7 @@ namespace GTA
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
-		public static Prop   GetClosestProp(Vector3 position, float radius, params Model[] models)
+		public static Prop GetClosestProp(Vector3 position, float radius, params Model[] models)
 		{
 			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			var entities = Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToArray(), radius, hashes), handle => new Prop(handle));
@@ -526,7 +531,7 @@ namespace GTA
 		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <remarks>Returns <c>null</c> if no <see cref="Prop"/> was in the given region.</remarks>
-		public static Prop   GetClosestPickupObject(Vector3 position, float radius)
+		public static Prop GetClosestPickupObject(Vector3 position, float radius)
 		{
 			var entities = Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToArray(), radius), handle => new Prop(handle));
 			return GetClosest(position, entities);
@@ -1004,7 +1009,7 @@ namespace GTA
 		/// <summary>
 		/// Spawns a pickup <see cref="Prop"/> at the specified position.
 		/// </summary>
-		public static Prop   CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
+		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
 		{
 			if (!model.Request(1000))
 			{
@@ -1034,7 +1039,9 @@ namespace GTA
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
 			if (handle == 0)
+			{
 				return null;
+			}
 
 			return new Checkpoint(handle);
 		}
@@ -1051,7 +1058,9 @@ namespace GTA
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 42, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
 			if (handle == 0)
+			{
 				return null;
+			}
 
 			return new Checkpoint(handle);
 		}
@@ -1069,7 +1078,10 @@ namespace GTA
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Vector3 pos, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
+			{
 				return false;
+			}
+
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 		}
 		/// <summary>
@@ -1086,7 +1098,10 @@ namespace GTA
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
+			{
 				return false;
+			}
+
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 		}
 		/// <summary>
@@ -1103,7 +1118,10 @@ namespace GTA
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
+			{
 				return false;
+			}
+
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 		}
 
@@ -1134,12 +1152,16 @@ namespace GTA
 		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 offset = default, Vector3 rotation = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
+			{
 				return null;
+			}
 
 			int handle = Function.Call<int>((entityBone.Owner is Ped) ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE,
 				effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
 			if (handle == 0)
+			{
 				return null;
+			}
 
 			return new ParticleEffect(handle, asset.AssetName, effectName, entityBone);
 		}
@@ -1155,11 +1177,15 @@ namespace GTA
 		public static ParticleEffect CreateParticleEffect(ParticleEffectAsset asset, string effectName, Vector3 position, Vector3 rotation = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
 			if (!asset.UseNext())
+			{
 				return null;
+			}
 
 			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z), false);
 			if (handle == 0)
+			{
 				return null;
+			}
 
 			return new ParticleEffect(handle, asset.AssetName, effectName, null);
 		}

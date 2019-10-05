@@ -3,8 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
+using System;
 
 namespace GTA
 {
@@ -18,7 +18,10 @@ namespace GTA
 		/// <summary>
 		/// Gets the memory address where the <see cref="HandlingData"/> is stored in memory.
 		/// </summary>
-		public IntPtr MemoryAddress { get; private set; }
+		public IntPtr MemoryAddress
+		{
+			get;
+		}
 
 		/// <summary>
 		/// Returns true if this <see cref="HandlingData"/> is valid.
@@ -1032,7 +1035,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is HandlingData data)
+			{
 				return MemoryAddress == data.MemoryAddress;
+			}
+
 			return false;
 		}
 

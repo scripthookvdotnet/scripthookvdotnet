@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System.Drawing;
 using GTA.Math;
 using GTA.Native;
+using System.Drawing;
 
 namespace GTA.UI
 {

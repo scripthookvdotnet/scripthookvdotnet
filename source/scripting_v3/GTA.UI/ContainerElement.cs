@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System.Drawing;
-using System.Collections.Generic;
 using GTA.Native;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace GTA.UI
 {
@@ -60,7 +60,10 @@ namespace GTA.UI
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		public virtual bool Enabled { get; set; }
+		public virtual bool Enabled
+		{
+			get; set;
+		}
 
 		/// <summary>
 		/// Gets or sets the color of this <see cref="ContainerElement"/>.
@@ -68,7 +71,10 @@ namespace GTA.UI
 		/// <value>
 		/// The color.
 		/// </value>
-		public virtual Color Color { get; set; }
+		public virtual Color Color
+		{
+			get; set;
+		}
 
 		/// <summary>
 		/// Gets or sets the position of this <see cref="ContainerElement"/>.
@@ -79,7 +85,10 @@ namespace GTA.UI
 		/// <remarks>
 		/// If ScaledDraw is called, the position will be scaled by the width returned in <see cref="Screen.ScaledWidth"/>.
 		/// </remarks>
-		public virtual PointF Position { get; set; }
+		public virtual PointF Position
+		{
+			get; set;
+		}
 
 		/// <summary>
 		/// Gets or sets the size to draw the <see cref="ContainerElement"/>
@@ -90,7 +99,10 @@ namespace GTA.UI
 		/// <remarks>
 		/// If ScaledDraw is called, the size will be scaled by the width returned in <see cref="Screen.ScaledWidth"/>.
 		/// </remarks>
-		public SizeF Size { get; set; }
+		public SizeF Size
+		{
+			get; set;
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="ContainerElement"/> should be positioned based on its center or top left corner
@@ -98,12 +110,18 @@ namespace GTA.UI
 		/// <value>
 		///   <c>true</c> if centered; otherwise, <c>false</c>.
 		/// </value>
-		public virtual bool Centered { get; set; }
+		public virtual bool Centered
+		{
+			get; set;
+		}
 
 		/// <summary>
 		/// The <see cref="IElement"/>s Contained inside this <see cref="ContainerElement"/>
 		/// </summary>
-		public List<IElement> Items { get; private set; }
+		public List<IElement> Items
+		{
+			get; private set;
+		}
 
 		/// <summary>
 		/// Draws this <see cref="ContainerElement" /> this frame.

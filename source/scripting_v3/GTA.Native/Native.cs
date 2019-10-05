@@ -7,14 +7,17 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GTA.Native
 {
 	public interface INativeValue
 	{
-		ulong NativeValue { get; set; }
+		ulong NativeValue
+		{
+			get; set;
+		}
 	}
 
 	internal static class NativeHelper<T>
@@ -28,7 +31,7 @@ namespace GTA.Native
 		static NativeHelper()
 		{
 			var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
-				new Type[]{ typeof(IntPtr) }, typeof(NativeHelper<T>), true);
+				new Type[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
 
 			ILGenerator generator = ptrToStrMethod.GetILGenerator();
 			generator.Emit(OpCodes.Ldarg_0);
@@ -322,7 +325,9 @@ namespace GTA.Native
 		protected virtual void Dispose(bool disposing)
 		{
 			if (_disposed)
+			{
 				return;
+			}
 
 			Marshal.FreeCoTaskMem(_storage);
 
@@ -363,7 +368,9 @@ namespace GTA.Native
 		{
 			ulong[] args = new ulong[arguments.Length];
 			for (int i = 0; i < arguments.Length; ++i)
+			{
 				args[i] = arguments[i]._data;
+			}
 
 			var task = new SHVDN.NativeFunc((ulong)hash, args);
 
@@ -373,7 +380,9 @@ namespace GTA.Native
 			{
 				// The result will be null when this method is called from a thread other than the main thread
 				if (task.Result == null)
+				{
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+				}
 
 				if (typeof(T).IsValueType || typeof(T).IsEnum)
 				{
@@ -394,7 +403,9 @@ namespace GTA.Native
 		{
 			ulong[] args = new ulong[arguments.Length];
 			for (int i = 0; i < arguments.Length; ++i)
+			{
 				args[i] = arguments[i]._data;
+			}
 
 			var task = new SHVDN.NativeFunc((ulong)hash, args);
 
@@ -664,7 +675,10 @@ namespace GTA.Native
 		/// <summary>
 		/// Gets the native memory address of the <see cref="GlobalVariable"/>.
 		/// </summary>
-		public IntPtr MemoryAddress { get; private set; }
+		public IntPtr MemoryAddress
+		{
+			get;
+		}
 
 		/// <summary>
 		/// Gets the value stored in the <see cref="GlobalVariable"/>.

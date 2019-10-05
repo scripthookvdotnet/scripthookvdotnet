@@ -105,7 +105,7 @@ namespace GTA
 			CallFunctionHead(function, arguments);
 			Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
 		}
-		public int  CallFunctionReturn(string function, params object[] arguments)
+		public int CallFunctionReturn(string function, params object[] arguments)
 		{
 			CallFunctionHead(function, arguments);
 			return Function.Call<int>(Hash.END_SCALEFORM_MOVIE_METHOD_RETURN_VALUE);

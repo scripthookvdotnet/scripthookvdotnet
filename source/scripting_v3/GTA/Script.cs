@@ -31,8 +31,22 @@ namespace GTA
 		/// </summary>
 		public event EventHandler Tick
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick -= value; }
+			add
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.Tick += value;
+				}
+			}
+			remove
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.Tick -= value;
+				}
+			}
 		}
 		/// <summary>
 		/// An event that is raised when this <see cref="Script"/> gets aborted for any reason.
@@ -40,8 +54,22 @@ namespace GTA
 		/// </summary>
 		public event EventHandler Aborted
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted -= value; }
+			add
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.Aborted += value;
+				}
+			}
+			remove
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.Aborted -= value;
+				}
+			}
 		}
 
 		/// <summary>
@@ -50,8 +78,22 @@ namespace GTA
 		/// </summary>
 		public event WinForms.KeyEventHandler KeyUp
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp -= value; }
+			add
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.KeyUp += value;
+				}
+			}
+			remove
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.KeyUp -= value;
+				}
+			}
 		}
 		/// <summary>
 		/// An event that is raised when a key is first pressed.
@@ -59,18 +101,38 @@ namespace GTA
 		/// </summary>
 		public event WinForms.KeyEventHandler KeyDown
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown -= value; }
+			add
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.KeyDown += value;
+				}
+			}
+			remove
+			{
+				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (s != null)
+				{
+					s.KeyDown -= value;
+				}
+			}
 		}
 
 		/// <summary>
 		/// Gets the name of this <see cref="Script"/>.
 		/// </summary>
-		public string Name { get; internal set; }
+		public string Name
+		{
+			get; internal set;
+		}
 		/// <summary>
 		/// Gets the filename of this <see cref="Script"/>.
 		/// </summary>
-		public string Filename { get; internal set; }
+		public string Filename
+		{
+			get; internal set;
+		}
 
 		/// <summary>
 		/// Gets the Directory where this <see cref="Script"/> is stored.
@@ -82,7 +144,10 @@ namespace GTA
 		/// </summary>
 		public bool IsPaused
 		{
-			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused; }
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused;
+			}
 		}
 
 		/// <summary>
@@ -90,7 +155,10 @@ namespace GTA
 		/// </summary>
 		public bool IsRunning
 		{
-			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning; }
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning;
+			}
 		}
 
 		/// <summary>
@@ -98,7 +166,10 @@ namespace GTA
 		/// </summary>
 		public bool IsExecuting
 		{
-			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting; }
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting;
+			}
 		}
 
 		/// <summary>
@@ -127,13 +198,22 @@ namespace GTA
 		/// </summary>
 		protected int Interval
 		{
-			get { return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval; }
-			set {
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
+			}
+			set
+			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (s != null)
+				{
 					s.Interval = value;
+				}
 			}
 		}
 
@@ -189,7 +269,9 @@ namespace GTA
 			SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
 
 			if (ReferenceEquals(script, null) || !script.IsRunning)
+			{
 				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
+			}
 
 			script.Wait(ms);
 		}
@@ -208,7 +290,9 @@ namespace GTA
 		{
 			SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(scriptType);
 			if (script == null)
+			{
 				return null;
+			}
 
 			script.Start();
 

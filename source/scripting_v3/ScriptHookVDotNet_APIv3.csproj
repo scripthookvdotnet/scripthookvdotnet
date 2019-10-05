@@ -101,7 +101,7 @@
     <Compile Include="GTA\Entities\Peds\DrivingStyle.cs" />
     <Compile Include="GTA\Entities\Peds\EnterVehicleFlags.cs" />
     <Compile Include="GTA\Entities\Peds\FiringPattern.cs" />
-    <Compile Include="GTA\Entities\Peds\FormationType.cs" />
+    <Compile Include="GTA\Entities\Peds\Formation.cs" />
     <Compile Include="GTA\Entities\Peds\Gender.cs" />
     <Compile Include="GTA\Entities\Peds\HelmetType.cs" />
     <Compile Include="GTA\Entities\Peds\LeaveVehicleFlags.cs" />
@@ -116,7 +116,7 @@
     <Compile Include="GTA\Entities\Peds\PedHash.cs" />
     <Compile Include="GTA\Entities\Peds\PedProp.cs" />
     <Compile Include="GTA\Entities\Peds\PedPropType.cs" />
-    <Compile Include="GTA\Entities\Peds\PedVariation.cs" />
+    <Compile Include="GTA\Entities\Peds\IPedVariation.cs" />
     <Compile Include="GTA\Entities\Peds\RagdollType.cs" />
     <Compile Include="GTA\Entities\Peds\Relationship.cs" />
     <Compile Include="GTA\Entities\Peds\RelationshipGroup.cs" />

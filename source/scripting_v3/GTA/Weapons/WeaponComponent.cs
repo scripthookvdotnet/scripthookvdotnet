@@ -9,8 +9,10 @@ namespace GTA
 {
 	public sealed class WeaponComponent
 	{
+		#region Fields
 		readonly Ped _owner;
 		readonly Weapon _weapon;
+		#endregion
 
 		internal WeaponComponent(Ped owner, Weapon weapon, WeaponComponentHash component)
 		{
@@ -49,7 +51,7 @@ namespace GTA
 				{
 					case WeaponComponentHash.KnuckleVarmodBase:
 						return "WT_KNUCKLE";
-						case WeaponComponentHash.KnuckleVarmodPimp:
+					case WeaponComponentHash.KnuckleVarmodPimp:
 						return "WCT_KNUCK_02";
 					case WeaponComponentHash.KnuckleVarmodBallas:
 						return "WCT_KNUCK_BG";

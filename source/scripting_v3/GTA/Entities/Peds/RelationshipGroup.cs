@@ -3,16 +3,16 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
-	public struct RelationshipGroup : INativeValue
+	public struct RelationshipGroup : INativeValue, IEquatable<RelationshipGroup>
 	{
 		RelationshipGroup(string name) : this()
 		{
-		    int hashArg;
+			int hashArg;
 			unsafe
 			{
 				Function.Call(Native.Hash.ADD_RELATIONSHIP_GROUP, name, &hashArg);
@@ -28,24 +28,28 @@ namespace GTA
 		{
 		}
 
-		public int Hash { get; private set; }
+		/// <summary>
+		/// Gets the hash for this <see cref="RelationshipGroup"/>.
+		/// </summary>
+		public int Hash
+		{
+			get; private set;
+		}
 
+		/// <summary>
+		/// Gets the native representation of this <see cref="RelationshipGroup"/>.
+		/// </summary>
 		public ulong NativeValue
 		{
-			get
-			{
-				return (ulong)Hash;
-			}
-			set
-			{
-				Hash = unchecked((int)value);
-			}
+			get => (ulong)Hash;
+			set => Hash = unchecked((int)value);
 		}
 
 		public Relationship GetRelationshipBetweenGroups(RelationshipGroup targetGroup)
 		{
 			return Function.Call<Relationship>(Native.Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, Hash, targetGroup.NativeValue);
 		}
+
 		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool bidirectionally = false)
 		{
 			Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup.NativeValue);
@@ -55,6 +59,7 @@ namespace GTA
 				Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup.NativeValue, Hash);
 			}
 		}
+
 		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool bidirectionally = false)
 		{
 			Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup.NativeValue);
@@ -70,10 +75,17 @@ namespace GTA
 			Function.Call(Native.Hash.REMOVE_RELATIONSHIP_GROUP, Hash);
 		}
 
+		public bool Equals(RelationshipGroup group)
+		{
+			return Hash == group.Hash;
+		}
 		public override bool Equals(object obj)
 		{
 			if (obj is RelationshipGroup group)
-				return Hash == group.Hash;
+			{
+				return Equals(group);
+			}
+
 			return false;
 		}
 

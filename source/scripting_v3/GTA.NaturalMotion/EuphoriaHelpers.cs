@@ -3,8 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-using GTA;
 using GTA.Math;
 
 namespace GTA.NaturalMotion
@@ -122,7 +120,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 
 		/// <summary>
@@ -133,7 +134,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseGravityCompensation
 		{
-			set { SetArgument("useGravityCompensation", value); }
+			set
+			{
+				SetArgument("useGravityCompensation", value);
+			}
 		}
 
 		/// <summary>
@@ -141,7 +145,10 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public AnimSource AnimSource
 		{
-			set { SetArgument("animSource", (int)value); }
+			set
+			{
+				SetArgument("animSource", (int)value);
+			}
 		}
 	}
 
@@ -168,9 +175,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("equalizeAmount", value);
 			}
 		}
@@ -188,9 +201,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 28)
+				{
 					value = 28;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("partIndex", value);
 			}
 		}
@@ -219,7 +238,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HitPoint
 		{
-			set { SetArgument("hitPoint", value); }
+			set
+			{
+				SetArgument("hitPoint", value);
+			}
 		}
 
 		/// <summary>
@@ -230,7 +252,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LocalHitPointInfo
 		{
-			set { SetArgument("localHitPointInfo", value); }
+			set
+			{
+				SetArgument("localHitPointInfo", value);
+			}
 		}
 
 		/// <summary>
@@ -241,7 +266,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LocalImpulseInfo
 		{
-			set { SetArgument("localImpulseInfo", value); }
+			set
+			{
+				SetArgument("localImpulseInfo", value);
+			}
 		}
 
 		/// <summary>
@@ -252,7 +280,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AngularImpulse
 		{
-			set { SetArgument("angularImpulse", value); }
+			set
+			{
+				SetArgument("angularImpulse", value);
+			}
 		}
 	}
 
@@ -279,9 +310,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("equalizeAmount", value);
 			}
 		}
@@ -299,9 +336,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 28)
+				{
 					value = 28;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("partIndex", value);
 			}
 		}
@@ -330,7 +373,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HitPoint
 		{
-			set { SetArgument("hitPoint", value); }
+			set
+			{
+				SetArgument("hitPoint", value);
+			}
 		}
 
 		/// <summary>
@@ -341,7 +387,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LocalHitPointInfo
 		{
-			set { SetArgument("localHitPointInfo", value); }
+			set
+			{
+				SetArgument("localHitPointInfo", value);
+			}
 		}
 
 		/// <summary>
@@ -357,9 +406,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("extraShare", value);
 			}
 		}
@@ -394,9 +449,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("relaxation", value);
 			}
 		}
@@ -413,9 +474,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -428,7 +495,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 
 		/// <summary>
@@ -439,7 +509,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HoldPose
 		{
-			set { SetArgument("holdPose", value); }
+			set
+			{
+				SetArgument("holdPose", value);
+			}
 		}
 
 		/// <summary>
@@ -450,7 +523,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DisableJointDriving
 		{
-			set { SetArgument("disableJointDriving", value); }
+			set
+			{
+				SetArgument("disableJointDriving", value);
+			}
 		}
 	}
 
@@ -483,9 +559,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.4f)
+				{
 					value = 0.4f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stepHeight", value);
 			}
 		}
@@ -503,9 +585,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.4f)
+				{
 					value = 0.4f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stepHeightInc4Step", value);
 			}
 		}
@@ -523,9 +611,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legsApartRestep", value);
 			}
 		}
@@ -543,9 +637,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legsTogetherRestep", value);
 			}
 		}
@@ -563,9 +663,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legsApartMax", value);
 			}
 		}
@@ -578,7 +684,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TaperKneeStrength
 		{
-			set { SetArgument("taperKneeStrength", value); }
+			set
+			{
+				SetArgument("taperKneeStrength", value);
+			}
 		}
 
 		/// <summary>
@@ -594,9 +703,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("legStiffness", value);
 			}
 		}
@@ -614,9 +729,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.2f)
+				{
 					value = 0.2f;
+				}
+
 				SetArgument("leftLegSwingDamping", value);
 			}
 		}
@@ -634,9 +755,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.2f)
+				{
 					value = 0.2f;
+				}
+
 				SetArgument("rightLegSwingDamping", value);
 			}
 		}
@@ -654,9 +781,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("opposeGravityLegs", value);
 			}
 		}
@@ -674,9 +807,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("opposeGravityAnkles", value);
 			}
 		}
@@ -694,9 +833,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAcc", value);
 			}
 		}
@@ -714,9 +859,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("hipLeanAcc", value);
 			}
 		}
@@ -734,9 +885,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAccMax", value);
 			}
 		}
@@ -754,9 +911,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("resistAcc", value);
 			}
 		}
@@ -774,9 +937,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("resistAccMax", value);
 			}
 		}
@@ -789,7 +958,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FootSlipCompOnMovingFloor
 		{
-			set { SetArgument("footSlipCompOnMovingFloor", value); }
+			set
+			{
+				SetArgument("footSlipCompOnMovingFloor", value);
+			}
 		}
 
 		/// <summary>
@@ -805,9 +977,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("ankleEquilibrium", value);
 			}
 		}
@@ -825,9 +1003,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("extraFeetApart", value);
 			}
 		}
@@ -844,7 +1028,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dontStepTime", value);
 			}
 		}
@@ -862,9 +1049,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("balanceAbortThreshold", value);
 			}
 		}
@@ -882,9 +1075,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("giveUpHeight", value);
 			}
 		}
@@ -901,9 +1100,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stepClampScale", value);
 			}
 		}
@@ -921,9 +1126,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stepClampScaleVariance", value);
 			}
 		}
@@ -941,9 +1152,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("predictionTimeHip", value);
 			}
 		}
@@ -961,9 +1178,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("predictionTime", value);
 			}
 		}
@@ -981,9 +1204,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("predictionTimeVariance", value);
 			}
 		}
@@ -1000,7 +1229,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 1)
+				{
 					value = 1;
+				}
+
 				SetArgument("maxSteps", value);
 			}
 		}
@@ -1017,7 +1249,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				SetArgument("maxBalanceTime", value);
 			}
 		}
@@ -1034,7 +1269,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("extraSteps", value);
 			}
 		}
@@ -1051,7 +1289,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("extraTime", value);
 			}
 		}
@@ -1065,7 +1306,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public FallType FallType
 		{
-			set { SetArgument("fallType", (int)value); }
+			set
+			{
+				SetArgument("fallType", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -1081,9 +1325,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fallMult", value);
 			}
 		}
@@ -1096,7 +1346,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FallReduceGravityComp
 		{
-			set { SetArgument("fallReduceGravityComp", value); }
+			set
+			{
+				SetArgument("fallReduceGravityComp", value);
+			}
 		}
 
 		/// <summary>
@@ -1107,7 +1360,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RampHipPitchOnFail
 		{
-			set { SetArgument("rampHipPitchOnFail", value); }
+			set
+			{
+				SetArgument("rampHipPitchOnFail", value);
+			}
 		}
 
 		/// <summary>
@@ -1123,9 +1379,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stableLinSpeedThresh", value);
 			}
 		}
@@ -1143,9 +1405,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stableRotSpeedThresh", value);
 			}
 		}
@@ -1158,7 +1426,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FailMustCollide
 		{
-			set { SetArgument("failMustCollide", value); }
+			set
+			{
+				SetArgument("failMustCollide", value);
+			}
 		}
 
 		/// <summary>
@@ -1169,7 +1440,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool IgnoreFailure
 		{
-			set { SetArgument("ignoreFailure", value); }
+			set
+			{
+				SetArgument("ignoreFailure", value);
+			}
 		}
 
 		/// <summary>
@@ -1185,9 +1459,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("changeStepTime", value);
 			}
 		}
@@ -1200,7 +1480,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BalanceIndefinitely
 		{
-			set { SetArgument("balanceIndefinitely", value); }
+			set
+			{
+				SetArgument("balanceIndefinitely", value);
+			}
 		}
 
 		/// <summary>
@@ -1211,7 +1494,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool MovingFloor
 		{
-			set { SetArgument("movingFloor", value); }
+			set
+			{
+				SetArgument("movingFloor", value);
+			}
 		}
 
 		/// <summary>
@@ -1222,7 +1508,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AirborneStep
 		{
-			set { SetArgument("airborneStep", value); }
+			set
+			{
+				SetArgument("airborneStep", value);
+			}
 		}
 
 		/// <summary>
@@ -1238,9 +1527,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("useComDirTurnVelThresh", value);
 			}
 		}
@@ -1258,9 +1553,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("minKneeAngle", value);
 			}
 		}
@@ -1272,7 +1573,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FlatterSwingFeet
 		{
-			set { SetArgument("flatterSwingFeet", value); }
+			set
+			{
+				SetArgument("flatterSwingFeet", value);
+			}
 		}
 
 		/// <summary>
@@ -1282,7 +1586,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FlatterStaticFeet
 		{
-			set { SetArgument("flatterStaticFeet", value); }
+			set
+			{
+				SetArgument("flatterStaticFeet", value);
+			}
 		}
 
 		/// <summary>
@@ -1293,7 +1600,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AvoidLeg
 		{
-			set { SetArgument("avoidLeg", value); }
+			set
+			{
+				SetArgument("avoidLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -1309,9 +1619,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("avoidFootWidth", value);
 			}
 		}
@@ -1329,9 +1645,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("avoidFeedback", value);
 			}
 		}
@@ -1348,9 +1670,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAgainstVelocity", value);
 			}
 		}
@@ -1367,9 +1695,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stepDecisionThreshold", value);
 			}
 		}
@@ -1382,7 +1716,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool StepIfInSupport
 		{
-			set { SetArgument("stepIfInSupport", value); }
+			set
+			{
+				SetArgument("stepIfInSupport", value);
+			}
 		}
 
 		/// <summary>
@@ -1392,7 +1729,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysStepWithFarthest
 		{
-			set { SetArgument("alwaysStepWithFarthest", value); }
+			set
+			{
+				SetArgument("alwaysStepWithFarthest", value);
+			}
 		}
 
 		/// <summary>
@@ -1403,7 +1743,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool StandUp
 		{
-			set { SetArgument("standUp", value); }
+			set
+			{
+				SetArgument("standUp", value);
+			}
 		}
 
 		/// <summary>
@@ -1419,9 +1762,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("depthFudge", value);
 			}
 		}
@@ -1439,9 +1788,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("depthFudgeStagger", value);
 			}
 		}
@@ -1459,9 +1814,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footFriction", value);
 			}
 		}
@@ -1479,9 +1840,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footFrictionStagger", value);
 			}
 		}
@@ -1499,9 +1866,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backwardsLeanCutoff", value);
 			}
 		}
@@ -1519,9 +1892,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("giveUpHeightEnd", value);
 			}
 		}
@@ -1539,9 +1918,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("balanceAbortThresholdEnd", value);
 			}
 		}
@@ -1559,9 +1944,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("giveUpRampDuration", value);
 			}
 		}
@@ -1579,9 +1970,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanToAbort", value);
 			}
 		}
@@ -1628,7 +2025,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseSelfAvoidance
 		{
-			set { SetArgument("useSelfAvoidance", value); }
+			set
+			{
+				SetArgument("useSelfAvoidance", value);
+			}
 		}
 
 		/// <summary>
@@ -1639,7 +2039,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OverwriteDragReduction
 		{
-			set { SetArgument("overwriteDragReduction", value); }
+			set
+			{
+				SetArgument("overwriteDragReduction", value);
+			}
 		}
 
 		/// <summary>
@@ -1655,9 +2058,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torsoSwingFraction", value);
 			}
 		}
@@ -1675,9 +2084,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.6f)
+				{
 					value = 1.6f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxTorsoSwingAngleRad", value);
 			}
 		}
@@ -1690,7 +2105,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SelfAvoidIfInSpineBoundsOnly
 		{
-			set { SetArgument("selfAvoidIfInSpineBoundsOnly", value); }
+			set
+			{
+				SetArgument("selfAvoidIfInSpineBoundsOnly", value);
+			}
 		}
 
 		/// <summary>
@@ -1706,9 +2124,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("selfAvoidAmount", value);
 			}
 		}
@@ -1721,7 +2145,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OverwriteTwist
 		{
-			set { SetArgument("overwriteTwist", value); }
+			set
+			{
+				SetArgument("overwriteTwist", value);
+			}
 		}
 
 		/// <summary>
@@ -1732,7 +2159,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UsePolarPathAlgorithm
 		{
-			set { SetArgument("usePolarPathAlgorithm", value); }
+			set
+			{
+				SetArgument("usePolarPathAlgorithm", value);
+			}
 		}
 
 		/// <summary>
@@ -1748,9 +2178,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("radius", value);
 			}
 		}
@@ -1774,7 +2210,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseSpreadOverParts
 		{
-			set { SetArgument("impulseSpreadOverParts", value); }
+			set
+			{
+				SetArgument("impulseSpreadOverParts", value);
+			}
 		}
 
 		/// <summary>
@@ -1785,7 +2224,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseLeakageStrengthScaled
 		{
-			set { SetArgument("impulseLeakageStrengthScaled", value); }
+			set
+			{
+				SetArgument("impulseLeakageStrengthScaled", value);
+			}
 		}
 
 		/// <summary>
@@ -1801,9 +2243,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulsePeriod", value);
 			}
 		}
@@ -1821,9 +2269,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseTorqueScale", value);
 			}
 		}
@@ -1836,7 +2290,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LoosenessFix
 		{
-			set { SetArgument("loosenessFix", value); }
+			set
+			{
+				SetArgument("loosenessFix", value);
+			}
 		}
 
 		/// <summary>
@@ -1852,9 +2309,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseDelay", value);
 			}
 		}
@@ -1872,9 +2335,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseReductionPerShot", value);
 			}
 		}
@@ -1892,9 +2361,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 60.0f)
+				{
 					value = 60.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseRecovery", value);
 			}
 		}
@@ -1912,9 +2387,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseMinLeakage", value);
 			}
 		}
@@ -1928,7 +2409,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TorqueMode TorqueMode
 		{
-			set { SetArgument("torqueMode", (int)value); }
+			set
+			{
+				SetArgument("torqueMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -1939,7 +2423,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TorqueSpinMode TorqueSpinMode
 		{
-			set { SetArgument("torqueSpinMode", (int)value); }
+			set
+			{
+				SetArgument("torqueSpinMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -1949,7 +2436,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TorqueFilterMode TorqueFilterMode
 		{
-			set { SetArgument("torqueFilterMode", (int)value); }
+			set
+			{
+				SetArgument("torqueFilterMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -1960,7 +2450,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TorqueAlwaysSpine3
 		{
-			set { SetArgument("torqueAlwaysSpine3", value); }
+			set
+			{
+				SetArgument("torqueAlwaysSpine3", value);
+			}
 		}
 
 		/// <summary>
@@ -1976,9 +2469,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueDelay", value);
 			}
 		}
@@ -1996,9 +2495,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torquePeriod", value);
 			}
 		}
@@ -2016,9 +2521,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueGain", value);
 			}
 		}
@@ -2036,9 +2547,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueCutoff", value);
 			}
 		}
@@ -2056,9 +2573,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueReductionPerTick", value);
 			}
 		}
@@ -2076,9 +2599,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("liftGain", value);
 			}
 		}
@@ -2096,9 +2625,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("counterImpulseDelay", value);
 			}
 		}
@@ -2116,9 +2651,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("counterImpulseMag", value);
 			}
 		}
@@ -2131,7 +2672,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool CounterAfterMagReached
 		{
-			set { SetArgument("counterAfterMagReached", value); }
+			set
+			{
+				SetArgument("counterAfterMagReached", value);
+			}
 		}
 
 		/// <summary>
@@ -2142,7 +2686,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DoCounterImpulse
 		{
-			set { SetArgument("doCounterImpulse", value); }
+			set
+			{
+				SetArgument("doCounterImpulse", value);
+			}
 		}
 
 		/// <summary>
@@ -2158,9 +2705,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("counterImpulse2Hips", value);
 			}
 		}
@@ -2178,9 +2731,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseNoBalMult", value);
 			}
 		}
@@ -2198,9 +2757,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseBalStabStart", value);
 			}
 		}
@@ -2218,9 +2783,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseBalStabEnd", value);
 			}
 		}
@@ -2238,9 +2809,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseBalStabMult", value);
 			}
 		}
@@ -2258,9 +2835,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("impulseSpineAngStart", value);
 			}
 		}
@@ -2278,9 +2861,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("impulseSpineAngEnd", value);
 			}
 		}
@@ -2298,9 +2887,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseSpineAngMult", value);
 			}
 		}
@@ -2318,9 +2913,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseVelStart", value);
 			}
 		}
@@ -2338,9 +2939,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseVelEnd", value);
 			}
 		}
@@ -2358,9 +2965,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseVelMult", value);
 			}
 		}
@@ -2378,9 +2991,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirMult", value);
 			}
 		}
@@ -2397,7 +3016,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirMultStart", value);
 			}
 		}
@@ -2414,7 +3036,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirMax", value);
 			}
 		}
@@ -2431,7 +3056,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirApplyAbove", value);
 			}
 		}
@@ -2444,7 +3072,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseAirOn
 		{
-			set { SetArgument("impulseAirOn", value); }
+			set
+			{
+				SetArgument("impulseAirOn", value);
+			}
 		}
 
 		/// <summary>
@@ -2460,9 +3091,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegMult", value);
 			}
 		}
@@ -2479,7 +3116,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegMultStart", value);
 			}
 		}
@@ -2496,7 +3136,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegMax", value);
 			}
 		}
@@ -2513,7 +3156,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegApplyAbove", value);
 			}
 		}
@@ -2526,7 +3172,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseOneLegOn
 		{
-			set { SetArgument("impulseOneLegOn", value); }
+			set
+			{
+				SetArgument("impulseOneLegOn", value);
+			}
 		}
 
 		/// <summary>
@@ -2542,9 +3191,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbRatio", value);
 			}
 		}
@@ -2562,9 +3217,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbLowerShare", value);
 			}
 		}
@@ -2582,9 +3243,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMoment", value);
 			}
 		}
@@ -2602,9 +3269,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxTwistMomentArm", value);
 			}
 		}
@@ -2622,9 +3295,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxBroomMomentArm", value);
 			}
 		}
@@ -2642,9 +3321,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbRatioAirborne", value);
 			}
 		}
@@ -2662,9 +3347,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMomentAirborne", value);
 			}
 		}
@@ -2682,9 +3373,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxTwistMomentArmAirborne", value);
 			}
 		}
@@ -2702,9 +3399,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxBroomMomentArmAirborne", value);
 			}
 		}
@@ -2722,9 +3425,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbRatioOneLeg", value);
 			}
 		}
@@ -2742,9 +3451,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMomentOneLeg", value);
 			}
 		}
@@ -2762,9 +3477,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxTwistMomentArmOneLeg", value);
 			}
 		}
@@ -2782,9 +3503,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxBroomMomentArmOneLeg", value);
 			}
 		}
@@ -2796,7 +3523,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>.
 		public RbTwistAxis RbTwistAxis
 		{
-			set { SetArgument("rbTwistAxis", (int)value); }
+			set
+			{
+				SetArgument("rbTwistAxis", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -2807,7 +3537,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RbPivot
 		{
-			set { SetArgument("rbPivot", value); }
+			set
+			{
+				SetArgument("rbPivot", value);
+			}
 		}
 	}
 
@@ -2829,7 +3562,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseSpreadOverParts
 		{
-			set { SetArgument("impulseSpreadOverParts", value); }
+			set
+			{
+				SetArgument("impulseSpreadOverParts", value);
+			}
 		}
 
 		/// <summary>
@@ -2845,9 +3581,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulsePeriod", value);
 			}
 		}
@@ -2865,9 +3607,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseTorqueScale", value);
 			}
 		}
@@ -2880,7 +3628,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LoosenessFix
 		{
-			set { SetArgument("loosenessFix", value); }
+			set
+			{
+				SetArgument("loosenessFix", value);
+			}
 		}
 
 		/// <summary>
@@ -2896,9 +3647,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseDelay", value);
 			}
 		}
@@ -2912,7 +3669,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TorqueMode TorqueMode
 		{
-			set { SetArgument("torqueMode", (int)value); }
+			set
+			{
+				SetArgument("torqueMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -2923,7 +3683,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TorqueSpinMode TorqueSpinMode
 		{
-			set { SetArgument("torqueSpinMode", (int)value); }
+			set
+			{
+				SetArgument("torqueSpinMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -2933,7 +3696,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TorqueFilterMode TorqueFilterMode
 		{
-			set { SetArgument("torqueFilterMode", (int)value); }
+			set
+			{
+				SetArgument("torqueFilterMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -2944,7 +3710,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TorqueAlwaysSpine3
 		{
-			set { SetArgument("torqueAlwaysSpine3", value); }
+			set
+			{
+				SetArgument("torqueAlwaysSpine3", value);
+			}
 		}
 
 		/// <summary>
@@ -2960,9 +3729,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueDelay", value);
 			}
 		}
@@ -2980,9 +3755,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torquePeriod", value);
 			}
 		}
@@ -3000,9 +3781,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueGain", value);
 			}
 		}
@@ -3020,9 +3807,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueCutoff", value);
 			}
 		}
@@ -3040,9 +3833,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueReductionPerTick", value);
 			}
 		}
@@ -3060,9 +3859,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("liftGain", value);
 			}
 		}
@@ -3080,9 +3885,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("counterImpulseDelay", value);
 			}
 		}
@@ -3100,9 +3911,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("counterImpulseMag", value);
 			}
 		}
@@ -3115,7 +3932,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool CounterAfterMagReached
 		{
-			set { SetArgument("counterAfterMagReached", value); }
+			set
+			{
+				SetArgument("counterAfterMagReached", value);
+			}
 		}
 
 		/// <summary>
@@ -3126,7 +3946,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DoCounterImpulse
 		{
-			set { SetArgument("doCounterImpulse", value); }
+			set
+			{
+				SetArgument("doCounterImpulse", value);
+			}
 		}
 
 		/// <summary>
@@ -3142,9 +3965,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("counterImpulse2Hips", value);
 			}
 		}
@@ -3162,9 +3991,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseNoBalMult", value);
 			}
 		}
@@ -3182,9 +4017,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseBalStabStart", value);
 			}
 		}
@@ -3202,9 +4043,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseBalStabEnd", value);
 			}
 		}
@@ -3222,9 +4069,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseBalStabMult", value);
 			}
 		}
@@ -3242,9 +4095,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("impulseSpineAngStart", value);
 			}
 		}
@@ -3262,9 +4121,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("impulseSpineAngEnd", value);
 			}
 		}
@@ -3282,9 +4147,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseSpineAngMult", value);
 			}
 		}
@@ -3302,9 +4173,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseVelStart", value);
 			}
 		}
@@ -3322,9 +4199,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseVelEnd", value);
 			}
 		}
@@ -3342,9 +4225,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseVelMult", value);
 			}
 		}
@@ -3362,9 +4251,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirMult", value);
 			}
 		}
@@ -3381,7 +4276,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirMultStart", value);
 			}
 		}
@@ -3398,7 +4296,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirMax", value);
 			}
 		}
@@ -3415,7 +4316,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseAirApplyAbove", value);
 			}
 		}
@@ -3428,7 +4332,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseAirOn
 		{
-			set { SetArgument("impulseAirOn", value); }
+			set
+			{
+				SetArgument("impulseAirOn", value);
+			}
 		}
 
 		/// <summary>
@@ -3444,9 +4351,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegMult", value);
 			}
 		}
@@ -3463,7 +4376,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegMultStart", value);
 			}
 		}
@@ -3480,7 +4396,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegMax", value);
 			}
 		}
@@ -3497,7 +4416,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impulseOneLegApplyAbove", value);
 			}
 		}
@@ -3510,7 +4432,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ImpulseOneLegOn
 		{
-			set { SetArgument("impulseOneLegOn", value); }
+			set
+			{
+				SetArgument("impulseOneLegOn", value);
+			}
 		}
 
 		/// <summary>
@@ -3526,9 +4451,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbRatio", value);
 			}
 		}
@@ -3546,9 +4477,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbLowerShare", value);
 			}
 		}
@@ -3566,9 +4503,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMoment", value);
 			}
 		}
@@ -3586,9 +4529,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxTwistMomentArm", value);
 			}
 		}
@@ -3606,9 +4555,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxBroomMomentArm", value);
 			}
 		}
@@ -3626,9 +4581,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbRatioAirborne", value);
 			}
 		}
@@ -3646,9 +4607,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMomentAirborne", value);
 			}
 		}
@@ -3666,9 +4633,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxTwistMomentArmAirborne", value);
 			}
 		}
@@ -3686,9 +4659,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxBroomMomentArmAirborne", value);
 			}
 		}
@@ -3706,9 +4685,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbRatioOneLeg", value);
 			}
 		}
@@ -3726,9 +4711,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMomentOneLeg", value);
 			}
 		}
@@ -3746,9 +4737,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxTwistMomentArmOneLeg", value);
 			}
 		}
@@ -3766,9 +4763,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rbMaxBroomMomentArmOneLeg", value);
 			}
 		}
@@ -3780,7 +4783,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>.
 		public RbTwistAxis RbTwistAxis
 		{
-			set { SetArgument("rbTwistAxis", (int)value); }
+			set
+			{
+				SetArgument("rbTwistAxis", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -3791,7 +4797,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RbPivot
 		{
-			set { SetArgument("rbPivot", value); }
+			set
+			{
+				SetArgument("rbPivot", value);
+			}
 		}
 	}
 
@@ -3819,7 +4828,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 
 		/// <summary>
@@ -3830,7 +4842,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Enable
 		{
-			set { SetArgument("enable", value); }
+			set
+			{
+				SetArgument("enable", value);
+			}
 		}
 
 		/// <summary>
@@ -3841,7 +4856,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ToDesired
 		{
-			set { SetArgument("toDesired", value); }
+			set
+			{
+				SetArgument("toDesired", value);
+			}
 		}
 
 		/// <summary>
@@ -3852,7 +4870,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Restore
 		{
-			set { SetArgument("restore", value); }
+			set
+			{
+				SetArgument("restore", value);
+			}
 		}
 
 		/// <summary>
@@ -3863,7 +4884,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ToCurAnimation
 		{
-			set { SetArgument("toCurAnimation", value); }
+			set
+			{
+				SetArgument("toCurAnimation", value);
+			}
 		}
 
 		/// <summary>
@@ -3878,7 +4902,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("index", value);
 			}
 		}
@@ -3896,9 +4923,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lean1", value);
 			}
 		}
@@ -3915,9 +4948,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lean2", value);
 			}
 		}
@@ -3934,9 +4973,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("twist", value);
 			}
 		}
@@ -3954,9 +4999,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("margin", value);
 			}
 		}
@@ -3985,9 +5036,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("index", value);
 			}
 		}
@@ -4006,9 +5063,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 30.0f)
+				{
 					value = 30.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stiffness", value);
 			}
 		}
@@ -4028,9 +5091,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.1f)
+				{
 					value = 1.1f;
+				}
+
 				if (value < 0.9f)
+				{
 					value = 0.9f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -4050,9 +5119,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.3f)
+				{
 					value = 6.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("limitAngle", value);
 			}
 		}
@@ -4072,9 +5147,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1)
+				{
 					value = 1;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("approachDirection", value);
 			}
 		}
@@ -4087,7 +5168,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool VelocityScaled
 		{
-			set { SetArgument("velocityScaled", value); }
+			set
+			{
+				SetArgument("velocityScaled", value);
+			}
 		}
 	}
 
@@ -4120,9 +5204,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("injuredArmTime", value);
 			}
 		}
@@ -4140,9 +5230,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("hipYaw", value);
 			}
 		}
@@ -4160,9 +5256,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("hipRoll", value);
 			}
 		}
@@ -4180,9 +5282,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.7f)
+				{
 					value = 0.7f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceStepExtraHeight", value);
 			}
 		}
@@ -4195,7 +5303,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ForceStep
 		{
-			set { SetArgument("forceStep", value); }
+			set
+			{
+				SetArgument("forceStep", value);
+			}
 		}
 
 		/// <summary>
@@ -4206,7 +5317,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool StepTurn
 		{
-			set { SetArgument("stepTurn", value); }
+			set
+			{
+				SetArgument("stepTurn", value);
+			}
 		}
 
 		/// <summary>
@@ -4222,9 +5336,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("velMultiplierStart", value);
 			}
 		}
@@ -4242,9 +5362,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				SetArgument("velMultiplierEnd", value);
 			}
 		}
@@ -4262,9 +5388,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("velForceStep", value);
 			}
 		}
@@ -4282,9 +5414,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("velStepTurn", value);
 			}
 		}
@@ -4298,7 +5436,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool VelScales
 		{
-			set { SetArgument("velScales", value); }
+			set
+			{
+				SetArgument("velScales", value);
+			}
 		}
 	}
 
@@ -4331,9 +5472,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeBeforeCollapseWoundLeg", value);
 			}
 		}
@@ -4351,9 +5498,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legInjuryTime", value);
 			}
 		}
@@ -4366,7 +5519,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LegForceStep
 		{
-			set { SetArgument("legForceStep", value); }
+			set
+			{
+				SetArgument("legForceStep", value);
+			}
 		}
 
 		/// <summary>
@@ -4383,9 +5539,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legLimpBend", value);
 			}
 		}
@@ -4404,9 +5566,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legLiftTime", value);
 			}
 		}
@@ -4424,9 +5592,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legInjury", value);
 			}
 		}
@@ -4444,9 +5618,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("legInjuryHipPitch", value);
 			}
 		}
@@ -4465,9 +5645,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("legInjuryLiftHipPitch", value);
 			}
 		}
@@ -4485,9 +5671,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("legInjurySpineBend", value);
 			}
 		}
@@ -4506,9 +5698,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("legInjuryLiftSpineBend", value);
 			}
 		}
@@ -4537,9 +5735,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("partIndex", value);
 			}
 		}
@@ -4556,7 +5760,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("objectMass", value);
 			}
 		}
@@ -4569,7 +5776,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 WorldPos
 		{
-			set { SetArgument("worldPos", value); }
+			set
+			{
+				SetArgument("worldPos", value);
+			}
 		}
 	}
 
@@ -4602,9 +5812,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 28)
+				{
 					value = 28;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("partIndex", value);
 			}
 		}
@@ -4633,7 +5849,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ForceDefinedInPartSpace
 		{
-			set { SetArgument("forceDefinedInPartSpace", value); }
+			set
+			{
+				SetArgument("forceDefinedInPartSpace", value);
+			}
 		}
 	}
 
@@ -4660,9 +5879,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -4676,7 +5901,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Dir
 		{
-			set { SetArgument("dir", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("dir", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 	}
 
@@ -4703,9 +5931,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAmountMin", value);
 			}
 		}
@@ -4723,9 +5957,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAmountMax", value);
 			}
 		}
@@ -4743,9 +5983,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeTimeMin", value);
 			}
 		}
@@ -4763,9 +6009,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeTimeMax", value);
 			}
 		}
@@ -4794,9 +6046,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -4809,7 +6067,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos
 		{
-			set { SetArgument("pos", value); }
+			set
+			{
+				SetArgument("pos", value);
+			}
 		}
 	}
 
@@ -4836,9 +6097,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -4872,7 +6139,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndex", value);
 			}
 		}
@@ -4889,7 +6159,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("boundIndex", value);
 			}
 		}
@@ -4918,9 +6191,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -4934,7 +6213,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Dir
 		{
-			set { SetArgument("dir", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("dir", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 	}
 
@@ -4961,9 +6243,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAmountMin", value);
 			}
 		}
@@ -4981,9 +6269,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAmountMax", value);
 			}
 		}
@@ -5001,9 +6295,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeTimeMin", value);
 			}
 		}
@@ -5021,9 +6321,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeTimeMax", value);
 			}
 		}
@@ -5052,9 +6358,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -5067,7 +6379,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos
 		{
-			set { SetArgument("pos", value); }
+			set
+			{
+				SetArgument("pos", value);
+			}
 		}
 	}
 
@@ -5094,9 +6409,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -5130,7 +6451,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndex", value);
 			}
 		}
@@ -5147,7 +6471,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("boundIndex", value);
 			}
 		}
@@ -5176,9 +6503,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -5192,7 +6525,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Dir
 		{
-			set { SetArgument("dir", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("dir", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5208,9 +6544,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("bodyPart", value);
 			}
 		}
@@ -5239,9 +6581,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAmountMin", value);
 			}
 		}
@@ -5259,9 +6607,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAmountMax", value);
 			}
 		}
@@ -5279,9 +6633,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeTimeMin", value);
 			}
 		}
@@ -5299,9 +6659,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeTimeMax", value);
 			}
 		}
@@ -5319,9 +6685,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("bodyPart", value);
 			}
 		}
@@ -5350,9 +6722,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -5365,7 +6743,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos
 		{
-			set { SetArgument("pos", value); }
+			set
+			{
+				SetArgument("pos", value);
+			}
 		}
 
 		/// <summary>
@@ -5381,9 +6762,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("bodyPart", value);
 			}
 		}
@@ -5412,9 +6799,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("leanAmount", value);
 			}
 		}
@@ -5448,7 +6841,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndex", value);
 			}
 		}
@@ -5465,7 +6861,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("boundIndex", value);
 			}
 		}
@@ -5483,9 +6882,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("bodyPart", value);
 			}
 		}
@@ -5520,9 +6925,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -5540,9 +6951,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -5555,7 +6972,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 	}
 
@@ -5588,9 +7008,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("muscleStiffness", value);
 			}
 		}
@@ -5603,7 +7029,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 	}
 
@@ -5630,7 +7059,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>.
 		public WeaponMode WeaponMode
 		{
-			set { SetArgument("weaponMode", (int)value); }
+			set
+			{
+				SetArgument("weaponMode", (int)value);
+			}
 		}
 	}
 
@@ -5657,7 +7089,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Hand Hand
 		{
-			set { SetArgument("hand", (int)value); }
+			set
+			{
+				SetArgument("hand", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -5672,7 +7107,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("levelIndex", value);
 			}
 		}
@@ -5689,7 +7127,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("constraintHandle", value);
 			}
 		}
@@ -5703,7 +7144,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 GunToHandA
 		{
-			set { SetArgument("gunToHandA", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("gunToHandA", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5715,7 +7159,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 GunToHandB
 		{
-			set { SetArgument("gunToHandB", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("gunToHandB", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5727,7 +7174,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 GunToHandC
 		{
-			set { SetArgument("gunToHandC", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("gunToHandC", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5739,7 +7189,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 GunToHandD
 		{
-			set { SetArgument("gunToHandD", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("gunToHandD", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -5750,7 +7203,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 GunToMuzzleInGun
 		{
-			set { SetArgument("gunToMuzzleInGun", value); }
+			set
+			{
+				SetArgument("gunToMuzzleInGun", value);
+			}
 		}
 
 		/// <summary>
@@ -5761,7 +7217,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 GunToButtInGun
 		{
-			set { SetArgument("gunToButtInGun", value); }
+			set
+			{
+				SetArgument("gunToButtInGun", value);
+			}
 		}
 	}
 
@@ -5788,9 +7247,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("relaxPeriodUpper", value);
 			}
 		}
@@ -5808,9 +7273,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("relaxPeriodLower", value);
 			}
 		}
@@ -5845,9 +7316,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10000.0f)
+				{
 					value = 10000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("firedWeaponStrength", value);
 			}
 		}
@@ -5860,7 +7337,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Hand GunHandEnum
 		{
-			set { SetArgument("gunHandEnum", (int)value); }
+			set
+			{
+				SetArgument("gunHandEnum", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -5871,7 +7351,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyFireGunForceAtClavicle
 		{
-			set { SetArgument("applyFireGunForceAtClavicle", value); }
+			set
+			{
+				SetArgument("applyFireGunForceAtClavicle", value);
+			}
 		}
 
 		/// <summary>
@@ -5887,9 +7370,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("inhibitTime", value);
 			}
 		}
@@ -5902,7 +7391,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Direction
 		{
-			set { SetArgument("direction", value); }
+			set
+			{
+				SetArgument("direction", value);
+			}
 		}
 
 		/// <summary>
@@ -5918,9 +7410,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("split", value);
 			}
 		}
@@ -5949,7 +7447,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HandCuffs
 		{
-			set { SetArgument("handCuffs", value); }
+			set
+			{
+				SetArgument("handCuffs", value);
+			}
 		}
 
 		/// <summary>
@@ -5960,7 +7461,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HandCuffsBehindBack
 		{
-			set { SetArgument("handCuffsBehindBack", value); }
+			set
+			{
+				SetArgument("handCuffsBehindBack", value);
+			}
 		}
 
 		/// <summary>
@@ -5971,7 +7475,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LegCuffs
 		{
-			set { SetArgument("legCuffs", value); }
+			set
+			{
+				SetArgument("legCuffs", value);
+			}
 		}
 
 		/// <summary>
@@ -5981,7 +7488,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RightDominant
 		{
-			set { SetArgument("rightDominant", value); }
+			set
+			{
+				SetArgument("rightDominant", value);
+			}
 		}
 
 		/// <summary>
@@ -5997,9 +7507,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5)
+				{
 					value = 5;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("passiveMode", value);
 			}
 		}
@@ -6012,7 +7528,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BespokeBehavior
 		{
-			set { SetArgument("bespokeBehaviour", value); }
+			set
+			{
+				SetArgument("bespokeBehaviour", value);
+			}
 		}
 
 		/// <summary>
@@ -6028,9 +7547,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("blend2ZeroPose", value);
 			}
 		}
@@ -6054,7 +7579,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseForces
 		{
-			set { SetArgument("useForces", value); }
+			set
+			{
+				SetArgument("useForces", value);
+			}
 		}
 
 		/// <summary>
@@ -6065,7 +7593,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseTorques
 		{
-			set { SetArgument("useTorques", value); }
+			set
+			{
+				SetArgument("useTorques", value);
+			}
 		}
 
 		/// <summary>
@@ -6076,7 +7607,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LastStandMode
 		{
-			set { SetArgument("lastStandMode", value); }
+			set
+			{
+				SetArgument("lastStandMode", value);
+			}
 		}
 
 		/// <summary>
@@ -6092,9 +7626,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lastStandSinkRate", value);
 			}
 		}
@@ -6112,9 +7652,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lastStandHorizDamping", value);
 			}
 		}
@@ -6132,9 +7678,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lastStandMaxTime", value);
 			}
 		}
@@ -6147,7 +7699,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TurnTowardsBullets
 		{
-			set { SetArgument("turnTowardsBullets", value); }
+			set
+			{
+				SetArgument("turnTowardsBullets", value);
+			}
 		}
 
 		/// <summary>
@@ -6158,7 +7713,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool VelocityBased
 		{
-			set { SetArgument("velocityBased", value); }
+			set
+			{
+				SetArgument("velocityBased", value);
+			}
 		}
 
 		/// <summary>
@@ -6169,7 +7727,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TorqueOnlyInAir
 		{
-			set { SetArgument("torqueOnlyInAir", value); }
+			set
+			{
+				SetArgument("torqueOnlyInAir", value);
+			}
 		}
 
 		/// <summary>
@@ -6185,9 +7746,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceStrength", value);
 			}
 		}
@@ -6205,9 +7772,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 50.0f)
+				{
 					value = 50.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("forceDamping", value);
 			}
 		}
@@ -6225,9 +7798,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceFeetMult", value);
 			}
 		}
@@ -6245,9 +7824,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceSpine3Share", value);
 			}
 		}
@@ -6265,9 +7850,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceLeanReduction", value);
 			}
 		}
@@ -6285,9 +7876,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceInAirShare", value);
 			}
 		}
@@ -6305,9 +7902,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("forceMin", value);
 			}
 		}
@@ -6325,9 +7928,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("forceMax", value);
 			}
 		}
@@ -6345,9 +7954,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("forceSaturationVel", value);
 			}
 		}
@@ -6365,9 +7980,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forceThresholdVel", value);
 			}
 		}
@@ -6385,9 +8006,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueStrength", value);
 			}
 		}
@@ -6405,9 +8032,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueDamping", value);
 			}
 		}
@@ -6425,9 +8058,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("torqueSaturationVel", value);
 			}
 		}
@@ -6445,9 +8084,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("torqueThresholdVel", value);
 			}
 		}
@@ -6465,9 +8110,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("supportPosition", value);
 			}
 		}
@@ -6485,9 +8136,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("noSupportForceMult", value);
 			}
 		}
@@ -6505,9 +8162,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stepUpHelp", value);
 			}
 		}
@@ -6525,9 +8188,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stayUpAcc", value);
 			}
 		}
@@ -6545,9 +8214,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 15.0f)
+				{
 					value = 15.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stayUpAccMax", value);
 			}
 		}
@@ -6599,9 +8274,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("characterStrength", value);
 			}
 		}
@@ -6636,9 +8317,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("characterHealth", value);
 			}
 		}
@@ -6668,7 +8355,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HandsAndKnees
 		{
-			set { SetArgument("handsAndKnees", value); }
+			set
+			{
+				SetArgument("handsAndKnees", value);
+			}
 		}
 
 		/// <summary>
@@ -6679,7 +8369,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool CallRDS
 		{
-			set { SetArgument("callRDS", value); }
+			set
+			{
+				SetArgument("callRDS", value);
+			}
 		}
 
 		/// <summary>
@@ -6695,9 +8388,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("comVelRDSThresh", value);
 			}
 		}
@@ -6710,7 +8409,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ResistRolling
 		{
-			set { SetArgument("resistRolling", value); }
+			set
+			{
+				SetArgument("resistRolling", value);
+			}
 		}
 
 		/// <summary>
@@ -6726,9 +8428,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armReduceSpeed", value);
 			}
 		}
@@ -6746,9 +8454,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				SetArgument("reachLengthMultiplier", value);
 			}
 		}
@@ -6766,9 +8480,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("inhibitRollingTime", value);
 			}
 		}
@@ -6786,9 +8506,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("changeFrictionTime", value);
 			}
 		}
@@ -6806,9 +8532,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundFriction", value);
 			}
 		}
@@ -6826,9 +8558,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("frictionMin", value);
 			}
 		}
@@ -6845,7 +8583,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("frictionMax", value);
 			}
 		}
@@ -6858,7 +8599,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool StopOnSlopes
 		{
-			set { SetArgument("stopOnSlopes", value); }
+			set
+			{
+				SetArgument("stopOnSlopes", value);
+			}
 		}
 
 		/// <summary>
@@ -6874,9 +8618,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stopManual", value);
 			}
 		}
@@ -6894,9 +8644,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stoppedStrengthDecay", value);
 			}
 		}
@@ -6914,9 +8670,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineLean1Offset", value);
 			}
 		}
@@ -6929,7 +8691,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RiflePose
 		{
-			set { SetArgument("riflePose", value); }
+			set
+			{
+				SetArgument("riflePose", value);
+			}
 		}
 
 		/// <summary>
@@ -6940,7 +8705,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HkHeadAvoid
 		{
-			set { SetArgument("hkHeadAvoid", value); }
+			set
+			{
+				SetArgument("hkHeadAvoid", value);
+			}
 		}
 
 		/// <summary>
@@ -6951,7 +8719,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AntiPropClav
 		{
-			set { SetArgument("antiPropClav", value); }
+			set
+			{
+				SetArgument("antiPropClav", value);
+			}
 		}
 
 		/// <summary>
@@ -6962,7 +8733,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AntiPropWeak
 		{
-			set { SetArgument("antiPropWeak", value); }
+			set
+			{
+				SetArgument("antiPropWeak", value);
+			}
 		}
 
 		/// <summary>
@@ -6973,7 +8747,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HeadAsWeakAsArms
 		{
-			set { SetArgument("headAsWeakAsArms", value); }
+			set
+			{
+				SetArgument("headAsWeakAsArms", value);
+			}
 		}
 
 		/// <summary>
@@ -6989,9 +8766,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				SetArgument("successStrength", value);
 			}
 		}
@@ -7021,7 +8804,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Underwater
 		{
-			set { SetArgument("underwater", value); }
+			set
+			{
+				SetArgument("underwater", value);
+			}
 		}
 
 		/// <summary>
@@ -7037,9 +8823,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("viscosity", value);
 			}
 		}
@@ -7057,9 +8849,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("gravityFactor", value);
 			}
 		}
@@ -7077,9 +8875,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1000.0f)
+				{
 					value = -1000.0f;
+				}
+
 				SetArgument("stroke", value);
 			}
 		}
@@ -7092,7 +8896,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LinearStroke
 		{
-			set { SetArgument("linearStroke", value); }
+			set
+			{
+				SetArgument("linearStroke", value);
+			}
 		}
 	}
 
@@ -7125,9 +8932,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spin", value);
 			}
 		}
@@ -7145,9 +8958,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxVelocity", value);
 			}
 		}
@@ -7159,7 +8978,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyToAll
 		{
-			set { SetArgument("applyToAll", value); }
+			set
+			{
+				SetArgument("applyToAll", value);
+			}
 		}
 
 		/// <summary>
@@ -7169,7 +8991,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyToSpine
 		{
-			set { SetArgument("applyToSpine", value); }
+			set
+			{
+				SetArgument("applyToSpine", value);
+			}
 		}
 
 		/// <summary>
@@ -7179,7 +9004,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyToThighs
 		{
-			set { SetArgument("applyToThighs", value); }
+			set
+			{
+				SetArgument("applyToThighs", value);
+			}
 		}
 
 		/// <summary>
@@ -7189,7 +9017,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyToClavicles
 		{
-			set { SetArgument("applyToClavicles", value); }
+			set
+			{
+				SetArgument("applyToClavicles", value);
+			}
 		}
 
 		/// <summary>
@@ -7199,7 +9030,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyToUpperArms
 		{
-			set { SetArgument("applyToUpperArms", value); }
+			set
+			{
+				SetArgument("applyToUpperArms", value);
+			}
 		}
 
 		/// <summary>
@@ -7210,7 +9044,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FootSlip
 		{
-			set { SetArgument("footSlip", value); }
+			set
+			{
+				SetArgument("footSlip", value);
+			}
 		}
 
 		/// <summary>
@@ -7226,9 +9063,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100)
+				{
 					value = 100;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("vehicleClass", value);
 			}
 		}
@@ -7263,9 +9106,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 200.0f)
+				{
 					value = 200.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("somersaultThresh", value);
 			}
 		}
@@ -7283,9 +9132,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("somersaultDamp", value);
 			}
 		}
@@ -7303,9 +9158,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 200.0f)
+				{
 					value = 200.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cartwheelThresh", value);
 			}
 		}
@@ -7323,9 +9184,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cartwheelDamp", value);
 			}
 		}
@@ -7343,9 +9210,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("vehicleCollisionTime", value);
 			}
 		}
@@ -7358,7 +9231,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool V2
 		{
-			set { SetArgument("v2", value); }
+			set
+			{
+				SetArgument("v2", value);
+			}
 		}
 	}
 
@@ -7391,9 +9267,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("scale", value);
 			}
 		}
@@ -7411,9 +9293,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000000.0f)
+				{
 					value = 1000000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("globalMin", value);
 			}
 		}
@@ -7431,9 +9319,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000000.0f)
+				{
 					value = 1000000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("globalMax", value);
 			}
 		}
@@ -7446,7 +9340,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 	}
 
@@ -7473,9 +9370,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.1f)
+				{
 					value = -1.1f;
+				}
+
 				SetArgument("muscleStiffness", value);
 			}
 		}
@@ -7493,9 +9396,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.1f)
+				{
 					value = -1.1f;
+				}
+
 				SetArgument("stiffness", value);
 			}
 		}
@@ -7513,9 +9422,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -7528,7 +9443,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string EffectorMask
 		{
-			set { SetArgument("effectorMask", value); }
+			set
+			{
+				SetArgument("effectorMask", value);
+			}
 		}
 
 		/// <summary>
@@ -7539,7 +9457,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OverideHeadlook
 		{
-			set { SetArgument("overideHeadlook", value); }
+			set
+			{
+				SetArgument("overideHeadlook", value);
+			}
 		}
 
 		/// <summary>
@@ -7550,7 +9471,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OveridePointArm
 		{
-			set { SetArgument("overidePointArm", value); }
+			set
+			{
+				SetArgument("overidePointArm", value);
+			}
 		}
 
 		/// <summary>
@@ -7561,7 +9485,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OveridePointGun
 		{
-			set { SetArgument("overidePointGun", value); }
+			set
+			{
+				SetArgument("overidePointGun", value);
+			}
 		}
 
 		/// <summary>
@@ -7572,7 +9499,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseZMPGravityCompensation
 		{
-			set { SetArgument("useZMPGravityCompensation", value); }
+			set
+			{
+				SetArgument("useZMPGravityCompensation", value);
+			}
 		}
 
 		/// <summary>
@@ -7588,9 +9518,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("gravityCompensation", value);
 			}
 		}
@@ -7608,9 +9544,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("muscleStiffnessLeftArm", value);
 			}
 		}
@@ -7628,9 +9570,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("muscleStiffnessRightArm", value);
 			}
 		}
@@ -7648,9 +9596,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("muscleStiffnessSpine", value);
 			}
 		}
@@ -7668,9 +9622,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("muscleStiffnessLeftLeg", value);
 			}
 		}
@@ -7688,9 +9648,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("muscleStiffnessRightLeg", value);
 			}
 		}
@@ -7708,9 +9674,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stiffnessLeftArm", value);
 			}
 		}
@@ -7728,9 +9700,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stiffnessRightArm", value);
 			}
 		}
@@ -7748,9 +9726,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stiffnessSpine", value);
 			}
 		}
@@ -7768,9 +9752,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stiffnessLeftLeg", value);
 			}
 		}
@@ -7788,9 +9778,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stiffnessRightLeg", value);
 			}
 		}
@@ -7808,9 +9804,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampingLeftArm", value);
 			}
 		}
@@ -7828,9 +9830,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampingRightArm", value);
 			}
 		}
@@ -7848,9 +9856,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampingSpine", value);
 			}
 		}
@@ -7868,9 +9882,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampingLeftLeg", value);
 			}
 		}
@@ -7888,9 +9908,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampingRightLeg", value);
 			}
 		}
@@ -7908,9 +9934,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("gravCompLeftArm", value);
 			}
 		}
@@ -7928,9 +9960,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("gravCompRightArm", value);
 			}
 		}
@@ -7948,9 +9986,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("gravCompSpine", value);
 			}
 		}
@@ -7968,9 +10012,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("gravCompLeftLeg", value);
 			}
 		}
@@ -7988,9 +10038,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("gravCompRightLeg", value);
 			}
 		}
@@ -8008,9 +10064,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("connectedLeftHand", value);
 			}
 		}
@@ -8028,9 +10090,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("connectedRightHand", value);
 			}
 		}
@@ -8048,9 +10116,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < -2)
+				{
 					value = -2;
+				}
+
 				SetArgument("connectedLeftFoot", value);
 			}
 		}
@@ -8068,9 +10142,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < -2)
+				{
 					value = -2;
+				}
+
 				SetArgument("connectedRightFoot", value);
 			}
 		}
@@ -8079,7 +10159,10 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public AnimSource AnimSource
 		{
-			set { SetArgument("animSource", (int)value); }
+			set
+			{
+				SetArgument("animSource", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -8094,7 +10177,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("dampenSideMotionInstanceIndex", value);
 			}
 		}
@@ -8123,9 +10209,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("leftPartID", value);
 			}
 		}
@@ -8143,9 +10235,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leftRadius1", value);
 			}
 		}
@@ -8163,9 +10261,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leftRadius2", value);
 			}
 		}
@@ -8183,9 +10287,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("leftSpeed", value);
 			}
 		}
@@ -8198,7 +10308,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 LeftNormal
 		{
-			set { SetArgument("leftNormal", value); }
+			set
+			{
+				SetArgument("leftNormal", value);
+			}
 		}
 
 		/// <summary>
@@ -8209,7 +10322,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 LeftCentre
 		{
-			set { SetArgument("leftCentre", value); }
+			set
+			{
+				SetArgument("leftCentre", value);
+			}
 		}
 
 		/// <summary>
@@ -8225,9 +10341,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("rightPartID", value);
 			}
 		}
@@ -8245,9 +10367,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rightRadius1", value);
 			}
 		}
@@ -8265,9 +10393,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rightRadius2", value);
 			}
 		}
@@ -8285,9 +10419,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("rightSpeed", value);
 			}
 		}
@@ -8300,7 +10440,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 RightNormal
 		{
-			set { SetArgument("rightNormal", value); }
+			set
+			{
+				SetArgument("rightNormal", value);
+			}
 		}
 
 		/// <summary>
@@ -8311,7 +10454,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 RightCentre
 		{
-			set { SetArgument("rightCentre", value); }
+			set
+			{
+				SetArgument("rightCentre", value);
+			}
 		}
 
 		/// <summary>
@@ -8327,9 +10473,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				SetArgument("shoulderStiffness", value);
 			}
 		}
@@ -8347,9 +10499,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shoulderDamping", value);
 			}
 		}
@@ -8367,9 +10525,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				SetArgument("elbowStiffness", value);
 			}
 		}
@@ -8387,9 +10551,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("elbowDamping", value);
 			}
 		}
@@ -8407,9 +10577,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.7f)
+				{
 					value = 1.7f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leftElbowMin", value);
 			}
 		}
@@ -8427,9 +10603,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.7f)
+				{
 					value = 1.7f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rightElbowMin", value);
 			}
 		}
@@ -8447,9 +10629,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 360.0f)
+				{
 					value = 360.0f;
+				}
+
 				if (value < -360.0f)
+				{
 					value = -360.0f;
+				}
+
 				SetArgument("phaseOffset", value);
 			}
 		}
@@ -8467,9 +10655,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dragReduction", value);
 			}
 		}
@@ -8487,9 +10681,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < -3.1f)
+				{
 					value = -3.1f;
+				}
+
 				SetArgument("IKtwist", value);
 			}
 		}
@@ -8507,9 +10707,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angVelThreshold", value);
 			}
 		}
@@ -8527,9 +10733,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angVelGain", value);
 			}
 		}
@@ -8542,7 +10754,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public MirrorMode MirrorMode
 		{
-			set { SetArgument("mirrorMode", (int)value); }
+			set
+			{
+				SetArgument("mirrorMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -8552,7 +10767,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public AdaptiveMode AdaptiveMode
 		{
-			set { SetArgument("adaptiveMode", (int)value); }
+			set
+			{
+				SetArgument("adaptiveMode", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -8563,7 +10781,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ForceSync
 		{
-			set { SetArgument("forceSync", value); }
+			set
+			{
+				SetArgument("forceSync", value);
+			}
 		}
 
 		/// <summary>
@@ -8574,7 +10795,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseLeft
 		{
-			set { SetArgument("useLeft", value); }
+			set
+			{
+				SetArgument("useLeft", value);
+			}
 		}
 
 		/// <summary>
@@ -8585,7 +10809,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseRight
 		{
-			set { SetArgument("useRight", value); }
+			set
+			{
+				SetArgument("useRight", value);
+			}
 		}
 
 		/// <summary>
@@ -8596,7 +10823,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DisableOnImpact
 		{
-			set { SetArgument("disableOnImpact", value); }
+			set
+			{
+				SetArgument("disableOnImpact", value);
+			}
 		}
 	}
 
@@ -8623,9 +10853,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("angSpeed", value);
 			}
 		}
@@ -8643,9 +10879,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -8663,9 +10905,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("amplitude", value);
 			}
 		}
@@ -8683,9 +10931,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 8.0f)
+				{
 					value = 8.0f;
+				}
+
 				if (value < -4.0f)
+				{
 					value = -4.0f;
+				}
+
 				SetArgument("phase", value);
 			}
 		}
@@ -8703,9 +10957,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -8723,9 +10983,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("leftElbowAngle", value);
 			}
 		}
@@ -8743,9 +11009,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("rightElbowAngle", value);
 			}
 		}
@@ -8763,9 +11035,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lean1mult", value);
 			}
 		}
@@ -8783,9 +11061,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				if (value < -6.0f)
+				{
 					value = -6.0f;
+				}
+
 				SetArgument("lean1offset", value);
 			}
 		}
@@ -8803,9 +11087,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("elbowRate", value);
 			}
 		}
@@ -8817,7 +11107,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public ArmDirection ArmDirection
 		{
-			set { SetArgument("armDirection", (int)value); }
+			set
+			{
+				SetArgument("armDirection", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -8828,7 +11121,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DisableOnImpact
 		{
-			set { SetArgument("disableOnImpact", value); }
+			set
+			{
+				SetArgument("disableOnImpact", value);
+			}
 		}
 
 		/// <summary>
@@ -8839,7 +11135,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SetBackAngles
 		{
-			set { SetArgument("setBackAngles", value); }
+			set
+			{
+				SetArgument("setBackAngles", value);
+			}
 		}
 
 		/// <summary>
@@ -8850,7 +11149,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseAngMom
 		{
-			set { SetArgument("useAngMom", value); }
+			set
+			{
+				SetArgument("useAngMom", value);
+			}
 		}
 
 		/// <summary>
@@ -8861,7 +11163,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BendLeftElbow
 		{
-			set { SetArgument("bendLeftElbow", value); }
+			set
+			{
+				SetArgument("bendLeftElbow", value);
+			}
 		}
 
 		/// <summary>
@@ -8872,7 +11177,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BendRightElbow
 		{
-			set { SetArgument("bendRightElbow", value); }
+			set
+			{
+				SetArgument("bendRightElbow", value);
+			}
 		}
 
 		/// <summary>
@@ -8883,7 +11191,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 	}
 
@@ -8909,7 +11220,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("numStepsTillSlump", value);
 			}
 		}
@@ -8926,7 +11240,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stable2SlumpTime", value);
 			}
 		}
@@ -8943,7 +11260,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("exclusionZone", value);
 			}
 		}
@@ -8961,9 +11281,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footFrictionMultStart", value);
 			}
 		}
@@ -8981,9 +11307,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 50.0f)
+				{
 					value = 50.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footFrictionMultRate", value);
 			}
 		}
@@ -9001,9 +11333,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backFrictionMultStart", value);
 			}
 		}
@@ -9021,9 +11359,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 50.0f)
+				{
 					value = 50.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backFrictionMultRate", value);
 			}
 		}
@@ -9041,9 +11385,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impactLegStiffReduction", value);
 			}
 		}
@@ -9061,9 +11411,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("slumpLegStiffReduction", value);
 			}
 		}
@@ -9081,9 +11437,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 50.0f)
+				{
 					value = 50.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("slumpLegStiffRate", value);
 			}
 		}
@@ -9101,9 +11463,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reactTime", value);
 			}
 		}
@@ -9121,9 +11489,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impactExagTime", value);
 			}
 		}
@@ -9141,9 +11515,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("glanceSpinTime", value);
 			}
 		}
@@ -9161,9 +11541,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("glanceSpinMag", value);
 			}
 		}
@@ -9181,9 +11567,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("glanceSpinDecayMult", value);
 			}
 		}
@@ -9200,7 +11592,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -2)
+				{
 					value = -2;
+				}
+
 				SetArgument("ignoreColWithIndex", value);
 			}
 		}
@@ -9218,9 +11613,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("slumpMode", value);
 			}
 		}
@@ -9238,9 +11639,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("reboundMode", value);
 			}
 		}
@@ -9258,9 +11665,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("ignoreColMassBelow", value);
 			}
 		}
@@ -9278,9 +11691,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1)
+				{
 					value = 1;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("forwardMode", value);
 			}
 		}
@@ -9298,9 +11717,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("timeToForward", value);
 			}
 		}
@@ -9318,9 +11743,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reboundForce", value);
 			}
 		}
@@ -9333,7 +11764,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BraceWall
 		{
-			set { SetArgument("braceWall", value); }
+			set
+			{
+				SetArgument("braceWall", value);
+			}
 		}
 
 		/// <summary>
@@ -9349,9 +11783,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("ignoreColVolumeBelow", value);
 			}
 		}
@@ -9364,7 +11804,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FallOverWallDrape
 		{
-			set { SetArgument("fallOverWallDrape", value); }
+			set
+			{
+				SetArgument("fallOverWallDrape", value);
+			}
 		}
 
 		/// <summary>
@@ -9375,7 +11818,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FallOverHighWalls
 		{
-			set { SetArgument("fallOverHighWalls", value); }
+			set
+			{
+				SetArgument("fallOverHighWalls", value);
+			}
 		}
 
 		/// <summary>
@@ -9386,7 +11832,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Snap
 		{
-			set { SetArgument("snap", value); }
+			set
+			{
+				SetArgument("snap", value);
+			}
 		}
 
 		/// <summary>
@@ -9402,9 +11851,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("snapMag", value);
 			}
 		}
@@ -9422,9 +11877,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("snapDirectionRandomness", value);
 			}
 		}
@@ -9437,7 +11898,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapLeftArm
 		{
-			set { SetArgument("snapLeftArm", value); }
+			set
+			{
+				SetArgument("snapLeftArm", value);
+			}
 		}
 
 		/// <summary>
@@ -9448,7 +11912,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapRightArm
 		{
-			set { SetArgument("snapRightArm", value); }
+			set
+			{
+				SetArgument("snapRightArm", value);
+			}
 		}
 
 		/// <summary>
@@ -9459,7 +11926,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapLeftLeg
 		{
-			set { SetArgument("snapLeftLeg", value); }
+			set
+			{
+				SetArgument("snapLeftLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -9470,7 +11940,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapRightLeg
 		{
-			set { SetArgument("snapRightLeg", value); }
+			set
+			{
+				SetArgument("snapRightLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -9481,7 +11954,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapSpine
 		{
-			set { SetArgument("snapSpine", value); }
+			set
+			{
+				SetArgument("snapSpine", value);
+			}
 		}
 
 		/// <summary>
@@ -9492,7 +11968,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapNeck
 		{
-			set { SetArgument("snapNeck", value); }
+			set
+			{
+				SetArgument("snapNeck", value);
+			}
 		}
 
 		/// <summary>
@@ -9503,7 +11982,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapPhasedLegs
 		{
-			set { SetArgument("snapPhasedLegs", value); }
+			set
+			{
+				SetArgument("snapPhasedLegs", value);
+			}
 		}
 
 		/// <summary>
@@ -9519,9 +12001,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("snapHipType", value);
 			}
 		}
@@ -9539,9 +12027,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("unSnapInterval", value);
 			}
 		}
@@ -9559,9 +12053,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("unSnapRatio", value);
 			}
 		}
@@ -9574,7 +12074,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapUseTorques
 		{
-			set { SetArgument("snapUseTorques", value); }
+			set
+			{
+				SetArgument("snapUseTorques", value);
+			}
 		}
 
 		/// <summary>
@@ -9590,9 +12093,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impactWeaknessZeroDuration", value);
 			}
 		}
@@ -9610,9 +12119,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impactWeaknessRampDuration", value);
 			}
 		}
@@ -9630,9 +12145,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("impactLoosenessAmount", value);
 			}
 		}
@@ -9645,7 +12166,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ObjectBehindVictim
 		{
-			set { SetArgument("objectBehindVictim", value); }
+			set
+			{
+				SetArgument("objectBehindVictim", value);
+			}
 		}
 
 		/// <summary>
@@ -9656,7 +12180,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 ObjectBehindVictimPos
 		{
-			set { SetArgument("objectBehindVictimPos", value); }
+			set
+			{
+				SetArgument("objectBehindVictimPos", value);
+			}
 		}
 
 		/// <summary>
@@ -9700,9 +12227,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -9720,9 +12253,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("elbow", value);
 			}
 		}
@@ -9740,9 +12279,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shoulder", value);
 			}
 		}
@@ -9760,9 +12305,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDamping", value);
 			}
 		}
@@ -9775,7 +12326,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -9786,7 +12340,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HeadLookPos
 		{
-			set { SetArgument("headLookPos", value); }
+			set
+			{
+				SetArgument("headLookPos", value);
+			}
 		}
 
 		/// <summary>
@@ -9801,7 +12358,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("headLookInstanceIndex", value);
 			}
 		}
@@ -9818,9 +12378,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("spineStiffness", value);
 			}
 		}
@@ -9838,9 +12404,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("somersaultAngle", value);
 			}
 		}
@@ -9858,9 +12430,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("somersaultAngleThreshold", value);
 			}
 		}
@@ -9878,9 +12456,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sideSomersaultAngle", value);
 			}
 		}
@@ -9897,9 +12481,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sideSomersaultAngleThreshold", value);
 			}
 		}
@@ -9912,7 +12502,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BackwardsAutoTurn
 		{
-			set { SetArgument("backwardsAutoTurn", value); }
+			set
+			{
+				SetArgument("backwardsAutoTurn", value);
+			}
 		}
 
 		/// <summary>
@@ -9928,9 +12521,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("turnWithBumpRadius", value);
 			}
 		}
@@ -9943,7 +12542,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BackwardsArms
 		{
-			set { SetArgument("backwardsArms", value); }
+			set
+			{
+				SetArgument("backwardsArms", value);
+			}
 		}
 
 		/// <summary>
@@ -9954,7 +12556,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BlendToZeroPose
 		{
-			set { SetArgument("blendToZeroPose", value); }
+			set
+			{
+				SetArgument("blendToZeroPose", value);
+			}
 		}
 
 		/// <summary>
@@ -9965,7 +12570,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ArmsOutOnPush
 		{
-			set { SetArgument("armsOutOnPush", value); }
+			set
+			{
+				SetArgument("armsOutOnPush", value);
+			}
 		}
 
 		/// <summary>
@@ -9981,9 +12589,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armsOutOnPushMultiplier", value);
 			}
 		}
@@ -10001,9 +12615,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armsOutOnPushTimeout", value);
 			}
 		}
@@ -10021,9 +12641,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("returningToBalanceArmsOut", value);
 			}
 		}
@@ -10041,9 +12667,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armsOutStraightenElbows", value);
 			}
 		}
@@ -10061,9 +12693,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("armsOutMinLean2", value);
 			}
 		}
@@ -10080,9 +12718,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineDamping", value);
 			}
 		}
@@ -10094,7 +12738,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseBodyTurn
 		{
-			set { SetArgument("useBodyTurn", value); }
+			set
+			{
+				SetArgument("useBodyTurn", value);
+			}
 		}
 
 		/// <summary>
@@ -10110,9 +12757,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("elbowAngleOnContact", value);
 			}
 		}
@@ -10130,9 +12783,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("bendElbowsTime", value);
 			}
 		}
@@ -10150,9 +12809,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -3.0f)
+				{
 					value = -3.0f;
+				}
+
 				SetArgument("bendElbowsGait", value);
 			}
 		}
@@ -10170,9 +12835,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("hipL2ArmL2", value);
 			}
 		}
@@ -10190,9 +12861,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -3.0f)
+				{
 					value = -3.0f;
+				}
+
 				SetArgument("shoulderL2", value);
 			}
 		}
@@ -10210,9 +12887,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("shoulderL1", value);
 			}
 		}
@@ -10230,9 +12913,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -3.0f)
+				{
 					value = -3.0f;
+				}
+
 				SetArgument("shoulderTwist", value);
 			}
 		}
@@ -10250,9 +12939,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("headLookAtVelProb", value);
 			}
 		}
@@ -10270,9 +12965,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnOffProb", value);
 			}
 		}
@@ -10290,9 +12991,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turn2VelProb", value);
 			}
 		}
@@ -10310,9 +13017,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnAwayProb", value);
 			}
 		}
@@ -10330,9 +13043,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnLeftProb", value);
 			}
 		}
@@ -10350,9 +13069,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnRightProb", value);
 			}
 		}
@@ -10370,9 +13095,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turn2TargetProb", value);
 			}
 		}
@@ -10423,9 +13154,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("braceDistance", value);
 			}
 		}
@@ -10443,9 +13180,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("targetPredictionTime", value);
 			}
 		}
@@ -10463,9 +13206,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reachAbsorbtionTime", value);
 			}
 		}
@@ -10483,9 +13232,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("braceStiffness", value);
 			}
 		}
@@ -10503,9 +13258,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minBraceTime", value);
 			}
 		}
@@ -10523,9 +13284,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeToBackwardsBrace", value);
 			}
 		}
@@ -10543,9 +13310,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handsDelayMin", value);
 			}
 		}
@@ -10563,9 +13336,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handsDelayMax", value);
 			}
 		}
@@ -10583,9 +13362,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("braceOffset", value);
 			}
 		}
@@ -10603,9 +13388,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("moveRadius", value);
 			}
 		}
@@ -10623,9 +13414,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("moveAmount", value);
 			}
 		}
@@ -10638,7 +13435,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool MoveWhenBracing
 		{
-			set { SetArgument("moveWhenBracing", value); }
+			set
+			{
+				SetArgument("moveWhenBracing", value);
+			}
 		}
 	}
 
@@ -10665,9 +13465,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("stiffness", value);
 			}
 		}
@@ -10685,9 +13491,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampingFactor", value);
 			}
 		}
@@ -10705,9 +13517,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("asymmetry", value);
 			}
 		}
@@ -10724,7 +13542,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("randomSeed", value);
 			}
 		}
@@ -10742,9 +13563,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backTwist", value);
 			}
 		}
@@ -10757,7 +13584,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 	}
 
@@ -10784,9 +13614,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("stiffness", value);
 			}
 		}
@@ -10804,9 +13640,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("useArmToSlowDown", value);
 			}
 		}
@@ -10824,9 +13666,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armReachAmount", value);
 			}
 		}
@@ -10839,7 +13687,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 
 		/// <summary>
@@ -10855,9 +13706,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("legPush", value);
 			}
 		}
@@ -10875,9 +13732,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -2.0f)
+				{
 					value = -2.0f;
+				}
+
 				SetArgument("asymmetricalLegs", value);
 			}
 		}
@@ -10895,9 +13758,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("noRollTimeBeforeSuccess", value);
 			}
 		}
@@ -10915,9 +13784,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollVelForSuccess", value);
 			}
 		}
@@ -10935,9 +13810,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollVelLinearContribution", value);
 			}
 		}
@@ -10955,9 +13836,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("velocityScale", value);
 			}
 		}
@@ -10975,9 +13862,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("velocityOffset", value);
 			}
 		}
@@ -10990,7 +13883,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyMinMaxFriction
 		{
-			set { SetArgument("applyMinMaxFriction", value); }
+			set
+			{
+				SetArgument("applyMinMaxFriction", value);
+			}
 		}
 	}
 
@@ -11016,9 +13912,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -11035,9 +13937,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("backStiffness", value);
 			}
 		}
@@ -11055,9 +13963,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("legStiffness", value);
 			}
 		}
@@ -11075,9 +13989,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDamping", value);
 			}
 		}
@@ -11095,9 +14015,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backDamping", value);
 			}
 		}
@@ -11115,9 +14041,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legDamping", value);
 			}
 		}
@@ -11135,9 +14067,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armPeriod", value);
 			}
 		}
@@ -11155,9 +14093,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backPeriod", value);
 			}
 		}
@@ -11175,9 +14119,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legPeriod", value);
 			}
 		}
@@ -11190,7 +14140,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 
 		/// <summary>
@@ -11205,9 +14158,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armAmplitude", value);
 			}
 		}
@@ -11225,9 +14184,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("backAmplitude", value);
 			}
 		}
@@ -11245,9 +14210,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legAmplitude", value);
 			}
 		}
@@ -11264,9 +14235,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("elbowAmplitude", value);
 			}
 		}
@@ -11283,9 +14260,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("kneeAmplitude", value);
 			}
 		}
@@ -11298,7 +14281,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RollOverFlag
 		{
-			set { SetArgument("rollOverFlag", value); }
+			set
+			{
+				SetArgument("rollOverFlag", value);
+			}
 		}
 
 		/// <summary>
@@ -11314,9 +14300,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("blendArms", value);
 			}
 		}
@@ -11334,9 +14326,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("blendBack", value);
 			}
 		}
@@ -11354,9 +14352,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("blendLegs", value);
 			}
 		}
@@ -11369,7 +14373,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyStiffness
 		{
-			set { SetArgument("applyStiffness", value); }
+			set
+			{
+				SetArgument("applyStiffness", value);
+			}
 		}
 
 		/// <summary>
@@ -11380,7 +14387,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OnFire
 		{
-			set { SetArgument("onFire", value); }
+			set
+			{
+				SetArgument("onFire", value);
+			}
 		}
 
 		/// <summary>
@@ -11396,9 +14406,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.3f)
+				{
 					value = 6.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shoulderLean1", value);
 			}
 		}
@@ -11416,9 +14432,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.3f)
+				{
 					value = 6.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shoulderLean2", value);
 			}
 		}
@@ -11436,9 +14458,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lean1BlendFactor", value);
 			}
 		}
@@ -11456,9 +14484,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lean2BlendFactor", value);
 			}
 		}
@@ -11476,9 +14510,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 300.0f)
+				{
 					value = 300.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollTorqueScale", value);
 			}
 		}
@@ -11496,9 +14536,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 60.0f)
+				{
 					value = 60.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxRollOverTime", value);
 			}
 		}
@@ -11516,9 +14562,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollOverRadius", value);
 			}
 		}
@@ -11547,9 +14599,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("braceDistance", value);
 			}
 		}
@@ -11567,9 +14625,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("targetPredictionTime", value);
 			}
 		}
@@ -11587,9 +14651,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reachAbsorbtionTime", value);
 			}
 		}
@@ -11606,7 +14676,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndex", value);
 			}
 		}
@@ -11624,9 +14697,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -11639,7 +14718,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool GrabDontLetGo
 		{
-			set { SetArgument("grabDontLetGo", value); }
+			set
+			{
+				SetArgument("grabDontLetGo", value);
+			}
 		}
 
 		/// <summary>
@@ -11655,9 +14737,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("grabStrength", value);
 			}
 		}
@@ -11675,9 +14763,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabDistance", value);
 			}
 		}
@@ -11695,9 +14789,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.2f)
+				{
 					value = 3.2f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabReachAngle", value);
 			}
 		}
@@ -11715,9 +14815,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabHoldTimer", value);
 			}
 		}
@@ -11735,9 +14841,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxGrabCarVelocity", value);
 			}
 		}
@@ -11755,9 +14867,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("legStiffness", value);
 			}
 		}
@@ -11775,9 +14893,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeToBackwardsBrace", value);
 			}
 		}
@@ -11790,7 +14914,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Look
 		{
-			set { SetArgument("look", value); }
+			set
+			{
+				SetArgument("look", value);
+			}
 		}
 
 		/// <summary>
@@ -11801,7 +14928,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos
 		{
-			set { SetArgument("pos", value); }
+			set
+			{
+				SetArgument("pos", value);
+			}
 		}
 
 		/// <summary>
@@ -11817,9 +14947,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minBraceTime", value);
 			}
 		}
@@ -11837,9 +14973,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handsDelayMin", value);
 			}
 		}
@@ -11857,9 +14999,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handsDelayMax", value);
 			}
 		}
@@ -11872,7 +15020,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool MoveAway
 		{
-			set { SetArgument("moveAway", value); }
+			set
+			{
+				SetArgument("moveAway", value);
+			}
 		}
 
 		/// <summary>
@@ -11888,9 +15039,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("moveAwayAmount", value);
 			}
 		}
@@ -11908,9 +15065,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("moveAwayLean", value);
 			}
 		}
@@ -11928,9 +15091,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("moveSideways", value);
 			}
 		}
@@ -11943,7 +15112,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BbArms
 		{
-			set { SetArgument("bbArms", value); }
+			set
+			{
+				SetArgument("bbArms", value);
+			}
 		}
 
 		/// <summary>
@@ -11954,7 +15126,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool NewBrace
 		{
-			set { SetArgument("newBrace", value); }
+			set
+			{
+				SetArgument("newBrace", value);
+			}
 		}
 
 		/// <summary>
@@ -11965,7 +15140,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BraceOnImpact
 		{
-			set { SetArgument("braceOnImpact", value); }
+			set
+			{
+				SetArgument("braceOnImpact", value);
+			}
 		}
 
 		/// <summary>
@@ -11976,7 +15154,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Roll2Velocity
 		{
-			set { SetArgument("roll2Velocity", value); }
+			set
+			{
+				SetArgument("roll2Velocity", value);
+			}
 		}
 
 		/// <summary>
@@ -11992,9 +15173,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("rollType", value);
 			}
 		}
@@ -12007,7 +15194,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapImpacts
 		{
-			set { SetArgument("snapImpacts", value); }
+			set
+			{
+				SetArgument("snapImpacts", value);
+			}
 		}
 
 		/// <summary>
@@ -12023,9 +15213,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < -20.0f)
+				{
 					value = -20.0f;
+				}
+
 				SetArgument("snapImpact", value);
 			}
 		}
@@ -12043,9 +15239,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < -20.0f)
+				{
 					value = -20.0f;
+				}
+
 				SetArgument("snapBonnet", value);
 			}
 		}
@@ -12063,9 +15265,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < -20.0f)
+				{
 					value = -20.0f;
+				}
+
 				SetArgument("snapFloor", value);
 			}
 		}
@@ -12078,7 +15286,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DampVel
 		{
-			set { SetArgument("dampVel", value); }
+			set
+			{
+				SetArgument("dampVel", value);
+			}
 		}
 
 		/// <summary>
@@ -12094,9 +15305,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampSpin", value);
 			}
 		}
@@ -12114,9 +15331,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 40.0f)
+				{
 					value = 40.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampUpVel", value);
 			}
 		}
@@ -12134,9 +15357,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampSpinThresh", value);
 			}
 		}
@@ -12154,9 +15383,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dampUpVelThresh", value);
 			}
 		}
@@ -12169,7 +15404,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool GsHelp
 		{
-			set { SetArgument("gsHelp", value); }
+			set
+			{
+				SetArgument("gsHelp", value);
+			}
 		}
 
 		/// <summary>
@@ -12185,9 +15423,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("gsEndMin", value);
 			}
 		}
@@ -12205,9 +15449,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("gsSideMin", value);
 			}
 		}
@@ -12225,9 +15475,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("gsSideMax", value);
 			}
 		}
@@ -12245,9 +15501,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("gsUpness", value);
 			}
 		}
@@ -12265,9 +15527,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("gsCarVelMin", value);
 			}
 		}
@@ -12280,7 +15548,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool GsScale1Foot
 		{
-			set { SetArgument("gsScale1Foot", value); }
+			set
+			{
+				SetArgument("gsScale1Foot", value);
+			}
 		}
 
 		/// <summary>
@@ -12296,9 +15567,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("gsFricScale1", value);
 			}
 		}
@@ -12311,7 +15588,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string GsFricMask1
 		{
-			set { SetArgument("gsFricMask1", value); }
+			set
+			{
+				SetArgument("gsFricMask1", value);
+			}
 		}
 
 		/// <summary>
@@ -12327,9 +15607,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("gsFricScale2", value);
 			}
 		}
@@ -12342,7 +15628,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string GsFricMask2
 		{
-			set { SetArgument("gsFricMask2", value); }
+			set
+			{
+				SetArgument("gsFricMask2", value);
+			}
 		}
 	}
 
@@ -12370,7 +15659,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 SurfacePoint
 		{
-			set { SetArgument("surfacePoint", value); }
+			set
+			{
+				SetArgument("surfacePoint", value);
+			}
 		}
 
 		/// <summary>
@@ -12382,7 +15674,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 SurfaceNormal
 		{
-			set { SetArgument("surfaceNormal", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("surfaceNormal", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -12397,7 +15692,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("buoyancy", value);
 			}
 		}
@@ -12414,7 +15712,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("chestBuoyancy", value);
 			}
 		}
@@ -12431,7 +15732,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -12444,7 +15748,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Righting
 		{
-			set { SetArgument("righting", value); }
+			set
+			{
+				SetArgument("righting", value);
+			}
 		}
 
 		/// <summary>
@@ -12459,7 +15766,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rightingStrength", value);
 			}
 		}
@@ -12476,7 +15786,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rightingTime", value);
 			}
 		}
@@ -12505,9 +15818,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("torsoStiffness", value);
 			}
 		}
@@ -12525,9 +15844,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				SetArgument("legsStiffness", value);
 			}
 		}
@@ -12545,9 +15870,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armsStiffness", value);
 			}
 		}
@@ -12565,9 +15896,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("backwardsMinArmOffset", value);
 			}
 		}
@@ -12585,9 +15922,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forwardMaxArmOffset", value);
 			}
 		}
@@ -12605,9 +15948,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("zAxisSpinReduction", value);
 			}
 		}
@@ -12625,9 +15974,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("extraSit", value);
 			}
 		}
@@ -12640,7 +15995,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -12651,7 +16009,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string Mask
 		{
-			set { SetArgument("mask", value); }
+			set
+			{
+				SetArgument("mask", value);
+			}
 		}
 	}
 
@@ -12678,9 +16039,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stunMag", value);
 			}
 		}
@@ -12698,9 +16065,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("initialMult", value);
 			}
 		}
@@ -12718,9 +16091,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("largeMult", value);
 			}
 		}
@@ -12738,9 +16117,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 200.0f)
+				{
 					value = 200.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("largeMinTime", value);
 			}
 		}
@@ -12758,9 +16143,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 200.0f)
+				{
 					value = 200.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("largeMaxTime", value);
 			}
 		}
@@ -12778,9 +16169,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("movingMult", value);
 			}
 		}
@@ -12798,9 +16195,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("balancingMult", value);
 			}
 		}
@@ -12818,9 +16221,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("airborneMult", value);
 			}
 		}
@@ -12838,9 +16247,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("movingThresh", value);
 			}
 		}
@@ -12858,9 +16273,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stunInterval", value);
 			}
 		}
@@ -12878,9 +16299,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("directionRandomness", value);
 			}
 		}
@@ -12893,7 +16320,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LeftArm
 		{
-			set { SetArgument("leftArm", value); }
+			set
+			{
+				SetArgument("leftArm", value);
+			}
 		}
 
 		/// <summary>
@@ -12904,7 +16334,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RightArm
 		{
-			set { SetArgument("rightArm", value); }
+			set
+			{
+				SetArgument("rightArm", value);
+			}
 		}
 
 		/// <summary>
@@ -12915,7 +16348,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LeftLeg
 		{
-			set { SetArgument("leftLeg", value); }
+			set
+			{
+				SetArgument("leftLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -12926,7 +16362,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RightLeg
 		{
-			set { SetArgument("rightLeg", value); }
+			set
+			{
+				SetArgument("rightLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -12937,7 +16376,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Spine
 		{
-			set { SetArgument("spine", value); }
+			set
+			{
+				SetArgument("spine", value);
+			}
 		}
 
 		/// <summary>
@@ -12948,7 +16390,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Neck
 		{
-			set { SetArgument("neck", value); }
+			set
+			{
+				SetArgument("neck", value);
+			}
 		}
 
 		/// <summary>
@@ -12959,7 +16404,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PhasedLegs
 		{
-			set { SetArgument("phasedLegs", value); }
+			set
+			{
+				SetArgument("phasedLegs", value);
+			}
 		}
 
 		/// <summary>
@@ -12970,7 +16418,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyStiffness
 		{
-			set { SetArgument("applyStiffness", value); }
+			set
+			{
+				SetArgument("applyStiffness", value);
+			}
 		}
 
 		/// <summary>
@@ -12981,7 +16432,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseTorques
 		{
-			set { SetArgument("useTorques", value); }
+			set
+			{
+				SetArgument("useTorques", value);
+			}
 		}
 
 		/// <summary>
@@ -12997,9 +16451,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("hipType", value);
 			}
 		}
@@ -13028,9 +16488,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -13048,9 +16514,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -13068,9 +16540,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("magOfForce", value);
 			}
 		}
@@ -13088,9 +16566,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxDistanceFromPelToHitPoint", value);
 			}
 		}
@@ -13108,9 +16592,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxForceDist", value);
 			}
 		}
@@ -13128,9 +16618,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stepExclusionZone", value);
 			}
 		}
@@ -13148,9 +16644,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("minLegHeight", value);
 			}
 		}
@@ -13168,9 +16670,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("bodyTwist", value);
 			}
 		}
@@ -13188,9 +16696,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxTwist", value);
 			}
 		}
@@ -13203,7 +16717,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 FallOverWallEndA
 		{
-			set { SetArgument("fallOverWallEndA", value); }
+			set
+			{
+				SetArgument("fallOverWallEndA", value);
+			}
 		}
 
 		/// <summary>
@@ -13214,7 +16731,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 FallOverWallEndB
 		{
-			set { SetArgument("fallOverWallEndB", value); }
+			set
+			{
+				SetArgument("fallOverWallEndB", value);
+			}
 		}
 
 		/// <summary>
@@ -13225,7 +16745,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public float ForceAngleAbort
 		{
-			set { SetArgument("forceAngleAbort", value); }
+			set
+			{
+				SetArgument("forceAngleAbort", value);
+			}
 		}
 
 		/// <summary>
@@ -13236,7 +16759,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public float ForceTimeOut
 		{
-			set { SetArgument("forceTimeOut", value); }
+			set
+			{
+				SetArgument("forceTimeOut", value);
+			}
 		}
 
 		/// <summary>
@@ -13247,7 +16773,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool MoveArms
 		{
-			set { SetArgument("moveArms", value); }
+			set
+			{
+				SetArgument("moveArms", value);
+			}
 		}
 
 		/// <summary>
@@ -13258,7 +16787,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool MoveLegs
 		{
-			set { SetArgument("moveLegs", value); }
+			set
+			{
+				SetArgument("moveLegs", value);
+			}
 		}
 
 		/// <summary>
@@ -13269,7 +16801,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BendSpine
 		{
-			set { SetArgument("bendSpine", value); }
+			set
+			{
+				SetArgument("bendSpine", value);
+			}
 		}
 
 		/// <summary>
@@ -13285,9 +16820,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angleDirWithWallNormal", value);
 			}
 		}
@@ -13305,9 +16846,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leaningAngleThreshold", value);
 			}
 		}
@@ -13325,9 +16872,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 30.0f)
+				{
 					value = 30.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("maxAngVel", value);
 			}
 		}
@@ -13340,7 +16893,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AdaptForcesToLowWall
 		{
-			set { SetArgument("adaptForcesToLowWall", value); }
+			set
+			{
+				SetArgument("adaptForcesToLowWall", value);
+			}
 		}
 
 		/// <summary>
@@ -13356,9 +16912,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("maxWallHeight", value);
 			}
 		}
@@ -13376,9 +16938,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("distanceToSendSuccessMessage", value);
 			}
 		}
@@ -13396,9 +16964,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollingBackThr", value);
 			}
 		}
@@ -13416,9 +16990,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("rollingPotential", value);
 			}
 		}
@@ -13431,7 +17011,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseArmIK
 		{
-			set { SetArgument("useArmIK", value); }
+			set
+			{
+				SetArgument("useArmIK", value);
+			}
 		}
 
 		/// <summary>
@@ -13447,9 +17030,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reachDistanceFromHitPoint", value);
 			}
 		}
@@ -13467,9 +17056,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minReachDistanceFromHitPoint", value);
 			}
 		}
@@ -13487,9 +17082,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angleTotallyBack", value);
 			}
 		}
@@ -13513,7 +17114,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseLeft
 		{
-			set { SetArgument("useLeft", value); }
+			set
+			{
+				SetArgument("useLeft", value);
+			}
 		}
 
 		/// <summary>
@@ -13524,7 +17128,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseRight
 		{
-			set { SetArgument("useRight", value); }
+			set
+			{
+				SetArgument("useRight", value);
+			}
 		}
 
 		/// <summary>
@@ -13535,7 +17142,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DropWeaponIfNecessary
 		{
-			set { SetArgument("dropWeaponIfNecessary", value); }
+			set
+			{
+				SetArgument("dropWeaponIfNecessary", value);
+			}
 		}
 
 		/// <summary>
@@ -13551,9 +17161,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dropWeaponDistance", value);
 			}
 		}
@@ -13571,9 +17187,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10000.0f)
+				{
 					value = 10000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("grabStrength", value);
 			}
 		}
@@ -13591,9 +17213,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stickyHands", value);
 			}
 		}
@@ -13605,7 +17233,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public TurnType TurnToTarget
 		{
-			set { SetArgument("turnToTarget", (int)value); }
+			set
+			{
+				SetArgument("turnToTarget", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -13621,9 +17252,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabHoldMaxTimer", value);
 			}
 		}
@@ -13641,9 +17278,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pullUpTime", value);
 			}
 		}
@@ -13661,9 +17304,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pullUpStrengthRight", value);
 			}
 		}
@@ -13681,9 +17330,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pullUpStrengthLeft", value);
 			}
 		}
@@ -13696,7 +17351,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos1
 		{
-			set { SetArgument("pos1", value); }
+			set
+			{
+				SetArgument("pos1", value);
+			}
 		}
 
 		/// <summary>
@@ -13707,7 +17365,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos2
 		{
-			set { SetArgument("pos2", value); }
+			set
+			{
+				SetArgument("pos2", value);
+			}
 		}
 
 		/// <summary>
@@ -13717,7 +17378,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos3
 		{
-			set { SetArgument("pos3", value); }
+			set
+			{
+				SetArgument("pos3", value);
+			}
 		}
 
 		/// <summary>
@@ -13727,7 +17391,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos4
 		{
-			set { SetArgument("pos4", value); }
+			set
+			{
+				SetArgument("pos4", value);
+			}
 		}
 
 		/// <summary>
@@ -13802,7 +17469,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HandsCollide
 		{
-			set { SetArgument("handsCollide", value); }
+			set
+			{
+				SetArgument("handsCollide", value);
+			}
 		}
 
 		/// <summary>
@@ -13813,7 +17483,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool JustBrace
 		{
-			set { SetArgument("justBrace", value); }
+			set
+			{
+				SetArgument("justBrace", value);
+			}
 		}
 
 		/// <summary>
@@ -13824,7 +17497,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseLineGrab
 		{
-			set { SetArgument("useLineGrab", value); }
+			set
+			{
+				SetArgument("useLineGrab", value);
+			}
 		}
 
 		/// <summary>
@@ -13835,7 +17511,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PointsX4grab
 		{
-			set { SetArgument("pointsX4grab", value); }
+			set
+			{
+				SetArgument("pointsX4grab", value);
+			}
 		}
 
 		/// <summary>
@@ -13846,7 +17525,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FromEA
 		{
-			set { SetArgument("fromEA", value); }
+			set
+			{
+				SetArgument("fromEA", value);
+			}
 		}
 
 		/// <summary>
@@ -13857,7 +17539,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SurfaceGrab
 		{
-			set { SetArgument("surfaceGrab", value); }
+			set
+			{
+				SetArgument("surfaceGrab", value);
+			}
 		}
 
 		/// <summary>
@@ -13872,7 +17557,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndex", value);
 			}
 		}
@@ -13889,7 +17577,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("instancePartIndex", value);
 			}
 		}
@@ -13902,7 +17593,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DontLetGo
 		{
-			set { SetArgument("dontLetGo", value); }
+			set
+			{
+				SetArgument("dontLetGo", value);
+			}
 		}
 
 		/// <summary>
@@ -13918,9 +17612,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -13938,9 +17638,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reachAngle", value);
 			}
 		}
@@ -13958,9 +17664,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("oneSideReachAngle", value);
 			}
 		}
@@ -13978,9 +17690,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabDistance", value);
 			}
 		}
@@ -13998,9 +17716,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 14.0f)
+				{
 					value = 14.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("move2Radius", value);
 			}
 		}
@@ -14018,9 +17742,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -14038,9 +17768,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxReachDistance", value);
 			}
 		}
@@ -14058,9 +17794,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("orientationConstraintScale", value);
 			}
 		}
@@ -14078,9 +17820,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.2f)
+				{
 					value = 3.2f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxWristAngle", value);
 			}
 		}
@@ -14093,7 +17841,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLookToTarget
 		{
-			set { SetArgument("useHeadLookToTarget", value); }
+			set
+			{
+				SetArgument("useHeadLookToTarget", value);
+			}
 		}
 
 		/// <summary>
@@ -14104,7 +17855,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LookAtGrab
 		{
-			set { SetArgument("lookAtGrab", value); }
+			set
+			{
+				SetArgument("lookAtGrab", value);
+			}
 		}
 
 		/// <summary>
@@ -14115,7 +17869,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 TargetForHeadLook
 		{
-			set { SetArgument("targetForHeadLook", value); }
+			set
+			{
+				SetArgument("targetForHeadLook", value);
+			}
 		}
 	}
 
@@ -14142,9 +17899,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -14162,9 +17925,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("stiffness", value);
 			}
 		}
@@ -14181,7 +17950,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndex", value);
 			}
 		}
@@ -14210,7 +17982,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos
 		{
-			set { SetArgument("pos", value); }
+			set
+			{
+				SetArgument("pos", value);
+			}
 		}
 
 		/// <summary>
@@ -14221,7 +17996,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysLook
 		{
-			set { SetArgument("alwaysLook", value); }
+			set
+			{
+				SetArgument("alwaysLook", value);
+			}
 		}
 
 		/// <summary>
@@ -14232,7 +18010,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool EyesHorizontal
 		{
-			set { SetArgument("eyesHorizontal", value); }
+			set
+			{
+				SetArgument("eyesHorizontal", value);
+			}
 		}
 
 		/// <summary>
@@ -14243,7 +18024,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysEyesHorizontal
 		{
-			set { SetArgument("alwaysEyesHorizontal", value); }
+			set
+			{
+				SetArgument("alwaysEyesHorizontal", value);
+			}
 		}
 
 		/// <summary>
@@ -14253,7 +18037,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool KeepHeadAwayFromGround
 		{
-			set { SetArgument("keepHeadAwayFromGround", value); }
+			set
+			{
+				SetArgument("keepHeadAwayFromGround", value);
+			}
 		}
 
 		/// <summary>
@@ -14264,7 +18051,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TwistSpine
 		{
-			set { SetArgument("twistSpine", value); }
+			set
+			{
+				SetArgument("twistSpine", value);
+			}
 		}
 	}
 
@@ -14291,9 +18081,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -14311,9 +18107,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("bodydamping", value);
 			}
 		}
@@ -14331,9 +18133,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("catchfalltime", value);
 			}
 		}
@@ -14351,9 +18159,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("crashOrLandCutOff", value);
 			}
 		}
@@ -14371,9 +18185,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pdStrength", value);
 			}
 		}
@@ -14391,9 +18211,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pdDamping", value);
 			}
 		}
@@ -14411,9 +18237,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armAngSpeed", value);
 			}
 		}
@@ -14431,9 +18263,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armAmplitude", value);
 			}
 		}
@@ -14452,9 +18290,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.3f)
+				{
 					value = 6.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armPhase", value);
 			}
 		}
@@ -14468,7 +18312,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ArmBendElbows
 		{
-			set { SetArgument("armBendElbows", value); }
+			set
+			{
+				SetArgument("armBendElbows", value);
+			}
 		}
 
 		/// <summary>
@@ -14484,9 +18331,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legRadius", value);
 			}
 		}
@@ -14504,9 +18357,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 15.0f)
+				{
 					value = 15.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legAngSpeed", value);
 			}
 		}
@@ -14524,9 +18383,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("legAsymmetry", value);
 			}
 		}
@@ -14544,9 +18409,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.5f)
+				{
 					value = 6.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("arms2LegsPhase", value);
 			}
 		}
@@ -14561,7 +18432,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Synchroisation Arms2LegsSync
 		{
-			set { SetArgument("arms2LegsSync", (int)value); }
+			set
+			{
+				SetArgument("arms2LegsSync", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -14579,9 +18453,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -4.0f)
+				{
 					value = -4.0f;
+				}
+
 				SetArgument("armsUp", value);
 			}
 		}
@@ -14595,7 +18475,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OrientateBodyToFallDirection
 		{
-			set { SetArgument("orientateBodyToFallDirection", value); }
+			set
+			{
+				SetArgument("orientateBodyToFallDirection", value);
+			}
 		}
 
 		/// <summary>
@@ -14607,7 +18490,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OrientateTwist
 		{
-			set { SetArgument("orientateTwist", value); }
+			set
+			{
+				SetArgument("orientateTwist", value);
+			}
 		}
 
 		/// <summary>
@@ -14627,9 +18513,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2000.0f)
+				{
 					value = 2000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("orientateMax", value);
 			}
 		}
@@ -14643,7 +18535,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlanRickman
 		{
-			set { SetArgument("alanRickman", value); }
+			set
+			{
+				SetArgument("alanRickman", value);
+			}
 		}
 
 		/// <summary>
@@ -14654,7 +18549,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FowardRoll
 		{
-			set { SetArgument("fowardRoll", value); }
+			set
+			{
+				SetArgument("fowardRoll", value);
+			}
 		}
 
 		/// <summary>
@@ -14665,7 +18563,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseZeroPose_withFowardRoll
 		{
-			set { SetArgument("useZeroPose_withFowardRoll", value); }
+			set
+			{
+				SetArgument("useZeroPose_withFowardRoll", value);
+			}
 		}
 
 		/// <summary>
@@ -14681,9 +18582,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < -3.1f)
+				{
 					value = -3.1f;
+				}
+
 				SetArgument("aimAngleBase", value);
 			}
 		}
@@ -14701,9 +18608,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("fowardVelRotation", value);
 			}
 		}
@@ -14721,9 +18634,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footVelCompScale", value);
 			}
 		}
@@ -14741,9 +18660,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("sideD", value);
 			}
 		}
@@ -14761,9 +18686,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fowardOffsetOfLegIK", value);
 			}
 		}
@@ -14781,9 +18712,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legL", value);
 			}
 		}
@@ -14801,9 +18738,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("catchFallCutOff", value);
 			}
 		}
@@ -14821,9 +18764,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("legStrength", value);
 			}
 		}
@@ -14836,7 +18785,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Balance
 		{
-			set { SetArgument("balance", value); }
+			set
+			{
+				SetArgument("balance", value);
+			}
 		}
 
 		/// <summary>
@@ -14847,7 +18799,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool IgnorWorldCollisions
 		{
-			set { SetArgument("ignorWorldCollisions", value); }
+			set
+			{
+				SetArgument("ignorWorldCollisions", value);
+			}
 		}
 
 		/// <summary>
@@ -14859,7 +18814,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AdaptiveCircling
 		{
-			set { SetArgument("adaptiveCircling", value); }
+			set
+			{
+				SetArgument("adaptiveCircling", value);
+			}
 		}
 
 		/// <summary>
@@ -14871,7 +18829,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Hula
 		{
-			set { SetArgument("hula", value); }
+			set
+			{
+				SetArgument("hula", value);
+			}
 		}
 
 		/// <summary>
@@ -14887,9 +18848,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxSpeedForRecoverableFall", value);
 			}
 		}
@@ -14907,9 +18874,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minSpeedForBrace", value);
 			}
 		}
@@ -14927,9 +18900,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("landingNormal", value);
 			}
 		}
@@ -14974,9 +18953,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("numInjuries", value);
 			}
 		}
@@ -14992,7 +18977,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("injury1Component", value);
 			}
 		}
@@ -15008,7 +18996,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("injury2Component", value);
 			}
 		}
@@ -15020,7 +19011,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Injury1LocalPosition
 		{
-			set { SetArgument("injury1LocalPosition", value); }
+			set
+			{
+				SetArgument("injury1LocalPosition", value);
+			}
 		}
 
 		/// <summary>
@@ -15030,7 +19024,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Injury2LocalPosition
 		{
-			set { SetArgument("injury2LocalPosition", value); }
+			set
+			{
+				SetArgument("injury2LocalPosition", value);
+			}
 		}
 
 		/// <summary>
@@ -15071,7 +19068,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 AttackerPos
 		{
-			set { SetArgument("attackerPos", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("attackerPos", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -15081,7 +19081,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DontReachWithLeft
 		{
-			set { SetArgument("dontReachWithLeft", value); }
+			set
+			{
+				SetArgument("dontReachWithLeft", value);
+			}
 		}
 
 		/// <summary>
@@ -15091,7 +19094,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DontReachWithRight
 		{
-			set { SetArgument("dontReachWithRight", value); }
+			set
+			{
+				SetArgument("dontReachWithRight", value);
+			}
 		}
 
 		/// <summary>
@@ -15101,7 +19107,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool StrongRollForce
 		{
-			set { SetArgument("strongRollForce", value); }
+			set
+			{
+				SetArgument("strongRollForce", value);
+			}
 		}
 	}
 
@@ -15145,7 +19154,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DoGrab
 		{
-			set { SetArgument("doGrab", value); }
+			set
+			{
+				SetArgument("doGrab", value);
+			}
 		}
 
 		/// <summary>
@@ -15160,9 +19172,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabFrequency", value);
 			}
 		}
@@ -15191,9 +19209,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 30.0f)
+				{
 					value = 30.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("staggerTime", value);
 			}
 		}
@@ -15211,9 +19235,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("staggerLeanRate", value);
 			}
 		}
@@ -15231,9 +19261,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stumbleMaxLeanBack", value);
 			}
 		}
@@ -15251,9 +19287,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stumbleMaxLeanForward", value);
 			}
 		}
@@ -15271,9 +19313,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armsWindmillWritheBlend", value);
 			}
 		}
@@ -15291,9 +19339,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineStumbleWritheBlend", value);
 			}
 		}
@@ -15311,9 +19365,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legsStumbleWritheBlend", value);
 			}
 		}
@@ -15331,9 +19391,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armsPoseWritheBlend", value);
 			}
 		}
@@ -15351,9 +19417,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spinePoseWritheBlend", value);
 			}
 		}
@@ -15371,9 +19443,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legsPoseWritheBlend", value);
 			}
 		}
@@ -15386,7 +19464,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RollOverFlag
 		{
-			set { SetArgument("rollOverFlag", value); }
+			set
+			{
+				SetArgument("rollOverFlag", value);
+			}
 		}
 
 		/// <summary>
@@ -15402,9 +19483,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 300.0f)
+				{
 					value = 300.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollTorqueScale", value);
 			}
 		}
@@ -15424,9 +19511,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("predictTime", value);
 			}
 		}
@@ -15444,9 +19537,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 60.0f)
+				{
 					value = 60.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxRollOverTime", value);
 			}
 		}
@@ -15464,9 +19563,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollOverRadius", value);
 			}
 		}
@@ -15490,7 +19595,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PedalLeftLeg
 		{
-			set { SetArgument("pedalLeftLeg", value); }
+			set
+			{
+				SetArgument("pedalLeftLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -15501,7 +19609,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PedalRightLeg
 		{
-			set { SetArgument("pedalRightLeg", value); }
+			set
+			{
+				SetArgument("pedalRightLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -15512,7 +19623,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BackPedal
 		{
-			set { SetArgument("backPedal", value); }
+			set
+			{
+				SetArgument("backPedal", value);
+			}
 		}
 
 		/// <summary>
@@ -15528,9 +19642,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("radius", value);
 			}
 		}
@@ -15548,9 +19668,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angularSpeed", value);
 			}
 		}
@@ -15568,9 +19694,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("legStiffness", value);
 			}
 		}
@@ -15588,9 +19720,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pedalOffset", value);
 			}
 		}
@@ -15607,7 +19745,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("randomSeed", value);
 			}
 		}
@@ -15625,9 +19766,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("speedAsymmetry", value);
 			}
 		}
@@ -15640,7 +19787,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AdaptivePedal4Dragging
 		{
-			set { SetArgument("adaptivePedal4Dragging", value); }
+			set
+			{
+				SetArgument("adaptivePedal4Dragging", value);
+			}
 		}
 
 		/// <summary>
@@ -15656,9 +19806,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angSpeedMultiplier4Dragging", value);
 			}
 		}
@@ -15676,9 +19832,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("radiusVariance", value);
 			}
 		}
@@ -15696,9 +19858,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legAngleVariance", value);
 			}
 		}
@@ -15716,9 +19884,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("centreSideways", value);
 			}
 		}
@@ -15736,9 +19910,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("centreForwards", value);
 			}
 		}
@@ -15756,9 +19936,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("centreUp", value);
 			}
 		}
@@ -15776,9 +19962,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("ellipse", value);
 			}
 		}
@@ -15796,9 +19988,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("dragReduction", value);
 			}
 		}
@@ -15816,9 +20014,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("spread", value);
 			}
 		}
@@ -15831,7 +20035,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Hula
 		{
-			set { SetArgument("hula", value); }
+			set
+			{
+				SetArgument("hula", value);
+			}
 		}
 	}
 
@@ -15859,7 +20066,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 TargetLeft
 		{
-			set { SetArgument("targetLeft", value); }
+			set
+			{
+				SetArgument("targetLeft", value);
+			}
 		}
 
 		/// <summary>
@@ -15875,9 +20085,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("twistLeft", value);
 			}
 		}
@@ -15895,9 +20111,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armStraightnessLeft", value);
 			}
 		}
@@ -15909,7 +20131,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseLeftArm
 		{
-			set { SetArgument("useLeftArm", value); }
+			set
+			{
+				SetArgument("useLeftArm", value);
+			}
 		}
 
 		/// <summary>
@@ -15925,9 +20150,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffnessLeft", value);
 			}
 		}
@@ -15945,9 +20176,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDampingLeft", value);
 			}
 		}
@@ -15964,7 +20201,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndexLeft", value);
 			}
 		}
@@ -15982,9 +20222,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pointSwingLimitLeft", value);
 			}
 		}
@@ -15996,7 +20242,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseZeroPoseWhenNotPointingLeft
 		{
-			set { SetArgument("useZeroPoseWhenNotPointingLeft", value); }
+			set
+			{
+				SetArgument("useZeroPoseWhenNotPointingLeft", value);
+			}
 		}
 
 		/// <summary>
@@ -16007,7 +20256,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 TargetRight
 		{
-			set { SetArgument("targetRight", value); }
+			set
+			{
+				SetArgument("targetRight", value);
+			}
 		}
 
 		/// <summary>
@@ -16023,9 +20275,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("twistRight", value);
 			}
 		}
@@ -16043,9 +20301,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armStraightnessRight", value);
 			}
 		}
@@ -16057,7 +20321,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseRightArm
 		{
-			set { SetArgument("useRightArm", value); }
+			set
+			{
+				SetArgument("useRightArm", value);
+			}
 		}
 
 		/// <summary>
@@ -16073,9 +20340,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffnessRight", value);
 			}
 		}
@@ -16093,9 +20366,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDampingRight", value);
 			}
 		}
@@ -16112,7 +20391,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("instanceIndexRight", value);
 			}
 		}
@@ -16130,9 +20412,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pointSwingLimitRight", value);
 			}
 		}
@@ -16144,7 +20432,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseZeroPoseWhenNotPointingRight
 		{
-			set { SetArgument("useZeroPoseWhenNotPointingRight", value); }
+			set
+			{
+				SetArgument("useZeroPoseWhenNotPointingRight", value);
+			}
 		}
 	}
 
@@ -16166,7 +20457,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool EnableRight
 		{
-			set { SetArgument("enableRight", value); }
+			set
+			{
+				SetArgument("enableRight", value);
+			}
 		}
 
 		/// <summary>
@@ -16177,7 +20471,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool EnableLeft
 		{
-			set { SetArgument("enableLeft", value); }
+			set
+			{
+				SetArgument("enableLeft", value);
+			}
 		}
 
 		/// <summary>
@@ -16188,7 +20485,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 LeftHandTarget
 		{
-			set { SetArgument("leftHandTarget", value); }
+			set
+			{
+				SetArgument("leftHandTarget", value);
+			}
 		}
 
 		/// <summary>
@@ -16199,7 +20499,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public int LeftHandTargetIndex
 		{
-			set { SetArgument("leftHandTargetIndex", value); }
+			set
+			{
+				SetArgument("leftHandTargetIndex", value);
+			}
 		}
 
 		/// <summary>
@@ -16210,7 +20513,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 RightHandTarget
 		{
-			set { SetArgument("rightHandTarget", value); }
+			set
+			{
+				SetArgument("rightHandTarget", value);
+			}
 		}
 
 		/// <summary>
@@ -16221,7 +20527,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public int RightHandTargetIndex
 		{
-			set { SetArgument("rightHandTargetIndex", value); }
+			set
+			{
+				SetArgument("rightHandTargetIndex", value);
+			}
 		}
 
 		/// <summary>
@@ -16237,9 +20546,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leadTarget", value);
 			}
 		}
@@ -16257,9 +20572,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 15.0f)
+				{
 					value = 15.0f;
+				}
+
 				if (value < 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -16277,9 +20598,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 15.0f)
+				{
 					value = 15.0f;
+				}
+
 				if (value < 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				SetArgument("armStiffnessDetSupport", value);
 			}
 		}
@@ -16297,9 +20624,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("armDamping", value);
 			}
 		}
@@ -16317,9 +20650,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("gravityOpposition", value);
 			}
 		}
@@ -16337,9 +20676,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("gravOppDetachedSupport", value);
 			}
 		}
@@ -16357,9 +20702,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("massMultDetachedSupport", value);
 			}
 		}
@@ -16372,7 +20723,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowShotLooseness
 		{
-			set { SetArgument("allowShotLooseness", value); }
+			set
+			{
+				SetArgument("allowShotLooseness", value);
+			}
 		}
 
 		/// <summary>
@@ -16388,9 +20742,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("clavicleBlend", value);
 			}
 		}
@@ -16408,9 +20768,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("elbowAttitude", value);
 			}
 		}
@@ -16428,9 +20794,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("supportConstraint", value);
 			}
 		}
@@ -16448,9 +20820,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("constraintMinDistance", value);
 			}
 		}
@@ -16468,9 +20846,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("makeConstraintDistance", value);
 			}
 		}
@@ -16488,9 +20872,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("reduceConstraintLengthVel", value);
 			}
 		}
@@ -16508,9 +20898,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("breakingStrength", value);
 			}
 		}
@@ -16528,9 +20924,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("brokenSupportTime", value);
 			}
 		}
@@ -16548,9 +20950,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("brokenToSideProb", value);
 			}
 		}
@@ -16568,9 +20976,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("connectAfter", value);
 			}
 		}
@@ -16588,9 +21002,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("connectFor", value);
 			}
 		}
@@ -16608,9 +21028,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("oneHandedPointing", value);
 			}
 		}
@@ -16623,7 +21049,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysSupport
 		{
-			set { SetArgument("alwaysSupport", value); }
+			set
+			{
+				SetArgument("alwaysSupport", value);
+			}
 		}
 
 		/// <summary>
@@ -16634,7 +21063,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PoseUnusedGunArm
 		{
-			set { SetArgument("poseUnusedGunArm", value); }
+			set
+			{
+				SetArgument("poseUnusedGunArm", value);
+			}
 		}
 
 		/// <summary>
@@ -16645,7 +21077,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PoseUnusedSupportArm
 		{
-			set { SetArgument("poseUnusedSupportArm", value); }
+			set
+			{
+				SetArgument("poseUnusedSupportArm", value);
+			}
 		}
 
 		/// <summary>
@@ -16656,7 +21091,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PoseUnusedOtherArm
 		{
-			set { SetArgument("poseUnusedOtherArm", value); }
+			set
+			{
+				SetArgument("poseUnusedOtherArm", value);
+			}
 		}
 
 		/// <summary>
@@ -16672,9 +21110,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxAngleAcross", value);
 			}
 		}
@@ -16692,9 +21136,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxAngleAway", value);
 			}
 		}
@@ -16712,9 +21162,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("fallingLimits", value);
 			}
 		}
@@ -16732,9 +21188,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("acrossLimit", value);
 			}
 		}
@@ -16752,9 +21214,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("awayLimit", value);
 			}
 		}
@@ -16772,9 +21240,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("upLimit", value);
 			}
 		}
@@ -16792,9 +21266,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 180.0f)
+				{
 					value = 180.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("downLimit", value);
 			}
 		}
@@ -16812,9 +21292,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("rifleFall", value);
 			}
 		}
@@ -16832,9 +21318,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("fallingSupport", value);
 			}
 		}
@@ -16852,9 +21344,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5)
+				{
 					value = 5;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("fallingTypeSupport", value);
 			}
 		}
@@ -16872,9 +21370,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("pistolNeutralType", value);
 			}
 		}
@@ -16887,7 +21391,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool NeutralPoint4Pistols
 		{
-			set { SetArgument("neutralPoint4Pistols", value); }
+			set
+			{
+				SetArgument("neutralPoint4Pistols", value);
+			}
 		}
 
 		/// <summary>
@@ -16898,7 +21405,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool NeutralPoint4Rifle
 		{
-			set { SetArgument("neutralPoint4Rifle", value); }
+			set
+			{
+				SetArgument("neutralPoint4Rifle", value);
+			}
 		}
 
 		/// <summary>
@@ -16909,7 +21419,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool CheckNeutralPoint
 		{
-			set { SetArgument("checkNeutralPoint", value); }
+			set
+			{
+				SetArgument("checkNeutralPoint", value);
+			}
 		}
 
 		/// <summary>
@@ -16920,7 +21433,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Point2Side
 		{
-			set { SetArgument("point2Side", value); }
+			set
+			{
+				SetArgument("point2Side", value);
+			}
 		}
 
 		/// <summary>
@@ -16936,9 +21452,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("add2WeaponDistSide", value);
 			}
 		}
@@ -16951,7 +21473,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Point2Connect
 		{
-			set { SetArgument("point2Connect", value); }
+			set
+			{
+				SetArgument("point2Connect", value);
+			}
 		}
 
 		/// <summary>
@@ -16967,9 +21492,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("add2WeaponDistConnect", value);
 			}
 		}
@@ -16982,7 +21513,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UsePistolIK
 		{
-			set { SetArgument("usePistolIK", value); }
+			set
+			{
+				SetArgument("usePistolIK", value);
+			}
 		}
 
 		/// <summary>
@@ -16993,7 +21527,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseSpineTwist
 		{
-			set { SetArgument("useSpineTwist", value); }
+			set
+			{
+				SetArgument("useSpineTwist", value);
+			}
 		}
 
 		/// <summary>
@@ -17004,7 +21541,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseTurnToTarget
 		{
-			set { SetArgument("useTurnToTarget", value); }
+			set
+			{
+				SetArgument("useTurnToTarget", value);
+			}
 		}
 
 		/// <summary>
@@ -17015,7 +21555,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -17031,9 +21574,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("errorThreshold", value);
 			}
 		}
@@ -17051,9 +21600,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fireWeaponRelaxTime", value);
 			}
 		}
@@ -17071,9 +21626,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("fireWeaponRelaxAmount", value);
 			}
 		}
@@ -17091,9 +21652,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fireWeaponRelaxDistance", value);
 			}
 		}
@@ -17106,7 +21673,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseIncomingTransforms
 		{
-			set { SetArgument("useIncomingTransforms", value); }
+			set
+			{
+				SetArgument("useIncomingTransforms", value);
+			}
 		}
 
 		/// <summary>
@@ -17117,7 +21687,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool MeasureParentOffset
 		{
-			set { SetArgument("measureParentOffset", value); }
+			set
+			{
+				SetArgument("measureParentOffset", value);
+			}
 		}
 
 		/// <summary>
@@ -17128,7 +21701,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 LeftHandParentOffset
 		{
-			set { SetArgument("leftHandParentOffset", value); }
+			set
+			{
+				SetArgument("leftHandParentOffset", value);
+			}
 		}
 
 		/// <summary>
@@ -17144,9 +21720,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("leftHandParentEffector", value);
 			}
 		}
@@ -17159,7 +21741,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 RightHandParentOffset
 		{
-			set { SetArgument("rightHandParentOffset", value); }
+			set
+			{
+				SetArgument("rightHandParentOffset", value);
+			}
 		}
 
 		/// <summary>
@@ -17175,9 +21760,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("rightHandParentEffector", value);
 			}
 		}
@@ -17195,9 +21786,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("primaryHandWeaponDistance", value);
 			}
 		}
@@ -17210,7 +21807,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ConstrainRifle
 		{
-			set { SetArgument("constrainRifle", value); }
+			set
+			{
+				SetArgument("constrainRifle", value);
+			}
 		}
 
 		/// <summary>
@@ -17225,7 +21825,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rifleConstraintMinDistance", value);
 			}
 		}
@@ -17238,7 +21841,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DisableArmCollisions
 		{
-			set { SetArgument("disableArmCollisions", value); }
+			set
+			{
+				SetArgument("disableArmCollisions", value);
+			}
 		}
 
 		/// <summary>
@@ -17249,7 +21855,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DisableRifleCollisions
 		{
-			set { SetArgument("disableRifleCollisions", value); }
+			set
+			{
+				SetArgument("disableRifleCollisions", value);
+			}
 		}
 	}
 
@@ -17282,9 +21891,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("constraintStrength", value);
 			}
 		}
@@ -17302,9 +21917,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("constraintThresh", value);
 			}
 		}
@@ -17321,7 +21942,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("weaponMask", value);
 			}
 		}
@@ -17334,7 +21958,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TimeWarpActive
 		{
-			set { SetArgument("timeWarpActive", value); }
+			set
+			{
+				SetArgument("timeWarpActive", value);
+			}
 		}
 
 		/// <summary>
@@ -17350,9 +21977,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("timeWarpStrengthScale", value);
 			}
 		}
@@ -17370,9 +22003,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("oriStiff", value);
 			}
 		}
@@ -17390,9 +22029,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("oriDamp", value);
 			}
 		}
@@ -17410,9 +22055,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("posStiff", value);
 			}
 		}
@@ -17430,9 +22081,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("posDamp", value);
 			}
 		}
@@ -17461,9 +22118,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("stiffness", value);
 			}
 		}
@@ -17481,9 +22144,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("damping", value);
 			}
 		}
@@ -17501,9 +22170,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("forcemag", value);
 			}
 		}
@@ -17521,9 +22196,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < -3.0f)
+				{
 					value = -3.0f;
+				}
+
 				SetArgument("m_useArmToSlowDown", value);
 			}
 		}
@@ -17536,7 +22217,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseZeroPose
 		{
-			set { SetArgument("useZeroPose", value); }
+			set
+			{
+				SetArgument("useZeroPose", value);
+			}
 		}
 
 		/// <summary>
@@ -17547,7 +22231,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SpinWhenInAir
 		{
-			set { SetArgument("spinWhenInAir", value); }
+			set
+			{
+				SetArgument("spinWhenInAir", value);
+			}
 		}
 
 		/// <summary>
@@ -17563,9 +22250,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("m_armReachAmount", value);
 			}
 		}
@@ -17583,9 +22276,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("m_legPush", value);
 			}
 		}
@@ -17598,7 +22297,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool TryToAvoidHeadButtingGround
 		{
-			set { SetArgument("tryToAvoidHeadButtingGround", value); }
+			set
+			{
+				SetArgument("tryToAvoidHeadButtingGround", value);
+			}
 		}
 
 		/// <summary>
@@ -17614,9 +22316,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armReachLength", value);
 			}
 		}
@@ -17645,7 +22353,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseCustomRollDir
 		{
-			set { SetArgument("useCustomRollDir", value); }
+			set
+			{
+				SetArgument("useCustomRollDir", value);
+			}
 		}
 
 		/// <summary>
@@ -17661,9 +22372,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stiffnessDecayTarget", value);
 			}
 		}
@@ -17681,9 +22398,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("stiffnessDecayTime", value);
 			}
 		}
@@ -17701,9 +22424,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("asymmetricalLegs", value);
 			}
 		}
@@ -17721,9 +22450,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("zAxisSpinReduction", value);
 			}
 		}
@@ -17741,9 +22476,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("targetLinearVelocityDecayTime", value);
 			}
 		}
@@ -17761,9 +22502,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("targetLinearVelocity", value);
 			}
 		}
@@ -17776,7 +22523,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OnlyApplyHelperForces
 		{
-			set { SetArgument("onlyApplyHelperForces", value); }
+			set
+			{
+				SetArgument("onlyApplyHelperForces", value);
+			}
 		}
 
 		/// <summary>
@@ -17787,7 +22537,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseVelocityOfObjectBelow
 		{
-			set { SetArgument("useVelocityOfObjectBelow", value); }
+			set
+			{
+				SetArgument("useVelocityOfObjectBelow", value);
+			}
 		}
 
 		/// <summary>
@@ -17798,7 +22551,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseRelativeVelocity
 		{
-			set { SetArgument("useRelativeVelocity", value); }
+			set
+			{
+				SetArgument("useRelativeVelocity", value);
+			}
 		}
 
 		/// <summary>
@@ -17809,7 +22565,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyFoetalToLegs
 		{
-			set { SetArgument("applyFoetalToLegs", value); }
+			set
+			{
+				SetArgument("applyFoetalToLegs", value);
+			}
 		}
 
 		/// <summary>
@@ -17825,9 +22584,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("movementLegsInFoetalPosition", value);
 			}
 		}
@@ -17845,9 +22610,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("maxAngVelAroundFrontwardAxis", value);
 			}
 		}
@@ -17865,9 +22636,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minAngVel", value);
 			}
 		}
@@ -17880,7 +22657,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyNewRollingCheatingTorques
 		{
-			set { SetArgument("applyNewRollingCheatingTorques", value); }
+			set
+			{
+				SetArgument("applyNewRollingCheatingTorques", value);
+			}
 		}
 
 		/// <summary>
@@ -17896,9 +22676,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxAngVel", value);
 			}
 		}
@@ -17916,9 +22702,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 500.0f)
+				{
 					value = 500.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("magOfTorqueToRoll", value);
 			}
 		}
@@ -17931,7 +22723,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyHelPerTorqueToAlign
 		{
-			set { SetArgument("applyHelPerTorqueToAlign", value); }
+			set
+			{
+				SetArgument("applyHelPerTorqueToAlign", value);
+			}
 		}
 
 		/// <summary>
@@ -17947,9 +22742,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("delayToAlignBody", value);
 			}
 		}
@@ -17967,9 +22768,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 500.0f)
+				{
 					value = 500.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("magOfTorqueToAlign", value);
 			}
 		}
@@ -17987,9 +22794,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("airborneReduction", value);
 			}
 		}
@@ -18002,7 +22815,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyMinMaxFriction
 		{
-			set { SetArgument("applyMinMaxFriction", value); }
+			set
+			{
+				SetArgument("applyMinMaxFriction", value);
+			}
 		}
 
 		/// <summary>
@@ -18013,7 +22829,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LimitSpinReduction
 		{
-			set { SetArgument("limitSpinReduction", value); }
+			set
+			{
+				SetArgument("limitSpinReduction", value);
+			}
 		}
 	}
 
@@ -18040,9 +22859,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -18060,9 +22885,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("spineDamping", value);
 			}
 		}
@@ -18080,9 +22911,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -18100,9 +22937,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				SetArgument("initialNeckStiffness", value);
 			}
 		}
@@ -18120,9 +22963,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("initialNeckDamping", value);
 			}
 		}
@@ -18140,9 +22989,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				SetArgument("neckStiffness", value);
 			}
 		}
@@ -18160,9 +23015,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("neckDamping", value);
 			}
 		}
@@ -18180,9 +23041,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("kMultOnLoose", value);
 			}
 		}
@@ -18200,9 +23067,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("kMult4Legs", value);
 			}
 		}
@@ -18220,9 +23093,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("loosenessAmount", value);
 			}
 		}
@@ -18240,9 +23119,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("looseness4Fall", value);
 			}
 		}
@@ -18260,9 +23145,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("looseness4Stagger", value);
 			}
 		}
@@ -18280,9 +23171,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minArmsLooseness", value);
 			}
 		}
@@ -18300,9 +23197,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minLegsLooseness", value);
 			}
 		}
@@ -18320,9 +23223,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("grabHoldTime", value);
 			}
 		}
@@ -18335,7 +23244,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SpineBlendExagCPain
 		{
-			set { SetArgument("spineBlendExagCPain", value); }
+			set
+			{
+				SetArgument("spineBlendExagCPain", value);
+			}
 		}
 
 		/// <summary>
@@ -18351,9 +23263,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -0.1f)
+				{
 					value = -0.1f;
+				}
+
 				SetArgument("spineBlendZero", value);
 			}
 		}
@@ -18366,7 +23284,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool BulletProofVest
 		{
-			set { SetArgument("bulletProofVest", value); }
+			set
+			{
+				SetArgument("bulletProofVest", value);
+			}
 		}
 
 		/// <summary>
@@ -18377,7 +23298,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysResetLooseness
 		{
-			set { SetArgument("alwaysResetLooseness", value); }
+			set
+			{
+				SetArgument("alwaysResetLooseness", value);
+			}
 		}
 
 		/// <summary>
@@ -18388,7 +23312,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysResetNeckLooseness
 		{
-			set { SetArgument("alwaysResetNeckLooseness", value); }
+			set
+			{
+				SetArgument("alwaysResetNeckLooseness", value);
+			}
 		}
 
 		/// <summary>
@@ -18404,9 +23331,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("angVelScale", value);
 			}
 		}
@@ -18419,7 +23352,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string AngVelScaleMask
 		{
-			set { SetArgument("angVelScaleMask", value); }
+			set
+			{
+				SetArgument("angVelScaleMask", value);
+			}
 		}
 
 		/// <summary>
@@ -18435,9 +23371,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("flingWidth", value);
 			}
 		}
@@ -18455,9 +23397,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("flingTime", value);
 			}
 		}
@@ -18475,9 +23423,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeBeforeReachForWound", value);
 			}
 		}
@@ -18495,9 +23449,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("exagDuration", value);
 			}
 		}
@@ -18515,9 +23475,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("exagMag", value);
 			}
 		}
@@ -18535,9 +23501,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("exagTwistMag", value);
 			}
 		}
@@ -18555,9 +23527,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("exagSmooth2Zero", value);
 			}
 		}
@@ -18575,9 +23553,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("exagZeroTime", value);
 			}
 		}
@@ -18595,9 +23579,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cpainSmooth2Time", value);
 			}
 		}
@@ -18615,9 +23605,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cpainDuration", value);
 			}
 		}
@@ -18635,9 +23631,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cpainMag", value);
 			}
 		}
@@ -18655,9 +23657,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cpainTwistMag", value);
 			}
 		}
@@ -18675,9 +23683,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cpainSmooth2Zero", value);
 			}
 		}
@@ -18690,7 +23704,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Crouching
 		{
-			set { SetArgument("crouching", value); }
+			set
+			{
+				SetArgument("crouching", value);
+			}
 		}
 
 		/// <summary>
@@ -18701,7 +23718,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ChickenArms
 		{
-			set { SetArgument("chickenArms", value); }
+			set
+			{
+				SetArgument("chickenArms", value);
+			}
 		}
 
 		/// <summary>
@@ -18712,7 +23732,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ReachForWound
 		{
-			set { SetArgument("reachForWound", value); }
+			set
+			{
+				SetArgument("reachForWound", value);
+			}
 		}
 
 		/// <summary>
@@ -18723,7 +23746,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Fling
 		{
-			set { SetArgument("fling", value); }
+			set
+			{
+				SetArgument("fling", value);
+			}
 		}
 
 		/// <summary>
@@ -18734,7 +23760,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowInjuredArm
 		{
-			set { SetArgument("allowInjuredArm", value); }
+			set
+			{
+				SetArgument("allowInjuredArm", value);
+			}
 		}
 
 		/// <summary>
@@ -18745,7 +23774,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowInjuredLeg
 		{
-			set { SetArgument("allowInjuredLeg", value); }
+			set
+			{
+				SetArgument("allowInjuredLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -18756,7 +23788,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowInjuredLowerLegReach
 		{
-			set { SetArgument("allowInjuredLowerLegReach", value); }
+			set
+			{
+				SetArgument("allowInjuredLowerLegReach", value);
+			}
 		}
 
 		/// <summary>
@@ -18767,7 +23802,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowInjuredThighReach
 		{
-			set { SetArgument("allowInjuredThighReach", value); }
+			set
+			{
+				SetArgument("allowInjuredThighReach", value);
+			}
 		}
 
 		/// <summary>
@@ -18778,7 +23816,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool StableHandsAndNeck
 		{
-			set { SetArgument("stableHandsAndNeck", value); }
+			set
+			{
+				SetArgument("stableHandsAndNeck", value);
+			}
 		}
 
 		/// <summary>
@@ -18788,7 +23829,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Melee
 		{
-			set { SetArgument("melee", value); }
+			set
+			{
+				SetArgument("melee", value);
+			}
 		}
 
 		/// <summary>
@@ -18804,9 +23848,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("fallingReaction", value);
 			}
 		}
@@ -18819,7 +23869,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseExtendedCatchFall
 		{
-			set { SetArgument("useExtendedCatchFall", value); }
+			set
+			{
+				SetArgument("useExtendedCatchFall", value);
+			}
 		}
 
 		/// <summary>
@@ -18835,9 +23888,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("initialWeaknessZeroDuration", value);
 			}
 		}
@@ -18855,9 +23914,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("initialWeaknessRampDuration", value);
 			}
 		}
@@ -18875,9 +23940,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("initialNeckDuration", value);
 			}
 		}
@@ -18895,9 +23966,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("initialNeckRampDuration", value);
 			}
 		}
@@ -18910,7 +23987,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseCStrModulation
 		{
-			set { SetArgument("useCStrModulation", value); }
+			set
+			{
+				SetArgument("useCStrModulation", value);
+			}
 		}
 
 		/// <summary>
@@ -18926,9 +24006,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("cStrUpperMin", value);
 			}
 		}
@@ -18945,9 +24031,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("cStrUpperMax", value);
 			}
 		}
@@ -18964,9 +24056,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("cStrLowerMin", value);
 			}
 		}
@@ -18983,9 +24081,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.1f)
+				{
 					value = 0.1f;
+				}
+
 				SetArgument("cStrLowerMax", value);
 			}
 		}
@@ -19003,9 +24107,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("deathTime", value);
 			}
 		}
@@ -19040,9 +24150,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 21)
+				{
 					value = 21;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("bodyPart", value);
 			}
 		}
@@ -19055,7 +24171,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LocalHitPointInfo
 		{
-			set { SetArgument("localHitPointInfo", value); }
+			set
+			{
+				SetArgument("localHitPointInfo", value);
+			}
 		}
 
 		/// <summary>
@@ -19068,7 +24187,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Normal
 		{
-			set { SetArgument("normal", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f))); }
+			set
+			{
+				SetArgument("normal", Vector3.Clamp(value, new Vector3(-1.0f, -1.0f, -1.0f), new Vector3(1.0f, 1.0f, 1.0f)));
+			}
 		}
 
 		/// <summary>
@@ -19079,7 +24201,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HitPoint
 		{
-			set { SetArgument("hitPoint", value); }
+			set
+			{
+				SetArgument("hitPoint", value);
+			}
 		}
 
 		/// <summary>
@@ -19118,7 +24243,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Snap
 		{
-			set { SetArgument("snap", value); }
+			set
+			{
+				SetArgument("snap", value);
+			}
 		}
 
 		/// <summary>
@@ -19134,9 +24262,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("snapMag", value);
 			}
 		}
@@ -19154,9 +24288,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("snapMovingMult", value);
 			}
 		}
@@ -19174,9 +24314,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("snapBalancingMult", value);
 			}
 		}
@@ -19194,9 +24340,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("snapAirborneMult", value);
 			}
 		}
@@ -19214,9 +24366,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("snapMovingThresh", value);
 			}
 		}
@@ -19234,9 +24392,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("snapDirectionRandomness", value);
 			}
 		}
@@ -19249,7 +24413,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapLeftArm
 		{
-			set { SetArgument("snapLeftArm", value); }
+			set
+			{
+				SetArgument("snapLeftArm", value);
+			}
 		}
 
 		/// <summary>
@@ -19260,7 +24427,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapRightArm
 		{
-			set { SetArgument("snapRightArm", value); }
+			set
+			{
+				SetArgument("snapRightArm", value);
+			}
 		}
 
 		/// <summary>
@@ -19271,7 +24441,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapLeftLeg
 		{
-			set { SetArgument("snapLeftLeg", value); }
+			set
+			{
+				SetArgument("snapLeftLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -19282,7 +24455,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapRightLeg
 		{
-			set { SetArgument("snapRightLeg", value); }
+			set
+			{
+				SetArgument("snapRightLeg", value);
+			}
 		}
 
 		/// <summary>
@@ -19293,7 +24469,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapSpine
 		{
-			set { SetArgument("snapSpine", value); }
+			set
+			{
+				SetArgument("snapSpine", value);
+			}
 		}
 
 		/// <summary>
@@ -19304,7 +24483,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapNeck
 		{
-			set { SetArgument("snapNeck", value); }
+			set
+			{
+				SetArgument("snapNeck", value);
+			}
 		}
 
 		/// <summary>
@@ -19315,7 +24497,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapPhasedLegs
 		{
-			set { SetArgument("snapPhasedLegs", value); }
+			set
+			{
+				SetArgument("snapPhasedLegs", value);
+			}
 		}
 
 		/// <summary>
@@ -19331,9 +24516,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("snapHipType", value);
 			}
 		}
@@ -19346,7 +24537,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapUseBulletDir
 		{
-			set { SetArgument("snapUseBulletDir", value); }
+			set
+			{
+				SetArgument("snapUseBulletDir", value);
+			}
 		}
 
 		/// <summary>
@@ -19357,7 +24551,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapHitPart
 		{
-			set { SetArgument("snapHitPart", value); }
+			set
+			{
+				SetArgument("snapHitPart", value);
+			}
 		}
 
 		/// <summary>
@@ -19373,9 +24570,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("unSnapInterval", value);
 			}
 		}
@@ -19393,9 +24596,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("unSnapRatio", value);
 			}
 		}
@@ -19408,7 +24617,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool SnapUseTorques
 		{
-			set { SetArgument("snapUseTorques", value); }
+			set
+			{
+				SetArgument("snapUseTorques", value);
+			}
 		}
 	}
 
@@ -19436,7 +24648,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AddShockSpin
 		{
-			set { SetArgument("addShockSpin", value); }
+			set
+			{
+				SetArgument("addShockSpin", value);
+			}
 		}
 
 		/// <summary>
@@ -19447,7 +24662,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RandomizeShockSpinDirection
 		{
-			set { SetArgument("randomizeShockSpinDirection", value); }
+			set
+			{
+				SetArgument("randomizeShockSpinDirection", value);
+			}
 		}
 
 		/// <summary>
@@ -19458,7 +24676,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysAddShockSpin
 		{
-			set { SetArgument("alwaysAddShockSpin", value); }
+			set
+			{
+				SetArgument("alwaysAddShockSpin", value);
+			}
 		}
 
 		/// <summary>
@@ -19474,9 +24695,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinMin", value);
 			}
 		}
@@ -19494,9 +24721,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1000.0f)
+				{
 					value = 1000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinMax", value);
 			}
 		}
@@ -19514,9 +24747,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinLiftForceMult", value);
 			}
 		}
@@ -19534,9 +24773,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinDecayMult", value);
 			}
 		}
@@ -19554,9 +24799,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinScalePerComponent", value);
 			}
 		}
@@ -19574,9 +24825,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 200.0f)
+				{
 					value = 200.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("shockSpinMaxTwistVel", value);
 			}
 		}
@@ -19589,7 +24846,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ShockSpinScaleByLeverArm
 		{
-			set { SetArgument("shockSpinScaleByLeverArm", value); }
+			set
+			{
+				SetArgument("shockSpinScaleByLeverArm", value);
+			}
 		}
 
 		/// <summary>
@@ -19605,9 +24865,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinAirMult", value);
 			}
 		}
@@ -19625,9 +24891,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpin1FootMult", value);
 			}
 		}
@@ -19645,9 +24917,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("shockSpinFootGripMult", value);
 			}
 		}
@@ -19665,9 +24943,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				SetArgument("bracedSideSpinMult", value);
 			}
 		}
@@ -19697,7 +24981,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FallToKnees
 		{
-			set { SetArgument("fallToKnees", value); }
+			set
+			{
+				SetArgument("fallToKnees", value);
+			}
 		}
 
 		/// <summary>
@@ -19708,7 +24995,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkAlwaysChangeFall
 		{
-			set { SetArgument("ftkAlwaysChangeFall", value); }
+			set
+			{
+				SetArgument("ftkAlwaysChangeFall", value);
+			}
 		}
 
 		/// <summary>
@@ -19724,9 +25014,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkBalanceTime", value);
 			}
 		}
@@ -19744,9 +25040,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2000.0f)
+				{
 					value = 2000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkHelperForce", value);
 			}
 		}
@@ -19759,7 +25061,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkHelperForceOnSpine
 		{
-			set { SetArgument("ftkHelperForceOnSpine", value); }
+			set
+			{
+				SetArgument("ftkHelperForceOnSpine", value);
+			}
 		}
 
 		/// <summary>
@@ -19776,9 +25081,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkLeanHelp", value);
 			}
 		}
@@ -19796,9 +25107,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				if (value < -0.2f)
+				{
 					value = -0.2f;
+				}
+
 				SetArgument("ftkSpineBend", value);
 			}
 		}
@@ -19811,7 +25128,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkStiffSpine
 		{
-			set { SetArgument("ftkStiffSpine", value); }
+			set
+			{
+				SetArgument("ftkStiffSpine", value);
+			}
 		}
 
 		/// <summary>
@@ -19827,9 +25147,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkImpactLooseness", value);
 			}
 		}
@@ -19847,9 +25173,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -0.1f)
+				{
 					value = -0.1f;
+				}
+
 				SetArgument("ftkImpactLoosenessTime", value);
 			}
 		}
@@ -19867,9 +25199,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkBendRate", value);
 			}
 		}
@@ -19887,9 +25225,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkHipBlend", value);
 			}
 		}
@@ -19907,9 +25251,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkLungeProb", value);
 			}
 		}
@@ -19923,7 +25273,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkKneeSpin
 		{
-			set { SetArgument("ftkKneeSpin", value); }
+			set
+			{
+				SetArgument("ftkKneeSpin", value);
+			}
 		}
 
 		/// <summary>
@@ -19939,9 +25292,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkFricMult", value);
 			}
 		}
@@ -19959,9 +25318,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("ftkHipAngleFall", value);
 			}
 		}
@@ -19979,9 +25344,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("ftkPitchForwards", value);
 			}
 		}
@@ -19999,9 +25370,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < -0.5f)
+				{
 					value = -0.5f;
+				}
+
 				SetArgument("ftkPitchBackwards", value);
 			}
 		}
@@ -20020,9 +25397,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 15.0f)
+				{
 					value = 15.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkFallBelowStab", value);
 			}
 		}
@@ -20040,9 +25423,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("ftkBalanceAbortThreshold", value);
 			}
 		}
@@ -20060,9 +25449,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("ftkOnKneesArmType", value);
 			}
 		}
@@ -20081,9 +25476,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("ftkReleaseReachForWound", value);
 			}
 		}
@@ -20097,7 +25498,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkReachForWound
 		{
-			set { SetArgument("ftkReachForWound", value); }
+			set
+			{
+				SetArgument("ftkReachForWound", value);
+			}
 		}
 
 		/// <summary>
@@ -20108,7 +25512,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkReleasePointGun
 		{
-			set { SetArgument("ftkReleasePointGun", value); }
+			set
+			{
+				SetArgument("ftkReleasePointGun", value);
+			}
 		}
 
 		/// <summary>
@@ -20119,7 +25526,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FtkFailMustCollide
 		{
-			set { SetArgument("ftkFailMustCollide", value); }
+			set
+			{
+				SetArgument("ftkFailMustCollide", value);
+			}
 		}
 	}
 
@@ -20147,7 +25557,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ShotFromBehind
 		{
-			set { SetArgument("shotFromBehind", value); }
+			set
+			{
+				SetArgument("shotFromBehind", value);
+			}
 		}
 
 		/// <summary>
@@ -20163,9 +25576,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbSpineAmount", value);
 			}
 		}
@@ -20183,9 +25602,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbNeckAmount", value);
 			}
 		}
@@ -20203,9 +25628,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbHipAmount", value);
 			}
 		}
@@ -20223,9 +25654,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbKneeAmount", value);
 			}
 		}
@@ -20243,9 +25680,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbPeriod", value);
 			}
 		}
@@ -20263,9 +25706,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbForceBalancePeriod", value);
 			}
 		}
@@ -20283,9 +25732,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbArmsOnset", value);
 			}
 		}
@@ -20303,9 +25758,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbKneesOnset", value);
 			}
 		}
@@ -20323,9 +25784,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sfbNoiseGain", value);
 			}
 		}
@@ -20346,9 +25813,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("sfbIgnoreFail", value);
 			}
 		}
@@ -20378,7 +25851,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ShotInGuts
 		{
-			set { SetArgument("shotInGuts", value); }
+			set
+			{
+				SetArgument("shotInGuts", value);
+			}
 		}
 
 		/// <summary>
@@ -20394,9 +25870,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigSpineAmount", value);
 			}
 		}
@@ -20414,9 +25896,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigNeckAmount", value);
 			}
 		}
@@ -20434,9 +25922,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigHipAmount", value);
 			}
 		}
@@ -20454,9 +25948,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigKneeAmount", value);
 			}
 		}
@@ -20474,9 +25974,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigPeriod", value);
 			}
 		}
@@ -20494,9 +26000,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigForceBalancePeriod", value);
 			}
 		}
@@ -20514,9 +26026,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("sigKneesOnset", value);
 			}
 		}
@@ -20542,7 +26060,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -20553,7 +26074,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HeadLook
 		{
-			set { SetArgument("headLook", value); }
+			set
+			{
+				SetArgument("headLook", value);
+			}
 		}
 
 		/// <summary>
@@ -20569,9 +26093,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("headLookAtWoundMinTimer", value);
 			}
 		}
@@ -20589,9 +26119,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("headLookAtWoundMaxTimer", value);
 			}
 		}
@@ -20609,9 +26145,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("headLookAtHeadPosMaxTimer", value);
 			}
 		}
@@ -20629,9 +26171,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("headLookAtHeadPosMinTimer", value);
 			}
 		}
@@ -20661,7 +26209,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Brace
 		{
-			set { SetArgument("brace", value); }
+			set
+			{
+				SetArgument("brace", value);
+			}
 		}
 
 		/// <summary>
@@ -20672,7 +26223,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool PointGun
 		{
-			set { SetArgument("pointGun", value); }
+			set
+			{
+				SetArgument("pointGun", value);
+			}
 		}
 
 		/// <summary>
@@ -20683,7 +26237,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseArmsWindmill
 		{
-			set { SetArgument("useArmsWindmill", value); }
+			set
+			{
+				SetArgument("useArmsWindmill", value);
+			}
 		}
 
 		/// <summary>
@@ -20702,9 +26259,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("releaseWound", value);
 			}
 		}
@@ -20725,9 +26288,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("reachFalling", value);
 			}
 		}
@@ -20749,9 +26318,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3)
+				{
 					value = 3;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("reachFallingWithOneHand", value);
 			}
 		}
@@ -20769,9 +26344,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("reachOnFloor", value);
 			}
 		}
@@ -20789,9 +26370,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("alwaysReachTime", value);
 			}
 		}
@@ -20809,9 +26396,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("AWSpeedMult", value);
 			}
 		}
@@ -20830,9 +26423,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("AWRadiusMult", value);
 			}
 		}
@@ -20850,9 +26449,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("AWStiffnessAdd", value);
 			}
 		}
@@ -20873,9 +26478,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("reachWithOneHand", value);
 			}
 		}
@@ -20890,7 +26501,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowLeftPistolRFW
 		{
-			set { SetArgument("allowLeftPistolRFW", value); }
+			set
+			{
+				SetArgument("allowLeftPistolRFW", value);
+			}
 		}
 
 		/// <summary>
@@ -20903,7 +26517,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AllowRightPistolRFW
 		{
-			set { SetArgument("allowRightPistolRFW", value); }
+			set
+			{
+				SetArgument("allowRightPistolRFW", value);
+			}
 		}
 
 		/// <summary>
@@ -20915,7 +26532,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RfwWithPistol
 		{
-			set { SetArgument("rfwWithPistol", value); }
+			set
+			{
+				SetArgument("rfwWithPistol", value);
+			}
 		}
 
 		/// <summary>
@@ -20926,7 +26546,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Fling2
 		{
-			set { SetArgument("fling2", value); }
+			set
+			{
+				SetArgument("fling2", value);
+			}
 		}
 
 		/// <summary>
@@ -20937,7 +26560,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Fling2Left
 		{
-			set { SetArgument("fling2Left", value); }
+			set
+			{
+				SetArgument("fling2Left", value);
+			}
 		}
 
 		/// <summary>
@@ -20948,7 +26574,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Fling2Right
 		{
-			set { SetArgument("fling2Right", value); }
+			set
+			{
+				SetArgument("fling2Right", value);
+			}
 		}
 
 		/// <summary>
@@ -20959,7 +26588,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Fling2OverrideStagger
 		{
-			set { SetArgument("fling2OverrideStagger", value); }
+			set
+			{
+				SetArgument("fling2OverrideStagger", value);
+			}
 		}
 
 		/// <summary>
@@ -20975,9 +26607,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fling2TimeBefore", value);
 			}
 		}
@@ -20995,9 +26633,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fling2Time", value);
 			}
 		}
@@ -21016,9 +26660,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("fling2MStiffL", value);
 			}
 		}
@@ -21037,9 +26687,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.5f)
+				{
 					value = 1.5f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("fling2MStiffR", value);
 			}
 		}
@@ -21059,9 +26715,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fling2RelaxTimeL", value);
 			}
 		}
@@ -21081,9 +26743,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fling2RelaxTimeR", value);
 			}
 		}
@@ -21104,9 +26772,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.5f)
+				{
 					value = -1.5f;
+				}
+
 				SetArgument("fling2AngleMinL", value);
 			}
 		}
@@ -21124,9 +26798,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.5f)
+				{
 					value = -1.5f;
+				}
+
 				SetArgument("fling2AngleMaxL", value);
 			}
 		}
@@ -21144,9 +26824,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.5f)
+				{
 					value = -1.5f;
+				}
+
 				SetArgument("fling2AngleMinR", value);
 			}
 		}
@@ -21164,9 +26850,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.5f)
+				{
 					value = -1.5f;
+				}
+
 				SetArgument("fling2AngleMaxR", value);
 			}
 		}
@@ -21187,9 +26879,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.6f)
+				{
 					value = 0.6f;
+				}
+
 				if (value < 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				SetArgument("fling2LengthMinL", value);
 			}
 		}
@@ -21207,9 +26905,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.6f)
+				{
 					value = 0.6f;
+				}
+
 				if (value < 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				SetArgument("fling2LengthMaxL", value);
 			}
 		}
@@ -21227,9 +26931,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.6f)
+				{
 					value = 0.6f;
+				}
+
 				if (value < 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				SetArgument("fling2LengthMinR", value);
 			}
 		}
@@ -21247,9 +26957,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.6f)
+				{
 					value = 0.6f;
+				}
+
 				if (value < 0.3f)
+				{
 					value = 0.3f;
+				}
+
 				SetArgument("fling2LengthMaxR", value);
 			}
 		}
@@ -21263,7 +26979,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Bust
 		{
-			set { SetArgument("bust", value); }
+			set
+			{
+				SetArgument("bust", value);
+			}
 		}
 
 		/// <summary>
@@ -21279,9 +26998,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("bustElbowLift", value);
 			}
 		}
@@ -21299,9 +27024,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cupSize", value);
 			}
 		}
@@ -21316,7 +27047,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool CupBust
 		{
-			set { SetArgument("cupBust", value); }
+			set
+			{
+				SetArgument("cupBust", value);
+			}
 		}
 	}
 
@@ -21350,9 +27084,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -21370,9 +27110,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.0f)
+				{
 					value = 3.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("bodydamping", value);
 			}
 		}
@@ -21390,9 +27136,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("catchfalltime", value);
 			}
 		}
@@ -21411,9 +27163,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("crashOrLandCutOff", value);
 			}
 		}
@@ -21431,9 +27189,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pdStrength", value);
 			}
 		}
@@ -21452,9 +27216,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("pdDamping", value);
 			}
 		}
@@ -21472,9 +27242,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armAngSpeed", value);
 			}
 		}
@@ -21492,9 +27268,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armAmplitude", value);
 			}
 		}
@@ -21513,9 +27295,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.3f)
+				{
 					value = 6.3f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armPhase", value);
 			}
 		}
@@ -21529,7 +27317,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ArmBendElbows
 		{
-			set { SetArgument("armBendElbows", value); }
+			set
+			{
+				SetArgument("armBendElbows", value);
+			}
 		}
 
 		/// <summary>
@@ -21545,9 +27336,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 0.5f)
+				{
 					value = 0.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legRadius", value);
 			}
 		}
@@ -21565,9 +27362,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 15.0f)
+				{
 					value = 15.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legAngSpeed", value);
 			}
 		}
@@ -21586,9 +27389,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("legAsymmetry", value);
 			}
 		}
@@ -21606,9 +27415,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 6.5f)
+				{
 					value = 6.5f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("arms2LegsPhase", value);
 			}
 		}
@@ -21623,7 +27438,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Synchroisation Arms2LegsSync
 		{
-			set { SetArgument("arms2LegsSync", (int)value); }
+			set
+			{
+				SetArgument("arms2LegsSync", (int)value);
+			}
 		}
 
 		/// <summary>
@@ -21641,9 +27459,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < -4.0f)
+				{
 					value = -4.0f;
+				}
+
 				SetArgument("armsUp", value);
 			}
 		}
@@ -21656,7 +27480,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OrientateBodyToFallDirection
 		{
-			set { SetArgument("orientateBodyToFallDirection", value); }
+			set
+			{
+				SetArgument("orientateBodyToFallDirection", value);
+			}
 		}
 
 		/// <summary>
@@ -21668,7 +27495,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool OrientateTwist
 		{
-			set { SetArgument("orientateTwist", value); }
+			set
+			{
+				SetArgument("orientateTwist", value);
+			}
 		}
 
 		/// <summary>
@@ -21687,9 +27517,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2000.0f)
+				{
 					value = 2000.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("orientateMax", value);
 			}
 		}
@@ -21703,7 +27539,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlanRickman
 		{
-			set { SetArgument("alanRickman", value); }
+			set
+			{
+				SetArgument("alanRickman", value);
+			}
 		}
 
 		/// <summary>
@@ -21714,7 +27553,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool FowardRoll
 		{
-			set { SetArgument("fowardRoll", value); }
+			set
+			{
+				SetArgument("fowardRoll", value);
+			}
 		}
 
 		/// <summary>
@@ -21725,7 +27567,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseZeroPose_withFowardRoll
 		{
-			set { SetArgument("useZeroPose_withFowardRoll", value); }
+			set
+			{
+				SetArgument("useZeroPose_withFowardRoll", value);
+			}
 		}
 
 		/// <summary>
@@ -21741,9 +27586,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 3.1f)
+				{
 					value = 3.1f;
+				}
+
 				if (value < -3.1f)
+				{
 					value = -3.1f;
+				}
+
 				SetArgument("aimAngleBase", value);
 			}
 		}
@@ -21761,9 +27612,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("fowardVelRotation", value);
 			}
 		}
@@ -21781,9 +27638,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footVelCompScale", value);
 			}
 		}
@@ -21801,9 +27664,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("sideD", value);
 			}
 		}
@@ -21821,9 +27690,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("fowardOffsetOfLegIK", value);
 			}
 		}
@@ -21841,9 +27716,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("legL", value);
 			}
 		}
@@ -21861,9 +27742,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("catchFallCutOff", value);
 			}
 		}
@@ -21881,9 +27768,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("legStrength", value);
 			}
 		}
@@ -21897,7 +27790,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Balance
 		{
-			set { SetArgument("balance", value); }
+			set
+			{
+				SetArgument("balance", value);
+			}
 		}
 
 		/// <summary>
@@ -21908,7 +27804,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool IgnorWorldCollisions
 		{
-			set { SetArgument("ignorWorldCollisions", value); }
+			set
+			{
+				SetArgument("ignorWorldCollisions", value);
+			}
 		}
 
 		/// <summary>
@@ -21919,7 +27818,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AdaptiveCircling
 		{
-			set { SetArgument("adaptiveCircling", value); }
+			set
+			{
+				SetArgument("adaptiveCircling", value);
+			}
 		}
 
 		/// <summary>
@@ -21930,7 +27832,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Hula
 		{
-			set { SetArgument("hula", value); }
+			set
+			{
+				SetArgument("hula", value);
+			}
 		}
 
 		/// <summary>
@@ -21946,9 +27851,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("maxSpeedForRecoverableFall", value);
 			}
 		}
@@ -21966,9 +27877,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("minSpeedForBrace", value);
 			}
 		}
@@ -21986,9 +27903,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("landingNormal", value);
 			}
 		}
@@ -22005,9 +27928,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rdsForceMag", value);
 			}
 		}
@@ -22025,9 +27954,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rdsTargetLinVeDecayTime", value);
 			}
 		}
@@ -22046,9 +27981,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 30.0f)
+				{
 					value = 30.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rdsTargetLinearVelocity", value);
 			}
 		}
@@ -22062,7 +28003,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool RdsUseStartingFriction
 		{
-			set { SetArgument("rdsUseStartingFriction", value); }
+			set
+			{
+				SetArgument("rdsUseStartingFriction", value);
+			}
 		}
 
 		/// <summary>
@@ -22079,9 +28023,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rdsStartingFriction", value);
 			}
 		}
@@ -22100,9 +28050,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rdsStartingFrictionMin", value);
 			}
 		}
@@ -22120,9 +28076,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rdsForceVelThreshold", value);
 			}
 		}
@@ -22140,9 +28102,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 7)
+				{
 					value = 7;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("initialState", value);
 			}
 		}
@@ -22155,7 +28123,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ChangeExtremityFriction
 		{
-			set { SetArgument("changeExtremityFriction", value); }
+			set
+			{
+				SetArgument("changeExtremityFriction", value);
+			}
 		}
 
 		/// <summary>
@@ -22166,7 +28137,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool Teeter
 		{
-			set { SetArgument("teeter", value); }
+			set
+			{
+				SetArgument("teeter", value);
+			}
 		}
 
 		/// <summary>
@@ -22183,9 +28157,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("teeterOffset", value);
 			}
 		}
@@ -22203,9 +28183,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("stopRollingTime", value);
 			}
 		}
@@ -22226,9 +28212,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("reboundScale", value);
 			}
 		}
@@ -22241,7 +28233,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public string ReboundMask
 		{
-			set { SetArgument("reboundMask", value); }
+			set
+			{
+				SetArgument("reboundMask", value);
+			}
 		}
 
 		/// <summary>
@@ -22252,7 +28247,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ForceHeadAvoid
 		{
-			set { SetArgument("forceHeadAvoid", value); }
+			set
+			{
+				SetArgument("forceHeadAvoid", value);
+			}
 		}
 
 		/// <summary>
@@ -22268,9 +28266,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("cfZAxisSpinReduction", value);
 			}
 		}
@@ -22289,9 +28293,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("splatWhenStopped", value);
 			}
 		}
@@ -22311,9 +28321,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("blendHeadWhenStopped", value);
 			}
 		}
@@ -22331,9 +28347,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("spreadLegs", value);
 			}
 		}
@@ -22362,9 +28384,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -22382,9 +28410,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDamping", value);
 			}
 		}
@@ -22401,9 +28435,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineDamping", value);
 			}
 		}
@@ -22420,9 +28460,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineStiffness", value);
 			}
 		}
@@ -22440,9 +28486,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armStiffnessStart", value);
 			}
 		}
@@ -22460,9 +28512,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDampingStart", value);
 			}
 		}
@@ -22480,9 +28538,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineDampingStart", value);
 			}
 		}
@@ -22500,9 +28564,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineStiffnessStart", value);
 			}
 		}
@@ -22520,9 +28590,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeAtStartValues", value);
 			}
 		}
@@ -22540,9 +28616,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rampTimeFromStartValues", value);
 			}
 		}
@@ -22560,9 +28642,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("staggerStepProb", value);
 			}
 		}
@@ -22580,9 +28668,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100)
+				{
 					value = 100;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("stepsTillStartEnd", value);
 			}
 		}
@@ -22600,9 +28694,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeStartEnd", value);
 			}
 		}
@@ -22620,9 +28720,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rampTimeToEndValues", value);
 			}
 		}
@@ -22640,9 +28746,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lowerBodyStiffness", value);
 			}
 		}
@@ -22660,9 +28772,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lowerBodyStiffnessEnd", value);
 			}
 		}
@@ -22682,9 +28800,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("predictionTime", value);
 			}
 		}
@@ -22702,9 +28826,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("perStepReduction1", value);
 			}
 		}
@@ -22722,9 +28852,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanInDirRate", value);
 			}
 		}
@@ -22742,9 +28878,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanInDirMaxF", value);
 			}
 		}
@@ -22762,9 +28904,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanInDirMaxB", value);
 			}
 		}
@@ -22782,9 +28930,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanHipsMaxF", value);
 			}
 		}
@@ -22802,9 +28956,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanHipsMaxB", value);
 			}
 		}
@@ -22822,9 +28982,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < -5.0f)
+				{
 					value = -5.0f;
+				}
+
 				SetArgument("lean2multF", value);
 			}
 		}
@@ -22842,9 +29008,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < -5.0f)
+				{
 					value = -5.0f;
+				}
+
 				SetArgument("lean2multB", value);
 			}
 		}
@@ -22863,9 +29035,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("pushOffDist", value);
 			}
 		}
@@ -22885,9 +29063,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < -20.0f)
+				{
 					value = -20.0f;
+				}
+
 				SetArgument("maxPushoffVel", value);
 			}
 		}
@@ -22905,9 +29089,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("hipBendMult", value);
 			}
 		}
@@ -22920,7 +29110,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool AlwaysBendForwards
 		{
-			set { SetArgument("alwaysBendForwards", value); }
+			set
+			{
+				SetArgument("alwaysBendForwards", value);
+			}
 		}
 
 		/// <summary>
@@ -22936,9 +29129,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < -10.0f)
+				{
 					value = -10.0f;
+				}
+
 				SetArgument("spineBendMult", value);
 			}
 		}
@@ -22951,7 +29150,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -22962,7 +29164,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HeadLookPos
 		{
-			set { SetArgument("headLookPos", value); }
+			set
+			{
+				SetArgument("headLookPos", value);
+			}
 		}
 
 		/// <summary>
@@ -22977,7 +29182,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("headLookInstanceIndex", value);
 			}
 		}
@@ -22995,9 +29203,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("headLookAtVelProb", value);
 			}
 		}
@@ -23016,9 +29230,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnOffProb", value);
 			}
 		}
@@ -23037,9 +29257,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turn2TargetProb", value);
 			}
 		}
@@ -23058,9 +29284,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turn2VelProb", value);
 			}
 		}
@@ -23079,9 +29311,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnAwayProb", value);
 			}
 		}
@@ -23100,9 +29338,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnLeftProb", value);
 			}
 		}
@@ -23121,9 +29365,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("turnRightProb", value);
 			}
 		}
@@ -23136,7 +29386,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseBodyTurn
 		{
-			set { SetArgument("useBodyTurn", value); }
+			set
+			{
+				SetArgument("useBodyTurn", value);
+			}
 		}
 
 		/// <summary>
@@ -23147,7 +29400,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UpperBodyReaction
 		{
-			set { SetArgument("upperBodyReaction", value); }
+			set
+			{
+				SetArgument("upperBodyReaction", value);
+			}
 		}
 	}
 
@@ -23170,7 +29426,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 EdgeLeft
 		{
-			set { SetArgument("edgeLeft", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("edgeLeft", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -23182,7 +29441,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 EdgeRight
 		{
-			set { SetArgument("edgeRight", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f))); }
+			set
+			{
+				SetArgument("edgeRight", Vector3.Maximize(value, new Vector3(0.0f, 0.0f, 0.0f)));
+			}
 		}
 
 		/// <summary>
@@ -23193,7 +29455,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseExclusionZone
 		{
-			set { SetArgument("useExclusionZone", value); }
+			set
+			{
+				SetArgument("useExclusionZone", value);
+			}
 		}
 
 		/// <summary>
@@ -23203,7 +29468,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -23215,7 +29483,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool CallHighFall
 		{
-			set { SetArgument("callHighFall", value); }
+			set
+			{
+				SetArgument("callHighFall", value);
+			}
 		}
 
 		/// <summary>
@@ -23226,7 +29497,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool LeanAway
 		{
-			set { SetArgument("leanAway", value); }
+			set
+			{
+				SetArgument("leanAway", value);
+			}
 		}
 
 		/// <summary>
@@ -23242,9 +29516,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("preTeeterTime", value);
 			}
 		}
@@ -23262,9 +29542,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAwayTime", value);
 			}
 		}
@@ -23282,9 +29568,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("leanAwayScale", value);
 			}
 		}
@@ -23302,9 +29594,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("teeterTime", value);
 			}
 		}
@@ -23333,9 +29631,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handDistanceLeftRight", value);
 			}
 		}
@@ -23353,9 +29657,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handDistanceFrontBack", value);
 			}
 		}
@@ -23373,9 +29683,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("handDistanceVertical", value);
 			}
 		}
@@ -23393,9 +29709,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("bodyStiffness", value);
 			}
 		}
@@ -23413,9 +29735,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("bodyDamping", value);
 			}
 		}
@@ -23433,9 +29761,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("backBendAmount", value);
 			}
 		}
@@ -23448,7 +29782,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseRightArm
 		{
-			set { SetArgument("useRightArm", value); }
+			set
+			{
+				SetArgument("useRightArm", value);
+			}
 		}
 
 		/// <summary>
@@ -23459,7 +29796,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseLeftArm
 		{
-			set { SetArgument("useLeftArm", value); }
+			set
+			{
+				SetArgument("useLeftArm", value);
+			}
 		}
 
 		/// <summary>
@@ -23475,9 +29815,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("noiseScale", value);
 			}
 		}
@@ -23490,7 +29836,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool NewHit
 		{
-			set { SetArgument("newHit", value); }
+			set
+			{
+				SetArgument("newHit", value);
+			}
 		}
 
 		/// <summary>
@@ -23502,7 +29851,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ProtectHeadToggle
 		{
-			set { SetArgument("protectHeadToggle", value); }
+			set
+			{
+				SetArgument("protectHeadToggle", value);
+			}
 		}
 
 		/// <summary>
@@ -23513,7 +29865,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool DontBraceHead
 		{
-			set { SetArgument("dontBraceHead", value); }
+			set
+			{
+				SetArgument("dontBraceHead", value);
+			}
 		}
 
 		/// <summary>
@@ -23524,7 +29879,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool ApplyStiffness
 		{
-			set { SetArgument("applyStiffness", value); }
+			set
+			{
+				SetArgument("applyStiffness", value);
+			}
 		}
 
 		/// <summary>
@@ -23535,7 +29893,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool HeadLookAwayFromTarget
 		{
-			set { SetArgument("headLookAwayFromTarget", value); }
+			set
+			{
+				SetArgument("headLookAwayFromTarget", value);
+			}
 		}
 
 		/// <summary>
@@ -23546,7 +29907,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -23563,9 +29927,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2)
+				{
 					value = 2;
+				}
+
 				if (value < -2)
+				{
 					value = -2;
+				}
+
 				SetArgument("turnTowards", value);
 			}
 		}
@@ -23578,7 +29948,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 Pos
 		{
-			set { SetArgument("pos", value); }
+			set
+			{
+				SetArgument("pos", value);
+			}
 		}
 	}
 
@@ -23605,9 +29978,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("armStiffness", value);
 			}
 		}
@@ -23625,9 +30004,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDamping", value);
 			}
 		}
@@ -23645,9 +30030,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineDamping", value);
 			}
 		}
@@ -23665,9 +30056,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 6.0f)
+				{
 					value = 6.0f;
+				}
+
 				SetArgument("spineStiffness", value);
 			}
 		}
@@ -23685,9 +30082,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armStiffnessStart", value);
 			}
 		}
@@ -23705,9 +30108,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("armDampingStart", value);
 			}
 		}
@@ -23725,9 +30134,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineDampingStart", value);
 			}
 		}
@@ -23745,9 +30160,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineStiffnessStart", value);
 			}
 		}
@@ -23765,9 +30186,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeAtStartValues", value);
 			}
 		}
@@ -23785,9 +30212,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rampTimeFromStartValues", value);
 			}
 		}
@@ -23805,9 +30238,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100)
+				{
 					value = 100;
+				}
+
 				if (value < 0)
+				{
 					value = 0;
+				}
+
 				SetArgument("stepsTillStartEnd", value);
 			}
 		}
@@ -23825,9 +30264,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 100.0f)
+				{
 					value = 100.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("timeStartEnd", value);
 			}
 		}
@@ -23845,9 +30290,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rampTimeToEndValues", value);
 			}
 		}
@@ -23865,9 +30316,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lowerBodyStiffness", value);
 			}
 		}
@@ -23885,9 +30342,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("lowerBodyStiffnessEnd", value);
 			}
 		}
@@ -23905,9 +30368,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("perStepReduction", value);
 			}
 		}
@@ -23926,9 +30395,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.3f)
+				{
 					value = 1.3f;
+				}
+
 				if (value < -1.3f)
+				{
 					value = -1.3f;
+				}
+
 				SetArgument("hipPitchForward", value);
 			}
 		}
@@ -23947,9 +30422,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.3f)
+				{
 					value = 1.3f;
+				}
+
 				if (value < -1.3f)
+				{
 					value = -1.3f;
+				}
+
 				SetArgument("hipPitchBack", value);
 			}
 		}
@@ -23967,9 +30448,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineBend", value);
 			}
 		}
@@ -23987,9 +30474,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("footFriction", value);
 			}
 		}
@@ -24009,9 +30502,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -0.1f)
+				{
 					value = -0.1f;
+				}
+
 				SetArgument("turnThresholdMin", value);
 			}
 		}
@@ -24031,9 +30530,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -0.1f)
+				{
 					value = -0.1f;
+				}
+
 				SetArgument("turnThresholdMax", value);
 			}
 		}
@@ -24046,7 +30551,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public bool UseHeadLook
 		{
-			set { SetArgument("useHeadLook", value); }
+			set
+			{
+				SetArgument("useHeadLook", value);
+			}
 		}
 
 		/// <summary>
@@ -24057,7 +30565,10 @@ namespace GTA.NaturalMotion
 		/// </remarks>
 		public Vector3 HeadLookPos
 		{
-			set { SetArgument("headLookPos", value); }
+			set
+			{
+				SetArgument("headLookPos", value);
+			}
 		}
 
 		/// <summary>
@@ -24072,7 +30583,10 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value < -1)
+				{
 					value = -1;
+				}
+
 				SetArgument("headLookInstanceIndex", value);
 			}
 		}
@@ -24090,9 +30604,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 1.0f)
+				{
 					value = 1.0f;
+				}
+
 				if (value < -1.0f)
+				{
 					value = -1.0f;
+				}
+
 				SetArgument("headLookAtVelProb", value);
 			}
 		}
@@ -24110,9 +30630,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 20.0f)
+				{
 					value = 20.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("comVelRDSThresh", value);
 			}
 		}
@@ -24130,9 +30656,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("hulaPeriod", value);
 			}
 		}
@@ -24150,9 +30682,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("hipAmplitude", value);
 			}
 		}
@@ -24170,9 +30708,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 4.0f)
+				{
 					value = 4.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("spineAmplitude", value);
 			}
 		}
@@ -24190,9 +30734,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < -5.0f)
+				{
 					value = -5.0f;
+				}
+
 				SetArgument("minRelaxPeriod", value);
 			}
 		}
@@ -24210,9 +30760,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 5.0f)
+				{
 					value = 5.0f;
+				}
+
 				if (value < -5.0f)
+				{
 					value = -5.0f;
+				}
+
 				SetArgument("maxRelaxPeriod", value);
 			}
 		}
@@ -24230,9 +30786,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("rollHelp", value);
 			}
 		}
@@ -24250,9 +30812,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundLegStiffness", value);
 			}
 		}
@@ -24270,9 +30838,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundArmStiffness", value);
 			}
 		}
@@ -24290,9 +30864,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 16.0f)
+				{
 					value = 16.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundSpineStiffness", value);
 			}
 		}
@@ -24310,9 +30890,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundLegDamping", value);
 			}
 		}
@@ -24330,9 +30916,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundArmDamping", value);
 			}
 		}
@@ -24350,9 +30942,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 2.0f)
+				{
 					value = 2.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundSpineDamping", value);
 			}
 		}
@@ -24372,9 +30970,15 @@ namespace GTA.NaturalMotion
 			set
 			{
 				if (value > 10.0f)
+				{
 					value = 10.0f;
+				}
+
 				if (value < 0.0f)
+				{
 					value = 0.0f;
+				}
+
 				SetArgument("groundFriction", value);
 			}
 		}

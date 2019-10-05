@@ -3,47 +3,27 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System.Collections.Generic;
 using System.Linq;
-using GTA.Native;
 
 namespace GTA
 {
 	public sealed class WeaponComponentCollection
 	{
+		#region Fields
 		readonly Ped _owner;
 		readonly Weapon _weapon;
 		readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents = new Dictionary<WeaponComponentHash, WeaponComponent>();
 		readonly WeaponComponentHash[] _components;
 		readonly static WeaponComponent _invalidComponent = new WeaponComponent(null, null, WeaponComponentHash.Invalid);
+		#endregion
 
 		internal WeaponComponentCollection(Ped owner, Weapon weapon)
 		{
 			_owner = owner;
 			_weapon = weapon;
 			_components = GetComponentsFromHash(weapon.Hash);
-		}
-
-		public WeaponComponent this[WeaponComponentHash componentHash]
-		{
-			get
-			{
-				if (_components.Contains(componentHash))
-				{
-					WeaponComponent component = null;
-					if (!_weaponComponents.TryGetValue(componentHash, out component))
-					{
-						component = new WeaponComponent(_owner, _weapon, componentHash);
-						_weaponComponents.Add(componentHash, component);
-					}
-
-					return component;
-				}
-				else
-				{
-					return _invalidComponent;
-				}
-			}
 		}
 
 		public WeaponComponent this[int index]
@@ -60,6 +40,28 @@ namespace GTA
 						component = new WeaponComponent(_owner, _weapon, componentHash);
 						_weaponComponents.Add(componentHash, component);
 					}
+					return component;
+				}
+				else
+				{
+					return _invalidComponent;
+				}
+			}
+		}
+
+		public WeaponComponent this[WeaponComponentHash componentHash]
+		{
+			get
+			{
+				if (_components.Contains(componentHash))
+				{
+					WeaponComponent component = null;
+					if (!_weaponComponents.TryGetValue(componentHash, out component))
+					{
+						component = new WeaponComponent(_owner, _weapon, componentHash);
+						_weaponComponents.Add(componentHash, component);
+					}
+
 					return component;
 				}
 				else
@@ -86,7 +88,7 @@ namespace GTA
 			foreach (var component in this)
 			{
 				if (component.AttachmentPoint == WeaponAttachmentPoint.Clip ||
-				    component.AttachmentPoint == WeaponAttachmentPoint.Clip2)
+					component.AttachmentPoint == WeaponAttachmentPoint.Clip2)
 				{
 					if (index-- == 0)
 					{

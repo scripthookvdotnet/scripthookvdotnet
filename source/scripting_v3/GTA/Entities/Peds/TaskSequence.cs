@@ -24,17 +24,16 @@ namespace GTA
 
 			Handle = handle;
 
-			if (ReferenceEquals(_nullPed, null))
+			if (_nullPed is null)
 			{
 				_nullPed = new Ped(0);
 			}
 		}
-
 		public TaskSequence(int handle)
 		{
 			Handle = handle;
 
-			if (ReferenceEquals(_nullPed, null))
+			if (_nullPed is null)
 			{
 				_nullPed = new Ped(0);
 			}
@@ -60,6 +59,7 @@ namespace GTA
 		{
 			get; private set;
 		}
+
 		public bool IsClosed
 		{
 			get; private set;

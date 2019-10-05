@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -43,7 +43,10 @@ namespace GTA
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return IntPtr.Zero;
+				}
+
 				return (SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
 			}
 		}
@@ -118,7 +121,10 @@ namespace GTA
 			{
 				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
+				{
 					return Vector3.RelativeTop;
+				}
+
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20));
 			}
 		}
@@ -132,7 +138,10 @@ namespace GTA
 			{
 				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
+				{
 					return Vector3.RelativeRight;
+				}
+
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
 			}
 		}
@@ -146,7 +155,10 @@ namespace GTA
 			{
 				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
+				{
 					return Vector3.RelativeFront;
+				}
+
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10));
 			}
 		}
@@ -366,7 +378,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Camera camera)
+			{
 				return Handle == camera.Handle;
+			}
+
 			return false;
 		}
 

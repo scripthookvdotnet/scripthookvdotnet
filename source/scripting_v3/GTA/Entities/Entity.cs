@@ -3,18 +3,20 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-using System.Linq;
 using GTA.Math;
 using GTA.Native;
+using System;
+using System.Linq;
 
 namespace GTA
 {
 	public abstract class Entity : PoolObject, ISpatial
 	{
+		#region Fields
 		EntityBoneCollection _bones;
+		#endregion
 
-		public Entity(int handle) : base(handle)
+		internal Entity(int handle) : base(handle)
 		{
 		}
 
@@ -1097,19 +1099,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a collection of the <see cref="EntityBone"/>s in this <see cref="Entity"/>
+		/// Gets a collection of the <see cref="EntityBone"/>s in this <see cref="Entity"/>.
 		/// </summary>
-		public virtual EntityBoneCollection Bones
-		{
-			get
-			{
-				if (ReferenceEquals(_bones, null))
-				{
-					_bones = new EntityBoneCollection(this);
-				}
-				return _bones;
-			}
-		}
+		public virtual EntityBoneCollection Bones => _bones ?? (_bones = new EntityBoneCollection(this));
 
 		/// <summary>
 		/// Creates a <see cref="Blip"/> on this <see cref="Entity"/>
@@ -1120,7 +1112,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="Blip"/> attached to this <see cref="Entity"/>
+		/// Gets the <see cref="Blip"/> attached to this <see cref="Entity"/>.
 		/// </summary>
 		/// <remarks>returns <c>null</c> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
 		public Blip AttachedBlip
@@ -1275,7 +1267,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Entity entity)
+			{
 				return Handle == entity.Handle;
+			}
+
 			return false;
 		}
 

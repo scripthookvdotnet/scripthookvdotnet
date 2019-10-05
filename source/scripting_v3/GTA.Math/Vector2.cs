@@ -103,8 +103,10 @@ namespace GTA.Math
 			{
 				switch (index)
 				{
-					case 0: return X;
-					case 1: return Y;
+					case 0:
+						return X;
+					case 1:
+						return Y;
 				}
 
 				throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
@@ -114,9 +116,14 @@ namespace GTA.Math
 			{
 				switch (index)
 				{
-					case 0: X = value; break;
-					case 1: Y = value; break;
-					default: throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+					case 0:
+						X = value;
+						break;
+					case 1:
+						Y = value;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
 				}
 			}
 		}
@@ -145,7 +152,10 @@ namespace GTA.Math
 		public void Normalize()
 		{
 			float length = Length();
-			if (length == 0) return;
+			if (length == 0)
+			{
+				return;
+			}
 
 			float num = 1 / length;
 			X *= num;
@@ -471,7 +481,9 @@ namespace GTA.Math
 		public string ToString(string format)
 		{
 			if (format == null)
+			{
 				return ToString();
+			}
 
 			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1}", X.ToString(format, CultureInfo.CurrentCulture), Y.ToString(format, CultureInfo.CurrentCulture));
 		}
@@ -496,7 +508,9 @@ namespace GTA.Math
 		public override bool Equals(object obj)
 		{
 			if (obj == null || obj.GetType() != GetType())
+			{
 				return false;
+			}
 
 			return Equals((Vector2)(obj));
 		}

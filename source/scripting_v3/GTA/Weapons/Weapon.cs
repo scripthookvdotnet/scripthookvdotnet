@@ -10,7 +10,7 @@ namespace GTA
 	public sealed class Weapon
 	{
 		#region Fields
-		Ped _owner;
+		readonly Ped _owner;
 		WeaponComponentCollection _components;
 		#endregion
 
@@ -24,7 +24,10 @@ namespace GTA
 			Hash = hash;
 		}
 
-		public WeaponHash Hash { get; private set; }
+		public WeaponHash Hash
+		{
+			get;
+		}
 
 		public static implicit operator WeaponHash(Weapon weapon)
 		{
@@ -32,9 +35,6 @@ namespace GTA
 		}
 
 		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, Hash);
-
-		public string DisplayName => GetDisplayNameFromHash(Hash);
-		public string LocalizedName => Game.GetLocalizedString(DisplayName);
 
 		public Model Model => new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
 
@@ -128,7 +128,7 @@ namespace GTA
 					return 1;
 				}
 
-			    int maxAmmo;
+				int maxAmmo;
 				unsafe
 				{
 					Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, &maxAmmo);
@@ -176,17 +176,10 @@ namespace GTA
 
 		public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, Hash);
 
-		public WeaponComponentCollection Components
-		{
-			get
-			{
-				if (_components == null)
-				{
-					_components = new WeaponComponentCollection(_owner, this);
-				}
-				return _components;
-			}
-		}
+		public WeaponComponentCollection Components => _components ?? (_components = new WeaponComponentCollection(_owner, this));
+
+		public string DisplayName => GetDisplayNameFromHash(Hash);
+		public string LocalizedName => Game.GetLocalizedString(DisplayName);
 
 		public static string GetDisplayNameFromHash(WeaponHash hash)
 		{

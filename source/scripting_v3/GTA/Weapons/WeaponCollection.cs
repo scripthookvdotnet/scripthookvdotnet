@@ -4,15 +4,16 @@
 //
 
 using GTA.Native;
-using System;
 using System.Collections.Generic;
 
 namespace GTA
 {
 	public sealed class WeaponCollection
 	{
+		#region Fields
 		readonly Ped _owner;
 		readonly Dictionary<WeaponHash, Weapon> _weapons = new Dictionary<WeaponHash, Weapon>();
+		#endregion
 
 		internal WeaponCollection(Ped owner)
 		{
@@ -42,13 +43,13 @@ namespace GTA
 		{
 			get
 			{
-			    int currentWeapon;
+				int currentWeapon;
 				unsafe
 				{
 					Function.Call(Hash.GET_CURRENT_PED_WEAPON, _owner.Handle, &currentWeapon, true);
 				}
 
-			    var hash = (WeaponHash)currentWeapon;
+				var hash = (WeaponHash)currentWeapon;
 
 				if (_weapons.ContainsKey(hash))
 				{
@@ -61,18 +62,6 @@ namespace GTA
 
 					return weapon;
 				}
-			}
-		}
-		public Prop   CurrentWeaponObject
-		{
-			get
-			{
-				if (Current.Hash == WeaponHash.Unarmed)
-				{
-					return null;
-				}
-
-				return new Prop(Function.Call<int>(Hash.GET_CURRENT_PED_WEAPON_ENTITY_INDEX, _owner.Handle));
 			}
 		}
 
@@ -100,9 +89,23 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, _owner.Handle, weaponHash);
 		}
+
 		public bool IsWeaponValid(WeaponHash hash)
 		{
 			return Function.Call<bool>(Hash.IS_WEAPON_VALID, hash);
+		}
+
+		public Prop CurrentWeaponObject
+		{
+			get
+			{
+				if (Current.Hash == WeaponHash.Unarmed)
+				{
+					return null;
+				}
+
+				return new Prop(Function.Call<int>(Hash.GET_CURRENT_PED_WEAPON_ENTITY_INDEX, _owner.Handle));
+			}
 		}
 
 		public bool Select(Weapon weapon)
@@ -172,6 +175,7 @@ namespace GTA
 		{
 			Function.Call(Hash.REMOVE_WEAPON_FROM_PED, _owner.Handle, weaponHash);
 		}
+
 		public void RemoveAll()
 		{
 			Function.Call(Hash.REMOVE_ALL_PED_WEAPONS, _owner.Handle, true);

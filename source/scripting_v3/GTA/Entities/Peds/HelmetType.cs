@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum HelmetType : uint
+	public enum Helmet : uint
 	{
 		RegularMotorcycleHelmet = 4096u,
 		FiremanHelmet = 16384u,

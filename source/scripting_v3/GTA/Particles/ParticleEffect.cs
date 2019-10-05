@@ -67,20 +67,32 @@ namespace GTA
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return Vector3.Zero;
+				}
+
 				address = SHVDN.NativeMemory.ReadAddress(address + 32);
 				if (address == IntPtr.Zero)
+				{
 					return Vector3.Zero;
+				}
+
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 144));
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return;
+				}
+
 				address = SHVDN.NativeMemory.ReadAddress(address + 32);
 				if (address == IntPtr.Zero)
+				{
 					return;
+				}
+
 				SHVDN.NativeMemory.WriteVector3(address + 144, value.ToArray());
 			}
 		}
@@ -107,19 +119,25 @@ namespace GTA
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return default;
+				}
+
 				address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
 				byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
 				byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
 				byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
 				byte a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
-				return  Color.FromArgb(a, r, g, b);
+				return Color.FromArgb(a, r, g, b);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return;
+				}
+
 				address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
 				SHVDN.NativeMemory.WriteFloat(address, value.R / 255f);
 				SHVDN.NativeMemory.WriteFloat(address + 4, value.G / 255f);
@@ -142,14 +160,20 @@ namespace GTA
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
+
 				return SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return;
+				}
+
 				SHVDN.NativeMemory.WriteFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336, value);
 			}
 		}
@@ -163,7 +187,10 @@ namespace GTA
 			{
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
+
 				return SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 384);
 			}
 			set => Function.Call(Hash.SET_PARTICLE_FX_LOOPED_FAR_CLIP_DIST, Handle, value);
@@ -204,7 +231,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is ParticleEffect effect)
+			{
 				return Handle == effect.Handle;
+			}
+
 			return false;
 		}
 

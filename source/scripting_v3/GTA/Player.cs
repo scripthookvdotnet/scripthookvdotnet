@@ -5,7 +5,6 @@
 
 using GTA.Math;
 using GTA.Native;
-using System;
 using System.Drawing;
 
 namespace GTA
@@ -592,7 +591,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Player player)
+			{
 				return Handle == player.Handle;
+			}
+
 			return false;
 		}
 

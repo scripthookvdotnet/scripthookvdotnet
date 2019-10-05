@@ -58,7 +58,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Pickup pickup)
+			{
 				return Handle == pickup.Handle;
+			}
+
 			return false;
 		}
 

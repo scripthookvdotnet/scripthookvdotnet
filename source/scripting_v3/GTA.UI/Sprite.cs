@@ -3,12 +3,12 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using GTA.Native;
 
 namespace GTA.UI
 {
@@ -140,14 +140,20 @@ namespace GTA.UI
 		/// <value>
 		///   <c>true</c> if enabled; otherwise, <c>false</c>.
 		/// </value>
-		public bool Enabled { get; set; }
+		public bool Enabled
+		{
+			get; set;
+		}
 		/// <summary>
 		/// Gets or sets the color of this <see cref="Sprite" />.
 		/// </summary>
 		/// <value>
 		/// The color.
 		/// </value>
-		public Color Color { get; set; }
+		public Color Color
+		{
+			get; set;
+		}
 		/// <summary>
 		/// Gets or sets the position of this <see cref="Sprite" />.
 		/// </summary>
@@ -157,7 +163,10 @@ namespace GTA.UI
 		/// <remarks>
 		/// If ScaledDraw is called, the position will be scaled by the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </remarks>
-		public PointF Position { get; set; }
+		public PointF Position
+		{
+			get; set;
+		}
 		/// <summary>
 		/// Gets or sets the size to draw the <see cref="Sprite" />
 		/// </summary>
@@ -167,21 +176,30 @@ namespace GTA.UI
 		/// <remarks>
 		/// If ScaledDraw is called, the size will be scaled by the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </remarks>
-		public SizeF Size { get; set; }
+		public SizeF Size
+		{
+			get; set;
+		}
 		/// <summary>
 		/// Gets or sets the rotation to draw thie <see cref="Sprite" />.
 		/// </summary>
 		/// <value>
 		/// The rotation measured in degrees, clockwise increasing, 0.0 at vertical
 		/// </value>
-		public float Rotation { get; set; }
+		public float Rotation
+		{
+			get; set;
+		}
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Sprite"/> should be positioned based on its center or top left corner
 		/// </summary>
 		/// <value>
 		///   <c>true</c> if centered; otherwise, <c>false</c>.
 		/// </value>
-		public bool Centered { get; set; }
+		public bool Centered
+		{
+			get; set;
+		}
 
 		/// <summary>
 		/// Draws this <see cref="Sprite" />.

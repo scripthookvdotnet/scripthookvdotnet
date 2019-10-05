@@ -3,59 +3,58 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Native;
 
 namespace GTA
 {
 	public sealed class VehicleDoor
 	{
-		#region Fields
-		Vehicle _owner;
-		#endregion
-
 		internal VehicleDoor(Vehicle owner, VehicleDoorIndex index)
 		{
-			_owner = owner;
+			Vehicle = owner;
 			Index = index;
 		}
 
-		public VehicleDoorIndex Index { get; private set; }
+		public Vehicle Vehicle
+		{
+			get;
+		}
 
-		public float AngleRatio
+		public VehicleDoorIndex Index
 		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, _owner.Handle, Index);
-			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_DOOR_CONTROL, _owner.Handle, Index, 1, value);
-			}
+			get;
 		}
-		public bool CanBeBroken
-		{
-			set
-			{
-				Function.Call(Hash._SET_VEHICLE_DOOR_CAN_BREAK, _owner.Handle, Index, value);
-			}
-		}
+
 		public bool IsOpen => AngleRatio > 0;
-		public bool IsFullyOpen => Function.Call<bool>(Hash.IS_VEHICLE_DOOR_FULLY_OPEN, _owner.Handle, Index);
-		public bool IsBroken => Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, _owner.Handle, Index);
-		public Vehicle Vehicle => _owner;
+
+		public bool IsFullyOpen => Function.Call<bool>(Hash.IS_VEHICLE_DOOR_FULLY_OPEN, Vehicle.Handle, Index);
 
 		public void Open(bool loose = false, bool instantly = false)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, _owner.Handle, Index, loose, instantly);
+			Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, Vehicle.Handle, Index, loose, instantly);
 		}
+
 		public void Close(bool instantly = false)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, _owner.Handle, Index, instantly);
+			Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, Vehicle.Handle, Index, instantly);
 		}
+
+		public bool IsBroken => Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, Vehicle.Handle, Index);
+
+		public bool CanBeBroken
+		{
+			set => Function.Call(Hash._SET_VEHICLE_DOOR_CAN_BREAK, Vehicle.Handle, Index, value);
+		}
+
 		public void Break(bool stayInTheWorld = true)
 		{
-			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, _owner.Handle, Index, !stayInTheWorld);
+			Function.Call(Hash.SET_VEHICLE_DOOR_BROKEN, Vehicle.Handle, Index, !stayInTheWorld);
+		}
+
+		public float AngleRatio
+		{
+			get => Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, Vehicle.Handle, Index);
+			set => Function.Call(Hash.SET_VEHICLE_DOOR_CONTROL, Vehicle.Handle, Index, 1, value);
 		}
 	}
 }

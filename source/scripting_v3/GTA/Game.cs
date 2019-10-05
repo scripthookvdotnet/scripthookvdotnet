@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System;
 using System.Windows.Forms;
-using GTA.Native;
 
 namespace GTA
 {
@@ -59,11 +59,6 @@ namespace GTA
 		static Player cachedPlayer;
 		#endregion
 
-		static Game()
-		{
-			Version = (GameVersion)SHVDN.NativeMemory.GetGameVersion();
-		}
-
 		/// <summary>
 		/// Gets the <see cref="GTA.Player"/> that you are controlling.
 		/// </summary>
@@ -83,18 +78,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the version of the game.
-		/// </summary>
-		public static GameVersion Version
-		{
-			get;
-			private set;
-		}
-
-		/// <summary>
 		/// Gets the current game language.
 		/// </summary>
 		public static Language Language => Function.Call<Language>(Hash.GET_CURRENT_LANGUAGE);
+
+		/// <summary>
+		/// Gets the version of the game.
+		/// </summary>
+		public static GameVersion Version => (GameVersion)SHVDN.NativeMemory.GetGameVersion();
 
 		/// <summary>
 		/// Gets how many milliseconds the game has been open in this session

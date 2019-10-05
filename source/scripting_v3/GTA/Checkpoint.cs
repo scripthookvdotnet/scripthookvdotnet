@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -293,7 +293,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Checkpoint checkpoint)
+			{
 				return Handle == checkpoint.Handle;
+			}
+
 			return false;
 		}
 

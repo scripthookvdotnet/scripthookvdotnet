@@ -172,9 +172,12 @@ namespace GTA.Math
 			{
 				switch (index)
 				{
-					case 0: return X;
-					case 1: return Y;
-					case 2: return Z;
+					case 0:
+						return X;
+					case 1:
+						return Y;
+					case 2:
+						return Z;
 				}
 
 				throw new ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
@@ -184,10 +187,17 @@ namespace GTA.Math
 			{
 				switch (index)
 				{
-					case 0: X = value; break;
-					case 1: Y = value; break;
-					case 2: Z = value; break;
-					default: throw new ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
+					case 0:
+						X = value;
+						break;
+					case 1:
+						Y = value;
+						break;
+					case 2:
+						Z = value;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("index", "Indices for Vector3 run from 0 to 2, inclusive.");
 				}
 			}
 		}
@@ -210,7 +220,10 @@ namespace GTA.Math
 		public void Normalize()
 		{
 			float length = Length();
-			if (length == 0) return;
+			if (length == 0)
+			{
+				return;
+			}
 
 			float num = 1 / length;
 			X *= num;
@@ -346,7 +359,7 @@ namespace GTA.Math
 		/// <returns>The vector containing rounded values</returns>
 		public Vector3 Round(int decimalPlaces = 2)
 		{
-		    return new Vector3((float)System.Math.Round(X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
+			return new Vector3((float)System.Math.Round(X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
 		}
 
 		/// <summary>
@@ -664,7 +677,9 @@ namespace GTA.Math
 		public string ToString(string format)
 		{
 			if (format == null)
+			{
 				return ToString();
+			}
 
 			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2}", X.ToString(format, CultureInfo.CurrentCulture),
 				Y.ToString(format, CultureInfo.CurrentCulture), Z.ToString(format, CultureInfo.CurrentCulture));
@@ -693,7 +708,9 @@ namespace GTA.Math
 		public override bool Equals(object obj)
 		{
 			if (obj == null || obj.GetType() != GetType())
+			{
 				return false;
+			}
 
 			return Equals((Vector3)obj);
 		}

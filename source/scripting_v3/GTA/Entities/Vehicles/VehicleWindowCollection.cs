@@ -11,10 +11,8 @@ namespace GTA
 	public sealed class VehicleWindowCollection
 	{
 		#region Fields
-
-		Vehicle _owner;
+		readonly Vehicle _owner;
 		readonly Dictionary<VehicleWindowIndex, VehicleWindow> _vehicleWindows = new Dictionary<VehicleWindowIndex, VehicleWindow>();
-
 		#endregion
 
 		internal VehicleWindowCollection(Vehicle owner)
@@ -22,14 +20,11 @@ namespace GTA
 			_owner = owner;
 		}
 
-
 		public VehicleWindow this[VehicleWindowIndex index]
 		{
 			get
 			{
-				VehicleWindow vehicleWindow = null;
-
-				if (!_vehicleWindows.TryGetValue(index, out vehicleWindow))
+				if (!_vehicleWindows.TryGetValue(index, out VehicleWindow vehicleWindow))
 				{
 					vehicleWindow = new VehicleWindow(_owner, index);
 					_vehicleWindows.Add(index, vehicleWindow);
@@ -39,7 +34,7 @@ namespace GTA
 			}
 		}
 
-		public bool AreAllWindowsIntact => Function.Call<bool>(Hash.ARE_ALL_VEHICLE_WINDOWS_INTACT, _owner.Handle);
+		public bool AllWindowsIntact => Function.Call<bool>(Hash.ARE_ALL_VEHICLE_WINDOWS_INTACT, _owner.Handle);
 
 		public void RollDownAllWindows()
 		{

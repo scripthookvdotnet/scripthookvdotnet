@@ -7,7 +7,7 @@ namespace GTA
 {
 	public sealed class Prop : Entity
 	{
-		public Prop(int handle) : base(handle)
+		internal Prop(int handle) : base(handle)
 		{
 		}
 

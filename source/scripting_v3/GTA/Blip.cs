@@ -172,7 +172,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-		    int handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.REMOVE_BLIP, &handle);
@@ -197,7 +197,10 @@ namespace GTA
 		public override bool Equals(object obj)
 		{
 			if (obj is Blip blip)
+			{
 				return Handle == blip.Handle;
+			}
+
 			return false;
 		}
 

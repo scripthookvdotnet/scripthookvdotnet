@@ -53,8 +53,8 @@ namespace GTA.UI
 		/// </summary>
 		public static CursorSprite CursorSprite
 		{
-			get { return (CursorSprite)SHVDN.NativeMemory.CursorSprite; }
-			set { Function.Call(Hash._SET_MOUSE_CURSOR_SPRITE, value); }
+			get => (CursorSprite)SHVDN.NativeMemory.CursorSprite;
+			set => Function.Call(Hash._SET_MOUSE_CURSOR_SPRITE, value);
 		}
 
 		/// <summary>
@@ -62,8 +62,8 @@ namespace GTA.UI
 		/// </summary>
 		public static bool IsVisible
 		{
-			get { return !Function.Call<bool>(Hash.IS_HUD_HIDDEN); }
-			set { Function.Call(Hash.DISPLAY_HUD, value); }
+			get => !Function.Call<bool>(Hash.IS_HUD_HIDDEN);
+			set => Function.Call(Hash.DISPLAY_HUD, value);
 		}
 
 		/// <summary>
@@ -71,8 +71,8 @@ namespace GTA.UI
 		/// </summary>
 		public static bool IsRadarVisible
 		{
-			get { return !Function.Call<bool>(Hash.IS_RADAR_HIDDEN); }
-			set { Function.Call(Hash.DISPLAY_RADAR, value); }
+			get => !Function.Call<bool>(Hash.IS_RADAR_HIDDEN);
+			set => Function.Call(Hash.DISPLAY_RADAR, value);
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace GTA.UI
 		/// </value>
 		public static int RadarZoom
 		{
-			set { Function.Call(Hash.SET_RADAR_ZOOM, value); }
+			set => Function.Call(Hash.SET_RADAR_ZOOM, value);
 		}
 	}
 }

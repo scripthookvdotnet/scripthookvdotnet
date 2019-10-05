@@ -3,7 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using GTA.Native;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +11,7 @@ namespace GTA
 	public sealed class VehicleWheelCollection
 	{
 		#region Fields
-		Vehicle _owner;
+		readonly Vehicle _owner;
 		readonly Dictionary<int, VehicleWheel> _vehicleWheels = new Dictionary<int, VehicleWheel>();
 		#endregion
 
@@ -25,9 +24,7 @@ namespace GTA
 		{
 			get
 			{
-				VehicleWheel vehicleWheel = null;
-
-				if (!_vehicleWheels.TryGetValue(index, out vehicleWheel))
+				if (!_vehicleWheels.TryGetValue(index, out VehicleWheel vehicleWheel))
 				{
 					vehicleWheel = new VehicleWheel(_owner, index);
 					_vehicleWheels.Add(index, vehicleWheel);
@@ -41,7 +38,8 @@ namespace GTA
 		{
 			get
 			{
-				if (_owner.MemoryAddress == IntPtr.Zero)
+				var address = _owner.MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0;
 				}

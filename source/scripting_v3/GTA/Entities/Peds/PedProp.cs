@@ -11,69 +11,71 @@ namespace GTA
 	{
 		#region Fields
 		readonly Ped _ped;
-		readonly PedPropType _propId;
 		#endregion
 
 		internal PedProp(Ped ped, PedPropType propId)
 		{
 			_ped = ped;
-			_propId = propId;
+			Type = propId;
 		}
 
-		public PedPropType PropType => _propId;
+		public string Name => Type.ToString();
 
-		public string Name => _propId.ToString();
+		public PedPropType Type
+		{
+			get;
+		}
 
-		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, _propId) + 1;
+		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, Type) + 1;
 
 		public int Index
 		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_PED_PROP_INDEX, _ped.Handle, _propId) + 1;
-			}
-			set
-			{
-				SetVariation(value);
-			}
+			get => Function.Call<int>(Hash.GET_PED_PROP_INDEX, _ped.Handle, Type) + 1;
+			set => SetVariation(value);
 		}
 
-		public int TextureCount => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, _ped.Handle, _propId, Index - 1);
+		public int TextureCount => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, _ped.Handle, Type, Index - 1);
 
 		public int TextureIndex
 		{
 			get
 			{
-				return Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, _propId);
+				return Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, Type);
 			}
 			set
 			{
 				if (Index > 0)
+				{
 					SetVariation(Index, value);
+				}
 			}
+		}
+
+		public bool SetVariation(int index, int textureIndex = 0)
+		{
+			if (index == 0)
+			{
+				Function.Call(Hash.CLEAR_PED_PROP, _ped.Handle, Type);
+				return true;
+			}
+
+			if (!IsVariationValid(index, textureIndex))
+			{
+				return false;
+			}
+
+			Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, Type, index - 1, textureIndex, 1);
+			return true;
 		}
 
 		public bool IsVariationValid(int index, int textureIndex = 0)
 		{
 			if (index == 0)
 			{
-				return true;//no prop always valid
+				return true; // No prop is always valid
 			}
-			return Function.Call<bool>(Hash._IS_PED_PROP_VALID, _ped.Handle, _propId, index - 1, textureIndex);
-		}
-		public bool SetVariation(int index, int textureIndex = 0)
-		{
-			if (index == 0)
-			{
-				Function.Call(Hash.CLEAR_PED_PROP, _ped.Handle, _propId);
-				return true;
-			}
-			if (IsVariationValid(index, textureIndex))
-			{
-				Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, _propId, index - 1, textureIndex, 1);
-				return true;
-			}
-			return false;
+
+			return Function.Call<bool>(Hash._IS_PED_PROP_VALID, _ped.Handle, Type, index - 1, textureIndex);
 		}
 
 		public bool HasVariations => Count > 1;
@@ -84,7 +86,7 @@ namespace GTA
 
 		public override string ToString()
 		{
-			return _propId.ToString();
+			return Type.ToString();
 		}
 	}
 }
