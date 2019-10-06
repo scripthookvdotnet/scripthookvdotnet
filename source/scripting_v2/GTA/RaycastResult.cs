@@ -21,8 +21,8 @@ namespace GTA
 				Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, &hitSomething, hitCoords, surfaceNormal, &entityHandle);
 			}
 
-			DidHitAnything = hitSomething != 0;
 			HitEntity = Entity.FromHandle(entityHandle);
+			DitHitAnything = hitSomething != 0;
 			HitCoords = hitCoords.GetResult<Vector3>();
 			SurfaceNormal = surfaceNormal.GetResult<Vector3>();
 		}
@@ -32,12 +32,12 @@ namespace GTA
 			get;
 		}
 
-		public bool DidHitEntity
+		public bool DitHitEntity
 		{
 			get => HitEntity != null;
 		}
 
-		public bool DidHitAnything
+		public bool DitHitAnything
 		{
 			get;
 		}
