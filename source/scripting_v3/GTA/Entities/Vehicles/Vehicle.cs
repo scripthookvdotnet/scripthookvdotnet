@@ -1587,7 +1587,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_DROPS_MONEY_WHEN_BLOWN_UP, Handle, value);
 		}
 
-		public void Deform(Vector3 position, float damageAmount, float radius)
+		public void ApplyDamage(Vector3 position, float damageAmount, float radius)
 		{
 			Function.Call(Hash.SET_VEHICLE_DAMAGE, position.X, position.Y, position.Z, damageAmount, radius);
 		}
