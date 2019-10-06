@@ -86,7 +86,7 @@ namespace GTA
 
 		public static Language Language => Function.Call<Language>(Hash._GET_UI_LANGUAGE_ID);
 
-		public static GameVersion Version => (GameVersion)SHVDN.NativeMemory.GetGameVersion();
+		public static GameVersion Version => (GameVersion)(SHVDN.NativeMemory.GetGameVersion() + 1);
 
 		public static GlobalCollection Globals { get; private set; } = new GlobalCollection();
 
