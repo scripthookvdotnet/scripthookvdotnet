@@ -4,6 +4,7 @@
 //
 
 using GTA.Native;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -32,13 +33,13 @@ namespace GTA
 				currentIndex = -1;
 			}
 
-			public void Dispose()
-			{
-			}
-
 			public bool MoveNext()
 			{
 				return ++currentIndex < collection.Count;
+			}
+
+			void IDisposable.Dispose()
+			{
 			}
 		}
 

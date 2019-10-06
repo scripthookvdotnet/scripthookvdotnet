@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 namespace GTA
 {
-	public class PedGroup : PoolObject, IEnumerable<Ped>, IDisposable
+	public sealed class PedGroup : PoolObject, IEnumerable<Ped>, IDisposable
 	{
-		public class Enumerator : IEnumerator<Ped>
+		public sealed class Enumerator : IEnumerator<Ped>
 		{
 			#region Fields
 			readonly PedGroup collection;
@@ -33,10 +33,6 @@ namespace GTA
 			{
 			}
 
-			public void Dispose()
-			{
-			}
-
 			public bool MoveNext()
 			{
 				if (currentIndex++ < (collection.MemberCount - 1))
@@ -53,6 +49,10 @@ namespace GTA
 
 				return false;
 			}
+
+			void IDisposable.Dispose()
+			{
+			}
 		}
 
 		public PedGroup() : base(Function.Call<int>(Hash.CREATE_GROUP, 0))
@@ -64,15 +64,8 @@ namespace GTA
 
 		public void Dispose()
 		{
-			Dispose(true);
+			Function.Call(Hash.REMOVE_GROUP, Handle);
 			GC.SuppressFinalize(this);
-		}
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Function.Call(Hash.REMOVE_GROUP, Handle);
-			}
 		}
 
 		public int MemberCount
