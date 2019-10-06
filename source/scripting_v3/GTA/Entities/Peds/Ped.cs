@@ -669,11 +669,6 @@ namespace GTA
 
 		public bool IsInParachuteFreeFall => Function.Call<bool>(Hash.IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
 
-		public void ParachuteTo(Vector3 location)
-		{
-			Function.Call(Hash.SET_PARACHUTE_TASK_TARGET, Handle, location.X, location.Y, location.Z);
-		}
-
 		public void OpenParachute()
 		{
 			Function.Call(Hash.FORCE_PED_TO_OPEN_PARACHUTE, Handle);
