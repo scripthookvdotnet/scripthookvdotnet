@@ -23,6 +23,6 @@ namespace GTA
 		BurstFireHeli = 2437838959u,
 		BurstFireMicro = 1122960381u,
 		BurstFireBursts = 1122960381u,
-		BurstFireTank = 3804904049u
+		BurstFireTank = 3804904049u,
 	}
 }

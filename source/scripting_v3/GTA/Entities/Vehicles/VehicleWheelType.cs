@@ -16,6 +16,6 @@ namespace GTA
 		BikeWheels,
 		HighEnd,
 		BennysOriginals,
-		BennysBespoke
+		BennysBespoke,
 	}
 }

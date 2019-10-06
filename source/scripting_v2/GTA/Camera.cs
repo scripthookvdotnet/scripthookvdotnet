@@ -221,7 +221,7 @@ namespace GTA
 		}
 		public static bool Exists(Camera camera)
 		{
-			return !(camera is null) && camera.Exists();
+			return camera != null && camera.Exists();
 		}
 
 		public bool Equals(Camera obj)

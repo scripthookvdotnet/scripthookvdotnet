@@ -39,7 +39,7 @@ namespace GTA
 				{
 					current = currentIndex < 0 ? collection.Leader : collection.GetMember(currentIndex);
 
-					if (!(current is null) && current.Exists())
+					if (current != null)
 					{
 						return true;
 					}
@@ -106,11 +106,19 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_PED_GROUP_MEMBER, ped.Handle, Handle);
 		}
 
-		public Ped Leader => new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle));
+		public Ped Leader
+		{
+			get
+			{
+				var ped = new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle));
+				return ped.Exists() ? ped : null;
+			}
+		}
 
 		public Ped GetMember(int index)
 		{
-			return new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index));
+			var ped = new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index));
+			return ped.Exists() ? ped : null;
 		}
 
 		public Ped[] ToArray(bool includingLeader = true)
@@ -126,7 +134,7 @@ namespace GTA
 			{
 				Ped leader = Leader;
 
-				if (leader != null && leader.Exists())
+				if (leader != null)
 				{
 					result.Add(leader);
 				}
@@ -136,7 +144,7 @@ namespace GTA
 			{
 				Ped member = GetMember(i);
 
-				if (member != null && member.Exists())
+				if (member != null)
 				{
 					result.Add(member);
 				}
@@ -208,7 +216,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return Handle;
+			return Handle.GetHashCode();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()

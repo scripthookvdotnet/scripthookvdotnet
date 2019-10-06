@@ -26,6 +26,6 @@ namespace GTA
 		ExtraSeat9,
 		ExtraSeat10,
 		ExtraSeat11,
-		ExtraSeat12
+		ExtraSeat12,
 	}
 }

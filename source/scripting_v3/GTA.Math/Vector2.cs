@@ -512,7 +512,7 @@ namespace GTA.Math
 				return false;
 			}
 
-			return Equals((Vector2)(obj));
+			return Equals((Vector2)obj);
 		}
 
 		/// <summary>

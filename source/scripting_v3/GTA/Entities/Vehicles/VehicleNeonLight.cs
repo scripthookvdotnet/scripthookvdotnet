@@ -10,6 +10,6 @@ namespace GTA
 		Left,
 		Right,
 		Front,
-		Back
+		Back,
 	}
 }

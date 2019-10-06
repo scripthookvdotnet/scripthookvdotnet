@@ -9,6 +9,6 @@ namespace GTA
 	{
 		RegularMotorcycleHelmet = 4096u,
 		FiremanHelmet = 16384u,
-		PilotHeadset = 32768u
+		PilotHeadset = 32768u,
 	}
 }

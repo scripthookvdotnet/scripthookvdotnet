@@ -349,6 +349,9 @@ namespace GTA
 		VehicleCarJump,
 		VehicleRocketBoost,
 		VehicleParachute,
-		VehicleBikeWings
+		VehicleBikeWings,
+		VehicleFlyBombBay,
+		VehicleFlyCounter,
+		VehicleFlyTransform,
 	}
 }

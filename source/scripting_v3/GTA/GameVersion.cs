@@ -8,6 +8,7 @@ namespace GTA
 	public enum GameVersion
 	{
 		Unknown = -1,
+
 		v1_0_335_2_Steam,
 		v1_0_335_2_NoSteam,
 		v1_0_350_1_Steam,
@@ -57,6 +58,8 @@ namespace GTA
 		v1_0_1604_0_Steam,
 		v1_0_1604_0_NoSteam,
 		v1_0_1604_1_Steam,
-		v1_0_1604_1_NoSteam
+		v1_0_1604_1_NoSteam,
+		v1_0_1737_0_Steam,
+		v1_0_1737_0_NoSteam,
 	}
 }

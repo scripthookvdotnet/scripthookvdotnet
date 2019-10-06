@@ -12,11 +12,6 @@ namespace GTA
 {
 	public sealed class Scaleform : IDisposable
 	{
-		// Keep in sync with UI.WIDTH
-		const float WIDTH = 1280;
-		// Keep in sync with UI.HEIGHT
-		const float HEIGHT = 720;
-
 		string scaleformID;
 
 		[Obsolete("Scaleform(int handle) is obselete, Please Use Scaleform(string scaleformID) instead")]
@@ -39,7 +34,8 @@ namespace GTA
 
 		public int Handle
 		{
-			get; private set;
+			get;
+			private set;
 		}
 
 		public bool IsValid => Handle != 0;
@@ -127,6 +123,11 @@ namespace GTA
 		}
 		public void Render2DScreenSpace(PointF location, PointF size)
 		{
+			// Keep in sync with UI.WIDTH
+			const float WIDTH = 1280;
+			// Keep in sync with UI.HEIGHT
+			const float HEIGHT = 720;
+
 			float x = location.X / WIDTH;
 			float y = location.Y / HEIGHT;
 			float width = size.X / WIDTH;

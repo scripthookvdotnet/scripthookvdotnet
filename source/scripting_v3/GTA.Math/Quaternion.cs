@@ -959,7 +959,7 @@ namespace GTA.Math
 				return false;
 			}
 
-			return Equals((Quaternion)(obj));
+			return Equals((Quaternion)obj);
 		}
 
 		/// <summary>

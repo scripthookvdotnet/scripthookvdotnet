@@ -97,7 +97,7 @@ namespace GTA
 		public static float RelativePitch
 		{
 			get => Function.Call<float>(Hash.GET_GAMEPLAY_CAM_RELATIVE_PITCH);
-			set => Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, value, 1F);
+			set => Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, value, 1f);
 		}
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace GTA
 		/// <param name="amplitude">The amplitude of the shaking.</param>
 		public static void Shake(CameraShake shakeType, float amplitude)
 		{
-			Function.Call(Hash.SHAKE_GAMEPLAY_CAM, Camera._shakeNames[(int)shakeType], amplitude);
+			Function.Call(Hash.SHAKE_GAMEPLAY_CAM, Camera.shakeNames[(int)shakeType], amplitude);
 		}
 
 		/// <summary>

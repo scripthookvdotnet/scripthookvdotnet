@@ -93,7 +93,7 @@ namespace GTA
 		}
 		public static bool Exists(Rope rope)
 		{
-			return !ReferenceEquals(rope, null) && rope.Exists();
+			return rope != null && rope.Exists();
 		}
 
 		public bool Equals(Rope obj)

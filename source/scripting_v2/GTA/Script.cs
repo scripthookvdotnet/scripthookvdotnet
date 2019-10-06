@@ -11,8 +11,10 @@ namespace GTA
 {
 	public abstract class Script : IDisposable
 	{
+		#region Fields
 		Viewport _viewport;
 		ScriptSettings _settings;
+		#endregion
 
 		public Script()
 		{
@@ -28,40 +30,91 @@ namespace GTA
 		{
 		}
 
-		public static void Wait(int ms)
-		{
-			SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
-
-			if (ReferenceEquals(script, null) || !script.IsRunning)
-				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
-
-			script.Wait(ms);
-		}
-		public static void Yield()
-		{
-			Wait(0);
-		}
-
 		public event EventHandler Tick
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Tick -= value; }
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Tick += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Tick -= value;
+				}
+			}
 		}
 		public event EventHandler Aborted
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.Aborted -= value; }
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Aborted += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Aborted -= value;
+				}
+			}
 		}
 
 		public event KeyEventHandler KeyUp
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyUp -= value; }
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.KeyUp += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.KeyUp -= value;
+				}
+			}
 		}
 		public event KeyEventHandler KeyDown
 		{
-			add { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown += value; }
-			remove { var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this); if (s != null) s.KeyDown -= value; }
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.KeyDown += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.KeyDown -= value;
+				}
+			}
+		}
+
+		public string Name
+		{
+			get => GetType().FullName;
+		}
+		public string Filename
+		{
+			get; private set;
 		}
 
 		public Keys ActivateKey = Keys.NumPad5;
@@ -70,9 +123,6 @@ namespace GTA
 		public Keys RightKey = Keys.NumPad6;
 		public Keys UpKey = Keys.NumPad8;
 		public Keys DownKey = Keys.NumPad2;
-
-		public string Name => GetType().FullName;
-		public string Filename { get; private set; }
 
 		public Viewport View
 		{
@@ -113,27 +163,50 @@ namespace GTA
 			}
 		}
 
-		public void Abort()
-		{
-			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Abort();
-		}
-
 		protected int Interval
 		{
-			get => SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
+			}
 			set
 			{
 				if (value < 0)
+				{
 					value = 0;
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
-					s.Interval = value;
+				}
+
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Interval = value;
+				}
 			}
 		}
 
 		public override string ToString()
 		{
 			return Name;
+		}
+
+		public void Abort()
+		{
+			SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Abort();
+		}
+
+		public static void Wait(int ms)
+		{
+			var script = SHVDN.ScriptDomain.ExecutingScript;
+			if (script == null || !script.IsRunning)
+			{
+				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
+			}
+
+			script.Wait(ms);
+		}
+		public static void Yield()
+		{
+			Wait(0);
 		}
 	}
 }

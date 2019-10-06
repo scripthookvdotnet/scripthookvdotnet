@@ -1721,7 +1721,7 @@ namespace GTA
 			{
 				Ped driver = Driver;
 
-				if (driver is null || !driver.Exists())
+				if (driver == null)
 				{
 					return Passengers;
 				}
@@ -1746,7 +1746,6 @@ namespace GTA
 			get
 			{
 				var result = new Ped[PassengerCount];
-
 				if (result.Length == 0)
 				{
 					return result;
@@ -1949,7 +1948,7 @@ namespace GTA
 
 		public void SetHeliYawPitchRollMult(float mult)
 		{
-			if (Model.IsHelicopter && mult >= 0 && mult <= 1)
+			if (Model.IsHelicopter && mult >= 0.0f && mult <= 1.0f)
 			{
 				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT, Handle, mult);
 			}

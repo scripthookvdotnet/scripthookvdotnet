@@ -14,6 +14,6 @@ namespace GTA
 		Army,
 		LSPD,
 		Orange,
-		Platinum
+		Platinum,
 	}
 }

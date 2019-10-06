@@ -3,8 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -52,6 +52,7 @@ namespace GTA
 
 			return true;
 		}
+
 		public void Dismiss()
 		{
 			Function.Call(Native.Hash.REMOVE_WEAPON_ASSET, Hash);

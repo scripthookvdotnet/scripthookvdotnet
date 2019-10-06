@@ -7,7 +7,7 @@ namespace GTA
 {
 	public enum CameraShake
 	{
-		Hand = 0,
+		Hand,
 		SmallExplosion,
 		MediumExplosion,
 		LargeExplosion,

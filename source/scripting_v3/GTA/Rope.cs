@@ -15,6 +15,11 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the number of vertices of this <see cref="Rope"/>.
+		/// </summary>
+		public int VertexCount => Function.Call<int>(Hash.GET_ROPE_VERTEX_COUNT, Handle);
+
+		/// <summary>
 		/// Gets or sets the length of this <see cref="Rope"/>.
 		/// </summary>
 		public float Length
@@ -22,11 +27,6 @@ namespace GTA
 			get => Function.Call<float>(Hash.ROPE_GET_DISTANCE_BETWEEN_ENDS, Handle);
 			set => Function.Call(Hash.ROPE_FORCE_LENGTH, Handle, value);
 		}
-
-		/// <summary>
-		/// Gets the number of vertices of this <see cref="Rope"/>.
-		/// </summary>
-		public int VertexCount => Function.Call<int>(Hash.GET_ROPE_VERTEX_COUNT, Handle);
 
 		/// <summary>
 		/// Activates physics interactions for this <see cref="Rope"/>.
@@ -185,7 +185,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return Handle;
+			return Handle.GetHashCode();
 		}
 	}
 }

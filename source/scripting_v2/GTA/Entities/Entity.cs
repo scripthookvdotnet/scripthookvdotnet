@@ -602,7 +602,7 @@ namespace GTA
 		}
 		public static bool Exists(Entity entity)
 		{
-			return !(entity is null) && entity.Exists();
+			return entity != null && entity.Exists();
 		}
 
 		public bool Equals(Entity obj)

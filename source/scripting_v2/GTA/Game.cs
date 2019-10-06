@@ -13,9 +13,9 @@ namespace GTA
 	public static class Game
 	{
 		#region Fields
-		static Player cachedPlayer;
+		static Player cachedPlayer = null;
 
-		internal static readonly string[] _radioNames = {
+		internal static readonly string[] radioNames = {
 			"RADIO_01_CLASS_ROCK",
 			"RADIO_02_POP",
 			"RADIO_03_HIPHOP_NEW",
@@ -39,7 +39,7 @@ namespace GTA
 			"RADIO_22_DLC_BATTLE_MIX1_RADIO",
 			"RADIO_OFF"
 		};
-		internal static readonly string[] _windowTitles = {
+		internal static readonly string[] windowTitles = {
 			"CELL_EMAIL_BOD",
 			"CELL_EMAIL_BODE",
 			"CELL_EMAIL_BODF",
@@ -78,8 +78,12 @@ namespace GTA
 			get
 			{
 				int handle = Function.Call<int>(Hash.PLAYER_ID);
-				if (cachedPlayer is null || handle != cachedPlayer.Handle)
+
+				if (cachedPlayer == null || handle != cachedPlayer.Handle)
+				{
 					cachedPlayer = new Player(handle);
+				}
+
 				return cachedPlayer;
 			}
 		}
@@ -145,13 +149,13 @@ namespace GTA
 					return RadioStation.RadioOff;
 				}
 
-				return (RadioStation)Array.IndexOf(_radioNames, radioName);
+				return (RadioStation)Array.IndexOf(radioNames, radioName);
 			}
 			set
 			{
 				if (Enum.IsDefined(typeof(RadioStation), value) && value != RadioStation.RadioOff)
 				{
-					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, _radioNames[(int)value]);
+					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, radioNames[(int)value]);
 				}
 				else
 				{
@@ -233,7 +237,7 @@ namespace GTA
 		{
 			SHVDN.ScriptDomain.CurrentDomain.PauseKeyEvents(true);
 
-			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, _windowTitles[(int)windowTitle], "", defaultText, "", "", "", maxLength + 1);
+			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitles[(int)windowTitle], "", defaultText, "", "", "", maxLength + 1);
 
 			while (Function.Call<int>(Hash.UPDATE_ONSCREEN_KEYBOARD) == 0)
 			{

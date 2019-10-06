@@ -35,6 +35,6 @@ namespace GTA
 		HorizontalCircleSkinny,
 		HorizontalCircleSkinnyArrow,
 		HorizontalSplitArrowCircle,
-		DebugSphere
+		DebugSphere,
 	}
 }

@@ -4,15 +4,17 @@
 //
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GTA
 {
 	public sealed class ScriptSettings
 	{
+		#region Fields
 		readonly string _fileName;
 		Dictionary<string, string> _values = new Dictionary<string, string>();
+		#endregion
 
 		ScriptSettings(string fileName)
 		{

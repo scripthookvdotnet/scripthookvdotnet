@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -21,10 +21,10 @@ namespace GTA
 		public Model(PedHash hash) : this((int)hash)
 		{
 		}
-		public Model(VehicleHash hash) : this((int)hash)
+		public Model(WeaponHash hash) : this((int)hash)
 		{
 		}
-		public Model(WeaponHash hash) : this((int)hash)
+		public Model(VehicleHash hash) : this((int)hash)
 		{
 		}
 
@@ -117,13 +117,13 @@ namespace GTA
 		{
 			return (PedHash)source.Hash;
 		}
-		public static implicit operator VehicleHash(Model source)
-		{
-			return (VehicleHash)source.Hash;
-		}
 		public static implicit operator WeaponHash(Model source)
 		{
 			return (WeaponHash)source.Hash;
+		}
+		public static implicit operator VehicleHash(Model source)
+		{
+			return (VehicleHash)source.Hash;
 		}
 
 		public static implicit operator Model(int source)
@@ -138,11 +138,11 @@ namespace GTA
 		{
 			return new Model(source);
 		}
-		public static implicit operator Model(VehicleHash source)
+		public static implicit operator Model(WeaponHash source)
 		{
 			return new Model(source);
 		}
-		public static implicit operator Model(WeaponHash source)
+		public static implicit operator Model(VehicleHash source)
 		{
 			return new Model(source);
 		}

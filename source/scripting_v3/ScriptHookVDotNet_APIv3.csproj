@@ -103,7 +103,7 @@
     <Compile Include="GTA\Entities\Peds\FiringPattern.cs" />
     <Compile Include="GTA\Entities\Peds\Formation.cs" />
     <Compile Include="GTA\Entities\Peds\Gender.cs" />
-    <Compile Include="GTA\Entities\Peds\HelmetType.cs" />
+    <Compile Include="GTA\Entities\Peds\Helmet.cs" />
     <Compile Include="GTA\Entities\Peds\LeaveVehicleFlags.cs" />
     <Compile Include="GTA\Entities\Peds\ParachuteLandingType.cs" />
     <Compile Include="GTA\Entities\Peds\ParachuteState.cs" />
@@ -196,7 +196,6 @@
     <Compile Include="GTA\Weather.cs" />
     <Compile Include="GTA\WindowTitle.cs" />
     <Compile Include="GTA\World.cs" />
-    <Compile Include="GTA\ZoneID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -16,7 +16,7 @@ namespace GTA
 	public abstract class Script
 	{
 		#region Fields
-		internal ScriptSettings _settings;
+		ScriptSettings _settings;
 		#endregion
 
 		public Script()
@@ -33,18 +33,18 @@ namespace GTA
 		{
 			add
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.Tick += value;
+					script.Tick += value;
 				}
 			}
 			remove
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.Tick -= value;
+					script.Tick -= value;
 				}
 			}
 		}
@@ -56,18 +56,18 @@ namespace GTA
 		{
 			add
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.Aborted += value;
+					script.Aborted += value;
 				}
 			}
 			remove
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.Aborted -= value;
+					script.Aborted -= value;
 				}
 			}
 		}
@@ -80,18 +80,18 @@ namespace GTA
 		{
 			add
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.KeyUp += value;
+					script.KeyUp += value;
 				}
 			}
 			remove
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.KeyUp -= value;
+					script.KeyUp -= value;
 				}
 			}
 		}
@@ -103,18 +103,18 @@ namespace GTA
 		{
 			add
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.KeyDown += value;
+					script.KeyDown += value;
 				}
 			}
 			remove
 			{
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.KeyDown -= value;
+					script.KeyDown -= value;
 				}
 			}
 		}
@@ -124,14 +124,14 @@ namespace GTA
 		/// </summary>
 		public string Name
 		{
-			get; internal set;
+			get;
 		}
 		/// <summary>
 		/// Gets the filename of this <see cref="Script"/>.
 		/// </summary>
 		public string Filename
 		{
-			get; internal set;
+			get;
 		}
 
 		/// <summary>
@@ -209,10 +209,10 @@ namespace GTA
 					value = 0;
 				}
 
-				var s = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
-				if (s != null)
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
 				{
-					s.Interval = value;
+					script.Interval = value;
 				}
 			}
 		}
@@ -266,9 +266,8 @@ namespace GTA
 		/// <param name="ms">The time in milliseconds to pause for.</param>
 		public static void Wait(int ms)
 		{
-			SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
-
-			if (ReferenceEquals(script, null) || !script.IsRunning)
+			var script = SHVDN.ScriptDomain.ExecutingScript;
+			if (script == null || !script.IsRunning)
 			{
 				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
 			}
@@ -288,7 +287,7 @@ namespace GTA
 		/// </summary>
 		public static Script AddScript(Type scriptType)
 		{
-			SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(scriptType);
+			var script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(scriptType);
 			if (script == null)
 			{
 				return null;

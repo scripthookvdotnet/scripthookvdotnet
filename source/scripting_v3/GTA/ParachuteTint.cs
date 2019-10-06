@@ -21,6 +21,6 @@ namespace GTA
 		Shadow,
 		HighAltitude,
 		Airbone,
-		Sunrise
+		Sunrise,
 	}
 }

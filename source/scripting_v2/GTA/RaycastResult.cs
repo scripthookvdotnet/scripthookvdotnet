@@ -34,7 +34,7 @@ namespace GTA
 
 		public bool DidHitEntity
 		{
-			get => !(HitEntity is null);
+			get => HitEntity != null;
 		}
 
 		public bool DidHitAnything

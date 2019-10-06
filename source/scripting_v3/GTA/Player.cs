@@ -11,9 +11,11 @@ namespace GTA
 {
 	public sealed class Player : INativeValue
 	{
-		Ped _ped;
+		#region Fields
+		Ped ped;
+		#endregion
 
-		public Player(int handle)
+		internal Player(int handle)
 		{
 			Handle = handle;
 		}
@@ -31,7 +33,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="Ped"/> this <see cref="Player"/> is controling.
+		/// Gets the <see cref="Ped"/> this <see cref="Player"/> is controlling.
 		/// </summary>
 		public Ped Character
 		{
@@ -39,12 +41,12 @@ namespace GTA
 			{
 				int handle = Function.Call<int>(Hash.GET_PLAYER_PED, Handle);
 
-				if (_ped is null || handle != _ped.Handle)
+				if (ped == null || handle != ped.Handle)
 				{
-					_ped = new Ped(handle);
+					ped = new Ped(handle);
 				}
 
-				return _ped;
+				return ped;
 			}
 		}
 
@@ -151,12 +153,10 @@ namespace GTA
 			get
 			{
 				int result;
-
 				unsafe
 				{
 					Function.Call(Hash.GET_PLAYER_PARACHUTE_TINT_INDEX, Handle, &result);
 				}
-
 				return (ParachuteTint)result;
 			}
 			set => Function.Call(Hash.SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, value);
@@ -169,12 +169,10 @@ namespace GTA
 			get
 			{
 				int result;
-
 				unsafe
 				{
 					Function.Call(Hash.GET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, &result);
 				}
-
 				return (ParachuteTint)result;
 			}
 			set => Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, value);
@@ -206,7 +204,6 @@ namespace GTA
 				{
 					Function.Call(Hash.GET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, &r, &g, &b);
 				}
-
 				return Color.FromArgb(r, g, b);
 			}
 			set => Function.Call(Hash.SET_PLAYER_PARACHUTE_SMOKE_TRAIL_COLOR, Handle, value.R, value.G, value.B);
@@ -330,7 +327,10 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Player"/> can start a mission; otherwise, <c>false</c>.
 		/// </value>
-		public bool CanStartMission => Function.Call<bool>(Hash.CAN_PLAYER_START_MISSION, Handle);
+		public bool CanStartMission
+		{
+			get => Function.Call<bool>(Hash.CAN_PLAYER_START_MISSION, Handle);
+		}
 
 		/// <summary>
 		/// Sets a value indicating whether this <see cref="Player"/> can control ragdoll.
@@ -359,7 +359,7 @@ namespace GTA
 		/// Attempts to change the <see cref="Model"/> of this <see cref="Player"/>.
 		/// </summary>
 		/// <param name="model">The <see cref="Model"/> to change this <see cref="Player"/> to.</param>
-		/// <returns><c>true</c> if the change was sucessful; otherwise, <c>false</c>.</returns>
+		/// <returns><c>true</c> if the change was successful; otherwise, <c>false</c>.</returns>
 		public bool ChangeModel(Model model)
 		{
 			if (!model.IsInCdImage || !model.IsPed || !model.Request(1000))
@@ -368,9 +368,7 @@ namespace GTA
 			}
 
 			Function.Call(Hash.SET_PLAYER_MODEL, Handle, model.Hash);
-
 			model.MarkAsNoLongerNeeded();
-
 			return true;
 		}
 
@@ -490,7 +488,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets a value indicating whether ths player is forced to aim.
+		/// Sets a value indicating whether the player is forced to aim.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> to make the player always be aiming; otherwise, <c>false</c>.
@@ -509,7 +507,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the run speed mult for this this <see cref="Player"/> this frame.
+		/// Sets the run speed multiplier for this <see cref="Player"/> this frame.
 		/// </summary>
 		/// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
 		public void SetRunSpeedMultThisFrame(float mult)
@@ -523,7 +521,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the swim speed mult for this this <see cref="Player"/> this frame.
+		/// Sets the swim speed multiplier for this <see cref="Player"/> this frame.
 		/// </summary>
 		/// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
 		public void SetSwimSpeedMultThisFrame(float mult)

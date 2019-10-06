@@ -28,6 +28,6 @@ namespace GTA
 		Emergency,
 		Military,
 		Commercial,
-		Trains
+		Trains,
 	}
 }

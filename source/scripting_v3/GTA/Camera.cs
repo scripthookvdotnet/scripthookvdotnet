@@ -11,7 +11,7 @@ namespace GTA
 {
 	public sealed class Camera : PoolObject, ISpatial
 	{
-		internal static readonly string[] _shakeNames = {
+		internal static readonly string[] shakeNames = {
 			"HAND_SHAKE",
 			"SMALL_EXPLOSION_SHAKE",
 			"MEDIUM_EXPLOSION_SHAKE",
@@ -232,7 +232,7 @@ namespace GTA
 		/// <param name="amplitude">The amplitude of the shaking.</param>
 		public void Shake(CameraShake shakeType, float amplitude)
 		{
-			Function.Call(Hash.SHAKE_CAM, Handle, _shakeNames[(int)shakeType], amplitude);
+			Function.Call(Hash.SHAKE_CAM, Handle, shakeNames[(int)shakeType], amplitude);
 		}
 
 		/// <summary>
@@ -311,7 +311,10 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Camera"/> is interpolating; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsInterpolating => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
+		public bool IsInterpolating
+		{
+			get => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
+		}
 
 		/// <summary>
 		/// Attaches this <see cref="Camera"/> to a specific <see cref="Entity"/>.

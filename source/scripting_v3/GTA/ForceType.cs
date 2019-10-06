@@ -12,6 +12,6 @@ namespace GTA
 		MinForce2,
 		MaxForceRot2,
 		ForceNoRot,
-		ForceRotPlusForce
+		ForceRotPlusForce,
 	}
 }

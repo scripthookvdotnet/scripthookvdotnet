@@ -12,6 +12,6 @@ namespace GTA
 		SometimesOvertakeTraffic = 5,
 		Rushed = 1074528293,
 		AvoidTraffic = 786468,
-		AvoidTrafficExtremely = 6
+		AvoidTrafficExtremely = 6,
 	}
 }

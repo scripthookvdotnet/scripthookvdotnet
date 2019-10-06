@@ -10,8 +10,8 @@ namespace GTA
 	public sealed class Weapon
 	{
 		#region Fields
-		readonly Ped _owner;
-		WeaponComponentCollection _components;
+		readonly Ped owner;
+		WeaponComponentCollection components;
 		#endregion
 
 		internal Weapon()
@@ -20,7 +20,7 @@ namespace GTA
 		}
 		internal Weapon(Ped owner, WeaponHash hash)
 		{
-			_owner = owner;
+			this.owner = owner;
 			Hash = hash;
 		}
 
@@ -29,19 +29,18 @@ namespace GTA
 			get;
 		}
 
-		public static implicit operator WeaponHash(Weapon weapon)
-		{
-			return weapon.Hash;
-		}
+		public string DisplayName => GetDisplayNameFromHash(Hash);
 
-		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, Hash);
+		public string LocalizedName => Game.GetLocalizedString(DisplayName);
+
+		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, Hash);
 
 		public Model Model => new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
 
 		public WeaponTint Tint
 		{
-			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, _owner.Handle, Hash);
-			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, _owner.Handle, Hash, value);
+			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, owner.Handle, Hash);
+			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, Hash, value);
 		}
 
 		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, Hash);
@@ -60,7 +59,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, _owner.Handle, Hash);
+				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, owner.Handle, Hash);
 			}
 			set
 			{
@@ -71,11 +70,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_PED_AMMO, _owner.Handle, Hash, value);
+					Function.Call(Native.Hash.SET_PED_AMMO, owner.Handle, Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, Hash, value, false, true);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, Hash, value, false, true);
 				}
 			}
 		}
@@ -96,9 +95,8 @@ namespace GTA
 				int ammoInClip;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, Hash, &ammoInClip);
+					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, owner.Handle, Hash, &ammoInClip);
 				}
-
 				return ammoInClip;
 			}
 			set
@@ -110,11 +108,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, _owner.Handle, Hash, value);
+					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, owner.Handle, Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, Hash, value, true, false);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, Hash, value, true, false);
 				}
 			}
 		}
@@ -131,9 +129,8 @@ namespace GTA
 				int maxAmmo;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, Hash, &maxAmmo);
+					Function.Call(Native.Hash.GET_MAX_AMMO, owner.Handle, Hash, &maxAmmo);
 				}
-
 				return maxAmmo;
 			}
 		}
@@ -151,7 +148,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, _owner.Handle, Hash, true);
+				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, owner.Handle, Hash, true);
 			}
 		}
 
@@ -166,20 +163,22 @@ namespace GTA
 					return;
 				}
 
-				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, _owner.Handle, value, Hash);
+				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, owner.Handle, value, Hash);
 			}
 		}
 		public bool InfiniteAmmoClip
 		{
-			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, _owner.Handle, value);
+			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, owner.Handle, value);
 		}
 
 		public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, Hash);
 
-		public WeaponComponentCollection Components => _components ?? (_components = new WeaponComponentCollection(_owner, this));
+		public WeaponComponentCollection Components => components ?? (components = new WeaponComponentCollection(owner, this));
 
-		public string DisplayName => GetDisplayNameFromHash(Hash);
-		public string LocalizedName => Game.GetLocalizedString(DisplayName);
+		public static implicit operator WeaponHash(Weapon weapon)
+		{
+			return weapon.Hash;
+		}
 
 		public static string GetDisplayNameFromHash(WeaponHash hash)
 		{
@@ -272,8 +271,9 @@ namespace GTA
 				case WeaponHash.Revolver:
 					return "WT_REVOLVER";
 			}
+
 			DlcWeaponData data;
-			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
+			for (int i = 0, max = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < max; i++)
 			{
 				unsafe
 				{
@@ -286,6 +286,7 @@ namespace GTA
 					}
 				}
 			}
+
 			return "WT_INVALID";
 		}
 	}

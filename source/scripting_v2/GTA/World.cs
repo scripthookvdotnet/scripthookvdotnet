@@ -723,7 +723,7 @@ namespace GTA
 		{
 			Prop p = CreateProp(model, position, dynamic, placeOnGround);
 
-			if (ReferenceEquals(p, null))
+			if (p == null)
 			{
 				return null;
 			}

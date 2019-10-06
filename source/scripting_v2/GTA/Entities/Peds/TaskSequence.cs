@@ -23,7 +23,7 @@ namespace GTA
 			}
 			Handle = handle;
 
-			if (nullPed is null)
+			if (nullPed == null)
 			{
 				nullPed = new Ped(0);
 			}
@@ -32,7 +32,7 @@ namespace GTA
 		{
 			Handle = handle;
 
-			if (nullPed is null)
+			if (nullPed == null)
 			{
 				nullPed = new Ped(0);
 			}

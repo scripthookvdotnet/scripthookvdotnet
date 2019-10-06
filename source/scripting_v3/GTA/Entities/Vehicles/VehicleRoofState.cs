@@ -10,6 +10,6 @@ namespace GTA
 		Closed,
 		Opening,
 		Opened,
-		Closing
+		Closing,
 	}
 }

@@ -74,6 +74,6 @@ namespace GTA
 		/// <summary>
 		/// "Enter your Challenge name (MAX 30 characters)"
 		/// </summary>
-		EnterChallengeName
+		EnterChallengeName,
 	}
 }

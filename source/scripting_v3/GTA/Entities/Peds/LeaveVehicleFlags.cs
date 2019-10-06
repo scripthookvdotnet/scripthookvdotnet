@@ -13,6 +13,6 @@ namespace GTA
 		None = 0,
 		WarpOut = 16,
 		LeaveDoorOpen = 256,
-		BailOut = 4096
+		BailOut = 4096,
 	}
 }

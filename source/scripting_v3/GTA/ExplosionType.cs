@@ -45,6 +45,6 @@ namespace GTA
 		FireWork,
 		SnowBall,
 		ProxMine,
-		Valkyrie
+		Valkyrie,
 	}
 }

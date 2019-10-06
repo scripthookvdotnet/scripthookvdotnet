@@ -13,6 +13,6 @@ namespace GTA
 		LightSmoke,
 		Stock,
 		Limo,
-		Green
+		Green,
 	}
 }

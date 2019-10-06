@@ -345,8 +345,13 @@ namespace GTA
 		VehicleSlowMoUpOnly,
 		VehicleSlowMoDownOnly,
 		MapPointOfInterest,
+		ReplaySnapmaticPhoto,
 		VehicleCarJump,
 		VehicleRocketBoost,
 		VehicleParachute,
+		VehicleBikeWings,
+		VehicleFlyBombBay,
+		VehicleFlyCounter,
+		VehicleFlyTransform,
 	}
 }

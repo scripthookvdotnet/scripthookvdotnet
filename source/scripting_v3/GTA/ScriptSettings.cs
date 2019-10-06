@@ -12,11 +12,11 @@ namespace GTA
 	public sealed class ScriptSettings
 	{
 		#region Fields
-		private string _fileName;
-		private Dictionary<string, string> _values = new Dictionary<string, string>();
+		readonly string _fileName;
+		Dictionary<string, string> _values = new Dictionary<string, string>();
 		#endregion
 
-		private ScriptSettings(string fileName)
+		ScriptSettings(string fileName)
 		{
 			_fileName = fileName;
 		}

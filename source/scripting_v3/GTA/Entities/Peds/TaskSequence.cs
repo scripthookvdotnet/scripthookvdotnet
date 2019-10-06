@@ -11,7 +11,7 @@ namespace GTA
 	public sealed class TaskSequence : IDisposable
 	{
 		#region Fields
-		static Ped _nullPed = null;
+		static Ped nullPed = null;
 		#endregion
 
 		public TaskSequence()
@@ -23,18 +23,18 @@ namespace GTA
 			}
 			Handle = handle;
 
-			if (_nullPed is null)
+			if (nullPed == null)
 			{
-				_nullPed = new Ped(0);
+				nullPed = new Ped(0);
 			}
 		}
 		public TaskSequence(int handle)
 		{
 			Handle = handle;
 
-			if (_nullPed is null)
+			if (nullPed == null)
 			{
-				_nullPed = new Ped(0);
+				nullPed = new Ped(0);
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace GTA
 				}
 
 				Count++;
-				return _nullPed.Task;
+				return nullPed.Task;
 			}
 		}
 

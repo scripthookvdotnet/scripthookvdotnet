@@ -21,6 +21,7 @@ namespace GTA
 		Snowing,
 		Blizzard,
 		Snowlight,
-		Christmas
+		Christmas,
+		Halloween,
 	}
 }

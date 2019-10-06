@@ -10,6 +10,6 @@ namespace GTA
 		Default,
 		Circle1,
 		Circle2,
-		Line
+		Line,
 	}
 }

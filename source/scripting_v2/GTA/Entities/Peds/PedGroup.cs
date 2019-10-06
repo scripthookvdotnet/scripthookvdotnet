@@ -53,7 +53,7 @@ namespace GTA
 				{
 					Current = index < 0 ? group.Leader : group.GetMember(index);
 
-					if (!(Current is null) && Current.Exists())
+					if (Entity.Exists(Current))
 					{
 						return true;
 					}
@@ -104,12 +104,11 @@ namespace GTA
 			}
 		}
 
-		public Ped Leader => Function.Call<Ped>(Hash._0x5CCE68DBD5FE93EC, Handle);
-
 		public float SeparationRange
 		{
 			set => Function.Call(Hash.SET_GROUP_SEPARATION_RANGE, Handle, value);
 		}
+
 		public FormationType FormationType
 		{
 			set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, (int)value);
@@ -128,6 +127,8 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_PED_GROUP_MEMBER, ped.Handle, Handle);
 		}
 
+		public Ped Leader => Function.Call<Ped>(Hash._0x5CCE68DBD5FE93EC, Handle);
+
 		public Ped GetMember(int index)
 		{
 			return Function.Call<Ped>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index);
@@ -140,23 +141,29 @@ namespace GTA
 
 		public List<Ped> ToList(bool includingLeader)
 		{
-			var list = new List<Ped>();
+			var result = new List<Ped>();
 
 			if (includingLeader)
 			{
-				Ped ped = Leader;
-				if (Ped.Exists(ped))
-					list.Add(ped);
+				Ped leader = Leader;
+
+				if (Entity.Exists(leader))
+				{
+					result.Add(leader);
+				}
 			}
 
 			for (int i = 0; i < MemberCount; i++)
 			{
-				Ped ped = GetMember(i);
-				if (Ped.Exists(ped))
-					list.Add(ped);
+				Ped member = GetMember(i);
+
+				if (Entity.Exists(member))
+				{
+					result.Add(member);
+				}
 			}
 
-			return list;
+			return result;
 		}
 
 		public bool Exists()
@@ -165,7 +172,7 @@ namespace GTA
 		}
 		public static bool Exists(PedGroup pedGroup)
 		{
-			return !(pedGroup is null) && pedGroup.Exists();
+			return pedGroup != null && pedGroup.Exists();
 		}
 
 		public bool Equals(PedGroup obj)
@@ -188,7 +195,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return Handle;
+			return Handle.GetHashCode();
 		}
 
 		public IEnumerator GetEnumerator2()

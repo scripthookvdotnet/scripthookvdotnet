@@ -6,8 +6,8 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace GTA
@@ -449,7 +449,7 @@ namespace GTA
 				}
 				else if (Enum.IsDefined(typeof(RadioStation), value))
 				{
-					Function.Call(Hash.SET_VEH_RADIO_STATION, Game._radioNames[(int)value]);
+					Function.Call(Hash.SET_VEH_RADIO_STATION, Game.radioNames[(int)value]);
 				}
 			}
 		}
@@ -1075,9 +1075,9 @@ namespace GTA
 		{
 			get
 			{
-				Ped driver = GetPedOnSeat(VehicleSeat.Driver);
+				Ped driver = Driver;
 
-				int arraySize = Ped.Exists(driver) ? PassengerCount + 1 : PassengerCount;
+				int arraySize = Entity.Exists(driver) ? PassengerCount + 1 : PassengerCount;
 				Ped[] occupantsArray = new Ped[arraySize];
 				int occupantIndex = 0;
 
@@ -1086,17 +1086,17 @@ namespace GTA
 					return occupantsArray;
 				}
 
-				if (ReferenceEquals(driver, null) || !driver.Exists())
+				if (Entity.Exists(driver))
 				{
 					occupantsArray[0] = driver;
 					++occupantIndex;
 				}
 
-				for (int i = 0; i < PassengerSeats; i++)
+				for (int i = 0, seats = PassengerSeats; i < seats; i++)
 				{
 					Ped ped = GetPedOnSeat((VehicleSeat)i);
 
-					if (ReferenceEquals(ped, null) || !ped.Exists())
+					if (!Entity.Exists(ped))
 					{
 						continue;
 					}
@@ -1121,16 +1121,16 @@ namespace GTA
 				var passengersArray = new Ped[PassengerCount];
 				int passengerIndex = 0;
 
-				if (PassengerCount == 0)
+				if (passengersArray.Length == 0)
 				{
 					return passengersArray;
 				}
 
-				for (int i = 0; i < PassengerSeats; i++)
+				for (int i = 0, seats = PassengerSeats; i < seats; i++)
 				{
 					Ped ped = GetPedOnSeat((VehicleSeat)i);
 
-					if (ReferenceEquals(ped, null) || !ped.Exists())
+					if (!Entity.Exists(ped))
 					{
 						continue;
 					}
@@ -1159,7 +1159,7 @@ namespace GTA
 				return null;
 			}
 
-			return Function.Call<Ped>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, (int)(seat), 1, 1);
+			return Function.Call<Ped>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, (int)seat, 1, 1);
 		}
 
 		public Ped CreateRandomPedOnSeat(VehicleSeat seat)
@@ -1171,14 +1171,15 @@ namespace GTA
 			else
 			{
 				Ped ped = Function.Call<Ped>(Hash.CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
-				Function.Call(Hash.SET_PED_INTO_VEHICLE, ped.Handle, Handle, (int)(seat));
+				Function.Call(Hash.SET_PED_INTO_VEHICLE, ped.Handle, Handle, (int)seat);
+
 				return ped;
 			}
 		}
 
 		public bool IsSeatFree(VehicleSeat seat)
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)(seat));
+			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)seat);
 		}
 
 		#endregion
@@ -1251,9 +1252,11 @@ namespace GTA
 
 		public void DetachTowedVehicle()
 		{
-			if (!ReferenceEquals(TowedVehicle, null) && TowedVehicle.Exists())
+			Vehicle vehicle = TowedVehicle;
+
+			if (Entity.Exists(vehicle))
 			{
-				Function.Call(Hash.DETACH_VEHICLE_FROM_TOW_TRUCK, Handle, TowedVehicle.Handle);
+				Function.Call(Hash.DETACH_VEHICLE_FROM_TOW_TRUCK, Handle, vehicle.Handle);
 			}
 		}
 
@@ -1282,12 +1285,9 @@ namespace GTA
 
 		public void SetHeliYawPitchRollMult(float mult)
 		{
-			if (Model.IsHelicopter)
+			if (Model.IsHelicopter && mult >= 0.0f && mult <= 1.0f)
 			{
-				if (mult >= 0.0f && mult <= 1.0f)
-				{
-					Function.Call(Hash._0x6E0859B530A365CC, Handle, mult);
-				}
+				Function.Call(Hash._0x6E0859B530A365CC, Handle, mult);
 			}
 		}
 
@@ -1313,6 +1313,7 @@ namespace GTA
 			{
 				return Function.Call<bool>(Hash._0x1821D91AD4B56108, Handle) || Function.Call<bool>(Hash._0x6E08BF5B3722BAC9, Handle);
 			}
+
 			return false;
 		}
 		public bool IsCargobobHookActive(CargobobHook hookType)
@@ -1327,6 +1328,7 @@ namespace GTA
 						return Function.Call<bool>(Hash._0x6E08BF5B3722BAC9, Handle);
 				}
 			}
+
 			return false;
 		}
 

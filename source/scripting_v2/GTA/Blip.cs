@@ -121,7 +121,7 @@ namespace GTA
 		}
 		public static bool Exists(Blip blip)
 		{
-			return !(blip is null) && blip.Exists();
+			return blip != null && blip.Exists();
 		}
 
 		public bool Equals(Blip obj)

@@ -16,6 +16,6 @@ namespace GTA
 		UpperBodyOnly = 16,
 		AllowRotation = 32,
 		CancelableWithMovement = 128,
-		RagdollOnCollision = 4194304
+		RagdollOnCollision = 4194304,
 	}
 }

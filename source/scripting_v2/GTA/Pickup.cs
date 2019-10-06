@@ -21,9 +21,14 @@ namespace GTA
 			get;
 		}
 
+		public Vector3 Position => Function.Call<Vector3>(Hash.GET_PICKUP_COORDS, Handle);
+
 		public bool IsCollected => Function.Call<bool>(Hash.HAS_PICKUP_BEEN_COLLECTED, Handle);
 
-		public Vector3 Position => Function.Call<Vector3>(Hash.GET_PICKUP_COORDS, Handle);
+		public bool ObjectExists()
+		{
+			return Function.Call<bool>(Hash.DOES_PICKUP_OBJECT_EXIST, Handle);
+		}
 
 		public void Delete()
 		{
@@ -34,13 +39,9 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.DOES_PICKUP_EXIST, Handle);
 		}
-		public bool ObjectExists()
-		{
-			return Function.Call<bool>(Hash.DOES_PICKUP_OBJECT_EXIST, Handle);
-		}
 		public static bool Exists(Pickup pickup)
 		{
-			return !(pickup is null) && pickup.Exists();
+			return pickup != null && pickup.Exists();
 		}
 
 		public bool Equals(Pickup obj)

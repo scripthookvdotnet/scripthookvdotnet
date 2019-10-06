@@ -28,6 +28,6 @@ namespace GTA
 		TheLab,
 		BlondedLosSantos,
 		LosSantosUndergroundRadio,
-		RadioOff = 255
+		RadioOff = 255,
 	}
 }

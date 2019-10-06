@@ -269,7 +269,7 @@ namespace GTA
 			get
 			{
 				Blip waypointBlip = WaypointBlip;
-				if (waypointBlip is null)
+				if (waypointBlip == null)
 				{
 					return Vector3.Zero;
 				}

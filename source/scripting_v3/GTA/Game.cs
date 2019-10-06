@@ -12,6 +12,8 @@ namespace GTA
 	public static class Game
 	{
 		#region Fields
+		static Player cachedPlayer = null;
+
 		internal static readonly string[] radioNames = {
 			"RADIO_01_CLASS_ROCK",
 			"RADIO_02_POP",
@@ -55,8 +57,6 @@ namespace GTA
 			"FMMC_KEY_TIP9N",
 			"PM_NAME_CHALL"
 		};
-
-		static Player cachedPlayer;
 		#endregion
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace GTA
 			{
 				int handle = Function.Call<int>(Hash.PLAYER_ID);
 
-				if (cachedPlayer is null || handle != cachedPlayer.Handle)
+				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
 					cachedPlayer = new Player(handle);
 				}

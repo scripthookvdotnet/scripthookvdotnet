@@ -166,6 +166,6 @@ namespace GTA
 		DefaultAlloyColor,
 		EpsilonBlue,
 		PureGold,
-		BrushedGold
+		BrushedGold,
 	}
 }
