@@ -364,7 +364,7 @@ namespace GTA
 
 		public static string GetGXTEntry(string entry)
 		{
-			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : string.Empty;
+			return Function.Call<string>(Hash._GET_LABEL_TEXT, entry);
 		}
 	}
 }
