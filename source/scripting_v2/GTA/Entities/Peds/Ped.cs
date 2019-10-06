@@ -3,9 +3,10 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using GTA.NaturalMotion;
+using System;
 
 namespace GTA
 {
@@ -264,7 +265,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_CAN_RAGDOLL, Handle, value);
 		}
 
-		public NaturalMotion.Euphoria Euphoria => _euphoria ?? (_euphoria = new NaturalMotion.Euphoria(this));
+		public Euphoria Euphoria => _euphoria ?? (_euphoria = new Euphoria(this));
 
 		#endregion
 

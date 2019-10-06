@@ -518,6 +518,10 @@ namespace GTA
 
 		#region Attaching
 
+		public void Detach()
+		{
+			Function.Call(Hash.DETACH_ENTITY, Handle, 1, 1);
+		}
 		public void AttachTo(Entity entity, int boneIndex)
 		{
 			AttachTo(entity, boneIndex, Vector3.Zero, Vector3.Zero);
@@ -525,10 +529,6 @@ namespace GTA
 		public void AttachTo(Entity entity, int boneIndex, Vector3 position, Vector3 rotation)
 		{
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, boneIndex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
-		}
-		public void Detach()
-		{
-			Function.Call(Hash.DETACH_ENTITY, Handle, 1, 1);
 		}
 
 		public bool IsAttached()

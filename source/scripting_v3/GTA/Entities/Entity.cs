@@ -268,7 +268,7 @@ namespace GTA
 		public virtual Vector3 Position
 		{
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, Handle, 0);
-			set =>Function.Call(Hash.SET_ENTITY_COORDS, Handle, value.X, value.Y, value.Z, 0, 0, 0, 1);
+			set => Function.Call(Hash.SET_ENTITY_COORDS, Handle, value.X, value.Y, value.Z, 0, 0, 0, 1);
 		}
 
 		/// <summary>
@@ -334,10 +334,7 @@ namespace GTA
 
 				return new Quaternion(x, y, z, w);
 			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_QUATERNION, Handle, value.X, value.Y, value.Z, value.W);
-			}
+			set => Function.Call(Hash.SET_ENTITY_QUATERNION, Handle, value.X, value.Y, value.Z, value.W);
 		}
 
 		/// <summary>
@@ -780,10 +777,7 @@ namespace GTA
 
 				return SHVDN.NativeMemory.IsBitSet(address + 392, 8);
 			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
-			}
+			set => Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
 		}
 
 		/// <summary>
@@ -804,10 +798,7 @@ namespace GTA
 
 				return SHVDN.NativeMemory.IsBitSet(address + 392, 9);
 			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
-			}
+			set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
 		}
 
 		#endregion
@@ -928,10 +919,7 @@ namespace GTA
 				return !SHVDN.NativeMemory.IsBitSet(address + 26, 4);
 
 			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
-			}
+			set => Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
 		}
 
 		/// <summary>
@@ -1118,12 +1106,19 @@ namespace GTA
 		#region Attaching
 
 		/// <summary>
+		/// Detaches this <see cref="Entity"/> from any <see cref="Entity"/> it may be attached to.
+		/// </summary>
+		public void Detach()
+		{
+			Function.Call(Hash.DETACH_ENTITY, Handle, true, true);
+		}
+		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="position">The position relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/></param>
-		public void Attach(Entity entity, Vector3 position = default, Vector3 rotation = default)
+		public void AttachTo(Entity entity, Vector3 position = default, Vector3 rotation = default)
 		{
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, -1, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
 		}
@@ -1133,16 +1128,9 @@ namespace GTA
 		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="position">The position relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
-		public void Attach(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
+		public void AttachTo(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
 		{
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entityBone.Owner.Handle, entityBone, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
-		}
-		/// <summary>
-		/// Detaches this <see cref="Entity"/> from any <see cref="Entity"/> it may be attached to.
-		/// </summary>
-		public void Detach()
-		{
-			Function.Call(Hash.DETACH_ENTITY, Handle, true, true);
 		}
 
 		/// <summary>
@@ -1208,8 +1196,8 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 			int handle = Handle;
+			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -1222,8 +1210,8 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
 			int handle = Handle;
+			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{
 				Function.Call(Hash.DELETE_ENTITY, &handle);

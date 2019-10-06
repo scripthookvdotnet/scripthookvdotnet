@@ -3,12 +3,12 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Math;
+using GTA.Native;
 using System;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-using GTA.Math;
-using GTA.Native;
 
 namespace GTA
 {
