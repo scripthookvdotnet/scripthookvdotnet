@@ -1998,29 +1998,38 @@ namespace GTA
 		{
 			return Function.Call<string>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, vehicleModel.Hash);
 		}
+		public static string GetClassDisplayName(VehicleClass vehicleClass)
+		{
+			return "VEH_CLASS_" + ((int)vehicleClass).ToString();
+		}
 
 		public static VehicleClass GetModelClass(Model vehicleModel)
 		{
 			return Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS_FROM_NAME, vehicleModel.Hash);
 		}
 
-		public static string GetClassDisplayName(VehicleClass vehicleClass)
+		public static int[] GetAllModelValues()
 		{
-			return "VEH_CLASS_" + ((int)vehicleClass).ToString();
+			var allModels = new List<int>();
+			for (int i = 0; i < 0x20; i++)
+			{
+				allModels.AddRange(SHVDN.NativeMemory.VehicleModels[i].ToArray());
+			}
+			return allModels.ToArray();
 		}
 
 		public static VehicleHash[] GetAllModels()
 		{
-			List<VehicleHash> allModels = new List<VehicleHash>();
+			var allModels = new List<VehicleHash>();
 			for (int i = 0; i < 0x20; i++)
 			{
-				allModels.AddRange(Array.ConvertAll<int, VehicleHash>(SHVDN.NativeMemory.VehicleModels[i].ToArray(), item => (VehicleHash)item));
+				allModels.AddRange(Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[i].ToArray(), item => (VehicleHash)item));
 			}
 			return allModels.ToArray();
 		}
 		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
 		{
-			return Array.ConvertAll<int, VehicleHash>(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
+			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
 		}
 	}
 }
