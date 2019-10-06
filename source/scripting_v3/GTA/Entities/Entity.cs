@@ -1033,7 +1033,7 @@ namespace GTA
 		/// <returns>
 		///   <c>true</c> if this <see cref="Entity"/> is in range of the <paramref name="position"/>; otherwise, <c>false</c>.
 		/// </returns>
-		public bool IsInRangeOf(Vector3 position, float range)
+		public bool IsInRange(Vector3 position, float range)
 		{
 			return Vector3.Subtract(Position, position).LengthSquared() < range * range;
 		}
@@ -1171,9 +1171,9 @@ namespace GTA
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
 		/// <remarks>returns <c>null</c> if this <see cref="Entity"/> isnt attached to any entity</remarks>
 		/// </summary>
-		public Entity GetEntityAttachedTo()
+		public Entity AttachedEntity
 		{
-			return FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
+			get => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 		}
 
 		#endregion

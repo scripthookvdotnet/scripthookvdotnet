@@ -768,10 +768,7 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle, target.Handle);
 		}
 
-		public Entity GetKiller()
-		{
-			return FromHandle(Function.Call<int>(Hash.GET_PED_SOURCE_OF_DEATH, Handle));
-		}
+		public Entity Killer => FromHandle(Function.Call<int>(Hash.GET_PED_SOURCE_OF_DEATH, Handle));
 
 		#endregion
 
@@ -968,19 +965,20 @@ namespace GTA
 			}
 		}
 
-		public Vector3 GetLastWeaponImpactPosition()
+		public Vector3 LastWeaponImpactPosition
 		{
-			NativeVector3 position;
-
-			unsafe
+			get
 			{
-				if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, &position))
+				NativeVector3 position;
+				unsafe
 				{
-					return position;
+					if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, &position))
+					{
+						return position;
+					}
 				}
+				return Vector3.Zero;
 			}
-
-			return Vector3.Zero;
 		}
 
 		#endregion
