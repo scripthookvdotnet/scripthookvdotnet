@@ -651,16 +651,22 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_STAY_IN_VEHICLE_WHEN_JACKED, Handle, value);
 		}
 
-		public Ped GetJacker()
+		public Ped Jacker
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_PEDS_JACKER, Handle));
-			return ped.Exists() ? ped : null;
+			get
+			{
+				var ped = new Ped(Function.Call<int>(Hash.GET_PEDS_JACKER, Handle));
+				return ped.Exists() ? ped : null;
+			}
 		}
 
-		public Ped GetJackTarget()
+		public Ped JackTarget
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_JACK_TARGET, Handle));
-			return ped.Exists() ? ped : null;
+			get
+			{
+				var ped = new Ped(Function.Call<int>(Hash.GET_JACK_TARGET, Handle));
+				return ped.Exists() ? ped : null;
+			}
 		}
 
 		#endregion
@@ -752,10 +758,13 @@ namespace GTA
 		/// </value>
 		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
 
-		public Ped GetMeleeTarget()
+		public Ped MeleeTarget
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle));
-			return ped.Exists() ? ped : null;
+			get
+			{
+				var ped = new Ped(Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle));
+				return ped.Exists() ? ped : null;
+			}
 		}
 
 		public bool IsInCombatAgainst(Ped target)
