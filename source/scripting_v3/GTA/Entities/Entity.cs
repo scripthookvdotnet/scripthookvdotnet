@@ -169,7 +169,7 @@ namespace GTA
 		/// <value>
 		/// The maximum health as an integer.
 		/// </value>
-		public int MaxHealth
+		public virtual int MaxHealth
 		{
 			get => Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
 			set => Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);

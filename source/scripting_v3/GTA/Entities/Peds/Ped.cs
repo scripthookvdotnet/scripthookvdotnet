@@ -267,6 +267,18 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_MONEY, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the maximum health of this <see cref="Ped"/> as an <see cref="int"/>.
+		/// </summary>
+		/// <value>
+		/// The maximum health as an integer.
+		/// </value>
+		public override int MaxHealth
+		{
+			get => Function.Call<int>(Hash.GET_PED_MAX_HEALTH, Handle);
+			set => Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
+		}
+
 		public bool IsPlayer => Function.Call<bool>(Hash.IS_PED_A_PLAYER, Handle);
 
 		public bool GetConfigFlag(int flagID)
