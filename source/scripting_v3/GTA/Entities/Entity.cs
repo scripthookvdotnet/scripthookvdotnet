@@ -53,100 +53,6 @@ namespace GTA
 		public EntityType EntityType => (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
 
 		/// <summary>
-		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value strictly, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
-		/// </summary>
-		/// <value>
-		/// The health as an integer.
-		/// </value>
-		/// <seealso cref="HealthFloat"/>
-		public int Health
-		{
-			get => Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
-			set => Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
-		}
-		/// <summary>
-		/// Gets or sets the health of this <see cref="Entity"/> as a <see cref="float"/>.
-		/// </summary>
-		/// <value>
-		/// The health in float.
-		/// </value>
-		public float HealthFloat
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return 0.0f;
-				}
-
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + 640);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + 640, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value strictly, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
-		/// </summary>
-		/// <value>
-		/// The maximum health as an integer.
-		/// </value>
-		public int MaxHealth
-		{
-			get => Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
-			set => Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
-		}
-		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Entity"/> in float.
-		/// </summary>
-		/// <value>
-		/// The maximum health in float.
-		/// </value>
-		public float MaxHealthFloat
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return 0.0f;
-				}
-
-				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
-
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
-
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets the model of the current <see cref="Entity"/>.
-		/// </summary>
-		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
-
-		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead.
 		/// </summary>
 		/// <value>
@@ -161,6 +67,181 @@ namespace GTA
 		/// </value>
 		public bool IsAlive => !IsDead;
 
+		#region Styling
+
+		/// <summary>
+		/// Gets the model of the current <see cref="Entity"/>.
+		/// </summary>
+		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
+
+		/// <summary>
+		/// Gets or sets how opaque this <see cref="Entity"/> is.
+		/// </summary>
+		/// <value>
+		/// 0 for completely see through, 255 for fully opaque
+		/// </value>
+		public int Opacity
+		{
+			get => Function.Call<int>(Hash.GET_ENTITY_ALPHA, Handle);
+			set => Function.Call(Hash.SET_ENTITY_ALPHA, Handle, value, false);
+		}
+
+		/// <summary>
+		/// Resets the <seealso cref="Opacity"/>.
+		/// </summary>
+		public void ResetOpacity()
+		{
+			Function.Call(Hash.RESET_ENTITY_ALPHA, Handle);
+		}
+
+		#endregion
+
+		#region Configuration
+
+		/// <summary>
+		/// Gets or sets the level of detail distance of this <see cref="Entity"/>.
+		/// </summary>
+		public int LodDistance
+		{
+			get => Function.Call<int>(Hash.GET_ENTITY_LOD_DIST, Handle);
+			set => Function.Call(Hash.SET_ENTITY_LOD_DIST, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is persistent.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is persistent; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsPersistent
+		{
+			get => Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
+			set => Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, value, !value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is frozen.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is position frozen; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsPositionFrozen
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x2E, 1);
+			}
+			set => Function.Call(Hash.FREEZE_ENTITY_POSITION, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets a collection of the <see cref="EntityBone"/>s in this <see cref="Entity"/>.
+		/// </summary>
+		public virtual EntityBoneCollection Bones => _bones ?? (_bones = new EntityBoneCollection(this));
+
+		#endregion
+
+		#region Health
+
+		/// <summary>
+		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
+		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value strictly, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
+		/// </summary>
+		/// <value>
+		/// The health as an integer.
+		/// </value>
+		/// <seealso cref="HealthFloat"/>
+		public int Health
+		{
+			get => Function.Call<int>(Hash.GET_ENTITY_HEALTH, Handle);
+			set => Function.Call(Hash.SET_ENTITY_HEALTH, Handle, value);
+		}
+		/// <summary>
+		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
+		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value strictly, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
+		/// </summary>
+		/// <value>
+		/// The maximum health as an integer.
+		/// </value>
+		public int MaxHealth
+		{
+			get => Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
+			set => Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the health of this <see cref="Entity"/> as a <see cref="float"/>.
+		/// </summary>
+		/// <value>
+		/// The health in float.
+		/// </value>
+		public float HealthFloat
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + 640);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + 640, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the maximum health of this <see cref="Entity"/> in float.
+		/// </summary>
+		/// <value>
+		/// The maximum health in float.
+		/// </value>
+		public float MaxHealthFloat
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
+
+				return SHVDN.NativeMemory.ReadFloat(address + offset);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x2A0 : 0x284;
+
+				SHVDN.NativeMemory.WriteFloat(address + offset, value);
+			}
+		}
+
+		#endregion
+
+		#region Positioning
+
 		/// <summary>
 		/// Gets this <see cref="Entity"/>s matrix which stores position and rotation information.
 		/// </summary>
@@ -168,13 +249,13 @@ namespace GTA
 		{
 			get
 			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return new Matrix();
 				}
 
-				return new Matrix(SHVDN.NativeMemory.ReadMatrix(memoryAddress + 96));
+				return new Matrix(SHVDN.NativeMemory.ReadMatrix(address + 96));
 			}
 		}
 
@@ -186,14 +267,8 @@ namespace GTA
 		/// </value>
 		public virtual Vector3 Position
 		{
-			get
-			{
-				return Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, Handle, 0);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_COORDS, Handle, value.X, value.Y, value.Z, 0, 0, 0, 1);
-			}
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, Handle, 0);
+			set =>Function.Call(Hash.SET_ENTITY_COORDS, Handle, value.X, value.Y, value.Z, 0, 0, 0, 1);
 		}
 
 		/// <summary>
@@ -204,10 +279,7 @@ namespace GTA
 		/// </value>
 		public Vector3 PositionNoOffset
 		{
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, Handle, value.X, value.Y, value.Z, 1, 1, 1);
-			}
+			set => Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, Handle, value.X, value.Y, value.Z, 1, 1, 1);
 		}
 
 		/// <summary>
@@ -218,14 +290,8 @@ namespace GTA
 		/// </value>
 		public virtual Vector3 Rotation
 		{
-			get
-			{
-				return Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION, Handle, 2);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_ROTATION, Handle, value.X, value.Y, value.Z, 2, 1);
-			}
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION, Handle, 2);
+			set => Function.Call(Hash.SET_ENTITY_ROTATION, Handle, value.X, value.Y, value.Z, 2, 1);
 		}
 
 		/// <summary>
@@ -236,15 +302,19 @@ namespace GTA
 		/// </value>
 		public float Heading
 		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_ENTITY_HEADING, Handle);
-			}
-			set
-			{
-				Function.Call<float>(Hash.SET_ENTITY_HEADING, Handle, value);
-			}
+			get => Function.Call<float>(Hash.GET_ENTITY_HEADING, Handle);
+			set => Function.Call<float>(Hash.SET_ENTITY_HEADING, Handle, value);
 		}
+
+		/// <summary>
+		/// Gets a value indicating how submersed this <see cref="Entity"/> is, 1.0f means the whole entity is submerged.
+		/// </summary>
+		public float SubmersionLevel => Function.Call<float>(Hash.GET_ENTITY_SUBMERGED_LEVEL, Handle);
+
+		/// <summary>
+		/// Gets how high above ground this <see cref="Entity"/> is.
+		/// </summary>
+		public float HeightAboveGround => Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
 
 		/// <summary>
 		/// Gets or sets the quaternion of this <see cref="Entity"/>.
@@ -277,13 +347,13 @@ namespace GTA
 		{
 			get
 			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
 				}
 
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 0x80));
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x80));
 			}
 		}
 
@@ -294,13 +364,13 @@ namespace GTA
 		{
 			get
 			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
 				}
 
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 0x60));
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x60));
 			}
 		}
 
@@ -311,53 +381,15 @@ namespace GTA
 		{
 			get
 			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
 				}
 
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 0x70));
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x70));
 			}
 		}
-
-		/// <summary>
-		/// Gets the position in world coordinates of an offset relative this <see cref="Entity"/>
-		/// </summary>
-		/// <param name="offset">The offset from this <see cref="Entity"/>.</param>
-		public Vector3 GetOffsetPosition(Vector3 offset)
-		{
-			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
-		}
-
-		/// <summary>
-		/// Gets the relative offset of this <see cref="Entity"/> from a world coordinates position
-		/// </summary>
-		/// <param name="worldCoords">The world coordinates.</param>
-		public Vector3 GetPositionOffset(Vector3 worldCoords)
-		{
-			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
-		}
-
-		/// <summary>
-		/// Gets or sets the velocity of this <see cref="Entity"/>.
-		/// </summary>
-		public Vector3 Velocity
-		{
-			get
-			{
-				return Function.Call<Vector3>(Hash.GET_ENTITY_VELOCITY, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
-			}
-		}
-
-		/// <summary>
-		/// Gets the rotation velocity of this <see cref="Entity"/>.
-		/// </summary>
-		public Vector3 RotationVelocity => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
 
 		/// <summary>
 		/// Gets a position directly to the left of this <see cref="Entity"/>
@@ -432,27 +464,21 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is frozen.
+		/// Gets the position in world coordinates of an offset relative this <see cref="Entity"/>
 		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is position frozen; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsPositionFrozen
+		/// <param name="offset">The offset from this <see cref="Entity"/>.</param>
+		public Vector3 GetOffsetPosition(Vector3 offset)
 		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
+			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
+		}
 
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 0x2E, 1);
-			}
-			set
-			{
-				Function.Call(Hash.FREEZE_ENTITY_POSITION, Handle, value);
-			}
+		/// <summary>
+		/// Gets the relative offset of this <see cref="Entity"/> from a world coordinates position
+		/// </summary>
+		/// <param name="worldCoords">The world coordinates.</param>
+		public Vector3 GetPositionOffset(Vector3 worldCoords)
+		{
+			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
 		}
 
 		/// <summary>
@@ -463,14 +489,8 @@ namespace GTA
 		/// </value>
 		public float Speed
 		{
-			get
-			{
-				return Function.Call<float>(Hash.GET_ENTITY_SPEED, Handle);
-			}
-			set
-			{
-				Velocity = Velocity.Normalized * value;
-			}
+			get => Function.Call<float>(Hash.GET_ENTITY_SPEED, Handle);
+			set => Velocity = Velocity.Normalized * value;
 		}
 
 		/// <summary>
@@ -478,501 +498,29 @@ namespace GTA
 		/// </summary>
 		public float MaxSpeed
 		{
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_MAX_SPEED, Handle, value);
-			}
+			set => Function.Call(Hash.SET_ENTITY_MAX_SPEED, Handle, value);
 		}
 
 		/// <summary>
-		/// Gets a value indicating how submersed this <see cref="Entity"/> is, 1.0f means the whole entity is submerged.
+		/// Gets or sets the velocity of this <see cref="Entity"/>.
 		/// </summary>
-		public float SubmersionLevel => Function.Call<float>(Hash.GET_ENTITY_SUBMERGED_LEVEL, Handle);
-
-		/// <summary>
-		/// Gets how high above ground this <see cref="Entity"/> is.
-		/// </summary>
-		public float HeightAboveGround => Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> has gravity.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> has gravity; otherwise, <c>false</c>.
-		/// </value>
-		public bool HasGravity
+		public Vector3 Velocity
 		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return true;
-				}
-				memoryAddress = SHVDN.NativeMemory.ReadAddress(memoryAddress + 48);
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return true;
-				}
-				return !SHVDN.NativeMemory.IsBitSet(memoryAddress + 26, 4);
-
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
-			}
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_VELOCITY, Handle);
+			set => Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is visible.
+		/// Gets the rotation velocity of this <see cref="Entity"/>.
 		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is visible; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsVisible
+		public Vector3 RotationVelocity
 		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_ENTITY_VISIBLE, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_VISIBLE, Handle, value);
-			}
-		}
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is occluded.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is occluded; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsOccluded => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is on screen.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is on screen; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsOnScreen => Function.Call<bool>(Hash.IS_ENTITY_ON_SCREEN, Handle);
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is rendered.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is rendered; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsRendered
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 176, 4);
-			}
-		}
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is upright.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is upright; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsUpright => Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, 30.0f);
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is upside down.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is upside down; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsUpsideDown => Function.Call<bool>(Hash.IS_ENTITY_UPSIDEDOWN, Handle);
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is in the air.
-		/// </summary>
-		/// <value>
-		///   <c>true</c> if this <see cref="Entity"/> is in the air; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsInAir => Function.Call<bool>(Hash.IS_ENTITY_IN_AIR, Handle);
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is in water.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is in water; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is persistent.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is persistent; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsPersistent
-		{
-			get
-			{
-				return Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
-			}
-			set
-			{
-				if (value)
-				{
-					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, true, false);
-				}
-				else
-				{
-					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-				}
-			}
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is on fire.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is on fire; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsOnFire => Function.Call<bool>(Hash.IS_ENTITY_ON_FIRE, Handle);
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is fire proof.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is fire proof; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsFireProof
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
+		#endregion
 
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 5);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				var address = memoryAddress + 392;
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address, 5);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address, 5);
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is melee proof.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is melee proof; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsMeleeProof
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 7);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				var address = memoryAddress + 392;
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address, 7);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address, 7);
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is bullet proof.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is bullet proof; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsBulletProof
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 4);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				var address = memoryAddress + 392;
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address, 4);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address, 4);
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is explosion proof.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is explosion proof; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsExplosionProof
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 11);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				var address = memoryAddress + 392;
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address, 11);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address, 11);
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is collision proof.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is collision proof; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsCollisionProof
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 6);
-			}
-			set
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				var address = memoryAddress + 392;
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address, 6);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address, 6);
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is invincible.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> is invincible; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsInvincible
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 8);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsOnlyDamagedByPlayer
-		{
-			get
-			{
-				var memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(memoryAddress + 392, 9);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets how opacque this <see cref="Entity"/> is.
-		/// </summary>
-		/// <value>
-		/// 0 for completely see through, 255 for fully opacque
-		/// </value>
-		public int Opacity
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_ENTITY_ALPHA, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_ALPHA, Handle, value, false);
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the level of detail distance of this <see cref="Entity"/>.
-		/// </summary>
-		public int LodDistance
-		{
-			get
-			{
-				return Function.Call<int>(Hash.GET_ENTITY_LOD_DIST, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_LOD_DIST, Handle, value);
-			}
-		}
-
-		/// <summary>
-		/// Resets the <seealso cref="Opacity"/>.
-		/// </summary>
-		public void ResetOpacity()
-		{
-			Function.Call(Hash.RESET_ENTITY_ALPHA, Handle);
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> has collided with anything.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> has collided; otherwise, <c>false</c>.
-		/// </value>
-		/// <remarks><see cref="IsRecordingCollisions"/> must be <c>true</c> for this to work.</remarks>
-		public bool HasCollided => Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
-
-		/// <summary>
-		/// Gets the material this <see cref="Entity"/> is pushing up against.
-		/// </summary>
-		/// <value>
-		/// A material hash if this <see cref = "Entity"/> has collision; otherwise, <see cref = "MaterialHash.None"/>.
-		/// </value>
-		/// <remarks>
-		/// <para>This returns <see cref = "MaterialHash.None"/> in some cases, although this enrity is internally considered touched with something.
-		/// For example, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> is a <see cref = "Ped"/> and this <see cref = "Entity"/> doesn't push none of the touching entities, including buildings.
-		/// However, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> touches any ragdolled peds.</para>
-		/// <para>Note that when this <see cref = "Entity"/> is a this <see cref = "Vehicle"/> and only its wheels touches something, the game will consider the entity touching nothing and this returns <see cref = "MaterialHash.None"/>.</para>
-		/// </remarks>
-		public MaterialHash MaterialCollidingWith => (MaterialHash)Function.Call<uint>(Hash.GET_LAST_MATERIAL_HIT_BY_ENTITY, Handle);
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> has collision.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this <see cref="Entity"/> has collision; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsCollisionEnabled
-		{
-			get
-			{
-				return !Function.Call<bool>(Hash.GET_ENTITY_COLLISION_DISABLED, Handle);
-			}
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
-			}
-		}
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is recording collisions.
-		/// </summary>
-		public bool IsRecordingCollisions
-		{
-			set
-			{
-				Function.Call(Hash.SET_ENTITY_RECORDS_COLLISIONS, Handle, value);
-			}
-		}
-
-		/// <summary>
-		/// Sets the collision between this <see cref="Entity"/> and another <see cref="Entity"/>
-		/// </summary>
-		/// <param name="entity">The <see cref="Entity"/> to set collision with</param>
-		/// <param name="toggle">if set to <c>true</c> the 2 <see cref="Entity"/>s wont collide with each other.</param>
-		public void SetNoCollision(Entity entity, bool toggle)
-		{
-			Function.Call(Hash.SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity.Handle, toggle);
-		}
+		#region Damaging
 
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> has been damaged by a specified <see cref="Entity"/>.
@@ -1025,6 +573,432 @@ namespace GTA
 			Function.Call(Hash.CLEAR_ENTITY_LAST_WEAPON_DAMAGE, Handle);
 		}
 
+		#endregion
+
+		#region Invincibility
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is fire proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is fire proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsFireProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 5);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 5);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 5);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is melee proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is melee proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsMeleeProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 7);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 7);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 7);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is bullet proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is bullet proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsBulletProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 4);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 4);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 4);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is explosion proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is explosion proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsExplosionProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 11);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 11);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 11);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is collision proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is collision proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsCollisionProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 6);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 6);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 6);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is invincible.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is invincible; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsInvincible
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 8);
+			}
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsOnlyDamagedByPlayer
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 9);
+			}
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
+			}
+		}
+
+		#endregion
+
+		#region Status Effects
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is visible.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is visible; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsVisible
+		{
+			get => Function.Call<bool>(Hash.IS_ENTITY_VISIBLE, Handle);
+			set => Function.Call(Hash.SET_ENTITY_VISIBLE, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is occluded.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is occluded; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsOccluded
+		{
+			get => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is rendered.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is rendered; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsRendered
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 176, 4);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is on fire.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is on fire; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsOnFire => Function.Call<bool>(Hash.IS_ENTITY_ON_FIRE, Handle);
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is on screen.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is on screen; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsOnScreen => Function.Call<bool>(Hash.IS_ENTITY_ON_SCREEN, Handle);
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is upright.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is upright; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsUpright => Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, 30.0f);
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is upside down.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is upside down; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsUpsideDown => Function.Call<bool>(Hash.IS_ENTITY_UPSIDEDOWN, Handle);
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is in the air.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this <see cref="Entity"/> is in the air; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsInAir => Function.Call<bool>(Hash.IS_ENTITY_IN_AIR, Handle);
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is in water.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is in water; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> has gravity.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> has gravity; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasGravity
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return true;
+				}
+				address = SHVDN.NativeMemory.ReadAddress(address + 48);
+				if (address == IntPtr.Zero)
+				{
+					return true;
+				}
+				return !SHVDN.NativeMemory.IsBitSet(address + 26, 4);
+
+			}
+			set
+			{
+				Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
+			}
+		}
+
+		/// <summary>
+		/// Stops all particle effects attached to this <see cref="Entity"/>
+		/// </summary>
+		public void RemoveParticleEffects()
+		{
+			Function.Call(Hash.REMOVE_PARTICLE_FX_FROM_ENTITY, Handle);
+		}
+
+		#endregion
+
+		#region Collision
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> has collided with anything.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> has collided; otherwise, <c>false</c>.
+		/// </value>
+		/// <remarks><see cref="IsRecordingCollisions"/> must be <c>true</c> for this to work.</remarks>
+		public bool HasCollided => Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
+
+		/// <summary>
+		/// Gets the material this <see cref="Entity"/> is pushing up against.
+		/// </summary>
+		/// <value>
+		/// A material hash if this <see cref = "Entity"/> has collision; otherwise, <see cref = "MaterialHash.None"/>.
+		/// </value>
+		/// <remarks>
+		/// <para>This returns <see cref = "MaterialHash.None"/> in some cases, although this enrity is internally considered touched with something.
+		/// For example, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> is a <see cref = "Ped"/> and this <see cref = "Entity"/> doesn't push none of the touching entities, including buildings.
+		/// However, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> touches any ragdolled peds.</para>
+		/// <para>Note that when this <see cref = "Entity"/> is a this <see cref = "Vehicle"/> and only its wheels touches something, the game will consider the entity touching nothing and this returns <see cref = "MaterialHash.None"/>.</para>
+		/// </remarks>
+		public MaterialHash MaterialCollidingWith => (MaterialHash)Function.Call<uint>(Hash.GET_LAST_MATERIAL_HIT_BY_ENTITY, Handle);
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> has collision.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> has collision; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsCollisionEnabled
+		{
+			get => !Function.Call<bool>(Hash.GET_ENTITY_COLLISION_DISABLED, Handle);
+			set => Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is recording collisions.
+		/// </summary>
+		public bool IsRecordingCollisions
+		{
+			set => Function.Call(Hash.SET_ENTITY_RECORDS_COLLISIONS, Handle, value);
+		}
+
+		/// <summary>
+		/// Sets the collision between this <see cref="Entity"/> and another <see cref="Entity"/>
+		/// </summary>
+		/// <param name="entity">The <see cref="Entity"/> to set collision with</param>
+		/// <param name="toggle">if set to <c>true</c> the 2 <see cref="Entity"/>s wont collide with each other.</param>
+		public void SetNoCollision(Entity entity, bool toggle)
+		{
+			Function.Call(Hash.SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity.Handle, toggle);
+		}
+
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is in a specified area
 		/// </summary>
@@ -1050,6 +1024,7 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, origin.X, origin.Y, origin.Z, edge.X, edge.Y, edge.Z, angle, false, true, false);
 		}
+
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is in range of a specified position
 		/// </summary>
@@ -1062,6 +1037,7 @@ namespace GTA
 		{
 			return Vector3.Subtract(Position, position).LengthSquared() < range * range;
 		}
+
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is near a specified <see cref="Entity"/>.
 		/// </summary>
@@ -1098,10 +1074,9 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_ENTITY_TOUCHING_ENTITY, Handle, entity.Handle);
 		}
 
-		/// <summary>
-		/// Gets a collection of the <see cref="EntityBone"/>s in this <see cref="Entity"/>.
-		/// </summary>
-		public virtual EntityBoneCollection Bones => _bones ?? (_bones = new EntityBoneCollection(this));
+		#endregion
+
+		#region Blips
 
 		/// <summary>
 		/// Creates a <see cref="Blip"/> on this <see cref="Entity"/>
@@ -1129,10 +1104,18 @@ namespace GTA
 				return null;
 			}
 		}
+
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Blip"/>s attached to this <see cref="Entity"/>.
 		/// </summary>
-		public Blip[] AttachedBlips => World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x.NativeValue) == Handle).ToArray();
+		public Blip[] AttachedBlips
+		{
+			get => World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x.NativeValue) == Handle).ToArray();
+		}
+
+		#endregion
+
+		#region Attaching
 
 		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
@@ -1193,6 +1176,10 @@ namespace GTA
 			return FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 		}
 
+		#endregion
+
+		#region Forces
+
 		/// <summary>
 		/// Applies a force to this <see cref="Entity"/>.
 		/// </summary>
@@ -1214,13 +1201,7 @@ namespace GTA
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 		}
 
-		/// <summary>
-		/// Stops all particle effects attached to this <see cref="Entity"/>
-		/// </summary>
-		public void RemoveParticleFX()
-		{
-			Function.Call(Hash.REMOVE_PARTICLE_FX_FROM_ENTITY, Handle);
-		}
+		#endregion
 
 		/// <summary>
 		/// Marks this <see cref="Entity"/> as no longer needed letting the game delete it when its too far away.

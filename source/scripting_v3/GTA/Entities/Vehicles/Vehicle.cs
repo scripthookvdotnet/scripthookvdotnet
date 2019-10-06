@@ -89,6 +89,9 @@ namespace GTA
 
 		#region Configuration
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> was stolen.
+		/// </summary>
 		public bool IsStolen
 		{
 			get => Function.Call<bool>(Hash.IS_VEHICLE_STOLEN, Handle);
@@ -374,107 +377,6 @@ namespace GTA
 
 		#endregion
 
-		#region Oil & Petrol
-
-		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> oil level.
-		/// </summary>
-		public float OilLevel
-		{
-			get
-			{
-				if (MemoryAddress == IntPtr.Zero)
-				{
-					return 0.0f;
-				}
-
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7AC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7BC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7E8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x838 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
-			}
-			set
-			{
-				if (MemoryAddress == IntPtr.Zero)
-				{
-					return;
-				}
-
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7AC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7BC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7E8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x838 : offset;
-
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets the oil volume of this <see cref="Vehicle"/>.
-		/// </summary>
-		public float OilVolume
-		{
-			get
-			{
-				if (MemoryAddress == IntPtr.Zero)
-				{
-					return 0.0f;
-				}
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x0104);
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> fuel level.
-		/// </summary>
-		public float FuelLevel
-		{
-			get
-			{
-				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
-				{
-					return 0.0f;
-				}
-
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.FuelLevelOffset);
-			}
-			set
-			{
-				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
-				{
-					return;
-				}
-
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.FuelLevelOffset, value);
-			}
-		}
-
-		/// <summary>
-		/// Gets the petrol tank volume of this <see cref="Vehicle"/>.
-		/// </summary>
-		public float PetrolTankVolume
-		{
-			get
-			{
-				if (MemoryAddress == IntPtr.Zero)
-				{
-					return 0.0f;
-				}
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x0100);
-			}
-		}
-
-		#endregion
-
 		#region Radio
 
 		/// <summary>
@@ -600,6 +502,103 @@ namespace GTA
 		public float EngineTorqueMultiplier
 		{
 			set => Function.Call(Hash._SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> oil level.
+		/// </summary>
+		public float OilLevel
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7AC : offset;
+				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7BC : offset;
+				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7E8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x838 : offset;
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
+				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
+				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7AC : offset;
+				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7BC : offset;
+				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7E8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x838 : offset;
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets the oil volume of this <see cref="Vehicle"/>.
+		/// </summary>
+		public float OilVolume
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x0104);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets this <see cref="Vehicle"/> fuel level.
+		/// </summary>
+		public float FuelLevel
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.FuelLevelOffset);
+			}
+			set
+			{
+				if (MemoryAddress == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.FuelLevelOffset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets the petrol tank volume of this <see cref="Vehicle"/>.
+		/// </summary>
+		public float PetrolTankVolume
+		{
+			get
+			{
+				if (MemoryAddress == IntPtr.Zero)
+				{
+					return 0.0f;
+				}
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x0100);
+			}
 		}
 
 		#endregion
@@ -1907,7 +1906,7 @@ namespace GTA
 
 		#endregion
 
-		#region BombBay & CarbobobHook
+		#region Carbobob
 
 		public bool HasBombBay => Bones.Contains("door_hatch_l") && Bones.Contains("door_hatch_r");
 

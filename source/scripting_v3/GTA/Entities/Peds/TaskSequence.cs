@@ -21,7 +21,6 @@ namespace GTA
 			{
 				Function.Call(Hash.OPEN_SEQUENCE_TASK, &handle);
 			}
-
 			Handle = handle;
 
 			if (_nullPed is null)

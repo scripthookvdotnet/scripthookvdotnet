@@ -32,7 +32,10 @@ namespace GTA
 		/// <summary>
 		/// Gets the memory address of this <see cref="Camera"/>.
 		/// </summary>
-		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetCameraAddress(Handle);
+		public IntPtr MemoryAddress
+		{
+			get => SHVDN.NativeMemory.GetCameraAddress(Handle);
+		}
 
 		/// <summary>
 		/// Gets the memory address of the matrix for this <see cref="Camera"/>.
@@ -42,12 +45,8 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero)
-				{
-					return IntPtr.Zero;
-				}
-
-				return (SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
+				return address != IntPtr.Zero ? (
+					(SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110) : IntPtr.Zero;
 			}
 		}
 
@@ -71,7 +70,7 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				return address == IntPtr.Zero ? new Matrix() : new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+				return address != IntPtr.Zero ? new Matrix(SHVDN.NativeMemory.ReadMatrix(address)) : new Matrix();
 			}
 		}
 
@@ -120,12 +119,7 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				if (address == IntPtr.Zero)
-				{
-					return Vector3.RelativeTop;
-				}
-
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20));
+				return address != IntPtr.Zero ? new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20)) : Vector3.RelativeTop;
 			}
 		}
 
@@ -137,12 +131,7 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				if (address == IntPtr.Zero)
-				{
-					return Vector3.RelativeRight;
-				}
-
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
+				return address != IntPtr.Zero ? new Vector3(SHVDN.NativeMemory.ReadVector3(address)) : Vector3.RelativeRight;
 			}
 		}
 
@@ -154,12 +143,7 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				if (address == IntPtr.Zero)
-				{
-					return Vector3.RelativeFront;
-				}
-
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10));
+				return address != IntPtr.Zero ? new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10)) : Vector3.RelativeFront;
 			}
 		}
 
@@ -265,7 +249,10 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Camera"/> is shaking; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsShaking => Function.Call<bool>(Hash.IS_CAM_SHAKING, Handle);
+		public bool IsShaking
+		{
+			get => Function.Call<bool>(Hash.IS_CAM_SHAKING, Handle);
+		}
 
 		/// <summary>
 		/// Sets the shake amplitude for this <see cref="Camera"/>.
@@ -280,7 +267,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="target">The <see cref="Entity"/> to point at.</param>
 		/// <param name="offset">The offset from the <paramref name="target"/> to point at.</param>
-		public void PointAt(Entity target, Vector3 offset = default(Vector3))
+		public void PointAt(Entity target, Vector3 offset = default)
 		{
 			Function.Call(Hash.POINT_CAM_AT_ENTITY, Handle, target.Handle, offset.X, offset.Y, offset.Z, true);
 		}
@@ -289,7 +276,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="target">The <see cref="PedBone"/> to point at.</param>
 		/// <param name="offset">The offset from the <paramref name="target"/> to point at</param>
-		public void PointAt(PedBone target, Vector3 offset = default(Vector3))
+		public void PointAt(PedBone target, Vector3 offset = default)
 		{
 			Function.Call(Hash.POINT_CAM_AT_PED_BONE, Handle, target.Owner.Handle, target, offset.X, offset.Y, offset.Z, true);
 		}

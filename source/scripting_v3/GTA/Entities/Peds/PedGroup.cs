@@ -43,7 +43,7 @@ namespace GTA
 				{
 					current = currentIndex < 0 ? collection.Leader : collection.GetMember(currentIndex);
 
-					if (current?.Exists() == true)
+					if (!(current is null) && current.Exists())
 					{
 						return true;
 					}
@@ -192,7 +192,7 @@ namespace GTA
 		/// <returns><c>true</c> if <paramref name="left"/> is the same group as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(PedGroup left, PedGroup right)
 		{
-			return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
+			return left is null ? right is null : left.Equals(right);
 		}
 		/// <summary>
 		/// Determines if two <see cref="PedGroup"/>s don't refer to the same group.

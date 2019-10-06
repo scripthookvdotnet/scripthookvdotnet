@@ -180,7 +180,6 @@ namespace GTA
 				{
 					value = 0;
 				}
-
 				if (value > 100)
 				{
 					value = 100;
@@ -285,6 +284,11 @@ namespace GTA
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, flagID, true);
 		}
 
+		/// <summary>
+		/// Gets a collection of the <see cref="PedBone"/>s in this <see cref="Ped"/>.
+		/// </summary>
+		public new PedBoneCollection Bones => _pedBones ?? (_pedBones = new PedBoneCollection(this));
+
 		#endregion
 
 		#region Tasks
@@ -312,8 +316,6 @@ namespace GTA
 		public bool IsSprinting => Function.Call<bool>(Hash.IS_PED_SPRINTING, Handle);
 
 		public bool IsStopped => Function.Call<bool>(Hash.IS_PED_STOPPED, Handle);
-
-		public bool IsInParachuteFreeFall => Function.Call<bool>(Hash.IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
 
 		public bool IsSwimming => Function.Call<bool>(Hash.IS_PED_SWIMMING, Handle);
 
@@ -508,7 +510,6 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_PED_IN_ANY_VEHICLE, Handle, 0);
 		}
-
 		public bool IsInVehicle(Vehicle vehicle)
 		{
 			return Function.Call<bool>(Hash.IS_PED_IN_VEHICLE, Handle, vehicle.Handle, 0);
@@ -518,7 +519,6 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_PED_SITTING_IN_ANY_VEHICLE, Handle);
 		}
-
 		public bool IsSittingInVehicle(Vehicle vehicle)
 		{
 			return Function.Call<bool>(Hash.IS_PED_SITTING_IN_VEHICLE, Handle, vehicle.Handle);
@@ -655,6 +655,8 @@ namespace GTA
 
 		#region Parachuting
 
+		public bool IsInParachuteFreeFall => Function.Call<bool>(Hash.IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
+
 		public void ParachuteTo(Vector3 location)
 		{
 			Function.Call(Hash.SET_PARACHUTE_TASK_TARGET, Handle, location.X, location.Y, location.Z);
@@ -683,9 +685,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_IS_TARGET_PRIORITY, Handle, value, 0);
 		}
 
-		public bool IsInjured => Function.Call<bool>(Hash.IS_PED_INJURED, Handle);
-
 		public bool IsFleeing => Function.Call<bool>(Hash.IS_PED_FLEEING, Handle);
+
+		public bool IsInjured => Function.Call<bool>(Hash.IS_PED_INJURED, Handle);
 
 		public bool IsInStealthMode => Function.Call<bool>(Hash.GET_PED_STEALTH_MOVEMENT, Handle);
 
@@ -761,7 +763,7 @@ namespace GTA
 
 		#endregion
 
-		#region Injuring
+		#region Damaging
 
 		public bool CanWrithe
 		{
@@ -1039,7 +1041,6 @@ namespace GTA
 
 			Function.Call(Hash._PLAY_AMBIENT_SPEECH1, Handle, speechName, _speechModifierNames[(int)modifier]);
 		}
-
 		public void PlayAmbientSpeech(string speechName, string voiceName, SpeechModifier modifier = SpeechModifier.Standard)
 		{
 			if (modifier < 0 || (int)modifier >= _speechModifierNames.Length)
@@ -1093,11 +1094,6 @@ namespace GTA
 				}
 			}
 		}
-
-		/// <summary>
-		/// Gets a collection of the <see cref="PedBone"/>s in this <see cref="Ped"/>.
-		/// </summary>
-		public new PedBoneCollection Bones => _pedBones ?? (_pedBones = new PedBoneCollection(this));
 
 		#endregion
 	}
