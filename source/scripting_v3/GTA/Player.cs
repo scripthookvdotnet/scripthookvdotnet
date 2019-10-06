@@ -450,41 +450,43 @@ namespace GTA
 		public Vehicle LastVehicle => Function.Call<Vehicle>(Hash.GET_PLAYERS_LAST_VEHICLE);
 
 		/// <summary>
-		/// Determines whether this <see cref="Player"/> is targetting the specified <see cref="Entity"/>.
+		/// Determines whether this <see cref="Player"/> is targeting the specified <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to check.</param>
 		/// <returns>
-		///   <c>true</c> if this <see cref="Player"/> is targetting the specified <see cref="Entity"/>; otherwise, <c>false</c>.
+		///   <c>true</c> if this <see cref="Player"/> is targeting the specified <see cref="Entity"/>; otherwise, <c>false</c>.
 		/// </returns>
-		public bool IsTargetting(Entity entity)
+		public bool IsTargeting(Entity entity)
 		{
 			return Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING_AT_ENTITY, Handle, entity.Handle);
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Player"/> is targetting anything.
+		/// Gets a value indicating whether this <see cref="Player"/> is targeting anything.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is targetting anything; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Player"/> is targeting anything; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsTargettingAnything => Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
+		public bool IsTargetingAnything => Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
 
 		/// <summary>
-		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is targetting.
+		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is targeting.
 		/// </summary>
-		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targetting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
-		public Entity GetTargetedEntity()
+		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targeting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
+		public Entity TargetedEntity
 		{
-			int entityHandle;
-			unsafe
+			get
 			{
-				if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
+				int entityHandle;
+				unsafe
 				{
-					return Entity.FromHandle(entityHandle);
+					if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
+					{
+						return Entity.FromHandle(entityHandle);
+					}
 				}
+				return null;
 			}
-
-			return null;
 		}
 
 		/// <summary>
