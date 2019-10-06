@@ -5,6 +5,7 @@
 
 using GTA.Math;
 using GTA.Native;
+using System.Runtime.InteropServices;
 
 namespace GTA
 {
@@ -37,7 +38,14 @@ namespace GTA
 			get;
 		}
 
-		public bool DidHitEntity => !(HitEntity is null);
+		public bool DidHitEntity
+		{
+			[return: MarshalAs(UnmanagedType.U1)]
+			get
+			{
+				return !(HitEntity is null);
+			}
+		}
 
 		public Entity HitEntity
 		{

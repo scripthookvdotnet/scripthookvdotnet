@@ -226,7 +226,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_PETROL_TANK_HEALTH, Handle, value);
 		}
 
-		public bool IsSirenActive
+		public bool SirenActive
 		{
 			get => Function.Call<bool>(Hash.IS_VEHICLE_SIREN_ON, Handle);
 			set => Function.Call(Hash.SET_VEHICLE_SIREN, Handle, value);
@@ -686,7 +686,7 @@ namespace GTA
 			}
 		}
 
-		public Vehicle TowedVehicle => new Vehicle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle));
+		public Vehicle TowedVehicle => Function.Call<Vehicle>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle);
 
 		public float TowingCraneRaisedAmount
 		{

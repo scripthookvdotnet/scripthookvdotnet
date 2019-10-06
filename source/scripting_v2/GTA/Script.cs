@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace GTA
 {
-	public abstract class Script
+	public abstract class Script : IDisposable
 	{
 		Viewport _viewport;
 		ScriptSettings _settings;
@@ -17,6 +17,15 @@ namespace GTA
 		public Script()
 		{
 			Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		protected virtual void Dispose(bool disposing)
+		{
 		}
 
 		public static void Wait(int ms)

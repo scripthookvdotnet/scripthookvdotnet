@@ -179,7 +179,7 @@ namespace GTA
 			Function.Call(Hash.DETACH_CAM, Handle);
 		}
 
-		public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
+		public void InterpTo(Camera to, int duration, bool easePosition, bool easeRotation)
 		{
 			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);
 		}
