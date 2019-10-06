@@ -316,7 +316,7 @@ namespace SHVDN
 				return false;
 			}
 
-			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " using API " + apiVersion.ToString(3) : string.Empty), ".");
+			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " resolved to API " + apiVersion.ToString(3) : string.Empty), ".");
 
 			return count != 0;
 		}
@@ -786,7 +786,8 @@ namespace SHVDN
 				// Some scripts reference a version-less SHVDN, do default those to major version 2
 				if (assemblyName.Version == bestVersion)
 				{
-					Log.Message(Log.Level.Warning, "Found API version 0.0.0", args.RequestingAssembly != null ? " referenced in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
+					Log.Message(Log.Level.Warning, "Resolving API version 0.0.0",
+						args.RequestingAssembly != null ? " referenced in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
 
 					return CurrentDomain.scriptApis.Where(x => x.GetName().Version.Major == 2).FirstOrDefault();
 				}
@@ -809,7 +810,7 @@ namespace SHVDN
 				if (compatibleApi == null)
 				{
 					Log.Message(Log.Level.Warning, "Unable to resolve API version ", assemblyName.Version.ToString(3),
-						args.RequestingAssembly != null ? " used in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
+						args.RequestingAssembly != null ? " referenced in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
 				}
 
 				return compatibleApi;
