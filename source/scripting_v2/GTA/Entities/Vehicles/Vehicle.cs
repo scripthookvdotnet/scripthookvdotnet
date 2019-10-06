@@ -512,17 +512,17 @@ namespace GTA
 			get
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.GearOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
 				{
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.GearOffset);
+				return SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.HighGearOffset);
 			}
 			set
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.GearOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
 				{
 					return;
 				}
@@ -539,7 +539,7 @@ namespace GTA
 					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 				}
 
-				SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.GearOffset, (byte)value);
+				SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.HighGearOffset, (byte)value);
 			}
 		}
 
