@@ -40,18 +40,19 @@ namespace GTA
 			get => Function.Call<bool>(Hash.IS_CAM_ACTIVE, Handle);
 			set => Function.Call(Hash.SET_CAM_ACTIVE, Handle, value);
 		}
-		public bool IsInterpolating => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
 
 		public Vector3 Position
 		{
 			get => Function.Call<Vector3>(Hash.GET_CAM_COORD, Handle);
 			set => Function.Call(Hash.SET_CAM_COORD, Handle, value.X, value.Y, value.Z);
 		}
+
 		public Vector3 Rotation
 		{
 			get => Function.Call<Vector3>(Hash.GET_CAM_ROT, Handle, 2);
 			set => Function.Call(Hash.SET_CAM_ROT, Handle, value.X, value.Y, value.Z, 2);
 		}
+
 		public Vector3 Direction
 		{
 			get
@@ -63,48 +64,15 @@ namespace GTA
 
 				return new Vector3((float)(-System.Math.Sin(rotZ) * multXY), (float)(System.Math.Cos(rotZ) * multXY), (float)System.Math.Sin(rotX));
 			}
-		}
-
-		public float FieldOfView
-		{
-			get => Function.Call<float>(Hash.GET_CAM_FOV, Handle);
-			set => Function.Call(Hash.SET_CAM_FOV, Handle, value);
-		}
-
-		public float ShakeAmplitude
-		{
-			set => Function.Call(Hash.SET_CAM_SHAKE_AMPLITUDE, Handle, value);
-		}
-
-		public float FarClip
-		{
-			get => Function.Call<float>(Hash.GET_CAM_FAR_CLIP, Handle);
-			set => Function.Call(Hash.SET_CAM_FAR_CLIP, Handle, value);
-		}
-		public float NearClip
-		{
-			get => Function.Call<float>(Hash.GET_CAM_NEAR_CLIP, Handle);
-			set => Function.Call(Hash.SET_CAM_NEAR_CLIP, Handle, value);
-		}
-
-		public float FarDepthOfField
-		{
-			get => Function.Call<float>(Hash.GET_CAM_FAR_DOF, Handle);
-			set => Function.Call(Hash.SET_CAM_FAR_DOF, Handle, value);
-		}
-		public float NearDepthOfField
-		{
-			set => Function.Call(Hash.SET_CAM_NEAR_DOF, Handle, value);
-		}
-
-		public float MotionBlurStrength
-		{
-			set => Function.Call(Hash.SET_CAM_MOTION_BLUR_STRENGTH, Handle, value);
-		}
-		public float DepthOfFieldStrength
-		{
-			set => Function.Call(Hash.SET_CAM_DOF_STRENGTH, Handle, value);
-		}
+			set
+			{
+				value.Normalize();
+				Vector3 vector1 = new Vector3(value.X, value.Y, 0.0f);
+				Vector3 vector2 = new Vector3(value.Z, vector1.Length(), 0.0f);
+				Vector3 vector3 = Vector3.Normalize(vector2);
+				Rotation = new Vector3((float)(System.Math.Atan2(vector3.X, vector3.Y) * 57.295779513082320876798154814105), 0.0f, (float)(-System.Math.Atan2(value.X, value.Y) * 57.295779513082320876798154814105));
+			}
+	}
 
 		public Vector3 GetOffsetInWorldCoords(Vector3 offset)
 		{
@@ -118,6 +86,7 @@ namespace GTA
 			Vector3 Up = Vector3.Cross(Right, Forward);
 			return Position + (Right * offset.X) + (Forward * offset.Y) + (Up * offset.Z);
 		}
+
 		public Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
 		{
 			Vector3 Forward = Direction;
@@ -132,13 +101,63 @@ namespace GTA
 			return new Vector3(Vector3.Dot(Right, Delta), Vector3.Dot(Forward, Delta), Vector3.Dot(Up, Delta));
 		}
 
+		public float FarClip
+		{
+			get => Function.Call<float>(Hash.GET_CAM_FAR_CLIP, Handle);
+			set => Function.Call(Hash.SET_CAM_FAR_CLIP, Handle, value);
+		}
+
+		public float NearClip
+		{
+			get => Function.Call<float>(Hash.GET_CAM_NEAR_CLIP, Handle);
+			set => Function.Call(Hash.SET_CAM_NEAR_CLIP, Handle, value);
+		}
+
+		public float FieldOfView
+		{
+			get => Function.Call<float>(Hash.GET_CAM_FOV, Handle);
+			set => Function.Call(Hash.SET_CAM_FOV, Handle, value);
+		}
+
+		public float FarDepthOfField
+		{
+			get => Function.Call<float>(Hash.GET_CAM_FAR_DOF, Handle);
+			set => Function.Call(Hash.SET_CAM_FAR_DOF, Handle, value);
+		}
+
+		public float NearDepthOfField
+		{
+			set => Function.Call(Hash.SET_CAM_NEAR_DOF, Handle, value);
+		}
+
+		public float MotionBlurStrength
+		{
+			set => Function.Call(Hash.SET_CAM_MOTION_BLUR_STRENGTH, Handle, value);
+		}
+
+		public float DepthOfFieldStrength
+		{
+			set => Function.Call(Hash.SET_CAM_DOF_STRENGTH, Handle, value);
+		}
+
 		public void Shake(CameraShake shakeType, float amplitude)
 		{
 			Function.Call(Hash.SHAKE_CAM, Handle, shakeNames[(int)shakeType], amplitude);
 		}
+
 		public void StopShaking()
 		{
 			Function.Call(Hash.STOP_CAM_SHAKING, Handle, true);
+		}
+
+		public bool IsShaking
+		{
+			get => Function.Call<bool>(Hash.IS_CAM_SHAKING, Handle);
+		}
+
+		public float ShakeAmplitude
+		{
+			set => Function.Call(Hash.SET_CAM_SHAKE_AMPLITUDE, Handle, value);
 		}
 
 		public void PointAt(Vector3 target)
@@ -161,9 +180,20 @@ namespace GTA
 		{
 			Function.Call(Hash.POINT_CAM_AT_PED_BONE, Handle, target.Handle, boneIndex, offset.X, offset.Y, offset.Z, true);
 		}
+
 		public void StopPointing()
 		{
 			Function.Call(Hash.STOP_CAM_POINTING, Handle);
+		}
+
+		public void InterpTo(Camera to, int duration, bool easePosition, bool easeRotation)
+		{
+			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);
+		}
+
+		public bool IsInterpolating
+		{
+			get => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
 		}
 
 		public void AttachTo(Entity entity, Vector3 offset)
@@ -174,14 +204,10 @@ namespace GTA
 		{
 			Function.Call(Hash.ATTACH_CAM_TO_PED_BONE, Handle, ped.Handle, boneIndex, offset.X, offset.Y, offset.Z, true);
 		}
+
 		public void Detach()
 		{
 			Function.Call(Hash.DETACH_CAM, Handle);
-		}
-
-		public void InterpTo(Camera to, int duration, bool easePosition, bool easeRotation)
-		{
-			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);
 		}
 
 		public void Destroy()
@@ -198,18 +224,13 @@ namespace GTA
 			return !(camera is null) && camera.Exists();
 		}
 
-		public bool Equals(Camera camera)
+		public bool Equals(Camera obj)
 		{
-			return !(camera is null) && Handle == camera.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
-		public override bool Equals(object camera)
+		public override bool Equals(object obj)
 		{
-			return !(camera is null) && camera.GetType() == GetType() && Equals((Camera)camera);
-		}
-
-		public override int GetHashCode()
-		{
-			return Handle;
+			return !(obj is null) && obj.GetType() == GetType() && Equals((Camera)obj);
 		}
 
 		public static bool operator ==(Camera left, Camera right)
@@ -219,6 +240,11 @@ namespace GTA
 		public static bool operator !=(Camera left, Camera right)
 		{
 			return !(left == right);
+		}
+
+		public sealed override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

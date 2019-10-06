@@ -16,12 +16,10 @@ namespace GTA
 			Handle = handle;
 		}
 
-		public int Handle
+		public int Type
 		{
-			get; private set;
+			get => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
 		}
-
-		public int Type => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
 
 		public int Alpha
 		{
@@ -29,19 +27,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
 		}
 
-		public int Priority
+		public int Handle
 		{
-			set => Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
-		}
-
-		public string Name
-		{
-			set
-			{
-				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, "CELL_EMAIL_BCON");
-				Function.PushLongString(value);
-				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
-			}
+			get;
 		}
 
 		public BlipColor Color
@@ -54,6 +42,16 @@ namespace GTA
 		{
 			get => (BlipSprite)Function.Call<int>(Hash.GET_BLIP_SPRITE, Handle);
 			set => Function.Call(Hash.SET_BLIP_SPRITE, Handle, (int)value);
+		}
+
+		public string Name
+		{
+			set
+			{
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, "CELL_EMAIL_BCON");
+				Function.PushLongString(value);
+				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
+			}
 		}
 
 		public Vector3 Position
@@ -72,8 +70,6 @@ namespace GTA
 			set => Function.Call(Hash.SET_BLIP_SCALE, Handle, value);
 		}
 
-		public Entity Entity => Entity.FromHandle(Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, Handle));
-
 		public bool ShowRoute
 		{
 			set => Function.Call(Hash.SET_BLIP_ROUTE, Handle, value);
@@ -90,7 +86,10 @@ namespace GTA
 			set => Function.Call(Hash.SET_BLIP_FLASHES, Handle, value);
 		}
 
-		public bool IsOnMinimap => Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
+		public bool IsOnMinimap
+		{
+			get => Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
+		}
 
 		public bool IsShortRange
 		{
@@ -110,8 +109,10 @@ namespace GTA
 		public void Remove()
 		{
 			int handle = Handle;
-			unsafe { Function.Call(Hash.REMOVE_BLIP, &handle); }
-			Handle = handle;
+			unsafe
+			{
+				Function.Call(Hash.REMOVE_BLIP, &handle);
+			}
 		}
 
 		public bool Exists()
@@ -123,18 +124,13 @@ namespace GTA
 			return !(blip is null) && blip.Exists();
 		}
 
-		public bool Equals(Blip blip)
+		public bool Equals(Blip obj)
 		{
-			return !(blip is null) && Handle == blip.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
-		public override bool Equals(object blip)
+		public override bool Equals(object obj)
 		{
-			return !(blip is null) && blip.GetType() == GetType() && Equals((Blip)blip);
-		}
-
-		public sealed override int GetHashCode()
-		{
-			return Handle.GetHashCode();
+			return !(obj is null) && obj.GetType() == GetType() && Equals((Blip)obj);
 		}
 
 		public static bool operator ==(Blip left, Blip right)
@@ -144,6 +140,11 @@ namespace GTA
 		public static bool operator !=(Blip left, Blip right)
 		{
 			return !(left == right);
+		}
+
+		public sealed override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

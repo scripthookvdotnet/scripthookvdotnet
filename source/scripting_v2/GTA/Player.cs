@@ -301,18 +301,13 @@ namespace GTA
 			return true;
 		}
 
-		public bool Equals(Player player)
+		public bool Equals(Player obj)
 		{
-			return !(player is null) && Handle == player.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
-		public override bool Equals(object player)
+		public override bool Equals(object obj)
 		{
-			return !(player is null) && player.GetType() == GetType() && Equals((Player)player);
-		}
-
-		public override int GetHashCode()
-		{
-			return Handle;
+			return !(obj is null) && obj.GetType() == GetType() && Equals((Player)obj);
 		}
 
 		public static bool operator ==(Player left, Player right)
@@ -322,6 +317,11 @@ namespace GTA
 		public static bool operator !=(Player left, Player right)
 		{
 			return !(left == right);
+		}
+
+		public sealed override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

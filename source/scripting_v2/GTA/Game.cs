@@ -12,6 +12,7 @@ namespace GTA
 {
 	public static class Game
 	{
+		#region Fields
 		static Player cachedPlayer;
 
 		internal static readonly string[] _radioNames = {
@@ -57,6 +58,7 @@ namespace GTA
 			"FMMC_KEY_TIP9N",
 			"PM_NAME_CHALL"
 		};
+		#endregion
 
 		public static float FPS => 1.0f / LastFrameTime;
 		public static float LastFrameTime => Function.Call<float>(Hash.GET_FRAME_TIME);
@@ -276,6 +278,18 @@ namespace GTA
 		public static bool IsControlJustReleased(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, (int)control);
+		}
+		public static bool IsDisabledControlPressed(int index, Control control)
+		{
+			return IsControlPressed(index, control) && !IsControlEnabled(index, control);
+		}
+		public static bool IsDisabledControlJustPressed(int index, Control control)
+		{
+			return IsControlJustPressed(index, control) && !IsControlEnabled(index, control);
+		}
+		public static bool IsDisabledControlJustReleased(int index, Control control)
+		{
+			return IsControlJustReleased(index, control) && !IsControlEnabled(index, control);
 		}
 		public static bool IsEnabledControlPressed(int index, Control control)
 		{

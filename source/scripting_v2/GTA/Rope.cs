@@ -18,7 +18,7 @@ namespace GTA
 
 		public int Handle
 		{
-			get; private set;
+			get;
 		}
 
 		public int VertexCount => Function.Call<int>(Hash.GET_ROPE_VERTEX_COUNT, Handle);
@@ -81,7 +81,6 @@ namespace GTA
 			{
 				Function.Call(Hash.DELETE_ROPE, &handle);
 			}
-			Handle = handle;
 		}
 
 		public bool Exists()
@@ -97,27 +96,27 @@ namespace GTA
 			return !ReferenceEquals(rope, null) && rope.Exists();
 		}
 
-		public bool Equals(Rope rope)
+		public bool Equals(Rope obj)
 		{
-			return !ReferenceEquals(rope, null) && Handle == rope.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
 		public override bool Equals(object obj)
 		{
-			return !ReferenceEquals(obj, null) && obj.GetType() == GetType() && Equals((Rope)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return Handle;
+			return !(obj is null) && obj.GetType() == GetType() && Equals((Rope)obj);
 		}
 
 		public static bool operator ==(Rope left, Rope right)
 		{
-			return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
+			return left is null ? right is null : left.Equals(right);
 		}
 		public static bool operator !=(Rope left, Rope right)
 		{
 			return !(left == right);
+		}
+
+		public sealed override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

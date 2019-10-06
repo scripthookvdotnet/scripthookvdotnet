@@ -43,18 +43,13 @@ namespace GTA
 			return !(pickup is null) && pickup.Exists();
 		}
 
-		public bool Equals(Pickup pickup)
+		public bool Equals(Pickup obj)
 		{
-			return !(pickup is null) && Handle == pickup.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
-		public sealed override bool Equals(object pickup)
+		public sealed override bool Equals(object obj)
 		{
-			return !(pickup is null) && pickup.GetType() == GetType() && Equals((Pickup)pickup);
-		}
-
-		public sealed override int GetHashCode()
-		{
-			return Handle;
+			return !(obj is null) && obj.GetType() == GetType() && Equals((Pickup)obj);
 		}
 
 		public static bool operator ==(Pickup left, Pickup right)
@@ -64,6 +59,11 @@ namespace GTA
 		public static bool operator !=(Pickup left, Pickup right)
 		{
 			return !(left == right);
+		}
+
+		public sealed override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

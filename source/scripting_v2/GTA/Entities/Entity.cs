@@ -11,6 +11,11 @@ namespace GTA
 {
 	public abstract class Entity : IEquatable<Entity>, IHandleable, ISpatial
 	{
+		public Entity(int handle)
+		{
+			Handle = handle;
+		}
+
 		internal static Entity FromHandle(int handle)
 		{
 			switch (Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
@@ -25,23 +30,84 @@ namespace GTA
 			return null;
 		}
 
-		public Entity(int handle)
-		{
-			Handle = handle;
-		}
-
 		public virtual int Handle
 		{
-			get; private set;
+			get;
 		}
 
 		public unsafe int* MemoryAddress => (int*)SHVDN.NativeMemory.GetEntityAddress(Handle).ToPointer();
+
+		public bool IsDead => Function.Call<bool>(Hash.IS_ENTITY_DEAD, Handle);
+		public bool IsAlive => !IsDead;
+
+		#region Styling
+
+		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
 
 		public int Alpha
 		{
 			get => Function.Call<int>(Hash.GET_ENTITY_ALPHA, Handle);
 			set => Function.Call(Hash.SET_ENTITY_ALPHA, Handle, value, false);
 		}
+
+		public void ResetAlpha()
+		{
+			Function.Call(Hash.RESET_ENTITY_ALPHA, Handle);
+		}
+
+		#endregion
+
+		#region Configuration
+
+		public int LodDistance
+		{
+			get => Function.Call<int>(Hash.GET_ENTITY_LOD_DIST, Handle);
+			set => Function.Call(Hash.SET_ENTITY_LOD_DIST, Handle, value);
+		}
+
+		public bool IsPersistent
+		{
+			get => Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
+			set => Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, value, !value);
+		}
+
+		public bool FreezePosition
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x2E, 1);
+			}
+			set => Function.Call(Hash.FREEZE_ENTITY_POSITION, Handle, value);
+		}
+
+		public int GetBoneIndex(string boneName)
+		{
+			return Function.Call<int>(Hash.GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
+		}
+
+		public bool HasBone(string boneName)
+		{
+			return GetBoneIndex(boneName) != -1;
+		}
+
+		public Vector3 GetBoneCoord(int boneIndex)
+		{
+			return Function.Call<Vector3>(Hash._GET_ENTITY_BONE_COORDS, Handle, boneIndex);
+		}
+		public Vector3 GetBoneCoord(string boneName)
+		{
+			return Function.Call<Vector3>(Hash._GET_ENTITY_BONE_COORDS, Handle, GetBoneIndex(boneName));
+		}
+
+		#endregion
+
+		#region Health
 
 		public int Health
 		{
@@ -55,38 +121,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_MAX_HEALTH, Handle, value);
 		}
 
-		public int LodDistance
-		{
-			get => Function.Call<int>(Hash.GET_ENTITY_LOD_DIST, Handle);
-			set => Function.Call(Hash.SET_ENTITY_LOD_DIST, Handle, value);
-		}
+		#endregion
 
-		public Blip CurrentBlip => Function.Call<Blip>(Hash.GET_BLIP_FROM_ENTITY, Handle);
-
-		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
-
-		public Vector3 UpVector => Vector3.Cross(RightVector, ForwardVector);
-
-		public Vector3 RightVector
-		{
-			get
-			{
-				const double D2R = 0.01745329251994329576923690768489;
-				double num1 = System.Math.Cos(Rotation.Y * D2R);
-				double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-				double y = num1 * System.Math.Sin(Rotation.Z * D2R);
-				double z = System.Math.Sin(-Rotation.Y * D2R);
-				return new Vector3((float)x, (float)y, (float)z);
-			}
-		}
-
-		public Vector3 ForwardVector => Function.Call<Vector3>(Hash.GET_ENTITY_FORWARD_VECTOR, Handle);
-
-		public Vector3 Velocity
-		{
-			get => Function.Call<Vector3>(Hash.GET_ENTITY_VELOCITY, Handle);
-			set => Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
-		}
+		#region Positioning
 
 		public virtual Vector3 Position
 		{
@@ -98,6 +135,20 @@ namespace GTA
 		{
 			set => Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, Handle, value.X, value.Y, value.Z, 1, 1, 1);
 		}
+
+		public virtual Vector3 Rotation
+		{
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION, Handle, 2);
+			set => Function.Call(Hash.SET_ENTITY_ROTATION, Handle, value.X, value.Y, value.Z, 2, 1);
+		}
+
+		public float Heading
+		{
+			get => Function.Call<float>(Hash.GET_ENTITY_HEADING, Handle);
+			set => Function.Call<float>(Hash.SET_ENTITY_HEADING, Handle, value);
+		}
+
+		public float HeightAboveGround => Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
 
 		public Quaternion Quaternion
 		{
@@ -117,30 +168,37 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_QUATERNION, Handle, value.X, value.Y, value.Z, value.W);
 		}
 
-		public virtual Vector3 Rotation
+		public Vector3 UpVector
 		{
-			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION, Handle, 2);
-			set => Function.Call(Hash.SET_ENTITY_ROTATION, Handle, value.X, value.Y, value.Z, 2, 1);
+			get => Vector3.Cross(RightVector, ForwardVector);
 		}
 
-		public bool FreezePosition
+		public Vector3 RightVector
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-
-				unsafe
-				{
-					return address != IntPtr.Zero && (*((byte*)address.ToPointer() + 0x2E) & (1 << 1)) != 0;
-				}
+				const double D2R = 0.01745329251994329576923690768489;
+				double num1 = System.Math.Cos(Rotation.Y * D2R);
+				double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+				double y = num1 * System.Math.Sin(Rotation.Z * D2R);
+				double z = System.Math.Sin(-Rotation.Y * D2R);
+				return new Vector3((float)x, (float)y, (float)z);
 			}
-			set => Function.Call(Hash.FREEZE_ENTITY_POSITION, Handle, value);
 		}
 
-		public float Heading
+		public Vector3 ForwardVector
 		{
-			get => Function.Call<float>(Hash.GET_ENTITY_HEADING, Handle);
-			set => Function.Call<float>(Hash.SET_ENTITY_HEADING, Handle, value);
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_FORWARD_VECTOR, Handle);
+		}
+
+		public Vector3 GetOffsetInWorldCoords(Vector3 offset)
+		{
+			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
+		}
+
+		public Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
+		{
+			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
 		}
 
 		public float MaxSpeed
@@ -148,64 +206,24 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_MAX_SPEED, Handle, value);
 		}
 
-		public float HeightAboveGround => Function.Call<float>(Hash.GET_ENTITY_HEIGHT_ABOVE_GROUND, Handle);
-
-		public bool HasGravity
+		public Vector3 Velocity
 		{
-			set => Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
+			get => Function.Call<Vector3>(Hash.GET_ENTITY_VELOCITY, Handle);
+			set => Function.Call(Hash.SET_ENTITY_VELOCITY, Handle, value.X, value.Y, value.Z);
 		}
 
-		public bool HasCollision
-		{
-			get
-			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
-				{
-					return false;
-				}
+		#endregion
 
-				return SHVDN.NativeMemory.IsBitSet(address + 0x29, 1);
-			}
-			set => Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
+		#region Damaging
+
+		public bool HasBeenDamagedBy(Entity entity)
+		{
+			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, Handle, entity.Handle, 1);
 		}
 
-		public bool HasCollidedWithAnything => Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
+		#endregion
 
-		public bool IsDead => Function.Call<bool>(Hash.IS_ENTITY_DEAD, Handle);
-
-		public bool IsAlive => !IsDead;
-
-		public bool IsBulletProof
-		{
-			get
-			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(address + 392, 4);
-			}
-			set
-			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
-				{
-					return;
-				}
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 4);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 4);
-				}
-			}
-		}
+		#region Invincibility
 
 		public bool IsFireProof
 		{
@@ -234,37 +252,6 @@ namespace GTA
 				else
 				{
 					SHVDN.NativeMemory.ClearBit(address + 392, 5);
-				}
-			}
-		}
-
-		public bool IsCollisionProof
-		{
-			get
-			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(address + 392, 6);
-			}
-			set
-			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
-				{
-					return;
-				}
-
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 6);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 6);
 				}
 			}
 		}
@@ -300,6 +287,37 @@ namespace GTA
 			}
 		}
 
+		public bool IsBulletProof
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 4);
+			}
+			set
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 4);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 4);
+				}
+			}
+		}
+
 		public bool IsExplosionProof
 		{
 			get
@@ -331,9 +349,36 @@ namespace GTA
 			}
 		}
 
-		public bool IsInAir => Function.Call<bool>(Hash.IS_ENTITY_IN_AIR, Handle);
+		public bool IsCollisionProof
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
 
-		public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 6);
+			}
+			set
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 6);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 6);
+				}
+			}
+		}
 
 		public bool IsInvincible
 		{
@@ -350,10 +395,6 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
 		}
 
-		public bool IsOnFire => Function.Call<bool>(Hash.IS_ENTITY_ON_FIRE, Handle);
-
-		public bool IsOnScreen => Function.Call<bool>(Hash.IS_ENTITY_ON_SCREEN, Handle);
-
 		public bool IsOnlyDamagedByPlayer
 		{
 			get
@@ -369,9 +410,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
 		}
 
-		public bool IsUpright => Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, 30.0f);
+		#endregion
 
-		public bool IsUpsideDown => Function.Call<bool>(Hash.IS_ENTITY_UPSIDEDOWN, Handle);
+		#region Status Effects
 
 		public bool IsVisible
 		{
@@ -379,22 +420,55 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_VISIBLE, Handle, value);
 		}
 
-		public bool IsOccluded => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
-
-		public bool IsPersistent
+		public bool IsOccluded
 		{
-			get => Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
-			set
+			get => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
+		}
+
+		public bool IsOnFire => Function.Call<bool>(Hash.IS_ENTITY_ON_FIRE, Handle);
+
+		public bool IsOnScreen
+		{
+			get => Function.Call<bool>(Hash.IS_ENTITY_ON_SCREEN, Handle);
+		}
+
+		public bool IsUpright => Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, 30.0f);
+
+		public bool IsUpsideDown => Function.Call<bool>(Hash.IS_ENTITY_UPSIDEDOWN, Handle);
+
+		public bool IsInAir => Function.Call<bool>(Hash.IS_ENTITY_IN_AIR, Handle);
+
+		public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
+
+		public bool HasGravity
+		{
+			set => Function.Call(Hash.SET_ENTITY_HAS_GRAVITY, Handle, value);
+		}
+
+		#endregion
+
+		#region Collision
+
+		public bool HasCollision
+		{
+			get
 			{
-				if (value)
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				if (address == IntPtr.Zero)
 				{
-					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, true, false);
+					return false;
 				}
-				else
-				{
-					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, true);
-				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x29, 1);
 			}
+			set => Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
+		}
+
+		public bool HasCollidedWithAnything => Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
+
+		public void SetNoCollision(Entity entity, bool toggle)
+		{
+			Function.Call(Hash.SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity.Handle, !toggle);
 		}
 
 		public bool IsInArea(Vector3 minBounds, Vector3 maxBounds)
@@ -405,18 +479,9 @@ namespace GTA
 		{
 			return IsInAngledArea(pos1, pos2, angle);
 		}
-		public bool IsInAngledArea(Vector3 Origin, Vector3 Edge, float angle)
+		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle)
 		{
-			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, Origin.X, Origin.Y, Origin.Z, Edge.X, Edge.Y, Edge.Z, angle, false, true, false);
-		}
-
-		public bool IsTouching(Model model)
-		{
-			return Function.Call<bool>(Hash.IS_ENTITY_TOUCHING_MODEL, Handle, model.Hash);
-		}
-		public bool IsTouching(Entity entity)
-		{
-			return Function.Call<bool>(Hash.IS_ENTITY_TOUCHING_ENTITY, Handle, entity.Handle);
+			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, origin.X, origin.Y, origin.Z, edge.X, edge.Y, edge.Z, angle, false, true, false);
 		}
 
 		public bool IsInRangeOf(Vector3 position, float distance)
@@ -429,18 +494,41 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_ENTITY_AT_ENTITY, Handle, entity.Handle, distance.X, distance.Y, distance.Z, 0, 1, 0);
 		}
 
-		public bool HasBeenDamagedBy(Entity entity)
+		public bool IsTouching(Model model)
 		{
-			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, Handle, entity.Handle, 1);
+			return Function.Call<bool>(Hash.IS_ENTITY_TOUCHING_MODEL, Handle, model.Hash);
+		}
+		public bool IsTouching(Entity entity)
+		{
+			return Function.Call<bool>(Hash.IS_ENTITY_TOUCHING_ENTITY, Handle, entity.Handle);
 		}
 
-		public Vector3 GetOffsetInWorldCoords(Vector3 offset)
+		#endregion
+
+		#region Blips
+
+		public Blip AddBlip()
 		{
-			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS, Handle, offset.X, offset.Y, offset.Z);
+			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_ENTITY, Handle);
 		}
-		public Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
+
+		public Blip CurrentBlip => Function.Call<Blip>(Hash.GET_BLIP_FROM_ENTITY, Handle);
+
+		#endregion
+
+		#region Attaching
+
+		public void AttachTo(Entity entity, int boneIndex)
 		{
-			return Function.Call<Vector3>(Hash.GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS, Handle, worldCoords.X, worldCoords.Y, worldCoords.Z);
+			AttachTo(entity, boneIndex, Vector3.Zero, Vector3.Zero);
+		}
+		public void AttachTo(Entity entity, int boneIndex, Vector3 position, Vector3 rotation)
+		{
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, boneIndex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
+		}
+		public void Detach()
+		{
+			Function.Call(Hash.DETACH_ENTITY, Handle, 1, 1);
 		}
 
 		public bool IsAttached()
@@ -451,33 +539,15 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_ENTITY_ATTACHED_TO_ENTITY, Handle, entity.Handle);
 		}
+
 		public Entity GetEntityAttachedTo()
 		{
 			return Function.Call<Entity>(Hash.GET_ENTITY_ATTACHED_TO, Handle);
 		}
 
-		public void SetNoCollision(Entity entity, bool toggle)
-		{
-			Function.Call(Hash.SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity.Handle, !toggle);
-		}
+		#endregion
 
-		public void Detach()
-		{
-			Function.Call(Hash.DETACH_ENTITY, Handle, 1, 1);
-		}
-		public void AttachTo(Entity entity, int boneIndex)
-		{
-			AttachTo(entity, boneIndex, Vector3.Zero, Vector3.Zero);
-		}
-		public void AttachTo(Entity entity, int boneIndex, Vector3 position, Vector3 rotation)
-		{
-			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, boneIndex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
-		}
-
-		public Blip AddBlip()
-		{
-			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_ENTITY, Handle);
-		}
+		#region Forces
 
 		public void ApplyForce(Vector3 direction)
 		{
@@ -504,26 +574,16 @@ namespace GTA
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 		}
 
-		public void ResetAlpha()
-		{
-			Function.Call(Hash.RESET_ENTITY_ALPHA, Handle);
-		}
+		#endregion
 
-		public int GetBoneIndex(string boneName)
+		public void MarkAsNoLongerNeeded()
 		{
-			return Function.Call<int>(Hash.GET_ENTITY_BONE_INDEX_BY_NAME, Handle, boneName);
-		}
-		public Vector3 GetBoneCoord(int boneIndex)
-		{
-			return Function.Call<Vector3>(Hash._GET_ENTITY_BONE_COORDS, Handle, boneIndex);
-		}
-		public Vector3 GetBoneCoord(string boneName)
-		{
-			return Function.Call<Vector3>(Hash._GET_ENTITY_BONE_COORDS, Handle, GetBoneIndex(boneName));
-		}
-		public bool HasBone(string boneName)
-		{
-			return GetBoneIndex(boneName) != -1;
+			int handle = Handle;
+			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
+			unsafe
+			{
+				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
+			}
 		}
 
 		public void Delete()
@@ -534,17 +594,6 @@ namespace GTA
 			{
 				Function.Call(Hash.DELETE_ENTITY, &handle);
 			}
-			Handle = handle;
-		}
-		public void MarkAsNoLongerNeeded()
-		{
-			int handle = Handle;
-			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
-			unsafe
-			{
-				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
-			}
-			Handle = handle;
 		}
 
 		public bool Exists()
@@ -556,18 +605,13 @@ namespace GTA
 			return !(entity is null) && entity.Exists();
 		}
 
-		public bool Equals(Entity entity)
+		public bool Equals(Entity obj)
 		{
-			return !(entity is null) && Handle == entity.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
-		public override bool Equals(object entity)
+		public override bool Equals(object obj)
 		{
-			return !(entity is null) && entity.GetType() == GetType() && Equals((Entity)entity);
-		}
-
-		public override int GetHashCode()
-		{
-			return Handle.GetHashCode();
+			return !(obj is null) && obj.GetType() == GetType() && Equals((Entity)obj);
 		}
 
 		public static bool operator ==(Entity left, Entity right)
@@ -577,6 +621,11 @@ namespace GTA
 		public static bool operator !=(Entity left, Entity right)
 		{
 			return !(left == right);
+		}
+
+		public override int GetHashCode()
+		{
+			return Handle.GetHashCode();
 		}
 	}
 }

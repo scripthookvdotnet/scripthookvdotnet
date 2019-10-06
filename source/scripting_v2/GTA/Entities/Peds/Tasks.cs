@@ -86,7 +86,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, (int)(seat), speed, flag, 0);
 		}
-		public void EveryoneLeaveVehicle(Vehicle vehicle)
+		public static void EveryoneLeaveVehicle(Vehicle vehicle)
 		{
 			Function.Call(Hash.TASK_EVERYONE_LEAVE_VEHICLE, vehicle.Handle);
 		}

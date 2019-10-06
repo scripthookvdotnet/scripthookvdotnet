@@ -5,7 +5,6 @@
 
 using GTA.Math;
 using GTA.Native;
-using System.Runtime.InteropServices;
 
 namespace GTA
 {
@@ -22,7 +21,7 @@ namespace GTA
 				Result = Function.Call<int>(Hash._GET_RAYCAST_RESULT, handle, &hitSomething, hitCoords, surfaceNormal, &entityHandle);
 			}
 
-			DidHit = hitSomething != 0;
+			DidHitAnything = hitSomething != 0;
 			HitEntity = Entity.FromHandle(entityHandle);
 			HitCoords = hitCoords.GetResult<Vector3>();
 			SurfaceNormal = surfaceNormal.GetResult<Vector3>();
@@ -33,18 +32,14 @@ namespace GTA
 			get;
 		}
 
-		public bool DidHit
-		{
-			get;
-		}
-
 		public bool DidHitEntity
 		{
-			[return: MarshalAs(UnmanagedType.U1)]
-			get
-			{
-				return !(HitEntity is null);
-			}
+			get => !(HitEntity is null);
+		}
+
+		public bool DidHitAnything
+		{
+			get;
 		}
 
 		public Entity HitEntity

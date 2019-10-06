@@ -3,15 +3,68 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Native;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using GTA.Native;
 
 namespace GTA
 {
 	public class PedGroup : IEquatable<PedGroup>, IEnumerable<Ped>, IHandleable, IDisposable
 	{
+		public class enumerator : IEnumerator<Ped>
+		{
+			#region Fields
+			int index;
+			readonly PedGroup group;
+			#endregion
+
+			public enumerator(PedGroup group)
+			{
+				index = -2;
+				this.group = group;
+			}
+
+			public virtual Ped Current
+			{
+				get; private set;
+			}
+
+			public object Current2 => Current;
+
+			object IEnumerator.Current => Current;
+
+			public void Dispose()
+			{
+				Dispose(true);
+				GC.SuppressFinalize(this);
+			}
+			protected virtual void Dispose(bool disposing)
+			{
+			}
+
+			public virtual void Reset()
+			{
+			}
+
+			public virtual bool MoveNext()
+			{
+				if (index++ < (group.MemberCount - 1))
+				{
+					Current = index < 0 ? group.Leader : group.GetMember(index);
+
+					if (!(Current is null) && Current.Exists())
+					{
+						return true;
+					}
+
+					return MoveNext();
+				}
+
+				return false;
+			}
+		}
+
 		public PedGroup() : this(Function.Call<int>(Hash.CREATE_GROUP, 0))
 		{
 		}
@@ -22,18 +75,31 @@ namespace GTA
 
 		public void Dispose()
 		{
-			Function.Call(Native.Hash.REMOVE_GROUP, Handle);
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				Function.Call(Native.Hash.REMOVE_GROUP, Handle);
+			}
+		}
 
-		public int Handle { get; }
+		public int Handle
+		{
+			get;
+		}
 
 		public int MemberCount
 		{
 			get
 			{
 				int count, val1;
-				unsafe { Function.Call(Hash.GET_GROUP_SIZE, Handle, &val1, &count); }
+				unsafe
+				{
+					Function.Call(Hash.GET_GROUP_SIZE, Handle, &val1, &count);
+				}
 				return count;
 			}
 		}
@@ -71,6 +137,7 @@ namespace GTA
 		{
 			return ToList(includingLeader).ToArray();
 		}
+
 		public List<Ped> ToList(bool includingLeader)
 		{
 			var list = new List<Ped>();
@@ -101,13 +168,22 @@ namespace GTA
 			return !(pedGroup is null) && pedGroup.Exists();
 		}
 
-		public bool Equals(PedGroup pedGroup)
+		public bool Equals(PedGroup obj)
 		{
-			return !(pedGroup is null) && Handle == pedGroup.Handle;
+			return !(obj is null) && Handle == obj.Handle;
 		}
-		public override bool Equals(object pedGroup)
+		public override bool Equals(object obj)
 		{
-			return !(pedGroup is null) && pedGroup.GetType() == GetType() && Equals((PedGroup)pedGroup);
+			return !(obj is null) && obj.GetType() == GetType() && Equals((PedGroup)obj);
+		}
+
+		public static bool operator ==(PedGroup left, PedGroup right)
+		{
+			return left is null ? right is null : left.Equals(right);
+		}
+		public static bool operator !=(PedGroup left, PedGroup right)
+		{
+			return !(left == right);
 		}
 
 		public override int GetHashCode()
@@ -115,50 +191,15 @@ namespace GTA
 			return Handle;
 		}
 
-		public class enumerator : IEnumerator<Ped>
+		public IEnumerator GetEnumerator2()
 		{
-			int index;
-			PedGroup group;
-
-			public enumerator(PedGroup group)
-			{
-				index = -2;
-				this.group = group;
-			}
-
-			public Ped Current { get; private set; }
-			object IEnumerator.Current => Current;
-
-			public void Reset()
-			{
-			}
-
-			public void Dispose()
-			{
-			}
-
-			public bool MoveNext()
-			{
-				if (index < (group.MemberCount - 1))
-				{
-					index++;
-					Current = index < 0 ? group.Leader : group.GetMember(index);
-
-					if (!(Current is null) && Current.Exists())
-						return true;
-
-					return MoveNext();
-				}
-
-				return false;
-			}
-		}
-
-		public IEnumerator<Ped> GetEnumerator()
-		{
-			return new enumerator(this);
+			return GetEnumerator();
 		}
 		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+		public virtual IEnumerator<Ped> GetEnumerator()
 		{
 			return new enumerator(this);
 		}
