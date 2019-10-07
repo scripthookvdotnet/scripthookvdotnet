@@ -8,12 +8,14 @@ using GTA.Native;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 
 namespace GTA
 {
 	public static class World
 	{
-		internal static readonly string[] _weatherNames = {
+		#region Fields
+		static readonly string[] weatherNames = {
 			"EXTRASUNNY",
 			"CLEAR",
 			"CLOUDS",
@@ -30,15 +32,60 @@ namespace GTA
 			"XMAS"
 		};
 
-		static readonly System.Globalization.GregorianCalendar _gregorianCalendar = new System.Globalization.GregorianCalendar();
+		static readonly GregorianCalendar calendar = new GregorianCalendar();
+		#endregion
+
+		#region Time & Day
+
+		public static DateTime CurrentDate
+		{
+			get
+			{
+				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
+				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH);
+				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
+				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
+				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
+				int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
+
+				return new DateTime(year, month, day, hour, minute, second);
+			}
+			set
+			{
+				Function.Call(Hash.SET_CLOCK_DATE, value.Year, value.Month, value.Day);
+				Function.Call(Hash.SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
+			}
+		}
+
+		public static TimeSpan CurrentDayTime
+		{
+			get
+			{
+				int hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
+				int minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
+				int seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
+
+				return new TimeSpan(hours, minutes, seconds);
+			}
+			set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
+		}
+
+		#endregion
+
+		#region Weather & Effects
+
+		public static void SetBlackout(bool enable)
+		{
+			Function.Call(Hash._SET_BLACKOUT, enable);
+		}
 
 		public static Weather Weather
 		{
 			get
 			{
-				for (int i = 0; i < _weatherNames.Length; i++)
+				for (int i = 0; i < weatherNames.Length; i++)
 				{
-					if (Function.Call<int>(Hash._GET_CURRENT_WEATHER_TYPE) == Game.GenerateHash(_weatherNames[i]))
+					if (Function.Call<int>(Hash._GET_CURRENT_WEATHER_TYPE) == Game.GenerateHash(weatherNames[i]))
 					{
 						return (Weather)i;
 					}
@@ -50,7 +97,7 @@ namespace GTA
 			{
 				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
 				{
-					Function.Call(Hash.SET_WEATHER_TYPE_NOW, _weatherNames[(int)value]);
+					Function.Call(Hash.SET_WEATHER_TYPE_NOW, weatherNames[(int)value]);
 				}
 			}
 		}
@@ -58,9 +105,9 @@ namespace GTA
 		{
 			get
 			{
-				for (int i = 0; i < _weatherNames.Length; i++)
+				for (int i = 0; i < weatherNames.Length; i++)
 				{
-					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, _weatherNames[i]))
+					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, weatherNames[i]))
 					{
 						return (Weather)i;
 					}
@@ -78,10 +125,19 @@ namespace GTA
 					{
 						Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 					}
-					Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, Game.GenerateHash(_weatherNames[(int)value]), 0.0f);
+					Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, Game.GenerateHash(weatherNames[(int)value]), 0.0f);
 				}
 			}
 		}
+
+		public static void TransitionToWeather(Weather value, float duration)
+		{
+			if (Enum.IsDefined(value.GetType(), value) && value != Weather.Unknown)
+			{
+				Function.Call(Hash._SET_WEATHER_TYPE_OVER_TIME, weatherNames[(int)value], duration);
+			}
+		}
+
 		public static float WeatherTransition
 		{
 			get
@@ -97,59 +153,77 @@ namespace GTA
 			set => Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, 0, 0, value);
 		}
 
-		public static DateTime CurrentDate
-		{
-			get
-			{
-				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
-				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH);
-				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), _gregorianCalendar.GetDaysInMonth(year, month));
-				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-				int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
-
-				return new DateTime(year, month, day, hour, minute, second);
-			}
-			set
-			{
-				Function.Call(Hash.SET_CLOCK_DATE, value.Year, value.Month, value.Day);
-				Function.Call(Hash.SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
-			}
-		}
-		public static TimeSpan CurrentDayTime
-		{
-			get
-			{
-				int hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-				int minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-				int seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
-
-				return new TimeSpan(hours, minutes, seconds);
-			}
-			set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
-		}
-
 		public static int GravityLevel
 		{
 			set => Function.Call(Hash.SET_GRAVITY_LEVEL, value);
 		}
 
-		public static Camera RenderingCamera
+		#endregion
+
+		#region Blips
+
+		public static Vector3 GetWaypointPosition()
 		{
-			get => new Camera(Function.Call<int>(Hash.GET_RENDERING_CAM));
-			set
+			if (!Game.IsWaypointActive)
 			{
-				if (value == null)
+				return Vector3.Zero;
+			}
+
+			bool blipFound = false;
+			Vector3 position = Vector3.Zero;
+
+			int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR);
+			for (int i = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, i); i = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
+			{
+				if (Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, i) == 4)
 				{
-					Function.Call(Hash.RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
-				}
-				else
-				{
-					value.IsActive = true;
-					Function.Call(Hash.RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
+					position = Function.Call<Vector3>(Hash.GET_BLIP_INFO_ID_COORD, i);
+					blipFound = true;
+					break;
 				}
 			}
+
+			if (blipFound)
+			{
+				bool groundFound = false;
+				float height = 0.0f;
+
+				for (int i = 800; i >= 0; i -= 50)
+				{
+					unsafe
+					{
+						if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, (float)i, &height))
+						{
+							groundFound = true;
+							position.Z = height;
+							break;
+						}
+					}
+
+					Script.Wait(100);
+				}
+
+				if (!groundFound)
+				{
+					position.Z = 1000.0f;
+				}
+			}
+
+			return position;
 		}
+
+		public static Blip CreateBlip(Vector3 position)
+		{
+			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
+		}
+		public static Blip CreateBlip(Vector3 position, float radius)
+		{
+			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
+		}
+
+		#endregion
+
+		#region Entities
 
 		public static Ped[] GetAllPeds()
 		{
@@ -297,6 +371,291 @@ namespace GTA
 
 		}
 
+		public static Ped CreatePed(Model model, Vector3 position)
+		{
+			return CreatePed(model, position, 0.0f);
+		}
+		public static Ped CreatePed(Model model, Vector3 position, float heading)
+		{
+			if (!model.IsPed || !model.Request(1000))
+			{
+				return null;
+			}
+
+			return Function.Call<Ped>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+		}
+		public static Ped CreateRandomPed(Vector3 position)
+		{
+			return Function.Call<Ped>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z);
+		}
+
+		public static Vehicle CreateVehicle(Model model, Vector3 position)
+		{
+			return CreateVehicle(model, position, 0.0f);
+		}
+		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading)
+		{
+			if (!model.IsVehicle || !model.Request(1000))
+			{
+				return null;
+			}
+
+			return Function.Call<Vehicle>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+		}
+
+		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
+		{
+			if (placeOnGround)
+			{
+				position.Z = GetGroundHeight(position);
+			}
+
+			if (!model.Request(1000))
+			{
+				return null;
+			}
+
+			return Function.Call<Prop>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+		}
+		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
+		{
+			Prop p = CreateProp(model, position, dynamic, placeOnGround);
+
+			if (p == null)
+			{
+				return null;
+			}
+
+			p.Rotation = rotation;
+
+			return p;
+		}
+
+		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
+		{
+			if (!model.Request(1000))
+			{
+				return null;
+			}
+
+			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, (int)type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+			if (handle == 0)
+			{
+				return null;
+			}
+
+			return new Prop(handle);
+		}
+		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
+		{
+			if (!model.Request(1000))
+			{
+				return null;
+			}
+
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP, (int)type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
+			if (handle == 0)
+			{
+				return null;
+			}
+
+			return new Pickup(handle);
+		}
+		public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
+		{
+			if (!model.Request(1000))
+			{
+				return null;
+			}
+
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, (int)type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
+			if (handle == 0)
+			{
+				return null;
+			}
+
+			return new Pickup(handle);
+		}
+
+		#endregion
+
+		#region Cameras
+
+		public static void DestroyAllCameras()
+		{
+			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
+		}
+
+		public static Camera CreateCamera(Vector3 position, Vector3 rotation, float fov)
+		{
+			return Function.Call<Camera>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
+		}
+
+		public static Camera RenderingCamera
+		{
+			get => new Camera(Function.Call<int>(Hash.GET_RENDERING_CAM));
+			set
+			{
+				if (value == null)
+				{
+					Function.Call(Hash.RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
+				}
+				else
+				{
+					value.IsActive = true;
+					Function.Call(Hash.RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
+				}
+			}
+		}
+
+		#endregion
+
+		#region Others
+
+		public static Rope AddRope(RopeType type, Vector3 position, Vector3 rotation, float length, float minLength, bool breakable)
+		{
+			Function.Call(Hash.ROPE_LOAD_TEXTURES);
+			return Function.Call<Rope>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, (int)type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0);
+		}
+
+		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage)
+		{
+			ShootBullet(sourcePosition, targetPosition, owner, model, damage, -1.0f);
+		}
+		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage, float speed)
+		{
+			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner.Handle, 1, 0, speed);
+		}
+
+		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake)
+		{
+			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, true, false, cameraShake);
+		}
+		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
+		{
+			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, Aubidble, Invis, cameraShake);
+		}
+		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake)
+		{
+			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, true, false, cameraShake);
+		}
+		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
+		{
+			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, Aubidble, Invis, cameraShake);
+		}
+
+		public static int AddRelationshipGroup(string groupName)
+		{
+			int handle = 0;
+			unsafe
+			{
+				Function.Call(Hash.ADD_RELATIONSHIP_GROUP, groupName, &handle);
+			};
+			return handle;
+		}
+		public static void RemoveRelationshipGroup(int group)
+		{
+			Function.Call(Hash.REMOVE_RELATIONSHIP_GROUP, group);
+		}
+		public static Relationship GetRelationshipBetweenGroups(int group1, int group2)
+		{
+			return (Relationship)Function.Call<int>(Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2);
+		}
+		public static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
+		{
+			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group1, group2);
+			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group2, group1);
+		}
+		public static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
+		{
+			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group1, group2);
+			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group2, group1);
+		}
+
+		#endregion
+
+		#region Drawing
+
+		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color)
+		{
+			DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, null, null, false);
+		}
+		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
+		{
+			InputArgument dict = new InputArgument(0), name = new InputArgument(0);
+
+			if (textueDict != null && textureName != null)
+			{
+				if (textueDict.Length > 0 && textureName.Length > 0)
+				{
+					dict = new InputArgument(textueDict);
+					name = new InputArgument(textureName);
+				}
+			}
+
+			Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
+		}
+		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
+		{
+			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
+		}
+		public static void DrawSpotLight(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+		{
+			Function.Call(Hash.DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+		}
+		public static void DrawSpotLightWithShadow(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
+		{
+			Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
+		}
+
+		#endregion
+
+		#region Raycasting
+
+		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options)
+		{
+			return Raycast(source, target, options, null);
+		}
+		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity)
+		{
+			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+		}
+		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options)
+		{
+			return Raycast(source, direction, maxDistance, options, null);
+		}
+		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity)
+		{
+			Vector3 target = source + (direction * maxDistance);
+			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+		}
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options)
+		{
+			return RaycastCapsule(source, target, radius, options, null);
+		}
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity)
+		{
+			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+		}
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options)
+		{
+			return RaycastCapsule(source, direction, maxDistance, radius, options, null);
+		}
+		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity)
+		{
+			Vector3 target = source + (direction * maxDistance);
+			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+		}
+
+		public static RaycastResult GetCrosshairCoordinates()
+		{
+			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000.0f, IntersectOptions.Everything);
+		}
+
+		#endregion
+
+		#region Positioning
+
 		public static float GetDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
@@ -319,60 +678,6 @@ namespace GTA
 			}
 
 			return resultArg;
-		}
-
-		public static Vector3 GetWaypointPosition()
-		{
-			if (!Game.IsWaypointActive)
-			{
-				return Vector3.Zero;
-			}
-
-			bool blipFound = false;
-			Vector3 position = Vector3.Zero;
-
-			int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR);
-			for (int i = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, i); i = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
-			{
-				if (Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, i) == 4)
-				{
-					position = Function.Call<Vector3>(Hash.GET_BLIP_INFO_ID_COORD, i);
-					blipFound = true;
-					break;
-				}
-			}
-
-			if (blipFound)
-			{
-				bool groundFound = false;
-				float height = 0.0f;
-
-				for (int i = 800; i >= 0; i -= 50)
-				{
-					unsafe
-					{
-						if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, (float)i, &height))
-						{
-							groundFound = true;
-							position.Z = height;
-							break;
-						}
-					}
-
-					Script.Wait(100);
-				}
-
-				if (!groundFound)
-				{
-					position.Z = 1000.0f;
-				}
-			}
-
-			return position;
-		}
-		public static RaycastResult GetCrosshairCoordinates()
-		{
-			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000.0f, IntersectOptions.Everything);
 		}
 
 		public static Vector3 GetSafeCoordForPed(Vector3 position)
@@ -673,269 +978,6 @@ namespace GTA
 			return Function.Call<string>(Hash.GET_STREET_NAME_FROM_HASH_KEY, streetHash);
 		}
 
-		public static Ped CreatePed(Model model, Vector3 position)
-		{
-			return CreatePed(model, position, 0.0f);
-		}
-		public static Ped CreatePed(Model model, Vector3 position, float heading)
-		{
-			if (!model.IsPed || !model.Request(1000))
-			{
-				return null;
-			}
-
-			return Function.Call<Ped>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
-		}
-		public static Ped CreateRandomPed(Vector3 position)
-		{
-			return Function.Call<Ped>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z);
-		}
-
-		public static Vehicle CreateVehicle(Model model, Vector3 position)
-		{
-			return CreateVehicle(model, position, 0.0f);
-		}
-		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading)
-		{
-			if (!model.IsVehicle || !model.Request(1000))
-			{
-				return null;
-			}
-
-			return Function.Call<Vehicle>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
-		}
-
-		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
-		{
-			if (placeOnGround)
-			{
-				position.Z = GetGroundHeight(position);
-			}
-
-			if (!model.Request(1000))
-			{
-				return null;
-			}
-
-			return Function.Call<Prop>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
-		}
-		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
-		{
-			Prop p = CreateProp(model, position, dynamic, placeOnGround);
-
-			if (p == null)
-			{
-				return null;
-			}
-
-			p.Rotation = rotation;
-
-			return p;
-		}
-
-		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
-		{
-			if (!model.Request(1000))
-			{
-				return null;
-			}
-
-			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, (int)type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new Prop(handle);
-		}
-		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
-		{
-			if (!model.Request(1000))
-			{
-				return null;
-			}
-
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP, (int)type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new Pickup(handle);
-		}
-		public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
-		{
-			if (!model.Request(1000))
-			{
-				return null;
-			}
-
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, (int)type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new Pickup(handle);
-		}
-
-		public static Blip CreateBlip(Vector3 position)
-		{
-			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
-		}
-		public static Blip CreateBlip(Vector3 position, float radius)
-		{
-			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
-		}
-
-		public static Camera CreateCamera(Vector3 position, Vector3 rotation, float fov)
-		{
-			return Function.Call<Camera>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
-		}
-
-		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage)
-		{
-			ShootBullet(sourcePosition, targetPosition, owner, model, damage, -1.0f);
-		}
-		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage, float speed)
-		{
-			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner.Handle, 1, 0, speed);
-		}
-
-		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake)
-		{
-			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, true, false, cameraShake);
-		}
-		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
-		{
-			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, Aubidble, Invis, cameraShake);
-		}
-		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake)
-		{
-			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, true, false, cameraShake);
-		}
-		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
-		{
-			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, Aubidble, Invis, cameraShake);
-		}
-
-		public static Rope AddRope(RopeType type, Vector3 position, Vector3 rotation, float length, float minLength, bool breakable)
-		{
-			Function.Call(Hash.ROPE_LOAD_TEXTURES);
-			return Function.Call<Rope>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, (int)type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0);
-		}
-
-		public static void DestroyAllCameras()
-		{
-			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
-		}
-
-		public static void SetBlackout(bool enable)
-		{
-			Function.Call(Hash._SET_BLACKOUT, enable);
-		}
-
-		public static int AddRelationshipGroup(string groupName)
-		{
-			int handle = 0;
-			unsafe
-			{
-				Function.Call(Hash.ADD_RELATIONSHIP_GROUP, groupName, &handle);
-			};
-			return handle;
-		}
-		public static void RemoveRelationshipGroup(int group)
-		{
-			Function.Call(Hash.REMOVE_RELATIONSHIP_GROUP, group);
-		}
-		public static Relationship GetRelationshipBetweenGroups(int group1, int group2)
-		{
-			return (Relationship)Function.Call<int>(Hash.GET_RELATIONSHIP_BETWEEN_GROUPS, group1, group2);
-		}
-		public static void SetRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-		{
-			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group1, group2);
-			Function.Call(Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group2, group1);
-		}
-		public static void ClearRelationshipBetweenGroups(Relationship relationship, int group1, int group2)
-		{
-			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group1, group2);
-			Function.Call(Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, group2, group1);
-		}
-
-		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options)
-		{
-			return Raycast(source, target, options, null);
-		}
-		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity)
-		{
-			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
-		}
-		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options)
-		{
-			return Raycast(source, direction, maxDistance, options, null);
-		}
-		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity)
-		{
-			Vector3 target = source + (direction * maxDistance);
-			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
-		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options)
-		{
-			return RaycastCapsule(source, target, radius, options, null);
-		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity)
-		{
-			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
-		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options)
-		{
-			return RaycastCapsule(source, direction, maxDistance, radius, options, null);
-		}
-		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity)
-		{
-			Vector3 target = source + (direction * maxDistance);
-			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
-		}
-
-		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color)
-		{
-			DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, null, null, false);
-		}
-		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
-		{
-			InputArgument dict = new InputArgument(0), name = new InputArgument(0);
-
-			if (textueDict != null && textureName != null)
-			{
-				if (textueDict.Length > 0 && textureName.Length > 0)
-				{
-					dict = new InputArgument(textueDict);
-					name = new InputArgument(textureName);
-				}
-			}
-
-			Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
-		}
-		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
-		{
-			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
-		}
-		public static void DrawSpotLight(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
-		{
-			Function.Call(Hash.DRAW_SPOT_LIGHT, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
-		}
-		public static void DrawSpotLightWithShadow(Vector3 pos, Vector3 dir, Color color, float distance, float brightness, float roundness, float radius, float fadeout)
-		{
-			Function.Call(Hash._DRAW_SPOT_LIGHT_WITH_SHADOW, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, color.R, color.G, color.B, distance, brightness, roundness, radius, fadeout);
-		}
-
-		public static void TransitionToWeather(Weather value, float duration)
-		{
-			if (Enum.IsDefined(value.GetType(), value) && value != Weather.Unknown)
-			{
-				Function.Call(Hash._SET_WEATHER_TYPE_OVER_TIME, _weatherNames[(int)value], duration);
-			}
-		}
+		#endregion
 	}
 }
