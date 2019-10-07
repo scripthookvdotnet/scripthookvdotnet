@@ -29,7 +29,8 @@ namespace GTA
 			"SNOW",
 			"BLIZZARD",
 			"SNOWLIGHT",
-			"XMAS"
+			"XMAS",
+			"HALLOWEEN"
 		};
 
 		static readonly GregorianCalendar calendar = new GregorianCalendar();
