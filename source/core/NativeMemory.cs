@@ -843,19 +843,25 @@ namespace SHVDN
 
 				if (doModelCheck)
 				{
-					uint v0 = *(uint*)(NativeMemory.EntityModel1Func(*(ulong*)(address + 32)));
-					uint v1 = v0 & 0xFFFF;
-					uint v2 = ((v1 ^ v0) & 0x0FFF0000 ^ v1) & 0xDFFFFFFF;
-					uint v3 = ((v2 ^ v0) & 0x10000000 ^ v2) & 0x3FFFFFFF;
-					ulong v5 = NativeMemory.EntityModel2Func((ulong)(&v3));
-
-					if (v5 == 0)
+					// Ugly workaround because function addresses are invalid on latest game patch
+					int handle = NativeMemory.AddEntityToPoolFunc(address);
+					int modelHash = *(int*)(void*)NativeFunc.Invoke(0x9F47B058362C84B5ul /*GET_ENTITY_MODEL*/, (ulong)handle);
+					if (!Array.Exists(modelHashes, x => x == modelHash))
 						return false;
 
-					foreach (int hash in modelHashes)
-						if (*(int*)(v5 + 24) == hash)
-							return true;
-					return false;
+					//uint v0 = *(uint*)(NativeMemory.EntityModel1Func(*(ulong*)(address + 32)));
+					//uint v1 = v0 & 0xFFFF;
+					//uint v2 = ((v1 ^ v0) & 0x0FFF0000 ^ v1) & 0xDFFFFFFF;
+					//uint v3 = ((v2 ^ v0) & 0x10000000 ^ v2) & 0x3FFFFFFF;
+					//ulong v5 = NativeMemory.EntityModel2Func((ulong)(&v3));
+					//
+					//if (v5 == 0)
+					//	return false;
+					//
+					//foreach (int hash in modelHashes)
+					//	if (*(int*)(v5 + 24) == hash)
+					//		return true;
+					//return false;
 				}
 
 				return true;

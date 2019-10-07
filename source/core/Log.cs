@@ -22,7 +22,14 @@ namespace SHVDN
 
 		public static void Clear()
 		{
-			try { File.WriteAllText(FilePath, string.Empty); } catch { }
+			try
+			{
+				File.WriteAllText(FilePath, string.Empty);
+			}
+			catch
+			{
+				// Ignore exceptions
+			}
 		}
 
 		public static void Message(Level level, params string[] message)
@@ -58,7 +65,10 @@ namespace SHVDN
 						}
 
 						foreach (string str in message)
+						{
 							sw.Write(str);
+						}
+
 						sw.WriteLine();
 					}
 				}
@@ -71,7 +81,8 @@ namespace SHVDN
 
 		static void WriteToConsole(Level level, params string[] message)
 		{
-			Console console = AppDomain.CurrentDomain.GetData("Console") as Console;
+			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
+
 			if (console == null)
 				return;
 
