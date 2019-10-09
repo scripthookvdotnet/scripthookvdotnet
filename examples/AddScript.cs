@@ -29,11 +29,8 @@ namespace ScriptInstance
 
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
-			if (e != null)
-			{
-
-
-			}
+			if (e == null) return
+			
 			if (e.KeyCode == Keys.T) // Create AI Script and store as AIone
 			{
 				SpawnAIone();
@@ -102,7 +99,7 @@ namespace ScriptInstance
 			{
 				AItwo.Abort();
 
-				//AItwo = null; Instead of clearing this instance i added a check to see if the old instance was runnning.
+				//AItwo = null; Instead of clearing this instance i added a check to see if the old instance had been Aborted.
 
 				GTA.UI.Notification.Show("SpawnAI: Ped(2).Abort();");
 			}
