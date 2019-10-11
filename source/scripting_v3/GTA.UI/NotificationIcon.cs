@@ -58,7 +58,7 @@ namespace GTA.UI
 		Gaymilitary,
 		Hao,
 		HitcherGirl,
-		Humandefault,
+		HumanDefault,
 		Hunter,
 		Jimmy,
 		JimmyBoston,
@@ -172,7 +172,7 @@ namespace GTA.UI
 		Tracey,
 		Trevor,
 		Wade,
-		Youtube,
-		CreatorPortraits
+		YouTube,
+		CreatorPortraits,
 	}
 }
