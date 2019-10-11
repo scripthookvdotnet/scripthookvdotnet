@@ -89,7 +89,7 @@ namespace GTA
 				else if (argument is char argChar)
 				{
 					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_EMAIL_BCON");
-					Function.PushLongString(new string(argChar, 1));
+					Function.PushLongString(argChar.ToString());
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}
 				else if (argument is float argFloat)

@@ -138,14 +138,18 @@ namespace GTA.Native
 		public InputArgument([MarshalAs(UnmanagedType.U1)] bool value) : this(value ? 1ul : 0ul)
 		{
 		}
-		public InputArgument(int value) : this((ulong)value)
+		public InputArgument(int value) : this((uint)value)
 		{
 		}
 		public InputArgument(uint value) : this((ulong)value)
 		{
 		}
-		public InputArgument(float value) : this((ulong)BitConverter.ToUInt32(BitConverter.GetBytes(value), 0))
+		public InputArgument(float value)
 		{
+			unsafe
+			{
+				data = *(uint*)&value;
+			}
 		}
 		public InputArgument(double value) : this((float)value)
 		{
@@ -154,7 +158,7 @@ namespace GTA.Native
 		{
 		}
 
-		public InputArgument(Model value) : this((ulong)value.Hash)
+		public InputArgument(Model value) : this((uint)value.Hash)
 		{
 		}
 		public InputArgument(Blip value) : this((object)value)

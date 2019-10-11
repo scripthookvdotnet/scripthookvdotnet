@@ -279,6 +279,9 @@ namespace GTA
 		Race = 309,
 		Deathmatch = 310,
 		ArmWrestling = 311,
+		/// <summary>
+		/// The default English text for this value is "Ammu-Nation with Shooting Range".
+		/// </summary>
 		AmmuNationShootingRange = 313,
 		RaceAir = 314,
 		/// <summary>
@@ -707,6 +710,9 @@ namespace GTA
 		Agatha,
 		Casino,
 		TableGames,
+		/// <summary>
+		/// The default English text for this value is "Wheel", but the text can be confusing.
+		/// </summary>
 		LuckyWheel,
 		Concierge,
 		Chips,
@@ -752,6 +758,9 @@ namespace GTA
 		Roulette00,
 		Limo,
 		AlienWeapon,
+		/// <summary>
+		/// The default English text for this value is "Enemy".
+		/// </summary>
 		Enemy2,
 	}
 }
