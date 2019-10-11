@@ -407,21 +407,19 @@ namespace GTA.Native
 			for (int i = 0; i < arguments.Length; ++i)
 				args[i] = arguments[i].data;
 
-			var task = new SHVDN.NativeFunc((ulong)hash, args);
-
-			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task);
-
 			unsafe
 			{
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args);
+
 				// The result will be null when this method is called from a thread other than the main thread
-				if (task.Result == null)
+				if (res == null)
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
 
 				var type = typeof(T);
 				if (type.IsEnum || type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
-					return NativeHelperGeneric<T>.ObjectFromNativeGeneric(task.Result);
+					return NativeHelperGeneric<T>.ObjectFromNativeGeneric(res);
 				else
-					return (T)ObjectFromNative(type, task.Result);
+					return (T)ObjectFromNative(type, res);
 			}
 		}
 		public static void Call(Hash hash, params InputArgument[] arguments)
@@ -430,9 +428,10 @@ namespace GTA.Native
 			for (int i = 0; i < arguments.Length; ++i)
 				args[i] = arguments[i].data;
 
-			var task = new SHVDN.NativeFunc((ulong)hash, args);
-
-			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task);
+			unsafe
+			{
+				SHVDN.NativeFunc.Invoke((ulong)hash, args);
+			}
 		}
 
 		internal static ulong ObjectToNative(object value)
@@ -549,94 +548,6 @@ namespace GTA.Native
 			}
 
 			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
-		}
-
-		internal static int GetUtf8CodePointSize(string str, int index)
-		{
-			uint chr = str[index];
-
-			if (chr < 0x80)
-			{
-				return 1;
-			}
-			if (chr < 0x800)
-			{
-				return 2;
-			}
-			if (chr < 0x10000)
-			{
-				return 3;
-			}
-			#region Surrogate check
-			const int HighSurrogateStart = 0xD800;
-			const int LowSurrogateStart = 0xD800;
-
-			var temp1 = (int)chr - HighSurrogateStart;
-			if (temp1 < 0 || temp1 > 0x7ff)
-			{
-				return 0;
-			}
-			// Found a high surrogate
-			if (index < str.Length - 1)
-			{
-				var temp2 = str[index + 1] - LowSurrogateStart;
-				if (temp2 >= 0 && temp2 <= 0x3ff)
-				{
-					// Found a low surrogate
-					return 4;
-				}
-
-				return 0;
-			}
-			else
-			{
-				return 0;
-			}
-			#endregion
-		}
-		internal static void PushLongString(string str, int maxLengthUtf8 = 99)
-		{
-			if (maxLengthUtf8 <= 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(maxLengthUtf8));
-			}
-
-			int size = Encoding.UTF8.GetByteCount(str);
-
-			if (size <= maxLengthUtf8)
-			{
-				Call(Hash._ADD_TEXT_COMPONENT_STRING, str);
-				return;
-			}
-
-			int currentUtf8StrLength = 0;
-			int startPos = 0;
-			int currentPos;
-
-			for (currentPos = 0; currentPos < str.Length; currentPos++)
-			{
-				int codePointSize = GetUtf8CodePointSize(str, currentPos);
-
-				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
-				{
-					Call(Hash._ADD_TEXT_COMPONENT_STRING, str.Substring(startPos, currentPos - startPos));
-
-					currentUtf8StrLength = 0;
-					startPos = currentPos;
-				}
-				else
-				{
-					currentUtf8StrLength += codePointSize;
-				}
-
-				//if the code point size is 4, additional increment is needed
-				if (codePointSize == 4)
-				{
-					currentPos++;
-				}
-			}
-
-			Call(Hash._ADD_TEXT_COMPONENT_STRING, str.Substring(startPos, str.Length - startPos));
 		}
 	}
 }

@@ -103,7 +103,7 @@ namespace GTA
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
 			Function.Call(Hash.SET_TEXT_CENTRE, Centered ? 1 : 0);
 			Function.Call(Hash._SET_TEXT_ENTRY, "CELL_EMAIL_BCON");
-			Function.PushLongString(Caption);
+			SHVDN.NativeFunc.PushLongString(Caption);
 			Function.Call(Hash._DRAW_TEXT, x, y);
 		}
 	}

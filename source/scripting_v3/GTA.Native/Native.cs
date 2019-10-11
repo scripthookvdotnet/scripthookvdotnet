@@ -372,25 +372,23 @@ namespace GTA.Native
 				args[i] = arguments[i]._data;
 			}
 
-			var task = new SHVDN.NativeFunc((ulong)hash, args);
-
-			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task);
-
 			unsafe
 			{
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args);
+
 				// The result will be null when this method is called from a thread other than the main thread
-				if (task.Result == null)
+				if (res == null)
 				{
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
 				}
 
 				if (typeof(T).IsValueType || typeof(T).IsEnum)
 				{
-					return ObjectFromNative<T>(task.Result);
+					return ObjectFromNative<T>(res);
 				}
 				else
 				{
-					return (T)(ObjectFromNative(typeof(T), task.Result));
+					return (T)ObjectFromNative(typeof(T), res);
 				}
 			}
 		}
@@ -407,9 +405,10 @@ namespace GTA.Native
 				args[i] = arguments[i]._data;
 			}
 
-			var task = new SHVDN.NativeFunc((ulong)hash, args);
-
-			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task);
+			unsafe
+			{
+				SHVDN.NativeFunc.Invoke((ulong)hash, args);
+			}
 		}
 
 		/// <summary>
@@ -538,105 +537,6 @@ namespace GTA.Native
 
 			throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
 		}
-
-		/// <summary>
-		/// Gets the UTF-8 code point size from the character of string at index.
-		/// </summary>
-		/// <returns>The UTF-8 code point size.</returns>
-		internal static int GetUtf8CodePointSize(string str, int index)
-		{
-			uint chr = str[index];
-
-			if (chr < 0x80)
-			{
-				return 1;
-			}
-			if (chr < 0x800)
-			{
-				return 2;
-			}
-			if (chr < 0x10000)
-			{
-				return 3;
-			}
-			#region Surrogate check
-			const int HighSurrogateStart = 0xD800;
-			const int LowSurrogateStart = 0xD800;
-
-			var temp1 = (int)chr - HighSurrogateStart;
-			if (temp1 < 0 || temp1 > 0x7ff)
-			{
-				return 0;
-			}
-			// Found a high surrogate
-			if (index < str.Length - 1)
-			{
-				var temp2 = str[index + 1] - LowSurrogateStart;
-				if (temp2 >= 0 && temp2 <= 0x3ff)
-				{
-					// Found a low surrogate
-					return 4;
-				}
-
-				return 0;
-			}
-			else
-			{
-				return 0;
-			}
-			#endregion
-		}
-		/// <summary>
-		/// Passes a string to the native script function <see cref="Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME"/>.
-		/// This function can process the string properly even if the string byte length in UTF-8 is more than 99 or the string contains non-ASCII characters.
-		/// </summary>
-		/// <param name="str">The string to pass to <see cref="Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME"/>.</param>
-		/// <param name="maxLengthUtf8">The max byte length per call in UTF-8.</param>
-		internal static void PushLongString(string str, int maxLengthUtf8 = 99)
-		{
-			if (maxLengthUtf8 <= 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(maxLengthUtf8));
-			}
-
-			int size = Encoding.UTF8.GetByteCount(str);
-
-			if (size <= maxLengthUtf8)
-			{
-				Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, str);
-				return;
-			}
-
-			int currentUtf8StrLength = 0;
-			int startPos = 0;
-			int currentPos;
-
-			for (currentPos = 0; currentPos < str.Length; currentPos++)
-			{
-				int codePointSize = GetUtf8CodePointSize(str, currentPos);
-
-				if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
-				{
-					Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, str.Substring(startPos, currentPos - startPos));
-
-					currentUtf8StrLength = 0;
-					startPos = currentPos;
-				}
-				else
-				{
-					currentUtf8StrLength += codePointSize;
-				}
-
-				//if the code point size is 4, additional increment is needed
-				if (codePointSize == 4)
-				{
-					currentPos++;
-				}
-			}
-
-			Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, str.Substring(startPos, str.Length - startPos));
-		}
-
 	}
 	#endregion
 

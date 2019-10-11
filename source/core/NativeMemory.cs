@@ -15,7 +15,7 @@ using static System.Runtime.InteropServices.Marshal;
 namespace SHVDN
 {
 	/// <summary>
-	/// Internal class responsible for managing all access to game memory.
+	/// Class responsible for managing all access to game memory.
 	/// </summary>
 	public static unsafe class NativeMemory
 	{

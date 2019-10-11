@@ -49,7 +49,7 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, "CELL_EMAIL_BCON");
-				Function.PushLongString(value);
+				SHVDN.NativeFunc.PushLongString(value);
 				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
 			}
 		}

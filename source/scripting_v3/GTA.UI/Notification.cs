@@ -21,7 +21,7 @@ namespace GTA.UI
 		public static int Show(string message, bool blinking = false)
 		{
 			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, SHVDN.NativeMemory.CellEmailBcon);
-			Native.Function.PushLongString(message);
+			SHVDN.NativeFunc.PushLongString(message);
 			return Function.Call<int>(Hash._DRAW_NOTIFICATION, blinking, true);
 		}
 
