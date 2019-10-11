@@ -29,6 +29,10 @@ public:
 	static void Help()
 	{
 		console->PrintInfo("~c~--- Help ---");
+		console->PrintInfo("The console accepts C# expressions as input and has full access to the scripting API. To print the result of an expression, simply add \"return\" in front of it.");
+		console->PrintInfo("You can use \"P\" as a shortcut for the player character and \"V\" for the current vehicle (without the quotes).");
+		console->PrintInfo("Example: \"return P.IsInVehicle()\" will print a boolean value indicating whether the player is currently sitting in a vehicle to the console.");
+		console->PrintInfo("~c~--- Commands ---");
 		console->PrintHelpText();
 	}
 	[SHVDN::ConsoleCommand("Print the help for a specific command")]
