@@ -829,6 +829,18 @@ namespace SHVDN
 
 				if (GetScriptAttribute(script.ScriptInstance.GetType(), "SupportURL") is string supportURL)
 					Log.Message(Log.Level.Error, "Please check the following site for support on the issue: ", supportURL);
+
+				// Show a notification with the script crash information
+				var domain = ScriptDomain.CurrentDomain;
+				if (domain != null && domain.executingScript != null)
+				{
+					unsafe
+					{
+						NativeFunc.Invoke(0x202709F4C58A0424ul /*_SET_NOTIFICATION_TEXT_ENTRY*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+						NativeFunc.PushLongString("Script \"" + script.Name + "\" ~r~crashed~s~!~n~~n~~r~" + args.ExceptionObject.GetType().Name + "~s~ " + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim());
+						NativeFunc.Invoke(0x2ED7843F8F801023ul /*_DRAW_NOTIFICATION*/, 1ul, 1ul);
+					}
+				}
 			}
 		}
 	}
