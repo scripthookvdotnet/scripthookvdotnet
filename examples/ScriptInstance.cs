@@ -4,12 +4,12 @@ using GTA;
 
 namespace ScriptInstance
 {
-	// Main Script is AutoStarted and using key press creates AI Scripts.
-	// T Key to Spawn AIone
-	// Y Key to Spawn AItwo
-	// G Key to change AIone Animation 
-	// H Key to SetWait(6) for AItwo
-	// J Key to Pause AIone
+	// Main script is auto-started and creates AI scripts using key presses.
+	// T key to spawn AIone
+	// Y key to spawn AItwo
+	// G key to change AIone animation 
+	// H key to SetWait(6) for AItwo
+	// J key to pause AIone
 
 	public class Main : Script
 	{
@@ -18,19 +18,13 @@ namespace ScriptInstance
 
 		public Main()
 		{
-			Tick += OnTick;
-
 			KeyDown += OnKeyDown;
 
 			Interval = 1000;
 		}
 
-		private void OnTick(object sender, EventArgs e) { }
-
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
-			if (e == null) return
-			
 			if (e.KeyCode == Keys.T) // Create AI Script and store as AIone
 			{
 				SpawnAIone();
@@ -47,7 +41,10 @@ namespace ScriptInstance
 					{
 						AIone.animation = "HandsUp";
 					}
-					else AIone.animation = "Jump";
+					else
+					{
+						AIone.animation = "Jump";
+					}
 
 					GTA.UI.Notification.Show("SpawnAI: Animation(" + AIone.animation + ");");
 				}
@@ -58,8 +55,14 @@ namespace ScriptInstance
 			}
 			else if (e.KeyCode == Keys.J) // Toggles Pause() for AIone
 			{
-				if (AIone.IsPaused) AIone.Resume();
-				else AIone.Pause();
+				if (AIone.IsPaused)
+				{
+					AIone.Resume();
+				}
+				else
+				{
+					AIone.Pause();
+				}
 			}
 		}
 
@@ -67,7 +70,7 @@ namespace ScriptInstance
 		{
 			if (AIone == null)
 			{
-				AIone = (AI)AddScript(typeof(AI));
+				AIone = InstantiateScript<AI>();
 
 				if (AIone != null)
 				{
@@ -78,7 +81,7 @@ namespace ScriptInstance
 			{
 				AIone.Abort();
 
-				AIone = null; // Clear Held instance to create a new script;
+				AIone = null; // Clear instance to create a new script next time
 
 				GTA.UI.Notification.Show("SpawnAI: Ped(1).Abort();");
 			}
@@ -88,7 +91,7 @@ namespace ScriptInstance
 		{
 			if (AItwo == null || !AItwo.IsRunning)
 			{
-				AItwo = (AI)AddScript(typeof(AI));
+				AItwo = InstantiateScript<AI>();
 
 				if (AItwo != null)
 				{
@@ -99,7 +102,7 @@ namespace ScriptInstance
 			{
 				AItwo.Abort();
 
-				//AItwo = null; Instead of clearing this instance i added a check to see if the old instance had been Aborted.
+				// Instead of setting AItwo to null, can also checking status with 'IsRunning'
 
 				GTA.UI.Notification.Show("SpawnAI: Ped(2).Abort();");
 			}
@@ -111,38 +114,39 @@ namespace ScriptInstance
 	{
 		public AI()
 		{
-			Aborted += Shutdown;
-
 			Tick += OnTick;
+			Aborted += OnShutdown;
 
 			Interval = 3000;
 		}
 
 		private Ped ped = null;
+		private int wait = -1;
 		public string animation = "HandsUp";
-		private int _Wait = -1;
 
 		public void SetWait(int ms)
 		{
-			if (ms > _Wait) _Wait = ms;
+			if (ms > wait)
+			{
+				wait = ms;
+			}
 		}
 
 		private void OnTick(object sender, EventArgs e)
 		{
-			if (_Wait > -1)
+			if (wait > -1)
 			{
-				Wait(_Wait);
-				_Wait = -1;
+				Wait(wait);
+				wait = -1;
 			}
 
-			if (ped == null || !ped.Exists())
+			if (ped == null)
 			{
-				Model model = new Model(PedHash.Beach01AMY);
-
-				ped = World.CreatePed(model, Game.Player.Character.Position + (GTA.Math.Vector3.RelativeFront * 3));
+				ped = World.CreatePed(PedHash.Beach01AMY, Game.Player.Character.Position + (GTA.Math.Vector3.RelativeFront * 3));
 			}
 
-			if (ped != null && ped.IsAlive) // OnTick Repeats animation if Alive.
+			// Repeat animation if alive
+			if (ped != null && ped.IsAlive)
 			{
 				if (animation == "HandsUp")
 				{
@@ -151,20 +155,14 @@ namespace ScriptInstance
 				else if (animation == "Jump")
 				{
 					ped.Task.Jump();
-
-					//Abort();
 				}
 			}
 		}
 
-		private void Shutdown(object sender, EventArgs e)
+		private void OnShutdown(object sender, EventArgs e)
 		{
-			if (ped != null) // On Abort() clears the ingame Ped
-			{
-				ped.MarkAsNoLongerNeeded();
-
-				ped.Delete();
-			}
+			// Clear pedestrian on script abort
+			ped?.Delete();
 		}
 	}
 }

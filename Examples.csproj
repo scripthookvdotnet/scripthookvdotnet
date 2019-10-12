@@ -36,10 +36,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="examples\AddScript.cs" />
     <Compile Include="examples\EuphoriaDemo.cs" />
     <Compile Include="examples\ExitVehicle.cs" />
     <Compile Include="examples\IndicatorControl.cs" />
+    <Compile Include="examples\ScriptInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="source\scripting_v3\ScriptHookVDotNet_APIv3.csproj">

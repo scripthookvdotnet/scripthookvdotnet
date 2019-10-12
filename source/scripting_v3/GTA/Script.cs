@@ -283,11 +283,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Adds a new <see cref="Script"/> to the CurrentDomain threads.
+		/// Spawns a new <see cref="Script"/> instance of the specified type.
 		/// </summary>
-		public static Script AddScript(Type scriptType)
+		public static T InstantiateScript<T>() where T : Script
 		{
-			var script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(scriptType);
+			var script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(typeof(T));
 			if (script == null)
 			{
 				return null;
@@ -295,7 +295,7 @@ namespace GTA
 
 			script.Start();
 
-			return (Script)script.ScriptInstance;
+			return (T)script.ScriptInstance;
 		}
 	}
 }
