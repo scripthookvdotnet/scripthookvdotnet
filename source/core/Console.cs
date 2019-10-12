@@ -616,41 +616,40 @@ namespace SHVDN
 		{
 			float w = (float)(width) / BASE_WIDTH;
 			float h = (float)(height) / BASE_HEIGHT;
-			float xNew = (x / BASE_WIDTH) + w * 0.5f;
-			float yNew = (y / BASE_HEIGHT) + h * 0.5f;
 
-			NativeFunc.InvokeInternal(0x3A618A217E5154F0ul /*DRAW_RECT*/, *(ulong*)&xNew, *(ulong*)&yNew, *(ulong*)&w, *(ulong*)&h, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
+			NativeFunc.InvokeInternal(0x3A618A217E5154F0ul /*DRAW_RECT*/,
+				(x / BASE_WIDTH) + w * 0.5f,
+				(y / BASE_HEIGHT) + h * 0.5f,
+				w, h,
+				color.R, color.G, color.B, color.A);
 		}
 		static unsafe void DrawText(float x, float y, string text, Color color)
 		{
-			float xNew = (x / BASE_WIDTH);
-			float yNew = (y / BASE_HEIGHT);
-
-			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul); // Chalet London :>
-			NativeFunc.InvokeInternal(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
-			NativeFunc.InvokeInternal(0xBE6B23FFA53FB442ul /*SET_TEXT_COLOUR*/, (ulong)color.R, (ulong)color.G, (ulong)color.B, (ulong)color.A);
-			NativeFunc.InvokeInternal(0x25FBB336DF1804CBul /*BEGIN_TEXT_COMMAND_DISPLAY_TEXT*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DA /*SET_TEXT_FONT*/, 0); // Chalet London :>
+			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /*SET_TEXT_SCALE*/, 0.35f, 0.35f);
+			NativeFunc.InvokeInternal(0xBE6B23FFA53FB442 /*SET_TEXT_COLOUR*/, color.R, color.G, color.B, color.A);
+			NativeFunc.InvokeInternal(0x25FBB336DF1804CB /*BEGIN_TEXT_COMMAND_DISPLAY_TEXT*/, NativeMemory.CellEmailBcon);
 			NativeFunc.PushLongString(text);
-			NativeFunc.InvokeInternal(0xCD015E5BB0D96A57ul /*END_TEXT_COMMAND_DISPLAY_TEXT*/, *(ulong*)&xNew, *(ulong*)&yNew);
+			NativeFunc.InvokeInternal(0xCD015E5BB0D96A57 /*END_TEXT_COMMAND_DISPLAY_TEXT*/, (x / BASE_WIDTH), (y / BASE_HEIGHT));
 		}
 
 		static unsafe void DisableControlsThisFrame()
 		{
-			NativeFunc.InvokeInternal(0x5F4B6931816E599Bul /*DISABLE_ALL_CONTROL_ACTIONS*/, 0ul);
+			NativeFunc.InvokeInternal(0x5F4B6931816E599B /*DISABLE_ALL_CONTROL_ACTIONS*/, 0);
 
 			// LookLeftRight .. LookRightOnly
 			for (int i = 1; i <= 6; i++)
-				NativeFunc.InvokeInternal(0x351220255D64C155ul /*ENABLE_CONTROL_ACTION*/, 0ul, (ulong)i, 0ul);
+				NativeFunc.InvokeInternal(0x351220255D64C155 /*ENABLE_CONTROL_ACTION*/, 0, i, 0);
 		}
 
 		static unsafe float GetTextLength(string text)
 		{
-			NativeFunc.InvokeInternal(0x54CE8AC98E120CABul /*_BEGIN_TEXT_COMMAND_WIDTH*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+			NativeFunc.InvokeInternal(0x54CE8AC98E120CAB /*_BEGIN_TEXT_COMMAND_GET_WIDTH*/, NativeMemory.CellEmailBcon);
 			NativeFunc.PushLongString(text);
-			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DAul /*SET_TEXT_FONT*/, 0ul);
-			NativeFunc.InvokeInternal(0x07C837F9A01C34C9ul /*SET_TEXT_SCALE*/, 0x3eb33333ul /*0.35f*/, 0x3eb33333ul /*0.35f*/);
+			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DA /*SET_TEXT_FONT*/, 0);
+			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /*SET_TEXT_SCALE*/, 0.35f, 0.35f);
 
-			return *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67ul /*_END_TEXT_COMMAND_GET_WIDTH*/, 1ul);
+			return *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /*_END_TEXT_COMMAND_GET_WIDTH*/, true);
 		}
 	}
 

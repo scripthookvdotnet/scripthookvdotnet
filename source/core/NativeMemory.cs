@@ -975,7 +975,7 @@ namespace SHVDN
 				{
 					// Ugly workaround because function addresses are invalid on latest game patch
 					int handle = NativeMemory.AddEntityToPoolFunc(address);
-					int modelHash = *(int*)(void*)NativeFunc.Invoke(0x9F47B058362C84B5ul /*GET_ENTITY_MODEL*/, (ulong)handle);
+					int modelHash = *(int*)NativeFunc.Invoke(0x9F47B058362C84B5 /*GET_ENTITY_MODEL*/, handle);
 					if (!Array.Exists(modelHashes, x => x == modelHash))
 						return false;
 

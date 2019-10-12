@@ -836,9 +836,9 @@ namespace SHVDN
 				{
 					unsafe
 					{
-						NativeFunc.Invoke(0x202709F4C58A0424ul /*_SET_NOTIFICATION_TEXT_ENTRY*/, (ulong)NativeMemory.CellEmailBcon.ToInt64());
+						NativeFunc.Invoke(0x202709F4C58A0424 /*BEGIN_TEXT_COMMAND_THEFEED_POST*/, NativeMemory.CellEmailBcon);
 						NativeFunc.PushLongString("Script \"" + script.Name + "\" ~r~crashed~s~!~n~~n~~r~" + args.ExceptionObject.GetType().Name + "~s~ " + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim());
-						NativeFunc.Invoke(0x2ED7843F8F801023ul /*_DRAW_NOTIFICATION*/, 1ul, 1ul);
+						NativeFunc.Invoke(0x2ED7843F8F801023 /*END_TEXT_COMMAND_THEFEED_POST_TICKER*/, true, true);
 					}
 				}
 			}

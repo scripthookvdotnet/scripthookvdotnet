@@ -44,14 +44,11 @@ namespace SHVDN
 		{
 			internal ulong Hash;
 			internal ulong[] Arguments;
-			internal ulong* Result;
+			internal unsafe ulong* Result;
 
 			public void Run()
 			{
-				NativeInit(Hash);
-				foreach (var arg in Arguments)
-					NativePush64(arg);
-				Result = NativeCall();
+				Result = InvokeInternal(Hash, Arguments);
 			}
 		}
 
@@ -169,6 +166,53 @@ namespace SHVDN
 		}
 
 		/// <summary>
+		/// Helper function that converts an array of primitive values to a native stack.
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		static ulong[] ConvertPrimitiveArguments(object[] args)
+		{
+			var result = new ulong[args.Length];
+			for (int i = 0; i < args.Length; ++i)
+			{
+				if (args[i] is bool valueBool)
+				{
+					result[i] = valueBool ? 1ul : 0ul;
+					continue;
+				}
+				if (args[i] is int valueInt32)
+				{
+					result[i] = (ulong)valueInt32;
+					continue;
+				}
+				if (args[i] is ulong valueUInt64)
+				{
+					result[i] = valueUInt64;
+					continue;
+				}
+				if (args[i] is float valueFloat)
+				{
+					result[i] = *(ulong*)&valueFloat;
+					continue;
+				}
+				if (args[i] is IntPtr valueIntPtr)
+				{
+					result[i] = (ulong)valueIntPtr.ToInt64();
+					continue;
+				}
+				if (args[i] is string valueString)
+				{
+					result[i] = (ulong)ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
+					continue;
+				}
+
+				throw new ArgumentException("Unknown primitive type in native argument list", nameof(args));
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Executes a script function inside the current script domain.
 		/// </summary>
 		/// <param name="hash">The function has to call.</param>
@@ -176,7 +220,7 @@ namespace SHVDN
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* Invoke(ulong hash, params ulong[] args)
 		{
-			var domain = SHVDN.ScriptDomain.CurrentDomain;
+			var domain = ScriptDomain.CurrentDomain;
 			if (domain == null)
 			{
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
@@ -186,6 +230,10 @@ namespace SHVDN
 			domain.ExecuteTask(task);
 
 			return task.Result;
+		}
+		public static ulong* Invoke(ulong hash, params object[] args)
+		{
+			return Invoke(hash, ConvertPrimitiveArguments(args));
 		}
 
 		/// <summary>
@@ -200,6 +248,10 @@ namespace SHVDN
 			foreach (var arg in args)
 				NativePush64(arg);
 			return NativeCall();
+		}
+		public static ulong* InvokeInternal(ulong hash, params object[] args)
+		{
+			return InvokeInternal(hash, ConvertPrimitiveArguments(args));
 		}
 	}
 }
