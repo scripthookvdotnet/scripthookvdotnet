@@ -192,8 +192,8 @@
     DependsOnTargets="$(CoreCompileDependsOn)">
     <!-- Keep track of the generated intermediate files so that they are properly cleaned on rebuilds -->
     <ItemGroup>
-      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).cpp.netmodule;"/>
-      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).csharp.netmodule"/>
+      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).cpp.netmodule;" />
+      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).csharp.netmodule" />
     </ItemGroup>
     <PropertyGroup>
       <GenerateDebugInformation>true</GenerateDebugInformation>
