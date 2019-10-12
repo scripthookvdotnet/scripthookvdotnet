@@ -59,9 +59,9 @@ namespace GTA.UI
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
 		public static int Show(string message, bool blinking = false)
 		{
-			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, SHVDN.NativeMemory.CellEmailBcon);
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(message);
-			return Function.Call<int>(Hash._DRAW_NOTIFICATION, blinking, true);
+			return Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER, blinking, true);
 		}
 
 		/// <summary>
@@ -78,11 +78,11 @@ namespace GTA.UI
 		{
 			string iconName = iconNames[(int)icon];
 
-			Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, SHVDN.NativeMemory.CellEmailBcon);
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(message);
-			Function.Call(Hash._SET_NOTIFICATION_MESSAGE_2, iconName, iconName, fadeIn, 1, sender, subject);
+			Function.Call(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, iconName, iconName, fadeIn, 1, sender, subject);
 
-			return Function.Call<int>(Hash._DRAW_NOTIFICATION_4, blinking, true);
+			return Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER, blinking, true);
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace GTA.UI
 		/// <param name="handle">The handle of the <see cref="Notification"/> to hide.</param>
 		public static void Hide(int handle)
 		{
-			Function.Call(Hash._REMOVE_NOTIFICATION, handle);
+			Function.Call(Hash.THEFEED_REMOVE_ITEM, handle);
 		}
 	}
 }
