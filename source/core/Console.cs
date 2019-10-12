@@ -638,17 +638,16 @@ namespace SHVDN
 			NativeFunc.InvokeInternal(0x5F4B6931816E599B /*DISABLE_ALL_CONTROL_ACTIONS*/, 0);
 
 			// LookLeftRight .. LookRightOnly
-			for (int i = 1; i <= 6; i++)
+			for (ulong i = 1; i <= 6; i++)
 				NativeFunc.InvokeInternal(0x351220255D64C155 /*ENABLE_CONTROL_ACTION*/, 0, i, 0);
 		}
 
 		static unsafe float GetTextLength(string text)
 		{
-			NativeFunc.InvokeInternal(0x54CE8AC98E120CAB /*_BEGIN_TEXT_COMMAND_GET_WIDTH*/, NativeMemory.CellEmailBcon);
-			NativeFunc.PushLongString(text);
 			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DA /*SET_TEXT_FONT*/, 0);
 			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /*SET_TEXT_SCALE*/, 0.35f, 0.35f);
-
+			NativeFunc.InvokeInternal(0x54CE8AC98E120CAB /*_BEGIN_TEXT_COMMAND_GET_WIDTH*/, NativeMemory.CellEmailBcon);
+			NativeFunc.PushLongString(text);
 			return *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /*_END_TEXT_COMMAND_GET_WIDTH*/, true);
 		}
 	}

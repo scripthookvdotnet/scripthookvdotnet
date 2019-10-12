@@ -180,6 +180,11 @@ namespace SHVDN
 					result[i] = valueBool ? 1ul : 0ul;
 					continue;
 				}
+				if (args[i] is byte valueByte)
+				{
+					result[i] = (ulong)valueByte;
+					continue;
+				}
 				if (args[i] is int valueInt32)
 				{
 					result[i] = (ulong)valueInt32;
