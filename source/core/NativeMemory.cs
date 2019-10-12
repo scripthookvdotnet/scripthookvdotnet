@@ -101,17 +101,17 @@ namespace SHVDN
 			byte* address;
 
 			// Get relative address and add it to the instruction address.
+			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
+			GetPtfxAddressFunc = GetDelegateForFunctionPointer<GetHandleAddressFuncDelegate>(
+				new IntPtr(*(int*)(address) + address + 4));
+
 			address = FindPattern("\xE8\x00\x00\x00\x00\x48\x8B\xD8\x48\x85\xC0\x74\x2E\x48\x83\x3D", "x????xxxxxxxxxxx");
-			GetEntityAddressFunc = GetDelegateForFunctionPointer<GetEntityAddressFuncDelegate>(
+			GetEntityAddressFunc = GetDelegateForFunctionPointer<GetHandleAddressFuncDelegate>(
 				new IntPtr(*(int*)(address + 1) + address + 5));
 
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
-			GetPlayerAddressFunc = GetDelegateForFunctionPointer<GetPlayerAddressFuncDelegate>(
+			GetPlayerAddressFunc = GetDelegateForFunctionPointer<GetHandleAddressFuncDelegate>(
 				new IntPtr(*(int*)(address + 3) + address + 7));
-
-			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
-			GetPtfxAddressFunc = GetDelegateForFunctionPointer<GetPtfxAddressFuncDelegate>(
-				new IntPtr(*(int*)(address) + address + 4));
 
 			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
 			AddEntityToPoolFunc = GetDelegateForFunctionPointer<AddEntityToPoolFuncDelegate>(
@@ -1253,25 +1253,19 @@ namespace SHVDN
 
 		#region -- Entity Addresses --
 
-		delegate ulong GetPtfxAddressFuncDelegate(int handle);
-		static GetPtfxAddressFuncDelegate GetPtfxAddressFunc;
+		delegate ulong GetHandleAddressFuncDelegate(int handle);
+		static GetHandleAddressFuncDelegate GetPtfxAddressFunc;
+		static GetHandleAddressFuncDelegate GetEntityAddressFunc;
+		static GetHandleAddressFuncDelegate GetPlayerAddressFunc;
 
 		public static IntPtr GetPtfxAddress(int handle)
 		{
 			return new IntPtr((long)GetPtfxAddressFunc(handle));
 		}
-
-		delegate ulong GetEntityAddressFuncDelegate(int handle);
-		static GetEntityAddressFuncDelegate GetEntityAddressFunc;
-
 		public static IntPtr GetEntityAddress(int handle)
 		{
 			return new IntPtr((long)GetEntityAddressFunc(handle));
 		}
-
-		delegate ulong GetPlayerAddressFuncDelegate(int handle);
-		static GetPlayerAddressFuncDelegate GetPlayerAddressFunc;
-
 		public static IntPtr GetPlayerAddress(int handle)
 		{
 			return new IntPtr((long)GetPlayerAddressFunc(handle));

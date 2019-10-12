@@ -7,7 +7,7 @@
 
 void GTA::Notification::Hide()
 {
-	SHVDN::NativeFunc::Invoke(0xBE4390CB40B3E627ull /*_REMOVE_NOTIFICATION*/, _handle);
+	SHVDN::NativeFunc::Invoke(0xBE4390CB40B3E627 /*THEFEED_REMOVE_ITEM*/, _handle);
 }
 
 GTA::Notification::Notification(int handle) : _handle(handle)
@@ -20,9 +20,9 @@ GTA::Notification ^GTA::UI::Notify(String ^message)
 }
 GTA::Notification ^GTA::UI::Notify(String ^message, bool blinking)
 {
-	SHVDN::NativeFunc::Invoke(0x202709F4C58A0424ull /*BEGIN_TEXT_COMMAND_THEFEED_POST*/, SHVDN::NativeMemory::CellEmailBcon);
+	SHVDN::NativeFunc::Invoke(0x202709F4C58A0424 /*BEGIN_TEXT_COMMAND_THEFEED_POST*/, SHVDN::NativeMemory::CellEmailBcon);
 	SHVDN::NativeFunc::PushLongString(message);
-	auto res = SHVDN::NativeFunc::Invoke(0x2ED7843F8F801023ull /*END_TEXT_COMMAND_THEFEED_POST_TICKER*/, blinking, true);
+	auto res = SHVDN::NativeFunc::Invoke(0x2ED7843F8F801023 /*END_TEXT_COMMAND_THEFEED_POST_TICKER*/, blinking, true);
 
 	return res != nullptr ? gcnew Notification(*(int*)res) : nullptr;
 }
@@ -33,9 +33,9 @@ void GTA::UI::ShowSubtitle(String ^message)
 }
 void GTA::UI::ShowSubtitle(String ^message, int duration)
 {
-	SHVDN::NativeFunc::Invoke(0xB87A37EEB7FAA67Dull /*BEGIN_TEXT_COMMAND_PRINT*/, SHVDN::NativeMemory::CellEmailBcon);
+	SHVDN::NativeFunc::Invoke(0xB87A37EEB7FAA67D /*BEGIN_TEXT_COMMAND_PRINT*/, SHVDN::NativeMemory::CellEmailBcon);
 	SHVDN::NativeFunc::PushLongString(message);
-	SHVDN::NativeFunc::Invoke(0x9D77056A530643F6ull /*END_TEXT_COMMAND_PRINT*/, duration, true);
+	SHVDN::NativeFunc::Invoke(0x9D77056A530643F6 /*END_TEXT_COMMAND_PRINT*/, duration, true);
 }
 
 void GTA::UI::ShowHelpMessage(String ^message)
@@ -52,30 +52,30 @@ void GTA::UI::ShowHelpMessage(String ^message, int duration)
 }
 void GTA::UI::ShowHelpMessage(String ^message, int duration, bool sound)
 {
-	SHVDN::NativeFunc::Invoke(0x8509B634FBE7DA11ull /*BEGIN_TEXT_COMMAND_DISPLAY_HELP*/, SHVDN::NativeMemory::String);
+	SHVDN::NativeFunc::Invoke(0x8509B634FBE7DA11 /*BEGIN_TEXT_COMMAND_DISPLAY_HELP*/, SHVDN::NativeMemory::String);
 	SHVDN::NativeFunc::PushLongString(message);
-	SHVDN::NativeFunc::Invoke(0x238FFE5C7B0498A6ull /*END_TEXT_COMMAND_DISPLAY_HELP*/, 0, false, sound, duration);
+	SHVDN::NativeFunc::Invoke(0x238FFE5C7B0498A6 /*END_TEXT_COMMAND_DISPLAY_HELP*/, 0, false, sound, duration);
 }
 
 bool GTA::UI::IsHudComponentActive(HudComponent component)
 {
-	auto res = SHVDN::NativeFunc::Invoke(0xBC4C9EA5391ECC0Dull /*IS_HUD_COMPONENT_ACTIVE*/, (UInt64)component);
+	auto res = SHVDN::NativeFunc::Invoke(0xBC4C9EA5391ECC0D /*IS_HUD_COMPONENT_ACTIVE*/, (UInt64)component);
 	return res != nullptr && *res != 0;
 }
 void GTA::UI::ShowHudComponentThisFrame(HudComponent component)
 {
-	SHVDN::NativeFunc::Invoke(0x0B4DF1FA60C0E664ull /*SHOW_HUD_COMPONENT_THIS_FRAME*/, (UInt64)component);
+	SHVDN::NativeFunc::Invoke(0x0B4DF1FA60C0E664 /*SHOW_HUD_COMPONENT_THIS_FRAME*/, (UInt64)component);
 }
 void GTA::UI::HideHudComponentThisFrame(HudComponent component)
 {
-	SHVDN::NativeFunc::Invoke(0x6806C51AD12B83B8ull /*HIDE_HUD_COMPONENT_THIS_FRAME*/, (UInt64)component);
+	SHVDN::NativeFunc::Invoke(0x6806C51AD12B83B8 /*HIDE_HUD_COMPONENT_THIS_FRAME*/, (UInt64)component);
 }
 
 //Point GTA::UI::WorldToScreen(Math::Vector3 position)
 //{
 //	float pointX, pointY;
 //
-//	auto res = SHVDN::NativeFunc::Invoke(0x34E82F05DF2974F5ull /*_WORLD3D_TO_SCREEN2D*/, (UInt64)*(UInt32*)&position.X, (UInt64)*(UInt32*)&position.Y, (UInt64)*(UInt32*)&position.Z, (UInt64)&pointX, (UInt64)&pointY);
+//	auto res = SHVDN::NativeFunc::Invoke(0x34E82F05DF2974F5 /*_WORLD3D_TO_SCREEN2D*/, (UInt64)*(UInt32*)&position.X, (UInt64)*(UInt32*)&position.Y, (UInt64)*(UInt32*)&position.Z, (UInt64)&pointX, (UInt64)&pointY);
 //	if (res != nullptr && *res != 0)
 //		return Point(static_cast<int>(pointX * UI::WIDTH), static_cast<int>(pointY * UI::HEIGHT));
 //	else
