@@ -478,7 +478,7 @@ namespace SHVDN
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{
 			if (ptr == IntPtr.Zero)
-				return null;
+				return string.Empty;
 
 			var data = (byte*)ptr.ToPointer();
 

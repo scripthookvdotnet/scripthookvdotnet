@@ -13,49 +13,47 @@ using GTA.Math;
 
 namespace GTA.Native
 {
-	internal static class NativeHelper
+	[StructLayout(LayoutKind.Explicit, Size = 0x18)]
+	internal struct NativeVector3
 	{
-		[StructLayout(LayoutKind.Explicit, Size = 0x18)]
-		internal struct NativeVector3
+		[FieldOffset(0x00)]
+		internal float X;
+		[FieldOffset(0x08)]
+		internal float Y;
+		[FieldOffset(0x10)]
+		internal float Z;
+
+		internal NativeVector3(float x, float y, float z)
 		{
-			[FieldOffset(0x00)]
-			internal float X;
-			[FieldOffset(0x08)]
-			internal float Y;
-			[FieldOffset(0x10)]
-			internal float Z;
-
-			internal NativeVector3(float x, float y, float z)
-			{
-				X = x;
-				Y = y;
-				Z = z;
-			}
-
-			public static explicit operator Vector2(NativeVector3 val) => new Vector2(val.X, val.Y);
-			public static explicit operator Vector3(NativeVector3 val) => new Vector3(val.X, val.Y, val.Z);
+			X = x;
+			Y = y;
+			Z = z;
 		}
+
+		public static explicit operator Vector2(NativeVector3 val) => new Vector2(val.X, val.Y);
+		public static explicit operator Vector3(NativeVector3 val) => new Vector3(val.X, val.Y, val.Z);
 	}
-	internal unsafe static class NativeHelperGeneric<T>
+
+	internal unsafe static class NativeHelper<T>
 	{
-		static class CastCache<From>
+		static class CastCache<TFrom>
 		{
-			internal static readonly Func<From, T> Convert;
+			internal static readonly Func<TFrom, T> Convert;
 
 			static CastCache()
 			{
-				var paramExp = Expression.Parameter(typeof(From));
+				var paramExp = Expression.Parameter(typeof(TFrom));
 				var convertExp = Expression.Convert(paramExp, typeof(T));
-				Convert = Expression.Lambda<Func<From, T>>(convertExp, paramExp).Compile();
+				Convert = Expression.Lambda<Func<TFrom, T>>(convertExp, paramExp).Compile();
 			}
 		}
 
-		private static readonly Func<IntPtr, T> _ptrToStrFunc;
+		static readonly Func<IntPtr, T> _ptrToStrFunc;
 
-		static NativeHelperGeneric()
+		static NativeHelper()
 		{
 			var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
-				new Type[] { typeof(IntPtr) }, typeof(NativeHelperGeneric<T>), true);
+				new Type[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
 
 			ILGenerator generator = ptrToStrMethod.GetILGenerator();
 			generator.Emit(OpCodes.Ldarg_0);
@@ -65,55 +63,9 @@ namespace GTA.Native
 			_ptrToStrFunc = (Func<IntPtr, T>)ptrToStrMethod.CreateDelegate(typeof(Func<IntPtr, T>));
 		}
 
-		internal static T ObjectFromNativeGeneric(ulong *value)
+		internal static T Convert<TFrom>(TFrom from)
 		{
-			if (typeof(T).IsEnum)
-			{
-				return Convert(*value);
-			}
-
-			// Fundamental types
-			if (typeof(T) == typeof(bool))
-			{
-				return PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(int))
-			{
-				return PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(uint))
-			{
-				return PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(long))
-			{
-				return PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(ulong))
-			{
-				return PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(float))
-			{
-				return PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(double))
-			{
-				return Convert(PtrToStructure(new IntPtr(value)));
-			}
-
-			// Math types
-			if (typeof(T) == typeof(Vector2) || typeof(T) == typeof(Vector3))
-			{
-				return Convert(*(NativeHelper.NativeVector3*)value);
-			}
-
-			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
-		}
-
-		internal static T Convert<T1>(T1 from)
-		{
-			return CastCache<T1>.Convert(from);
+			return CastCache<TFrom>.Convert(from);
 		}
 
 		internal static T PtrToStructure(IntPtr ptr)
@@ -383,18 +335,25 @@ namespace GTA.Native
 		}
 		protected virtual void Dispose([MarshalAs(UnmanagedType.U1)] bool disposing)
 		{
-			Marshal.FreeCoTaskMem((IntPtr)(long)data);
+			if (data != 0)
+			{
+				Marshal.FreeCoTaskMem((IntPtr)(long)data);
+				data = 0;
+			}
 		}
 
 		public T GetResult<T>()
 		{
 			unsafe
 			{
-				var type = typeof(T);
-				if (type.IsEnum || type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
-					return NativeHelperGeneric<T>.ObjectFromNativeGeneric((ulong*)data);
+				if (typeof(T).IsEnum || typeof(T).IsPrimitive || typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector2))
+				{
+					return Function.ObjectFromNative<T>((ulong*)data);
+				}
 				else
-					return (T)Function.ObjectFromNative(type, (ulong*)data);
+				{
+					return (T)Function.ObjectFromNative(typeof(T), (ulong*)data);
+				}
 			}
 		}
 	}
@@ -405,7 +364,9 @@ namespace GTA.Native
 		{
 			ulong[] args = new ulong[arguments.Length];
 			for (int i = 0; i < arguments.Length; ++i)
+			{
 				args[i] = arguments[i].data;
+			}
 
 			unsafe
 			{
@@ -413,20 +374,27 @@ namespace GTA.Native
 
 				// The result will be null when this method is called from a thread other than the main thread
 				if (res == null)
+				{
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+				}
 
-				var type = typeof(T);
-				if (type.IsEnum || type.IsPrimitive || type == typeof(Vector3) || type == typeof(Vector2))
-					return NativeHelperGeneric<T>.ObjectFromNativeGeneric(res);
+				if (typeof(T).IsEnum || typeof(T).IsPrimitive || typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector2))
+				{
+					return ObjectFromNative<T>(res);
+				}
 				else
-					return (T)ObjectFromNative(type, res);
+				{
+					return (T)ObjectFromNative(typeof(T), res);
+				}
 			}
 		}
 		public static void Call(Hash hash, params InputArgument[] arguments)
 		{
 			ulong[] args = new ulong[arguments.Length];
 			for (int i = 0; i < arguments.Length; ++i)
+			{
 				args[i] = arguments[i].data;
+			}
 
 			unsafe
 			{
@@ -434,120 +402,135 @@ namespace GTA.Native
 			}
 		}
 
-		internal static ulong ObjectToNative(object value)
+		internal static unsafe ulong ObjectToNative(object value)
 		{
-			if (ReferenceEquals(value, null))
+			if (value is null)
 			{
 				return 0;
 			}
 
-			var type = value.GetType();
-
-			// Fundamental types
-			if (type == typeof(bool))
+			if (value is bool valueBool)
 			{
-				return (bool)value ? 1ul : 0ul;
+				return valueBool ? 1ul : 0ul;
 			}
-			if (type == typeof(int))
+			if (value is int valueInt32)
 			{
-				return (ulong)(int)value;
+				// Prevent value from changing memory expression, in case the type is incorrect
+				return (uint)valueInt32;
 			}
-			if (type == typeof(uint))
+			if (value is uint valueUInt32)
 			{
-				return (uint)value;
+				return valueUInt32;
 			}
-			if (type == typeof(float))
+			if (value is float valueFloat)
 			{
-				return BitConverter.ToUInt32(BitConverter.GetBytes((float)value), 0);
+				return *(uint*)&valueFloat;
 			}
-			if (type == typeof(double))
+			if (value is double valueDouble)
 			{
-				return BitConverter.ToUInt32(BitConverter.GetBytes((float)(double)value), 0);
+				valueFloat = (float)valueDouble;
+				return *(uint*)&valueFloat;
 			}
-			if (type == typeof(IntPtr))
+			if (value is IntPtr valueIntPtr)
 			{
-				return (ulong)((IntPtr)value).ToInt64();
+				return (ulong)valueIntPtr.ToInt64();
 			}
-			if (type == typeof(string))
+			if (value is string valueString)
 			{
-				return (ulong)SHVDN.ScriptDomain.CurrentDomain.PinString((string)value).ToInt64();
+				return (ulong)SHVDN.ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
 			}
 
 			// Scripting types
-			if (type == typeof(Model))
+			if (value is Model valueModel)
 			{
-				return (ulong)((Model)value).Hash;
+				return (ulong)valueModel.Hash;
 			}
-			if (typeof(IHandleable).IsAssignableFrom(type))
+			if (typeof(IHandleable).IsAssignableFrom(value.GetType()))
 			{
 				return (ulong)((IHandleable)value).Handle;
 			}
 
-			throw new InvalidCastException(string.Concat("Unable to cast object of type '", type.FullName, "' to native value"));
+			throw new InvalidCastException(string.Concat("Unable to cast object of type '", value.GetType(), "' to native value"));
 		}
+
+		internal static unsafe T ObjectFromNative<T>(ulong* value)
+		{
+			if (typeof(T).IsEnum)
+			{
+				return NativeHelper<T>.Convert(*value);
+			}
+
+			if (typeof(T) == typeof(bool))
+			{
+				// Return proper boolean values (true if non-zero and false if zero)
+				bool valueBool = *value != 0;
+				return NativeHelper<T>.PtrToStructure(new IntPtr(&valueBool));
+			}
+
+			if (typeof(T) == typeof(int) || typeof(T) == typeof(uint) || typeof(T) == typeof(long) || typeof(T) == typeof(ulong) || typeof(T) == typeof(float))
+			{
+				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
+			}
+
+			if (typeof(T) == typeof(double))
+			{
+				return NativeHelper<T>.Convert(NativeHelper<T>.PtrToStructure(new IntPtr(value)));
+			}
+
+			if (typeof(T) == typeof(Vector2) || typeof(T) == typeof(Vector3))
+			{
+				return NativeHelper<T>.Convert(*(NativeVector3*)value);
+			}
+
+			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
+		}
+
 		internal static unsafe object ObjectFromNative(Type type, ulong* value)
 		{
 			if (type == typeof(string))
 			{
-				if (*value != 0)
-				{
-					int length = 0;
-					for (byte* end = (byte*)*value; *end++ != 0; length++)
-						continue;
-
-					var bytes = new byte[length];
-
-					Marshal.Copy((IntPtr)(long)*value, bytes, 0, length);
-
-					return Encoding.UTF8.GetString(bytes);
-				}
-				else
-				{
-					return string.Empty;
-				}
+				return SHVDN.NativeMemory.PtrToStringUTF8(new IntPtr((char*)*value));
 			}
-
-			int handle = *(int*)value;
 
 			// Scripting types
 			if (type == typeof(Blip))
 			{
-				return new Blip(handle);
+				return new Blip(*(int*)value);
 			}
 			if (type == typeof(Camera))
 			{
-				return new Camera(handle);
+				return new Camera(*(int*)value);
 			}
 			if (type == typeof(Entity))
 			{
-				return Entity.FromHandle(handle);
+				return Entity.FromHandle(*(int*)value);
 			}
 			if (type == typeof(Ped))
 			{
-				return new Ped(handle);
+				return new Ped(*(int*)value);
 			}
 			if (type == typeof(PedGroup))
 			{
-				return new PedGroup(handle);
+				return new PedGroup(*(int*)value);
 			}
 			if (type == typeof(Player))
 			{
-				return new Player(handle);
+				return new Player(*(int*)value);
 			}
 			if (type == typeof(Prop))
 			{
-				return new Prop(handle);
+				return new Prop(*(int*)value);
 			}
 			if (type == typeof(Rope))
 			{
-				return new Rope(handle);
+				return new Rope(*(int*)value);
 			}
 			if (type == typeof(Vehicle))
 			{
-				return new Vehicle(handle);
+				return new Vehicle(*(int*)value);
 			}
 
-			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
+			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", type, "'"));
 		}
 	}
 }

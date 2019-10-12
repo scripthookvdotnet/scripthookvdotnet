@@ -22,12 +22,20 @@ namespace GTA.Native
 
 	internal static class NativeHelper<T>
 	{
-		private static readonly Func<IntPtr, T> _ptrToStrFunc;
-
-		internal static T PtrToStructure(IntPtr ptr)
+		static class CastCache<TFrom>
 		{
-			return _ptrToStrFunc(ptr);
+			internal static readonly Func<TFrom, T> Cast;
+
+			static CastCache()
+			{
+				var paramExp = Expression.Parameter(typeof(TFrom));
+				var convertExp = Expression.Convert(paramExp, typeof(T));
+				Cast = Expression.Lambda<Func<TFrom, T>>(convertExp, paramExp).Compile();
+			}
 		}
+
+		static readonly Func<IntPtr, T> _ptrToStrFunc;
+
 		static NativeHelper()
 		{
 			var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
@@ -46,16 +54,9 @@ namespace GTA.Native
 			return CastCache<TFrom>.Cast(from);
 		}
 
-		internal static class CastCache<TFrom>
+		internal static T PtrToStructure(IntPtr ptr)
 		{
-			internal static readonly Func<TFrom, T> Cast;
-
-			static CastCache()
-			{
-				var paramExp = Expression.Parameter(typeof(TFrom));
-				var convertExp = Expression.Convert(paramExp, typeof(T));
-				Cast = Expression.Lambda<Func<TFrom, T>>(convertExp, paramExp).Compile();
-			}
+			return _ptrToStrFunc(ptr);
 		}
 	}
 	internal static class InstanceCreator<T1, TInstance>
@@ -275,7 +276,7 @@ namespace GTA.Native
 
 		public static implicit operator InputArgument(OutputArgument value)
 		{
-			return new InputArgument(value._storage);
+			return new InputArgument(value.storage);
 		}
 		#endregion
 	}
@@ -286,8 +287,8 @@ namespace GTA.Native
 	public class OutputArgument : IDisposable
 	{
 		#region Fields
-		private bool _disposed = false;
-		internal IntPtr _storage = IntPtr.Zero;
+		bool disposed = false;
+		internal IntPtr storage = IntPtr.Zero;
 		#endregion
 
 		/// <summary>
@@ -295,7 +296,7 @@ namespace GTA.Native
 		/// </summary>
 		public OutputArgument()
 		{
-			_storage = Marshal.AllocCoTaskMem(24);
+			storage = Marshal.AllocCoTaskMem(24);
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions that require the pointer to data instead of the actual data.
@@ -305,7 +306,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				*(ulong*)(_storage) = Function.ObjectToNative(value);
+				*(ulong*)(storage) = Function.ObjectToNative(value);
 			}
 		}
 
@@ -324,14 +325,13 @@ namespace GTA.Native
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (_disposed)
+			if (disposed)
 			{
 				return;
 			}
 
-			Marshal.FreeCoTaskMem(_storage);
-
-			_disposed = true;
+			Marshal.FreeCoTaskMem(storage);
+			disposed = true;
 		}
 
 		/// <summary>
@@ -343,11 +343,11 @@ namespace GTA.Native
 			{
 				if (typeof(T).IsValueType || typeof(T).IsEnum)
 				{
-					return Function.ObjectFromNative<T>((ulong*)(_storage.ToPointer()));
+					return Function.ObjectFromNative<T>((ulong*)storage.ToPointer());
 				}
 				else
 				{
-					return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(_storage.ToPointer())));
+					return (T)Function.ObjectFromNative(typeof(T), (ulong*)storage.ToPointer());
 				}
 			}
 		}
@@ -418,25 +418,72 @@ namespace GTA.Native
 		/// <returns>A native value representing the input <paramref name="value"/>.</returns>
 		internal static ulong ObjectToNative(object value)
 		{
-			if (ReferenceEquals(value, null))
+			if (value is null)
 			{
 				return 0;
 			}
 
-			var type = value.GetType();
-
-			if (type == typeof(string))
+			if (value is string valueString)
 			{
-				return (ulong)SHVDN.ScriptDomain.CurrentDomain.PinString((string)(value)).ToInt64();
+				return (ulong)SHVDN.ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
 			}
 
-			if (typeof(INativeValue).IsAssignableFrom(type))
+			if (typeof(INativeValue).IsAssignableFrom(value.GetType()))
 			{
 				return ((INativeValue)value).NativeValue;
 			}
 
-			throw new InvalidCastException(String.Concat("Unable to cast object of type '", type.FullName, "' to native value"));
+			throw new InvalidCastException(string.Concat("Unable to cast object of type '", value.GetType(), "' to native value"));
 		}
+
+		/// <summary>
+		/// Converts a native value to a managed object of a value type.
+		/// </summary>
+		/// <typeparam name="T">The return type. The type should be a value type.</typeparam>
+		/// <param name="value">The native value to convert.</param>
+		/// <returns>A managed object representing the input <paramref name="value"/>.</returns>
+		internal static unsafe T ObjectFromNative<T>(ulong* value)
+		{
+			if (typeof(T) == typeof(bool))
+			{
+				// Return proper boolean values (true if non-zero and false if zero)
+				bool valueBool = *value != 0;
+				return NativeHelper<T>.PtrToStructure(new IntPtr(&valueBool));
+			}
+			if (typeof(T) == typeof(IntPtr)) // Has to be before 'IsPrimitive' check
+			{
+				return InstanceCreator<long, T>.Create((long)(*value));
+			}
+
+			if (typeof(T).IsEnum)
+			{
+				return NativeHelper<T>.Convert(*value);
+			}
+			if (typeof(T).IsPrimitive)
+			{
+				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
+			}
+
+			if (typeof(T) == typeof(Math.Vector2))
+			{
+				var data = (float*)value;
+				return InstanceCreator<float, float, T>.Create(data[0], data[2]);
+
+			}
+			if (typeof(T) == typeof(Math.Vector3))
+			{
+				var data = (float*)value;
+				return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
+			}
+
+			if (typeof(T) == typeof(Model) || typeof(T) == typeof(WeaponAsset) || typeof(T) == typeof(RelationshipGroup))
+			{
+				return InstanceCreator<int, T>.Create((int)*value);
+			}
+
+			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
+		}
+
 		/// <summary>
 		/// Converts a native value to a managed object of a reference type.
 		/// </summary>
@@ -447,14 +494,7 @@ namespace GTA.Native
 		{
 			if (type == typeof(string))
 			{
-				var address = (char*)(*value);
-
-				if (address == null)
-				{
-					return String.Empty;
-				}
-
-				return SHVDN.NativeMemory.PtrToStringUTF8(new IntPtr(address));
+				return SHVDN.NativeMemory.PtrToStringUTF8(new IntPtr((char*)*value));
 			}
 
 			if (typeof(INativeValue).IsAssignableFrom(type))
@@ -466,76 +506,7 @@ namespace GTA.Native
 				return result;
 			}
 
-			throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
-		}
-		/// <summary>
-		/// Converts a native value to a managed object of a value type.
-		/// </summary>
-		/// <typeparam name="T">The return type. The type should be a value type.</typeparam>
-		/// <param name="value">The native value to convert.</param>
-		/// <returns>A managed object representing the input <paramref name="value"/>.</returns>
-		internal static unsafe T ObjectFromNative<T>(ulong* value)
-		{
-			if (typeof(T).IsEnum)
-			{
-				return NativeHelper<T>.Convert(*value);
-			}
-
-			if (typeof(T) == typeof(bool))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(int))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(uint))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(long))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(ulong))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(float))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-			if (typeof(T) == typeof(double))
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-
-			if (typeof(T) == typeof(IntPtr))
-			{
-				return InstanceCreator<long, T>.Create((long)(*value));
-			}
-
-			if (typeof(T) == typeof(Math.Vector2))
-			{
-				var data = (float*)(value);
-
-				return InstanceCreator<float, float, T>.Create(data[0], data[2]);
-
-			}
-			if (typeof(T) == typeof(Math.Vector3))
-			{
-				var data = (float*)(value);
-
-				return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
-
-			}
-
-			if (typeof(T) == typeof(Model) || typeof(T) == typeof(WeaponAsset) || typeof(T) == typeof(RelationshipGroup))
-			{
-				return InstanceCreator<int, T>.Create((int)(*value));
-			}
-
-			throw new InvalidCastException(String.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
+			throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
 		}
 	}
 	#endregion
