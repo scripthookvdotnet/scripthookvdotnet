@@ -74,7 +74,7 @@ namespace GTA.UI
 		/// <param name="fadeIn">If <c>true</c> the message will fade in.</param>
 		/// <param name="blinking">if set to <c>true</c> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
-		public static int Show(NotificationIcon icon, string sender, string subject, string message, bool fadeIn, bool blinking = false)
+		public static int Show(NotificationIcon icon, string sender, string subject, string message, bool fadeIn = false, bool blinking = false)
 		{
 			string iconName = iconNames[(int)icon];
 
