@@ -414,7 +414,7 @@ namespace SHVDN
 				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
 				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
 
-				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
+				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.TopDirectoryOnly)
 					.Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
