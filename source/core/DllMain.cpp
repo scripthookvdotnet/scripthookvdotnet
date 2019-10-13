@@ -21,6 +21,9 @@ namespace WinForms = System::Windows::Forms;
 [assembly:AssemblyCopyright("Copyright © 2015 crosire")];
 [assembly:AssemblyVersion(SHVDN_VERSION)];
 [assembly:AssemblyFileVersion(SHVDN_VERSION)];
+// Sign with a strong name to distinguish from older versions and cause .NET framework runtime to bind the correct assemblies
+// There is no version check performed for assemblies without strong names (https://docs.microsoft.com/en-us/dotnet/framework/deployment/how-the-runtime-locates-assemblies)
+[assembly:AssemblyKeyFileAttribute("PublicKeyToken.snk")];
 
 public ref class ScriptHookVDotNet
 {

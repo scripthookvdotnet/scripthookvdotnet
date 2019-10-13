@@ -771,7 +771,7 @@ namespace SHVDN
 		{
 			var assemblyName = new AssemblyName(args.Name);
 
-			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup), so is unable to load the ScriptDomain type when creating it in a new application domain
+			// Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup, so is unable to load the ScriptDomain type when creating it in a new application domain)
 			// Some scripts were written against old SHVDN versions where everything was still in the ASI, so make sure those are not caught here (see also https://github.com/crosire/scripthookvdotnet/releases/tag/v2.10.0)
 			if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) && assemblyName.Version >= new Version(2, 10, 0, 0))
 			{
