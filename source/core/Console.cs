@@ -22,6 +22,7 @@ namespace SHVDN
 		int cursorPos = 0;
 		int commandPos = -1;
 		int currentPage = 1;
+		bool isOpen = false;
 		string input = string.Empty;
 		List<string> lineHistory = new List<string>();
 		List<string> commandHistory = new List<string>();
@@ -51,12 +52,17 @@ namespace SHVDN
 		/// <summary>
 		/// Gets or sets whether the console is open.
 		/// </summary>
-		public bool IsOpen { get; set; }
-
-		/// <summary>
-		/// Gets or sets the key used to open or close the console.
-		/// </summary>
-		public Keys ToggleKey { get; set; } = Keys.F4;
+		public bool IsOpen
+		{
+			get => isOpen;
+			set
+			{
+				isOpen = value;
+				DisableControlsThisFrame();
+				if (!isOpen)
+					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
+			}
+		}
 
 		/// <summary>
 		/// Register the specified method as a console command.
@@ -332,26 +338,10 @@ namespace SHVDN
 		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
 		internal void DoKeyEvent(Keys keys, bool status)
 		{
-			if (!status)
-				return; // Only interested in key down events
+			if (!status || !IsOpen)
+				return; // Only interested in key down events and do not need to handle events when the console is not open
 
 			var e = new KeyEventArgs(keys);
-
-			if (e.KeyCode == ToggleKey)
-			{
-				// Toggle open state
-				IsOpen = !IsOpen;
-				DisableControlsThisFrame();
-				if (!IsOpen)
-					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
-				return; // The toggle key does not need any additional handling
-			}
-
-			if (!IsOpen)
-			{
-				// Do not need to handle keyboard events when the console is not open
-				return;
-			}
 
 			if (e.KeyCode == Keys.PageUp)
 			{
@@ -401,8 +391,6 @@ namespace SHVDN
 					break;
 				case Keys.Escape:
 					IsOpen = false;
-					DisableControlsThisFrame();
-					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 					break;
 				case Keys.B:
 					if (e.Control)

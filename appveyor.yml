@@ -24,6 +24,10 @@ before_package:
 
     type LICENSE.txt | more /P > bin\Release\LICENSE.txt
 
+    echo ReloadKey=None > bin\Release\ScriptHookVDotNet.ini
+
+    echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini
+
 test: off
 artifacts:
 - path: bin/Release/

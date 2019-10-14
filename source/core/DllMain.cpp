@@ -110,6 +110,8 @@ public:
 internal:
 	static SHVDN::Console ^console = nullptr;
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
+	static WinForms::Keys reloadKey = WinForms::Keys::None;
+	static WinForms::Keys consoleKey = WinForms::Keys::F4;
 
 	static void SetConsole()
 	{
@@ -129,8 +131,38 @@ static void ScriptHookVDotnet_ManagedInit()
 	// Clear log from previous runs
 	SHVDN::Log::Clear();
 
+	// Load configuration
+	String ^scriptPath = "scripts";
+
+	try
+	{
+		array<String ^> ^config = IO::File::ReadAllLines(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
+
+		for each (String ^line in config)
+		{
+			// Perform some very basic key/value parsing
+			line = line->Trim();
+			if (line->StartsWith("//"))
+				continue;
+			array<String ^> ^data = line->Split('=');
+			if (data->Length != 2)
+				continue;
+
+			     if (data[0] == "ReloadKey")
+				Enum::TryParse(data[1], true, ScriptHookVDotNet::reloadKey);
+			else if (data[0] == "ConsoleKey")
+				Enum::TryParse(data[1], true, ScriptHookVDotNet::consoleKey);
+			else if (data[0] == "ScriptsLocation")
+				scriptPath = data[1];
+		}
+	}
+	catch (Exception ^ex)
+	{
+		SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to load config: ", ex->ToString());
+	}
+
 	// Create a separate script domain
-	domain = SHVDN::ScriptDomain::Load(".", "scripts");
+	domain = SHVDN::ScriptDomain::Load(".", scriptPath);
 	if (domain == nullptr)
 		return;
 
@@ -174,7 +206,7 @@ static void ScriptHookVDotnet_ManagedTick()
 static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
 {
 	// Filter out invalid key codes
-	if (keycode < 0 || keycode >= 256)
+	if (keycode <= 0 || keycode >= 256)
 		return;
 
 	// Convert message into a key event
@@ -184,9 +216,20 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	if (alt)   keys = keys | WinForms::Keys::Alt;
 
 	SHVDN::Console ^console = ScriptHookVDotNet::console;
-	if (console != nullptr) {
-		// Send key events to console
-		console->DoKeyEvent(keys, keydown);
+	if (console != nullptr)
+	{
+		if (keys == ScriptHookVDotNet::reloadKey)
+		{
+			ScriptHookVDotNet::Reload();
+		}
+		else if (keys == ScriptHookVDotNet::consoleKey)
+		{
+			console->IsOpen = !console->IsOpen;
+		}
+		else // Send key events to console
+		{
+			console->DoKeyEvent(keys, keydown);
+		}
 
 		// Do not send keyboard events to other running scripts when console is open
 		if (console->IsOpen)
@@ -195,8 +238,10 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 
 	SHVDN::ScriptDomain ^scriptdomain = ScriptHookVDotNet::domain;
 	if (scriptdomain != nullptr)
+	{
 		// Send key events to all scripts
 		scriptdomain->DoKeyEvent(keys, keydown);
+	}
 }
 
 #pragma unmanaged
