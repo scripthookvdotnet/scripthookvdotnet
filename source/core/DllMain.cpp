@@ -218,18 +218,21 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	SHVDN::Console ^console = ScriptHookVDotNet::console;
 	if (console != nullptr)
 	{
-		if (keys == ScriptHookVDotNet::reloadKey)
+		if (keydown && keys == ScriptHookVDotNet::reloadKey)
 		{
+			// Force a reload
 			ScriptHookVDotNet::Reload();
+			return;
 		}
-		else if (keys == ScriptHookVDotNet::consoleKey)
+		if (keydown && keys == ScriptHookVDotNet::consoleKey)
 		{
+			// Toggle open state
 			console->IsOpen = !console->IsOpen;
+			return;
 		}
-		else // Send key events to console
-		{
-			console->DoKeyEvent(keys, keydown);
-		}
+
+		// Send key events to console
+		console->DoKeyEvent(keys, keydown);
 
 		// Do not send keyboard events to other running scripts when console is open
 		if (console->IsOpen)
