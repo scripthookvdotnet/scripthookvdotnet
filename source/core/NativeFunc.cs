@@ -89,8 +89,7 @@ namespace SHVDN
 		{
 			const int maxLengthUtf8 = 99;
 
-			int size = Encoding.UTF8.GetByteCount(str);
-			if (size <= maxLengthUtf8)
+			if (Encoding.UTF8.GetByteCount(str) <= maxLengthUtf8)
 			{
 				action(str);
 				return;
@@ -145,15 +144,14 @@ namespace SHVDN
 				{
 					action(str.Substring(startPos, currentPos - startPos));
 
-					currentUtf8StrLength = 0;
 					startPos = currentPos;
+					currentUtf8StrLength = 0;
 				}
 				else
 				{
+					currentPos++;
 					currentUtf8StrLength += codePointSize;
 				}
-
-				currentPos++;
 
 				// Additional increment is needed for surrogate
 				if (codePointSize == 4)
