@@ -173,6 +173,17 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Checks if this <see cref="Script"/> is executing.
+		/// </summary>
+		public static bool IsConsoleOpen
+		{
+			get
+			{
+				return ScriptHookVDotNet.IsOpen;
+			}
+		}
+
+		/// <summary>
 		/// Gets an INI file associated with this <see cref="Script"/>.
 		/// The File will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
 		/// Use this to save and load settings for this <see cref="Script"/>.

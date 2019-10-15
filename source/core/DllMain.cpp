@@ -107,6 +107,8 @@ public:
 			console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? (script->IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
 	}
 
+	static bool IsOpen = console->IsOpen;
+
 internal:
 	static SHVDN::Console ^console = nullptr;
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
