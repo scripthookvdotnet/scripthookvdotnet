@@ -113,10 +113,14 @@ namespace GTA
 				string key = data.Key.Substring(data.Key.IndexOf("]") + 1);
 				string section = data.Key.Remove(data.Key.IndexOf("]")).Substring(1);
 
+				// Strip array index
+				key = key.Remove(key.LastIndexOf("//"));
+
 				if (!result.ContainsKey(section))
 				{
-					var values = new List<Tuple<string, string>>();
-					values.Add(new Tuple<string, string>(key, data.Value));
+					var values = new List<Tuple<string, string>> {
+						new Tuple<string, string>(key, data.Value)
+					};
 
 					result.Add(section, values);
 				}
@@ -173,24 +177,21 @@ namespace GTA
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
 			string lookup = $"[{section}]{name}//0".ToUpper();
-			string internalValue;
 
-			if (!_values.TryGetValue(lookup, out internalValue))
+			if (!_values.TryGetValue(lookup, out string internalValue))
 			{
 				return defaultvalue;
 			}
 
 			try
 			{
-				var type = typeof(T);
-
-				if (type.IsEnum)
+				if (typeof(T).IsEnum)
 				{
-					return (T)(Enum.Parse(type, internalValue, true));
+					return (T)Enum.Parse(typeof(T), internalValue, true);
 				}
 				else
 				{
-					return (T)(Convert.ChangeType(internalValue, type));
+					return (T)Convert.ChangeType(internalValue, typeof(T));
 				}
 			}
 			catch (Exception)
@@ -225,19 +226,18 @@ namespace GTA
 		public T[] GetAllValues<T>(string section, string name)
 		{
 			var values = new List<T>();
-			string internalValue;
 
-			for (int i = 0; _values.TryGetValue($"[{section}]{name}//{i}".ToUpper(), out internalValue); ++i)
+			for (int i = 0; _values.TryGetValue($"[{section}]{name}//{i}".ToUpper(), out string internalValue); ++i)
 			{
 				try
 				{
 					if (typeof(T).IsEnum)
 					{
-						values.Add((T)(Enum.Parse(typeof(T), internalValue, true)));
+						values.Add((T)Enum.Parse(typeof(T), internalValue, true));
 					}
 					else
 					{
-						values.Add((T)(Convert.ChangeType(internalValue, typeof(T))));
+						values.Add((T)Convert.ChangeType(internalValue, typeof(T)));
 					}
 				}
 				catch
