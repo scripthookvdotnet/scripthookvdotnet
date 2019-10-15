@@ -598,7 +598,8 @@ namespace SHVDN
 		{
 			var e = new KeyEventArgs(keys);
 
-			keyboardState[e.KeyValue] = status;
+			// Only update state of the primary key (without modifiers) here
+			keyboardState[(int)e.KeyCode] = status;
 
 			if (recordKeyboardEvents)
 			{
