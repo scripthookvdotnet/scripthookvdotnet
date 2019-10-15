@@ -179,7 +179,7 @@ namespace GTA
 		{
 			get
 			{
-				return ScriptHookVDotNet.IsOpen;
+				return ScriptHookVDotNet.IsOpen();
 			}
 		}
 
