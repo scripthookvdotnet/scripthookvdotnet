@@ -414,7 +414,7 @@ namespace SHVDN
 				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
 				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
 
-				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.TopDirectoryOnly)
+				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
 					.Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
@@ -598,7 +598,8 @@ namespace SHVDN
 		{
 			var e = new KeyEventArgs(keys);
 
-			keyboardState[e.KeyValue] = status;
+			// Only update state of the primary key (without modifiers) here
+			keyboardState[(int)e.KeyCode] = status;
 
 			if (recordKeyboardEvents)
 			{

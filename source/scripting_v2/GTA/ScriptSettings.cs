@@ -74,7 +74,7 @@ namespace GTA
 							value = value.Substring(1, value.Length - 2);
 						}
 
-						string lookup = $"[{section}]{key}//0".ToUpper();
+						string lookup = $"[{section}]{key}".ToUpper();
 
 						if (result._values.ContainsKey(lookup))
 						{
@@ -181,7 +181,7 @@ namespace GTA
 		}
 		public string GetValue(string section, string key, string defaultvalue)
 		{
-			string lookup = $"[{section}]{key}//0".ToUpper();
+			string lookup = $"[{section}]{key}".ToUpper();
 
 			if (_values.TryGetValue(lookup, out string value))
 				return value;
@@ -211,7 +211,7 @@ namespace GTA
 		}
 		public void SetValue(string section, string key, string value)
 		{
-			string lookup = $"[{section}]{key}//0".ToUpper();
+			string lookup = $"[{section}]{key}".ToUpper();
 
 			if (!_values.ContainsKey(lookup))
 				_values.Add(lookup, value);
