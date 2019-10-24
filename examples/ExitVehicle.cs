@@ -20,6 +20,10 @@ public class ExitVehicle : Script
 			Wait(250);
 
 			Vehicle vehicle = playerPed.CurrentVehicle;
+
+			if (vehicle == null)
+				return;
+
 			bool isPlayerTheDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == playerPed;
 
 			if (Game.IsControlPressed(Control.VehicleExit))
