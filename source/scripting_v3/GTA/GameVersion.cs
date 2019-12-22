@@ -63,5 +63,7 @@ namespace GTA
 		v1_0_1737_0_NoSteam,
 		v1_0_1737_6_Steam,
 		v1_0_1737_6_NoSteam,
+		v1_0_1868_0_Steam,
+		v1_0_1868_0_NoSteam
 	}
 }
