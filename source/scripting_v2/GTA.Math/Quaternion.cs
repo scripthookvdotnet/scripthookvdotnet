@@ -722,6 +722,20 @@ namespace GTA.Math
 		}
 
 		/// <summary>
+		/// Rotates a point using a quaternion.
+		/// </summary>
+		/// <param name="rotation">The quaternion to rotate the point with.</param>
+		/// <param name="point">The point to rotate.</param>
+		/// <returns>The rotated point coordinates.</returns>
+		public static    Vector3 operator *(Quaternion rotation, Vector3 point)
+		{
+			Vector3 q = new Vector3(rotation.X, rotation.Y, rotation.Z);
+			Vector3 t = 2.0f * Vector3.Cross(q, point);
+			Vector3 result = point + (rotation.W * t) + Vector3.Cross(q, t);
+			return result;
+		}
+
+		/// <summary>
 		/// Scales a quaternion by the given value.
 		/// </summary>
 		/// <param name="quaternion">The quaternion to scale.</param>
