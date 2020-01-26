@@ -68,7 +68,17 @@ namespace GTA
 		public bool IsPersistent
 		{
 			get => Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
-			set => Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, value, !value);
+			set
+			{
+				if (value)
+				{
+					Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, true, true);
+				}
+				else
+				{
+					MarkAsNoLongerNeeded();
+				}
+			}
 		}
 
 		public bool FreezePosition
@@ -579,7 +589,6 @@ namespace GTA
 		public void MarkAsNoLongerNeeded()
 		{
 			int handle = Handle;
-			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
