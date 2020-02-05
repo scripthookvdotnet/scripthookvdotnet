@@ -907,6 +907,22 @@ namespace GTA
 		public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
 
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is a pedestrian.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is a ped; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsPed => Function.Call<bool>(Hash.IS_ENTITY_A_PED, Handle)
+		
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is a vehicle.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is a vehicle; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsVehicle => Function.Call<bool>(Hash.IS_ENTITY_A_VEHICLE, Handle)
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> has gravity.
 		/// </summary>
 		/// <value>
