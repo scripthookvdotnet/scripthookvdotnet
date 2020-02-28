@@ -236,15 +236,25 @@ namespace GTA.UI
 			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, 1);
 		}
 		/// <summary>
-		/// Displays a help message in the top corner of the screen this frame.
+		/// Displays a help message in the top corner of the screen this frame. Beeping sound will be played.
 		/// </summary>
 		/// <param name="helpText">The text to display.</param>
 		public static void ShowHelpTextThisFrame(string helpText)
 		{
+			ShowHelpTextThisFrame(helpText, true);			// keeping it DRY :)
+		}
+		/// <summary>
+		/// Displays a help message in the top corner of the screen this frame. Specify whether beeping sound plays.
+		/// </summary>
+		/// <param name="helpText">The text to display.</param>
+		/// <param name="beep">Whether to play beeping sound</param>
+		public static void ShowHelpTextThisFrame(string helpText, bool beep)
+		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_HELP, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(helpText);
-			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, 0, 1, -1);
+			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, 0, beep, -1);
 		}
+
 
 		// Space Conversion
 
