@@ -155,6 +155,11 @@ namespace GTA
 			return weapon;
 		}
 
+		public Weapon Give(string name, int ammoCount, bool equipNow, bool isAmmoLoaded)
+		{
+			return Give((WeaponHash)Game.GenerateHash(name), ammoCount, equipNow, isAmmoLoaded);
+		}
+
 		public void Drop()
 		{
 			Function.Call(Hash.SET_PED_DROPS_WEAPON, owner.Handle);
