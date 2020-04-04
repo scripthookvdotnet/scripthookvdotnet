@@ -78,7 +78,7 @@ namespace GTA
 		/// </summary>
 		public void Kill()
 		{
-			Health = -1;
+			Health = 0;
 		}
 
 		/// <summary>

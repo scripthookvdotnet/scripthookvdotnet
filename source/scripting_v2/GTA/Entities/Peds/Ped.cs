@@ -73,7 +73,7 @@ namespace GTA
 
 		public void Kill()
 		{
-			Health = -1;
+			Health = 0;
 		}
 
 		#region Styling
