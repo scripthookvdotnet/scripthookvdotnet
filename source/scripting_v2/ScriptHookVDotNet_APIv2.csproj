@@ -173,6 +173,9 @@
     <CppCompile Include="GTA\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="Properties\AssemblyInfo.rc" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="GTA\HudComponent.h" />
     <None Include="GTA\Notification.h" />
     <None Include="GTA\UI.h" />
@@ -184,6 +187,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Overwrite core build logic to support a mixed C++/CLI and C# code base -->
   <UsingTask TaskName="CL" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
+  <UsingTask TaskName="RC" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll"/>
   <UsingTask TaskName="Link" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <Target
     Name="CoreCompile"
@@ -197,8 +201,8 @@
     </ItemGroup>
     <PropertyGroup>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateDebugInformation Condition="'$(DebugType)'=='none'">false</GenerateDebugInformation>
-      <GenerateDebugInformation Condition="'$(DebugType)'=='full'">DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(DebugType)' == 'none'">false</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(DebugType)' == 'full'">DebugFull</GenerateDebugInformation>
     </PropertyGroup>
     <!-- First build all C++/CLI files -->
     <CL
@@ -236,9 +240,16 @@
       WarningsNotAsErrors="$(WarningsNotAsErrors)"
       ToolExe="$(CscToolExe)"
       ToolPath="$(CscToolPath)" />
+    <!-- Compile version resource -->
+    <RC
+      Source="@(ResourceCompile)"
+      ResourceOutputFileName="$(IntermediateOutputPath)$(TargetName).res"
+      SuppressStartupBanner="true"
+      ToolExe="rc.exe"
+      ToolPath="$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64" />
     <!-- Finally link the two modules together into a single assembly -->
     <Link
-      Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule"
+      Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule;$(IntermediateOutputPath)$(TargetName).res"
       AdditionalLibraryDirectories="$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(OutputPath)"
       GenerateDebugInformation="$(GenerateDebugInformation)"
       LinkDLL="true"
