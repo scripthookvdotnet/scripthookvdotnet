@@ -456,6 +456,10 @@ namespace GTA
 						(VehicleWeaponHash)hash : VehicleWeaponHash.Invalid;
 				}
 			}
+			set
+			{
+				Function.Call(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, value);
+			}
 		}
 
 		/// <summary>
