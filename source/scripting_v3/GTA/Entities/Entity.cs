@@ -859,12 +859,40 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is on fire.
+		/// Gets a value indicating whether this <see cref="Entity"/> is on fire. Setter ONLY works with PED type.
+		/// Calling the setter on any entity type other than PED will do nothing.
+		/// Setting true/false starts and stops fire respectively.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> is on fire; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsOnFire => Function.Call<bool>(Hash.IS_ENTITY_ON_FIRE, Handle);
+		///
+		public virtual bool IsOnFire
+		{
+			get
+			{
+				return Fire.IsEntityOnFire(this);
+			}
+			set
+			{
+				if (this is Ped)
+				{
+					// SET PEDESTRIAN FIRES
+					if (value)
+					{
+						Fire.StartEntityFire(this as Ped);
+					}
+					else
+					{
+						Fire.StopEntityFire(this as Ped);
+					}
+				}
+				else
+				{
+					// not available for generalized entities
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is on screen.

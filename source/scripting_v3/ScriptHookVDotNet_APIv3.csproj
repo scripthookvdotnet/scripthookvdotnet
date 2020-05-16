@@ -155,6 +155,7 @@
     <Compile Include="GTA\Entities\Vehicles\VehicleWindowIndex.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWindowTint.cs" />
     <Compile Include="GTA\ExplosionType.cs" />
+    <Compile Include="GTA\Fire.cs" />
     <Compile Include="GTA\ForceType.cs" />
     <Compile Include="GTA\Game.cs" />
     <Compile Include="GTA\GameplayCamera.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="GTA\Language.cs" />
     <Compile Include="GTA\MarkerType.cs" />
     <Compile Include="GTA\MaterialHash.cs" />
+    <Compile Include="GTA\MobilePhone.cs" />
     <Compile Include="GTA\ParachuteTint.cs" />
     <Compile Include="GTA\Particles\ParticleEffect.cs" />
     <Compile Include="GTA\Particles\ParticleEffectAsset.cs" />
