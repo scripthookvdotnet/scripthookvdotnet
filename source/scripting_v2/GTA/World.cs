@@ -43,7 +43,7 @@ namespace GTA
 			get
 			{
 				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
-				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH);
+				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
 				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
 				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
 				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
@@ -53,7 +53,7 @@ namespace GTA
 			}
 			set
 			{
-				Function.Call(Hash.SET_CLOCK_DATE, value.Year, value.Month, value.Day);
+				Function.Call(Hash.SET_CLOCK_DATE, value.Day, value.Month - 1, value.Year);
 				Function.Call(Hash.SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
 			}
 		}
