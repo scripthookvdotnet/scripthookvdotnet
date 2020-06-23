@@ -7,6 +7,7 @@ namespace GTA
 {
 	public enum VehicleWindowTint
 	{
+		Invalid = -1,
 		None,
 		PureBlack,
 		DarkSmoke,
