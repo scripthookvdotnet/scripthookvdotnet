@@ -653,7 +653,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)((value + (value > 0 ? 10 : -10)) * (System.Math.PI / 180.0)));
 			}
 		}
 

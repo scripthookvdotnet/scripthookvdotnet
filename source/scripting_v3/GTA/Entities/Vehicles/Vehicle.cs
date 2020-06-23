@@ -1126,7 +1126,8 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, value);
+				// Need to add 10 degrees to the value for it to apply correctly for some reason
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)((value + (value > 0 ? 10 : -10)) * (System.Math.PI / 180.0)));
 			}
 		}
 
