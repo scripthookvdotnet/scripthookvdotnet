@@ -7,14 +7,14 @@ namespace GTA
 {
 	public enum VehicleWindowIndex
 	{
-		FrontRightWindow = 1,
-		FrontLeftWindow = 0,
-		BackRightWindow = 3,
-		BackLeftWindow = 2,
-		//Exe lists 8 possible windows
-		ExtraWindow1 = 4,
-		ExtraWindow2 = 5,
-		ExtraWindow3 = 6,
-		ExtraWindow4 = 7
+		FrontLeftWindow,
+		FrontRightWindow,
+		BackLeftWindow,
+		BackRightWindow,
+		// Executable lists 8 possible windows
+		ExtraWindow1,
+		ExtraWindow2,
+		ExtraWindow3,
+		ExtraWindow4,
 	}
 }

@@ -18,6 +18,6 @@ namespace GTA
 		Special2,
 		Special3,
 		Textures,
-		Torso2
+		Torso2,
 	}
 }

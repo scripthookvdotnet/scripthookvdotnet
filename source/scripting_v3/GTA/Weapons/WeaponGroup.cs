@@ -22,6 +22,6 @@ namespace GTA
 		Stungun = 690389602u,
 		Heavy = 2725924767u,
 		Thrown = 1548507267u,
-		PetrolCan = 1595662460u
+		PetrolCan = 1595662460u,
 	}
 }

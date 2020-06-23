@@ -25,6 +25,6 @@ namespace GTA
 		DriveBySight = 4194304,
 		IgnorePathFinding = 16777216,
 		TryToAvoidHighways = 536870912,
-		StopAtDestination = 2147483648
+		StopAtDestination = 2147483648,
 	}
 }

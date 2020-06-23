@@ -44,6 +44,6 @@ namespace GTA
 		SpeechDucksScore,
 		SuppressPlayerScubaBreathing,
 		WantedMusicDisabled,
-		WantedMusicOnMission
+		WantedMusicOnMission,
 	}
 }

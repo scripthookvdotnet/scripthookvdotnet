@@ -11,6 +11,6 @@ namespace GTA
 		FreeFalling,
 		Deploying,
 		Gliding,
-		LandingOrFallingToDoom
+		LandingOrFallingToDoom,
 	}
 }

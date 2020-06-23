@@ -133,6 +133,6 @@ namespace GTA
 		SwitchbladeVarmodVar2 = 3885209186u,
 		VintagePistolClip01 = 1168357051u,
 		VintagePistolClip02 = 867832552u,
-		Invalid = 4294967295u
+		Invalid = 4294967295u,
 	}
 }

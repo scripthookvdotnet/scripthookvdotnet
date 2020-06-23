@@ -7,7 +7,7 @@ namespace GTA
 {
 	public enum FiringPattern : uint
 	{
-		Default,
+		Default = 0u,
 		FullAuto = 3337513804u,
 		BurstFire = 3607063905u,
 		BurstInCover = 40051185u,

@@ -11,6 +11,6 @@ namespace GTA
 		Retracting,
 		Deploying = 3,
 		Retracted,
-		Broken
+		Broken,
 	}
 }

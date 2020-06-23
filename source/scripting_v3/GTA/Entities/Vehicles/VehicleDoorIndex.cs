@@ -12,6 +12,6 @@ namespace GTA
 		BackRightDoor = 3,
 		BackLeftDoor = 2,
 		Hood = 4,
-		Trunk = 5
+		Trunk = 5,
 	}
 }

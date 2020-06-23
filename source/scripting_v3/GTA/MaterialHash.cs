@@ -220,6 +220,6 @@ namespace GTA
 		Temp27 = 0x3500F64A,
 		Temp28 = 0xB9AF9A0E,
 		Temp29 = 0x40475AB5,
-		Temp30 = 0xCFEBB4
+		Temp30 = 0xCFEBB4,
 	}
 }

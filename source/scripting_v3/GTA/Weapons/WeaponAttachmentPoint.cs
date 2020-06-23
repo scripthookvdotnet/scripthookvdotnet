@@ -21,6 +21,6 @@ namespace GTA
 		Grip2 = 3748215485u,
 		TorchBulb = 421673795u,
 		Rail = 2451679629u,
-		Rail2 = 497110245u
+		Rail2 = 497110245u,
 	}
 }

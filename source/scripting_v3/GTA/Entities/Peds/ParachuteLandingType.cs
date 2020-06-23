@@ -10,6 +10,6 @@ namespace GTA
 		None = -1,
 		Stumbling = 1,
 		Rolling,
-		Ragdoll
+		Ragdoll,
 	}
 }
