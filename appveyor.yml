@@ -41,11 +41,11 @@ deploy:
   artifact: ScriptHookVDotNet
   draft: true
   on:
-    branch: master
+    branch: main
     appveyor_repo_tag: true
 - provider: NuGet
   api_key:
     secure: 4803INtOGJwqBUIaW7pQv3hfF8YKQHXZ6HiwS9rRMZ9tBjbmi6dY1LoeNBVAkCGI
   on:
-    branch: master
+    branch: main
     appveyor_repo_tag: true
