@@ -39,25 +39,6 @@ namespace GTA
 			"RADIO_22_DLC_BATTLE_MIX1_RADIO",
 			"RADIO_OFF"
 		};
-		internal static readonly string[] windowTitles = {
-			"CELL_EMAIL_BOD",
-			"CELL_EMAIL_BODE",
-			"CELL_EMAIL_BODF",
-			"CELL_EMAIL_SOD",
-			"CELL_EMAIL_SODE",
-			"FMMC_KEY_TIP10",
-			"FMMC_KEY_TIP12",
-			"FMMC_KEY_TIP12F",
-			"FMMC_KEY_TIP12N",
-			"FMMC_KEY_TIP8",
-			"FMMC_KEY_TIP8F",
-			"FMMC_KEY_TIP8FS",
-			"FMMC_KEY_TIP8S",
-			"FMMC_KEY_TIP9",
-			"FMMC_KEY_TIP9F",
-			"FMMC_KEY_TIP9N",
-			"PM_NAME_CHALL"
-		};
 		#endregion
 
 		public static float FPS => 1.0f / LastFrameTime;
@@ -237,7 +218,7 @@ namespace GTA
 		{
 			SHVDN.ScriptDomain.CurrentDomain.PauseKeyEvents(true);
 
-			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitles[(int)windowTitle], "", defaultText, "", "", "", maxLength + 1);
+			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitle.ToString(), "", defaultText, "", "", "", maxLength + 1);
 
 			while (Function.Call<int>(Hash.UPDATE_ONSCREEN_KEYBOARD) == 0)
 			{
