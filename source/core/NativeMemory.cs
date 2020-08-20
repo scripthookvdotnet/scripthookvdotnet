@@ -198,11 +198,11 @@ namespace SHVDN
 			readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
 			writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
 
-			address = FindPattern("\xF3\x0F\x10\x0D\x00\x00\x00\x00\x41\x0F\x2F\xCB\x0F\x83", "xxxx????xxxxxx");
+			address = FindPattern("\xF3\x0F\x10\x1D\x00\x00\x00\x00\x41\xB8\x00\x00\x00\x00\x41\x8B\xD0", "xxxx????xx????xxx");
 			var timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
 			if (timeScaleArrayAddress != null)
-				// SET_TIME_SCALE changes the 3rd element, so obtain the address of it
-				timeScaleAddress = timeScaleArrayAddress + 2;
+				// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
+				timeScaleAddress = timeScaleArrayAddress + 1;
 
 			// Find camera objects
 			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
