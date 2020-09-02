@@ -185,9 +185,17 @@ namespace SHVDN
 			compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
 			compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
-			// Reference the oldest scripting API to stay compatible with existing scripts
-			compilerOptions.ReferencedAssemblies.Add(scriptApis.First().Location);
 			compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
+
+			Assembly scriptApi = null;
+			// Support specifying the API version to be used in the file name like "script.3.cs"
+			string apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
+			if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out int apiVersion))
+				scriptApi = CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
+			// Reference the oldest scripting API by default to stay compatible with existing scripts
+			if (scriptApi is null)
+				scriptApi = scriptApis.First();
+			compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
 			string extension = Path.GetExtension(filename);
 			System.CodeDom.Compiler.CodeDomProvider compiler = null;
@@ -649,7 +657,7 @@ namespace SHVDN
 				return null;
 
 			// Return matching script in running script list if one is found
-			var script = runningScripts.Where(x => x.ScriptInstance == scriptInstance).FirstOrDefault();
+			var script = runningScripts.FirstOrDefault(x => x.ScriptInstance == scriptInstance);
 
 			// Otherwise return the executing script, since during constructor execution the running script list was not yet updated
 			if (script == null && executingScript != null && executingScript.ScriptInstance == null)
@@ -679,7 +687,7 @@ namespace SHVDN
 		/// <param name="name">The named argument to search.</param>
 		static object GetScriptAttribute(Type scriptType, string name)
 		{
-			var attribute = scriptType.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.ScriptAttributes").FirstOrDefault();
+			var attribute = scriptType.GetCustomAttributesData().FirstOrDefault(x => x.AttributeType.FullName == "GTA.ScriptAttributes");
 
 			if (attribute != null)
 			{
@@ -790,7 +798,7 @@ namespace SHVDN
 					Log.Message(Log.Level.Warning, "Resolving API version 0.0.0",
 						args.RequestingAssembly != null ? " referenced in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
 
-					return CurrentDomain.scriptApis.Where(x => x.GetName().Version.Major == 2).FirstOrDefault();
+					return CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == 2);
 				}
 
 				Assembly compatibleApi = null;
