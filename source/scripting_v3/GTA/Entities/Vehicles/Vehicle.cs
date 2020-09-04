@@ -1604,6 +1604,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> drops money when destroyed.
+		/// Only works when the vehicle model is a car, quad bikes or trikes (strictly when the internal vehicle class is CAutomobile or derived class from CAutomobile).
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Vehicle"/> drops money when destroyed; otherwise, <c>false</c>.
@@ -1618,18 +1619,14 @@ namespace GTA
 					return false;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xA98 : 0xA78;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0xAD8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0xB18 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0xB58 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0xBA8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0xBD8 : offset;
+				var model = Model;
 
-				int maxVehType = Game.Version >= GameVersion.v1_0_944_2_Steam ? 10 : 8;
-
-				if (SHVDN.NativeMemory.ReadInt32(address + offset) <= maxVehType)
+				// check if the vehicle is CAutomobile or a derived class from it
+				if (model.IsCar || model.IsQuadBike ||
+					(Game.Version >= GameVersion.v1_0_944_2_Steam && model.IsAmphibiousCar) ||
+					(Game.Version >= GameVersion.v1_0_944_2_Steam && model.IsAmphibiousQuadBike))
 				{
-					offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1319 : 0x12F9;
+					int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1319 : 0x12F9;
 					offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1349 : offset;
 					offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x13B9 : offset;
 					offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x1409 : offset;
