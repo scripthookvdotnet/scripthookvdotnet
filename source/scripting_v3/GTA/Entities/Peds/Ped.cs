@@ -171,6 +171,7 @@ namespace GTA
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x11A0 : 0x1170);
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x11B0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x11C0 : offset;
 
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
@@ -238,6 +239,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14B8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x14E0 : offset;
 
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
@@ -253,6 +255,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14B8 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x14E0 : offset;
 
 				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
@@ -603,6 +606,7 @@ namespace GTA
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x158A : 0x1542);
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x159A : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x15A2 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x15CA : offset;
 
 				int seatIndex = (sbyte)SHVDN.NativeMemory.ReadByte(address + offset);
 				return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
@@ -808,6 +812,7 @@ namespace GTA
 				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x13BC : 0x13AC;
 				offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E4 : offset);
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x13F4 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1414 : offset;
 
 				return (SHVDN.NativeMemory.ReadByte(address + offset) & (1 << 2)) == 0;
 			}
@@ -853,6 +858,7 @@ namespace GTA
 
 				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E5 : 0x13BD);
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x13F5 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1415 : offset;
 
 				return (SHVDN.NativeMemory.ReadByte(address + offset) & (1 << 6)) == 0;
 			}
@@ -909,6 +915,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14D8 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14E0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1508 : offset;
 
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
@@ -924,6 +931,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14C8 : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14D8 : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14E0 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1508 : offset;
 
 				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
@@ -953,6 +961,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14DC : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14E4 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x150C : offset;
 
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
@@ -968,6 +977,7 @@ namespace GTA
 				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14CC : offset;
 				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14DC : offset;
 				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14E4 : offset;
+				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x150C : offset;
 
 				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
