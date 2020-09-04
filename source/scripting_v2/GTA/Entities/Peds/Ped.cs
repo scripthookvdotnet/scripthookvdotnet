@@ -382,10 +382,10 @@ namespace GTA
 					return VehicleSeat.None;
 				}
 
-				int offset = (Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x158A : 0x1542);
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x159A : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x15A2 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x15CA : offset;
+				int offset = (Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x1588 : 0x1540);
+				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x1598 : offset;
+				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x15A0 : offset;
+				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x15C8 : offset;
 
 				int seatIndex = SHVDN.NativeMemory.ReadByte(address + offset);
 
