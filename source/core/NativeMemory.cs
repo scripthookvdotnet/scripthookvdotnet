@@ -226,6 +226,7 @@ namespace SHVDN
 			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
 			if (address != null)
 			{
+				NextGearOffset = *(int*)(address + 3);
 				GearOffset = *(int*)(address + 3) + 2;
 				HighGearOffset = *(int*)(address + 3) + 6;
 			}
@@ -246,7 +247,17 @@ namespace SHVDN
 			if (address != null)
 			{
 				CurrentRPMOffset = *(int*)(address + 10);
+				ClutchOffset = *(int*)(address + 10) + 0xC;
 				AccelerationOffset = *(int*)(address + 10) + 0x10;
+			}
+
+			// use the former pattern if the version is 1.0.1604.0 or newer
+			address = GetGameVersion() >= 46 ?
+						FindPattern("\xF3\x0F\x10\x9F\xD4\x08\x00\x00\x0F\x2F\xDF\x73\x0A", "xxxx????xxxxx") :
+						FindPattern("\xF3\x0F\x10\x8F\x68\x08\x00\x00\x88\x4D\x8C\x0F\x2F\xCF", "xxxx????xxx???");
+			if (address != null)
+			{
+				TurboOffset = *(int*)(address + 4);
 			}
 
 			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
@@ -254,6 +265,41 @@ namespace SHVDN
 			{
 				SteeringScaleOffset = *(int*)(address + 6);
 				SteeringAngleOffset = *(int*)(address + 6) + 8;
+				ThrottlePowerOffset = *(int*)(address + 6) + 0x10;
+				BrakePowerOffset = *(int*)(address + 6) + 0x14;
+			}
+
+			address = FindPattern("\xF3\x0F\x11\x9B\xDC\x09\x00\x00\x0F\x84\xB1\x00\x00\x00", "xxxx????xxx???");
+			if (address != null)
+			{
+				EngineTemperatureOffset = *(int*)(address + 4);
+			}
+
+			address = FindPattern("\xFD\x02\xDB\x08\x98\x00\x00\x00\x00\x48\x8B\x5C\x24\x30", "xxxxx????xxxxx");
+			if (address != null)
+			{
+				IsInteriorLightOnOffset = *(int*)(address - 4);
+				IsEngineStartingOffset = IsInteriorLightOnOffset + 1;
+			}
+
+			address = FindPattern("\x8A\x96\x00\x00\x00\x00\x0F\xB6\xC8\x84\xD2\x41", "xx????xxxxxx");
+			if (address != null)
+			{
+				IsWantedOffset = *(int*)(address + 40);
+			}
+
+
+			address = FindPattern("\x45\x33\xC9\x41\xB0\x01\x40\x8A\xD7", "xxxxxxxxx");
+			if (address != null)
+			{
+				PreviouslyOwnedByPlayerOffset = *(int*)(address - 5);
+				NeedsToBeHotwiredOffset = PreviouslyOwnedByPlayerOffset;
+			}
+
+			address = FindPattern("\x24\x07\x3C\x03\x74\x00\xE8", "xxxxx?x");
+			if (address != null)
+			{
+				AlarmTimeOffset = *(int*)(address + 52);
 			}
 
 			// Generate vehicle model list
@@ -674,17 +720,35 @@ namespace SHVDN
 
 		#region -- Vehicle Offsets --
 
+		public static int NextGearOffset { get; }
 		public static int GearOffset { get; }
 		public static int HighGearOffset { get; }
 
 		public static int CurrentRPMOffset { get; }
+		public static int ClutchOffset { get; }
 		public static int AccelerationOffset { get; }
+
+		public static int TurboOffset { get; }
 
 		public static int FuelLevelOffset { get; }
 		public static int WheelSpeedOffset { get; }
 
 		public static int SteeringAngleOffset { get; }
 		public static int SteeringScaleOffset { get; }
+		public static int ThrottlePowerOffset { get; }
+		public static int BrakePowerOffset { get; }
+
+		public static int EngineTemperatureOffset { get; }
+
+		public static int IsInteriorLightOnOffset { get; }
+		public static int IsEngineStartingOffset { get; }
+
+		public static int IsWantedOffset { get; }
+
+		public static int PreviouslyOwnedByPlayerOffset { get; }
+		public static int NeedsToBeHotwiredOffset { get; }
+
+		public static int AlarmTimeOffset { get; }
 
 		#endregion
 
