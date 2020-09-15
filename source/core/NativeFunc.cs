@@ -89,7 +89,7 @@ namespace SHVDN
 		{
 			const int maxLengthUtf8 = 99;
 
-			if (Encoding.UTF8.GetByteCount(str) <= maxLengthUtf8)
+			if (str == null || Encoding.UTF8.GetByteCount(str) <= maxLengthUtf8)
 			{
 				action(str);
 				return;
