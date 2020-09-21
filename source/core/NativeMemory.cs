@@ -945,6 +945,8 @@ namespace SHVDN
 			public uint size;
 			[FieldOffset(0x14)]
 			public uint itemSize;
+			[FieldOffset(0x20)]
+			public ushort itemCount;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public bool IsValid(uint index)
@@ -1167,7 +1169,7 @@ namespace SHVDN
 			if (*PedPoolAddress != 0)
 			{
 				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
-				return (int)pool->itemSize;
+				return (int)pool->itemCount;
 			}
 			return 0;
 		}
