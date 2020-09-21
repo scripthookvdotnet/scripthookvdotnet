@@ -420,7 +420,7 @@ namespace GTA
 		Taphillbilly = 2585681490u,
 		TaylorFemaleYoung = 450271392u,
 		Tramp01 = 1787764635u,
-		UshiMaleYoung = 4218162071,
+		UshiMaleYoung = 4218162071u,
 		VagosFun01 = 3299219389u,
 		VinceMaleMiddleAge = 2526968950u,
 		WareMechMale01 = 4154933561u,
