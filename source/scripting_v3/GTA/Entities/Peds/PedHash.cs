@@ -304,7 +304,7 @@ namespace GTA
 		CocaineMale01 = 1456705429u,
 		ComJane = 3064628686u,
 		Corpse01UFY = 2624589981u,
-		Corpse01UMY = 773063444u,
+		Corpse01UMY = 2495782975u,
 		Corpse02UFY = 228356856u,
 		CounterfeitFemale01 = 3079205365u,
 		CounterfeitMale01 = 2555758964u,
