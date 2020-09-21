@@ -79,7 +79,7 @@ namespace GTA.Native
 		Boxville5 = 682434785u,
 		Brawler = 2815302597u,
 		Brickade = 3989239879u,
-		Brioso = 1549126457,
+		Brioso = 1549126457u,
 		Bruiser = 668439077u,
 		Bruiser2 = 2600885406u,
 		Bruiser3 = 2252616474u,
