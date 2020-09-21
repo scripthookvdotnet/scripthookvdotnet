@@ -762,5 +762,25 @@ namespace GTA
 		/// The default English text for this value is "Enemy".
 		/// </summary>
 		Enemy2,
+		RappelPoint,
+		SwapCar,
+		ScubaGear,
+		ControlPanel1,
+		ControlPanel2,
+		ControlPanel3,
+		ControlPanel4,
+		SnowTruck,
+		Buggy1,
+		Buggy2,
+		Zhaba,
+		Gerald,
+		Ron,
+		Arcade,
+		DroneControls,
+		RCTank,
+		Stairs,
+		Camera2,
+		ShipWheel = 751,
+		SpaceshipPart,
 	}
 }
