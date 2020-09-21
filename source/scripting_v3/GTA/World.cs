@@ -325,9 +325,41 @@ namespace GTA
 		#region Entities
 
 		/// <summary>
-		/// A fast way to get the total number of vehicles spawned in the world.
+		/// A fast way to get the total number of <see cref="Vehicle"/>s spawned in the world.
 		/// </summary>
 		public static int VehicleCount => SHVDN.NativeMemory.GetVehicleCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Ped"/>s spawned in the world.
+		/// </summary>
+		public static int PedCount => SHVDN.NativeMemory.GetPedCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Prop"/>s spawned in the world.
+		/// </summary>
+		public static int PropCount => SHVDN.NativeMemory.GetObjectCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Prop"/>s in the world associated with a <see cref="Pickup"/>.
+		/// </summary>
+		public static int PickupObjectCount => SHVDN.NativeMemory.GetPickupObjectCount();
+
+		/// <summary>
+		/// The total number of <see cref="Vehicle"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Vehicle"/> is the same as this limit and the game tries to create a <see cref="Vehicle"/>.</remarks>
+		public static int VehicleCapacity => SHVDN.NativeMemory.GetVehicleCapacity();
+		/// <summary>
+		/// The total number of <see cref="Ped"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Ped"/> is the same as this limit and the game tries to create a <see cref="Ped"/>.</remarks>
+		public static int PedCapacity => SHVDN.NativeMemory.GetPedCapacity();
+		/// <summary>
+		/// The total number of <see cref="Prop"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Prop"/> is the same as this limit and the game tries to create a <see cref="Prop"/>.</remarks>
+		public static int PropCapacity => SHVDN.NativeMemory.GetObjectCapacity();
+		/// <summary>
+		/// The total number of <see cref="Prop"/>s in the world associated with a <see cref="Pickup"/> that can exist in the world.
+		/// </summary>
+		public static int PickupObjectCapacity => SHVDN.NativeMemory.GetPickupObjectCapacity();
 
 		/// <summary>
 		/// Gets the closest <see cref="Ped"/> to a given position in the World.
