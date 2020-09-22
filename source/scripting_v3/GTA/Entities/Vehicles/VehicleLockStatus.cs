@@ -3,19 +3,29 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
+
 namespace GTA
 {
 	public enum VehicleLockStatus
 	{
 		None,
 		Unlocked,
-		Locked,
-		LockedForPlayer,
 		/// <summary>
-		/// <para>The vehicle is locked and must be broken into even if already broken into (the same as <see cref="CanBeBrokenIntoPersist"/>).</para>
-		/// <para>Doesn't allow players to exit the vehicle with the exit vehicle key or button.</para>
+		/// The <see cref="Vehicle"/> cannot be entered regardless of whether the door is open or closed, or missing entirely.
+		/// Warping into the <see cref="Vehicle"/> is the only way to make <see cref="Ped"/>s get in on a seat.
 		/// </summary>
-		StickPlayerInside,
+		CannotEnter,
+		/// <summary>
+		/// Players cannot enter the <see cref="Vehicle"/> regardless of whether the door is open or closed, or missing entirely.
+		///Warping into the <see cref="Vehicle"/> is the only way to make <see cref="Ped"/>s get in on a seat.
+		/// </summary>
+		PlayerCannotEnter,
+		/// <summary>
+		/// <para>Doesn't allow players to exit the <see cref="Vehicle"/> with the exit vehicle key or button.</para>
+		/// <para>The <see cref="Vehicle"/> is locked and must be broken into even if already broken into (the same as <see cref="CanBeBrokenIntoPersist"/>).</para>
+		/// </summary>
+		PlayerCannotLeaveCanBeBrokenIntoPersist,
 		/// <summary>
 		/// For players, the <see cref="Vehicle"/> cannot open any door if it has a driver.
 		/// For AI, entering vehicle tasks will not start if the target <see cref="Vehicle"/>'s lock status is set to this value and the <see cref="Vehicle"/> has a driver.
@@ -44,6 +54,20 @@ namespace GTA
 		/// Changing the <see cref="Vehicle"/>'s lock status to this value does not immediately block <see cref="Ped"/>s' entering vehicle tasks.
 		/// </remarks>
 		DriversSeatOnlyNoJacking,
+		/// <summary>Players cannot attempt to enter the <see cref="Vehicle"/> with the enter vehicle key or button.</summary>
+		IgnoredByPlayer,
+
+		[Obsolete("VehicleLockStatus.Locked is obsolete, please use VehicleLockStatus.CannotEnter instead.")]
+		Locked = 2,
+		[Obsolete("VehicleLockStatus.LockedForPlayer is obsolete, please use VehicleLockStatus.PlayerCannotEnter instead.")]
+		LockedForPlayer,
+		/// <summary>
+		/// <para>The <see cref="Vehicle"/> is locked and must be broken into even if already broken into (the same as <see cref="CanBeBrokenIntoPersist"/>).</para>
+		/// <para>Doesn't allow players to exit the <see cref="Vehicle"/> with the exit vehicle key or button.</para>
+		/// </summary>
+		[Obsolete("VehicleLockStatus.StickPlayerInside is obsolete, please use VehicleLockStatus.PlayerCannotLeaveCanBeBrokenIntoPersist instead.")]
+		StickPlayerInside,
+		[Obsolete("VehicleLockStatus.CannotBeTriedToEnter is obsolete, please use VehicleLockStatus.IgnoredByPlayer instead.")]
 		CannotBeTriedToEnter = 10,
 	}
 }
