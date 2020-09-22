@@ -37,6 +37,7 @@ namespace GTA
 			"RADIO_20_THELAB",
 			"RADIO_21_DLC_XM17",
 			"RADIO_22_DLC_BATTLE_MIX1_RADIO",
+			"RADIO_23_DLC_XM19_RADIO",
 			"RADIO_OFF"
 		};
 		#endregion
