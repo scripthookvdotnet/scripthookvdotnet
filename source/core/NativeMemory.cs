@@ -841,6 +841,37 @@ namespace SHVDN
 
 			return VehicleStructClassType.Invalid;
 		}
+		static IntPtr GetModelInfo(IntPtr entityAddress)
+		{
+			if (entityAddress != IntPtr.Zero)
+			{
+				return new IntPtr(*(long*)((ulong)entityAddress.ToInt64() + 0x20));
+			}
+
+			return IntPtr.Zero;
+		}
+		static int GetModelHashFromFwArcheType(IntPtr fwArcheTypeAddress)
+		{
+			if (fwArcheTypeAddress != IntPtr.Zero)
+			{
+				return (*(int*)((ulong)fwArcheTypeAddress.ToInt64() + 0x18));
+			}
+
+			return 0;
+		}
+		static int GetModelHashFromEntity(IntPtr entityAddress)
+		{
+			if (entityAddress != IntPtr.Zero)
+			{
+				var modelInfoAddress = GetModelInfo(entityAddress);
+				if (modelInfoAddress != IntPtr.Zero)
+				{
+					return GetModelHashFromFwArcheType(modelInfoAddress);
+				}
+			}
+
+			return 0;
+		}
 
 		public static bool IsModelAPed(int modelHash)
 		{
@@ -1037,9 +1068,7 @@ namespace SHVDN
 
 				if (doModelCheck)
 				{
-					// Ugly workaround because function addresses are invalid on latest game patch
-					int handle = NativeMemory.AddEntityToPoolFunc(address);
-					int modelHash = *(int*)NativeFunc.Invoke(0x9F47B058362C84B5 /*GET_ENTITY_MODEL*/, handle);
+					int modelHash = GetModelHashFromEntity(new IntPtr((long)address));
 					if (!Array.Exists(modelHashes, x => x == modelHash))
 						return false;
 
