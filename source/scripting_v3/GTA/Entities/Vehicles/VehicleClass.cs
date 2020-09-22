@@ -29,5 +29,6 @@ namespace GTA
 		Military,
 		Commercial,
 		Trains,
+		OpenWheel,
 	}
 }
