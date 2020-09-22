@@ -42,8 +42,9 @@ namespace GTA
 		/// <returns>The identifier of the active sound effect instance.</returns>
 		public static int PlaySoundAt(Entity entity, string soundFile)
 		{
-			Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, -1, soundFile, entity.Handle, 0, 0, 0);
-			return Function.Call<int>(Hash.GET_SOUND_ID);
+			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, id, soundFile, entity.Handle, 0, 0, 0);
+			return id;
 		}
 		/// <summary>
 		/// Plays a sound from the game's sound files at the specified <paramref name="entity"/>.
@@ -54,8 +55,9 @@ namespace GTA
 		/// <returns>The identifier of the active sound effect instance.</returns>
 		public static int PlaySoundAt(Entity entity, string soundFile, string soundSet)
 		{
-			Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, -1, soundFile, entity.Handle, soundSet, 0, 0);
-			return Function.Call<int>(Hash.GET_SOUND_ID);
+			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, id, soundFile, entity.Handle, soundSet, 0, 0);
+			return id;
 		}
 		/// <summary>
 		/// Plays a sound from the game's sound files at the specified <paramref name="position"/>.
@@ -65,8 +67,9 @@ namespace GTA
 		/// <returns>The identifier of the active sound effect instance.</returns>
 		public static int PlaySoundAt(Vector3 position, string soundFile)
 		{
-			Function.Call(Hash.PLAY_SOUND_FROM_COORD, -1, soundFile, position.X, position.Y, position.Z, 0, 0, 0, 0);
-			return Function.Call<int>(Hash.GET_SOUND_ID);
+			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			Function.Call(Hash.PLAY_SOUND_FROM_COORD, id, soundFile, position.X, position.Y, position.Z, 0, 0, 0, 0);
+			return id;
 		}
 		/// <summary>
 		/// Plays a sound from the game's sound files at the specified <paramref name="position"/>.
@@ -77,8 +80,9 @@ namespace GTA
 		/// <returns>The identifier of the active sound effect instance.</returns>
 		public static int PlaySoundAt(Vector3 position, string soundFile, string soundSet)
 		{
-			Function.Call(Hash.PLAY_SOUND_FROM_COORD, -1, soundFile, position.X, position.Y, position.Z, soundSet, 0, 0, 0);
-			return Function.Call<int>(Hash.GET_SOUND_ID);
+			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			Function.Call(Hash.PLAY_SOUND_FROM_COORD, id, soundFile, position.X, position.Y, position.Z, soundSet, 0, 0, 0);
+			return id;
 		}
 		/// <summary>
 		/// Plays a sound from the game's sound files without transformation.
@@ -87,8 +91,9 @@ namespace GTA
 		/// <returns>The identifier of the active sound effect instance.</returns>
 		public static int PlaySoundFrontend(string soundFile)
 		{
-			Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, soundFile, 0, 0);
-			return Function.Call<int>(Hash.GET_SOUND_ID);
+			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			Function.Call(Hash.PLAY_SOUND_FRONTEND, id, soundFile, 0, 0);
+			return id;
 		}
 		/// <summary>
 		/// Plays a sound from the game's sound files without transformation.
@@ -98,8 +103,9 @@ namespace GTA
 		/// <returns>The identifier of the active sound effect instance.</returns>
 		public static int PlaySoundFrontend(string soundFile, string soundSet)
 		{
-			Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, soundFile, soundSet, 0);
-			return Function.Call<int>(Hash.GET_SOUND_ID);
+			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			Function.Call(Hash.PLAY_SOUND_FRONTEND, id, soundFile, soundSet, 0);
+			return id;
 		}
 
 		/// <summary>
