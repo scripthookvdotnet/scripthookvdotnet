@@ -350,6 +350,12 @@ namespace SHVDN
 			VehicleModels = Array.AsReadOnly(result);
 
 			#region -- Enable All DLC Vehicles --
+			// no need to patch the global variable in v1.0.573.1 or older builds
+			if (gameVersion <= 15)
+			{
+				return;
+			}
+
 			address = FindPattern("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
 			var yscScriptTable = (YscScriptTable*)(address + *(int*)(address + 3) + 7);
 
