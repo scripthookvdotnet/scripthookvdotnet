@@ -14,5 +14,7 @@ namespace GTA
 		WarpOut = 16,
 		LeaveDoorOpen = 256,
 		BailOut = 4096,
+		FromLeftSide = 131072,
+		FromRightSide = 262144,
 	}
 }
