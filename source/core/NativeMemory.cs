@@ -264,7 +264,8 @@ namespace SHVDN
 			}
 
 			// use the former pattern if the version is 1.0.1604.0 or newer
-			address = GetGameVersion() >= 46 ?
+			var gameVersion = GetGameVersion();
+			address = gameVersion >= 46 ?
 						FindPattern("\xF3\x0F\x10\x9F\xD4\x08\x00\x00\x0F\x2F\xDF\x73\x0A", "xxxx????xxxxx") :
 						FindPattern("\xF3\x0F\x10\x8F\x68\x08\x00\x00\x88\x4D\x8C\x0F\x2F\xCF", "xxxx????xxx???");
 			if (address != null)
@@ -347,6 +348,41 @@ namespace SHVDN
 			for (int i = 0; i < 0x20; i++)
 				result[i] = Array.AsReadOnly(hashes[i].ToArray());
 			VehicleModels = Array.AsReadOnly(result);
+
+			#region -- Enable All DLC Vehicles --
+			address = FindPattern("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
+			var yscScriptTable = (YscScriptTable*)(address + *(int*)(address + 3) + 7);
+
+			// find the shop_controller script
+			YscScriptTableItem* shopControllerItem = yscScriptTable->FindScript(0x39DA738B);
+
+			if (shopControllerItem == null || !shopControllerItem->IsLoaded())
+			{
+				return;
+			}
+
+			YscScriptHeader* shopControllerHeader = shopControllerItem->header;
+
+			for (int i = 0; i < shopControllerHeader->CodePageCount(); i++)
+			{
+				int size = shopControllerHeader->GetCodePageSize(i);
+				if (size > 0)
+				{
+					var enableCarsGlobalPattern = gameVersion >= 46 ?
+							"\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01" :
+							"\x2C\x01\x00\x00\x20\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01";
+					var enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
+					var enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
+					address = FindPattern(enableCarsGlobalPattern, enableCarsGlobalMask, shopControllerHeader->GetCodePageAddress(i), (ulong)size);
+
+					if (address != null)
+					{
+						int globalindex = *(int*)(address + enableCarsGlobalOffset) & 0xFFFFFF;
+						*(int*)GetGlobalPtr(globalindex).ToPointer() = 1;
+					}
+				}
+			}
+			#endregion
 		}
 
 		/// <summary>
@@ -619,6 +655,83 @@ namespace SHVDN
 			var entryText = (char*)GetLabelTextByHashFunc(GetLabelTextByHashAddress, entryLabelHash);
 			return entryText != null ? PtrToStringUTF8(new IntPtr(entryText)) : string.Empty;
 		}
+
+		#endregion
+
+		#region -- YSC Script Data --
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct YscScriptHeader
+		{
+			[FieldOffset(0x10)]
+			internal byte** codeBlocksOffset;
+			[FieldOffset(0x1C)]
+			internal int codeLength;
+			[FieldOffset(0x24)]
+			internal int localCount;
+			[FieldOffset(0x2C)]
+			internal int nativeCount;
+			[FieldOffset(0x30)]
+			internal long* localOffset;
+			[FieldOffset(0x40)]
+			internal long* nativeOffset;
+			[FieldOffset(0x58)]
+			internal int nameHash;
+
+			internal int CodePageCount()
+			{
+				return (codeLength + 0x3FFF) >> 14;
+			}
+			internal int GetCodePageSize(int page)
+			{
+				return (page < 0 || page >= CodePageCount() ? 0 : (page == CodePageCount() - 1) ? codeLength & 0x3FFF : 0x4000);
+			}
+			internal IntPtr GetCodePageAddress(int page)
+			{
+				return new IntPtr(codeBlocksOffset[page]);
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct YscScriptTableItem
+		{
+			[FieldOffset(0x0)]
+			internal YscScriptHeader* header;
+			[FieldOffset(0xC)]
+			internal int hash;
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			internal bool IsLoaded()
+			{
+				return header != null;
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct YscScriptTable
+		{
+			[FieldOffset(0x0)]
+			internal YscScriptTableItem* TablePtr;
+			[FieldOffset(0x18)]
+			internal uint count;
+
+			internal YscScriptTableItem* FindScript(int hash)
+			{
+				if (TablePtr == null)
+				{
+					return null; //table initialisation hasnt happened yet
+				}
+				for (int i = 0; i < count; i++)
+				{
+					if (TablePtr[i].hash == hash)
+					{
+						return &TablePtr[i];
+					}
+				}
+				return null;
+			}
+		}
+
 
 		#endregion
 
