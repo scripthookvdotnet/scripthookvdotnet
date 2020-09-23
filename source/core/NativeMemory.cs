@@ -75,9 +75,21 @@ namespace SHVDN
 		static unsafe byte* FindPattern(string pattern, string mask)
 		{
 			ProcessModule module = Process.GetCurrentProcess().MainModule;
+			return FindPattern(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
+		}
 
-			ulong address = (ulong)module.BaseAddress.ToInt64();
-			ulong endAddress = address + (ulong)module.ModuleMemorySize;
+		/// <summary>
+		/// Searches the specific address space of the current process for a memory pattern.
+		/// </summary>
+		/// <param name="pattern">The pattern.</param>
+		/// <param name="mask">The pattern mask.</param>
+		/// <param name="startAddress">The address to start searching at.</param>
+		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
+		/// <returns>The address of a region matching the pattern or <c>null</c> if none was found.</returns>
+		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
+		{
+			ulong address = (ulong)startAddress.ToInt64();
+			ulong endAddress = address + size;
 
 			for (; address < endAddress; address++)
 			{
