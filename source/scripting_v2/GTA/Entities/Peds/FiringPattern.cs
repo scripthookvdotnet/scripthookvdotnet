@@ -24,5 +24,10 @@ namespace GTA
 		BurstFireMicro = 0x42EF03FD,
 		BurstFireBursts = 0x42EF03FD,
 		BurstFireTank = 0xE2CA3A71,
+		TampaMortar = 2452873343u,
+		HunterBarrage = 2905356422u,
+		AkulaBarrage = 1392378214u,
+		ChernoBarrage = 703122589u,
+		Pounder2Barrage = 2228901467u,
 	}
 }
