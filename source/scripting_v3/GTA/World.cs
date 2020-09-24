@@ -616,13 +616,17 @@ namespace GTA
 			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 		}
 		/// <summary>
-		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
+		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified. Does not work currently.
 		/// </summary>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
 		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
 		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
 		{
+			// GET_RANDOM_VEHICLE_MODEL_IN_MEMORY is not present but just a nullsub in the retail version
+			// We need certain memory patterns to get this method to spawn random ambient vehicles properly
+			return null;
+
 			int outModel, outInt;
 			unsafe
 			{
