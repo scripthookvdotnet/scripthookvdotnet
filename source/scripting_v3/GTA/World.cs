@@ -325,9 +325,41 @@ namespace GTA
 		#region Entities
 
 		/// <summary>
-		/// A fast way to get the total number of vehicles spawned in the world.
+		/// A fast way to get the total number of <see cref="Vehicle"/>s spawned in the world.
 		/// </summary>
 		public static int VehicleCount => SHVDN.NativeMemory.GetVehicleCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Ped"/>s spawned in the world.
+		/// </summary>
+		public static int PedCount => SHVDN.NativeMemory.GetPedCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Prop"/>s spawned in the world.
+		/// </summary>
+		public static int PropCount => SHVDN.NativeMemory.GetObjectCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Prop"/>s in the world associated with a <see cref="Pickup"/>.
+		/// </summary>
+		public static int PickupObjectCount => SHVDN.NativeMemory.GetPickupObjectCount();
+
+		/// <summary>
+		/// The total number of <see cref="Vehicle"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Vehicle"/> is the same as this limit and the game tries to create a <see cref="Vehicle"/>.</remarks>
+		public static int VehicleCapacity => SHVDN.NativeMemory.GetVehicleCapacity();
+		/// <summary>
+		/// The total number of <see cref="Ped"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Ped"/> is the same as this limit and the game tries to create a <see cref="Ped"/>.</remarks>
+		public static int PedCapacity => SHVDN.NativeMemory.GetPedCapacity();
+		/// <summary>
+		/// The total number of <see cref="Prop"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Prop"/> is the same as this limit and the game tries to create a <see cref="Prop"/>.</remarks>
+		public static int PropCapacity => SHVDN.NativeMemory.GetObjectCapacity();
+		/// <summary>
+		/// The total number of <see cref="Prop"/>s in the world associated with a <see cref="Pickup"/> that can exist in the world.
+		/// </summary>
+		public static int PickupObjectCapacity => SHVDN.NativeMemory.GetPickupObjectCapacity();
 
 		/// <summary>
 		/// Gets the closest <see cref="Ped"/> to a given position in the World.
@@ -583,7 +615,7 @@ namespace GTA
 		/// <remarks>returns <c>null</c> if the <see cref="Ped"/> could not be spawned</remarks>
 		public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
 		{
-			if (!model.IsPed || !model.Request(1000))
+			if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
 			{
 				return null;
 			}
@@ -596,6 +628,11 @@ namespace GTA
 		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
 		public static Ped CreateRandomPed(Vector3 position)
 		{
+			if (PedCount >= PedCapacity)
+			{
+				return null;
+			}
+
 			return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
 		}
 
@@ -608,7 +645,7 @@ namespace GTA
 		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
 		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
 		{
-			if (!model.IsVehicle || !model.Request(1000))
+			if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
 			{
 				return null;
 			}
@@ -651,7 +688,7 @@ namespace GTA
 		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
 		{
-			if (!model.Request(1000))
+			if (PropCount >= PropCapacity || !model.Request(1000))
 			{
 				return null;
 			}
@@ -692,7 +729,7 @@ namespace GTA
 		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
 		{
-			if (!model.Request(1000))
+			if (PropCount >= PropCapacity || !model.Request(1000))
 			{
 				return null;
 			}

@@ -1107,6 +1107,8 @@ namespace SHVDN
 			public uint size;
 			[FieldOffset(0x14)]
 			public uint itemSize;
+			[FieldOffset(0x20)]
+			public ushort itemCount;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public bool IsValid(uint index)
@@ -1324,7 +1326,7 @@ namespace SHVDN
 			if (*PedPoolAddress != 0)
 			{
 				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
-				return (int)pool->itemSize;
+				return (int)pool->itemCount;
 			}
 			return 0;
 		}
@@ -1334,6 +1336,61 @@ namespace SHVDN
 			{
 				VehiclePool* pool = *(VehiclePool**)(*VehiclePoolAddress);
 				return (int)pool->itemCount;
+			}
+			return 0;
+		}
+		public static int GetObjectCount()
+		{
+			if (*ObjectPoolAddress != 0)
+			{
+				GenericPool* pool = (GenericPool*)(*ObjectPoolAddress);
+				return (int)pool->itemCount;
+			}
+			return 0;
+		}
+		public static int GetPickupObjectCount()
+		{
+			if (*PickupObjectPoolAddress != 0)
+			{
+				GenericPool* pool = (GenericPool*)(*PickupObjectPoolAddress);
+				return (int)pool->itemCount;
+			}
+			return 0;
+		}
+
+		public static int GetPedCapacity()
+		{
+			if (*PedPoolAddress != 0)
+			{
+				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
+				return (int)pool->size;
+			}
+			return 0;
+		}
+		public static int GetVehicleCapacity()
+		{
+			if (*VehiclePoolAddress != 0)
+			{
+				VehiclePool* pool = *(VehiclePool**)(*VehiclePoolAddress);
+				return (int)pool->size;
+			}
+			return 0;
+		}
+		public static int GetObjectCapacity()
+		{
+			if (*ObjectPoolAddress != 0)
+			{
+				GenericPool* pool = (GenericPool*)(*ObjectPoolAddress);
+				return (int)pool->size;
+			}
+			return 0;
+		}
+		public static int GetPickupObjectCapacity()
+		{
+			if (*PickupObjectPoolAddress != 0)
+			{
+				GenericPool* pool = (GenericPool*)(*PickupObjectPoolAddress);
+				return (int)pool->size;
 			}
 			return 0;
 		}
