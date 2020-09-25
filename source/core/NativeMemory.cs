@@ -315,6 +315,12 @@ namespace SHVDN
 				AlarmTimeOffset = *(int*)(address + 52);
 			}
 
+			address = FindPattern("\x44\x0F\x2F\x43\x00\x45\x8D\x74\x24\x01", "xxxx?xxxxx");
+			if (address != null)
+			{
+				HandlingDataOffset = *(int*)(address - 35);
+			}
+
 			// Generate vehicle model list
 			List<int>[] hashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
@@ -880,6 +886,8 @@ namespace SHVDN
 		public static int NeedsToBeHotwiredOffset { get; }
 
 		public static int AlarmTimeOffset { get; }
+
+		public static int HandlingDataOffset { get; }
 
 		#endregion
 
