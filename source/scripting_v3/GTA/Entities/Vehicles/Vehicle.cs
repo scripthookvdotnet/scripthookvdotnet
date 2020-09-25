@@ -210,6 +210,20 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 		}
 
+		public HandlingData HandlingData
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HandlingDataOffset == 0)
+				{
+					return new HandlingData(IntPtr.Zero);
+				}
+
+				return new HandlingData(SHVDN.NativeMemory.ReadAddress(MemoryAddress + SHVDN.NativeMemory.HandlingDataOffset));
+			}
+		}
+
 		#endregion
 
 		#region Health
