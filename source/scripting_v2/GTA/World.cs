@@ -372,13 +372,21 @@ namespace GTA
 
 		}
 
+		private static int VehicleCount => SHVDN.NativeMemory.GetVehicleCount();
+		private static int PedCount => SHVDN.NativeMemory.GetPedCount();
+		private static int PropCount => SHVDN.NativeMemory.GetObjectCount();
+
+		private static int VehicleCapacity => SHVDN.NativeMemory.GetVehicleCapacity();
+		private static int PedCapacity => SHVDN.NativeMemory.GetPedCapacity();
+		private static int PropCapacity => SHVDN.NativeMemory.GetObjectCapacity();
+
 		public static Ped CreatePed(Model model, Vector3 position)
 		{
 			return CreatePed(model, position, 0.0f);
 		}
 		public static Ped CreatePed(Model model, Vector3 position, float heading)
 		{
-			if (!model.IsPed || !model.Request(1000))
+			if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
 			{
 				return null;
 			}
@@ -387,6 +395,11 @@ namespace GTA
 		}
 		public static Ped CreateRandomPed(Vector3 position)
 		{
+			if (PedCount >= PedCapacity)
+            {
+				return null;
+            }
+
 			return Function.Call<Ped>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z);
 		}
 
@@ -396,7 +409,7 @@ namespace GTA
 		}
 		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading)
 		{
-			if (!model.IsVehicle || !model.Request(1000))
+			if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
 			{
 				return null;
 			}
@@ -406,6 +419,11 @@ namespace GTA
 
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
 		{
+			if (PropCount >= PropCapacity)
+			{
+				return null;
+			}
+
 			if (placeOnGround)
 			{
 				position.Z = GetGroundHeight(position);
