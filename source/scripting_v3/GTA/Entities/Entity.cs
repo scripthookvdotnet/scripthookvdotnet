@@ -770,6 +770,118 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is water cannon proof.
+		/// <see cref="Ped"/>s does not get ragdolled by the water jet from fire hydrants when this property is set to <c>true</c>.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is water cannon proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsWaterCannonProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 12);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 12);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 12);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is steam proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is steam proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSteamProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 15);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 15);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 15);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Entity"/> is smoke proof.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Entity"/> is smoke proof; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSmokeProof
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 16);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + 392, 16);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + 392, 16);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is invincible.
 		/// </summary>
 		/// <value>
