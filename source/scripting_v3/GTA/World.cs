@@ -283,23 +283,8 @@ namespace GTA
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetAllBlips(params BlipSprite[] blipTypes)
 		{
-			var res = new List<Blip>();
-			if (blipTypes.Length == 0)
-			{
-				blipTypes = Enum.GetValues(typeof(BlipSprite)).Cast<BlipSprite>().ToArray();
-			}
-			foreach (BlipSprite sprite in blipTypes)
-			{
-				int handle = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, sprite);
-
-				while (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
-				{
-					res.Add(new Blip(handle));
-
-					handle = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, sprite);
-				}
-			}
-			return res.ToArray();
+			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(blipTypesInt), handle => new Blip(handle));
 		}
 
 		/// <summary>
