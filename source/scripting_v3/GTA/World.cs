@@ -288,6 +288,18 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Blip"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Blip"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Blip"/>s.</param>
+		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
+		public static Blip[] GetNearbyBlips(Vector3 position, float radius, params BlipSprite[] blipTypes)
+		{
+			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToArray(), radius, blipTypesInt), handle => new Blip(handle));
+		}
+
+		/// <summary>
 		/// Creates a <see cref="Blip"/> at the given position on the map.
 		/// </summary>
 		/// <param name="position">The position of the blip on the map.</param>
