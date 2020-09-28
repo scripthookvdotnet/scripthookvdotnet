@@ -1604,6 +1604,29 @@ namespace SHVDN
 			}
 		}
 
+		public static IntPtr GetBlipAddress(int handle)
+		{
+			if (RadarBlipPoolAddress == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			int poolIndexOfHandle = handle & 0xFFFF;
+			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+
+			if (poolIndexOfHandle >= possibleBlipCount)
+			{
+				return IntPtr.Zero;
+			}
+
+			ulong address = *(RadarBlipPoolAddress + poolIndexOfHandle);
+
+			if (address != 0 && *(int*)(address + 4) == handle)
+				return new IntPtr((long)address);
+
+			return IntPtr.Zero;
+		}
+
 		#endregion
 
 		#region -- Entity Addresses --

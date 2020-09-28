@@ -81,7 +81,9 @@
     <Compile Include="GTA\Audio.cs" />
     <Compile Include="GTA\AudioFlags.cs" />
     <Compile Include="GTA\Blip.cs" />
+    <Compile Include="GTA\BlipCategoryType.cs" />
     <Compile Include="GTA\BlipColor.cs" />
+    <Compile Include="GTA\BlipDisplayType.cs" />
     <Compile Include="GTA\BlipSprite.cs" />
     <Compile Include="GTA\Button.cs" />
     <Compile Include="GTA\Camera.cs" />

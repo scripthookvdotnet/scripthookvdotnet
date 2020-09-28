@@ -3,6 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
+using System.Drawing;
 using GTA.Math;
 using GTA.Native;
 
@@ -15,6 +17,11 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the memory address where the <see cref="GTA.Entity"/> is stored in memory.
+		/// </summary>
+		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetBlipAddress(Handle);
+
+		/// <summary>
 		/// Gets the type of this <see cref="Blip"/>.
 		/// </summary>
 		public int Type
@@ -23,7 +30,44 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the display type of this <see cref="Blip"/>.
+		/// </summary>
+		public BlipDisplayType BlipDisplayType
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return (BlipDisplayType)SHVDN.NativeMemory.ReadByte(address + 0x5E);
+			}
+			set => Function.Call<int>(Hash.SET_BLIP_DISPLAY, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the category type of this <see cref="Blip"/>.
+		/// </summary>
+		public BlipCategoryType BlipCategoryType
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return (BlipCategoryType)SHVDN.NativeMemory.ReadByte(address + 0x60);
+			}
+			set => Function.Call<int>(Hash.SET_BLIP_CATEGORY, Handle, value);
+		}
+
+		/// <summary>
 		/// Gets or sets the alpha of this <see cref="Blip"/> on the map.
+		/// The value is up to 255.
 		/// </summary>
 		public int Alpha
 		{
@@ -32,18 +76,49 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the priority of this <see cref="Blip"/>.
+		/// Gets or sets the priority of this <see cref="Blip"/>.
+		/// Overlapping <see cref="Blip"/>s with a higher priority cover those with a smaller one.
+		/// The value is up to 255.
 		/// </summary>
 		public int Priority
 		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadByte(address + 0x5D);
+			}
 			set => Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
 		}
 
 		/// <summary>
-		/// Sets this <see cref="Blip"/>s label to the given number.
+		/// Gets or sets this <see cref="Blip"/>s label to the given number.
 		/// </summary>
+		/// <remarks>returns <c>-1</c> if the internal value of this property value is between <c>0x80</c> to <c>0xFF</c>.</remarks>
 		public int NumberLabel
 		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				var returnValue = (int)SHVDN.NativeMemory.ReadByte(address + 0x61);
+
+				// the game does not show a number label on the blip if the value is between 0x80 to 0xFF
+				if ((returnValue & 0x80) != 0)
+				{
+					return -1;
+				}
+
+				return returnValue;
+			}
 			set => Function.Call(Hash.SHOW_NUMBER_ON_BLIP, Handle, value);
 		}
 
@@ -65,6 +140,25 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the secondary color of this <see cref="Blip"/>.
+		/// </summary>
+		public Color SecondaryColor
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					// The same value is set when the game creates a blip
+					return System.Drawing.Color.FromArgb(unchecked((int)0xFF5DB6E5));
+				}
+
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(address + 0x4C));
+			}
+			set => Function.Call(Hash.SET_BLIP_SECONDARY_COLOUR, Handle, value.R, value.G, value.B);
+		}
+
+		/// <summary>
 		/// Gets or sets the sprite of this <see cref="Blip"/>.
 		/// </summary>
 		public BlipSprite Sprite
@@ -74,15 +168,63 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets this <see cref="Blip"/>s label to the given string.
+		/// Get or sets the custom name of this <see cref="Blip"/>.
+		/// The custom name appears in the legends list on the map.
 		/// </summary>
+		/// <remarks>
+		/// Returns <c>null</c> if the <see cref="Blip"/> does not exist.
+		/// Setting <see cref="Sprite"/> will clear this name.
+		/// </remarks>
+		/// <seealso cref="DisplayNameHash"/>
 		public string Name
 		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return null;
+				}
+
+				var nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
+
+				// Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
+				return nameLength != 0 ? SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28)) : string.Empty;
+			}
 			set
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_SET_BLIP_NAME, SHVDN.NativeMemory.String);
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, value);
 				Function.Call(Hash.END_TEXT_COMMAND_SET_BLIP_NAME, Handle);
+			}
+		}
+
+		/// <summary>
+		/// Get or sets this <see cref="Blip"/>s display name hash.
+		/// When <see cref="Name"/> is not set, the game will show the localized <see cref="string"/> from the games language files with a specified GXT key hash.
+		/// </summary>
+		/// <remarks>Setting <see cref="Sprite"/> will reset this value.</remarks>
+		public int DisplayNameHash
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadInt32(address + 0x38);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteInt32(address + 0x38, value);
 			}
 		}
 
@@ -96,11 +238,47 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the rotation of this <see cref="Blip"/> on the map.
+		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as an <see cref="int"/>.
+		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value strictly, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
+		/// <value>
+		/// The rotation as an integer.
+		/// </value>
+		/// <seealso cref="RotationFloat"/>
 		public int Rotation
 		{
+			get => Game.Version >= GameVersion.v1_0_2060_1_Steam ? Function.Call<int>((Hash)0x003E92BA477F9D7F, Handle) : (int)RotationFloat;
 			set => Function.Call(Hash.SET_BLIP_ROTATION, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as a <see cref="float"/>.
+		/// </summary>
+		/// <value>
+		/// The rotation as a float.
+		/// </value>
+		public float RotationFloat
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + 0x58);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + 0x58, value);
+			}
 		}
 
 		/// <summary>
@@ -112,6 +290,106 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the x-axis scale of this <see cref="Blip"/> on the map.
+		/// </summary>
+		public float ScaleX
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + 0x50);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + 0x50, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the y-axis scale of this <see cref="Blip"/> on the map.
+		/// </summary>
+		public float ScaleY
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + 0x54);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + 0x54, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the interval in ms between each blip flashing.
+		/// The value is up to 65535.
+		/// </summary>
+		public int FlashInterval
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadInt16(address + 0x44);
+			}
+			set => Function.Call(Hash.SET_BLIP_FLASH_INTERVAL, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the interval in ms between each blip flashing.
+		/// The value is up to 65534.
+		/// </summary>
+		/// <remarks>returns <c>-1</c> if the internal value of this property value is set to <c>65535</c>, which indicates that the flashing timer is not set.</remarks>
+		public int FlashTimer
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				int returnValue = SHVDN.NativeMemory.ReadInt16(address + 0x44);
+
+				if (returnValue == 0xFFFF)
+				{
+					return -1;
+				}
+
+				return returnValue;
+			}
+			set => Function.Call(Hash.SET_BLIP_FLASH_TIMER, Handle, value);
+		}
+
+		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Blip"/> is attached to.
 		/// </summary>
 		public Entity Entity
@@ -120,14 +398,132 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets a value indicating whether the route to this <see cref="Blip"/> should be shown on the map.
+		/// Gets or sets a value indicating whether the route to this <see cref="Blip"/> should be shown on the map.
 		/// </summary>
 		/// <value>
 		///   <c>true</c> to show the route; otherwise, <c>false</c>.
 		/// </value>
 		public bool ShowRoute
 		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 4);
+			}
 			set => Function.Call(Hash.SET_BLIP_ROUTE, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to show the dollar sign; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShowsDollarSign
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 16);
+			}
+			set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows the heading indicator used for normal players in GTA: Online.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to show the heading indicator; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShowsHeadingIndicator
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 17);
+			}
+			set => Function.Call(Hash.SHOW_HEADING_INDICATOR_ON_BLIP, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows outline.
+		/// The outline color can be changed by setting <see cref="SecondaryColor"/>.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to show outline; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShowsOutlineIndicator
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 18);
+			}
+			set => Function.Call(Hash.SHOW_HEADING_INDICATOR_ON_BLIP, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows friend indicator, which highlights the <see cref="Blip"/> by a right half cyan circle.
+		/// The right half cyan circle indicator is used to indicate friends in GTA: Online.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to show friend indicator; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShowsFriendIndicator
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 19);
+			}
+			set => Function.Call(Hash.SHOW_FRIEND_INDICATOR_ON_BLIP, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows crew member indicator, which highlights the <see cref="Blip"/> by a left half cyan circle.
+		/// The right half cyan circle indicator is used to indicate crew members in GTA: Online.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> to show crew member indicator; otherwise, <c>false</c>.
+		/// </value>
+		public bool ShowsCrewIndicator
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 20);
+			}
+			set => Function.Call(Hash.SHOW_CREW_INDICATOR_ON_BLIP, Handle, value);
 		}
 
 		/// <summary>
@@ -174,6 +570,62 @@ namespace GTA
 		{
 			get => Function.Call<bool>(Hash.IS_BLIP_SHORT_RANGE, Handle);
 			set => Function.Call(Hash.SET_BLIP_AS_SHORT_RANGE, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Blip"/> is hidden on the map legend.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Blip"/> is hidden on the map legend; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsHiddenOnLegend
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + 0x20, 14);
+			}
+			set => Function.Call(Hash.SET_BLIP_HIDDEN_ON_LEGEND, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets the appropriate name of this <see cref="Blip"/> in the same way the game does.
+		/// </summary>
+		/// <value>
+		/// The same <see cref="string"/> as <see cref="Name"/> if the custom string is set;
+		/// otherwise, the localized <see cref="string"/> from the games language files with the same GXT key hash as <see cref="DisplayNameHash"/>.
+		/// </value>
+		/// Returns <c>null</c> if the <see cref="Blip"/> does not exist.
+		public string GetAppropriateName()
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			var nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
+
+			// Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
+			return nameLength != 0 ?
+				SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28)) :
+				Game.GetLocalizedString(SHVDN.NativeMemory.ReadInt32(address + 0x38));
+		}
+
+		/// <summary>
+		/// Sets the name of this <see cref="Blip"/> based on its current <see cref="Sprite"/>.
+		/// </summary>
+		public void ResetName()
+		{
+			// Resetting sprite also resets color
+			var color = Color;
+			Sprite = Sprite;
+			Color = color;
 		}
 
 		/// <summary>
