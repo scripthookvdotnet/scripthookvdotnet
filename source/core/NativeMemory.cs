@@ -1604,6 +1604,19 @@ namespace SHVDN
 			}
 		}
 
+		public static int GetNorthBlip()
+		{
+			if (RadarBlipPoolAddress != null)
+			{
+				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
+
+				if (northBlipAddress != 0)
+					return *(int*)(northBlipAddress + 4);
+			}
+
+			return -1;
+		}
+
 		public static IntPtr GetBlipAddress(int handle)
 		{
 			if (RadarBlipPoolAddress == null)
