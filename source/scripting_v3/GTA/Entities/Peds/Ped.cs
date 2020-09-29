@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using GTA.NaturalMotion;
 using System;
+using System.Linq;
 
 namespace GTA
 {
@@ -1124,5 +1125,10 @@ namespace GTA
 		}
 
 		#endregion
+
+		public static PedHash[] GetAllPedModels()
+		{
+			return SHVDN.NativeMemory.PedModels.Select(x => (PedHash)x).ToArray();
+		}
 	}
 }
