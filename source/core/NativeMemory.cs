@@ -324,6 +324,12 @@ namespace SHVDN
 				HandlingDataOffset = *(int*)(address - 35);
 			}
 
+			address = FindPattern("\x48\x85\xC0\x74\x3C\x8B\x80\x00\x00\x00\x00\xC1\xE8\x0F", "xxxxxxx????xxx");
+			if (address != null)
+			{
+				FirstVehicleFlagsOffset = *(int*)(address + 7);
+			}
+
 			// Generate vehicle model list
 			var vehicleHashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
@@ -906,6 +912,8 @@ namespace SHVDN
 
 		public static int HandlingDataOffset { get; }
 
+		public static int FirstVehicleFlagsOffset { get; }
+
 		#endregion
 
 		#region -- Model Info --
@@ -947,6 +955,27 @@ namespace SHVDN
 			Boat = 0xD,
 			Train = 0xE,
 			Submarine = 0xF
+		}
+		[Flags]
+		public enum VehicleFlag1 : ulong
+		{
+			Big = 0x2,
+			IsVan = 0x20,
+			CanStandOnTop = 0x10000000,
+			LawEnforcement = 0x80000000,
+			EmergencyService = 0x100000000,
+			AllowsRappel = 0x8000000000,
+			IsElectric = 0x80000000000,
+			IsOffroadVehicle = 0x1000000000000,
+			IsBus = 0x400000000000000,
+		}
+		[Flags]
+		public enum VehicleFlag2 : ulong
+		{
+			IsTank = 0x200,
+			HasBulletProofGlass = 0x1000,
+			HasLowriderHydraulics = 0x80000000000000,
+			HasLowriderDonkHydraulics = 0x800000000000000,
 		}
 
 		static int handlingIndexOffsetInModelInfo;
@@ -1039,10 +1068,34 @@ namespace SHVDN
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Blimp;
 		}
+		public static bool IsModelASubmarineCar(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.SubmarineCar;
+		}
 		public static bool IsModelATrailer(int modelHash)
 		{
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
+		}
+
+
+		public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
+		public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
+		private static bool HasVehicleFlagInternal(int modelHash, ulong flag, int flagOffset)
+		{
+			if (FirstVehicleFlagsOffset == 0)
+				return false;
+
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+
+			if (GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
+			{
+				var modelFlags = *(ulong*)(modelInfo + FirstVehicleFlagsOffset + flagOffset).ToPointer();
+				return (modelFlags & flag) != 0;
+			}
+
+			return false;
 		}
 
 		public static ReadOnlyCollection<int> WeaponModels { get; }
