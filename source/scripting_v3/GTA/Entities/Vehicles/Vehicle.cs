@@ -54,9 +54,9 @@ namespace GTA
 
 		public bool IsConvertible => Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
 		public bool IsBig => Function.Call<bool>(Hash.IS_BIG_VEHICLE, Handle);
-		public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag3.HasBulletProofGlass);
-		public bool HasLowriderHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag4.HasLowriderHydraulics);
-		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag4.HasLowriderDonkHydraulics);
+		public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasBulletProofGlass);
+		public bool HasLowriderHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
+		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
 		public bool HasParachute => Game.Version >= GameVersion.v1_0_505_2_Steam && Function.Call<bool>(Hash._GET_VEHICLE_HAS_PARACHUTE, Handle);
 		public bool HasRocketBoost => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash._GET_HAS_ROCKET_BOOST, Handle);
 
@@ -177,7 +177,7 @@ namespace GTA
 		/// </value>
 		public bool AllowRappel => Game.Version >= GameVersion.v1_0_757_2_Steam
 			? Function.Call<bool>(Hash._DOES_VEHICLE_ALLOW_RAPPEL, Handle)
-			: SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.AllowsRappel);
+			: SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag1.AllowsRappel);
 
 		/// <summary>
 		/// Gets a value indicating whether <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed.

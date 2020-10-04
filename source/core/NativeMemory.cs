@@ -940,33 +940,25 @@ namespace SHVDN
 			Submarine = 0xF
 		}
 		[Flags]
-		public enum VehicleFlag1 : uint
+		public enum VehicleFlag1 : ulong
 		{
 			Big = 0x2,
 			IsVan = 0x20,
 			CanStandOnTop = 0x10000000,
 			LawEnforcement = 0x80000000,
+			EmergencyService = 0x100000000,
+			AllowsRappel = 0x8000000000,
+			IsElectric = 0x80000000000,
+			IsOffroadVehicle = 0x1000000000000,
+			IsBus = 0x400000000000000,
 		}
 		[Flags]
-		public enum VehicleFlag2 : uint
-		{
-			EmergencyService = 0x1,
-			AllowsRappel = 0x80,
-			IsElectric = 0x800,
-			IsOffroadVehicle = 0x10000,
-			IsBus = 0x4000000,
-		}
-		[Flags]
-		public enum VehicleFlag3 : uint
+		public enum VehicleFlag2 : ulong
 		{
 			IsTank = 0x200,
 			HasBulletProofGlass = 0x1000,
-		}
-		[Flags]
-		public enum VehicleFlag4 : uint
-		{
-			HasLowriderHydraulics = 0x800000,
-			HasLowriderDonkHydraulics = 0x8000000,
+			HasLowriderHydraulics = 0x80000000000000,
+			HasLowriderDonkHydraulics = 0x800000000000000,
 		}
 
 		static int handlingIndexOffsetInModelInfo;
@@ -1070,11 +1062,9 @@ namespace SHVDN
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
 
-		public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (uint)flag, 0x0);
-		public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (uint)flag, 0x4);
-		public static bool HasVehicleFlag(int modelHash, VehicleFlag3 flag) => HasVehicleFlagInternal(modelHash, (uint)flag, 0x8);
-		public static bool HasVehicleFlag(int modelHash, VehicleFlag4 flag) => HasVehicleFlagInternal(modelHash, (uint)flag, 0xC);
-		private static bool HasVehicleFlagInternal(int modelHash, uint flag, int flagOffset)
+		public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
+		public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
+		private static bool HasVehicleFlagInternal(int modelHash, ulong flag, int flagOffset)
 		{
 			if (FirstVehicleFlagsOffset == 0)
 				return false;
@@ -1083,7 +1073,7 @@ namespace SHVDN
 
 			if (GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
 			{
-				var modelFlags = *(uint*)(modelInfo + FirstVehicleFlagsOffset + flagOffset).ToPointer();
+				var modelFlags = *(ulong*)(modelInfo + FirstVehicleFlagsOffset + flagOffset).ToPointer();
 				return (modelFlags & flag) != 0;
 			}
 

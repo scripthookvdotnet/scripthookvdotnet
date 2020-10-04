@@ -138,7 +138,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is an emergency vehicle; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsBus => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.IsBus);
+		public bool IsBus => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.IsBus);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a car.
 		/// </summary>
@@ -159,7 +159,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a donk car; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsDonk => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag4.HasLowriderDonkHydraulics);
+		public bool IsDonk => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an electric vehicle.
@@ -167,14 +167,14 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is an electric vehicle; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsElectricVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.IsElectric);
+		public bool IsElectricVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.IsElectric);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an emergency vehicle.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is an emergency vehicle; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsEmergencyVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.EmergencyService);
+		public bool IsEmergencyVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.EmergencyService);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a helicopter.
 		/// </summary>
@@ -202,7 +202,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a regular lowrider; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag4.HasLowriderHydraulics);
+		public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an off-road vehicle.
@@ -210,7 +210,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is an off-road vehicle; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsOffRoadVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.IsOffroadVehicle);
+		public bool IsOffRoadVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.IsOffroadVehicle);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a pedestrian.
 		/// </summary>
@@ -252,7 +252,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a tank; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsTank => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag3.IsTank);
+		public bool IsTank => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.IsTank);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a train.
 		/// </summary>
