@@ -317,21 +317,7 @@ namespace GTA
 
 		public static Blip[] GetActiveBlips()
 		{
-			List<Blip> res = new List<Blip>();
-
-			foreach (BlipSprite sprite in Enum.GetValues(typeof(BlipSprite)))
-			{
-				int handle = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, (int)sprite);
-
-				while (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
-				{
-					res.Add(new Blip(handle));
-
-					handle = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, (int)sprite);
-				}
-			}
-
-			return res.ToArray();
+			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(), handle => new Blip(handle));
 		}
 
 		public static Entity[] GetAllEntities()

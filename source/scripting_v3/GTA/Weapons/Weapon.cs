@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System.Linq;
 using GTA.Native;
 
 namespace GTA
@@ -288,6 +289,11 @@ namespace GTA
 			}
 
 			return "WT_INVALID";
+		}
+
+		public static Model[] GetAllModels()
+		{
+			return SHVDN.NativeMemory.WeaponModels.Select(x => new Model(x)).ToArray();
 		}
 	}
 }

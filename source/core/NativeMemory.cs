@@ -200,6 +200,9 @@ namespace SHVDN
 			GetCheckpointBaseAddress = GetDelegateForFunctionPointer<GetCheckpointBaseAddressDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
 			GetCheckpointHandleAddress = GetDelegateForFunctionPointer<GetCheckpointHandleAddressDelegate>(new IntPtr(*(int*)(address - 9) + address - 5));
 
+			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
+			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+
 			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
 			GetHashKeyFunc = GetDelegateForFunctionPointer<GetHashKeyDelegate>(new IntPtr(*(int*)(address + 6) + address + 10));
 
@@ -328,9 +331,12 @@ namespace SHVDN
 			}
 
 			// Generate vehicle model list
-			List<int>[] hashes = new List<int>[0x20];
+			var vehicleHashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-				hashes[i] = new List<int>();
+				vehicleHashes[i] = new List<int>();
+
+			var weaponObjectHashes = new List<int>();
+			var pedHashes = new List<int>();
 
 			for (int i = 0; i < modelHashEntries; i++)
 			{
@@ -346,9 +352,17 @@ namespace SHVDN
 							ulong addr2 = *(ulong*)(addr1);
 							if (addr2 != 0)
 							{
-								if ((*(byte*)(addr2 + 157) & 0x1F) == 5)
+								switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
 								{
-									hashes[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+									case ModelInfoClassType.Weapon:
+										weaponObjectHashes.Add(cur->hash);
+										break;
+									case ModelInfoClassType.Vehicle:
+										vehicleHashes[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+										break;
+									case ModelInfoClassType.Ped:
+										pedHashes.Add(cur->hash);
+										break;
 								}
 							}
 						}
@@ -356,10 +370,13 @@ namespace SHVDN
 				}
 			}
 
-			var result = new ReadOnlyCollection<int>[0x20];
+			var vehicleResult = new ReadOnlyCollection<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-				result[i] = Array.AsReadOnly(hashes[i].ToArray());
-			VehicleModels = Array.AsReadOnly(result);
+				vehicleResult[i] = Array.AsReadOnly(vehicleHashes[i].ToArray());
+			VehicleModels = Array.AsReadOnly(vehicleResult);
+
+			WeaponModels = Array.AsReadOnly(weaponObjectHashes.ToArray());
+			PedModels = Array.AsReadOnly(pedHashes.ToArray());
 
 			#region -- Enable All DLC Vehicles --
 			// no need to patch the global variable in v1.0.573.1 or older builds
@@ -1062,6 +1079,7 @@ namespace SHVDN
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
 
+
 		public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
 		public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
 		private static bool HasVehicleFlagInternal(int modelHash, ulong flag, int flagOffset)
@@ -1080,7 +1098,9 @@ namespace SHVDN
 			return false;
 		}
 
+		public static ReadOnlyCollection<int> WeaponModels { get; }
 		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
+		public static ReadOnlyCollection<int> PedModels { get; }
 
 		delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
 		delegate ulong GetHandlingDataByIndexDelegate(int index);
@@ -1200,6 +1220,7 @@ namespace SHVDN
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
 		static ulong* CheckpointPoolAddress;
+		static ulong* RadarBlipPoolAddress;
 
 		delegate ulong EntityPosFuncDelegate(ulong address, float* position);
 		delegate ulong EntityModel1FuncDelegate(ulong address);
@@ -1585,6 +1606,107 @@ namespace SHVDN
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
 			return task.handles.ToArray();
+		}
+
+		#endregion
+
+		#region -- Radar Blip Pool --
+
+		public static int[] GetNonCriticalRadarBlipHandles(params int[] spriteTypes)
+		{
+			return GetNonCriticalRadarBlipHandles(null, 0f, spriteTypes);
+		}
+		public static int[] GetNonCriticalRadarBlipHandles(float[] position = null, float radius = 0f, params int[] spriteTypes)
+		{
+			if (RadarBlipPoolAddress == null)
+			{
+				return new int[0];
+			}
+
+			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+
+			var handles = new List<int>(possibleBlipCount);
+
+			// Skip the first 3 critical blips, just like GET_FIRST_BLIP_INFO_ID does
+			// The second critical blip is the player blip and the third is the north blip (The first is unknown)
+			for (int i = 3; i < possibleBlipCount; i++)
+			{
+				ulong address = *(RadarBlipPoolAddress + i);
+
+				if (address == 0)
+					continue;
+
+				if (CheckBlip(address, position, radius, spriteTypes))
+					handles.Add(*(int*)(address + 4));
+			}
+
+			return handles.ToArray();
+
+			bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
+			{
+				if (spriteTypes.Length > 0)
+				{
+					int spriteIndex = *(int*)(blipAddress + 0x40);
+					if (!Array.Exists(spriteTypes, x => x == spriteIndex))
+						return false;
+				}
+
+				if (position != null && radius > 0f)
+				{
+					float* blipPosition = stackalloc float[3];
+
+					blipPosition[0] = *(float*)(blipAddress + 0x10);
+					blipPosition[1] = *(float*)(blipAddress + 0x14);
+					blipPosition[2] = *(float*)(blipAddress + 0x18);
+
+					float x = blipPosition[0] - position[0];
+					float y = blipPosition[1] - position[1];
+					float z = blipPosition[2] - position[2];
+					float distanceSquared = (x * x) + (y * y) + (z * z);
+					float radiusSquared = radius * radius;
+
+					if (distanceSquared > radiusSquared)
+						return false;
+				}
+
+				return true;
+			}
+		}
+
+		public static int GetNorthBlip()
+		{
+			if (RadarBlipPoolAddress != null)
+			{
+				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
+
+				if (northBlipAddress != 0)
+					return *(int*)(northBlipAddress + 4);
+			}
+
+			return -1;
+		}
+
+		public static IntPtr GetBlipAddress(int handle)
+		{
+			if (RadarBlipPoolAddress == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			int poolIndexOfHandle = handle & 0xFFFF;
+			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+
+			if (poolIndexOfHandle >= possibleBlipCount)
+			{
+				return IntPtr.Zero;
+			}
+
+			ulong address = *(RadarBlipPoolAddress + poolIndexOfHandle);
+
+			if (address != 0 && *(int*)(address + 4) == handle)
+				return new IntPtr((long)address);
+
+			return IntPtr.Zero;
 		}
 
 		#endregion
