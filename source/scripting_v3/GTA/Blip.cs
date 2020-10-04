@@ -50,7 +50,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the category type of this <see cref="Blip"/>.
 		/// </summary>
-		public BlipCategoryType BlipCategoryType
+		public BlipCategoryType CategoryType
 		{
 			get
 			{
