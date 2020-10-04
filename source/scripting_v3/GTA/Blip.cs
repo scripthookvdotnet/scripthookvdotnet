@@ -32,7 +32,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the display type of this <see cref="Blip"/>.
 		/// </summary>
-		public BlipDisplayType BlipDisplayType
+		public BlipDisplayType DisplayType
 		{
 			get
 			{

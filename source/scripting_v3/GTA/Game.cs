@@ -79,9 +79,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the main blip of the <see cref="GTA.Player"/> that you are controlling.
+		/// Gets the blip of the <see cref="GTA.Player"/> that you are controlling.
 		/// </summary>
-		public static Blip MainPlayerBlip => new Blip(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
+		public static Blip PlayerBlip => new Blip(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
 
 		/// <summary>
 		/// Gets the north blip, which is shown on the radar.
