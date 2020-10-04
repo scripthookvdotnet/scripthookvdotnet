@@ -291,7 +291,7 @@ namespace GTA
 			return "WT_INVALID";
 		}
 
-		public static Model[] GetAllWeaponObjectModels()
+		public static Model[] GetAllModels()
 		{
 			return SHVDN.NativeMemory.WeaponModels.Select(x => new Model(x)).ToArray();
 		}

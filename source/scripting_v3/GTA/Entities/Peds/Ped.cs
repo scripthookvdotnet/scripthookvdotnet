@@ -1126,7 +1126,7 @@ namespace GTA
 
 		#endregion
 
-		public static PedHash[] GetAllPedModels()
+		public static PedHash[] GetAllModels()
 		{
 			return SHVDN.NativeMemory.PedModels.Select(x => (PedHash)x).ToArray();
 		}
