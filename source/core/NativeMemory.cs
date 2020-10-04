@@ -325,9 +325,12 @@ namespace SHVDN
 			}
 
 			// Generate vehicle model list
-			List<int>[] hashes = new List<int>[0x20];
+			var vehicleHashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-				hashes[i] = new List<int>();
+				vehicleHashes[i] = new List<int>();
+
+			var weaponObjectHashes = new List<int>();
+			var pedHashes = new List<int>();
 
 			for (int i = 0; i < modelHashEntries; i++)
 			{
@@ -343,9 +346,17 @@ namespace SHVDN
 							ulong addr2 = *(ulong*)(addr1);
 							if (addr2 != 0)
 							{
-								if ((*(byte*)(addr2 + 157) & 0x1F) == 5)
+								switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
 								{
-									hashes[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+									case ModelInfoClassType.Weapon:
+										weaponObjectHashes.Add(cur->hash);
+										break;
+									case ModelInfoClassType.Vehicle:
+										vehicleHashes[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+										break;
+									case ModelInfoClassType.Ped:
+										pedHashes.Add(cur->hash);
+										break;
 								}
 							}
 						}
@@ -353,10 +364,13 @@ namespace SHVDN
 				}
 			}
 
-			var result = new ReadOnlyCollection<int>[0x20];
+			var vehicleResult = new ReadOnlyCollection<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-				result[i] = Array.AsReadOnly(hashes[i].ToArray());
-			VehicleModels = Array.AsReadOnly(result);
+				vehicleResult[i] = Array.AsReadOnly(vehicleHashes[i].ToArray());
+			VehicleModels = Array.AsReadOnly(vehicleResult);
+
+			WeaponModels = Array.AsReadOnly(weaponObjectHashes.ToArray());
+			PedModels = Array.AsReadOnly(pedHashes.ToArray());
 
 			#region -- Enable All DLC Vehicles --
 			// no need to patch the global variable in v1.0.573.1 or older builds
@@ -1031,7 +1045,9 @@ namespace SHVDN
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
 
+		public static ReadOnlyCollection<int> WeaponModels { get; }
 		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
+		public static ReadOnlyCollection<int> PedModels { get; }
 
 		delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
 		delegate ulong GetHandlingDataByIndexDelegate(int index);
