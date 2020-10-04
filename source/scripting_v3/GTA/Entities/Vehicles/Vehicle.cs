@@ -175,7 +175,7 @@ namespace GTA
 		/// <value>
 		/// <c>true</c> if this <see cref="Vehicle"/> allows <see cref="Ped"/>s to rappel; otherwise, <c>false</c>.
 		/// </value>
-		public bool AllowsRappel => Game.Version >= GameVersion.v1_0_757_2_Steam
+		public bool AllowRappel => Game.Version >= GameVersion.v1_0_757_2_Steam
 			? Function.Call<bool>(Hash._DOES_VEHICLE_ALLOW_RAPPEL, Handle)
 			: SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.AllowsRappel);
 
