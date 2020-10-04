@@ -283,23 +283,20 @@ namespace GTA
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetAllBlips(params BlipSprite[] blipTypes)
 		{
-			var res = new List<Blip>();
-			if (blipTypes.Length == 0)
-			{
-				blipTypes = Enum.GetValues(typeof(BlipSprite)).Cast<BlipSprite>().ToArray();
-			}
-			foreach (BlipSprite sprite in blipTypes)
-			{
-				int handle = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, sprite);
+			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(blipTypesInt), handle => new Blip(handle));
+		}
 
-				while (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
-				{
-					res.Add(new Blip(handle));
-
-					handle = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, sprite);
-				}
-			}
-			return res.ToArray();
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Blip"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Blip"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Blip"/>s.</param>
+		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
+		public static Blip[] GetNearbyBlips(Vector3 position, float radius, params BlipSprite[] blipTypes)
+		{
+			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToArray(), radius, blipTypesInt), handle => new Blip(handle));
 		}
 
 		/// <summary>

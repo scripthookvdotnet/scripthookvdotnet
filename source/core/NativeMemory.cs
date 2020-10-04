@@ -200,6 +200,9 @@ namespace SHVDN
 			GetCheckpointBaseAddress = GetDelegateForFunctionPointer<GetCheckpointBaseAddressDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
 			GetCheckpointHandleAddress = GetDelegateForFunctionPointer<GetCheckpointHandleAddressDelegate>(new IntPtr(*(int*)(address - 9) + address - 5));
 
+			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
+			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+
 			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
 			GetHashKeyFunc = GetDelegateForFunctionPointer<GetHashKeyDelegate>(new IntPtr(*(int*)(address + 6) + address + 10));
 
@@ -1148,6 +1151,7 @@ namespace SHVDN
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
 		static ulong* CheckpointPoolAddress;
+		static ulong* RadarBlipPoolAddress;
 
 		delegate ulong EntityPosFuncDelegate(ulong address, float* position);
 		delegate ulong EntityModel1FuncDelegate(ulong address);
@@ -1533,6 +1537,107 @@ namespace SHVDN
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
 			return task.handles.ToArray();
+		}
+
+		#endregion
+
+		#region -- Radar Blip Pool --
+
+		public static int[] GetNonCriticalRadarBlipHandles(params int[] spriteTypes)
+		{
+			return GetNonCriticalRadarBlipHandles(null, 0f, spriteTypes);
+		}
+		public static int[] GetNonCriticalRadarBlipHandles(float[] position = null, float radius = 0f, params int[] spriteTypes)
+		{
+			if (RadarBlipPoolAddress == null)
+			{
+				return new int[0];
+			}
+
+			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+
+			var handles = new List<int>(possibleBlipCount);
+
+			// Skip the first 3 critical blips, just like GET_FIRST_BLIP_INFO_ID does
+			// The second critical blip is the player blip and the third is the north blip (The first is unknown)
+			for (int i = 3; i < possibleBlipCount; i++)
+			{
+				ulong address = *(RadarBlipPoolAddress + i);
+
+				if (address == 0)
+					continue;
+
+				if (CheckBlip(address, position, radius, spriteTypes))
+					handles.Add(*(int*)(address + 4));
+			}
+
+			return handles.ToArray();
+
+			bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
+			{
+				if (spriteTypes.Length > 0)
+				{
+					int spriteIndex = *(int*)(blipAddress + 0x40);
+					if (!Array.Exists(spriteTypes, x => x == spriteIndex))
+						return false;
+				}
+
+				if (position != null && radius > 0f)
+				{
+					float* blipPosition = stackalloc float[3];
+
+					blipPosition[0] = *(float*)(blipAddress + 0x10);
+					blipPosition[1] = *(float*)(blipAddress + 0x14);
+					blipPosition[2] = *(float*)(blipAddress + 0x18);
+
+					float x = blipPosition[0] - position[0];
+					float y = blipPosition[1] - position[1];
+					float z = blipPosition[2] - position[2];
+					float distanceSquared = (x * x) + (y * y) + (z * z);
+					float radiusSquared = radius * radius;
+
+					if (distanceSquared > radiusSquared)
+						return false;
+				}
+
+				return true;
+			}
+		}
+
+		public static int GetNorthBlip()
+		{
+			if (RadarBlipPoolAddress != null)
+			{
+				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
+
+				if (northBlipAddress != 0)
+					return *(int*)(northBlipAddress + 4);
+			}
+
+			return -1;
+		}
+
+		public static IntPtr GetBlipAddress(int handle)
+		{
+			if (RadarBlipPoolAddress == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			int poolIndexOfHandle = handle & 0xFFFF;
+			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+
+			if (poolIndexOfHandle >= possibleBlipCount)
+			{
+				return IntPtr.Zero;
+			}
+
+			ulong address = *(RadarBlipPoolAddress + poolIndexOfHandle);
+
+			if (address != 0 && *(int*)(address + 4) == handle)
+				return new IntPtr((long)address);
+
+			return IntPtr.Zero;
 		}
 
 		#endregion

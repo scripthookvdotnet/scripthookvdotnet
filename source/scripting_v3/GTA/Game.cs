@@ -79,6 +79,16 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the blip of the <see cref="GTA.Player"/> that you are controlling.
+		/// </summary>
+		public static Blip PlayerBlip => new Blip(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
+
+		/// <summary>
+		/// Gets the north blip, which is shown on the radar.
+		/// </summary>
+		public static Blip NorthBlip => Version >= GameVersion.v1_0_463_1_Steam ? new Blip(Function.Call<int>((Hash)0x3F0CF9CB7E589B88)) : new Blip(SHVDN.NativeMemory.GetNorthBlip());
+
+		/// <summary>
 		/// Gets the current game language.
 		/// </summary>
 		public static Language Language => Function.Call<Language>(Hash.GET_CURRENT_LANGUAGE);
