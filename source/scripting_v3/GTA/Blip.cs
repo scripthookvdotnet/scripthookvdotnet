@@ -363,11 +363,12 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the interval in ms between each blip flashing.
-		/// The value is up to 65534.
+		/// Gets or sets the flash time left in ms before this <see cref="Blip"/> stops flashing.
+		/// The max value is up to 65534.
+		/// Set <c>-1</c> to let the <see cref="Blip"/> flash forever.
 		/// </summary>
-		/// <remarks>returns <c>-1</c> if the internal value of this property value is set to <c>65535</c>, which indicates that the flashing timer is not set.</remarks>
-		public int FlashTimer
+		/// <remarks>returns <c>-1</c> if the internal value of this property value is set to <c>65535</c>, which indicates that the flash timer is explicitly not set.</remarks>
+		public int FlashTimeLeft
 		{
 			get
 			{
