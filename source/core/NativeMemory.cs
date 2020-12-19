@@ -801,41 +801,13 @@ namespace SHVDN
 
 		static ulong GetEntitySkeletonData(int handle)
 		{
-			ulong MemAddress = GetEntityAddressFunc(handle);
+			IntPtr address = GetEntityAddress(handle);
 
-			var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + 88));
-			ulong Addr2 = func2(MemAddress);
-			ulong Addr3;
-			if (Addr2 == 0)
-			{
-				Addr3 = *(ulong*)(MemAddress + 80);
-				if (Addr3 == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(ulong*)(Addr3 + 40);
-				}
-			}
-			else
-			{
-				Addr3 = *(ulong*)(Addr2 + 104);
-				if (Addr3 == 0 || *(ulong*)(Addr2 + 120) == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(ulong*)(Addr3 + 376);
-				}
-			}
-			if (Addr3 == 0)
-			{
-				return 0;
-			}
+			ulong address2 = *(ulong*)(address + 0x0030);
 
-			return Addr3;
+			address2 = *(ulong*)(address2 + 0x0010);
+
+			return *(ulong*)(address2 + 0x0158);
 		}
 
 		public static int GetEntityBoneCount(int handle)
