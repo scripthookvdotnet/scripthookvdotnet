@@ -37,6 +37,9 @@ namespace GTA
 			"RADIO_21_DLC_XM17",
 			"RADIO_22_DLC_BATTLE_MIX1_RADIO",
 			"RADIO_23_DLC_XM19_RADIO",
+			"RADIO_27_DLC_PRHEI4",
+			"RADIO_34_DLC_HEI4_KULT",
+			"RADIO_35_DLC_HEI4_MLR",
 			"RADIO_OFF"
 		};
 		internal static readonly string[] windowTitles = {

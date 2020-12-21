@@ -30,6 +30,9 @@ namespace GTA
 		BlondedLosSantos,
 		LosSantosUndergroundRadio,
 		iFruitRadio,
+		StillSlippingLosSantos,
+		KultFM,
+		MusicLocker,
 		RadioOff = 255,
 	}
 }
