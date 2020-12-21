@@ -513,6 +513,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets this <see cref="Vehicle"/> oil level.
+		/// If this value is above zero, this value decreases instead of <see cref="EngineHealth"/> when the engine emits black smoke.
 		/// </summary>
 		public float OilLevel
 		{
