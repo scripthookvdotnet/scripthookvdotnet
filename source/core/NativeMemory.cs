@@ -802,7 +802,9 @@ namespace SHVDN
 		{
 			ulong MemAddress = GetEntityAddressFunc(handle);
 
-			var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + 88));
+			int offset = NativeMemory.GetGameVersion() >= 63 /*v1_0_2189_0_Steam*/ ? 96 : 88;
+
+			var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + offset));
 			ulong Addr2 = func2(MemAddress);
 			ulong Addr3;
 			if (Addr2 == 0)
