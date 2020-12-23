@@ -16,6 +16,7 @@ namespace GTA
 		Polish,
 		Russian,
 		Korean,
+		/// <summary>Traditional Chinese</summary>
 		Chinese,
 		Japanese,
 		Mexican,
