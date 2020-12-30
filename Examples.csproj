@@ -19,6 +19,7 @@
   <!-- Debug compilation settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\Debug\scripts</OutputPath>
+    <BaseIntermediateOutputPath>intermediate\Examples\</BaseIntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -26,6 +27,7 @@
   <!-- Release compilation settings -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\Release\scripts</OutputPath>
+    <BaseIntermediateOutputPath>intermediate\Examples\</BaseIntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
