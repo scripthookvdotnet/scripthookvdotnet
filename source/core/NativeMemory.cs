@@ -1613,6 +1613,36 @@ namespace SHVDN
 
 		#region -- Radar Blip Pool --
 
+		static bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
+		{
+			if (spriteTypes.Length > 0)
+			{
+				int spriteIndex = *(int*)(blipAddress + 0x40);
+				if (!Array.Exists(spriteTypes, x => x == spriteIndex))
+					return false;
+			}
+
+			if (position != null && radius > 0f)
+			{
+				float* blipPosition = stackalloc float[3];
+
+				blipPosition[0] = *(float*)(blipAddress + 0x10);
+				blipPosition[1] = *(float*)(blipAddress + 0x14);
+				blipPosition[2] = *(float*)(blipAddress + 0x18);
+
+				float x = blipPosition[0] - position[0];
+				float y = blipPosition[1] - position[1];
+				float z = blipPosition[2] - position[2];
+				float distanceSquared = (x * x) + (y * y) + (z * z);
+				float radiusSquared = radius * radius;
+
+				if (distanceSquared > radiusSquared)
+					return false;
+			}
+
+			return true;
+		}
+
 		public static int[] GetNonCriticalRadarBlipHandles(params int[] spriteTypes)
 		{
 			return GetNonCriticalRadarBlipHandles(null, 0f, spriteTypes);
@@ -1642,36 +1672,6 @@ namespace SHVDN
 			}
 
 			return handles.ToArray();
-
-			bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
-			{
-				if (spriteTypes.Length > 0)
-				{
-					int spriteIndex = *(int*)(blipAddress + 0x40);
-					if (!Array.Exists(spriteTypes, x => x == spriteIndex))
-						return false;
-				}
-
-				if (position != null && radius > 0f)
-				{
-					float* blipPosition = stackalloc float[3];
-
-					blipPosition[0] = *(float*)(blipAddress + 0x10);
-					blipPosition[1] = *(float*)(blipAddress + 0x14);
-					blipPosition[2] = *(float*)(blipAddress + 0x18);
-
-					float x = blipPosition[0] - position[0];
-					float y = blipPosition[1] - position[1];
-					float z = blipPosition[2] - position[2];
-					float distanceSquared = (x * x) + (y * y) + (z * z);
-					float radiusSquared = radius * radius;
-
-					if (distanceSquared > radiusSquared)
-						return false;
-				}
-
-				return true;
-			}
 		}
 
 		public static int GetNorthBlip()

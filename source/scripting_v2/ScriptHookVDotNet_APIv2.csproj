@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\..\bin\Debug\</OutputPath>
-    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
     <DocumentationFile>..\..\bin\Debug\ScriptHookVDotNet2.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -29,7 +29,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\Release\</OutputPath>
-    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
     <DocumentationFile>..\..\bin\Release\ScriptHookVDotNet2.xml</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -187,7 +187,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Overwrite core build logic to support a mixed C++/CLI and C# code base -->
   <UsingTask TaskName="CL" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
-  <UsingTask TaskName="RC" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll"/>
+  <UsingTask TaskName="RC" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <UsingTask TaskName="Link" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <Target
     Name="CoreCompile"

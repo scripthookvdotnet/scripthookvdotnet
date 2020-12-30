@@ -14,7 +14,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\..\bin\Debug\</OutputPath>
-    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet3\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet3\</BaseIntermediateOutputPath>
     <DocumentationFile>..\..\bin\Debug\ScriptHookVDotNet3.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -28,7 +28,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\Release\</OutputPath>
-    <BaseIntermediateOutputPath>..\..\obj\ScriptHookVDotNet3\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet3\</BaseIntermediateOutputPath>
     <DocumentationFile>..\..\bin\Release\ScriptHookVDotNet3.xml</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
