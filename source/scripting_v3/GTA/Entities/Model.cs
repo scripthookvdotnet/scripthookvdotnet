@@ -240,6 +240,13 @@ namespace GTA
 		/// </value>
 		public bool IsQuadBike => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_QUADBIKE, Hash);
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a submarine.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an submarine; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSubmarine => SHVDN.NativeMemory.IsModelASubmarine(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a submarine car.
 		/// </summary>
 		/// <value>
