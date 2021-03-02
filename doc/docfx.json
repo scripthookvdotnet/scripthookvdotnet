@@ -53,11 +53,8 @@
         "globalMetadata": {
             "_appTitle": "ScriptHookVDotNet",
             "_appFooter": "<span>Copyright (C) 2015 crosire<br>Generated with <strong>DocFX</strong></span>",
-            "_gitContribute": {
-                "repo": "https://github.com/crosire/scripthookvdotnet/",
-                "branch": "master"
-            },
             "_enableNewTab": true,
+            "_disableContribution": true,
             "_appLogoPath": "-"
         },
         "template": [
