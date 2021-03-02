@@ -265,7 +265,7 @@ namespace GTA
 		public static implicit operator InputArgument(ParticleEffect effect)
 		{
 			//we only need to worry about supplying a particle effect to a native, never returning one
-			return new InputArgument(effect.Handle);
+			return new InputArgument((ulong)effect.Handle);
 		}
 
 		public override int GetHashCode()

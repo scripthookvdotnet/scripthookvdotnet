@@ -360,7 +360,7 @@ namespace GTA
 		/// </summary>
 		public static implicit operator InputArgument(EntityBone entityBone)
 		{
-			return new InputArgument(entityBone.Index);
+			return new InputArgument((ulong)entityBone.Index);
 		}
 
 		public override int GetHashCode()
