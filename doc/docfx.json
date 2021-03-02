@@ -1,0 +1,77 @@
+{
+    "metadata": [
+        {
+            "src": [
+                {
+                    "files": [
+                        "source/scripting_v2/**.csproj"
+                    ],
+                    "exclude": [
+                        "**/bin/**",
+                        "**/obj/**",
+                        "_site/**"
+                      ],
+                      "src": "../"
+                }
+            ],
+            "dest": "scripting_v2"
+        },
+        {
+            "src": [
+                {
+                    "files": [
+                        "source/scripting_v3/**.csproj"
+                    ],
+                    "exclude": [
+                        "**/bin/**",
+                        "**/obj/**",
+                        "_site/**"
+                      ],
+                      "src": "../"
+                }
+            ],
+            "dest": "scripting_v3"
+        }
+    ],
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "LICENSE.txt",
+                    "**.md",
+                    "**.yml",
+                    "scripting_v2/**.md",
+                    "scripting_v3/**.md",
+                    "scripting_v2/**.yml",
+                    "scripting_v3/**.yml",
+                    "scripting_v2/api/**.yml",
+                    "scripting_v3/api**.yml"
+                ]
+            }
+        ],
+        "dest": "_site",
+        "globalMetadataFiles": [],
+        "fileMetadataFiles": [],
+        "globalMetadata": {
+            "_appTitle": "ScriptHookVDotNet",
+            "__appFooter": "Copyright (C) 2015 crosire",
+            "_gitContribute": {
+                "repo": "https://github.com/crosire/scripthookvdotnet/",
+                "branch": "master"
+            },
+            "_enableNewTab": true,
+            "_appLogoPath": "-"
+        },
+        "template": [
+            "default",
+            "template/darkfx",
+            "template/memberpage"
+        ],
+        "markdownEngineName": "markdig",
+        "postProcessors": ["ExtractSearchIndex"],
+        "noLangKeyword": false,
+        "_appLogoPath ": ""
+
+        
+    }
+}
