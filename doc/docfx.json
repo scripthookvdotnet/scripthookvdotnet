@@ -50,8 +50,6 @@
             }
         ],
         "dest": "_site",
-        "globalMetadataFiles": [],
-        "fileMetadataFiles": [],
         "globalMetadata": {
             "_appTitle": "ScriptHookVDotNet",
             "__appFooter": "Copyright (C) 2015 crosire",
