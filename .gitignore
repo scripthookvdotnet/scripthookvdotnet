@@ -1,9 +1,9 @@
 # Build results
-[Bb]in/
-[Oo]bj/
-[Bb]uild/
-[Dd]ebug/
-[Rr]elease/
+bin/
+obj/
+intermediate/
+Debug/
+Release/
 
 # Visual Studio cache files
 .vs/
