@@ -51,7 +51,7 @@
         ],
         "dest": "_site",
         "globalMetadata": {
-            "_appTitle": "ScriptHookVDotNet",
+            "_appTitle": "Community Script Hook V .NET",
             "_appFooter": "<span>Copyright (C) 2015 crosire<br>Generated with <strong>DocFX</strong></span>",
             "_enableNewTab": true,
             "_disableContribution": true,
