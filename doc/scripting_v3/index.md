@@ -1,4 +1,4 @@
-ScriptHookVDotNet v2
+ScriptHookVDotNet v3
 ==========================
 
 #{CHANGELOGV3}#
