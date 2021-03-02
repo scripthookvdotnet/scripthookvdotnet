@@ -44,14 +44,10 @@ jobs:
       - name: Generate Changelog
         uses: cschleiden/replace-tokens@v1.0
         with:
-          files: '["doc/scripting_v2/index.md", "doc/scripting_v3/index.md"]'
+          files: '["scripthookvdotnet-doc/scripting_v2/index.md", "scripthookvdotnet-doc/scripting_v3/index.md"]'
         env:
           CHANGELOGV2: ${{ steps.changelog_two.outputs.changelog }}
           CHANGELOGV3: ${{ steps.changelog_three.outputs.changelog }}
-      - name: Add Changelog to site files
-        run: |
-          cp README.md doc/index.md
-          cp LICENSE.txt doc/LICENSE.txt
       - name: Upload Artefacts
         uses: actions/upload-artifact@v2
         with:
@@ -78,11 +74,11 @@ jobs:
           name: gen-doc
           path: .
       - name: Documentation Generation
-        run: docfx doc/docfx.json
+        run: docfx scripthookvdotnet-doc/docfx.json
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_dir: doc/_site
+          publish_dir: scripthookvdotnet-doc/_site
           github_token: ${{ github.token }}
 
   
