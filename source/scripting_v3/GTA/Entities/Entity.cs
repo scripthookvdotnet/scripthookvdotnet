@@ -1323,7 +1323,7 @@ namespace GTA
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
 			}
-			Handle = handle;
+			// Do not set "Handle" property to the value of "handle" again, since engine will have set it to zero, but we still may want to use it otherwise
 		}
 
 		/// <summary>
@@ -1337,7 +1337,7 @@ namespace GTA
 			{
 				Function.Call(Hash.DELETE_ENTITY, &handle);
 			}
-			Handle = handle;
+			Handle = handle; // This will be zero now
 		}
 
 		/// <summary>
