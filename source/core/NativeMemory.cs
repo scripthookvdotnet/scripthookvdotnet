@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Linq;
 using static System.Runtime.InteropServices.Marshal;
 
 namespace SHVDN
@@ -938,6 +939,42 @@ namespace SHVDN
 			Vehicle = 5,
 			Ped = 6
 		}
+		static int[] AnimalHashList = new int[]
+		{
+			-832573324, // a_c_boar
+			1462895032, // a_c_cat_01
+			-1430839454, // a_c_chickenhawk
+			-1469565163, // a_c_chimp
+			351016938, // a_c_chop
+			1457690978, // a_c_cormorant
+			-50684386, // a_c_cow
+			1682622302, // a_c_coyote
+			402729631, // a_c_crow
+			-664053099, // a_c_deer
+			-1950698411, // a_c_dolphin
+			802685111, // a_c_fish
+			1015224100, // a_c_sharkhammer
+			1794449327, // a_c_hen
+			1193010354, // a_c_humpback
+			1318032802, // a_c_husky
+			-1920284487, // a_c_killerwhale
+			307287994, // a_c_mtlion
+			-1323586730, // a_c_pig
+			111281960, // a_c_pigeon
+			1125994524, // a_c_poodle
+			1832265812, // a_c_pug
+			-541762431, // a_c_rabbit_01
+			-1011537562, // a_c_rat
+			882848737, // a_c_retriever
+			-1026527405, // a_c_rhesus
+			-1788665315, // a_c_rottweiler
+			-745300483, // a_c_seagull
+			1126154828, // a_c_shepherd
+			-1589092019, // a_c_stingray
+			113504370, // a_c_sharktiger
+			-1384627013, // a_c_westy
+			-417505688 // a_c_panther (DLC: The Cayo Perico Heist)
+		};
 		enum VehicleStructClassType
 		{
 			Invalid = -1,
@@ -1064,6 +1101,11 @@ namespace SHVDN
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped;
 		}
+		public static bool IsModelAnAnimal(int modelHash)
+        {
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped && AnimalHashList.Contains(modelHash);
+        }
 		public static bool IsModelABlimp(int modelHash)
 		{
 			IntPtr modelInfo = FindCModelInfo(modelHash);

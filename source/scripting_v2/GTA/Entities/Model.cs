@@ -46,6 +46,7 @@ namespace GTA
 		public bool IsCargobob => (VehicleHash)Hash == VehicleHash.Cargobob || (VehicleHash)Hash == VehicleHash.Cargobob2 || (VehicleHash)Hash == VehicleHash.Cargobob3 || (VehicleHash)Hash == VehicleHash.Cargobob4;
 		public bool IsHelicopter => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_HELI, Hash);
 		public bool IsPed => SHVDN.NativeMemory.IsModelAPed(Hash);
+		public bool IsAnimal => SHVDN.NativeMemory.IsModelAnAnimal(Hash);
 		public bool IsPlane => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_PLANE, Hash);
 		public bool IsQuadbike => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_QUADBIKE, Hash);
 		public bool IsTrain => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_TRAIN, Hash);

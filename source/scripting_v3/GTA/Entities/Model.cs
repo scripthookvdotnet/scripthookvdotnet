@@ -219,6 +219,13 @@ namespace GTA
 		/// </value>
 		public bool IsPed => SHVDN.NativeMemory.IsModelAPed(Hash);
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is an Animal.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is an Animal; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAnimal => SHVDN.NativeMemory.IsModelAnAnimal(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a plane.
 		/// </summary>
 		/// <value>
