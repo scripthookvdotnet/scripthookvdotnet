@@ -103,6 +103,11 @@ namespace GTA
 		public static GameVersion Version => (GameVersion)SHVDN.NativeMemory.GetGameVersion();
 
 		/// <summary>
+		/// Gets the measurement system the game uses to display.
+		/// </summary>
+		public static MeasurementSystem MeasurementSystem => Function.Call<bool>(Hash.SHOULD_USE_METRIC_MEASUREMENTS) ? MeasurementSystem.Metric : MeasurementSystem.Imperial;
+
+		/// <summary>
 		/// Gets how many milliseconds the game has been open in this session
 		/// </summary>
 		public static int GameTime => Function.Call<int>(Hash.GET_GAME_TIMER);
