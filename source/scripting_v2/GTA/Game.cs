@@ -41,6 +41,7 @@ namespace GTA
 			"RADIO_27_DLC_PRHEI4",
 			"RADIO_34_DLC_HEI4_KULT",
 			"RADIO_35_DLC_HEI4_MLR",
+			"RADIO_36_AUDIOPLAYER",
 			"RADIO_OFF"
 		};
 		#endregion

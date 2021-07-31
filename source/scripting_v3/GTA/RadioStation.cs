@@ -32,6 +32,7 @@ namespace GTA
 		StillSlippingLosSantos,
 		KultFM,
 		MusicLocker,
+		MediaPlayer,
 		RadioOff = 255,
 	}
 }
