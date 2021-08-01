@@ -219,6 +219,9 @@ namespace SHVDN
 				// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
 				timeScaleAddress = timeScaleArrayAddress + 1;
 
+			address = FindPattern("\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x57\xF6", "xxxx????xxx");
+			millisecondsPerGameMinuteAddress = (int*)(*(int*)(address + 4) + address + 8);
+
 			// Find camera objects
 			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
 			CameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
@@ -783,6 +786,13 @@ namespace SHVDN
 		public static float TimeScale
 		{
 			get { return *timeScaleAddress; }
+		}
+
+		static int* millisecondsPerGameMinuteAddress;
+
+		public static int MillisecondsPerGameMinute
+		{
+			set { *millisecondsPerGameMinuteAddress = value; }
 		}
 
 		static float* readWorldGravityAddress;

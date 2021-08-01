@@ -167,6 +167,7 @@
     <Compile Include="GTA\Language.cs" />
     <Compile Include="GTA\MarkerType.cs" />
     <Compile Include="GTA\MaterialHash.cs" />
+    <Compile Include="GTA\MeasurementSystem.cs" />
     <Compile Include="GTA\ParachuteTint.cs" />
     <Compile Include="GTA\Particles\ParticleEffect.cs" />
     <Compile Include="GTA\Particles\ParticleEffectAsset.cs" />

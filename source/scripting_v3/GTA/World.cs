@@ -93,6 +93,18 @@ namespace GTA
 			set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
 		}
 
+		/// <summary>
+		/// Gets or sets how many milliseconds in the real world one game minute takes.
+		/// </summary>
+		/// <value>
+		/// The milliseconds one game minute takes in the real world.
+		/// </value>
+		public static int MillisecondsPerGameMinute
+		{
+			get => Function.Call<int>(Hash.GET_MILLISECONDS_PER_GAME_MINUTE);
+			set => SHVDN.NativeMemory.MillisecondsPerGameMinute = value;
+		}
+
 		#endregion
 
 		#region Weather & Effects
