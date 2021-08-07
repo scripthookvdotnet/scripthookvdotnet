@@ -53,17 +53,17 @@ namespace GTA
 		public EntityType EntityType => (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is dead.
+		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Entity"/> is dead; otherwise, <c>false</c>.
+		///   <c>true</c> if this <see cref="Entity"/> is dead or does not exist; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsDead => Function.Call<bool>(Hash.IS_ENTITY_DEAD, Handle);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is alive.
+		/// Gets a value indicating whether this <see cref="Entity"/> exists and is alive.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Entity"/> is alive; otherwise, <c>false</c>.
+		///   <c>true</c> if this <see cref="Entity"/> exists and is alive; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsAlive => !IsDead;
 
