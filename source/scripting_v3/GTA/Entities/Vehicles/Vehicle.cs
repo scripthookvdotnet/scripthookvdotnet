@@ -1483,8 +1483,8 @@ namespace GTA
 
 				// check if the vehicle is CAutomobile or a derived class from it
 				if (model.IsCar || model.IsQuadBike ||
-					(Game.Version >= GameVersion.v1_0_944_2_Steam && model.IsAmphibiousCar) ||
-					(Game.Version >= GameVersion.v1_0_944_2_Steam && model.IsAmphibiousQuadBike))
+					(Game.Version >= GameVersion.v1_0_944_2_Steam && (model.IsAmphibiousCar || model.IsAmphibiousQuadBike)) || 
+					(Game.Version >= GameVersion.v1_0_1290_1_Steam && model.IsSubmarineCar))
 				{
 					int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1319 : 0x12F9;
 					offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1349 : offset;
