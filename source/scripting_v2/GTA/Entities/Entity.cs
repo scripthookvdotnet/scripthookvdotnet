@@ -415,7 +415,7 @@ namespace GTA
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + 392, 9);
+				return SHVDN.NativeMemory.IsBitSet(address + 392, 10);
 			}
 			set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
 		}
