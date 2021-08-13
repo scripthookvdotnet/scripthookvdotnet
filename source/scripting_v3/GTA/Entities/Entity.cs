@@ -623,6 +623,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is melee proof.
+		/// <see cref="Ped"/>s are not susceptible to the reactions of melee attacks when this property is set to <c>true</c>.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> is melee proof; otherwise, <c>false</c>.
@@ -883,6 +884,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is invincible.
+		/// Setting this property to <c>true</c> does not prevent <see cref="Ped"/>s from doing the reactions for getting hit with melee attacks.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> is invincible; otherwise, <c>false</c>.
@@ -904,6 +906,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s.
+		/// <see cref="Ped"/>s are not susceptible to the reactions of melee attacks when this property is set to <c>true</c>, unlike <see cref="IsInvincible"/>.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s; otherwise, <c>false</c>.
