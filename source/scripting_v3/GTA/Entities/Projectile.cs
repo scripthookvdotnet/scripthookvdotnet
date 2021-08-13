@@ -31,5 +31,24 @@ namespace GTA
 				return new Ped(SHVDN.NativeMemory.GetEntityHandleFromAddress(pedAddress));
 			}
 		}
+
+		public WeaponHash WeaponHash
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileAmmoInfoOffset == 0)
+				{
+					return (WeaponHash)0;
+				}
+
+				IntPtr cAmmoInfoAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset);
+
+				if (cAmmoInfoAddress == IntPtr.Zero)
+					return (WeaponHash)0;
+
+				return (WeaponHash)SHVDN.NativeMemory.ReadInt32(address + 0x10);
+			}
+		}
 	}
 }

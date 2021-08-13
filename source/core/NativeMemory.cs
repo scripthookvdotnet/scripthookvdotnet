@@ -348,6 +348,11 @@ namespace SHVDN
 			{
 				ProjectileOwnerOffset = *(int*)(address + 8);
 			}
+			address = FindPattern("\x45\x85\xF6\x74\x0D\x48\x8B\x81\x00\x00\x00\x00\x44\x39\x70\x10", "xxxxxxxx????xxxx");
+			if (address != null)
+			{
+				ProjectileAmmoInfoOffset = *(int*)(address + 8);
+			}
 
 			// Generate vehicle model list
 			var vehicleHashes = new List<int>[0x20];
@@ -1859,6 +1864,7 @@ namespace SHVDN
 		#endregion
 
 		#region -- Projectile Offsets --
+		public static int ProjectileAmmoInfoOffset { get; }
 		public static int ProjectileOwnerOffset { get; }
 		#endregion
 
