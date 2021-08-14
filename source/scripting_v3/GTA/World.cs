@@ -236,17 +236,11 @@ namespace GTA
 		{
 			get
 			{
-				if (!Game.IsWaypointActive)
-				{
-					return null;
-				}
+				var handle = SHVDN.NativeMemory.GetWaypointBlip();
 
-				for (int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR), blip = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, blip); blip = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
+				if (handle != 0)
 				{
-					if (Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, blip) == 4)
-					{
-						return new Blip(blip);
-					}
+					return new Blip(handle);
 				}
 
 				return null;

@@ -84,6 +84,25 @@ namespace SHVDN
 		/// <param name="pattern">The pattern.</param>
 		/// <param name="mask">The pattern mask.</param>
 		/// <param name="startAddress">The address to start searching at.</param>
+		/// <returns>The address of a region matching the pattern or <c>null</c> if none was found.</returns>
+		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress)
+		{
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
+
+			if ((ulong)startAddress.ToInt64() < (ulong)module.BaseAddress.ToInt64())
+				return null;
+
+			ulong size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
+
+			return FindPattern(pattern, mask, startAddress, size);
+		}
+
+		/// <summary>
+		/// Searches the specific address space of the current process for a memory pattern.
+		/// </summary>
+		/// <param name="pattern">The pattern.</param>
+		/// <param name="mask">The pattern mask.</param>
+		/// <param name="startAddress">The address to start searching at.</param>
 		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
 		/// <returns>The address of a region matching the pattern or <c>null</c> if none was found.</returns>
 		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
@@ -111,6 +130,8 @@ namespace SHVDN
 		static NativeMemory()
 		{
 			byte* address;
+			IntPtr startAddressToSearch;
+			IntPtr mainModuleBaseAddress = Process.GetCurrentProcess().MainModule.BaseAddress;
 
 			// Get relative address and add it to the instruction address.
 			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
@@ -202,6 +223,15 @@ namespace SHVDN
 
 			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
 			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+
+			address = FindPattern("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
+			GetLocalPlayerAddressFunc = GetDelegateForFunctionPointer<GetLocalPlayerAddressFuncDelegate>(new IntPtr(*(int*)(address + 3) + address + 7));
+
+			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
+			waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			startAddressToSearch = address != null ? new IntPtr(address) : mainModuleBaseAddress;
+			address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxxxxxxxxx", startAddressToSearch);
+			waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
 			GetHashKeyFunc = GetDelegateForFunctionPointer<GetHashKeyDelegate>(new IntPtr(*(int*)(address + 6) + address + 10));
@@ -1725,6 +1755,39 @@ namespace SHVDN
 			return IntPtr.Zero;
 		}
 
+		#endregion
+
+		#region -- Waypoint Info Array --
+
+		delegate ulong GetLocalPlayerAddressFuncDelegate();
+		static ulong* waypointInfoArrayStartAddress;
+		static ulong* waypointInfoArrayEndAddress;
+		static GetLocalPlayerAddressFuncDelegate GetLocalPlayerAddressFunc;
+
+		public static int GetWaypointBlip()
+		{
+			if (waypointInfoArrayStartAddress == null || waypointInfoArrayEndAddress == null)
+				return 0;
+
+			int playerPedModelHash = 0;
+			ulong playerPedAddress = GetLocalPlayerAddressFunc();
+
+			if (playerPedAddress != 0)
+            {
+				playerPedModelHash = GetModelHashFromEntity(new IntPtr((long)playerPedAddress));
+            }
+
+			ulong waypointInfoAddress = (ulong)waypointInfoArrayStartAddress;
+			for (; waypointInfoAddress < (ulong)waypointInfoArrayEndAddress; waypointInfoAddress += 0x18)
+            {
+				int modelHash = *(int*)waypointInfoAddress;
+
+				if (modelHash == playerPedModelHash)
+					return *(int*)(waypointInfoAddress + 0x4);
+			}
+
+			return 0;
+		}
 		#endregion
 
 		#region -- Entity Addresses --

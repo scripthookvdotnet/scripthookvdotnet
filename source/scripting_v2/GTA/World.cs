@@ -173,15 +173,12 @@ namespace GTA
 			bool blipFound = false;
 			Vector3 position = Vector3.Zero;
 
-			int it = Function.Call<int>(Hash._GET_BLIP_INFO_ID_ITERATOR);
-			for (int i = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, it); Function.Call<bool>(Hash.DOES_BLIP_EXIST, i); i = Function.Call<int>(Hash.GET_NEXT_BLIP_INFO_ID, it))
+			var waypointBlipHandle = SHVDN.NativeMemory.GetWaypointBlip();
+
+			if (waypointBlipHandle != 0)
 			{
-				if (Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, i) == 4)
-				{
-					position = Function.Call<Vector3>(Hash.GET_BLIP_INFO_ID_COORD, i);
-					blipFound = true;
-					break;
-				}
+				position = Function.Call<Vector3>(Hash.GET_BLIP_INFO_ID_COORD, waypointBlipHandle);
+				blipFound = true;
 			}
 
 			if (blipFound)
