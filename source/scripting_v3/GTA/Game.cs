@@ -347,7 +347,7 @@ namespace GTA
 		/// <summary>
 		/// Gets whether the last input was made with a GamePad or keyboard and mouse.
 		/// </summary>
-		public static InputMethod LastInputMethod => Function.Call<bool>(Hash._IS_INPUT_DISABLED, 2) ? InputMethod.MouseAndKeyboard : InputMethod.GamePad;
+		public static InputMethod LastInputMethod => Function.Call<bool>(Hash._IS_USING_KEYBOARD, 2) ? InputMethod.MouseAndKeyboard : InputMethod.GamePad;
 
 		/// <summary>
 		/// Gets an analog value of a <see cref="Control"/> input.

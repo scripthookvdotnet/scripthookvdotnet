@@ -301,7 +301,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				return Function.Call<float>(Hash._GET_HELI_ENGINE_HEALTH, Handle);
+				return Function.Call<float>(Hash.GET_HELI_TAIL_BOOM_HEALTH, Handle);
 			}
 			set
 			{
@@ -508,7 +508,7 @@ namespace GTA
 
 		public float EngineTorqueMultiplier
 		{
-			set => Function.Call(Hash._SET_VEHICLE_ENGINE_TORQUE_MULTIPLIER, Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_CHEAT_POWER_INCREASE, Handle, value);
 		}
 
 		/// <summary>
@@ -1185,7 +1185,7 @@ namespace GTA
 		/// </value>
 		public bool IsSirenSilent
 		{
-			set => Function.Call(Hash._SET_DISABLE_VEHICLE_SIREN_SOUND, Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_HAS_MUTED_SIRENS, Handle, value);
 		}
 
 		/// <summary>

@@ -112,7 +112,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the zoom of the <see cref="GameplayCamera"/>.
 		/// </summary>
-		public static float Zoom => Function.Call<float>(Hash._GET_GAMEPLAY_CAM_ZOOM);
+		public static float Zoom => Function.Call<float>(Hash.GET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR);
 
 		/// <summary>
 		/// Gets the field of view of the <see cref="GameplayCamera"/>.

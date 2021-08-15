@@ -1068,7 +1068,7 @@ namespace GTA
 				throw new ArgumentOutOfRangeException(nameof(modifier));
 			}
 
-			Function.Call(Hash._PLAY_AMBIENT_SPEECH1, Handle, speechName, _speechModifierNames[(int)modifier]);
+			Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, Handle, speechName, _speechModifierNames[(int)modifier]);
 		}
 		public void PlayAmbientSpeech(string speechName, string voiceName, SpeechModifier modifier = SpeechModifier.Standard)
 		{
@@ -1077,7 +1077,7 @@ namespace GTA
 				throw new ArgumentOutOfRangeException(nameof(modifier));
 			}
 
-			Function.Call(Hash._PLAY_AMBIENT_SPEECH_WITH_VOICE, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
+			Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
 		}
 
 		/// <summary>

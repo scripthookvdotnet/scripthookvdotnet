@@ -75,7 +75,7 @@ namespace GTA
 				return true; // No prop is always valid
 			}
 
-			return Function.Call<bool>(Hash._IS_PED_PROP_VALID, _ped.Handle, Type, index - 1, textureIndex);
+			return Function.Call<bool>(Hash.SET_PED_PRELOAD_PROP_DATA, _ped.Handle, Type, index - 1, textureIndex);
 		}
 
 		public bool HasVariations => Count > 1;
