@@ -127,6 +127,7 @@
     <Compile Include="GTA\Entities\Peds\TaskInvoker.cs" />
     <Compile Include="GTA\Entities\Peds\TaskSequence.cs" />
     <Compile Include="GTA\Entities\Peds\VehicleDrivingFlags.cs" />
+    <Compile Include="GTA\Entities\Projectile.cs" />
     <Compile Include="GTA\Entities\Prop.cs" />
     <Compile Include="GTA\Entities\Vehicles\CargobobHook.cs" />
     <Compile Include="GTA\Entities\Vehicles\HandlingData.cs" />

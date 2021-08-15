@@ -362,6 +362,28 @@ namespace SHVDN
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
 			}
 
+			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
+			if (address != null)
+			{
+				ProjectilePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			}
+			// Find address of the projectile count, just in case the max number of projectile changes from 50
+			address = FindPattern("\x44\x8B\x0D\x00\x00\x00\x00\x33\xDB\x45\x8A\xF8", "xxx????xxxxx");
+			if (address != null)
+			{
+				ProjectileCountAddress = (int*)(*(int*)(address + 3) + address + 7);
+			}
+			address = FindPattern("\x48\x85\xED\x74\x09\x48\x39\xA9\x00\x00\x00\x00\x75\x2D", "xxxxxxxx????xx");
+			if (address != null)
+			{
+				ProjectileOwnerOffset = *(int*)(address + 8);
+			}
+			address = FindPattern("\x45\x85\xF6\x74\x0D\x48\x8B\x81\x00\x00\x00\x00\x44\x39\x70\x10", "xxxxxxxx????xxxx");
+			if (address != null)
+			{
+				ProjectileAmmoInfoOffset = *(int*)(address + 8);
+			}
+
 			// Generate vehicle model list
 			var vehicleHashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
@@ -1268,6 +1290,9 @@ namespace SHVDN
 		static ulong* CheckpointPoolAddress;
 		static ulong* RadarBlipPoolAddress;
 
+		static ulong* ProjectilePoolAddress;
+		static int* ProjectileCountAddress;
+
 		delegate ulong EntityPosFuncDelegate(ulong address, float* position);
 		delegate ulong EntityModel1FuncDelegate(ulong address);
 		delegate ulong EntityModel2FuncDelegate(ulong address);
@@ -1295,7 +1320,8 @@ namespace SHVDN
 				Ped = 1,
 				Object = 2,
 				Vehicle = 4,
-				PickupObject = 8
+				PickupObject = 8,
+				Projectile = 16,
 			}
 
 			internal EntityPoolTask(Type type)
@@ -1445,6 +1471,44 @@ namespace SHVDN
 						}
 					}
 				}
+
+				if (poolType.HasFlag(Type.Projectile) && NativeMemory.ProjectilePoolAddress != null)
+				{
+					int ProjectilesLeft = NativeMemory.GetProjectileCount();
+					int ProjectilesCapacity = NativeMemory.GetProjectileCapacity();
+					ulong* projectilePoolAddress = NativeMemory.ProjectilePoolAddress;
+
+					for (uint i = 0; (ProjectilesLeft > 0 && i < ProjectilesCapacity); i++)
+					{
+						ulong entityAddress = (ulong)ReadAddress(new IntPtr(projectilePoolAddress + i)).ToInt64();
+
+						if (entityAddress == 0)
+							continue;
+
+						ProjectilesLeft--;
+
+						if (CheckCheckpoint(entityAddress))
+							handles.Add(NativeMemory.AddEntityToPoolFunc(entityAddress));
+					}
+				}
+			}
+		}
+
+		internal class GetEntityHandleTask : IScriptTask
+		{
+			#region Fields
+			internal ulong entityAddress;
+			internal int returnEntityHandle = -1;
+			#endregion
+
+			internal GetEntityHandleTask(IntPtr entityAddress)
+			{
+				this.entityAddress = (ulong)entityAddress.ToInt64();
+			}
+
+			public void Run()
+            {
+				returnEntityHandle = NativeMemory.AddEntityToPoolFunc(entityAddress);
 			}
 		}
 
@@ -1484,6 +1548,10 @@ namespace SHVDN
 			}
 			return 0;
 		}
+		public static int GetProjectileCount()
+		{
+			return ProjectileCountAddress != null ? *ProjectileCountAddress : 0;
+		}
 
 		public static int GetPedCapacity()
 		{
@@ -1520,6 +1588,11 @@ namespace SHVDN
 				return (int)pool->size;
 			}
 			return 0;
+		}
+		//the max number of projectile has not been changed from 50
+		public static int GetProjectileCapacity()
+		{
+			return 50;
 		}
 
 		public static int[] GetPedHandles(int[] modelHashes = null)
@@ -1653,6 +1726,35 @@ namespace SHVDN
 
 			return task.handles.ToArray();
 		}
+		public static int[] GetProjectileHandles()
+		{
+			var task = new EntityPoolTask(EntityPoolTask.Type.Projectile);
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.handles.ToArray();
+		}
+		public static int[] GetProjectileHandles(float[] position, float radius)
+		{
+			var task = new EntityPoolTask(EntityPoolTask.Type.Projectile);
+			task.position = position;
+			task.radiusSquared = radius * radius;
+			task.doPosCheck = true;
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.handles.ToArray();
+		}
+
+		public static int GetEntityHandleFromAddress(IntPtr address)
+		{
+			var task = new GetEntityHandleTask(address);
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnEntityHandle;
+		}
+
 
 		#endregion
 
@@ -1822,6 +1924,11 @@ namespace SHVDN
 			return new IntPtr((long)((ulong)(CheckpointPoolAddress) + 96 * ((ulong)*(int*)(addr + 16))));
 		}
 
+		#endregion
+
+		#region -- Projectile Offsets --
+		public static int ProjectileAmmoInfoOffset { get; }
+		public static int ProjectileOwnerOffset { get; }
 		#endregion
 
 		#region -- NaturalMotion Euphoria --
