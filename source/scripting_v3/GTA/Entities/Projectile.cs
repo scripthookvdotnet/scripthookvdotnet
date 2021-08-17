@@ -42,12 +42,7 @@ namespace GTA
 					return (WeaponHash)0;
 				}
 
-				IntPtr cAmmoInfoAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset);
-
-				if (cAmmoInfoAddress == IntPtr.Zero)
-					return (WeaponHash)0;
-
-				return (WeaponHash)SHVDN.NativeMemory.ReadInt32(cAmmoInfoAddress + 0x10);
+				return (WeaponHash)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset + 0x8);
 			}
 		}
 	}
