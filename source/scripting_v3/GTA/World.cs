@@ -556,7 +556,7 @@ namespace GTA
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Projectile"/>s in the World.
 		/// </summary>
-		public static Projectile[] GetAlProjectiles()
+		public static Projectile[] GetAllProjectiles()
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetProjectileHandles(), handle => new Projectile(handle));
 		}
