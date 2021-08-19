@@ -128,7 +128,9 @@ namespace GTA
 
 		public List<Ped> ToList(bool includingLeader = true)
 		{
-			var result = new List<Ped>();
+			var memberCount = MemberCount;
+			var expectedListSize = includingLeader ? 1 + memberCount : memberCount;
+			var result = new List<Ped>(expectedListSize);
 
 			if (includingLeader)
 			{
@@ -140,7 +142,7 @@ namespace GTA
 				}
 			}
 
-			for (int i = 0; i < MemberCount; i++)
+			for (int i = 0; i < memberCount; i++)
 			{
 				Ped member = GetMember(i);
 
