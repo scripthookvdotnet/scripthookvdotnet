@@ -39,19 +39,12 @@ namespace GTA
 			get
 			{
 				var address = _owner.MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.WheelCountOffset == 0)
 				{
 					return 0;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0xAA8 : 0xA88;
-				offset = Game.Version >= GameVersion.v1_0_505_2_Steam ? 0xA98 : offset;
-				offset = Game.Version >= GameVersion.v1_0_791_2_Steam ? 0xAB8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0xAE8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0xB18 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2189_0_Steam ? 0xC10 : offset;
-
-				return SHVDN.NativeMemory.ReadInt32(_owner.MemoryAddress + offset);
+				return SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.WheelCountOffset);
 			}
 		}
 	}

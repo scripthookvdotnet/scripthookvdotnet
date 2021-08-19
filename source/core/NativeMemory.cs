@@ -293,6 +293,12 @@ namespace SHVDN
 				WheelSpeedOffset = *(int*)(address + 4);
 			}
 
+			address = FindPattern("\x48\x63\x99\x00\x00\x00\x00\x45\x33\xC0\x45\x8B\xD0\x48\x85\xDB", "xxx????xxxxxxxxx");
+			if (address != null)
+			{
+				WheelCountOffset = *(int*)(address + 3);
+			}
+
 			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
 			if (address != null)
 			{
@@ -956,6 +962,7 @@ namespace SHVDN
 		public static int TurboOffset { get; }
 
 		public static int FuelLevelOffset { get; }
+		public static int WheelCountOffset { get; }
 		public static int WheelSpeedOffset { get; }
 
 		public static int SteeringAngleOffset { get; }
