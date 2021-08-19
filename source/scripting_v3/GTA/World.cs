@@ -40,12 +40,22 @@ namespace GTA
 		#region Time & Day
 
 		/// <summary>
+		/// Gets or sets a value indicating whether the in-game clock is paused.
+		/// </summary>
+		public static bool IsClockPaused
+		{
+			get => SHVDN.NativeMemory.IsClockPaused;
+			set => Function.Call(Hash.PAUSE_CLOCK, value);
+		}
+
+		/// <summary>
 		/// Pauses or resumes the in-game clock.
 		/// </summary>
 		/// <param name="value">Pauses the game clock if set to <c>true</c>; otherwise, resumes the game clock.</param>
+		[Obsolete("The World.PauseClock is obsolete, use World.IsClockPaused instead.")]
 		public static void PauseClock(bool value)
 		{
-			Function.Call(Hash.PAUSE_CLOCK, value);
+			IsClockPaused = value;
 		}
 
 		/// <summary>
@@ -345,6 +355,11 @@ namespace GTA
 		public static int PickupObjectCount => SHVDN.NativeMemory.GetPickupObjectCount();
 
 		/// <summary>
+		/// A fast way to get the total number of <see cref="Projectile"/>s spawned in the world.
+		/// </summary>
+		public static int ProjectileCount => SHVDN.NativeMemory.GetProjectileCount();
+
+		/// <summary>
 		/// The total number of <see cref="Vehicle"/>s that can exist in the world.
 		/// </summary>
 		/// <remarks>The game will crash when the number of <see cref="Vehicle"/> is the same as this limit and the game tries to create a <see cref="Vehicle"/>.</remarks>
@@ -363,6 +378,11 @@ namespace GTA
 		/// The total number of <see cref="Prop"/>s in the world associated with a <see cref="Pickup"/> that can exist in the world.
 		/// </summary>
 		public static int PickupObjectCapacity => SHVDN.NativeMemory.GetPickupObjectCapacity();
+		/// <summary>
+		/// The total number of <see cref="Projectile"/>s that can exist in the world.
+		/// Always returns 50 currently since the limit is hard-coded in the exe.
+		/// </summary>
+		public static int ProjectileCapacity => SHVDN.NativeMemory.GetProjectileCapacity();
 
 		/// <summary>
 		/// Gets the closest <see cref="Ped"/> to a given position in the World.

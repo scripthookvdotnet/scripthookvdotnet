@@ -254,6 +254,9 @@ namespace SHVDN
 			address = FindPattern("\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x57\xF6", "xxxx????xxx");
 			millisecondsPerGameMinuteAddress = (int*)(*(int*)(address + 4) + address + 8);
 
+			address = FindPattern("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
+			isClockPausedAddress = (bool*)(*(int*)(address + 5) + address + 9);
+
 			// Find camera objects
 			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
 			CameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
@@ -853,6 +856,13 @@ namespace SHVDN
 		public static int MillisecondsPerGameMinute
 		{
 			set { *millisecondsPerGameMinuteAddress = value; }
+		}
+
+		static bool* isClockPausedAddress;
+
+		public static bool IsClockPaused
+		{
+			get { return *isClockPausedAddress; }
 		}
 
 		static float* readWorldGravityAddress;
