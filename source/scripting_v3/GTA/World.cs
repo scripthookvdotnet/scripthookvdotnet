@@ -40,12 +40,22 @@ namespace GTA
 		#region Time & Day
 
 		/// <summary>
+		/// Gets or sets a value indicating whether the in-game clock is paused.
+		/// </summary>
+		public static bool IsClockPaused
+		{
+			get => SHVDN.NativeMemory.IsClockPaused;
+			set => Function.Call(Hash.PAUSE_CLOCK, value);
+		}
+
+		/// <summary>
 		/// Pauses or resumes the in-game clock.
 		/// </summary>
 		/// <param name="value">Pauses the game clock if set to <c>true</c>; otherwise, resumes the game clock.</param>
+		[Obsolete("The World.PauseClock is obsolete, use World.IsClockPaused instead.")]
 		public static void PauseClock(bool value)
 		{
-			Function.Call(Hash.PAUSE_CLOCK, value);
+			IsClockPaused = value;
 		}
 
 		/// <summary>
