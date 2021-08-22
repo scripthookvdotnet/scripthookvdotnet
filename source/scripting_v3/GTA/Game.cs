@@ -350,6 +350,16 @@ namespace GTA
 		public static InputMethod LastInputMethod => Function.Call<bool>(Hash._IS_USING_KEYBOARD, 2) ? InputMethod.MouseAndKeyboard : InputMethod.GamePad;
 
 		/// <summary>
+		/// Gets the current targeting mode of the local player.
+		/// </summary>
+		public static PlayerTargetingMode PlayerTargetingMode => (PlayerTargetingMode)GetProfileSetting(0);
+
+		/// <summary>
+		/// Gets a value indicating whether the controller vibration is enabled.
+		/// </summary>
+		public static bool IsVibrationEnabled => GetProfileSetting(2) != 0;
+
+		/// <summary>
 		/// Gets an analog value of a <see cref="Control"/> input.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
@@ -522,6 +532,16 @@ namespace GTA
 		public static string GetLocalizedString(int entryLabelHash)
 		{
 			return SHVDN.NativeMemory.GetGXTEntryByHash(entryLabelHash);
+		}
+
+		/// <summary>
+		/// Gets an value associated with the specified index of the profile setting.
+		/// </summary>
+		/// <param name="index">The index of the profile setting values.</param>
+		/// <returns>The integer value associated with the specified index of the profile setting.</returns>
+		public static int GetProfileSetting(int index)
+		{
+			return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
 		}
 	}
 }
