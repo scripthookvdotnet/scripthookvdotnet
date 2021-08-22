@@ -491,6 +491,7 @@ namespace GTA
 
 		/// <summary>
 		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> which can then be used by any native function that takes a hash.
+		/// Can be called in any thread.
 		/// </summary>
 		/// <param name="input">The input <see cref="string"/> to hash.</param>
 		/// <returns>The Jenkins hash of the input <see cref="string"/>.</returns>
