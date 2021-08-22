@@ -112,10 +112,10 @@ namespace GTA
 		/// </value>
 		public bool IsBigVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.Big);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a motorbike.
+		/// Gets a value indicating whether this <see cref="Model"/> is a bike (either a motorcycle or a bycycle).
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Model"/> is a motorbike; otherwise, <c>false</c>.
+		/// <c>true</c> if this <see cref="Model"/> is a bike; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsBike => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_BIKE, Hash);
 		/// <summary>
