@@ -275,6 +275,12 @@ namespace SHVDN
 			modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
 			modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
 
+			address = FindPattern("\x33\xD2\x00\x8B\xD0\x00\x2B\x05\x00\x00\x00\x00\xC1\xE6\x10", "xx?xx?xx????xxx");
+			modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
+
+			address = FindPattern("\x8B\x54\x00\x00\x00\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\xC3", "xx???xx????x????xx");
+			cStreamingAddr = (ulong*)(*(int*)(address + 7) + address + 11);
+
 			// Find vehicle data offsets
 			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
 			if (address != null)
@@ -1067,6 +1073,8 @@ namespace SHVDN
 		static UInt64 modelNum4;
 		static UInt64 modelHashTable;
 		static UInt16 modelHashEntries;
+		static ulong* modelInfoArrayPtr;
+		static ulong* cStreamingAddr;
 
 		static IntPtr FindCModelInfo(int modelHash)
 		{
@@ -1139,6 +1147,38 @@ namespace SHVDN
 
 			return 0;
 		}
+
+		static IntPtr GetModelInfoByIndex(uint index)
+		{
+			if (modelInfoArrayPtr == null || index < 0)
+				return IntPtr.Zero;
+
+			ulong modelInfoArrayFirstElemPtr = *modelInfoArrayPtr;
+
+			return new IntPtr(*(long*)(modelInfoArrayFirstElemPtr + index * 0x8));
+		}
+		public static List<int> GetLoadedAppropriateVehicleHashes()
+		{
+			if (modelInfoArrayPtr == null || cStreamingAddr == null)
+				return new List<int>();
+
+			var resultList = new List<int>();
+
+			const int MAX_MODEL_LIST_ELEMENT_COUNT = 256;
+			ulong firstIndexAddrOfAppropriateVehicleSet = (ulong)((byte*)cStreamingAddr + 0x2D00);
+			for (uint i = 0; i < MAX_MODEL_LIST_ELEMENT_COUNT; i++)
+            {
+				uint indexOfModelInfo = *(ushort*)(firstIndexAddrOfAppropriateVehicleSet + i * 0x4);
+
+				if (indexOfModelInfo == 0xFFFF)
+					break;
+
+				resultList.Add(GetModelHashFromFwArcheType(GetModelInfoByIndex(indexOfModelInfo)));
+			}
+
+			return resultList;
+		}
+
 
 		public static bool IsModelAPed(int modelHash)
 		{

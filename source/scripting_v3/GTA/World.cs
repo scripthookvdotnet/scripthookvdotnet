@@ -702,29 +702,28 @@ namespace GTA
 			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 		}
 		/// <summary>
-		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified. Does not work currently.
+		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
 		/// </summary>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
 		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
 		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
 		{
-			// GET_RANDOM_VEHICLE_MODEL_IN_MEMORY is not present but just a nullsub in the retail version
-			// We need certain memory patterns to get this method to spawn random ambient vehicles properly
-			return null;
+			if (VehicleCount >= VehicleCapacity)
+			{
+				return null;
+			}
 
-			int outModel, outInt;
-			unsafe
-			{
-				Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, &outModel, &outInt);
-			}
-			Model model = outModel;
-			if (model.IsVehicle && model.IsLoaded)
-			{
-				return
-					new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
-			}
-			return null;
+			List<int> loadedAppropriateVehHashes = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes();
+			var loadedHashCount = loadedAppropriateVehHashes.Count;
+			if (loadedHashCount == 0)
+				return null;
+
+			var rand = Math.Random.Instance;
+			var pickedHash = loadedAppropriateVehHashes.ElementAt(rand.Next(loadedHashCount));
+
+			// the model should be loaded at this moment, so call CREATE_VEHICLE immediately
+			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedHash, position.X, position.Y, position.Z, heading, false, false));
 		}
 
 		/// <summary>
