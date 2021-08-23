@@ -1130,5 +1130,16 @@ namespace GTA
 		{
 			return SHVDN.NativeMemory.PedModels.Select(x => (PedHash)x).ToArray();
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all loaded <see cref="PedHash"/>s that is appropriate to spawn as ambient vehicles.
+		/// The result array can contains animal hashes, which CREATE_RANDOM_PED excludes to spawn.
+		/// All the model hashes of the elements are loaded and the <see cref="Ped"/>s with the model hashes can be spawned immediately.
+		/// </summary>
+		public static PedHash[] GetAllLoadedModelsAppropriateForAmbientPeds()
+		{
+			return SHVDN.NativeMemory.GetLoadedAppropriatePedHashes()
+				.Select(x => (PedHash)x)
+				.ToArray();
+		}
 	}
 }

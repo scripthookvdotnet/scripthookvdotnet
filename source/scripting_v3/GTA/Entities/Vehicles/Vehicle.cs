@@ -1942,6 +1942,18 @@ namespace GTA
 			}
 			return allModels.ToArray();
 		}
+
+		/// <summary>
+		/// Gets an <c>array</c> of all loaded <see cref="VehicleHash"/>s that is appropriate to spawn as ambient vehicles.
+		/// All the model hashes of the elements are loaded and the <see cref="Vehicle"/>s with the model hashes can be spawned immediately.
+		/// </summary>
+		public static VehicleHash[] GetAllLoadedModelsAppropriateForAmbientVehicles()
+		{
+			return SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes()
+				.Select(x => (VehicleHash)x)
+				.ToArray();
+		}
+
 		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
