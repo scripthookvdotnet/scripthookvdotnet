@@ -1159,26 +1159,13 @@ namespace SHVDN
 		}
 		public static List<int> GetLoadedAppropriateVehicleHashes()
 		{
-			if (modelInfoArrayPtr == null || cStreamingAddr == null)
-				return new List<int>();
-
-			var resultList = new List<int>();
-
-			const int MAX_MODEL_LIST_ELEMENT_COUNT = 256;
-			ulong firstIndexAddrOfAppropriateVehicleSet = (ulong)((byte*)cStreamingAddr + 0x2D00);
-			for (uint i = 0; i < MAX_MODEL_LIST_ELEMENT_COUNT; i++)
-            {
-				uint indexOfModelInfo = *(ushort*)(firstIndexAddrOfAppropriateVehicleSet + i * 0x4);
-
-				if (indexOfModelInfo == 0xFFFF)
-					break;
-
-				resultList.Add(GetModelHashFromFwArcheType(GetModelInfoByIndex(indexOfModelInfo)));
-			}
-
-			return resultList;
+			return GetLoadedHashesOfModelList(0x2D00);;
 		}
 		public static List<int> GetLoadedAppropriatePedHashes()
+		{
+			return GetLoadedHashesOfModelList(0x4504);
+		}
+		internal static List<int> GetLoadedHashesOfModelList(int startOffsetOfCStreaming)
 		{
 			if (modelInfoArrayPtr == null || cStreamingAddr == null)
 				return new List<int>();
@@ -1186,10 +1173,10 @@ namespace SHVDN
 			var resultList = new List<int>();
 
 			const int MAX_MODEL_LIST_ELEMENT_COUNT = 256;
-			ulong firstIndexAddrOfAppropriateVehicleSet = (ulong)((byte*)cStreamingAddr + 0x4504);
+			ulong firstIndexAddrModelSet = (ulong)((byte*)cStreamingAddr + startOffsetOfCStreaming);
 			for (uint i = 0; i < MAX_MODEL_LIST_ELEMENT_COUNT; i++)
 			{
-				uint indexOfModelInfo = *(ushort*)(firstIndexAddrOfAppropriateVehicleSet + i * 0x4);
+				uint indexOfModelInfo = *(ushort*)(firstIndexAddrModelSet + i * 0x4);
 
 				if (indexOfModelInfo == 0xFFFF)
 					break;
