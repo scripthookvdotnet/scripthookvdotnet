@@ -976,6 +976,18 @@ namespace SHVDN
 
 		#region -- Entity Offsets --
 
+		// the size is at least 0x10 in all game versions
+		[StructLayout(LayoutKind.Explicit, Size = 0x10)]
+		struct CAttacker
+        {
+			[FieldOffset(0x0)]
+			internal ulong attackerEntityAddress;
+			[FieldOffset(0x8)]
+			internal int weaponHash;
+			[FieldOffset(0xC)]
+			internal int gameTime;
+		}
+
 		public static uint cAttackerArrayOfEntityOffset { get; }
 		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
 		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
@@ -997,10 +1009,10 @@ namespace SHVDN
 
 			for (uint i = 0; i < returnEntries.Length; i++)
             {
-				var elementAddress = entityCAttackerArrayAddress + i * elementSizeOfCAttackerArrayOfEntity;
-				var attackerEntityAddress = *(ulong*)elementAddress;
-				var weaponHash = *(int*)(elementAddress + 0x8);
-				var gameTime = *(int*)(elementAddress + 0xC);
+				var cAttacker = (CAttacker*)(entityCAttackerArrayAddress + i * elementSizeOfCAttackerArrayOfEntity);
+				var attackerEntityAddress = cAttacker->attackerEntityAddress;
+				var weaponHash = cAttacker->weaponHash;
+				var gameTime = cAttacker->gameTime;
 
 				var returnHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : -1;
 				returnEntries[i] = (returnHandle, weaponHash, gameTime);
