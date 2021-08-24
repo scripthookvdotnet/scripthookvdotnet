@@ -281,6 +281,13 @@ namespace SHVDN
 			address = FindPattern("\x8B\x54\x00\x00\x00\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\xC3", "xx???xx????x????xx");
 			cStreamingAddr = (ulong*)(*(int*)(address + 7) + address + 11);
 
+			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
+			if (address != null)
+            {
+				pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 10);
+				pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 17) + address + 21);
+			}
+
 			// Find vehicle data offsets
 			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
 			if (address != null)
@@ -1067,6 +1074,7 @@ namespace SHVDN
 		}
 
 		static int handlingIndexOffsetInModelInfo;
+		static int pedPersonalityIndexOffsetInModelInfo;
 		static UInt32 modelNum1;
 		static UInt64 modelNum2;
 		static UInt64 modelNum3;
@@ -1075,6 +1083,10 @@ namespace SHVDN
 		static UInt16 modelHashEntries;
 		static ulong* modelInfoArrayPtr;
 		static ulong* cStreamingAddr;
+		static ulong* pedPersonalitiesArrayAddr;
+
+		// This values is not likely to be changed in further updates
+		const int PED_PERSONALITY_ELEMENT_SIZE = 0xB8;
 
 		static IntPtr FindCModelInfo(int modelHash)
 		{
@@ -1255,6 +1267,66 @@ namespace SHVDN
 		public static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
 		{
 			return new IntPtr((long)GetHandlingDataByHash(new IntPtr(&handlingNameHash)));
+		}
+
+		private static ulong GetPedPersonalityElementAddress(IntPtr modelInfoAddress)
+		{
+			if (modelInfoAddress == IntPtr.Zero ||
+				pedPersonalitiesArrayAddr == null ||
+				pedPersonalityIndexOffsetInModelInfo == 0 ||
+				*(ulong*)pedPersonalitiesArrayAddr == 0)
+				return 0;
+
+			if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Ped)
+				return 0;
+
+			var indexOfPedPersonality = *(ushort*)(modelInfoAddress + pedPersonalityIndexOffsetInModelInfo).ToPointer();
+			return *(ulong*)pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PED_PERSONALITY_ELEMENT_SIZE);
+		}
+		public static bool IsModelAMalePed(int modelHash)
+		{
+			ulong pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == 0)
+				return false;
+
+			return *(byte*)(pedPersonalityAddress + 0x7C) != 0;
+		}
+		public static bool IsModelAFemalePed(int modelHash)
+		{
+			ulong pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == 0)
+				return false;
+
+			return *(byte*)(pedPersonalityAddress + 0x7C) == 0;
+		}
+		public static bool IsModelHumanPed(int modelHash)
+		{
+			ulong pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == 0)
+				return false;
+
+			return *(byte*)(pedPersonalityAddress + 0x7D) != 0;
+		}
+		public static bool IsModelAnAnimalPed(int modelHash)
+		{
+			ulong pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == 0)
+				return false;
+
+			return *(byte*)(pedPersonalityAddress + 0x7D) == 0;
+		}
+		public static bool IsModelAGangPed(int modelHash)
+		{
+			ulong pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == 0)
+				return false;
+
+			return *(byte*)(pedPersonalityAddress + 0x7F) != 0;
 		}
 
 		#endregion

@@ -98,6 +98,13 @@ namespace GTA
 		/// </value>
 		public bool IsAmphibiousVehicle => IsAmphibiousCar || IsAmphibiousQuadBike;
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a animal pedestrian.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a animal pedestrian; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAnimalPed => SHVDN.NativeMemory.IsModelAnAnimalPed(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a bicycle.
 		/// </summary>
 		/// <value>
@@ -176,12 +183,33 @@ namespace GTA
 		/// </value>
 		public bool IsEmergencyVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.EmergencyService);
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a female pedestrian.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a female pedestrian; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsFemalePed => SHVDN.NativeMemory.IsModelAFemalePed(Hash);
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a gangster pedestrian.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a gangster pedestrian; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsGangPed => SHVDN.NativeMemory.IsModelAGangPed(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a helicopter.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Model"/> is a helicopter; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsHelicopter => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_HELI, Hash);
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a human pedestrian.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a human pedestrian; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsHumanPed => SHVDN.NativeMemory.IsModelHumanPed(Hash);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a jet ski.
 		/// </summary>
@@ -203,6 +231,14 @@ namespace GTA
 		/// <c>true</c> if this <see cref="Model"/> is a regular lowrider; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a male pedestrian.
+		/// Without modding <c>pedpersonality.ymt</c>, returns <c>true</c> if the <see cref="Hash"/> is one of the animal hashes.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a male pedestrian; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsMalePed => SHVDN.NativeMemory.IsModelAMalePed(Hash);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an off-road vehicle.
