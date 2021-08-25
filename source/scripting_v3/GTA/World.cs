@@ -703,23 +703,23 @@ namespace GTA
 				return null;
 			}
 
-			var loadedAppropriatePedHashes = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
-			var filteredPedHashes = predicate != null
-				? loadedAppropriatePedHashes.Where(predicate).ToArray()
-				: loadedAppropriatePedHashes.Where(defaultPredicateForCreateRandomPed).ToArray();
-			var loadedHashCount = filteredPedHashes.Length;
-			if (loadedHashCount == 0)
+			var loadedAppropriatePedModels = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+			var filteredPedModels = predicate != null
+				? loadedAppropriatePedModels.Where(predicate).ToArray()
+				: loadedAppropriatePedModels.Where(defaultPredicateForCreateRandomPed).ToArray();
+			var filteredModelCount = filteredPedModels.Length;
+			if (filteredModelCount == 0)
 				return null;
 
 			var rand = Math.Random.Instance;
-			var pickedModel = filteredPedHashes.ElementAt(rand.Next(loadedHashCount));
+			var pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
 
 			// the model should be loaded at this moment, so call CREATE_PED immediately
 			var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y, position.Z, heading, false, false));
 
 			// Randomize clothes and ped props just like CREATE_RANDOM_PED does
-			Function.Call<int>(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, 0);
-			Function.Call<int>(Hash.SET_PED_RANDOM_PROPS, createdPed.Handle);
+			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, 0);
+			Function.Call(Hash.SET_PED_RANDOM_PROPS, createdPed.Handle);
 
 			return createdPed;
 		}
@@ -754,14 +754,14 @@ namespace GTA
 				return null;
 			}
 
-			var loadedAppropriateVehHashes = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
-			var filteredVehHashes = predicate != null ? loadedAppropriateVehHashes.Where(predicate).ToArray() : loadedAppropriateVehHashes.ToArray();
-			var loadedHashCount = filteredVehHashes.Length;
-			if (loadedHashCount == 0)
+			var loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+			var filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+			var filteredModelCount = filteredVehModels.Length;
+			if (filteredModelCount == 0)
 				return null;
 
 			var rand = Math.Random.Instance;
-			var pickedModel = filteredVehHashes.ElementAt(rand.Next(loadedHashCount));
+			var pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
 
 			// the model should be loaded at this moment, so call CREATE_VEHICLE immediately
 			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
