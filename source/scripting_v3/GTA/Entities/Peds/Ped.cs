@@ -219,7 +219,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing.
 		/// </summary>
-		/// <remarks>if you need to get or set the value strictly, use <see cref="ArmorFloat"/> instead.</remarks>
+		/// <remarks>if you need to get or set the value precisely, use <see cref="ArmorFloat"/> instead.</remarks>
 		public int Armor
 		{
 			get => Function.Call<int>(Hash.GET_PED_ARMOUR, Handle);

@@ -239,7 +239,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as an <see cref="int"/>.
-		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value strictly, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/>.</para>
+		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
 		/// The rotation as an integer.
