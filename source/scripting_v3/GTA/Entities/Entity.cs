@@ -1320,7 +1320,8 @@ namespace GTA
 		#endregion
 
 		/// <summary>
-		/// Marks this <see cref="Entity"/> as no longer needed letting the game delete it when its too far away.
+		/// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when its too far away.
+		/// You can still manipulate this <see cref="Entity"/> as long as they exist. 
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
@@ -1348,7 +1349,7 @@ namespace GTA
 
 		/// <summary>
 		/// Determines if this <see cref="Entity"/> exists.
-		/// You should ensure if <see cref="Entity"/>s still exists before manipulating them on every tick, since some native functions may crash the game if invalid entity handles are passed.
+		/// You should ensure <see cref="Entity"/>s still exist before manipulating them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
 		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
 		public override bool Exists()
