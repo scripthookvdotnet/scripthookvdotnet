@@ -1336,7 +1336,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Destroys this <see cref="Entity"/>.
+		/// <para>Destroys this <see cref="Entity"/> and sets <see cref="PoolObject.Handle"/> to 0.</para>
+		/// <para>
+		/// If you need to remove this <see cref="Entity"/> from collections that use <see cref="object.Equals(object)"/> for equality comparison (e.g. <see cref="System.Collections.Generic.Dictionary{TKey, TValue}"/>),
+		/// remove this <see cref="Entity"/> element from these collections before calling this method.
+		/// </para>
 		/// </summary>
 		public override void Delete()
 		{
