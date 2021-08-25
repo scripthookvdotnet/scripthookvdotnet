@@ -745,23 +745,9 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
-		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
-		{
-			return CreateRandomVehicleInternal(position, heading, null);
-		}
-		/// <summary>
-		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
-		/// </summary>
-		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
-		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
 		/// <param name="predicate">The method that determines whether a model should be considered when choosing a random model for the <see cref="Vehicle"/>.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
-		public static Vehicle CreateRandomVehicle(Func<Model, bool> predicate, Vector3 position, float heading = 0f)
-		{
-			return CreateRandomVehicleInternal(position, heading, predicate);
-		}
-		internal static Vehicle CreateRandomVehicleInternal(Vector3 position, float heading, Func<Model, bool> predicate)
+		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned.</remarks>
+		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
 		{
 			if (VehicleCount >= VehicleCapacity)
 			{
