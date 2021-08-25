@@ -43,6 +43,7 @@ namespace GTA
 
 		/// <summary>
 		/// Determines if this <see cref="Vehicle"/> exists.
+		/// You should ensure <see cref="Vehicle"/>s still exist before manipulating them or getting some values for them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
 		/// <returns><c>true</c> if this <see cref="Vehicle"/> exists; otherwise, <c>false</c></returns>
 		public new bool Exists()

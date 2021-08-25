@@ -58,6 +58,8 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Entity"/> is dead or does not exist; otherwise, <c>false</c>.
 		/// </value>
+		/// <seealso cref="Exists"/>
+		/// <seealso cref="Ped.IsInjured"/>
 		public bool IsDead => Function.Call<bool>(Hash.IS_ENTITY_DEAD, Handle);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> exists and is alive.
@@ -164,7 +166,7 @@ namespace GTA
 		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value precisely, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
-		/// The health as an integer.
+		/// The health as an <see cref="int"/>.
 		/// </value>
 		/// <seealso cref="HealthFloat"/>
 		public int Health
@@ -177,7 +179,7 @@ namespace GTA
 		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value precisely, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
-		/// The maximum health as an integer.
+		/// The maximum health as a <see cref="int"/>.
 		/// </value>
 		public virtual int MaxHealth
 		{
@@ -189,7 +191,7 @@ namespace GTA
 		/// Gets or sets the health of this <see cref="Entity"/> as a <see cref="float"/>.
 		/// </summary>
 		/// <value>
-		/// The health in float.
+		/// The health as a <see cref="float"/>.
 		/// </value>
 		public float HealthFloat
 		{
@@ -215,10 +217,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Entity"/> in float.
+		/// Gets or sets the maximum health of this <see cref="Entity"/> as a <see cref="float"/>.
 		/// </summary>
 		/// <value>
-		/// The maximum health in float.
+		/// The maximum health as a <see cref="float"/>.
 		/// </value>
 		public float MaxHealthFloat
 		{
@@ -1321,7 +1323,7 @@ namespace GTA
 
 		/// <summary>
 		/// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when its too far away.
-		/// You can still manipulate this <see cref="Entity"/> as long as they exist. 
+		/// You can still manipulate this <see cref="Entity"/> as long as the <see cref="Entity"/> exists.
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
@@ -1349,9 +1351,10 @@ namespace GTA
 
 		/// <summary>
 		/// Determines if this <see cref="Entity"/> exists.
-		/// You should ensure <see cref="Entity"/>s still exist before manipulating them on every tick, since some native functions may crash the game if invalid entity handles are passed.
+		/// You should ensure <see cref="Entity"/>s still exist before manipulating them or getting some values for them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
+		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>.
+		/// <seealso cref="IsDead"/>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, Handle);

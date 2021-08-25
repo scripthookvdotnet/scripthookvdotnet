@@ -98,8 +98,11 @@ namespace GTA
 
 		/// <summary>
 		/// Determines if this <see cref="Ped"/> exists.
+		/// You should ensure <see cref="Ped"/>s still exist before manipulating them or getting some values for them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
 		/// <returns><c>true</c> if this <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
+		/// <seealso cref="Entity.IsDead"/>
+		/// <seealso cref="IsInjured"/>
 		public new bool Exists()
 		{
 			return EntityType == EntityType.Ped;
@@ -217,15 +220,24 @@ namespace GTA
 		#region Configuration
 
 		/// <summary>
-		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing.
+		/// Gets or sets how much armor this <see cref="Ped"/> is wearing as an <see cref="int"/>.
 		/// </summary>
 		/// <remarks>if you need to get or set the value precisely, use <see cref="ArmorFloat"/> instead.</remarks>
+		/// <value>
+		/// The armor as an <see cref="int"/>.
+		/// </value>
 		public int Armor
 		{
 			get => Function.Call<int>(Hash.GET_PED_ARMOUR, Handle);
 			set => Function.Call(Hash.SET_PED_ARMOUR, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets how much Armor this <see cref="Ped"/> is wearing as a <see cref="float"/>.
+		/// </summary>
+		/// <value>
+		/// The armor as a <see cref="float"/>.
+		/// </value>
 		public float ArmorFloat
 		{
 			get
@@ -275,7 +287,7 @@ namespace GTA
 		/// Gets or sets the maximum health of this <see cref="Ped"/> as an <see cref="int"/>.
 		/// </summary>
 		/// <value>
-		/// The maximum health as an integer.
+		/// The maximum health as an <see cref="int"/>.
 		/// </value>
 		public override int MaxHealth
 		{
@@ -709,6 +721,15 @@ namespace GTA
 
 		public bool IsFleeing => Function.Call<bool>(Hash.IS_PED_FLEEING, Handle);
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Ped"/> is injured (<see cref="Entity.Health"/> of the <see cref="Ped"/> is lower than <see cref="InjuryHealthThreshold"/>) or does not exist.
+		/// Can be called safely to check if <see cref="Ped"/>s exist and are not injured without calling <see cref="Exists"/>.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> this <see cref="Ped"/> is injured or does not exist; otherwise, <c>false</c>.
+		/// </value>
+		/// <seealso cref="Entity.IsDead"/>
+		/// <seealso cref="Exists"/>
 		public bool IsInjured => Function.Call<bool>(Hash.IS_PED_INJURED, Handle);
 
 		public bool IsInStealthMode => Function.Call<bool>(Hash.GET_PED_STEALTH_MOVEMENT, Handle);
