@@ -13,6 +13,9 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Gets the <see cref="Ped"/> this <see cref="Projectile"/> belongs to. Can be <c>null</c>.
+		/// </summary>
 		public Ped Owner
 		{
 			get
@@ -32,6 +35,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="WeaponHash"/> this <see cref="Projectile"/> was fired with.
+		/// </summary>
 		public WeaponHash WeaponHash
 		{
 			get

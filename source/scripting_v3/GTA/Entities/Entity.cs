@@ -58,6 +58,8 @@ namespace GTA
 		/// <value>
 		///   <c>true</c> if this <see cref="Entity"/> is dead or does not exist; otherwise, <c>false</c>.
 		/// </value>
+		/// <seealso cref="Exists"/>
+		/// <seealso cref="Ped.IsInjured"/>
 		public bool IsDead => Function.Call<bool>(Hash.IS_ENTITY_DEAD, Handle);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> exists and is alive.
@@ -161,10 +163,10 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value strictly, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
+		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value precisely, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
-		/// The health as an integer.
+		/// The health as an <see cref="int"/>.
 		/// </value>
 		/// <seealso cref="HealthFloat"/>
 		public int Health
@@ -174,10 +176,10 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value strictly, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
+		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value precisely, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
-		/// The maximum health as an integer.
+		/// The maximum health as a <see cref="int"/>.
 		/// </value>
 		public virtual int MaxHealth
 		{
@@ -189,7 +191,7 @@ namespace GTA
 		/// Gets or sets the health of this <see cref="Entity"/> as a <see cref="float"/>.
 		/// </summary>
 		/// <value>
-		/// The health in float.
+		/// The health as a <see cref="float"/>.
 		/// </value>
 		public float HealthFloat
 		{
@@ -215,10 +217,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum health of this <see cref="Entity"/> in float.
+		/// Gets or sets the maximum health of this <see cref="Entity"/> as a <see cref="float"/>.
 		/// </summary>
 		/// <value>
-		/// The maximum health in float.
+		/// The maximum health as a <see cref="float"/>.
 		/// </value>
 		public float MaxHealthFloat
 		{
@@ -348,7 +350,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the vector that points above this <see cref="Entity"/>
+		/// Gets the vector that points above this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 UpVector
 		{
@@ -365,7 +367,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the vector that points to the right of this <see cref="Entity"/>
+		/// Gets the vector that points to the right of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 RightVector
 		{
@@ -382,7 +384,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the vector that points in front of this <see cref="Entity"/>
+		/// Gets the vector that points in front of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 ForwardVector
 		{
@@ -399,7 +401,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly to the left of this <see cref="Entity"/>
+		/// Gets a position directly to the left of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 LeftPosition
 		{
@@ -411,7 +413,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly to the right of this <see cref="Entity"/>
+		/// Gets a position directly to the right of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 RightPosition
 		{
@@ -423,7 +425,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly behind this <see cref="Entity"/>
+		/// Gets a position directly behind this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 RearPosition
 		{
@@ -435,7 +437,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly in front of this <see cref="Entity"/>
+		/// Gets a position directly in front of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 FrontPosition
 		{
@@ -447,7 +449,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly above this <see cref="Entity"/>
+		/// Gets a position directly above this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 AbovePosition
 		{
@@ -459,7 +461,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a position directly below this <see cref="Entity"/>
+		/// Gets a position directly below this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 BelowPosition
 		{
@@ -471,7 +473,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position in world coordinates of an offset relative this <see cref="Entity"/>
+		/// Gets the position in world coordinates of an offset relative this <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="offset">The offset from this <see cref="Entity"/>.</param>
 		public Vector3 GetOffsetPosition(Vector3 offset)
@@ -480,7 +482,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the relative offset of this <see cref="Entity"/> from a world coordinates position
+		/// Gets the relative offset of this <see cref="Entity"/> from a world coordinates position.
 		/// </summary>
 		/// <param name="worldCoords">The world coordinates.</param>
 		public Vector3 GetPositionOffset(Vector3 worldCoords)
@@ -586,6 +588,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is fire proof.
+		/// This <see cref="Entity"/> does not catch fire naturally and <see cref="Ped"/>s do not getting ragdolled for being burned when this property is set to <c>true</c>.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> is fire proof; otherwise, <c>false</c>.
@@ -698,6 +701,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is explosion proof.
+		/// Explosions cannot add force to this <see cref="Entity"/> and <see cref="Ped"/>s do not getting ragdolled with explosions when this property is set to <c>true</c>.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> is explosion proof; otherwise, <c>false</c>.
@@ -735,6 +739,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is collision proof.
+		/// Setting this property to <c>true</c> only does not prevent this <see cref="Entity"/> from getting ragdolled when another <see cref="Entity"/> collide with this <see cref="Entity"/>.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this <see cref="Entity"/> is collision proof; otherwise, <c>false</c>.
@@ -1048,7 +1053,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Stops all particle effects attached to this <see cref="Entity"/>
+		/// Stops all particle effects attached to this <see cref="Entity"/>.
 		/// </summary>
 		public void RemoveParticleEffects()
 		{
@@ -1192,7 +1197,7 @@ namespace GTA
 		#region Blips
 
 		/// <summary>
-		/// Creates a <see cref="Blip"/> on this <see cref="Entity"/>
+		/// Creates a <see cref="Blip"/> on this <see cref="Entity"/>.
 		/// </summary>
 		public Blip AddBlip()
 		{
@@ -1317,7 +1322,8 @@ namespace GTA
 		#endregion
 
 		/// <summary>
-		/// Marks this <see cref="Entity"/> as no longer needed letting the game delete it when its too far away.
+		/// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when its too far away.
+		/// You can still manipulate this <see cref="Entity"/> as long as the <see cref="Entity"/> exists.
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
@@ -1330,7 +1336,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Destroys this <see cref="Entity"/>.
+		/// <para>Destroys this <see cref="Entity"/> and sets <see cref="PoolObject.Handle"/> to 0.</para>
+		/// <para>
+		/// If you need to remove this <see cref="Entity"/> from collections that use <see cref="object.Equals(object)"/> for equality comparison (e.g. <see cref="System.Collections.Generic.Dictionary{TKey, TValue}"/>),
+		/// remove this <see cref="Entity"/> element from these collections before calling this method.
+		/// </para>
 		/// </summary>
 		public override void Delete()
 		{
@@ -1345,8 +1355,10 @@ namespace GTA
 
 		/// <summary>
 		/// Determines if this <see cref="Entity"/> exists.
+		/// You should ensure <see cref="Entity"/>s still exist before manipulating them or getting some values for them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>
+		/// <returns><c>true</c> if this <see cref="Entity"/> exists; otherwise, <c>false</c></returns>.
+		/// <seealso cref="IsDead"/>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_ENTITY_EXIST, Handle);

@@ -55,7 +55,7 @@ namespace GTA
 		public static Vector3 ForwardVector => new Vector3(SHVDN.NativeMemory.ReadVector3(MemoryAddress + 0x200));
 
 		/// <summary>
-		/// Gets the position in world coordinates of an offset relative to the <see cref="GameplayCamera"/>
+		/// Gets the position in world coordinates of an offset relative to the <see cref="GameplayCamera"/>.
 		/// </summary>
 		/// <param name="offset">The offset from the <see cref="GameplayCamera"/>.</param>
 		public static Vector3 GetOffsetPosition(Vector3 offset)
@@ -64,7 +64,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the relative offset of the <see cref="GameplayCamera"/> from a world coordinates position
+		/// Gets the relative offset of the <see cref="GameplayCamera"/> from a world coordinates position.
 		/// </summary>
 		/// <param name="worldCoords">The world coordinates.</param>
 		public static Vector3 GetPositionOffset(Vector3 worldCoords)

@@ -664,7 +664,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Ped"/>.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Ped"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Ped"/> could not be spawned.</remarks>
 		public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
 		{
 			if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
@@ -730,7 +730,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned.</remarks>
 		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
 		{
 			if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
@@ -774,7 +774,7 @@ namespace GTA
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
 		/// <param name="placeOnGround">if set to <c>true</c> place the prop on the ground nearest to the <paramref name="position"/>.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
 		{
 			if (PropCount >= PropCapacity || !model.Request(1000))
@@ -797,7 +797,7 @@ namespace GTA
 		/// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
 		/// <param name="placeOnGround">if set to <c>true</c> place the prop on the ground nearest to the <paramref name="position"/>.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
 		{
 			Prop prop = CreateProp(model, position, dynamic, placeOnGround);
@@ -815,7 +815,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Prop"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned.</remarks>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
 		{
 			if (PropCount >= PropCapacity || !model.Request(1000))
@@ -832,7 +832,7 @@ namespace GTA
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
 		/// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
 		/// <param name="dynamic">if set to <c>true</c> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
-		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned</remarks>
+		/// <remarks>returns <c>null</c> if the <see cref="Prop"/> could not be spawned.</remarks>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
 		{
 			Prop prop = CreatePropNoOffset(model, position, dynamic);
