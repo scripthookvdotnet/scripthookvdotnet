@@ -1517,7 +1517,7 @@ namespace SHVDN
 		{
 			#region Fields
 			internal ulong entityAddress;
-			internal int returnEntityHandle = -1;
+			internal int returnEntityHandle;
 			#endregion
 
 			internal GetEntityHandleTask(IntPtr entityAddress)
