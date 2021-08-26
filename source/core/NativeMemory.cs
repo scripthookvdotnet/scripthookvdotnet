@@ -302,6 +302,12 @@ namespace SHVDN
 				WheelCountOffset = *(int*)(address + 3);
 			}
 
+			address = FindPattern("\x74\x18\x80\xA0\x00\x00\x00\x00\xBF\x84\xDB\x0F\x94\xC1\x80\xE1\x01\xC0\xE1\x06", "xxxx????xxxxxxxxxxxx");
+			if (address != null)
+			{
+				CanWheelBreakOffset = *(int*)(address + 4);
+			}
+
 			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
 			if (address != null)
 			{
@@ -335,11 +341,25 @@ namespace SHVDN
 				EngineTemperatureOffset = *(int*)(address + 4);
 			}
 
+			address = FindPattern("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				var modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
+				var modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
+				EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
+			}
+
 			address = FindPattern("\xFD\x02\xDB\x08\x98\x00\x00\x00\x00\x48\x8B\x5C\x24\x30", "xxxxx????xxxxx");
 			if (address != null)
 			{
 				IsInteriorLightOnOffset = *(int*)(address - 4);
 				IsEngineStartingOffset = IsInteriorLightOnOffset + 1;
+			}
+
+			address = FindPattern("\x84\xC0\x75\x09\x8A\x9F\x00\x00\x00\x00\x80\xE3\x01\x8A\xC3\x48\x8B\x5C\x24\x30", "xxxxxx????xxxxxxxxxx");
+			if (address != null)
+			{
+				IsHeadlightDamagedOffset = *(int*)(address + 6);
 			}
 
 			address = FindPattern("\x8A\x96\x00\x00\x00\x00\x0F\xB6\xC8\x84\xD2\x41", "xx????xxxxxx");
@@ -361,6 +381,36 @@ namespace SHVDN
 				AlarmTimeOffset = *(int*)(address + 52);
 			}
 
+
+            {
+				string patternForHeliHealthOffsets = "\x48\x85\xC0\x74\x18\x8B\x88\x00\x00\x00\x00\x83\xE9\x08\x83\xF9\x01\x77\x0A\xF3\x0F\x10\x80\x00\x00\x00\x00";
+				string maskForHeliHealthOffsets = "xxxxxxx????xxxxxxxxxxxx????";
+				startAddressToSearch = Process.GetCurrentProcess().MainModule.BaseAddress;
+
+				int[] heliHealthOffsets = new int[3];
+
+				// the pattern will match 3 times
+				for (int i = 0; i < 3; i++)
+                {
+					address = FindPattern(patternForHeliHealthOffsets, maskForHeliHealthOffsets, startAddressToSearch);
+
+					if (address != null)
+					{
+						heliHealthOffsets[i] = *(int*)(address + 23);
+						startAddressToSearch = new IntPtr((long)(address + patternForHeliHealthOffsets.Length));
+					}
+				}
+
+				if (!Array.Exists(heliHealthOffsets, (x => x != 0)))
+				{
+					Array.Sort<int>(heliHealthOffsets);
+					HeliMainRotorHealthOffset = heliHealthOffsets[0];
+					HeliTailRotorHealthOffset = heliHealthOffsets[1];
+					HeliTailBoomHealthOffset = heliHealthOffsets[2];
+				}
+			}
+
+
 			address = FindPattern("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
 			if (address != null)
 			{
@@ -371,6 +421,24 @@ namespace SHVDN
 			if (address != null)
 			{
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
+			}
+
+			address = FindPattern("\x74\x14\x8B\x88\x00\x00\x00\x00\x81\xE1\x00\x40\x00\x00\x31\x88", "xxxx????xxxxxxxx");
+			if (address != null)
+			{
+				PedDropsWeaponsWhenDeadOffset = *(int*)(address + 4);
+			}
+
+			address = FindPattern("\x8B\x88\x00\x00\x00\x00\x83\xE1\x04\x31\x88\x00\x00\x00\x00\x55\x48\x8D\x2D", "xx????xxxxx????xxxx");
+			if (address != null)
+			{
+				PedSuffersCriticalHitOffset = *(int*)(address + 2);
+			}
+
+			address = FindPattern("\x48\x8D\x99\x00\x00\x00\x00\x0F\x29\x74\x24\x20\x48\x8B\xF1", "xxx????xxxxxxxx");
+			if (address != null)
+			{
+				ArmorOffset = *(int*)(address + 3);
 			}
 
 			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
@@ -974,6 +1042,7 @@ namespace SHVDN
 		public static int FuelLevelOffset { get; }
 		public static int WheelCountOffset { get; }
 		public static int WheelSpeedOffset { get; }
+		public static int CanWheelBreakOffset { get; }
 
 		public static int SteeringAngleOffset { get; }
 		public static int SteeringScaleOffset { get; }
@@ -981,20 +1050,37 @@ namespace SHVDN
 		public static int BrakePowerOffset { get; }
 
 		public static int EngineTemperatureOffset { get; }
+		public static int EnginePowerMultiplierOffset { get; }
 
 		public static int IsInteriorLightOnOffset { get; }
 		public static int IsEngineStartingOffset { get; }
 
 		public static int IsWantedOffset { get; }
 
+		public static int IsHeadlightDamagedOffset { get; }
+
 		public static int PreviouslyOwnedByPlayerOffset { get; }
 		public static int NeedsToBeHotwiredOffset { get; }
 
 		public static int AlarmTimeOffset { get; }
 
+		public static int HeliMainRotorHealthOffset { get; }
+		public static int HeliTailRotorHealthOffset { get; }
+		public static int HeliTailBoomHealthOffset { get; }
+
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		#endregion
+
+		#region -- Ped Offsets --
+
+		public static int PedDropsWeaponsWhenDeadOffset { get; }
+
+		public static int PedSuffersCriticalHitOffset { get; }
+
+		public static int ArmorOffset { get; }
 
 		#endregion
 

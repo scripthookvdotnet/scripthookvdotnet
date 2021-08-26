@@ -243,34 +243,22 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.ArmorOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14B8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x14E0 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(address + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.ArmorOffset);
 			}
 			set
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.ArmorOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1474 : 0x1464;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x14A0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x14B0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x14B8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x14E0 : offset;
-
-				SHVDN.NativeMemory.WriteFloat(address + offset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.ArmorOffset, value);
 			}
 		}
 
@@ -826,17 +814,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSuffersCriticalHitOffset == 0)
 				{
 					return false;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x13BC : 0x13AC;
-				offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E4 : offset);
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x13F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1414 : offset;
-
-				return (SHVDN.NativeMemory.ReadByte(address + offset) & (1 << 2)) == 0;
+				return (SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.PedSuffersCriticalHitOffset) & (1 << 2)) == 0;
 			}
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
@@ -873,16 +856,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
 				}
 
-				int offset = (Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x13E5 : 0x13BD);
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x13F5 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1415 : offset;
-
-				return (SHVDN.NativeMemory.ReadByte(address + offset) & (1 << 6)) == 0;
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 14);
 			}
 			set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 		}
