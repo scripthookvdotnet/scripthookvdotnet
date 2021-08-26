@@ -1014,7 +1014,7 @@ namespace SHVDN
 				var weaponHash = cAttacker->weaponHash;
 				var gameTime = cAttacker->gameTime;
 
-				var returnHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : -1;
+				var returnHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
 				returnEntries[i] = (returnHandle, weaponHash, gameTime);
 			}
 

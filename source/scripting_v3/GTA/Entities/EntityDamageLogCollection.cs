@@ -38,7 +38,7 @@ namespace GTA
 			for (int i = 0; i < returnDamageLogs.Length; i++)
 			{
 				(int attackerHandle, int weaponHash, int gameTime) = damageEntries[i];
-				var attackerEntity = attackerHandle != -1 ? Entity.FromHandle(attackerHandle) : null;
+				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
 				returnDamageLogs[i] = new EntityDamageLog(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
 			}
 
