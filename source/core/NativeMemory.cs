@@ -401,7 +401,7 @@ namespace SHVDN
 					}
 				}
 
-				if (!Array.Exists(heliHealthOffsets, (x => x != 0)))
+				if (!Array.Exists(heliHealthOffsets, (x => x == 0)))
 				{
 					Array.Sort<int>(heliHealthOffsets);
 					HeliMainRotorHealthOffset = heliHealthOffsets[0];

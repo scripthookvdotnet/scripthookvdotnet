@@ -819,7 +819,7 @@ namespace GTA
 					return false;
 				}
 
-				return (SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.PedSuffersCriticalHitOffset) & (1 << 2)) == 0;
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedSuffersCriticalHitOffset, 2);
 			}
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
@@ -861,7 +861,7 @@ namespace GTA
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 14);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 14);
 			}
 			set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 		}
