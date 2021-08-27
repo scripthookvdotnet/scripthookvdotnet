@@ -168,6 +168,14 @@ namespace GTA.UI
 		public static bool IsFadingOut => Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
 
 		/// <summary>
+		/// Gets a value indicating whether screen kill effects are enabled.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if screen kill effects are enabled; otherwise, <c>false</c>.
+		/// </value>
+		public static bool AreScreenKillEffectsEnabled => Game.GetProfileSetting(226) != 0;
+
+		/// <summary>
 		/// Fades the screen in over a specific time, useful for transitioning
 		/// </summary>
 		/// <param name="time">The time for the fade in to take</param>

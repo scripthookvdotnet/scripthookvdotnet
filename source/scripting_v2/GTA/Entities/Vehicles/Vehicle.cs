@@ -362,21 +362,12 @@ namespace GTA
 			get
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.NeedsToBeHotwiredOffset == 0)
 				{
 					return false;
 				}
 
-				int offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x844 : 0x834;
-				offset = Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x864 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x88C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1103_2_STEAM ? 0x89C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1180_2_STEAM ? 0x8BC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x8DC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1604_0_STEAM ? 0x92C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x94C : offset;
-
-				return SHVDN.NativeMemory.IsBitSet(address + offset, 2);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.NeedsToBeHotwiredOffset, 2);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_NEEDS_TO_BE_HOTWIRED, Handle, value);
 		}
@@ -386,21 +377,12 @@ namespace GTA
 			get
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PreviouslyOwnedByPlayerOffset == 0)
 				{
 					return false;
 				}
 
-				int offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x844 : 0x834;
-				offset = Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x864 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x88C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1103_2_STEAM ? 0x89C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1180_2_STEAM ? 0x8BC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x8DC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1604_0_STEAM ? 0x92C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x94C : offset;
-
-				return SHVDN.NativeMemory.IsBitSet(address + offset, 1);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PreviouslyOwnedByPlayerOffset, 1);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_HAS_BEEN_OWNED_BY_PLAYER, Handle, value);
 		}
@@ -820,27 +802,18 @@ namespace GTA
 			set
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.IsHeadlightDamagedOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x77C : 0x76C;
-				offset = Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x79C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x7BC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1103_2_STEAM ? 0x7CC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1180_2_STEAM ? 0x7EC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x80C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1604_0_STEAM ? 0x84C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x86C : offset;
-
 				if (value)
 				{
-					SHVDN.NativeMemory.SetBit(address + offset, 0);
+					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
 				}
 				else
 				{
-					SHVDN.NativeMemory.ClearBit(address + offset, 0);
+					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
 				}
 			}
 		}
@@ -851,27 +824,18 @@ namespace GTA
 			set
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.IsHeadlightDamagedOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x77C : 0x76C;
-				offset = Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x79C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x7BC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1103_2_STEAM ? 0x7CC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1180_2_STEAM ? 0x7EC : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x80C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1604_0_STEAM ? 0x84C : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x86C : offset;
-
 				if (value)
 				{
-					SHVDN.NativeMemory.SetBit(address + offset, 1);
+					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
 				}
 				else
 				{
-					SHVDN.NativeMemory.ClearBit(address + offset, 1);
+					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
 				}
 			}
 		}

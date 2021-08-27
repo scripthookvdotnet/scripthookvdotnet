@@ -377,24 +377,13 @@ namespace GTA
 			get
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.SeatIndexOffset == 0)
 				{
 					return VehicleSeat.None;
 				}
 
-				int offset = (Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x1588 : 0x1540);
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x1598 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_1290_1_STEAM ? 0x15A0 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x15C8 : offset;
-
-				int seatIndex = SHVDN.NativeMemory.ReadByte(address + offset);
-
-				if (seatIndex == -1 || !IsInVehicle())
-				{
-					return VehicleSeat.None;
-				}
-
-				return (VehicleSeat)(seatIndex - 1);
+				int seatIndex = (sbyte)SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.SeatIndexOffset);
+				return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
 			}
 		}
 
@@ -539,17 +528,12 @@ namespace GTA
 			get
 			{
 				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSuffersCriticalHitOffset == 0)
 				{
 					return false;
 				}
 
-				int offset = Game.Version >= GameVersion.VER_1_0_372_2_STEAM ? 0x13BC : 0x13AC;
-				offset = Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x13E4 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x13F4 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x1414 : offset;
-
-				return (SHVDN.NativeMemory.ReadByte(address + offset) & (1 << 2)) == 0;
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedSuffersCriticalHitOffset, 2);
 			}
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
@@ -579,14 +563,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
+				{
 					return false;
+				}
 
-				int offset = Game.Version >= GameVersion.VER_1_0_877_1_STEAM ? 0x13E5 : 0x13BD;
-				offset = Game.Version >= GameVersion.VER_1_0_944_2_STEAM ? 0x13F5 : offset;
-				offset = Game.Version >= GameVersion.VER_1_0_2060_0_STEAM ? 0x1415 : offset;
-
-				return SHVDN.NativeMemory.IsBitSet(address + offset, 6);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 14);
 			}
 			set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 		}
