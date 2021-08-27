@@ -203,7 +203,13 @@ namespace GTA
 		/// <c>true</c> if this <see cref="Model"/> is a regular lowrider; otherwise, <c>false</c>.
 		/// </value>
 		public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
-
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a motorcycle.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this <see cref="Model"/> is a motorcycle; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsMotorcycle => SHVDN.NativeMemory.IsModelAMotorcycle(Hash);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an off-road vehicle.
 		/// </summary>

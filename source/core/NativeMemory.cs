@@ -1313,6 +1313,11 @@ namespace SHVDN
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Blimp;
 		}
+		public static bool IsModelAMotorcycle(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Bike;
+		}
 		public static bool IsModelASubmarine(int modelHash)
 		{
 			IntPtr modelInfo = FindCModelInfo(modelHash);
