@@ -887,7 +887,7 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliBladesSpeedOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliBladesSpeedOffset == 0 || !Model.IsHelicopter)
 				{
 					return 0.0f;
 				}
@@ -1648,7 +1648,7 @@ namespace GTA
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleProvidesCoverOffset, 2);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleProvidesCoverOffset, 2);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_PROVIDES_COVER, Handle, value);
 		}

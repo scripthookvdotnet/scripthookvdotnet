@@ -521,16 +521,6 @@ namespace SHVDN
 				ProjectileAmmoInfoOffset = *(int*)(address + 8);
 			}
 
-			Log.Message(Log.Level.Info, $"OilLevelOffset: {OilLevelOffset:X}");
-			Log.Message(Log.Level.Info, $"VehicleLightsMultiplierOffset: {VehicleLightsMultiplierOffset:X}");
-			Log.Message(Log.Level.Info, $"VehicleLodMultiplierOffset: {VehicleLodMultiplierOffset:X}");
-			Log.Message(Log.Level.Info, $"VehicleDropsMoneyWhenBlownUpOffset: {VehicleDropsMoneyWhenBlownUpOffset:X}");
-			Log.Message(Log.Level.Info, $"HeliBladesSpeedOffset: {HeliBladesSpeedOffset:X}");
-			Log.Message(Log.Level.Info, $"SweatOffset: {SweatOffset:X}");
-			Log.Message(Log.Level.Info, $"SeatIndexOffset: {SeatIndexOffset:X}");
-			Log.Message(Log.Level.Info, $"InjuryHealthThresholdOffset: {InjuryHealthThresholdOffset:X}");
-			Log.Message(Log.Level.Info, $"FatalInjuryHealthThresholdOffset: {FatalInjuryHealthThresholdOffset:X}");
-
 			// Generate vehicle model list
 			var vehicleHashes = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
