@@ -226,21 +226,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleLodMultiplierOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1204 : 0x11F4; // untested
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1224 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x1264 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x1274 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x12A8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x12C8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x1328 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1368 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(address + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleLodMultiplierOffset);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 		}
@@ -485,40 +476,22 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.OilLevelOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7AC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7BC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7E8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x838 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x858 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(address + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.OilLevelOffset);
 			}
 			set
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.OilLevelOffset == 0)
 				{
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x76C : 0x75C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x78C : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7AC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7BC : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x7D8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x7E8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x838 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x858 : offset;
-
-				SHVDN.NativeMemory.WriteFloat(address + offset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.OilLevelOffset, value);
 			}
 		}
 
@@ -914,21 +887,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || !Model.IsHelicopter)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliBladesSpeedOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1740 : 0x1730; // untested
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1760 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x1810 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x1840 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x18E0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x19E4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x1AA8 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1AE4 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(address + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.HeliBladesSpeedOffset);
 			}
 			set
 			{
@@ -1291,21 +1255,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleLightsMultiplierOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x90C : 0x8FC; // untested
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x92C : offset;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x954 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x964 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x984 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x9A4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x9F4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0xA14 : offset;
-
-				return SHVDN.NativeMemory.ReadFloat(address + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleLightsMultiplierOffset);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_LIGHT_MULTIPLIER, Handle, value);
 		}
@@ -1417,21 +1372,19 @@ namespace GTA
 					return false;
 				}
 
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleDropsMoneyWhenBlownUpOffset == 0)
+				{
+					return false;
+				}
+
 				var model = Model;
 
-				// check if the vehicle is CAutomobile or a derived class from it
-				if (model.IsCar || model.IsQuadBike ||
+				// check if the vehicle is a car, a quad bike or a trailer
+				if (model.IsCar || model.IsTrailer || model.IsQuadBike ||
 					(Game.Version >= GameVersion.v1_0_944_2_Steam && (model.IsAmphibiousCar || model.IsAmphibiousQuadBike)) || 
 					(Game.Version >= GameVersion.v1_0_1290_1_Steam && model.IsSubmarineCar))
 				{
-					int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x1319 : 0x12F9;
-					offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x1349 : offset;
-					offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x13B9 : offset;
-					offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x1409 : offset;
-					offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x1459 : offset;
-					offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x1539 : offset;
-
-					return SHVDN.NativeMemory.IsBitSet(address + offset, 1);
+					return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleDropsMoneyWhenBlownUpOffset, 1);
 				}
 
 				return false;
@@ -1690,22 +1643,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleProvidesCoverOffset == 0)
 				{
 					return false;
 				}
 
-				// Unsure of the exact version this switched, but all others in the rangs are the same
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x83C : 0x82C;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x85C : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x884 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x894 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x8B4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x8D4 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x924 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x944 : offset;
-
-				return SHVDN.NativeMemory.IsBitSet(address + offset, 2);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleProvidesCoverOffset, 2);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_PROVIDES_COVER, Handle, value);
 		}

@@ -289,6 +289,11 @@ namespace SHVDN
 			{
 				FuelLevelOffset = *(int*)(address + 8);
 			}
+			address = FindPattern("\x74\x2D\x0F\x57\xC0\x0F\x2F\x83\x00\x00\x00\x00", "xxxxxxxx????");
+			if (address != null)
+			{
+				OilLevelOffset = *(int*)(address + 8);
+			}
 
 			address = FindPattern("\xF3\x0F\x10\x8F\x10\x0A\x00\x00\xF3\x0F\x59\x05\x5E\x30\x8D\x00", "xxxx????xxxx????");
 			if (address != null)
@@ -349,6 +354,18 @@ namespace SHVDN
 				EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
 			}
 
+			address = FindPattern("\x74\x4A\x80\x7A\x28\x03\x75\x44\xF6\x82\x00\x00\x00\x00\x04", "xxxxxxxxxx????x");
+			if (address != null)
+			{
+				VehicleProvidesCoverOffset = *(int*)(address + 10);
+			}
+
+			address = FindPattern("\xF3\x44\x0F\x59\x93\x00\x00\x00\x00\x48\x8B\xCB\xF3\x44\x0F\x59\x97\x00\x00\x00\x00", "xxxxx????xxxxxxxx????");
+			if (address != null)
+			{
+				VehicleLightsMultiplierOffset = *(int*)(address + 5);
+			}
+
 			address = FindPattern("\xFD\x02\xDB\x08\x98\x00\x00\x00\x00\x48\x8B\x5C\x24\x30", "xxxxx????xxxxx");
 			if (address != null)
 			{
@@ -381,8 +398,25 @@ namespace SHVDN
 				AlarmTimeOffset = *(int*)(address + 52);
 			}
 
+			address = FindPattern("\x0F\x84\xE0\x02\x00\x00\xF3\x0F\x10\x05\x00\x00\x00\x00\x41\x0F\x2F\x86\x00\x00\x00\x00", "xxxxxxxxxx????xxxx????");
+			if (address != null)
+			{
+				VehicleLodMultiplierOffset = *(int*)(address + 18);
+			}
 
-            {
+			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
+			if (address != null)
+			{
+				VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
+			}
+
+			address = FindPattern("\x73\x1E\xF3\x41\x0F\x59\x86\x00\x00\x00\x00\xF3\x0F\x59\xC2\xF3\x0F\x59\xC7", "xxxxxxx????xxxxxxxx");
+			if (address != null)
+			{
+				HeliBladesSpeedOffset = *(int*)(address + 7);
+			}
+
+			{
 				string patternForHeliHealthOffsets = "\x48\x85\xC0\x74\x18\x8B\x88\x00\x00\x00\x00\x83\xE9\x08\x83\xF9\x01\x77\x0A\xF3\x0F\x10\x80\x00\x00\x00\x00";
 				string maskForHeliHealthOffsets = "xxxxxxx????xxxxxxxxxxxx????";
 				startAddressToSearch = Process.GetCurrentProcess().MainModule.BaseAddress;
@@ -423,6 +457,18 @@ namespace SHVDN
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
 			}
 
+			address = FindPattern("\xF3\x44\x0F\x10\xAB\x00\x00\x00\x00\x0F\x5B\xC9\xF3\x45\x0F\x5C\xD4", "xxxxx????xxxxxxxx");
+			if (address != null)
+			{
+				SweatOffset = *(int*)(address + 5);
+			}
+
+			address = FindPattern("\x24\x3F\x0F\xB6\xC0\x66\x89\x87\x00\x00\x00\x00", "xxxxxxxx????");
+			if (address != null)
+			{
+				SeatIndexOffset = *(int*)(address + 8);
+			}
+
 			address = FindPattern("\x74\x14\x8B\x88\x00\x00\x00\x00\x81\xE1\x00\x40\x00\x00\x31\x88", "xxxx????xxxxxxxx");
 			if (address != null)
 			{
@@ -439,6 +485,18 @@ namespace SHVDN
 			if (address != null)
 			{
 				ArmorOffset = *(int*)(address + 3);
+			}
+
+			address = FindPattern("\x49\x3B\xF6\x75\xD3\xF3\x0F\x10\x9F\x00\x00\x00\x00", "xxxxxxxxx????");
+			if (address != null)
+			{
+				InjuryHealthThresholdOffset = *(int*)(address + 9);
+			}
+
+			address = FindPattern("\x75\xD0\xF3\x0F\x10\x83\x00\x00\x00\x00\x41\x0F\x2F\x06", "xxxxxx????xxxx");
+			if (address != null)
+			{
+				FatalInjuryHealthThresholdOffset = *(int*)(address + 6);
 			}
 
 			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
@@ -462,6 +520,16 @@ namespace SHVDN
 			{
 				ProjectileAmmoInfoOffset = *(int*)(address + 8);
 			}
+
+			Log.Message(Log.Level.Info, $"OilLevelOffset: {OilLevelOffset:X}");
+			Log.Message(Log.Level.Info, $"VehicleLightsMultiplierOffset: {VehicleLightsMultiplierOffset:X}");
+			Log.Message(Log.Level.Info, $"VehicleLodMultiplierOffset: {VehicleLodMultiplierOffset:X}");
+			Log.Message(Log.Level.Info, $"VehicleDropsMoneyWhenBlownUpOffset: {VehicleDropsMoneyWhenBlownUpOffset:X}");
+			Log.Message(Log.Level.Info, $"HeliBladesSpeedOffset: {HeliBladesSpeedOffset:X}");
+			Log.Message(Log.Level.Info, $"SweatOffset: {SweatOffset:X}");
+			Log.Message(Log.Level.Info, $"SeatIndexOffset: {SeatIndexOffset:X}");
+			Log.Message(Log.Level.Info, $"InjuryHealthThresholdOffset: {InjuryHealthThresholdOffset:X}");
+			Log.Message(Log.Level.Info, $"FatalInjuryHealthThresholdOffset: {FatalInjuryHealthThresholdOffset:X}");
 
 			// Generate vehicle model list
 			var vehicleHashes = new List<int>[0x20];
@@ -1040,6 +1108,8 @@ namespace SHVDN
 		public static int TurboOffset { get; }
 
 		public static int FuelLevelOffset { get; }
+		public static int OilLevelOffset { get; }
+
 		public static int WheelCountOffset { get; }
 		public static int WheelSpeedOffset { get; }
 		public static int CanWheelBreakOffset { get; }
@@ -1051,6 +1121,10 @@ namespace SHVDN
 
 		public static int EngineTemperatureOffset { get; }
 		public static int EnginePowerMultiplierOffset { get; }
+
+		public static int VehicleProvidesCoverOffset { get; }
+
+		public static int VehicleLightsMultiplierOffset { get; }
 
 		public static int IsInteriorLightOnOffset { get; }
 		public static int IsEngineStartingOffset { get; }
@@ -1064,6 +1138,12 @@ namespace SHVDN
 
 		public static int AlarmTimeOffset { get; }
 
+		public static int VehicleLodMultiplierOffset { get; }
+
+		public static int VehicleDropsMoneyWhenBlownUpOffset { get; }
+
+		public static int HeliBladesSpeedOffset { get; }
+
 		public static int HeliMainRotorHealthOffset { get; }
 		public static int HeliTailRotorHealthOffset { get; }
 		public static int HeliTailBoomHealthOffset { get; }
@@ -1076,11 +1156,18 @@ namespace SHVDN
 
 		#region -- Ped Offsets --
 
+		public static int SweatOffset { get; }
+
 		public static int PedDropsWeaponsWhenDeadOffset { get; }
 
 		public static int PedSuffersCriticalHitOffset { get; }
 
 		public static int ArmorOffset { get; }
+
+		public static int InjuryHealthThresholdOffset { get; }
+		public static int FatalInjuryHealthThresholdOffset { get; }
+
+		public static int SeatIndexOffset { get; }
 
 		#endregion
 
