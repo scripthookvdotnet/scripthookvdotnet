@@ -563,46 +563,11 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the gears value of this <see cref="Vehicle"/>.
 		/// </summary>
+		[Obsolete("Vehicle.Gears is obsolete, please use Vehicle.HighGear for the high gear value and Vehicle.CurrentGear for the current gear value instead.")]
 		public int Gears
 		{
-			get
-			{
-				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
-				{
-					return 0;
-				}
-
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A0 : 0x790;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7C0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7E0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7F0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x810 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x830 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x870 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x890 : offset;
-
-				return SHVDN.NativeMemory.ReadInt32(address + offset);
-			}
-			set
-			{
-				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
-				{
-					return;
-				}
-
-				int offset = Game.Version >= GameVersion.v1_0_372_2_Steam ? 0x7A0 : 0x790;
-				offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 0x7C0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_944_2_Steam ? 0x7E0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1103_2_Steam ? 0x7F0 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x810 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1290_1_Steam ? 0x830 : offset;
-				offset = Game.Version >= GameVersion.v1_0_1604_0_Steam ? 0x870 : offset;
-				offset = Game.Version >= GameVersion.v1_0_2060_0_Steam ? 0x890 : offset;
-
-				SHVDN.NativeMemory.WriteInt32(address + offset, value);
-			}
+			get => HighGear;
+			set => HighGear = value;
 		}
 
 		public int HighGear
