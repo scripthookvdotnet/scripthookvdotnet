@@ -6,6 +6,7 @@
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Text.RegularExpressions;
 
 namespace GTA
 {
@@ -41,6 +42,16 @@ namespace GTA
 		{
 			info.AddValue("MinimumSupportedVersion", MinimumSupportedGameVersion, typeof(GameVersion));
 			base.GetObjectData(info, context);
+		}
+
+		internal static string BuildErrorMessage(GameVersion minimumSupportedGameVersion, string className, string propertyOrMethodName)
+		{
+			string maximumNotSupportedGameVersionEnumStr = Enum.GetName(typeof(GameVersion), (GameVersion)((int)minimumSupportedGameVersion - 1)).Replace('_', '.');
+
+			string versionRegexPattern = @"v1\.0\.\d{3,5}\.\d";
+			string maximumNotSupportedGameVersionWithoutPlatformName = Regex.Match(maximumNotSupportedGameVersionEnumStr, versionRegexPattern).Value;
+
+			return $"{className}.{propertyOrMethodName} is not supported in between v1.0.335.2 to ${maximumNotSupportedGameVersionWithoutPlatformName}.";
 		}
 	}
 }
