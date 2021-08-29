@@ -997,12 +997,12 @@ namespace SHVDN
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
 				elementSizeOfCAttackerArrayOfEntity == 0)
-					return new (int handle, int weaponHash, int gameTime)[0];
+					return Array.Empty<(int handle, int weaponHash, int gameTime)>();
 
 			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
-				return new (int handle, int weaponHash, int gameTime)[0];
+				return Array.Empty<(int handle, int weaponHash, int gameTime)>();
 
 			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
 			var returnEntries = new (int handle, int weaponHash, int gameTime)[returnEntrySize];
