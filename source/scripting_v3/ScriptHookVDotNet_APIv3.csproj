@@ -179,6 +179,7 @@
     <Compile Include="GTA\PoolObject.cs" />
     <Compile Include="GTA\RadioStation.cs" />
     <Compile Include="GTA\RaycastResult.cs" />
+    <Compile Include="GTA\GameVersionNotSupportedException.cs" />
     <Compile Include="GTA\RequireScript.cs" />
     <Compile Include="GTA\Rope.cs" />
     <Compile Include="GTA\RopeType.cs" />
