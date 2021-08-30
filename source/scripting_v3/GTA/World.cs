@@ -35,6 +35,9 @@ namespace GTA
 		};
 
 		static readonly GregorianCalendar calendar = new GregorianCalendar();
+
+		// removes gang and animal ped models just like CREATE_RANDOM_PED does
+		static readonly Func<Model, bool> defaultPredicateForCreateRandomPed = (x => x.IsHumanPed && !x.IsGangPed);
 		#endregion
 
 		#region Time & Day
@@ -684,6 +687,42 @@ namespace GTA
 
 			return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
 		}
+		/// <summary>
+		/// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
+		/// </summary>
+		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+		/// <param name="heading">The heading of the <see cref="Ped"/>.</param>
+		/// <param name="predicate">
+		/// The method that determines whether a model should be considered when choosing a random model for the <see cref="Ped"/>.
+		/// If <c>null</c> is set, gangster and animal models will not be chosen, just like CREATE_PED does.
+		/// </param>
+		public static Ped CreateRandomPed(Vector3 position, float heading, Func<Model, bool> predicate = null)
+		{
+			if (PedCount >= PedCapacity)
+			{
+				return null;
+			}
+
+			var loadedAppropriatePedModels = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+			var filteredPedModels = predicate != null
+				? loadedAppropriatePedModels.Where(predicate).ToArray()
+				: loadedAppropriatePedModels.Where(defaultPredicateForCreateRandomPed).ToArray();
+			var filteredModelCount = filteredPedModels.Length;
+			if (filteredModelCount == 0)
+				return null;
+
+			var rand = Math.Random.Instance;
+			var pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
+
+			// the model should be loaded at this moment, so call CREATE_PED immediately
+			var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y, position.Z, heading, false, false));
+
+			// Randomize clothes and ped props just like CREATE_RANDOM_PED does
+			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, 0);
+			Function.Call(Hash.SET_PED_RANDOM_PROPS, createdPed.Handle);
+
+			return createdPed;
+		}
 
 		/// <summary>
 		/// Spawns a <see cref="Vehicle"/> of the given <see cref="Model"/> at the position and heading specified.
@@ -702,29 +741,30 @@ namespace GTA
 			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
 		}
 		/// <summary>
-		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified. Does not work currently.
+		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
 		/// </summary>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
+		/// <param name="predicate">The method that determines whether a model should be considered when choosing a random model for the <see cref="Vehicle"/>.</param>
 		/// <remarks>returns <c>null</c> if the <see cref="Vehicle"/> could not be spawned.</remarks>
-		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f)
+		public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
 		{
-			// GET_RANDOM_VEHICLE_MODEL_IN_MEMORY is not present but just a nullsub in the retail version
-			// We need certain memory patterns to get this method to spawn random ambient vehicles properly
-			return null;
+			if (VehicleCount >= VehicleCapacity)
+			{
+				return null;
+			}
 
-			int outModel, outInt;
-			unsafe
-			{
-				Function.Call(Hash.GET_RANDOM_VEHICLE_MODEL_IN_MEMORY, 1, &outModel, &outInt);
-			}
-			Model model = outModel;
-			if (model.IsVehicle && model.IsLoaded)
-			{
-				return
-					new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
-			}
-			return null;
+			var loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+			var filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+			var filteredModelCount = filteredVehModels.Length;
+			if (filteredModelCount == 0)
+				return null;
+
+			var rand = Math.Random.Instance;
+			var pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
+
+			// the model should be loaded at this moment, so call CREATE_VEHICLE immediately
+			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
 		}
 
 		/// <summary>

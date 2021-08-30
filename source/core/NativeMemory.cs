@@ -275,6 +275,19 @@ namespace SHVDN
 			modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
 			modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
 
+			address = FindPattern("\x33\xD2\x00\x8B\xD0\x00\x2B\x05\x00\x00\x00\x00\xC1\xE6\x10", "xx?xx?xx????xxx");
+			modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
+
+			address = FindPattern("\x8B\x54\x00\x00\x00\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\xC3", "xx???xx????x????xx");
+			cStreamingAddr = (ulong*)(*(int*)(address + 7) + address + 11);
+
+			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
+			if (address != null)
+            {
+				pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 10);
+				pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 17) + address + 21);
+			}
+
 			// Find vehicle data offsets
 			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
 			if (address != null)
@@ -1223,13 +1236,35 @@ namespace SHVDN
 			HasLowriderDonkHydraulics = 0x800000000000000,
 		}
 
+		[StructLayout(LayoutKind.Explicit, Size = 0x400)]
+		struct CModelList
+		{
+			[FieldOffset(0x0)]
+			internal fixed uint modelMemberIndices[0x100];
+		}
+
+		[StructLayout(LayoutKind.Explicit, Size = 0xB8)]
+		struct PedPersonality
+		{
+			[FieldOffset(0x7C)]
+			internal bool isMale;
+			[FieldOffset(0x7D)]
+			internal bool isHuman;
+			[FieldOffset(0x7F)]
+			internal bool isGang;
+		}
+
 		static int handlingIndexOffsetInModelInfo;
+		static int pedPersonalityIndexOffsetInModelInfo;
 		static UInt32 modelNum1;
 		static UInt64 modelNum2;
 		static UInt64 modelNum3;
 		static UInt64 modelNum4;
 		static UInt64 modelHashTable;
 		static UInt16 modelHashEntries;
+		static ulong* modelInfoArrayPtr;
+		static ulong* cStreamingAddr;
+		static ulong* pedPersonalitiesArrayAddr;
 
 		static IntPtr FindCModelInfo(int modelHash)
 		{
@@ -1303,6 +1338,46 @@ namespace SHVDN
 			return 0;
 		}
 
+		static IntPtr GetModelInfoByIndex(uint index)
+		{
+			if (modelInfoArrayPtr == null || index < 0)
+				return IntPtr.Zero;
+
+			ulong modelInfoArrayFirstElemPtr = *modelInfoArrayPtr;
+
+			return new IntPtr(*(long*)(modelInfoArrayFirstElemPtr + index * 0x8));
+		}
+		public static List<int> GetLoadedAppropriateVehicleHashes()
+		{
+			return GetLoadedHashesOfModelList(0x2D00);
+		}
+		public static List<int> GetLoadedAppropriatePedHashes()
+		{
+			return GetLoadedHashesOfModelList(0x4504);
+		}
+		internal static List<int> GetLoadedHashesOfModelList(int startOffsetOfCStreaming)
+		{
+			if (modelInfoArrayPtr == null || cStreamingAddr == null)
+				return new List<int>();
+
+			var resultList = new List<int>();
+
+			const int MAX_MODEL_LIST_ELEMENT_COUNT = 256;
+			var modelSet = (CModelList*)((ulong)cStreamingAddr + (uint)startOffsetOfCStreaming);
+			for (uint i = 0; i < MAX_MODEL_LIST_ELEMENT_COUNT; i++)
+			{
+				uint indexOfModelInfo = modelSet->modelMemberIndices[i];
+
+				if (indexOfModelInfo == 0xFFFF)
+					break;
+
+				resultList.Add(GetModelHashFromFwArcheType(GetModelInfoByIndex(indexOfModelInfo)));
+			}
+
+			return resultList;
+		}
+
+
 		public static bool IsModelAPed(int modelHash)
 		{
 			IntPtr modelInfo = FindCModelInfo(modelHash);
@@ -1375,6 +1450,69 @@ namespace SHVDN
 		public static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
 		{
 			return new IntPtr((long)GetHandlingDataByHash(new IntPtr(&handlingNameHash)));
+		}
+
+		private static PedPersonality* GetPedPersonalityElementAddress(IntPtr modelInfoAddress)
+		{
+			if (modelInfoAddress == IntPtr.Zero ||
+				pedPersonalitiesArrayAddr == null ||
+				pedPersonalityIndexOffsetInModelInfo == 0 ||
+				*(ulong*)pedPersonalitiesArrayAddr == 0)
+				return null;
+
+			if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Ped)
+				return null;
+
+			// This values is not likely to be changed in further updates
+			const int PED_PERSONALITY_ELEMENT_SIZE = 0xB8;
+
+			var indexOfPedPersonality = *(ushort*)(modelInfoAddress + pedPersonalityIndexOffsetInModelInfo).ToPointer();
+			return (PedPersonality*)(*(ulong*)pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PED_PERSONALITY_ELEMENT_SIZE));
+		}
+		public static bool IsModelAMalePed(int modelHash)
+		{
+			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == null)
+				return false;
+
+			return pedPersonalityAddress->isMale;
+		}
+		public static bool IsModelAFemalePed(int modelHash)
+		{
+			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == null)
+				return false;
+
+			return !pedPersonalityAddress->isMale;
+		}
+		public static bool IsModelHumanPed(int modelHash)
+		{
+			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == null)
+				return false;
+
+			return pedPersonalityAddress->isHuman;
+		}
+		public static bool IsModelAnAnimalPed(int modelHash)
+		{
+			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == null)
+				return false;
+
+			return !pedPersonalityAddress->isHuman;
+		}
+		public static bool IsModelAGangPed(int modelHash)
+		{
+			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+
+			if (pedPersonalityAddress == null)
+				return false;
+
+			return pedPersonalityAddress->isGang;
 		}
 
 		#endregion
