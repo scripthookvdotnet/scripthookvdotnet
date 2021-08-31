@@ -13,8 +13,8 @@ namespace SHVDN
 	public class Script
 	{
 		Thread thread; // The thread hosting the execution of the script
-		internal SemaphoreSlim waitEvent = new SemaphoreSlim(0);
-		internal SemaphoreSlim continueEvent = new SemaphoreSlim(0);
+		DateTime resumeTime = DateTime.MinValue;
+		bool willInvokeAbortEvent;
 		internal ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, KeyEventArgs>>();
 
 		/// <summary>
@@ -74,54 +74,57 @@ namespace SHVDN
 		/// <summary>
 		/// The main execution logic of all scripts.
 		/// </summary>
-		void MainLoop()
+		internal void MainLoop()
 		{
-			IsRunning = true;
-
-			// Wait for script domain to continue this script
-			continueEvent.Wait();
-
-			while (IsRunning)
+			if (!IsRunning || IsPaused || DateTime.UtcNow < resumeTime)
 			{
-				// Process keyboard events
-				while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
-				{
-					try
-					{
-						if (!ev.Item1)
-							KeyUp?.Invoke(this, ev.Item2);
-						else
-							KeyDown?.Invoke(this, ev.Item2);
-					}
-					catch (ThreadAbortException)
-					{
-						// Stop main loop immediately on a thread abort exception
-						return;
-					}
-					catch (Exception ex)
-					{
-						ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
-						break; // Break out of key event loop, but continue to run script
-					}
-				}
+				return;
+			}
 
+			// Process keyboard events
+			while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
+			{
 				try
 				{
-					Tick?.Invoke(this, EventArgs.Empty);
+					if (!ev.Item1)
+						KeyUp?.Invoke(this, ev.Item2);
+					else
+						KeyDown?.Invoke(this, ev.Item2);
 				}
-				catch (ThreadAbortException)
+				catch (Exception ex)
 				{
-					// Stop main loop immediately on a thread abort exception
-					return;
+					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
+					break; // Break out of key event loop, but continue to run script
+				}
+			}
+
+			try
+			{
+				Tick?.Invoke(this, EventArgs.Empty);
+			}
+			catch (Exception ex)
+			{
+				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+
+				// An exception during tick is fatal, so abort the script and stop main loop
+				Abort();
+			}
+
+			if (willInvokeAbortEvent)
+			{
+				try
+				{
+					Aborted?.Invoke(this, EventArgs.Empty);
 				}
 				catch (Exception ex)
 				{
 					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-
-					// An exception during tick is fatal, so abort the script and stop main loop
-					Abort(); return;
 				}
 
+				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".");
+			}
+			else
+			{
 				// Yield execution to next tick
 				Wait(Interval);
 			}
@@ -132,8 +135,7 @@ namespace SHVDN
 		/// </summary>
 		public void Start()
 		{
-			thread = new Thread(new ThreadStart(MainLoop));
-			thread.Start();
+			IsRunning = true;
 
 			Log.Message(Log.Level.Info, "Started script ", Name, ".");
 		}
@@ -143,24 +145,7 @@ namespace SHVDN
 		public void Abort()
 		{
 			IsRunning = false;
-
-			try
-			{
-				Aborted?.Invoke(this, EventArgs.Empty);
-			}
-			catch (Exception ex)
-			{
-				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-			}
-
-			waitEvent.Release();
-
-			if (thread != null)
-			{
-				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".");
-
-				thread.Abort(); thread = null;
-			}
+			willInvokeAbortEvent = true;
 		}
 
 		/// <summary>
@@ -194,14 +179,7 @@ namespace SHVDN
 		/// <param name="ms">The time in milliseconds to pause.</param>
 		public void Wait(int ms)
 		{
-			DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
-
-			do
-			{
-				waitEvent.Release();
-				continueEvent.Wait();
-			}
-			while (DateTime.UtcNow < resumeTime);
+			resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
 		}
 	}
 }

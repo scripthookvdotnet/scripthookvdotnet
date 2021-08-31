@@ -25,7 +25,6 @@ namespace SHVDN
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
 		List<Script> runningScripts = new List<Script>();
-		Queue<IScriptTask> taskQueue = new Queue<IScriptTask>();
 		Dictionary<string, int> scriptInstances = new Dictionary<string, int>();
 		SortedList<string, Tuple<string, Type>> scriptTypes = new SortedList<string, Tuple<string, Type>>();
 		bool recordKeyboardEvents = true;
@@ -518,18 +517,7 @@ namespace SHVDN
 		/// <param name="task">The task to execute.</param>
 		public void ExecuteTask(IScriptTask task)
 		{
-			if (Thread.CurrentThread.ManagedThreadId == executingThreadId)
-			{
-				// Request came from the main thread, so can just execute it right away
-				task.Run();
-			}
-			else
-			{
-				// Request came from the script thread, so need to pass it to the domain thread and execute there
-				taskQueue.Enqueue(task);
-
-				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
-			}
+			task.Run();
 		}
 
 		/// <summary>
@@ -566,13 +554,9 @@ namespace SHVDN
 
 				executingScript = script;
 
-				bool finishedInTime = true;
-
 				try
 				{
-					// Resume script thread and execute any incoming tasks from it
-					while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
-						taskQueue.Dequeue().Run();
+					script.MainLoop(DateTime.UtcNow);
 				}
 				catch (Exception ex)
 				{
@@ -584,14 +568,6 @@ namespace SHVDN
 
 				executingScript = null;
 
-				if (!finishedInTime)
-				{
-					Log.Message(Log.Level.Error, "Script '", script.Name, "' is not responding! Aborting ...");
-
-					// Wait operation above timed out, which means that the script did not send any task for some time, so abort it
-					script.Abort();
-					continue;
-				}
 			}
 
 			// Clean up any pinned strings of this frame
@@ -705,17 +681,6 @@ namespace SHVDN
 		{
 			// Return null to avoid lifetime restriction on the marshaled object.
 			return null;
-		}
-
-		static void SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn)
-		{
-			toSignal.Release();
-			toWaitOn.Wait();
-		}
-		static bool SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn, int timeout)
-		{
-			toSignal.Release();
-			return toWaitOn.Wait(timeout);
 		}
 
 		static bool IsSubclassOf(Type type, string baseTypeName)
