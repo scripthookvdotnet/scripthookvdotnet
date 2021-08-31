@@ -556,7 +556,7 @@ namespace SHVDN
 
 				try
 				{
-					script.MainLoop(DateTime.UtcNow);
+					script.MainLoop();
 				}
 				catch (Exception ex)
 				{

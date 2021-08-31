@@ -12,7 +12,6 @@ namespace SHVDN
 {
 	public class Script
 	{
-		Thread thread; // The thread hosting the execution of the script
 		DateTime resumeTime = DateTime.MinValue;
 		bool willInvokeAbortEvent;
 		internal ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, KeyEventArgs>>();
