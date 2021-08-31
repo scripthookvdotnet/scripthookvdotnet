@@ -11,28 +11,16 @@ using System.Text.RegularExpressions;
 namespace GTA
 {
 	[Serializable]
-	public class GameVersionNotSupportedException : Exception
+	public sealed class GameVersionNotSupportedException : Exception
 	{
 		public GameVersion MinimumSupportedGameVersion { get; }
 
-		public GameVersionNotSupportedException()
-		{
-		}
-
-		public GameVersionNotSupportedException(string message) : base(message)
-		{
-		}
-
-		public GameVersionNotSupportedException(string message, Exception inner) : base(message, inner)
-		{
-		}
-
-		public GameVersionNotSupportedException(string message, GameVersion minimumSupportedGameVersion) : base(message)
+		public GameVersionNotSupportedException(GameVersion minimumSupportedGameVersion, string className, string propertyOrMethodName) : base(BuildErrorMessage(minimumSupportedGameVersion, className, propertyOrMethodName))
 		{
 			MinimumSupportedGameVersion = minimumSupportedGameVersion;
 		}
 
-		protected GameVersionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context)
+		private GameVersionNotSupportedException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			MinimumSupportedGameVersion = (GameVersion)info.GetValue("MinimumSupportedGameVersion", typeof(GameVersion));
 		}
