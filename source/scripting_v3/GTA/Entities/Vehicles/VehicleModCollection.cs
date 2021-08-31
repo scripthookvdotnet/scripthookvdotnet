@@ -313,6 +313,9 @@ namespace GTA
 		{
 			get
 			{
+				if (Game.Version < GameVersion.v1_0_505_2_Steam)
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(TrimColor));
+
 				int color;
 				unsafe
 				{
@@ -323,6 +326,9 @@ namespace GTA
 			}
 			set
 			{
+				if (Game.Version < GameVersion.v1_0_505_2_Steam)
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(TrimColor));
+
 				Function.Call(Hash._SET_VEHICLE_INTERIOR_COLOR, _owner.Handle, value);
 			}
 		}
@@ -330,6 +336,9 @@ namespace GTA
 		{
 			get
 			{
+				if (Game.Version < GameVersion.v1_0_505_2_Steam)
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(DashboardColor));
+
 				int color;
 				unsafe
 				{
@@ -340,6 +349,9 @@ namespace GTA
 			}
 			set
 			{
+				if (Game.Version < GameVersion.v1_0_505_2_Steam)
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(DashboardColor));
+
 				Function.Call(Hash._SET_VEHICLE_DASHBOARD_COLOR, _owner.Handle, value);
 			}
 		}
