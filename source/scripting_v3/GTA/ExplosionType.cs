@@ -83,5 +83,7 @@ namespace GTA
 		RCTankRocket,
 		BombWater,
 		BombWaterSecondary,
+		ScriptMissileLarge = 81,
+		SubmarineBig,
 	}
 }
