@@ -2333,12 +2333,6 @@ namespace SHVDN
 			}
 
 			var weaponAndAmmoInfoElementCount = weaponAndAmmoInfoArrayPtr->size;
-
-			if (weaponAndAmmoInfoElementCount == 0)
-			{
-				return new List<uint>();
-			}
-
 			var resultList = new List<uint>();
 
 			for (int i = 0; i < weaponAndAmmoInfoElementCount; i++)
