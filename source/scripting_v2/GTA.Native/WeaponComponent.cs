@@ -226,6 +226,7 @@ namespace GTA.Native
 		MarksmanPistolClip01 = 0xCB9E41ED,
 		MarksmanRifleClip01 = 0xD83B4141,
 		MarksmanRifleClip02 = 0xCCFD2AC5,
+		MarksmanRifleVarmodLuxe = 0x161E9241,
 		MarksmanRifleMk2Camo = 0x9094FBA0,
 		MarksmanRifleMk2Camo02 = 0x7320F4B2,
 		MarksmanRifleMk2Camo03 = 0x60CF500F,
