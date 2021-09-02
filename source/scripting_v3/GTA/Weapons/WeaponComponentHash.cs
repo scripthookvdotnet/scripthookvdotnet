@@ -7,6 +7,7 @@ namespace GTA
 {
 	public enum WeaponComponentHash : uint
 	{
+		Invalid = 0xFFFFFFFF,
 		AdvancedRifleClip01 = 0xFA8FA10F,
 		AdvancedRifleClip02 = 0x8EC1C979,
 		AdvancedRifleVarmodLuxe = 0x377CD377,
