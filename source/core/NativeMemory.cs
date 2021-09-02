@@ -281,6 +281,18 @@ namespace SHVDN
 			address = FindPattern("\x8B\x54\x00\x00\x00\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\xC3", "xx???xx????x????xx");
 			cStreamingAddr = (ulong*)(*(int*)(address + 7) + address + 11);
 
+			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
+			weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
+
+			address = FindPattern("\x8B\x05\x00\x00\x00\x00\x44\x8B\xD3\x8D\x48\xFF", "xx????xxxxxx");
+			if (address != null)
+			{
+				weaponComponentArrayCountAddr = (uint*)(*(int*)(address + 2) + address + 6);
+
+				address = FindPattern("\x46\x8D\x04\x11\x48\x8D\x15\x00\x00\x00\x00\x41\xD1\xF8", "xxxxxxx????xxx", new IntPtr(address));
+				offsetForCWeaponComponentArrayAddr = (ulong)(address + 7);
+			}
+
 			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
 			if (address != null)
             {
@@ -850,6 +862,26 @@ namespace SHVDN
 
 			return dest;
 		}
+
+		#region -- RAGE classes --
+
+		[StructLayout(LayoutKind.Explicit, Size=0xC)]
+		struct RageAtArrayPtr
+		{
+			[FieldOffset(0x0)]
+			internal ulong* data;
+			[FieldOffset(0x8)]
+			internal ushort size;
+			[FieldOffset(0xA)]
+			internal ushort capacity;
+
+			internal ulong GetElementAddress(int i)
+			{
+				return data[i];
+			}
+		}
+
+		#endregion
 
 		#region -- Cameras --
 
@@ -2254,6 +2286,116 @@ namespace SHVDN
 		#region -- Projectile Offsets --
 		public static int ProjectileAmmoInfoOffset { get; }
 		public static int ProjectileOwnerOffset { get; }
+		#endregion
+
+		#region -- Weapon Info And Ammo Info --
+
+		// The function uses rax and rdx registers in newer versions (probably since b2189), and it uses only rax register in older versions.
+		// The function returns the address where the class name hash is in all the version (the address will be the outVal address in newer versions).
+		delegate uint* GetClassNameHashOfCItemInfoDelegate(ulong unused, uint* outVal);
+		static Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate> getClassNameHashOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate>();
+
+		static RageAtArrayPtr* weaponAndAmmoInfoArrayPtr;
+		static HashSet<uint> disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>() {
+				0x1B79F17,  /* weapon_briefcase_02 */
+				0x166218FF, /* weapon_passenger_rocket */
+				0x32A888BD, /* weapon_tranquilizer */
+				0x687652CE, /* weapon_stinger */
+				0x6D5E2801, /* weapon_bird_crap */
+				0x88C78EB7, /* weapon_briefcase */
+				0xFDBADCED, /* weapon_digiscanner */
+			};
+
+		static uint* weaponComponentArrayCountAddr;
+		// Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).
+		static ulong offsetForCWeaponComponentArrayAddr;
+
+		[StructLayout(LayoutKind.Explicit, Size=0x20)]
+		struct ItemInfo
+		{
+			[FieldOffset(0x0)]
+			internal ulong* vTable;
+			[FieldOffset(0x10)]
+			internal uint nameHash;
+			[FieldOffset(0x14)]
+			internal uint modelHash;
+			[FieldOffset(0x18)]
+			internal uint audioHash;
+			[FieldOffset(0x1C)]
+			internal uint slot;
+		}
+
+		public static List<uint> GetAllWeaponHashesForHumanPeds()
+		{
+			if (weaponAndAmmoInfoArrayPtr == null)
+			{
+				return new List<uint>();
+			}
+
+			var weaponAndAmmoInfoElementCount = weaponAndAmmoInfoArrayPtr->size;
+
+			if (weaponAndAmmoInfoElementCount == 0)
+			{
+				return new List<uint>();
+			}
+
+			var resultList = new List<uint>();
+
+			for (int i = 0; i < weaponAndAmmoInfoElementCount; i++)
+			{
+				var weaponOrAmmoInfo = (ItemInfo*)weaponAndAmmoInfoArrayPtr->GetElementAddress(i);
+
+				if (!CanPedEquip(weaponOrAmmoInfo) && !disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->nameHash))
+					continue;
+
+				var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(weaponOrAmmoInfo->vTable[2]);
+				uint outVal = 0;
+				var returnVal = GetClassNameHashFunc(0, &outVal);
+
+				const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
+				if (*returnVal == CWEAPONINFO_NAME_HASH)
+					resultList.Add(weaponOrAmmoInfo->nameHash);
+			}
+
+			return resultList;
+
+			bool CanPedEquip(ItemInfo* weaponInfoAddress)
+			{
+				return weaponInfoAddress->modelHash != 0 && weaponInfoAddress->slot != 0;
+			}
+		}
+
+		public static List<uint> GetAllWeaponComponentHashes()
+		{
+			var cWeaponComponentArrayFirstPtr = (ulong*)((byte*)offsetForCWeaponComponentArrayAddr + 4 + *(int*)offsetForCWeaponComponentArrayAddr);
+			var arrayCount = weaponComponentArrayCountAddr != null ? *(uint*)weaponComponentArrayCountAddr : 0;
+			var resultList = new List<uint>();
+
+			for (uint i = 0; i < arrayCount; i++)
+			{
+				var cWeaponComponentInfo = cWeaponComponentArrayFirstPtr[i];
+				var weaponComponentNameHash = *(uint*)(cWeaponComponentInfo + 0x10);
+				resultList.Add(weaponComponentNameHash);
+			}
+
+			return resultList;
+		}
+
+		private static GetClassNameHashOfCItemInfoDelegate CreateGetClassNameHashDelegateIfNotCreated(ulong virtualFuncAddr)
+		{
+			if (getClassNameHashOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
+			{
+				return outDelegate;
+			}
+			else
+			{
+				var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
+				getClassNameHashOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
+
+				return newDelegate;
+			}
+		}
+
 		#endregion
 
 		#region -- NaturalMotion Euphoria --

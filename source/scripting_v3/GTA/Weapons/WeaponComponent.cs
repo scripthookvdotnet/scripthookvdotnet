@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System.Linq;
 using GTA.Native;
 
 namespace GTA
@@ -651,6 +652,11 @@ namespace GTA
 				}
 			}
 			return WeaponAttachmentPoint.Invalid;
+		}
+
+		public static WeaponComponentHash[] GetAllHashes()
+		{
+			return SHVDN.NativeMemory.GetAllWeaponComponentHashes().Select(x => (WeaponComponentHash)x).ToArray();
 		}
 	}
 }

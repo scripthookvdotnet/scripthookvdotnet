@@ -291,6 +291,11 @@ namespace GTA
 			return "WT_INVALID";
 		}
 
+		public static WeaponHash[] GetAllWeaponHashesForHumanPeds()
+		{
+			return SHVDN.NativeMemory.GetAllWeaponHashesForHumanPeds().Select(x => (WeaponHash)x).ToArray();
+		}
+
 		public static Model[] GetAllModels()
 		{
 			return SHVDN.NativeMemory.WeaponModels.Select(x => new Model(x)).ToArray();
