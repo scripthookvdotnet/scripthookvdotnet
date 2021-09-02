@@ -2344,10 +2344,10 @@ namespace SHVDN
 
 				var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(weaponOrAmmoInfo->vTable[2]);
 				uint outVal = 0;
-				var returnVal = GetClassNameHashFunc(0, &outVal);
+				var returnClassNameHashAddr = GetClassNameHashFunc(0, &outVal);
 
 				const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
-				if (*returnVal == CWEAPONINFO_NAME_HASH)
+				if (*returnClassNameHashAddr == CWEAPONINFO_NAME_HASH)
 					resultList.Add(weaponOrAmmoInfo->nameHash);
 			}
 
