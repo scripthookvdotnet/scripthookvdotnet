@@ -376,20 +376,79 @@ namespace GTA.Native
 			{
 				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args);
 
-				// The result will be null when this method is called from a thread other than the main thread
-				if (res == null)
-				{
-					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
-				}
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash)
+		{
+			return CallInternalNoParamArray<T>(hash, null, null, null, null);
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0)
+		{
+			return CallInternalNoParamArray<T>(hash, argument0, null, null, null);
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
+		{
+			return CallInternalNoParamArray<T>(hash, argument0, argument1, null, null);
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
+		{
+			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, null);
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		{
+			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, argument3);
+		}
+		static unsafe T CallInternalNoParamArray<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		{
+			bool isArg0Null = argument0 == null;
+			bool isArg1Null = argument1 == null;
+			bool isArg2Null = argument2 == null;
+			bool isArg3Null = argument3 == null;
 
-				if (typeof(T).IsValueType || typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T).IsEnum)
-				{
-					return ObjectFromNative<T>(res);
-				}
-				else
-				{
-					return (T)ObjectFromNative(typeof(T), res);
-				}
+			int argCount = 0;
+			if (!isArg0Null)
+				argCount++;
+			if (!isArg1Null)
+				argCount++;
+			if (!isArg2Null)
+				argCount++;
+			if (!isArg3Null)
+				argCount++;
+
+			unsafe
+			{
+				var args = stackalloc ulong[argCount];
+
+				if (!isArg0Null)
+					args[0] = argument0._data;
+				if (!isArg1Null)
+					args[1] = argument1._data;
+				if (!isArg2Null)
+					args[2] = argument2._data;
+				if (!isArg3Null)
+					args[3] = argument3._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
+
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
+		{
+			// The result will be null when this method is called from a thread other than the main thread
+			if (result == null)
+			{
+				throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+			}
+
+			if (typeof(T).IsValueType || typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T).IsEnum)
+			{
+				return ObjectFromNative<T>(result);
+			}
+			else
+			{
+				return (T)ObjectFromNative(typeof(T), result);
 			}
 		}
 		/// <summary>
@@ -408,6 +467,59 @@ namespace GTA.Native
 			unsafe
 			{
 				SHVDN.NativeFunc.Invoke((ulong)hash, args);
+			}
+		}
+		public static void Call(Hash hash)
+		{
+			CallInternalNoParamArray(hash, null, null, null, null);
+		}
+		public static void Call(Hash hash, InputArgument argument0)
+		{
+			CallInternalNoParamArray(hash, argument0, null, null, null);
+		}
+		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1)
+		{
+			CallInternalNoParamArray(hash, argument0, argument1, null, null);
+		}
+		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
+		{
+			CallInternalNoParamArray(hash, argument0, argument1, argument2, null);
+		}
+		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		{
+			CallInternalNoParamArray(hash, argument0, argument1, argument2, argument3);
+		}
+		static void CallInternalNoParamArray(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		{
+			bool isArg0Null = argument0 == null;
+			bool isArg1Null = argument1 == null;
+			bool isArg2Null = argument2 == null;
+			bool isArg3Null = argument3 == null;
+
+			int argCount = 0;
+			if (!isArg0Null)
+				argCount++;
+			if (!isArg1Null)
+				argCount++;
+			if (!isArg2Null)
+				argCount++;
+			if (!isArg3Null)
+				argCount++;
+
+			unsafe
+			{
+				var args = stackalloc ulong[argCount];
+
+				if (!isArg0Null)
+					args[0] = argument0._data;
+				if (!isArg1Null)
+					args[1] = argument1._data;
+				if (!isArg2Null)
+					args[2] = argument2._data;
+				if (!isArg3Null)
+					args[3] = argument3._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
 			}
 		}
 
