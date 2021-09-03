@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Linq;
 using static System.Runtime.InteropServices.Marshal;
 
 namespace SHVDN
@@ -291,6 +292,18 @@ namespace SHVDN
 
 				address = FindPattern("\x46\x8D\x04\x11\x48\x8D\x15\x00\x00\x00\x00\x41\xD1\xF8", "xxxxxxx????xxx", new IntPtr(address));
 				offsetForCWeaponComponentArrayAddr = (ulong)(address + 7);
+
+				address = FindPattern("\x74\x10\x49\x8B\xC9\xE8\x00\x00\x00\x00", "xxxxxx????");
+				var findAttachPointFuncAddr = new IntPtr((long)(*(int*)(address + 6) + address + 10));
+
+				address = FindPattern("\x4C\x8D\x81\x00\x00\x00\x00", "xxx????", findAttachPointFuncAddr);
+				weaponAttachPointsStartOffset = *(int*)(address + 3);
+				address = FindPattern("\x4D\x63\x98\x00\x00\x00\x00", "xxx????", new(address));
+				weaponAttachPointsEndOffset = *(int*)(address + 3) + weaponAttachPointsStartOffset;
+				address = FindPattern("\x4C\x63\x50\x00", "xxx?", new(address));
+				weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
+				address = FindPattern("\x48\x83\xC0\x00", "xxx?", new(address));
+				weaponAttachPointElementSize = *(byte*)(address + 3);
 			}
 
 			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
@@ -2309,6 +2322,10 @@ namespace SHVDN
 		static uint* weaponComponentArrayCountAddr;
 		// Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).
 		static ulong offsetForCWeaponComponentArrayAddr;
+		static int weaponAttachPointsStartOffset;
+		static int weaponAttachPointsEndOffset;
+		static int weaponAttachPointElementComponentCountOffset;
+		static int weaponAttachPointElementSize;
 
 		[StructLayout(LayoutKind.Explicit, Size=0x20)]
 		struct ItemInfo
@@ -2323,6 +2340,56 @@ namespace SHVDN
 			internal uint audioHash;
 			[FieldOffset(0x1C)]
 			internal uint slot;
+		}
+
+		static ItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
+		{
+			if (weaponAndAmmoInfoArrayPtr == null)
+			{
+				return null;
+			}
+
+			var weaponAndAmmoInfoElementCount = weaponAndAmmoInfoArrayPtr->size;
+
+			if (weaponAndAmmoInfoElementCount == 0)
+				return null;
+
+			int offset1 = 0, offset2 = weaponAndAmmoInfoElementCount - 1;
+			while (true)
+			{
+				int indexToRead = (offset1 + offset2) >> 1;
+				var weaponOrAmmoInfo = (ItemInfo*)weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
+
+				if (weaponOrAmmoInfo->nameHash == nameHash)
+					return weaponOrAmmoInfo;
+
+				// The array is sorted in ascending order
+				if (weaponOrAmmoInfo->nameHash <= nameHash)
+					offset1 = indexToRead + 1;
+				else
+					offset2 = indexToRead - 1;
+
+				if (offset1 > offset2)
+					return null;
+			}
+		}
+
+		static ItemInfo* FindWeaponInfo(uint nameHash)
+		{
+			var itemInfoPtr = FindItemInfoFromWeaponAndAmmoInfoArray(nameHash);
+
+			if (itemInfoPtr == null)
+				return null;
+
+			var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(itemInfoPtr->vTable[2]);
+			uint outVal = 0;
+			var returnClassNameHashAddr = GetClassNameHashFunc(0, &outVal);
+
+			const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
+			if (*returnClassNameHashAddr == CWEAPONINFO_NAME_HASH)
+				return itemInfoPtr;
+
+			return null;
 		}
 
 		public static List<uint> GetAllWeaponHashesForHumanPeds()
@@ -2373,6 +2440,33 @@ namespace SHVDN
 			}
 
 			return resultList;
+		}
+
+		public static List<uint> GetAllCompatibleWeaponComponentHashes(uint weaponHash)
+		{
+			var weaponInfo = FindWeaponInfo(weaponHash);
+
+			if (weaponInfo == null)
+            {
+				return new List<uint>();
+            }
+
+			var returnList = new List<uint>();
+			for (int attachPointOffset = weaponAttachPointsStartOffset; attachPointOffset < weaponAttachPointsEndOffset; attachPointOffset += weaponAttachPointElementSize)
+			{
+				int componentItemsOffset = attaZchPointOffset + 0x8;
+				var componentItemAddr = (byte*)weaponInfo + componentItemsOffset;
+				int componentItemsCount = *(int*)(componentItemAddr + weaponAttachPointElementComponentCountOffset);
+
+				if (componentItemsCount <= 0)
+					continue;
+
+				for (int i = 0; i < componentItemsCount; i++)
+				{
+					returnList.Add(*(uint*)((byte*)weaponInfo + componentItemsOffset + i * 0x8));
+				}
+			}
+			return returnList;
 		}
 
 		private static GetClassNameHashOfCItemInfoDelegate CreateGetClassNameHashDelegateIfNotCreated(ulong virtualFuncAddr)
