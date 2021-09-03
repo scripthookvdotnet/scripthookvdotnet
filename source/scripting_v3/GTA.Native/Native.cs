@@ -222,31 +222,31 @@ namespace GTA.Native
 			{
 				ulongValue = (ulong)Convert.ToInt32(value);
 			}
-			if (enumDataType == typeof(uint))
+			else if (enumDataType == typeof(uint))
 			{
 				ulongValue = Convert.ToUInt32(value);
 			}
-			if (enumDataType == typeof(long))
+			else if (enumDataType == typeof(long))
 			{
 				ulongValue = (ulong)Convert.ToInt64(value);
 			}
-			if (enumDataType == typeof(ulong))
+			else if (enumDataType == typeof(ulong))
 			{
 				ulongValue = Convert.ToUInt64(value);
 			}
-			if (enumDataType == typeof(short))
+			else if (enumDataType == typeof(short))
 			{
 				ulongValue = (ulong)Convert.ToInt16(value);
 			}
-			if (enumDataType == typeof(ushort))
+			else if (enumDataType == typeof(ushort))
 			{
 				ulongValue = Convert.ToUInt16(value);
 			}
-			if (enumDataType == typeof(byte))
+			else if (enumDataType == typeof(byte))
 			{
 				ulongValue = Convert.ToByte(value);
 			}
-			if (enumDataType == typeof(sbyte))
+			else if (enumDataType == typeof(sbyte))
 			{
 				ulongValue = (ulong)Convert.ToSByte(value);
 			}
