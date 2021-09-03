@@ -2454,7 +2454,7 @@ namespace SHVDN
 			var returnList = new List<uint>();
 			for (int attachPointOffset = weaponAttachPointsStartOffset; attachPointOffset < weaponAttachPointsEndOffset; attachPointOffset += weaponAttachPointElementSize)
 			{
-				int componentItemsOffset = attaZchPointOffset + 0x8;
+				int componentItemsOffset = attachPointOffset + 0x8;
 				var componentItemAddr = (byte*)weaponInfo + componentItemsOffset;
 				int componentItemsCount = *(int*)(componentItemAddr + weaponAttachPointElementComponentCountOffset);
 
