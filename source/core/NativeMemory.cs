@@ -2392,6 +2392,33 @@ namespace SHVDN
 			return null;
 		}
 
+		public static uint GetAttachmentPointHash(uint weaponHash, uint componentHash)
+		{
+			var weaponInfo = FindWeaponInfo(weaponHash);
+
+			if (weaponInfo == null)
+				return 0xFFFFFFFF;
+
+			for (int attachPointOffset = weaponAttachPointsStartOffset; attachPointOffset < weaponAttachPointsEndOffset; attachPointOffset += weaponAttachPointElementSize)
+			{
+				int componentItemsOffset = attachPointOffset + 0x8;
+				var componentItemAddr = (byte*)weaponInfo + componentItemsOffset;
+				int componentItemsCount = *(int*)(componentItemAddr + weaponAttachPointElementComponentCountOffset);
+
+				if (componentItemsCount <= 0)
+					continue;
+
+				for (int i = 0; i < componentItemsCount; i++)
+				{
+					var componentHashInItemArray = *(uint*)((byte*)weaponInfo + componentItemsOffset + i * 0x8);
+					if (componentHashInItemArray == componentHash)
+						return *(uint*)((byte*)weaponInfo + componentItemsOffset);
+				}
+			}
+
+			return 0xFFFFFFFF;
+		}
+
 		public static List<uint> GetAllWeaponHashesForHumanPeds()
 		{
 			if (weaponAndAmmoInfoArrayPtr == null)
@@ -2447,9 +2474,7 @@ namespace SHVDN
 			var weaponInfo = FindWeaponInfo(weaponHash);
 
 			if (weaponInfo == null)
-            {
 				return new List<uint>();
-            }
 
 			var returnList = new List<uint>();
 			for (int attachPointOffset = weaponAttachPointsStartOffset; attachPointOffset < weaponAttachPointsEndOffset; attachPointOffset += weaponAttachPointElementSize)
