@@ -8,7 +8,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class EntityDamageLog
+	public struct EntityDamageLog
 	{
 		internal EntityDamageLog(Entity victim, Entity attacker, WeaponHash weaponHash, int gameTime)
 		{
@@ -76,7 +76,7 @@ namespace GTA
 		/// <returns><c>true</c> if <paramref name="left"/> has the same properties as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
 		public static bool operator ==(EntityDamageLog left, EntityDamageLog right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left.Equals(right);
 		}
 		/// <summary>
 		/// Determines if two <see cref="Entity"/>s do not have the same properties.
