@@ -517,6 +517,11 @@ namespace SHVDN
 		/// <param name="task">The task to execute.</param>
 		public void ExecuteTask(IScriptTask task)
 		{
+			if (Thread.CurrentThread.ManagedThreadId != executingThreadId)
+			{
+				throw new InvalidOperationException("Illegal scripting call outside the main thread.");
+			}
+
 			task.Run();
 		}
 
