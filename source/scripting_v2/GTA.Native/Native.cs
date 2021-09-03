@@ -401,22 +401,31 @@ namespace GTA.Native
 			{
 				var args = stackalloc ulong[argCount];
 
-				if (argCount <= 0)
-					goto CallNative;
-				args[0] = argument0.data;
-				if (argCount == 1)
-					goto CallNative;
-				args[1] = argument1.data;
-				if (argCount == 2)
-					goto CallNative;
-				args[2] = argument2.data;
-				if (argCount == 3)
-					goto CallNative;
-				args[3] = argument3.data;
+				switch (argCount)
+				{
+					case 0:
+						break;
+					case 1:
+						args[0] = argument0.data;
+						break;
+					case 2:
+						args[0] = argument0.data;
+						args[1] = argument1.data;
+						break;
+					case 3:
+						args[0] = argument0.data;
+						args[1] = argument1.data;
+						args[2] = argument2.data;
+						break;
+					default:
+						args[0] = argument0.data;
+						args[1] = argument1.data;
+						args[2] = argument2.data;
+						args[3] = argument3.data;
+						break;
+				}
 
-			CallNative:
 				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
-
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -476,20 +485,30 @@ namespace GTA.Native
 			{
 				var args = stackalloc ulong[argCount];
 
-				if (argCount <= 0)
-					goto CallNative;
-				args[0] = argument0.data;
-				if (argCount == 1)
-					goto CallNative;
-				args[1] = argument1.data;
-				if (argCount == 2)
-					goto CallNative;
-				args[2] = argument2.data;
-				if (argCount == 3)
-					goto CallNative;
-				args[3] = argument3.data;
+				switch (argCount)
+				{
+					case 0:
+						break;
+					case 1:
+						args[0] = argument0.data;
+						break;
+					case 2:
+						args[0] = argument0.data;
+						args[1] = argument1.data;
+						break;
+					case 3:
+						args[0] = argument0.data;
+						args[1] = argument1.data;
+						args[2] = argument2.data;
+						break;
+					default:
+						args[0] = argument0.data;
+						args[1] = argument1.data;
+						args[2] = argument2.data;
+						args[3] = argument3.data;
+						break;
+				}
 
-			CallNative:
 				SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
 			}
 		}
