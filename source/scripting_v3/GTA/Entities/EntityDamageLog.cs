@@ -91,22 +91,12 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			int attackerHandle = Attacker != null ? Attacker.Handle : 0;
-
-			uint joaatHash = 0;
-			var propertyValuesToHash = new int[4] { Victim.Handle, attackerHandle, (int)WeaponHash, GameTime };
-			foreach (int propertyValue in propertyValuesToHash)
-			{
-				joaatHash += (uint)propertyValue;
-				joaatHash += (joaatHash << 10);
-				joaatHash ^= (joaatHash >> 6);
-			}
-
-			joaatHash += (joaatHash << 3);
-			joaatHash ^= (joaatHash >> 11);
-			joaatHash += (joaatHash << 15);
-
-			return (int)joaatHash;
+			int hash = 17;
+			hash = hash * 5039 + Victim.Handle.GetHashCode();
+			hash = Attacker != null ? hash * 883 + Attacker.Handle.GetHashCode() : hash;
+			hash = hash * 9719 + ((int)WeaponHash).GetHashCode();
+			hash = hash * 317 + GameTime.GetHashCode();
+			return hash;
 		}
 	}
 }
