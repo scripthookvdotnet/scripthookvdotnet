@@ -992,7 +992,38 @@ namespace SHVDN
 		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
 		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
 
-		public static (int handle, int weaponHash, int gameTime)[] GetEntityDamageLogEntries(IntPtr entityAddress)
+		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageLogEntryAtIndex(ulong cAttackerArrayAddress, uint index)
+		{
+			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * elementSizeOfCAttackerArrayOfEntity);
+
+			var attackerEntityAddress = cAttacker->attackerEntityAddress;
+			var weaponHash = cAttacker->weaponHash;
+			var gameTime = cAttacker->gameTime;
+			var attackerHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
+
+			return (attackerHandle, weaponHash, gameTime);
+		}
+		public static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageLogEntryAtIndex(IntPtr entityAddress, uint index)
+		{
+			if (cAttackerArrayOfEntityOffset == 0 ||
+				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
+				elementSizeOfCAttackerArrayOfEntity == 0)
+				return default((int attackerHandle, int weaponHash, int gameTime));
+
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
+
+			if (entityCAttackerArrayAddress == 0)
+				return default((int attackerHandle, int weaponHash, int gameTime));
+
+			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
+
+			if (index >= returnEntrySize)
+				return default((int attackerHandle, int weaponHash, int gameTime));
+
+			return GetEntityDamageLogEntryAtIndex(entityCAttackerArrayAddress, index);
+		}
+
+		public static (int attackerHandle, int weaponHash, int gameTime)[] GetEntityDamageLogEntries(IntPtr entityAddress)
 		{
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
@@ -1002,20 +1033,14 @@ namespace SHVDN
 			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
-				return Array.Empty<(int handle, int weaponHash, int gameTime)>();
+				return Array.Empty<(int attackerHandle, int weaponHash, int gameTime)>();
 
 			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
-			var returnEntries = new (int handle, int weaponHash, int gameTime)[returnEntrySize];
+			var returnEntries = returnEntrySize != 0 ? new (int attackerHandle, int weaponHash, int gameTime)[returnEntrySize] : Array.Empty<(int attackerHandle, int weaponHash, int gameTime)>();
 
 			for (uint i = 0; i < returnEntries.Length; i++)
             {
-				var cAttacker = (CAttacker*)(entityCAttackerArrayAddress + i * elementSizeOfCAttackerArrayOfEntity);
-				var attackerEntityAddress = cAttacker->attackerEntityAddress;
-				var weaponHash = cAttacker->weaponHash;
-				var gameTime = cAttacker->gameTime;
-
-				var returnHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
-				returnEntries[i] = (returnHandle, weaponHash, gameTime);
+				returnEntries[i] = GetEntityDamageLogEntryAtIndex(entityCAttackerArrayAddress, i);
 			}
 
 			return returnEntries;

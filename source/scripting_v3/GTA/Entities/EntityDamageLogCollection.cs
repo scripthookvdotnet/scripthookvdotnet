@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace GTA
 {
-	public class EntityDamageLogCollection
+	public class EntityDamageLogCollection : IEnumerable<EntityDamageLog>, IEnumerable
 	{
 		#region Fields
 		protected readonly Entity _owner;
@@ -19,6 +19,32 @@ namespace GTA
 		{
 			_owner = owner;
 		}
+
+		public IEnumerator<EntityDamageLog> GetEnumerator()
+		{
+			uint index = 0;
+
+			while (_owner.MemoryAddress == IntPtr.Zero)
+			{
+				// No more than 3 damage logs
+				if (index >= 3)
+					yield break;
+
+				var returnDamageLog = SHVDN.NativeMemory.GetEntityDamageLogEntryAtIndex(_owner.MemoryAddress, index);
+
+				// If the value is default, then no more damage logs.
+				if (returnDamageLog == default)
+					yield break;
+
+				(int attackerHandle, int weaponHash, int gameTime) = returnDamageLog;
+				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
+				yield return new EntityDamageLog(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
+
+				index++;
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		/// <summary>
 		/// Gets all the <see cref="EntityDamageLog" /> at the moment.
