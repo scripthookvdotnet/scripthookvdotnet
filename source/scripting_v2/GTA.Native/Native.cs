@@ -377,54 +377,44 @@ namespace GTA.Native
 		}
 		public static T Call<T>(Hash hash)
 		{
-			return CallInternalNoParamArray<T>(hash, null, null, null, null);
+			return CallInternalNoParamArray<T>(hash, null, null, null, null, 0);
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, null, null, null);
+			return CallInternalNoParamArray<T>(hash, argument0, null, null, null, 1);
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, argument1, null, null);
+			return CallInternalNoParamArray<T>(hash, argument0, argument1, null, null, 2);
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, null);
+			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, null, 3);
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, argument3);
+			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, argument3, 4);
 		}
-		static unsafe T CallInternalNoParamArray<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		static unsafe T CallInternalNoParamArray<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3, int argCount)
 		{
-			bool isArg0Null = argument0 == null;
-			bool isArg1Null = argument1 == null;
-			bool isArg2Null = argument2 == null;
-			bool isArg3Null = argument3 == null;
-
-			int argCount = 0;
-			if (!isArg0Null)
-				argCount++;
-			if (!isArg1Null)
-				argCount++;
-			if (!isArg2Null)
-				argCount++;
-			if (!isArg3Null)
-				argCount++;
-
 			unsafe
 			{
 				var args = stackalloc ulong[argCount];
 
-				if (!isArg0Null)
-					args[0] = argument0.data;
-				if (!isArg1Null)
-					args[1] = argument1.data;
-				if (!isArg2Null)
-					args[2] = argument2.data;
-				if (!isArg3Null)
-					args[3] = argument3.data;
+				if (argCount <= 0)
+					goto CallNative;
+				args[0] = argument0.data;
+				if (argCount == 1)
+					goto CallNative;
+				args[1] = argument1.data;
+				if (argCount == 2)
+					goto CallNative;
+				args[2] = argument2.data;
+				if (argCount == 3)
+					goto CallNative;
+				args[3] = argument3.data;
 
+			CallNative:
 				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
 
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -462,54 +452,44 @@ namespace GTA.Native
 		}
 		public static void Call(Hash hash)
 		{
-			CallInternalNoParamArray(hash, null, null, null, null);
+			CallInternalNoParamArray(hash, null, null, null, null, 0);
 		}
 		public static void Call(Hash hash, InputArgument argument0)
 		{
-			CallInternalNoParamArray(hash, argument0, null, null, null);
+			CallInternalNoParamArray(hash, argument0, null, null, null, 1);
 		}
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
-			CallInternalNoParamArray(hash, argument0, argument1, null, null);
+			CallInternalNoParamArray(hash, argument0, argument1, null, null, 2);
 		}
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
-			CallInternalNoParamArray(hash, argument0, argument1, argument2, null);
+			CallInternalNoParamArray(hash, argument0, argument1, argument2, null, 3);
 		}
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
-			CallInternalNoParamArray(hash, argument0, argument1, argument2, argument3);
+			CallInternalNoParamArray(hash, argument0, argument1, argument2, argument3, 4);
 		}
-		static void CallInternalNoParamArray(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		static void CallInternalNoParamArray(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3, int argCount)
 		{
-			bool isArg0Null = argument0 == null;
-			bool isArg1Null = argument1 == null;
-			bool isArg2Null = argument2 == null;
-			bool isArg3Null = argument3 == null;
-
-			int argCount = 0;
-			if (!isArg0Null)
-				argCount++;
-			if (!isArg1Null)
-				argCount++;
-			if (!isArg2Null)
-				argCount++;
-			if (!isArg3Null)
-				argCount++;
-
 			unsafe
 			{
 				var args = stackalloc ulong[argCount];
 
-				if (!isArg0Null)
-					args[0] = argument0.data;
-				if (!isArg1Null)
-					args[1] = argument1.data;
-				if (!isArg2Null)
-					args[2] = argument2.data;
-				if (!isArg3Null)
-					args[3] = argument3.data;
+				if (argCount <= 0)
+					goto CallNative;
+				args[0] = argument0.data;
+				if (argCount == 1)
+					goto CallNative;
+				args[1] = argument1.data;
+				if (argCount == 2)
+					goto CallNative;
+				args[2] = argument2.data;
+				if (argCount == 3)
+					goto CallNative;
+				args[3] = argument3.data;
 
+			CallNative:
 				SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
 			}
 		}
