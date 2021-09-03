@@ -382,7 +382,7 @@ namespace GTA.Native
 					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
 				}
 
-				if (typeof(T).IsValueType || typeof(T).IsEnum)
+				if (typeof(T).IsValueType || typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T).IsEnum)
 				{
 					return ObjectFromNative<T>(res);
 				}
@@ -464,6 +464,11 @@ namespace GTA.Native
 				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 			}
 
+			if (typeof(PoolObject).IsAssignableFrom(typeof(T)))
+			{
+				return InstanceCreator<int, T>.Create((int)*value);
+			}
+
 			if (typeof(T) == typeof(Math.Vector2))
 			{
 				var data = (float*)value;
@@ -499,7 +504,7 @@ namespace GTA.Native
 
 			if (typeof(INativeValue).IsAssignableFrom(type))
 			{
-				// Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
+				// Edge case. Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
 				var result = (INativeValue)(System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type));
 				result.NativeValue = *value;
 
