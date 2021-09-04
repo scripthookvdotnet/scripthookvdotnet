@@ -59,12 +59,12 @@ namespace SHVDN
 		{
 			internal ulong Hash;
 			internal ulong* ArgumentPtr;
-			internal int ArgumentLength;
+			internal int ArgumentCount;
 			internal unsafe ulong* Result;
 
 			public void Run()
 			{
-				Result = InvokeInternal(Hash, ArgumentPtr, ArgumentLength);
+				Result = InvokeInternal(Hash, ArgumentPtr, ArgumentCount);
 			}
 		}
 
@@ -246,7 +246,7 @@ namespace SHVDN
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			var task = new NativeTaskPtrArgs { Hash = hash, ArgumentPtr = argPtr, ArgumentLength = argCount };
+			var task = new NativeTaskPtrArgs { Hash = hash, ArgumentPtr = argPtr, ArgumentCount = argCount };
 			domain.ExecuteTask(task);
 
 			return task.Result;
