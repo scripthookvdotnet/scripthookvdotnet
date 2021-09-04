@@ -269,7 +269,7 @@ namespace SHVDN
 			uint vehicleClassOffset = *(uint*)(address + 0x31);
 			address = FindPattern("\x3C\x05\x75\x16\x8B\x81\x00\x00\x00\x00", "xxxxxx????");
 			if (address != null)
-				vehicleTypeOffset = *(int*)(address + 6);
+				VehicleTypeOffsetInModelInfo = *(int*)(address + 6);
 
 			address = address + *(int*)(address) + 4;
 			modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
@@ -424,7 +424,7 @@ namespace SHVDN
 			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
 			if (address != null)
 			{
-				VehicleTypeOffset = *(int*)(address + 2);
+				VehicleTypeOffsetInCVehicle = *(int*)(address + 2);
 				VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
 			}
 
@@ -572,7 +572,7 @@ namespace SHVDN
 										break;
 									case ModelInfoClassType.Vehicle:
 										vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
-										vehicleHashesGroupedByType[*(int*)((byte*)addr2 + vehicleTypeOffset)].Add(cur->hash);
+										vehicleHashesGroupedByType[*(int*)((byte*)addr2 + VehicleTypeOffsetInModelInfo)].Add(cur->hash);
 										break;
 									case ModelInfoClassType.Ped:
 										pedHashes.Add(cur->hash);
@@ -1128,7 +1128,7 @@ namespace SHVDN
 		public static int FuelLevelOffset { get; }
 		public static int OilLevelOffset { get; }
 
-		public static int VehicleTypeOffset { get; }
+		public static int VehicleTypeOffsetInCVehicle { get; }
 
 		public static int WheelCountOffset { get; }
 		public static int WheelSpeedOffset { get; }
@@ -1171,8 +1171,6 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
-
-		public static int GetCVehicleType(IntPtr vehicleAddress) => *(int*)(vehicleAddress + VehicleTypeOffset).ToPointer();
 
 		#endregion
 
@@ -1273,7 +1271,7 @@ namespace SHVDN
 			internal bool isGang;
 		}
 
-		static int vehicleTypeOffset;
+		static int VehicleTypeOffsetInModelInfo;
 		static int handlingIndexOffsetInModelInfo;
 		static int pedPersonalityIndexOffsetInModelInfo;
 		static UInt32 modelNum1;
@@ -1321,7 +1319,7 @@ namespace SHVDN
 		{
 			if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType.Vehicle)
 			{
-				return (VehicleStructClassType)(*(int*)((byte*)modelInfoAddress.ToPointer() + vehicleTypeOffset));
+				return (VehicleStructClassType)(*(int*)((byte*)modelInfoAddress.ToPointer() + VehicleTypeOffsetInModelInfo));
 			}
 
 			return VehicleStructClassType.Invalid;

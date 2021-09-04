@@ -229,12 +229,12 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle == 0)
 				{
 					return VehicleType.Invalid;
 				}
 
-				return (VehicleType)SHVDN.NativeMemory.GetCVehicleType(address);
+				return (VehicleType)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
 			}
 		}
 
