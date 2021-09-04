@@ -402,7 +402,7 @@ namespace GTA.Native
 				var argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0.data;
-				argPtr[1] = argument0.data;
+				argPtr[1] = argument1.data;
 
 				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
 			}

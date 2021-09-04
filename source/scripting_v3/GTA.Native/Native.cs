@@ -363,7 +363,7 @@ namespace GTA.Native
 		/// </summary>
 		/// <param name="hash">The hashed name of the native script function.</param>
 		/// <param name="arguments">A list of input and output arguments to pass to the native script function.</param>
-		/// <returns>The return value of the native</returns>
+		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, params InputArgument[] arguments)
 		{
 			ulong[] args = new ulong[arguments.Length];
@@ -378,6 +378,11 @@ namespace GTA.Native
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and returns its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash)
 		{
 			unsafe
@@ -385,17 +390,30 @@ namespace GTA.Native
 				return CallInternalNoParamArray<T>(hash, null, 0);
 			}
 		}
-		public static T Call<T>(Hash hash, InputArgument argument0)
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument">The input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash, InputArgument argument)
 		{
 			unsafe
 			{
 				var argPtr = stackalloc ulong[1];
 
-				argPtr[0] = argument0._data;
+				argPtr[0] = argument._data;
 
 				return CallInternalNoParamArray<T>(hash, argPtr, 1);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
 			unsafe
@@ -403,11 +421,19 @@ namespace GTA.Native
 				var argPtr = stackalloc ulong[2];
 
 				argPtr[0] = argument0._data;
-				argPtr[1] = argument0._data;
+				argPtr[1] = argument1._data;
 
 				return CallInternalNoParamArray<T>(hash, argPtr, 2);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
 			unsafe
@@ -421,6 +447,15 @@ namespace GTA.Native
 				return CallInternalNoParamArray<T>(hash, argPtr, 3);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The fourth input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
 			unsafe
@@ -478,6 +513,10 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, args);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
 		public static void Call(Hash hash)
 		{
 			unsafe
@@ -485,6 +524,11 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0)
 		{
 			unsafe
@@ -497,6 +541,14 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The fourth input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
 			unsafe
@@ -510,6 +562,13 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
 			unsafe
@@ -524,6 +583,14 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The fourth input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
 			unsafe
