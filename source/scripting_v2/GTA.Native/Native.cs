@@ -377,64 +377,76 @@ namespace GTA.Native
 		}
 		public static T Call<T>(Hash hash)
 		{
-			return CallInternalNoParamArray<T>(hash, null, null, null, null, 0);
+			unsafe
+			{
+				return CallInternalNoParamArray<T>(hash, null, 0);
+			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, null, null, null, 1);
+			unsafe
+			{
+				const int argCount = 1;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+
+				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, argument1, null, null, 2);
+			unsafe
+			{
+				const int argCount = 2;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument0.data;
+
+				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, null, 3);
+			unsafe
+			{
+				const int argCount = 3;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+
+				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
-			return CallInternalNoParamArray<T>(hash, argument0, argument1, argument2, argument3, 4);
-		}
-		static unsafe T CallInternalNoParamArray<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3, int argCount)
-		{
 			unsafe
 			{
-				var args = stackalloc ulong[argCount];
+				const int argCount = 4;
+				var argPtr = stackalloc ulong[argCount];
 
-				switch (argCount)
-				{
-					case 0:
-						break;
-					case 1:
-						args[0] = argument0.data;
-						break;
-					case 2:
-						args[0] = argument0.data;
-						args[1] = argument1.data;
-						break;
-					case 3:
-						args[0] = argument0.data;
-						args[1] = argument1.data;
-						args[2] = argument2.data;
-						break;
-					default:
-						args[0] = argument0.data;
-						args[1] = argument1.data;
-						args[2] = argument2.data;
-						args[3] = argument3.data;
-						break;
-				}
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
-				return ReturnValueFromNativeIfNotNull<T>(res);
+				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
 			}
+		}
+		static unsafe T CallInternalNoParamArray<T>(Hash hash, ulong* argPtr, int argCount)
+		{
+			var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			return ReturnValueFromNativeIfNotNull<T>(res);
 		}
 		static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
 		{
 			// The result will be null when this method is called from a thread other than the main thread
 			if (result == null)
 			{
-				throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+				ThrowInvalidOperationExceptionForInvalidNativeCall();
 			}
 
 			if (typeof(T).IsEnum || typeof(T).IsPrimitive || typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector2))
@@ -446,6 +458,9 @@ namespace GTA.Native
 				return (T)ObjectFromNative(typeof(T), result);
 			}
 		}
+		// have to create this method to let JIT inline ReturnValueFromNativeIfNotNull
+		static void ThrowInvalidOperationExceptionForInvalidNativeCall() => throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+
 		public static void Call(Hash hash, params InputArgument[] arguments)
 		{
 			ulong[] args = new ulong[arguments.Length];
@@ -461,55 +476,63 @@ namespace GTA.Native
 		}
 		public static void Call(Hash hash)
 		{
-			CallInternalNoParamArray(hash, null, null, null, null, 0);
+			unsafe
+			{
+				SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
+			}
 		}
 		public static void Call(Hash hash, InputArgument argument0)
 		{
-			CallInternalNoParamArray(hash, argument0, null, null, null, 1);
+			unsafe
+			{
+				const int argCount = 1;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
 		}
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
-			CallInternalNoParamArray(hash, argument0, argument1, null, null, 2);
+			unsafe
+			{
+				const int argCount = 2;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
 		}
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
-			CallInternalNoParamArray(hash, argument0, argument1, argument2, null, 3);
+			unsafe
+			{
+				const int argCount = 3;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
 		}
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
-			CallInternalNoParamArray(hash, argument0, argument1, argument2, argument3, 4);
-		}
-		static void CallInternalNoParamArray(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3, int argCount)
-		{
 			unsafe
 			{
-				var args = stackalloc ulong[argCount];
+				const int argCount = 4;
+				var argPtr = stackalloc ulong[argCount];
 
-				switch (argCount)
-				{
-					case 0:
-						break;
-					case 1:
-						args[0] = argument0.data;
-						break;
-					case 2:
-						args[0] = argument0.data;
-						args[1] = argument1.data;
-						break;
-					case 3:
-						args[0] = argument0.data;
-						args[1] = argument1.data;
-						args[2] = argument2.data;
-						break;
-					default:
-						args[0] = argument0.data;
-						args[1] = argument1.data;
-						args[2] = argument2.data;
-						args[3] = argument3.data;
-						break;
-				}
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
 
-				SHVDN.NativeFunc.Invoke((ulong)hash, args, argCount);
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
 
