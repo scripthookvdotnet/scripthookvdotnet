@@ -22,25 +22,19 @@ namespace GTA
 
 		public IEnumerator<EntityDamageLog> GetEnumerator()
 		{
-			uint index = 0;
-
-			while (_owner.MemoryAddress == IntPtr.Zero)
+			// No more than 3 damage logs
+			for (uint i = 0; i < 3; i++)
 			{
-				// No more than 3 damage logs
-				if (index >= 3)
+				var memoryAddress = _owner.MemoryAddress;
+
+				if (memoryAddress == IntPtr.Zero || SHVDN.NativeMemory.IsIndexOfEntityDamageLogValid(memoryAddress, i))
 					yield break;
 
-				var returnDamageLog = SHVDN.NativeMemory.GetEntityDamageLogEntryAtIndex(_owner.MemoryAddress, index);
-
-				// If the value is default, then no more damage logs.
-				if (returnDamageLog == default)
-					yield break;
+				var returnDamageLog = SHVDN.NativeMemory.GetEntityDamageLogEntryAtIndex(_owner.MemoryAddress, i);
 
 				(int attackerHandle, int weaponHash, int gameTime) = returnDamageLog;
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
 				yield return new EntityDamageLog(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
-
-				index++;
 			}
 		}
 
@@ -53,10 +47,9 @@ namespace GTA
 		public EntityDamageLog[] GetAllDamageLogs()
 		{
 			var memoryAddress = _owner.MemoryAddress;
+
 			if (memoryAddress == IntPtr.Zero)
-			{
 				return new EntityDamageLog[0];
-			}
 
 			var damageEntries = SHVDN.NativeMemory.GetEntityDamageLogEntries(memoryAddress);
 			var returnDamageLogs = new EntityDamageLog[damageEntries.Length];

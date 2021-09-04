@@ -976,10 +976,18 @@ namespace SHVDN
 
 		#region -- Entity Offsets --
 
+		public static uint cAttackerArrayOfEntityOffset { get; }
+		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
+		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
+
+		#endregion
+
+		#region -- Entity Data --
+
 		// the size is at least 0x10 in all game versions
 		[StructLayout(LayoutKind.Explicit, Size = 0x10)]
 		struct CAttacker
-        {
+		{
 			[FieldOffset(0x0)]
 			internal ulong attackerEntityAddress;
 			[FieldOffset(0x8)]
@@ -988,10 +996,22 @@ namespace SHVDN
 			internal int gameTime;
 		}
 
-		public static uint cAttackerArrayOfEntityOffset { get; }
-		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
-		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
+		public static bool IsIndexOfEntityDamageLogValid(IntPtr entityAddress, uint index)
+		{
+			if (cAttackerArrayOfEntityOffset == 0 ||
+				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
+				elementSizeOfCAttackerArrayOfEntity == 0)
+				return false;
 
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
+
+			if (entityCAttackerArrayAddress == 0)
+				return false;
+
+			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
+
+			return index < returnEntrySize;
+		}
 		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageLogEntryAtIndex(ulong cAttackerArrayAddress, uint index)
 		{
 			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * elementSizeOfCAttackerArrayOfEntity);
