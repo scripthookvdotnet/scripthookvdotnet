@@ -1785,6 +1785,10 @@ namespace GTA
 		{
 			return Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS_FROM_NAME, vehicleModel.Hash);
 		}
+		public static VehicleType GetModelType(Model vehicleModel)
+		{
+			return (VehicleType)SHVDN.NativeMemory.GetVehicleType(vehicleModel);
+		}
 
 		public static int[] GetAllModelValues()
 		{
@@ -1820,6 +1824,11 @@ namespace GTA
 		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
+		}
+
+		public static VehicleHash[] GetAllModelsOfType(VehicleType vehicleType)
+		{
+			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModelsGroupedByType[(int)vehicleType].ToArray(), item => (VehicleHash)item);
 		}
 	}
 }
