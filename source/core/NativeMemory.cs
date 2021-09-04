@@ -420,6 +420,7 @@ namespace SHVDN
 			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
 			if (address != null)
 			{
+				VehicleTypeOffset = *(int*)(address + 2);
 				VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
 			}
 
@@ -1113,6 +1114,8 @@ namespace SHVDN
 		public static int FuelLevelOffset { get; }
 		public static int OilLevelOffset { get; }
 
+		public static int VehicleTypeOffset { get; }
+
 		public static int WheelCountOffset { get; }
 		public static int WheelSpeedOffset { get; }
 		public static int CanWheelBreakOffset { get; }
@@ -1154,6 +1157,8 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		public static int GetCVehicleType(IntPtr vehicleAddress) => *(int*)(vehicleAddress + VehicleTypeOffset).ToPointer();
 
 		#endregion
 

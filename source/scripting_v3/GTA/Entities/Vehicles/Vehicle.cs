@@ -221,6 +221,23 @@ namespace GTA
 		/// </summary>
 		public VehicleClass ClassType => Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS, Handle);
 
+		/// <summary>
+		/// Gets the type of this <see cref="Vehicle"/>.
+		/// </summary>
+		public VehicleType Type
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffset == 0)
+				{
+					return VehicleType.Invalid;
+				}
+
+				return (VehicleType)SHVDN.NativeMemory.GetCVehicleType(address);
+			}
+		}
+
 		public float LodMultiplier
 		{
 			get
