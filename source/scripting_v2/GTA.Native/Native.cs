@@ -362,21 +362,19 @@ namespace GTA.Native
 	public static class Function
 	{
 		const int MAX_ARG_COUNT = 32;
-		static ulong[] argPool = new ulong[MAX_ARG_COUNT];
 
 		public static T Call<T>(Hash hash, params InputArgument[] arguments)
 		{
 			unsafe
 			{
-				int argLength = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
-				fixed (ulong* argPoolPtr = &argPool[0])
-				{
-					for (int i = 0; i < argLength; ++i)
-						argPoolPtr[i] = arguments[i].data;
+				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				var argPtr = stackalloc ulong[argCount];
 
-					var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPoolPtr, argLength);
-					return ReturnValueFromNativeIfNotNull<T>(res);
-				}
+				for (int i = 0; i < argCount; ++i)
+					argPtr[i] = arguments[i].data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		public static T Call<T>(Hash hash)
@@ -469,14 +467,13 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				int argLength = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
-				fixed (ulong* argPoolPtr = &argPool[0])
-				{
-					for (int i = 0; i < argLength; ++i)
-						argPoolPtr[i] = arguments[i].data;
+				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				var argPtr = stackalloc ulong[argCount];
 
-					SHVDN.NativeFunc.Invoke((ulong)hash, argPoolPtr, argLength);
-				}
+				for (int i = 0; i < argCount; ++i)
+					argPtr[i] = arguments[i].data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
 		public static void Call(Hash hash)
