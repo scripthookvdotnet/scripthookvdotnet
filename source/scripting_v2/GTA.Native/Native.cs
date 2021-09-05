@@ -361,13 +361,14 @@ namespace GTA.Native
 
 	public static class Function
 	{
-		static ulong[] argPool = new ulong[32];
+		const int MAX_ARG_COUNT = 32;
+		static ulong[] argPool = new ulong[MAX_ARG_COUNT];
 
 		public static T Call<T>(Hash hash, params InputArgument[] arguments)
 		{
 			unsafe
 			{
-				int argLength = arguments.Length <= 32 ? arguments.Length : 32;
+				int argLength = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
 				fixed (ulong* argPoolPtr = &argPool[0])
 				{
 					for (int i = 0; i < argLength; ++i)
@@ -468,7 +469,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				int argLength = arguments.Length <= 32 ? arguments.Length : 32;
+				int argLength = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
 				fixed (ulong* argPoolPtr = &argPool[0])
 				{
 					for (int i = 0; i < argLength; ++i)
