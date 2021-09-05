@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using GTA.Math;
 
 namespace GTA.Native

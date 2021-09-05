@@ -8,7 +8,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Text;
+
 
 namespace GTA.Native
 {
@@ -616,6 +618,7 @@ namespace GTA.Native
 		/// </summary>
 		/// <param name="value">The object to convert.</param>
 		/// <returns>A native value representing the input <paramref name="value"/>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal static ulong ObjectToNative(object value)
 		{
 			if (value is null)
@@ -633,8 +636,10 @@ namespace GTA.Native
 				return ((INativeValue)value).NativeValue;
 			}
 
-			throw new InvalidCastException(string.Concat("Unable to cast object of type '", value.GetType(), "' to native value"));
+			ThrowExceptionForObjectToNative(value);
+			return 0;
 		}
+		static void ThrowExceptionForObjectToNative(object value) => throw new InvalidCastException(string.Concat("Unable to cast object of type '", value.GetType(), "' to native value"));
 
 		/// <summary>
 		/// Converts a native value to a managed object of a value type.
