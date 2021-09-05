@@ -32,7 +32,7 @@ namespace GTA
 		/// </remarks>
 		QuadBike = 0x3,
 		/// <summary>
-		/// The submarine car type.
+		/// The submarine car type for the submarine cars, which can travel underwater like submarines.
 		/// </summary>
 		/// <remarks>
 		/// <para>Amphibious automobiles are not classified as this type but classified as <see cref="AmphibiousAutomobile" />.</para>
@@ -64,32 +64,32 @@ namespace GTA
 		/// <remarks>The internal class in memory is <c>CBlimp</c>, which is a subclass of <c>CHeli</c>.</remarks>
 		Blimp = 0x9,
 		/// <summary>
-		/// The autogyro class, which is not used in the stock game.
+		/// The autogyro type, which is not used in the stock game.
 		/// </summary>
 		/// <remarks>The internal class in memory is <c>CAutogyro</c>.</remarks>
 		Autogyro = 0xA,
 		/// <summary>
-		/// The motorcycle class.
+		/// The motorcycle type.
 		/// </summary>
 		/// <remarks>The internal class in memory is <c>CBike</c>.</remarks>
 		Motorcycle = 0xB,
 		/// <summary>
-		/// The bicycle class.
+		/// The bicycle type.
 		/// </summary>
 		/// <remarks>The internal class in memory is <c>CBmx</c>, which is a subclass of <c>CBike</c>.</remarks>
 		Bycicle = 0xC,
 		/// <remarks>The internal class in memory is <c>CBoat</c>, which is a subclass of <c>CBoat</c>.</remarks>
 		/// <summary>
-		/// The boat class.
+		/// The boat type.
 		/// </summary>
 		Boat = 0xD,
 		/// <summary>
-		/// The train class.
+		/// The train type.
 		/// </summary>
 		/// <remarks>The internal class in memory is <c>CTrain</c>, which is a subclass of <c>CTrain</c>.</remarks>
 		Train = 0xE,
 		/// <summary>
-		/// The submarine class.
+		/// The submarine type.
 		/// </summary>
 		/// <remarks>
 		/// <para>Submarine cars are not classified as this type but classified as <see cref="SubmarineCar" />.</para>
