@@ -358,6 +358,8 @@ namespace GTA.Native
 	/// </summary>
 	public static class Function
 	{
+		static ulong[] argPool = new ulong[32];
+
 		/// <summary>
 		/// Calls the specified native script function and returns its return value.
 		/// </summary>
@@ -366,16 +368,17 @@ namespace GTA.Native
 		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, params InputArgument[] arguments)
 		{
-			ulong[] args = new ulong[arguments.Length];
-			for (int i = 0; i < arguments.Length; ++i)
-			{
-				args[i] = arguments[i]._data;
-			}
-
 			unsafe
 			{
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args);
-				return ReturnValueFromNativeIfNotNull<T>(res);
+				int argLength = arguments.Length <= 32 ? arguments.Length : 32;
+				fixed (ulong* argPoolPtr = &argPool[0])
+				{
+					for (int i = 0; i < argLength; ++i)
+						argPoolPtr[i] = arguments[i]._data;
+
+					var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPoolPtr, argLength);
+					return ReturnValueFromNativeIfNotNull<T>(res);
+				}
 			}
 		}
 		/// <summary>
@@ -502,15 +505,16 @@ namespace GTA.Native
 		/// <param name="arguments">A list of input and output arguments to pass to the native script function.</param>
 		public static void Call(Hash hash, params InputArgument[] arguments)
 		{
-			ulong[] args = new ulong[arguments.Length];
-			for (int i = 0; i < arguments.Length; ++i)
-			{
-				args[i] = arguments[i]._data;
-			}
-
 			unsafe
 			{
-				SHVDN.NativeFunc.Invoke((ulong)hash, args);
+				int argLength = arguments.Length <= 32 ? arguments.Length : 32;
+				fixed (ulong* argPoolPtr = &argPool[0])
+				{
+					for (int i = 0; i < argLength; ++i)
+						argPoolPtr[i] = arguments[i]._data;
+
+					SHVDN.NativeFunc.Invoke((ulong)hash, argPoolPtr, argLength);
+				}
 			}
 		}
 		/// <summary>
