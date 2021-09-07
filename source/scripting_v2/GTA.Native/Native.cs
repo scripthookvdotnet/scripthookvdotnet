@@ -381,7 +381,8 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				return CallInternalNoParamArray<T>(hash, null, 0);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0)
@@ -393,7 +394,8 @@ namespace GTA.Native
 
 				argPtr[0] = argument0.data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
@@ -406,7 +408,8 @@ namespace GTA.Native
 				argPtr[0] = argument0.data;
 				argPtr[1] = argument1.data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
@@ -420,7 +423,8 @@ namespace GTA.Native
 				argPtr[1] = argument1.data;
 				argPtr[2] = argument2.data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
@@ -435,13 +439,9 @@ namespace GTA.Native
 				argPtr[2] = argument2.data;
 				argPtr[3] = argument3.data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, argCount);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
-		}
-		static unsafe T CallInternalNoParamArray<T>(Hash hash, ulong* argPtr, int argCount)
-		{
-			var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
-			return ReturnValueFromNativeIfNotNull<T>(res);
 		}
 		static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
 		{

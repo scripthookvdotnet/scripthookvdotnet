@@ -391,7 +391,8 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				return CallInternalNoParamArray<T>(hash, null, 0);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		/// <summary>
@@ -404,11 +405,13 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var argPtr = stackalloc ulong[1];
+				const int argCount = 1;
+				var argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument._data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, 1);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		/// <summary>
@@ -422,12 +425,14 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var argPtr = stackalloc ulong[2];
+				const int argCount = 2;
+				var argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, 2);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		/// <summary>
@@ -442,13 +447,15 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var argPtr = stackalloc ulong[3];
+				const int argCount = 3;
+				var argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
 				argPtr[2] = argument2._data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, 3);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
 		/// <summary>
@@ -464,20 +471,17 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var argPtr = stackalloc ulong[4];
+				const int argCount = 4;
+				var argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
 				argPtr[2] = argument2._data;
 				argPtr[3] = argument3._data;
 
-				return CallInternalNoParamArray<T>(hash, argPtr, 4);
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
-		}
-		static unsafe T CallInternalNoParamArray<T>(Hash hash, ulong* argPtr, int argCount)
-		{
-			var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
-			return ReturnValueFromNativeIfNotNull<T>(res);
 		}
 		static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
 		{
