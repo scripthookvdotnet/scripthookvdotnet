@@ -44,7 +44,7 @@ namespace GTA
 		/// Gets all the <see cref="EntityDamageRecord" /> at the moment.
 		/// The return array can contain up to 3 <see cref="EntityDamageRecord" />s.
 		/// </summary>
-		public EntityDamageRecord[] GetAllDamageLogs()
+		public EntityDamageRecord[] GetAllDamageRecords()
 		{
 			var memoryAddress = _owner.MemoryAddress;
 
