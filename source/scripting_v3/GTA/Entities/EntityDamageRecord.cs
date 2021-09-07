@@ -50,6 +50,21 @@ namespace GTA
 			get;
 		}
 
+		public void Deconstruct(out Entity attacker, out WeaponHash weaponHash, out int gameTime)
+		{
+			attacker = Attacker;
+			weaponHash = WeaponHash;
+			gameTime = GameTime;
+		}
+
+		public void Deconstruct(out Entity victim, out Entity attacker, out WeaponHash weaponHash, out int gameTime)
+		{
+			victim = Victim;
+			attacker = Attacker;
+			weaponHash = WeaponHash;
+			gameTime = GameTime;
+		}
+
 		/// <summary>
 		/// Determines if <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageRecord"/>.
 		/// </summary>
