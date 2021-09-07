@@ -96,7 +96,7 @@
     <Compile Include="GTA\Entities\Entity.cs" />
     <Compile Include="GTA\Entities\EntityBone.cs" />
     <Compile Include="GTA\Entities\EntityBoneCollection.cs" />
-    <Compile Include="GTA\Entities\EntityDamageLog.cs" />
+    <Compile Include="GTA\Entities\EntityDamageRecord.cs" />
     <Compile Include="GTA\Entities\EntityType.cs" />
     <Compile Include="GTA\Entities\Model.cs" />
     <Compile Include="GTA\Entities\Peds\AnimationFlags.cs" />
@@ -178,7 +178,7 @@
     <Compile Include="GTA\Player.cs" />
     <Compile Include="GTA\PoolObject.cs" />
     <Compile Include="GTA\RadioStation.cs" />
-    <Compile Include="GTA\Entities\EntityDamageLogCollection.cs" />
+    <Compile Include="GTA\Entities\EntityDamageRecordCollection.cs" />
     <Compile Include="GTA\RaycastResult.cs" />
     <Compile Include="GTA\RequireScript.cs" />
     <Compile Include="GTA\Rope.cs" />

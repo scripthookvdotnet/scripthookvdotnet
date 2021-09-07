@@ -9,20 +9,20 @@ using System.Collections.Generic;
 
 namespace GTA
 {
-	public class EntityDamageLogCollection : IEnumerable<EntityDamageLog>, IEnumerable
+	public class EntityDamageRecordCollection : IEnumerable<EntityDamageRecord>, IEnumerable
 	{
 		#region Fields
 		protected readonly Entity _owner;
 		#endregion
 
-		internal EntityDamageLogCollection(Entity owner)
+		internal EntityDamageRecordCollection(Entity owner)
 		{
 			_owner = owner;
 		}
 
-		public IEnumerator<EntityDamageLog> GetEnumerator()
+		public IEnumerator<EntityDamageRecord> GetEnumerator()
 		{
-			// No more than 3 damage logs
+			// No more than 3 damage records
 			for (uint i = 0; i < 3; i++)
 			{
 				var memoryAddress = _owner.MemoryAddress;
@@ -34,31 +34,31 @@ namespace GTA
 
 				(int attackerHandle, int weaponHash, int gameTime) = returnDamageLog;
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
-				yield return new EntityDamageLog(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
+				yield return new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
 			}
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		/// <summary>
-		/// Gets all the <see cref="EntityDamageLog" /> at the moment.
-		/// The return array can contain up to 3 <see cref="EntityDamageLog" />s.
+		/// Gets all the <see cref="EntityDamageRecord" /> at the moment.
+		/// The return array can contain up to 3 <see cref="EntityDamageRecord" />s.
 		/// </summary>
-		public EntityDamageLog[] GetAllDamageLogs()
+		public EntityDamageRecord[] GetAllDamageLogs()
 		{
 			var memoryAddress = _owner.MemoryAddress;
 
 			if (memoryAddress == IntPtr.Zero)
-				return new EntityDamageLog[0];
+				return new EntityDamageRecord[0];
 
 			var damageEntries = SHVDN.NativeMemory.GetEntityDamageLogEntries(memoryAddress);
-			var returnDamageLogs = new EntityDamageLog[damageEntries.Length];
+			var returnDamageLogs = new EntityDamageRecord[damageEntries.Length];
 
 			for (int i = 0; i < returnDamageLogs.Length; i++)
 			{
 				(int attackerHandle, int weaponHash, int gameTime) = damageEntries[i];
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
-				returnDamageLogs[i] = new EntityDamageLog(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
+				returnDamageLogs[i] = new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
 			}
 
 			return returnDamageLogs;

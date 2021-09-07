@@ -8,9 +8,9 @@ using GTA.Native;
 
 namespace GTA
 {
-	public struct EntityDamageLog
+	public struct EntityDamageRecord
 	{
-		internal EntityDamageLog(Entity victim, Entity attacker, WeaponHash weaponHash, int gameTime)
+		internal EntityDamageRecord(Entity victim, Entity attacker, WeaponHash weaponHash, int gameTime)
 		{
 			Victim = victim;
 			Attacker = attacker;
@@ -51,11 +51,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageLog"/>.
+		/// Determines if <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageRecord"/>.
 		/// </summary>
 		/// <param name="entityDamageLog">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageLog"/>; otherwise, <c>false</c>.</returns>
-		public bool Equals(EntityDamageLog entityDamageLog)
+		/// <returns><c>true</c> if the <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageRecord"/>; otherwise, <c>false</c>.</returns>
+		public bool Equals(EntityDamageRecord entityDamageLog)
 		{
 			return Victim == entityDamageLog.Victim &&
 				Attacker == entityDamageLog.Attacker &&
@@ -63,13 +63,13 @@ namespace GTA
 				GameTime == entityDamageLog.GameTime;
 		}
 		/// <summary>
-		/// Determines if an <see cref="object"/> is an <see cref="EntityDamageLog"/> and has the same properties as this <see cref="EntityDamageLog"/>.
+		/// Determines if an <see cref="object"/> is an <see cref="EntityDamageRecord"/> and has the same properties as this <see cref="EntityDamageRecord"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is an <see cref="EntityDamageLog"/> and has the same properties as this <see cref="EntityDamageLog"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><c>true</c> if the <paramref name="obj"/> is an <see cref="EntityDamageRecord"/> and has the same properties as this <see cref="EntityDamageRecord"/>; otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is EntityDamageLog entityDamageLog)
+			if (obj is EntityDamageRecord entityDamageLog)
 			{
 				Equals(entityDamageLog);
 			}
@@ -78,12 +78,12 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if two <see cref="EntityDamageLog"/>s have the same properties.
+		/// Determines if two <see cref="EntityDamageRecord"/>s have the same properties.
 		/// </summary>
 		/// <param name="left">The left <see cref="Entity"/>.</param>
 		/// <param name="right">The right <see cref="Entity"/>.</param>
 		/// <returns><c>true</c> if <paramref name="left"/> has the same properties as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-		public static bool operator ==(EntityDamageLog left, EntityDamageLog right)
+		public static bool operator ==(EntityDamageRecord left, EntityDamageRecord right)
 		{
 			return left.Equals(right);
 		}
@@ -93,7 +93,7 @@ namespace GTA
 		/// <param name="left">The left <see cref="Entity"/>.</param>
 		/// <param name="right">The right <see cref="Entity"/>.</param>
 		/// <returns><c>true</c> if <paramref name="left"/> does not have the same properties as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
-		public static bool operator !=(EntityDamageLog left, EntityDamageLog right)
+		public static bool operator !=(EntityDamageRecord left, EntityDamageRecord right)
 		{
 			return !left.Equals(right);
 		}
