@@ -30,7 +30,7 @@ namespace GTA
 				if (memoryAddress == IntPtr.Zero || SHVDN.NativeMemory.IsIndexOfEntityDamageRecordValid(memoryAddress, i))
 					yield break;
 
-				var returnDamageRecord = SHVDN.NativeMemory.GetEntityDamageLogEntryAtIndex(_owner.MemoryAddress, i);
+				var returnDamageRecord = SHVDN.NativeMemory.GetEntityDamageRecordEntryAtIndex(_owner.MemoryAddress, i);
 
 				(int attackerHandle, int weaponHash, int gameTime) = returnDamageRecord;
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
