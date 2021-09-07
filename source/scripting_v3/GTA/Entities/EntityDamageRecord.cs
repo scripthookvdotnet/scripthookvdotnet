@@ -66,16 +66,16 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageRecord"/>.
+		/// Determines if <paramref name="entityDamageRecord"/> has the same properties as this <see cref="EntityDamageRecord"/>.
 		/// </summary>
-		/// <param name="entityDamageLog">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="entityDamageLog"/> has the same properties as this <see cref="EntityDamageRecord"/>; otherwise, <c>false</c>.</returns>
-		public bool Equals(EntityDamageRecord entityDamageLog)
+		/// <param name="entityDamageRecord">The <see cref="object"/> to check.</param>
+		/// <returns><c>true</c> if the <paramref name="entityDamageRecord"/> has the same properties as this <see cref="EntityDamageRecord"/>; otherwise, <c>false</c>.</returns>
+		public bool Equals(EntityDamageRecord entityDamageRecord)
 		{
-			return Victim == entityDamageLog.Victim &&
-				Attacker == entityDamageLog.Attacker &&
-				WeaponHash == entityDamageLog.WeaponHash &&
-				GameTime == entityDamageLog.GameTime;
+			return Victim == entityDamageRecord.Victim &&
+				Attacker == entityDamageRecord.Attacker &&
+				WeaponHash == entityDamageRecord.WeaponHash &&
+				GameTime == entityDamageRecord.GameTime;
 		}
 		/// <summary>
 		/// Determines if an <see cref="object"/> is an <see cref="EntityDamageRecord"/> and has the same properties as this <see cref="EntityDamageRecord"/>.
@@ -84,9 +84,9 @@ namespace GTA
 		/// <returns><c>true</c> if the <paramref name="obj"/> is an <see cref="EntityDamageRecord"/> and has the same properties as this <see cref="EntityDamageRecord"/>; otherwise, <c>false</c>.</returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is EntityDamageRecord entityDamageLog)
+			if (obj is EntityDamageRecord entityDamageRecord)
 			{
-				Equals(entityDamageLog);
+				Equals(entityDamageRecord);
 			}
 
 			return false;

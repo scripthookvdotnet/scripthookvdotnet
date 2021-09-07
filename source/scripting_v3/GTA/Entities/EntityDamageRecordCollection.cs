@@ -27,12 +27,12 @@ namespace GTA
 			{
 				var memoryAddress = _owner.MemoryAddress;
 
-				if (memoryAddress == IntPtr.Zero || SHVDN.NativeMemory.IsIndexOfEntityDamageLogValid(memoryAddress, i))
+				if (memoryAddress == IntPtr.Zero || SHVDN.NativeMemory.IsIndexOfEntityDamageRecordValid(memoryAddress, i))
 					yield break;
 
-				var returnDamageLog = SHVDN.NativeMemory.GetEntityDamageLogEntryAtIndex(_owner.MemoryAddress, i);
+				var returnDamageRecord = SHVDN.NativeMemory.GetEntityDamageLogEntryAtIndex(_owner.MemoryAddress, i);
 
-				(int attackerHandle, int weaponHash, int gameTime) = returnDamageLog;
+				(int attackerHandle, int weaponHash, int gameTime) = returnDamageRecord;
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
 				yield return new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
 			}
@@ -51,17 +51,17 @@ namespace GTA
 			if (memoryAddress == IntPtr.Zero)
 				return new EntityDamageRecord[0];
 
-			var damageEntries = SHVDN.NativeMemory.GetEntityDamageLogEntries(memoryAddress);
-			var returnDamageLogs = new EntityDamageRecord[damageEntries.Length];
+			var damageEntries = SHVDN.NativeMemory.GetEntityDamageRecordEntries(memoryAddress);
+			var returnDamageRecords = new EntityDamageRecord[damageEntries.Length];
 
-			for (int i = 0; i < returnDamageLogs.Length; i++)
+			for (int i = 0; i < returnDamageRecords.Length; i++)
 			{
 				(int attackerHandle, int weaponHash, int gameTime) = damageEntries[i];
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
-				returnDamageLogs[i] = new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
+				returnDamageRecords[i] = new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
 			}
 
-			return returnDamageLogs;
+			return returnDamageRecords;
 		}
 	}
 }

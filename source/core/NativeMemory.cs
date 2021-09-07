@@ -996,7 +996,7 @@ namespace SHVDN
 			internal int gameTime;
 		}
 
-		public static bool IsIndexOfEntityDamageLogValid(IntPtr entityAddress, uint index)
+		public static bool IsIndexOfEntityDamageRecordValid(IntPtr entityAddress, uint index)
 		{
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
@@ -1012,7 +1012,7 @@ namespace SHVDN
 
 			return index < returnEntrySize;
 		}
-		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageLogEntryAtIndex(ulong cAttackerArrayAddress, uint index)
+		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndex(ulong cAttackerArrayAddress, uint index)
 		{
 			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * elementSizeOfCAttackerArrayOfEntity);
 
@@ -1023,7 +1023,7 @@ namespace SHVDN
 
 			return (attackerHandle, weaponHash, gameTime);
 		}
-		public static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageLogEntryAtIndex(IntPtr entityAddress, uint index)
+		public static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
 		{
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
@@ -1040,10 +1040,10 @@ namespace SHVDN
 			if (index >= returnEntrySize)
 				return default((int attackerHandle, int weaponHash, int gameTime));
 
-			return GetEntityDamageLogEntryAtIndex(entityCAttackerArrayAddress, index);
+			return GetEntityDamageRecordEntryAtIndex(entityCAttackerArrayAddress, index);
 		}
 
-		public static (int attackerHandle, int weaponHash, int gameTime)[] GetEntityDamageLogEntries(IntPtr entityAddress)
+		public static (int attackerHandle, int weaponHash, int gameTime)[] GetEntityDamageRecordEntries(IntPtr entityAddress)
 		{
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
@@ -1060,7 +1060,7 @@ namespace SHVDN
 
 			for (uint i = 0; i < returnEntries.Length; i++)
             {
-				returnEntries[i] = GetEntityDamageLogEntryAtIndex(entityCAttackerArrayAddress, i);
+				returnEntries[i] = GetEntityDamageRecordEntryAtIndex(entityCAttackerArrayAddress, i);
 			}
 
 			return returnEntries;
