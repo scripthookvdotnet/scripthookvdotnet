@@ -45,19 +45,7 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		public void SendTo(Ped target)
 		{
-			if (!target.IsRagdoll)
-			{
-				if (!target.CanRagdoll)
-				{
-					target.CanRagdoll = true;
-				}
-
-				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, -1, 1, 1, 1, 0);
-			}
-
-			SetArgument("start", true);
-
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _arguments);
+			SendTo(target, -1);
 		}
 		/// <summary>
 		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
@@ -66,14 +54,19 @@ namespace GTA.NaturalMotion
 		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void SendTo(Ped target, int duration)
 		{
-			if (!target.CanRagdoll)
+			if (!target.IsRagdoll)
 			{
-				target.CanRagdoll = true;
+				if (!target.CanRagdoll)
+				{
+					target.CanRagdoll = true;
+				}
+
+				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, duration, 1, 1, 1, 0);
 			}
 
-			Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, duration, 1, 1, 1, 0);
+			SetArgument("start", true);
 
-			SendTo(target);
+			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _arguments);
 		}
 
 		/// <summary>
