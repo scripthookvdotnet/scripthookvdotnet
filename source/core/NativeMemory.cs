@@ -72,7 +72,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="pattern">The pattern.</param>
 		/// <param name="mask">The pattern mask.</param>
-		/// <returns>The address of a region matching the pattern or <c>null</c> if none was found.</returns>
+		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
 		static unsafe byte* FindPattern(string pattern, string mask)
 		{
 			ProcessModule module = Process.GetCurrentProcess().MainModule;
@@ -85,7 +85,7 @@ namespace SHVDN
 		/// <param name="pattern">The pattern.</param>
 		/// <param name="mask">The pattern mask.</param>
 		/// <param name="startAddress">The address to start searching at.</param>
-		/// <returns>The address of a region matching the pattern or <c>null</c> if none was found.</returns>
+		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
 		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress)
 		{
 			ProcessModule module = Process.GetCurrentProcess().MainModule;
@@ -105,7 +105,7 @@ namespace SHVDN
 		/// <param name="mask">The pattern mask.</param>
 		/// <param name="startAddress">The address to start searching at.</param>
 		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
-		/// <returns>The address of a region matching the pattern or <c>null</c> if none was found.</returns>
+		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
 		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
 		{
 			ulong address = (ulong)startAddress.ToInt64();
@@ -848,7 +848,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="address">The memory address to access.</param>
 		/// <param name="bit">The bit index to check.</param>
-		/// <returns><c>true</c> if the bit is set, <c>false</c> if it is unset.</returns>
+		/// <returns><see langword="true" /> if the bit is set, <see langword="false" /> if it is unset.</returns>
 		public static bool IsBitSet(IntPtr address, int bit)
 		{
 			if (bit < 0 || bit > 31)

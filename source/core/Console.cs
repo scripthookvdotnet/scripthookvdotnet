@@ -335,7 +335,7 @@ namespace SHVDN
 		/// Keyboard handling logic of the console.
 		/// </summary>
 		/// <param name="keys">The key that was originated this event and its modifiers.</param>
-		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
+		/// <param name="status"><see langword="true" /> on a key down, <see langword="false" /> on a key up event.</param>
 		internal void DoKeyEvent(Keys keys, bool status)
 		{
 			if (!status || !IsOpen)

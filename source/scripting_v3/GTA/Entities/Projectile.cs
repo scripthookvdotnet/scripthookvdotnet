@@ -14,7 +14,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="Ped"/> this <see cref="Projectile"/> belongs to. Can be <c>null</c>.
+		/// Gets the <see cref="Ped"/> this <see cref="Projectile"/> belongs to. Can be <see langword="null" />.
 		/// </summary>
 		public Ped Owner
 		{

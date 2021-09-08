@@ -103,7 +103,7 @@ namespace GTA
 		/// <summary>
 		/// Saves this <see cref="ScriptSettings"/> to file.
 		/// </summary>
-		/// <returns><c>true</c> if the file saved successfully; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the file saved successfully; otherwise, <see langword="false" /></returns>
 		public bool Save()
 		{
 			var result = new Dictionary<string, List<Tuple<string, string>>>();

@@ -44,7 +44,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if this <see cref="Pickup"/> exists.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Pickup"/> exists; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if this <see cref="Pickup"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_PICKUP_EXIST, Handle);
@@ -54,7 +54,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same pickup as this <see cref="Pickup"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same pickup as this <see cref="Pickup"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same pickup as this <see cref="Pickup"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is Pickup pickup)
@@ -70,7 +70,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Pickup"/>.</param>
 		/// <param name="right">The right <see cref="Pickup"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same pickup as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same pickup as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Pickup left, Pickup right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -80,7 +80,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Pickup"/>.</param>
 		/// <param name="right">The right <see cref="Pickup"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same pickup as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same pickup as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Pickup left, Pickup right)
 		{
 			return !(left == right);

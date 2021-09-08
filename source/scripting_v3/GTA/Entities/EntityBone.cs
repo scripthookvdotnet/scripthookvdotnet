@@ -290,7 +290,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same bone as this <see cref="EntityBone"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same bone as this <see cref="EntityBone"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same bone as this <see cref="EntityBone"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is EntityBone bone)
@@ -306,7 +306,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="EntityBone"/>.</param>
 		/// <param name="right">The right <see cref="EntityBone"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same bone as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same bone as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(EntityBone left, EntityBone right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -316,7 +316,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="EntityBone"/>.</param>
 		/// <param name="right">The right <see cref="EntityBone"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same bone as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same bone as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(EntityBone left, EntityBone right)
 		{
 			return !(left == right);
@@ -327,7 +327,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="entityBone">The <see cref="EntityBone"/> to check.</param>
 		/// <param name="boneId">The <see cref="Bone"/> ID to check against.</param>
-		/// <returns><c>true</c> if <paramref name="entityBone"/> refers to the <paramref name="boneId"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="entityBone"/> refers to the <paramref name="boneId"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(EntityBone entityBone, Bone boneId)
 		{
 			if (entityBone is null)
@@ -342,7 +342,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="entityBone">The <see cref="EntityBone"/> to check.</param>
 		/// <param name="boneId">The <see cref="Bone"/> ID to check against.</param>
-		/// <returns><c>true</c> if <paramref name="entityBone"/> does not refer to the <paramref name="boneId"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="entityBone"/> does not refer to the <paramref name="boneId"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(EntityBone entityBone, Bone boneId)
 		{
 			return !(entityBone == boneId);

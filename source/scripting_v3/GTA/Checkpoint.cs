@@ -279,7 +279,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if this <see cref="Checkpoint"/> exists.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Checkpoint"/> exists; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if this <see cref="Checkpoint"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
 			return Handle != 0 && MemoryAddress != IntPtr.Zero;
@@ -289,7 +289,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same checkpoint as this <see cref="Checkpoint"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same checkpoint as this <see cref="Checkpoint"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is Checkpoint checkpoint)
@@ -305,7 +305,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Checkpoint"/>.</param>
 		/// <param name="right">The right <see cref="Checkpoint"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same checkpoint as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same checkpoint as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Checkpoint left, Checkpoint right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -315,7 +315,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Checkpoint"/>.</param>
 		/// <param name="right">The right <see cref="Checkpoint"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same checkpoint as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same checkpoint as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Checkpoint left, Checkpoint right)
 		{
 			return !(left == right);

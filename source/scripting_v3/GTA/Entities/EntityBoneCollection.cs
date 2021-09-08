@@ -80,7 +80,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="boneName">Name of the bone.</param>
 		/// <returns>
-		///   <c>true</c> if this <see cref="Entity"/> has a bone with the specified bone name; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Entity"/> has a bone with the specified bone name; otherwise, <see langword="false" />.
 		/// </returns>
 		public bool Contains(string boneName)
 		{

@@ -59,7 +59,7 @@ namespace GTA
 		/// Attempts to load this <see cref="WeaponAsset"/> into memory for a given period of time.
 		/// </summary>
 		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="WeaponAsset"/>.</param>
-		/// <returns><c>true</c> if this <see cref="WeaponAsset"/> is loaded; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if this <see cref="WeaponAsset"/> is loaded; otherwise, <see langword="false" />.</returns>
 		public bool Request(int timeout)
 		{
 			Request();

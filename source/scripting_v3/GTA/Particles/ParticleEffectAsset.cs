@@ -72,7 +72,7 @@ namespace GTA
 		/// Attempts to load this <see cref="ParticleEffectAsset"/> into memory so it can be used for starting <see cref="ParticleEffect"/>s.
 		/// </summary>
 		/// <param name="timeout">How long in milliseconds should the game wait while the model hasn't been loaded before giving up</param>
-		/// <returns><c>true</c> if the <see cref="ParticleEffectAsset"/> is Loaded; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="ParticleEffectAsset"/> is Loaded; otherwise, <see langword="false" /></returns>
 		public bool Request(int timeout)
 		{
 			Request();

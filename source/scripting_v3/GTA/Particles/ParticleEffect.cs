@@ -25,7 +25,7 @@ namespace GTA
 		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetPtfxAddress(Handle);
 
 		/// <summary>
-		/// Gets the <see cref="GTA.Entity"/> this <see cref="ParticleEffect"/> is attached to or <c>null</c> if there is none.
+		/// Gets the <see cref="GTA.Entity"/> this <see cref="ParticleEffect"/> is attached to or <see langword="null" /> if there is none.
 		/// </summary>
 		public Entity Entity
 		{
@@ -33,7 +33,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="EntityBone"/> that this <see cref="ParticleEffect"/> is attached to or <c>null</c> if there is none.
+		/// Gets the <see cref="EntityBone"/> that this <see cref="ParticleEffect"/> is attached to or <see langword="null" /> if there is none.
 		/// </summary>
 		public EntityBone Bone
 		{
@@ -217,7 +217,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if this <see cref="Checkpoint"/> exists.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Checkpoint"/> exists; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if this <see cref="Checkpoint"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_PARTICLE_FX_LOOPED_EXIST, Handle);
@@ -227,7 +227,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same effect as this <see cref="ParticleEffect"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same effect as this <see cref="ParticleEffect"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same effect as this <see cref="ParticleEffect"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is ParticleEffect effect)
@@ -243,7 +243,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="ParticleEffect"/>.</param>
 		/// <param name="right">The right <see cref="ParticleEffect"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same effect as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same effect as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(ParticleEffect left, ParticleEffect right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -253,7 +253,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="ParticleEffect"/>.</param>
 		/// <param name="right">The right <see cref="ParticleEffect"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same effect as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same effect as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(ParticleEffect left, ParticleEffect right)
 		{
 			return !(left == right);

@@ -29,7 +29,7 @@ namespace SHVDN
 
 		/// <summary>
 		/// Gets the status of this script.
-		/// So <c>true</c> if it is running and <c>false</c> if it was aborted.
+		/// So <see langword="true" /> if it is running and <see langword="false" /> if it was aborted.
 		/// </summary>
 		public bool IsRunning { get; private set; }
 

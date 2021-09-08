@@ -182,7 +182,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Player"/> can leave a parachute smoke trail.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> can leave a parachute smoke trail; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> can leave a parachute smoke trail; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanLeaveParachuteSmokeTrail
 		{
@@ -213,7 +213,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is dead.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Player"/> is dead; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Player"/> is dead; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsDead => Function.Call<bool>(Hash.IS_PLAYER_DEAD, Handle);
 
@@ -221,7 +221,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is alive.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Player"/> is alive; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Player"/> is alive; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsAlive => !IsDead;
 
@@ -229,7 +229,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is aiming.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Player"/> is aiming; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Player"/> is aiming; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsAiming => Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, Handle);
 
@@ -237,7 +237,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is climbing.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is climbing; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is climbing; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsClimbing => Function.Call<bool>(Hash.IS_PLAYER_CLIMBING, Handle);
 
@@ -245,7 +245,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is riding a train.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is riding a train; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is riding a train; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsRidingTrain => Function.Call<bool>(Hash.IS_PLAYER_RIDING_TRAIN, Handle);
 
@@ -253,7 +253,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is pressing a horn.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is pressing a horn; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is pressing a horn; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsPressingHorn => Function.Call<bool>(Hash.IS_PLAYER_PRESSING_HORN, Handle);
 
@@ -261,7 +261,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is playing.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is playing; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is playing; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsPlaying => Function.Call<bool>(Hash.IS_PLAYER_PLAYING, Handle);
 
@@ -269,7 +269,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Player"/> is invincible.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is invincible; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is invincible; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsInvincible
 		{
@@ -281,7 +281,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Player"/> is ignored by the police.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Player"/> is ignored by the police; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Player"/> is ignored by the police; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IgnoredByPolice
 		{
@@ -292,7 +292,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Player"/> is ignored by everyone.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Player"/> is ignored by everyone; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Player"/> is ignored by everyone; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IgnoredByEveryone
 		{
@@ -303,7 +303,7 @@ namespace GTA
 		/// Sets a value indicating whether cops will be dispatched for this <see cref="Player"/>
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if cops will be dispatched; otherwise, <c>false</c>.
+		///   <see langword="true" /> if cops will be dispatched; otherwise, <see langword="false" />.
 		/// </value>
 		public bool DispatchsCops
 		{
@@ -314,7 +314,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Player"/> can use cover.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> can use cover; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> can use cover; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanUseCover
 		{
@@ -325,7 +325,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> can start a mission.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> can start a mission; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> can start a mission; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanStartMission
 		{
@@ -336,7 +336,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Player"/> can control ragdoll.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> can control ragdoll; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> can control ragdoll; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanControlRagdoll
 		{
@@ -347,7 +347,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Player"/> can control its <see cref="Ped"/>.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> can control its <see cref="Ped"/>; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> can control its <see cref="Ped"/>; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanControlCharacter
 		{
@@ -359,7 +359,7 @@ namespace GTA
 		/// Attempts to change the <see cref="Model"/> of this <see cref="Player"/>.
 		/// </summary>
 		/// <param name="model">The <see cref="Model"/> to change this <see cref="Player"/> to.</param>
-		/// <returns><c>true</c> if the change was successful; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the change was successful; otherwise, <see langword="false" />.</returns>
 		public bool ChangeModel(Model model)
 		{
 			if (!model.IsInCdImage || !model.IsPed || !model.Request(1000))
@@ -391,7 +391,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is using their special ability.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is using their special ability; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is using their special ability; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSpecialAbilityActive => Function.Call<bool>(Hash.IS_SPECIAL_ABILITY_ACTIVE, Handle);
 
@@ -399,7 +399,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Player"/> can use their special ability.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this  <see cref="Player"/> can use their special ability; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this  <see cref="Player"/> can use their special ability; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSpecialAbilityEnabled
 		{
@@ -444,7 +444,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the last <see cref="Vehicle"/> this <see cref="Player"/> used.
 		/// </summary>
-		/// <remarks>returns <c>null</c> if the last vehicle doesn't exist.</remarks>
+		/// <remarks>returns <see langword="null" /> if the last vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle => Function.Call<Vehicle>(Hash.GET_PLAYERS_LAST_VEHICLE);
 
 		/// <summary>
@@ -452,7 +452,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to check.</param>
 		/// <returns>
-		///   <c>true</c> if this <see cref="Player"/> is targeting the specified <see cref="Entity"/>; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Player"/> is targeting the specified <see cref="Entity"/>; otherwise, <see langword="false" />.
 		/// </returns>
 		public bool IsTargeting(Entity entity)
 		{
@@ -463,14 +463,14 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Player"/> is targeting anything.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Player"/> is targeting anything; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Player"/> is targeting anything; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsTargetingAnything => Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
 
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is targeting.
 		/// </summary>
-		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targeting any <see cref="Entity"/>; otherwise, <c>null</c></returns>
+		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targeting any <see cref="Entity"/>; otherwise, <see langword="null" /></returns>
 		public Entity TargetedEntity
 		{
 			get
@@ -491,7 +491,7 @@ namespace GTA
 		/// Sets a value indicating whether the player is forced to aim.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to make the player always be aiming; otherwise, <c>false</c>.
+		///   <see langword="true" /> to make the player always be aiming; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ForcedAim
 		{
@@ -587,7 +587,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same player as this <see cref="Player"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same player as this <see cref="Player"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same player as this <see cref="Player"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is Player player)
@@ -603,7 +603,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Player"/>.</param>
 		/// <param name="right">The right <see cref="Player"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same player as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same player as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Player left, Player right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -613,7 +613,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Player"/>.</param>
 		/// <param name="right">The right <see cref="Player"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same player as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same player as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Player left, Player right)
 		{
 			return !(left == right);

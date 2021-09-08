@@ -118,7 +118,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="TextElement" /> will be drawn.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if enabled; otherwise, <c>false</c>.
+		///   <see langword="true" /> if enabled; otherwise, <see langword="false" />.
 		/// </value>
 		public bool Enabled
 		{
@@ -211,7 +211,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="TextElement"/> is drawn with a shadow effect.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if shadow; otherwise, <c>false</c>.
+		///   <see langword="true" /> if shadow; otherwise, <see langword="false" />.
 		/// </value>
 		public bool Shadow
 		{
@@ -221,7 +221,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="TextElement"/> is drawn with an outline.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if outline; otherwise, <c>false</c>.
+		///   <see langword="true" /> if outline; otherwise, <see langword="false" />.
 		/// </value>
 		public bool Outline
 		{
@@ -242,7 +242,7 @@ namespace GTA.UI
 		/// See <see cref="Alignment"/>
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if centered; otherwise, <c>false</c>.
+		///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
 		/// </value>
 		public bool Centered
 		{

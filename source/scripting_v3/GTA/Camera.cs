@@ -54,7 +54,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Camera"/> is currently being rendered.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Camera"/> is active; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Camera"/> is active; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsActive
 		{
@@ -247,7 +247,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Camera"/> is shaking.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Camera"/> is shaking; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Camera"/> is shaking; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsShaking
 		{
@@ -309,7 +309,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Camera"/> is interpolating.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Camera"/> is interpolating; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Camera"/> is interpolating; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsInterpolating
 		{
@@ -354,7 +354,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if this <see cref="Camera"/> exists.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Camera"/> exists; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if this <see cref="Camera"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_CAM_EXIST, Handle);
@@ -364,7 +364,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same camera as this <see cref="Camera"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same camera as this <see cref="Camera"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same camera as this <see cref="Camera"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is Camera camera)
@@ -380,7 +380,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Camera"/>.</param>
 		/// <param name="right">The right <see cref="Camera"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same camera as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same camera as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Camera left, Camera right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -390,7 +390,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Camera"/>.</param>
 		/// <param name="right">The right <see cref="Camera"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same camera as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same camera as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Camera left, Camera right)
 		{
 			return !(left == right);

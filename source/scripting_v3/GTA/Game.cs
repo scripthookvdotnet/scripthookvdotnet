@@ -307,7 +307,7 @@ namespace GTA
 		/// Gets whether a cheat code was entered into the cheat text box.
 		/// </summary>
 		/// <param name="cheat">The name of the cheat to check.</param>
-		/// <returns><c>true</c> if the cheat was just entered; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the cheat was just entered; otherwise, <see langword="false" /></returns>
 		public static bool WasCheatStringJustEntered(string cheat)
 		{
 			return Function.Call<bool>(Hash._HAS_CHEAT_STRING_JUST_BEEN_ENTERED, GenerateHash(cheat));
@@ -316,7 +316,7 @@ namespace GTA
 		/// Gets whether a specific sequence of <see cref="Button"/>s has been pressed.
 		/// </summary>
 		/// <param name="buttons">The sequence of <see cref="Button"/>s in the order the user should enter them in-game.</param>
-		/// <returns><c>true</c> if the combination was just entered; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the combination was just entered; otherwise, <see langword="false" /></returns>
 		/// <remarks>
 		/// There must be between 6 and 29 inclusive <see cref="Button"/>s otherwise an <see cref="ArgumentException"/> is thrown.
 		/// It only works for GamePad inputs. The in-game cheat combinations use the same system.
@@ -408,7 +408,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> is currently pressed.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsControlPressed(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, control);
@@ -417,7 +417,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> was just pressed this frame
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsControlJustPressed(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, control);
@@ -426,7 +426,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> was just released this frame
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsControlJustReleased(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, control);
@@ -435,7 +435,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> is enabled and currently pressed.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> is pressed; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlPressed(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, control);
@@ -444,7 +444,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just pressed this frame; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustPressed(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, control);
@@ -453,7 +453,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> was just released this frame; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustReleased(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, control);
@@ -463,7 +463,7 @@ namespace GTA
 		/// Gets whether a <see cref="Control"/> is enabled or disabled this frame.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
-		/// <returns><c>true</c> if the <see cref="Control"/> is Enabled; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="Control"/> is Enabled; otherwise, <see langword="false" /></returns>
 		public static bool IsControlEnabled(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, control);

@@ -123,7 +123,7 @@ namespace GTA
 		/// Gets a value indicating whether the <see cref="GameplayCamera"/> is rendering.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the <see cref="GameplayCamera"/> is rendering; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is rendering; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsRendering => Function.Call<bool>(Hash.IS_GAMEPLAY_CAM_RENDERING);
 
@@ -131,7 +131,7 @@ namespace GTA
 		/// Gets a value indicating whether the aiming camera is rendering.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the aiming camera is rendering; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the aiming camera is rendering; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsAimCamActive => Function.Call<bool>(Hash.IS_AIM_CAM_ACTIVE);
 
@@ -139,7 +139,7 @@ namespace GTA
 		/// Gets a value indicating whether the first person aiming camera is rendering.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the aiming camera is rendering; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the aiming camera is rendering; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsFirstPersonAimCamActive => Function.Call<bool>(Hash.IS_FIRST_PERSON_AIM_CAM_ACTIVE);
 
@@ -147,7 +147,7 @@ namespace GTA
 		/// Gets a value indicating whether the <see cref="GameplayCamera"/> is looking behind.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the <see cref="GameplayCamera"/> is looking behind; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is looking behind; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsLookingBehind => Function.Call<bool>(Hash.IS_GAMEPLAY_CAM_LOOKING_BEHIND);
 
@@ -173,7 +173,7 @@ namespace GTA
 		/// Gets a value indicating whether the <see cref="GameplayCamera"/> is shaking.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the <see cref="GameplayCamera"/> is shaking; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is shaking; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsShaking => Function.Call<bool>(Hash.IS_GAMEPLAY_CAM_SHAKING);
 

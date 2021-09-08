@@ -55,7 +55,7 @@ namespace SHVDN
 		/// </summary>
 		public Script[] RunningScripts => runningScripts.ToArray();
 		/// <summary>
-		/// Gets the currently executing script or <c>null</c> if there is none.
+		/// Gets the currently executing script or <see langword="null" /> if there is none.
 		/// </summary>
 		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
 
@@ -129,7 +129,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="basePath">The path to the application root directory.</param>
 		/// <param name="scriptPath">The path to the directory containing scripts.</param>
-		/// <returns>The script domain or <c>null</c> in case of failure.</returns>
+		/// <returns>The script domain or <see langword="null" /> in case of failure.</returns>
 		public static ScriptDomain Load(string basePath, string scriptPath)
 		{
 			// Make absolute path to scrips location
@@ -172,7 +172,7 @@ namespace SHVDN
 		/// Compiles and load scripts from a C# or VB.NET source code file.
 		/// </summary>
 		/// <param name="filename">The path to the code file to load.</param>
-		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
+		/// <returns><see langword="true" /> on success, <see langword="false" /> otherwise</returns>
 		bool LoadScriptsFromSource(string filename)
 		{
 			var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
@@ -242,7 +242,7 @@ namespace SHVDN
 		/// Loads scripts from the specified assembly file.
 		/// </summary>
 		/// <param name="filename">The path to the assembly file to load.</param>
-		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
+		/// <returns><see langword="true" /> on success, <see langword="false" /> otherwise</returns>
 		bool LoadScriptsFromAssembly(string filename)
 		{
 			if (!IsManagedAssembly(filename))
@@ -270,7 +270,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="filename">The path to the file associated with this assembly.</param>
 		/// <param name="assembly">The assembly to load.</param>
-		/// <returns><c>true</c> on success, <c>false</c> otherwise</returns>
+		/// <returns><see langword="true" /> on success, <see langword="false" /> otherwise</returns>
 		bool LoadScriptsFromAssembly(Assembly assembly, string filename)
 		{
 			int count = 0;
@@ -333,7 +333,7 @@ namespace SHVDN
 		/// Creates an instance of a script.
 		/// </summary>
 		/// <param name="scriptType">The type of the script to instantiate.</param>
-		/// <returns>The script instance or <c>null</c> in case of failure.</returns>
+		/// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
 		public Script InstantiateScript(Type scriptType)
 		{
 			if (scriptType.IsAbstract || !IsSubclassOf(scriptType, "GTA.Script"))
@@ -536,7 +536,7 @@ namespace SHVDN
 		/// Gets the key down status of the specified key.
 		/// </summary>
 		/// <param name="key">The key to check.</param>
-		/// <returns><c>true</c> if the key is currently pressed or <c>false</c> otherwise</returns>
+		/// <returns><see langword="true" /> if the key is currently pressed or <see langword="false" /> otherwise</returns>
 		public bool IsKeyPressed(Keys key)
 		{
 			return keyboardState[(int)key];
@@ -544,7 +544,7 @@ namespace SHVDN
 		/// <summary>
 		/// Pauses or resumes handling of keyboard events in this script domain.
 		/// </summary>
-		/// <param name="pause"><c>true</c> to pause or <c>false</c> to resume</param>
+		/// <param name="pause"><see langword="true" /> to pause or <see langword="false" /> to resume</param>
 		public void PauseKeyEvents(bool pause)
 		{
 			recordKeyboardEvents = !pause;
@@ -601,7 +601,7 @@ namespace SHVDN
 		/// Keyboard handling logic of the script domain.
 		/// </summary>
 		/// <param name="keys">The key that was originated this event and its modifiers.</param>
-		/// <param name="status"><c>true</c> on a key down, <c>false</c> on a key up event.</param>
+		/// <param name="status"><see langword="true" /> on a key down, <see langword="false" /> on a key up event.</param>
 		internal void DoKeyEvent(Keys keys, bool status)
 		{
 			var e = new KeyEventArgs(keys);

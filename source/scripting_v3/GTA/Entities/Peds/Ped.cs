@@ -100,7 +100,7 @@ namespace GTA
 		/// Determines if this <see cref="Ped"/> exists.
 		/// You should ensure <see cref="Ped"/>s still exist before manipulating them or getting some values for them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Ped"/> exists; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if this <see cref="Ped"/> exists; otherwise, <see langword="false" /></returns>
 		/// <seealso cref="Entity.IsDead"/>
 		/// <seealso cref="IsInjured"/>
 		public new bool Exists()
@@ -114,7 +114,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Ped"/> is human.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Ped"/> is human; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Ped"/> is human; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsHuman => Function.Call<bool>(Hash.IS_PED_HUMAN, Handle);
 
@@ -354,7 +354,7 @@ namespace GTA
 		///  If permanent events are blocked, this <see cref="Ped"/> will only do as it's told, and won't flee when shot at, etc.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if permanent events are blocked; otherwise, <c>false</c>.
+		///   <see langword="true" /> if permanent events are blocked; otherwise, <see langword="false" />.
 		/// </value>
 		public bool BlockPermanentEvents
 		{
@@ -500,7 +500,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Ped"/> is jumping out of their vehicle.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Ped"/> is jumping out of their vehicle; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Ped"/> is jumping out of their vehicle; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsJumpingOutOfVehicle => Function.Call<bool>(Hash.IS_PED_JUMPING_OUT_OF_VEHICLE, Handle);
 
@@ -548,7 +548,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the last <see cref="Vehicle"/> this <see cref="Ped"/> used.
 		/// </summary>
-		/// <remarks>returns <c>null</c> if the last vehicle doesn't exist.</remarks>
+		/// <remarks>returns <see langword="null" /> if the last vehicle doesn't exist.</remarks>
 		public Vehicle LastVehicle
 		{
 			get
@@ -561,7 +561,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is using.
 		/// </summary>
-		/// <remarks>returns <c>null</c> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
 		public Vehicle CurrentVehicle
 		{
 			get
@@ -574,7 +574,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Vehicle"/> this <see cref="Ped"/> is trying to enter.
 		/// </summary>
-		/// <remarks>returns <c>null</c> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
+		/// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
 		public Vehicle VehicleTryingToEnter
 		{
 			get
@@ -644,7 +644,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if <see cref="Ped"/> stays in vehicle when jacked; otherwise, <c>false</c>.
+		/// <see langword="true" /> if <see cref="Ped"/> stays in vehicle when jacked; otherwise, <see langword="false" />.
 		/// </value>
 		public bool StaysInVehicleWhenJacked
 		{
@@ -705,7 +705,7 @@ namespace GTA
 		/// Can be called safely to check if <see cref="Ped"/>s exist and are not injured without calling <see cref="Exists"/>.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> this <see cref="Ped"/> is injured or does not exist; otherwise, <c>false</c>.
+		///   <see langword="true" /> this <see cref="Ped"/> is injured or does not exist; otherwise, <see langword="false" />.
 		/// </value>
 		/// <seealso cref="Entity.IsDead"/>
 		/// <seealso cref="Exists"/>
@@ -755,7 +755,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Ped"/> was killed by a stealth attack.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Ped"/> was killed by stealth; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Ped"/> was killed by stealth; otherwise, <see langword="false" />.
 		/// </value>
 		public bool WasKilledByStealth => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_STEALTH, Handle);
 
@@ -763,7 +763,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Ped"/> was killed by a takedown.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Ped"/> was killed by a takedown; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Ped"/> was killed by a takedown; otherwise, <see langword="false" />.
 		/// </value>
 		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
 
@@ -798,7 +798,7 @@ namespace GTA
 		///  If this <see cref="Ped"/> can't suffer critical damage, they will take base damage of weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Ped"/> can suffer critical damage; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Ped"/> can suffer critical damage; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanSufferCriticalHits
 		{
@@ -840,7 +840,7 @@ namespace GTA
 		///  Note that <see cref="Ped"/>s will drop only their equipped weapon when they get killed.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if <see cref="Ped"/> drops the equipped weapon when killed; otherwise, <c>false</c>.
+		/// <see langword="true" /> if <see cref="Ped"/> drops the equipped weapon when killed; otherwise, <see langword="false" />.
 		/// </value>
 		public bool DropsEquippedWeaponOnDeath
 		{
@@ -1056,7 +1056,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the animation dictionary or set this <see cref="Ped"/> should use or <c>null</c> to clear it.
+		/// Sets the animation dictionary or set this <see cref="Ped"/> should use or <see langword="null" /> to clear it.
 		/// </summary>
 		public string MovementAnimationSet
 		{

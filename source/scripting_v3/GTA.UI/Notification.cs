@@ -55,7 +55,7 @@ namespace GTA.UI
 		/// Creates a <see cref="Notification"/> above the minimap with the given message.
 		/// </summary>
 		/// <param name="message">The message in the notification.</param>
-		/// <param name="blinking">if set to <c>true</c> the notification will blink.</param>
+		/// <param name="blinking">if set to <see langword="true" /> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
 		public static int Show(string message, bool blinking = false)
 		{
@@ -71,8 +71,8 @@ namespace GTA.UI
 		/// <param name="sender">The sender name.</param>
 		/// <param name="subject">The subject line.</param>
 		/// <param name="message">The message itself.</param>
-		/// <param name="fadeIn">If <c>true</c> the message will fade in.</param>
-		/// <param name="blinking">if set to <c>true</c> the notification will blink.</param>
+		/// <param name="fadeIn">If <see langword="true" /> the message will fade in.</param>
+		/// <param name="blinking">if set to <see langword="true" /> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
 		public static int Show(NotificationIcon icon, string sender, string subject, string message, bool fadeIn = false, bool blinking = false)
 		{

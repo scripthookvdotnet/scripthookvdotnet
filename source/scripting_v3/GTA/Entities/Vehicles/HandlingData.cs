@@ -27,7 +27,7 @@ namespace GTA
 		/// Returns true if this <see cref="HandlingData"/> is valid.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="HandlingData"/> is valid; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="HandlingData"/> is valid; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsValid => MemoryAddress != IntPtr.Zero;
 

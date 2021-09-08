@@ -593,7 +593,7 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Vector3 left, Vector3 right) => Equals(left, right);
 
 		/// <summary>
@@ -601,7 +601,7 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Vector3 left, Vector3 right) => !Equals(left, right);
 
 		/// <summary>
@@ -639,7 +639,7 @@ namespace GTA.Math
 		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object to make the comparison with.</param>
-		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
+		/// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj == null || obj.GetType() != GetType())
@@ -652,7 +652,7 @@ namespace GTA.Math
 		/// Returns a value that indicates whether the current instance is equal to the specified object.
 		/// </summary>
 		/// <param name="other">Object to make the comparison with.</param>
-		/// <returns><c>true</c> if the current instance is equal to the specified object; <c>false</c> otherwise.</returns>
+		/// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
 		public bool Equals(Vector3 other) => (X == other.X && Y == other.Y && Z == other.Z);
 
 		/// <summary>
@@ -660,8 +660,8 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="value1">The first value to compare.</param>
 		/// <param name="value2">The second value to compare.</param>
-		/// <returns><c>true</c> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
-		/// if both are <c>null</c> references or if <c>value1.Equals(value2)</c> returns <c>true</c>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
+		/// if both are <see langword="null" /> references or if <c>value1.Equals(value2)</c> returns <see langword="true" />; otherwise, <see langword="false" />.</returns>
 		public static bool Equals(ref Vector3 value1, ref Vector3 value2) => value1.Equals(value2);
 	}
 }

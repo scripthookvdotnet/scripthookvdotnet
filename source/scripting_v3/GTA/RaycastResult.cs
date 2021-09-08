@@ -47,7 +47,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the <see cref="Entity" /> this ray cast collided with.
-		/// <remarks>Returns <c>null</c> if the ray cast didn't collide with any <see cref="Entity"/>.</remarks>
+		/// <remarks>Returns <see langword="null" /> if the ray cast didn't collide with any <see cref="Entity"/>.</remarks>
 		/// </summary>
 		public Entity HitEntity
 		{

@@ -142,28 +142,28 @@ namespace GTA.UI
 		/// Gets a value indicating whether the screen is faded in.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the screen is faded in; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the screen is faded in; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsFadedIn => Function.Call<bool>(Hash.IS_SCREEN_FADED_IN);
 		/// <summary>
 		/// Gets a value indicating whether the screen is faded out.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the screen is faded out; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the screen is faded out; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsFadedOut => Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
 		/// <summary>
 		/// Gets a value indicating whether the screen is fading in.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the screen is fading in; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the screen is fading in; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsFadingIn => Function.Call<bool>(Hash.IS_SCREEN_FADING_IN);
 		/// <summary>
 		/// Gets a value indicating whether the screen is fading out.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the screen is fading out; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the screen is fading out; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsFadingOut => Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
 
@@ -171,7 +171,7 @@ namespace GTA.UI
 		/// Gets a value indicating whether screen kill effects are enabled.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if screen kill effects are enabled; otherwise, <c>false</c>.
+		/// <see langword="true" /> if screen kill effects are enabled; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool AreScreenKillEffectsEnabled => Game.GetProfileSetting(226) != 0;
 
@@ -198,7 +198,7 @@ namespace GTA.UI
 		/// Gets a value indicating whether the specific screen effect is running.
 		/// </summary>
 		/// <param name="effectName">The <see cref="ScreenEffect"/> to check.</param>
-		/// <returns><c>true</c> if the screen effect is active; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the screen effect is active; otherwise, <see langword="false" />.</returns>
 		public static bool IsEffectActive(ScreenEffect effectName)
 		{
 			return Function.Call<bool>(Hash.ANIMPOSTFX_IS_RUNNING, _effects[(int)effectName]);
@@ -209,7 +209,7 @@ namespace GTA.UI
 		/// </summary>
 		/// <param name="effectName">The <see cref="ScreenEffect"/> to start playing.</param>
 		/// <param name="duration">The duration of the effect in milliseconds or zero to use the default length.</param>
-		/// <param name="looped">If <c>true</c> the effect won't stop until <see cref="Screen.StopEffect(ScreenEffect)"/> is called.</param>
+		/// <param name="looped">If <see langword="true" /> the effect won't stop until <see cref="Screen.StopEffect(ScreenEffect)"/> is called.</param>
 		public static void StartEffect(ScreenEffect effectName, int duration = 0, bool looped = false)
 		{
 			Function.Call(Hash.ANIMPOSTFX_PLAY, _effects[(int)effectName], duration, looped);
@@ -270,7 +270,7 @@ namespace GTA.UI
 		/// Translates a point in WorldSpace to its given Coordinates on the <see cref="Screen"/>
 		/// </summary>
 		/// <param name="position">The position in the World.</param>
-		/// <param name="scaleWidth">if set to <c>true</c> Returns the screen position scaled by <see cref="ScaledWidth"/>; otherwise, returns the screen position scaled by <see cref="Width"/>.</param>
+		/// <param name="scaleWidth">if set to <see langword="true" /> Returns the screen position scaled by <see cref="ScaledWidth"/>; otherwise, returns the screen position scaled by <see cref="Width"/>.</param>
 		/// <returns></returns>
 		public static PointF WorldToScreen(Vector3 position, bool scaleWidth = false)
 		{

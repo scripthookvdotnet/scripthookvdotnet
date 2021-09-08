@@ -58,7 +58,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="ContainerElement"/> will be drawn.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if enabled; otherwise, <c>false</c>.
+		///   <see langword="true" /> if enabled; otherwise, <see langword="false" />.
 		/// </value>
 		public virtual bool Enabled
 		{
@@ -108,7 +108,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="ContainerElement"/> should be positioned based on its center or top left corner
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if centered; otherwise, <c>false</c>.
+		///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
 		/// </value>
 		public virtual bool Centered
 		{

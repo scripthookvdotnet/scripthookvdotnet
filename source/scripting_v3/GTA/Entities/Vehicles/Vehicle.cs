@@ -45,7 +45,7 @@ namespace GTA
 		/// Determines if this <see cref="Vehicle"/> exists.
 		/// You should ensure <see cref="Vehicle"/>s still exist before manipulating them or getting some values for them on every tick, since some native functions may crash the game if invalid entity handles are passed.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Vehicle"/> exists; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if this <see cref="Vehicle"/> exists; otherwise, <see langword="false" /></returns>
 		public new bool Exists()
 		{
 			return EntityType == EntityType.Vehicle;
@@ -111,7 +111,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> is wanted by the police.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> is wanted by the police; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> is wanted by the police; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsWanted
 		{
@@ -132,7 +132,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> needs to be hotwired to start.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> needs to be hotwired to start; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> needs to be hotwired to start; otherwise, <see langword="false" />.
 		/// </value>
 		public bool NeedsToBeHotwired
 		{
@@ -153,7 +153,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Vehicle"/> was previously owned by a <see cref="Player"/>; otherwise, <see langword="false" />.
 		/// </value>
 		public bool PreviouslyOwnedByPlayer
 		{
@@ -174,7 +174,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Vehicle"/> allows <see cref="Ped"/>s to rappel.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Vehicle"/> allows <see cref="Ped"/>s to rappel; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Vehicle"/> allows <see cref="Ped"/>s to rappel; otherwise, <see langword="false" />.
 		/// </value>
 		public bool AllowRappel => Game.Version >= GameVersion.v1_0_757_2_Steam
 			? Function.Call<bool>(Hash._DOES_VEHICLE_ALLOW_RAPPEL, Handle)
@@ -184,7 +184,7 @@ namespace GTA
 		/// Gets a value indicating whether <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed; otherwise, <c>false</c>.
+		/// <see langword="true" /> if <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag1.CanStandOnTop);
 
@@ -192,7 +192,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Vehicle"/> can jump.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Vehicle"/> can jump; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Vehicle"/> can jump; otherwise, <see langword="false" />.
 		/// </value>
 		public bool CanJump => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash._GET_CAN_VEHICLE_JUMP, Handle);
 
@@ -397,7 +397,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/>s engine is running.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Vehicle"/>s engine is running; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Vehicle"/>s engine is running; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsEngineRunning
 		{
@@ -409,7 +409,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/>s engine is currently starting.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Vehicle"/>s engine is starting; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Vehicle"/>s engine is starting; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsEngineStarting
 		{
@@ -983,7 +983,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Vehicle"/> has an alarm set.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has an alarm set; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has an alarm set; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsAlarmSet
 		{
@@ -1003,7 +1003,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Vehicle"/> is sounding its alarm.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> is sounding its alarm; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> is sounding its alarm; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsAlarmSounding => Function.Call<bool>(Hash.IS_VEHICLE_ALARM_ACTIVATED, Handle);
 
@@ -1056,7 +1056,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Vehicle"/> has a siren.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has a siren; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has a siren; otherwise, <see langword="false" />.
 		/// </value>
 		public bool HasSiren => Bones.Contains("siren1");
 
@@ -1064,7 +1064,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSirenActive
 		{
@@ -1075,7 +1075,7 @@ namespace GTA
 		/// Sets a value indicating whether the siren on this <see cref="Vehicle"/> plays sounds.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if the siren on this <see cref="Vehicle"/> plays sounds; otherwise, <c>false</c>.
+		/// <see langword="true" /> if the siren on this <see cref="Vehicle"/> plays sounds; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSirenSilent
 		{
@@ -1099,7 +1099,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its lights on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its lights on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its lights on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool AreLightsOn
 		{
@@ -1120,7 +1120,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its high beams on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its high beams on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its high beams on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool AreHighBeamsOn
 		{
@@ -1141,7 +1141,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its interior lights on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its interior lights on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its interior lights on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsInteriorLightOn
 		{
@@ -1162,7 +1162,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its search light on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its search light on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its search light on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSearchLightOn
 		{
@@ -1174,7 +1174,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its taxi light on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its taxi light on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its taxi light on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsTaxiLightOn
 		{
@@ -1186,7 +1186,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its left indicator light on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its left indicator light on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its left indicator light on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsLeftIndicatorLightOn
 		{
@@ -1197,7 +1197,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its right indicator light on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its right indicator light on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its right indicator light on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsRightIndicatorLightOn
 		{
@@ -1208,7 +1208,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its brake light on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has its brake light on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has its brake light on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool AreBrakeLightsOn
 		{
@@ -1325,7 +1325,7 @@ namespace GTA
 		/// Only works when the vehicle model is a car, quad bikes or trikes (strictly when the internal vehicle class is CAutomobile or derived class from CAutomobile).
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Vehicle"/> drops money when destroyed; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Vehicle"/> drops money when destroyed; otherwise, <see langword="false" />.
 		/// </value>
 		public bool DropsMoneyOnExplosion
 		{
@@ -1447,7 +1447,7 @@ namespace GTA
 		/// Sets a value indicating whether the Handbrake on this <see cref="Vehicle"/> is forced on.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if the Handbrake on this <see cref="Vehicle"/> is forced on; otherwise, <c>false</c>.
+		///   <see langword="true" /> if the Handbrake on this <see cref="Vehicle"/> is forced on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsHandbrakeForcedOn
 		{
@@ -1601,7 +1601,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether peds can use this <see cref="Vehicle"/> for cover.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if peds can use this <see cref="Vehicle"/> for cover; otherwise, <c>false</c>.
+		///   <see langword="true" /> if peds can use this <see cref="Vehicle"/> for cover; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ProvidesCover
 		{
@@ -1626,7 +1626,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Vehicle"/> has forks.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if this <see cref="Vehicle"/> has forks; otherwise, <c>false</c>.
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has forks; otherwise, <see langword="false" />.
 		/// </value>
 		public bool HasForks => Bones.Contains("forks");
 

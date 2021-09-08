@@ -172,7 +172,7 @@ namespace GTA
 		/// The custom name appears in the legends list on the map.
 		/// </summary>
 		/// <remarks>
-		/// Returns <c>null</c> if the <see cref="Blip"/> does not exist.
+		/// Returns <see langword="null" /> if the <see cref="Blip"/> does not exist.
 		/// Setting <see cref="Sprite"/> will clear this name.
 		/// </remarks>
 		/// <seealso cref="DisplayNameHash"/>
@@ -402,7 +402,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether the route to this <see cref="Blip"/> should be shown on the map.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to show the route; otherwise, <c>false</c>.
+		///   <see langword="true" /> to show the route; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ShowRoute
 		{
@@ -423,7 +423,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to show the dollar sign; otherwise, <c>false</c>.
+		///   <see langword="true" /> to show the dollar sign; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ShowsDollarSign
 		{
@@ -444,7 +444,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Blip"/> shows the heading indicator used for normal players in GTA: Online.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to show the heading indicator; otherwise, <c>false</c>.
+		///   <see langword="true" /> to show the heading indicator; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ShowsHeadingIndicator
 		{
@@ -466,7 +466,7 @@ namespace GTA
 		/// The outline color can be changed by setting <see cref="SecondaryColor"/>.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to show outline; otherwise, <c>false</c>.
+		///   <see langword="true" /> to show outline; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ShowsOutlineIndicator
 		{
@@ -488,7 +488,7 @@ namespace GTA
 		/// The right half cyan circle indicator is used to indicate friends in GTA: Online.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to show friend indicator; otherwise, <c>false</c>.
+		///   <see langword="true" /> to show friend indicator; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ShowsFriendIndicator
 		{
@@ -510,7 +510,7 @@ namespace GTA
 		/// The right half cyan circle indicator is used to indicate crew members in GTA: Online.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> to show crew member indicator; otherwise, <c>false</c>.
+		///   <see langword="true" /> to show crew member indicator; otherwise, <see langword="false" />.
 		/// </value>
 		public bool ShowsCrewIndicator
 		{
@@ -531,7 +531,7 @@ namespace GTA
 		/// Sets a value indicating whether this <see cref="Blip"/> is friendly.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Blip"/> is friendly; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Blip"/> is friendly; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsFriendly
 		{
@@ -542,7 +542,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Blip"/> is flashing.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Blip"/> is flashing; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Blip"/> is flashing; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsFlashing
 		{
@@ -554,7 +554,7 @@ namespace GTA
 		/// Gets a value indicating whether this <see cref="Blip"/> is on minimap.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Blip"/> is on minimap; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Blip"/> is on minimap; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsOnMinimap
 		{
@@ -565,7 +565,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Blip"/> is short range.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Blip"/> is short range; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Blip"/> is short range; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsShortRange
 		{
@@ -577,7 +577,7 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Blip"/> is hidden on the map legend.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this <see cref="Blip"/> is hidden on the map legend; otherwise, <c>false</c>.
+		/// <see langword="true" /> if this <see cref="Blip"/> is hidden on the map legend; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsHiddenOnLegend
 		{
@@ -601,7 +601,7 @@ namespace GTA
 		/// The same <see cref="string"/> as <see cref="Name"/> if the custom string is set;
 		/// otherwise, the localized <see cref="string"/> from the games language files with the same GXT key hash as <see cref="DisplayNameHash"/>.
 		/// </value>
-		/// Returns <c>null</c> if the <see cref="Blip"/> does not exist.
+		/// Returns <see langword="null" /> if the <see cref="Blip"/> does not exist.
 		public string GetAppropriateName()
 		{
 			var address = MemoryAddress;
@@ -645,7 +645,7 @@ namespace GTA
 		/// <summary>
 		/// Determines if this <see cref="Blip"/> exists.
 		/// </summary>
-		/// <returns><c>true</c> if this <see cref="Blip"/> exists; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if this <see cref="Blip"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
 			return Function.Call<bool>(Hash.DOES_BLIP_EXIST, Handle);
@@ -655,7 +655,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same blip as this <see cref="Blip"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><c>true</c> if the <paramref name="obj"/> is the same blip as this <see cref="Blip"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same blip as this <see cref="Blip"/>; otherwise, <see langword="false" />.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is Blip blip)
@@ -671,7 +671,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Pickup"/>.</param>
 		/// <param name="right">The right <see cref="Pickup"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is the same blip as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same blip as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Blip left, Blip right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -681,7 +681,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="Pickup"/>.</param>
 		/// <param name="right">The right <see cref="Pickup"/>.</param>
-		/// <returns><c>true</c> if <paramref name="left"/> is not the same blip as <paramref name="right"/>; otherwise, <c>false</c>.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same blip as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Blip left, Blip right)
 		{
 			return !(left == right);

@@ -16,7 +16,7 @@ namespace GTA.UI
 		/// Determines whether a given <see cref="HudComponent"/> is active.
 		/// </summary>
 		/// <param name="component">The <see cref="HudComponent"/> to check</param>
-		/// <returns><c>true</c> if the <see cref="HudComponent"/> is active; otherwise, <c>false</c></returns>
+		/// <returns><see langword="true" /> if the <see cref="HudComponent"/> is active; otherwise, <see langword="false" /></returns>
 		public static bool IsComponentActive(HudComponent component)
 		{
 			return Function.Call<bool>(Hash.IS_HUD_COMPONENT_ACTIVE, component);

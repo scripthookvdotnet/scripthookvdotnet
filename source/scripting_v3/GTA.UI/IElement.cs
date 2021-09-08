@@ -13,7 +13,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="IElement"/> will be drawn.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if enabled; otherwise, <c>false</c>.
+		///   <see langword="true" /> if enabled; otherwise, <see langword="false" />.
 		/// </value>
 		bool Enabled
 		{
@@ -49,7 +49,7 @@ namespace GTA.UI
 		/// Gets or sets a value indicating whether this <see cref="IElement"/> should be positioned based on its center or top left corner
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if centered; otherwise, <c>false</c>.
+		///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
 		/// </value>
 		bool Centered
 		{
