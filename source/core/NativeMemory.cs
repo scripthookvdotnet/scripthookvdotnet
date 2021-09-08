@@ -213,6 +213,20 @@ namespace SHVDN
 			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
 			GetActiveTaskFunc = GetDelegateForFunctionPointer<GetActiveTaskFuncDelegate>(new IntPtr(address));
 
+			address = FindPattern("\x75\xEF\x48\x8B\x5C\x24\x30\xB8\x00\x00\x00\x00", "xxxxxxxx????");
+			if (address != null)
+			{
+				cTaskNMScriptControlTypeIndex = *(int*)(address + 8);
+			}
+
+			address = FindPattern("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
+			if (address != null)
+			{
+				var cEventSwitch2NMVfTableArrayAddr = (ulong)(*(int*)(address + 3) + address + 7);
+				var getEventTypeOfcEventSwitch2NMFuncAddr = *(ulong*)(cEventSwitch2NMVfTableArrayAddr + 0x18);
+				cEventSwitch2NMTypeIndex = *(int*)(getEventTypeOfcEventSwitch2NMFuncAddr + 1);
+			}
+
 			address = FindPattern("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
 			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
 
@@ -2581,6 +2595,8 @@ namespace SHVDN
 		static SendMessageToPedDelegate SendMessageToPedFunc;
 
 		static int fragInstNMGtaOffset;
+		static int cTaskNMScriptControlTypeIndex;
+		static int cEventSwitch2NMTypeIndex;
 
 		[StructLayout(LayoutKind.Explicit, Size=0x38)]
 		struct CTask
@@ -2672,9 +2688,8 @@ namespace SHVDN
 					{
 						var PedIntelligenceAddr = *(ulong*)(_PedAddress + PedIntelligenceOffset);
 
-						// check whether the ped is currently performing the 'CTaskNMScriptControl' task (task type index is shifted by at least 1 between b372 to b2372)
 						var activeTask = GetActiveTaskFunc(*(ulong*)((byte*)PedIntelligenceAddr + CTaskTreePedOffset));
-						if (activeTask != null && activeTask->taskTypeIndex == 402)
+						if (activeTask != null && activeTask->taskTypeIndex == cTaskNMScriptControlTypeIndex)
 						{
 							v5 = true;
 						}
@@ -2686,13 +2701,12 @@ namespace SHVDN
 								var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
 								if (eventAddress != 0)
 								{
-									// check whether the ped is currently reacting to the 'EVENT_SWITCH_2_NM_TASK' event (event type index is shifted by at least 2 between b372 to b2372)
-									if (GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)eventAddress + 0x18)))(eventAddress) == 134)
+									if (GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)eventAddress + 0x18)))(eventAddress) == cEventSwitch2NMTypeIndex)
 									{
 										var taskInEvent = *(CTask**)(eventAddress + 0x28);
 										if (taskInEvent != null)
 										{
-											if (taskInEvent->taskTypeIndex == 402)
+											if (taskInEvent->taskTypeIndex == cTaskNMScriptControlTypeIndex)
 												v5 = true;
 										}
 									}
