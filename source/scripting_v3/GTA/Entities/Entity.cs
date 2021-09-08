@@ -14,6 +14,7 @@ namespace GTA
 	{
 		#region Fields
 		EntityBoneCollection _bones;
+		EntityDamageRecordCollection _damageRecords;
 		#endregion
 
 		internal Entity(int handle) : base(handle)
@@ -530,6 +531,11 @@ namespace GTA
 		#endregion
 
 		#region Damaging
+
+		/// <summary>
+		/// Gets a collection of the <see cref="EntityDamageRecord"/>s in this <see cref="Entity"/>.
+		/// </summary>
+		public EntityDamageRecordCollection DamageRecords => _damageRecords ?? (_damageRecords = new EntityDamageRecordCollection(this));
 
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> has been damaged by a specified <see cref="Entity"/>.
