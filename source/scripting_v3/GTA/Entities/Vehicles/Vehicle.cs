@@ -99,6 +99,136 @@ namespace GTA
 		#region Configuration
 
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a regular automobile.
+		/// </summary>
+		public bool IsRegularAutomobile => Type == VehicleType.Automobile;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is an amphibious automobile.
+		/// </summary>
+		public bool IsAmphibiousAutomobile => Type == VehicleType.AmphibiousAutomobile;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a submarine car.
+		/// </summary>
+		public bool IsSubmarineCar => Type == VehicleType.SubmarineCar;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is an automobile.
+		/// </summary>
+		public bool IsAutomobile
+		{
+			get
+			{
+				var vehicleType = Type;
+				return (vehicleType == VehicleType.Automobile || vehicleType == VehicleType.AmphibiousAutomobile || vehicleType == VehicleType.SubmarineCar);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a regular quad bike.
+		/// </summary>
+		public bool IsRegularQuadBike => Type == VehicleType.QuadBike;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is an amphibious quad bike.
+		/// </summary>
+		public bool IsAmphibiousQuadBike => Type == VehicleType.AmphibiousQuadBike;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a quad bike.
+		/// </summary>
+		public bool IsQuadBike
+		{
+			get
+			{
+				var vehicleType = Type;
+				return (vehicleType == VehicleType.QuadBike || vehicleType == VehicleType.AmphibiousQuadBike);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is an amphibious vehicle.
+		/// </summary>
+		public bool IsAmphibious
+		{
+			get
+			{
+				var vehicleType = Type;
+				return (vehicleType == VehicleType.AmphibiousAutomobile || vehicleType == VehicleType.AmphibiousQuadBike);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a trailer.
+		/// </summary>
+		public bool IsTrailer => Type == VehicleType.Trailer;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a plane.
+		/// </summary>
+		public bool IsPlane => Type == VehicleType.Plane;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a helicopter.
+		/// </summary>
+		public bool IsHelicopter => Type == VehicleType.Helicopter;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a helicopter.
+		/// </summary>
+		public bool IsBlimp => Type == VehicleType.Blimp;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is an aircraft.
+		/// </summary>
+		public bool IsAircraft
+		{
+			get
+			{
+				var vehicleType = Type;
+				return (vehicleType == VehicleType.Plane || vehicleType == VehicleType.Helicopter || vehicleType == VehicleType.Blimp);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a motorcycle.
+		/// </summary>
+		public bool IsMotorcycle => Type == VehicleType.Motorcycle;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a bicycle.
+		/// </summary>
+		public bool IsBycicle => Type == VehicleType.Bycicle;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a bike.
+		/// </summary>
+		public bool IsBike
+		{
+			get
+			{
+				var vehicleType = Type;
+				return (vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bycicle);
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a boat.
+		/// </summary>
+		public bool IsBoat => Type == VehicleType.Motorcycle;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a train.
+		/// </summary>
+		public bool IsTrain => Type == VehicleType.Bycicle;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> is a submarine.
+		/// </summary>
+		public bool IsSubmarine => Type == VehicleType.Submarine;
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> was stolen.
 		/// </summary>
 		public bool IsStolen
@@ -220,6 +350,23 @@ namespace GTA
 		/// Gets the class of this <see cref="Vehicle"/>.
 		/// </summary>
 		public VehicleClass ClassType => Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS, Handle);
+
+		/// <summary>
+		/// Gets the type of this <see cref="Vehicle"/>.
+		/// </summary>
+		public VehicleType Type
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle == 0)
+				{
+					return VehicleType.Invalid;
+				}
+
+				return (VehicleType)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+			}
+		}
 
 		public float LodMultiplier
 		{
@@ -1768,6 +1915,10 @@ namespace GTA
 		{
 			return Function.Call<VehicleClass>(Hash.GET_VEHICLE_CLASS_FROM_NAME, vehicleModel.Hash);
 		}
+		public static VehicleType GetModelType(Model vehicleModel)
+		{
+			return (VehicleType)SHVDN.NativeMemory.GetVehicleType(vehicleModel);
+		}
 
 		public static int[] GetAllModelValues()
 		{
@@ -1803,6 +1954,11 @@ namespace GTA
 		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
+		}
+
+		public static VehicleHash[] GetAllModelsOfType(VehicleType vehicleType)
+		{
+			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModelsGroupedByType[(int)vehicleType].ToArray(), item => (VehicleHash)item);
 		}
 	}
 }

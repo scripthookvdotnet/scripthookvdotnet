@@ -285,6 +285,10 @@ namespace SHVDN
 			// Find model hash table
 			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
 			uint vehicleClassOffset = *(uint*)(address + 0x31);
+			address = FindPattern("\x3C\x05\x75\x16\x8B\x81\x00\x00\x00\x00", "xxxxxx????");
+			if (address != null)
+				VehicleTypeOffsetInModelInfo = *(int*)(address + 6);
+
 			address = address + *(int*)(address) + 4;
 			modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
 			modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
@@ -462,6 +466,7 @@ namespace SHVDN
 			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
 			if (address != null)
 			{
+				VehicleTypeOffsetInCVehicle = *(int*)(address + 2);
 				VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
 			}
 
@@ -603,9 +608,13 @@ namespace SHVDN
 			}
 
 			// Generate vehicle model list
-			var vehicleHashes = new List<int>[0x20];
+			var vehicleHashesGroupedByClass = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-				vehicleHashes[i] = new List<int>();
+				vehicleHashesGroupedByClass[i] = new List<int>();
+
+			var vehicleHashesGroupedByType = new List<int>[0x10];
+			for (int i = 0; i < 0x10; i++)
+				vehicleHashesGroupedByType[i] = new List<int>();
 
 			var weaponObjectHashes = new List<int>();
 			var pedHashes = new List<int>();
@@ -630,7 +639,8 @@ namespace SHVDN
 										weaponObjectHashes.Add(cur->hash);
 										break;
 									case ModelInfoClassType.Vehicle:
-										vehicleHashes[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+										vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+										vehicleHashesGroupedByType[*(int*)((byte*)addr2 + VehicleTypeOffsetInModelInfo)].Add(cur->hash);
 										break;
 									case ModelInfoClassType.Ped:
 										pedHashes.Add(cur->hash);
@@ -644,8 +654,13 @@ namespace SHVDN
 
 			var vehicleResult = new ReadOnlyCollection<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
-				vehicleResult[i] = Array.AsReadOnly(vehicleHashes[i].ToArray());
+				vehicleResult[i] = Array.AsReadOnly(vehicleHashesGroupedByClass[i].ToArray());
 			VehicleModels = Array.AsReadOnly(vehicleResult);
+
+			vehicleResult = new ReadOnlyCollection<int>[0x10];
+			for (int i = 0; i < 0x10; i++)
+				vehicleResult[i] = Array.AsReadOnly(vehicleHashesGroupedByType[i].ToArray());
+			VehicleModelsGroupedByType = Array.AsReadOnly(vehicleResult);
 
 			WeaponModels = Array.AsReadOnly(weaponObjectHashes.ToArray());
 			PedModels = Array.AsReadOnly(pedHashes.ToArray());
@@ -1201,6 +1216,8 @@ namespace SHVDN
 		public static int FuelLevelOffset { get; }
 		public static int OilLevelOffset { get; }
 
+		public static int VehicleTypeOffsetInCVehicle { get; }
+
 		public static int WheelCountOffset { get; }
 		public static int WheelSpeedOffset { get; }
 		public static int CanWheelBreakOffset { get; }
@@ -1354,6 +1371,7 @@ namespace SHVDN
 			internal bool isGang;
 		}
 
+		static int VehicleTypeOffsetInModelInfo;
 		static int handlingIndexOffsetInModelInfo;
 		static int pedPersonalityIndexOffsetInModelInfo;
 		static UInt32 modelNum1;
@@ -1401,10 +1419,19 @@ namespace SHVDN
 		{
 			if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType.Vehicle)
 			{
-				return (VehicleStructClassType)(*(int*)((ulong)modelInfoAddress.ToInt64() + 792));
+				return (VehicleStructClassType)(*(int*)((byte*)modelInfoAddress.ToPointer() + VehicleTypeOffsetInModelInfo));
 			}
 
 			return VehicleStructClassType.Invalid;
+		}
+		public static int GetVehicleType(int modelHash)
+		{
+			var modelInfo = FindCModelInfo(modelHash);
+
+			if (modelInfo == IntPtr.Zero)
+				return -1;
+
+			return (int)GetVehicleStructClass(modelInfo);
 		}
 		static IntPtr GetModelInfo(IntPtr entityAddress)
 		{
@@ -1530,6 +1557,7 @@ namespace SHVDN
 
 		public static ReadOnlyCollection<int> WeaponModels { get; }
 		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
+		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModelsGroupedByType { get; }
 		public static ReadOnlyCollection<int> PedModels { get; }
 
 		delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
