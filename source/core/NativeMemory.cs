@@ -2598,6 +2598,8 @@ namespace SHVDN
 		static int cTaskNMScriptControlTypeIndex;
 		static int cEventSwitch2NMTypeIndex;
 
+		static Dictionary<ulong, GetEventTypeIndexDelegate> getEventTypeIndexDelegateCacheDict = new Dictionary<ulong, GetEventTypeIndexDelegate>();
+
 		[StructLayout(LayoutKind.Explicit, Size=0x38)]
 		struct CTask
         {
@@ -2701,13 +2703,17 @@ namespace SHVDN
 								var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
 								if (eventAddress != 0)
 								{
-									if (GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)eventAddress + 0x18)))(eventAddress) == cEventSwitch2NMTypeIndex)
+									var getEventTypeIndexFunc = CreateGetEventTypeIndexDelegateIfNotCreated(eventAddress);
+									if (getEventTypeIndexFunc(eventAddress) == cEventSwitch2NMTypeIndex)
 									{
 										var taskInEvent = *(CTask**)(eventAddress + 0x28);
 										if (taskInEvent != null)
 										{
 											if (taskInEvent->taskTypeIndex == cTaskNMScriptControlTypeIndex)
+                                            {
 												v5 = true;
+												break;
+											}
 										}
 									}
 								}
@@ -2725,6 +2731,19 @@ namespace SHVDN
 				FreeCoTaskMem(new IntPtr((long)messageMemory));
 
 				bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
+
+				GetEventTypeIndexDelegate CreateGetEventTypeIndexDelegateIfNotCreated(ulong eventAddress)
+				{
+					var getEventTypeIndexVirtualFuncAddr = *(ulong*)(*(ulong*)eventAddress + 0x18);
+
+					if (getEventTypeIndexDelegateCacheDict.TryGetValue(getEventTypeIndexVirtualFuncAddr, out var cachedDelegate))
+						return cachedDelegate;
+
+					var createdDelegate = GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)getEventTypeIndexVirtualFuncAddr));
+					getEventTypeIndexDelegateCacheDict[getEventTypeIndexVirtualFuncAddr] = createdDelegate;
+
+					return createdDelegate;
+				}
 			}
 		}
 
