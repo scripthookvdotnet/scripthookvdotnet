@@ -188,11 +188,11 @@ namespace SHVDN
 			PickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			// Find euphoria functions
-			address = FindPattern("\x48\x8b\xc4\x48\x89\x58\x08\x48\x89\x68\x10\x48\x89\x70\x18\x48\x89\x78\x20\x41\x55\x41\x56\x41\x57\x48\x83\xec\x20\xe8\x00\x00\x00\x00\x48\x8b\xd8\x48\x85\xc0\x0f", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxx");
-			GiveNmMessageFuncAddress = (ulong)address;
+			address = FindPattern("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
+			InitMessageMemoryFunc = GetDelegateForFunctionPointer<InitMessageMemoryDelegate>(new IntPtr(address));
 
-			address = FindPattern("\x33\xDB\x48\x89\x1D\x00\x00\x00\x00\x85\xFF", "xxxxx????xx");
-			CreateNmMessageFuncAddress = (ulong)address - 0x42;
+			address = FindPattern("\x41\x83\xFA\xFF\x74\x4A\x48\x85\xD2\x74\x19", "xxxxxxxxxxx") - 0xE;
+			SendMessageToPedFunc = GetDelegateForFunctionPointer<SendMessageToPedDelegate>(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
 			SetNmIntAddress = GetDelegateForFunctionPointer<SetNmIntAddressDelegate>(new IntPtr(address));
@@ -208,6 +208,9 @@ namespace SHVDN
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmVector3Address = GetDelegateForFunctionPointer<SetNmVector3AddressDelegate>(new IntPtr(address));
+
+			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
+			GetActiveTaskFunc = GetDelegateForFunctionPointer<GetActiveTaskFuncDelegate>(new IntPtr(address));
 
 			address = FindPattern("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
 			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
@@ -468,6 +471,32 @@ namespace SHVDN
 			if (address != null)
 			{
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
+			}
+
+			address = FindPattern("\x8B\x00\x00\x00\x00\x00\x0F\xBA\x00\x00\x00\x00\x00\x09\x8B\x05", "x?????xx?????xxx");
+			if (address != null)
+			{
+				PedIntelligenceOffset = *(int*)(address + 2);
+			}
+
+			address = FindPattern("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
+			if (address != null)
+			{
+				CTaskTreePedOffset = *(int*)(address + 3);
+			}
+
+			address = FindPattern("\x40\x38\x3D\x00\x00\x00\x00\x8B\xB6\x00\x00\x00\x00\x74\x0C", "xxx????xx????xx");
+			if (address != null)
+			{
+				CEventCountOffset = *(int*)(address + 9);
+				address = FindPattern("\x48\x8B\xB4\xC6\x00\x00\x00\x00", "xxxx????", new IntPtr(address));
+				CEventStackOffset = *(int*)(address + 4);
+			}
+
+			address = FindPattern("\x0F\x29\x4D\xF0\x48\x8B\x92\x00\x00\x00\x00", "xxxxxxx????");
+			if (address != null)
+			{
+				fragInstNMGtaOffset = *(int*)(address + 7);
 			}
 
 			address = FindPattern("\xF3\x44\x0F\x10\xAB\x00\x00\x00\x00\x0F\x5B\xC9\xF3\x45\x0F\x5C\xD4", "xxxxx????xxxxxxxx");
@@ -1171,6 +1200,18 @@ namespace SHVDN
 		public static int FatalInjuryHealthThresholdOffset { get; }
 
 		public static int SeatIndexOffset { get; }
+
+		#region -- Ped Intelligence Offsets --
+
+		static int PedIntelligenceOffset { get; }
+
+		static int CTaskTreePedOffset { get; }
+
+		static int CEventCountOffset { get; }
+
+		static int CEventStackOffset { get; }
+
+		#endregion
 
 		#endregion
 
@@ -2264,21 +2305,34 @@ namespace SHVDN
 		delegate byte SetNmVector3AddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float x, float y, float z);
 		delegate byte SetNmStringAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, IntPtr stringPtr);
 
+		delegate ulong InitMessageMemoryDelegate(ulong T1, ulong T2, int T3);
 		delegate void SendMessageToPedDelegate(ulong pedNmAddress, IntPtr messagePtr, ulong messageAddress);
 		delegate void FreeMessageMemoryDelegate(ulong messageAddress);
 
-		delegate void ActionUlongDelegate(ulong T);
-		delegate Int32 FuncUlongIntDelegate(ulong T);
-		delegate ulong FuncUlongUlongDelegate(ulong T);
-		delegate ulong FuncUlongUlongIntUlongDelegate(ulong T1, ulong T2, int T3);
+		delegate CTask* GetActiveTaskFuncDelegate(ulong cTaskTreePedAddress);
+		delegate int GetEventTypeIndexDelegate(ulong cEventAddress);
 
-		static ulong GiveNmMessageFuncAddress;
-		static ulong CreateNmMessageFuncAddress;
+		delegate void ActionUlongDelegate(ulong T);
+		delegate int FuncUlongIntDelegate(ulong T);
+		delegate ulong FuncUlongUlongDelegate(ulong T);
+
 		static SetNmIntAddressDelegate SetNmIntAddress;
 		static SetNmBoolAddressDelegate SetNmBoolAddress;
 		static SetNmFloatAddressDelegate SetNmFloatAddress;
 		static SetNmStringAddressDelegate SetNmStringAddress;
 		static SetNmVector3AddressDelegate SetNmVector3Address;
+		static GetActiveTaskFuncDelegate GetActiveTaskFunc;
+		static InitMessageMemoryDelegate InitMessageMemoryFunc;
+		static SendMessageToPedDelegate SendMessageToPedFunc;
+
+		static int fragInstNMGtaOffset;
+
+		[StructLayout(LayoutKind.Explicit, Size=0x38)]
+		struct CTask
+        {
+			[FieldOffset(0x34)]
+			internal ushort taskTypeIndex;
+        }
 
 		internal class EuphoriaMessageTask : IScriptTask
 		{
@@ -2297,98 +2351,84 @@ namespace SHVDN
 
 			public void Run()
 			{
-				throw new NotImplementedException("Euphoria is not currently supported on latest game versions.");
+				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
 
-				byte* NativeFunc = (byte*)NativeMemory.CreateNmMessageFuncAddress;
-				ulong MessageAddress = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(NativeFunc + 0x22) + NativeFunc + 0x26)))(4632);
-
-				if (MessageAddress == 0)
+				if (messageMemory == 0)
 					return;
 
-				GetDelegateForFunctionPointer<FuncUlongUlongIntUlongDelegate>(new IntPtr((long)((*(int*)(NativeFunc + 0x3C)) + NativeFunc + 0x40)))(MessageAddress, MessageAddress + 24, 64);
+				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
 
 				foreach (var arg in arguments)
 				{
 					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
 					if (arg.Value is int)
-						NativeMemory.SetNmIntAddress(MessageAddress, name, (int)arg.Value);
+						NativeMemory.SetNmIntAddress(messageMemory, name, (int)arg.Value);
 					if (arg.Value is bool)
-						NativeMemory.SetNmBoolAddress(MessageAddress, name, (bool)arg.Value);
+						NativeMemory.SetNmBoolAddress(messageMemory, name, (bool)arg.Value);
 					if (arg.Value is float)
-						NativeMemory.SetNmFloatAddress(MessageAddress, name, (float)arg.Value);
+						NativeMemory.SetNmFloatAddress(messageMemory, name, (float)arg.Value);
 					if (arg.Value is string)
-						NativeMemory.SetNmStringAddress(MessageAddress, name, ScriptDomain.CurrentDomain.PinString((string)arg.Value));
+						NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString((string)arg.Value));
 					if (arg.Value is float[])
-						NativeMemory.SetNmVector3Address(MessageAddress, name, ((float[])arg.Value)[0], ((float[])arg.Value)[1], ((float[])arg.Value)[2]);
+						NativeMemory.SetNmVector3Address(messageMemory, name, ((float[])arg.Value)[0], ((float[])arg.Value)[1], ((float[])arg.Value)[2]);
 				}
 
-				byte* BaseFunc = (byte*)NativeMemory.GiveNmMessageFuncAddress;
-				byte* ByteAddr = (*(int*)(BaseFunc + 0xBC) + BaseFunc + 0xC0);
-				byte* UnkStrAddr = (*(int*)(BaseFunc + 0xCE) + BaseFunc + 0xD2);
 				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
-				byte* PedNmAddress;
 				bool v5 = false;
-				byte v7;
-				ulong v11;
-				ulong v12;
 
-				if (_PedAddress == null || *(ulong*)(_PedAddress + 48) == 0)
+				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x20);
+
+				if (_PedAddress == null || phInstGtaAddress == 0)
 					return;
 
-				PedNmAddress = (byte*)GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(ulong*)(*(ulong*)(_PedAddress) + 88))))((ulong)_PedAddress);
+				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
 
-				int MinHealthOffset = NativeMemory.GetGameVersion() < 26 /*v1_0_877_1_Steam*/ ? *(int*)(BaseFunc + 78) : *(int*)(BaseFunc + 157 + *(int*)(BaseFunc + 76));
-
-				if (*(ulong*)(_PedAddress + 48) == (ulong)PedNmAddress && *(float*)(_PedAddress + MinHealthOffset) <= *(float*)(_PedAddress + 640))
+				if (phInstGtaAddress == fragInstNMGtaAddress && !IsPedInjured(_PedAddress))
 				{
-					if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
+					var funcUlongIntDelegate = GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + 0x98)));
+					if (funcUlongIntDelegate(fragInstNMGtaAddress) != -1)
 					{
-						ulong PedIntelligenceAddr = *(ulong*)(_PedAddress + *(int*)(BaseFunc + 147));
+						var PedIntelligenceAddr = *(ulong*)(_PedAddress + PedIntelligenceOffset);
 
-						// check whether the ped is currently performing the 'CTaskNMScriptControl' task
-						if (*(short*)(GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xA2) + BaseFunc + 0xA6)))(*(ulong*)(PedIntelligenceAddr + 864)) + 52) == 401)
+						// check whether the ped is currently performing the 'CTaskNMScriptControl' task (task type index is shifted by at least 1 between b372 to b2372)
+						var activeTask = GetActiveTaskFunc(*(ulong*)((byte*)PedIntelligenceAddr + CTaskTreePedOffset));
+						if (activeTask != null && activeTask->taskTypeIndex == 402)
 						{
 							v5 = true;
 						}
 						else
 						{
-							v7 = *ByteAddr;
-							if (v7 != 0)
+							int eventCount = *(int*)((byte*)PedIntelligenceAddr + CEventCountOffset);
+							for (int i = 0; i < eventCount; i++)
 							{
-								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xD3) + BaseFunc + 0xD7)))((ulong)UnkStrAddr);
-								v7 = *ByteAddr;
-							}
-							int count = *(int*)(PedIntelligenceAddr + 1064);
-							if (v7 != 0)
-							{
-								GetDelegateForFunctionPointer<ActionUlongDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0xF0) + BaseFunc + 0xF4)))((ulong)UnkStrAddr);
-							}
-							for (int i = 0; i < count; i++)
-							{
-								v11 = *(ulong*)((byte*)PedIntelligenceAddr + 8 * ((i + *(int*)(PedIntelligenceAddr + 1060) + 1) % 16) + 928);
-								if (v11 != 0)
+								var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
+								if (eventAddress != 0)
 								{
-									if (GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)v11 + 24)))(v11) == 132)
+									// check whether the ped is currently reacting to the 'EVENT_SWITCH_2_NM_TASK' event (event type index is shifted by at least 2 between b372 to b2372)
+									if (GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)eventAddress + 0x18)))(eventAddress) == 134)
 									{
-										v12 = *(ulong*)(v11 + 40);
-										if (v12 != 0)
+										var taskInEvent = *(CTask**)(eventAddress + 0x28);
+										if (taskInEvent != null)
 										{
-											if (*(short*)(v12 + 52) == 401)
+											if (taskInEvent->taskTypeIndex == 402)
 												v5 = true;
 										}
 									}
 								}
 							}
 						}
-						if (v5 && GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)PedNmAddress + 152)))((ulong)PedNmAddress) != -1)
+						if (v5 && funcUlongIntDelegate((ulong)fragInstNMGtaAddress) != -1)
 						{
-							IntPtr messagePtr = ScriptDomain.CurrentDomain.PinString(message);
-							GetDelegateForFunctionPointer<SendMessageToPedDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0x1AA) + BaseFunc + 0x1AE)))((ulong)PedNmAddress, messagePtr, MessageAddress);
+							IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(message);
+							SendMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
 						}
-						GetDelegateForFunctionPointer<FreeMessageMemoryDelegate>(new IntPtr((long)(*(int*)(BaseFunc + 0x1BB) + BaseFunc + 0x1BF)))(MessageAddress);
+
+						FreeCoTaskMem(new IntPtr((long)messageMemory));
 					}
 				}
+
+				bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + InjuryHealthThresholdOffset) > *(float*)(pedAddress + 0x280);
 			}
 		}
 
