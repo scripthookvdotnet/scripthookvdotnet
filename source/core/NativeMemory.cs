@@ -2594,14 +2594,16 @@ namespace SHVDN
 			#region Fields
 			int targetHandle;
 			string message;
-			Dictionary<string, object> arguments;
+			Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
+			Dictionary<string, object> _stringVector3ArrayArguments;
 			#endregion
 
-			internal EuphoriaMessageTask(int target, string message, Dictionary<string, object> arguments)
+			internal EuphoriaMessageTask(int target, string message, Dictionary<string, (int, Type)> boolIntFloatArguments, Dictionary<string, object> stringVector3ArrayArguments)
 			{
 				targetHandle = target;
 				this.message = message;
-				this.arguments = arguments;
+				_boolIntFloatArguments = boolIntFloatArguments;
+				_stringVector3ArrayArguments = stringVector3ArrayArguments;
 			}
 
 			public void Run()
@@ -2618,20 +2620,40 @@ namespace SHVDN
 
 				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
 
-				foreach (var arg in arguments)
+				if (_boolIntFloatArguments != null)
+				{
+					foreach (var arg in _boolIntFloatArguments)
+					{
+						IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+
+						(var argValue, var argType) = arg.Value;
+
+						if (argType == typeof(float))
+						{
+							var argValueConverted = *(float*)(&argValue);
+							NativeMemory.SetNmFloatAddress(messageMemory, name, argValueConverted);
+						}
+						else if (argType == typeof(bool))
+						{
+							var argValueConverted = argValue != 0 ? true : false;
+							NativeMemory.SetNmBoolAddress(messageMemory, name, argValueConverted);
+						}
+						else if (argType == typeof(int))
+						{
+							NativeMemory.SetNmIntAddress(messageMemory, name, argValue);
+						}
+					}
+				}
+
+				foreach (var arg in _stringVector3ArrayArguments)
 				{
 					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
-					if (arg.Value is int)
-						NativeMemory.SetNmIntAddress(messageMemory, name, (int)arg.Value);
-					if (arg.Value is bool)
-						NativeMemory.SetNmBoolAddress(messageMemory, name, (bool)arg.Value);
-					if (arg.Value is float)
-						NativeMemory.SetNmFloatAddress(messageMemory, name, (float)arg.Value);
-					if (arg.Value is string)
-						NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString((string)arg.Value));
-					if (arg.Value is float[])
-						NativeMemory.SetNmVector3Address(messageMemory, name, ((float[])arg.Value)[0], ((float[])arg.Value)[1], ((float[])arg.Value)[2]);
+					var argValue = arg.Value;
+					if (argValue is float[] vector3ArgValue)
+						NativeMemory.SetNmVector3Address(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
+					else if (argValue is string stringArgValue)
+						NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
 				}
 
 				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x30);
@@ -2692,9 +2714,9 @@ namespace SHVDN
 			}
 		}
 
-		public static void SendEuphoriaMessage(int targetHandle, string message, Dictionary<string, object> arguments)
+		public static void SendEuphoriaMessage(int targetHandle, string message, Dictionary<string, (int, Type)> boolIntFloatArguments, Dictionary<string, object> stringVector3ArrayArguments)
 		{
-			var task = new EuphoriaMessageTask(targetHandle, message, arguments);
+			var task = new EuphoriaMessageTask(targetHandle, message, boolIntFloatArguments, stringVector3ArrayArguments);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
