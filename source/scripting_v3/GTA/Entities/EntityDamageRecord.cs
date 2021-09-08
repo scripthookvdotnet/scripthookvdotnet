@@ -8,7 +8,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public struct EntityDamageRecord
+	public readonly struct EntityDamageRecord
 	{
 		internal EntityDamageRecord(Entity victim, Entity attacker, WeaponHash weaponHash, int gameTime)
 		{
