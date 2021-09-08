@@ -2606,6 +2606,11 @@ namespace SHVDN
 
 			public void Run()
 			{
+				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
+
+				if (_PedAddress == null)
+					return;
+
 				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
 
 				if (messageMemory == 0)
@@ -2629,13 +2634,12 @@ namespace SHVDN
 						NativeMemory.SetNmVector3Address(messageMemory, name, ((float[])arg.Value)[0], ((float[])arg.Value)[1], ((float[])arg.Value)[2]);
 				}
 
-				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
-				bool v5 = false;
-
 				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x30);
 
-				if (_PedAddress == null || phInstGtaAddress == 0)
+				if (phInstGtaAddress == 0)
 					return;
+
+				bool v5 = false;
 
 				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
 
