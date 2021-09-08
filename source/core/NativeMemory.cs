@@ -2632,7 +2632,7 @@ namespace SHVDN
 				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
 				bool v5 = false;
 
-				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x20);
+				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x30);
 
 				if (_PedAddress == null || phInstGtaAddress == 0)
 					return;
@@ -2679,11 +2679,12 @@ namespace SHVDN
 							SendMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
 						}
 
-						FreeCoTaskMem(new IntPtr((long)messageMemory));
 					}
 				}
 
-				bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + InjuryHealthThresholdOffset) > *(float*)(pedAddress + 0x280);
+				FreeCoTaskMem(new IntPtr((long)messageMemory));
+
+				bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 			}
 		}
 
