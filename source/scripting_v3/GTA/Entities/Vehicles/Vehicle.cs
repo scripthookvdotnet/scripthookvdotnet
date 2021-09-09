@@ -191,6 +191,24 @@ namespace GTA
 			}
 		}
 
+		private bool IsHeliOrBlimp
+		{
+			get
+			{
+				var vehicleType = Type;
+				return ((uint)vehicleType - 8) <= 1;
+			}
+		}
+
+		private bool IsRotaryWingAircraft
+		{
+			get
+			{
+				var vehicleType = Type;
+				return ((uint)vehicleType - 8) <= 2;
+			}
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> is a motorcycle.
 		/// </summary>
@@ -435,7 +453,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!Model.IsHelicopter)
+				if (!IsHeliOrBlimp)
 				{
 					return 0.0f;
 				}
@@ -445,7 +463,7 @@ namespace GTA
 			set
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliTailBoomHealthOffset == 0 || !Model.IsHelicopter)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliTailBoomHealthOffset == 0 || !IsHeliOrBlimp)
 				{
 					return;
 				}
@@ -461,7 +479,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!Model.IsHelicopter)
+				if (!IsHeliOrBlimp)
 				{
 					return 0.0f;
 				}
@@ -471,7 +489,7 @@ namespace GTA
 			set
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliMainRotorHealthOffset == 0 || !Model.IsHelicopter)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliMainRotorHealthOffset == 0 || !IsHeliOrBlimp)
 				{
 					return;
 				}
@@ -487,7 +505,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!Model.IsHelicopter)
+				if (!IsHeliOrBlimp)
 				{
 					return 0.0f;
 				}
@@ -497,7 +515,7 @@ namespace GTA
 			set
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliTailRotorHealthOffset == 0 || !Model.IsHelicopter)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliTailRotorHealthOffset == 0 || !IsHeliOrBlimp)
 				{
 					return;
 				}
@@ -999,7 +1017,7 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliBladesSpeedOffset == 0 || !Model.IsHelicopter)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.HeliBladesSpeedOffset == 0 || !IsRotaryWingAircraft)
 				{
 					return 0.0f;
 				}
@@ -1008,7 +1026,7 @@ namespace GTA
 			}
 			set
 			{
-				if (!Model.IsHelicopter)
+				if (!IsRotaryWingAircraft)
 				{
 					return;
 				}
@@ -1479,22 +1497,13 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
-				{
-					return false;
-				}
-
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleDropsMoneyWhenBlownUpOffset == 0)
 				{
 					return false;
 				}
 
-				var model = Model;
-
-				// check if the vehicle is a car, a quad bike or a trailer
-				if (model.IsCar || model.IsTrailer || model.IsQuadBike ||
-					(Game.Version >= GameVersion.v1_0_944_2_Steam && (model.IsAmphibiousCar || model.IsAmphibiousQuadBike)) || 
-					(Game.Version >= GameVersion.v1_0_1290_1_Steam && model.IsSubmarineCar))
+				// Check if the vehicle class is CAutomobile or a subclass of it
+				if ((uint)Type <= 10)
 				{
 					return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleDropsMoneyWhenBlownUpOffset, 1);
 				}
@@ -1837,7 +1846,7 @@ namespace GTA
 
 		public void SetHeliYawPitchRollMult(float mult)
 		{
-			if (Model.IsHelicopter && mult >= 0.0f && mult <= 1.0f)
+			if (IsHeliOrBlimp && mult >= 0.0f && mult <= 1.0f)
 			{
 				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT, Handle, mult);
 			}
