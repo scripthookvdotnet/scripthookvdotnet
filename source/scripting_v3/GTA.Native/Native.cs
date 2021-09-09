@@ -382,6 +382,8 @@ namespace GTA.Native
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
+
+		#region Call with Return Value Overloads with Normal InputArgument Paramaters
 		/// <summary>
 		/// Calls the specified native script function and returns its return value.
 		/// </summary>
@@ -418,8 +420,8 @@ namespace GTA.Native
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
 		/// <param name="hash">The hashed name of the script function.</param>
-		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
-		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
 		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
@@ -439,9 +441,9 @@ namespace GTA.Native
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
 		/// <param name="hash">The hashed name of the script function.</param>
-		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
-		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
-		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
 		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
@@ -462,10 +464,10 @@ namespace GTA.Native
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
 		/// <param name="hash">The hashed name of the script function.</param>
-		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
-		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
-		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
-		/// <param name="argument3">The fourth input or output argument to pass to the native script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
 		/// <returns>The return value of the native.</returns>
 		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
@@ -483,6 +485,590 @@ namespace GTA.Native
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4)
+		{
+			unsafe
+			{
+				const int argCount = 5;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5)
+		{
+			unsafe
+			{
+				const int argCount = 6;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6)
+		{
+			unsafe
+			{
+				const int argCount = 7;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7)
+		{
+			unsafe
+			{
+				const int argCount = 8;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8)
+		{
+			unsafe
+			{
+				const int argCount = 9;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9)
+		{
+			unsafe
+			{
+				const int argCount = 10;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10)
+		{
+			unsafe
+			{
+				const int argCount = 11;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11)
+		{
+			unsafe
+			{
+				const int argCount = 12;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12)
+		{
+			unsafe
+			{
+				const int argCount = 13;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13)
+		{
+			unsafe
+			{
+				const int argCount = 14;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+				argPtr[13] = argument13._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+		/// <param name="argument14">The 15th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14)
+		{
+			unsafe
+			{
+				const int argCount = 15;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+				argPtr[13] = argument13._data;
+				argPtr[14] = argument14._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+		/// <param name="argument14">The 15th input or output argument to pass to the native script function.</param>
+		/// <param name="argument15">The 16th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14,
+			InputArgument argument15)
+		{
+			unsafe
+			{
+				const int argCount = 16;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+				argPtr[13] = argument13._data;
+				argPtr[14] = argument14._data;
+				argPtr[15] = argument15._data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		#endregion
+
 		static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
 		{
 			// The result will be null when this method is called from a thread other than the main thread
@@ -521,6 +1107,8 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
+
+		#region void Call Overloads with Normal InputArgument Paramaters
 		/// <summary>
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
@@ -553,10 +1141,8 @@ namespace GTA.Native
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
 		/// <param name="hash">The hashed name of the script function.</param>
-		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
-		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
-		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
-		/// <param name="argument3">The fourth input or output argument to pass to the native script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1)
 		{
 			unsafe
@@ -574,9 +1160,9 @@ namespace GTA.Native
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
 		/// <param name="hash">The hashed name of the script function.</param>
-		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
-		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
-		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
 		{
 			unsafe
@@ -595,10 +1181,10 @@ namespace GTA.Native
 		/// Calls the specified native script function and ignores its return value.
 		/// </summary>
 		/// <param name="hash">The hashed name of the script function.</param>
-		/// <param name="argument0">The first input or output argument to pass to the native script function.</param>
-		/// <param name="argument1">The second input or output argument to pass to the native script function.</param>
-		/// <param name="argument2">The third input or output argument to pass to the native script function.</param>
-		/// <param name="argument3">The fourth input or output argument to pass to the native script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
 		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
 		{
 			unsafe
@@ -614,6 +1200,577 @@ namespace GTA.Native
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4)
+		{
+			unsafe
+			{
+				const int argCount = 5;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5)
+		{
+			unsafe
+			{
+				const int argCount = 6;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6)
+		{
+			unsafe
+			{
+				const int argCount = 7;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7)
+		{
+			unsafe
+			{
+				const int argCount = 8;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8)
+		{
+			unsafe
+			{
+				const int argCount = 9;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9)
+		{
+			unsafe
+			{
+				const int argCount = 10;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10)
+		{
+			unsafe
+			{
+				const int argCount = 11;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11)
+		{
+			unsafe
+			{
+				const int argCount = 12;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12)
+		{
+			unsafe
+			{
+				const int argCount = 13;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13)
+		{
+			unsafe
+			{
+				const int argCount = 14;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+				argPtr[13] = argument13._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+		/// <param name="argument14">The 15th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14)
+		{
+			unsafe
+			{
+				const int argCount = 15;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+				argPtr[13] = argument13._data;
+				argPtr[14] = argument14._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		/// <summary>
+		/// Calls the specified native script function and ignores its return value.
+		/// </summary>
+		/// <param name="hash">The hashed name of the script function.</param>
+		/// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+		/// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+		/// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+		/// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+		/// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+		/// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+		/// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+		/// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+		/// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+		/// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+		/// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+		/// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+		/// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+		/// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+		/// <param name="argument14">The 15th input or output argument to pass to the native script function.</param>
+		/// <param name="argument15">The 16th input or output argument to pass to the native script function.</param>
+		/// <returns>The return value of the native.</returns>
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14,
+			InputArgument argument15)
+		{
+			unsafe
+			{
+				const int argCount = 16;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0._data;
+				argPtr[1] = argument1._data;
+				argPtr[2] = argument2._data;
+				argPtr[3] = argument3._data;
+				argPtr[4] = argument4._data;
+				argPtr[5] = argument5._data;
+				argPtr[6] = argument6._data;
+				argPtr[7] = argument7._data;
+				argPtr[8] = argument8._data;
+				argPtr[9] = argument9._data;
+				argPtr[10] = argument10._data;
+				argPtr[11] = argument11._data;
+				argPtr[12] = argument12._data;
+				argPtr[13] = argument13._data;
+				argPtr[14] = argument14._data;
+				argPtr[15] = argument15._data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		#endregion
 
 		/// <summary>
 		/// Converts a managed object to a native value.
