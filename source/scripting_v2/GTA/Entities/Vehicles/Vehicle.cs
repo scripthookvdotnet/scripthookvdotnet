@@ -1253,9 +1253,21 @@ namespace GTA
 
 		public void SetHeliYawPitchRollMult(float mult)
 		{
-			if (Model.IsHelicopter && mult >= 0.0f && mult <= 1.0f)
+			if (IsVehicleHeliOrBlimp(Handle) && mult >= 0.0f && mult <= 1.0f)
 			{
 				Function.Call(Hash._0x6E0859B530A365CC, Handle, mult);
+			}
+
+			bool IsVehicleHeliOrBlimp(int handle)
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle == 0)
+				{
+					return false;
+				}
+
+				var vehicleTypeValue = (uint)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				return (vehicleTypeValue - 8) <= 1;
 			}
 		}
 
