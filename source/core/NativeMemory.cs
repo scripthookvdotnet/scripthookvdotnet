@@ -1241,7 +1241,8 @@ namespace SHVDN
 
 		public static bool IsIndexOfEntityDamageRecordValid(IntPtr entityAddress, uint index)
 		{
-			if (cAttackerArrayOfEntityOffset == 0 ||
+			if (index < 0 ||
+				cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
 				elementSizeOfCAttackerArrayOfEntity == 0)
 				return false;
@@ -1251,11 +1252,11 @@ namespace SHVDN
 			if (entityCAttackerArrayAddress == 0)
 				return false;
 
-			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
+			var entryCount = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
 
-			return index < returnEntrySize;
+			return index < entryCount;
 		}
-		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndex(ulong cAttackerArrayAddress, uint index)
+		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
 		{
 			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * elementSizeOfCAttackerArrayOfEntity);
 
@@ -1268,22 +1269,12 @@ namespace SHVDN
 		}
 		public static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
 		{
-			if (cAttackerArrayOfEntityOffset == 0 ||
-				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
-				elementSizeOfCAttackerArrayOfEntity == 0)
-				return default((int attackerHandle, int weaponHash, int gameTime));
-
 			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
 				return default((int attackerHandle, int weaponHash, int gameTime));
 
-			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
-
-			if (index >= returnEntrySize)
-				return default((int attackerHandle, int weaponHash, int gameTime));
-
-			return GetEntityDamageRecordEntryAtIndex(entityCAttackerArrayAddress, index);
+			return GetEntityDamageRecordEntryAtIndexInternal(entityCAttackerArrayAddress, index);
 		}
 
 		public static (int attackerHandle, int weaponHash, int gameTime)[] GetEntityDamageRecordEntries(IntPtr entityAddress)
@@ -1303,7 +1294,7 @@ namespace SHVDN
 
 			for (uint i = 0; i < returnEntries.Length; i++)
             {
-				returnEntries[i] = GetEntityDamageRecordEntryAtIndex(entityCAttackerArrayAddress, i);
+				returnEntries[i] = GetEntityDamageRecordEntryAtIndexInternal(entityCAttackerArrayAddress, i);
 			}
 
 			return returnEntries;

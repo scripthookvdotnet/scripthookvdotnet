@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -27,13 +28,14 @@ namespace GTA
 			{
 				var memoryAddress = _owner.MemoryAddress;
 
-				if (memoryAddress == IntPtr.Zero || SHVDN.NativeMemory.IsIndexOfEntityDamageRecordValid(memoryAddress, i))
+				if (memoryAddress == IntPtr.Zero || !SHVDN.NativeMemory.IsIndexOfEntityDamageRecordValid(memoryAddress, i))
 					yield break;
 
 				var returnDamageRecord = SHVDN.NativeMemory.GetEntityDamageRecordEntryAtIndex(_owner.MemoryAddress, i);
 
 				(int attackerHandle, int weaponHash, int gameTime) = returnDamageRecord;
 				var attackerEntity = attackerHandle != 0 ? Entity.FromHandle(attackerHandle) : null;
+
 				yield return new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)weaponHash, gameTime);
 			}
 		}
