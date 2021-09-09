@@ -298,11 +298,12 @@ namespace SHVDN
 			GameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			// Find model hash table
-			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
-			uint vehicleClassOffset = *(uint*)(address + 0x31);
 			address = FindPattern("\x3C\x05\x75\x16\x8B\x81\x00\x00\x00\x00", "xxxxxx????");
 			if (address != null)
 				VehicleTypeOffsetInModelInfo = *(int*)(address + 6);
+
+			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
+			uint vehicleClassOffset = *(uint*)(address + 0x31);
 
 			address = address + *(int*)(address) + 4;
 			modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
