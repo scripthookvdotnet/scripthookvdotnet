@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using GTA.Math;
 
 namespace GTA.Native
@@ -360,47 +361,969 @@ namespace GTA.Native
 
 	public static class Function
 	{
+		const int MAX_ARG_COUNT = 32;
+
 		public static T Call<T>(Hash hash, params InputArgument[] arguments)
 		{
-			ulong[] args = new ulong[arguments.Length];
-			for (int i = 0; i < arguments.Length; ++i)
-			{
-				args[i] = arguments[i].data;
-			}
-
 			unsafe
 			{
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, args);
+				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				var argPtr = stackalloc ulong[argCount];
 
-				// The result will be null when this method is called from a thread other than the main thread
-				if (res == null)
-				{
-					throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
-				}
+				for (int i = 0; i < argCount; ++i)
+					argPtr[i] = arguments[i].data;
 
-				if (typeof(T).IsEnum || typeof(T).IsPrimitive || typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector2))
-				{
-					return ObjectFromNative<T>(res);
-				}
-				else
-				{
-					return (T)ObjectFromNative(typeof(T), res);
-				}
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
+
+		#region Call with Return Value Overloads with Normal InputArgument Paramaters
+		public static T Call<T>(Hash hash)
+		{
+			unsafe
+			{
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0)
+		{
+			unsafe
+			{
+				const int argCount = 1;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1)
+		{
+			unsafe
+			{
+				const int argCount = 2;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
+		{
+			unsafe
+			{
+				const int argCount = 3;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		{
+			unsafe
+			{
+				const int argCount = 4;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4)
+		{
+			unsafe
+			{
+				const int argCount = 5;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5)
+		{
+			unsafe
+			{
+				const int argCount = 6;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6)
+		{
+			unsafe
+			{
+				const int argCount = 7;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7)
+		{
+			unsafe
+			{
+				const int argCount = 8;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8)
+		{
+			unsafe
+			{
+				const int argCount = 9;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9)
+		{
+			unsafe
+			{
+				const int argCount = 10;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10)
+		{
+			unsafe
+			{
+				const int argCount = 11;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11)
+		{
+			unsafe
+			{
+				const int argCount = 12;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12)
+		{
+			unsafe
+			{
+				const int argCount = 13;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13)
+		{
+			unsafe
+			{
+				const int argCount = 14;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+				argPtr[13] = argument13.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14)
+		{
+			unsafe
+			{
+				const int argCount = 15;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+				argPtr[13] = argument13.data;
+				argPtr[14] = argument14.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		public static T Call<T>(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14,
+			InputArgument argument15)
+		{
+			unsafe
+			{
+				const int argCount = 16;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+				argPtr[13] = argument13.data;
+				argPtr[14] = argument14.data;
+				argPtr[15] = argument15.data;
+
+				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				return ReturnValueFromNativeIfNotNull<T>(res);
+			}
+		}
+		#endregion
+
+		static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
+		{
+			// The result will be null when this method is called from a thread other than the main thread
+			if (result == null)
+			{
+				ThrowInvalidOperationExceptionForInvalidNativeCall();
+			}
+
+			if (typeof(T).IsEnum || typeof(T).IsPrimitive || typeof(T) == typeof(Vector3) || typeof(T) == typeof(Vector2))
+			{
+				return ObjectFromNative<T>(result);
+			}
+			else
+			{
+				return (T)ObjectFromNative(typeof(T), result);
+			}
+		}
+		// have to create this method to let JIT inline ReturnValueFromNativeIfNotNull
+		static void ThrowInvalidOperationExceptionForInvalidNativeCall() => throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+
 		public static void Call(Hash hash, params InputArgument[] arguments)
 		{
-			ulong[] args = new ulong[arguments.Length];
-			for (int i = 0; i < arguments.Length; ++i)
-			{
-				args[i] = arguments[i].data;
-			}
-
 			unsafe
 			{
-				SHVDN.NativeFunc.Invoke((ulong)hash, args);
+				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				var argPtr = stackalloc ulong[argCount];
+
+				for (int i = 0; i < argCount; ++i)
+					argPtr[i] = arguments[i].data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
 		}
+
+		#region void Call Overloads with Normal InputArgument Paramaters
+		public static void Call(Hash hash)
+		{
+			unsafe
+			{
+				SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
+			}
+		}
+		public static void Call(Hash hash, InputArgument argument0)
+		{
+			unsafe
+			{
+				const int argCount = 1;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1)
+		{
+			unsafe
+			{
+				const int argCount = 2;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
+		{
+			unsafe
+			{
+				const int argCount = 3;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+		{
+			unsafe
+			{
+				const int argCount = 4;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4)
+		{
+			unsafe
+			{
+				const int argCount = 5;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5)
+		{
+			unsafe
+			{
+				const int argCount = 6;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6)
+		{
+			unsafe
+			{
+				const int argCount = 7;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7)
+		{
+			unsafe
+			{
+				const int argCount = 8;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8)
+		{
+			unsafe
+			{
+				const int argCount = 9;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9)
+		{
+			unsafe
+			{
+				const int argCount = 10;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10)
+		{
+			unsafe
+			{
+				const int argCount = 11;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11)
+		{
+			unsafe
+			{
+				const int argCount = 12;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12)
+		{
+			unsafe
+			{
+				const int argCount = 13;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13)
+		{
+			unsafe
+			{
+				const int argCount = 14;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+				argPtr[13] = argument13.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14)
+		{
+			unsafe
+			{
+				const int argCount = 15;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+				argPtr[13] = argument13.data;
+				argPtr[14] = argument14.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		public static void Call(Hash hash,
+			InputArgument argument0,
+			InputArgument argument1,
+			InputArgument argument2,
+			InputArgument argument3,
+			InputArgument argument4,
+			InputArgument argument5,
+			InputArgument argument6,
+			InputArgument argument7,
+			InputArgument argument8,
+			InputArgument argument9,
+			InputArgument argument10,
+			InputArgument argument11,
+			InputArgument argument12,
+			InputArgument argument13,
+			InputArgument argument14,
+			InputArgument argument15)
+		{
+			unsafe
+			{
+				const int argCount = 16;
+				var argPtr = stackalloc ulong[argCount];
+
+				argPtr[0] = argument0.data;
+				argPtr[1] = argument1.data;
+				argPtr[2] = argument2.data;
+				argPtr[3] = argument3.data;
+				argPtr[4] = argument4.data;
+				argPtr[5] = argument5.data;
+				argPtr[6] = argument6.data;
+				argPtr[7] = argument7.data;
+				argPtr[8] = argument8.data;
+				argPtr[9] = argument9.data;
+				argPtr[10] = argument10.data;
+				argPtr[11] = argument11.data;
+				argPtr[12] = argument12.data;
+				argPtr[13] = argument13.data;
+				argPtr[14] = argument14.data;
+				argPtr[15] = argument15.data;
+
+				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+			}
+		}
+		#endregion
 
 		internal static unsafe ulong ObjectToNative(object value)
 		{
