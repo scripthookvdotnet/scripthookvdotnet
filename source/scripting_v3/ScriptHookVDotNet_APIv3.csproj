@@ -93,6 +93,7 @@
     <Compile Include="GTA\CheckpointCustomIconStyle.cs" />
     <Compile Include="GTA\CheckpointIcon.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
+    <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\PlayerTargetingMode.cs" />
     <Compile Include="GTA\Control.cs" />
     <Compile Include="GTA\Entities\Entity.cs" />

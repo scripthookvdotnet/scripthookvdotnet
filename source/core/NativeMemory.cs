@@ -380,6 +380,8 @@ namespace SHVDN
 			if (address != null)
 			{
 				WheelCountOffset = *(int*)(address + 3);
+				WheelPtrArrayOffset = WheelCountOffset - 8;
+				WheelBoneIdToPtrArrayIndexOffset = WheelCountOffset + 4;
 			}
 
 			address = FindPattern("\x74\x18\x80\xA0\x00\x00\x00\x00\xBF\x84\xDB\x0F\x94\xC1\x80\xE1\x01\xC0\xE1\x06", "xxxx????xxxxxxxxxxxx");
@@ -520,7 +522,6 @@ namespace SHVDN
 				}
 			}
 
-
 			address = FindPattern("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
 			if (address != null)
 			{
@@ -531,6 +532,45 @@ namespace SHVDN
 			if (address != null)
 			{
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
+			}
+
+			address = FindPattern("\x74\x13\x0F\x57\xC0\x0F\x2E\x80\x00\x00\x00\x00", "xxxxxxxx????");
+			if (address != null)
+			{
+				VehicleTireHealthOffset = *(int*)(address + 8);
+				VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
+			}
+
+			address = FindPattern("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
+			if (address != null)
+			{
+				VehicleWheelIdOffset = *(int*)(address + 3);
+			}
+
+			address = FindPattern("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8\x00\x00\x00\x00", "xxxxxxxx????xxxx????");
+			if (address != null)
+			{
+				FixVehicleWheelFunc = GetDelegateForFunctionPointer<FixVehicleWheelDelegate>(new IntPtr(*(int*)(address + 16) + address + 20));
+				address = FindPattern("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
+				UnkWheelFlagInCustomShaderEffectVehicleOffset = *(int*)(address + 2);
+			}
+
+			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				BurstVehicleTireNewFunc = GetDelegateForFunctionPointer<BurstVehicleTireNewDelegate>(new IntPtr((long)(address - 0x10)));
+				address = FindPattern("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
+				BurstVehicleTireOnRimNewFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimNewDelegate>(new IntPtr((long)(address - 0xB)));
+			}
+			else
+			{
+				address = FindPattern("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
+				if (address != null)
+				{
+					BurstVehicleTireOldFunc = GetDelegateForFunctionPointer<BurstVehicleTireOldDelegate>(new IntPtr((long)(address - 0x14)));
+					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
+					BurstVehicleTireOnRimOldFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimOldDelegate>(new IntPtr((long)(address - 0x10)));
+				}
 			}
 
 			address = FindPattern("\x8B\x00\x00\x00\x00\x00\x0F\xBA\x00\x00\x00\x00\x00\x09\x8B\x05", "x?????xx?????xxx");
@@ -1319,7 +1359,9 @@ namespace SHVDN
 
 		public static int VehicleTypeOffsetInCVehicle { get; }
 
+		public static int WheelPtrArrayOffset { get; }
 		public static int WheelCountOffset { get; }
+		public static int WheelBoneIdToPtrArrayIndexOffset { get; }
 		public static int WheelSpeedOffset { get; }
 		public static int CanWheelBreakOffset { get; }
 
@@ -1360,6 +1402,82 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		#endregion
+
+		#region -- Vehicle Wheel Data --
+
+		delegate void FixVehicleWheelDelegate(IntPtr wheelAddress);
+		delegate void BurstVehicleTireNewDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
+		delegate void BurstVehicleTireOldDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, IntPtr vehiclePtr, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
+		delegate void BurstVehicleTireOnRimNewDelegate(IntPtr wheelPtr);
+		delegate void BurstVehicleTireOnRimOldDelegate(IntPtr wheelPtr, IntPtr vehiclePtr);
+
+		static FixVehicleWheelDelegate FixVehicleWheelFunc;
+		static BurstVehicleTireNewDelegate BurstVehicleTireNewFunc;
+		static BurstVehicleTireOldDelegate BurstVehicleTireOldFunc;
+		static BurstVehicleTireOnRimNewDelegate BurstVehicleTireOnRimNewFunc;
+		static BurstVehicleTireOnRimOldDelegate BurstVehicleTireOnRimOldFunc;
+
+		public static int VehicleWheelHealthOffset { get; }
+
+		public static int VehicleTireHealthOffset { get; }
+
+		public static int VehicleWheelIdOffset { get; }
+
+		public static int UnkWheelFlagInCustomShaderEffectVehicleOffset { get; }
+
+		public static void FixVehicleWheel(IntPtr wheelAddress) => FixVehicleWheelFunc(wheelAddress);
+
+		public static IntPtr GetVehicleWheelAddressByIndexOfWheelArray(IntPtr vehicleAddress, int index)
+		{
+			var vehicleWheelArrayAddr = *(ulong**)(vehicleAddress + SHVDN.NativeMemory.WheelPtrArrayOffset);
+
+			if (vehicleWheelArrayAddr == null)
+				return IntPtr.Zero;
+
+			return new IntPtr((long)*(vehicleWheelArrayAddr + index));
+		}
+
+		public static void BurstTireOnRim(IntPtr wheelAddress, IntPtr vehicleAddress)
+		{
+			var task = new VehicleWheelBurstTask(wheelAddress, vehicleAddress);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		// the function BurstVehicleTireOnRimNew(Old)Func calls must be called in the main thread or the game will crash
+		internal class VehicleWheelBurstTask : IScriptTask
+		{
+			#region Fields
+			IntPtr wheelAddress;
+			IntPtr vehicleAddress;
+			#endregion
+
+			internal VehicleWheelBurstTask(IntPtr wheelAddress, IntPtr vehicleAddress)
+			{
+				this.wheelAddress = wheelAddress;
+				this.vehicleAddress = vehicleAddress;
+			}
+
+			public void Run()
+			{
+				int outValInt;
+				float outValFloat;
+
+				if (VehicleWheelHasVehiclePtr())
+				{
+					BurstVehicleTireNewFunc(wheelAddress, 0, 1000f, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					BurstVehicleTireOnRimNewFunc(wheelAddress);
+				}
+				else
+				{
+					BurstVehicleTireOldFunc(wheelAddress, 0, 1000f, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					BurstVehicleTireOnRimOldFunc(wheelAddress, vehicleAddress);
+				}
+
+				bool VehicleWheelHasVehiclePtr() => BurstVehicleTireNewFunc != null;
+			}
+		}
 
 		#endregion
 
