@@ -66,7 +66,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="VehicleWheel"/>'s tire completely.
+		/// Gets the <see cref="VehicleWheel"/> by index.
 		/// </summary>
 		/// <param name="index">The index of the wheel collection. The order is the same as how the wheel array of the owner <see cref="Vehicle"/> is aligned.</param>
 		/// <exception cref="ArgumentOutOfRangeException"></exception>
