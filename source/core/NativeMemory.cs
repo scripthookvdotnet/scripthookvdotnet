@@ -552,7 +552,7 @@ namespace SHVDN
 			{
 				FixVehicleWheelFunc = GetDelegateForFunctionPointer<FixVehicleWheelDelegate>(new IntPtr(*(int*)(address + 16) + address + 20));
 				address = FindPattern("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
-				UnkWheelFlagInCustomShaderEffectVehicleOffset = *(int*)(address + 2);
+				ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
 			}
 
 			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
@@ -1425,7 +1425,7 @@ namespace SHVDN
 
 		public static int VehicleWheelIdOffset { get; }
 
-		public static int UnkWheelFlagInCustomShaderEffectVehicleOffset { get; }
+		public static int ShouldShowOnlyVehicleTiresWithPositiveHealthOffset { get; }
 
 		public static void FixVehicleWheel(IntPtr wheelAddress) => FixVehicleWheelFunc(wheelAddress);
 

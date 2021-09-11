@@ -177,7 +177,7 @@ namespace GTA
 			// Do exactly SET_VEHICLE_TYRE_FIXED does when the vehicle exists and the vehicle index is valid
 			SHVDN.NativeMemory.FixVehicleWheel(address);
 			var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
-			SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.UnkWheelFlagInCustomShaderEffectVehicleOffset, 1);
+			SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1);
 		}
 
 		public void Burst()
