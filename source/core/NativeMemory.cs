@@ -1484,33 +1484,33 @@ namespace SHVDN
 
 		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
 		{
-			int outValInt;
-			float outValFloat;
-
-			if (VehicleWheelHasVehiclePtr())
-				PunctureVehicleTireNewFunc(wheelAddress, 0, damage, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
-			else
-				PunctureVehicleTireOldFunc(wheelAddress, 0, damage, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+			var task = new VehicleWheelPunctureTask(wheelAddress, vehicleAddress, false, damage);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 
 		public static void BurstTireOnRim(IntPtr wheelAddress, IntPtr vehicleAddress)
 		{
-			var task = new VehicleWheelBurstTask(wheelAddress, vehicleAddress);
+			var task = new VehicleWheelPunctureTask(wheelAddress, vehicleAddress, true);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 
 		// the function BurstVehicleTireOnRimNew(Old)Func calls must be called in the main thread or the game will crash
-		internal class VehicleWheelBurstTask : IScriptTask
+		// the function PunctureVehicleTireNew(Old)Func calls should be called in the main thread or the game might crash in some cases
+		internal class VehicleWheelPunctureTask : IScriptTask
 		{
 			#region Fields
 			IntPtr wheelAddress;
 			IntPtr vehicleAddress;
+			bool burstWheelCompletely;
+			float damage;
 			#endregion
 
-			internal VehicleWheelBurstTask(IntPtr wheelAddress, IntPtr vehicleAddress)
+			internal VehicleWheelPunctureTask(IntPtr wheelAddress, IntPtr vehicleAddress, bool burstWheelCompletely, float damage = 1000f)
 			{
 				this.wheelAddress = wheelAddress;
 				this.vehicleAddress = vehicleAddress;
+				this.burstWheelCompletely = burstWheelCompletely;
+				this.damage = damage;
 			}
 
 			public void Run()
@@ -1520,13 +1520,15 @@ namespace SHVDN
 
 				if (VehicleWheelHasVehiclePtr())
 				{
-					PunctureVehicleTireNewFunc(wheelAddress, 0, 1000f, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
-					BurstVehicleTireOnRimNewFunc(wheelAddress);
+					PunctureVehicleTireNewFunc(wheelAddress, 0, damage, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					if (burstWheelCompletely)
+						BurstVehicleTireOnRimNewFunc(wheelAddress);
 				}
 				else
 				{
-					PunctureVehicleTireOldFunc(wheelAddress, 0, 1000f, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
-					BurstVehicleTireOnRimOldFunc(wheelAddress, vehicleAddress);
+					PunctureVehicleTireOldFunc(wheelAddress, 0, damage, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					if (burstWheelCompletely)
+						BurstVehicleTireOnRimOldFunc(wheelAddress, vehicleAddress);
 				}
 			}
 		}
