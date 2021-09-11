@@ -113,7 +113,7 @@ namespace GTA
 					return IntPtr.Zero;
 
 				// Check if the vehicle is not boat, train, or submarine. This also checks if the vehicle exists (0xFFFFFFFF will be returned if doesn't exist)
-				if (!CanVehicleHasWheels(Vehicle))
+				if (!CanVehicleHaveWheels(Vehicle))
 						return IntPtr.Zero;
 
 				if (_cachedAddress != IntPtr.Zero)
@@ -191,7 +191,7 @@ namespace GTA
 		}
 
 		// boats, trains, and submarines cannot have wheels
-		static internal bool CanVehicleHasWheels(Vehicle vehicle) => (uint)vehicle.Type > 0xC;
+		static internal bool CanVehicleHaveWheels(Vehicle vehicle) => (uint)vehicle.Type <= 0xC;
 		private IntPtr GetMemoryAddressInit()
 		{
 			var vehicleAddr = Vehicle.MemoryAddress;
