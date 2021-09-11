@@ -177,7 +177,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the temperature of <see cref="VehicleWheel"/>. Drifting, braking, and burnout raises this value.
-		/// If this value keeping <c>59f</c> when <see cref="Vehicle"/> is on burnout for a short time, the tire will burst.
+		/// If this value is kept at <c>59f</c> when <see cref="Vehicle"/> is on burnout for a short time, the tire will burst.
 		/// </summary>
 		public float Temperature
 		{
