@@ -199,6 +199,31 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleTireHealthOffset, value);
 			}
 		}
+		public float WearMultiplier
+		{
+			get
+			{
+				if (Game.Version < GameVersion.v1_0_1868_0_Steam)
+					return 0f;
+
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireWearMultiplierOffset == 0)
+					return 0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleTireWearMultiplierOffset);
+			}
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_1868_0_Steam)
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1868_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
+
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireWearMultiplierOffset == 0)
+					return;
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleTireWearMultiplierOffset, value);
+			}
+		}
 
 		public void Fix()
 		{

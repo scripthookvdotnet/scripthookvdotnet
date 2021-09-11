@@ -97,13 +97,11 @@ namespace GTA
 				if (vehicleAddr == IntPtr.Zero)
 					yield break;
 
-				var wheelAddr = SHVDN.NativeMemory.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddr, i);
-				if (wheelAddr == IntPtr.Zero)
-					yield break;
+				var wheelAddress = SHVDN.NativeMemory.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddr, i);
 
-				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddr + SHVDN.NativeMemory.VehicleWheelIdOffset);
+				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.VehicleWheelIdOffset);
 				int boneIndexZeroBased = (int)boneId - 11;
-				yield return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(_owner, boneId, wheelAddr));
+				yield return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(_owner, boneId, wheelAddress));
 			}
 		}
 
@@ -121,6 +119,35 @@ namespace GTA
 
 				return SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.WheelCountOffset);
 			}
+		}
+
+		public VehicleWheel[] GetAllWheels()
+		{
+			if (!VehicleWheel.CanVehicleHaveWheels(_owner))
+				return Array.Empty<VehicleWheel>();
+
+			var vehicleAddress = _owner.MemoryAddress;
+			if (vehicleAddress == IntPtr.Zero || SHVDN.NativeMemory.WheelCountOffset == 0)
+			{
+				return Array.Empty<VehicleWheel>();
+			}
+
+			var wheelCount = SHVDN.NativeMemory.ReadInt32(vehicleAddress + SHVDN.NativeMemory.WheelCountOffset);
+			var returnWheelArray = new VehicleWheel[wheelCount];
+
+			for (int i = 0; i < returnWheelArray.Length; i++)
+			{
+				var wheelAddress = SHVDN.NativeMemory.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddress, i);
+				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.VehicleWheelIdOffset);
+				var vehicleWheelInstance = new VehicleWheel(_owner, boneId, wheelAddress);
+				returnWheelArray[i] = vehicleWheelInstance;
+
+				int boneIndexZeroBased = (int)boneId - 11;
+				if (_vehicleWheels[boneIndexZeroBased] == null)
+					_vehicleWheels[boneIndexZeroBased] = vehicleWheelInstance;
+			}
+
+			return returnWheelArray;
 		}
 	}
 }

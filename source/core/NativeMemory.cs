@@ -541,6 +541,13 @@ namespace SHVDN
 				VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
 			}
 
+			// won't match in b1737 or older version
+			address = FindPattern("\x76\x31\x0F\x2E\xB3\x00\x00\x00\x00\x75\x28\xC7\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0F\xBA\xB3\x00\x00\x00\x00\x1E", "xxxxx????xxxx????????xxx????x");
+			if (address != null)
+			{
+				VehicleTireWearMultiplierOffset = *(int*)(address + 5);
+			}
+
 			address = FindPattern("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
 			if (address != null)
 			{
@@ -1428,6 +1435,8 @@ namespace SHVDN
 		public static int VehicleWheelHealthOffset { get; }
 
 		public static int VehicleTireHealthOffset { get; }
+
+		public static int VehicleTireWearMultiplierOffset { get; }
 
 		public static int VehicleWheelTouchingFlagsOffset { get; }
 
