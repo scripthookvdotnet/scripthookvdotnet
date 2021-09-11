@@ -135,7 +135,7 @@ namespace GTA
 			}
 		}
 
-		public bool IsBurst
+		public bool IsPunctured
 		{
 			get
 			{
@@ -146,7 +146,7 @@ namespace GTA
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleWheelHealthOffset) < 1000f;
 			}
 		}
-		public bool IsBurstCompletely
+		public bool IsBurstedCompletely
 		{
 			get
 			{
@@ -154,7 +154,7 @@ namespace GTA
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireHealthOffset == 0)
 					return false;
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleTireHealthOffset) == 0f;
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleTireHealthOffset) <= 0f;
 			}
 		}
 		public float Health
