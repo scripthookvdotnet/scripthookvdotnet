@@ -12,7 +12,6 @@ namespace GTA
 	public sealed class VehicleWheelCollection : IEnumerable<VehicleWheel>, IEnumerable
 	{
 		#region Fields
-		readonly Vehicle _owner;
 		// Vehicles have up to 10 wheels
 		const int MAX_WHEEL_COUNT = 10;
 		readonly VehicleWheel[] _vehicleWheels = new VehicleWheel[MAX_WHEEL_COUNT];
@@ -34,14 +33,14 @@ namespace GTA
 				// The vehicle wheel id array for natives defines only 8 elements, and any other values can result in undefined behavior or even memory access violation
 				if (index < 0 || index > 7)
 				{
-					return _nullWheel ?? (_nullWheel = new VehicleWheel(_owner, -1));
+					return _nullWheel ?? (_nullWheel = new VehicleWheel(Vehicle, -1));
 				}
 
 				if (index < 6)
 				{
 					VehicleWheelBoneId boneId = VehicleWheel.vehicleWheelBoneIndexTableForNatives[index];
 					int boneIndexZeroBased = (int)boneId - 11;
-					return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(_owner, index));
+					return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, index));
 				}
 				// Use a special array in case some scripts access to index 6 or 7 wheel and read Index property
 				else
@@ -49,7 +48,7 @@ namespace GTA
 					if (_vehicleWheelsForIndex6And7 == null)
 						_vehicleWheelsForIndex6And7 = new VehicleWheel[2];
 
-					return _vehicleWheelsForIndex6And7[index - 6] ?? (_vehicleWheelsForIndex6And7[index - 6] = new VehicleWheel(_owner, index));
+					return _vehicleWheelsForIndex6And7[index - 6] ?? (_vehicleWheelsForIndex6And7[index - 6] = new VehicleWheel(Vehicle, index));
 				}
 			}
 		}
@@ -62,7 +61,7 @@ namespace GTA
 					throw new ArgumentOutOfRangeException(nameof(boneId));
 
 				int boneIndexZeroBased = (int)boneId - 11;
-				return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(_owner, boneId));
+				return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId));
 			}
 		}
 
@@ -86,19 +85,19 @@ namespace GTA
 
 			var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddr + SHVDN.NativeMemory.VehicleWheelIdOffset);
 			int boneIndexZeroBased = (int)boneId - 11;
-			return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(_owner, boneId, wheelAddr));
+			return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId, wheelAddr));
 		}
 
 		public IEnumerator<VehicleWheel> GetEnumerator()
 		{
 			// No elements will be return if the vehicle is a boat, a train or a submarine
-			if (!VehicleWheel.CanVehicleHaveWheels(_owner))
+			if (!VehicleWheel.CanVehicleHaveWheels(Vehicle))
 				yield break;
 
 			var wheelCount = Count;
 			for (int i = 0; i < wheelCount; i++)
 			{
-				var vehicleAddr = _owner.MemoryAddress;
+				var vehicleAddr = Vehicle.MemoryAddress;
 				if (vehicleAddr == IntPtr.Zero)
 					yield break;
 
@@ -113,13 +112,21 @@ namespace GTA
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		/// <summary>
+		/// Gets the <see cref="Vehicle"/>this <see cref="VehicleWheelCollection"/> belongs to.
+		/// </summary>
+		public Vehicle Vehicle
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets the number of <see cref="VehicleWheel"/> this <see cref="VehicleWheelCollection"/> has. <c>0</c> will be returned if the owner vehicle does not exist.
 		/// </summary>
 		public int Count
 		{
 			get
 			{
-				var address = _owner.MemoryAddress;
+				var address = Vehicle.MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.WheelCountOffset == 0)
 				{
 					return 0;
@@ -134,10 +141,10 @@ namespace GTA
 		/// </summary>
 		public VehicleWheel[] GetAllWheels()
 		{
-			if (!VehicleWheel.CanVehicleHaveWheels(_owner))
+			if (!VehicleWheel.CanVehicleHaveWheels(Vehicle))
 				return Array.Empty<VehicleWheel>();
 
-			var vehicleAddress = _owner.MemoryAddress;
+			var vehicleAddress = Vehicle.MemoryAddress;
 			if (vehicleAddress == IntPtr.Zero || SHVDN.NativeMemory.WheelCountOffset == 0)
 			{
 				return Array.Empty<VehicleWheel>();
@@ -150,7 +157,7 @@ namespace GTA
 			{
 				var wheelAddress = SHVDN.NativeMemory.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddress, i);
 				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.VehicleWheelIdOffset);
-				var vehicleWheelInstance = new VehicleWheel(_owner, boneId, wheelAddress);
+				var vehicleWheelInstance = new VehicleWheel(Vehicle, boneId, wheelAddress);
 				returnWheelArray[i] = vehicleWheelInstance;
 
 				int boneIndexZeroBased = (int)boneId - 11;
