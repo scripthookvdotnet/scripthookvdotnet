@@ -194,7 +194,7 @@ namespace GTA
 			if (address == IntPtr.Zero)
 				return;
 
-			// Do exactly SET_VEHICLE_TYRE_FIXED does when the vehicle exists and the vehicle index is valid
+			// Do what SET_VEHICLE_TYRE_FIXED exactly does when the vehicle exists and the vehicle index is valid
 			SHVDN.NativeMemory.FixVehicleWheel(address);
 			var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
 			SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1);
@@ -220,7 +220,7 @@ namespace GTA
 			if (address == IntPtr.Zero)
 				return;
 
-			// Do exactly SET_VEHICLE_TYRE_BURST does with false (zero) as 3rd parameter
+			// Do what SET_VEHICLE_TYRE_BURST exactly does with false (zero) as 3rd parameter
 			SHVDN.NativeMemory.PunctureTire(address, damage, Vehicle.MemoryAddress);
 		}
 
@@ -230,12 +230,12 @@ namespace GTA
 			if (address == IntPtr.Zero)
 				return;
 
-			// Do exactly SET_VEHICLE_TYRE_BURST does with true (non-zero) as 3rd parameter and 1000f as 4th parameter
+			// Do what SET_VEHICLE_TYRE_BURST exactly does with true (non-zero) as 3rd parameter and 1000f as 4th parameter
 			SHVDN.NativeMemory.BurstTireOnRim(address, Vehicle.MemoryAddress);
 		}
 
 		// boats, trains, and submarines cannot have wheels
-		static internal bool CanVehicleHaveWheels(Vehicle vehicle) => (uint)vehicle.Type <= 0xC;
+		internal static bool CanVehicleHaveWheels(Vehicle vehicle) => (uint)vehicle.Type <= 0xC;
 		private IntPtr GetMemoryAddressInit()
 		{
 			var vehicleAddr = Vehicle.MemoryAddress;
@@ -249,7 +249,7 @@ namespace GTA
 
 			return _cachedAddress;
 		}
-		static internal bool IsBoneIdValid(VehicleWheelBoneId boneId)
+		internal static bool IsBoneIdValid(VehicleWheelBoneId boneId)
 		{
 			switch (boneId)
 			{
