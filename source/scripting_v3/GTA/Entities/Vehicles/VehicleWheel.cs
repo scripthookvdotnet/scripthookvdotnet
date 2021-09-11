@@ -199,6 +199,30 @@ namespace GTA
 			var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
 			SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1);
 		}
+		public void Fix(bool leaveOtherBurstedTiresNotShowing)
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero)
+				return;
+
+			SHVDN.NativeMemory.FixVehicleWheel(address);
+
+			if (!leaveOtherBurstedTiresNotShowing)
+			{
+				var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
+				SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1);
+			}
+		}
+
+		public void Puncture(float damage = 1000f)
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero)
+				return;
+
+			// Do exactly SET_VEHICLE_TYRE_BURST does with false (zero) as 3rd parameter
+			SHVDN.NativeMemory.PunctureTire(address, damage, Vehicle.MemoryAddress);
+		}
 
 		public void Burst()
 		{

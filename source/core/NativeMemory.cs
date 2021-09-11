@@ -558,7 +558,7 @@ namespace SHVDN
 			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				BurstVehicleTireNewFunc = GetDelegateForFunctionPointer<BurstVehicleTireNewDelegate>(new IntPtr((long)(address - 0x10)));
+				PunctureVehicleTireNewFunc = GetDelegateForFunctionPointer<PunctureVehicleTireNewDelegate>(new IntPtr((long)(address - 0x10)));
 				address = FindPattern("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
 				BurstVehicleTireOnRimNewFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimNewDelegate>(new IntPtr((long)(address - 0xB)));
 			}
@@ -567,7 +567,7 @@ namespace SHVDN
 				address = FindPattern("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
 				if (address != null)
 				{
-					BurstVehicleTireOldFunc = GetDelegateForFunctionPointer<BurstVehicleTireOldDelegate>(new IntPtr((long)(address - 0x14)));
+					PunctureVehicleTireOldFunc = GetDelegateForFunctionPointer<PunctureVehicleTireOldDelegate>(new IntPtr((long)(address - 0x14)));
 					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
 					BurstVehicleTireOnRimOldFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimOldDelegate>(new IntPtr((long)(address - 0x10)));
 				}
@@ -1408,14 +1408,14 @@ namespace SHVDN
 		#region -- Vehicle Wheel Data --
 
 		delegate void FixVehicleWheelDelegate(IntPtr wheelAddress);
-		delegate void BurstVehicleTireNewDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
-		delegate void BurstVehicleTireOldDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, IntPtr vehiclePtr, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
+		delegate void PunctureVehicleTireNewDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
+		delegate void PunctureVehicleTireOldDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, IntPtr vehiclePtr, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
 		delegate void BurstVehicleTireOnRimNewDelegate(IntPtr wheelPtr);
 		delegate void BurstVehicleTireOnRimOldDelegate(IntPtr wheelPtr, IntPtr vehiclePtr);
 
 		static FixVehicleWheelDelegate FixVehicleWheelFunc;
-		static BurstVehicleTireNewDelegate BurstVehicleTireNewFunc;
-		static BurstVehicleTireOldDelegate BurstVehicleTireOldFunc;
+		static PunctureVehicleTireNewDelegate PunctureVehicleTireNewFunc;
+		static PunctureVehicleTireOldDelegate PunctureVehicleTireOldFunc;
 		static BurstVehicleTireOnRimNewDelegate BurstVehicleTireOnRimNewFunc;
 		static BurstVehicleTireOnRimOldDelegate BurstVehicleTireOnRimOldFunc;
 
@@ -1437,6 +1437,19 @@ namespace SHVDN
 				return IntPtr.Zero;
 
 			return new IntPtr((long)*(vehicleWheelArrayAddr + index));
+		}
+
+		static bool VehicleWheelHasVehiclePtr() => PunctureVehicleTireNewFunc != null;
+
+		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
+		{
+			int outValInt;
+			float outValFloat;
+
+			if (VehicleWheelHasVehiclePtr())
+				PunctureVehicleTireNewFunc(wheelAddress, 0, damage, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+			else
+				PunctureVehicleTireOldFunc(wheelAddress, 0, damage, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
 		}
 
 		public static void BurstTireOnRim(IntPtr wheelAddress, IntPtr vehicleAddress)
@@ -1466,16 +1479,14 @@ namespace SHVDN
 
 				if (VehicleWheelHasVehiclePtr())
 				{
-					BurstVehicleTireNewFunc(wheelAddress, 0, 1000f, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					PunctureVehicleTireNewFunc(wheelAddress, 0, 1000f, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
 					BurstVehicleTireOnRimNewFunc(wheelAddress);
 				}
 				else
 				{
-					BurstVehicleTireOldFunc(wheelAddress, 0, 1000f, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					PunctureVehicleTireOldFunc(wheelAddress, 0, 1000f, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
 					BurstVehicleTireOnRimOldFunc(wheelAddress, vehicleAddress);
 				}
-
-				bool VehicleWheelHasVehiclePtr() => BurstVehicleTireNewFunc != null;
 			}
 		}
 
