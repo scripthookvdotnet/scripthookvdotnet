@@ -547,6 +547,12 @@ namespace SHVDN
 				VehicleWheelIdOffset = *(int*)(address + 3);
 			}
 
+			address = FindPattern("\xEB\x02\x33\xC9\xF6\x81\x00\x00\x00\x00\x01\x75\x43", "xxxxxx????xxx");
+			if (address != null)
+			{
+				VehicleWheelTouchingFlagsOffset = *(int*)(address + 6);
+			}
+
 			address = FindPattern("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8\x00\x00\x00\x00", "xxxxxxxx????xxxx????");
 			if (address != null)
 			{
@@ -1423,6 +1429,8 @@ namespace SHVDN
 
 		public static int VehicleTireHealthOffset { get; }
 
+		public static int VehicleWheelTouchingFlagsOffset { get; }
+
 		public static int VehicleWheelIdOffset { get; }
 
 		public static int ShouldShowOnlyVehicleTiresWithPositiveHealthOffset { get; }
@@ -1437,6 +1445,30 @@ namespace SHVDN
 				return IntPtr.Zero;
 
 			return new IntPtr((long)*(vehicleWheelArrayAddr + index));
+		}
+
+		public static bool IsWheelTouchingSurface(IntPtr wheelAddress, IntPtr vehicleAddress)
+		{
+			if (VehicleWheelTouchingFlagsOffset == 0)
+				return false;
+
+			var wheelTouchingFlag = *(uint*)(wheelAddress + VehicleWheelTouchingFlagsOffset).ToPointer();
+			if ((wheelTouchingFlag & 1) != 0)
+				return true;
+
+			#region Slower Check
+			if (((wheelTouchingFlag >> 1) & 1) == 0)
+				return false;
+
+			var unkClassForVehicle = *(ulong*)(wheelAddress + 0x50).ToPointer();
+			if (unkClassForVehicle == 0)
+				return false;
+			var phArticulatedCollider = *(ulong*)(unkClassForVehicle + 0x18);
+			if (phArticulatedCollider == 0)
+				return false;
+
+			return (*(uint*)(wheelAddress + 0x14).ToPointer() & 0xFFFFFFFD) == 0;
+			#endregion
 		}
 
 		static bool VehicleWheelHasVehiclePtr() => PunctureVehicleTireNewFunc != null;

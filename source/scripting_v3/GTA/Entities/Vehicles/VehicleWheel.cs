@@ -123,6 +123,18 @@ namespace GTA
 			}
 		}
 
+		public bool IsTouchingSurface
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+					return false;
+
+				return SHVDN.NativeMemory.IsWheelTouchingSurface(address, Vehicle.MemoryAddress);
+			}
+		}
+
 		public bool IsBurst
 		{
 			get
