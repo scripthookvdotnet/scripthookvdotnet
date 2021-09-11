@@ -90,7 +90,7 @@ namespace GTA
 
 		public IEnumerator<VehicleWheel> GetEnumerator()
 		{
-			// No elements will be return if the vehicle is a boat, a train or a submarine
+			// No elements will be returned if the vehicle is a boat, a train or a submarine
 			if (!VehicleWheel.CanVehicleHaveWheels(Vehicle))
 				yield break;
 
