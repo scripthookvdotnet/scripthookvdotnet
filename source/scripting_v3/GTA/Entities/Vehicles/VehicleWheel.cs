@@ -137,7 +137,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is touching any surface.
+		/// Gets a value indicating whether this <see cref="VehicleWheel"/> is touching any surface.
 		/// </summary>
 		public bool IsTouchingSurface
 		{
