@@ -39,7 +39,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is valid as weapon or ammo hash.
+		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is valid as a weapon or a ammo hash.
 		/// </summary>
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_WEAPON_VALID, Hash);
 
