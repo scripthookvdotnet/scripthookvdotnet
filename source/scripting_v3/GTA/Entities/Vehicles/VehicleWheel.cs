@@ -89,22 +89,35 @@ namespace GTA
 			_cachedAddress = wheelAddress;
 		}
 
+		/// <summary>
+		/// Gets the <see cref="Vehicle"/>this <see cref="VehicleWheel"/> belongs to.
+		/// </summary>
 		public Vehicle Vehicle
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Gets the index for native functions.
+		/// Obsoleted in v3 API because there is no legiminate ways to get value from or modify any of the 4 wheels <c>wheel_lm2</c>, <c>wheel_rm2</c>, <c>wheel_lm3</c>, or <c>wheel_lm3</c> in native functions.
+		/// </summary>
 		[Obsolete("VehicleWheel.Index does not support any of the wheels wheel_lm2, wheel_rm2, wheel_lm3, or wheel_lm3 for legacy scripts compatibility in v3 API. Use VehicleWheel.BoneId instead.")]
 		public int Index
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Gets the bone id this <see cref="VehicleWheel"/>.
+		/// </summary>
 		public VehicleWheelBoneId BoneId
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Gets the memory address where this <see cref="VehicleWheel"/> is stored in memory.
+		/// </summary>
 		public IntPtr MemoryAddress
 		{
 			get
@@ -123,6 +136,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is touching any surface.
+		/// </summary>
 		public bool IsTouchingSurface
 		{
 			get
@@ -134,7 +150,9 @@ namespace GTA
 				return SHVDN.NativeMemory.IsWheelTouchingSurface(address, Vehicle.MemoryAddress);
 			}
 		}
-
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is punctured.
+		/// </summary>
 		public bool IsPunctured
 		{
 			get
@@ -146,6 +164,9 @@ namespace GTA
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleWheelHealthOffset) < 1000f;
 			}
 		}
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is bursted completely.
+		/// </summary>
 		public bool IsBurstedCompletely
 		{
 			get
@@ -157,6 +178,9 @@ namespace GTA
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleTireHealthOffset) <= 0f;
 			}
 		}
+		/// <summary>
+		/// Gets or sets the wheel health.
+		/// </summary>
 		public float Health
 		{
 			get
@@ -176,6 +200,10 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleWheelHealthOffset, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the tire health.
+		/// If <see cref="WearMultiplier" /> is set to exactly <c>0f</c>, the value will default to <c>350f</c> if the value is positive and less than <c>1000f</c>.
+		/// </summary>
 		public float TireHealth
 		{
 			get
@@ -199,6 +227,11 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleTireHealthOffset, value);
 			}
 		}
+		/// <summary>
+		/// Gets or sets the value indicating how fast the tires will wear out. The higher this value is, the greater downforce will be created.
+		/// <para>Only supported in v1.0.1868.0 and will throw <see cref="GameVersionNotSupportedException"/> if the setter is called in older versions (the getter always returns <see langword="false"/> in older versions).</para>
+		/// </summary>
+		/// <exception cref="GameVersionNotSupportedException"></exception>
 		public float WearMultiplier
 		{
 			get
@@ -225,11 +258,18 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Fixes this <see cref="VehicleWheel"/>'s tire.
+		/// </summary>
 		public void Fix()
 		{
 			// Do what SET_VEHICLE_TYRE_FIXED exactly does
 			Fix(false);
 		}
+		/// <summary>
+		/// Fixes this <see cref="VehicleWheel"/>'s tire.
+		/// </summary>
+		/// <param name="leaveOtherBurstedTiresNotShowing">If set to <see langword="false"/>, bursted tires will appear again just like <c>SET_VEHICLE_TYRE_FIXED</c> does.</param>
 		public void Fix(bool leaveOtherBurstedTiresNotShowing)
 		{
 			var address = MemoryAddress;
@@ -245,6 +285,10 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Punctures this <see cref="VehicleWheel"/>'s tire.
+		/// </summary>
+		/// <param name="damage">How much damage this <see cref="VehicleWheel"/> will take.</param>
 		public void Puncture(float damage = 1000f)
 		{
 			var address = MemoryAddress;
@@ -255,6 +299,9 @@ namespace GTA
 			SHVDN.NativeMemory.PunctureTire(address, damage, Vehicle.MemoryAddress);
 		}
 
+		/// <summary>
+		/// Bursts this <see cref="VehicleWheel"/>'s tire completely.
+		/// </summary>
 		public void Burst()
 		{
 			var address = MemoryAddress;

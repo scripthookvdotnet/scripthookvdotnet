@@ -66,6 +66,11 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="VehicleWheel"/>'s tire completely.
+		/// </summary>
+		/// <param name="index">The index of the wheel collection. The order is the same as how the wheel array of the owner <see cref="Vehicle"/> is aligned.</param>
+		/// <exception cref="ArgumentOutOfRangeException"></exception>
 		public VehicleWheel GetWheelByIndexOfCollection(int index)
 		{
 			if (index < 0 || index >= Count)
@@ -107,6 +112,9 @@ namespace GTA
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+		/// <summary>
+		/// Gets the number of <see cref="VehicleWheel"/> this <see cref="VehicleWheelCollection"/> has. <c>0</c> will be returned if the owner vehicle does not exist.
+		/// </summary>
 		public int Count
 		{
 			get
@@ -121,6 +129,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="VehicleWheel"/>s this <see cref="VehicleWheelCollection"/> has.
+		/// </summary>
 		public VehicleWheel[] GetAllWheels()
 		{
 			if (!VehicleWheel.CanVehicleHaveWheels(_owner))
