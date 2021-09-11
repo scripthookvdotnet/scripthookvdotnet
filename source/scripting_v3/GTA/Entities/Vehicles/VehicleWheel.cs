@@ -4,6 +4,7 @@
 //
 
 using System;
+using GTA.Math;
 using GTA.Native;
 
 namespace GTA
@@ -137,6 +138,68 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the last contact position.
+		/// </summary>
+		public Vector3 LastContactPosition
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+					return Vector3.Zero;
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x40));
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the limit multiplier that affects how much this <see cref="VehicleWheel"/> can turn.
+		/// </summary>
+		public float SteeringLimitMultiplier
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSteeringLimitMultiplierOffset == 0)
+					return 0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleWheelSteeringLimitMultiplierOffset);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSteeringLimitMultiplierOffset == 0)
+					return;
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleWheelSteeringLimitMultiplierOffset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the temperature of <see cref="VehicleWheel"/>. Drifting, braking, and burnout raises this value.
+		/// If this value keeping <c>59f</c> when <see cref="Vehicle"/> is on burnout for a short time, the tire will burst.
+		/// </summary>
+		public float Temperature
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTemperatureOffset == 0)
+					return 0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleWheelTemperatureOffset);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTemperatureOffset == 0)
+					return;
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleWheelTemperatureOffset, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="VehicleWheel"/> is touching any surface.
 		/// </summary>
 		public bool IsTouchingSurface
@@ -150,6 +213,36 @@ namespace GTA
 				return SHVDN.NativeMemory.IsWheelTouchingSurface(address, Vehicle.MemoryAddress);
 			}
 		}
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="VehicleWheel"/>'s tire is on fire.
+		/// </summary>
+		public bool IsTireOnFire
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+					return false;
+
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
+					return;
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is punctured.
 		/// </summary>

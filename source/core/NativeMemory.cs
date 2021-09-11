@@ -534,6 +534,18 @@ namespace SHVDN
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
 			}
 
+			address = FindPattern("\x0F\xBA\xAB\x00\x00\x00\x00\x09\x0F\x2F\xB3\x00\x00\x00\x00\x48\x8B\x83\x20\x01\x00\x00", "xx?????xxx???xxxx?????");
+			if (address != null)
+			{
+				VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 11);
+			}
+
+			address = FindPattern("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
+			if (address != null)
+			{
+				VehicleWheelTemperatureOffset = *(int*)(address + 11);
+			}
+
 			address = FindPattern("\x74\x13\x0F\x57\xC0\x0F\x2E\x80\x00\x00\x00\x00", "xxxxxxxx????");
 			if (address != null)
 			{
@@ -1432,12 +1444,17 @@ namespace SHVDN
 		static BurstVehicleTireOnRimNewDelegate BurstVehicleTireOnRimNewFunc;
 		static BurstVehicleTireOnRimOldDelegate BurstVehicleTireOnRimOldFunc;
 
+		public static int VehicleWheelSteeringLimitMultiplierOffset { get; }
+
+		public static int VehicleWheelTemperatureOffset { get; }
+
 		public static int VehicleWheelHealthOffset { get; }
 
 		public static int VehicleTireHealthOffset { get; }
 
 		public static int VehicleTireWearMultiplierOffset { get; }
 
+		// the on fire offset is the same as this offset
 		public static int VehicleWheelTouchingFlagsOffset { get; }
 
 		public static int VehicleWheelIdOffset { get; }
