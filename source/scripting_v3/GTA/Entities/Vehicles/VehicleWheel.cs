@@ -227,14 +227,8 @@ namespace GTA
 
 		public void Fix()
 		{
-			var address = MemoryAddress;
-			if (address == IntPtr.Zero)
-				return;
-
-			// Do what SET_VEHICLE_TYRE_FIXED exactly does when the vehicle exists and the vehicle index is valid
-			SHVDN.NativeMemory.FixVehicleWheel(address);
-			var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
-			SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1);
+			// Do what SET_VEHICLE_TYRE_FIXED exactly does
+			Fix(false);
 		}
 		public void Fix(bool leaveOtherBurstedTiresNotShowing)
 		{
