@@ -21,7 +21,7 @@ namespace GTA
 
 		internal VehicleWheelCollection(Vehicle owner)
 		{
-			_owner = owner;
+			Vehicle = owner;
 		}
 
 		[Obsolete("VehicleWheel indexer overload with int index does not support any of the wheels wheel_lm2, wheel_rm2, wheel_lm3, or wheel_lm3 for legacy scripts compatibility in v3 API. Use VehicleWheel indexer overload with VehicleWheelBoneId enum instead.")]
@@ -75,7 +75,7 @@ namespace GTA
 			if (index < 0 || index >= Count)
 				throw new ArgumentOutOfRangeException(nameof(index));
 
-			var vehicleAddr = _owner.MemoryAddress;
+			var vehicleAddr = Vehicle.MemoryAddress;
 			if (vehicleAddr == IntPtr.Zero)
 				return null;
 
@@ -105,7 +105,7 @@ namespace GTA
 
 				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.VehicleWheelIdOffset);
 				int boneIndexZeroBased = (int)boneId - 11;
-				yield return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(_owner, boneId, wheelAddress));
+				yield return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId, wheelAddress));
 			}
 		}
 
