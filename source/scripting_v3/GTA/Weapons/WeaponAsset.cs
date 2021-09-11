@@ -39,9 +39,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets if this <see cref="WeaponAsset"/> is valid.
+		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is valid as weapon or ammo hash.
 		/// </summary>
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_WEAPON_VALID, Hash);
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is valid as a weapon hash.
+		/// </summary>
+		public bool IsValidAsWeaponHash => SHVDN.NativeMemory.IsHashValidAsWeaponHash((uint)Hash);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="WeaponAsset"/> is loaded so it can be spawned.
@@ -88,9 +93,9 @@ namespace GTA
 			Function.Call(Native.Hash.REMOVE_WEAPON_ASSET, Hash);
 		}
 
-		public string DisplayName => Weapon.GetDisplayNameFromHash((WeaponHash)Hash);
+		public string DisplayName => IsValidAsWeaponHash ? Weapon.GetDisplayNameFromHash((WeaponHash)Hash) : string.Empty;
 
-		public string LocalizedName => Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash));
+		public string LocalizedName => IsValidAsWeaponHash ? Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash)) : string.Empty;
 
 		public bool Equals(WeaponAsset weaponAsset)
 		{

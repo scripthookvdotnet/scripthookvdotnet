@@ -743,6 +743,16 @@ namespace GTA
 
 		public bool CanBeTargetted
 		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
+				{
+					return false;
+				}
+
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 9);
+			}
 			set => Function.Call(Hash.SET_PED_CAN_BE_TARGETTED, Handle, value);
 		}
 

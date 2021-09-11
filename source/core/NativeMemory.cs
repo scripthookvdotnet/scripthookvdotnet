@@ -1367,6 +1367,7 @@ namespace SHVDN
 
 		public static int SweatOffset { get; }
 
+		// the same offset as the offset for SET_PED_CAN_BE_TARGETTED
 		public static int PedDropsWeaponsWhenDeadOffset { get; }
 
 		public static int PedSuffersCriticalHitOffset { get; }
@@ -2575,6 +2576,8 @@ namespace SHVDN
 
 			return null;
 		}
+
+		public static bool IsHashValidAsWeaponHash(uint weaponHash) => FindWeaponInfo(weaponHash) != null;
 
 		public static uint GetAttachmentPointHash(uint weaponHash, uint componentHash)
 		{
