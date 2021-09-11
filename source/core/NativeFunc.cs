@@ -236,7 +236,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="hash">The function has to call.</param>
 		/// <param name="argPtr">A pointer of function arguments.</param>
-		/// <param name="argCount">The length of <paramref name="argPtr">.</param>
+		/// <param name="argCount">The length of <paramref name="argPtr /">.</param>
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* Invoke(ulong hash, ulong* argPtr, int argCount)
 		{
@@ -280,7 +280,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="hash">The function has to call.</param>
 		/// <param name="argPtr">A pointer of function arguments.</param>
-		/// <param name="argCount">The length of <paramref name="argPtr">.</param>
+		/// <param name="argCount">The length of <paramref name="argPtr" />.</param>
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* InvokeInternal(ulong hash, ulong* argPtr, int argCount)
 		{
