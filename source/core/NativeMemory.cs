@@ -553,11 +553,14 @@ namespace SHVDN
 				VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
 			}
 
-			// won't match in b1737 or older version
-			address = FindPattern("\x76\x31\x0F\x2E\xB3\x00\x00\x00\x00\x75\x28\xC7\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0F\xBA\xB3\x00\x00\x00\x00\x1E", "xxxxx????xxxx????????xxx????x");
-			if (address != null)
+			// the tire wear multipiler value for vehicle wheels is present only in v1.0.1868.0 or newer versions
+			if (gameVersion >= 54)
 			{
-				VehicleTireWearMultiplierOffset = *(int*)(address + 5);
+				address = FindPattern("\x76\x31\x0F\x2E\xB3\x00\x00\x00\x00\x75\x28\xC7\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0F\xBA\xB3\x00\x00\x00\x00\x1E", "xxxxx????xxxx????????xxx????x");
+				if (address != null)
+				{
+					VehicleTireWearMultiplierOffset = *(int*)(address + 5);
+				}
 			}
 
 			address = FindPattern("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
