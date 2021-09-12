@@ -2369,7 +2369,10 @@ namespace SHVDN
 					continue;
 
 				if (CheckBlip(address, position, radius, spriteTypes))
-					handles.Add(*(int*)(address + 4));
+                {
+					ushort blipCreationIncrement = *(ushort*)(address + 8);
+					handles.Add((int)((blipCreationIncrement << 0x10) + (uint)i));
+				}
 			}
 
 			return handles.ToArray();
@@ -2382,7 +2385,10 @@ namespace SHVDN
 				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
 
 				if (northBlipAddress != 0)
-					return *(int*)(northBlipAddress + 4);
+                {
+					ushort blipCreationIncrement = *(ushort*)(northBlipAddress + 8);
+					return ((blipCreationIncrement << 0x10) + 2);
+				}
 			}
 
 			return 0;
@@ -2405,10 +2411,12 @@ namespace SHVDN
 
 			ulong address = *(RadarBlipPoolAddress + poolIndexOfHandle);
 
-			if (address != 0 && *(int*)(address + 4) == handle)
+			if (address != 0 && IsBlipCreationIncrementValid(address, handle))
 				return new IntPtr((long)address);
 
 			return IntPtr.Zero;
+
+			bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(address + 8) == (((uint)handle >> 0x10));
 		}
 
 		#endregion
@@ -2439,7 +2447,9 @@ namespace SHVDN
 				int modelHash = *(int*)waypointInfoAddress;
 
 				if (modelHash == playerPedModelHash)
-					return *(int*)(waypointInfoAddress + 0x4);
+				{				
+					return *(int*)(waypointInfoAddress + 4);
+				}
 			}
 
 			return 0;
