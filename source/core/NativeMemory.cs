@@ -2385,7 +2385,7 @@ namespace SHVDN
 					return *(int*)(northBlipAddress + 4);
 			}
 
-			return -1;
+			return 0;
 		}
 
 		public static IntPtr GetBlipAddress(int handle)
