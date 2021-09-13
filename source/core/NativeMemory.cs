@@ -2416,7 +2416,7 @@ namespace SHVDN
 
 			return IntPtr.Zero;
 
-			bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(address + 8) == (((uint)handle >> 0x10));
+			bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == (((uint)blipHandle >> 0x10));
 		}
 
 		#endregion
