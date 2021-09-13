@@ -221,7 +221,7 @@ namespace GTA
 			get
 			{
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 					return false;
 
 				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
@@ -239,6 +239,36 @@ namespace GTA
 				else
 				{
 					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="VehicleWheel"/> is a driving wheel.
+		/// </summary>
+		public bool IsDrivingWheel
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
+					return false;
+
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 3);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
+					return;
+
+				if (value)
+				{
+					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 3);
+				}
+				else
+				{
+					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 3);
 				}
 			}
 		}
