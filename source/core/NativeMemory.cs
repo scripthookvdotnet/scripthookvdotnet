@@ -622,6 +622,11 @@ namespace SHVDN
 			{
 				ProjectileAmmoInfoOffset = *(int*)(address + 8);
 			}
+			address = FindPattern("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
+			if (address != null)
+			{
+				ExplodeProjectileFunc = GetDelegateForFunctionPointer<ExplodeProjectileDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
+			}
 
 			// Generate vehicle model list
 			var vehicleHashesGroupedByClass = new List<int>[0x20];
@@ -2484,6 +2489,36 @@ namespace SHVDN
 		#region -- Projectile Offsets --
 		public static int ProjectileAmmoInfoOffset { get; }
 		public static int ProjectileOwnerOffset { get; }
+		#endregion
+
+		#region -- Projectile Functions --
+
+		delegate void ExplodeProjectileDelegate(IntPtr projectileAddress, int unkParam);
+		static ExplodeProjectileDelegate ExplodeProjectileFunc;
+
+		public static void ExplodeProjectile(IntPtr projectileAddress)
+		{
+			var task = new ExplodeProjectileTask(projectileAddress);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		internal class ExplodeProjectileTask : IScriptTask
+		{
+			#region Fields
+			internal IntPtr projectileAddress;
+			#endregion
+
+			internal ExplodeProjectileTask(IntPtr projectileAddress)
+			{
+				this.projectileAddress = projectileAddress;
+			}
+
+			public void Run()
+			{
+				ExplodeProjectileFunc(projectileAddress, 0);
+			}
+		}
+
 		#endregion
 
 		#region -- Weapon Info And Ammo Info --
