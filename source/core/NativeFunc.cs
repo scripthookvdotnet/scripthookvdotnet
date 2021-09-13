@@ -82,9 +82,11 @@ namespace SHVDN
 
 			IntPtr strUtf8 = domain.PinString(str);
 
-			domain.ExecuteTask(new NativeTask {
+			var strArg = (ulong)strUtf8.ToInt64();
+			domain.ExecuteTask(new NativeTaskPtrArgs {
 				Hash = 0x6C188BE134E074AA /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-				Arguments = new ulong[] { (ulong)strUtf8.ToInt64() }
+				ArgumentPtr = &strArg,
+				ArgumentCount = 1
 			});
 		}
 
@@ -176,7 +178,10 @@ namespace SHVDN
 				}
 			}
 
-			action(str.Substring(startPos, str.Length - startPos));
+			if (startPos == 0)
+				action(str);
+			else
+				action(str.Substring(startPos, str.Length - startPos));
 		}
 
 		/// <summary>

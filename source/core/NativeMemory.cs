@@ -906,6 +906,7 @@ namespace SHVDN
 		public static IntPtr String => StringToCoTaskMemUTF8("STRING");
 		public static IntPtr NullString => StringToCoTaskMemUTF8(string.Empty);
 		public static IntPtr CellEmailBcon => StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
+		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
 
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{
@@ -938,14 +939,20 @@ namespace SHVDN
 			if (s == null)
 				return IntPtr.Zero;
 
-			byte[] utf8Bytes = Encoding.UTF8.GetBytes(s);
-			IntPtr dest = AllocCoTaskMem(utf8Bytes.Length + 1);
+			int byteCountUtf8 = Encoding.UTF8.GetByteCount(s);
+			if (byteCountUtf8 > _strBufferForStringToCoTaskMemUTF8.Length)
+			{
+				_strBufferForStringToCoTaskMemUTF8 = new byte[byteCountUtf8 * 2];
+			}
+
+			Encoding.UTF8.GetBytes(s, 0, s.Length, _strBufferForStringToCoTaskMemUTF8, 0);
+			IntPtr dest = AllocCoTaskMem(byteCountUtf8 + 1);
 			if (dest == IntPtr.Zero)
 				throw new OutOfMemoryException();
 
-			Copy(utf8Bytes, 0, dest, utf8Bytes.Length);
+			Copy(_strBufferForStringToCoTaskMemUTF8, 0, dest, byteCountUtf8);
 			// Add null-terminator to end
-			((byte*)dest.ToPointer())[utf8Bytes.Length] = 0;
+			((byte*)dest.ToPointer())[byteCountUtf8] = 0;
 
 			return dest;
 		}
