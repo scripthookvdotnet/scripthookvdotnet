@@ -130,7 +130,7 @@ static void ScriptHookVDotnet_ManagedInit()
 	// Unload previous domain (this unloads all script assemblies too)
 	if (domain != nullptr)
 	{
-		// Stach the command history if console is loaded 
+		// Stash the command history if console is loaded 
 		if (console != nullptr)
 		{
 			stashedConsoleCommandHistory = console->CommandHistory;
