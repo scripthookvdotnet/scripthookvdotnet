@@ -1868,12 +1868,18 @@ namespace SHVDN
 		{
 			#region Fields
 			internal Type poolType;
-			internal List<int> handles = new List<int>();
+			internal int[] handles;
 			internal bool doPosCheck;
 			internal bool doModelCheck;
 			internal int[] modelHashes;
 			internal float radiusSquared;
 			internal float[] position;
+
+			internal static int[] _vehicleHandleBuffer;
+			internal static int[] _pedHandleBuffer;
+			internal static int[] _objectHandleBuffer;
+			internal static int[] _pickupObjectHandleBuffer;
+			internal static int[] _projectileHandleBuffer = new int[50];
 			#endregion
 
 			internal enum Type
@@ -1961,11 +1967,18 @@ namespace SHVDN
 
 				EntityPool* entityPool = (EntityPool*)(*NativeMemory.EntityPoolAddress);
 
+				#region Store Entity Handles to Buffer Arrays
+				int vehicleCountStored = 0;
 				if (poolType.HasFlag(Type.Vehicle) && *NativeMemory.VehiclePoolAddress != 0)
 				{
 					VehiclePool* vehiclePool = *(VehiclePool**)(*NativeMemory.VehiclePoolAddress);
 
-					for (uint i = 0; i < vehiclePool->size; i++)
+					uint vehicleCountInPool = vehiclePool->itemCount;
+					if (_vehicleHandleBuffer == null || vehicleCountInPool > _vehicleHandleBuffer.Length)
+						_vehicleHandleBuffer = new int[CalculateAppropriateExtendedArrayLength(_vehicleHandleBuffer, (int)vehicleCountInPool)];
+
+					uint poolSize = vehiclePool->size;
+					for (uint i = 0; i < poolSize; i++)
 					{
 						if (entityPool->IsFull())
 							break;
@@ -1974,83 +1987,144 @@ namespace SHVDN
 						{
 							ulong address = vehiclePool->GetAddress(i);
 							if (CheckEntity(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
+								AddElementAndReallocateIfLengthIsNotLongEnough(ref _vehicleHandleBuffer, vehicleCountStored++, NativeMemory.AddEntityToPoolFunc(address));
 						}
 					}
 				}
 
+				int pedCountStored = 0;
 				if (poolType.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
-
-					for (uint i = 0; i < pedPool->size; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (pedPool->IsValid(i))
-						{
-							ulong address = pedPool->GetAddress(i);
-							if (CheckEntity(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
+					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer);
 				}
 
+				int objectCountStored = 0;
 				if (poolType.HasFlag(Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
 				{
-					GenericPool* propPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
-
-					for (uint i = 0; i < propPool->size; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (propPool->IsValid(i))
-						{
-							ulong address = propPool->GetAddress(i);
-							if (CheckEntity(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
+					GenericPool* objectPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
+					objectCountStored = CopyEntityHandlesToArrayGenericPool(objectPool, ref _objectHandleBuffer);
 				}
 
+				int pickupCountStored = 0;
 				if (poolType.HasFlag(Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
 				{
 					GenericPool* pickupPool = (GenericPool*)(*NativeMemory.PickupObjectPoolAddress);
-
-					for (uint i = 0; i < pickupPool->size; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (pickupPool->IsValid(i))
-						{
-							ulong address = pickupPool->GetAddress(i);
-							if (CheckCheckpoint(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
+					pickupCountStored = CopyEntityHandlesToArrayGenericPool(pickupPool, ref _pickupObjectHandleBuffer);
 				}
 
+				int projectileCountStored = 0;
 				if (poolType.HasFlag(Type.Projectile) && NativeMemory.ProjectilePoolAddress != null)
 				{
-					int ProjectilesLeft = NativeMemory.GetProjectileCount();
-					int ProjectilesCapacity = NativeMemory.GetProjectileCapacity();
+					int projectilesLeft = NativeMemory.GetProjectileCount();
+					int projectileCapacity = NativeMemory.GetProjectileCapacity();
 					ulong* projectilePoolAddress = NativeMemory.ProjectilePoolAddress;
 
-					for (uint i = 0; (ProjectilesLeft > 0 && i < ProjectilesCapacity); i++)
+					int projectileCountInPool = projectilesLeft;
+					if (_projectileHandleBuffer == null || projectileCountInPool > _projectileHandleBuffer.Length)
+						_projectileHandleBuffer = new int[CalculateAppropriateExtendedArrayLength(_projectileHandleBuffer, (int)projectileCountInPool)];
+
+					for (uint i = 0; (projectilesLeft > 0 && i < projectileCapacity); i++)
 					{
 						ulong entityAddress = (ulong)ReadAddress(new IntPtr(projectilePoolAddress + i)).ToInt64();
 
 						if (entityAddress == 0)
 							continue;
 
-						ProjectilesLeft--;
+						projectilesLeft--;
 
 						if (CheckCheckpoint(entityAddress))
-							handles.Add(NativeMemory.AddEntityToPoolFunc(entityAddress));
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.AddEntityToPoolFunc(entityAddress));
 					}
+				}
+				#endregion
+
+				#region Copy Entity Handles to a New Result Array
+				int totalEntityCount = vehicleCountStored + pedCountStored + objectCountStored + pickupCountStored + projectileCountStored;
+				if (totalEntityCount == 0)
+				{
+					handles = Array.Empty<int>();
+					return;
+				}
+
+				handles = new int[totalEntityCount];
+				int currentStartIndexToCopy = 0;
+
+				if (vehicleCountStored != 0)
+				{
+					Array.Copy(_vehicleHandleBuffer, 0, handles, currentStartIndexToCopy, vehicleCountStored);
+					currentStartIndexToCopy += vehicleCountStored;
+				}
+				if (pedCountStored != 0)
+				{
+					Array.Copy(_pedHandleBuffer, 0, handles, currentStartIndexToCopy, pedCountStored);
+					currentStartIndexToCopy += pedCountStored;
+				}
+				if (objectCountStored != 0)
+				{
+					Array.Copy(_objectHandleBuffer, 0, handles, currentStartIndexToCopy, objectCountStored);
+					currentStartIndexToCopy += objectCountStored;
+				}
+				if (pickupCountStored != 0)
+				{
+					Array.Copy(_pickupObjectHandleBuffer, 0, handles, currentStartIndexToCopy, pickupCountStored);
+					currentStartIndexToCopy += pickupCountStored;
+				}
+				if (projectileCountStored != 0)
+				{
+					Array.Copy(_projectileHandleBuffer, 0, handles, currentStartIndexToCopy, projectileCountStored);
+					currentStartIndexToCopy += projectileCountStored;
+				}
+				#endregion
+
+				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
+				{
+					int returnEntityCount = 0;
+
+					uint entityCountInPool = pool->itemCount;
+					if (handleBuffer == null || entityCountInPool > handleBuffer.Length)
+						handleBuffer = new int[CalculateAppropriateExtendedArrayLength(handleBuffer, (int)entityCountInPool)];
+
+					uint poolSize = pool->size;
+					for (uint i = 0; i < poolSize; i++)
+					{
+						if (entityPool->IsFull())
+							break;
+
+						if (pool->IsValid(i))
+						{
+							ulong address = pool->GetAddress(i);
+							if (CheckEntity(address))
+								AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
+						}
+					}
+
+					return returnEntityCount;
+				}
+
+				void AddElementAndReallocateIfLengthIsNotLongEnough(ref int[] array, int index, int elementToAdd)
+				{
+					if (index >= array.Length)
+					{
+						// This is edge case!
+						var newArray = new int[array.Length * 2];
+						Array.Copy(array, newArray, array.Length);
+						newArray[index] = elementToAdd;
+
+						array = newArray;
+					}
+					else
+					{
+						array[index] = elementToAdd;
+					}
+				}
+
+				int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
+				{
+					if (array == null)
+						return targetElementCount * 2;
+
+					return (array.Length * 2 <= targetElementCount) ? array.Length * 2 : targetElementCount * 2;
 				}
 			}
 		}
@@ -2164,7 +2238,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetPedHandles(float[] position, float radius, int[] modelHashes = null)
 		{
@@ -2177,7 +2251,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetPropHandles(int[] modelHashes = null)
@@ -2188,7 +2262,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetPropHandles(float[] position, float radius, int[] modelHashes = null)
 		{
@@ -2201,7 +2275,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetEntityHandles()
@@ -2210,7 +2284,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetEntityHandles(float[] position, float radius)
 		{
@@ -2221,7 +2295,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetVehicleHandles(int[] modelHashes = null)
@@ -2232,7 +2306,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetVehicleHandles(float[] position, float radius, int[] modelHashes = null)
 		{
@@ -2245,7 +2319,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetCheckpointHandles()
@@ -2274,7 +2348,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetPickupObjectHandles(float[] position, float radius)
 		{
@@ -2285,7 +2359,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetProjectileHandles()
 		{
@@ -2293,7 +2367,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetProjectileHandles(float[] position, float radius)
 		{
@@ -2304,7 +2378,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int GetEntityHandleFromAddress(IntPtr address)
