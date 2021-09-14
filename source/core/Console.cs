@@ -409,6 +409,12 @@ namespace SHVDN
 					else
 						goto default;
 					break;
+				case Keys.D:
+					if (e.Control)
+						RemoveCharRight();
+					else
+						goto default;
+					break;
 				case Keys.F:
 					if (e.Control)
 						MoveCursorRight();
@@ -444,6 +450,12 @@ namespace SHVDN
 				case Keys.L:
 					if (e.Control)
 						Clear();
+					else
+						goto default;
+					break;
+				case Keys.T:
+					if (e.Control)
+						TransposeTwoChars();
 					else
 						goto default;
 					break;
@@ -522,6 +534,43 @@ namespace SHVDN
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
 				input = input.Remove(cursorPos, 1);
+			}
+		}
+
+		void TransposeTwoChars()
+		{
+			var inputLength = input.Length;
+			if (inputLength < 2)
+			{
+				return;
+			}
+
+			if (cursorPos == 0)
+			{
+				SwapTwoCharacters(input, 0);
+				cursorPos = 2;
+			}
+			else if (cursorPos < inputLength)
+			{
+				SwapTwoCharacters(input, cursorPos - 1);
+				cursorPos += 1;
+			}
+			else
+			{
+				SwapTwoCharacters(input, cursorPos - 2);
+			}
+
+			void SwapTwoCharacters(string str, int index)
+			{
+				unsafe
+				{
+					fixed (char* stringPtr = str)
+					{
+						char tmp = stringPtr[index];
+						stringPtr[index] = stringPtr[index + 1];
+						stringPtr[index + 1] = tmp;
+					}
+				}
 			}
 		}
 
