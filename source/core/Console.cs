@@ -423,6 +423,12 @@ namespace SHVDN
 					else
 						goto default;
 					break;
+				case Keys.H:
+					if (e.Control)
+						RemoveCharLeft();
+					else
+						goto default;
+					break;
 				case Keys.A:
 					if (e.Control)
 						MoveCursorToBegOfLine();
