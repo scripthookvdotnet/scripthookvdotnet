@@ -1875,11 +1875,11 @@ namespace SHVDN
 			internal float radiusSquared;
 			internal float[] position;
 
-			internal static int[] _vehicleHandleBuffer;
-			internal static int[] _pedHandleBuffer;
-			internal static int[] _objectHandleBuffer;
-			internal static int[] _pickupObjectHandleBuffer;
-			internal static int[] _projectileHandleBuffer = new int[50];
+			static int[] _vehicleHandleBuffer;
+			static int[] _pedHandleBuffer;
+			static int[] _objectHandleBuffer;
+			static int[] _pickupObjectHandleBuffer;
+			static int[] _projectileHandleBuffer = new int[50];
 			#endregion
 
 			internal enum Type
@@ -2106,7 +2106,7 @@ namespace SHVDN
 				{
 					if (index >= array.Length)
 					{
-						// This is edge case!
+						// This path is edge case!
 						var newArray = new int[array.Length * 2];
 						Array.Copy(array, newArray, array.Length);
 						newArray[index] = elementToAdd;
