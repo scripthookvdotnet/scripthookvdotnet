@@ -25,7 +25,7 @@ namespace SHVDN
 		bool isOpen = false;
 		string input = string.Empty;
 		List<string> lineHistory = new List<string>();
-		List<string> commandHistory = new List<string>();
+		List<string> commandHistory; // This must be set via CommandHistory property
 		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
 		DateTime lastClosed;
@@ -62,6 +62,15 @@ namespace SHVDN
 				if (!isOpen)
 					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 			}
+		}
+
+		/// <summary>
+		/// Gets or sets the command history. This is used to avoid losing the command history on SHVDN reloading.
+		/// </summary>
+		public List<string> CommandHistory
+		{
+			get => commandHistory;
+			set => commandHistory = value;
 		}
 
 		/// <summary>

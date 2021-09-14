@@ -11,6 +11,7 @@ bool sGameReloaded = false;
 #using "ScriptHookVDotNet.netmodule"
 
 using namespace System;
+using namespace System::Collections::Generic;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
@@ -113,6 +114,7 @@ internal:
 	static WinForms::Keys reloadKey = WinForms::Keys::None;
 	static WinForms::Keys consoleKey = WinForms::Keys::F4;
 
+
 	static void SetConsole()
 	{
 		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
@@ -121,12 +123,22 @@ internal:
 
 static void ScriptHookVDotnet_ManagedInit()
 {
-	SHVDN::Console ^%console = ScriptHookVDotNet::console;
-	SHVDN::ScriptDomain ^%domain = ScriptHookVDotNet::domain;
+	SHVDN::Console^% console = ScriptHookVDotNet::console;
+	SHVDN::ScriptDomain^% domain = ScriptHookVDotNet::domain;
+	List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
 
 	// Unload previous domain (this unloads all script assemblies too)
 	if (domain != nullptr)
+	{
+		// Stach the command history if console is loaded 
+		if (console != nullptr)
+		{
+			stashedConsoleCommandHistory = console->CommandHistory;
+		}
+
 		SHVDN::ScriptDomain::Unload(domain);
+	}
+
 
 	// Clear log from previous runs
 	SHVDN::Log::Clear();
@@ -171,6 +183,9 @@ static void ScriptHookVDotnet_ManagedInit()
 		// Instantiate console inside script domain, so that it can access the scripting API
 		console = (SHVDN::Console ^)domain->AppDomain->CreateInstanceFromAndUnwrap(
 			SHVDN::Console::typeid->Assembly->Location, SHVDN::Console::typeid->FullName);
+
+		// Restore the console command history (set a empty history for the first time)
+		console->CommandHistory = stashedConsoleCommandHistory;
 
 		// Print welcome message
 		console->PrintInfo("~c~--- Community Script Hook V .NET " SHVDN_VERSION " ---");
