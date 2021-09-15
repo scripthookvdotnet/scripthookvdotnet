@@ -1886,34 +1886,20 @@ namespace SHVDN
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			bool CheckEntity(ulong address, bool checkCurrentVehicleOfPed = false)
+			bool CheckEntity(ulong address)
 			{
 				if (address == 0)
 					return false;
 
 				if (doPosCheck)
 				{
-					float x, y, z;
+					float* position = stackalloc float[4];
 
-					if (checkCurrentVehicleOfPed)
-					{
-						float* position = stackalloc float[4];
-
-						// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
-						NativeMemory.EntityPosFunc(address, position);
-
-						x = this.position[0] - position[0];
-						y = this.position[1] - position[1];
-						z = this.position[2] - position[2];
-					}
-					else
-					{
-						float* position = (float*)(address + 0x90);
-
-						x = this.position[0] - position[0];
-						y = this.position[1] - position[1];
-						z = this.position[2] - position[2];
-					}
+					// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
+					NativeMemory.EntityPosFunc(address, position);
+					float x = this.position[0] - position[0];
+					float y = this.position[1] - position[1];
+					float z = this.position[2] - position[2];
 
 					float distanceSquared = (x * x) + (y * y) + (z * z);
 					if (distanceSquared > radiusSquared)
@@ -1968,7 +1954,7 @@ namespace SHVDN
 				if (poolType.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
-					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer, true);
+					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer);
 				}
 
 				int objectCountStored = 0;
@@ -2048,7 +2034,7 @@ namespace SHVDN
 				}
 				#endregion
 
-				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer, bool checkCurrentVehicleOfPed = false)
+				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
 				{
 					int returnEntityCount = 0;
 
@@ -2067,7 +2053,7 @@ namespace SHVDN
 						if (pool->IsValid(i))
 						{
 							ulong address = pool->GetAddress(i);
-							if (CheckEntity(address, checkCurrentVehicleOfPed))
+							if (CheckEntity(address))
 								AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
 						}
 					}
