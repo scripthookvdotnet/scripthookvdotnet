@@ -100,7 +100,7 @@ namespace GTA.UI
 		};
 		#endregion
 
-		// Dimensions
+		#region Dimensions
 
 		/// <summary>
 		/// The base width of the screen used for all UI Calculations, unless ScaledDraw is used
@@ -136,7 +136,9 @@ namespace GTA.UI
 		/// </summary>
 		public static float ScaledWidth => Height * AspectRatio;
 
-		// Fading
+		#endregion
+
+		#region Fading
 
 		/// <summary>
 		/// Gets a value indicating whether the screen is faded in.
@@ -168,14 +170,6 @@ namespace GTA.UI
 		public static bool IsFadingOut => Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
 
 		/// <summary>
-		/// Gets a value indicating whether screen kill effects are enabled.
-		/// </summary>
-		/// <value>
-		/// <see langword="true" /> if screen kill effects are enabled; otherwise, <see langword="false" />.
-		/// </value>
-		public static bool AreScreenKillEffectsEnabled => Game.GetProfileSetting(226) != 0;
-
-		/// <summary>
 		/// Fades the screen in over a specific time, useful for transitioning
 		/// </summary>
 		/// <param name="time">The time for the fade in to take</param>
@@ -192,7 +186,17 @@ namespace GTA.UI
 			Function.Call(Hash.DO_SCREEN_FADE_OUT, time);
 		}
 
-		// Screen Effects
+		#endregion
+
+		#region Screen Effects
+
+		/// <summary>
+		/// Gets a value indicating whether screen kill effects are enabled.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if screen kill effects are enabled; otherwise, <see langword="false" />.
+		/// </value>
+		public static bool AreScreenKillEffectsEnabled => Game.GetProfileSetting(226) != 0;
 
 		/// <summary>
 		/// Gets a value indicating whether the specific screen effect is running.
@@ -230,7 +234,9 @@ namespace GTA.UI
 			Function.Call(Hash.ANIMPOSTFX_STOP_ALL);
 		}
 
-		// Text
+		#endregion
+
+		#region Text
 
 		/// <summary>
 		/// Shows a subtitle at the bottom of the screen for a given time
@@ -263,8 +269,9 @@ namespace GTA.UI
 			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, 0, beep, -1);
 		}
 
+		#endregion
 
-		// Space Conversion
+		#region Space Conversion
 
 		/// <summary>
 		/// Translates a point in WorldSpace to its given Coordinates on the <see cref="Screen"/>
@@ -289,5 +296,7 @@ namespace GTA.UI
 
 			return new PointF(pointX, pointY);
 		}
+
+		#endregion
 	}
 }
