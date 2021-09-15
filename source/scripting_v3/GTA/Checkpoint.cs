@@ -117,7 +117,7 @@ namespace GTA
 					return;
 				}
 				SHVDN.NativeMemory.WriteByte(memoryAddress + 52, value);
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + 56, 42); // Sets the icon to a custom icon
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + 56, 44); // Sets the icon to a custom icon
 			}
 		}
 
