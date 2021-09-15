@@ -158,7 +158,9 @@ namespace GTA
 				{
 					return System.Drawing.Color.Transparent;
 				}
-				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + 80));
+
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + offset));
 			}
 			set
 			{
@@ -167,7 +169,8 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + 80, Color.ToArgb());
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + offset, Color.ToArgb());
 			}
 		}
 		/// <summary>
@@ -182,7 +185,8 @@ namespace GTA
 				{
 					return System.Drawing.Color.Transparent;
 				}
-				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + 84));
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + offset));
 			}
 			set
 			{
@@ -191,7 +195,8 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + 84, Color.ToArgb());
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
+				SHVDN.NativeMemory.WriteInt32(memoryAddress + offset, Color.ToArgb());
 			}
 		}
 
@@ -207,7 +212,8 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + 76);
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
+				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
 			}
 			set
 			{
@@ -216,7 +222,8 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + 76, value);
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
+				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
 			}
 		}
 		/// <summary>
@@ -231,7 +238,8 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + 68);
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
+				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
 			}
 			set
 			{
@@ -240,7 +248,8 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + 68, value);
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
+				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
 			}
 		}
 		/// <summary>
@@ -255,7 +264,8 @@ namespace GTA
 				{
 					return 0.0f;
 				}
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + 72);
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
+				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
 			}
 			set
 			{
@@ -264,7 +274,8 @@ namespace GTA
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + 72, value);
+				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
+				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
 			}
 		}
 
