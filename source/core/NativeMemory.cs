@@ -1755,14 +1755,15 @@ namespace SHVDN
 
 		#region -- Entity Pools --
 
-		[StructLayout(LayoutKind.Sequential)]
-		struct Checkpoint
+		[StructLayout(LayoutKind.Explicit)]
+		struct CheckpointPoolData
 		{
-			internal long padding;
-			internal int padding1;
+			[FieldOffset(0xC)]
 			internal int handle;
-			internal long padding2;
-			internal Checkpoint* next;
+			[FieldOffset(0x10)]
+			internal long indexOfPool;
+			[FieldOffset(0x18)]
+			internal CheckpointPoolData* next;
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
@@ -1863,6 +1864,9 @@ namespace SHVDN
 		static EntityModel1FuncDelegate EntityModel1Func;
 		static EntityModel2FuncDelegate EntityModel2Func;
 		static AddEntityToPoolFuncDelegate AddEntityToPoolFunc;
+
+		const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
+		static readonly int[] _checkpointHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
 
 		internal class EntityPoolTask : IScriptTask
 		{
@@ -1975,7 +1979,9 @@ namespace SHVDN
 					VehiclePool* vehiclePool = *(VehiclePool**)(*NativeMemory.VehiclePoolAddress);
 
 					uint vehicleCountInPool = vehiclePool->itemCount;
-					if (_vehicleHandleBuffer == null || vehicleCountInPool > _vehicleHandleBuffer.Length)
+					if (_vehicleHandleBuffer == null)
+						_vehicleHandleBuffer = new int[(int)vehicleCountInPool * 2];
+					else if (_vehicleHandleBuffer == null || vehicleCountInPool > _vehicleHandleBuffer.Length)
 						_vehicleHandleBuffer = new int[CalculateAppropriateExtendedArrayLength(_vehicleHandleBuffer, (int)vehicleCountInPool)];
 
 					uint poolSize = vehiclePool->size;
@@ -2022,7 +2028,9 @@ namespace SHVDN
 					ulong* projectilePoolAddress = NativeMemory.ProjectilePoolAddress;
 
 					int projectileCountInPool = projectilesLeft;
-					if (_projectileHandleBuffer == null || projectileCountInPool > _projectileHandleBuffer.Length)
+					if (_projectileHandleBuffer == null)
+						_projectileHandleBuffer = new int[(int)projectileCountInPool * 2];
+					else if (projectileCountInPool > _projectileHandleBuffer.Length)
 						_projectileHandleBuffer = new int[CalculateAppropriateExtendedArrayLength(_projectileHandleBuffer, (int)projectileCountInPool)];
 
 					for (uint i = 0; (projectilesLeft > 0 && i < projectileCapacity); i++)
@@ -2034,7 +2042,7 @@ namespace SHVDN
 
 						projectilesLeft--;
 
-						if (CheckCheckpoint(entityAddress))
+						if (CheckEntity(entityAddress))
 							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.AddEntityToPoolFunc(entityAddress));
 					}
 				}
@@ -2080,7 +2088,9 @@ namespace SHVDN
 					int returnEntityCount = 0;
 
 					uint entityCountInPool = pool->itemCount;
-					if (handleBuffer == null || entityCountInPool > handleBuffer.Length)
+					if (handleBuffer == null)
+						handleBuffer = new int[(int)entityCountInPool * 2];
+					else if (entityCountInPool > handleBuffer.Length)
 						handleBuffer = new int[CalculateAppropriateExtendedArrayLength(handleBuffer, (int)entityCountInPool)];
 
 					uint poolSize = pool->size;
@@ -2119,10 +2129,69 @@ namespace SHVDN
 
 				int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
 				{
-					if (array == null)
-						return targetElementCount * 2;
+					return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
+				}
+			}
+		}
 
-					return (array.Length * 2 <= targetElementCount) ? array.Length * 2 : targetElementCount * 2;
+		internal class GetAllCheckpointHandlesTask : IScriptTask
+		{
+			#region Fields
+			internal int[] returnHandles = Array.Empty<int>();
+			#endregion
+
+			internal GetAllCheckpointHandlesTask()
+			{
+			}
+
+			public void Run()
+			{
+				var checkpointBaseAddress = GetCheckpointBaseAddress();
+
+				if (checkpointBaseAddress == 0)
+					return;
+
+				int count = 0;
+				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				{
+					_checkpointHandleBuffer[count++] = item->handle;
+				}
+
+				if (count == 0)
+					return;
+
+				returnHandles = new int[count];
+				Array.Copy(_checkpointHandleBuffer, returnHandles, count);
+			}
+		}
+
+		internal class GetCheckpointAddressTask : IScriptTask
+		{
+			#region Fields
+			internal int targetHandle;
+			internal IntPtr returnAddress;
+			#endregion
+
+			internal GetCheckpointAddressTask(int handle)
+			{
+				this.targetHandle = handle;
+			}
+
+			public void Run()
+			{
+				var checkpointBaseAddress = GetCheckpointBaseAddress();
+
+				if (checkpointBaseAddress == 0)
+					return;
+
+				int count = 0;
+				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				{
+					if (item->handle == targetHandle)
+					{
+						returnAddress = new IntPtr((long)((byte*)(CheckpointPoolAddress) + item->indexOfPool * 0x60));
+						break;
+					}
 				}
 			}
 		}
@@ -2322,23 +2391,11 @@ namespace SHVDN
 
 		public static int[] GetCheckpointHandles()
 		{
-			int[] handles = new int[64];
+			var task = new GetAllCheckpointHandlesTask();
 
-			ulong count = 0;
-			for (Checkpoint* item = *(Checkpoint**)(GetCheckpointBaseAddress() + 48); item != null && count < 64; item = item->next)
-			{
-				handles[count++] = item->handle;
-			}
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			int[] dataArray = new int[count];
-			unsafe
-			{
-				fixed (int* ptrBuffer = &dataArray[0])
-				{
-					Copy(handles, 0, new IntPtr(ptrBuffer), (int)count);
-				}
-			}
-			return dataArray;
+			return task.returnHandles;
 		}
 		public static int[] GetPickupObjectHandles()
 		{
@@ -2562,9 +2619,10 @@ namespace SHVDN
 
 		public static IntPtr GetCheckpointAddress(int handle)
 		{
-			var addr = GetCheckpointHandleAddress(GetCheckpointBaseAddress(), handle);
-			if (addr == 0) return IntPtr.Zero;
-			return new IntPtr((long)((ulong)(CheckpointPoolAddress) + 96 * ((ulong)*(int*)(addr + 16))));
+			var task = new GetCheckpointAddressTask(handle);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnAddress;
 		}
 
 		#endregion
