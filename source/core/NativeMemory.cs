@@ -1756,17 +1756,6 @@ namespace SHVDN
 		#region -- Entity Pools --
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct CheckpointPoolData
-		{
-			[FieldOffset(0xC)]
-			internal int handle;
-			[FieldOffset(0x10)]
-			internal long indexOfPool;
-			[FieldOffset(0x18)]
-			internal CheckpointPoolData* next;
-		}
-
-		[StructLayout(LayoutKind.Explicit)]
 		struct EntityPool
 		{
 			[FieldOffset(0x10)]
@@ -1849,8 +1838,6 @@ namespace SHVDN
 		static ulong* ObjectPoolAddress;
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
-		static ulong* CheckpointPoolAddress;
-		static ulong* RadarBlipPoolAddress;
 
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
@@ -1864,9 +1851,6 @@ namespace SHVDN
 		static EntityModel1FuncDelegate EntityModel1Func;
 		static EntityModel2FuncDelegate EntityModel2Func;
 		static AddEntityToPoolFuncDelegate AddEntityToPoolFunc;
-
-		const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
-		static readonly int[] _checkpointHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
 
 		internal class EntityPoolTask : IScriptTask
 		{
@@ -1902,21 +1886,35 @@ namespace SHVDN
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			bool CheckEntity(ulong address)
+			bool CheckEntity(ulong address, bool checkCurrentVehicleOfPed = false)
 			{
 				if (address == 0)
 					return false;
 
 				if (doPosCheck)
 				{
-					float* position = stackalloc float[4]; // EntityPosFunc changes 16 bytes
+					float x, y, z;
 
-					// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
-					NativeMemory.EntityPosFunc(address, position);
+					if (checkCurrentVehicleOfPed)
+					{
+						float* position = stackalloc float[4];
 
-					float x = this.position[0] - position[0];
-					float y = this.position[1] - position[1];
-					float z = this.position[2] - position[2];
+						// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
+						NativeMemory.EntityPosFunc(address, position);
+
+						x = this.position[0] - position[0];
+						y = this.position[1] - position[1];
+						z = this.position[2] - position[2];
+					}
+					else
+					{
+						float* position = (float*)(address + 0x90);
+
+						x = this.position[0] - position[0];
+						y = this.position[1] - position[1];
+						z = this.position[2] - position[2];
+					}
+
 					float distanceSquared = (x * x) + (y * y) + (z * z);
 					if (distanceSquared > radiusSquared)
 						return false;
@@ -1926,40 +1924,6 @@ namespace SHVDN
 				{
 					int modelHash = GetModelHashFromEntity(new IntPtr((long)address));
 					if (!Array.Exists(modelHashes, x => x == modelHash))
-						return false;
-
-					//uint v0 = *(uint*)(NativeMemory.EntityModel1Func(*(ulong*)(address + 32)));
-					//uint v1 = v0 & 0xFFFF;
-					//uint v2 = ((v1 ^ v0) & 0x0FFF0000 ^ v1) & 0xDFFFFFFF;
-					//uint v3 = ((v2 ^ v0) & 0x10000000 ^ v2) & 0x3FFFFFFF;
-					//ulong v5 = NativeMemory.EntityModel2Func((ulong)(&v3));
-					//
-					//if (v5 == 0)
-					//	return false;
-					//
-					//foreach (int hash in modelHashes)
-					//	if (*(int*)(v5 + 24) == hash)
-					//		return true;
-					//return false;
-				}
-
-				return true;
-			}
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			bool CheckCheckpoint(ulong address)
-			{
-				if (address == 0)
-					return false;
-
-				if (doPosCheck)
-				{
-					float* position = (float*)(address + 0x90);
-
-					float x = this.position[0] - position[0];
-					float y = this.position[1] - position[1];
-					float z = this.position[2] - position[2];
-					float distanceSquared = (x * x) + (y * y) + (z * z);
-					if (distanceSquared > radiusSquared)
 						return false;
 				}
 
@@ -2004,7 +1968,7 @@ namespace SHVDN
 				if (poolType.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
-					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer);
+					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer, true);
 				}
 
 				int objectCountStored = 0;
@@ -2084,7 +2048,7 @@ namespace SHVDN
 				}
 				#endregion
 
-				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
+				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer, bool checkCurrentVehicleOfPed = false)
 				{
 					int returnEntityCount = 0;
 
@@ -2103,7 +2067,7 @@ namespace SHVDN
 						if (pool->IsValid(i))
 						{
 							ulong address = pool->GetAddress(i);
-							if (CheckEntity(address))
+							if (CheckEntity(address, checkCurrentVehicleOfPed))
 								AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
 						}
 					}
@@ -2131,68 +2095,6 @@ namespace SHVDN
 				int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
 				{
 					return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
-				}
-			}
-		}
-
-		internal class GetAllCheckpointHandlesTask : IScriptTask
-		{
-			#region Fields
-			internal int[] returnHandles = Array.Empty<int>();
-			#endregion
-
-			internal GetAllCheckpointHandlesTask()
-			{
-			}
-
-			public void Run()
-			{
-				var checkpointBaseAddress = GetCheckpointBaseAddress();
-
-				if (checkpointBaseAddress == 0)
-					return;
-
-				int count = 0;
-				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
-				{
-					_checkpointHandleBuffer[count++] = item->handle;
-				}
-
-				if (count == 0)
-					return;
-
-				returnHandles = new int[count];
-				Array.Copy(_checkpointHandleBuffer, returnHandles, count);
-			}
-		}
-
-		internal class GetCheckpointAddressTask : IScriptTask
-		{
-			#region Fields
-			internal int targetHandle;
-			internal IntPtr returnAddress;
-			#endregion
-
-			internal GetCheckpointAddressTask(int handle)
-			{
-				this.targetHandle = handle;
-			}
-
-			public void Run()
-			{
-				var checkpointBaseAddress = GetCheckpointBaseAddress();
-
-				if (checkpointBaseAddress == 0)
-					return;
-
-				int count = 0;
-				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
-				{
-					if (item->handle == targetHandle)
-					{
-						returnAddress = new IntPtr((long)((byte*)(CheckpointPoolAddress) + item->indexOfPool * 0x60));
-						break;
-					}
 				}
 			}
 		}
@@ -2390,14 +2292,6 @@ namespace SHVDN
 			return task.handles;
 		}
 
-		public static int[] GetCheckpointHandles()
-		{
-			var task = new GetAllCheckpointHandlesTask();
-
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
-
-			return task.returnHandles;
-		}
 		public static int[] GetPickupObjectHandles()
 		{
 			var task = new EntityPoolTask(EntityPoolTask.Type.PickupObject);
@@ -2450,6 +2344,8 @@ namespace SHVDN
 		#endregion
 
 		#region -- Radar Blip Pool --
+
+		static ulong* RadarBlipPoolAddress;
 
 		static bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
 		{
@@ -2558,6 +2454,110 @@ namespace SHVDN
 
 		#endregion
 
+		#region -- Checkpoint Pool --
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct CheckpointPoolData
+		{
+			[FieldOffset(0xC)]
+			internal int handle;
+			[FieldOffset(0x10)]
+			internal long indexOfPool;
+			[FieldOffset(0x18)]
+			internal CheckpointPoolData* next;
+		}
+
+		delegate ulong GetCheckpointBaseAddressDelegate();
+		static GetCheckpointBaseAddressDelegate GetCheckpointBaseAddress;
+		delegate ulong GetCheckpointHandleAddressDelegate(ulong baseAddr, int handle);
+		static GetCheckpointHandleAddressDelegate GetCheckpointHandleAddress;
+
+		const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
+		static readonly int[] _checkpointHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
+		static ulong* CheckpointPoolAddress;
+
+		internal class GetAllCheckpointHandlesTask : IScriptTask
+		{
+			#region Fields
+			internal int[] returnHandles = Array.Empty<int>();
+			#endregion
+
+			internal GetAllCheckpointHandlesTask()
+			{
+			}
+
+			public void Run()
+			{
+				var checkpointBaseAddress = GetCheckpointBaseAddress();
+
+				if (checkpointBaseAddress == 0)
+					return;
+
+				int count = 0;
+				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				{
+					_checkpointHandleBuffer[count++] = item->handle;
+				}
+
+				if (count == 0)
+					return;
+
+				returnHandles = new int[count];
+				Array.Copy(_checkpointHandleBuffer, returnHandles, count);
+			}
+		}
+
+		internal class GetCheckpointAddressTask : IScriptTask
+		{
+			#region Fields
+			internal int targetHandle;
+			internal IntPtr returnAddress;
+			#endregion
+
+			internal GetCheckpointAddressTask(int handle)
+			{
+				this.targetHandle = handle;
+			}
+
+			public void Run()
+			{
+				var checkpointBaseAddress = GetCheckpointBaseAddress();
+
+				if (checkpointBaseAddress == 0)
+					return;
+
+				int count = 0;
+				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				{
+					if (item->handle == targetHandle)
+					{
+						returnAddress = new IntPtr((long)((byte*)(CheckpointPoolAddress) + item->indexOfPool * 0x60));
+						break;
+					}
+				}
+			}
+		}
+
+		public static int[] GetCheckpointHandles()
+		{
+			var task = new GetAllCheckpointHandlesTask();
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnHandles;
+		}
+
+		public static IntPtr GetCheckpointAddress(int handle)
+		{
+			var task = new GetCheckpointAddressTask(handle);
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnAddress;
+		}
+
+		#endregion
+
 		#region -- Waypoint Info Array --
 
 		delegate ulong GetLocalPlayerPedAddressFuncDelegate();
@@ -2611,19 +2611,6 @@ namespace SHVDN
 		public static IntPtr GetPlayerAddress(int handle)
 		{
 			return new IntPtr((long)GetPlayerAddressFunc(handle));
-		}
-
-		delegate ulong GetCheckpointBaseAddressDelegate();
-		static GetCheckpointBaseAddressDelegate GetCheckpointBaseAddress;
-		delegate ulong GetCheckpointHandleAddressDelegate(ulong baseAddr, int handle);
-		static GetCheckpointHandleAddressDelegate GetCheckpointHandleAddress;
-
-		public static IntPtr GetCheckpointAddress(int handle)
-		{
-			var task = new GetCheckpointAddressTask(handle);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
-
-			return task.returnAddress;
 		}
 
 		#endregion
