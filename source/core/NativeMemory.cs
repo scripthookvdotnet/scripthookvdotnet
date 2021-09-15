@@ -1868,13 +1868,14 @@ namespace SHVDN
 		{
 			#region Fields
 			internal Type poolType;
-			internal int[] handles;
+			internal int[] handles = Array.Empty<int>(); // Assign the reserved empty int array to avoid NullReferenceException in edge cases (e.g. at the very beginning of game session launching)
 			internal bool doPosCheck;
 			internal bool doModelCheck;
 			internal int[] modelHashes;
 			internal float radiusSquared;
 			internal float[] position;
 
+			// We should avoid wasting (temp) arrays many times by casually using List, but ArrayPool is not available in .NET Framework. So prepare resource pools manually
 			static int[] _vehicleHandleBuffer;
 			static int[] _pedHandleBuffer;
 			static int[] _objectHandleBuffer;
@@ -2042,10 +2043,7 @@ namespace SHVDN
 				#region Copy Entity Handles to a New Result Array
 				int totalEntityCount = vehicleCountStored + pedCountStored + objectCountStored + pickupCountStored + projectileCountStored;
 				if (totalEntityCount == 0)
-				{
-					handles = Array.Empty<int>();
 					return;
-				}
 
 				handles = new int[totalEntityCount];
 				int currentStartIndexToCopy = 0;
@@ -2106,7 +2104,7 @@ namespace SHVDN
 				{
 					if (index >= array.Length)
 					{
-						// This path is edge case!
+						// This path is an edge case!
 						var newArray = new int[array.Length * 2];
 						Array.Copy(array, newArray, array.Length);
 						newArray[index] = elementToAdd;
