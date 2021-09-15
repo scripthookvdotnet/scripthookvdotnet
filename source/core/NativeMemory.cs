@@ -1909,8 +1909,9 @@ namespace SHVDN
 
 				if (doPosCheck)
 				{
-					float* position = stackalloc float[3];
+					float* position = stackalloc float[4]; // EntityPosFunc changes 16 bytes
 
+					// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 					NativeMemory.EntityPosFunc(address, position);
 
 					float x = this.position[0] - position[0];
