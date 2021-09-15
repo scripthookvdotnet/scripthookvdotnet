@@ -239,15 +239,52 @@ namespace GTA.UI
 		#region Text
 
 		/// <summary>
+		/// Gets a value indicating whether a help message is currently displayed.
+		/// </summary>
+		public static bool IsHelpTextDisplayed => Function.Call<bool>(Hash.IS_HELP_MESSAGE_BEING_DISPLAYED);
+
+		/// <summary>
 		/// Shows a subtitle at the bottom of the screen for a given time
 		/// </summary>
 		/// <param name="message">The message to display.</param>
 		/// <param name="duration">The duration to display the subtitle in milliseconds.</param>
 		public static void ShowSubtitle(string message, int duration = 2500)
 		{
+			ShowSubtitle(message, duration, true);
+		}
+		/// <summary>
+		/// Shows a subtitle at the bottom of the screen for a given time
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="duration">The duration to display the subtitle in milliseconds.</param>
+		/// <param name="drawImmediately">Whether to draw immediately or draw after all the queued subtitles have finished.</param>
+		public static void ShowSubtitle(string message, int duration, bool drawImmediately = true)
+		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_PRINT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(message);
-			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, 1);
+			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, drawImmediately);
+		}
+		/// <summary>
+		/// Displays a help message in the top corner of the screen.
+		/// </summary>
+		/// <param name="helpText">The text to display.</param>
+		/// <param name="duration">
+		/// The duration how long the help text will be displayed in real time (not in game time which is influenced by game speed).
+		/// if the value is not positive, the help text will be displayed for 7.5 seconds.
+		/// </param>
+		/// <param name="beep">Whether to play beeping sound.</param>
+		public static void ShowHelpText(string helpText, int duration = -1, bool beep = true)
+		{
+			ShowHelpTextInternal(helpText, duration, beep, false);
+		}
+		/// <summary>
+		/// Displays a help message in the top corner of the screen infinitely.
+		/// </summary>
+		/// <param name="helpText">The text to display.</param>
+		/// <param name="beep">Whether to play beeping sound.</param>
+		public static void ShowHelpTextLooped(string helpText, bool beep = true)
+		{
+			ShowHelpTextInternal(helpText, -1, beep, true);
 		}
 		/// <summary>
 		/// Displays a help message in the top corner of the screen this frame. Beeping sound will be played.
