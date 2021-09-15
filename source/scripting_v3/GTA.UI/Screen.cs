@@ -255,7 +255,7 @@ namespace GTA.UI
 		/// <param name="helpText">The text to display.</param>
 		public static void ShowHelpTextThisFrame(string helpText)
 		{
-			ShowHelpTextThisFrame(helpText, true);			// keeping it DRY :)
+			ShowHelpTextInternal(helpText, 1, true, false);			// keeping it DRY :)
 		}
 		/// <summary>
 		/// Displays a help message in the top corner of the screen this frame. Specify whether beeping sound plays.
@@ -264,9 +264,13 @@ namespace GTA.UI
 		/// <param name="beep">Whether to play beeping sound</param>
 		public static void ShowHelpTextThisFrame(string helpText, bool beep)
 		{
+			ShowHelpTextInternal(helpText, 1, beep, false);
+		}
+		static void ShowHelpTextInternal(string helpText, int duration, bool beep, bool loop)
+		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_HELP, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(helpText);
-			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, 0, beep, -1);
+			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, loop, beep, duration);
 		}
 
 		#endregion
