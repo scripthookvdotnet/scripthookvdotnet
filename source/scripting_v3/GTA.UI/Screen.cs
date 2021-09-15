@@ -309,6 +309,13 @@ namespace GTA.UI
 			SHVDN.NativeFunc.PushLongString(helpText);
 			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, loop, beep, duration);
 		}
+		/// <summary>
+		/// Clears a help message immediately.
+		/// </summary>
+		static void ClearHelpText()
+		{
+			Function.Call(Hash.CLEAR_HELP, true);
+		}
 
 		#endregion
 
