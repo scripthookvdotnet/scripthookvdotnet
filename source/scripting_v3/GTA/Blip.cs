@@ -42,7 +42,14 @@ namespace GTA
 					return 0;
 				}
 
-				return (BlipDisplayType)SHVDN.NativeMemory.ReadByte(address + 0x5E);
+				var gameVersion = Game.Version;
+				var offset = 0x58;
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+					offset = 0x5E;
+				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
+					offset = 0x5C;
+
+				return (BlipDisplayType)SHVDN.NativeMemory.ReadByte(address + offset);
 			}
 			set => Function.Call<int>(Hash.SET_BLIP_DISPLAY, Handle, value);
 		}
@@ -60,7 +67,14 @@ namespace GTA
 					return 0;
 				}
 
-				return (BlipCategoryType)SHVDN.NativeMemory.ReadByte(address + 0x60);
+				var gameVersion = Game.Version;
+				var offset = 0x5A;
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+					offset = 0x60;
+				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
+					offset = 0x5E;
+
+				return (BlipCategoryType)SHVDN.NativeMemory.ReadByte(address + offset);
 			}
 			set => Function.Call<int>(Hash.SET_BLIP_CATEGORY, Handle, value);
 		}
@@ -90,7 +104,14 @@ namespace GTA
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadByte(address + 0x5D);
+				var gameVersion = Game.Version;
+				var offset = 0x57;
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+					offset = 0x5D;
+				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
+					offset = 0x5B;
+
+				return SHVDN.NativeMemory.ReadByte(address + offset);
 			}
 			set => Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
 		}
@@ -109,7 +130,14 @@ namespace GTA
 					return 0;
 				}
 
-				var returnValue = (int)SHVDN.NativeMemory.ReadByte(address + 0x61);
+				var gameVersion = Game.Version;
+				var offset = 0x5B;
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+					offset = 0x61;
+				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
+					offset = 0x5F;
+
+				var returnValue = (int)SHVDN.NativeMemory.ReadByte(address + offset);
 
 				// the game does not show a number label on the blip if the value is between 0x80 to 0xFF
 				if ((returnValue & 0x80) != 0)
@@ -239,7 +267,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as an <see cref="int"/>.
-		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/>.</para>
+		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/> in v1.0.944.2 or newer versions.</para>
 		/// </summary>
 		/// <value>
 		/// The rotation as an <see cref="int"/>.
@@ -247,12 +275,31 @@ namespace GTA
 		/// <seealso cref="RotationFloat"/>
 		public int Rotation
 		{
-			get => Game.Version >= GameVersion.v1_0_2060_1_Steam ? Function.Call<int>((Hash)0x003E92BA477F9D7F, Handle) : (int)RotationFloat;
+			get
+			{
+				if (Game.Version >= GameVersion.v1_0_2060_1_Steam)
+					return Function.Call<int>(Hash._GET_BLIP_ROTATION, Handle);
+
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				var gameVersion = Game.Version;
+
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+					return (int)SHVDN.NativeMemory.ReadFloat(address + 0x58);
+
+				var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
+				return SHVDN.NativeMemory.ReadInt16(address + offset);
+			}
 			set => Function.Call(Hash.SET_BLIP_ROTATION, Handle, value);
 		}
 
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as a <see cref="float"/>.
+		/// The value does not have any decimal places in v1.0.877.1 or older versions because the value is stored as <see cref="ushort"/> in these versions.
 		/// </summary>
 		/// <value>
 		/// The rotation as a <see cref="float"/>.
@@ -267,7 +314,13 @@ namespace GTA
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + 0x58);
+				var gameVersion = Game.Version;
+
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+					return SHVDN.NativeMemory.ReadFloat(address + 0x58);
+
+				var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
+				return (float)SHVDN.NativeMemory.ReadInt16(address + offset);
 			}
 			set
 			{
@@ -277,7 +330,25 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + 0x58, value);
+				var valueNormalized = NormalizeRotation(value);
+				var gameVersion = Game.Version;
+
+				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+				{
+					SHVDN.NativeMemory.WriteFloat(address + 0x58, valueNormalized);
+					return;
+				}
+
+				var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
+				SHVDN.NativeMemory.WriteInt16(address + offset, (short)valueNormalized);
+
+				float NormalizeRotation(float val)
+				{
+					var normalizedValue = val % 360;
+					if (normalizedValue < 0)
+						normalizedValue += 360;
+					return normalizedValue;
+				}
 			}
 		}
 
@@ -291,6 +362,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the x-axis scale of this <see cref="Blip"/> on the map.
+		/// The value is the same as <see cref="ScaleY"/> in v1.0.393.4 or older versions.
 		/// </summary>
 		public float ScaleX
 		{
@@ -318,6 +390,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the y-axis scale of this <see cref="Blip"/> on the map.
+		/// The value is the same as <see cref="ScaleX"/> in v1.0.393.4 or older versions.
 		/// </summary>
 		public float ScaleY
 		{
@@ -329,7 +402,7 @@ namespace GTA
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + 0x54);
+				return Game.Version >= GameVersion.v1_0_463_1_Steam ? SHVDN.NativeMemory.ReadFloat(address + 0x54) : SHVDN.NativeMemory.ReadFloat(address + 0x50);
 			}
 			set
 			{
@@ -339,7 +412,10 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + 0x54, value);
+				if (Game.Version >= GameVersion.v1_0_463_1_Steam)
+					SHVDN.NativeMemory.WriteFloat(address + 0x54, value);
+				else
+					SHVDN.NativeMemory.WriteFloat(address + 0x50, value);
 			}
 		}
 

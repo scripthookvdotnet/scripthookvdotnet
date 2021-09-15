@@ -239,6 +239,7 @@ namespace GTA
 		/// <see langword="true" /> if this <see cref="Model"/> is a male pedestrian; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsMalePed => SHVDN.NativeMemory.IsModelAMalePed(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a motorcycle.
 		/// </summary>
 		/// <value>

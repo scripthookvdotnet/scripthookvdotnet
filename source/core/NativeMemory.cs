@@ -911,6 +911,7 @@ namespace SHVDN
 		public static IntPtr String => StringToCoTaskMemUTF8("STRING");
 		public static IntPtr NullString => StringToCoTaskMemUTF8(string.Empty);
 		public static IntPtr CellEmailBcon => StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
+		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
 
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{
@@ -943,14 +944,20 @@ namespace SHVDN
 			if (s == null)
 				return IntPtr.Zero;
 
-			byte[] utf8Bytes = Encoding.UTF8.GetBytes(s);
-			IntPtr dest = AllocCoTaskMem(utf8Bytes.Length + 1);
+			int byteCountUtf8 = Encoding.UTF8.GetByteCount(s);
+			if (byteCountUtf8 > _strBufferForStringToCoTaskMemUTF8.Length)
+			{
+				_strBufferForStringToCoTaskMemUTF8 = new byte[byteCountUtf8 * 2];
+			}
+
+			Encoding.UTF8.GetBytes(s, 0, s.Length, _strBufferForStringToCoTaskMemUTF8, 0);
+			IntPtr dest = AllocCoTaskMem(byteCountUtf8 + 1);
 			if (dest == IntPtr.Zero)
 				throw new OutOfMemoryException();
 
-			Copy(utf8Bytes, 0, dest, utf8Bytes.Length);
+			Copy(_strBufferForStringToCoTaskMemUTF8, 0, dest, byteCountUtf8);
 			// Add null-terminator to end
-			((byte*)dest.ToPointer())[utf8Bytes.Length] = 0;
+			((byte*)dest.ToPointer())[byteCountUtf8] = 0;
 
 			return dest;
 		}
@@ -1754,16 +1761,6 @@ namespace SHVDN
 
 		#region -- Entity Pools --
 
-		[StructLayout(LayoutKind.Sequential)]
-		struct Checkpoint
-		{
-			internal long padding;
-			internal int padding1;
-			internal int handle;
-			internal long padding2;
-			internal Checkpoint* next;
-		}
-
 		[StructLayout(LayoutKind.Explicit)]
 		struct EntityPool
 		{
@@ -1847,8 +1844,6 @@ namespace SHVDN
 		static ulong* ObjectPoolAddress;
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
-		static ulong* CheckpointPoolAddress;
-		static ulong* RadarBlipPoolAddress;
 
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
@@ -1867,12 +1862,19 @@ namespace SHVDN
 		{
 			#region Fields
 			internal Type poolType;
-			internal List<int> handles = new List<int>();
+			internal int[] handles = Array.Empty<int>(); // Assign the reserved empty int array to avoid NullReferenceException in edge cases (e.g. at the very beginning of game session launching)
 			internal bool doPosCheck;
 			internal bool doModelCheck;
 			internal int[] modelHashes;
 			internal float radiusSquared;
 			internal float[] position;
+
+			// We should avoid wasting (temp) arrays many times by casually using List, but ArrayPool is not available in .NET Framework. So prepare resource pools manually
+			static int[] _vehicleHandleBuffer;
+			static int[] _pedHandleBuffer;
+			static int[] _objectHandleBuffer;
+			static int[] _pickupObjectHandleBuffer;
+			static int[] _projectileHandleBuffer = new int[50];
 			#endregion
 
 			internal enum Type
@@ -1897,13 +1899,14 @@ namespace SHVDN
 
 				if (doPosCheck)
 				{
-					float* position = stackalloc float[3];
+					float* position = stackalloc float[4];
 
+					// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 					NativeMemory.EntityPosFunc(address, position);
-
 					float x = this.position[0] - position[0];
 					float y = this.position[1] - position[1];
 					float z = this.position[2] - position[2];
+
 					float distanceSquared = (x * x) + (y * y) + (z * z);
 					if (distanceSquared > radiusSquared)
 						return false;
@@ -1913,40 +1916,6 @@ namespace SHVDN
 				{
 					int modelHash = GetModelHashFromEntity(new IntPtr((long)address));
 					if (!Array.Exists(modelHashes, x => x == modelHash))
-						return false;
-
-					//uint v0 = *(uint*)(NativeMemory.EntityModel1Func(*(ulong*)(address + 32)));
-					//uint v1 = v0 & 0xFFFF;
-					//uint v2 = ((v1 ^ v0) & 0x0FFF0000 ^ v1) & 0xDFFFFFFF;
-					//uint v3 = ((v2 ^ v0) & 0x10000000 ^ v2) & 0x3FFFFFFF;
-					//ulong v5 = NativeMemory.EntityModel2Func((ulong)(&v3));
-					//
-					//if (v5 == 0)
-					//	return false;
-					//
-					//foreach (int hash in modelHashes)
-					//	if (*(int*)(v5 + 24) == hash)
-					//		return true;
-					//return false;
-				}
-
-				return true;
-			}
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			bool CheckCheckpoint(ulong address)
-			{
-				if (address == 0)
-					return false;
-
-				if (doPosCheck)
-				{
-					float* position = (float*)(address + 0x90);
-
-					float x = this.position[0] - position[0];
-					float y = this.position[1] - position[1];
-					float z = this.position[2] - position[2];
-					float distanceSquared = (x * x) + (y * y) + (z * z);
-					if (distanceSquared > radiusSquared)
 						return false;
 				}
 
@@ -1960,11 +1929,20 @@ namespace SHVDN
 
 				EntityPool* entityPool = (EntityPool*)(*NativeMemory.EntityPoolAddress);
 
+				#region Store Entity Handles to Buffer Arrays
+				int vehicleCountStored = 0;
 				if (poolType.HasFlag(Type.Vehicle) && *NativeMemory.VehiclePoolAddress != 0)
 				{
 					VehiclePool* vehiclePool = *(VehiclePool**)(*NativeMemory.VehiclePoolAddress);
 
-					for (uint i = 0; i < vehiclePool->size; i++)
+					uint vehicleCountInPool = vehiclePool->itemCount;
+					if (_vehicleHandleBuffer == null)
+						_vehicleHandleBuffer = new int[(int)vehicleCountInPool * 2];
+					else if (_vehicleHandleBuffer == null || vehicleCountInPool > _vehicleHandleBuffer.Length)
+						_vehicleHandleBuffer = new int[CalculateAppropriateExtendedArrayLength(_vehicleHandleBuffer, (int)vehicleCountInPool)];
+
+					uint poolSize = vehiclePool->size;
+					for (uint i = 0; i < poolSize; i++)
 					{
 						if (entityPool->IsFull())
 							break;
@@ -1973,83 +1951,142 @@ namespace SHVDN
 						{
 							ulong address = vehiclePool->GetAddress(i);
 							if (CheckEntity(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
+								AddElementAndReallocateIfLengthIsNotLongEnough(ref _vehicleHandleBuffer, vehicleCountStored++, NativeMemory.AddEntityToPoolFunc(address));
 						}
 					}
 				}
 
+				int pedCountStored = 0;
 				if (poolType.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
-
-					for (uint i = 0; i < pedPool->size; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (pedPool->IsValid(i))
-						{
-							ulong address = pedPool->GetAddress(i);
-							if (CheckEntity(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
+					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer);
 				}
 
+				int objectCountStored = 0;
 				if (poolType.HasFlag(Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
 				{
-					GenericPool* propPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
-
-					for (uint i = 0; i < propPool->size; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (propPool->IsValid(i))
-						{
-							ulong address = propPool->GetAddress(i);
-							if (CheckEntity(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
+					GenericPool* objectPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
+					objectCountStored = CopyEntityHandlesToArrayGenericPool(objectPool, ref _objectHandleBuffer);
 				}
 
+				int pickupCountStored = 0;
 				if (poolType.HasFlag(Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
 				{
 					GenericPool* pickupPool = (GenericPool*)(*NativeMemory.PickupObjectPoolAddress);
-
-					for (uint i = 0; i < pickupPool->size; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (pickupPool->IsValid(i))
-						{
-							ulong address = pickupPool->GetAddress(i);
-							if (CheckCheckpoint(address))
-								handles.Add(NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
+					pickupCountStored = CopyEntityHandlesToArrayGenericPool(pickupPool, ref _pickupObjectHandleBuffer);
 				}
 
+				int projectileCountStored = 0;
 				if (poolType.HasFlag(Type.Projectile) && NativeMemory.ProjectilePoolAddress != null)
 				{
-					int ProjectilesLeft = NativeMemory.GetProjectileCount();
-					int ProjectilesCapacity = NativeMemory.GetProjectileCapacity();
+					int projectilesLeft = NativeMemory.GetProjectileCount();
+					int projectileCapacity = NativeMemory.GetProjectileCapacity();
 					ulong* projectilePoolAddress = NativeMemory.ProjectilePoolAddress;
 
-					for (uint i = 0; (ProjectilesLeft > 0 && i < ProjectilesCapacity); i++)
+					int projectileCountInPool = projectilesLeft;
+					if (_projectileHandleBuffer == null)
+						_projectileHandleBuffer = new int[(int)projectileCountInPool * 2];
+					else if (projectileCountInPool > _projectileHandleBuffer.Length)
+						_projectileHandleBuffer = new int[CalculateAppropriateExtendedArrayLength(_projectileHandleBuffer, (int)projectileCountInPool)];
+
+					for (uint i = 0; (projectilesLeft > 0 && i < projectileCapacity); i++)
 					{
 						ulong entityAddress = (ulong)ReadAddress(new IntPtr(projectilePoolAddress + i)).ToInt64();
 
 						if (entityAddress == 0)
 							continue;
 
-						ProjectilesLeft--;
+						projectilesLeft--;
 
-						if (CheckCheckpoint(entityAddress))
-							handles.Add(NativeMemory.AddEntityToPoolFunc(entityAddress));
+						if (CheckEntity(entityAddress))
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.AddEntityToPoolFunc(entityAddress));
 					}
+				}
+				#endregion
+
+				#region Copy Entity Handles to a New Result Array
+				int totalEntityCount = vehicleCountStored + pedCountStored + objectCountStored + pickupCountStored + projectileCountStored;
+				if (totalEntityCount == 0)
+					return;
+
+				handles = new int[totalEntityCount];
+				int currentStartIndexToCopy = 0;
+
+				if (vehicleCountStored != 0)
+				{
+					Array.Copy(_vehicleHandleBuffer, 0, handles, currentStartIndexToCopy, vehicleCountStored);
+					currentStartIndexToCopy += vehicleCountStored;
+				}
+				if (pedCountStored != 0)
+				{
+					Array.Copy(_pedHandleBuffer, 0, handles, currentStartIndexToCopy, pedCountStored);
+					currentStartIndexToCopy += pedCountStored;
+				}
+				if (objectCountStored != 0)
+				{
+					Array.Copy(_objectHandleBuffer, 0, handles, currentStartIndexToCopy, objectCountStored);
+					currentStartIndexToCopy += objectCountStored;
+				}
+				if (pickupCountStored != 0)
+				{
+					Array.Copy(_pickupObjectHandleBuffer, 0, handles, currentStartIndexToCopy, pickupCountStored);
+					currentStartIndexToCopy += pickupCountStored;
+				}
+				if (projectileCountStored != 0)
+				{
+					Array.Copy(_projectileHandleBuffer, 0, handles, currentStartIndexToCopy, projectileCountStored);
+					currentStartIndexToCopy += projectileCountStored;
+				}
+				#endregion
+
+				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
+				{
+					int returnEntityCount = 0;
+
+					uint entityCountInPool = pool->itemCount;
+					if (handleBuffer == null)
+						handleBuffer = new int[(int)entityCountInPool * 2];
+					else if (entityCountInPool > handleBuffer.Length)
+						handleBuffer = new int[CalculateAppropriateExtendedArrayLength(handleBuffer, (int)entityCountInPool)];
+
+					uint poolSize = pool->size;
+					for (uint i = 0; i < poolSize; i++)
+					{
+						if (entityPool->IsFull())
+							break;
+
+						if (pool->IsValid(i))
+						{
+							ulong address = pool->GetAddress(i);
+							if (CheckEntity(address))
+								AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
+						}
+					}
+
+					return returnEntityCount;
+				}
+
+				void AddElementAndReallocateIfLengthIsNotLongEnough(ref int[] array, int index, int elementToAdd)
+				{
+					if (index >= array.Length)
+					{
+						// This path is an edge case!
+						var newArray = new int[array.Length * 2];
+						Array.Copy(array, newArray, array.Length);
+						newArray[index] = elementToAdd;
+
+						array = newArray;
+					}
+					else
+					{
+						array[index] = elementToAdd;
+					}
+				}
+
+				int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
+				{
+					return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
 				}
 			}
 		}
@@ -2163,7 +2200,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetPedHandles(float[] position, float radius, int[] modelHashes = null)
 		{
@@ -2176,7 +2213,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetPropHandles(int[] modelHashes = null)
@@ -2187,7 +2224,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetPropHandles(float[] position, float radius, int[] modelHashes = null)
 		{
@@ -2200,7 +2237,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetEntityHandles()
@@ -2209,7 +2246,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetEntityHandles(float[] position, float radius)
 		{
@@ -2220,7 +2257,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int[] GetVehicleHandles(int[] modelHashes = null)
@@ -2231,7 +2268,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetVehicleHandles(float[] position, float radius, int[] modelHashes = null)
 		{
@@ -2244,36 +2281,16 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
-		public static int[] GetCheckpointHandles()
-		{
-			int[] handles = new int[64];
-
-			ulong count = 0;
-			for (Checkpoint* item = *(Checkpoint**)(GetCheckpointBaseAddress() + 48); item != null && count < 64; item = item->next)
-			{
-				handles[count++] = item->handle;
-			}
-
-			int[] dataArray = new int[count];
-			unsafe
-			{
-				fixed (int* ptrBuffer = &dataArray[0])
-				{
-					Copy(handles, 0, new IntPtr(ptrBuffer), (int)count);
-				}
-			}
-			return dataArray;
-		}
 		public static int[] GetPickupObjectHandles()
 		{
 			var task = new EntityPoolTask(EntityPoolTask.Type.PickupObject);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetPickupObjectHandles(float[] position, float radius)
 		{
@@ -2284,7 +2301,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetProjectileHandles()
 		{
@@ -2292,7 +2309,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 		public static int[] GetProjectileHandles(float[] position, float radius)
 		{
@@ -2303,7 +2320,7 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.handles.ToArray();
+			return task.handles;
 		}
 
 		public static int GetEntityHandleFromAddress(IntPtr address)
@@ -2319,6 +2336,8 @@ namespace SHVDN
 		#endregion
 
 		#region -- Radar Blip Pool --
+
+		static ulong* RadarBlipPoolAddress;
 
 		static bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
 		{
@@ -2375,7 +2394,10 @@ namespace SHVDN
 					continue;
 
 				if (CheckBlip(address, position, radius, spriteTypes))
-					handles.Add(*(int*)(address + 4));
+                {
+					ushort blipCreationIncrement = *(ushort*)(address + 8);
+					handles.Add((int)((blipCreationIncrement << 0x10) + (uint)i));
+				}
 			}
 
 			return handles.ToArray();
@@ -2388,10 +2410,13 @@ namespace SHVDN
 				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
 
 				if (northBlipAddress != 0)
-					return *(int*)(northBlipAddress + 4);
+                {
+					ushort blipCreationIncrement = *(ushort*)(northBlipAddress + 8);
+					return ((blipCreationIncrement << 0x10) + 2);
+				}
 			}
 
-			return -1;
+			return 0;
 		}
 
 		public static IntPtr GetBlipAddress(int handle)
@@ -2411,10 +2436,116 @@ namespace SHVDN
 
 			ulong address = *(RadarBlipPoolAddress + poolIndexOfHandle);
 
-			if (address != 0 && *(int*)(address + 4) == handle)
+			if (address != 0 && IsBlipCreationIncrementValid(address, handle))
 				return new IntPtr((long)address);
 
 			return IntPtr.Zero;
+
+			bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == (((uint)blipHandle >> 0x10));
+		}
+
+		#endregion
+
+		#region -- Checkpoint Pool --
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct CheckpointPoolData
+		{
+			[FieldOffset(0xC)]
+			internal int handle;
+			[FieldOffset(0x10)]
+			internal long indexOfPool;
+			[FieldOffset(0x18)]
+			internal CheckpointPoolData* next;
+		}
+
+		delegate ulong GetCheckpointBaseAddressDelegate();
+		static GetCheckpointBaseAddressDelegate GetCheckpointBaseAddress;
+		delegate ulong GetCheckpointHandleAddressDelegate(ulong baseAddr, int handle);
+		static GetCheckpointHandleAddressDelegate GetCheckpointHandleAddress;
+
+		const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
+		static readonly int[] _checkpointHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
+		static ulong* CheckpointPoolAddress;
+
+		internal class GetAllCheckpointHandlesTask : IScriptTask
+		{
+			#region Fields
+			internal int[] returnHandles = Array.Empty<int>();
+			#endregion
+
+			internal GetAllCheckpointHandlesTask()
+			{
+			}
+
+			public void Run()
+			{
+				var checkpointBaseAddress = GetCheckpointBaseAddress();
+
+				if (checkpointBaseAddress == 0)
+					return;
+
+				int count = 0;
+				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				{
+					_checkpointHandleBuffer[count++] = item->handle;
+				}
+
+				if (count == 0)
+					return;
+
+				returnHandles = new int[count];
+				Array.Copy(_checkpointHandleBuffer, returnHandles, count);
+			}
+		}
+
+		internal class GetCheckpointAddressTask : IScriptTask
+		{
+			#region Fields
+			internal int targetHandle;
+			internal IntPtr returnAddress;
+			#endregion
+
+			internal GetCheckpointAddressTask(int handle)
+			{
+				this.targetHandle = handle;
+			}
+
+			public void Run()
+			{
+				var checkpointBaseAddress = GetCheckpointBaseAddress();
+
+				if (checkpointBaseAddress == 0)
+					return;
+
+				int count = 0;
+				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				{
+					if (item->handle == targetHandle)
+					{
+						returnAddress = new IntPtr((long)((byte*)(CheckpointPoolAddress) + item->indexOfPool * 0x60));
+						break;
+					}
+				}
+			}
+		}
+
+		public static int[] GetCheckpointHandles()
+		{
+			var task = new GetAllCheckpointHandlesTask();
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnHandles;
+		}
+
+		public static IntPtr GetCheckpointAddress(int handle)
+		{
+			var task = new GetCheckpointAddressTask(handle);
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnAddress;
 		}
 
 		#endregion
@@ -2445,7 +2576,9 @@ namespace SHVDN
 				int modelHash = *(int*)waypointInfoAddress;
 
 				if (modelHash == playerPedModelHash)
-					return *(int*)(waypointInfoAddress + 0x4);
+				{				
+					return *(int*)(waypointInfoAddress + 4);
+				}
 			}
 
 			return 0;
@@ -2470,18 +2603,6 @@ namespace SHVDN
 		public static IntPtr GetPlayerAddress(int handle)
 		{
 			return new IntPtr((long)GetPlayerAddressFunc(handle));
-		}
-
-		delegate ulong GetCheckpointBaseAddressDelegate();
-		static GetCheckpointBaseAddressDelegate GetCheckpointBaseAddress;
-		delegate ulong GetCheckpointHandleAddressDelegate(ulong baseAddr, int handle);
-		static GetCheckpointHandleAddressDelegate GetCheckpointHandleAddress;
-
-		public static IntPtr GetCheckpointAddress(int handle)
-		{
-			var addr = GetCheckpointHandleAddress(GetCheckpointBaseAddress(), handle);
-			if (addr == 0) return IntPtr.Zero;
-			return new IntPtr((long)((ulong)(CheckpointPoolAddress) + 96 * ((ulong)*(int*)(addr + 16))));
 		}
 
 		#endregion
