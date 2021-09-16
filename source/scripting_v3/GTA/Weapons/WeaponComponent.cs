@@ -24,13 +24,25 @@ namespace GTA
 
 		public bool Active
 		{
-			get => Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, ComponentHash);
-			set => Function.Call(value ? Hash.GIVE_WEAPON_COMPONENT_TO_PED : Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, _weapon.Hash, ComponentHash);
+			get
+			{
+				if (_weapon == null || _owner == null || !_owner.Exists())
+					return false;
+
+				return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, ComponentHash);
+			}
+			set
+			{
+				if (_weapon == null || _owner == null || !_owner.Exists())
+					return;
+
+				Function.Call(value ? Hash.GIVE_WEAPON_COMPONENT_TO_PED : Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, _weapon.Hash, ComponentHash);
+			}
 		}
 
-		public string DisplayName => GetComponentDisplayNameFromHash(_weapon.Hash, ComponentHash);
+		public string DisplayName => _weapon != null ? GetComponentDisplayNameFromHash(_weapon.Hash, ComponentHash) : string.Empty;
 
-		public string LocalizedName => Game.GetLocalizedString(DisplayName);
+		public string LocalizedName => _weapon != null ? Game.GetLocalizedString(DisplayName) : string.Empty;
 
 		public WeaponComponentHash ComponentHash
 		{
