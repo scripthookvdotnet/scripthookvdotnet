@@ -29,6 +29,7 @@ namespace GTA
 		{
 			get;
 		}
+
 		public string DisplayName => GetDisplayNameFromHash(Hash);
 
 		public string LocalizedName => Game.GetLocalizedString(DisplayName);
