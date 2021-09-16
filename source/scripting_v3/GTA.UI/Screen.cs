@@ -282,7 +282,7 @@ namespace GTA.UI
 		/// </summary>
 		/// <param name="helpText">The text to display.</param>
 		/// <param name="beep">Whether to play beeping sound.</param>
-		public static void ShowHelpTextLooped(string helpText, bool beep = true)
+		public static void ShowHelpTextForever(string helpText, bool beep = true)
 		{
 			ShowHelpTextInternal(helpText, -1, beep, true);
 		}
