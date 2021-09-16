@@ -521,11 +521,53 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the rotation velocity of this <see cref="Entity"/>.
+		/// Gets the rotation velocity of this <see cref="Entity"/> in local axes.
 		/// </summary>
 		public Vector3 RotationVelocity
 		{
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				var angularVelocityInLocalAxes = Quaternion * value;
+				SHVDN.NativeMemory.SetEntityAngularVelocity(address, angularVelocityInLocalAxes.X, angularVelocityInLocalAxes.Y, angularVelocityInLocalAxes.Z);
+			}
+		}
+
+		/// <summary>
+		/// Gets the rotation velocity of this <see cref="Entity"/> in world axes.
+		/// </summary>
+		public Vector3 RotationVelocityWorldAxis
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				unsafe
+				{
+					var returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
+					return new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]);
+				}
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.SetEntityAngularVelocity(address, value.X, value.Y, value.Z);
+			}
 		}
 
 		#endregion

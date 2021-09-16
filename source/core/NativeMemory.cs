@@ -253,6 +253,12 @@ namespace SHVDN
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
+			address = FindPattern("\x75\x11\x48\x8B\x06\x48\x8D\x54\x24\x20\x48\x8B\xCE\xFF\x90", "xxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				SetAngularVelocityVFuncOfEntityOffset = *(int*)(address + 15);
+				GetAngularVelocityVFuncOfEntityOffset = SetAngularVelocityVFuncOfEntityOffset + 0x8;
+			}
 
 			address = FindPattern("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
 			cAttackerArrayOfEntityOffset = *(uint*)(address + 3); // the correct name is unknown
@@ -1231,9 +1237,101 @@ namespace SHVDN
 
 		#region -- Entity Offsets --
 
+		public static int SetAngularVelocityVFuncOfEntityOffset { get; }
+		public static int GetAngularVelocityVFuncOfEntityOffset { get; }
+
 		public static uint cAttackerArrayOfEntityOffset { get; }
 		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
 		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
+
+		#endregion
+
+		#region -- Entity Functions --
+
+		public delegate void SetEntityAngularVelocityDelegate(IntPtr entityAddress, float* angularVelocity);
+		// return value will be the address of the temporary 4 float storage
+		public delegate float* GetEntityAngularVelocityDelegate(IntPtr entityAddress);
+
+		// Only 2 virtural functions are present (one for peds and objects and one for vehicles), so use List instead of Dictionary
+		static List<(ulong vFuncAddr, SetEntityAngularVelocityDelegate delegateInstance)> setEntityAngularVelocityVFuncCache = new List<(ulong vFuncAddr, SetEntityAngularVelocityDelegate delegateInstance)>(2);
+		static List<(ulong vFuncAddr, GetEntityAngularVelocityDelegate delegateInstance)> getEntityAngularVelocityVFuncCache = new List<(ulong vFuncAddr, GetEntityAngularVelocityDelegate delegateInstance)>(2);
+
+		internal class SetEntityAngularVelocityTask : IScriptTask
+		{
+			#region Fields
+			IntPtr entityAddress;
+			SetEntityAngularVelocityDelegate setAngularVelocityDelegate;
+			float x, y, z;
+			#endregion
+
+			internal SetEntityAngularVelocityTask(IntPtr entityAddress, SetEntityAngularVelocityDelegate vFuncDelegate, float x, float y, float z)
+			{
+				this.entityAddress = entityAddress;
+				this.setAngularVelocityDelegate = vFuncDelegate;
+				this.x = x;
+				this.y = y;
+				this.z = z;
+			}
+
+			public void Run()
+			{
+				var angularVelocity = stackalloc float[4];
+				angularVelocity[0] = x;
+				angularVelocity[1] = y;
+				angularVelocity[2] = z;
+
+				setAngularVelocityDelegate(entityAddress, angularVelocity);
+			}
+		}
+
+		public static float* GetEntityAngularVelocity(IntPtr entityAddress)
+		{
+			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)GetAngularVelocityVFuncOfEntityOffset);
+			var getEntityAngularVelocity = CreateGetEntityAngularVelocityDelegateIfNotCreated(vFuncAddr);
+
+			return getEntityAngularVelocity(entityAddress);
+		}
+
+		public static void SetEntityAngularVelocity(IntPtr entityAddress, float x, float y, float z)
+		{
+			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)SetAngularVelocityVFuncOfEntityOffset);
+			var setEntityAngularVelocityDelegate = CreateSetEntityAngularVelocityDelegateIfNotCreated(vFuncAddr);
+
+			var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		static SetEntityAngularVelocityDelegate CreateSetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
+		{
+			foreach (var addressAndDelegateTuple in setEntityAngularVelocityVFuncCache)
+			{
+				var (vFuncAddrCached, delegateCached) = addressAndDelegateTuple;
+
+				if (virtualFuncAddr == vFuncAddrCached)
+					return delegateCached;
+			}
+
+			var createdDelegate = GetDelegateForFunctionPointer<SetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
+			setEntityAngularVelocityVFuncCache.Add((virtualFuncAddr, createdDelegate));
+
+			return createdDelegate;
+		}
+
+		static GetEntityAngularVelocityDelegate CreateGetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
+		{
+			foreach (var addressAndDelegateTuple in getEntityAngularVelocityVFuncCache)
+			{
+				var (vFuncAddrCached, delegateCached) = addressAndDelegateTuple;
+
+				if (virtualFuncAddr == vFuncAddrCached)
+					return delegateCached;
+			}
+
+			var createdDelegate = GetDelegateForFunctionPointer<GetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
+			getEntityAngularVelocityVFuncCache.Add((virtualFuncAddr, createdDelegate));
+
+			return createdDelegate;
+		}
 
 		#endregion
 
