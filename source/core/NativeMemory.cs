@@ -330,13 +330,13 @@ namespace SHVDN
 				address = FindPattern("\x46\x8D\x04\x11\x48\x8D\x15\x00\x00\x00\x00\x41\xD1\xF8", "xxxxxxx????xxx", new IntPtr(address));
 				offsetForCWeaponComponentArrayAddr = (ulong)(address + 7);
 
-				address = FindPattern("\x74\x10\x49\x8B\xC9\xE8\x00\x00\x00\x00", "xxxxxx????");
+				address = FindPattern("\x74\x10\x49\x8B\xC9\xE8\x00\x00\x00\x00", "xxxxxx????", new IntPtr(address));
 				var findAttachPointFuncAddr = new IntPtr((long)(*(int*)(address + 6) + address + 10));
 
 				address = FindPattern("\x4C\x8D\x81\x00\x00\x00\x00", "xxx????", findAttachPointFuncAddr);
 				weaponAttachPointsStartOffset = *(int*)(address + 3);
-				address = FindPattern("\x4D\x63\x98\x00\x00\x00\x00", "xxx????", new(address));
-				weaponAttachPointsEndOffset = *(int*)(address + 3) + weaponAttachPointsStartOffset;
+				address = FindPattern("\x4D\x63\x98\x00\x00\x00\x00", "xxx????", new IntPtr(address));
+				weaponAttachPointsArrayCountOffset = *(int*)(address + 3);
 				address = FindPattern("\x4C\x63\x50\x00", "xxx?", new(address));
 				weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
 				address = FindPattern("\x48\x83\xC0\x00", "xxx?", new(address));
@@ -2628,7 +2628,7 @@ namespace SHVDN
 		// Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).
 		static ulong offsetForCWeaponComponentArrayAddr;
 		static int weaponAttachPointsStartOffset;
-		static int weaponAttachPointsEndOffset;
+		static int weaponAttachPointsArrayCountOffset;
 		static int weaponAttachPointElementComponentCountOffset;
 		static int weaponAttachPointElementSize;
 
@@ -2704,20 +2704,23 @@ namespace SHVDN
 			if (weaponInfo == null)
 				return 0xFFFFFFFF;
 
-			for (int attachPointOffset = weaponAttachPointsStartOffset; attachPointOffset < weaponAttachPointsEndOffset; attachPointOffset += weaponAttachPointElementSize)
+			var weaponAttachPointsAddr = (byte*)weaponInfo + weaponAttachPointsStartOffset;
+			var weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + weaponAttachPointsArrayCountOffset);
+			var weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr);
+
+			for (int i = 0; i < weaponAttachPointsCount; i++)
 			{
-				int componentItemsOffset = attachPointOffset + 0x8;
-				var componentItemAddr = (byte*)weaponInfo + componentItemsOffset;
-				int componentItemsCount = *(int*)(componentItemAddr + weaponAttachPointElementComponentCountOffset);
+				var weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + (i * weaponAttachPointElementSize) + 0x8;
+				int componentItemsCount = *(int*)(weaponAttachPointElementAddr + weaponAttachPointElementComponentCountOffset);
 
 				if (componentItemsCount <= 0)
 					continue;
 
-				for (int i = 0; i < componentItemsCount; i++)
+				for (int j = 0; j < componentItemsCount; j++)
 				{
-					var componentHashInItemArray = *(uint*)((byte*)weaponInfo + componentItemsOffset + i * 0x8);
+					var componentHashInItemArray = *(uint*)(weaponAttachPointElementAddr + j * 0x8);
 					if (componentHashInItemArray == componentHash)
-						return *(uint*)((byte*)weaponInfo + componentItemsOffset);
+						return *(uint*)(weaponAttachPointElementStartAddr + i * weaponAttachPointElementSize);
 				}
 			}
 
@@ -2782,20 +2785,24 @@ namespace SHVDN
 				return new List<uint>();
 
 			var returnList = new List<uint>();
-			for (int attachPointOffset = weaponAttachPointsStartOffset; attachPointOffset < weaponAttachPointsEndOffset; attachPointOffset += weaponAttachPointElementSize)
+
+			var weaponAttachPointsAddr = (byte*)weaponInfo + weaponAttachPointsStartOffset;
+			var weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + weaponAttachPointsArrayCountOffset);
+			var weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr + 0x8);
+			for (int i = 0; i < weaponAttachPointsCount; i++)
 			{
-				int componentItemsOffset = attachPointOffset + 0x8;
-				var componentItemAddr = (byte*)weaponInfo + componentItemsOffset;
-				int componentItemsCount = *(int*)(componentItemAddr + weaponAttachPointElementComponentCountOffset);
+				var weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + i * weaponAttachPointElementSize;
+				int componentItemsCount = *(int*)(weaponAttachPointElementAddr + weaponAttachPointElementComponentCountOffset);
 
 				if (componentItemsCount <= 0)
 					continue;
 
-				for (int i = 0; i < componentItemsCount; i++)
+				for (int j = 0; j < componentItemsCount; j++)
 				{
-					returnList.Add(*(uint*)((byte*)weaponInfo + componentItemsOffset + i * 0x8));
+					returnList.Add(*(uint*)(weaponAttachPointElementAddr + j * 0x8));
 				}
 			}
+
 			return returnList;
 		}
 
