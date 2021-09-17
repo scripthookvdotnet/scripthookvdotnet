@@ -1252,9 +1252,9 @@ namespace SHVDN
 		// return value will be the address of the temporary 4 float storage
 		public delegate float* GetEntityAngularVelocityDelegate(IntPtr entityAddress);
 
-		// Only 2 virtural functions are present (one for peds and objects and one for vehicles), so use List instead of Dictionary
-		static List<(ulong vFuncAddr, SetEntityAngularVelocityDelegate delegateInstance)> setEntityAngularVelocityVFuncCache = new List<(ulong vFuncAddr, SetEntityAngularVelocityDelegate delegateInstance)>(2);
-		static List<(ulong vFuncAddr, GetEntityAngularVelocityDelegate delegateInstance)> getEntityAngularVelocityVFuncCache = new List<(ulong vFuncAddr, GetEntityAngularVelocityDelegate delegateInstance)>(2);
+		// Only 2 virtural functions are present (one for peds and objects and one for vehicles)
+		static Dictionary<ulong, SetEntityAngularVelocityDelegate> setEntityAngularVelocityVFuncCache = new Dictionary<ulong, SetEntityAngularVelocityDelegate>(2);
+		static Dictionary<ulong, GetEntityAngularVelocityDelegate> getEntityAngularVelocityVFuncCache = new Dictionary<ulong, GetEntityAngularVelocityDelegate>(2);
 
 		internal class SetEntityAngularVelocityTask : IScriptTask
 		{
@@ -1303,34 +1303,32 @@ namespace SHVDN
 
 		static SetEntityAngularVelocityDelegate CreateSetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
 		{
-			foreach (var addressAndDelegateTuple in setEntityAngularVelocityVFuncCache)
+			if (setEntityAngularVelocityVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
 			{
-				var (vFuncAddrCached, delegateCached) = addressAndDelegateTuple;
-
-				if (virtualFuncAddr == vFuncAddrCached)
-					return delegateCached;
+				return outDelegate;
 			}
+			else
+			{
+				var newDelegate = GetDelegateForFunctionPointer<SetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
+				setEntityAngularVelocityVFuncCache.Add(virtualFuncAddr, newDelegate);
 
-			var createdDelegate = GetDelegateForFunctionPointer<SetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
-			setEntityAngularVelocityVFuncCache.Add((virtualFuncAddr, createdDelegate));
-
-			return createdDelegate;
+				return newDelegate;
+			}
 		}
 
 		static GetEntityAngularVelocityDelegate CreateGetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
 		{
-			foreach (var addressAndDelegateTuple in getEntityAngularVelocityVFuncCache)
+			if (getEntityAngularVelocityVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
 			{
-				var (vFuncAddrCached, delegateCached) = addressAndDelegateTuple;
-
-				if (virtualFuncAddr == vFuncAddrCached)
-					return delegateCached;
+				return outDelegate;
 			}
+			else
+			{
+				var newDelegate = GetDelegateForFunctionPointer<GetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
+				getEntityAngularVelocityVFuncCache.Add(virtualFuncAddr, newDelegate);
 
-			var createdDelegate = GetDelegateForFunctionPointer<GetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
-			getEntityAngularVelocityVFuncCache.Add((virtualFuncAddr, createdDelegate));
-
-			return createdDelegate;
+				return newDelegate;
+			}
 		}
 
 		#endregion
