@@ -1434,7 +1434,7 @@ namespace SHVDN
 			Blimp = 0x9,
 			Autogyro = 0xA,
 			Bike = 0xB,
-			Bycicle = 0xC,
+			Bicycle = 0xC,
 			Boat = 0xD,
 			Train = 0xE,
 			Submarine = 0xF
