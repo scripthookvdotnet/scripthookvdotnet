@@ -345,7 +345,7 @@ namespace SHVDN
 
 			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
 			if (address != null)
-            {
+			{
 				pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 10);
 				pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 17) + address + 21);
 			}
@@ -501,7 +501,7 @@ namespace SHVDN
 
 				// the pattern will match 3 times
 				for (int i = 0; i < 3; i++)
-                {
+				{
 					address = FindPattern(patternForHeliHealthOffsets, maskForHeliHealthOffsets, startAddressToSearch);
 
 					if (address != null)
@@ -1300,7 +1300,7 @@ namespace SHVDN
 			var returnEntries = returnEntrySize != 0 ? new (int attackerHandle, int weaponHash, int gameTime)[returnEntrySize] : Array.Empty<(int attackerHandle, int weaponHash, int gameTime)>();
 
 			for (uint i = 0; i < returnEntries.Length; i++)
-            {
+			{
 				returnEntries[i] = GetEntityDamageRecordEntryAtIndexInternal(entityCAttackerArrayAddress, i);
 			}
 
@@ -2098,7 +2098,7 @@ namespace SHVDN
 			}
 
 			public void Run()
-            {
+			{
 				returnEntityHandle = NativeMemory.AddEntityToPoolFunc(entityAddress);
 			}
 		}
@@ -2388,7 +2388,7 @@ namespace SHVDN
 					continue;
 
 				if (CheckBlip(address, position, radius, spriteTypes))
-                {
+				{
 					ushort blipCreationIncrement = *(ushort*)(address + 8);
 					handles.Add((int)((blipCreationIncrement << 0x10) + (uint)i));
 				}
@@ -2404,7 +2404,7 @@ namespace SHVDN
 				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
 
 				if (northBlipAddress != 0)
-                {
+				{
 					ushort blipCreationIncrement = *(ushort*)(northBlipAddress + 8);
 					return ((blipCreationIncrement << 0x10) + 2);
 				}
@@ -2859,10 +2859,10 @@ namespace SHVDN
 
 		[StructLayout(LayoutKind.Explicit, Size=0x38)]
 		struct CTask
-        {
+		{
 			[FieldOffset(0x34)]
 			internal ushort taskTypeIndex;
-        }
+ 		}
 
 		internal class EuphoriaMessageTask : IScriptTask
 		{
@@ -2967,7 +2967,7 @@ namespace SHVDN
 										if (taskInEvent != null)
 										{
 											if (taskInEvent->taskTypeIndex == cTaskNMScriptControlTypeIndex)
-                                            {
+											{
 												v5 = true;
 												break;
 											}

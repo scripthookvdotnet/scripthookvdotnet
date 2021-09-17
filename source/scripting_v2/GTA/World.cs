@@ -379,9 +379,9 @@ namespace GTA
 		public static Ped CreateRandomPed(Vector3 position)
 		{
 			if (PedCount >= PedCapacity)
-            {
+			{
 				return null;
-            }
+			}
 
 			return Function.Call<Ped>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z);
 		}
