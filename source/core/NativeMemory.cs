@@ -235,8 +235,7 @@ namespace SHVDN
 
 			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
 			CheckpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
-			GetCheckpointBaseAddress = GetDelegateForFunctionPointer<GetCheckpointBaseAddressDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
-			GetCheckpointHandleAddress = GetDelegateForFunctionPointer<GetCheckpointHandleAddressDelegate>(new IntPtr(*(int*)(address - 9) + address - 5));
+			GetCGameScriptHandlerAddressFunc = GetDelegateForFunctionPointer<GetCGameScriptHandlerAddressDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
 
 			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
 			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -2440,93 +2439,117 @@ namespace SHVDN
 
 		#endregion
 
-		#region -- Checkpoint Pool --
+		#region -- CScriptResource Data --
 
-		[StructLayout(LayoutKind.Explicit)]
-		struct CheckpointPoolData
+		internal enum CScriptResourceTypeNameIndex
 		{
-			[FieldOffset(0xC)]
-			internal int handle;
-			[FieldOffset(0x10)]
-			internal long indexOfPool;
-			[FieldOffset(0x18)]
-			internal CheckpointPoolData* next;
+			Checkpoint = 6
 		}
 
-		delegate ulong GetCheckpointBaseAddressDelegate();
-		static GetCheckpointBaseAddressDelegate GetCheckpointBaseAddress;
-		delegate ulong GetCheckpointHandleAddressDelegate(ulong baseAddr, int handle);
-		static GetCheckpointHandleAddressDelegate GetCheckpointHandleAddress;
+		[StructLayout(LayoutKind.Explicit)]
+		struct CGameScriptResource
+		{
+			[FieldOffset(0x0)]
+			internal ulong* vTable;
+			[FieldOffset(0x8)]
+			internal CScriptResourceTypeNameIndex resourceTypeNameIndex;
+			[FieldOffset(0xC)]
+			internal int counterOfPool;
+			[FieldOffset(0x10)]
+			internal int indexOfPool;
+			[FieldOffset(0x18)]
+			internal CGameScriptResource* next;
+			[FieldOffset(0x20)]
+			internal CGameScriptResource* prev;
+		}
 
-		const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
-		static readonly int[] _checkpointHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
-		static ulong* CheckpointPoolAddress;
-
-		internal class GetAllCheckpointHandlesTask : IScriptTask
+		internal class GetAllCScriptResourceHandlesTask : IScriptTask
 		{
 			#region Fields
+			internal CScriptResourceTypeNameIndex typeNameIndex;
 			internal int[] returnHandles = Array.Empty<int>();
+
+			const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
+			static readonly int[] _cScriptResourceHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
 			#endregion
 
-			internal GetAllCheckpointHandlesTask()
+			internal GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex typeNameIndex)
 			{
+				this.typeNameIndex = typeNameIndex;
 			}
 
 			public void Run()
 			{
-				var checkpointBaseAddress = GetCheckpointBaseAddress();
+				var cGameScriptHandlerAddress = GetCGameScriptHandlerAddressFunc();
 
-				if (checkpointBaseAddress == 0)
+				if (cGameScriptHandlerAddress == 0)
 					return;
 
-				int count = 0;
-				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				int elementCount = 0;
+				var firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
+				for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
 				{
-					_checkpointHandleBuffer[count++] = item->handle;
+					if (item->resourceTypeNameIndex != typeNameIndex)
+						continue;
+
+					_cScriptResourceHandleBuffer[elementCount++] = item->counterOfPool;
 				}
 
-				if (count == 0)
+				if (elementCount == 0)
 					return;
 
-				returnHandles = new int[count];
-				Array.Copy(_checkpointHandleBuffer, returnHandles, count);
+				returnHandles = new int[elementCount];
+				Array.Copy(_cScriptResourceHandleBuffer, returnHandles, elementCount);
 			}
 		}
 
-		internal class GetCheckpointAddressTask : IScriptTask
+		internal class GetCScriptResourceAddressTask : IScriptTask
 		{
 			#region Fields
 			internal int targetHandle;
+			internal ulong* poolAddress;
+			internal int elementSize;
 			internal IntPtr returnAddress;
 			#endregion
 
-			internal GetCheckpointAddressTask(int handle)
+			internal GetCScriptResourceAddressTask(int handle, ulong* poolAddress, int elementSize)
 			{
 				this.targetHandle = handle;
+				this.poolAddress = poolAddress;
+				this.elementSize = elementSize;
 			}
 
 			public void Run()
 			{
-				var checkpointBaseAddress = GetCheckpointBaseAddress();
+				var cGameScriptHandlerAddress = GetCGameScriptHandlerAddressFunc();
 
-				if (checkpointBaseAddress == 0)
+				if (cGameScriptHandlerAddress == 0)
 					return;
 
-				int count = 0;
-				for (CheckpointPoolData* item = *(CheckpointPoolData**)(checkpointBaseAddress + 48); item != null && count < MAX_CHECKPOINT_COUNT; item = item->next)
+				var firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
+				for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
 				{
-					if (item->handle == targetHandle)
+					if (item->counterOfPool == targetHandle)
 					{
-						returnAddress = new IntPtr((long)((byte*)(CheckpointPoolAddress) + item->indexOfPool * 0x60));
+						returnAddress = new IntPtr((long)((byte*)(poolAddress) + item->indexOfPool * elementSize));
 						break;
 					}
 				}
 			}
 		}
 
+		#endregion
+
+		#region -- Checkpoint Pool --
+
+		static ulong* CheckpointPoolAddress;
+
+		delegate ulong GetCGameScriptHandlerAddressDelegate();
+		static GetCGameScriptHandlerAddressDelegate GetCGameScriptHandlerAddressFunc;
+
 		public static int[] GetCheckpointHandles()
 		{
-			var task = new GetAllCheckpointHandlesTask();
+			var task = new GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex.Checkpoint);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -2535,7 +2558,7 @@ namespace SHVDN
 
 		public static IntPtr GetCheckpointAddress(int handle)
 		{
-			var task = new GetCheckpointAddressTask(handle);
+			var task = new GetCScriptResourceAddressTask(handle, CheckpointPoolAddress, 0x60);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
