@@ -468,9 +468,9 @@ namespace GTA
 		public bool IsTargetingAnything => Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, Handle);
 
 		/// <summary>
-		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is targeting.
+		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is free aiming.
 		/// </summary>
-		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is targeting any <see cref="Entity"/>; otherwise, <see langword="null" /></returns>
+		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is free aiming any <see cref="Entity"/>; otherwise, <see langword="null" /></returns>
 		public Entity TargetedEntity
 		{
 			get
@@ -479,6 +479,26 @@ namespace GTA
 				unsafe
 				{
 					if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
+					{
+						return Entity.FromHandle(entityHandle);
+					}
+				}
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="Entity"/> this <see cref="Player"/> is locking on when they are aiming with a firearm using a controller or they are locking on unarmed or with a melee weapon.
+		/// </summary>
+		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is automatically locking on any <see cref="Entity"/>; otherwise, <see langword="null" /></returns>
+		public Entity LockedOnEntity
+		{
+			get
+			{
+				int entityHandle;
+				unsafe
+				{
+					if (Function.Call<bool>(Hash.GET_PLAYER_TARGET_ENTITY, Handle, &entityHandle))
 					{
 						return Entity.FromHandle(entityHandle);
 					}
