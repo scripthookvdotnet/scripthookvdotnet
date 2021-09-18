@@ -349,6 +349,12 @@ namespace SHVDN
 				weaponAttachPointElementSize = *(byte*)(address + 3);
 			}
 
+			address = FindPattern("\x24\x1F\x3C\x05\x0F\x85\x00\x00\x00\x00\x48\x8D\x82\x00\x00\x00\x00", "xxxxxx????xxx????");
+			if (address != null)
+			{
+				vehicleMakeNameOffsetInModelInfo = *(int*)(address + 13);
+			}
+
 			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
 			if (address != null)
             {
@@ -1581,6 +1587,7 @@ namespace SHVDN
 			internal bool isGang;
 		}
 
+		static int vehicleMakeNameOffsetInModelInfo;
 		static int VehicleTypeOffsetInModelInfo;
 		static int handlingIndexOffsetInModelInfo;
 		static int pedPersonalityIndexOffsetInModelInfo;
@@ -1746,6 +1753,17 @@ namespace SHVDN
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
 
+		public static string GetVehicleMakeName(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+
+			if (GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
+			{
+				return PtrToStringUTF8(modelInfo + vehicleMakeNameOffsetInModelInfo);
+			}
+
+			return "CARNOTFOUND";
+		}
 
 		public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
 		public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
