@@ -15,7 +15,7 @@ namespace GTA
 	{
 		public GameVersion MinimumSupportedGameVersion { get; }
 
-		public GameVersionNotSupportedException(GameVersion minimumSupportedGameVersion, string className, string propertyOrMethodName) : base(BuildErrorMessage(minimumSupportedGameVersion, className, propertyOrMethodName))
+		internal GameVersionNotSupportedException(GameVersion minimumSupportedGameVersion, string className, string propertyOrMethodName) : base(BuildErrorMessage(minimumSupportedGameVersion, className, propertyOrMethodName))
 		{
 			MinimumSupportedGameVersion = minimumSupportedGameVersion;
 		}
