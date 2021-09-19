@@ -21,6 +21,14 @@ namespace GTA
 		{
 		}
 
+		private enum EntityTypeInternal
+		{
+			Building = 1,
+			Vehicle = 3,
+			Ped = 4,
+			Object = 5
+		}
+
 		/// <summary>
 		/// Creates a new instance of an <see cref="Entity"/> from the given handle.
 		/// </summary>
@@ -31,13 +39,20 @@ namespace GTA
 		/// Returns <see langword="null" /> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
 		public static Entity FromHandle(int handle)
 		{
-			switch ((EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, handle))
+			var memoryAddress = SHVDN.NativeMemory.GetEntityAddress(handle);
+			if (memoryAddress == IntPtr.Zero)
+				return null;
+
+			// Read the same field as GET_ENTITY_TYPE does
+			var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(memoryAddress + 0x28);
+
+			switch (entityType)
 			{
-				case EntityType.Ped:
+				case EntityTypeInternal.Ped:
 					return new Ped(handle);
-				case EntityType.Vehicle:
+				case EntityTypeInternal.Vehicle:
 					return new Vehicle(handle);
-				case EntityType.Prop:
+				case EntityTypeInternal.Object:
 					return new Prop(handle);
 			}
 			return null;
@@ -51,7 +66,32 @@ namespace GTA
 		/// <summary>
 		/// Gets the type of the current <see cref="Entity"/>.
 		/// </summary>
-		public EntityType EntityType => (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
+		public EntityType EntityType
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return EntityType.Invalid;
+				}
+
+				// Read the same field as GET_ENTITY_TYPE does
+				var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28);
+
+				switch (entityType)
+				{
+					case EntityTypeInternal.Ped:
+						return EntityType.Ped;
+					case EntityTypeInternal.Vehicle:
+						return EntityType.Vehicle;
+					case EntityTypeInternal.Object:
+						return EntityType.Prop;
+				}
+
+				return EntityType.Invalid;
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.

@@ -217,7 +217,7 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> is a bicycle.
 		/// </summary>
-		public bool IsBycicle => Type == VehicleType.Bycicle;
+		public bool IsBicycle => Type == VehicleType.Bicycle;
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> is a bike.
@@ -227,7 +227,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bycicle);
+				return (vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle);
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> is a train.
 		/// </summary>
-		public bool IsTrain => Type == VehicleType.Bycicle;
+		public bool IsTrain => Type == VehicleType.Train;
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> is a submarine.
