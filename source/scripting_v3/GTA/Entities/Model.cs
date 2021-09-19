@@ -119,7 +119,7 @@ namespace GTA
 		/// </value>
 		public bool IsBigVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag1.Big);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a bike (either a motorcycle or a bycycle).
+		/// Gets a value indicating whether this <see cref="Model"/> is a bike (either a motorcycle or a bicycle).
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Model"/> is a bike; otherwise, <see langword="false" />.
@@ -239,6 +239,7 @@ namespace GTA
 		/// <see langword="true" /> if this <see cref="Model"/> is a male pedestrian; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsMalePed => SHVDN.NativeMemory.IsModelAMalePed(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a motorcycle.
 		/// </summary>
 		/// <value>

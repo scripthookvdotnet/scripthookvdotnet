@@ -77,7 +77,7 @@ namespace GTA
 		/// The bicycle type.
 		/// </summary>
 		/// <remarks>The internal class in memory is <c>CBmx</c>, which is a subclass of <c>CBike</c>.</remarks>
-		Bycicle = 0xC,
+		Bicycle = 0xC,
 		/// <remarks>The internal class in memory is <c>CBoat</c>, which is a subclass of <c>CBoat</c>.</remarks>
 		/// <summary>
 		/// The boat type.

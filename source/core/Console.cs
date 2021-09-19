@@ -25,7 +25,7 @@ namespace SHVDN
 		bool isOpen = false;
 		string input = string.Empty;
 		List<string> lineHistory = new List<string>();
-		List<string> commandHistory = new List<string>();
+		List<string> commandHistory; // This must be set via CommandHistory property
 		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
 		DateTime lastClosed;
@@ -62,6 +62,15 @@ namespace SHVDN
 				if (!isOpen)
 					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
 			}
+		}
+
+		/// <summary>
+		/// Gets or sets the command history. This is used to avoid losing the command history on SHVDN reloading.
+		/// </summary>
+		public List<string> CommandHistory
+		{
+			get => commandHistory;
+			set => commandHistory = value;
 		}
 
 		/// <summary>
@@ -400,11 +409,23 @@ namespace SHVDN
 					else
 						goto default;
 					break;
+				case Keys.D:
+					if (e.Control)
+						RemoveCharRight();
+					else
+						goto default;
+					break;
 				case Keys.F:
 					if (e.Control)
 						MoveCursorRight();
 					else if (e.Alt)
 						ForwardWord();
+					else
+						goto default;
+					break;
+				case Keys.H:
+					if (e.Control)
+						RemoveCharLeft();
 					else
 						goto default;
 					break;
@@ -435,6 +456,12 @@ namespace SHVDN
 				case Keys.L:
 					if (e.Control)
 						Clear();
+					else
+						goto default;
+					break;
+				case Keys.T:
+					if (e.Control)
+						TransposeTwoChars();
 					else
 						goto default;
 					break;
@@ -513,6 +540,43 @@ namespace SHVDN
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
 				input = input.Remove(cursorPos, 1);
+			}
+		}
+
+		void TransposeTwoChars()
+		{
+			var inputLength = input.Length;
+			if (inputLength < 2)
+			{
+				return;
+			}
+
+			if (cursorPos == 0)
+			{
+				SwapTwoCharacters(input, 0);
+				cursorPos = 2;
+			}
+			else if (cursorPos < inputLength)
+			{
+				SwapTwoCharacters(input, cursorPos - 1);
+				cursorPos += 1;
+			}
+			else
+			{
+				SwapTwoCharacters(input, cursorPos - 2);
+			}
+
+			void SwapTwoCharacters(string str, int index)
+			{
+				unsafe
+				{
+					fixed (char* stringPtr = str)
+					{
+						char tmp = stringPtr[index];
+						stringPtr[index] = stringPtr[index + 1];
+						stringPtr[index + 1] = tmp;
+					}
+				}
 			}
 		}
 

@@ -82,9 +82,11 @@ namespace SHVDN
 
 			IntPtr strUtf8 = domain.PinString(str);
 
-			domain.ExecuteTask(new NativeTask {
+			var strArg = (ulong)strUtf8.ToInt64();
+			domain.ExecuteTask(new NativeTaskPtrArgs {
 				Hash = 0x6C188BE134E074AA /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
-				Arguments = new ulong[] { (ulong)strUtf8.ToInt64() }
+				ArgumentPtr = &strArg,
+				ArgumentCount = 1
 			});
 		}
 
@@ -176,7 +178,10 @@ namespace SHVDN
 				}
 			}
 
-			action(str.Substring(startPos, str.Length - startPos));
+			if (startPos == 0)
+				action(str);
+			else
+				action(str.Substring(startPos, str.Length - startPos));
 		}
 
 		/// <summary>
@@ -236,7 +241,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="hash">The function has to call.</param>
 		/// <param name="argPtr">A pointer of function arguments.</param>
-		/// <param name="argCount">The length of <paramref name="argPtr">.</param>
+		/// <param name="argCount">The length of <paramref name="argPtr" />.</param>
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* Invoke(ulong hash, ulong* argPtr, int argCount)
 		{
@@ -280,7 +285,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="hash">The function has to call.</param>
 		/// <param name="argPtr">A pointer of function arguments.</param>
-		/// <param name="argCount">The length of <paramref name="argPtr">.</param>
+		/// <param name="argCount">The length of <paramref name="argPtr" />.</param>
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* InvokeInternal(ulong hash, ulong* argPtr, int argCount)
 		{
