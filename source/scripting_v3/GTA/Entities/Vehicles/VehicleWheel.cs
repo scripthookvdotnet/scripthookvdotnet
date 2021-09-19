@@ -318,9 +318,9 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is bursted completely.
+		/// Sets a value indicating whether this <see cref="VehicleWheel"/> is bursted.
 		/// </summary>
-		public bool IsBurstedCompletely
+		public bool IsBursted
 		{
 			get
 			{
