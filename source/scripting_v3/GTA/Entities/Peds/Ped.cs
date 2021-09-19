@@ -297,6 +297,22 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Sets a value indicating whether this <see cref="Entity"/> is persistent.
+		/// Unlike <see cref="Entity.IsPersistent"/>, calling this method does not affect assigned tasks.
+		/// </summary>
+		public void SetIsPersistentNoClearTask(bool value)
+		{
+			if (value)
+			{
+				PopulationType = EntityPopulationType.Mission;
+			}
+			else
+			{
+				PopulationType = EntityPopulationType.RandomAmbient;
+			}
+		}
+
+		/// <summary>
 		/// Gets a collection of the <see cref="PedBone"/>s in this <see cref="Ped"/>.
 		/// </summary>
 		public new PedBoneCollection Bones => _pedBones ?? (_pedBones = new PedBoneCollection(this));
@@ -743,6 +759,16 @@ namespace GTA
 
 		public bool CanBeTargetted
 		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
+				{
+					return false;
+				}
+
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 9);
+			}
 			set => Function.Call(Hash.SET_PED_CAN_BE_TARGETTED, Handle, value);
 		}
 

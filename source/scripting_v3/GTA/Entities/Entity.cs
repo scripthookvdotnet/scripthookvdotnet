@@ -94,6 +94,25 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the population type of the current <see cref="Entity"/>.
+		/// This property can also be used to add or remove <see cref="Entity"/> persistence.
+		/// </summary>
+		public EntityPopulationType PopulationType
+		{
+			get => (EntityPopulationType)Function.Call<int>(Hash.GET_ENTITY_POPULATION_TYPE, Handle);
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteByte(address + 0xDA, (byte)((int)value & 0xF));
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
 		/// </summary>
 		/// <value>
@@ -156,6 +175,10 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Entity"/> is persistent; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// If this <see cref="Entity"/> is <see cref="Ped"/>, setting to <see langword="true" /> can clear ambient tasks and setting to <see langword="false" /> will clear all tasks immediately.
+		/// Use <see cref="Ped.SetIsPersistentNoClearTask(bool)"/> instead if you need to keep assigned tasks.
+		/// </remarks>
 		public bool IsPersistent
 		{
 			get => Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
@@ -561,11 +584,53 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the rotation velocity of this <see cref="Entity"/>.
+		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in local space.
 		/// </summary>
 		public Vector3 RotationVelocity
 		{
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				var angularVelocityInLocalAxes = Quaternion * value;
+				SHVDN.NativeMemory.SetEntityAngularVelocity(address, angularVelocityInLocalAxes.X, angularVelocityInLocalAxes.Y, angularVelocityInLocalAxes.Z);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in world space.
+		/// </summary>
+		public Vector3 WorldRotationVelocity
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				unsafe
+				{
+					var returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
+					return new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]);
+				}
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.SetEntityAngularVelocity(address, value.X, value.Y, value.Z);
+			}
 		}
 
 		#endregion

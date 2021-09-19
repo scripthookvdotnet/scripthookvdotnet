@@ -51,5 +51,17 @@ namespace GTA
 				return (WeaponHash)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset + 0x8);
 			}
 		}
+
+		/// <summary>
+		/// Explodes this <see cref="Projectile"/>. Note that calling this method does not necessarily delete this <see cref="Projectile"/> due to the weapon configuration.
+		/// </summary>
+		public void Explode()
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero)
+				return;
+
+			SHVDN.NativeMemory.ExplodeProjectile(address);
+		}
 	}
 }

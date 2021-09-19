@@ -1919,6 +1919,10 @@ namespace GTA
 		{
 			return "VEH_CLASS_" + ((int)vehicleClass).ToString();
 		}
+		public static string GetModelMakeName(Model vehicleModel)
+		{
+			return SHVDN.NativeMemory.GetVehicleMakeName(vehicleModel.Hash);
+		}
 
 		public static VehicleClass GetModelClass(Model vehicleModel)
 		{

@@ -252,6 +252,12 @@ namespace SHVDN
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
+			address = FindPattern("\x75\x11\x48\x8B\x06\x48\x8D\x54\x24\x20\x48\x8B\xCE\xFF\x90", "xxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				SetAngularVelocityVFuncOfEntityOffset = *(int*)(address + 15);
+				GetAngularVelocityVFuncOfEntityOffset = SetAngularVelocityVFuncOfEntityOffset + 0x8;
+			}
 
 			address = FindPattern("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
 			cAttackerArrayOfEntityOffset = *(uint*)(address + 3); // the correct name is unknown
@@ -340,6 +346,12 @@ namespace SHVDN
 				weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
 				address = FindPattern("\x48\x83\xC0\x00", "xxx?", new(address));
 				weaponAttachPointElementSize = *(byte*)(address + 3);
+			}
+
+			address = FindPattern("\x24\x1F\x3C\x05\x0F\x85\x00\x00\x00\x00\x48\x8D\x82\x00\x00\x00\x00", "xxxxxx????xxx????");
+			if (address != null)
+			{
+				vehicleMakeNameOffsetInModelInfo = *(int*)(address + 13);
 			}
 
 			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
@@ -688,6 +700,11 @@ namespace SHVDN
 			if (address != null)
 			{
 				ProjectileAmmoInfoOffset = *(int*)(address + 8);
+			}
+			address = FindPattern("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
+			if (address != null)
+			{
+				ExplodeProjectileFunc = GetDelegateForFunctionPointer<ExplodeProjectileDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
 			}
 
 			// Generate vehicle model list
@@ -1293,9 +1310,99 @@ namespace SHVDN
 
 		#region -- Entity Offsets --
 
+		public static int SetAngularVelocityVFuncOfEntityOffset { get; }
+		public static int GetAngularVelocityVFuncOfEntityOffset { get; }
+
 		public static uint cAttackerArrayOfEntityOffset { get; }
 		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
 		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
+
+		#endregion
+
+		#region -- Entity Functions --
+
+		public delegate void SetEntityAngularVelocityDelegate(IntPtr entityAddress, float* angularVelocity);
+		// return value will be the address of the temporary 4 float storage
+		public delegate float* GetEntityAngularVelocityDelegate(IntPtr entityAddress);
+
+		// Only 2 virtural functions are present (one for peds and objects and one for vehicles)
+		static Dictionary<ulong, SetEntityAngularVelocityDelegate> setEntityAngularVelocityVFuncCache = new Dictionary<ulong, SetEntityAngularVelocityDelegate>(2);
+		static Dictionary<ulong, GetEntityAngularVelocityDelegate> getEntityAngularVelocityVFuncCache = new Dictionary<ulong, GetEntityAngularVelocityDelegate>(2);
+
+		internal class SetEntityAngularVelocityTask : IScriptTask
+		{
+			#region Fields
+			IntPtr entityAddress;
+			SetEntityAngularVelocityDelegate setAngularVelocityDelegate;
+			float x, y, z;
+			#endregion
+
+			internal SetEntityAngularVelocityTask(IntPtr entityAddress, SetEntityAngularVelocityDelegate vFuncDelegate, float x, float y, float z)
+			{
+				this.entityAddress = entityAddress;
+				this.setAngularVelocityDelegate = vFuncDelegate;
+				this.x = x;
+				this.y = y;
+				this.z = z;
+			}
+
+			public void Run()
+			{
+				var angularVelocity = stackalloc float[4];
+				angularVelocity[0] = x;
+				angularVelocity[1] = y;
+				angularVelocity[2] = z;
+
+				setAngularVelocityDelegate(entityAddress, angularVelocity);
+			}
+		}
+
+		public static float* GetEntityAngularVelocity(IntPtr entityAddress)
+		{
+			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)GetAngularVelocityVFuncOfEntityOffset);
+			var getEntityAngularVelocity = CreateGetEntityAngularVelocityDelegateIfNotCreated(vFuncAddr);
+
+			return getEntityAngularVelocity(entityAddress);
+		}
+
+		public static void SetEntityAngularVelocity(IntPtr entityAddress, float x, float y, float z)
+		{
+			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)SetAngularVelocityVFuncOfEntityOffset);
+			var setEntityAngularVelocityDelegate = CreateSetEntityAngularVelocityDelegateIfNotCreated(vFuncAddr);
+
+			var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		static SetEntityAngularVelocityDelegate CreateSetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
+		{
+			if (setEntityAngularVelocityVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
+			{
+				return outDelegate;
+			}
+			else
+			{
+				var newDelegate = GetDelegateForFunctionPointer<SetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
+				setEntityAngularVelocityVFuncCache.Add(virtualFuncAddr, newDelegate);
+
+				return newDelegate;
+			}
+		}
+
+		static GetEntityAngularVelocityDelegate CreateGetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
+		{
+			if (getEntityAngularVelocityVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
+			{
+				return outDelegate;
+			}
+			else
+			{
+				var newDelegate = GetDelegateForFunctionPointer<GetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
+				getEntityAngularVelocityVFuncCache.Add(virtualFuncAddr, newDelegate);
+
+				return newDelegate;
+			}
+		}
 
 		#endregion
 
@@ -1565,6 +1672,7 @@ namespace SHVDN
 
 		public static int SweatOffset { get; }
 
+		// the same offset as the offset for SET_PED_CAN_BE_TARGETTED
 		public static int PedDropsWeaponsWhenDeadOffset { get; }
 
 		public static int PedSuffersCriticalHitOffset { get; }
@@ -1670,6 +1778,7 @@ namespace SHVDN
 			internal bool isGang;
 		}
 
+		static int vehicleMakeNameOffsetInModelInfo;
 		static int VehicleTypeOffsetInModelInfo;
 		static int handlingIndexOffsetInModelInfo;
 		static int pedPersonalityIndexOffsetInModelInfo;
@@ -1835,6 +1944,17 @@ namespace SHVDN
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
 
+		public static string GetVehicleMakeName(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+
+			if (GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
+			{
+				return PtrToStringUTF8(modelInfo + vehicleMakeNameOffsetInModelInfo);
+			}
+
+			return "CARNOTFOUND";
+		}
 
 		public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
 		public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
@@ -2821,6 +2941,36 @@ namespace SHVDN
 		public static int ProjectileOwnerOffset { get; }
 		#endregion
 
+		#region -- Projectile Functions --
+
+		delegate void ExplodeProjectileDelegate(IntPtr projectileAddress, int unkParam);
+		static ExplodeProjectileDelegate ExplodeProjectileFunc;
+
+		public static void ExplodeProjectile(IntPtr projectileAddress)
+		{
+			var task = new ExplodeProjectileTask(projectileAddress);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		internal class ExplodeProjectileTask : IScriptTask
+		{
+			#region Fields
+			internal IntPtr projectileAddress;
+			#endregion
+
+			internal ExplodeProjectileTask(IntPtr projectileAddress)
+			{
+				this.projectileAddress = projectileAddress;
+			}
+
+			public void Run()
+			{
+				ExplodeProjectileFunc(projectileAddress, 0);
+			}
+		}
+
+		#endregion
+
 		#region -- Weapon Info And Ammo Info --
 
 		// The function uses rax and rdx registers in newer versions (probably since b2189), and it uses only rax register in older versions.
@@ -2911,6 +3061,8 @@ namespace SHVDN
 
 			return null;
 		}
+
+		public static bool IsHashValidAsWeaponHash(uint weaponHash) => FindWeaponInfo(weaponHash) != null;
 
 		public static uint GetAttachmentPointHash(uint weaponHash, uint componentHash)
 		{
