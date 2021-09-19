@@ -66,7 +66,32 @@ namespace GTA
 		/// <summary>
 		/// Gets the type of the current <see cref="Entity"/>.
 		/// </summary>
-		public EntityType EntityType => (EntityType)Function.Call<int>(Hash.GET_ENTITY_TYPE, Handle);
+		public EntityType EntityType
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return EntityType.Invalid;
+				}
+
+				// Read the same field as GET_ENTITY_TYPE does
+				var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28);
+
+				switch (entityType)
+				{
+					case EntityTypeInternal.Ped:
+						return EntityType.Ped;
+					case EntityTypeInternal.Vehicle:
+						return EntityType.Vehicle;
+					case EntityTypeInternal.Object:
+						return EntityType.Prop;
+				}
+
+				return EntityType.Invalid;
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
