@@ -584,7 +584,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in local axes.
+		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in local space.
 		/// </summary>
 		public Vector3 RotationVelocity
 		{
@@ -603,9 +603,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in world axes.
+		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in world space.
 		/// </summary>
-		public Vector3 RotationVelocityWorldAxis
+		public Vector3 WorldRotationVelocity
 		{
 			get
 			{
