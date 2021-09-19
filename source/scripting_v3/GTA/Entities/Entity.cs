@@ -177,7 +177,7 @@ namespace GTA
 		/// </value>
 		/// <remarks>
 		/// If this <see cref="Entity"/> is <see cref="Ped"/>, setting to <see langword="true" /> can clear ambient tasks and setting to <see langword="false" /> will clear all tasks immediately.
-		/// Use <see cref="Ped.IsPersistentNoClearTask"/> instead if you need to keep assigned tasks.
+		/// Use <see cref="Ped.SetIsPersistentNoClearTask(bool)"/> instead if you need to keep assigned tasks.
 		/// </remarks>
 		public bool IsPersistent
 		{

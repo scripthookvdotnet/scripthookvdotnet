@@ -216,29 +216,6 @@ namespace GTA
 		#region Configuration
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Entity"/> is persistent.
-		/// Unlike <see cref="Entity.IsPersistent"/>, setting a value does not affect assigned tasks.
-		/// </summary>
-		/// <value>
-		/// <see langword="true" /> if this <see cref="Entity"/> is persistent; otherwise, <see langword="false" />.
-		/// </value>
-		public bool IsPersistentNoClearTask
-		{
-			get => IsPersistent;
-			set
-			{
-				if (value)
-				{
-					PopulationType = EntityPopulationType.Mission;
-				}
-				else
-				{
-					PopulationType = EntityPopulationType.RandomAmbient;
-				}
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets how much armor this <see cref="Ped"/> is wearing as an <see cref="int"/>.
 		/// </summary>
 		/// <remarks>if you need to get or set the value precisely, use <see cref="ArmorFloat"/> instead.</remarks>
@@ -317,6 +294,22 @@ namespace GTA
 		public void ResetConfigFlag(int flagID)
 		{
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, flagID, true);
+		}
+
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Entity"/> is persistent.
+		/// Unlike <see cref="Entity.IsPersistent"/>, calling this method does not affect assigned tasks.
+		/// </summary>
+		public void SetIsPersistentNoClearTask(bool value)
+		{
+			if (value)
+			{
+				PopulationType = EntityPopulationType.Mission;
+			}
+			else
+			{
+				PopulationType = EntityPopulationType.RandomAmbient;
+			}
 		}
 
 		/// <summary>
