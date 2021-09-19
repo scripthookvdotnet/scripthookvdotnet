@@ -379,6 +379,8 @@ namespace SHVDN
 			if (address != null)
 			{
 				WheelCountOffset = *(int*)(address + 3);
+				WheelPtrArrayOffset = WheelCountOffset - 8;
+				WheelBoneIdToPtrArrayIndexOffset = WheelCountOffset + 4;
 			}
 
 			address = FindPattern("\x74\x18\x80\xA0\x00\x00\x00\x00\xBF\x84\xDB\x0F\x94\xC1\x80\xE1\x01\xC0\xE1\x06", "xxxx????xxxxxxxxxxxx");
@@ -519,7 +521,6 @@ namespace SHVDN
 				}
 			}
 
-
 			address = FindPattern("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
 			if (address != null)
 			{
@@ -530,6 +531,73 @@ namespace SHVDN
 			if (address != null)
 			{
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
+			}
+
+			address = FindPattern("\x0F\xBA\xAB\x00\x00\x00\x00\x09\x0F\x2F\xB3\x00\x00\x00\x00\x48\x8B\x83\x20\x01\x00\x00", "xx?????xxx???xxxx?????");
+			if (address != null)
+			{
+				VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 11);
+			}
+
+			address = FindPattern("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
+			if (address != null)
+			{
+				VehicleWheelTemperatureOffset = *(int*)(address + 11);
+			}
+
+			address = FindPattern("\x74\x13\x0F\x57\xC0\x0F\x2E\x80\x00\x00\x00\x00", "xxxxxxxx????");
+			if (address != null)
+			{
+				VehicleTireHealthOffset = *(int*)(address + 8);
+				VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
+			}
+
+			// the tire wear multipiler value for vehicle wheels is present only in v1.0.1868.0 or newer versions
+			if (gameVersion >= 54)
+			{
+				address = FindPattern("\x76\x31\x0F\x2E\xB3\x00\x00\x00\x00\x75\x28\xC7\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0F\xBA\xB3\x00\x00\x00\x00\x1E", "xxxxx????xxxx????????xxx????x");
+				if (address != null)
+				{
+					VehicleTireWearMultiplierOffset = *(int*)(address + 5);
+				}
+			}
+
+			address = FindPattern("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
+			if (address != null)
+			{
+				VehicleWheelIdOffset = *(int*)(address + 3);
+			}
+
+			address = FindPattern("\xEB\x02\x33\xC9\xF6\x81\x00\x00\x00\x00\x01\x75\x43", "xxxxxx????xxx");
+			if (address != null)
+			{
+				VehicleWheelTouchingFlagsOffset = *(int*)(address + 6);
+			}
+
+			address = FindPattern("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8\x00\x00\x00\x00", "xxxxxxxx????xxxx????");
+			if (address != null)
+			{
+				FixVehicleWheelFunc = GetDelegateForFunctionPointer<FixVehicleWheelDelegate>(new IntPtr(*(int*)(address + 16) + address + 20));
+				address = FindPattern("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
+				ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
+			}
+
+			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				PunctureVehicleTireNewFunc = GetDelegateForFunctionPointer<PunctureVehicleTireNewDelegate>(new IntPtr((long)(address - 0x10)));
+				address = FindPattern("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
+				BurstVehicleTireOnRimNewFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimNewDelegate>(new IntPtr((long)(address - 0xB)));
+			}
+			else
+			{
+				address = FindPattern("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
+				if (address != null)
+				{
+					PunctureVehicleTireOldFunc = GetDelegateForFunctionPointer<PunctureVehicleTireOldDelegate>(new IntPtr((long)(address - 0x14)));
+					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
+					BurstVehicleTireOnRimOldFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimOldDelegate>(new IntPtr((long)(address - 0x10)));
+				}
 			}
 
 			address = FindPattern("\x8B\x00\x00\x00\x00\x00\x0F\xBA\x00\x00\x00\x00\x00\x09\x8B\x05", "x?????xx?????xxx");
@@ -1325,7 +1393,9 @@ namespace SHVDN
 
 		public static int VehicleTypeOffsetInCVehicle { get; }
 
+		public static int WheelPtrArrayOffset { get; }
 		public static int WheelCountOffset { get; }
+		public static int WheelBoneIdToPtrArrayIndexOffset { get; }
 		public static int WheelSpeedOffset { get; }
 		public static int CanWheelBreakOffset { get; }
 
@@ -1366,6 +1436,128 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		#endregion
+
+		#region -- Vehicle Wheel Data --
+
+		delegate void FixVehicleWheelDelegate(IntPtr wheelAddress);
+		delegate void PunctureVehicleTireNewDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
+		delegate void PunctureVehicleTireOldDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, IntPtr vehiclePtr, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
+		delegate void BurstVehicleTireOnRimNewDelegate(IntPtr wheelPtr);
+		delegate void BurstVehicleTireOnRimOldDelegate(IntPtr wheelPtr, IntPtr vehiclePtr);
+
+		static FixVehicleWheelDelegate FixVehicleWheelFunc;
+		static PunctureVehicleTireNewDelegate PunctureVehicleTireNewFunc;
+		static PunctureVehicleTireOldDelegate PunctureVehicleTireOldFunc;
+		static BurstVehicleTireOnRimNewDelegate BurstVehicleTireOnRimNewFunc;
+		static BurstVehicleTireOnRimOldDelegate BurstVehicleTireOnRimOldFunc;
+
+		public static int VehicleWheelSteeringLimitMultiplierOffset { get; }
+
+		public static int VehicleWheelTemperatureOffset { get; }
+
+		public static int VehicleWheelHealthOffset { get; }
+
+		public static int VehicleTireHealthOffset { get; }
+
+		public static int VehicleTireWearMultiplierOffset { get; }
+
+		// the on fire offset is the same as this offset
+		public static int VehicleWheelTouchingFlagsOffset { get; }
+
+		public static int VehicleWheelIdOffset { get; }
+
+		public static int ShouldShowOnlyVehicleTiresWithPositiveHealthOffset { get; }
+
+		public static void FixVehicleWheel(IntPtr wheelAddress) => FixVehicleWheelFunc(wheelAddress);
+
+		public static IntPtr GetVehicleWheelAddressByIndexOfWheelArray(IntPtr vehicleAddress, int index)
+		{
+			var vehicleWheelArrayAddr = *(ulong**)(vehicleAddress + SHVDN.NativeMemory.WheelPtrArrayOffset);
+
+			if (vehicleWheelArrayAddr == null)
+				return IntPtr.Zero;
+
+			return new IntPtr((long)*(vehicleWheelArrayAddr + index));
+		}
+
+		public static bool IsWheelTouchingSurface(IntPtr wheelAddress, IntPtr vehicleAddress)
+		{
+			if (VehicleWheelTouchingFlagsOffset == 0)
+				return false;
+
+			var wheelTouchingFlag = *(uint*)(wheelAddress + VehicleWheelTouchingFlagsOffset).ToPointer();
+			if ((wheelTouchingFlag & 1) != 0)
+				return true;
+
+			#region Slower Check
+			if (((wheelTouchingFlag >> 1) & 1) == 0)
+				return false;
+
+			var unkClassForVehicle = *(ulong*)(wheelAddress + 0x50).ToPointer();
+			if (unkClassForVehicle == 0)
+				return false;
+			var phArticulatedCollider = *(ulong*)(unkClassForVehicle + 0x18);
+			if (phArticulatedCollider == 0)
+				return false;
+
+			return (*(uint*)(wheelAddress + 0x14).ToPointer() & 0xFFFFFFFD) == 0;
+			#endregion
+		}
+
+		static bool VehicleWheelHasVehiclePtr() => PunctureVehicleTireNewFunc != null;
+
+		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
+		{
+			var task = new VehicleWheelPunctureTask(wheelAddress, vehicleAddress, false, damage);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		public static void BurstTireOnRim(IntPtr wheelAddress, IntPtr vehicleAddress)
+		{
+			var task = new VehicleWheelPunctureTask(wheelAddress, vehicleAddress, true);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+
+		// the function BurstVehicleTireOnRimNew(Old)Func calls must be called in the main thread or the game will crash
+		// the function PunctureVehicleTireNew(Old)Func calls should be called in the main thread or the game might crash in some cases
+		internal class VehicleWheelPunctureTask : IScriptTask
+		{
+			#region Fields
+			IntPtr wheelAddress;
+			IntPtr vehicleAddress;
+			bool burstWheelCompletely;
+			float damage;
+			#endregion
+
+			internal VehicleWheelPunctureTask(IntPtr wheelAddress, IntPtr vehicleAddress, bool burstWheelCompletely, float damage = 1000f)
+			{
+				this.wheelAddress = wheelAddress;
+				this.vehicleAddress = vehicleAddress;
+				this.burstWheelCompletely = burstWheelCompletely;
+				this.damage = damage;
+			}
+
+			public void Run()
+			{
+				int outValInt;
+				float outValFloat;
+
+				if (VehicleWheelHasVehiclePtr())
+				{
+					PunctureVehicleTireNewFunc(wheelAddress, 0, damage, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					if (burstWheelCompletely)
+						BurstVehicleTireOnRimNewFunc(wheelAddress);
+				}
+				else
+				{
+					PunctureVehicleTireOldFunc(wheelAddress, 0, damage, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					if (burstWheelCompletely)
+						BurstVehicleTireOnRimOldFunc(wheelAddress, vehicleAddress);
+				}
+			}
+		}
 
 		#endregion
 
