@@ -94,6 +94,25 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the population type of the current <see cref="Entity"/>.
+		/// This property can also be used to add or remove <see cref="Entity"/> persistence.
+		/// </summary>
+		public EntityPopulationType PopulationType
+		{
+			get => (EntityPopulationType)Function.Call<int>(Hash.GET_ENTITY_POPULATION_TYPE, Handle);
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteByte(address + 0xDA, (byte)((int)value & 0xF));
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
 		/// </summary>
 		/// <value>
@@ -156,6 +175,10 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Entity"/> is persistent; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// If this <see cref="Entity"/> is <see cref="Ped"/>, setting to <see langword="true" /> can clear ambient tasks and setting to <see langword="false" /> will clear all tasks immediately.
+		/// Use <see cref="Ped.IsPersistentNoClearTask"/> instead if you need to keep assigned tasks.
+		/// </remarks>
 		public bool IsPersistent
 		{
 			get => Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, Handle);
