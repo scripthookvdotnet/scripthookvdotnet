@@ -239,23 +239,39 @@ namespace GTA.UI
 		#region Text
 
 		/// <summary>
+		/// Gets a value indicating whether a help message is currently displayed.
+		/// </summary>
+		public static bool IsHelpTextDisplayed => Function.Call<bool>(Hash.IS_HELP_MESSAGE_BEING_DISPLAYED);
+
+		/// <summary>
 		/// Shows a subtitle at the bottom of the screen for a given time
 		/// </summary>
 		/// <param name="message">The message to display.</param>
 		/// <param name="duration">The duration to display the subtitle in milliseconds.</param>
 		public static void ShowSubtitle(string message, int duration = 2500)
 		{
+			ShowSubtitle(message, duration, true);
+		}
+		/// <summary>
+		/// Shows a subtitle at the bottom of the screen for a given time
+		/// </summary>
+		/// <param name="message">The message to display.</param>
+		/// <param name="duration">The duration to display the subtitle in milliseconds.</param>
+		/// <param name="drawImmediately">Whether to draw immediately or draw after all the queued subtitles have finished.</param>
+		public static void ShowSubtitle(string message, int duration, bool drawImmediately = true)
+		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_PRINT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(message);
-			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, 1);
+			Function.Call(Hash.END_TEXT_COMMAND_PRINT, duration, drawImmediately);
 		}
+
 		/// <summary>
 		/// Displays a help message in the top corner of the screen this frame. Beeping sound will be played.
 		/// </summary>
 		/// <param name="helpText">The text to display.</param>
 		public static void ShowHelpTextThisFrame(string helpText)
 		{
-			ShowHelpTextInternal(helpText, 1, true, false);			// keeping it DRY :)
+			ShowHelpText(helpText, 1, true, false);			// keeping it DRY :)
 		}
 		/// <summary>
 		/// Displays a help message in the top corner of the screen this frame. Specify whether beeping sound plays.
@@ -264,13 +280,30 @@ namespace GTA.UI
 		/// <param name="beep">Whether to play beeping sound</param>
 		public static void ShowHelpTextThisFrame(string helpText, bool beep)
 		{
-			ShowHelpTextInternal(helpText, 1, beep, false);
+			ShowHelpText(helpText, 1, beep, false);
 		}
-		static void ShowHelpTextInternal(string helpText, int duration, bool beep, bool loop)
+		/// <summary>
+		/// Displays a help message in the top corner of the screen infinitely.
+		/// </summary>
+		/// <param name="helpText">The text to display.</param>
+		/// <param name="duration">
+		/// The duration how long the help text will be displayed in real time (not in game time which is influenced by game speed).
+		/// if the value is not positive, the help text will be displayed for 7.5 seconds.
+		/// </param>
+		/// <param name="beep">Whether to play beeping sound.</param>
+		/// <param name="looped">Whether to show this help message forever.</param>
+		public static void ShowHelpText(string helpText, int duration = -1, bool beep = true, bool looped = false)
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_HELP, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(helpText);
-			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, loop, beep, duration);
+			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_HELP, 0, looped, beep, duration);
+		}
+		/// <summary>
+		/// Clears a help message immediately.
+		/// </summary>
+		static void ClearHelpText()
+		{
+			Function.Call(Hash.CLEAR_HELP, true);
 		}
 
 		#endregion
