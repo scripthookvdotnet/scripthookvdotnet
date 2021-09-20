@@ -442,6 +442,12 @@ namespace SHVDN
 				EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
 			}
 
+			address = FindPattern("\x74\x00\xF6\x00\x00\x00\x00\x00\x80\x75\x00\x33\x00\x48\x8D", "x?x?????xx?x?xx");
+			if (address != null)
+			{
+				DisablePretendOccupantOffset = *(int*)(address + 4);
+			}
+
 			address = FindPattern("\x74\x4A\x80\x7A\x28\x03\x75\x44\xF6\x82\x00\x00\x00\x00\x04", "xxxxxxxxxx????x");
 			if (address != null)
 			{
@@ -1513,6 +1519,8 @@ namespace SHVDN
 
 		public static int EngineTemperatureOffset { get; }
 		public static int EnginePowerMultiplierOffset { get; }
+
+		public static int DisablePretendOccupantOffset { get; }
 
 		public static int VehicleProvidesCoverOffset { get; }
 
