@@ -247,6 +247,46 @@ namespace GTA
 		public bool IsSubmarine => Type == VehicleType.Submarine;
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> can pretend it has the same <see cref="Ped"/>s.
+		/// Set to <see langword="false"/> to prevent this <see cref="Vehicle"/> from creating new <see cref="Ped"/>s as its occupants.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="Vehicle"/>s do not pretend occupants regardless of this value if <see cref="Entity.PopulationType"/> is set to
+		/// <see cref="EntityPopulationType.Permanent"/> or <see cref="EntityPopulationType.Mission"/>.
+		/// </remarks>
+		public bool CanPretendOccupants
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.DisablePretendOccupantOffset == 0)
+				{
+					return false;
+				}
+
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.DisablePretendOccupantOffset == 0)
+				{
+					return;
+				}
+
+				// SET_DISABLE_PRETEND_OCCUPANTS changes the value only if the population type is set to 6 or 7, so change the value manually
+				if (value)
+				{
+					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
+				}
+				else
+				{
+					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> was stolen.
 		/// </summary>
 		public bool IsStolen
