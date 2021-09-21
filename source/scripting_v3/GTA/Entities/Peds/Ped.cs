@@ -391,7 +391,11 @@ namespace GTA
 
 		#region Euphoria & Ragdoll
 
-		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Normal)
+		/// <summary>
+		/// Enables this <see cref="Ped"/>'s ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
+		/// If <paramref name="ragdollType"/> is not set to <see cref="RagdollType.Relax"/> or <see cref="RagdollType.ScriptControl"/>, the ragdoll behavior for <see cref="RagdollType.Balance"/> will be used.
+		/// </summary>
+		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
 		{
 			CanRagdoll = true;
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, ragdollType, false, false, false);
