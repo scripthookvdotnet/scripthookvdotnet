@@ -1440,8 +1440,14 @@ namespace GTA
 		#region Damaging
 
 		/// <summary>
+		/// <para>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> is considered destroyed.
 		/// Will be set to <see langword="true"/> when <see cref="Vehicle"/>s are exploded or sinking for a short time.
+		/// </para>
+		/// <para>
+		/// <see cref="Entity.IsDead"/> will return <see langword="true"/> and <see cref="IsDriveable"/> will return <see langword="false"/> if this value is set to <see langword="true"/>.
+		/// Does not affect if this <see cref="Vehicle"/> will rendered scorched.
+		/// </para>
 		/// </summary>
 		/// <remarks>
 		/// Many features of <see cref="Vehicle"/> will be disabled when this value is set to <see langword="true"/>.
