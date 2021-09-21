@@ -1037,7 +1037,7 @@ namespace GTA
 		{
 			set
 			{
-				if (Model.IsTrain)
+				if (IsTrain)
 				{
 					Function.Call(Hash.SET_TRAIN_SPEED, Handle, value);
 					Function.Call(Hash.SET_TRAIN_CRUISE_SPEED, Handle, value);
