@@ -8,7 +8,7 @@ namespace GTA
 	public enum VehicleType
 	{
 		/// <summary>
-		/// The Default/Invalid type.
+		/// The default/invalid type.
 		/// </summary>
 		/// <remarks>
 		/// The corresponding name in vehicles.meta for this value is <c>VEHICLE_TYPE_NONE</c>.
