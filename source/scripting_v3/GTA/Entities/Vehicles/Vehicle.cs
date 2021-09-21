@@ -419,7 +419,7 @@ namespace GTA
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle == 0)
 				{
-					return VehicleType.Invalid;
+					return VehicleType.None;
 				}
 
 				return (VehicleType)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);

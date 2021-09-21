@@ -7,7 +7,14 @@ namespace GTA
 {
 	public enum VehicleType
 	{
-		Invalid = -1,
+		/// <summary>
+		/// The Default/Invalid type.
+		/// </summary>
+		/// <remarks>
+		/// The corresponding name in vehicles.meta for this value is <c>VEHICLE_TYPE_NONE</c>.
+		/// The hash value for <c>VEHICLE_TYPE_NONE</c> is <c>0x2F2B9BC</c> (hashed by Jenkins one-at-a-time hash but without lowercase conversion).
+		/// </remarks>
+		None = -1,
 		/// <summary>
 		/// The general automobile type, such as general cars, taxis, trucks, and tanks.
 		/// </summary>

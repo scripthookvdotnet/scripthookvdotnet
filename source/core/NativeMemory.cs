@@ -1729,7 +1729,7 @@ namespace SHVDN
 		}
 		enum VehicleStructClassType
 		{
-			Invalid = -1,
+			None = -1,
 			Automobile = 0x0,
 			Plane = 0x1,
 			Trailer = 0x2,
@@ -1838,7 +1838,7 @@ namespace SHVDN
 				return (VehicleStructClassType)(*(int*)((byte*)modelInfoAddress.ToPointer() + VehicleTypeOffsetInModelInfo));
 			}
 
-			return VehicleStructClassType.Invalid;
+			return VehicleStructClassType.None;
 		}
 		public static int GetVehicleType(int modelHash)
 		{
