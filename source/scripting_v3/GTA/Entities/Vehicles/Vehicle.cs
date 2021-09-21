@@ -31,6 +31,7 @@ namespace GTA
 		public void Repair()
 		{
 			Function.Call(Hash.SET_VEHICLE_FIXED, Handle);
+			IsConsideredDestroyed = false;
 		}
 
 		/// <summary>
@@ -1437,6 +1438,51 @@ namespace GTA
 		#endregion
 
 		#region Damaging
+
+		/// <summary>
+		/// <para>
+		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> is considered destroyed.
+		/// Will be set to <see langword="true"/> when <see cref="Vehicle"/>s are exploded or sinking for a short time.
+		/// </para>
+		/// <para>
+		/// <see cref="Entity.IsDead"/> will return <see langword="true"/> and <see cref="IsDriveable"/> will return <see langword="false"/> if this value is set to <see langword="true"/>.
+		/// Does not affect if this <see cref="Vehicle"/> will rendered scorched.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// Many features of <see cref="Vehicle"/> will be disabled when this value is set to <see langword="true"/>.
+		/// For example, <see cref="Ped"/>s cannot enter <see cref="Vehicle"/>s considered destroyed or start the engines of them. <see cref="Ped"/>s cannot use weapons of them.
+		/// The player cannot unflip <see cref="Vehicle"/>s considered destroyed.
+		/// </remarks>
+		public bool IsConsideredDestroyed
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					// Return true if the entity does not exist, just like IS_ENTITY_DEAD will return true in the same condition
+					return true;
+				}
+
+				return (SHVDN.NativeMemory.ReadByte(address + 0xD8) & 7) == 3;
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				var targetValue = SHVDN.NativeMemory.ReadByte(address + 0xD8) & 0xF8;
+
+				if (value)
+					targetValue |= 3;
+
+				SHVDN.NativeMemory.WriteByte(address + 0xD8, (byte)targetValue);
+			}
+		}
 
 		public bool IsDamaged => Function.Call<bool>(Hash._IS_VEHICLE_DAMAGED, Handle);
 
