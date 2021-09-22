@@ -1018,7 +1018,11 @@ namespace GTA
 				return false;
 			}
 
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
+			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
 		/// <summary>
 		/// Starts a Particle Effect on an <see cref="Entity"/> that runs once then is destroyed.
@@ -1038,7 +1042,11 @@ namespace GTA
 				return false;
 			}
 
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
+			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
 		/// <summary>
 		/// Starts a Particle Effect on an <see cref="EntityBone"/> that runs once then is destroyed.
@@ -1058,7 +1066,11 @@ namespace GTA
 				return false;
 			}
 
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
+			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
 
 		/// <summary>
@@ -1092,8 +1104,12 @@ namespace GTA
 				return null;
 			}
 
+			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+
 			int handle = Function.Call<int>((entityBone.Owner is Ped) ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE,
-				effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z));
+				effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 			if (handle == 0)
 			{
 				return null;
@@ -1117,7 +1133,11 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxis.HasFlag(InvertAxisFlags.X), invertAxis.HasFlag(InvertAxisFlags.Y), invertAxis.HasFlag(InvertAxisFlags.Z), false);
+			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+
+			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ, false);
 			if (handle == 0)
 			{
 				return null;
@@ -1125,6 +1145,8 @@ namespace GTA
 
 			return new ParticleEffect(handle, asset.AssetName, effectName, null);
 		}
+
+		private static bool HasFlagFast(InvertAxisFlags flagValues, InvertAxisFlags flag) => (flagValues & flag) == flag;
 
 		/// <summary>
 		/// Stops all particle effects in a range.
