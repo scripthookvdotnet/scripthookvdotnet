@@ -2244,7 +2244,7 @@ namespace SHVDN
 
 				#region Store Entity Handles to Buffer Arrays
 				int vehicleCountStored = 0;
-				if (poolType.HasFlag(Type.Vehicle) && *NativeMemory.VehiclePoolAddress != 0)
+				if (HasFlagFast(poolType, Type.Vehicle) && *NativeMemory.VehiclePoolAddress != 0)
 				{
 					VehiclePool* vehiclePool = *(VehiclePool**)(*NativeMemory.VehiclePoolAddress);
 
@@ -2270,28 +2270,28 @@ namespace SHVDN
 				}
 
 				int pedCountStored = 0;
-				if (poolType.HasFlag(Type.Ped) && *NativeMemory.PedPoolAddress != 0)
+				if (HasFlagFast(poolType, Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
 					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer);
 				}
 
 				int objectCountStored = 0;
-				if (poolType.HasFlag(Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
+				if (HasFlagFast(poolType, Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
 				{
 					GenericPool* objectPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
 					objectCountStored = CopyEntityHandlesToArrayGenericPool(objectPool, ref _objectHandleBuffer);
 				}
 
 				int pickupCountStored = 0;
-				if (poolType.HasFlag(Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
+				if (HasFlagFast(poolType, Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
 				{
 					GenericPool* pickupPool = (GenericPool*)(*NativeMemory.PickupObjectPoolAddress);
 					pickupCountStored = CopyEntityHandlesToArrayGenericPool(pickupPool, ref _pickupObjectHandleBuffer);
 				}
 
 				int projectileCountStored = 0;
-				if (poolType.HasFlag(Type.Projectile) && NativeMemory.ProjectilePoolAddress != null)
+				if (HasFlagFast(poolType, Type.Projectile) && NativeMemory.ProjectilePoolAddress != null)
 				{
 					int projectilesLeft = NativeMemory.GetProjectileCount();
 					int projectileCapacity = NativeMemory.GetProjectileCapacity();
@@ -2352,6 +2352,9 @@ namespace SHVDN
 					currentStartIndexToCopy += projectileCountStored;
 				}
 				#endregion
+
+				// Enum.HasFlag causes the boxing in .NET Framework and much slower than manually comparing enum flags with bitwise AND
+				bool HasFlagFast(Type poolTypeValue, Type flag) => (poolTypeValue & flag) == flag;
 
 				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
 				{
