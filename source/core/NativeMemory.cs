@@ -551,10 +551,10 @@ namespace SHVDN
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
 			}
 
-			address = FindPattern("\x0F\xBA\xAB\x00\x00\x00\x00\x09\x0F\x2F\xB3\x00\x00\x00\x00\x48\x8B\x83\x20\x01\x00\x00", "xx?????xxx???xxxx?????");
+			address = FindPattern("\xF3\x0F\x59\x05\x00\x00\x00\x00\xF3\x0F\x59\x83\x00\x00\x00\x00\xF3\x0F\x10\xC8\x0F\xC6\xC9\x00", "xxxx????xxxx????xxxxxxxx");
 			if (address != null)
 			{
-				VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 11);
+				VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 12);
 			}
 
 			address = FindPattern("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
