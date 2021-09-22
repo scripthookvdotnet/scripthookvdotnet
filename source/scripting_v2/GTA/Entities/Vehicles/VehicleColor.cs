@@ -167,5 +167,6 @@ namespace GTA
 		EpsilonBlue,
 		PureGold,
 		BrushedGold,
+		MP100GoldSpecular,
 	}
 }
