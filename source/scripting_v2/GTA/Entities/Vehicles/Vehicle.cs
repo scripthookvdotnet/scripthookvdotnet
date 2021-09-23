@@ -21,6 +21,23 @@ namespace GTA
 		public void Repair()
 		{
 			Function.Call(Hash.SET_VEHICLE_FIXED, Handle);
+			RemoveDestroyedFlag(Handle);
+
+			void RemoveDestroyedFlag(int vehicleHandle)
+			{
+				var address = SHVDN.NativeMemory.GetEntityAddress(vehicleHandle);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				int targetValue = SHVDN.NativeMemory.ReadByte(address + 0xD8);
+
+				if ((targetValue & 7) == 3)
+					targetValue &= 0xF8;
+
+				SHVDN.NativeMemory.WriteByte(address + 0xD8, (byte)targetValue);
+			}
 		}
 
 		public void Explode()
