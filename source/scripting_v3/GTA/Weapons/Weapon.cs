@@ -291,7 +291,7 @@ namespace GTA
 				case WeaponHash.Musket:
 					return "WT_MUSKET";
 				case WeaponHash.MarksmanRifle:
-					return "WT_HMKRIFLE";
+					return "WT_MKRIFLE";
 				case WeaponHash.Firework:
 					return "WT_FWRKLNCHR";
 				case WeaponHash.HomingLauncher:
