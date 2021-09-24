@@ -211,18 +211,39 @@ namespace GTA
 
 		public static string GetDisplayNameFromHash(WeaponHash hash)
 		{
+			// Will be found in this switch statement if the hash is a weapon hash for singleplayer
 			switch (hash)
 			{
+				case WeaponHash.Unarmed:
+					return "WT_UNARMED";
+				case WeaponHash.Knife:
+					return "WT_KNIFE";
+				case WeaponHash.Nightstick:
+					return "WT_NGTSTK";
+				case WeaponHash.Hammer:
+					return "WT_HAMMER";
+				case WeaponHash.Bat:
+					return "WT_BAT";
+				case WeaponHash.Crowbar:
+					return "WT_CROWBAR";
+				case WeaponHash.GolfClub:
+					return "WT_GOLFCLUB";
 				case WeaponHash.Pistol:
 					return "WT_PIST";
 				case WeaponHash.CombatPistol:
 					return "WT_PIST_CBT";
+				case WeaponHash.Pistol50:
+					return "WT_PIST_50";
 				case WeaponHash.APPistol:
 					return "WT_PIST_AP";
-				case WeaponHash.SMG:
-					return "WT_SMG";
+				case WeaponHash.StunGun:
+					return "WT_STUN";
 				case WeaponHash.MicroSMG:
 					return "WT_SMG_MCR";
+				case WeaponHash.SMG:
+					return "WT_SMG";
+				case WeaponHash.AssaultSMG:
+					return "WT_SMG_ASL";
 				case WeaponHash.AssaultRifle:
 					return "WT_RIFLE_ASL";
 				case WeaponHash.CarbineRifle:
@@ -239,66 +260,72 @@ namespace GTA
 					return "WT_SG_SOF";
 				case WeaponHash.AssaultShotgun:
 					return "WT_SG_ASL";
-				case WeaponHash.HeavySniper:
-					return "WT_SNIP_HVY";
+				case WeaponHash.BullpupShotgun:
+					return "WT_SG_BLP";
 				case WeaponHash.SniperRifle:
 					return "WT_SNIP_RIF";
+				case WeaponHash.HeavySniper:
+					return "WT_SNIP_HVY";
 				case WeaponHash.GrenadeLauncher:
 					return "WT_GL";
 				case WeaponHash.RPG:
 					return "WT_RPG";
 				case WeaponHash.Minigun:
 					return "WT_MINIGUN";
-				case WeaponHash.AssaultSMG:
-					return "WT_SMG_ASL";
-				case WeaponHash.BullpupShotgun:
-					return "WT_SG_BLP";
-				case WeaponHash.Pistol50:
-					return "WT_PIST_50";
+				case WeaponHash.Grenade:
+					return "WT_GNADE";
+				case WeaponHash.StickyBomb:
+					return "WT_GNADE_STK";
+				case WeaponHash.SmokeGrenade:
+					return "WT_GNADE_SMK";
+				case WeaponHash.BZGas:
+					return "WT_BZGAS";
+				case WeaponHash.Molotov:
+					return "WT_MOLOTOV";
+				case WeaponHash.PetrolCan:
+					return "WT_PETROL";
+				case WeaponHash.Ball:
+					return "WT_BALL";
+				case WeaponHash.Flare:
+					return "WT_FLARE";
 				case WeaponHash.Bottle:
 					return "WT_BOTTLE";
-				case WeaponHash.Gusenberg:
-					return "WT_GUSENBERG";
+				case WeaponHash.Dagger:
+					return "WT_DAGGER";
+				case WeaponHash.Hatchet:
+					return "WT_HATCHET";
+				case WeaponHash.Machete:
+					return "WT_MACHETE";
+				case WeaponHash.KnuckleDuster:
+					return "WT_KNUCKLE";
 				case WeaponHash.SNSPistol:
 					return "WT_SNSPISTOL";
 				case WeaponHash.VintagePistol:
-					return "TT_VPISTOL";
-				case WeaponHash.Dagger:
-					return "WT_DAGGER";
-				case WeaponHash.FlareGun:
-					return "WT_FLAREGUN";
-				case WeaponHash.Musket:
-					return "WT_MUSKET";
-				case WeaponHash.Firework:
-					return "WT_FWRKLNCHR";
-				case WeaponHash.MarksmanRifle:
-					return "WT_HMKRIFLE";
-				case WeaponHash.HeavyShotgun:
-					return "WT_HVYSHOT";
-				case WeaponHash.ProximityMine:
-					return "WT_PRXMINE";
-				case WeaponHash.HomingLauncher:
-					return "WT_HOMLNCH";
-				case WeaponHash.CombatPDW:
-					return "WT_COMBATPDW";
-				case WeaponHash.KnuckleDuster:
-					return "WT_KNUCKLE";
-				case WeaponHash.MarksmanPistol:
-					return "WT_MKPISTOL";
-				case WeaponHash.Machete:
-					return "WT_MACHETE";
+					return "WT_VPISTOL";
+				case WeaponHash.HeavyPistol:
+					return "WT_HVYPISTOL";
+				case WeaponHash.Gusenberg:
+					return "WT_GUSENBERG";
 				case WeaponHash.MachinePistol:
 					return "WT_MCHPIST";
-				case WeaponHash.Flashlight:
-					return "WT_FLASHLIGHT";
-				case WeaponHash.DoubleBarrelShotgun:
-					return "WT_DBSHGN";
-				case WeaponHash.CompactRifle:
-					return "WT_CMPRIFLE";
-				case WeaponHash.SwitchBlade:
-					return "WT_SWBLADE";
-				case WeaponHash.Revolver:
-					return "WT_REVOLVER";
+				case WeaponHash.CombatPDW:
+					return "WT_COMBATPDW";
+				case WeaponHash.SpecialCarbine:
+					return "WT_SPCARBINE";
+				case WeaponHash.HeavyShotgun:
+					return "WT_HVYSHOT";
+				case WeaponHash.Musket:
+					return "WT_MUSKET";
+				case WeaponHash.MarksmanRifle:
+					return "WT_HMKRIFLE";
+				case WeaponHash.Firework:
+					return "WT_FWRKLNCHR";
+				case WeaponHash.HomingLauncher:
+					return "WT_HOMLNCH";
+				case WeaponHash.Railgun:
+					return "WT_RAILGUN";
+				case WeaponHash.ProximityMine:
+					return "WT_PRXMINE";
 			}
 
 			DlcWeaponData data;
