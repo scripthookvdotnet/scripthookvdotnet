@@ -353,113 +353,113 @@ namespace GTA
 			// Will be found in this switch statement if the hash is a weapon component hash for singleplayer
 			switch (component)
 			{
-				case WeaponComponentHash.Invalid:
+				case WeaponComponent.Invalid:
 					return "WCT_INVALID";
-				case WeaponComponentHash.AtRailCover01:
+				case WeaponComponent.AtRailCover01:
 					return "WCT_RAIL";
-				case WeaponComponentHash.AtArAfGrip:
+				case WeaponComponent.AtArAfGrip:
 					return "WCT_GRIP";
-				case WeaponComponentHash.AtPiFlsh:
-				case WeaponComponentHash.AtArFlsh:
+				case WeaponComponent.AtPiFlsh:
+				case WeaponComponent.AtArFlsh:
 					return "WCT_FLASH";
-				case WeaponComponentHash.AtScopeMacro:
-				case WeaponComponentHash.AtScopeMacro02:
+				case WeaponComponent.AtScopeMacro:
+				case WeaponComponent.AtScopeMacro02:
 					return "WCT_SCOPE_MAC";
-				case WeaponComponentHash.AtScopeSmall:
-				case WeaponComponentHash.AtScopeSmall02:
+				case WeaponComponent.AtScopeSmall:
+				case WeaponComponent.AtScopeSmall02:
 					return "WCT_SCOPE_SML";
-				case WeaponComponentHash.AtScopeMedium:
+				case WeaponComponent.AtScopeMedium:
 					return "WCT_SCOPE_MED";
-				case WeaponComponentHash.AtScopeLarge:
-				case WeaponComponentHash.AtScopeLargeFixedZoom:
+				case WeaponComponent.AtScopeLarge:
+				case WeaponComponent.AtScopeLargeFixedZoom:
 					return "WCT_SCOPE_LRG";
-				case WeaponComponentHash.AtScopeMax:
+				case WeaponComponent.AtScopeMax:
 					return "WCT_SCOPE_MAX";
-				case WeaponComponentHash.AtPiSupp:
-				case WeaponComponentHash.AtArSupp:
-				case WeaponComponentHash.AtSrSupp:
+				case WeaponComponent.AtPiSupp:
+				case WeaponComponent.AtArSupp:
+				case WeaponComponent.AtSrSupp:
 					return "WCT_SUPP";
-				case WeaponComponentHash.PistolClip01:
-				case WeaponComponentHash.CombatPistolClip01:
-				case WeaponComponentHash.APPistolClip01:
-				case WeaponComponentHash.MicroSMGClip01:
-				case WeaponComponentHash.SMGClip01:
-				case WeaponComponentHash.AssaultRifleClip01:
-				case WeaponComponentHash.CarbineRifleClip01:
-				case WeaponComponentHash.AdvancedRifleClip01:
-				case WeaponComponentHash.MGClip01:
-				case WeaponComponentHash.CombatMGClip01:
-				case WeaponComponentHash.AssaultShotgunClip01:
-				case WeaponComponentHash.SniperRifleClip01:
-				case WeaponComponentHash.HeavySniperClip01:
-				case WeaponComponentHash.AssaultSMGClip01:
-				case WeaponComponentHash.Pistol50Clip01:
-				case (WeaponComponentHash)0x0BAAB157:
-				case (WeaponComponentHash)0x5AF49386:
-				case (WeaponComponentHash)0xCAEBD246:
-				case (WeaponComponentHash)0xF8955D89:
-				case WeaponComponentHash.SNSPistolClip01:
-				case WeaponComponentHash.VintagePistolClip01:
-				case WeaponComponentHash.HeavyShotgunClip01:
-				case WeaponComponentHash.MarksmanRifleClip01:
-				case WeaponComponentHash.CombatPDWClip01:
-				case WeaponComponentHash.MarksmanPistolClip01:
-				case WeaponComponentHash.MachinePistolClip01:
+				case WeaponComponent.PistolClip01:
+				case WeaponComponent.CombatPistolClip01:
+				case WeaponComponent.APPistolClip01:
+				case WeaponComponent.MicroSMGClip01:
+				case WeaponComponent.SMGClip01:
+				case WeaponComponent.AssaultRifleClip01:
+				case WeaponComponent.CarbineRifleClip01:
+				case WeaponComponent.AdvancedRifleClip01:
+				case WeaponComponent.MGClip01:
+				case WeaponComponent.CombatMGClip01:
+				case WeaponComponent.AssaultShotgunClip01:
+				case WeaponComponent.SniperRifleClip01:
+				case WeaponComponent.HeavySniperClip01:
+				case WeaponComponent.AssaultSMGClip01:
+				case WeaponComponent.Pistol50Clip01:
+				case (WeaponComponent)0x0BAAB157:
+				case (WeaponComponent)0x5AF49386:
+				case (WeaponComponent)0xCAEBD246:
+				case (WeaponComponent)0xF8955D89:
+				case WeaponComponent.SNSPistolClip01:
+				case WeaponComponent.VintagePistolClip01:
+				case WeaponComponent.HeavyShotgunClip01:
+				case WeaponComponent.MarksmanRifleClip01:
+				case WeaponComponent.CombatPDWClip01:
+				case WeaponComponent.MarksmanPistolClip01:
+				case WeaponComponent.MachinePistolClip01:
 					return "WCT_CLIP1";
-				case WeaponComponentHash.PistolClip02:
-				case WeaponComponentHash.CombatPistolClip02:
-				case WeaponComponentHash.APPistolClip02:
-				case WeaponComponentHash.MicroSMGClip02:
-				case WeaponComponentHash.SMGClip02:
-				case WeaponComponentHash.AssaultRifleClip02:
-				case WeaponComponentHash.CarbineRifleClip02:
-				case WeaponComponentHash.AdvancedRifleClip02:
-				case WeaponComponentHash.MGClip02:
-				case WeaponComponentHash.CombatMGClip02:
-				case WeaponComponentHash.AssaultShotgunClip02:
-				case WeaponComponentHash.MinigunClip01:
-				case WeaponComponentHash.AssaultSMGClip02:
-				case WeaponComponentHash.Pistol50Clip02:
-				case (WeaponComponentHash)0x6CBF371B:
-				case (WeaponComponentHash)0xE1C5FFFA:
-				case (WeaponComponentHash)0x3E7E6956:
-				case WeaponComponentHash.SNSPistolClip02:
-				case WeaponComponentHash.VintagePistolClip02:
-				case WeaponComponentHash.HeavyShotgunClip02:
-				case WeaponComponentHash.MarksmanRifleClip02:
-				case WeaponComponentHash.CombatPDWClip02:
-				case WeaponComponentHash.MachinePistolClip02:
+				case WeaponComponent.PistolClip02:
+				case WeaponComponent.CombatPistolClip02:
+				case WeaponComponent.APPistolClip02:
+				case WeaponComponent.MicroSMGClip02:
+				case WeaponComponent.SMGClip02:
+				case WeaponComponent.AssaultRifleClip02:
+				case WeaponComponent.CarbineRifleClip02:
+				case WeaponComponent.AdvancedRifleClip02:
+				case WeaponComponent.MGClip02:
+				case WeaponComponent.CombatMGClip02:
+				case WeaponComponent.AssaultShotgunClip02:
+				case WeaponComponent.MinigunClip01:
+				case WeaponComponent.AssaultSMGClip02:
+				case WeaponComponent.Pistol50Clip02:
+				case (WeaponComponent)0x6CBF371B:
+				case (WeaponComponent)0xE1C5FFFA:
+				case (WeaponComponent)0x3E7E6956:
+				case WeaponComponent.SNSPistolClip02:
+				case WeaponComponent.VintagePistolClip02:
+				case WeaponComponent.HeavyShotgunClip02:
+				case WeaponComponent.MarksmanRifleClip02:
+				case WeaponComponent.CombatPDWClip02:
+				case WeaponComponent.MachinePistolClip02:
 					return "WCT_CLIP2";
-				case WeaponComponentHash.AssaultRifleVarmodLuxe:
-				case WeaponComponentHash.CarbineRifleVarmodLuxe:
-				case WeaponComponentHash.PistolVarmodLuxe:
-				case WeaponComponentHash.SMGVarmodLuxe:
-				case WeaponComponentHash.MicroSMGVarmodLuxe:
-				case WeaponComponentHash.MarksmanRifleVarmodLuxe:
-				case WeaponComponentHash.AssaultSMGVarmodLowrider:
-				case WeaponComponentHash.CombatPistolVarmodLowrider:
-				case WeaponComponentHash.MGVarmodLowrider:
-				case WeaponComponentHash.PumpShotgunVarmodLowrider:
+				case WeaponComponent.AssaultRifleVarmodLuxe:
+				case WeaponComponent.CarbineRifleVarmodLuxe:
+				case WeaponComponent.PistolVarmodLuxe:
+				case WeaponComponent.SMGVarmodLuxe:
+				case WeaponComponent.MicroSMGVarmodLuxe:
+				case WeaponComponent.MarksmanRifleVarmodLuxe:
+				case WeaponComponent.AssaultSMGVarmodLowrider:
+				case WeaponComponent.CombatPistolVarmodLowrider:
+				case WeaponComponent.MGVarmodLowrider:
+				case WeaponComponent.PumpShotgunVarmodLowrider:
 					return "WCT_VAR_GOLD";
-				case WeaponComponentHash.AdvancedRifleVarmodLuxe:
-				case WeaponComponentHash.APPistolVarmodLuxe:
-				case WeaponComponentHash.SawnoffShotgunVarmodLuxe:
-				case WeaponComponentHash.BullpupRifleVarmodLow:
+				case WeaponComponent.AdvancedRifleVarmodLuxe:
+				case WeaponComponent.APPistolVarmodLuxe:
+				case WeaponComponent.SawnoffShotgunVarmodLuxe:
+				case WeaponComponent.BullpupRifleVarmodLow:
 					return "WCT_VAR_METAL";
-				case WeaponComponentHash.Pistol50VarmodLuxe:
+				case WeaponComponent.Pistol50VarmodLuxe:
 					return "WCT_VAR_SIL";
-				case WeaponComponentHash.HeavyPistolVarmodLuxe:
-				case WeaponComponentHash.SniperRifleVarmodLuxe:
-				case WeaponComponentHash.SNSPistolVarmodLowrider:
+				case WeaponComponent.HeavyPistolVarmodLuxe:
+				case WeaponComponent.SniperRifleVarmodLuxe:
+				case WeaponComponent.SNSPistolVarmodLowrider:
 					return "WCT_VAR_WOOD";
-				case WeaponComponentHash.CombatMGVarmodLowrider:
-				case WeaponComponentHash.SpecialCarbineVarmodLowrider:
+				case WeaponComponent.CombatMGVarmodLowrider:
+				case WeaponComponent.SpecialCarbineVarmodLowrider:
 					return "WCT_VAR_ETCHM";
-				case WeaponComponentHash.SMGClip03:
-				case WeaponComponentHash.AssaultRifleClip03:
-				case WeaponComponentHash.HeavyShotgunClip03:
+				case WeaponComponent.SMGClip03:
+				case WeaponComponent.AssaultRifleClip03:
+				case WeaponComponent.HeavyShotgunClip03:
 					return "WCT_CLIP_DRM";
-				case WeaponComponentHash.CarbineRifleClip03:
+				case WeaponComponent.CarbineRifleClip03:
 					return "WCT_CLIP_BOX";
 			}
 
