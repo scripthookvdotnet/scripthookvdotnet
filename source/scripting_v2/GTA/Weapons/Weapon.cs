@@ -304,6 +304,8 @@ namespace GTA
 					return "WT_VPISTOL";
 				case WeaponHash.HeavyPistol:
 					return "WT_HVYPISTOL";
+				case WeaponHash.MarksmanPistol:
+					return "WT_MKPISTOL";
 				case WeaponHash.Gusenberg:
 					return "WT_GUSENBERG";
 				case WeaponHash.MachinePistol:
