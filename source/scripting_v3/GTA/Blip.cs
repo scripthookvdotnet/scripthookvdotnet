@@ -267,7 +267,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as an <see cref="int"/>.
-		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/> in v1.0.944.2 or newer versions.</para>
+		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/> in v1.0.944.2 or later versions.</para>
 		/// </summary>
 		/// <value>
 		/// The rotation as an <see cref="int"/>.
@@ -299,7 +299,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as a <see cref="float"/>.
-		/// The value does not have any decimal places in v1.0.877.1 or older versions because the value is stored as <see cref="ushort"/> in these versions.
+		/// The value does not have any decimal places in v1.0.877.1 or earlier versions because the value is stored as <see cref="ushort"/> in these versions.
 		/// </summary>
 		/// <value>
 		/// The rotation as a <see cref="float"/>.
@@ -362,7 +362,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the x-axis scale of this <see cref="Blip"/> on the map.
-		/// The value is the same as <see cref="ScaleY"/> in v1.0.393.4 or older versions.
+		/// The value is the same as <see cref="ScaleY"/> in v1.0.393.4 or earlier versions.
 		/// </summary>
 		public float ScaleX
 		{
@@ -390,7 +390,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the y-axis scale of this <see cref="Blip"/> on the map.
-		/// The value is the same as <see cref="ScaleX"/> in v1.0.393.4 or older versions.
+		/// The value is the same as <see cref="ScaleX"/> in v1.0.393.4 or earlier versions.
 		/// </summary>
 		public float ScaleY
 		{

@@ -382,7 +382,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the value indicating how fast the tires will wear out. The higher this value is, the greater downforce will be created.
-		/// <para>Only supported in v1.0.1868.0 and will throw <see cref="GameVersionNotSupportedException"/> if the setter is called in older versions (the getter always returns <see langword="false"/> in older versions).</para>
+		/// <para>Only supported in v1.0.1868.0 and later versions. Will throw <see cref="GameVersionNotSupportedException"/> if the setter is called in earlier versions (the getter always returns <see langword="false"/> in earlier versions).</para>
 		/// </summary>
 		/// <exception cref="GameVersionNotSupportedException"></exception>
 		public float WearMultiplier
