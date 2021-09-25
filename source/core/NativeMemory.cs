@@ -725,6 +725,8 @@ namespace SHVDN
 			var weaponObjectHashes = new List<int>();
 			var pedHashes = new List<int>();
 
+			var gameVersionCached = GetGameVersion();
+
 			for (int i = 0; i < modelHashEntries; i++)
 			{
 				for (HashNode* cur = ((HashNode**)modelHashTable)[i]; cur != null; cur = cur->next)
@@ -746,7 +748,14 @@ namespace SHVDN
 										break;
 									case ModelInfoClassType.Vehicle:
 										vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
-										vehicleHashesGroupedByType[*(int*)((byte*)addr2 + VehicleTypeOffsetInModelInfo)].Add(cur->hash);
+
+										// Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
+										// The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
+										int vehicleTypeInt = *(int*)((byte*)addr2 + VehicleTypeOffsetInModelInfo);
+										if (gameVersionCached < 28 && vehicleTypeInt >= 6)
+											vehicleTypeInt += 2;
+										vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->hash);
+
 										break;
 									case ModelInfoClassType.Ped:
 										pedHashes.Add(cur->hash);
@@ -1835,7 +1844,14 @@ namespace SHVDN
 		{
 			if (GetModelInfoClass(modelInfoAddress) == ModelInfoClassType.Vehicle)
 			{
-				return (VehicleStructClassType)(*(int*)((byte*)modelInfoAddress.ToPointer() + VehicleTypeOffsetInModelInfo));
+				int typeInt = (*(int*)((byte*)modelInfoAddress.ToPointer() + VehicleTypeOffsetInModelInfo));
+
+				// Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
+				// The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
+				if (GetGameVersion() < 28 && typeInt >= 6)
+					typeInt += 2;
+
+				return (VehicleStructClassType)typeInt;
 			}
 
 			return VehicleStructClassType.None;
