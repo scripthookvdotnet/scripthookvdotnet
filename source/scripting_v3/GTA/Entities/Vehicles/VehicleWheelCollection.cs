@@ -24,7 +24,7 @@ namespace GTA
 			Vehicle = owner;
 		}
 
-		[Obsolete("VehicleWheel indexer overload with int index does not support any of the wheels wheel_lm2, wheel_rm2, wheel_lm3, or wheel_lm3 for legacy scripts compatibility in v3 API. Use VehicleWheel indexer overload with VehicleWheelBoneId enum instead.")]
+		[Obsolete("VehicleWheel indexer overload with int index does not support any of the wheels wheel_lm2, wheel_rm2, wheel_lm3, or wheel_lm3, but provided for legacy scripts compatibility in v3 API. Use VehicleWheel indexer overload with VehicleWheelBoneId enum instead.")]
 		public VehicleWheel this[int index]
 		{
 			get

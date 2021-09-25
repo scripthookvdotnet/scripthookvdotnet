@@ -102,7 +102,7 @@ namespace GTA
 		/// Gets the index for native functions.
 		/// Obsoleted in v3 API because there is no legiminate ways to get value from or modify any of the 4 wheels <c>wheel_lm2</c>, <c>wheel_rm2</c>, <c>wheel_lm3</c>, or <c>wheel_lm3</c> in native functions.
 		/// </summary>
-		[Obsolete("VehicleWheel.Index does not support any of the wheels wheel_lm2, wheel_rm2, wheel_lm3, or wheel_lm3 for legacy scripts compatibility in v3 API. Use VehicleWheel.BoneId instead.")]
+		[Obsolete("VehicleWheel.Index does not support any of the wheels wheel_lm2, wheel_rm2, wheel_lm3, or wheel_lm3, but provided for legacy scripts compatibility in v3 API. Use VehicleWheel.BoneId instead.")]
 		public int Index
 		{
 			get;
