@@ -283,7 +283,7 @@ namespace SHVDN
 			readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
 			writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
 
-			address = FindPattern("\xF3\x0F\x10\x1D\x00\x00\x00\x00\x41\xB8\x00\x00\x00\x00\x41\x8B\xD0", "xxxx????xx????xxx");
+			address = FindPattern("\xF3\x0F\x11\x05\x00\x00\x00\x00\xF3\x0F\x10\x08\x0F\x2F\xC8\x73\x03\x0F\x28\xC1\x48\x83\xC0\x04\x49\x2B", "xxxx????xxxxxxxxxxxxxxxxxx");
 			var timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
 			if (timeScaleArrayAddress != null)
 				// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
