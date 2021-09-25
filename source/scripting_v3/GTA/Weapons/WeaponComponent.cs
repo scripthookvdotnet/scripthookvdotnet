@@ -58,7 +58,7 @@ namespace GTA
 
 		static string GetComponentDisplayNameFromHash(WeaponHash hash, WeaponComponentHash component)
 		{
-			// Will be found in this switch statement if the hash is a weapon component hash for singleplayer
+			// Will be found in this switch statement if the hash is one of the weapon component hashes for singleplayer
 			switch (component)
 			{
 				case WeaponComponentHash.Invalid:

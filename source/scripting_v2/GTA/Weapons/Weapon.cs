@@ -211,7 +211,7 @@ namespace GTA
 
 		public static string GetDisplayNameFromHash(WeaponHash hash)
 		{
-			// Will be found in this switch statement if the hash is a weapon hash for singleplayer
+			// Will be found in this switch statement if the hash is one of the weapon hashes for singleplayer
 			switch (hash)
 			{
 				case WeaponHash.Unarmed:
@@ -282,6 +282,8 @@ namespace GTA
 					return "WT_BZGAS";
 				case WeaponHash.Molotov:
 					return "WT_MOLOTOV";
+				case WeaponHash.FireExtinguisher:
+					return "WT_FIRE";
 				case WeaponHash.PetrolCan:
 					return "WT_PETROL";
 				case WeaponHash.Ball:
@@ -328,6 +330,9 @@ namespace GTA
 					return "WT_RAILGUN";
 				case WeaponHash.ProximityMine:
 					return "WT_PRXMINE";
+				// there is no WeaponShopItem for the weapon snowballs, so listed here
+				case WeaponHash.Snowball:
+					return "WT_SNWBALL";
 			}
 
 			DlcWeaponData data;
@@ -350,7 +355,7 @@ namespace GTA
 
 		public static string GetComponentDisplayNameFromHash(WeaponHash hash, WeaponComponent component)
 		{
-			// Will be found in this switch statement if the hash is a weapon component hash for singleplayer
+			// Will be found in this switch statement if the hash is one of the weapon component hashes for singleplayer
 			switch (component)
 			{
 				case WeaponComponent.Invalid:
