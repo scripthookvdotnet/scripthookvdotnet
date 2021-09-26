@@ -13,7 +13,7 @@ namespace GTA
 	/// </summary>
 	public static class Audio
 	{
-		// Music
+		#region Music
 
 		/// <summary>
 		/// Plays music from the game's music files.
@@ -32,7 +32,9 @@ namespace GTA
 			Function.Call(Hash.CANCEL_MUSIC_EVENT, musicFile);
 		}
 
-		// Sounds
+		#endregion
+
+		#region Sounds
 
 		/// <summary>
 		/// Plays a sound from the game's sound files at the specified <paramref name="entity"/>.
@@ -143,5 +145,7 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_AUDIO_FLAG, flag.ToString(), toggle);
 		}
+
+		#endregion
 	}
 }
