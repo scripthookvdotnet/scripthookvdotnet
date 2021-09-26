@@ -3314,15 +3314,18 @@ namespace SHVDN
 					}
 				}
 
-				foreach (var arg in _stringVector3ArrayArguments)
+				if (_stringVector3ArrayArguments != null)
 				{
-					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+					foreach (var arg in _stringVector3ArrayArguments)
+					{
+						IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
-					var argValue = arg.Value;
-					if (argValue is float[] vector3ArgValue)
-						NativeMemory.SetNmVector3Address(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
-					else if (argValue is string stringArgValue)
-						NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
+						var argValue = arg.Value;
+						if (argValue is float[] vector3ArgValue)
+							NativeMemory.SetNmVector3Address(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
+						else if (argValue is string stringArgValue)
+							NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
+					}
 				}
 
 				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x30);

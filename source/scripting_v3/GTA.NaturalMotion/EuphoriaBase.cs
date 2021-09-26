@@ -16,9 +16,9 @@ namespace GTA.NaturalMotion
 	public class Message
 	{
 		#region Fields
-		readonly string _message;
-		readonly Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
-		readonly Dictionary<string, object> _stringVector3ArrayArguments;
+		private string _message;
+		private Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
+		private Dictionary<string, object> _stringVector3ArrayArguments;
 		private static readonly Dictionary<string, object> _stopArgument = new Dictionary<string, object>() { { "start", false } };
 		#endregion
 
@@ -79,6 +79,8 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string argName, bool value)
 		{
+			CreateBoolIntFloatArgDictIfNotCreated();
+
 			int valueConverted = value ? 1 : 0;
 			_boolIntFloatArguments[argName] = (valueConverted, typeof(bool));
 		}
@@ -89,6 +91,8 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string argName, int value)
 		{
+			CreateBoolIntFloatArgDictIfNotCreated();
+
 			_boolIntFloatArguments[argName] = (value, typeof(int));
 		}
 		/// <summary>
@@ -98,6 +102,8 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string argName, float value)
 		{
+			CreateBoolIntFloatArgDictIfNotCreated();
+
 			unsafe
 			{
 				int valueConverted = *(int*)&value;
@@ -111,6 +117,8 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string argName, string value)
 		{
+			CreateStringVector3ArrayArgDictIfNotCreated();
+
 			_stringVector3ArrayArguments[argName] = value;
 		}
 		/// <summary>
@@ -120,6 +128,8 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string argName, Vector3 value)
 		{
+			CreateStringVector3ArrayArgDictIfNotCreated();
+
 			_stringVector3ArrayArguments[argName] = value;
 		}
 
@@ -128,8 +138,24 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public void ResetArguments()
 		{
-			_boolIntFloatArguments.Clear();
-			_stringVector3ArrayArguments.Clear();
+			_boolIntFloatArguments?.Clear();
+			_stringVector3ArrayArguments?.Clear();
+		}
+
+		public void CreateBoolIntFloatArgDictIfNotCreated()
+		{
+			if (_boolIntFloatArguments == null)
+			{
+				_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
+			}
+		}
+
+		public void CreateStringVector3ArrayArgDictIfNotCreated()
+		{
+			if (_stringVector3ArrayArguments == null)
+			{
+				_stringVector3ArrayArguments = new Dictionary<string, object>();
+			}
 		}
 
 		/// <summary>
