@@ -84,7 +84,13 @@ namespace GTA
 		v1_0_2215_0_NoSteam,
 		v1_0_2245_0_Steam,
 		v1_0_2245_0_NoSteam,
+		/// <summary>
+		/// This value also represents the exe version 1.0.2372.2 for Steam version. 1.0.2372.2 basically works in the same way as 1.0.2372.0 but with bug fixes.
+		/// </summary>
 		v1_0_2372_0_Steam,
+		/// <summary>
+		/// This value also represents the exe version 1.0.2372.2 for non-Steam version. 1.0.2372.2 basically works in the same way as 1.0.2372.0 but with bug fixes.
+		/// </summary>
 		v1_0_2372_0_NoSteam,
 	}
 }
