@@ -181,6 +181,39 @@ namespace GTA
 			}
 		}
 
+		public WeaponComponent GetSuppressorOrMuzzleBrakeComponent(int index)
+		{
+			foreach (var component in this)
+			{
+				if (component.AttachmentPoint == WeaponAttachmentPoint.Supp ||
+					component.AttachmentPoint == WeaponAttachmentPoint.Supp2)
+				{
+					if (index-- == 0)
+					{
+						return component;
+					}
+				}
+			}
+			return _invalidComponent;
+		}
+
+		public int SuppressorAndMuzzleBrakeVariationsCount
+		{
+			get
+			{
+				int count = 0;
+				foreach (var component in this)
+				{
+					if (component.AttachmentPoint == WeaponAttachmentPoint.Supp ||
+						component.AttachmentPoint == WeaponAttachmentPoint.Supp2)
+					{
+						count++;
+					}
+				}
+				return count;
+			}
+		}
+
 		public WeaponComponent GetGunRootComponent(int index)
 		{
 			foreach (var component in this)
@@ -212,6 +245,7 @@ namespace GTA
 			}
 		}
 
+		// This should get the suppressor instance, but we could add additional validations by checking if the weapon component info class is CWeaponComponentSuppressorInfo
 		public WeaponComponent GetSuppressorComponent()
 		{
 			foreach (var component in this)
