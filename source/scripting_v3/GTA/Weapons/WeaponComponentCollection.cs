@@ -229,6 +229,10 @@ namespace GTA
 		{
 			foreach (var component in this)
 			{
+				// COMPONENT_AT_RAILCOVER_01 is the only component that attaches the flashlight position other than actual flashlights
+				if (component.ComponentHash == WeaponComponentHash.AtRailCover01)
+					continue;
+
 				if (component.AttachmentPoint == WeaponAttachmentPoint.FlashLaser ||
 					component.AttachmentPoint == WeaponAttachmentPoint.FlashLaser2)
 				{
