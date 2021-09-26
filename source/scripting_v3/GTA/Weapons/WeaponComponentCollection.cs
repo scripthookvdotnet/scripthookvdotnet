@@ -72,6 +72,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the number of compatible components.
+		/// </summary>
 		public int Count => _components.Length;
 
 		public IEnumerator<WeaponComponent> GetEnumerator()
@@ -84,6 +87,14 @@ namespace GTA
 			return (AllComponents as IEnumerable<WeaponComponent>).GetEnumerator();
 		}
 
+		/// <summary>
+		/// Gets the clip component at the index.
+		/// </summary>
+		/// <param name="index">The index of the clip component subset of all the weapon component array.</param>
+		/// <returns>
+		/// A <see cref="WeaponComponent"/> instance if the <see cref="WeaponComponent"/> at the <paramref name="index"/> of the clip component subset is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		public WeaponComponent GetClipComponent(int index)
 		{
 			foreach (var component in this)
@@ -100,6 +111,9 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the number of compatible clip components.
+		/// </summary>
 		public int ClipVariationsCount
 		{
 			get
@@ -117,6 +131,14 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the scope component at the index.
+		/// </summary>
+		/// <param name="index">The index of the scope component subset of all the weapon component array.</param>
+		/// <returns>
+		/// A <see cref="WeaponComponent"/> instance if the <see cref="WeaponComponent"/> at the <paramref name="index"/> of the scope component subset is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		public WeaponComponent GetScopeComponent(int index)
 		{
 			foreach (var component in this)
@@ -133,6 +155,9 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the number of compatible scope components.
+		/// </summary>
 		public int ScopeVariationsCount
 		{
 			get
@@ -150,6 +175,14 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the barrel component at the index.
+		/// </summary>
+		/// <param name="index">The index of the barrel component subset of all the weapon component array.</param>
+		/// <returns>
+		/// A <see cref="WeaponComponent"/> instance if the <see cref="WeaponComponent"/> at the <paramref name="index"/> of the barrel component subset is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		public WeaponComponent GetBarrelComponent(int index)
 		{
 			foreach (var component in this)
@@ -165,6 +198,9 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the number of compatible barrel components.
+		/// </summary>
 		public int BarrelVariationsCount
 		{
 			get
@@ -181,6 +217,14 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the suppressor or muzzle brake component at the index.
+		/// </summary>
+		/// <param name="index">The index of the subset of the suppressor and muzzle brake components of all the weapon component array.</param>
+		/// <returns>
+		/// A <see cref="WeaponComponent"/> instance if the <see cref="WeaponComponent"/> at the <paramref name="index"/> of the subset of the suppressor and muzzle brake components is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		public WeaponComponent GetSuppressorOrMuzzleBrakeComponent(int index)
 		{
 			foreach (var component in this)
@@ -197,6 +241,9 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the number of compatible suppressor and muzzle brake components.
+		/// </summary>
 		public int SuppressorAndMuzzleBrakeVariationsCount
 		{
 			get
@@ -214,6 +261,14 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the component for <see cref="WeaponAttachmentPoint.GunRoot"/> at the index.
+		/// </summary>
+		/// <param name="index">The index of the components for <see cref="WeaponAttachmentPoint.GunRoot"/> subset of all the weapon component array.</param>
+		/// <returns>
+		/// A <see cref="WeaponComponent"/> instance if the <see cref="WeaponComponent"/> at the <paramref name="index"/> of the components for <see cref="WeaponAttachmentPoint.GunRoot"/> is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		public WeaponComponent GetGunRootComponent(int index)
 		{
 			foreach (var component in this)
@@ -229,6 +284,9 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the number of compatible components for <see cref="WeaponAttachmentPoint.GunRoot"/>.
+		/// </summary>
 		public int GunRootVariationsCount
 		{
 			get
@@ -245,6 +303,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the suppressor component.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="WeaponComponent"/> instance if the suppressor component is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		// This should get the suppressor instance, but we could add additional validations by checking if the weapon component info class is CWeaponComponentSuppressorInfo
 		public WeaponComponent GetSuppressorComponent()
 		{
@@ -259,6 +324,13 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the flashlight component.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="WeaponComponent"/> instance if the flashlight component is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		public WeaponComponent GetFlashLightComponent()
 		{
 			foreach (var component in this)
@@ -276,6 +348,14 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets the first component of all the components for <see cref="WeaponAttachmentPoint.GunRoot"/>.
+		/// Despite the method name, return value is not guaranteed to a <see cref="WeaponComponent"/> instance that represents the luxury finish component.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="WeaponComponent"/> instance if the first component of all the components for <see cref="WeaponAttachmentPoint.GunRoot"/> is found;
+		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
+		/// </returns>
 		[Obsolete("WeaponComponentCollection.GetLuxuryFinishComponent is wrongly named and cannot necessarily get all of the components for gun_root (e.g. camo components), please use WeaponComponentCollection.GetGunRootComponent instead.")]
 		public WeaponComponent GetLuxuryFinishComponent()
 		{
@@ -289,6 +369,10 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		/// <summary>
+		/// Gets all the compatible weapon component hashes for the speficied weapon hash.
+		/// </summary>
+		/// <param name="hash">The weapon hash.</param>
 		static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
 		{
 			return SHVDN.NativeMemory.GetAllCompatibleWeaponComponentHashes((uint)hash).Select(x => (WeaponComponentHash)x).ToArray();
