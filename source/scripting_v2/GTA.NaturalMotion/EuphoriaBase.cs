@@ -17,8 +17,8 @@ namespace GTA.NaturalMotion
 	{
 		#region Fields
 		readonly string _message;
-		readonly Dictionary<string, (int value, Type type)> _BoolIntFloatArguments;
-		readonly Dictionary<string, object> _StringVector3ArrayArguments;
+		readonly Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
+		readonly Dictionary<string, object> _stringVector3ArrayArguments;
 		private static readonly Dictionary<string, object> _stopArgument = new Dictionary<string, object>() { { "start", false } };
 		#endregion
 
@@ -29,8 +29,8 @@ namespace GTA.NaturalMotion
 		public Message(string message)
 		{
 			_message = message;
-			_BoolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
-			_StringVector3ArrayArguments = new Dictionary<string, object>();
+			_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
+			_stringVector3ArrayArguments = new Dictionary<string, object>();
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace GTA.NaturalMotion
 
 			SetArgument("start", true);
 
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _BoolIntFloatArguments, _StringVector3ArrayArguments);
+			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
 		}
 
 		/// <summary>
@@ -80,7 +80,7 @@ namespace GTA.NaturalMotion
 		public void SetArgument(string message, bool value)
 		{
 			int valueConverted = value ? 1 : 0;
-			_BoolIntFloatArguments[message] = (valueConverted, typeof(bool));
+			_boolIntFloatArguments[message] = (valueConverted, typeof(bool));
 		}
 		/// <summary>
 		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value.
@@ -89,7 +89,7 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string message, int value)
 		{
-			_BoolIntFloatArguments[message] = (value, typeof(int));
+			_boolIntFloatArguments[message] = (value, typeof(int));
 		}
 		/// <summary>
 		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value.
@@ -101,7 +101,7 @@ namespace GTA.NaturalMotion
 			unsafe
 			{
 				int valueConverted = *(int*)&value;
-				_BoolIntFloatArguments[message] = (valueConverted, typeof(float));
+				_boolIntFloatArguments[message] = (valueConverted, typeof(float));
 			}
 		}
 		/// <summary>
@@ -111,7 +111,7 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string message, string value)
 		{
-			_StringVector3ArrayArguments[message] = value;
+			_stringVector3ArrayArguments[message] = value;
 		}
 		/// <summary>
 		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value.
@@ -120,7 +120,7 @@ namespace GTA.NaturalMotion
 		/// <param name="value">The value to set the argument to.</param>
 		public void SetArgument(string message, Vector3 value)
 		{
-			_StringVector3ArrayArguments[message] = value;
+			_stringVector3ArrayArguments[message] = value;
 		}
 
 		/// <summary>
@@ -128,8 +128,8 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public void ResetArguments()
 		{
-			_BoolIntFloatArguments.Clear();
-			_StringVector3ArrayArguments.Clear();
+			_boolIntFloatArguments.Clear();
+			_stringVector3ArrayArguments.Clear();
 		}
 
 		/// <summary>
