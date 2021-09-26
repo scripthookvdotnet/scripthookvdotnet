@@ -128,7 +128,7 @@ namespace GTA.NaturalMotion
 		{
 			CreateStringVector3ArrayArgDictIfNotCreated();
 
-			_stringVector3ArrayArguments[message] = value;.ToArray()
+			_stringVector3ArrayArguments[message] = value.ToArray();
 		}
 
 		/// <summary>
