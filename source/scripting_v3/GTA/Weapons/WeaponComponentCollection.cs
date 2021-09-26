@@ -4,6 +4,7 @@
 //
 
 using GTA.Native;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -149,6 +150,68 @@ namespace GTA
 			}
 		}
 
+		public WeaponComponent GetBarrelComponent(int index)
+		{
+			foreach (var component in this)
+			{
+				if (component.AttachmentPoint == WeaponAttachmentPoint.Barrel)
+				{
+					if (index-- == 0)
+					{
+						return component;
+					}
+				}
+			}
+			return _invalidComponent;
+		}
+
+		public int BarrelVariationsCount
+		{
+			get
+			{
+				int count = 0;
+				foreach (var component in this)
+				{
+					if (component.AttachmentPoint == WeaponAttachmentPoint.Barrel)
+					{
+						count++;
+					}
+				}
+				return count;
+			}
+		}
+
+		public WeaponComponent GetGunRootComponent(int index)
+		{
+			foreach (var component in this)
+			{
+				if (component.AttachmentPoint == WeaponAttachmentPoint.GunRoot)
+				{
+					if (index-- == 0)
+					{
+						return component;
+					}
+				}
+			}
+			return _invalidComponent;
+		}
+
+		public int GunRootVariationsCount
+		{
+			get
+			{
+				int count = 0;
+				foreach (var component in this)
+				{
+					if (component.AttachmentPoint == WeaponAttachmentPoint.GunRoot)
+					{
+						count++;
+					}
+				}
+				return count;
+			}
+		}
+
 		public WeaponComponent GetSuppressorComponent()
 		{
 			foreach (var component in this)
@@ -175,6 +238,7 @@ namespace GTA
 			return _invalidComponent;
 		}
 
+		[Obsolete("WeaponComponentCollection.GetLuxuryFinishComponent is wrongly named and cannot necessarily get all of the components for gun_root (e.g. camo components), please use WeaponComponentCollection.GetGunRootComponent instead.")]
 		public WeaponComponent GetLuxuryFinishComponent()
 		{
 			foreach (var component in this)
