@@ -130,7 +130,7 @@ namespace GTA.NaturalMotion
 		{
 			CreateStringVector3ArrayArgDictIfNotCreated();
 
-			_stringVector3ArrayArguments[argName] = value;
+			_stringVector3ArrayArguments[argName] = value.ToArray();
 		}
 
 		/// <summary>
