@@ -313,7 +313,7 @@ namespace SHVDN
 					scriptTypes.Add(key, new Tuple<string, Type>(filename, type));
 
 					if (apiVersion == null) // Check API version for one of the types (should be the same for all)
-						apiVersion = type.BaseType.Assembly.GetName().Version;
+						apiVersion = GetBaseTypeVersion(type, "GTA.Script");
 				}
 			}
 			catch (ReflectionTypeLoadException ex)
@@ -728,6 +728,14 @@ namespace SHVDN
 				if (t.FullName == baseTypeName)
 					return true;
 			return false;
+		}
+
+		static Version GetBaseTypeVersion(Type type, string baseTypeName)
+		{
+			for (Type t = type.BaseType; t != null; t = t.BaseType)
+				if (t.FullName == baseTypeName)
+					return t.Assembly.GetName().Version;
+			return null;
 		}
 
 		static bool IsManagedAssembly(string filename)
