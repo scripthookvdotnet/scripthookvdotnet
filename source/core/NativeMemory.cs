@@ -1619,14 +1619,14 @@ namespace SHVDN
 			if (((wheelTouchingFlag >> 1) & 1) == 0)
 				return false;
 
-			var unkClassForVehicle = *(ulong*)(*(ulong*)(vehicleAddress + 0x50).ToPointer() + 0x50);
-			if (unkClassForVehicle == 0)
+			var phCollider = *(ulong*)(*(ulong*)(vehicleAddress + 0x50).ToPointer() + 0x50);
+			if (phCollider == 0)
 				return true;
-			var phArticulatedCollider = *(ulong*)(unkClassForVehicle + 0x18);
-			if (phArticulatedCollider == 0)
+			var unkStructAddr = *(ulong*)(phCollider + 0x18);
+			if (unkStructAddr == 0)
 				return false;
 
-			return (*(uint*)(phArticulatedCollider + 0x14) & 0xFFFFFFFD) == 0;
+			return (*(uint*)(unkStructAddr + 0x14) & 0xFFFFFFFD) == 0;
 			#endregion
 		}
 
