@@ -543,5 +543,16 @@ namespace GTA
 		{
 			return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
 		}
+
+		/// <summary>
+		/// Searches the address space of the current process for a memory pattern.
+		/// </summary>
+		/// <param name="pattern">The pattern.</param>
+		/// <param name="mask">The pattern mask.</param>
+		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
+		public static unsafe byte* FindPattern(string pattern, string mask)
+		{
+			return SHVDN.NativeMemory.FindPattern(pattern, mask);
+		}
 	}
 }
