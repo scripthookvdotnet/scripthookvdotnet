@@ -552,7 +552,7 @@ namespace GTA
 		/// <param name="pattern">The pattern.</param>
 		/// <returns>The address of a region matching the pattern, or <see cref="IntPtr.Zero" /> if none was found.</returns>
 		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ?? ?? 44 8B C6 8B D5 8B D8" for example, where ?? is a wildcard).</remarks>
-		public static unsafe IntPtr FindPattern(string pattern)
+		public static IntPtr FindPattern(string pattern)
 		{
 			string newPattern = string.Empty;
 			string newMask = string.Empty;
@@ -585,10 +585,13 @@ namespace GTA
 		/// <param name="mask">The pattern mask.</param>
 		/// <returns>The address of a region matching the pattern, or <see cref="IntPtr.Zero" /> if none was found.</returns>
 		/// <remarks>This function takes the classic format ("\x48\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC6\x8B\xD5\x8B\xD8" as the pattern and "xxx????xxxxxxx" as the mask for example, where \x00 in the pattern and ? In the mask is a wildcard).</remarks>
-		public static unsafe IntPtr FindPattern(string pattern, string mask)
+		public static IntPtr FindPattern(string pattern, string mask)
 		{
-			byte* address = SHVDN.NativeMemory.FindPattern(pattern, mask);
-			return address == null ? IntPtr.Zero : new IntPtr(address);
+			unsafe
+			{
+				byte* address = SHVDN.NativeMemory.FindPattern(pattern, mask);
+				return address == null ? IntPtr.Zero : new IntPtr(address);
+			}
 		}
 	}
 }
