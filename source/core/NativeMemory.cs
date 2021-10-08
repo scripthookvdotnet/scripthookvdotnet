@@ -73,7 +73,7 @@ namespace SHVDN
 		/// <param name="pattern">The pattern.</param>
 		/// <param name="mask">The pattern mask.</param>
 		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		static unsafe byte* FindPattern(string pattern, string mask)
+		public static unsafe byte* FindPattern(string pattern, string mask)
 		{
 			ProcessModule module = Process.GetCurrentProcess().MainModule;
 			return FindPattern(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
