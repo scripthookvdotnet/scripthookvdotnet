@@ -549,10 +549,11 @@ namespace GTA
 		/// </summary>
 		/// <param name="pattern">The pattern.</param>
 		/// <param name="mask">The pattern mask.</param>
-		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		public static unsafe byte* FindPattern(string pattern, string mask)
+		/// <returns>The address of a region matching the pattern, or <see cref="IntPtr.Zero" /> if none was found.</returns>
+		public static unsafe IntPtr FindPattern(string pattern, string mask)
 		{
-			return SHVDN.NativeMemory.FindPattern(pattern, mask);
+			byte* address = SHVDN.NativeMemory.FindPattern(pattern, mask);
+			return address == null ? IntPtr.Zero : new IntPtr(address);
 		}
 	}
 }
