@@ -5,6 +5,7 @@
 
 using GTA.Native;
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace GTA
@@ -544,6 +545,39 @@ namespace GTA
 			return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
 		}
 
+
+		/// <summary>
+		/// Searches the address space of the current process for a memory pattern.
+		/// </summary>
+		/// <param name="pattern">The pattern.</param>
+		/// <returns>The address of a region matching the pattern, or <see cref="IntPtr.Zero" /> if none was found.</returns>
+		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ?? ?? 44 8B C6 8B D5 8B D8" for example, where ?? is a wildcard).</remarks>
+		public static unsafe IntPtr FindPattern(string pattern)
+		{
+			string newPattern = string.Empty;
+			string newMask = string.Empty;
+
+			foreach (string rawHex in pattern.Split(' '))
+			{
+				if (string.IsNullOrEmpty(rawHex))
+				{
+					continue;
+				}
+
+				if (rawHex == "??")
+				{
+					newPattern += "\x00";
+					newMask += "?";
+					continue;
+				}
+
+				char character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
+				newPattern += character;
+				newMask += "x";
+			}
+
+			return FindPattern(newPattern, newMask);
+		}
 		/// <summary>
 		/// Searches the address space of the current process for a memory pattern.
 		/// </summary>
