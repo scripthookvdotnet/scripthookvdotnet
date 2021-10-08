@@ -551,7 +551,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="pattern">The pattern.</param>
 		/// <returns>The address of a region matching the pattern, or <see cref="IntPtr.Zero" /> if none was found.</returns>
-		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ?? ?? 44 8B C6 8B D5 8B D8" for example, where ?? is a wildcard).</remarks>
+		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ? ? 44 8B C6 8B D5 8B D8" for example, where ?? and ? are wildcards).</remarks>
 		public static IntPtr FindPattern(string pattern)
 		{
 			string newPattern = string.Empty;
@@ -564,7 +564,7 @@ namespace GTA
 					continue;
 				}
 
-				if (rawHex == "??")
+				if (rawHex == "??" || rawHex == "?")
 				{
 					newPattern += "\x00";
 					newMask += "?";
