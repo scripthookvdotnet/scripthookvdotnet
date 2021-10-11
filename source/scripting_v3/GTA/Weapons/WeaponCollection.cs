@@ -145,7 +145,10 @@ namespace GTA
 
 			if (weapon.IsPresent)
 			{
-				Select(weapon);
+				if (equipNow)
+				{
+					Select(weapon);
+				}
 			}
 			else
 			{
