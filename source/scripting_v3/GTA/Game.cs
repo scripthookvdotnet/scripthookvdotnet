@@ -154,7 +154,7 @@ namespace GTA
 				{
 					value = 0;
 				}
-				if (value > 5)
+				else if (value > 5)
 				{
 					value = 5;
 				}
@@ -545,6 +545,15 @@ namespace GTA
 			return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
 		}
 
+		/// <summary>
+		/// Get the current address of an entity with a handle
+		/// </summary>
+		/// <param name="handle">The handle of an entity.</param>
+		/// <returns>The address of an entity, or <see cref="IntPtr.Zero" /> if none was found.</returns>
+		public static IntPtr GetEntityAddress(int handle)
+		{
+			return SHVDN.NativeMemory.GetEntityAddress(handle);
+		}
 
 		/// <summary>
 		/// Searches the address space of the current process for a memory pattern.
