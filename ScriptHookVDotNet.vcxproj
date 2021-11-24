@@ -17,7 +17,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B2933D8F-F922-40BD-BB70-18622A81AB8F}</ProjectGuid>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>SHVDN</RootNamespace>
   </PropertyGroup>
@@ -46,15 +46,6 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='NativeGen'">
     <ConfigurationType>Utility</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='NativeGen|x64'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <!-- Global compilation settings -->
@@ -138,11 +129,31 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->
-  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
-    <Csc Sources="@(CsCompile)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DisabledWarnings="%(CsCompile.NoWarn)" DocumentationFile="$(IntDir)$(TargetName).xdc" LangVersion="%(CsCompile.LangVersion)" Optimize="%(CsCompile.Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" TargetType="Module" Utf8Output="%(CsCompile.Utf8Output)" WarningLevel="%(CsCompile.WarningLevel)" WarningsAsErrors="%(CsCompile.WarningsAsErrors)" WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
+  <Target
+    Name="CsCompile"
+    BeforeTargets="ClCompile"
+    Inputs="@(CsCompile)"
+    Outputs="$(IntDir)$(TargetName).netmodule">
+    <Csc
+      Sources="@(CsCompile)"
+      AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)"
+      DisabledWarnings="%(CsCompile.NoWarn)"
+      DocumentationFile="$(IntDir)$(TargetName).xdc"
+      LangVersion="%(CsCompile.LangVersion)"
+      Optimize="%(CsCompile.Optimize)"
+      OutputAssembly="$(IntDir)$(TargetName).netmodule"
+      TargetType="Module"
+      Utf8Output="%(CsCompile.Utf8Output)"
+      WarningLevel="%(CsCompile.WarningLevel)"
+      WarningsAsErrors="%(CsCompile.WarningsAsErrors)"
+      WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)"
+      ToolExe="$(CscToolExe)"
+      ToolPath="$(CscToolPath)" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
-  <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
+  <Target
+    Name="VerifySDKFiles"
+    BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>
       <!-- Look for the header files and the library -->
       <SDKFiles Include="sdk\inc\*.h" />
