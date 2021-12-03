@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using SHVDN;
 
 namespace GTA.NaturalMotion
 {
@@ -48,7 +49,22 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		public void SendTo(Ped target)
 		{
-			SendTo(target, -1);
+			if (!target.IsRagdoll)
+			{
+				if (!target.CanRagdoll)
+				{
+					target.CanRagdoll = true;
+				}	
+			}
+			if (!SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(target.MemoryAddress))
+			{
+				// Does not call when a CTaskNMControl task is active or the CEvent (which usually causes some task) related to CTaskNMControl occured for calling SET_PED_TO_RAGDOLL just like in legacy scripts.
+				// Otherwise, the ragdoll duration will be overridden.
+				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, -1, 1, 1, 1, 0);
+			}
+
+			SetArgument("start", true);
+			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
 		}
 		/// <summary>
 		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
@@ -57,19 +73,14 @@ namespace GTA.NaturalMotion
 		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void SendTo(Ped target, int duration)
 		{
-			if (!target.IsRagdoll)
+			if (!target.CanRagdoll)
 			{
-				if (!target.CanRagdoll)
-				{
-					target.CanRagdoll = true;
-				}
-
-				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, duration, 1, 1, 1, 0);
+				target.CanRagdoll = true;
 			}
 
-			SetArgument("start", true);
-
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
+			// Always call to specify the new duration
+			Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, duration, 1, 1, 1, 0);
+			SendTo(target);
 		}
 
 		/// <summary>

@@ -2664,7 +2664,6 @@ namespace SHVDN
 			return task.returnEntityHandle;
 		}
 
-
 		#endregion
 
 		#region -- Radar Blip Pool --
@@ -3258,6 +3257,71 @@ namespace SHVDN
 			internal ushort taskTypeIndex;
  		}
 
+		public static bool IsTaskNMScriptControlOrEventSwitch2NMActive(IntPtr pedAddress)
+		{
+			ulong phInstGtaAddress = *(ulong*)(pedAddress + 0x30);
+
+			if (phInstGtaAddress == 0)
+				return false;
+
+			ulong fragInstNMGtaAddress = *(ulong*)(pedAddress + fragInstNMGtaOffset);
+
+			if (phInstGtaAddress == fragInstNMGtaAddress && !IsPedInjured((byte*)pedAddress))
+			{
+				var funcUlongIntDelegate = GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + 0x98)));
+				if (funcUlongIntDelegate(fragInstNMGtaAddress) != -1)
+				{
+					var PedIntelligenceAddr = *(ulong*)(pedAddress + PedIntelligenceOffset);
+
+					var activeTask = GetActiveTaskFunc(*(ulong*)((byte*)PedIntelligenceAddr + CTaskTreePedOffset));
+					if (activeTask != null && activeTask->taskTypeIndex == cTaskNMScriptControlTypeIndex)
+					{
+						return true;
+					}
+					else
+					{
+						int eventCount = *(int*)((byte*)PedIntelligenceAddr + CEventCountOffset);
+						for (int i = 0; i < eventCount; i++)
+						{
+							var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
+							if (eventAddress != 0)
+							{
+								var getEventTypeIndexFunc = CreateGetEventTypeIndexDelegateIfNotCreated(eventAddress);
+								if (getEventTypeIndexFunc(eventAddress) == cEventSwitch2NMTypeIndex)
+								{
+									var taskInEvent = *(CTask**)(eventAddress + 0x28);
+									if (taskInEvent != null)
+									{
+										if (taskInEvent->taskTypeIndex == cTaskNMScriptControlTypeIndex)
+										{
+											return true;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+
+			bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
+
+			GetEventTypeIndexDelegate CreateGetEventTypeIndexDelegateIfNotCreated(ulong eventAddress)
+			{
+				var getEventTypeIndexVirtualFuncAddr = *(ulong*)(*(ulong*)eventAddress + 0x18);
+
+				if (getEventTypeIndexDelegateCacheDict.TryGetValue(getEventTypeIndexVirtualFuncAddr, out var cachedDelegate))
+					return cachedDelegate;
+
+				var createdDelegate = GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)getEventTypeIndexVirtualFuncAddr));
+				getEventTypeIndexDelegateCacheDict[getEventTypeIndexVirtualFuncAddr] = createdDelegate;
+
+				return createdDelegate;
+			}
+		}
+
 		internal class EuphoriaMessageTask : IScriptTask
 		{
 			#region Fields
@@ -3328,76 +3392,14 @@ namespace SHVDN
 					}
 				}
 
-				ulong phInstGtaAddress = *(ulong*)(_PedAddress + 0x30);
-
-				if (phInstGtaAddress == 0)
-					return;
-
-				bool v5 = false;
-
-				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
-
-				if (phInstGtaAddress == fragInstNMGtaAddress && !IsPedInjured(_PedAddress))
+				if (IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
 				{
-					var funcUlongIntDelegate = GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + 0x98)));
-					if (funcUlongIntDelegate(fragInstNMGtaAddress) != -1)
-					{
-						var PedIntelligenceAddr = *(ulong*)(_PedAddress + PedIntelligenceOffset);
-
-						var activeTask = GetActiveTaskFunc(*(ulong*)((byte*)PedIntelligenceAddr + CTaskTreePedOffset));
-						if (activeTask != null && activeTask->taskTypeIndex == cTaskNMScriptControlTypeIndex)
-						{
-							v5 = true;
-						}
-						else
-						{
-							int eventCount = *(int*)((byte*)PedIntelligenceAddr + CEventCountOffset);
-							for (int i = 0; i < eventCount; i++)
-							{
-								var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
-								if (eventAddress != 0)
-								{
-									var getEventTypeIndexFunc = CreateGetEventTypeIndexDelegateIfNotCreated(eventAddress);
-									if (getEventTypeIndexFunc(eventAddress) == cEventSwitch2NMTypeIndex)
-									{
-										var taskInEvent = *(CTask**)(eventAddress + 0x28);
-										if (taskInEvent != null)
-										{
-											if (taskInEvent->taskTypeIndex == cTaskNMScriptControlTypeIndex)
-											{
-												v5 = true;
-												break;
-											}
-										}
-									}
-								}
-							}
-						}
-						if (v5 && funcUlongIntDelegate((ulong)fragInstNMGtaAddress) != -1)
-						{
-							IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(message);
-							SendMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
-						}
-
-					}
+					ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
+					IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(message);
+					SendMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
 				}
 
 				FreeCoTaskMem(new IntPtr((long)messageMemory));
-
-				bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
-
-				GetEventTypeIndexDelegate CreateGetEventTypeIndexDelegateIfNotCreated(ulong eventAddress)
-				{
-					var getEventTypeIndexVirtualFuncAddr = *(ulong*)(*(ulong*)eventAddress + 0x18);
-
-					if (getEventTypeIndexDelegateCacheDict.TryGetValue(getEventTypeIndexVirtualFuncAddr, out var cachedDelegate))
-						return cachedDelegate;
-
-					var createdDelegate = GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)getEventTypeIndexVirtualFuncAddr));
-					getEventTypeIndexDelegateCacheDict[getEventTypeIndexVirtualFuncAddr] = createdDelegate;
-
-					return createdDelegate;
-				}
 			}
 		}
 
