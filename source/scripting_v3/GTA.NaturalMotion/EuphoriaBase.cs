@@ -19,7 +19,7 @@ namespace GTA.NaturalMotion
 		private string _message;
 		private Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
 		private Dictionary<string, object> _stringVector3ArrayArguments;
-		private static readonly Dictionary<string, object> _stopArgument = new Dictionary<string, object>() { { "start", false } };
+		private static readonly Dictionary<string, (int value, Type type)> _stopArgument = new Dictionary<string, (int value, Type type)>() { { "start", (0, typeof(bool)) } };
 		#endregion
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
 		{
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, null, _stopArgument);
+			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _stopArgument, null);
 		}
 
 		/// <summary>
