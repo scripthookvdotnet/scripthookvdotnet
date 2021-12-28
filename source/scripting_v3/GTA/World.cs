@@ -363,6 +363,11 @@ namespace GTA
 		public static int ProjectileCount => SHVDN.NativeMemory.GetProjectileCount();
 
 		/// <summary>
+		/// Returns the total number of <see cref="Entity"/> colliders used.
+		/// </summary>
+		public static int EntityColliderCount => SHVDN.NativeMemory.GetEntityColliderCount();
+
+		/// <summary>
 		/// The total number of <see cref="Vehicle"/>s that can exist in the world.
 		/// </summary>
 		/// <remarks>The game will crash when the number of <see cref="Vehicle"/> is the same as this limit and the game tries to create a <see cref="Vehicle"/>.</remarks>
@@ -386,6 +391,12 @@ namespace GTA
 		/// Always returns 50 currently since the limit is hard-coded in the exe.
 		/// </summary>
 		public static int ProjectileCapacity => SHVDN.NativeMemory.GetProjectileCapacity();
+		/// <summary>
+		/// <para>The total number of <see cref="Entity"/> colliders can be used. The return value can be different in different versions.</para>
+		/// <para>When <see cref="EntityColliderCount"/> reaches this value, no more <see cref="Entity"/> will not be able to be physically moved
+		/// and <see cref="Vehicle"/>s and <see cref="Prop"/>s will not be able to detach fragment parts properly.</para>
+		/// </summary>
+		public static int EntityColliderCapacity => SHVDN.NativeMemory.GetEntityColliderCapacity();
 
 		/// <summary>
 		/// Gets the closest <see cref="Ped"/> to a given position in the World.

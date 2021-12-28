@@ -713,6 +713,24 @@ namespace SHVDN
 				ExplodeProjectileFunc = GetDelegateForFunctionPointer<ExplodeProjectileDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
 			}
 
+			address = FindPattern("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E\x00", "xxxxxxxxx?xxxxxx????xx?");
+			if (address != null)
+			{
+				getFragInstVFuncOffset = *(sbyte*)(address + 9);
+				detachFragmentPartByIndexFunc = GetDelegateForFunctionPointer<DetachFragmentPartByIndexDelegate>(new IntPtr(*(int*)(address + 16) + address + 20));
+			}
+			address = FindPattern("\x00\x8B\x0D\x00\x00\x00\x00\x00\x83\x64\x00\x00\x00\x00\x0F\xB7\xD1\x00\x33\xC9\xE8", "?xx?????xx????xxx?xxx");
+			if (address != null)
+			{
+				phSimulatorInstPtr = (ulong**)(*(int*)(address + 3) + address + 7);
+			}
+			address = FindPattern("\x00\x63\x00\x00\x00\x00\x00\x3B\x00\x00\x00\x00\x00\x0F\x8D\x00\x00\x00\x00\x00\x8B\xC8", "?x?????x?????xx?????xx");
+			if (address != null)
+			{
+				colliderCountOffset = *(int*)(address + 3);
+				colliderCapacityOffset = *(int*)(address + 9);
+			}
+
 			// Generate vehicle model list
 			var vehicleHashesGroupedByClass = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
@@ -1242,64 +1260,57 @@ namespace SHVDN
 
 		#region -- Skeleton Data --
 
-		static ulong GetEntitySkeletonData(int handle)
+		static CrSkeleton* GetCrSkeletonOfEntityHandle(int handle) => GetCrSkeletonOfEntity(new IntPtr((long)GetEntityAddressFunc(handle)));
+		static CrSkeleton* GetCrSkeletonOfEntity(IntPtr entityAddress)
 		{
-			ulong MemAddress = GetEntityAddressFunc(handle);
-
-			int offset = NativeMemory.GetGameVersion() >= 63 /*v1_0_2189_0_Steam*/ ? 96 : 88;
-
-			var func2 = GetDelegateForFunctionPointer<FuncUlongUlongDelegate>(ReadIntPtr(ReadIntPtr(new IntPtr((long)MemAddress)) + offset));
-			ulong Addr2 = func2(MemAddress);
-			ulong Addr3;
-			if (Addr2 == 0)
+			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			// Return value will not be null if the entity is a CVehicle or a CPed
+			if (fragInst != null)
 			{
-				Addr3 = *(ulong*)(MemAddress + 80);
-				if (Addr3 == 0)
-				{
-					return 0;
-				}
-				else
-				{
-					Addr3 = *(ulong*)(Addr3 + 40);
-				}
+				return GetEntityCrSkeletonOfFragInst(fragInst);
 			}
 			else
 			{
-				Addr3 = *(ulong*)(Addr2 + 104);
-				if (Addr3 == 0 || *(ulong*)(Addr2 + 120) == 0)
+				ulong unkAddr = *(ulong*)(entityAddress + 80);
+				if (unkAddr == 0)
 				{
-					return 0;
+					return null;
 				}
 				else
 				{
-					Addr3 = *(ulong*)(Addr3 + 376);
+					return (CrSkeleton*)*(ulong*)(unkAddr + 40);
 				}
 			}
-			if (Addr3 == 0)
-			{
-				return 0;
-			}
+		}
+		static CrSkeleton* GetEntityCrSkeletonOfFragInst(FragInst* fragInst)
+		{
+			var fragCacheEntry = fragInst->fragCacheEntry;
+			var gtaFragType = fragInst->gtaFragType;
 
-			return Addr3;
+			// Check if either pointer is null just like native functions that take a bone index argument
+			if (fragCacheEntry == null || gtaFragType == null)
+				return null;
+
+			return fragCacheEntry->crSkeleton;
 		}
 
 		public static int GetEntityBoneCount(int handle)
 		{
-			var fragSkeletonData = GetEntitySkeletonData(handle);
-			return fragSkeletonData != 0 ? *(int*)(fragSkeletonData + 32) : 0;
+			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
 		public static IntPtr GetEntityBonePoseAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var fragSkeletonData = GetEntitySkeletonData(handle);
-			if (fragSkeletonData == 0)
+			var crSkeletonData = GetCrSkeletonOfEntityHandle(handle);
+			if (crSkeletonData == null)
 				return IntPtr.Zero;
 
-			if (boneIndex < *(int*)(fragSkeletonData + 32)) // boneIndex < max bones?
+			if (boneIndex < crSkeletonData->boneCount)
 			{
-				return new IntPtr((long)(*(ulong*)(fragSkeletonData + 16) + ((uint)boneIndex * 0x40)));
+				return crSkeletonData->GetBonePoseMatrixAddress(boneIndex);
 			}
 
 			return IntPtr.Zero;
@@ -1309,13 +1320,13 @@ namespace SHVDN
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var fragSkeletonData = GetEntitySkeletonData(handle);
-			if (fragSkeletonData == 0)
+			var crSkeletonData = GetCrSkeletonOfEntityHandle(handle);
+			if (crSkeletonData == null)
 				return IntPtr.Zero;
 
-			if (boneIndex < *(int*)(fragSkeletonData + 32)) // boneIndex < max bones?
+			if (boneIndex < crSkeletonData->boneCount)
 			{
-				return new IntPtr((long)(*(ulong*)(fragSkeletonData + 24) + ((uint)boneIndex * 0x40)));
+				return crSkeletonData->GetBoneMatrixAddress(boneIndex);
 			}
 
 			return IntPtr.Zero;
@@ -3209,6 +3220,306 @@ namespace SHVDN
 			{
 				var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
 				getClassNameHashOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
+
+				return newDelegate;
+			}
+		}
+
+		#endregion
+
+		#region -- Fragment Object for Entity --
+
+		internal delegate FragInst* GetFragInstDelegate(IntPtr entityAddress);
+		internal delegate FragInst* DetachFragmentPartByIndexDelegate(FragInst* fragInst, int partIndex);
+
+		static int getFragInstVFuncOffset;
+		static DetachFragmentPartByIndexDelegate detachFragmentPartByIndexFunc;
+		static ulong** phSimulatorInstPtr;
+		static int colliderCapacityOffset;
+		static int colliderCountOffset;
+
+		// Only 3 virtural functions are present (one for peds and objects and one for vehicles)
+		static Dictionary<ulong, GetFragInstDelegate> getFragInstVFuncCache = new Dictionary<ulong, GetFragInstDelegate>(3);
+
+		[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
+		internal unsafe struct FragInst
+		{
+			[FieldOffset(0x68)]
+			internal FragCacheEntry* fragCacheEntry;
+			[FieldOffset(0x78)]
+			internal GtaFragType* gtaFragType;
+			[FieldOffset(0xB8)]
+			internal uint unkType;
+
+			internal FragPhysicsLOD* GetAppropriateFragPhysicsLOD()
+			{
+				var fragPhysicsLODGroup = gtaFragType->fragPhysicsLODGroup;
+				if (fragPhysicsLODGroup == null)
+					return null;
+
+				switch (unkType)
+				{
+					case 0:
+					case 1:
+					case 2:
+						return fragPhysicsLODGroup->GetFragPhysicsLODByIndex((int)unkType);
+					default:
+						return fragPhysicsLODGroup->GetFragPhysicsLODByIndex(0);
+				}
+			}
+		}
+		[StructLayout(LayoutKind.Explicit)]
+		internal unsafe struct FragCacheEntry
+		{
+			[FieldOffset(0x178)] internal CrSkeleton* crSkeleton;
+		}
+		[StructLayout(LayoutKind.Explicit)]
+		internal struct GtaFragType
+		{
+			[FieldOffset(0x30)]
+			internal FragDrawable* fragDrawable;
+			[FieldOffset(0xF0)]
+			internal FragPhysicsLODGroup* fragPhysicsLODGroup;
+		}
+		[StructLayout(LayoutKind.Explicit)]
+		internal struct FragDrawable
+		{
+			[FieldOffset(0x18)]
+			internal CrSkeletonData* crSkeletonData;
+		}
+		[StructLayout(LayoutKind.Explicit)]
+		internal struct FragPhysicsLODGroup
+		{
+			[FieldOffset(0x10)]
+			internal fixed ulong fragPhysicsLODAddresses[3];
+
+			internal FragPhysicsLOD* GetFragPhysicsLODByIndex(int index) => (FragPhysicsLOD*)((ulong*)fragPhysicsLODAddresses[index]);
+		}
+		[StructLayout(LayoutKind.Explicit)]
+		internal struct FragPhysicsLOD
+		{
+			[FieldOffset(0xD0)]
+			internal ulong fragTypeChildArr;
+			[FieldOffset(0x11E)]
+			internal byte fragmentGroupCount;
+
+			internal FragTypeChild* GetFragTypeChild(int index)
+			{
+				if (index >= fragmentGroupCount)
+					return null;
+
+				return (FragTypeChild*)*((ulong*)fragTypeChildArr + index);
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		internal struct FragTypeChild
+		{
+			[FieldOffset(0x10)]
+			internal ushort boneIndex;
+			[FieldOffset(0x12)]
+			internal ushort boneId;
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		internal unsafe struct CrSkeleton
+		{
+			[FieldOffset(0x00)] internal CrSkeletonData* skeletonData;
+			[FieldOffset(0x10)] internal ulong bonePoseMatrixArrayPtr;
+			[FieldOffset(0x18)] internal ulong boneMatrixArrayPtr;
+			[FieldOffset(0x20)] internal int boneCount;
+
+			public IntPtr GetBonePoseMatrixAddress(int boneIndex)
+			{
+				return new IntPtr((long)(*(ulong*)(bonePoseMatrixArrayPtr) + ((uint)boneIndex * 0x40)));
+			}
+
+			public IntPtr GetBoneMatrixAddress(int boneIndex)
+			{
+				return new IntPtr((long)(*(ulong*)(boneMatrixArrayPtr) + ((uint)boneIndex * 0x40)));
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		internal unsafe struct CrSkeletonData
+		{
+			[FieldOffset(0x10)] internal ulong boneIdAndIndexTupleArrayPtr;
+			[FieldOffset(0x18)] internal ushort divisorForBoneIdAndIndexTuple;
+			[FieldOffset(0x1A)] internal ushort unkValue;
+			[FieldOffset(0x5E)] internal ushort boneCount;
+
+			/// <summary>
+			/// Gets the bone id from specified bone index. Note that bone indexes are sequential values and bone ids are not sequential ones.
+			/// </summary>
+			public int GetBoneIndexByBoneId(int boneId)
+			{
+				if (unkValue == 0)
+				{
+					if (boneId < boneCount)
+						return boneId;
+
+					return -1;
+				}
+
+				if (divisorForBoneIdAndIndexTuple == 0)
+					return -1;
+
+				var firstTuplePtr = ((ulong*)boneIdAndIndexTupleArrayPtr + (boneId % divisorForBoneIdAndIndexTuple));
+
+				for (var boneIdAndIndexTuple = (BoneIdAndIndexTuple*)*firstTuplePtr; boneIdAndIndexTuple != null; boneIdAndIndexTuple = (BoneIdAndIndexTuple*)boneIdAndIndexTuple->nextTupleAddr)
+				{
+					if (boneId == boneIdAndIndexTuple->boneId)
+						return boneIdAndIndexTuple->boneIndex;
+				}
+
+				return -1;
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		internal struct BoneIdAndIndexTuple
+		{
+			[FieldOffset(0x0)] internal int boneId;
+			[FieldOffset(0x4)] internal int boneIndex;
+			[FieldOffset(0x8)] internal ulong nextTupleAddr;
+		}
+
+		internal class DetachFragmentPartByIndexTask : IScriptTask
+		{
+			#region Fields
+			internal FragInst* fragInst;
+			internal int fragmentGroupIndex;
+			internal bool didNewFragInstCreated;
+			#endregion
+
+			internal DetachFragmentPartByIndexTask(FragInst* fragInst, int fragmentGroupIndex)
+			{
+				this.fragInst = fragInst;
+				this.fragmentGroupIndex = fragmentGroupIndex;
+			}
+
+			public void Run()
+			{
+				didNewFragInstCreated = detachFragmentPartByIndexFunc(fragInst, fragmentGroupIndex) != null;
+			}
+		}
+
+		public static int GetFragmentGroupCountFromEntity(IntPtr entityAddress)
+		{
+			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			if (fragInst == null)
+				return 0;
+
+			return GetFragmentGroupCountOfFragInst(fragInst);
+		}
+
+		public static bool DetachFragmentPartByIndex(IntPtr entityAddress, int fragmentGroupIndex)
+		{
+			if (fragmentGroupIndex < 0)
+				return false;
+
+			// If the entity collider count is at the capacity, the game can crash for trying to create the new entity while no free collider slots are available
+			if (GetEntityColliderCount() >= GetEntityColliderCapacity())
+				return false;
+
+			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			if (fragInst == null)
+				return false;
+
+			var fragmentGroupCount = GetFragmentGroupCountOfFragInst(fragInst);
+			if (fragmentGroupIndex >= fragmentGroupCount)
+				return false;
+
+			var task = new DetachFragmentPartByIndexTask(fragInst, fragmentGroupIndex);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.didNewFragInstCreated;
+		}
+
+		public static int GetFragmentGroupIndexByEntityBoneIndex(IntPtr entityAddress, int boneIndex)
+		{
+			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
+				return -1;
+
+			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			if (fragInst == null)
+				return -1;
+
+
+			var crSkeletonData = fragInst->gtaFragType->fragDrawable->crSkeletonData;
+			if (crSkeletonData == null)
+				return -1;
+
+			var boneCount = crSkeletonData->boneCount;
+			if (boneIndex >= boneCount)
+				return -1;
+
+			var fragPhysicsLOD = fragInst->GetAppropriateFragPhysicsLOD();
+			if (fragPhysicsLOD == null)
+				return -1;
+
+			var fragmentGroupCount = fragPhysicsLOD->fragmentGroupCount;
+
+			for (int i = 0; i < fragmentGroupCount; i++)
+			{
+				var fragTypeChild = fragPhysicsLOD->GetFragTypeChild(i);
+
+				if (fragTypeChild == null)
+					continue;
+
+				if (boneIndex == crSkeletonData->GetBoneIndexByBoneId(fragTypeChild->boneId))
+					return i;
+			}
+
+			return -1;
+		}
+
+		public static int GetEntityColliderCapacity()
+		{
+			if (*phSimulatorInstPtr == null)
+				return 0;
+
+			return *(int*)((byte*)*phSimulatorInstPtr + colliderCapacityOffset);
+		}
+
+		public static int GetEntityColliderCount()
+		{
+			if (*phSimulatorInstPtr == null)
+				return 0;
+
+			return *(int*)((byte*)*phSimulatorInstPtr + colliderCountOffset);
+		}
+
+		public static bool IsEntityFragmentObject(IntPtr entityAddress)
+		{
+			// For CObject, a valid address will be returned only when a certain flag is set. For CPed and CVehicle, a valid address will always be returned.
+			return GetFragInstAddressOfEntity(entityAddress) != null;
+		}
+
+		private static FragInst* GetFragInstAddressOfEntity(IntPtr entityAddress)
+		{
+			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)getFragInstVFuncOffset);
+			var getFragInstFunc = CreateGetFragInstDelegateIfNotCreated(vFuncAddr);
+
+			return getFragInstFunc(entityAddress);
+		}
+
+		private static int GetFragmentGroupCountOfFragInst(FragInst* fragInst)
+		{
+			var fragPhysicsLOD = fragInst->GetAppropriateFragPhysicsLOD();
+			return fragPhysicsLOD != null ? fragPhysicsLOD->fragmentGroupCount : 0;
+		}
+
+		private static GetFragInstDelegate CreateGetFragInstDelegateIfNotCreated(ulong virtualFuncAddr)
+		{
+			if (getFragInstVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
+			{
+				return outDelegate;
+			}
+			else
+			{
+				var newDelegate = GetDelegateForFunctionPointer<GetFragInstDelegate>(new IntPtr((long)virtualFuncAddr));
+				getFragInstVFuncCache.Add(virtualFuncAddr, newDelegate);
 
 				return newDelegate;
 			}
