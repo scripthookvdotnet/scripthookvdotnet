@@ -1,0 +1,431 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly ScriptHookVDotNet, Version=3.0.0.0, Culture=neutral, PublicKeyToken=8564999cffc18483: 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Class ScriptHookVDotNet: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Help(String): PrivateScope, Public, Static, HideBySig
+    Help(): PrivateScope, Public, Static, HideBySig
+    Clear(): PrivateScope, Public, Static, HideBySig
+    Reload(): PrivateScope, Public, Static, HideBySig
+    Start(String): PrivateScope, Public, Static, HideBySig
+    Abort(String): PrivateScope, Public, Static, HideBySig
+    AbortAll(): PrivateScope, Public, Static, HideBySig
+    ListScripts(): PrivateScope, Public, Static, HideBySig
+Class SHVDN.Console: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.MarshalByRefObject
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Boolean IsOpen 'get set' : 
+    System.Collections.Generic.List`1[System.String] CommandHistory 'get set' : 
+  Methods:
+    get_IsOpen(): PrivateScope, Public, HideBySig, SpecialName
+    set_IsOpen(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_CommandHistory(): PrivateScope, Public, HideBySig, SpecialName
+    set_CommandHistory(List`1): PrivateScope, Public, HideBySig, SpecialName
+    RegisterCommand(ConsoleCommand, MethodInfo): PrivateScope, Public, HideBySig
+    RegisterCommands(Type): PrivateScope, Public, HideBySig
+    UnregisterCommands(Type): PrivateScope, Public, HideBySig
+    Clear(): PrivateScope, Public, HideBySig
+    PrintInfo(String, Object[]): PrivateScope, Public, HideBySig
+    PrintError(String, Object[]): PrivateScope, Public, HideBySig
+    PrintWarning(String, Object[]): PrivateScope, Public, HideBySig
+    InitializeLifetimeService(): PrivateScope, Public, Virtual, HideBySig
+Class SHVDN.ConsoleCommand: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Attribute
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+    Void .ctor(System.String): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    System.String Help 'get ' : 
+  Methods:
+    get_Help(): PrivateScope, Public, HideBySig, SpecialName
+Class SHVDN.Log: AutoLayout, AnsiClass, Class, Public, Abstract, Sealed, BeforeFieldInit
+  Methods:
+    Clear(): PrivateScope, Public, Static, HideBySig
+    Message(Level, String[]): PrivateScope, Public, Static, HideBySig
+Class SHVDN.NativeFunc: AutoLayout, AnsiClass, Class, Public, Abstract, Sealed, BeforeFieldInit
+  Methods:
+    PushLongString(String): PrivateScope, Public, Static, HideBySig
+    PushLongString(String, Action`1): PrivateScope, Public, Static, HideBySig
+    Invoke(UInt64, UInt64*, Int32): PrivateScope, Public, Static, HideBySig
+    Invoke(UInt64, UInt64[]): PrivateScope, Public, Static, HideBySig
+    Invoke(UInt64, Object[]): PrivateScope, Public, Static, HideBySig
+    InvokeInternal(UInt64, UInt64*, Int32): PrivateScope, Public, Static, HideBySig
+    InvokeInternal(UInt64, UInt64[]): PrivateScope, Public, Static, HideBySig
+    InvokeInternal(UInt64, Object[]): PrivateScope, Public, Static, HideBySig
+Class SHVDN.NativeMemory: AutoLayout, AnsiClass, Class, Public, Abstract, Sealed
+  Properties:
+    IntPtr String 'get ' : 
+    IntPtr NullString 'get ' : 
+    IntPtr CellEmailBcon 'get ' : 
+    Int32 CursorSprite 'get ' : 
+    Single TimeScale 'get ' : 
+    Int32 MillisecondsPerGameMinute 'set' : 
+    Boolean IsClockPaused 'get ' : 
+    Single WorldGravity 'get set' : 
+    Int32 SetAngularVelocityVFuncOfEntityOffset 'get ' : 
+    Int32 GetAngularVelocityVFuncOfEntityOffset 'get ' : 
+    UInt32 cAttackerArrayOfEntityOffset 'get ' : 
+    UInt32 elementCountOfCAttackerArrayOfEntityOffset 'get ' : 
+    UInt32 elementSizeOfCAttackerArrayOfEntity 'get ' : 
+    Int32 NextGearOffset 'get ' : 
+    Int32 GearOffset 'get ' : 
+    Int32 HighGearOffset 'get ' : 
+    Int32 CurrentRPMOffset 'get ' : 
+    Int32 ClutchOffset 'get ' : 
+    Int32 AccelerationOffset 'get ' : 
+    Int32 TurboOffset 'get ' : 
+    Int32 FuelLevelOffset 'get ' : 
+    Int32 OilLevelOffset 'get ' : 
+    Int32 VehicleTypeOffsetInCVehicle 'get ' : 
+    Int32 WheelPtrArrayOffset 'get ' : 
+    Int32 WheelCountOffset 'get ' : 
+    Int32 WheelBoneIdToPtrArrayIndexOffset 'get ' : 
+    Int32 WheelSpeedOffset 'get ' : 
+    Int32 CanWheelBreakOffset 'get ' : 
+    Int32 SteeringAngleOffset 'get ' : 
+    Int32 SteeringScaleOffset 'get ' : 
+    Int32 ThrottlePowerOffset 'get ' : 
+    Int32 BrakePowerOffset 'get ' : 
+    Int32 EngineTemperatureOffset 'get ' : 
+    Int32 EnginePowerMultiplierOffset 'get ' : 
+    Int32 DisablePretendOccupantOffset 'get ' : 
+    Int32 VehicleProvidesCoverOffset 'get ' : 
+    Int32 VehicleLightsMultiplierOffset 'get ' : 
+    Int32 IsInteriorLightOnOffset 'get ' : 
+    Int32 IsEngineStartingOffset 'get ' : 
+    Int32 IsWantedOffset 'get ' : 
+    Int32 IsHeadlightDamagedOffset 'get ' : 
+    Int32 PreviouslyOwnedByPlayerOffset 'get ' : 
+    Int32 NeedsToBeHotwiredOffset 'get ' : 
+    Int32 AlarmTimeOffset 'get ' : 
+    Int32 VehicleLodMultiplierOffset 'get ' : 
+    Int32 VehicleDropsMoneyWhenBlownUpOffset 'get ' : 
+    Int32 HeliBladesSpeedOffset 'get ' : 
+    Int32 HeliMainRotorHealthOffset 'get ' : 
+    Int32 HeliTailRotorHealthOffset 'get ' : 
+    Int32 HeliTailBoomHealthOffset 'get ' : 
+    Int32 HandlingDataOffset 'get ' : 
+    Int32 FirstVehicleFlagsOffset 'get ' : 
+    Int32 VehicleWheelSteeringLimitMultiplierOffset 'get ' : 
+    Int32 VehicleWheelTemperatureOffset 'get ' : 
+    Int32 VehicleWheelHealthOffset 'get ' : 
+    Int32 VehicleTireHealthOffset 'get ' : 
+    Int32 VehicleTireWearMultiplierOffset 'get ' : 
+    Int32 VehicleWheelTouchingFlagsOffset 'get ' : 
+    Int32 VehicleWheelIdOffset 'get ' : 
+    Int32 ShouldShowOnlyVehicleTiresWithPositiveHealthOffset 'get ' : 
+    Int32 SweatOffset 'get ' : 
+    Int32 PedDropsWeaponsWhenDeadOffset 'get ' : 
+    Int32 PedSuffersCriticalHitOffset 'get ' : 
+    Int32 ArmorOffset 'get ' : 
+    Int32 InjuryHealthThresholdOffset 'get ' : 
+    Int32 FatalInjuryHealthThresholdOffset 'get ' : 
+    Int32 SeatIndexOffset 'get ' : 
+    System.Collections.ObjectModel.ReadOnlyCollection`1[System.Int32] WeaponModels 'get ' : 
+    System.Collections.ObjectModel.ReadOnlyCollection`1[System.Collections.ObjectModel.ReadOnlyCollection`1[System.Int32]] VehicleModels 'get ' : 
+    System.Collections.ObjectModel.ReadOnlyCollection`1[System.Collections.ObjectModel.ReadOnlyCollection`1[System.Int32]] VehicleModelsGroupedByType 'get ' : 
+    System.Collections.ObjectModel.ReadOnlyCollection`1[System.Int32] PedModels 'get ' : 
+    Int32 ProjectileAmmoInfoOffset 'get ' : 
+    Int32 ProjectileOwnerOffset 'get ' : 
+  Methods:
+    GetPedCapacity(): PrivateScope, Public, Static, HideBySig
+    GetVehicleCapacity(): PrivateScope, Public, Static, HideBySig
+    GetObjectCapacity(): PrivateScope, Public, Static, HideBySig
+    GetPickupObjectCapacity(): PrivateScope, Public, Static, HideBySig
+    GetProjectileCapacity(): PrivateScope, Public, Static, HideBySig
+    GetPedHandles(Int32[](Optional, HasDefault)): PrivateScope, Public, Static, HideBySig
+    GetPedHandles(Single[], Single, Int32[](Optional, HasDefault)): PrivateScope, Public, Static, HideBySig
+    GetPropHandles(Int32[](Optional, HasDefault)): PrivateScope, Public, Static, HideBySig
+    GetPropHandles(Single[], Single, Int32[](Optional, HasDefault)): PrivateScope, Public, Static, HideBySig
+    GetEntityHandles(): PrivateScope, Public, Static, HideBySig
+    GetEntityHandles(Single[], Single): PrivateScope, Public, Static, HideBySig
+    GetVehicleHandles(Int32[](Optional, HasDefault)): PrivateScope, Public, Static, HideBySig
+    GetVehicleHandles(Single[], Single, Int32[](Optional, HasDefault)): PrivateScope, Public, Static, HideBySig
+    GetPickupObjectHandles(): PrivateScope, Public, Static, HideBySig
+    GetPickupObjectHandles(Single[], Single): PrivateScope, Public, Static, HideBySig
+    GetProjectileHandles(): PrivateScope, Public, Static, HideBySig
+    GetProjectileHandles(Single[], Single): PrivateScope, Public, Static, HideBySig
+    GetEntityHandleFromAddress(IntPtr): PrivateScope, Public, Static, HideBySig
+    GetNonCriticalRadarBlipHandles(Int32[]): PrivateScope, Public, Static, HideBySig
+    GetNonCriticalRadarBlipHandles(Single[](Optional, HasDefault), Single(Optional, HasDefault), Int32[]): PrivateScope, Public, Static, HideBySig
+    GetNorthBlip(): PrivateScope, Public, Static, HideBySig
+    GetBlipAddress(Int32): PrivateScope, Public, Static, HideBySig
+    GetCheckpointHandles(): PrivateScope, Public, Static, HideBySig
+    GetCheckpointAddress(Int32): PrivateScope, Public, Static, HideBySig
+    GetWaypointBlip(): PrivateScope, Public, Static, HideBySig
+    GetPtfxAddress(Int32): PrivateScope, Public, Static, HideBySig
+    GetEntityAddress(Int32): PrivateScope, Public, Static, HideBySig
+    GetPlayerAddress(Int32): PrivateScope, Public, Static, HideBySig
+    get_ProjectileAmmoInfoOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_ProjectileOwnerOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    ExplodeProjectile(IntPtr): PrivateScope, Public, Static, HideBySig
+    IsHashValidAsWeaponHash(UInt32): PrivateScope, Public, Static, HideBySig
+    GetAttachmentPointHash(UInt32, UInt32): PrivateScope, Public, Static, HideBySig
+    GetAllWeaponHashesForHumanPeds(): PrivateScope, Public, Static, HideBySig
+    GetAllWeaponComponentHashes(): PrivateScope, Public, Static, HideBySig
+    GetAllCompatibleWeaponComponentHashes(UInt32): PrivateScope, Public, Static, HideBySig
+    SendEuphoriaMessage(Int32, String, Dictionary`2, Dictionary`2): PrivateScope, Public, Static, HideBySig
+    get_ThrottlePowerOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_BrakePowerOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_EngineTemperatureOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_EnginePowerMultiplierOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_DisablePretendOccupantOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleProvidesCoverOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleLightsMultiplierOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_IsInteriorLightOnOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_IsEngineStartingOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_IsWantedOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_IsHeadlightDamagedOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_PreviouslyOwnedByPlayerOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_NeedsToBeHotwiredOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_AlarmTimeOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleLodMultiplierOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleDropsMoneyWhenBlownUpOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_HeliBladesSpeedOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_HeliMainRotorHealthOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_HeliTailRotorHealthOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_HeliTailBoomHealthOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_HandlingDataOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_FirstVehicleFlagsOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleWheelSteeringLimitMultiplierOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleWheelTemperatureOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleWheelHealthOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleTireHealthOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleTireWearMultiplierOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleWheelTouchingFlagsOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleWheelIdOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_ShouldShowOnlyVehicleTiresWithPositiveHealthOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    FixVehicleWheel(IntPtr): PrivateScope, Public, Static, HideBySig
+    GetVehicleWheelAddressByIndexOfWheelArray(IntPtr, Int32): PrivateScope, Public, Static, HideBySig
+    IsWheelTouchingSurface(IntPtr, IntPtr): PrivateScope, Public, Static, HideBySig
+    PunctureTire(IntPtr, Single, IntPtr): PrivateScope, Public, Static, HideBySig
+    BurstTireOnRim(IntPtr, IntPtr): PrivateScope, Public, Static, HideBySig
+    get_SweatOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_PedDropsWeaponsWhenDeadOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_PedSuffersCriticalHitOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_ArmorOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_InjuryHealthThresholdOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_FatalInjuryHealthThresholdOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_SeatIndexOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    GetVehicleType(Int32): PrivateScope, Public, Static, HideBySig
+    GetLoadedAppropriateVehicleHashes(): PrivateScope, Public, Static, HideBySig
+    GetLoadedAppropriatePedHashes(): PrivateScope, Public, Static, HideBySig
+    IsModelAPed(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelABlimp(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelAMotorcycle(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelASubmarine(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelASubmarineCar(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelATrailer(Int32): PrivateScope, Public, Static, HideBySig
+    GetVehicleMakeName(Int32): PrivateScope, Public, Static, HideBySig
+    HasVehicleFlag(Int32, VehicleFlag1): PrivateScope, Public, Static, HideBySig
+    HasVehicleFlag(Int32, VehicleFlag2): PrivateScope, Public, Static, HideBySig
+    get_WeaponModels(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleModels(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleModelsGroupedByType(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_PedModels(): PrivateScope, Public, Static, HideBySig, SpecialName
+    GetHandlingDataByModelHash(Int32): PrivateScope, Public, Static, HideBySig
+    GetHandlingDataByHandlingNameHash(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelAMalePed(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelAFemalePed(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelHumanPed(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelAnAnimalPed(Int32): PrivateScope, Public, Static, HideBySig
+    IsModelAGangPed(Int32): PrivateScope, Public, Static, HideBySig
+    GetPedCount(): PrivateScope, Public, Static, HideBySig
+    GetVehicleCount(): PrivateScope, Public, Static, HideBySig
+    GetObjectCount(): PrivateScope, Public, Static, HideBySig
+    GetPickupObjectCount(): PrivateScope, Public, Static, HideBySig
+    GetProjectileCount(): PrivateScope, Public, Static, HideBySig
+    CreateTexture(String(HasFieldMarshal)): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    DrawTexture(Int32, Int32, Int32, Int32, Single, Single, Single, Single, Single, Single, Single, Single, Single, Single, Single, Single): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    GetGameVersion(): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    GetGlobalPtr(Int32): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    ReadByte(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadInt16(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadInt32(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadFloat(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadString(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadAddress(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadMatrix(IntPtr): PrivateScope, Public, Static, HideBySig
+    ReadVector3(IntPtr): PrivateScope, Public, Static, HideBySig
+    WriteByte(IntPtr, Byte): PrivateScope, Public, Static, HideBySig
+    WriteInt16(IntPtr, Int16): PrivateScope, Public, Static, HideBySig
+    WriteInt32(IntPtr, Int32): PrivateScope, Public, Static, HideBySig
+    WriteFloat(IntPtr, Single): PrivateScope, Public, Static, HideBySig
+    WriteMatrix(IntPtr, Single[]): PrivateScope, Public, Static, HideBySig
+    WriteVector3(IntPtr, Single[]): PrivateScope, Public, Static, HideBySig
+    SetBit(IntPtr, Int32): PrivateScope, Public, Static, HideBySig
+    ClearBit(IntPtr, Int32): PrivateScope, Public, Static, HideBySig
+    IsBitSet(IntPtr, Int32): PrivateScope, Public, Static, HideBySig
+    get_String(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_NullString(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_CellEmailBcon(): PrivateScope, Public, Static, HideBySig, SpecialName
+    PtrToStringUTF8(IntPtr): PrivateScope, Public, Static, HideBySig
+    PtrToStringUTF8(IntPtr, Int32): PrivateScope, Public, Static, HideBySig
+    StringToCoTaskMemUTF8(String): PrivateScope, Public, Static, HideBySig
+    GetCameraAddress(Int32): PrivateScope, Public, Static, HideBySig
+    GetGameplayCameraAddress(): PrivateScope, Public, Static, HideBySig
+    GetHashKey(String): PrivateScope, Public, Static, HideBySig
+    GetGXTEntryByHash(Int32): PrivateScope, Public, Static, HideBySig
+    get_CursorSprite(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_TimeScale(): PrivateScope, Public, Static, HideBySig, SpecialName
+    set_MillisecondsPerGameMinute(Int32): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_IsClockPaused(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_WorldGravity(): PrivateScope, Public, Static, HideBySig, SpecialName
+    set_WorldGravity(Single): PrivateScope, Public, Static, HideBySig, SpecialName
+    GetEntityBoneCount(Int32): PrivateScope, Public, Static, HideBySig
+    GetEntityBonePoseAddress(Int32, Int32): PrivateScope, Public, Static, HideBySig
+    GetEntityBoneMatrixAddress(Int32, Int32): PrivateScope, Public, Static, HideBySig
+    get_SetAngularVelocityVFuncOfEntityOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_GetAngularVelocityVFuncOfEntityOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_cAttackerArrayOfEntityOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_elementCountOfCAttackerArrayOfEntityOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_elementSizeOfCAttackerArrayOfEntity(): PrivateScope, Public, Static, HideBySig, SpecialName
+    GetEntityAngularVelocity(IntPtr): PrivateScope, Public, Static, HideBySig
+    SetEntityAngularVelocity(IntPtr, Single, Single, Single): PrivateScope, Public, Static, HideBySig
+    IsIndexOfEntityDamageRecordValid(IntPtr, UInt32): PrivateScope, Public, Static, HideBySig
+    GetEntityDamageRecordEntryAtIndex(IntPtr, UInt32): PrivateScope, Public, Static, HideBySig
+    GetEntityDamageRecordEntries(IntPtr): PrivateScope, Public, Static, HideBySig
+    get_NextGearOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_GearOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_HighGearOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_CurrentRPMOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_ClutchOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_AccelerationOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_TurboOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_FuelLevelOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_OilLevelOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_VehicleTypeOffsetInCVehicle(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_WheelPtrArrayOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_WheelCountOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_WheelBoneIdToPtrArrayIndexOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_WheelSpeedOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_CanWheelBreakOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_SteeringAngleOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_SteeringScaleOffset(): PrivateScope, Public, Static, HideBySig, SpecialName
+Class SHVDN.Script: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Int32 Interval 'get set' : 
+    Boolean IsPaused 'get set' : 
+    Boolean IsRunning 'get set' : 
+    Boolean IsExecuting 'get ' : 
+    System.String Name 'get set' : 
+    System.String Filename 'get set' : 
+    System.Object ScriptInstance 'get set' : 
+  Events:
+    System.EventHandler Tick: 
+    System.EventHandler Aborted: 
+    System.Windows.Forms.KeyEventHandler KeyUp: 
+    System.Windows.Forms.KeyEventHandler KeyDown: 
+  Methods:
+    get_Interval(): PrivateScope, Public, HideBySig, SpecialName
+    set_Interval(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_IsPaused(): PrivateScope, Public, HideBySig, SpecialName
+    get_IsRunning(): PrivateScope, Public, HideBySig, SpecialName
+    get_IsExecuting(): PrivateScope, Public, HideBySig, SpecialName
+    add_Tick(EventHandler): PrivateScope, Public, HideBySig, SpecialName
+    remove_Tick(EventHandler): PrivateScope, Public, HideBySig, SpecialName
+    add_Aborted(EventHandler): PrivateScope, Public, HideBySig, SpecialName
+    remove_Aborted(EventHandler): PrivateScope, Public, HideBySig, SpecialName
+    add_KeyUp(KeyEventHandler): PrivateScope, Public, HideBySig, SpecialName
+    remove_KeyUp(KeyEventHandler): PrivateScope, Public, HideBySig, SpecialName
+    add_KeyDown(KeyEventHandler): PrivateScope, Public, HideBySig, SpecialName
+    remove_KeyDown(KeyEventHandler): PrivateScope, Public, HideBySig, SpecialName
+    get_Name(): PrivateScope, Public, HideBySig, SpecialName
+    get_Filename(): PrivateScope, Public, HideBySig, SpecialName
+    get_ScriptInstance(): PrivateScope, Public, HideBySig, SpecialName
+    Start(): PrivateScope, Public, HideBySig
+    Abort(): PrivateScope, Public, HideBySig
+    Pause(): PrivateScope, Public, HideBySig
+    Resume(): PrivateScope, Public, HideBySig
+    Wait(Int32): PrivateScope, Public, HideBySig
+Interface SHVDN.IScriptTask: AutoLayout, AnsiClass, Class, Public, ClassSemanticsMask, Abstract
+  Methods:
+    Run(): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+Class SHVDN.ScriptDomain: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.MarshalByRefObject
+  Interfaces:
+    System.IDisposable
+  Properties:
+    System.String Name 'get ' : 
+    System.String ScriptPath 'get ' : 
+    System.AppDomain AppDomain 'get ' : 
+    SHVDN.ScriptDomain CurrentDomain 'get set' : 
+    SHVDN.Script[] RunningScripts 'get ' : 
+    SHVDN.Script ExecutingScript 'get ' : 
+  Methods:
+    get_Name(): PrivateScope, Public, HideBySig, SpecialName
+    get_ScriptPath(): PrivateScope, Public, HideBySig, SpecialName
+    get_AppDomain(): PrivateScope, Public, HideBySig, SpecialName
+    get_CurrentDomain(): PrivateScope, Public, Static, HideBySig, SpecialName
+    get_RunningScripts(): PrivateScope, Public, HideBySig, SpecialName
+    get_ExecutingScript(): PrivateScope, Public, Static, HideBySig, SpecialName
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    Unload(ScriptDomain): PrivateScope, Public, Static, HideBySig
+    Load(String, String): PrivateScope, Public, Static, HideBySig
+    InstantiateScript(Type): PrivateScope, Public, HideBySig
+    Start(): PrivateScope, Public, HideBySig
+    StartScripts(String): PrivateScope, Public, HideBySig
+    Abort(): PrivateScope, Public, HideBySig
+    AbortScripts(String): PrivateScope, Public, HideBySig
+    ExecuteTask(IScriptTask): PrivateScope, Public, HideBySig
+    IsKeyPressed(Keys): PrivateScope, Public, HideBySig
+    PauseKeyEvents(Boolean): PrivateScope, Public, HideBySig
+    PinString(String): PrivateScope, Public, HideBySig
+    LookupScript(Object): PrivateScope, Public, HideBySig
+    LookupScriptFilename(Type): PrivateScope, Public, HideBySig
+    InitializeLifetimeService(): PrivateScope, Public, Virtual, HideBySig
+Struct SHVDN.Log+Level: AutoLayout, AnsiClass, Class, NestedPublic, Sealed
+  :System.Enum
+  Fields:
+    Int32 value__ : Public, SpecialName, RTSpecialName
+    Level Error = 0 : Public, Static, Literal, HasDefault
+    Level Warning = 1 : Public, Static, Literal, HasDefault
+    Level Info = 2 : Public, Static, Literal, HasDefault
+    Level Debug = 3 : Public, Static, Literal, HasDefault
+Class SHVDN.NativeMemory+SetEntityAngularVelocityDelegate: AutoLayout, AnsiClass, Class, NestedPublic, Sealed
+  :System.MulticastDelegate
+    Void .ctor(System.Object, IntPtr): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Invoke(IntPtr, Single*): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+    BeginInvoke(IntPtr, Single*, AsyncCallback, Object): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+    EndInvoke(IAsyncResult): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+Class SHVDN.NativeMemory+GetEntityAngularVelocityDelegate: AutoLayout, AnsiClass, Class, NestedPublic, Sealed
+  :System.MulticastDelegate
+    Void .ctor(System.Object, IntPtr): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Methods:
+    Invoke(IntPtr): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+    BeginInvoke(IntPtr, AsyncCallback, Object): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+    EndInvoke(IAsyncResult): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask
+Struct SHVDN.NativeMemory+VehicleFlag1: AutoLayout, AnsiClass, Class, NestedPublic, Sealed
+  :System.Enum
+  Fields:
+    UInt64 value__ : Public, SpecialName, RTSpecialName
+    VehicleFlag1 Big = 2 : Public, Static, Literal, HasDefault
+    VehicleFlag1 IsVan = 32 : Public, Static, Literal, HasDefault
+    VehicleFlag1 CanStandOnTop = 268435456 : Public, Static, Literal, HasDefault
+    VehicleFlag1 LawEnforcement = 2147483648 : Public, Static, Literal, HasDefault
+    VehicleFlag1 EmergencyService = 4294967296 : Public, Static, Literal, HasDefault
+    VehicleFlag1 AllowsRappel = 549755813888 : Public, Static, Literal, HasDefault
+    VehicleFlag1 IsElectric = 8796093022208 : Public, Static, Literal, HasDefault
+    VehicleFlag1 IsOffroadVehicle = 281474976710656 : Public, Static, Literal, HasDefault
+    VehicleFlag1 IsBus = 288230376151711744 : Public, Static, Literal, HasDefault
+Struct SHVDN.NativeMemory+VehicleFlag2: AutoLayout, AnsiClass, Class, NestedPublic, Sealed
+  :System.Enum
+  Fields:
+    UInt64 value__ : Public, SpecialName, RTSpecialName
+    VehicleFlag2 IsTank = 512 : Public, Static, Literal, HasDefault
+    VehicleFlag2 HasBulletProofGlass = 4096 : Public, Static, Literal, HasDefault
+    VehicleFlag2 HasLowriderHydraulics = 36028797018963968 : Public, Static, Literal, HasDefault
+    VehicleFlag2 HasLowriderDonkHydraulics = 576460752303423488 : Public, Static, Literal, HasDefault

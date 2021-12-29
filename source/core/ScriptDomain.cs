@@ -54,8 +54,6 @@ namespace SHVDN
 		/// </summary>
 		public static ScriptDomain CurrentDomain { get; private set; }
 
-		internal static string CurrentLoadingScriptAssemblyName { get; private set; }
-
 		/// <summary>
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
 		/// </summary>
@@ -261,7 +259,6 @@ namespace SHVDN
 			try
 			{
 				// Note: This loads the assembly only the first time and afterwards returns the already loaded assembly!
-				ScriptDomain.CurrentLoadingScriptAssemblyName = Path.GetFileName(filename);
 				assembly = Assembly.LoadFrom(filename);
 			}
 			catch (Exception ex)
@@ -810,9 +807,8 @@ namespace SHVDN
 				// Some scripts reference a version-less SHVDN, do default those to major version 2
 				if (assemblyName.Version == bestVersion)
 				{
-					// ResolveEventArgs.RequestingAssembly will always be null for some reason
 					Log.Message(Log.Level.Warning, "Resolving API version 0.0.0",
-						ScriptDomain.CurrentLoadingScriptAssemblyName != null ? " referenced in " + ScriptDomain.CurrentLoadingScriptAssemblyName : string.Empty, ".");
+						args.RequestingAssembly != null ? " referenced in " + args.RequestingAssembly.GetName().Name : string.Empty, ".");
 
 					return CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == 2);
 				}
