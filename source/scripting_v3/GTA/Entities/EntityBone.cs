@@ -231,6 +231,23 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the fragment group index of this <see cref="EntityBone"/>. -1 will be returned if the <see cref="Entity"/> does not exist or <see cref="Index"/> is invalid.
+		/// </summary>
+		public int FragmentGroupIndex
+		{
+			get
+			{
+				IntPtr address = Owner.MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return -1;
+				}
+
+				return SHVDN.NativeMemory.GetFragmentGroupIndexByEntityBoneIndex(address, Index);
+			}
+		}
+
+		/// <summary>
 		/// Gets the position in world coordinates of an offset relative this <see cref="EntityBone"/>
 		/// </summary>
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
