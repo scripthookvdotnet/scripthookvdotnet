@@ -337,6 +337,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the position of this <see cref="Entity"/>.
+		/// If the <see cref="Entity"/> is <see cref="Ped"/> and the <see cref="Ped"/> is in a <see cref="Vehicle"/>, the <see cref="Vehicle"/>'s position will be returned or changed.
 		/// </summary>
 		/// <value>
 		/// The position in world space.
