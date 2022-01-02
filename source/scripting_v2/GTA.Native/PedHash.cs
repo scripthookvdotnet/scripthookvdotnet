@@ -26,7 +26,13 @@ namespace GTA.Native
 		Agent14 = 4227433577u,
 		AmandaTownley = 1830688247u,
 		Andreas = 1206185632u,
+		/// <summary>
+		/// The first in-game model of Andre Romelle Young, known professionally as Dr. Dre.
+		/// </summary>
 		ARY = 3473698871u,
+		/// <summary>
+		/// The second in-game model of Andre Romelle Young, known professionally as Dr. Dre.
+		/// </summary>
 		ARY02 = 2275358319u,
 		Ashley = 2129936603u,
 		AviSchwartzman = 939183526u,
@@ -114,7 +120,13 @@ namespace GTA.Native
 		JimmyBoston02 = 1135976220u,
 		JimmyDisanto = 1459905209u,
 		JimmyDiSanto2 = 2217591510u,
+		/// <summary>
+		/// The first in-game model of Jimmy Iovine.
+		/// </summary>
 		JIO = 1937203007u,
+		/// <summary>
+		/// The second in-game model of Jimmy Iovine.
+		/// </summary>
 		JIO02 = 3494374974u,
 		JoeMinuteman = 3189787803u,
 		JohnnyGuns = 658984954u,
@@ -147,7 +159,13 @@ namespace GTA.Native
 		MiguelMadrazo = 2781707480u,
 		Milton = 3408943538u,
 		Mimi = 2018483349u,
+		/// <summary>
+		/// The first in-game model of Mark Jordan, known professionally as DJ Pooh.
+		/// </summary>
 		MJO = 761115490u,
+		/// <summary>
+		/// The second in-game model of Mark Jordan, known professionally as DJ Pooh.
+		/// </summary>
 		MJO02 = 952584644u,
 		Molly = 2936266209u,
 		Moodyman02 = 2547074227u,
@@ -236,7 +254,13 @@ namespace GTA.Native
 		AndreasCutscene = 3881194279u,
 		AnitaCutscene = 117698822u,
 		AntonCutscene = 2781317046u,
+		/// <summary>
+		/// The first cutscene model of Andre Romelle Young, known professionally as Dr. Dre.
+		/// </summary>
 		ARYCutscene = 3059505486u,
+		/// <summary>
+		/// The second cutscene model of Andre Romelle Young, known professionally as Dr. Dre.
+		/// </summary>
 		ARY02Cutscene = 3927407837u,
 		AshleyCutscene = 650367097u,
 		AveryCutscene = 1427949869u,
@@ -316,7 +340,13 @@ namespace GTA.Native
 		JimmyBostonCutscene = 60192701u,
 		JimmyDisantoCutscene = 3100414644u,
 		JimmyDiSanto2Cutscene = 1836024091u,
+		/// <summary>
+		/// The first cutscene model of Jimmy Iovine.
+		/// </summary>
 		JIOCutscene = 2727058989u,
+		/// <summary>
+		/// The second cutscene model of Jimmy Iovine.
+		/// </summary>
 		JIO02Cutscene = 3702591664u,
 		JoeMinutemanCutscene = 4036845097u,
 		JohnnyGunsCutscene = 2108278433u,
@@ -344,7 +374,13 @@ namespace GTA.Native
 		MiguelMadrazoCutscene = 3685838978u,
 		MiltonCutscene = 3077190415u,
 		MimiCutscene = 2260860904u,
+		/// <summary>
+		/// The first cutscene model of Mark Jordan, known professionally as DJ Pooh.
+		/// </summary>
 		MJOCutscene = 2700978005u,
+		/// <summary>
+		/// The second cutscene model of Mark Jordan, known professionally as DJ Pooh.
+		/// </summary>
 		MJO02Cutscene = 2566126104u,
 		MollyCutscene = 1167167044u,
 		Moodyman02Cutscene = 2373903780u,
