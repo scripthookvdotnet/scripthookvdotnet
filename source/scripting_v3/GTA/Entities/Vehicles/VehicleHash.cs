@@ -559,6 +559,7 @@ namespace GTA
 		Schlagen = 3787471536u,
 		Shotaro = 3889340782u,
 		Skylift = 1044954915u,
+		Slamtruck = 3249056020u,
 		SlamVan = 729783779u,
 		SlamVan2 = 833469436u,
 		SlamVan3 = 1119641113u,
