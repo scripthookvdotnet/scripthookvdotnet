@@ -740,7 +740,7 @@ namespace GTA
 		/// </summary>
 		/// <returns>
 		///   <para><see langword="true" /> if a new <see cref="Entity"/> is created; otherwise, <see langword="false" />.</para>
-		///   <para>Returning <see langword="false" /> does not necessarily mean detaching the part did not changed the <see cref="Entity"/> in any ways.
+		///   <para>Returning <see langword="false" /> does not necessarily mean detaching the part did not change the <see cref="Entity"/> in any ways.
 		///   For example, detaching <c>seat_f</c> for <see cref="Vehicle"/> will return <see langword="false" /> but the <see cref="Ped"/> on the front seat will not be able to sit properly.</para>
 		/// </returns>
 		public bool DetachFragmentPart(int fragmentGroupIndex)

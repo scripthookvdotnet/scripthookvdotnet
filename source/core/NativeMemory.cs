@@ -3389,7 +3389,7 @@ namespace SHVDN
 			#region Fields
 			internal FragInst* fragInst;
 			internal int fragmentGroupIndex;
-			internal bool didNewFragInstCreated;
+			internal bool wasNewFragInstCreated;
 			#endregion
 
 			internal DetachFragmentPartByIndexTask(FragInst* fragInst, int fragmentGroupIndex)
@@ -3400,7 +3400,7 @@ namespace SHVDN
 
 			public void Run()
 			{
-				didNewFragInstCreated = detachFragmentPartByIndexFunc(fragInst, fragmentGroupIndex) != null;
+				wasNewFragInstCreated = detachFragmentPartByIndexFunc(fragInst, fragmentGroupIndex) != null;
 			}
 		}
 
@@ -3433,7 +3433,7 @@ namespace SHVDN
 			var task = new DetachFragmentPartByIndexTask(fragInst, fragmentGroupIndex);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.didNewFragInstCreated;
+			return task.wasNewFragInstCreated;
 		}
 
 		public static int GetFragmentGroupIndexByEntityBoneIndex(IntPtr entityAddress, int boneIndex)
