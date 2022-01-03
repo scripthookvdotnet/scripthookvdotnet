@@ -694,6 +694,19 @@ namespace SHVDN
 				PedSourceOfDeathOffset = PedTimeOfDeathOffset - 12;
 			}
 
+			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
+			if (address != null)
+			{
+				SeeingRangeOffset = *(int*)(address + 9);
+				HearingRangeOffset = SeeingRangeOffset - 4;
+				VisualFieldMinAngleOffset = SeeingRangeOffset + 8;
+				VisualFieldMaxAngleOffset = SeeingRangeOffset + 0xC;
+				VisualFieldMinElevationAngleOffset = SeeingRangeOffset + 0x10;
+				VisualFieldMaxElevationAngleOffset = SeeingRangeOffset + 0x14;
+				VisualFieldPeripheralRangeOffset = SeeingRangeOffset + 0x18;
+				VisualFieldCenterAngleOffset = SeeingRangeOffset + 0x1C;
+			}
+
 			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
 			if (address != null)
 			{
@@ -1736,7 +1749,16 @@ namespace SHVDN
 
 		#region -- Ped Intelligence Offsets --
 
-		static int PedIntelligenceOffset { get; }
+		public static int PedIntelligenceOffset { get; }
+
+		public static int SeeingRangeOffset { get; }
+		public static int HearingRangeOffset { get; }
+		public static int VisualFieldMinAngleOffset { get; }
+		public static int VisualFieldMaxAngleOffset { get; }
+		public static int VisualFieldMinElevationAngleOffset { get; }
+		public static int VisualFieldMaxElevationAngleOffset { get; }
+		public static int VisualFieldPeripheralRangeOffset { get; }
+		public static int VisualFieldCenterAngleOffset { get; }
 
 		static int CTaskTreePedOffset { get; }
 
