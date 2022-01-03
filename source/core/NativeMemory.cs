@@ -694,6 +694,12 @@ namespace SHVDN
 				PedSourceOfDeathOffset = PedTimeOfDeathOffset - 12;
 			}
 
+			address = FindPattern("\x74\x08\x8B\x81\x00\x00\x00\x00\xEB\x0D\x48\x8B\x87\x00\x00\x00\x00\x8B\x80", "xxxx????xxxxx????xx");
+			if (address != null)
+			{
+				FiringPatternOffset = *(int*)(address + 19);
+			}
+
 			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
 			if (address != null)
 			{
@@ -1750,6 +1756,8 @@ namespace SHVDN
 		#region -- Ped Intelligence Offsets --
 
 		public static int PedIntelligenceOffset { get; }
+
+		public static int FiringPatternOffset { get; }
 
 		public static int SeeingRangeOffset { get; }
 		public static int HearingRangeOffset { get; }

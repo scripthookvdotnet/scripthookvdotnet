@@ -463,10 +463,21 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the pattern this <see cref="Ped"/> uses to fire weapons.
+		/// Gets of sets the pattern this <see cref="Ped"/> uses to fire weapons.
 		/// </summary>
 		public FiringPattern FiringPattern
 		{
+			get
+			{
+				if (SHVDN.NativeMemory.FiringPatternOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return (FiringPattern)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.FiringPatternOffset);
+			}
 			set => Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, value);
 		}
 
