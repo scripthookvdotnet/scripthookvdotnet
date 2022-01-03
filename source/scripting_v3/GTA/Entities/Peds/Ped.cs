@@ -1211,7 +1211,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_PERIPHERAL_RANGE, Handle, value);
 		}
 
-		public float VisualFieldCenterAngleRange
+		public float VisualFieldCenterAngle
 		{
 			get
 			{
