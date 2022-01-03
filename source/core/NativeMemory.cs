@@ -686,6 +686,33 @@ namespace SHVDN
 				FatalInjuryHealthThresholdOffset = *(int*)(address + 6);
 			}
 
+			address = FindPattern("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
+			if (address != null)
+			{
+				PedTimeOfDeathOffset = *(int*)(address + 2);
+				PedCauseOfDeathOffset = PedTimeOfDeathOffset - 4;
+				PedSourceOfDeathOffset = PedTimeOfDeathOffset - 12;
+			}
+
+			address = FindPattern("\x74\x08\x8B\x81\x00\x00\x00\x00\xEB\x0D\x48\x8B\x87\x00\x00\x00\x00\x8B\x80", "xxxx????xxxxx????xx");
+			if (address != null)
+			{
+				FiringPatternOffset = *(int*)(address + 19);
+			}
+
+			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
+			if (address != null)
+			{
+				SeeingRangeOffset = *(int*)(address + 9);
+				HearingRangeOffset = SeeingRangeOffset - 4;
+				VisualFieldMinAngleOffset = SeeingRangeOffset + 8;
+				VisualFieldMaxAngleOffset = SeeingRangeOffset + 0xC;
+				VisualFieldMinElevationAngleOffset = SeeingRangeOffset + 0x10;
+				VisualFieldMaxElevationAngleOffset = SeeingRangeOffset + 0x14;
+				VisualFieldPeripheralRangeOffset = SeeingRangeOffset + 0x18;
+				VisualFieldCenterAngleOffset = SeeingRangeOffset + 0x1C;
+			}
+
 			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
 			if (address != null)
 			{
@@ -977,6 +1004,16 @@ namespace SHVDN
 			data[0] = value[0];
 			data[1] = value[1];
 			data[2] = value[2];
+		}
+		/// <summary>
+		/// Writes a single 64-bit value from the specified <paramref name="address"/>.
+		/// </summary>
+		/// <param name="address">The memory address to access.</param>
+		/// <param name="value">The value to write.</param>
+		public static void WriteAddress(IntPtr address, IntPtr value)
+		{
+			var data = (long*)address.ToPointer();
+			*data = value.ToInt64();
 		}
 
 		/// <summary>
@@ -1712,9 +1749,24 @@ namespace SHVDN
 
 		public static int SeatIndexOffset { get; }
 
+		public static int PedSourceOfDeathOffset { get; }
+		public static int PedCauseOfDeathOffset { get; }
+		public static int PedTimeOfDeathOffset { get; }
+
 		#region -- Ped Intelligence Offsets --
 
-		static int PedIntelligenceOffset { get; }
+		public static int PedIntelligenceOffset { get; }
+
+		public static int FiringPatternOffset { get; }
+
+		public static int SeeingRangeOffset { get; }
+		public static int HearingRangeOffset { get; }
+		public static int VisualFieldMinAngleOffset { get; }
+		public static int VisualFieldMaxAngleOffset { get; }
+		public static int VisualFieldMinElevationAngleOffset { get; }
+		public static int VisualFieldMaxElevationAngleOffset { get; }
+		public static int VisualFieldPeripheralRangeOffset { get; }
+		public static int VisualFieldCenterAngleOffset { get; }
 
 		static int CTaskTreePedOffset { get; }
 

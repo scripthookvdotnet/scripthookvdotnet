@@ -108,6 +108,20 @@ namespace GTA
 			return EntityType == EntityType.Ped;
 		}
 
+		private IntPtr PedIntelligenceAddress
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return IntPtr.Zero;
+				}
+
+				return SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.PedIntelligenceOffset);
+			}
+		}
+
 		#region Styling
 
 		/// <summary>
@@ -449,10 +463,21 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the pattern this <see cref="Ped"/> uses to fire weapons.
+		/// Gets of sets the pattern this <see cref="Ped"/> uses to fire weapons.
 		/// </summary>
 		public FiringPattern FiringPattern
 		{
+			get
+			{
+				if (SHVDN.NativeMemory.FiringPatternOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return (FiringPattern)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.FiringPatternOffset);
+			}
 			set => Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, value);
 		}
 
@@ -811,7 +836,65 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle, target.Handle);
 		}
 
+		/// <summary>
+		/// Gets the <see cref="Entity"/> that killed this <see cref="Ped"/>.
+		/// </summary>
 		public Entity Killer => FromHandle(Function.Call<int>(Hash.GET_PED_SOURCE_OF_DEATH, Handle));
+
+		/// <summary>
+		/// Gets the <see cref="WeaponHash"/> that this <see cref="Ped"/> is killed with. The return value is not necessarily a weapon hash for a human <see cref="Ped"/>s (e.g. can be the hash of <c>WEAPON_COUGAR</c>).
+		/// </summary>
+		public WeaponHash CauseOfDeath => Function.Call<WeaponHash>(Hash.GET_PED_CAUSE_OF_DEATH, Handle);
+
+		/// <summary>
+		/// Gets the time when this <see cref="Ped"/> is killed. This value determines how this <see cref="Ped"/> is rendered when <see cref="Game.IsThermalVisionActive"/> is <see langword="true" /> and the <see cref="Ped"/> is dead.
+		/// </summary>
+		public int TimeOfDeath => Function.Call<int>(Hash.GET_PED_TIME_OF_DEATH, Handle);
+
+		/// <summary>
+		/// <para>Clears the <see cref="Entity"/> record that killed this <see cref="Ped"/>. Can be useful after resurrecting this <see cref="Ped"/>.</para>
+		/// <para>Internally, when a <see cref="Ped"/> killed and the value for the source of death in the instance of this <see cref="Ped"/> is not <c>0</c> (not <see langword="null" />), the game does not write the memory address of the <see cref="Ped"/> that killed this <see cref="Ped"/>.</para>
+		/// </summary>
+		public void ClearKillerRecord()
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSourceOfDeathOffset == 0)
+			{
+				return;
+			}
+
+			SHVDN.NativeMemory.WriteAddress(address + SHVDN.NativeMemory.PedSourceOfDeathOffset, IntPtr.Zero);
+		}
+
+		/// <summary>
+		/// <para>Clears the record of the cause of death that killed this <see cref="Ped"/> with. Can be useful after resurrecting this <see cref="Ped"/>.</para>
+		/// <para>Internally, when a <see cref="Ped"/> killed and the value for the cause of death in the instance of this <see cref="Ped"/> is not <c>0</c>, the game does not write the weapon hash value for the cause of death.</para>
+		/// </summary>
+		public void ClearCauseOfDeathRecord()
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedCauseOfDeathOffset == 0)
+			{
+				return;
+			}
+
+			SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.PedCauseOfDeathOffset, 0);
+		}
+
+		/// <summary>
+		/// <para>Clears the time record when this <see cref="Ped"/> is killed. Can be useful after resurrecting this <see cref="Ped"/>.</para>
+		/// <para>Internally, when a <see cref="Ped"/> killed and the value for the time of death in the instance of this <see cref="Ped"/> is not <c>0</c>, the game does not write the game time value for the time of death.</para>
+		/// </summary>
+		public void ClearTimeOfDeathRecord()
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedTimeOfDeathOffset == 0)
+			{
+				return;
+			}
+
+			SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.PedTimeOfDeathOffset, 0);
+		}
 
 		#endregion
 
@@ -1010,6 +1093,138 @@ namespace GTA
 		{
 			get => new RelationshipGroup(Function.Call<int>(Hash.GET_PED_RELATIONSHIP_GROUP_HASH, Handle));
 			set => Function.Call(Hash.SET_PED_RELATIONSHIP_GROUP_HASH, Handle, value.Hash);
+		}
+
+		#endregion
+
+		#region Perception
+
+		public float SeeingRange
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.SeeingRangeOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.SeeingRangeOffset);
+			}
+			set => Function.Call(Hash.SET_PED_SEEING_RANGE, Handle, value);
+		}
+
+		public float HearingRange
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.HearingRangeOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.HearingRangeOffset);
+			}
+			set => Function.Call(Hash.SET_PED_HEARING_RANGE, Handle, value);
+		}
+
+		public float VisualFieldMinAngle
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.VisualFieldMinAngleOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMinAngleOffset);
+			}
+			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MIN_ANGLE, Handle, value);
+		}
+
+		public float VisualFieldMaxAngle
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.VisualFieldMaxAngleOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMaxAngleOffset);
+			}
+			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MAX_ANGLE, Handle, value);
+		}
+
+		public float VisualFieldMinElevationAngle
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.VisualFieldMinElevationAngleOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMinElevationAngleOffset);
+			}
+			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MIN_ELEVATION_ANGLE, Handle, value);
+		}
+
+		public float VisualFieldMaxElevationAngle
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.VisualFieldMaxElevationAngleOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMaxElevationAngleOffset);
+			}
+			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MAX_ELEVATION_ANGLE, Handle, value);
+		}
+
+		public float VisualFieldPeripheralRange
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.VisualFieldPeripheralRangeOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldPeripheralRangeOffset);
+			}
+			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_PERIPHERAL_RANGE, Handle, value);
+		}
+
+		public float VisualFieldCenterAngle
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.VisualFieldCenterAngleOffset == 0)
+					return 0.0f;
+
+				var address = PedIntelligenceAddress;
+				if (address == IntPtr.Zero)
+					return 0.0f;
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldCenterAngleOffset);
+			}
+			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_CENTER_ANGLE, Handle, value);
 		}
 
 		#endregion
