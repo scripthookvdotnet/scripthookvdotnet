@@ -159,7 +159,7 @@ namespace SHVDN
 				return;
 
 			input = input.Insert(cursorPos, text);
-			cursorPos++;
+			cursorPos += text.Length;
 		}
 		/// <summary>
 		/// Paste clipboard content into the console input line.
