@@ -92,7 +92,10 @@
     <Compile Include="GTA\CheckpointCustomIcon.cs" />
     <Compile Include="GTA\CheckpointCustomIconStyle.cs" />
     <Compile Include="GTA\CheckpointIcon.cs" />
+    <Compile Include="GTA\Entities\AnimatedBuilding.cs" />
+    <Compile Include="GTA\Entities\InteriorInstance.cs" />
     <Compile Include="GTA\Entities\EntityPopulationType.cs" />
+    <Compile Include="GTA\Entities\Building.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\PlayerTargetingMode.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="GTA\PickupType.cs" />
     <Compile Include="GTA\Player.cs" />
     <Compile Include="GTA\PoolObject.cs" />
+    <Compile Include="GTA\InteriorProxy.cs" />
     <Compile Include="GTA\RadioStation.cs" />
     <Compile Include="GTA\Entities\EntityDamageRecordCollection.cs" />
     <Compile Include="GTA\RaycastResult.cs" />

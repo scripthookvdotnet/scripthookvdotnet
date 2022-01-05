@@ -1077,7 +1077,7 @@ namespace GTA.Native
 				ThrowInvalidOperationExceptionForInvalidNativeCall();
 			}
 
-			if (typeof(T).IsValueType || typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T).IsEnum)
+			if (typeof(T).IsValueType || typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T) == typeof(InteriorProxy) || typeof(T).IsEnum)
 			{
 				return ObjectFromNative<T>(result);
 			}
@@ -1828,7 +1828,7 @@ namespace GTA.Native
 				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
 			}
 
-			if (typeof(PoolObject).IsAssignableFrom(typeof(T)))
+			if (typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T) == typeof(InteriorProxy))
 			{
 				return InstanceCreator<int, T>.Create((int)*value);
 			}
