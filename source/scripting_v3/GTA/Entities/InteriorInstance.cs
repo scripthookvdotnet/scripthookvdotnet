@@ -37,7 +37,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the memory address where the <see cref="InteriorInstance"/> is stored in memory.
 		/// </summary>
-		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetBuildingAddress(Handle);
+		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetInteriorInstAddress(Handle);
 
 		/// <summary>
 		/// Gets the model of this <see cref="InteriorInstance"/>.
