@@ -133,6 +133,23 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the <see cref="InteriorProxy"/> this <see cref="InteriorInstance"/> is loaded from.
+		/// </summary>
+		/// <remarks>returns <see langword="null" /> if this <see cref="InteriorInstance"/> does not exist or SHVDN could not find the <see cref="InteriorProxy"/> pool for some reason.</remarks>
+		public InteriorProxy InteriorProxy
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+					return null;
+
+				var interiorProxyHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromInteriorInst(Handle);
+				return interiorProxyHandle != 0 ? new InteriorProxy(interiorProxyHandle) : null;
+			}
+		}
+
+		/// <summary>
 		/// Determines if this <see cref="InteriorInstance"/> exists.
 		/// </summary>
 		/// <returns><see langword="true" /> if this <see cref="InteriorInstance"/> exists; otherwise, <see langword="false" />.</returns>

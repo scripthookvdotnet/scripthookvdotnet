@@ -786,6 +786,14 @@ namespace SHVDN
 				colliderCapacityOffset = *(int*)(address + 9);
 			}
 
+			address = FindPattern("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
+			if (address != null)
+			{
+				InteriorProxyPtrAtGameplayCamAddress = (ulong*)(*(int*)(address + 37) + address + 41);
+				InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
+			}
+
+
 			// Generate vehicle model list
 			var vehicleHashesGroupedByClass = new List<int>[0x20];
 			for (int i = 0; i < 0x20; i++)
@@ -2291,7 +2299,7 @@ namespace SHVDN
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public ulong GetGuidHandleFromAddress(ulong address)
+			public int GetGuidHandleFromAddress(ulong address)
 			{
 				if (address < poolStartAddress || address >= poolStartAddress + size * itemSize)
 					return 0;
@@ -2301,7 +2309,7 @@ namespace SHVDN
 					return 0;
 
 				var indexOfPool = (uint)(offset / itemSize);
-				return (indexOfPool << 8) + GetCounter(indexOfPool);
+				return (int)((indexOfPool << 8) + GetCounter(indexOfPool));
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3286,6 +3294,55 @@ namespace SHVDN
 			{
 				ExplodeProjectileFunc(projectileAddress, 0);
 			}
+		}
+
+		#endregion
+
+		#region -- Interior Offsets --
+
+		public static ulong* InteriorProxyPtrAtGameplayCamAddress { get; }
+		public static int InteriorInstPtrInInteriorProxyOffset { get; }
+
+		public static int GetAssociatedInteriorInstHandleFromInteriorProxy(int interiorProxyHandle)
+		{
+			if (InteriorInstPtrInInteriorProxyOffset == 0 || InteriorInstPoolAddress == null)
+				return 0;
+
+			var interiorProxyAddress = GetInteriorProxyAddress(interiorProxyHandle);
+			if (interiorProxyAddress == IntPtr.Zero)
+				return 0;
+
+			var interiorInstAddress = *(ulong*)(interiorProxyAddress + InteriorInstPtrInInteriorProxyOffset).ToPointer();
+			if (interiorInstAddress == 0)
+				return 0;
+
+			return ((GenericPool*)(*NativeMemory.InteriorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
+		}
+		public static int GetInteriorProxyHandleFromInteriorInst(int interiorInstHandle)
+		{
+			if (InteriorProxyPoolAddress == null)
+				return 0;
+
+			var interiorInstAddress = GetInteriorInstAddress(interiorInstHandle);
+			if (interiorInstAddress == IntPtr.Zero)
+				return 0;
+
+			var interiorProxyAddress = *(ulong*)(interiorInstAddress + 0x188).ToPointer();
+			if (interiorProxyAddress == 0)
+				return 0;
+
+			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
+		}
+		public static int GetInteriorProxyHandleAtGameplayCam()
+		{
+			if (InteriorProxyPtrAtGameplayCamAddress == null || InteriorInstPoolAddress == null)
+				return 0;
+
+			var interiorProxyAddress = *InteriorProxyPtrAtGameplayCamAddress;
+			if (interiorProxyAddress == 0)
+				return 0;
+
+			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
 		}
 
 		#endregion
