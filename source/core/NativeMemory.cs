@@ -2578,15 +2578,6 @@ namespace SHVDN
 			}
 		}
 
-		public static int GetPedCount()
-		{
-			if (*PedPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
-				return (int)pool->itemCount;
-			}
-			return 0;
-		}
 		public static int GetVehicleCount()
 		{
 			if (*VehiclePoolAddress != 0)
@@ -2596,38 +2587,20 @@ namespace SHVDN
 			}
 			return 0;
 		}
-		public static int GetObjectCount()
+		public static int GetPedCount() => PedPoolAddress != null ? GetGenericPoolCount(*PedPoolAddress) : 0;
+		public static int GetObjectCount() => ObjectPoolAddress != null ? GetGenericPoolCount(*ObjectPoolAddress) : 0;
+		public static int GetPickupObjectCount() => PickupObjectPoolAddress != null ? GetGenericPoolCount(*PickupObjectPoolAddress) : 0;
+		public static int GetBuildingCount() => BuildingPoolAddress != null ? GetGenericPoolCount(*BuildingPoolAddress) : 0;
+		public static int GetAnimatedBuildingCount() => AnimatedBuildingPoolAddress != null ? GetGenericPoolCount(*AnimatedBuildingPoolAddress) : 0;
+		public static int GetInteriorInstCount() => InteriorInstPoolAddress != null ? GetGenericPoolCount(*InteriorInstPoolAddress) : 0;
+		public static int GetInteriorProxyCount() => InteriorProxyPoolAddress != null ? GetGenericPoolCount(*InteriorProxyPoolAddress) : 0;
+		public static int GetProjectileCount() => ProjectileCountAddress != null ? *ProjectileCountAddress : 0;
+		static int GetGenericPoolCount(ulong address)
 		{
-			if (*ObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*ObjectPoolAddress);
-				return (int)pool->itemCount;
-			}
-			return 0;
-		}
-		public static int GetPickupObjectCount()
-		{
-			if (*PickupObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PickupObjectPoolAddress);
-				return (int)pool->itemCount;
-			}
-			return 0;
-		}
-		public static int GetProjectileCount()
-		{
-			return ProjectileCountAddress != null ? *ProjectileCountAddress : 0;
+			GenericPool* pool = (GenericPool*)(address);
+			return (int)pool->itemCount;
 		}
 
-		public static int GetPedCapacity()
-		{
-			if (*PedPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
-				return (int)pool->size;
-			}
-			return 0;
-		}
 		public static int GetVehicleCapacity()
 		{
 			if (*VehiclePoolAddress != 0)
@@ -2637,28 +2610,19 @@ namespace SHVDN
 			}
 			return 0;
 		}
-		public static int GetObjectCapacity()
-		{
-			if (*ObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*ObjectPoolAddress);
-				return (int)pool->size;
-			}
-			return 0;
-		}
-		public static int GetPickupObjectCapacity()
-		{
-			if (*PickupObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PickupObjectPoolAddress);
-				return (int)pool->size;
-			}
-			return 0;
-		}
+		public static int GetPedCapacity() => PedPoolAddress != null ? GetGenericPoolCapacity(*PedPoolAddress) : 0;
+		public static int GetObjectCapacity() => ObjectPoolAddress != null ? GetGenericPoolCapacity(*ObjectPoolAddress) : 0;
+		public static int GetPickupObjectCapacity() => PickupObjectPoolAddress != null ? GetGenericPoolCapacity(*PickupObjectPoolAddress) : 0;
+		public static int GetBuildingCapacity() => BuildingPoolAddress != null ? GetGenericPoolCapacity(*BuildingPoolAddress) : 0;
+		public static int GetAnimatedBuildingCapacity() => AnimatedBuildingPoolAddress != null ? GetGenericPoolCapacity(*AnimatedBuildingPoolAddress) : 0;
+		public static int GetInteriorInstCapacity() => InteriorInstPoolAddress != null ? GetGenericPoolCapacity(*InteriorInstPoolAddress) : 0;
+		public static int GetInteriorProxyCapacity() => InteriorProxyPoolAddress != null ? GetGenericPoolCapacity(*InteriorProxyPoolAddress) : 0;
 		//the max number of projectile has not been changed from 50
-		public static int GetProjectileCapacity()
+		public static int GetProjectileCapacity() => 50;
+		static int GetGenericPoolCapacity(ulong address)
 		{
-			return 50;
+			GenericPool* pool = (GenericPool*)(address);
+			return (int)pool->size;
 		}
 
 		public static int[] GetPedHandles(int[] modelHashes = null)
