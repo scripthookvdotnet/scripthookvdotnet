@@ -789,7 +789,7 @@ namespace SHVDN
 			address = FindPattern("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
 			if (address != null)
 			{
-				InteriorProxyPtrAtGameplayCamAddress = (ulong*)(*(int*)(address + 37) + address + 41);
+				InteriorProxyPtrFromGameplayCamAddress = (ulong*)(*(int*)(address + 37) + address + 41);
 				InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
 			}
 
@@ -3300,7 +3300,7 @@ namespace SHVDN
 
 		#region -- Interior Offsets --
 
-		public static ulong* InteriorProxyPtrAtGameplayCamAddress { get; }
+		public static ulong* InteriorProxyPtrFromGameplayCamAddress { get; }
 		public static int InteriorInstPtrInInteriorProxyOffset { get; }
 
 		public static int GetAssociatedInteriorInstHandleFromInteriorProxy(int interiorProxyHandle)
@@ -3333,12 +3333,12 @@ namespace SHVDN
 
 			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
 		}
-		public static int GetInteriorProxyHandleAtGameplayCam()
+		public static int GetInteriorProxyHandleFromGameplayCam()
 		{
-			if (InteriorProxyPtrAtGameplayCamAddress == null || InteriorInstPoolAddress == null)
+			if (InteriorProxyPtrFromGameplayCamAddress == null || InteriorInstPoolAddress == null)
 				return 0;
 
-			var interiorProxyAddress = *InteriorProxyPtrAtGameplayCamAddress;
+			var interiorProxyAddress = *InteriorProxyPtrFromGameplayCamAddress;
 			if (interiorProxyAddress == 0)
 				return 0;
 

@@ -167,9 +167,9 @@ namespace GTA
 		/// Gets the <see cref="InteriorProxy"/> where the gameplay camera is.
 		/// </summary>
 		/// <returns>returns <see langword="null" /> if the gameplay camera is not in any interior space.</returns>
-		static public InteriorProxy GetInteriorProxyAtGameplayCam()
+		static public InteriorProxy GetInteriorProxyFromGameplayCam()
 		{
-			var interiorInstHandle = SHVDN.NativeMemory.GetInteriorProxyHandleAtGameplayCam();
+			var interiorInstHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromGameplayCam();
 			return interiorInstHandle != 0 ? new InteriorProxy(interiorInstHandle) : null;
 		}
 
