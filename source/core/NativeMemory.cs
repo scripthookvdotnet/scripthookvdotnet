@@ -2089,6 +2089,11 @@ namespace SHVDN
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
+		public static bool IsModelAMlo(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Mlo;
+		}
 
 		public static string GetVehicleMakeName(int modelHash)
 		{
