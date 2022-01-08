@@ -33,6 +33,7 @@ namespace GTA
 		KultFM,
 		MusicLocker,
 		MediaPlayer,
+		MotomamiLosSantos,
 		RadioOff = 255,
 	}
 }

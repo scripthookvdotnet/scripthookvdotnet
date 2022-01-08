@@ -42,6 +42,7 @@ namespace GTA
 			"RADIO_34_DLC_HEI4_KULT",
 			"RADIO_35_DLC_HEI4_MLR",
 			"RADIO_36_AUDIOPLAYER",
+			"RADIO_37_MOTOMAMI",
 			"RADIO_OFF"
 		};
 		#endregion
