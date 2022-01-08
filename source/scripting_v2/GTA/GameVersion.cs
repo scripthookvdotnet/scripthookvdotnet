@@ -92,5 +92,7 @@ namespace GTA
 		/// This value also represents the exe version 1.0.2372.2 for non-Steam version. 1.0.2372.2 basically works in the same way as 1.0.2372.0 but with bug fixes.
 		/// </summary>
 		VER_1_0_2372_0_NOSTEAM,
+		VER_1_0_2545_0_STEAM,
+		VER_1_0_2545_0_NOSTEAM,
 	}
 }

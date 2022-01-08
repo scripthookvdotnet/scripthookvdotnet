@@ -3675,12 +3675,12 @@ namespace SHVDN
 
 			public IntPtr GetBonePoseMatrixAddress(int boneIndex)
 			{
-				return new IntPtr((long)(*(ulong*)(bonePoseMatrixArrayPtr) + ((uint)boneIndex * 0x40)));
+				return new IntPtr((long)(bonePoseMatrixArrayPtr + ((uint)boneIndex * 0x40)));
 			}
 
 			public IntPtr GetBoneMatrixAddress(int boneIndex)
 			{
-				return new IntPtr((long)(*(ulong*)(boneMatrixArrayPtr) + ((uint)boneIndex * 0x40)));
+				return new IntPtr((long)(boneMatrixArrayPtr + ((uint)boneIndex * 0x40)));
 			}
 		}
 
