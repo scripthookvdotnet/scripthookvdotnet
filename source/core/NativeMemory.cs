@@ -1418,10 +1418,10 @@ namespace SHVDN
 		{
 			GetRotationFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64(), rotationOrder);
 
-			const float rad2Deg = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
-			returnRotationArray[0] *= rad2Deg;
-			returnRotationArray[1] *= rad2Deg;
-			returnRotationArray[2] *= rad2Deg;
+			const float RAD_2_DEG = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
+			returnRotationArray[0] *= RAD_2_DEG;
+			returnRotationArray[1] *= RAD_2_DEG;
+			returnRotationArray[2] *= RAD_2_DEG;
 		}
 		public static void GetQuaternionFromMatrix(float* returnRotationArray, IntPtr matrixAddress)
 		{
