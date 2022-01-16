@@ -146,13 +146,13 @@ namespace GTA
 		/// </summary>
 		public void PinInMemory()
 		{
-			Function.Call(Hash.DISABLE_INTERIOR, Handle);
+			Function.Call(Hash.PIN_INTERIOR_IN_MEMORY, Handle);
 		}
 
 		/// <summary>
 		/// Lets this <see cref="InteriorProxy"/> free the <see cref="InteriorProxy"/> this <see cref="InteriorProxy"/> is loaded.
 		/// </summary>
-		public void UnpinFromMemory(bool toggle)
+		public void UnpinFromMemory()
 		{
 			Function.Call(Hash.UNPIN_INTERIOR, Handle);
 		}
