@@ -27,7 +27,7 @@ namespace GTA
 		public static InteriorInstance FromHandle(int handle) => SHVDN.NativeMemory.InteriorInstHandleExists(handle) ? new InteriorInstance(handle) : null;
 
 		/// <summary>
-		/// The handle of this <see cref="Building"/>. This property is provided mainly for safer instance handling, but .
+		/// The handle of this <see cref="Building"/>. This property is provided mainly for safer instance handling, but this is also used for equality comparison.
 		/// </summary>
 		public int Handle
 		{

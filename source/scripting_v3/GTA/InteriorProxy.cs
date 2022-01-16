@@ -100,7 +100,6 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="InteriorProxy"/> will behave as if interior is not loaded completely.
-		/// Does not prevent from having a <see cref="InteriorInstance"/>.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will behave as if interior is not loaded completely; otherwise, <see langword="false" />.
@@ -109,7 +108,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="InteriorProxy"/> will only load a few elements of the interior.
-		/// Doors can be loaded and the collision is not necessarily completely disabled (e.g. collisions for bullet and projectiles can work).
+		/// Doors can be loaded and the collision is not necessarily completely disabled (e.g. collisions for bullets and projectiles can work).
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will only load a few elements of the interior; otherwise, <see langword="false" />.
@@ -125,7 +124,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Disables the interior so this <see cref="InteriorProxy"/> will only load a few elements of the interior.
+		/// Disables the interior, making <see cref="InteriorProxy"/> behave as if interior is not loaded completely. Does not prevent from having a <see cref="InteriorInstance"/>.
 		/// Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.
 		/// </summary>
 		public void Disable(bool toggle)
@@ -164,9 +163,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="InteriorProxy"/> where the gameplay camera is.
+		/// Gets the <see cref="InteriorProxy"/> if the gameplay camera is in a interior.
 		/// </summary>
-		/// <returns>returns <see langword="null" /> if the gameplay camera is not in any interior space.</returns>
+		/// <remarks>returns <see langword="null" /> if the gameplay camera is not in any interior space.</remarks>
 		static public InteriorProxy GetInteriorProxyFromGameplayCam()
 		{
 			var interiorInstHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromGameplayCam();
