@@ -172,7 +172,7 @@ namespace SHVDN
 			GetHandlingDataByHash = GetDelegateForFunctionPointer<GetHandlingDataByHashDelegate>(
 				new IntPtr(*(int*)(address + 1) + address + 5));
 
-			// Find entity pools
+			// Find entity pools and interior proxy pool
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
 			PedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
@@ -187,6 +187,23 @@ namespace SHVDN
 
 			address = FindPattern("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
 			PickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+
+			address = FindPattern("\x83\x38\xFF\x74\x27\xD1\xEA\xF6\xC2\x01\x74\x20", "xxxxxxxxxxxx");
+			if (address != null)
+			{
+				BuildingPoolAddress = (ulong*)(*(int*)(address + 47) + address + 51);
+				AnimatedBuildingPoolAddress = (ulong*)(*(int*)(address + 15) + address + 19);
+			}
+			address = FindPattern("\x83\xBB\x80\x01\x00\x00\x01\x75\x12", "xxxxxxxxx");
+			if (address != null)
+			{
+				InteriorInstPoolAddress = (ulong*)(*(int*)(address + 23) + address + 27);
+			}
+			address = FindPattern("\x0F\x85\xA3\x00\x00\x00\x8B\x52\x0C\x48\x8B\x0D\x00\x00\x00\x00", "xxxxxxxxxxxx????");
+			if (address != null)
+			{
+				InteriorProxyPoolAddress = (ulong*)(*(int*)(address + 12) + address + 16);
+			}
 
 			// Find euphoria functions
 			address = FindPattern("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
@@ -250,6 +267,17 @@ namespace SHVDN
 				startAddressToSearch = new IntPtr(address);
 				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxxxxxxxxx", startAddressToSearch);
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			}
+
+			address = FindPattern("\x48\x8D\x4C\x24\x20\x41\xB8\x02\x00\x00\x00\xE8\x00\x00\x00\x00\xF3", "xxxxxxxxxxxx????x");
+			if (address != null)
+			{
+				GetRotationFromMatrixFunc = GetDelegateForFunctionPointer<GetRotationFromMatrixDelegate>(new IntPtr(*(int*)(address + 12) + address + 16));
+			}
+			address = FindPattern("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00", "xxxxxxxxxxx????");
+			if (address != null)
+			{
+				GetQuaternionFromMatrixFunc = GetDelegateForFunctionPointer<GetQuaternionFromMatrixDelegate>(new IntPtr(*(int*)(address + 11) + address + 15));
 			}
 
 			address = FindPattern("\x75\x11\x48\x8B\x06\x48\x8D\x54\x24\x20\x48\x8B\xCE\xFF\x90", "xxxxxxxxxxxxxxx");
@@ -757,6 +785,14 @@ namespace SHVDN
 				colliderCountOffset = *(int*)(address + 3);
 				colliderCapacityOffset = *(int*)(address + 9);
 			}
+
+			address = FindPattern("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
+			if (address != null)
+			{
+				InteriorProxyPtrFromGameplayCamAddress = (ulong*)(*(int*)(address + 37) + address + 41);
+				InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
+			}
+
 
 			// Generate vehicle model list
 			var vehicleHashesGroupedByClass = new List<int>[0x20];
@@ -1371,7 +1407,30 @@ namespace SHVDN
 
 		#endregion
 
-		#region -- Entity Offsets --
+		#region -- CEntity Functions --
+
+		public delegate float* GetRotationFromMatrixDelegate(float* returnRotationArrayAddress, ulong matrixAddress, int rotationOrder);
+		public delegate int GetQuaternionFromMatrixDelegate(float* returnQuaternionArrayAddress, ulong matrixAddress);
+		static GetRotationFromMatrixDelegate GetRotationFromMatrixFunc;
+		static GetQuaternionFromMatrixDelegate GetQuaternionFromMatrixFunc;
+
+		public static void GetRotationFromMatrix(float* returnRotationArray, IntPtr matrixAddress, int rotationOrder = 2)
+		{
+			GetRotationFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64(), rotationOrder);
+
+			const float RAD_2_DEG = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
+			returnRotationArray[0] *= RAD_2_DEG;
+			returnRotationArray[1] *= RAD_2_DEG;
+			returnRotationArray[2] *= RAD_2_DEG;
+		}
+		public static void GetQuaternionFromMatrix(float* returnRotationArray, IntPtr matrixAddress)
+		{
+			GetQuaternionFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64());
+		}
+
+		#endregion
+
+		#region -- CPhysical Offsets --
 
 		public static int SetAngularVelocityVFuncOfEntityOffset { get; }
 		public static int GetAngularVelocityVFuncOfEntityOffset { get; }
@@ -1382,7 +1441,7 @@ namespace SHVDN
 
 		#endregion
 
-		#region -- Entity Functions --
+		#region -- CPhysical Functions --
 
 		public delegate void SetEntityAngularVelocityDelegate(IntPtr entityAddress, float* angularVelocity);
 		// return value will be the address of the temporary 4 float storage
@@ -1469,7 +1528,7 @@ namespace SHVDN
 
 		#endregion
 
-		#region -- Entity Data --
+		#region -- CPhysical Data --
 
 		// the size is at least 0x10 in all game versions
 		[StructLayout(LayoutKind.Explicit, Size = 0x10)]
@@ -1946,7 +2005,7 @@ namespace SHVDN
 
 			return 0;
 		}
-		static int GetModelHashFromEntity(IntPtr entityAddress)
+		public static int GetModelHashFromEntity(IntPtr entityAddress)
 		{
 			if (entityAddress != IntPtr.Zero)
 			{
@@ -2029,6 +2088,11 @@ namespace SHVDN
 		{
 			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
+		}
+		public static bool IsModelAMlo(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Mlo;
 		}
 
 		public static string GetVehicleMakeName(int modelHash)
@@ -2214,9 +2278,53 @@ namespace SHVDN
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public bool IsHandleValid(int handle)
+			{
+				uint handleUInt = (uint)handle;
+				var index = handleUInt >> 8;
+				return GetCounter(index) == (handleUInt & 0xFFu);
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public ulong GetAddress(uint index)
 			{
 				return ((Mask(index) & (poolStartAddress + index * itemSize)));
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public IntPtr GetAddressFromHandle(int handle)
+			{
+				return IsHandleValid(handle) ? new IntPtr((long)GetAddress((uint)handle >> 8)) : IntPtr.Zero;
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public int GetGuidHandleByIndex(uint index)
+			{
+				return IsValid(index) ? (int)((index << 8) + GetCounter(index)) : 0;
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public int GetGuidHandleFromAddress(ulong address)
+			{
+				if (address < poolStartAddress || address >= poolStartAddress + size * itemSize)
+					return 0;
+
+				var offset = address - poolStartAddress;
+				if (offset % itemSize != 0)
+					return 0;
+
+				var indexOfPool = (uint)(offset / itemSize);
+				return (int)((indexOfPool << 8) + GetCounter(indexOfPool));
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			private byte GetCounter(uint index)
+			{
+				unsafe
+				{
+					byte* byteArrayPtr = (byte*)byteArray.ToPointer();
+					return (byte)(byteArrayPtr[index] & 0x7F);
+				}
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2236,6 +2344,10 @@ namespace SHVDN
 		static ulong* ObjectPoolAddress;
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
+		static ulong* BuildingPoolAddress;
+		static ulong* AnimatedBuildingPoolAddress;
+		static ulong* InteriorInstPoolAddress;
+		static ulong* InteriorProxyPoolAddress;
 
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
@@ -2245,6 +2357,7 @@ namespace SHVDN
 		delegate ulong EntityModel2FuncDelegate(ulong address);
 		delegate int AddEntityToPoolFuncDelegate(ulong address);
 
+		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 		static EntityPosFuncDelegate EntityPosFunc;
 		static EntityModel1FuncDelegate EntityModel1Func;
 		static EntityModel2FuncDelegate EntityModel2Func;
@@ -2293,7 +2406,6 @@ namespace SHVDN
 				{
 					float* position = stackalloc float[4];
 
-					// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 					NativeMemory.EntityPosFunc(address, position);
 					float x = this.position[0] - position[0];
 					float y = this.position[1] - position[1];
@@ -2312,6 +2424,30 @@ namespace SHVDN
 				}
 
 				return true;
+			}
+
+			int CopyCPhysicalHandlesFromArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
+			{
+				int returnEntityCount = 0;
+
+				uint entityCountInPool = pool->itemCount;
+				if (handleBuffer == null)
+					handleBuffer = new int[(int)entityCountInPool * 2];
+				else if (entityCountInPool > handleBuffer.Length)
+					handleBuffer = new int[CalculateAppropriateExtendedArrayLength(handleBuffer, (int)entityCountInPool)];
+
+				uint poolSize = pool->size;
+				for (uint i = 0; i < poolSize; i++)
+				{
+					if (pool->IsValid(i))
+					{
+						ulong address = pool->GetAddress(i);
+						if (CheckEntity(address))
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
+					}
+				}
+
+				return returnEntityCount;
 			}
 
 			public void Run()
@@ -2352,21 +2488,21 @@ namespace SHVDN
 				if (HasFlagFast(poolType, Type.Ped) && *NativeMemory.PedPoolAddress != 0)
 				{
 					GenericPool* pedPool = (GenericPool*)(*NativeMemory.PedPoolAddress);
-					pedCountStored = CopyEntityHandlesToArrayGenericPool(pedPool, ref _pedHandleBuffer);
+					pedCountStored = CopyCPhysicalHandlesFromArrayGenericPool(pedPool, ref _pedHandleBuffer);
 				}
 
 				int objectCountStored = 0;
 				if (HasFlagFast(poolType, Type.Object) && *NativeMemory.ObjectPoolAddress != 0)
 				{
 					GenericPool* objectPool = (GenericPool*)(*NativeMemory.ObjectPoolAddress);
-					objectCountStored = CopyEntityHandlesToArrayGenericPool(objectPool, ref _objectHandleBuffer);
+					objectCountStored = CopyCPhysicalHandlesFromArrayGenericPool(objectPool, ref _objectHandleBuffer);
 				}
 
 				int pickupCountStored = 0;
 				if (HasFlagFast(poolType, Type.PickupObject) && *NativeMemory.PickupObjectPoolAddress != 0)
 				{
 					GenericPool* pickupPool = (GenericPool*)(*NativeMemory.PickupObjectPoolAddress);
-					pickupCountStored = CopyEntityHandlesToArrayGenericPool(pickupPool, ref _pickupObjectHandleBuffer);
+					pickupCountStored = CopyCPhysicalHandlesFromArrayGenericPool(pickupPool, ref _pickupObjectHandleBuffer);
 				}
 
 				int projectileCountStored = 0;
@@ -2434,55 +2570,6 @@ namespace SHVDN
 
 				// Enum.HasFlag causes the boxing in .NET Framework and much slower than manually comparing enum flags with bitwise AND
 				bool HasFlagFast(Type poolTypeValue, Type flag) => (poolTypeValue & flag) == flag;
-
-				int CopyEntityHandlesToArrayGenericPool(GenericPool* pool, ref int[] handleBuffer)
-				{
-					int returnEntityCount = 0;
-
-					uint entityCountInPool = pool->itemCount;
-					if (handleBuffer == null)
-						handleBuffer = new int[(int)entityCountInPool * 2];
-					else if (entityCountInPool > handleBuffer.Length)
-						handleBuffer = new int[CalculateAppropriateExtendedArrayLength(handleBuffer, (int)entityCountInPool)];
-
-					uint poolSize = pool->size;
-					for (uint i = 0; i < poolSize; i++)
-					{
-						if (entityPool->IsFull())
-							break;
-
-						if (pool->IsValid(i))
-						{
-							ulong address = pool->GetAddress(i);
-							if (CheckEntity(address))
-								AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
-						}
-					}
-
-					return returnEntityCount;
-				}
-
-				void AddElementAndReallocateIfLengthIsNotLongEnough(ref int[] array, int index, int elementToAdd)
-				{
-					if (index >= array.Length)
-					{
-						// This path is an edge case!
-						var newArray = new int[array.Length * 2];
-						Array.Copy(array, newArray, array.Length);
-						newArray[index] = elementToAdd;
-
-						array = newArray;
-					}
-					else
-					{
-						array[index] = elementToAdd;
-					}
-				}
-
-				int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
-				{
-					return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
-				}
 			}
 		}
 
@@ -2504,15 +2591,6 @@ namespace SHVDN
 			}
 		}
 
-		public static int GetPedCount()
-		{
-			if (*PedPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
-				return (int)pool->itemCount;
-			}
-			return 0;
-		}
 		public static int GetVehicleCount()
 		{
 			if (*VehiclePoolAddress != 0)
@@ -2522,38 +2600,20 @@ namespace SHVDN
 			}
 			return 0;
 		}
-		public static int GetObjectCount()
+		public static int GetPedCount() => PedPoolAddress != null ? GetGenericPoolCount(*PedPoolAddress) : 0;
+		public static int GetObjectCount() => ObjectPoolAddress != null ? GetGenericPoolCount(*ObjectPoolAddress) : 0;
+		public static int GetPickupObjectCount() => PickupObjectPoolAddress != null ? GetGenericPoolCount(*PickupObjectPoolAddress) : 0;
+		public static int GetBuildingCount() => BuildingPoolAddress != null ? GetGenericPoolCount(*BuildingPoolAddress) : 0;
+		public static int GetAnimatedBuildingCount() => AnimatedBuildingPoolAddress != null ? GetGenericPoolCount(*AnimatedBuildingPoolAddress) : 0;
+		public static int GetInteriorInstCount() => InteriorInstPoolAddress != null ? GetGenericPoolCount(*InteriorInstPoolAddress) : 0;
+		public static int GetInteriorProxyCount() => InteriorProxyPoolAddress != null ? GetGenericPoolCount(*InteriorProxyPoolAddress) : 0;
+		public static int GetProjectileCount() => ProjectileCountAddress != null ? *ProjectileCountAddress : 0;
+		static int GetGenericPoolCount(ulong address)
 		{
-			if (*ObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*ObjectPoolAddress);
-				return (int)pool->itemCount;
-			}
-			return 0;
-		}
-		public static int GetPickupObjectCount()
-		{
-			if (*PickupObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PickupObjectPoolAddress);
-				return (int)pool->itemCount;
-			}
-			return 0;
-		}
-		public static int GetProjectileCount()
-		{
-			return ProjectileCountAddress != null ? *ProjectileCountAddress : 0;
+			GenericPool* pool = (GenericPool*)(address);
+			return (int)pool->itemCount;
 		}
 
-		public static int GetPedCapacity()
-		{
-			if (*PedPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PedPoolAddress);
-				return (int)pool->size;
-			}
-			return 0;
-		}
 		public static int GetVehicleCapacity()
 		{
 			if (*VehiclePoolAddress != 0)
@@ -2563,28 +2623,19 @@ namespace SHVDN
 			}
 			return 0;
 		}
-		public static int GetObjectCapacity()
-		{
-			if (*ObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*ObjectPoolAddress);
-				return (int)pool->size;
-			}
-			return 0;
-		}
-		public static int GetPickupObjectCapacity()
-		{
-			if (*PickupObjectPoolAddress != 0)
-			{
-				GenericPool* pool = (GenericPool*)(*PickupObjectPoolAddress);
-				return (int)pool->size;
-			}
-			return 0;
-		}
+		public static int GetPedCapacity() => PedPoolAddress != null ? GetGenericPoolCapacity(*PedPoolAddress) : 0;
+		public static int GetObjectCapacity() => ObjectPoolAddress != null ? GetGenericPoolCapacity(*ObjectPoolAddress) : 0;
+		public static int GetPickupObjectCapacity() => PickupObjectPoolAddress != null ? GetGenericPoolCapacity(*PickupObjectPoolAddress) : 0;
+		public static int GetBuildingCapacity() => BuildingPoolAddress != null ? GetGenericPoolCapacity(*BuildingPoolAddress) : 0;
+		public static int GetAnimatedBuildingCapacity() => AnimatedBuildingPoolAddress != null ? GetGenericPoolCapacity(*AnimatedBuildingPoolAddress) : 0;
+		public static int GetInteriorInstCapacity() => InteriorInstPoolAddress != null ? GetGenericPoolCapacity(*InteriorInstPoolAddress) : 0;
+		public static int GetInteriorProxyCapacity() => InteriorProxyPoolAddress != null ? GetGenericPoolCapacity(*InteriorProxyPoolAddress) : 0;
 		//the max number of projectile has not been changed from 50
-		public static int GetProjectileCapacity()
+		public static int GetProjectileCapacity() => 50;
+		static int GetGenericPoolCapacity(ulong address)
 		{
-			return 50;
+			GenericPool* pool = (GenericPool*)(address);
+			return (int)pool->size;
 		}
 
 		public static int[] GetPedHandles(int[] modelHashes = null)
@@ -2718,6 +2769,94 @@ namespace SHVDN
 			return task.handles;
 		}
 
+		public static int[] GetBuildingHandles()
+		{
+			if (BuildingPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetHandlesInGenericPool(*NativeMemory.BuildingPoolAddress);
+		}
+
+		public static int[] GetBuildingHandles(float[] position, float radius)
+		{
+			if (BuildingPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetCEntityHandlesInRange(*NativeMemory.BuildingPoolAddress, position, radius);
+		}
+
+		public static int[] GetAnimatedBuildingHandles()
+		{
+			if (AnimatedBuildingPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetHandlesInGenericPool(*NativeMemory.AnimatedBuildingPoolAddress);
+		}
+
+		public static int[] GetAnimatedBuildingHandles(float[] position, float radius)
+		{
+			if (AnimatedBuildingPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetCEntityHandlesInRange(*NativeMemory.AnimatedBuildingPoolAddress, position, radius);
+		}
+
+		public static int[] GetInteriorInstHandles()
+		{
+			if (InteriorInstPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetHandlesInGenericPool(*NativeMemory.InteriorInstPoolAddress);
+		}
+
+		public static int[] GetInteriorInstHandles(float[] position, float radius)
+		{
+			if (InteriorInstPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetCEntityHandlesInRange(*NativeMemory.InteriorInstPoolAddress, position, radius);
+		}
+
+		public static int[] GetInteriorProxyHandles()
+		{
+			if (InteriorProxyPoolAddress == null)
+				return Array.Empty<int>();
+
+			return GetHandlesInGenericPool(*NativeMemory.InteriorProxyPoolAddress);
+		}
+
+		public static int[] GetInteriorProxyHandles(float[] position, float radius)
+		{
+			if (InteriorProxyPoolAddress == null)
+				return Array.Empty<int>();
+
+			GenericPool* pool = (GenericPool*)(*NativeMemory.InteriorProxyPoolAddress);
+
+			// CInteriorProxy is not a subclass of CEntity and position data is placed at different offset
+			var returnHandles = new List<int>();
+			var poolSize = pool->size;
+			float radiusSquared = radius * radius;
+			for (uint i = 0; i < poolSize; i++)
+			{
+				if (!pool->IsValid(i))
+					continue;
+
+				var address = pool->GetAddress(i);
+
+				float x = *(float*)(address + 0x70) - position[0];
+				float y = *(float*)(address + 0x74) - position[1];
+				float z = *(float*)(address + 0x78) - position[2];
+
+				float distanceSquared = (x * x) + (y * y) + (z * z);
+				if (distanceSquared > radiusSquared)
+					continue;
+
+				returnHandles.Add(pool->GetGuidHandleByIndex(i));
+			}
+
+			return returnHandles.ToArray();
+		}
+
 		public static int GetEntityHandleFromAddress(IntPtr address)
 		{
 			var task = new GetEntityHandleTask(address);
@@ -2725,6 +2864,81 @@ namespace SHVDN
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
 			return task.returnEntityHandle;
+		}
+
+		public static bool BuildingHandleExists(int handle) => BuildingPoolAddress != null ? ((GenericPool*)(*BuildingPoolAddress))->IsHandleValid(handle) : false;
+		public static bool AnimatedBuildingHandleExists(int handle) => AnimatedBuildingPoolAddress != null ? ((GenericPool*)(*AnimatedBuildingPoolAddress))->IsHandleValid(handle) : false;
+		public static bool InteriorInstHandleExists(int handle) => InteriorInstPoolAddress != null ? ((GenericPool*)(*InteriorInstPoolAddress))->IsHandleValid(handle) : false;
+		public static bool InteriorProxyHandleExists(int handle) => InteriorProxyPoolAddress != null ? ((GenericPool*)(*InteriorProxyPoolAddress))->IsHandleValid(handle) : false;
+
+		static int[] GetHandlesInGenericPool(ulong poolAddress)
+		{
+			GenericPool* pool = (GenericPool*)poolAddress;
+
+			var returnHandles = new List<int>(pool->itemCount);
+			var poolSize = pool->size;
+			for (uint i = 0; i < poolSize; i++)
+			{
+				if (pool->IsValid(i))
+				{
+					returnHandles.Add(pool->GetGuidHandleByIndex(i));
+				}
+			}
+
+			return returnHandles.ToArray();
+		}
+
+		static int[] GetCEntityHandlesInRange(ulong poolAddress, float[] position, float radius)
+		{
+			GenericPool* pool = (GenericPool*)poolAddress;
+
+			var returnHandles = new List<int>();
+			var poolSize = pool->size;
+			float radiusSquared = radius * radius;
+			for (uint i = 0; i < poolSize; i++)
+			{
+				if (!pool->IsValid(i))
+					continue;
+
+				var address = pool->GetAddress(i);
+
+				float* entityPosition = stackalloc float[4];
+
+				NativeMemory.EntityPosFunc(address, entityPosition);
+				float x = entityPosition[0] - position[0];
+				float y = entityPosition[1] - position[1];
+				float z = entityPosition[2] - position[2];
+
+				float distanceSquared = (x * x) + (y * y) + (z * z);
+				if (distanceSquared > radiusSquared)
+					continue;
+
+				returnHandles.Add(pool->GetGuidHandleByIndex(i));
+			}
+
+			return returnHandles.ToArray();
+		}
+
+		static void AddElementAndReallocateIfLengthIsNotLongEnough(ref int[] array, int index, int elementToAdd)
+		{
+			if (index >= array.Length)
+			{
+				// This path is an edge case!
+				var newArray = new int[array.Length * 2];
+				Array.Copy(array, newArray, array.Length);
+				newArray[index] = elementToAdd;
+
+				array = newArray;
+			}
+			else
+			{
+				array[index] = elementToAdd;
+			}
+		}
+
+		static int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
+		{
+			return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
 		}
 
 		#endregion
@@ -3003,7 +3217,7 @@ namespace SHVDN
 		}
 		#endregion
 
-		#region -- Entity Addresses --
+		#region -- Pool Addresses --
 
 		delegate ulong GetHandleAddressFuncDelegate(int handle);
 		static GetHandleAddressFuncDelegate GetPtfxAddressFunc;
@@ -3021,6 +3235,35 @@ namespace SHVDN
 		public static IntPtr GetPlayerAddress(int handle)
 		{
 			return new IntPtr((long)GetPlayerAddressFunc(handle));
+		}
+
+		public static IntPtr GetBuildingAddress(int handle)
+		{
+			if (BuildingPoolAddress == null)
+				return IntPtr.Zero;
+
+			return ((GenericPool*)(*NativeMemory.BuildingPoolAddress))->GetAddressFromHandle(handle);
+		}
+		public static IntPtr GetAnimatedBuildingAddress(int handle)
+		{
+			if (AnimatedBuildingPoolAddress == null)
+				return IntPtr.Zero;
+
+			return ((GenericPool*)(*NativeMemory.AnimatedBuildingPoolAddress))->GetAddressFromHandle(handle);
+		}
+		public static IntPtr GetInteriorInstAddress(int handle)
+		{
+			if (InteriorInstPoolAddress == null)
+				return IntPtr.Zero;
+
+			return ((GenericPool*)(*NativeMemory.InteriorInstPoolAddress))->GetAddressFromHandle(handle);
+		}
+		public static IntPtr GetInteriorProxyAddress(int handle)
+		{
+			if (InteriorProxyPoolAddress == null)
+				return IntPtr.Zero;
+
+			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetAddressFromHandle(handle);
 		}
 
 		#endregion
@@ -3056,6 +3299,55 @@ namespace SHVDN
 			{
 				ExplodeProjectileFunc(projectileAddress, 0);
 			}
+		}
+
+		#endregion
+
+		#region -- Interior Offsets --
+
+		public static ulong* InteriorProxyPtrFromGameplayCamAddress { get; }
+		public static int InteriorInstPtrInInteriorProxyOffset { get; }
+
+		public static int GetAssociatedInteriorInstHandleFromInteriorProxy(int interiorProxyHandle)
+		{
+			if (InteriorInstPtrInInteriorProxyOffset == 0 || InteriorInstPoolAddress == null)
+				return 0;
+
+			var interiorProxyAddress = GetInteriorProxyAddress(interiorProxyHandle);
+			if (interiorProxyAddress == IntPtr.Zero)
+				return 0;
+
+			var interiorInstAddress = *(ulong*)(interiorProxyAddress + InteriorInstPtrInInteriorProxyOffset).ToPointer();
+			if (interiorInstAddress == 0)
+				return 0;
+
+			return ((GenericPool*)(*NativeMemory.InteriorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
+		}
+		public static int GetInteriorProxyHandleFromInteriorInst(int interiorInstHandle)
+		{
+			if (InteriorProxyPoolAddress == null)
+				return 0;
+
+			var interiorInstAddress = GetInteriorInstAddress(interiorInstHandle);
+			if (interiorInstAddress == IntPtr.Zero)
+				return 0;
+
+			var interiorProxyAddress = *(ulong*)(interiorInstAddress + 0x188).ToPointer();
+			if (interiorProxyAddress == 0)
+				return 0;
+
+			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
+		}
+		public static int GetInteriorProxyHandleFromGameplayCam()
+		{
+			if (InteriorProxyPtrFromGameplayCamAddress == null || InteriorInstPoolAddress == null)
+				return 0;
+
+			var interiorProxyAddress = *InteriorProxyPtrFromGameplayCamAddress;
+			if (interiorProxyAddress == 0)
+				return 0;
+
+			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
 		}
 
 		#endregion

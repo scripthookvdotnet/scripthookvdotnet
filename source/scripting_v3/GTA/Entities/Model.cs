@@ -232,6 +232,13 @@ namespace GTA
 		/// </value>
 		public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a movable interior loader (also known as MLO or MILO).
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Model"/> is a car; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsMlo => SHVDN.NativeMemory.IsModelAMlo(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a male pedestrian.
 		/// Without modding <c>pedpersonality.ymt</c>, returns <see langword="true" /> if the <see cref="Hash"/> is one of the animal hashes.
 		/// </summary>
