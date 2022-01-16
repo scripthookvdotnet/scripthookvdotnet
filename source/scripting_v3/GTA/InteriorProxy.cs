@@ -86,7 +86,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the model this <see cref="InteriorProxy"/> will load.
 		/// </summary>
-		public Model InteriorModel
+		public Model Model
 		{
 			get
 			{
@@ -105,7 +105,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will behave as if interior is not loaded completely; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsInteriorDisabled => Function.Call<bool>(Hash.IS_INTERIOR_DISABLED, Handle);
+		public bool IsDisabled => Function.Call<bool>(Hash.IS_INTERIOR_DISABLED, Handle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="InteriorProxy"/> will only load a few elements of the interior.
@@ -114,12 +114,12 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will only load a few elements of the interior; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsInteriorCapped => Function.Call<bool>(Hash.IS_INTERIOR_CAPPED, Handle);
+		public bool IsCapped => Function.Call<bool>(Hash.IS_INTERIOR_CAPPED, Handle);
 
 		/// <summary>
 		/// Refreshs the current <see cref="InteriorInstance"/> if loaded. Does not change the memory address or handle of the <see cref="InteriorInstance"/>.
 		/// </summary>
-		public void RefreshInterior()
+		public void Refresh()
 		{
 			Function.Call(Hash.REFRESH_INTERIOR, Handle);
 		}
@@ -128,7 +128,7 @@ namespace GTA
 		/// Disables the interior so this <see cref="InteriorProxy"/> will only load a few elements of the interior.
 		/// Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.
 		/// </summary>
-		public void DisableInterior(bool toggle)
+		public void Disable(bool toggle)
 		{
 			Function.Call(Hash.DISABLE_INTERIOR, Handle, toggle);
 		}
@@ -137,7 +137,7 @@ namespace GTA
 		/// Caps the interior so this <see cref="InteriorProxy"/> will only load a few elements of the interior.
 		/// Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.
 		/// </summary>
-		public void CapInterior(bool toggle)
+		public void Cap(bool toggle)
 		{
 			Function.Call(Hash.CAP_INTERIOR, Handle, toggle);
 		}
@@ -145,7 +145,7 @@ namespace GTA
 		/// <summary>
 		/// Makes this <see cref="InteriorProxy"/> keep the <see cref="InteriorProxy"/> this <see cref="InteriorProxy"/> is loaded.
 		/// </summary>
-		public void PinInteriorInMemory()
+		public void PinInMemory()
 		{
 			Function.Call(Hash.DISABLE_INTERIOR, Handle);
 		}
@@ -153,7 +153,7 @@ namespace GTA
 		/// <summary>
 		/// Lets this <see cref="InteriorProxy"/> free the <see cref="InteriorProxy"/> this <see cref="InteriorProxy"/> is loaded.
 		/// </summary>
-		public void UnpinInteriorFromMemory(bool toggle)
+		public void UnpinFromMemory(bool toggle)
 		{
 			Function.Call(Hash.UNPIN_INTERIOR, Handle);
 		}
