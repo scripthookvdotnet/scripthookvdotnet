@@ -482,6 +482,15 @@ namespace GTA.Math
 		}
 
 		/// <summary>
+		/// Creates a rotation with the specified <paramref name="forward"/> and <see cref="Vector3.WorldUp"/> directions.
+		/// </summary>
+		public static Quaternion LookRotation(Vector3 forward) => LookRotation(forward, Vector3.WorldUp);
+		/// <summary>
+		/// Creates a rotation with the specified <paramref name="forward"/> and <paramref name="up"/> directions.
+		/// </summary>
+		public static Quaternion LookRotation(Vector3 forward, Vector3 up) => DirectionVectors(Vector3.Cross(forward, up), forward, up);
+
+		/// <summary>
 		/// Creates a rotation which rotates from fromDirection to toDirection.
 		/// </summary>
 		public static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection)
