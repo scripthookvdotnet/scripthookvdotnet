@@ -488,69 +488,7 @@ namespace GTA.Math
 		/// <summary>
 		/// Creates a rotation with the specified <paramref name="forward"/> and <paramref name="up"/> directions.
 		/// </summary>
-		public static Quaternion LookRotation(Vector3 forward, Vector3 up)
-		{
-			forward = Vector3.Normalize(forward);
-			Vector3 right = Vector3.Normalize(Vector3.Cross(forward, up));
-			up = Vector3.Cross(right, forward);
-			var m11 = right.X;
-			var m12 = right.Y;
-			var m13 = right.Z;
-			var m21 = forward.X;
-			var m22 = forward.Y;
-			var m23 = forward.Z;
-			var m31 = up.X;
-			var m32 = up.Y;
-			var m33 = up.Z;
-
-			Quaternion result = Zero;
-			float sqrt;
-			float half;
-			float scale = m11 + m22 + m33;
-
-			if (scale > 0.0f)
-			{
-				sqrt = (float)System.Math.Sqrt(scale + 1.0f);
-				result.W = sqrt * 0.5f;
-				sqrt = 0.5f / sqrt;
-
-				result.X = (m23 - m32) * sqrt;
-				result.Y = (m31 - m13) * sqrt;
-				result.Z = (m12 - m21) * sqrt;
-			}
-			else if ((m11 >= m22) && (m11 >= m33))
-			{
-				sqrt = (float)System.Math.Sqrt(1.0f + m11 - m22 - m33);
-				half = 0.5f / sqrt;
-
-				result.X = 0.5f * sqrt;
-				result.Y = (m12 + m21) * half;
-				result.Z = (m13 + m31) * half;
-				result.W = (m23 - m32) * half;
-			}
-			else if (m22 > m33)
-			{
-				sqrt = (float)System.Math.Sqrt(1.0f + m22 - m11 - m33);
-				half = 0.5f / sqrt;
-
-				result.X = (m21 + m12) * half;
-				result.Y = 0.5f * sqrt;
-				result.Z = (m32 + m23) * half;
-				result.W = (m31 - m13) * half;
-			}
-			else
-			{
-				sqrt = (float)System.Math.Sqrt(1.0f + m33 - m11 - m22);
-				half = 0.5f / sqrt;
-
-				result.X = (m31 + m13) * half;
-				result.Y = (m32 + m23) * half;
-				result.Z = 0.5f * sqrt;
-				result.W = (m12 - m21) * half;
-			}
-
-			return result;
-		}
+		public static Quaternion LookRotation(Vector3 forward, Vector3 up) => DirectionVectors(Vector3.Cross(forward, up), forward, up);
 
 		/// <summary>
 		/// Creates a rotation which rotates from fromDirection to toDirection.
