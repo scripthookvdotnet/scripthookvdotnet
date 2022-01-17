@@ -135,6 +135,18 @@ namespace GTA
 			return true;
 		}
 
+
+		/// <summary>
+		/// Gives the speficied weapon if the owner <see cref="Ped"/> does not have one, or selects the weapon if they have one and <paramref name="equipNow"/> is set to <see langword="true" />.
+		/// </summary>
+		/// <param name="weaponHash">The weapon hash.</param>
+		/// <param name="ammoCount">The ammo count to be added to the weapon inventory of the owner <see cref="Ped"/>.</param>
+		/// <param name="equipNow">If set to <see langword="true" />, the owner <see cref="Ped"/> will switch their weapon to the weapon of <paramref name="weaponHash"/> as soon as they can (not instantly).</param>
+		/// <param name="isAmmoLoaded">
+		/// Does not work since the ammo in clip is always full if not selected unless the game code related to auto-reload is modified.
+		/// This was supposed to determine if the ammo will be loaded after the weapon is given to the owner <see cref="Ped"/>.
+		/// </param>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
 		public Weapon Give(WeaponHash weaponHash, int ammoCount, bool equipNow, bool isAmmoLoaded)
 		{
 			if (!weapons.TryGetValue(weaponHash, out Weapon weapon))
@@ -152,7 +164,8 @@ namespace GTA
 			}
 			else
 			{
-				Function.Call(Hash.GIVE_WEAPON_TO_PED, owner.Handle, weapon.Hash, ammoCount, equipNow, isAmmoLoaded);
+				// Set the 4th argument to false for consistency. If 4th argument is set to true when 5th one is set to true, the ped will instantly select the added weapon in any case.
+				Function.Call(Hash.GIVE_WEAPON_TO_PED, owner.Handle, weapon.Hash, ammoCount, false, equipNow);
 			}
 
 			return weapon;
