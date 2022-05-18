@@ -27,6 +27,13 @@
       <EnumValue Name="7.2" DisplayName="7.2" Description="Accept only syntax that is included in the version 7.2 C# language specification." />
       <EnumValue Name="7.3" DisplayName="7.3" Description="Accept only syntax that is included in the version 7.3 C# language specification." />
     </EnumProperty>
+    <EnumProperty Name="DebugType" DisplayName="Debugging information">
+      <EnumValue Name="none" DisplayName="None" />
+      <EnumValue Name="full" DisplayName="Full" />
+      <EnumValue Name="pdbonly" DisplayName="Pdb-only" />
+      <EnumValue Name="portable" DisplayName="Portable" />
+      <EnumValue Name="embedded" DisplayName="Embedded" />
+    </EnumProperty>
     <BoolProperty Name="Optimize" DisplayName="Optimize" Category="General" />
     <BoolProperty Name="AllowUnsafeBlocks" DisplayName="Allow Unsafe Code" Category="General" />
     <EnumProperty Name="WarningLevel" DisplayName="Warning Level" Category="General" >

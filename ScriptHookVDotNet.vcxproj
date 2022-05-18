@@ -83,6 +83,8 @@
       <NoWarn>1591;1668;%(NoWarn)</NoWarn>
       <WarningLevel>3</WarningLevel>
       <LangVersion>latest</LangVersion>
+      <DebugType>pdbonly</DebugType>
+      <DebugSymbols>true</DebugSymbols>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -99,6 +101,8 @@
       <NoWarn>1591;1668;%(NoWarn)</NoWarn>
       <WarningLevel>3</WarningLevel>
       <LangVersion>latest3</LangVersion>
+      <DebugType>none</DebugType>
+      <DebugSymbols>false</DebugSymbols>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -139,12 +143,16 @@
     <Csc
       Sources="@(CsCompile)"
       AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)"
+      DebugType="%(CsCompile.DebugType)"
       DisabledWarnings="%(CsCompile.NoWarn)"
       DocumentationFile="$(IntDir)$(TargetName).xdc"
+      EmitDebugInformation="%(CsCompile.DebugSymbols)"
       LangVersion="%(CsCompile.LangVersion)"
       Optimize="%(CsCompile.Optimize)"
       OutputAssembly="$(IntDir)$(TargetName).netmodule"
+      PdbFile="$(IntDir)$(TargetName).netmodule.pdb"
       TargetType="Module"
+      TreatWarningsAsErrors="%(CsCompile.TreatWarningsAsErrors)"
       Utf8Output="%(CsCompile.Utf8Output)"
       WarningLevel="%(CsCompile.WarningLevel)"
       WarningsAsErrors="%(CsCompile.WarningsAsErrors)"
