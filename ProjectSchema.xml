@@ -13,12 +13,19 @@
       <Category Name="All Options" DisplayName="All Options" Subtype="Search" />
     </Rule.Categories>
     <EnumProperty Name="LangVersion" DisplayName="Language Version">
-      <EnumValue Name="default" DisplayName="Default" Description="Accept all valid language syntax." />
+      <EnumValue Name="preview" DisplayName="Preview" Description="Accept syntax from the latest released version of the compiler." />
+      <EnumValue Name="latest" DisplayName="Latest" Description="Accept all valid language syntax from the latest released version of the compiler (including minor version)." />
+      <EnumValue Name="default" DisplayName="Default" Description="Accept all valid language syntax from the latest released major version of the compiler." />
       <EnumValue Name="ISO-1" DisplayName="ISO-1" Description="Accept only syntax that is included in the ISO/IEC 23270:2003 C# language specification." />
       <EnumValue Name="ISO-2" DisplayName="ISO-2" Description="Accept only syntax that is included in the ISO/IEC 23270:2006 C# language specification." />
-      <EnumValue Name="3" DisplayName="3.0" Description="Accept only syntax that is included in the version 3.0 C# language Specification." />
-      <EnumValue Name="4" DisplayName="4.0" Description="Accept only syntax that is included in the version 4.0 C# language Specification." />
-      <EnumValue Name="5" DisplayName="5.0" Description="Accept only syntax that is included in the version 5.0 C# language Specification." />
+      <EnumValue Name="3" DisplayName="3.0" Description="Accept only syntax that is included in the version 3.0 C# language specification." />
+      <EnumValue Name="4" DisplayName="4.0" Description="Accept only syntax that is included in the version 4.0 C# language specification." />
+      <EnumValue Name="5" DisplayName="5.0" Description="Accept only syntax that is included in the version 5.0 C# language specification." />
+      <EnumValue Name="6" DisplayName="6.0" Description="Accept only syntax that is included in the version 6.0 C# language specification." />
+      <EnumValue Name="7" DisplayName="7.0" Description="Accept only syntax that is included in the version 7.0 C# language specification." />
+      <EnumValue Name="7.1" DisplayName="7.1" Description="Accept only syntax that is included in the version 7.1 C# language specification." />
+      <EnumValue Name="7.2" DisplayName="7.2" Description="Accept only syntax that is included in the version 7.2 C# language specification." />
+      <EnumValue Name="7.3" DisplayName="7.3" Description="Accept only syntax that is included in the version 7.3 C# language specification." />
     </EnumProperty>
     <BoolProperty Name="Optimize" DisplayName="Optimize" Category="General" />
     <BoolProperty Name="AllowUnsafeBlocks" DisplayName="Allow Unsafe Code" Category="General" />

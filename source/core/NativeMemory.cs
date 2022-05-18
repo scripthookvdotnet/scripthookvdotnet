@@ -370,9 +370,9 @@ namespace SHVDN
 				weaponAttachPointsStartOffset = *(int*)(address + 3);
 				address = FindPattern("\x4D\x63\x98\x00\x00\x00\x00", "xxx????", new IntPtr(address));
 				weaponAttachPointsArrayCountOffset = *(int*)(address + 3);
-				address = FindPattern("\x4C\x63\x50\x00", "xxx?", new(address));
+				address = FindPattern("\x4C\x63\x50\x00", "xxx?", new IntPtr(address));
 				weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
-				address = FindPattern("\x48\x83\xC0\x00", "xxx?", new(address));
+				address = FindPattern("\x48\x83\xC0\x00", "xxx?", new IntPtr(address));
 				weaponAttachPointElementSize = *(byte*)(address + 3);
 			}
 
@@ -3910,7 +3910,7 @@ namespace SHVDN
 		{
 			[FieldOffset(0x34)]
 			internal ushort taskTypeIndex;
- 		}
+		}
 
 		public static bool IsTaskNMScriptControlOrEventSwitch2NMActive(IntPtr pedAddress)
 		{
@@ -3960,21 +3960,21 @@ namespace SHVDN
 			}
 
 			return false;
+		}
 
-			bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
+		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 
-			GetEventTypeIndexDelegate CreateGetEventTypeIndexDelegateIfNotCreated(ulong eventAddress)
-			{
-				var getEventTypeIndexVirtualFuncAddr = *(ulong*)(*(ulong*)eventAddress + 0x18);
+		static GetEventTypeIndexDelegate CreateGetEventTypeIndexDelegateIfNotCreated(ulong eventAddress)
+		{
+			var getEventTypeIndexVirtualFuncAddr = *(ulong*)(*(ulong*)eventAddress + 0x18);
 
-				if (getEventTypeIndexDelegateCacheDict.TryGetValue(getEventTypeIndexVirtualFuncAddr, out var cachedDelegate))
-					return cachedDelegate;
+			if (getEventTypeIndexDelegateCacheDict.TryGetValue(getEventTypeIndexVirtualFuncAddr, out var cachedDelegate))
+				return cachedDelegate;
 
-				var createdDelegate = GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)getEventTypeIndexVirtualFuncAddr));
-				getEventTypeIndexDelegateCacheDict[getEventTypeIndexVirtualFuncAddr] = createdDelegate;
+			var createdDelegate = GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)getEventTypeIndexVirtualFuncAddr));
+			getEventTypeIndexDelegateCacheDict[getEventTypeIndexVirtualFuncAddr] = createdDelegate;
 
-				return createdDelegate;
-			}
+			return createdDelegate;
 		}
 
 		internal class EuphoriaMessageTask : IScriptTask

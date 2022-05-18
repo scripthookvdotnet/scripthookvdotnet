@@ -82,6 +82,7 @@
       <Optimize>false</Optimize>
       <NoWarn>1591;1668;%(NoWarn)</NoWarn>
       <WarningLevel>3</WarningLevel>
+      <LangVersion>latest</LangVersion>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -97,6 +98,7 @@
       <Optimize>true</Optimize>
       <NoWarn>1591;1668;%(NoWarn)</NoWarn>
       <WarningLevel>3</WarningLevel>
+      <LangVersion>latest3</LangVersion>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
