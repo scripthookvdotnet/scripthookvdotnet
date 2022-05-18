@@ -19,6 +19,17 @@ namespace GTA
 		ScriptSettings _settings;
 		#endregion
 
+		class InstantiateScriptTask : SHVDN.IScriptTask
+		{
+			internal Type type;
+			internal SHVDN.Script script;
+
+			public void Run()
+			{
+				script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(type);
+			}
+		}
+
 		public Script()
 		{
 			Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
@@ -287,15 +298,17 @@ namespace GTA
 		/// </summary>
 		public static T InstantiateScript<T>() where T : Script
 		{
-			var script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(typeof(T));
-			if (script == null)
+			var task = new InstantiateScriptTask { type = typeof(T) };
+			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			if (task.script == null)
 			{
 				return null;
 			}
 
-			script.Start();
+			task.script.Start();
 
-			return (T)script.ScriptInstance;
+			return (T)task.script.ScriptInstance;
 		}
 	}
 }

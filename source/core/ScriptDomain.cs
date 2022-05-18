@@ -343,6 +343,8 @@ namespace SHVDN
 		/// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
 		public Script InstantiateScript(Type scriptType)
 		{
+			if (Thread.CurrentThread.ManagedThreadId != executingThreadId)
+				return null; // This must only be called in the main thread (since changing 'executingScript' during 'DoTick' of another script would break)
 			if (scriptType.IsAbstract || !IsSubclassOf(scriptType, "GTA.Script"))
 				return null;
 
