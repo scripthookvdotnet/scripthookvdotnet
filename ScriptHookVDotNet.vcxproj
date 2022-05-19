@@ -100,7 +100,7 @@
       <Optimize>true</Optimize>
       <NoWarn>1591;1668;%(NoWarn)</NoWarn>
       <WarningLevel>3</WarningLevel>
-      <LangVersion>latest3</LangVersion>
+      <LangVersion>latest</LangVersion>
       <DebugType>none</DebugType>
       <DebugSymbols>false</DebugSymbols>
     </CsCompile>
