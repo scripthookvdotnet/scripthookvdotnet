@@ -14,25 +14,45 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="Ped"/> this <see cref="Projectile"/> belongs to. Can be <see langword="null" />.
+		/// Gets the <see cref="Ped"/> this <see cref="Projectile"/> belongs to.
+		/// Can be <see langword="null" /> or a <see cref="Ped"/> instance whose handle is for <see cref="Vehicle"/>, which is not valid as a <see cref="Ped"/> instance.
 		/// </summary>
+		[Obsolete("The Projectile.Owner is obsolete in the v3 API because the actual owner can be a Vehicle, use Projectile.OwnerEntity in the v3 API instead.")]
 		public Ped Owner
 		{
 			get
 			{
-				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileOwnerOffset == 0)
-				{
-					return null;
-				}
-
-				IntPtr pedAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
-
-				if (pedAddress == IntPtr.Zero)
-					return null;
-
-				return new Ped(SHVDN.NativeMemory.GetEntityHandleFromAddress(pedAddress));
+				var ownerHandle = GetOwnerEntityInternal();
+				return ownerHandle != 0 ? new Ped(ownerHandle) : null;
 			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="Entity"/> this <see cref="Projectile"/> belongs to. Can be <see langword="null" />.
+		/// </summary>
+		public Entity OwnerEntity
+		{
+			get
+			{
+				var ownerHandle = GetOwnerEntityInternal();
+				return ownerHandle != 0 ? Entity.FromHandle(ownerHandle) : null;
+			}
+		}
+
+		private int GetOwnerEntityInternal()
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileOwnerOffset == 0)
+			{
+				return 0;
+			}
+
+			IntPtr entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
+
+			if (entityAddress == IntPtr.Zero)
+				return 0;
+
+			return SHVDN.NativeMemory.GetEntityHandleFromAddress(entityAddress);
 		}
 
 		/// <summary>
