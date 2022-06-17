@@ -1475,18 +1475,29 @@ namespace GTA
 		/// <param name="type">The type of explosion.</param>
 		/// <param name="radius">The radius of the explosion.</param>
 		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
+		/// <param name="aubidble">if set to <see langword="true" /> explosion can be heard.</param>
+		/// <param name="invisible">if set to <see langword="true" /> explosion is invisible.</param>
+		/// <param name="noDamage">if set to <see langword="true" /> explosion does not cause damage.</param>
+		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool aubidble = true, bool invisible = false, bool noDamage = false)
+		{
+			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake, noDamage);
+		}
+
+		/// <summary>
+		/// Creates an owned explosion in the world
+		/// </summary>
+		/// <param name="position">The position of the explosion.</param>
+		/// <param name="type">The type of explosion.</param>
+		/// <param name="radius">The radius of the explosion.</param>
+		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
 		/// <param name="owner">The <see cref="Ped"/> who caused the explosion, leave null if no one caused the explosion.</param>
 		/// <param name="aubidble">if set to <see langword="true" /> explosion can be heard.</param>
 		/// <param name="invisible">if set to <see langword="true" /> explosion is invisible.</param>
-		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, Ped owner = null, bool aubidble = true, bool invisible = false)
+		public static void AddOwnedExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, Ped owner = null, bool aubidble = true, bool invisible = false)
 		{
 			if (owner?.Exists() == true)
 			{
 				Function.Call(Hash.ADD_OWNED_EXPLOSION, owner.Handle, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
-			}
-			else
-			{
-				Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
 			}
 		}
 
