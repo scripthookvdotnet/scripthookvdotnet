@@ -61,7 +61,7 @@
     <ClCompile>
       <AdditionalUsingDirectories>$(IntDir);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalIncludeDirectories>sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'==''">SHVDN_VERSION="3.0.0.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'==''">SHVDN_VERSION="3.4.0.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'!=''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <CsCompile>
