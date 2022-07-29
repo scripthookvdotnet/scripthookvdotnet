@@ -611,6 +611,11 @@ namespace GTA
 		{
 			get
 			{
+				// In b2699, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
+				if (Game.Version >= GameVersion.v1_0_2699_0_Steam && !IsInVehicle())
+				{
+					return null;
+				}
 				var veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
 				return veh.Exists() ? veh : null;
 			}
