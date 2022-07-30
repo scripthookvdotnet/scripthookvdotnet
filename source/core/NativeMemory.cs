@@ -3005,21 +3005,21 @@ namespace SHVDN
 		private static short GetBlipIndexIfHandleIsValid(int handle)
 		{
 			if (handle == 0)
-            {
+			{
 				return -1;
-            }
+			}
 			ushort blipIndex = (ushort)handle;
 			ulong blipAddress = *(RadarBlipPoolAddress + blipIndex);
 			if (blipAddress == 0)
-            {
+			{
 				return -1;
-            }
+			}
 
 			int blipCreationIncrement = (handle >> 0x10);
 			if (blipCreationIncrement != *(int*)(blipAddress + 0x8))
-            {
+			{
 				return -1;
-            }
+			}
 
 			return (short)blipIndex;
 		}
