@@ -808,6 +808,15 @@ namespace SHVDN
 
 			var gameVersionCached = GetGameVersion();
 
+			// The game will crash when it load these vehicles because of the stub vehicle models
+			var stubVehicles = new HashSet<uint> {
+				0xA71D0D4F, /* astron2 */
+				0x170341C2, /* cyclone2 */
+				0x5C54030C, /* arbitergt */
+				0x39085F47, /* ignus2 */
+				0x438F6593, /* s95 */
+			};
+
 			for (int i = 0; i < modelHashEntries; i++)
 			{
 				for (HashNode* cur = ((HashNode**)modelHashTable)[i]; cur != null; cur = cur->next)
@@ -828,6 +837,9 @@ namespace SHVDN
 										weaponObjectHashes.Add(cur->hash);
 										break;
 									case ModelInfoClassType.Vehicle:
+										// Avoid loading stub vehicles since it will crash the game
+										if (stubVehicles.Contains(cur->hash))
+											continue;
 										vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
 
 										// Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
