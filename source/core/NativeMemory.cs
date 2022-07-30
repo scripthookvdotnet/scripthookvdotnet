@@ -838,7 +838,7 @@ namespace SHVDN
 										break;
 									case ModelInfoClassType.Vehicle:
 										// Avoid loading stub vehicles since it will crash the game
-										if (stubVehicles.Contains(cur->hash))
+										if (stubVehicles.Contains((uint)cur->hash))
 											continue;
 										vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
 
