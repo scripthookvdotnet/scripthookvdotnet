@@ -256,6 +256,14 @@ namespace SHVDN
 
 			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
 			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			address = FindPattern("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
+			PossibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
+			address = FindPattern("\x3B\x35\x00\x00\x00\x00\x74\x2E\x48\x81\xFD\xDB\x05\x00\x00", "xx????xxxxxxxxx");
+			UnkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 2) + address + 6);
+			address = FindPattern("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
+			NorthRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+			address = FindPattern("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
+			CenterRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
 
 			address = FindPattern("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
 			GetLocalPlayerPedAddressFunc = GetDelegateForFunctionPointer<GetLocalPlayerPedAddressFuncDelegate>(new IntPtr(*(int*)(address + 3) + address + 7));
@@ -2958,6 +2966,10 @@ namespace SHVDN
 		#region -- Radar Blip Pool --
 
 		static ulong* RadarBlipPoolAddress;
+		static int* PossibleRadarBlipCountAddress;
+		static int* UnkFirstRadarBlipIndexAddress;
+		static int* NorthRadarBlipHandleAddress;
+		static int* CenterRadarBlipHandleAddress;
 
 		static bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
 		{
@@ -2989,6 +3001,28 @@ namespace SHVDN
 			return true;
 		}
 
+		// The equivalent function is called in 2 functions (which is for the north and player blip) used in GET_NUMBER_OF_ACTIVE_BLIPS
+		private static short GetBlipIndexIfHandleIsValid(int handle)
+		{
+			if (handle == 0)
+            {
+				return -1;
+            }
+			ushort blipIndex = (ushort)handle;
+			ulong blipAddress = *(RadarBlipPoolAddress + blipIndex);
+			if (blipAddress == 0)
+            {
+				return -1;
+            }
+
+			int blipCreationIncrement = (handle >> 0x10);
+			if (blipCreationIncrement != *(int*)(blipAddress + 0x8))
+            {
+				return -1;
+            }
+
+			return (short)blipIndex;
+		}
 		public static int[] GetNonCriticalRadarBlipHandles(params int[] spriteTypes)
 		{
 			return GetNonCriticalRadarBlipHandles(null, 0f, spriteTypes);
@@ -3000,17 +3034,20 @@ namespace SHVDN
 				return new int[0];
 			}
 
-			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+			int possibleBlipCount = *PossibleRadarBlipCountAddress;
+			int unkFirstBlipIndex = *UnkFirstRadarBlipIndexAddress;
+			int northBlipIndex = GetBlipIndexIfHandleIsValid(*NorthRadarBlipHandleAddress);
+			int centerBlipIndex = GetBlipIndexIfHandleIsValid(*CenterRadarBlipHandleAddress);
 
 			var handles = new List<int>(possibleBlipCount);
 
-			// Skip the first 3 critical blips, just like GET_FIRST_BLIP_INFO_ID does
-			// The second critical blip is the player blip and the third is the north blip (The first is unknown)
-			for (int i = 3; i < possibleBlipCount; i++)
+			// Skip the 3 critical blips, just like GET_FIRST_BLIP_INFO_ID does
+			// The 3 critical blips is the north blip, the center blip, and the unknown simple blip (placeholder?).
+			for (int i = 0; i < possibleBlipCount; i++)
 			{
 				ulong address = *(RadarBlipPoolAddress + i);
 
-				if (address == 0)
+				if (address == 0 || i == unkFirstBlipIndex || i == northBlipIndex || i == centerBlipIndex)
 					continue;
 
 				if (CheckBlip(address, position, radius, spriteTypes))
@@ -3023,21 +3060,7 @@ namespace SHVDN
 			return handles.ToArray();
 		}
 
-		public static int GetNorthBlip()
-		{
-			if (RadarBlipPoolAddress != null)
-			{
-				ulong northBlipAddress = *(RadarBlipPoolAddress + 2);
-
-				if (northBlipAddress != 0)
-				{
-					ushort blipCreationIncrement = *(ushort*)(northBlipAddress + 8);
-					return ((blipCreationIncrement << 0x10) + 2);
-				}
-			}
-
-			return 0;
-		}
+		public static int GetNorthBlip() => NorthRadarBlipHandleAddress != null ? *NorthRadarBlipHandleAddress : 0;
 
 		public static IntPtr GetBlipAddress(int handle)
 		{
@@ -3047,7 +3070,7 @@ namespace SHVDN
 			}
 
 			int poolIndexOfHandle = handle & 0xFFFF;
-			int possibleBlipCount = *(int*)(RadarBlipPoolAddress - 1);
+			int possibleBlipCount = *PossibleRadarBlipCountAddress;
 
 			if (poolIndexOfHandle >= possibleBlipCount)
 			{
