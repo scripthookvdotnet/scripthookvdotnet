@@ -8,6 +8,11 @@ using System;
 
 namespace GTA
 {
+	/// <summary>
+	/// This class has most regular handling data.
+	/// Note that this class gets or sets raw data and not all the handling values don't match the equivalent values in the <c>handling.meta</c> file.
+	/// The game multiplies or divides some values after reading values from the <c>handling.meta</c> file.
+	/// </summary>
 	public class HandlingData
 	{
 		internal HandlingData(IntPtr address)
