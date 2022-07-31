@@ -850,5 +850,17 @@ namespace GTA
 		DewbaucheeChampion,
 		BuffaloSTX,
 		Agency,
+		BikerCar,
+		SimeonOverlay,
+		JunkEnergySkydive,
+		LuxuryAutos,
+		CarShowroom,
+		SimeonCarShowroom,
+		FlamingSkull,
+		WeaponAmmo,
+		CommunitySeries,
+		CayoPericoSeries,
+		ClubhouseContract,
+		AgentULP,
 	}
 }
