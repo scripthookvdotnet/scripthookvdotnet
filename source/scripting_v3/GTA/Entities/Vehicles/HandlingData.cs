@@ -38,9 +38,10 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the bias between front and rear for the anti-roll bar.
+		/// This value will be set to the equivalent value in the <c>handling.meta</c> multiplied by 2 when <see cref="HandlingData"/> instances are initialized.
 		/// </summary>
 		/// <value>
-		/// The anti roll bar bias front. 0.0f is fully front, 1.0f is fully rear.
+		/// The anti roll bar bias front. 0.0f is fully front, 2.0f is fully rear.
 		/// </value>
 		public float AntiRollBarBiasFront
 		{
@@ -692,6 +693,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the damping scale bias between front and rear wheels.
 		/// This value determines which suspension is stronger, front or rear.
+		/// This value will be set to the equivalent value in the <c>handling.meta</c> multiplied by 2 when <see cref="HandlingData"/> instances are initialized.
 		/// </summary>
 		/// <value>
 		/// The suspension bias front.
@@ -721,6 +723,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the damping during strut compression.
+		/// This value will be set to the equivalent value in the <c>handling.meta</c> divided by 10 when <see cref="HandlingData"/> instances are initialized.
+		/// </summary>
+		/// <value>
+		/// The damping during strut compression.
+		/// </value>
 		public float SuspensionCompressionDamping
 		{
 			get
@@ -828,6 +837,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the damping during strut rebound.
+		/// This value will be set to the equivalent value in the <c>handling.meta</c> divided by 10 when <see cref="HandlingData"/> instances are initialized.
+		/// </summary>
+		/// <value>
+		/// The damping during strut rebound.
+		/// </value>
 		public float SuspensionReboundDamping
 		{
 			get
@@ -880,6 +896,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the value that determines the distribution of traction from front to rear.
+		/// This value will be set to the equivalent value in the <c>handling.meta</c> multiplied by 2 when <see cref="HandlingData"/> instances are initialized.
 		/// </summary>
 		/// <value>
 		/// The value that determines distribution of traction from front to rear.
