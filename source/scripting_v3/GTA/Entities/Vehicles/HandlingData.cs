@@ -960,7 +960,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0xA8);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0xB8);
 			}
 			set
 			{
@@ -969,7 +969,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0xA8, value);
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0xB8, value);
 			}
 		}
 
