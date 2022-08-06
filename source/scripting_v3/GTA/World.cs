@@ -1572,6 +1572,71 @@ namespace GTA
 			Function.Call(Hash.DRAW_POLY, vertexA.X, vertexA.Y, vertexA.Z, vertexB.X, vertexB.Y, vertexB.Z, vertexC.X, vertexC.Y, vertexC.Z, color.R, color.G, color.B, color.A);
 		}
 
+		/// <summary>
+		/// Draws a box that occupies the angled area.
+		/// An angled area is an X-Z oriented rectangle with three parameters: origin, extent, and width.
+		/// </summary>
+		/// <param name="originEdge">The mid-point along a base edge of the rectangle.</param>
+		/// <param name="extentEdge">The mid-point of opposite base edge on the other Z.</param>
+		/// <param name="width">The length of the base edge.</param>
+		/// <param name="color">The color of the box.</param>
+		/// <param name="drawFlags">Which sides to draw.</param>
+		public static void DrawBoxForAngledArea(Vector3 originEdge, Vector3 extentEdge, float width, Color color, DrawBoxFlags drawFlags = DrawBoxFlags.OutsideOnly)
+		{
+			if ((drawFlags & DrawBoxFlags.InsideOnly) == DrawBoxFlags.InsideOnly)
+			{
+				DrawBoxForAngledAreaInsideInternal(originEdge, extentEdge, width, color);
+			}
+			if ((drawFlags & DrawBoxFlags.OutsideOnly) == DrawBoxFlags.OutsideOnly)
+			{
+				DrawBoxForAngledAreaOutsideInternal(originEdge, extentEdge, width, color);
+			}
+		}
+
+		private static void DrawBoxForAngledAreaOutsideInternal(Vector3 origin, Vector3 extent, float width, Color color)
+		{
+			Vector3 point1 = origin;
+			Vector3 point2 = extent;
+			Vector3 point3 = new Vector3(point2.X, point2.Y, point1.Z);
+			Vector3 normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
+
+			Vector3 point4 = new Vector3(point1.X, point1.Y, point2.Z);
+
+			DrawQuadPolygonInternal(point1 + normalVector, point2 + normalVector, point3 + normalVector, point4 + normalVector, color);
+			DrawQuadPolygonInternal(point2 - normalVector, point1 - normalVector, point3 - normalVector, point4 - normalVector, color);
+
+			DrawQuadPolygonInternal(point1 + normalVector, point3 - normalVector, point1 - normalVector, point3 + normalVector, color);
+			DrawQuadPolygonInternal(point2 + normalVector, point4 - normalVector, point2 - normalVector, point4 + normalVector, color);
+
+			DrawQuadPolygonInternal(point2 + normalVector, point3 - normalVector, point3 + normalVector, point2 - normalVector, color);
+			DrawQuadPolygonInternal(point1 + normalVector, point4 - normalVector, point4 + normalVector, point1 - normalVector, color);
+		}
+
+		private static void DrawBoxForAngledAreaInsideInternal(Vector3 origin, Vector3 extent, float width, Color color)
+		{
+			Vector3 point1 = origin;
+			Vector3 point2 = extent;
+			Vector3 point3 = new Vector3(point2.X, point2.Y, point1.Z);
+			Vector3 normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
+
+			Vector3 point4 = new Vector3(point1.X, point1.Y, point2.Z);
+
+			DrawQuadPolygonInternal(point2 + normalVector, point1 + normalVector, point3 + normalVector, point4 + normalVector, color);
+			DrawQuadPolygonInternal(point1 - normalVector, point2 - normalVector, point3 - normalVector, point4 - normalVector, color);
+
+			DrawQuadPolygonInternal(point3 - normalVector, point1 + normalVector, point1 - normalVector, point3 + normalVector, color);
+			DrawQuadPolygonInternal(point4 - normalVector, point2 + normalVector, point2 - normalVector, point4 + normalVector, color);
+
+			DrawQuadPolygonInternal(point3 - normalVector, point2 + normalVector, point3 + normalVector, point2 - normalVector, color);
+			DrawQuadPolygonInternal(point4 - normalVector, point1 + normalVector, point4 + normalVector, point1 - normalVector, color);
+		}
+
+		private static void DrawQuadPolygonInternal(Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4, Color color)
+		{
+			DrawPolygon(point1, point2, point3, color);
+			DrawPolygon(point2, point1, point4, color);
+		}
+
 		#endregion
 
 		#region Raycasting
@@ -1865,6 +1930,26 @@ namespace GTA
 		public static string GetZoneLocalizedName(Vector3 position)
 		{
 			return Game.GetLocalizedString(GetZoneDisplayName(position));
+		}
+
+		/// <summary>
+		/// Determines whether the specified point is in the angled area.
+		/// An angled area is an X-Z oriented rectangle with three parameters: origin, extent, and width.
+		/// </summary>
+		/// <param name="point">The point to check whether is in the angled area.</param>
+		/// <param name="originEdge">The mid-point along a base edge of the rectangle.</param>
+		/// <param name="extentEdge">The mid-point of opposite base edge on the other Z.</param>
+		/// <param name="width">The length of the base edge.</param>
+		/// <param name="includeZAxis">
+		/// If set to <see langword="true" />, the method will also check if the point is in area in Z axis as well as X and Y axes.
+		/// If set to <see langword="false" />, the method will only check if the point is in area in X and Y axes.
+		/// </param>
+		///  <returns>
+		///   <see langword="true" /> if the specified point is in the specified angled area; otherwise, <see langword="false" />.
+		/// </returns>
+		public static bool IsPointInAngledArea(Vector3 point, Vector3 originEdge, Vector3 extentEdge, float width, bool includeZAxis = true)
+		{
+			return Function.Call<bool>(Hash.IS_POINT_IN_ANGLED_AREA, point.X, point.Y, point.Z, originEdge.X, originEdge.Y, originEdge.Z, extentEdge.X, extentEdge.Y, extentEdge.Z, width, false, includeZAxis);
 		}
 
 		#endregion

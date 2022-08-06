@@ -1305,15 +1305,30 @@ namespace GTA
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is in a specified angled area
 		/// </summary>
-		/// <param name="origin">The origin.</param>
-		/// <param name="edge">The edge.</param>
-		/// <param name="angle">The angle.</param>
+		/// <param name="origin">The mid-point along a base edge of the rectangle.</param>
+		/// <param name="edge">The mid-point of opposite base edge on the other Z.</param>
+		/// <param name="angle">The width. Wrongly named parameter but is kept for existing script compatibilities.</param>
 		/// <returns>
 		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
 		/// </returns>
-		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle)
+		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle) => IsInAngledArea(origin, edge, angle, true);
+		/// <summary>
+		/// Determines whether this <see cref="Entity"/> is in a specified angled area.
+		/// An angled area is an X-Z oriented rectangle with three parameters: origin, extent, and width.
+		/// </summary>
+		/// <param name="originEdge">The mid-point along a base edge of the rectangle.</param>
+		/// <param name="extentEdge">The mid-point of opposite base edge on the other Z.</param>
+		/// <param name="width">The length of the base edge.</param>
+		/// <param name="includeZAxis">
+		/// If set to <see langword="true" />, the method will also check if the point is in area in Z axis as well as X and Y axes.
+		/// If set to <see langword="false" />, the method will only check if the point is in area in X and Y axes.
+		/// </param>
+		/// <returns>
+		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
+		/// </returns>
+		public bool IsInAngledArea(Vector3 originEdge, Vector3 extentEdge, float width, bool includeZAxis)
 		{
-			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, origin.X, origin.Y, origin.Z, edge.X, edge.Y, edge.Z, angle, false, true, false);
+			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, originEdge.X, originEdge.Y, originEdge.Z, extentEdge.X, extentEdge.Y, extentEdge.Z, width, false, includeZAxis, 0);
 		}
 
 		/// <summary>
