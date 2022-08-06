@@ -94,6 +94,50 @@ namespace GTA
 			}
 		}
 
+		public float BoostMaxSpeed
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x130);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x130, value);
+			}
+		}
+
+		public float BrakeBiasFront
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x74);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x74, value);
+			}
+		}
+
 		public float BrakeForce
 		{
 			get
@@ -261,6 +305,63 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the amount of downforce applied to the vehicle.
+		/// </summary>
+		/// <value>
+		/// The amount of downforce applied to the vehicle.
+		/// </value>
+		public float DownForceModifier
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x14);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x14, value);
+			}
+		}
+
+		/// <summary>
+		/// <para>Gets or sets how much the vehicle gives rear axles force. The rest of the force will be given to front axles. This value will be set to the equivalent value in the <c>handling.meta</c> multiplied by 2 when <see cref="HandlingData"/> instances are initialized.</para>
+		/// <para>0.0 is rear wheel drive, 2.0 is front wheel drive, and any value between 0.01 and 0.199 is four wheel drive (1.0 give both front and rear axles equal force, being perfect 4WD.)</para>
+		/// </summary>
+		/// <value>
+		/// The percent the vehicle gives rear axles force (between 0.0 to 2.0).
+		/// </value>
+		public float DriveBiasFront
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x48);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x48, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the drive inertia that determines how fast the engine acceleration is.
 		/// </summary>
 		/// <value>
@@ -358,6 +459,34 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the drag coefficient.
+		/// </summary>
+		/// <value>
+		/// The drag coefficient.
+		/// </value>
+		public float InitialDragCoefficient
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x10);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x10, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the power engine produces in top gear.
 		/// </summary>
 		/// <value>
@@ -410,6 +539,64 @@ namespace GTA
 				}
 
 				SHVDN.NativeMemory.WriteInt32(MemoryAddress + 0x50, value);
+			}
+		}
+
+		/// <summary>
+		/// Determines the speed at redline in high gear; Controls the final drive of the vehicle's gearbox.
+		/// Setting this value does not guarantee the vehicle will reach this speed.
+		/// </summary>
+		/// <value>
+		/// the speed at redline in high gear.
+		/// </value>
+		public float InitialDriveMaxFlatVelocity
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x68);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x68, value);
+			}
+		}
+
+		/// <summary>
+		/// How much traction is reduced at low speed, 0.0 means normal traction. It affects mainly car burnout (spinning wheels when car doesn't move) when pressing gas.
+		/// Decreasing value will cause less burnout, less sliding at start. However, the higher value, the more burnout car gets.
+		/// </summary>
+		/// <value>
+		/// How much traction is reduced at low speed.
+		/// </value>
+		public float LowSpeedTractionLossMultiplier
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0xA8);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0xA8, value);
 			}
 		}
 
@@ -548,6 +735,56 @@ namespace GTA
 				}
 
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x100, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the rotation values in degree the parts pop-up headlights needs to be rotated when headlights are on.
+		/// </summary>
+		/// <value>
+		/// The rotation values in degree. Can be negative.
+		/// </value>
+		public float PopUpLightRotation
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x18);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x18, value);
+			}
+		}
+
+		public float RocketBoostCapacity
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x120);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x120, value);
 			}
 		}
 
@@ -964,6 +1201,28 @@ namespace GTA
 				}
 
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x90, value);
+			}
+		}
+
+		public float TractionCurveLateral
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x98);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x98, value);
 			}
 		}
 
