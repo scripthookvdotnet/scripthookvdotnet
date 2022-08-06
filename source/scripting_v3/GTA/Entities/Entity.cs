@@ -1311,7 +1311,7 @@ namespace GTA
 		/// <returns>
 		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
 		/// </returns>
-		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle) => IsInAngledAreaNew(origin, edge, angle);
+		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle) => IsInAngledArea(origin, edge, angle, true);
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is in a specified angled area.
 		/// An angled area is an X-Z oriented rectangle with three parameters: origin, extent, and width.
@@ -1323,10 +1323,10 @@ namespace GTA
 		/// If set to <see langword="true" />, the method will also check if the point is in area in Z axis as well as X and Y axes.
 		/// If set to <see langword="false" />, the method will only check if the point is in area in X and Y axes.
 		/// </param>
-		///  <returns>
+		/// <returns>
 		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
 		/// </returns>
-		public bool IsInAngledAreaNew(Vector3 originEdge, Vector3 extentEdge, float width, bool includeZAxis = true)
+		public bool IsInAngledArea(Vector3 originEdge, Vector3 extentEdge, float width, bool includeZAxis)
 		{
 			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, originEdge.X, originEdge.Y, originEdge.Z, extentEdge.X, extentEdge.Y, extentEdge.Z, width, false, includeZAxis, 0);
 		}
