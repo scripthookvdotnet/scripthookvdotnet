@@ -12,6 +12,6 @@ namespace GTA
 	{
 		OutsideOnly = 1,
 		InsideOnly = 2,
-		BothSides = OutsideOnly & InsideOnly
+		BothSides = OutsideOnly | InsideOnly
 	}
 }
