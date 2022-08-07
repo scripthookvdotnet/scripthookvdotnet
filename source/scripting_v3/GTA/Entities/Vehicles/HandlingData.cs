@@ -899,11 +899,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets a value that multiplies the game's calculation of the angle of the steer wheel will turn while at full turn.
+		/// <para>
+		/// Gets or sets a value that multiplies the game's calculation of the angle of the steer wheel will turn while at full turn in radians.
 		/// Steering lock is directly related to over/under-steer.
+		/// </para>
+		/// <para>When <see cref="HandlingData"/> instances are initialized, the game converts the value in degrees read from <c>handling.meta</c> to radians before this value is initialized.</para>
 		/// </summary>
 		/// <value>
-		/// The value that multiplies the game's calculation of the angle of the steer wheel, between 0.01 and above.
+		/// The value that multiplies the game's calculation of the angle of the steer wheel in radians, between 0.01 and above.
 		/// </value>
 		public float SteeringLock
 		{
