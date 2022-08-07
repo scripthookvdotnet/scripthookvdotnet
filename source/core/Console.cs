@@ -447,6 +447,12 @@ namespace SHVDN
 					else
 						goto default;
 					break;
+				case Keys.K:
+					if (e.Control)
+						RemoveAllCharsRight();
+					else
+						goto default;
+					break;
 				case Keys.N:
 					if (e.Control)
 						GoDownCommandList();
@@ -462,6 +468,12 @@ namespace SHVDN
 				case Keys.T:
 					if (e.Control)
 						TransposeTwoChars();
+					else
+						goto default;
+					break;
+				case Keys.U:
+					if (e.Control)
+						RemoveAllCharsLeft();
 					else
 						goto default;
 					break;
@@ -540,6 +552,21 @@ namespace SHVDN
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
 				input = input.Remove(cursorPos, 1);
+			}
+		}
+		void RemoveAllCharsLeft()
+		{
+			if (input.Length > 0 && cursorPos > 0)
+			{
+				input = input.Remove(0, cursorPos);
+				cursorPos = 0;
+			}
+		}
+		void RemoveAllCharsRight()
+		{
+			if (input.Length > 0 && cursorPos < input.Length)
+			{
+				input = input.Remove(cursorPos, input.Length - cursorPos);
 			}
 		}
 
