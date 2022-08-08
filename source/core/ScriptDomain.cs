@@ -254,20 +254,28 @@ namespace SHVDN
 			if (!IsManagedAssembly(filename))
 				return false;
 
-			Log.Message(Log.Level.Debug, "Loading assembly ", Path.GetFileName(filename), " ...");
+			var fileNameWithoutPath = Path.GetFileName(filename);
+			Log.Message(Log.Level.Debug, "Loading assembly ", fileNameWithoutPath, " ...");
 
 			Assembly assembly = null;
 
 			try
 			{
 				// Note: This loads the assembly only the first time and afterwards returns the already loaded assembly!
-				ScriptDomain.CurrentLoadingScriptAssemblyName = Path.GetFileName(filename);
+				ScriptDomain.CurrentLoadingScriptAssemblyName = fileNameWithoutPath;
 				assembly = Assembly.LoadFrom(filename);
 			}
 			catch (Exception ex)
 			{
-				Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(filename), ": ", ex.ToString());
+				Log.Message(Log.Level.Error, "Unable to load ", fileNameWithoutPath, ": ", ex.ToString());
 				return false;
+			}
+
+			// Show the warning "Resolving API version 0.0.0" if the script reference a version-less SHVDN
+			var ShvdnAssembly = assembly.GetReferencedAssemblies().FirstOrDefault(x => x.Name == "ScriptHookVDotNet");
+			if (ShvdnAssembly != null && ShvdnAssembly.Version == new Version(0, 0, 0, 0))
+			{
+				Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + fileNameWithoutPath, ".");
 			}
 
 			return LoadScriptsFromAssembly(assembly, filename);
@@ -317,6 +325,11 @@ namespace SHVDN
 
 					if (apiVersion == null) // Check API version for one of the types (should be the same for all)
 						apiVersion = GetBaseTypeVersion(type, "GTA.Script");
+
+					if (apiVersion == new Version(0, 0, 0, 0))
+					{
+						Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + assembly.GetName(), ".");
+					}
 				}
 			}
 			catch (ReflectionTypeLoadException ex)
@@ -810,12 +823,9 @@ namespace SHVDN
 				var bestVersion = new Version(0, 0, 0, 0);
 
 				// Some scripts reference a version-less SHVDN, do default those to major version 2
+				// No warning will be printed from here. Once one script that references a version-less SHVDN is resolved, SHVDN will not execute this block when SHVDN resolves other script that reference a version-less SHVDN.
 				if (assemblyName.Version == bestVersion)
 				{
-					// ResolveEventArgs.RequestingAssembly will always be null for some reason
-					Log.Message(Log.Level.Warning, "Resolving API version 0.0.0",
-						ScriptDomain.CurrentLoadingScriptAssemblyName != null ? " referenced in " + ScriptDomain.CurrentLoadingScriptAssemblyName : string.Empty, ".");
-
 					return CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == 2);
 				}
 
