@@ -71,7 +71,9 @@ namespace GTA
 		/// <param name="heading">The direction the clone should be facing.</param>
 		public Ped Clone(float heading = 0.0f)
 		{
-			return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, heading, false, false));
+			var clone = new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, heading, false, false));
+			CreatedByScript.Add(clone.Handle);
+			return clone;
 		}
 
 		/// <summary>

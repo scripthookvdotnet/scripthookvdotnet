@@ -948,7 +948,9 @@ namespace GTA
 				return null;
 			}
 
-			return new Ped(Function.Call<int>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+			var handle = Function.Call<int>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+			Entity.CreatedByScript.Add(handle);
+			return new Ped(handle);
 		}
 		/// <summary>
 		/// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
@@ -961,7 +963,9 @@ namespace GTA
 				return null;
 			}
 
-			return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
+			var handle = Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z);
+			Entity.CreatedByScript.Add(handle);
+			return new Ped(handle);
 		}
 		/// <summary>
 		/// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
@@ -997,6 +1001,7 @@ namespace GTA
 			Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, 0);
 			Function.Call(Hash.SET_PED_RANDOM_PROPS, createdPed.Handle);
 
+			Entity.CreatedByScript.Add(createdPed.Handle);
 			return createdPed;
 		}
 
@@ -1014,7 +1019,9 @@ namespace GTA
 				return null;
 			}
 
-			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+			var handle = Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
+			Entity.CreatedByScript.Add(handle);
+			return new Vehicle(handle);
 		}
 		/// <summary>
 		/// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
@@ -1040,7 +1047,10 @@ namespace GTA
 			var pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
 
 			// the model should be loaded at this moment, so call CREATE_VEHICLE immediately
-			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
+			var handle = Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z,
+				heading, false, false);
+			Entity.CreatedByScript.Add(handle);
+			return new Vehicle(handle);
 		}
 
 		/// <summary>
@@ -1063,7 +1073,9 @@ namespace GTA
 				position.Z = GetGroundHeight(position);
 			}
 
-			return new Prop(Function.Call<int>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+			var handle = Function.Call<int>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+			Entity.CreatedByScript.Add(handle);
+			return new Prop(handle);
 		}
 		/// <summary>
 		/// Spawns a <see cref="Prop"/> of the given <see cref="Model"/> at the specified position.
@@ -1099,7 +1111,9 @@ namespace GTA
 				return null;
 			}
 
-			return new Prop(Function.Call<int>(Hash.CREATE_OBJECT_NO_OFFSET, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+			var handle = Function.Call<int>(Hash.CREATE_OBJECT_NO_OFFSET, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
+			Entity.CreatedByScript.Add(handle);
+			return new Prop(handle);
 		}
 		/// <summary>
 		/// Spawns a <see cref="Prop"/> of the given <see cref="Model"/> at the specified position without any offset.
@@ -1138,6 +1152,7 @@ namespace GTA
 				return null;
 			}
 
+			Entity.CreatedByScript.Add(handle);
 			return new Prop(handle);
 		}
 
@@ -1158,6 +1173,7 @@ namespace GTA
 				return null;
 			}
 
+			Entity.CreatedByScript.Add(handle);
 			return new Pickup(handle);
 		}
 		/// <summary>
@@ -1177,6 +1193,7 @@ namespace GTA
 				return null;
 			}
 
+			Entity.CreatedByScript.Add(handle);
 			return new Pickup(handle);
 		}
 

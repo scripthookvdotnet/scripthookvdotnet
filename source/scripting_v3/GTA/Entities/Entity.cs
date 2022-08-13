@@ -6,12 +6,16 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GTA
 {
 	public abstract class Entity : PoolObject, ISpatial
 	{
+		// Register entities created by a script.
+		internal static readonly HashSet<int> CreatedByScript = new HashSet<int>();
+
 		#region Fields
 		EntityBoneCollection _bones;
 		EntityDamageRecordCollection _damageRecords;
@@ -111,6 +115,15 @@ namespace GTA
 				SHVDN.NativeMemory.WriteByte(address + 0xDA, (byte)((int)value & 0xF));
 			}
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> is created by the currently running script.
+		/// </summary>
+		/// <value>
+		///   <see langword="true" /> if this <see cref="Entity"/> is created by this script; otherwise, <see langword="false" />.
+		/// </value>
+		/// <seealso cref="Exists"/>
+		public bool IsCreatedByScript => CreatedByScript.Contains(Handle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
