@@ -129,5 +129,13 @@ namespace GTA
 		EnemyLaser = 0x5D6660AB,
 		SearchLight = 0xCDAC517D,
 		Radar = 0xD276317E,
+		WaterCannon = 0x67D18297,
+		Rotors = 0xB1205A4E,
+		Dune = 0x3AD4DB0C,
+		ValkyrieNoseTurret = 0x4170E491,
+		ValkyrieTurret = 0xA4513E35,
+		Technical = 0x7FD2EA0B,
+		Insurgent = 0x44DB5498,
+		Stromberg = 0x461DDD80,
 	}
 }
