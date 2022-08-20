@@ -1396,6 +1396,11 @@ namespace GTA
 		/// </value>
 		public bool IsLeftIndicatorLightOn
 		{
+			get => NativeMemory.ReadByte(MemoryAddress + NativeMemory.IsInteriorLightOnOffset) switch
+			{
+				1 or 3 => true,
+				_ => false
+			};
 			set => Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, true, value);
 		}
 
@@ -1407,6 +1412,11 @@ namespace GTA
 		/// </value>
 		public bool IsRightIndicatorLightOn
 		{
+			get => NativeMemory.ReadByte(MemoryAddress + NativeMemory.IsInteriorLightOnOffset) switch
+			{
+				2 or 3 => true,
+				_ => false
+			};
 			set => Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, false, value);
 		}
 
