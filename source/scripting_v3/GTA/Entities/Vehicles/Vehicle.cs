@@ -61,6 +61,16 @@ namespace GTA
 		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
 		public bool HasParachute => Game.Version >= GameVersion.v1_0_505_2_Steam && Function.Call<bool>(Hash._GET_VEHICLE_HAS_PARACHUTE, Handle);
 		public bool HasRocketBoost => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash._GET_HAS_ROCKET_BOOST, Handle);
+		public bool IsRocketBoostActive
+		{
+			get => Function.Call<bool>((Hash)0x3D34E80EED4AE3BE, Handle);
+			set => Function.Call((Hash)0x81E1552E35DC3839, Handle, value);
+		}
+		public bool IsParachuteActive
+		{
+			get => Function.Call<bool>((Hash)0x3DE51E9C80B116CF, Handle);
+			set => Function.Call((Hash)0x0BFFB028B3DD0A97, Handle, value);
+		}
 
 
 		public float DirtLevel
