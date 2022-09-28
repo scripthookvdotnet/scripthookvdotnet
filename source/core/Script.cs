@@ -140,9 +140,9 @@ namespace SHVDN
 							if (*value != 0)
 							{
 								IsStarted = true;
-								Started?.Invoke(this, EventArgs.Empty);
 							}
 						}
+						if (IsStarted) Started?.Invoke(this, EventArgs.Empty);
 					}
 
 					Tick?.Invoke(this, EventArgs.Empty);
