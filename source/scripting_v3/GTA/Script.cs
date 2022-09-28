@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using WinForms = System.Windows.Forms;
 
 namespace GTA
@@ -15,6 +16,14 @@ namespace GTA
 	/// </summary>
 	public abstract class Script
 	{
+		public enum LogLevel
+		{
+			Error,
+			Warning,
+			Info,
+			Debug,
+		}
+
 		#region Fields
 		ScriptSettings _settings;
 		#endregion
@@ -226,6 +235,17 @@ namespace GTA
 					script.Interval = value;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Log a message to the console and log file from this script.
+		/// </summary>
+		/// <param name="level">The log level.</param>
+		/// <param name="message">The message to log.</param>
+		public void Log(LogLevel level, params string[] message)
+		{
+			string[] msg = new string[] { $"[{Name}] " };
+			SHVDN.Log.Message((SHVDN.Log.Level)level, msg.Concat(message).ToArray());
 		}
 
 		/// <summary>
