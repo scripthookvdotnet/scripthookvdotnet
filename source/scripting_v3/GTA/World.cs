@@ -1185,13 +1185,31 @@ namespace GTA
 		/// </summary>
 		/// <param name="cornerA">The bottom left corner.</param>
 		/// <param name="cornerB">The top right corner</param>
-		/// <remarks>* Doesn't find cop <see cref="Ped"/> sitting inside vehicles. Use with <seealso cref="IsCopVehicleInArea3D"/></remarks> if needed.
+		/// <remarks>* Doesn't find cop <see cref="Ped"/> sitting inside vehicles. Use with <seealso cref="IsCopVehicleInArea3D(Vector3, Vector3)"/> if needed.</remarks>
 		/// <returns>
-		///	  <see langword="true" /> if a cop <see cref="Ped"/> is in the area between cornerA and cornerB ; otherwise, <see langword="false" />.
+		///	  <see langword="true" /> if a cop <see cref="Ped"/> is in the area between cornerA and cornerB; otherwise, <see langword="false" />.
 		/// </returns>
 		public static bool IsCopPedInArea3D(Vector3 cornerA, Vector3 cornerB)
 		{
-			return Function.Call<bool>(Hash.IS_COP_VEHICLE_IN_AREA_3D, cornerA.X, cornerA.Y, cornerA.Z, cornerB.X, cornerB.Y, cornerB.Z);
+			return Function.Call<bool>(Hash.IS_COP_PED_IN_AREA_3D, cornerA.X, cornerA.Y, cornerA.Z, cornerB.X, cornerB.Y, cornerB.Z);
+		}
+
+		/// <summary>
+		/// Check wether a cop <see cref="Ped"/> is inside the area between coordinates.
+		/// </summary>
+		/// <param name="x1">The bottom left X value</param>
+		/// <param name="y1">The bottom left Y value</param>
+		/// <param name="z1">The bottom left Z value.</param>
+		/// <param name="x2">The top right X value</param>
+		/// <param name="y2">The top right Y value</param>
+		/// <param name="z2">The top right Z value.</param>
+		/// <remarks>* Doesn't find cop <see cref="Ped"/> sitting inside vehicles. Use with <see cref="IsCopVehicleInArea3D(float, float, float, float, float, float)"/></remarks> if needed.
+		/// <returns>
+		///	  <see langword="true" /> if a cop <see cref="Ped"/> is in the area between coordinates; otherwise, <see langword="false" />.
+		/// </returns>
+		public static bool IsCopPedInArea3D(float x1, float y1, float z1, float x2, float y2, float z2)
+		{
+			return Function.Call<bool>(Hash.IS_COP_PED_IN_AREA_3D, x1, y1, z1, x2, y2, z2);
 		}
 
 		/// <summary>
@@ -1200,11 +1218,28 @@ namespace GTA
 		/// <param name="cornerA">The bottom left corner.</param>
 		/// <param name="cornerB">The top right corner</param>
 		/// <returns>
-		///	  <see langword="true" /> if a cop <see cref="Vehicle"/> is in the area between cornerA and cornerB ; otherwise, <see langword="false" />.
+		///	  <see langword="true" /> if a cop <see cref="Vehicle"/> is in the area between cornerA and cornerB; otherwise, <see langword="false" />.
 		/// </returns>
 		public static bool IsCopVehicleInArea3D(Vector3 cornerA, Vector3 cornerB)
 		{
 			return Function.Call<bool>(Hash.IS_COP_VEHICLE_IN_AREA_3D, cornerA.X, cornerA.Y, cornerA.Z, cornerB.X, cornerB.Y, cornerB.Z);
+		}
+
+		/// <summary>
+		/// Check wether a cop <see cref="Vehicle"/> is inside the area between coordinates.
+		/// </summary>
+		/// <param name="x1">The bottom left X value</param>
+		/// <param name="y1">The bottom left Y value</param>
+		/// <param name="z1">The bottom left Z value.</param>
+		/// <param name="x2">The top right X value</param>
+		/// <param name="y2">The top right Y value</param>
+		/// <param name="z2">The top right Z value.</param>
+		/// <returns>
+		///	  <see langword="true" /> if a cop <see cref="Vehicle"/> is in the area between coordinates; otherwise, <see langword="false" />.
+		/// </returns>
+		public static bool IsCopVehicleInArea3D(float x1, float y1, float z1, float x2, float y2, float z2)
+		{
+			return Function.Call<bool>(Hash.IS_COP_VEHICLE_IN_AREA_3D, x1, y1, z1, x2, y2, z2);
 		}
 
 		#endregion
