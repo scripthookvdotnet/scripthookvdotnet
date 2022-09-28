@@ -1180,6 +1180,20 @@ namespace GTA
 			return new Pickup(handle);
 		}
 
+		/// <summary>
+		/// Check wether a cop <see cref="Ped"/> is inside the area between cornerA and cornerB.
+		/// </summary>
+		/// <param name="cornerA">The bottom left corner.</param>
+		/// <param name="cornerB">The top right corner</param>
+		/// <remarks>* Doesn't find cop <see cref="Ped"/> sitting inside vehicles. Use with <seealso cref="IsCopVehicleInArea3D"/></remarks> if needed.
+		/// <returns>
+		///	  <see langword="true" /> if a cop <see cref="Ped"/> is in the area between cornerA and cornerB ; otherwise, <see langword="false" />.
+		/// </returns>
+		public static bool IsCopPedInArea3D(Vector3 cornerA, Vector3 cornerB)
+		{
+			return Function.Call<bool>(Hash.IS_COP_VEHICLE_IN_AREA_3D, cornerA.X, cornerA.Y, cornerA.Z, cornerB.X, cornerB.Y, cornerB.Z);
+		}
+
 		#endregion
 
 		#region Checkpoints
