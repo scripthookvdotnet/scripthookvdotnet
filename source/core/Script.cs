@@ -28,6 +28,11 @@ namespace SHVDN
 		public bool IsInitialized { get; private set; }
 
 		/// <summary>
+		/// Gets whether this script has started or not.
+		/// </summary>
+		public bool IsStarted { get; private set; }
+
+		/// <summary>
 		/// Gets whether executing of this script is paused or not.
 		/// </summary>
 		public bool IsPaused { get; private set; }
@@ -47,6 +52,10 @@ namespace SHVDN
 		/// An event that is raised on the first tick of the script.
 		/// </summary>
 		public event EventHandler Init;
+		/// <summary>
+		/// An event that is raised when the game has completely loaded, after the loading screen.
+		/// </summary>
+		public event EventHandler Started;
 		/// <summary>
 		/// An event that is raised every tick of the script.
 		/// </summary>
@@ -120,6 +129,20 @@ namespace SHVDN
                     {
 						IsInitialized = true;
 						Init?.Invoke(this, EventArgs.Empty);
+					}
+
+					if (!IsStarted)
+					{
+						unsafe
+                        {
+							// GET_IS_LOADING_SCREEN_ACTIVE
+							ulong* value = NativeFunc.Invoke(0x10D0A8F259E93EC9, null, 0);
+							if (*value != 0)
+							{
+								IsStarted = true;
+								Started?.Invoke(this, EventArgs.Empty);
+							}
+						}
 					}
 
 					Tick?.Invoke(this, EventArgs.Empty);
