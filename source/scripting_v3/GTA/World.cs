@@ -1194,6 +1194,19 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_COP_VEHICLE_IN_AREA_3D, cornerA.X, cornerA.Y, cornerA.Z, cornerB.X, cornerB.Y, cornerB.Z);
 		}
 
+		/// <summary>
+		/// Check wether a cop <see cref="Vehicle"/> is inside the area between cornerA and cornerB.
+		/// </summary>
+		/// <param name="cornerA">The bottom left corner.</param>
+		/// <param name="cornerB">The top right corner</param>
+		/// <returns>
+		///	  <see langword="true" /> if a cop <see cref="Vehicle"/> is in the area between cornerA and cornerB ; otherwise, <see langword="false" />.
+		/// </returns>
+		public static bool IsCopVehicleInArea3D(Vector3 cornerA, Vector3 cornerB)
+		{
+			return Function.Call<bool>(Hash.IS_COP_VEHICLE_IN_AREA_3D, cornerA.X, cornerA.Y, cornerA.Z, cornerB.X, cornerB.Y, cornerB.Z);
+		}
+
 		#endregion
 
 		#region Checkpoints
