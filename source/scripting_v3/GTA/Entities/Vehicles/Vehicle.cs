@@ -54,6 +54,11 @@ namespace GTA
 
 		#region Styling
 
+		/// <summary>
+		/// Is <see cref="Vehicle"/> a cop vehicle.
+		/// </summary>
+		public bool IsCopVehicle => World.IsCopVehicleInArea3D(Position.X - 0.01f, Position.Y - 0.01f, Position.Z - 0.01f, Position.X + 0.01f, Position.Y + 0.01f, Position.Z + 0.01f);
+
 		public bool IsConvertible => Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
 		public bool IsBig => Function.Call<bool>(Hash.IS_BIG_VEHICLE, Handle);
 		public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasBulletProofGlass);
