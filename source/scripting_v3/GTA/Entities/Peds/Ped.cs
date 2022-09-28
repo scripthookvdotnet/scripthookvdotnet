@@ -132,6 +132,11 @@ namespace GTA
 		/// </value>
 		public bool IsHuman => Function.Call<bool>(Hash.IS_PED_HUMAN, Handle);
 
+		/// <summary>
+		/// Is <see cref="Ped"/> a cop.
+		/// </summary>
+		public bool IsCop => World.IsCopPedInArea3D(Position.X - 0.01f, Position.Y - 0.01f, Position.Z - 0.01f, Position.X + 0.01f, Position.Y + 0.01f, Position.Z + 0.01f) || World.IsCopVehicleInArea3D(Position.X - 0.01f, Position.Y - 0.01f, Position.Z - 0.01f, Position.X + 0.01f, Position.Y + 0.01f, Position.Z + 0.01f);
+
 		public bool IsCuffed => Function.Call<bool>(Hash.IS_PED_CUFFED, Handle);
 
 		public bool CanWearHelmet
