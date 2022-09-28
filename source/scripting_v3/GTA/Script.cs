@@ -46,6 +46,29 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// An event that is raised on the first tick of the script.
+		/// Put code that needs to run first during the loading screen in here.
+		/// </summary>
+		public event EventHandler Init
+		{
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Init += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Init -= value;
+				}
+			}
+		}
+		/// <summary>
 		/// An event that is raised every tick of the script.
 		/// Put code that needs to be looped each frame in here.
 		/// </summary>
@@ -158,6 +181,17 @@ namespace GTA
 		/// Gets the Directory where this <see cref="Script"/> is stored.
 		/// </summary>
 		public string BaseDirectory => Path.GetDirectoryName(Filename);
+
+		/// <summary>
+		/// Checks if this <see cref="Script"/> first tick has been called.
+		/// </summary>
+		public bool IsInitialized
+		{
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsInitialized;
+			}
+		}
 
 		/// <summary>
 		/// Checks if this <see cref="Script"/> is paused.

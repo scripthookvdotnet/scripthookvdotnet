@@ -23,6 +23,11 @@ namespace SHVDN
 		public int Interval { get; set; }
 
 		/// <summary>
+		/// Gets whether this script has initialized or not.
+		/// </summary>
+		public bool IsInitialized { get; private set; }
+
+		/// <summary>
 		/// Gets whether executing of this script is paused or not.
 		/// </summary>
 		public bool IsPaused { get; private set; }
@@ -38,6 +43,10 @@ namespace SHVDN
 		/// </summary>
 		public bool IsExecuting => ScriptDomain.ExecutingScript == this;
 
+		/// <summary>
+		/// An event that is raised on the first tick of the script.
+		/// </summary>
+		public event EventHandler Init;
 		/// <summary>
 		/// An event that is raised every tick of the script.
 		/// </summary>
@@ -107,6 +116,12 @@ namespace SHVDN
 
 				try
 				{
+					if (!IsInitialized)
+                    {
+						IsInitialized = true;
+						Init?.Invoke(this, EventArgs.Empty);
+					}
+
 					Tick?.Invoke(this, EventArgs.Empty);
 				}
 				catch (ThreadAbortException)
