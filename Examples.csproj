@@ -41,6 +41,7 @@
     <Compile Include="examples\EuphoriaDemo.cs" />
     <Compile Include="examples\ExitVehicle.cs" />
     <Compile Include="examples\IndicatorControl.cs" />
+    <Compile Include="examples\ScriptEvents.cs" />
     <Compile Include="examples\ScriptInstance.cs" />
   </ItemGroup>
   <ItemGroup>
