@@ -137,12 +137,15 @@ namespace SHVDN
                         {
 							// GET_IS_LOADING_SCREEN_ACTIVE
 							ulong* value = NativeFunc.Invoke(0x10D0A8F259E93EC9, null, 0);
-							if (*value != 0)
+							bool isLoading = *value != 0;
+							if (isLoading == false)
 							{
 								IsStarted = true;
 							}
 						}
-						if (IsStarted) Started?.Invoke(this, EventArgs.Empty);
+
+						if (IsStarted)
+							Started?.Invoke(this, EventArgs.Empty);
 					}
 
 					Tick?.Invoke(this, EventArgs.Empty);
