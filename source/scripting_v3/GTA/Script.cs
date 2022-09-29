@@ -317,6 +317,15 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Log a Debug message to the console and log file from this script.
+		/// </summary>
+		/// <param name="message">The message to log.</param>
+		public void Log(params string[] message)
+		{
+			Log(LogLevel.Debug, message);
+		}
+
+		/// <summary>
 		/// Returns a string that represents this <see cref="Script"/>.
 		/// </summary>
 		public override string ToString()
