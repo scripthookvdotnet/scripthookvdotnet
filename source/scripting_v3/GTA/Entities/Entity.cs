@@ -636,6 +636,24 @@ namespace GTA
 
 		#endregion
 
+		#region Perception
+
+		/// <summary>
+		/// Determine wether this <see cref="Entity"/> has clear line of sigh to an other <see cref="Entity"/> in front.
+		/// </summary>
+		/// <remarks>This is one of the most CPU demanding natives in the game; avoid calling this in things like nested for-loops</remarks>
+		/// <param name="entityInFront">The target <see cref="Entity"/> to see in front</param>
+		/// <returns>
+		///   <see langword="true" /> if this <see cref="Entity"/> has a clear line of sigh of the <see cref="Entity"/> in front.
+		/// </returns>
+		public bool HasClearLOSToEntityInFront(Entity entityInFront)
+		{
+			if (Handle == entityInFront.Handle) return false;
+			return Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT, Handle, entityInFront.Handle);
+		}
+
+		#endregion
+
 		#region Damaging
 
 		/// <summary>

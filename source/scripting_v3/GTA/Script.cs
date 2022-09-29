@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using WinForms = System.Windows.Forms;
 
 namespace GTA
@@ -15,6 +16,14 @@ namespace GTA
 	/// </summary>
 	public abstract class Script
 	{
+		public enum LogLevel
+		{
+			Error,
+			Warning,
+			Info,
+			Debug,
+		}
+
 		#region Fields
 		ScriptSettings _settings;
 		#endregion
@@ -36,6 +45,52 @@ namespace GTA
 			Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
 		}
 
+		/// <summary>
+		/// An event that is raised on the first tick of the script.
+		/// Put code that needs to run first during the loading screen in here.
+		/// </summary>
+		public event EventHandler Init
+		{
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Init += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Init -= value;
+				}
+			}
+		}
+		/// <summary>
+		/// An event that is raised when the game has completely loaded, after the loading screen.
+		/// Put code that needs to run first after the loading screen in here.
+		/// </summary>
+		public event EventHandler Started
+		{
+			add
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Started += value;
+				}
+			}
+			remove
+			{
+				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				if (script != null)
+				{
+					script.Started -= value;
+				}
+			}
+		}
 		/// <summary>
 		/// An event that is raised every tick of the script.
 		/// Put code that needs to be looped each frame in here.
@@ -151,6 +206,28 @@ namespace GTA
 		public string BaseDirectory => Path.GetDirectoryName(Filename);
 
 		/// <summary>
+		/// Checks if this <see cref="Script"/> first tick has been called.
+		/// </summary>
+		public bool IsInitialized
+		{
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsInitialized;
+			}
+		}
+
+		/// <summary>
+		/// Checks if this <see cref="Script"/> first tick after loading screen has been called.
+		/// </summary>
+		public bool IsStarted
+		{
+			get
+			{
+				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsStarted;
+			}
+		}
+
+		/// <summary>
 		/// Checks if this <see cref="Script"/> is paused.
 		/// </summary>
 		public bool IsPaused
@@ -226,6 +303,26 @@ namespace GTA
 					script.Interval = value;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Log a message to the console and log file from this script.
+		/// </summary>
+		/// <param name="level">The log level.</param>
+		/// <param name="message">The message to log.</param>
+		public void Log(LogLevel level, params string[] message)
+		{
+			string[] msg = new string[] { $"[{Name}] " };
+			SHVDN.Log.Message((SHVDN.Log.Level)level, msg.Concat(message).ToArray());
+		}
+
+		/// <summary>
+		/// Log a Debug message to the console and log file from this script.
+		/// </summary>
+		/// <param name="message">The message to log.</param>
+		public void Log(params string[] message)
+		{
+			Log(LogLevel.Debug, message);
 		}
 
 		/// <summary>
