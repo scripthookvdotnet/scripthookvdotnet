@@ -7,6 +7,10 @@ using GTA;
 
 namespace GTA.examples
 {
+	/// <summary>
+	/// Script Attribute set NoDefaultInstance = true to not start automatically.
+	/// Use Script.InstantiateScript<ScriptEvents>(); to start it.
+	/// </summary>
 	[ScriptAttributes(Author = "Konijima", NoDefaultInstance = true)]
 	public class ScriptEvents : Script
 	{
@@ -22,23 +26,24 @@ namespace GTA.examples
 
 		private void ScriptEvents_Init(object sender, EventArgs e)
 		{
-			Log(LogLevel.Info, "We are in the loading screen and the first tick is about to be called.");
+			Log("We are in the loading screen and the first tick is about to be called.");
 		}
 
 		private void ScriptEvents_Started(object sender, EventArgs e)
 		{
-			Log(LogLevel.Info, "We just left the loading screen and the game is ready.");
+			Log("We just left the loading screen and the game is ready.");
+			UI.Notification.Show("Game is ready!");
 		}
 
 		private void ScriptEvents_Tick(object sender, EventArgs e)
 		{
 			if (IsStarted)
 			{
-				Log(LogLevel.Info, "We are ticking in the game world!");
+				Log("We are ticking in the game world!");
 			}
 			else
 			{
-				Log(LogLevel.Info, "We are ticking in the loading screen!");
+				Log("We are ticking in the loading screen!");
 			}
 
 		}
@@ -61,7 +66,7 @@ namespace GTA.examples
 
 		private void ScriptEvents_Aborted(object sender, EventArgs e)
 		{
-			Log(LogLevel.Info, "Script is aborting!");
+			Log(LogLevel.Warning, "Script is aborting, time to clean up our mess, if any!");
 		}
 	}
 }
