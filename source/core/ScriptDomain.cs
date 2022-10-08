@@ -50,6 +50,18 @@ namespace SHVDN
 		public AppDomain AppDomain { get; } = AppDomain.CurrentDomain;
 
 		/// <summary>
+		/// The event that gets invoked every tick from main thread
+		/// </summary>
+		public event EventHandler Tick;
+
+		/// <summary>
+		/// Gets invoked from main thread
+		/// </summary>
+		public event KeyEventDelegate KeyEvent;
+
+		public delegate void KeyEventDelegate(Keys keys, bool status); 
+
+		/// <summary>
 		/// Gets the scripting domain for the current application domain.
 		/// </summary>
 		public static ScriptDomain CurrentDomain { get; private set; }
@@ -300,7 +312,8 @@ namespace SHVDN
 
 					// This function builds a composite key of all dependencies of a script
 					Func<Type, string, string> BuildComparisonString = null;
-					BuildComparisonString = (a, b) => {
+					BuildComparisonString = (a, b) =>
+					{
 						b = a.FullName + "%%" + b;
 						foreach (var attribute in a.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.RequireScript"))
 						{
@@ -575,8 +588,9 @@ namespace SHVDN
 		/// <summary>
 		/// Main execution logic of the script domain.
 		/// </summary>
-		internal void DoTick()
+		public void DoTick()
 		{
+
 			// Execute running scripts
 			for (int i = 0; i < runningScripts.Count; i++)
 			{
@@ -616,15 +630,26 @@ namespace SHVDN
 				}
 			}
 
+
+			try
+			{
+				Tick?.Invoke(this, EventArgs.Empty);
+			}
+			catch (Exception ex)
+			{
+				Log.Message(Log.Level.Error, "Error occurred when executing Tick event: ", ex.ToString());
+			}
+
 			// Clean up any pinned strings of this frame
 			CleanupStrings();
 		}
+
 		/// <summary>
 		/// Keyboard handling logic of the script domain.
 		/// </summary>
 		/// <param name="keys">The key that was originated this event and its modifiers.</param>
 		/// <param name="status"><see langword="true" /> on a key down, <see langword="false" /> on a key up event.</param>
-		internal void DoKeyEvent(Keys keys, bool status)
+		public void DoKeyEvent(Keys keys, bool status)
 		{
 			var e = new KeyEventArgs(keys);
 
@@ -637,6 +662,15 @@ namespace SHVDN
 
 				foreach (Script script in runningScripts)
 					script.keyboardEvents.Enqueue(eventinfo);
+			}
+
+			try
+			{
+				KeyEvent?.Invoke(keys, status);
+			}
+			catch (Exception ex)
+			{
+				Log.Message(Log.Level.Error, "Error occurred when executing KeyDown event: ", ex.ToString());
 			}
 		}
 
