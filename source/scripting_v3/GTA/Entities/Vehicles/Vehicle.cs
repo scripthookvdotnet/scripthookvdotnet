@@ -586,11 +586,11 @@ namespace GTA
 			{
 				if (value == RadioStation.RadioOff)
 				{
-					Function.Call(Hash.SET_VEH_RADIO_STATION, "OFF");
+					Function.Call(Hash.SET_VEH_RADIO_STATION, Handle, "OFF");
 				}
 				else if (Enum.IsDefined(typeof(RadioStation), value))
 				{
-					Function.Call(Hash.SET_VEH_RADIO_STATION, Game.radioNames[(int)value]);
+					Function.Call(Hash.SET_VEH_RADIO_STATION, Handle, Game.radioNames[(int)value]);
 				}
 			}
 		}
