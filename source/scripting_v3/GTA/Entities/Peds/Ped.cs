@@ -374,6 +374,20 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_PED_HEADTRACKING_ENTITY, Handle, entity.Handle);
 		}
 
+		/// <summary>
+		/// <para>
+		/// Sets whether this <see cref="Ped"/> keeps their tasks when they are marked as no longer needed by <see cref="Entity.MarkAsNoLongerNeeded"/> or gets cleaned up by the mission script.
+		/// Despite the property name, this property does not determine whether permanent events can interrupt the <see cref="Ped"/>'s tasks (e.g. seeing hated peds or getting shot at).
+		/// </para>
+		/// <para>
+		/// If set to <see langword="false" />, this <see cref="Ped"/>'s task will be immediately cleared and start some ambient tasks (most likely start wandering) when they are marked as no longer needed.
+		/// </para>
+		/// <para>
+		/// If set to <see langword="true" />, this <see cref="Ped"/> will keep their task until they have nothing to do (where their task stacks only contains <c>CTaskDoNothing</c>).
+		/// Once this <see cref="Ped"/> has nothing to do, their task will clear and they'll start some ambient tasks (one-time-only).
+		/// </para>
+		/// </summary>
+
 		public bool AlwaysKeepTask
 		{
 			set => Function.Call(Hash.SET_PED_KEEP_TASK, Handle, value);
@@ -381,7 +395,11 @@ namespace GTA
 
 		/// <summary>
 		/// Sets whether permanent events are blocked for this <see cref="Ped"/>.
-		///  If permanent events are blocked, this <see cref="Ped"/> will only do as it's told, and won't flee when shot at, etc.
+		/// <para>
+		/// If set to <see langword="true" />, this <see cref="Ped"/> will no longer react to permanent events and will only do as they're told.
+		/// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if the decision maker specifies that seeing a hated ped should.
+		/// However, the <see cref="Ped"/> will still respond to temporary events like walking around other peds or vehicles even if this property is set to <see langword="true" />.
+		/// </para>
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if permanent events are blocked; otherwise, <see langword="false" />.
