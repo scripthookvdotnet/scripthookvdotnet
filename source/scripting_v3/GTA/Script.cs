@@ -32,7 +32,7 @@ namespace GTA
 
 		public Script()
 		{
-			Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Name;
+			Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this)?.Name ?? string.Empty;
 			Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());
 		}
 
