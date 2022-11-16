@@ -288,6 +288,12 @@ namespace SHVDN
 				GetQuaternionFromMatrixFunc = GetDelegateForFunctionPointer<GetQuaternionFromMatrixDelegate>(new IntPtr(*(int*)(address + 11) + address + 15));
 			}
 
+			address = FindPattern("\x48\x8B\x42\x20\x48\x85\xC0\x74\x09\xF3\x0F\x10\x80", "xxxxxxxxxxxxx");
+			if (address != null)
+			{
+				EntityMaxHealthOffset = *(int*)(address + 0x25);
+			}
+
 			address = FindPattern("\x75\x11\x48\x8B\x06\x48\x8D\x54\x24\x20\x48\x8B\xCE\xFF\x90", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
@@ -1452,6 +1458,7 @@ namespace SHVDN
 
 		#region -- CPhysical Offsets --
 
+		public static int EntityMaxHealthOffset { get; }
 		public static int SetAngularVelocityVFuncOfEntityOffset { get; }
 		public static int GetAngularVelocityVFuncOfEntityOffset { get; }
 
