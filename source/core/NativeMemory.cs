@@ -692,6 +692,12 @@ namespace SHVDN
 				SweatOffset = *(int*)(address + 5);
 			}
 
+			address = FindPattern("\x8A\x41\x30\xC0\xE8\x03\xA8\x01\x74\x49\x8B\x82\x00\x00\x00\x00", "xxxxxxxxxxxx????");
+			if (address != null)
+			{
+				PedIsInVehicleOffset = *(int*)(address + 12);
+				PedLastVehicleOffset = *(int*)(address + 0x1A);
+			}
 			address = FindPattern("\x24\x3F\x0F\xB6\xC0\x66\x89\x87\x00\x00\x00\x00", "xxxxxxxx????");
 			if (address != null)
 			{
@@ -1175,7 +1181,7 @@ namespace SHVDN
 
 		#region -- RAGE classes --
 
-		[StructLayout(LayoutKind.Explicit, Size=0xC)]
+		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
 		struct RageAtArrayPtr
 		{
 			[FieldOffset(0x0)]
@@ -1612,7 +1618,7 @@ namespace SHVDN
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
 				elementSizeOfCAttackerArrayOfEntity == 0)
-					return Array.Empty<(int handle, int weaponHash, int gameTime)>();
+				return Array.Empty<(int handle, int weaponHash, int gameTime)>();
 
 			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
 
@@ -1628,6 +1634,48 @@ namespace SHVDN
 			}
 
 			return returnEntries;
+		}
+
+		#endregion
+
+		#region -- CPed Data --
+
+		/// <summary>
+		/// <para>Gets the last vehicle the ped used or is using.</para>
+		/// <para>
+		/// This method exists because there are no reliable ways with native functions.
+		/// The native <c>GET_VEHICLE_PED_IS_IN</c> returns the last vehicle the ped used when not in vehicle (though the 2nd parameter name is supposed to be <c>ConsiderEnteringAsInVehicle</c> as a leaked header suggests),
+        /// but returns <c>0</c> when the ped is going to a door of some vehicle or opening one.
+		/// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it, which is different from the last vehicle this method returns and the native <c>RESET_PED_LAST_VEHICLE</c> changes.
+		/// </para>
+		/// </summary>
+		public static int GetLastVehicleHandleOfPed(IntPtr pedAddress)
+		{
+			if (PedLastVehicleOffset == 0)
+				return 0;
+
+			var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + PedLastVehicleOffset));
+			return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
+		}
+
+		/// <summary>
+		/// <para>Gets the current vehicle the ped is using.</para>
+		/// <para>
+		/// This method exists because <c>GET_VEHICLE_PED_IS_IN</c> always returns the last vehicle without checking the driving flag in b2699 even when the 2nd argument is set to <c>false</c> unlike previous versions.
+		/// </para>
+		/// </summary>
+		public static int GetVehicleHandlePedIsIn(IntPtr pedAddress)
+		{
+			if (PedIsInVehicleOffset == 0 || PedLastVehicleOffset == 0)
+				return 0;
+
+			var bitFlags = *(uint*)(pedAddress + PedIsInVehicleOffset);
+			bool isPedInVehicle = ((bitFlags & (1 << 0x1E)) != 0);
+			if (!isPedInVehicle)
+				return 0;
+
+			var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + PedLastVehicleOffset));
+			return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
 		}
 
 		#endregion
@@ -1833,6 +1881,8 @@ namespace SHVDN
 		public static int InjuryHealthThresholdOffset { get; }
 		public static int FatalInjuryHealthThresholdOffset { get; }
 
+		public static int PedIsInVehicleOffset { get; }
+		public static int PedLastVehicleOffset { get; }
 		public static int SeatIndexOffset { get; }
 
 		public static int PedSourceOfDeathOffset { get; }

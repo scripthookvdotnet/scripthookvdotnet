@@ -616,8 +616,16 @@ namespace GTA
 		{
 			get
 			{
-				var veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, true));
-				return veh.Exists() ? veh : null;
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return null;
+				}
+
+				// GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
+				// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
+				var vehicleHandle = SHVDN.NativeMemory.GetLastVehicleHandleOfPed(address);
+				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
 
@@ -630,12 +638,14 @@ namespace GTA
 			get
 			{
 				// In b2699, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
-				if (Game.Version >= GameVersion.v1_0_2699_0_Steam && !IsInVehicle())
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return null;
 				}
-				var veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_IN, Handle, false));
-				return veh.Exists() ? veh : null;
+
+				var vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
+				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
 
