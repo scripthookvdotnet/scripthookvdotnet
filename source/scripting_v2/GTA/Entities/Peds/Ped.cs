@@ -331,7 +331,7 @@ namespace GTA
 
 		public bool CanBeKnockedOffBike
 		{
-			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, value);
+			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, !value);
 		}
 
 		public bool CanFlyThroughWindscreen
