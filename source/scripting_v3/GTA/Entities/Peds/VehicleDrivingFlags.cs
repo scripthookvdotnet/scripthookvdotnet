@@ -17,14 +17,35 @@ namespace GTA
 		AvoidEmptyVehicles = 8,
 		AvoidPeds = 16,
 		AvoidObjects = 32,
+		/// <summary>Don't steer around the player ped even if <see cref="AvoidPeds"/> is set.</summary>
+		DontSteerAroundPlayerPed = 64,
 		StopAtTrafficLights = 128,
-		UseBlinkers = 256,
+		/// <summary>
+		/// Make the <see cref="Ped"/> prefer to go off the road rather than enter oncoming lanes when avoiding (steering around) obstacles if the correct lanes are full.
+		/// Even if this value is set, the <see cref="Ped"/> will try to steer around obstacles by entering other correct lanes if the correct lanes are not full. 
+		/// </summary>
+		GoOffRoadWhenAvoiding = 256,
+		/// <summary>
+		/// Allow the <see cref="Ped"/> to drive into the oncoming traffic if the correct lanes are full.
+		/// Even if this value is set, the <see cref="Ped"/> will try to reach the correct lanes again as soon as possible. 
+		/// </summary>
 		AllowGoingWrongWay = 512,
 		Reverse = 1024,
+		/// <summary>
+		/// If pathfinding fails, cruise randomly instead of going on a straight line.
+		/// </summary>
+		UseWanderFallbackInsteadOfStraightLine = 2048,
+		/// <summary>
+		/// Limit the speed based on the road speed if the max cruise speed for driving tasks exceeds the road speed. Only works when the car mission is set to MISSION_CRUISE.
+		/// </summary>
+		AdjustCruiseSpeedBasedOnRoadSpeed = 16384,
 		AllowMedianCrossing = 262144,
 		DriveBySight = 4194304,
 		IgnorePathFinding = 16777216,
 		TryToAvoidHighways = 536870912,
 		StopAtDestination = 2147483648,
+
+		[Obsolete("VehicleDrivingFlags.UseBlinkers is obsolete because it is incorrect, please use VehicleDrivingFlags.GoOffRoadWhenAvoiding instead.")]
+		UseBlinkers = 256,
 	}
 }
