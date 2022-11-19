@@ -70,11 +70,11 @@ namespace GTA
 		/// This flag takes precedence over <see cref="AllowJacking"/>.
 		/// </summary>
 		DontJackAnyone = 8388608,
-		[Obsolete($"{nameof(EnterVehicleFlags.AllowJacking)} is obsolete, use {nameof(EnterVehicleFlags.JackAnyone)} instead.")]
+		[Obsolete("EnterVehicleFlags.AllowJacking is obsolete, use EnterVehicleFlags.JackAnyone instead.")]
 		AllowJacking = 8,
-		[Obsolete($"{nameof(EnterVehicleFlags.EnterFromOppositeSide)} is obsolete, use {nameof(EnterVehicleFlags.UseRightEntry)} instead.")]
+		[Obsolete("EnterVehicleFlags.EnterFromOppositeSide is obsolete, use EnterVehicleFlags.UseRightEntry instead.")]
 		EnterFromOppositeSide = 262144,
-		[Obsolete($"{nameof(EnterVehicleFlags.OnlyOpenDoor)} is obsolete, use {nameof(EnterVehicleFlags.JustPullPedOut)} instead.")]
+		[Obsolete("EnterVehicleFlags.OnlyOpenDoor is obsolete, use EnterVehicleFlags.JustPullPedOut instead.")]
 		OnlyOpenDoor = 524288,
 	}
 }
