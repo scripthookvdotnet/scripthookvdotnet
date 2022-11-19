@@ -35,14 +35,26 @@ namespace GTA
 		/// If pathfinding fails, cruise randomly instead of going on a straight line.
 		/// </summary>
 		UseWanderFallbackInsteadOfStraightLine = 2048,
+		AvoidRestrictedAreas = 4096,
+		/// <summary>
+		/// Only works when the car mission is set to MISSION_CRUISE.
+		/// </summary>
+		PreventBackgroundPathfinding = 8192,
 		/// <summary>
 		/// Limit the speed based on the road speed if the max cruise speed for driving tasks exceeds the road speed. Only works when the car mission is set to MISSION_CRUISE.
 		/// </summary>
 		AdjustCruiseSpeedBasedOnRoadSpeed = 16384,
 		AllowMedianCrossing = 262144,
+		ChangeLanesAroundObstructions = 524288,
 		DriveBySight = 4194304,
+		/// <summary>
+		/// Only works for planes using <c>MISSION_GOTO</c>, will cause them to drive along the ground instead of fly.
+		/// </summary>
+		PlaneTaxiMode = 8388608,
 		IgnorePathFinding = 16777216,
+		UseStringPullingAtJunctions = 33554432,
 		TryToAvoidHighways = 536870912,
+		ForceJoinInRoadDirection = 1073741824,
 		StopAtDestination = 2147483648,
 
 		[Obsolete("VehicleDrivingFlags.UseBlinkers is obsolete because it is incorrect, please use VehicleDrivingFlags.GoOffRoadWhenAvoiding instead.")]
