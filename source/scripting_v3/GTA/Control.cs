@@ -368,5 +368,7 @@ namespace GTA
 		QuadLocoReverse,
 		RespawnFaster,
 		HudmarkerSelect,
+		EatSnack,
+		UseArmor,
 	}
 }
