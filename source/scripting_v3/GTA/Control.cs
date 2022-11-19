@@ -359,6 +359,7 @@ namespace GTA
 		ReplaySnapmaticPhoto,
 		VehicleCarJump,
 		VehicleRocketBoost,
+		VehicleFlyBoost,
 		VehicleParachute,
 		VehicleBikeWings,
 		VehicleFlyBombBay,
