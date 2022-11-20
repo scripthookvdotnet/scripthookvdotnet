@@ -61,6 +61,17 @@ namespace GTA
 		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
 		public bool HasParachute => Game.Version >= GameVersion.v1_0_505_2_Steam && Function.Call<bool>(Hash._GET_VEHICLE_HAS_PARACHUTE, Handle);
 		public bool HasRocketBoost => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash._GET_HAS_ROCKET_BOOST, Handle);
+		public bool IsParachuteDeployed => Game.Version >= GameVersion.v1_0_1011_1_Steam && Function.Call<bool>((Hash)0x3DE51E9C80B116CF, Handle);
+		public bool IsRocketBoostActive
+		{
+			get => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>((Hash)0x3D34E80EED4AE3BE, Handle);
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_944_2_Steam)
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(IsRocketBoostActive));
+				Function.Call((Hash)0x81E1552E35DC3839, Handle, value);
+			}
+		}
 
 
 		public float DirtLevel
@@ -1992,6 +2003,25 @@ namespace GTA
 			if (IsCargobobHookActive(CargobobHook.Magnet))
 			{
 				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, false);
+			}
+		}
+
+		#endregion
+
+		#region Special Abilities
+
+		/// <summary>
+		/// Open the vehicle's parachute (if any)
+		/// </summary>
+		/// <param name="allowPlayerToCancel">Whether to allow the player to cancel parachuting before the vehicle lands</param>
+		public void StartParachuting(bool allowPlayerToCancel)
+		{
+			if (Game.Version < GameVersion.v1_0_944_2_Steam)
+				throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(StartParachuting));
+
+			if (HasParachute)
+			{
+				Function.Call((Hash)0x0BFFB028B3DD0A97, Handle, allowPlayerToCancel);
 			}
 		}
 
