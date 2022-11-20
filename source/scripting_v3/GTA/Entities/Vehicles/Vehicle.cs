@@ -1997,6 +1997,45 @@ namespace GTA
 
 		#endregion
 
+		#region Task
+
+		/// <summary>
+		/// Checks if this <see cref="Vehicle"/> is being brought to a halt.
+		/// </summary>
+		public bool IsBeingBroughtToHalt => Game.Version >= GameVersion.v1_0_1493_0_Steam && Function.Call<bool>((Hash)0xC69BB1D832A710EF, Handle);
+
+		/// <summary>
+		/// Starts the task to decelerate this <see cref="Vehicle"/> until it comes to rest, possibly in an unphysically short distance.
+		/// </summary>
+		/// <param name="stoppingDistance">The distance from the initial coords at which the vehicle should come to rest.</param>
+		/// <param name="timeToStopFor">The length of time in seconds to hold the car at rest after stopping.</param>
+		/// <param name="controlVerticalVelocity">
+		/// If <see langword="false" />, the task allows gravity to act normally in the Z direction.
+		/// If <see langword="true" />,  the task will also arrest the car's vertical velocity.
+		/// </param>
+		public void BringToHalt(float stoppingDistance, int timeToStopFor, bool controlVerticalVelocity = false)
+		{
+			Function.Call(Hash.BRING_VEHICLE_TO_HALT, Handle, stoppingDistance, timeToStopFor, controlVerticalVelocity);
+		}
+
+		/// <summary>
+		/// Stops bringing this <see cref="Vehicle"/> to a halt.
+		/// </summary>
+		public void StopBringingToHalt()
+		{
+			if (Game.Version < GameVersion.v1_0_1103_2_Steam)
+				throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(Vehicle), nameof(StopBringingToHalt));
+
+			Function.Call((Hash)0x7C06330BFDDA182E, Handle);
+		}
+
+		public VehicleMissionType GetActiveMissionType()
+		{
+			return Function.Call<VehicleMissionType>(Hash.GET_ACTIVE_VEHICLE_MISSION_TYPE, Handle);
+		}
+
+		#endregion
+
 		public static string GetModelDisplayName(Model vehicleModel)
 		{
 			return Function.Call<string>(Hash.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL, vehicleModel.Hash);
