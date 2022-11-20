@@ -18,7 +18,7 @@ namespace GTA
 		UseWanderRoute = 256,
 		UseFleeRoute = 512,
 		NeverPause = 1024,
-		DEFAULTSETTINGS = StopAtEnd | StopAtShore | AvoidShore,
-		OPENOCEANSETTINGS = StopAtEnd | StopAtShore | AvoidShore | PreferForward | NeverNavMesh | NeverRoute
+		DefaultSettings = StopAtEnd | StopAtShore | AvoidShore,
+		OpenOceanSettings = StopAtEnd | StopAtShore | AvoidShore | PreferForward | NeverNavMesh | NeverRoute
 	}
 }
