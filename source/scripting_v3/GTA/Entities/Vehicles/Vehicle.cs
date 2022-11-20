@@ -1407,6 +1407,7 @@ namespace GTA
 		/// </value>
 		public bool IsLeftIndicatorLightOn
 		{
+			get => NativeMemory.IsBitSet(MemoryAddress + NativeMemory.IsInteriorLightOnOffset, 0);
 			set => Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, true, value);
 		}
 
@@ -1418,6 +1419,7 @@ namespace GTA
 		/// </value>
 		public bool IsRightIndicatorLightOn
 		{
+			get => NativeMemory.IsBitSet(MemoryAddress + NativeMemory.IsInteriorLightOnOffset, 1);
 			set => Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, false, value);
 		}
 
