@@ -266,7 +266,7 @@ namespace GTA.UI
 		{
 			get
 			{
-				Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
 				foreach (IntPtr ptr in _pinnedText)
 				{
@@ -276,7 +276,7 @@ namespace GTA.UI
 				Function.Call(Hash.SET_TEXT_FONT, Font);
 				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
-				return Screen.Width * Function.Call<float>(Hash._END_TEXT_COMMAND_GET_WIDTH, 1);
+				return Screen.Width * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
 			}
 		}
 		/// <summary>
@@ -286,7 +286,7 @@ namespace GTA.UI
 		{
 			get
 			{
-				Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
 				foreach (IntPtr ptr in _pinnedText)
 				{
@@ -296,7 +296,7 @@ namespace GTA.UI
 				Function.Call(Hash.SET_TEXT_FONT, Font);
 				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
-				return Screen.ScaledWidth * Function.Call<float>(Hash._END_TEXT_COMMAND_GET_WIDTH, 1);
+				return Screen.ScaledWidth * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
 			}
 		}
 
@@ -311,12 +311,12 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(text);
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
-			return Screen.Width * Function.Call<float>(Hash._END_TEXT_COMMAND_GET_WIDTH, 1);
+			return Screen.Width * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
 		}
 		/// <summary>
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
@@ -329,12 +329,12 @@ namespace GTA.UI
 		/// </returns>
 		public static float GetScaledStringWidth(string text, Font font = Font.ChaletLondon, float scale = 1.0f)
 		{
-			Function.Call(Hash._BEGIN_TEXT_COMMAND_GET_WIDTH, SHVDN.NativeMemory.CellEmailBcon);
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(text);
 			Function.Call(Hash.SET_TEXT_FONT, font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
-			return Screen.ScaledWidth * Function.Call<float>(Hash._END_TEXT_COMMAND_GET_WIDTH, 1);
+			return Screen.ScaledWidth * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
 		}
 
 		/// <summary>

@@ -82,14 +82,14 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Model"/> is an amphibious car; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsAmphibiousCar => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Native.Hash._IS_THIS_MODEL_AN_AMPHIBIOUS_CAR, Hash);
+		public bool IsAmphibiousCar => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Native.Hash.IS_THIS_MODEL_AN_AMPHIBIOUS_CAR, Hash);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious quad bike.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Model"/> is an amphibious quad bike; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsAmphibiousQuadBike => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Native.Hash._IS_THIS_MODEL_AN_AMPHIBIOUS_QUADBIKE, Hash);
+		public bool IsAmphibiousQuadBike => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Native.Hash.IS_THIS_MODEL_AN_AMPHIBIOUS_QUADBIKE, Hash);
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is an amphibious vehicle.
 		/// </summary>

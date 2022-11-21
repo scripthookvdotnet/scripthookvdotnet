@@ -121,7 +121,7 @@ namespace GTA.UI
 				int width, height;
 				unsafe
 				{
-					Function.Call(Hash._GET_ACTIVE_SCREEN_RESOLUTION, &width, &height);
+					Function.Call(Hash.GET_ACTUAL_SCREEN_RESOLUTION, &width, &height);
 				}
 
 				return new Size(width, height);
@@ -130,7 +130,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Gets the current screen aspect ratio
 		/// </summary>
-		public static float AspectRatio => Function.Call<float>(Hash._GET_ASPECT_RATIO, 0);
+		public static float AspectRatio => Function.Call<float>(Hash.GET_ASPECT_RATIO, 0);
 		/// <summary>
 		/// Gets the screen width scaled against a 720pixel height base.
 		/// </summary>
