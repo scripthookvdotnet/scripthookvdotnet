@@ -484,8 +484,10 @@ namespace SHVDN
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
 				// Start the script unless script does not want a default instance
-				if (!(GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance) || !NoDefaultInstance)
-					InstantiateScript(type)?.Start();
+				if (GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance && NoDefaultInstance)
+					continue;
+
+				InstantiateScript(type)?.Start(!(GetScriptAttribute(type, "NoScriptThread") is bool NoScriptThread) || !NoScriptThread);
 			}
 		}
 		/// <summary>
@@ -507,8 +509,10 @@ namespace SHVDN
 				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
 				// Start the script unless script does not want a default instance
-				if (!(GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance) || !NoDefaultInstance)
-					InstantiateScript(type)?.Start();
+				if (GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance && NoDefaultInstance)
+					continue;
+
+				InstantiateScript(type)?.Start(!(GetScriptAttribute(type, "NoScriptThread") is bool NoScriptThread) || !NoScriptThread);
 			}
 		}
 		/// <summary>
@@ -592,9 +596,16 @@ namespace SHVDN
 
 				try
 				{
-					// Resume script thread and execute any incoming tasks from it
-					while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
-						taskQueue.Dequeue().Run();
+					if (script.IsUsingThread)
+					{
+						// Resume script thread and execute any incoming tasks from it
+						while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
+							taskQueue.Dequeue().Run();
+					}
+					else
+					{
+						script.DoTick();
+					}
 				}
 				catch (Exception ex)
 				{

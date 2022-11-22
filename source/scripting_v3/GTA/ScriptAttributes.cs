@@ -12,6 +12,7 @@ namespace GTA
 	{
 		public string Author;
 		public string SupportURL;
+		public bool NoScriptThread;
 		public bool NoDefaultInstance;
 	}
 }

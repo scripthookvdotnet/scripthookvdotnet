@@ -13,8 +13,8 @@ namespace SHVDN
 	public class Script
 	{
 		Thread thread; // The thread hosting the execution of the script
-		internal SemaphoreSlim waitEvent = new SemaphoreSlim(0);
-		internal SemaphoreSlim continueEvent = new SemaphoreSlim(0);
+		internal SemaphoreSlim waitEvent = null;
+		internal SemaphoreSlim continueEvent = null;
 		internal ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, KeyEventArgs>>();
 
 		/// <summary>
@@ -37,6 +37,11 @@ namespace SHVDN
 		/// Gets whether this is the currently executing script.
 		/// </summary>
 		public bool IsExecuting => ScriptDomain.ExecutingScript == this;
+
+		/// <summary>
+		/// Gets whether a dedicated thread is hosting the execution of this script.
+		/// </summary>
+		public bool IsUsingThread => thread != null;
 
 		/// <summary>
 		/// An event that is raised every tick of the script.
@@ -85,44 +90,7 @@ namespace SHVDN
 
 				while (IsRunning)
 				{
-					// Process keyboard events
-					while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
-					{
-						try
-						{
-							if (!ev.Item1)
-								KeyUp?.Invoke(this, ev.Item2);
-							else
-								KeyDown?.Invoke(this, ev.Item2);
-						}
-						catch (ThreadAbortException)
-						{
-							// Stop main loop immediately on a thread abort exception
-							throw;
-						}
-						catch (Exception ex)
-						{
-							ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
-							break; // Break out of key event loop, but continue to run script
-						}
-					}
-
-					try
-					{
-						Tick?.Invoke(this, EventArgs.Empty);
-					}
-					catch (ThreadAbortException)
-					{
-						// Stop main loop immediately on a thread abort exception
-						throw;
-					}
-					catch (Exception ex)
-					{
-						ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-
-						// An exception during tick is fatal, so abort the script and stop main loop
-						Abort(); return;
-					}
+					DoTick();
 
 					// Yield execution to next tick
 					Wait(Interval);
@@ -133,14 +101,65 @@ namespace SHVDN
 				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".", Environment.NewLine, ex.StackTrace);
 			}
 		}
+		internal void DoTick()
+		{
+			// Process keyboard events
+			while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
+			{
+				try
+				{
+					if (!ev.Item1)
+						KeyUp?.Invoke(this, ev.Item2);
+					else
+						KeyDown?.Invoke(this, ev.Item2);
+				}
+				catch (ThreadAbortException)
+				{
+					// Stop main loop immediately on a thread abort exception
+					throw;
+				}
+				catch (Exception ex)
+				{
+					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
+					break; // Break out of key event loop, but continue to run script
+				}
+			}
+
+			try
+			{
+				Tick?.Invoke(this, EventArgs.Empty);
+			}
+			catch (ThreadAbortException)
+			{
+				// Stop main loop immediately on a thread abort exception
+				throw;
+			}
+			catch (Exception ex)
+			{
+				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+
+				// An exception during tick is fatal, so abort the script and stop main loop
+				Abort();
+			}
+		}
 
 		/// <summary>
 		/// Starts execution of this script.
 		/// </summary>
-		public void Start()
+		public void Start(bool useThread = true)
 		{
-			thread = new Thread(new ThreadStart(MainLoop));
-			thread.Start();
+			if (useThread)
+			{
+				waitEvent = new SemaphoreSlim(0);
+				continueEvent = new SemaphoreSlim(0);
+
+				thread = new Thread(new ThreadStart(MainLoop));
+				thread.Start();
+			}
+			else
+			{
+				IsRunning = true;
+			}
 
 			Log.Message(Log.Level.Info, "Started script ", Name, ".");
 		}
@@ -160,11 +179,12 @@ namespace SHVDN
 				ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
 			}
 
-			waitEvent.Release();
-
-			if (thread != null)
+			if (IsUsingThread)
 			{
-				thread.Abort(); thread = null;
+				waitEvent.Release();
+
+				thread.Abort();
+				thread = null;
 			}
 		}
 
@@ -199,14 +219,21 @@ namespace SHVDN
 		/// <param name="ms">The time in milliseconds to pause.</param>
 		public void Wait(int ms)
 		{
-			DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
-
-			do
+			if (IsUsingThread)
 			{
-				waitEvent.Release();
-				continueEvent.Wait();
+				DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
+
+				do
+				{
+					waitEvent.Release();
+					continueEvent.Wait();
+				}
+				while (DateTime.UtcNow < resumeTime);
 			}
-			while (DateTime.UtcNow < resumeTime);
+			else
+			{
+				Thread.Sleep(ms);
+			}
 		}
 	}
 }
