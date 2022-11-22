@@ -96,6 +96,9 @@
     <Compile Include="GTA\Entities\InteriorInstance.cs" />
     <Compile Include="GTA\Entities\EntityPopulationType.cs" />
     <Compile Include="GTA\Entities\Building.cs" />
+    <Compile Include="GTA\Entities\Vehicles\BoatMissionFlags.cs" />
+    <Compile Include="GTA\Entities\Vehicles\HeliMissionFlags.cs" />
+    <Compile Include="GTA\Entities\Vehicles\VehicleMissionType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\DrawBoxFlags.cs" />

@@ -79,6 +79,23 @@ namespace GTA
 		ForceJoinInRoadDirection = 1073741824,
 		StopAtDestination = 2147483648,
 
+		/// <summary>Standard driving mode. stops for cars, peds, and lights, goes around stationary obstructions, and obey lights.</summary>
+		DrivingModeStopForVehicles = StopForVehicles | StopForPeds | SteerAroundObjects | SteerAroundStationaryVehicles | StopAtTrafficLights | UseShortCutLinks | ChangeLanesAroundObstructions,
+		/// <summary>Like <see cref="DrivingModeStopForVehicles"/>, but doesn't steer around anything in its way - will only wait instead (doesn't deviate an inch).</summary>
+		DrivingModeStopForVehiclesStrict = StopForVehicles | StopForPeds | StopAtTrafficLights | UseShortCutLinks,
+		/// <summary>Default "alerted" driving mode. Drives around everything, doesn't obey lights.</summary>
+		DrivingModeAvoidVehicles = SwerveAroundAllVehicles | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions | StopForVehicles,
+		/// <summary>Very erratic driving. difference between this and <see cref="DrivingModeAvoidVehicles"/> is that it doesn't use the brakes at ALL to help with steering.</summary>
+		DrivingModeAvoidVehiclesReckless = SwerveAroundAllVehicles | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions,
+		/// <summary>Smashes through everything.</summary>
+		DrivingModePloughThrough = UseShortCutLinks,
+		/// <summary>Drives normally except for the fact that it ignores lights.</summary>
+		DrivingModeStopForVehiclesIgnoreLights = StopForVehicles | SteerAroundStationaryVehicles | StopForPeds | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions,
+		/// <summary>Try to swerve around everything, but stop for lights if necessary.</summary>
+		DrivingModeAvoidVehiclesObeyLights = SwerveAroundAllVehicles | StopAtTrafficLights | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions | StopForVehicles,
+		/// <summary>Swerve around cars, be careful around peds, and stop for lights.</summary>
+		DrivingModeAvoidVehiclesStopForPedsObeyLights = SwerveAroundAllVehicles | StopAtTrafficLights | StopForPeds | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions | StopForVehicles,
+
 		[Obsolete("VehicleDrivingFlags.UseBlinkers is obsolete because it is incorrect, please use VehicleDrivingFlags.GoOffRoadWhenAvoiding instead.")]
 		UseBlinkers = 256,
 		[Obsolete("VehicleDrivingFlags.FollowTraffic is obsolete because  it has less obvious name, please use VehicleDrivingFlags.StopForVehicles instead.")]
