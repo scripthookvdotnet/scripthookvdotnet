@@ -18,10 +18,11 @@ namespace GTA
 		Flee = 8,
 		Circle = 9,
 		Escort = 12,
+		GoToRacing = 14,
 		FollowRecording = 15,
 		PoliceBehaviour = 16,
 		Land = 19,
-		Land2 = 20,
+		LandAndWait = 20,
 		Crash = 21,
 		PullOver = 22,
 		HeliProtect = 23
