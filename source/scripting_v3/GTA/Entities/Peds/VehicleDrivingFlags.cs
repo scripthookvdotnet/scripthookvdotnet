@@ -44,10 +44,25 @@ namespace GTA
 		/// Limit the speed based on the road speed if the max cruise speed for driving tasks exceeds the road speed. Only works when the car mission is set to MISSION_CRUISE.
 		/// </summary>
 		AdjustCruiseSpeedBasedOnRoadSpeed = 16384,
+		/// <summary>
+		/// Allow the <see cref="Ped"/> to use short cut links (e.g. the 180? turns on the highways without the direction sign).
+		/// </summary>
 		UseShortCutLinks = 262144,
+		/// <summary>
+		/// Make the driver change lanes around obstructions.
+		/// Without this flag, even small obstacles make the driver completely change lanes.
+		/// </summary>
 		ChangeLanesAroundObstructions = 524288,
+		/// <summary>
+		/// Allow the <see cref="Ped"/> to drive on switched off nodes, which are usually located at paths whose colors on the map are darker than roads for driving (e.g. some dirt roads), and on parking lots.
+		/// You can check if some nodes are marked as switched off with <c>GET_VEHICLE_NODE_IS_SWITCHED_OFF</c>.
+		/// </summary>
 		UseSwitchedOffNodes = 2097152,
-		DriveBySight = 4194304,
+		/// <summary>
+		/// Make <see cref="Ped"/> prefer navigation mesh routes rather than vehicle nodes.
+		/// Can be useful if you're going to be primarily driving off road.
+		/// </summary>
+		PreferNavmeshRoute = 4194304,
 		/// <summary>
 		/// Only works for planes using <c>MISSION_GOTO</c>, will cause them to drive along the ground instead of fly.
 		/// </summary>
@@ -57,6 +72,9 @@ namespace GTA
 		/// </summary>
 		ForceStraightLine = 16777216,
 		UseStringPullingAtJunctions = 33554432,
+		/// <summary>
+		/// Avoid the highway unless the <see cref="Ped"/> has to drive on it to achieve the vehicle task.
+		/// </summary>
 		TryToAvoidHighways = 536870912,
 		ForceJoinInRoadDirection = 1073741824,
 		StopAtDestination = 2147483648,
@@ -79,5 +97,7 @@ namespace GTA
 		AllowMedianCrossing = 262144,
 		[Obsolete("VehicleDrivingFlags.IgnorePathFinding is obsolete because it has less obvious name, please use VehicleDrivingFlags.ForceStraightLine instead.")]
 		IgnorePathFinding = 16777216,
+		[Obsolete("VehicleDrivingFlags.DriveBySight is obsolete because it is inaccurate, please use VehicleDrivingFlags.PreferNavmeshRoute instead.")]
+		DriveBySight = 4194304,
 	}
 }

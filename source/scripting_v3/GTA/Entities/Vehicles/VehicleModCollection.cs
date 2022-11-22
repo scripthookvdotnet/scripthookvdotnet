@@ -319,7 +319,7 @@ namespace GTA
 				int color;
 				unsafe
 				{
-					Function.Call(Hash._GET_VEHICLE_INTERIOR_COLOR, _owner.Handle, &color);
+					Function.Call(Hash.GET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, &color);
 				}
 
 				return (VehicleColor)color;
@@ -329,7 +329,7 @@ namespace GTA
 				if (Game.Version < GameVersion.v1_0_505_2_Steam)
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(TrimColor));
 
-				Function.Call(Hash._SET_VEHICLE_INTERIOR_COLOR, _owner.Handle, value);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, value);
 			}
 		}
 		public VehicleColor DashboardColor
@@ -342,7 +342,7 @@ namespace GTA
 				int color;
 				unsafe
 				{
-					Function.Call(Hash._GET_VEHICLE_DASHBOARD_COLOR, _owner.Handle, &color);
+					Function.Call(Hash.GET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, &color);
 				}
 
 				return (VehicleColor)color;
@@ -352,7 +352,7 @@ namespace GTA
 				if (Game.Version < GameVersion.v1_0_505_2_Steam)
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(DashboardColor));
 
-				Function.Call(Hash._SET_VEHICLE_DASHBOARD_COLOR, _owner.Handle, value);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, value);
 			}
 		}
 
@@ -388,14 +388,14 @@ namespace GTA
 				int red, green, blue;
 				unsafe
 				{
-					Function.Call(Hash._GET_VEHICLE_NEON_LIGHTS_COLOUR, _owner.Handle, &red, &green, &blue);
+					Function.Call(Hash.GET_VEHICLE_NEON_COLOUR, _owner.Handle, &red, &green, &blue);
 				}
 
 				return Color.FromArgb(red, green, blue);
 			}
 			set
 			{
-				Function.Call(Hash._SET_VEHICLE_NEON_LIGHTS_COLOUR, _owner.Handle, value.R, value.G, value.B);
+				Function.Call(Hash.SET_VEHICLE_NEON_COLOUR, _owner.Handle, value.R, value.G, value.B);
 			}
 		}
 
@@ -420,11 +420,11 @@ namespace GTA
 
 		public bool IsNeonLightsOn(VehicleNeonLight light)
 		{
-			return Function.Call<bool>(Hash._IS_VEHICLE_NEON_LIGHT_ENABLED, _owner.Handle, light);
+			return Function.Call<bool>(Hash.GET_VEHICLE_NEON_ENABLED, _owner.Handle, light);
 		}
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
-			Function.Call(Hash._SET_VEHICLE_NEON_LIGHT_ENABLED, _owner.Handle, light, on);
+			Function.Call(Hash.SET_VEHICLE_NEON_ENABLED, _owner.Handle, light, on);
 		}
 
 		public Color CustomPrimaryColor

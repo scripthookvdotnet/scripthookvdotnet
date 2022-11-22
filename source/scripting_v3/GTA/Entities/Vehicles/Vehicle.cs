@@ -59,17 +59,17 @@ namespace GTA
 		public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasBulletProofGlass);
 		public bool HasLowriderHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
 		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
-		public bool HasParachute => Game.Version >= GameVersion.v1_0_505_2_Steam && Function.Call<bool>(Hash._GET_VEHICLE_HAS_PARACHUTE, Handle);
-		public bool HasRocketBoost => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash._GET_HAS_ROCKET_BOOST, Handle);
-		public bool IsParachuteDeployed => Game.Version >= GameVersion.v1_0_1011_1_Steam && Function.Call<bool>((Hash)0x3DE51E9C80B116CF, Handle);
+		public bool HasParachute => Game.Version >= GameVersion.v1_0_505_2_Steam && Function.Call<bool>(Hash.GET_VEHICLE_HAS_PARACHUTE, Handle);
+		public bool HasRocketBoost => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.GET_HAS_ROCKET_BOOST, Handle);
+    public bool IsParachuteDeployed => Game.Version >= GameVersion.v1_0_1011_1_Steam && Function.Call<bool>(Hash.IS_VEHICLE_PARACHUTE_DEPLOYED, Handle);
 		public bool IsRocketBoostActive
 		{
-			get => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>((Hash)0x3D34E80EED4AE3BE, Handle);
+			get => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.IS_ROCKET_BOOST_ACTIVE, Handle);
 			set
 			{
 				if (Game.Version < GameVersion.v1_0_944_2_Steam)
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(IsRocketBoostActive));
-				Function.Call((Hash)0x81E1552E35DC3839, Handle, value);
+				Function.Call(Hash.SET_ROCKET_BOOST_ACTIVE, Handle, value);
 			}
 		}
 
@@ -377,7 +377,7 @@ namespace GTA
 		/// <see langword="true" /> if this <see cref="Vehicle"/> allows <see cref="Ped"/>s to rappel; otherwise, <see langword="false" />.
 		/// </value>
 		public bool AllowRappel => Game.Version >= GameVersion.v1_0_757_2_Steam
-			? Function.Call<bool>(Hash._DOES_VEHICLE_ALLOW_RAPPEL, Handle)
+			? Function.Call<bool>(Hash.DOES_VEHICLE_ALLOW_RAPPEL, Handle)
 			: SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag1.AllowsRappel);
 
 		/// <summary>
@@ -394,7 +394,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Vehicle"/> can jump; otherwise, <see langword="false" />.
 		/// </value>
-		public bool CanJump => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash._GET_CAN_VEHICLE_JUMP, Handle);
+		public bool CanJump => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.GET_CAR_HAS_JUMP, Handle);
 
 		/// <summary>
 		/// Gets the display name of this <see cref="Vehicle"/>.
@@ -1497,7 +1497,7 @@ namespace GTA
 			}
 		}
 
-		public bool IsDamaged => Function.Call<bool>(Hash._IS_VEHICLE_DAMAGED, Handle);
+		public bool IsDamaged => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
 
 		public bool IsDriveable
 		{
@@ -1947,7 +1947,7 @@ namespace GTA
 		{
 			if (IsHeliOrBlimp && mult >= 0.0f && mult <= 1.0f)
 			{
-				Function.Call(Hash._SET_HELICOPTER_ROLL_PITCH_YAW_MULT, Handle, mult);
+				Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
 			}
 		}
 

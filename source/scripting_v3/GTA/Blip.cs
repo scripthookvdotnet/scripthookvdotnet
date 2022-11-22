@@ -278,7 +278,7 @@ namespace GTA
 			get
 			{
 				if (Game.Version >= GameVersion.v1_0_2060_1_Steam)
-					return Function.Call<int>(Hash._GET_BLIP_ROTATION, Handle);
+					return Function.Call<int>(Hash.GET_BLIP_ROTATION, Handle);
 
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero)

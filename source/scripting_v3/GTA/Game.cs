@@ -92,7 +92,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the north blip, which is shown on the radar.
 		/// </summary>
-		public static Blip NorthBlip => Version >= GameVersion.v1_0_463_1_Steam ? new Blip(Function.Call<int>((Hash)0x3F0CF9CB7E589B88)) : new Blip(SHVDN.NativeMemory.GetNorthBlip());
+		public static Blip NorthBlip => Version >= GameVersion.v1_0_463_1_Steam ? new Blip(Function.Call<int>(Hash.GET_NORTH_BLID_INDEX)) : new Blip(SHVDN.NativeMemory.GetNorthBlip());
 
 		/// <summary>
 		/// Gets the current game language.
@@ -312,7 +312,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the cheat was just entered; otherwise, <see langword="false" /></returns>
 		public static bool WasCheatStringJustEntered(string cheat)
 		{
-			return Function.Call<bool>(Hash._HAS_CHEAT_STRING_JUST_BEEN_ENTERED, GenerateHash(cheat));
+			return Function.Call<bool>(Hash.HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED, GenerateHash(cheat));
 		}
 		/// <summary>
 		/// Gets whether a specific sequence of <see cref="Button"/>s has been pressed.
@@ -343,13 +343,13 @@ namespace GTA
 			hash ^= (hash >> 11);
 			hash += (hash << 15);
 
-			return Function.Call<bool>(Hash._HAS_BUTTON_COMBINATION_JUST_BEEN_ENTERED, hash, buttons.Length);
+			return Function.Call<bool>(Hash.HAS_CHEAT_WITH_HASH_BEEN_ACTIVATED, hash, buttons.Length);
 		}
 
 		/// <summary>
 		/// Gets whether the last input was made with a GamePad or keyboard and mouse.
 		/// </summary>
-		public static InputMethod LastInputMethod => Function.Call<bool>(Hash._IS_USING_KEYBOARD, 2) ? InputMethod.MouseAndKeyboard : InputMethod.GamePad;
+		public static InputMethod LastInputMethod => Function.Call<bool>(Hash.IS_USING_KEYBOARD_AND_MOUSE, 2) ? InputMethod.MouseAndKeyboard : InputMethod.GamePad;
 
 		/// <summary>
 		/// Gets the current targeting mode of the local player.
@@ -395,7 +395,7 @@ namespace GTA
 		/// <param name="value">the value to set the control to.</param>
 		public static void SetControlValueNormalized(Control control, float value)
 		{
-			Function.Call(Hash._SET_CONTROL_NORMAL, 0, control, value);
+			Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, control, value);
 		}
 
 		/// <summary>
@@ -524,7 +524,7 @@ namespace GTA
 		/// <returns>The localized <see cref="string"/> if the key exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetLocalizedString(string entry)
 		{
-			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry) ? Function.Call<string>(Hash._GET_LABEL_TEXT, entry) : string.Empty;
+			return Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, entry) ? Function.Call<string>(Hash.GET_FILENAME_FOR_AUDIO_CONVERSATION, entry) : string.Empty;
 		}
 		/// <summary>
 		/// Returns a localized <see cref="string"/> from the games language files with a specified GXT key hash.
