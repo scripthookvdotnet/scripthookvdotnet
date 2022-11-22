@@ -2042,6 +2042,9 @@ namespace GTA
 			Function.Call(Hash.STOP_BRINGING_VEHICLE_TO_HALT, Handle);
 		}
 
+		/// <summary>
+		/// Gets active vehicle mission type.
+		/// </summary>
 		public VehicleMissionType GetActiveMissionType()
 		{
 			return Function.Call<VehicleMissionType>(Hash.GET_ACTIVE_VEHICLE_MISSION_TYPE, Handle);
