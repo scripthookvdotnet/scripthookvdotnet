@@ -79,7 +79,7 @@ namespace GTA
 		/// <param name="max">The maximum yaw value.</param>
 		public static void ClampYaw(float min, float max)
 		{
-			Function.Call(Hash._CLAMP_GAMEPLAY_CAM_YAW, min, max);
+			Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_HEADING_LIMITS_THIS_UPDATE, min, max);
 		}
 		/// <summary>
 		/// Clamps the pitch of the <see cref="GameplayCamera"/>.
@@ -88,7 +88,7 @@ namespace GTA
 		/// <param name="max">The maximum pitch value.</param>
 		public static void ClampPitch(float min, float max)
 		{
-			Function.Call(Hash._CLAMP_GAMEPLAY_CAM_PITCH, min, max);
+			Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_PITCH_LIMITS_THIS_UPDATE, min, max);
 		}
 
 		/// <summary>

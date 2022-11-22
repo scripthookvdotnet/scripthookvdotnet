@@ -43,7 +43,7 @@ namespace GTA
 
 		public bool CanBeBroken
 		{
-			set => Function.Call(Hash._SET_VEHICLE_DOOR_CAN_BREAK, Vehicle.Handle, Index, value);
+			set => Function.Call(Hash.SET_DOOR_ALLOWED_TO_BE_BROKEN_OFF, Vehicle.Handle, Index, value);
 		}
 
 		public void Break(bool stayInTheWorld = true)
