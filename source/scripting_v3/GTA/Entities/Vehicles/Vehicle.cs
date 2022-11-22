@@ -2002,7 +2002,7 @@ namespace GTA
 		/// <summary>
 		/// Checks if this <see cref="Vehicle"/> is being brought to a halt.
 		/// </summary>
-		public bool IsBeingBroughtToHalt => Game.Version >= GameVersion.v1_0_1493_0_Steam && Function.Call<bool>((Hash)0xC69BB1D832A710EF, Handle);
+		public bool IsBeingBroughtToHalt => Game.Version >= GameVersion.v1_0_1493_0_Steam && Function.Call<bool>(Hash.IS_VEHICLE_BEING_BROUGHT_TO_HALT, Handle);
 
 		/// <summary>
 		/// Starts the task to decelerate this <see cref="Vehicle"/> until it comes to rest, possibly in an unphysically short distance.
@@ -2026,7 +2026,7 @@ namespace GTA
 			if (Game.Version < GameVersion.v1_0_1103_2_Steam)
 				throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(Vehicle), nameof(StopBringingToHalt));
 
-			Function.Call((Hash)0x7C06330BFDDA182E, Handle);
+			Function.Call(Hash.STOP_BRINGING_VEHICLE_TO_HALT, Handle);
 		}
 
 		public VehicleMissionType GetActiveMissionType()
