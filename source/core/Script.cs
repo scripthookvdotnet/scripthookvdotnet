@@ -78,52 +78,59 @@ namespace SHVDN
 		{
 			IsRunning = true;
 
-			// Wait for script domain to continue this script
-			continueEvent.Wait();
-
-			while (IsRunning)
+			try
 			{
-				// Process keyboard events
-				while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
+				// Wait for script domain to continue this script
+				continueEvent.Wait();
+
+				while (IsRunning)
 				{
+					// Process keyboard events
+					while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
+					{
+						try
+						{
+							if (!ev.Item1)
+								KeyUp?.Invoke(this, ev.Item2);
+							else
+								KeyDown?.Invoke(this, ev.Item2);
+						}
+						catch (ThreadAbortException)
+						{
+							// Stop main loop immediately on a thread abort exception
+							throw;
+						}
+						catch (Exception ex)
+						{
+							ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
+							break; // Break out of key event loop, but continue to run script
+						}
+					}
+
 					try
 					{
-						if (!ev.Item1)
-							KeyUp?.Invoke(this, ev.Item2);
-						else
-							KeyDown?.Invoke(this, ev.Item2);
+						Tick?.Invoke(this, EventArgs.Empty);
 					}
 					catch (ThreadAbortException)
 					{
 						// Stop main loop immediately on a thread abort exception
-						return;
+						throw;
 					}
 					catch (Exception ex)
 					{
-						ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, false));
-						break; // Break out of key event loop, but continue to run script
+						ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
+
+						// An exception during tick is fatal, so abort the script and stop main loop
+						Abort(); return;
 					}
-				}
 
-				try
-				{
-					Tick?.Invoke(this, EventArgs.Empty);
+					// Yield execution to next tick
+					Wait(Interval);
 				}
-				catch (ThreadAbortException)
-				{
-					// Stop main loop immediately on a thread abort exception
-					return;
-				}
-				catch (Exception ex)
-				{
-					ScriptDomain.HandleUnhandledException(this, new UnhandledExceptionEventArgs(ex, true));
-
-					// An exception during tick is fatal, so abort the script and stop main loop
-					Abort(); return;
-				}
-
-				// Yield execution to next tick
-				Wait(Interval);
+			}
+			catch (ThreadAbortException ex)
+			{
+				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".", Environment.NewLine, ex.StackTrace);
 			}
 		}
 
@@ -157,8 +164,6 @@ namespace SHVDN
 
 			if (thread != null)
 			{
-				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".");
-
 				thread.Abort(); thread = null;
 			}
 		}

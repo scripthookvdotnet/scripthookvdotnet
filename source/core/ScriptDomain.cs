@@ -608,7 +608,7 @@ namespace SHVDN
 
 				if (!finishedInTime)
 				{
-					Log.Message(Log.Level.Error, "Script '", script.Name, "' is not responding! Aborting ...");
+					Log.Message(Log.Level.Error, "Script ", script.Name, " is not responding! Aborting ...");
 
 					// Wait operation above timed out, which means that the script did not send any task for some time, so abort it
 					script.Abort();
@@ -869,7 +869,7 @@ namespace SHVDN
 
 				// Show a notification with the script crash information
 				var domain = ScriptDomain.CurrentDomain;
-				if (domain != null && domain.executingScript != null)
+				if (domain != null && domain.executingScript != null && !args.IsTerminating)
 				{
 					unsafe
 					{
