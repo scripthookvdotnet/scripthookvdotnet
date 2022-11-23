@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="GTA.Math\Matrix.cs" />
     <Compile Include="GTA.Math\Quaternion.cs" />
+    <Compile Include="GTA.Math\EulerRotationOrder.cs" />
     <Compile Include="GTA.Math\Vector2.cs" />
     <Compile Include="GTA.Math\Vector3.cs" />
     <Compile Include="GTA.Native\Native.cs" />
@@ -102,6 +103,8 @@
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\DrawBoxFlags.cs" />
+    <Compile Include="GTA\ShapeTestOptions.cs" />
+    <Compile Include="GTA\ShapeTestStatus.cs" />
     <Compile Include="GTA\PlayerTargetingMode.cs" />
     <Compile Include="GTA\Control.cs" />
     <Compile Include="GTA\Entities\Entity.cs" />
@@ -201,6 +204,9 @@
     <Compile Include="GTA\Script.cs" />
     <Compile Include="GTA\ScriptAttributes.cs" />
     <Compile Include="GTA\ScriptSettings.cs" />
+    <Compile Include="GTA\ShapeTest.cs" />
+    <Compile Include="GTA\ShapeTestHandle.cs" />
+    <Compile Include="GTA\ShapeTestResult.cs" />
     <Compile Include="GTA\Weapons\WeaponAttachmentPoint.cs" />
     <Compile Include="GTA\Weapons\DlcWeaponData.cs" />
     <Compile Include="GTA\Weapons\Weapon.cs" />

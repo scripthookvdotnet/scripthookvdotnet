@@ -1675,6 +1675,7 @@ namespace GTA
 		/// <param name="radius">The radius of the raycast.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
+		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
@@ -1688,6 +1689,7 @@ namespace GTA
 		/// <param name="maxDistance">How far the raycast should go out to.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
+		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;

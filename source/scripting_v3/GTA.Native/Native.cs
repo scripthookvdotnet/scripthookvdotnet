@@ -1845,7 +1845,7 @@ namespace GTA.Native
 				return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
 			}
 
-			if (typeof(T) == typeof(Model) || typeof(T) == typeof(WeaponAsset) || typeof(T) == typeof(RelationshipGroup))
+			if (typeof(T) == typeof(Model) || typeof(T) == typeof(WeaponAsset) || typeof(T) == typeof(RelationshipGroup) || typeof(T) == typeof(ShapeTestHandle))
 			{
 				return InstanceCreator<int, T>.Create((int)*value);
 			}
