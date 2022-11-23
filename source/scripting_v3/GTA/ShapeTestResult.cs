@@ -13,7 +13,7 @@ namespace GTA
 	/// </summary>
 	public readonly struct ShapeTestResult
 	{
-		public ShapeTestResult(bool didHit, Vector3 hitPosition, Vector3 surfaceNormal, int guidHandle) : this()
+		internal ShapeTestResult(bool didHit, Vector3 hitPosition, Vector3 surfaceNormal, int guidHandle) : this()
 		{
 			DidHit = didHit;
 			HitPosition = hitPosition;

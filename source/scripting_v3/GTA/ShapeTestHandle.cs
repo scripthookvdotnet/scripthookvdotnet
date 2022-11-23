@@ -15,7 +15,7 @@ namespace GTA
 	/// </summary>
 	public struct ShapeTestHandle : IEquatable<ShapeTestHandle>, INativeValue
 	{
-		public ShapeTestHandle(int handle) : this()
+		internal ShapeTestHandle(int handle) : this()
 		{
 			Handle = handle;
 		}
