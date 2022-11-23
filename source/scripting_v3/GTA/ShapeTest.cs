@@ -134,8 +134,8 @@ namespace GTA
 		/// Start a line-of-sight world probe shape test between 2 points calculated based on the mouse cursor position.
 		/// Works just like <see cref="StartTestLOSProbe(Vector3, Vector3, IntersectFlags, Entity, ShapeTestOptions)"/> only the start and end points of the probe are calculated based on the mouse cursor position projected into the world.
 		/// </summary>
-		/// <param name="outProbeStartPosition">The returned start position of the probe in world space.</param>
-		/// <param name="outProbeEndPosition">The returned end position of the probe in world space.</param>
+		/// <param name="probeStartPosition">The returned start position of the probe in world space.</param>
+		/// <param name="probeEndPosition">The returned end position of the probe in world space.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
 		/// <param name="options">Specify options for the spape test.</param>
@@ -143,7 +143,7 @@ namespace GTA
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
 		/// </value>
-		public static ShapeTestHandle StartTestMouseCursorLOSProbe(out Vector3 outProbeStartPosition, out Vector3 outProbeEndPosition, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.Default)
+		public static ShapeTestHandle StartTestMouseCursorLOSProbe(out Vector3 probeStartPosition, out Vector3 probeEndPosition, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.Default)
 		{
 			NativeVector3 outProbeStartPositionNative;
 			NativeVector3 outProbeEndPositionNative;
@@ -154,8 +154,8 @@ namespace GTA
 				handle = new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_MOUSE_CURSOR_LOS_PROBE, &outProbeStartPositionNative, &outProbeEndPositionNative, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
 			}
 
-			outProbeStartPosition = outProbeStartPositionNative;
-			outProbeEndPosition = outProbeEndPositionNative;
+			probeStartPosition = outProbeStartPositionNative;
+			probeEndPosition = outProbeEndPositionNative;
 			return handle;
 		}
 

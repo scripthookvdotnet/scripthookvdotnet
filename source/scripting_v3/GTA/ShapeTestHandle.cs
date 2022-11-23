@@ -54,7 +54,7 @@ namespace GTA
 		/// The shape test request is destroyed by this call if <see cref="ShapeTestStatus.Ready"/> is returned.
 		/// If this is not called every frame then the request will be destroyed.
 		/// </remarks>
-		public ShapeTestStatus GetResult(out ShapeTestResult outResult)
+		public ShapeTestStatus GetResult(out ShapeTestResult result)
 		{
 			NativeVector3 hitPositionArg;
 			bool hitSomethingArg;
@@ -65,7 +65,7 @@ namespace GTA
 			{
 				shapeTestStatus = Function.Call<ShapeTestStatus>(Hash.GET_SHAPE_TEST_RESULT, Handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &guidHandleArg);
 			}
-			outResult = new ShapeTestResult(hitSomethingArg, hitPositionArg, surfaceNormalArg, guidHandleArg);
+			result = new ShapeTestResult(hitSomethingArg, hitPositionArg, surfaceNormalArg, guidHandleArg);
 
 			return shapeTestStatus;
 		}
@@ -92,7 +92,7 @@ namespace GTA
 		/// The shape test request is destroyed by this call if <see cref="ShapeTestStatus.Ready"/> is returned.
 		/// If this is not called every frame then the request will be destroyed.
 		/// </remarks>
-		public ShapeTestStatus GetResultIncludingMaterial(out ShapeTestResult outResult, out MaterialHash outMaterialHash)
+		public ShapeTestStatus GetResultIncludingMaterial(out ShapeTestResult result, out MaterialHash materialHash)
 		{
 			NativeVector3 hitPositionArg;
 			bool hitSomethingArg;
@@ -105,8 +105,8 @@ namespace GTA
 			{
 				shapeTestStatus = Function.Call<ShapeTestStatus>(Hash.GET_SHAPE_TEST_RESULT_INCLUDING_MATERIAL, Handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &materialHashArg, &guidHandleArg);
 			}
-			outResult = new ShapeTestResult(hitSomethingArg, hitPositionArg, surfaceNormalArg, guidHandleArg);
-			outMaterialHash = (MaterialHash)materialHashArg;
+			result = new ShapeTestResult(hitSomethingArg, hitPositionArg, surfaceNormalArg, guidHandleArg);
+			materialHash = (MaterialHash)materialHashArg;
 
 			return shapeTestStatus;
 		}
