@@ -44,7 +44,7 @@ namespace GTA
 		/// <value>
 		///   <see langword="true" /> if the request is failed; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsRequestFailed => Handle != 0;
+		public bool IsRequestFailed => Handle == 0;
 
 		/// <summary>
 		/// If status returned is <see cref="ShapeTestStatus.Ready"/>, then returns whether something was hit, and if so nearest hit position and normal.
