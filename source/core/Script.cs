@@ -186,6 +186,10 @@ namespace SHVDN
 				thread.Abort();
 				thread = null;
 			}
+			else
+			{
+				Log.Message(Log.Level.Warning, "Aborted script ", Name, ".");
+			}
 		}
 
 		/// <summary>
