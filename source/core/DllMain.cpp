@@ -193,7 +193,7 @@ static void ScriptHookVDotnet_ManagedInit()
 
 		// Update console pointer in script domain
 		domain->AppDomain->SetData("Console", console);
-		domain->AppDomain->DoCallBack(gcnew CrossAppDomainDelegate(&ScriptHookVDotNet::SetConsole));
+		//domain->AppDomain->DoCallBack(gcnew CrossAppDomainDelegate(&ScriptHookVDotNet::SetConsole));
 
 		// Add default console commands
 		console->RegisterCommands(ScriptHookVDotNet::typeid);
