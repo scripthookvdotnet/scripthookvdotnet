@@ -1322,7 +1322,7 @@ namespace GTA
 			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
 			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, -1, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_ENTITY, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
 		/// <summary>
 		/// Starts a Particle Effect on an <see cref="EntityBone"/> that runs once then is destroyed.
@@ -1346,7 +1346,7 @@ namespace GTA
 			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
 			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_PED_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
+			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
 
 		/// <summary>
@@ -1384,8 +1384,7 @@ namespace GTA
 			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
 			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			int handle = Function.Call<int>((entityBone.Owner is Ped) ? Hash.START_PARTICLE_FX_LOOPED_ON_PED_BONE : Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE,
-				effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
+			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 			if (handle == 0)
 			{
 				return null;
