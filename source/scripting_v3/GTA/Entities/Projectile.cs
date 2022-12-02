@@ -83,5 +83,20 @@ namespace GTA
 
 			SHVDN.NativeMemory.ExplodeProjectile(address);
 		}
+
+		/// <summary>
+		/// Get a <see cref="Projectile"/> instance by its handle
+		/// </summary>
+		/// <param name="handle"></param>
+		/// <returns>Null if not found or the entity is not a <see cref="Prop"/>, otherwise, a <see cref="Projectile"/></returns>
+		public new static Projectile FromHandle(int handle)
+		{
+			var memoryAddress = NativeMemory.GetEntityAddress(handle);
+
+			if (memoryAddress == IntPtr.Zero || NativeMemory.ReadByte(memoryAddress + 0x28) != 5)
+				return null;
+
+			return new Projectile(handle);
+		}
 	}
 }
