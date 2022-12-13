@@ -2,6 +2,7 @@
 bin/
 obj/
 intermediate/
+[Bb]uild/
 Debug/
 Release/
 
@@ -9,13 +10,19 @@ Release/
 .vs/
 ipch/
 *.aps
-*.cachefile
 *.VC.db
-*.opendb
-*.opensdf
-*.user
+*.VC.opendb
+
+# Visual Studio user config files
 *.sdf
+*.opensdf
 *.suo
+*.vcxproj.user
+*.Args.json
+*.ArgsCfg.json
+
+# Visual Studio Code
+.vscode/
 
 # Temporary OS files
 .DS_Store
