@@ -97,7 +97,26 @@ namespace GTA
 
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
 		{
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, seat, speed, flag, 0);
+			EnterVehicle(vehicle, seat, timeout, speed, flag, null);
+		}
+		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
+		{
+			float moveBlendRatioArgForNative = 1.0f;
+			if (moveBlendRatio.HasValue)
+			{
+				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
+			}
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, seat, moveBlendRatioArgForNative, flag, overriddenClipSet);
+		}
+
+		public void OpenVehicleDoor(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, PedMoveBlendRatio? moveBlendRatio = null)
+		{
+			float moveBlendRatioArgForNative = 2.0f;
+			if (moveBlendRatio.HasValue)
+			{
+				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
+			}
+			Function.Call(Hash.TASK_OPEN_VEHICLE_DOOR, _ped.Handle, vehicle.Handle, timeout, seat, moveBlendRatioArgForNative);
 		}
 
 		public static void EveryoneLeaveVehicle(Vehicle vehicle)
@@ -246,20 +265,38 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName)
 		{
-			PlayAnimation(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f);
+			PlayAnimation(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
+		}
+		public void PlayAnimation(AnimationDictionary animDict, string animName)
+		{
+			PlayAnimation(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
-			PlayAnimation(animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate);
+			PlayAnimation(animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, AnimationIKControlFlags.None);
+		}
+		public void PlayAnimation(AnimationDictionary animDict, string animName, AnimationBlendDelta blendSpeed, int duration, float startPhase)
+		{
+			PlayAnimation(animDict, animName, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None, startPhase, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
-			PlayAnimation(animDict, animName, blendInSpeed, -8f, duration, flags, 0f);
+			PlayAnimation(animDict, animName, blendInSpeed, -8f, duration, flags, 0f, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
+		{
+			PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, AnimationIKControlFlags.None);
+		}
+
+		public void PlayAnimation(AnimationDictionary animDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)
+		{
+			PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, startPhase, AnimationIKControlFlags.None);
+		}
+
+		public void PlayAnimation(AnimationDictionary animDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, AnimationIKControlFlags ikFlags)
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
@@ -275,7 +312,10 @@ namespace GTA
 				}
 			}
 
-			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, 0, 0, 0);
+			// The third last argument is named phaseControlled in commands_task.sch.
+			// Considering how paparrazo3.ysc calls this function, the third last argument may be useful under a synchronized scene.
+			// The last argument is named bAllowOverrideCloneUpdate and will not be useful in the story mode.
+			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, 0, ikFlags, 0);
 		}
 
 		public void RappelFromHelicopter()
