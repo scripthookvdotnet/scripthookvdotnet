@@ -3446,11 +3446,6 @@ namespace SHVDN
 
 		#region -- Weapon Info And Ammo Info --
 
-		// The function uses rax and rdx registers in newer versions (probably since b2189), and it uses only rax register in older versions.
-		// The function returns the address where the class name hash is in all the version (the address will be the outVal address in newer versions).
-		delegate uint* GetClassNameHashOfCItemInfoDelegate(ulong unused, uint* outVal);
-		static Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate> getClassNameHashOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate>();
-
 		static RageAtArrayPtr* weaponAndAmmoInfoArrayPtr;
 		static HashSet<uint> disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>() {
 				0x1B79F17,  /* weapon_briefcase_02 */
@@ -3483,6 +3478,63 @@ namespace SHVDN
 			internal uint audioHash;
 			[FieldOffset(0x1C)]
 			internal uint slot;
+
+			// The function is for the game version b2802 or later ones.
+			// This one directly returns a hash value (not a pointer value) unlike the previous function.
+			delegate uint GetClassNameHashOfCItemInfoDelegate();
+			static Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate> getClassNameHashOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate>();
+			// The function is for game versions prior to b2802.
+			// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
+			// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
+			delegate uint* GetClassNameHashAddressOfCItemInfoDelegate(ulong unused, uint* outVal);
+			static Dictionary<ulong, GetClassNameHashAddressOfCItemInfoDelegate> getClassNameHashAddressOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashAddressOfCItemInfoDelegate>();
+
+			internal uint GetClassNameHash()
+			{
+				// In the b2802 or a later exe, the function returns a hash value (not a pointer value)
+				if (GetGameVersion() >= 80)
+				{
+					var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(vTable[2]);
+					return GetClassNameHashFunc();
+				}
+				else
+				{
+					var GetClassNameAddressHashFunc = CreateGetClassNameHashAddressDelegateIfNotCreated(vTable[2]);
+					uint outVal = 0;
+					var returnValueAddress = GetClassNameAddressHashFunc(0, &outVal);
+					return *returnValueAddress;
+				}
+			}
+
+			private static GetClassNameHashOfCItemInfoDelegate CreateGetClassNameHashDelegateIfNotCreated(ulong virtualFuncAddr)
+			{
+				if (getClassNameHashOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
+				{
+					return outDelegate;
+				}
+				else
+				{
+					var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
+					getClassNameHashOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
+
+					return newDelegate;
+				}
+			}
+
+			private static GetClassNameHashAddressOfCItemInfoDelegate CreateGetClassNameHashAddressDelegateIfNotCreated(ulong virtualFuncAddr)
+			{
+				if (getClassNameHashAddressOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
+				{
+					return outDelegate;
+				}
+				else
+				{
+					var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashAddressOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
+					getClassNameHashAddressOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
+
+					return newDelegate;
+				}
+			}
 		}
 
 		static ItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
@@ -3524,12 +3576,10 @@ namespace SHVDN
 			if (itemInfoPtr == null)
 				return null;
 
-			var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(itemInfoPtr->vTable[2]);
-			uint outVal = 0;
-			var returnClassNameHashAddr = GetClassNameHashFunc(0, &outVal);
+			var classNameHash = itemInfoPtr->GetClassNameHash();
 
 			const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
-			if (*returnClassNameHashAddr == CWEAPONINFO_NAME_HASH)
+			if (classNameHash == CWEAPONINFO_NAME_HASH)
 				return itemInfoPtr;
 
 			return null;
@@ -3584,12 +3634,10 @@ namespace SHVDN
 				if (!CanPedEquip(weaponOrAmmoInfo) && !disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->nameHash))
 					continue;
 
-				var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(weaponOrAmmoInfo->vTable[2]);
-				uint outVal = 0;
-				var returnClassNameHashAddr = GetClassNameHashFunc(0, &outVal);
+				var classNameHash = weaponOrAmmoInfo->GetClassNameHash();
 
 				const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
-				if (*returnClassNameHashAddr == CWEAPONINFO_NAME_HASH)
+				if (classNameHash == CWEAPONINFO_NAME_HASH)
 					resultList.Add(weaponOrAmmoInfo->nameHash);
 			}
 
@@ -3644,21 +3692,6 @@ namespace SHVDN
 			}
 
 			return returnList;
-		}
-
-		private static GetClassNameHashOfCItemInfoDelegate CreateGetClassNameHashDelegateIfNotCreated(ulong virtualFuncAddr)
-		{
-			if (getClassNameHashOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
-			{
-				return outDelegate;
-			}
-			else
-			{
-				var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
-				getClassNameHashOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
-
-				return newDelegate;
-			}
 		}
 
 		#endregion
