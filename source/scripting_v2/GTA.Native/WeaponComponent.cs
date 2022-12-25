@@ -322,6 +322,7 @@ namespace GTA.Native
 		PumpShotgunMk2ClipHollowPoint = 0xE9582927,
 		PumpShotgunMk2ClipIncendiary = 0x9F8A1BF5,
 		RailgunClip01 = 0x384F3E8,
+		RailgunXmas3Clip01 = 0x43660892,
 		RevolverClip01 = 0xE9867CE3,
 		RevolverVarmodBoss = 0x16EE3040,
 		RevolverVarmodGoon = 0x9493B80D,
@@ -425,9 +426,11 @@ namespace GTA.Native
 		SwitchbladeVarmodBase = 0x9137A500,
 		SwitchbladeVarmodVar1 = 0x5B3E7DB6,
 		SwitchbladeVarmodVar2 = 0xE7939662,
+		UpNAtomizerVarmodXmas18 = 0xD7DBF707,
 		VintagePistolClip01 = 0x45A3B6BB,
 		VintagePistolClip02 = 0x33BA12E8,
-		UpNAtomizerVarmodXmas18 = 0xD7DBF707,
+		WM29PistolClip01 = 0x1663E75E,
+		WM29PistolSupp = 0x1E02B7E0,
 		Invalid = 0xFFFFFFFF,
 	}
 }
