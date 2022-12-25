@@ -826,8 +826,6 @@ namespace SHVDN
 			var weaponObjectHashes = new List<int>();
 			var pedHashes = new List<int>();
 
-			var gameVersionCached = GetGameVersion();
-
 			// The game will crash when it load these vehicles because of the stub vehicle models
 			var stubVehicles = new HashSet<uint> {
 				0xA71D0D4F, /* astron2 */
@@ -865,7 +863,7 @@ namespace SHVDN
 										// Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
 										// The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
 										int vehicleTypeInt = *(int*)((byte*)addr2 + VehicleTypeOffsetInModelInfo);
-										if (gameVersionCached < 28 && vehicleTypeInt >= 6)
+										if (gameVersion < 28 && vehicleTypeInt >= 6)
 											vehicleTypeInt += 2;
 										vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->hash);
 
@@ -913,16 +911,28 @@ namespace SHVDN
 
 			YscScriptHeader* shopControllerHeader = shopControllerItem->header;
 
+			string enableCarsGlobalPattern;
+			if (gameVersion >= 80)
+			{
+				// b2802 has 3 additional opcodes between CALL opcode (0x5D) and GLOBAL_U24 opcode (0x61 in b2802)
+				enableCarsGlobalPattern = "\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x71\x2E\x00\x01\x62\x00\x00\x00\x00\x04\x00\x71\x2E\x00\x01";
+			}
+			else if (gameVersion >= 46)
+			{
+				enableCarsGlobalPattern = "\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01";
+			}
+			else
+			{
+				enableCarsGlobalPattern = "\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01";
+			}
+			var enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
+			var enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
+
 			for (int i = 0; i < shopControllerHeader->CodePageCount(); i++)
 			{
 				int size = shopControllerHeader->GetCodePageSize(i);
 				if (size > 0)
 				{
-					var enableCarsGlobalPattern = gameVersion >= 46 ?
-							"\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01" :
-							"\x2C\x01\x00\x00\x20\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01";
-					var enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
-					var enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
 					address = FindPattern(enableCarsGlobalPattern, enableCarsGlobalMask, shopControllerHeader->GetCodePageAddress(i), (ulong)size);
 
 					if (address != null)
