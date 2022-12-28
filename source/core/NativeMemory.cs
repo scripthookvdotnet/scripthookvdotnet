@@ -369,6 +369,9 @@ namespace SHVDN
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
 			weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
 
+			address = FindPattern("\x48\x85\xC0\x74\x08\x8B\x90\x00\x00\x00\x00\xEB\x02", "xxxxxxx????xx");
+			weaponInfoHumanNameHashOffset = *(int*)(address + 7);
+
 			address = FindPattern("\x8B\x05\x00\x00\x00\x00\x44\x8B\xD3\x8D\x48\xFF", "xx????xxxxxx");
 			if (address != null)
 			{
@@ -3475,6 +3478,8 @@ namespace SHVDN
 		static int weaponAttachPointElementComponentCountOffset;
 		static int weaponAttachPointElementSize;
 
+		static int weaponInfoHumanNameHashOffset;
+
 		[StructLayout(LayoutKind.Explicit, Size=0x20)]
 		struct ItemInfo
 		{
@@ -3547,6 +3552,27 @@ namespace SHVDN
 			}
 		}
 
+		[StructLayout(LayoutKind.Explicit, Size = 0x48)]
+		struct WeaponComponentInfo
+		{
+			[FieldOffset(0x0)]
+			internal ulong* vTable;
+			[FieldOffset(0x10)]
+			internal uint nameHash;
+			[FieldOffset(0x14)]
+			internal uint modelHash;
+			[FieldOffset(0x18)]
+			internal uint locNameHash;
+			[FieldOffset(0x1C)]
+			internal uint locDescHash;
+			[FieldOffset(0x40)]
+			internal bool shownOnWheel;
+			[FieldOffset(0x41)]
+			internal bool createObject;
+			[FieldOffset(0x42)]
+			internal bool applyWeaponTint;
+		}
+
 		static ItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
 		{
 			if (weaponAndAmmoInfoArrayPtr == null)
@@ -3593,6 +3619,35 @@ namespace SHVDN
 				return itemInfoPtr;
 
 			return null;
+		}
+
+		static WeaponComponentInfo* FindWeaponComponentInfo(uint nameHash)
+		{
+			var cWeaponComponentArrayFirstPtr = (ulong*)((byte*)offsetForCWeaponComponentArrayAddr + 4 + *(int*)offsetForCWeaponComponentArrayAddr);
+			var arrayCount = weaponComponentArrayCountAddr != null ? *(uint*)weaponComponentArrayCountAddr : 0;
+			if (cWeaponComponentArrayFirstPtr == null || arrayCount == 0)
+			{
+				return null;
+			}
+
+			int low = 0, high = (int)arrayCount - 1;
+			while (true)
+			{
+				int indexToRead = (low + high) >> 1;
+				var weaponComponentInfo = (WeaponComponentInfo*)cWeaponComponentArrayFirstPtr[indexToRead];
+
+				if (weaponComponentInfo->nameHash == nameHash)
+					return weaponComponentInfo;
+
+				// The array is sorted in ascending order
+				if (weaponComponentInfo->nameHash <= nameHash)
+					low = indexToRead + 1;
+				else
+					high = indexToRead - 1;
+
+				if (low > high)
+					return null;
+			}
 		}
 
 		public static bool IsHashValidAsWeaponHash(uint weaponHash) => FindWeaponInfo(weaponHash) != null;
@@ -3702,6 +3757,28 @@ namespace SHVDN
 			}
 
 			return returnList;
+		}
+
+		public static uint GetHumanNameHashOfWeaponInfo(uint weaponHash)
+		{
+			var weaponInfo = FindWeaponInfo(weaponHash);
+
+			if (weaponInfo == null)
+				// hashed value of WT_INVALID
+				return 0xBFED8500;
+
+			return *(uint*)((byte*)weaponInfo + weaponInfoHumanNameHashOffset);
+		}
+
+		public static uint GetHumanNameHashOfWeaponComponentInfo(uint weaponComponentHash)
+		{
+			var weaponComponentInfo = FindWeaponComponentInfo(weaponComponentHash);
+
+			if (weaponComponentInfo == null)
+				// hashed value of WCT_INVALID
+				return 0xDE4BE9F8;
+
+			return weaponComponentInfo->locNameHash;
 		}
 
 		#endregion

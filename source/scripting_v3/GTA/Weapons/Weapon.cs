@@ -32,7 +32,7 @@ namespace GTA
 
 		public string DisplayName => GetDisplayNameFromHash(Hash);
 
-		public string LocalizedName => Game.GetLocalizedString(DisplayName);
+		public string LocalizedName => Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)Hash));
 
 		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, Hash);
 
