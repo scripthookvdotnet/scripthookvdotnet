@@ -3585,10 +3585,10 @@ namespace SHVDN
 			if (weaponAndAmmoInfoElementCount == 0)
 				return null;
 
-			int offset1 = 0, offset2 = weaponAndAmmoInfoElementCount - 1;
+			int low = 0, high = weaponAndAmmoInfoElementCount - 1;
 			while (true)
 			{
-				int indexToRead = (offset1 + offset2) >> 1;
+				int indexToRead = (low + high) >> 1;
 				var weaponOrAmmoInfo = (ItemInfo*)weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
 
 				if (weaponOrAmmoInfo->nameHash == nameHash)
@@ -3596,11 +3596,11 @@ namespace SHVDN
 
 				// The array is sorted in ascending order
 				if (weaponOrAmmoInfo->nameHash <= nameHash)
-					offset1 = indexToRead + 1;
+					low = indexToRead + 1;
 				else
-					offset2 = indexToRead - 1;
+					high = indexToRead - 1;
 
-				if (offset1 > offset2)
+				if (low > high)
 					return null;
 			}
 		}
