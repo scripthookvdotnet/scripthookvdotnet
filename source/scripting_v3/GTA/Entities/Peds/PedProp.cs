@@ -4,6 +4,7 @@
 //
 
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -16,31 +17,40 @@ namespace GTA
 		internal PedProp(Ped ped, PedPropType propId)
 		{
 			_ped = ped;
-			Type = propId;
+			AnchorPosition = (PedPropAnchorPosition)propId;
 		}
 
-		public string Name => Type.ToString();
+		internal PedProp(Ped ped, PedPropAnchorPosition anchorPosition)
+		{
+			_ped = ped;
+			AnchorPosition = anchorPosition;
+		}
 
-		public PedPropType Type
+		public string Name => AnchorPosition.ToString();
+
+		[Obsolete("PedProp.Type is obsolete, use PedProp.AnchorPosition instead.")]
+		public PedPropType Type => (PedPropType)AnchorPosition;
+
+		public PedPropAnchorPosition AnchorPosition
 		{
 			get;
 		}
 
-		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, Type) + 1;
+		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, AnchorPosition) + 1;
 
 		public int Index
 		{
-			get => Function.Call<int>(Hash.GET_PED_PROP_INDEX, _ped.Handle, Type) + 1;
+			get => Function.Call<int>(Hash.GET_PED_PROP_INDEX, _ped.Handle, AnchorPosition) + 1;
 			set => SetVariation(value);
 		}
 
-		public int TextureCount => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, _ped.Handle, Type, Index - 1);
+		public int TextureCount => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, _ped.Handle, AnchorPosition, Index - 1);
 
 		public int TextureIndex
 		{
 			get
 			{
-				return Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, Type);
+				return Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, AnchorPosition);
 			}
 			set
 			{
@@ -55,7 +65,7 @@ namespace GTA
 		{
 			if (index == 0)
 			{
-				Function.Call(Hash.CLEAR_PED_PROP, _ped.Handle, Type);
+				Function.Call(Hash.CLEAR_PED_PROP, _ped.Handle, AnchorPosition);
 				return true;
 			}
 
@@ -64,7 +74,7 @@ namespace GTA
 				return false;
 			}
 
-			Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, Type, index - 1, textureIndex, 1);
+			Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, AnchorPosition, index - 1, textureIndex, 1);
 			return true;
 		}
 
@@ -75,7 +85,7 @@ namespace GTA
 				return true; // No prop is always valid
 			}
 
-			return Function.Call<bool>(Hash.SET_PED_PRELOAD_PROP_DATA, _ped.Handle, Type, index - 1, textureIndex);
+			return Function.Call<bool>(Hash.SET_PED_PRELOAD_PROP_DATA, _ped.Handle, AnchorPosition, index - 1, textureIndex);
 		}
 
 		public bool HasVariations => Count > 1;
@@ -86,7 +96,7 @@ namespace GTA
 
 		public override string ToString()
 		{
-			return Type.ToString();
+			return AnchorPosition.ToString();
 		}
 	}
 }
