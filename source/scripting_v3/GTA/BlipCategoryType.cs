@@ -11,10 +11,7 @@ namespace GTA
 		DistanceShown,
 		/// <summary>
 		/// <para>Blips will show under the "Other Players" category listing in the map legend, regardless of name. Also shows distance in the map legend.</para>
-		/// <para>
-		/// When the game language is set to a non-CJK language, the blip name will show with <see cref="UI.Font.ChaletComprimeCologne"/>.
-		/// When the game language is set to a CJK language and the vanilla font files are used, the blip name will show with the default CJK font used for the current language.
-		/// </para>
+		/// <para>the blip name will show with <see cref="UI.Font.ChaletComprimeCologneNotGamerName"/>.</para>
 		/// </summary>
 		OtherPlayers = 7,
 		/// <summary>
