@@ -79,6 +79,8 @@
     <Compile Include="GTA.UI\ScreenEffects.cs" />
     <Compile Include="GTA.UI\Sprite.cs" />
     <Compile Include="GTA.UI\TextElement.cs" />
+    <Compile Include="GTA\AnimationBlendDelta.cs" />
+    <Compile Include="GTA\AnimationDictionary.cs" />
     <Compile Include="GTA\Audio.cs" />
     <Compile Include="GTA\AudioFlags.cs" />
     <Compile Include="GTA\Blip.cs" />
@@ -97,6 +99,8 @@
     <Compile Include="GTA\Entities\InteriorInstance.cs" />
     <Compile Include="GTA\Entities\EntityPopulationType.cs" />
     <Compile Include="GTA\Entities\Building.cs" />
+    <Compile Include="GTA\Entities\Peds\IKControlFlags.cs" />
+    <Compile Include="GTA\Entities\Peds\PedMoveBlendRatio.cs" />
     <Compile Include="GTA\Entities\Peds\PedPropAnchorPosition.cs" />
     <Compile Include="GTA\Entities\Vehicles\BoatMissionFlags.cs" />
     <Compile Include="GTA\Entities\Vehicles\HeliMissionFlags.cs" />
@@ -104,6 +108,7 @@
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\DrawBoxFlags.cs" />
+    <Compile Include="GTA\IStreamingResource.cs" />
     <Compile Include="GTA\ShapeTestOptions.cs" />
     <Compile Include="GTA\ShapeTestStatus.cs" />
     <Compile Include="GTA\PlayerTargetingMode.cs" />

@@ -10,7 +10,7 @@ using SHVDN;
 
 namespace GTA
 {
-	public struct Model : IEquatable<Model>, INativeValue
+	public struct Model : IEquatable<Model>, INativeValue, IStreamingResource
 	{
 		public Model(int hash) : this()
 		{
