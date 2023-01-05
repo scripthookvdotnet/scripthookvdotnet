@@ -42,7 +42,7 @@ namespace GTA
 
 		public string DisplayName => _weapon != null ? GetComponentDisplayNameFromHash(_weapon.Hash, ComponentHash) : string.Empty;
 
-		public string LocalizedName => _weapon != null ? Game.GetLocalizedString(DisplayName) : string.Empty;
+		public string LocalizedName => _weapon != null ? Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponComponentInfo((uint)ComponentHash)) : string.Empty;
 
 		public WeaponComponentHash ComponentHash
 		{
