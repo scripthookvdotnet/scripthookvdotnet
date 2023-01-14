@@ -301,7 +301,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Clears a help message immediately.
 		/// </summary>
-		static void ClearHelpText()
+		public static void ClearHelpText()
 		{
 			Function.Call(Hash.CLEAR_HELP, true);
 		}
