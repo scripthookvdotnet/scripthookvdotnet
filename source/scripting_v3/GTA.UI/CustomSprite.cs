@@ -219,12 +219,11 @@ namespace GTA.UI
 		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a 1280*720 pixel base.</param>
 		public virtual void WorldDraw(Vector3 position, SizeF offset)
 		{
-			var worldToScreen = Screen.WorldToScreen(position);
-			if (worldToScreen == PointF.Empty)
+			PointF pointF = Screen.WorldToScreen(position);
+			if (!(pointF == PointF.Empty))
 			{
-				return;
+				InternalDraw(new SizeF(pointF) + offset, Screen.Width, Screen.Height);
 			}
-			InternalDraw(new SizeF(worldToScreen) + offset, Screen.Width, Screen.Height);
 		}
 
 		/// <summary>
@@ -243,12 +242,11 @@ namespace GTA.UI
 		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base.</param>
 		public virtual void WorldScaledDraw(Vector3 position, SizeF offset)
 		{
-			var worldToScreen = Screen.WorldToScreen(position, true);
-			if (worldToScreen == PointF.Empty)
+			PointF pointF = Screen.WorldToScreen(position, scaleWidth: true);
+			if (!(pointF == PointF.Empty))
 			{
-				return;
+				InternalDraw(new SizeF(pointF) + offset, Screen.ScaledWidth, Screen.Height);
 			}
-			InternalDraw(new SizeF(worldToScreen) + offset, Screen.ScaledWidth, Screen.Height);
 		}
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
