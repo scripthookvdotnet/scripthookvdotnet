@@ -68,9 +68,6 @@ namespace GTA.UI
 		void Draw(SizeF offset);
 
 		/// <summary>
-		/// Draws this <see cref="IElement"/> this frame.
-		/// </summary>
-		/// <summary>
 		/// Draws this <see cref="IElement"/> this frame using the width returned in <see cref="Screen.ScaledWidth"/>.
 		/// </summary>
 		void ScaledDraw();

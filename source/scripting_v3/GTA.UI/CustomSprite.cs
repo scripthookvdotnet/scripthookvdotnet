@@ -5,9 +5,9 @@
 
 using GTA.Math;
 using GTA.Native;
-using System.IO;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace GTA.UI
 {
@@ -224,8 +224,7 @@ namespace GTA.UI
 			{
 				return;
 			}
-			Position = worldToScreen;
-			InternalDraw(offset, Screen.Width, Screen.Height);
+			InternalDraw(new SizeF(worldToScreen) + offset, Screen.Width, Screen.Height);
 		}
 
 		/// <summary>
@@ -249,8 +248,7 @@ namespace GTA.UI
 			{
 				return;
 			}
-			Position = worldToScreen;
-			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+			InternalDraw(new SizeF(worldToScreen) + offset, Screen.ScaledWidth, Screen.Height);
 		}
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)

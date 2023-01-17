@@ -6,10 +6,10 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-using System.Text;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GTA.UI
 {
@@ -189,7 +189,8 @@ namespace GTA.UI
 				}
 				_pinnedText.Clear();
 
-				SHVDN.NativeFunc.PushLongString(value, (string str) => {
+				SHVDN.NativeFunc.PushLongString(value, (string str) =>
+				{
 					byte[] data = Encoding.UTF8.GetBytes(str + "\0");
 					IntPtr next = Marshal.AllocCoTaskMem(data.Length);
 					Marshal.Copy(data, 0, next, data.Length);
