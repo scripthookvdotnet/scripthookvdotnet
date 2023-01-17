@@ -118,6 +118,11 @@ namespace GTA
 		public Vector3 Position => Function.Call<Vector3>(Hash.GET_WORLD_POSITION_OF_ENTITY_BONE, Owner.Handle, Index);
 
 		/// <summary>
+		/// Gets the  world rotation of this <see cref="EntityBone"/>.
+		/// </summary>
+		public Vector3 Rotation => Function.Call<Vector3>(Hash.GET_ENTITY_BONE_ROTATION, Owner.Handle, Index);
+
+		/// <summary>
 		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
 		public Vector3 RelativePosition
