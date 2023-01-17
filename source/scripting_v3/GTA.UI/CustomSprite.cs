@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Math;
 using GTA.Native;
 using System.Collections.Generic;
 using System.Drawing;
@@ -200,6 +201,52 @@ namespace GTA.UI
 		public virtual void ScaledDraw(SizeF offset)
 		{
 			InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
+		}
+
+		/// <summary>
+		/// Draws this <see cref="CustomSprite"/> this frame in the specified <see cref="Vector3"/> position.
+		/// </summary>
+		/// <param name="position">Position in the world where you want the <see cref="CustomSprite"/> to be drawn</param>
+		public virtual void WorldDraw(Vector3 position)
+		{
+			WorldDraw(position, SizeF.Empty);
+		}
+
+		/// <summary>
+		/// Draws this <see cref="CustomSprite"/> this frame at the specified <see cref="Vector3"/> position and offset.
+		/// </summary>
+		/// <param name="position">Position in the world where you want the <see cref="CustomSprite"/> to be drawn</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a 1280*720 pixel base.</param>
+		public virtual void WorldDraw(Vector3 position, SizeF offset)
+		{
+			PointF pointF = Screen.WorldToScreen(position);
+			if (!(pointF == PointF.Empty))
+			{
+				InternalDraw(new SizeF(pointF) + offset, Screen.Width, Screen.Height);
+			}
+		}
+
+		/// <summary>
+		/// Draws this <see cref="CustomSprite"/> this frame at the specified <see cref="Vector3"/> position and offset using the width returned in <see cref="Screen.ScaledWidth"/>.
+		/// </summary>
+		/// <param name="position">Position in the world where you want the <see cref="CustomSprite"/> to be drawn</param>
+		public virtual void WorldScaledDraw(Vector3 position)
+		{
+			WorldScaledDraw(position, SizeF.Empty);
+		}
+
+		/// <summary>
+		/// Draws this <see cref="CustomSprite"/> this frame at the specified <see cref="Vector3"/> position and offset using the width returned in <see cref="Screen.ScaledWidth"/>.
+		/// </summary>
+		/// <param name="position">Position in the world where you want the <see cref="CustomSprite"/> to be drawn</param>
+		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base.</param>
+		public virtual void WorldScaledDraw(Vector3 position, SizeF offset)
+		{
+			PointF pointF = Screen.WorldToScreen(position, scaleWidth: true);
+			if (!(pointF == PointF.Empty))
+			{
+				InternalDraw(new SizeF(pointF) + offset, Screen.ScaledWidth, Screen.Height);
+			}
 		}
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
