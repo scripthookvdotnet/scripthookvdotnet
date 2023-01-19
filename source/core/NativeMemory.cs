@@ -106,7 +106,7 @@ namespace SHVDN
 		/// <param name="startAddress">The address to start searching at.</param>
 		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
 		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
+		public static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
 		{
 			ulong address = (ulong)startAddress.ToInt64();
 			ulong endAddress = address + size;
@@ -1138,9 +1138,9 @@ namespace SHVDN
 			return (*data & (1 << bit)) != 0;
 		}
 
-		public static IntPtr String => StringToCoTaskMemUTF8("STRING");
-		public static IntPtr NullString => StringToCoTaskMemUTF8(string.Empty);
-		public static IntPtr CellEmailBcon => StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
+		public static readonly IntPtr String = StringToCoTaskMemUTF8("STRING");
+		public static readonly IntPtr NullString = StringToCoTaskMemUTF8(string.Empty);
+		public static readonly IntPtr CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
 		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
 
 		public static string PtrToStringUTF8(IntPtr ptr)
