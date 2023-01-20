@@ -2268,14 +2268,20 @@ namespace SHVDN
 		struct EntityPool
 		{
 			[FieldOffset(0x10)]
-			internal uint num1;
+			internal uint maxCount;
+			[FieldOffset(0x14)]
+			internal int itemSize;
+			[FieldOffset(0x18)]
+			internal int firstEmptySlot;
+			[FieldOffset(0x1C)]
+			internal int emptySlots;
 			[FieldOffset(0x20)]
-			internal uint num2;
+			internal uint itemCount;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			internal bool IsFull()
 			{
-				return num1 - (num2 & 0x3FFFFFFF) <= 256;
+				return maxCount - (itemCount & 0x3FFFFFFF) <= 256;
 			}
 		}
 
