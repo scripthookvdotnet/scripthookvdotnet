@@ -1232,6 +1232,12 @@ namespace SHVDN
 		{
 			return new IntPtr((long)*GameplayCameraAddress);
 		}
+
+		#endregion
+
+		#region -- Game Data --
+
+
 		static delegate* unmanaged[Stdcall]<IntPtr, uint, uint> GetHashKeyFunc;
 
 		public static uint GetHashKey(string key)
@@ -1241,6 +1247,7 @@ namespace SHVDN
 		}
 
 		static ulong GetLabelTextByHashAddress;
+
 		static delegate* unmanaged[Stdcall]<ulong, int, ulong> GetLabelTextByHashFunc;
 
 		public static string GetGXTEntryByHash(int entryLabelHash)
@@ -1442,6 +1449,13 @@ namespace SHVDN
 
 			return IntPtr.Zero;
 		}
+
+		#endregion
+
+		#region -- CEntity Functions --
+
+
+
 		static delegate* unmanaged[Stdcall]<float*, ulong, int, float*> GetRotationFromMatrixFunc;
 		static delegate* unmanaged[Stdcall]<float*, ulong, int> GetQuaternionFromMatrixFunc;
 
@@ -1470,6 +1484,18 @@ namespace SHVDN
 		public static uint cAttackerArrayOfEntityOffset { get; }
 		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
 		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
+
+		#endregion
+
+		#region -- CPhysical Functions --
+
+
+		// return value will be the address of the temporary 4 float storage
+
+
+		// Only 2 virtural functions are present (one for peds and objects and one for vehicles)
+
+
 
 		internal class SetEntityAngularVelocityTask : IScriptTask
 		{
@@ -1515,6 +1541,10 @@ namespace SHVDN
 			var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
+
+
+
+
 
 		#endregion
 
@@ -1699,6 +1729,16 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		#endregion
+
+		#region -- Vehicle Wheel Data --
+
+
+
+
+
+
 
 		static delegate* unmanaged[Stdcall]<IntPtr, void> FixVehicleWheelFunc;
 		static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void> PunctureVehicleTireNewFunc;
@@ -2154,6 +2194,9 @@ namespace SHVDN
 		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModelsGroupedByType { get; }
 		public static ReadOnlyCollection<int> PedModels { get; }
 
+
+
+
 		static delegate* unmanaged[Stdcall]<IntPtr, ulong> GetHandlingDataByHash;
 		static delegate* unmanaged[Stdcall]<int, ulong> GetHandlingDataByIndex;
 
@@ -2372,6 +2415,11 @@ namespace SHVDN
 
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
+
+
+
+
+
 
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
@@ -3189,6 +3237,8 @@ namespace SHVDN
 		#region -- Checkpoint Pool --
 
 		static ulong* CheckpointPoolAddress;
+
+
 		static delegate* unmanaged[Stdcall]<ulong> GetCGameScriptHandlerAddressFunc;
 
 		public static int[] GetCheckpointHandles()
@@ -3208,6 +3258,12 @@ namespace SHVDN
 
 			return task.returnAddress;
 		}
+
+		#endregion
+
+		#region -- Waypoint Info Array --
+
+
 		static ulong* waypointInfoArrayStartAddress;
 		static ulong* waypointInfoArrayEndAddress;
 		static delegate* unmanaged[Stdcall]<ulong> GetLocalPlayerPedAddressFunc;
@@ -3238,6 +3294,11 @@ namespace SHVDN
 
 			return 0;
 		}
+		#endregion
+
+		#region -- Pool Addresses --
+
+
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
 		static delegate* unmanaged[Stdcall]<int, ulong> GetEntityAddressFunc;
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerAddressFunc;
@@ -3289,6 +3350,11 @@ namespace SHVDN
 		#region -- Projectile Offsets --
 		public static int ProjectileAmmoInfoOffset { get; }
 		public static int ProjectileOwnerOffset { get; }
+		#endregion
+
+		#region -- Projectile Functions --
+
+
 		static delegate* unmanaged[Stdcall]<IntPtr, int, void> ExplodeProjectileFunc;
 
 		public static void ExplodeProjectile(IntPtr projectileAddress)
@@ -3689,11 +3755,21 @@ namespace SHVDN
 			return weaponComponentInfo->locNameHash;
 		}
 
+		#endregion
+
+		#region -- Fragment Object for Entity --
+
+
+
+
 		static int getFragInstVFuncOffset;
 		static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> detachFragmentPartByIndexFunc;
 		static ulong** phSimulatorInstPtr;
 		static int colliderCapacityOffset;
 		static int colliderCountOffset;
+
+		// Only 3 virtural functions are present (one for peds and objects and one for vehicles)
+
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
 		internal unsafe struct FragInst
@@ -3964,6 +4040,29 @@ namespace SHVDN
 			return fragPhysicsLOD != null ? fragPhysicsLOD->fragmentGroupCount : 0;
 		}
 
+
+
+		#endregion
+
+		#region -- NaturalMotion Euphoria --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmIntAddress;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmBoolAddress;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmFloatAddress;
@@ -3976,6 +4075,8 @@ namespace SHVDN
 		static int fragInstNMGtaOffset;
 		static int cTaskNMScriptControlTypeIndex;
 		static int cEventSwitch2NMTypeIndex;
+
+
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x38)]
 		struct CTask
@@ -4035,6 +4136,8 @@ namespace SHVDN
 		}
 
 		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
+
+
 
 		internal class EuphoriaMessageTask : IScriptTask
 		{
