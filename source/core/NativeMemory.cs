@@ -1138,10 +1138,10 @@ namespace SHVDN
 			return (*data & (1 << bit)) != 0;
 		}
 
+		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
 		public static readonly IntPtr String = StringToCoTaskMemUTF8("STRING");
 		public static readonly IntPtr NullString = StringToCoTaskMemUTF8(string.Empty);
 		public static readonly IntPtr CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
-		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
 
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{
