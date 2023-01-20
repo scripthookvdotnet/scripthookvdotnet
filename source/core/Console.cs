@@ -270,7 +270,7 @@ namespace SHVDN
 		/// <summary>
 		/// Main execution logic of the console.
 		/// </summary>
-		internal void DoTick()
+		internal unsafe void DoTick()
 		{
 			DateTime now = DateTime.UtcNow;
 
@@ -328,8 +328,12 @@ namespace SHVDN
 			// Draw blinking cursor
 			if (now.Millisecond < 500)
 			{
-				float length = GetTextLength(input.Substring(0, cursorPos));
-				DrawText(25 + (length * CONSOLE_WIDTH) - 4, CONSOLE_HEIGHT, "~w~~h~|~w~", InputColor);
+				var lenStr = input.Substring(0, cursorPos);
+				fixed (char* pLenStr = lenStr)
+				{
+					float length = GetTextLength(pLenStr,lenStr.Length);
+					DrawRect(25 + (length * CONSOLE_WIDTH) - 5, CONSOLE_HEIGHT + 3, 3, INPUT_HEIGHT - 6, Color.White);
+				}
 			}
 
 			// Draw console history text
@@ -721,13 +725,30 @@ namespace SHVDN
 				NativeFunc.InvokeInternal(0x351220255D64C155 /*ENABLE_CONTROL_ACTION*/, 0, i, 0);
 		}
 
-		static unsafe float GetTextLength(string text)
+		static unsafe float GetTextLength(char* str, int count)
 		{
+			var calculated = count;
+			if (calculated > 50) { calculated = 50; }
+			while (Encoding.UTF8.GetByteCount(str, calculated) > 50) { calculated--; };
 			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DA /*SET_TEXT_FONT*/, 0);
 			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /*SET_TEXT_SCALE*/, 0.35f, 0.35f);
 			NativeFunc.InvokeInternal(0x54CE8AC98E120CAB /*_BEGIN_TEXT_COMMAND_GET_WIDTH*/, NativeMemory.CellEmailBcon);
-			NativeFunc.PushLongString(text);
-			return *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /*_END_TEXT_COMMAND_GET_WIDTH*/, true);
+			NativeFunc.PushLongString(new string(str, 0, calculated));
+			var len = *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /*_END_TEXT_COMMAND_GET_WIDTH*/, true);
+			if (calculated < count)
+			{
+				len += GetTextLength(str + calculated, count - calculated) - GetMarginLength();
+			}
+			return len;
+		}
+
+		static unsafe float GetMarginLength()
+		{
+			char* pC = stackalloc char[3] { 'A', '\0', '\0' };
+			var len1 = GetTextLength(pC, 1);
+			pC[1] = 'A';
+			var len2 = GetTextLength(pC, 2);
+			return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
 		}
 	}
 
