@@ -154,14 +154,6 @@ namespace SHVDN
 			EntityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(
 				new IntPtr((address - 6)));
 
-			address = FindPattern("\x0F\x85\x00\x00\x00\x00\x48\x8B\x4B\x20\xE8\x00\x00\x00\x00\x48\x8B\xC8", "xx????xxxxx????xxx");
-			EntityModel1Func = (delegate* unmanaged[Stdcall]<ulong, ulong>)(
-				new IntPtr((*(int*)address + 11) + address + 15));
-
-			address = FindPattern("\x45\x33\xC9\x3B\x05", "xxxxx");
-			EntityModel2Func = (delegate* unmanaged[Stdcall]<ulong, ulong>)(
-				new IntPtr(address - 0x46));
-
 			// Find handling data functions
 			address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
 			GetHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(
@@ -2452,8 +2444,6 @@ namespace SHVDN
 
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
-		static delegate* unmanaged[Stdcall]<ulong, ulong> EntityModel1Func;
-		static delegate* unmanaged[Stdcall]<ulong, ulong> EntityModel2Func;
 		static delegate* unmanaged[Stdcall]<ulong, int> AddEntityToPoolFunc;
 
 		internal class EntityPoolTask : IScriptTask
