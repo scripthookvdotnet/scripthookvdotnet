@@ -1234,6 +1234,9 @@ namespace SHVDN
 
 		#region -- Game Data --
 
+		// copied directly from the game -- performs uppercase to lowercase conversions and backslash to slash conversion amongst other things
+		// look at the pattern for more info 48 8B 0B 33 D2 E8 ? ? ? ? 89 03 (which is how you can find rage::atStringHash)
+		// with this lookup table, the hash function will perform faster than using if branches for uppercase characters and backslash (which is how the hash function in GTA IV does to pick characters)
 		private static readonly byte[]
 		 LookupTableForGetHashKey =
 		 {
@@ -1267,6 +1270,7 @@ namespace SHVDN
 		{
 			uint hash = 0;
 
+			// rage::atStringHash in the exe checks if the first byte is double quote, but that check is omitted since there are no practical cases for that edge case found
 			if (!string.IsNullOrWhiteSpace(str))
 			{
 				byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
