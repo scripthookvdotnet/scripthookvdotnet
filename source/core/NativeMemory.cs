@@ -809,20 +809,22 @@ namespace SHVDN
 			#region -- Bypass model requests block for some models --
 			// Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
 			address = FindPattern("\x48\x85\xC0\x00\x00\x38\x45\x00\x0F", "xxx??xx?x");
-			if (address != null)
+			address = address != null ? (address + 0x4D) : null;
+			if (address != null && *address != 0x90)
 			{
 				const int bytesToWriteInstructions = 0x18;
 				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
-				Marshal.Copy(nopBytes, 0, new IntPtr(address + 0x4D), bytesToWriteInstructions);
+				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
 			}
 			#endregion
 			#region -- Bypass is player model allowed to spawn checks --
 			address = FindPattern("\xFF\x52\x00\x84\xC0\x00\x00\x48\x8B\xC3", "xx?xx??xxx");
-			if (address != null)
+			address = address != null ? (address + 5) : null;
+			if (address != null && *address != 0x90)
 			{
 				const int bytesToWriteInstructions = 2;
 				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
-				Marshal.Copy(nopBytes, 0, new IntPtr(address + 5), bytesToWriteInstructions);
+				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
 			}
 			#endregion
 
