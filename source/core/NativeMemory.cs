@@ -1276,7 +1276,7 @@ namespace SHVDN
 				byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
 				for (int i = 0; i < utf8Bytes.Length; i++)
 				{
-					hash += LookupTable[utf8Bytes[i]];
+					hash += LookupTableForGetHashKey[utf8Bytes[i]];
 					hash += (hash << 10);
 					hash ^= (hash >> 6);
 				}
