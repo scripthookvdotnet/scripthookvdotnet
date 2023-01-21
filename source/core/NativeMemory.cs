@@ -4133,8 +4133,8 @@ namespace SHVDN
 							var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
 							if (eventAddress != 0)
 							{
-								var getEventTypeIndexFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(eventAddress);
-								if (getEventTypeIndexFunc(eventAddress) == cEventSwitch2NMTypeIndex)
+								var getEventTypeIndexVirtualFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(*(ulong*)(*(ulong*)eventAddress + 0x18));
+								if (getEventTypeIndexVirtualFunc(eventAddress) == cEventSwitch2NMTypeIndex)
 								{
 									var taskInEvent = *(CTask**)(eventAddress + 0x28);
 									if (taskInEvent != null)
