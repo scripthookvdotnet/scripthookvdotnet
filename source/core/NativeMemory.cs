@@ -1235,7 +1235,7 @@ namespace SHVDN
 		#region -- Game Data --
 
 		private static readonly byte[]
-		 LookupTable =
+		 LookupTableForGetHashKey =
 		 {
 			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
 			0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
@@ -1269,10 +1269,10 @@ namespace SHVDN
 
 			if (!string.IsNullOrWhiteSpace(str))
 			{
-				byte[] UTF8Bytes = Encoding.UTF8.GetBytes(str);
-				for (int i = 0; i < UTF8Bytes.Length; i++)
+				byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
+				for (int i = 0; i < utf8Bytes.Length; i++)
 				{
-					hash += LookupTable[UTF8Bytes[i]];
+					hash += LookupTable[utf8Bytes[i]];
 					hash += (hash << 10);
 					hash ^= (hash >> 6);
 				}
