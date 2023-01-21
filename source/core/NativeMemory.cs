@@ -1268,22 +1268,23 @@ namespace SHVDN
 
 		public static uint GetHashKey(string str)
 		{
-			uint hash = 0;
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
 
 			// rage::atStringHash in the exe checks if the first byte is double quote, but that check is omitted since there are no practical cases for that edge case found
-			if (!string.IsNullOrWhiteSpace(str))
+			uint hash = 0;
+			byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
+			for (int i = 0; i < utf8Bytes.Length; i++)
 			{
-				byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
-				for (int i = 0; i < utf8Bytes.Length; i++)
-				{
-					hash += LookupTableForGetHashKey[utf8Bytes[i]];
-					hash += (hash << 10);
-					hash ^= (hash >> 6);
-				}
-				hash += (hash << 3);
-				hash ^= (hash >> 11);
-				hash += (hash << 15);
+				hash += LookupTableForGetHashKey[utf8Bytes[i]];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
 			}
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
 
 			return hash;
 		}
