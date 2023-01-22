@@ -329,9 +329,10 @@ namespace SHVDN
 			if (now.Millisecond < 500)
 			{
 				var lenStr = input.Substring(0, cursorPos);
+
 				fixed (char* pLenStr = lenStr)
 				{
-					float length = GetTextLength(pLenStr,lenStr.Length);
+					float length = GetTextLength(pLenStr, lenStr.Length, GetMarginLength());
 					DrawRect(25 + (length * CONSOLE_WIDTH) - 5, CONSOLE_HEIGHT + 3, 3, INPUT_HEIGHT - 6, Color.White);
 				}
 			}
@@ -639,7 +640,8 @@ namespace SHVDN
 			if (commandHistory.LastOrDefault() != input)
 				commandHistory.Add(input);
 
-			compilerTask = Task.Factory.StartNew(() => {
+			compilerTask = Task.Factory.StartNew(() =>
+			{
 				var compiler = new Microsoft.CSharp.CSharpCodeProvider();
 				var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
 				compilerOptions.GenerateInMemory = true;
@@ -725,7 +727,7 @@ namespace SHVDN
 				NativeFunc.InvokeInternal(0x351220255D64C155 /*ENABLE_CONTROL_ACTION*/, 0, i, 0);
 		}
 
-		static unsafe float GetTextLength(char* str, int count)
+		static unsafe float GetTextLength(char* str, int count, float marginLength)
 		{
 			var calculated = count;
 			if (calculated > 50) { calculated = 50; }
@@ -737,7 +739,7 @@ namespace SHVDN
 			var len = *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /*_END_TEXT_COMMAND_GET_WIDTH*/, true);
 			if (calculated < count)
 			{
-				len += GetTextLength(str + calculated, count - calculated) - GetMarginLength();
+				len += GetTextLength(str + calculated, count - calculated, marginLength) - marginLength;
 			}
 			return len;
 		}
@@ -745,9 +747,9 @@ namespace SHVDN
 		static unsafe float GetMarginLength()
 		{
 			char* pC = stackalloc char[3] { 'A', '\0', '\0' };
-			var len1 = GetTextLength(pC, 1);
+			var len1 = GetTextLength(pC, 1, 0);
 			pC[1] = 'A';
-			var len2 = GetTextLength(pC, 2);
+			var len2 = GetTextLength(pC, 2, 0);
 			return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
 		}
 	}
