@@ -26,7 +26,7 @@ namespace GTA.UI
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position) :
-			this(textureDict, textureName, size, position, Color.WhiteSmoke, 0f, false)
+			this(textureDict, textureName, size, position, Color.WhiteSmoke, RectangleF.Empty, 0f, false)
 		{
 		}
 		/// <summary>
@@ -38,7 +38,7 @@ namespace GTA.UI
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color) :
-			this(textureDict, textureName, size, position, color, 0f, false)
+			this(textureDict, textureName, size, position, color, RectangleF.Empty, 0f, false)
 		{
 		}
 		/// <summary>
@@ -49,9 +49,9 @@ namespace GTA.UI
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
-		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
-		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation) :
-			this(textureDict, textureName, size, position, color, rotation, false)
+		/// <param name="textureCoordinates">Set the <see cref="TextureCoordinates"/> to specify the coordinates (measured in percentage: 1f = 100%), used to draw the <see cref="Sprite"/>.</param>
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, RectangleF textureCoordinates) :
+			this(textureDict, textureName, size, position, color, textureCoordinates, 0f, false)
 		{
 		}
 		/// <summary>
@@ -62,9 +62,10 @@ namespace GTA.UI
 		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
+		/// <param name="textureCoordinates">Set the <see cref="TextureCoordinates"/> to specify the coordinates (measured in percentage: 1f = 100%), used to draw the <see cref="Sprite"/>.</param>
 		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
 		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
-		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, RectangleF textureCoordinates, float rotation, bool centered)
 		{
 			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
 			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
@@ -79,6 +80,7 @@ namespace GTA.UI
 			Enabled = true;
 			Size = size;
 			Position = position;
+			TextureCoordinates = textureCoordinates;
 			Color = color;
 			Rotation = rotation;
 			Centered = centered;
@@ -165,6 +167,16 @@ namespace GTA.UI
 		/// If ScaledDraw is called, the position will be scaled by the width returned in <see cref="Screen.ScaledWidth" />.
 		/// </remarks>
 		public PointF Position
+		{
+			get; set;
+		}
+		/// <summary>
+		/// Gets or sets the texture coordinates of this <see cref="Sprite" />.
+		/// </summary>
+		/// <value>
+		/// The texture coordinates allows to specify the coordinates (measured in percentage: 1f = 100%), used to draw the sprite.
+		/// </value>
+		public RectangleF TextureCoordinates
 		{
 			get; set;
 		}
@@ -289,6 +301,18 @@ namespace GTA.UI
 			{
 				positionX += scaleX * 0.5f;
 				positionY += scaleY * 0.5f;
+			}
+
+			if (TextureCoordinates != RectangleF.Empty)
+			{
+				float u1 = TextureCoordinates.Top;
+				float v1 = TextureCoordinates.Left;
+				float u2 = TextureCoordinates.Right;
+				float v2 = TextureCoordinates.Bottom;
+
+				Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, u1, v1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
+
+				return;
 			}
 
 			Function.Call(Hash.DRAW_SPRITE, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
