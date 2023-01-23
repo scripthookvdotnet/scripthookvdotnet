@@ -86,12 +86,12 @@ namespace GTA
 		{
 			get
 			{
-				int outBone;
+				Bone outBone;
 				unsafe
 				{
 					if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, &outBone))
 					{
-						return this[(Bone)outBone];
+						return this[(int)outBone];
 					}
 				}
 				return this[Bone.SkelRoot];
