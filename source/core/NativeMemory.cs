@@ -106,7 +106,7 @@ namespace SHVDN
 		/// <param name="startAddress">The address to start searching at.</param>
 		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
 		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
+		public static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
 		{
 			ulong address = (ulong)startAddress.ToInt64();
 			ulong endAddress = address + size;
@@ -135,41 +135,33 @@ namespace SHVDN
 
 			// Get relative address and add it to the instruction address.
 			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
-			GetPtfxAddressFunc = GetDelegateForFunctionPointer<GetHandleAddressFuncDelegate>(
+			GetPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address) + address + 4));
 
 			address = FindPattern("\xE8\x00\x00\x00\x00\x48\x8B\xD8\x48\x85\xC0\x74\x2E\x48\x83\x3D", "x????xxxxxxxxxxx");
-			GetEntityAddressFunc = GetDelegateForFunctionPointer<GetHandleAddressFuncDelegate>(
+			GetEntityAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 1) + address + 5));
 
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
-			GetPlayerAddressFunc = GetDelegateForFunctionPointer<GetHandleAddressFuncDelegate>(
+			GetPlayerAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 3) + address + 7));
 
 			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
-			AddEntityToPoolFunc = GetDelegateForFunctionPointer<AddEntityToPoolFuncDelegate>(
+			AddEntityToPoolFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(
 				new IntPtr(address - 0x68));
 
 			address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
-			EntityPosFunc = GetDelegateForFunctionPointer<EntityPosFuncDelegate>(
+			EntityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(
 				new IntPtr((address - 6)));
-
-			address = FindPattern("\x0F\x85\x00\x00\x00\x00\x48\x8B\x4B\x20\xE8\x00\x00\x00\x00\x48\x8B\xC8", "xx????xxxxx????xxx");
-			EntityModel1Func = GetDelegateForFunctionPointer<EntityModel1FuncDelegate>(
-				new IntPtr((*(int*)address + 11) + address + 15));
-
-			address = FindPattern("\x45\x33\xC9\x3B\x05", "xxxxx");
-			EntityModel2Func = GetDelegateForFunctionPointer<EntityModel2FuncDelegate>(
-				new IntPtr(address - 0x46));
 
 			// Find handling data functions
 			address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
-			GetHandlingDataByIndex = GetDelegateForFunctionPointer<GetHandlingDataByIndexDelegate>(
+			GetHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 13) + address + 17));
 			handlingIndexOffsetInModelInfo = *(int*)(address + 8);
 
 			address = FindPattern("\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x5A\xB2\x01", "x????xxxxxxx");
-			GetHandlingDataByHash = GetDelegateForFunctionPointer<GetHandlingDataByHashDelegate>(
+			GetHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
 				new IntPtr(*(int*)(address + 1) + address + 5));
 
 			// Find entity pools and interior proxy pool
@@ -207,28 +199,28 @@ namespace SHVDN
 
 			// Find euphoria functions
 			address = FindPattern("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
-			InitMessageMemoryFunc = GetDelegateForFunctionPointer<InitMessageMemoryDelegate>(new IntPtr(address));
+			InitMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
 
 			address = FindPattern("\x41\x83\xFA\xFF\x74\x4A\x48\x85\xD2\x74\x19", "xxxxxxxxxxx") - 0xE;
-			SendMessageToPedFunc = GetDelegateForFunctionPointer<SendMessageToPedDelegate>(new IntPtr(address));
+			SendMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmIntAddress = GetDelegateForFunctionPointer<SetNmIntAddressDelegate>(new IntPtr(address));
+			SetNmIntAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmBoolAddress = GetDelegateForFunctionPointer<SetNmBoolAddressDelegate>(new IntPtr(address));
+			SetNmBoolAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmFloatAddress = GetDelegateForFunctionPointer<SetNmFloatAddressDelegate>(new IntPtr(address));
+			SetNmFloatAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
-			SetNmStringAddress = GetDelegateForFunctionPointer<SetNmStringAddressDelegate>(new IntPtr(address));
+			SetNmStringAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmVector3Address = GetDelegateForFunctionPointer<SetNmVector3AddressDelegate>(new IntPtr(address));
+			SetNmVector3Address = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
-			GetActiveTaskFunc = GetDelegateForFunctionPointer<GetActiveTaskFuncDelegate>(new IntPtr(address));
+			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(address));
 
 			address = FindPattern("\x75\xEF\x48\x8B\x5C\x24\x30\xB8\x00\x00\x00\x00", "xxxxxxxx????");
 			if (address != null)
@@ -248,11 +240,11 @@ namespace SHVDN
 			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
 
 			address = FindPattern("\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x18\x89\x54\x24\x10\x56\x57\x41\x56\x48\x83\xEC\x20", "xxxxxxxxxxxxxxxxxxxxxx");
-			GetLabelTextByHashFunc = GetDelegateForFunctionPointer<GetLabelTextByHashFuncDelegate>(new IntPtr(address));
+			GetLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(new IntPtr(address));
 
 			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
 			CheckpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
-			GetCGameScriptHandlerAddressFunc = GetDelegateForFunctionPointer<GetCGameScriptHandlerAddressDelegate>(new IntPtr(*(int*)(address - 19) + address - 15));
+			GetCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
 
 			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
 			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -266,7 +258,7 @@ namespace SHVDN
 			CenterRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
 
 			address = FindPattern("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
-			GetLocalPlayerPedAddressFunc = GetDelegateForFunctionPointer<GetLocalPlayerPedAddressFuncDelegate>(new IntPtr(*(int*)(address + 3) + address + 7));
+			GetLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address + 3) + address + 7));
 
 			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
 			waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -280,12 +272,12 @@ namespace SHVDN
 			address = FindPattern("\x48\x8D\x4C\x24\x20\x41\xB8\x02\x00\x00\x00\xE8\x00\x00\x00\x00\xF3", "xxxxxxxxxxxx????x");
 			if (address != null)
 			{
-				GetRotationFromMatrixFunc = GetDelegateForFunctionPointer<GetRotationFromMatrixDelegate>(new IntPtr(*(int*)(address + 12) + address + 16));
+				GetRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)(new IntPtr(*(int*)(address + 12) + address + 16));
 			}
 			address = FindPattern("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00", "xxxxxxxxxxx????");
 			if (address != null)
 			{
-				GetQuaternionFromMatrixFunc = GetDelegateForFunctionPointer<GetQuaternionFromMatrixDelegate>(new IntPtr(*(int*)(address + 11) + address + 15));
+				GetQuaternionFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int>)(new IntPtr(*(int*)(address + 11) + address + 15));
 			}
 
 			address = FindPattern("\x48\x8B\x42\x20\x48\x85\xC0\x74\x09\xF3\x0F\x10\x80", "xxxxxxxxxxxxx");
@@ -314,9 +306,6 @@ namespace SHVDN
 				// the element size might be 0x10 in older builds (the size is 0x18 at least in b1604 and b2372)
 				elementSizeOfCAttackerArrayOfEntity = (uint)(*(sbyte*)(address + 3));
 			}
-
-			address = FindPattern("\x48\x8B\x0B\x33\xD2\xE8\x00\x00\x00\x00\x89\x03", "xxxxxx????xx");
-			GetHashKeyFunc = GetDelegateForFunctionPointer<GetHashKeyDelegate>(new IntPtr(*(int*)(address + 6) + address + 10));
 
 			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
 			cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
@@ -640,7 +629,7 @@ namespace SHVDN
 			address = FindPattern("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8\x00\x00\x00\x00", "xxxxxxxx????xxxx????");
 			if (address != null)
 			{
-				FixVehicleWheelFunc = GetDelegateForFunctionPointer<FixVehicleWheelDelegate>(new IntPtr(*(int*)(address + 16) + address + 20));
+				FixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 16) + address + 20));
 				address = FindPattern("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
 				ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
 			}
@@ -648,18 +637,18 @@ namespace SHVDN
 			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				PunctureVehicleTireNewFunc = GetDelegateForFunctionPointer<PunctureVehicleTireNewDelegate>(new IntPtr((long)(address - 0x10)));
+				PunctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
 				address = FindPattern("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
-				BurstVehicleTireOnRimNewFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimNewDelegate>(new IntPtr((long)(address - 0xB)));
+				BurstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
 			}
 			else
 			{
 				address = FindPattern("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
 				if (address != null)
 				{
-					PunctureVehicleTireOldFunc = GetDelegateForFunctionPointer<PunctureVehicleTireOldDelegate>(new IntPtr((long)(address - 0x14)));
+					PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
 					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
-					BurstVehicleTireOnRimOldFunc = GetDelegateForFunctionPointer<BurstVehicleTireOnRimOldDelegate>(new IntPtr((long)(address - 0x10)));
+					BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
 				}
 			}
 
@@ -788,14 +777,14 @@ namespace SHVDN
 			address = FindPattern("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
 			if (address != null)
 			{
-				ExplodeProjectileFunc = GetDelegateForFunctionPointer<ExplodeProjectileDelegate>(new IntPtr(*(int*)(address + 13) + address + 17));
+				ExplodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)(new IntPtr(*(int*)(address + 13) + address + 17));
 			}
 
 			address = FindPattern("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E\x00", "xxxxxxxxx?xxxxxx????xx?");
 			if (address != null)
 			{
 				getFragInstVFuncOffset = *(sbyte*)(address + 9);
-				detachFragmentPartByIndexFunc = GetDelegateForFunctionPointer<DetachFragmentPartByIndexDelegate>(new IntPtr(*(int*)(address + 16) + address + 20));
+				detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
 			}
 			address = FindPattern("\x00\x8B\x0D\x00\x00\x00\x00\x00\x83\x64\x00\x00\x00\x00\x0F\xB7\xD1\x00\x33\xC9\xE8", "?xx?????xx????xxx?xxx");
 			if (address != null)
@@ -816,6 +805,28 @@ namespace SHVDN
 				InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
 			}
 
+			// These 2 nopping are done by some trainers such as Simple Trainer, Menyoo, and Enhanced Native Trainer, but we try to do this if they are not done yet
+			#region -- Bypass model requests block for some models --
+			// Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
+			address = FindPattern("\x48\x85\xC0\x00\x00\x38\x45\x00\x0F", "xxx??xx?x");
+			address = address != null ? (address + 0x4D) : null;
+			if (address != null && *address != 0x90)
+			{
+				const int bytesToWriteInstructions = 0x18;
+				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
+				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
+			}
+			#endregion
+			#region -- Bypass is player model allowed to spawn checks --
+			address = FindPattern("\xFF\x52\x00\x84\xC0\x00\x00\x48\x8B\xC3", "xx?xx??xxx");
+			address = address != null ? (address + 5) : null;
+			if (address != null && *address != 0x90)
+			{
+				const int bytesToWriteInstructions = 2;
+				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
+				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
+			}
+			#endregion
 
 			// Generate vehicle model list
 			var vehicleHashesGroupedByClass = new List<int>[0x20];
@@ -1138,10 +1149,10 @@ namespace SHVDN
 			return (*data & (1 << bit)) != 0;
 		}
 
-		public static IntPtr String => StringToCoTaskMemUTF8("STRING");
-		public static IntPtr NullString => StringToCoTaskMemUTF8(string.Empty);
-		public static IntPtr CellEmailBcon => StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
 		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
+		public static readonly IntPtr String = StringToCoTaskMemUTF8("STRING");
+		public static readonly IntPtr NullString = StringToCoTaskMemUTF8(string.Empty);
+		public static readonly IntPtr CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
 
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{
@@ -1237,18 +1248,63 @@ namespace SHVDN
 
 		#region -- Game Data --
 
-		delegate uint GetHashKeyDelegate(IntPtr stringPtr, uint initialHash);
-		static GetHashKeyDelegate GetHashKeyFunc;
+		// copied directly from the game -- performs uppercase to lowercase conversions and backslash to slash conversion amongst other things
+		// look at the pattern for more info 48 8B 0B 33 D2 E8 ? ? ? ? 89 03 (which is how you can find rage::atStringHash)
+		// with this lookup table, the hash function will perform faster than using if branches for uppercase characters and backslash (which is how the hash function in GTA IV does to pick characters)
+		private static readonly byte[]
+		 LookupTableForGetHashKey =
+		 {
+			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
+			0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+			0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20,
+			0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B,
+			0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
+			0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x61,
+			0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C,
+			0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77,
+			0x78, 0x79, 0x7A, 0x5B, 0x2F, 0x5D, 0x5E, 0x5F, 0x60, 0x61, 0x62,
+			0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D,
+			0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78,
+			0x79, 0x7A, 0x7B, 0x7C, 0x7D, 0x7E, 0x7F, 0x80, 0x81, 0x82, 0x83,
+			0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E,
+			0x8F, 0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99,
+			0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9F, 0xA0, 0xA1, 0xA2, 0xA3, 0xA4,
+			0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF,
+			0xB0, 0xB1, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA,
+			0xBB, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5,
+			0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0,
+			0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB,
+			0xDC, 0xDD, 0xDE, 0xDF, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6,
+			0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1,
+			0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC,
+			0xFD, 0xFE, 0xFF
+		 };
 
-		public static uint GetHashKey(string key)
+		public static uint GetHashKey(string str)
 		{
-			IntPtr keyPtr = ScriptDomain.CurrentDomain.PinString(key);
-			return GetHashKeyFunc(keyPtr, 0);
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			// rage::atStringHash in the exe checks if the first byte is double quote, but that check is omitted since there are no practical cases for that edge case found
+			uint hash = 0;
+			byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
+			for (int i = 0; i < utf8Bytes.Length; i++)
+			{
+				hash += LookupTableForGetHashKey[utf8Bytes[i]];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
 		}
 
 		static ulong GetLabelTextByHashAddress;
-		delegate ulong GetLabelTextByHashFuncDelegate(ulong address, int labelHash);
-		static GetLabelTextByHashFuncDelegate GetLabelTextByHashFunc;
+		static delegate* unmanaged[Stdcall]<ulong, int, ulong> GetLabelTextByHashFunc;
 
 		public static string GetGXTEntryByHash(int entryLabelHash)
 		{
@@ -1454,10 +1510,8 @@ namespace SHVDN
 
 		#region -- CEntity Functions --
 
-		public delegate float* GetRotationFromMatrixDelegate(float* returnRotationArrayAddress, ulong matrixAddress, int rotationOrder);
-		public delegate int GetQuaternionFromMatrixDelegate(float* returnQuaternionArrayAddress, ulong matrixAddress);
-		static GetRotationFromMatrixDelegate GetRotationFromMatrixFunc;
-		static GetQuaternionFromMatrixDelegate GetQuaternionFromMatrixFunc;
+		static delegate* unmanaged[Stdcall]<float*, ulong, int, float*> GetRotationFromMatrixFunc;
+		static delegate* unmanaged[Stdcall]<float*, ulong, int> GetQuaternionFromMatrixFunc;
 
 		public static void GetRotationFromMatrix(float* returnRotationArray, IntPtr matrixAddress, int rotationOrder = 2)
 		{
@@ -1489,23 +1543,19 @@ namespace SHVDN
 
 		#region -- CPhysical Functions --
 
-		public delegate void SetEntityAngularVelocityDelegate(IntPtr entityAddress, float* angularVelocity);
 		// return value will be the address of the temporary 4 float storage
-		public delegate float* GetEntityAngularVelocityDelegate(IntPtr entityAddress);
 
 		// Only 2 virtural functions are present (one for peds and objects and one for vehicles)
-		static Dictionary<ulong, SetEntityAngularVelocityDelegate> setEntityAngularVelocityVFuncCache = new Dictionary<ulong, SetEntityAngularVelocityDelegate>(2);
-		static Dictionary<ulong, GetEntityAngularVelocityDelegate> getEntityAngularVelocityVFuncCache = new Dictionary<ulong, GetEntityAngularVelocityDelegate>(2);
 
 		internal class SetEntityAngularVelocityTask : IScriptTask
 		{
 			#region Fields
 			IntPtr entityAddress;
-			SetEntityAngularVelocityDelegate setAngularVelocityDelegate;
+			delegate* unmanaged[Stdcall]<IntPtr, float*, void> setAngularVelocityDelegate;
 			float x, y, z;
 			#endregion
 
-			internal SetEntityAngularVelocityTask(IntPtr entityAddress, SetEntityAngularVelocityDelegate vFuncDelegate, float x, float y, float z)
+			internal SetEntityAngularVelocityTask(IntPtr entityAddress, delegate* unmanaged[Stdcall]<IntPtr, float*, void> vFuncDelegate, float x, float y, float z)
 			{
 				this.entityAddress = entityAddress;
 				this.setAngularVelocityDelegate = vFuncDelegate;
@@ -1528,7 +1578,7 @@ namespace SHVDN
 		public static float* GetEntityAngularVelocity(IntPtr entityAddress)
 		{
 			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)GetAngularVelocityVFuncOfEntityOffset);
-			var getEntityAngularVelocity = CreateGetEntityAngularVelocityDelegateIfNotCreated(vFuncAddr);
+			var getEntityAngularVelocity = (delegate* unmanaged[Stdcall]<IntPtr, float*>)(vFuncAddr);
 
 			return getEntityAngularVelocity(entityAddress);
 		}
@@ -1536,41 +1586,13 @@ namespace SHVDN
 		public static void SetEntityAngularVelocity(IntPtr entityAddress, float x, float y, float z)
 		{
 			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)SetAngularVelocityVFuncOfEntityOffset);
-			var setEntityAngularVelocityDelegate = CreateSetEntityAngularVelocityDelegateIfNotCreated(vFuncAddr);
+			var setEntityAngularVelocityDelegate = (delegate* unmanaged[Stdcall]<IntPtr, float*, void>)(vFuncAddr);
 
 			var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 
-		static SetEntityAngularVelocityDelegate CreateSetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
-		{
-			if (setEntityAngularVelocityVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
-			{
-				return outDelegate;
-			}
-			else
-			{
-				var newDelegate = GetDelegateForFunctionPointer<SetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
-				setEntityAngularVelocityVFuncCache.Add(virtualFuncAddr, newDelegate);
 
-				return newDelegate;
-			}
-		}
-
-		static GetEntityAngularVelocityDelegate CreateGetEntityAngularVelocityDelegateIfNotCreated(ulong virtualFuncAddr)
-		{
-			if (getEntityAngularVelocityVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
-			{
-				return outDelegate;
-			}
-			else
-			{
-				var newDelegate = GetDelegateForFunctionPointer<GetEntityAngularVelocityDelegate>(new IntPtr((long)virtualFuncAddr));
-				getEntityAngularVelocityVFuncCache.Add(virtualFuncAddr, newDelegate);
-
-				return newDelegate;
-			}
-		}
 
 		#endregion
 
@@ -1658,7 +1680,7 @@ namespace SHVDN
 		/// <para>
 		/// This method exists because there are no reliable ways with native functions.
 		/// The native <c>GET_VEHICLE_PED_IS_IN</c> returns the last vehicle the ped used when not in vehicle (though the 2nd parameter name is supposed to be <c>ConsiderEnteringAsInVehicle</c> as a leaked header suggests),
-        /// but returns <c>0</c> when the ped is going to a door of some vehicle or opening one.
+		/// but returns <c>0</c> when the ped is going to a door of some vehicle or opening one.
 		/// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it, which is different from the last vehicle this method returns and the native <c>RESET_PED_LAST_VEHICLE</c> changes.
 		/// </para>
 		/// </summary>
@@ -1760,17 +1782,12 @@ namespace SHVDN
 
 		#region -- Vehicle Wheel Data --
 
-		delegate void FixVehicleWheelDelegate(IntPtr wheelAddress);
-		delegate void PunctureVehicleTireNewDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
-		delegate void PunctureVehicleTireOldDelegate(IntPtr wheelPtr, ulong unkPtr, float damage, IntPtr vehiclePtr, ulong unkIntReturnPtrParam, ulong unkFloatReturnPtrParam, int unkIntParam, byte unkByteParam, [MarshalAs(UnmanagedType.I1)] bool someBoolFlagForMultiplayer);
-		delegate void BurstVehicleTireOnRimNewDelegate(IntPtr wheelPtr);
-		delegate void BurstVehicleTireOnRimOldDelegate(IntPtr wheelPtr, IntPtr vehiclePtr);
 
-		static FixVehicleWheelDelegate FixVehicleWheelFunc;
-		static PunctureVehicleTireNewDelegate PunctureVehicleTireNewFunc;
-		static PunctureVehicleTireOldDelegate PunctureVehicleTireOldFunc;
-		static BurstVehicleTireOnRimNewDelegate BurstVehicleTireOnRimNewFunc;
-		static BurstVehicleTireOnRimOldDelegate BurstVehicleTireOnRimOldFunc;
+		static delegate* unmanaged[Stdcall]<IntPtr, void> FixVehicleWheelFunc;
+		static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void> PunctureVehicleTireNewFunc;
+		static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void> PunctureVehicleTireOldFunc;
+		static delegate* unmanaged[Stdcall]<IntPtr, void> BurstVehicleTireOnRimNewFunc;
+		static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> BurstVehicleTireOnRimOldFunc;
 
 		public static int VehicleWheelSteeringLimitMultiplierOffset { get; }
 
@@ -2220,11 +2237,9 @@ namespace SHVDN
 		public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModelsGroupedByType { get; }
 		public static ReadOnlyCollection<int> PedModels { get; }
 
-		delegate ulong GetHandlingDataByHashDelegate(IntPtr hashAddress);
-		delegate ulong GetHandlingDataByIndexDelegate(int index);
 
-		static GetHandlingDataByHashDelegate GetHandlingDataByHash;
-		static GetHandlingDataByIndexDelegate GetHandlingDataByIndex;
+		static delegate* unmanaged[Stdcall]<IntPtr, ulong> GetHandlingDataByHash;
+		static delegate* unmanaged[Stdcall]<int, ulong> GetHandlingDataByIndex;
 
 		public static IntPtr GetHandlingDataByModelHash(int modelHash)
 		{
@@ -2311,14 +2326,20 @@ namespace SHVDN
 		struct EntityPool
 		{
 			[FieldOffset(0x10)]
-			internal uint num1;
+			internal uint maxCount;
+			[FieldOffset(0x14)]
+			internal int itemSize;
+			[FieldOffset(0x18)]
+			internal int firstEmptySlot;
+			[FieldOffset(0x1C)]
+			internal int emptySlots;
 			[FieldOffset(0x20)]
-			internal uint num2;
+			internal uint itemCount;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			internal bool IsFull()
 			{
-				return num1 - (num2 & 0x3FFFFFFF) <= 256;
+				return maxCount - (itemCount & 0x3FFFFFFF) <= 256;
 			}
 		}
 
@@ -2442,16 +2463,10 @@ namespace SHVDN
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
 
-		delegate ulong EntityPosFuncDelegate(ulong address, float* position);
-		delegate ulong EntityModel1FuncDelegate(ulong address);
-		delegate ulong EntityModel2FuncDelegate(ulong address);
-		delegate int AddEntityToPoolFuncDelegate(ulong address);
 
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
-		static EntityPosFuncDelegate EntityPosFunc;
-		static EntityModel1FuncDelegate EntityModel1Func;
-		static EntityModel2FuncDelegate EntityModel2Func;
-		static AddEntityToPoolFuncDelegate AddEntityToPoolFunc;
+		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
+		static delegate* unmanaged[Stdcall]<ulong, int> AddEntityToPoolFunc;
 
 		internal class EntityPoolTask : IScriptTask
 		{
@@ -3264,8 +3279,7 @@ namespace SHVDN
 
 		static ulong* CheckpointPoolAddress;
 
-		delegate ulong GetCGameScriptHandlerAddressDelegate();
-		static GetCGameScriptHandlerAddressDelegate GetCGameScriptHandlerAddressFunc;
+		static delegate* unmanaged[Stdcall]<ulong> GetCGameScriptHandlerAddressFunc;
 
 		public static int[] GetCheckpointHandles()
 		{
@@ -3289,10 +3303,9 @@ namespace SHVDN
 
 		#region -- Waypoint Info Array --
 
-		delegate ulong GetLocalPlayerPedAddressFuncDelegate();
 		static ulong* waypointInfoArrayStartAddress;
 		static ulong* waypointInfoArrayEndAddress;
-		static GetLocalPlayerPedAddressFuncDelegate GetLocalPlayerPedAddressFunc;
+		static delegate* unmanaged[Stdcall]<ulong> GetLocalPlayerPedAddressFunc;
 
 		public static int GetWaypointBlip()
 		{
@@ -3313,7 +3326,7 @@ namespace SHVDN
 				int modelHash = *(int*)waypointInfoAddress;
 
 				if (modelHash == playerPedModelHash)
-				{				
+				{
 					return *(int*)(waypointInfoAddress + 4);
 				}
 			}
@@ -3324,10 +3337,9 @@ namespace SHVDN
 
 		#region -- Pool Addresses --
 
-		delegate ulong GetHandleAddressFuncDelegate(int handle);
-		static GetHandleAddressFuncDelegate GetPtfxAddressFunc;
-		static GetHandleAddressFuncDelegate GetEntityAddressFunc;
-		static GetHandleAddressFuncDelegate GetPlayerAddressFunc;
+		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
+		static delegate* unmanaged[Stdcall]<int, ulong> GetEntityAddressFunc;
+		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerAddressFunc;
 
 		public static IntPtr GetPtfxAddress(int handle)
 		{
@@ -3380,8 +3392,7 @@ namespace SHVDN
 
 		#region -- Projectile Functions --
 
-		delegate void ExplodeProjectileDelegate(IntPtr projectileAddress, int unkParam);
-		static ExplodeProjectileDelegate ExplodeProjectileFunc;
+		static delegate* unmanaged[Stdcall]<IntPtr, int, void> ExplodeProjectileFunc;
 
 		public static void ExplodeProjectile(IntPtr projectileAddress)
 		{
@@ -3480,7 +3491,7 @@ namespace SHVDN
 
 		static int weaponInfoHumanNameHashOffset;
 
-		[StructLayout(LayoutKind.Explicit, Size=0x20)]
+		[StructLayout(LayoutKind.Explicit, Size = 0x20)]
 		struct ItemInfo
 		{
 			[FieldOffset(0x0)]
@@ -3785,17 +3796,14 @@ namespace SHVDN
 
 		#region -- Fragment Object for Entity --
 
-		internal delegate FragInst* GetFragInstDelegate(IntPtr entityAddress);
-		internal delegate FragInst* DetachFragmentPartByIndexDelegate(FragInst* fragInst, int partIndex);
 
 		static int getFragInstVFuncOffset;
-		static DetachFragmentPartByIndexDelegate detachFragmentPartByIndexFunc;
+		static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> detachFragmentPartByIndexFunc;
 		static ulong** phSimulatorInstPtr;
 		static int colliderCapacityOffset;
 		static int colliderCountOffset;
 
 		// Only 3 virtural functions are present (one for peds and objects and one for vehicles)
-		static Dictionary<ulong, GetFragInstDelegate> getFragInstVFuncCache = new Dictionary<ulong, GetFragInstDelegate>(3);
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
 		internal unsafe struct FragInst
@@ -4055,7 +4063,7 @@ namespace SHVDN
 		private static FragInst* GetFragInstAddressOfEntity(IntPtr entityAddress)
 		{
 			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)getFragInstVFuncOffset);
-			var getFragInstFunc = CreateGetFragInstDelegateIfNotCreated(vFuncAddr);
+			var getFragInstFunc = (delegate* unmanaged[Stdcall]<IntPtr, FragInst*>)(vFuncAddr);
 
 			return getFragInstFunc(entityAddress);
 		}
@@ -4066,58 +4074,30 @@ namespace SHVDN
 			return fragPhysicsLOD != null ? fragPhysicsLOD->fragmentGroupCount : 0;
 		}
 
-		private static GetFragInstDelegate CreateGetFragInstDelegateIfNotCreated(ulong virtualFuncAddr)
-		{
-			if (getFragInstVFuncCache.TryGetValue(virtualFuncAddr, out var outDelegate))
-			{
-				return outDelegate;
-			}
-			else
-			{
-				var newDelegate = GetDelegateForFunctionPointer<GetFragInstDelegate>(new IntPtr((long)virtualFuncAddr));
-				getFragInstVFuncCache.Add(virtualFuncAddr, newDelegate);
-
-				return newDelegate;
-			}
-		}
 
 		#endregion
 
 		#region -- NaturalMotion Euphoria --
 
-		delegate byte SetNmBoolAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, [MarshalAs(UnmanagedType.I1)] bool value);
-		delegate byte SetNmIntAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, int value);
-		delegate byte SetNmFloatAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float value);
-		delegate byte SetNmVector3AddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, float x, float y, float z);
-		delegate byte SetNmStringAddressDelegate(ulong messageAddress, IntPtr argumentNamePtr, IntPtr stringPtr);
 
-		delegate ulong InitMessageMemoryDelegate(ulong T1, ulong T2, int T3);
-		delegate void SendMessageToPedDelegate(ulong pedNmAddress, IntPtr messagePtr, ulong messageAddress);
-		delegate void FreeMessageMemoryDelegate(ulong messageAddress);
 
-		delegate CTask* GetActiveTaskFuncDelegate(ulong cTaskTreePedAddress);
-		delegate int GetEventTypeIndexDelegate(ulong cEventAddress);
 
-		delegate void ActionUlongDelegate(ulong T);
-		delegate int FuncUlongIntDelegate(ulong T);
-		delegate ulong FuncUlongUlongDelegate(ulong T);
 
-		static SetNmIntAddressDelegate SetNmIntAddress;
-		static SetNmBoolAddressDelegate SetNmBoolAddress;
-		static SetNmFloatAddressDelegate SetNmFloatAddress;
-		static SetNmStringAddressDelegate SetNmStringAddress;
-		static SetNmVector3AddressDelegate SetNmVector3Address;
-		static GetActiveTaskFuncDelegate GetActiveTaskFunc;
-		static InitMessageMemoryDelegate InitMessageMemoryFunc;
-		static SendMessageToPedDelegate SendMessageToPedFunc;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmIntAddress;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmBoolAddress;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmFloatAddress;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmStringAddress;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmVector3Address;
+		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
+		static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> InitMessageMemoryFunc;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendMessageToPedFunc;
 
 		static int fragInstNMGtaOffset;
 		static int cTaskNMScriptControlTypeIndex;
 		static int cEventSwitch2NMTypeIndex;
 
-		static Dictionary<ulong, GetEventTypeIndexDelegate> getEventTypeIndexDelegateCacheDict = new Dictionary<ulong, GetEventTypeIndexDelegate>();
 
-		[StructLayout(LayoutKind.Explicit, Size=0x38)]
+		[StructLayout(LayoutKind.Explicit, Size = 0x38)]
 		struct CTask
 		{
 			[FieldOffset(0x34)]
@@ -4135,7 +4115,7 @@ namespace SHVDN
 
 			if (phInstGtaAddress == fragInstNMGtaAddress && !IsPedInjured((byte*)pedAddress))
 			{
-				var funcUlongIntDelegate = GetDelegateForFunctionPointer<FuncUlongIntDelegate>(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + 0x98)));
+				var funcUlongIntDelegate = (delegate* unmanaged[Stdcall]<ulong, int>)(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + 0x98)));
 				if (funcUlongIntDelegate(fragInstNMGtaAddress) != -1)
 				{
 					var PedIntelligenceAddr = *(ulong*)(pedAddress + PedIntelligenceOffset);
@@ -4153,8 +4133,8 @@ namespace SHVDN
 							var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
 							if (eventAddress != 0)
 							{
-								var getEventTypeIndexFunc = CreateGetEventTypeIndexDelegateIfNotCreated(eventAddress);
-								if (getEventTypeIndexFunc(eventAddress) == cEventSwitch2NMTypeIndex)
+								var getEventTypeIndexVirtualFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(*(ulong*)(*(ulong*)eventAddress + 0x18));
+								if (getEventTypeIndexVirtualFunc(eventAddress) == cEventSwitch2NMTypeIndex)
 								{
 									var taskInEvent = *(CTask**)(eventAddress + 0x28);
 									if (taskInEvent != null)
@@ -4176,18 +4156,6 @@ namespace SHVDN
 
 		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 
-		static GetEventTypeIndexDelegate CreateGetEventTypeIndexDelegateIfNotCreated(ulong eventAddress)
-		{
-			var getEventTypeIndexVirtualFuncAddr = *(ulong*)(*(ulong*)eventAddress + 0x18);
-
-			if (getEventTypeIndexDelegateCacheDict.TryGetValue(getEventTypeIndexVirtualFuncAddr, out var cachedDelegate))
-				return cachedDelegate;
-
-			var createdDelegate = GetDelegateForFunctionPointer<GetEventTypeIndexDelegate>(new IntPtr((long)getEventTypeIndexVirtualFuncAddr));
-			getEventTypeIndexDelegateCacheDict[getEventTypeIndexVirtualFuncAddr] = createdDelegate;
-
-			return createdDelegate;
-		}
 
 		internal class EuphoriaMessageTask : IScriptTask
 		{
