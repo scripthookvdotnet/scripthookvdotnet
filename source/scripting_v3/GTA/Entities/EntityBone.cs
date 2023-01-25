@@ -140,7 +140,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// Gets the rotation of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
 		public Vector3 RelativeRotation
 		{
