@@ -50,6 +50,19 @@ namespace GTA.UI
 		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
 		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
 		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
+		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation) :
+			this(textureDict, textureName, size, position, color, rotation, false)
+		{
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.
+		/// </summary>
+		/// <param name="textureDict">The Texture dictionary where the <see cref="Sprite"/> is stored (the *.ytd file).</param>
+		/// <param name="textureName">Name of the <see cref="Sprite"/> inside the Texture dictionary.</param>
+		/// <param name="size">Set the <see cref="Size"/> of the <see cref="Sprite"/>.</param>
+		/// <param name="position">Set the <see cref="Position"/> on screen where to draw the <see cref="Sprite"/>.</param>
+		/// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="Sprite"/>.</param>
+		/// <param name="rotation">Set the rotation to draw the sprite, measured in degrees, see also <seealso cref="Rotation"/>.</param>
 		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
 		{
