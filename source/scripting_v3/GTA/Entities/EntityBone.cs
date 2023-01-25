@@ -48,7 +48,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBonePoseAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -58,7 +58,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBonePoseAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -75,7 +75,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -92,7 +92,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBonePoseAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -102,7 +102,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBonePoseAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -129,7 +129,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -146,7 +146,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.UpVector;
@@ -162,7 +162,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.RightVector;
@@ -178,7 +178,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.ForwardVector;
@@ -194,7 +194,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
@@ -210,7 +210,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
@@ -226,7 +226,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
@@ -258,7 +258,7 @@ namespace GTA
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
 		public Vector3 GetOffsetPosition(Vector3 offset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return Owner.Matrix.TransformPoint(offset);
@@ -272,7 +272,7 @@ namespace GTA
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
 		public Vector3 GetRelativeOffsetPosition(Vector3 offset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return offset;
@@ -286,7 +286,7 @@ namespace GTA
 		/// <param name="worldCoords">The world coordinates.</param>
 		public Vector3 GetPositionOffset(Vector3 worldCoords)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return Owner.Matrix.InverseTransformPoint(worldCoords);
@@ -300,7 +300,7 @@ namespace GTA
 		/// <param name="entityOffset">The <see cref="Entity"/> offset.</param>
 		public Vector3 GetRelativePositionOffset(Vector3 entityOffset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneMatrixAddress(Owner.Handle, Index);
+			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return entityOffset;

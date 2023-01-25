@@ -1473,34 +1473,34 @@ namespace SHVDN
 			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
 			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
-		public static IntPtr GetEntityBonePoseAddress(int handle, int boneIndex)
+		public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeletonData = GetCrSkeletonOfEntityHandle(handle);
-			if (crSkeletonData == null)
+			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			if (crSkeleton == null)
 				return IntPtr.Zero;
 
-			if (boneIndex < crSkeletonData->boneCount)
+			if (boneIndex < crSkeleton->boneCount)
 			{
-				return crSkeletonData->GetBonePoseMatrixAddress(boneIndex);
+				return crSkeleton->GetBoneObjectMatrixAddress((boneIndex));
 			}
 
 			return IntPtr.Zero;
 		}
-		public static IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex)
+		public static IntPtr GetEntityBoneGlobalMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeletonData = GetCrSkeletonOfEntityHandle(handle);
-			if (crSkeletonData == null)
+			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			if (crSkeleton == null)
 				return IntPtr.Zero;
 
-			if (boneIndex < crSkeletonData->boneCount)
+			if (boneIndex < crSkeleton->boneCount)
 			{
-				return crSkeletonData->GetBoneMatrixAddress(boneIndex);
+				return crSkeleton->GetBoneGlobalMatrixAddress(boneIndex);
 			}
 
 			return IntPtr.Zero;
@@ -3889,18 +3889,20 @@ namespace SHVDN
 		internal unsafe struct CrSkeleton
 		{
 			[FieldOffset(0x00)] internal CrSkeletonData* skeletonData;
-			[FieldOffset(0x10)] internal ulong bonePoseMatrixArrayPtr;
-			[FieldOffset(0x18)] internal ulong boneMatrixArrayPtr;
+			// object matrices (entity-local space)
+			[FieldOffset(0x10)] internal ulong boneObjectMatrixArrayPtr;
+			// global matrices (world space)
+			[FieldOffset(0x18)] internal ulong boneGlobalMatrixArrayPtr;
 			[FieldOffset(0x20)] internal int boneCount;
 
-			public IntPtr GetBonePoseMatrixAddress(int boneIndex)
+			public IntPtr GetBoneObjectMatrixAddress(int boneIndex)
 			{
-				return new IntPtr((long)(bonePoseMatrixArrayPtr + ((uint)boneIndex * 0x40)));
+				return new IntPtr((long)(boneObjectMatrixArrayPtr + ((uint)boneIndex * 0x40)));
 			}
 
-			public IntPtr GetBoneMatrixAddress(int boneIndex)
+			public IntPtr GetBoneGlobalMatrixAddress(int boneIndex)
 			{
-				return new IntPtr((long)(boneMatrixArrayPtr + ((uint)boneIndex * 0x40)));
+				return new IntPtr((long)(boneGlobalMatrixArrayPtr + ((uint)boneIndex * 0x40)));
 			}
 		}
 
