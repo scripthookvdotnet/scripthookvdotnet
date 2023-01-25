@@ -140,6 +140,29 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		public Vector3 RelativeRotation
+		{
+			get
+			{
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				unsafe
+				{
+					var tempRotationArray = stackalloc float[3];
+					SHVDN.NativeMemory.GetRotationFromMatrix(tempRotationArray, address);
+
+					return new Vector3(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2]);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the vector that points above this <see cref="EntityBone"/> relative to the world.
 		/// </summary>
 		public Vector3 UpVector
