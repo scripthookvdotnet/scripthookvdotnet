@@ -729,6 +729,9 @@ namespace SHVDN
 
 		static unsafe float GetTextLength(char* str, int count, float marginLength)
 		{
+                        if(str == null || count == 0)
+                                return marginLength;
+
 			var calculated = count;
 			if (calculated > 50) { calculated = 50; }
 			while (Encoding.UTF8.GetByteCount(str, calculated) > 50) { calculated--; };
