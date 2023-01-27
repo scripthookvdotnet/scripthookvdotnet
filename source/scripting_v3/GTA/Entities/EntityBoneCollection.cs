@@ -65,6 +65,10 @@ namespace GTA
 		/// Gets the <see cref="EntityBone"/> with the specified bone name.
 		/// </summary>
 		/// <param name="boneName">Name of the bone.</param>
+		/// <remarks>
+		/// Use <see cref="PedBoneCollection.this[Bone]"/> if this <see cref="Entity"/> is <see cref="Ped"/>
+		/// since this overload will always returns a <see cref="EntityBone"/> whose index is <c>-1</c> for peds.
+		/// </remarks>
 		public EntityBone this[string boneName]
 		{
 			get => new EntityBone(_owner, boneName);
