@@ -66,9 +66,21 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="PedBone"/> with the specified bone name.
+		/// <para>
+		/// Gets the <see cref="PedBone"/> with the specified bone name. Use this overload only if you know a correct bone tag.
+		/// If the corresponding bone is not found, the <see cref="EntityBone.Index"/> of the returned instance will return <c>-1</c>.
+		/// </para>
+		/// <para>
+		/// This method will try to find the corresponding bone by the hash calcutated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
+		/// where <c>ElfHashUppercased(string)</c> will convert ASCII lowercase characters to uppercase ones before hashing characters.
+		/// </para>
 		/// </summary>
 		/// <param name="boneName">Name of the bone.</param>
+		/// <remarks>
+		/// Registered bone tag values (in the model) may be different from the calculated hashes from corresponding bone names.
+		/// For example, <see cref="Ped"/>s have the bones in their skeletons whose name is <c>SKEL_Spine3</c> and whose ID is <c>24818</c>, which doesn't match the hashed value of <c>SKEL_Spine3</c> but matches that of <c>BONETAG_SPINE3</c>.
+		/// On the other hand, <see cref="Ped"/>s have the bone in their skeletons whose name is <c>IK_Head</c> and whose ID is <c>12844</c>, which matches the hashed value of <c>IK_Head</c>.
+		/// </remarks>
 		public new PedBone this[string boneName]
 		{
 			get => new PedBone((Ped)_owner, boneName);

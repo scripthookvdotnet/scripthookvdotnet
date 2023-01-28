@@ -62,9 +62,21 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// <para>
 		/// Gets the <see cref="EntityBone"/> with the specified bone name.
+		/// If the corresponding bone is not found, the <see cref="EntityBone.Index"/> of the returned instance will return <c>-1</c>.
+		/// To access to the chassis bone of <see cref="Vehicle"/>, use <see cref="this[int]"/> with the index <c>0</c> as the chassis bone index and ID will always be <c>0</c> (hardcoded to the exe).
+		/// </para>
+		/// <para>
+		/// This method will try to find the corresponding bone by the hash calcutated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
+		/// where <c>ElfHashUppercased(string)</c> will convert ASCII lowercase characters to uppercase ones before hashing characters.
+		/// </para>
 		/// </summary>
 		/// <param name="boneName">Name of the bone.</param>
+		/// <remarks>
+		/// Registered bone tag values (in the model) may be different from the calculated hashes from corresponding bone names.
+		/// For example, <see cref="Ped"/>s have the bone in their skeletons whose name is <c>SKEL_Spine3</c> and whose ID is <c>24818</c>, which doesn't match the hashed value of <c>SKEL_Spine3</c> but matches that of <c>BONETAG_SPINE3</c>.
+		/// </remarks>
 		public EntityBone this[string boneName]
 		{
 			get => new EntityBone(_owner, boneName);
