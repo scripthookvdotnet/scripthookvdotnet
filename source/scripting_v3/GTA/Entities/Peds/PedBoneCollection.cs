@@ -69,7 +69,6 @@ namespace GTA
 		/// Gets the <see cref="PedBone"/> with the specified bone name.
 		/// </summary>
 		/// <param name="boneName">Name of the bone.</param>
-		[Obsolete("The string indexer overload is obsolete since GET_ENTITY_BONE_INDEX_BY_NAME will return -1 when the entity is a ped, and as a result PedBone's index will always be -1 and will not work as intended.")]
 		public new PedBone this[string boneName]
 		{
 			get => new PedBone((Ped)_owner, boneName);
