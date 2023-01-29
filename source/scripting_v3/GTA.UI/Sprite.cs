@@ -169,6 +169,16 @@ namespace GTA.UI
 			get; set;
 		}
 		/// <summary>
+		/// Gets or sets the texture coordinates of this <see cref="Sprite" />.
+		/// </summary>
+		/// <value>
+		/// The texture coordinates allows to specify the coordinates (measured in percentage: 1f = 100%), used to draw the sprite.
+		/// </value>
+		public RectangleF TextureCoordinates
+		{
+			get; set;
+		}
+		/// <summary>
 		/// Gets or sets the size to draw the <see cref="Sprite" />
 		/// </summary>
 		/// <value>
@@ -289,6 +299,18 @@ namespace GTA.UI
 			{
 				positionX += scaleX * 0.5f;
 				positionY += scaleY * 0.5f;
+			}
+
+			if (TextureCoordinates != RectangleF.Empty)
+			{
+				float u1 = TextureCoordinates.Top;
+				float v1 = TextureCoordinates.Left;
+				float u2 = TextureCoordinates.Right;
+				float v2 = TextureCoordinates.Bottom;
+
+				Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, u1, v1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
+
+				return;
 			}
 
 			Function.Call(Hash.DRAW_SPRITE, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);

@@ -228,11 +228,17 @@ namespace SHVDN
 				cTaskNMScriptControlTypeIndex = *(int*)(address + 8);
 			}
 
+			address = FindPattern("\x4C\x8B\x03\x48\x8B\xD5\x48\x8B\xCB\x41\xFF\x50\x00\x83\xFE\x04", "xxxxxxxxxxxx?xxx");
+			if (address != null)
+			{
+				// The instruction expects a signed value, but virtual function offsets can't be negative
+				getEventTypeIndexVFuncOffset = (uint)*(byte*)(address + 12);
+			}
 			address = FindPattern("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
 			if (address != null)
 			{
 				var cEventSwitch2NMVfTableArrayAddr = (ulong)(*(int*)(address + 3) + address + 7);
-				var getEventTypeOfcEventSwitch2NMFuncAddr = *(ulong*)(cEventSwitch2NMVfTableArrayAddr + 0x18);
+				var getEventTypeOfcEventSwitch2NMFuncAddr = *(ulong*)(cEventSwitch2NMVfTableArrayAddr + getEventTypeIndexVFuncOffset);
 				cEventSwitch2NMTypeIndex = *(int*)(getEventTypeOfcEventSwitch2NMFuncAddr + 1);
 			}
 
@@ -676,6 +682,11 @@ namespace SHVDN
 			if (address != null)
 			{
 				fragInstNMGtaOffset = *(int*)(address + 7);
+			}
+			address = FindPattern("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
+			if (address != null)
+			{
+				fragInstNMGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
 			}
 
 			address = FindPattern("\xF3\x44\x0F\x10\xAB\x00\x00\x00\x00\x0F\x5B\xC9\xF3\x45\x0F\x5C\xD4", "xxxxx????xxxxxxxx");
@@ -1473,34 +1484,34 @@ namespace SHVDN
 			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
 			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
-		public static IntPtr GetEntityBonePoseAddress(int handle, int boneIndex)
+		public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeletonData = GetCrSkeletonOfEntityHandle(handle);
-			if (crSkeletonData == null)
+			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			if (crSkeleton == null)
 				return IntPtr.Zero;
 
-			if (boneIndex < crSkeletonData->boneCount)
+			if (boneIndex < crSkeleton->boneCount)
 			{
-				return crSkeletonData->GetBonePoseMatrixAddress(boneIndex);
+				return crSkeleton->GetBoneObjectMatrixAddress((boneIndex));
 			}
 
 			return IntPtr.Zero;
 		}
-		public static IntPtr GetEntityBoneMatrixAddress(int handle, int boneIndex)
+		public static IntPtr GetEntityBoneGlobalMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeletonData = GetCrSkeletonOfEntityHandle(handle);
-			if (crSkeletonData == null)
+			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			if (crSkeleton == null)
 				return IntPtr.Zero;
 
-			if (boneIndex < crSkeletonData->boneCount)
+			if (boneIndex < crSkeleton->boneCount)
 			{
-				return crSkeletonData->GetBoneMatrixAddress(boneIndex);
+				return crSkeleton->GetBoneGlobalMatrixAddress(boneIndex);
 			}
 
 			return IntPtr.Zero;
@@ -3889,18 +3900,20 @@ namespace SHVDN
 		internal unsafe struct CrSkeleton
 		{
 			[FieldOffset(0x00)] internal CrSkeletonData* skeletonData;
-			[FieldOffset(0x10)] internal ulong bonePoseMatrixArrayPtr;
-			[FieldOffset(0x18)] internal ulong boneMatrixArrayPtr;
+			// object matrices (entity-local space)
+			[FieldOffset(0x10)] internal ulong boneObjectMatrixArrayPtr;
+			// global matrices (world space)
+			[FieldOffset(0x18)] internal ulong boneGlobalMatrixArrayPtr;
 			[FieldOffset(0x20)] internal int boneCount;
 
-			public IntPtr GetBonePoseMatrixAddress(int boneIndex)
+			public IntPtr GetBoneObjectMatrixAddress(int boneIndex)
 			{
-				return new IntPtr((long)(bonePoseMatrixArrayPtr + ((uint)boneIndex * 0x40)));
+				return new IntPtr((long)(boneObjectMatrixArrayPtr + ((uint)boneIndex * 0x40)));
 			}
 
-			public IntPtr GetBoneMatrixAddress(int boneIndex)
+			public IntPtr GetBoneGlobalMatrixAddress(int boneIndex)
 			{
-				return new IntPtr((long)(boneMatrixArrayPtr + ((uint)boneIndex * 0x40)));
+				return new IntPtr((long)(boneGlobalMatrixArrayPtr + ((uint)boneIndex * 0x40)));
 			}
 		}
 
@@ -4095,7 +4108,8 @@ namespace SHVDN
 		static int fragInstNMGtaOffset;
 		static int cTaskNMScriptControlTypeIndex;
 		static int cEventSwitch2NMTypeIndex;
-
+		static uint getEventTypeIndexVFuncOffset;
+		static uint fragInstNMGtaGetUnkValVFuncOffset;
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x38)]
 		struct CTask
@@ -4115,8 +4129,9 @@ namespace SHVDN
 
 			if (phInstGtaAddress == fragInstNMGtaAddress && !IsPedInjured((byte*)pedAddress))
 			{
-				var funcUlongIntDelegate = (delegate* unmanaged[Stdcall]<ulong, int>)(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + 0x98)));
-				if (funcUlongIntDelegate(fragInstNMGtaAddress) != -1)
+				// This virtual function will return -1 if phInstGta is not a NM one
+				var fragInstNMGtaGetUnkValVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + fragInstNMGtaGetUnkValVFuncOffset)));
+				if (fragInstNMGtaGetUnkValVFunc(fragInstNMGtaAddress) != -1)
 				{
 					var PedIntelligenceAddr = *(ulong*)(pedAddress + PedIntelligenceOffset);
 
@@ -4133,7 +4148,7 @@ namespace SHVDN
 							var eventAddress = *(ulong*)((byte*)PedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)PedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
 							if (eventAddress != 0)
 							{
-								var getEventTypeIndexVirtualFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(*(ulong*)(*(ulong*)eventAddress + 0x18));
+								var getEventTypeIndexVirtualFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(*(ulong*)(*(ulong*)eventAddress + getEventTypeIndexVFuncOffset));
 								if (getEventTypeIndexVirtualFunc(eventAddress) == cEventSwitch2NMTypeIndex)
 								{
 									var taskInEvent = *(CTask**)(eventAddress + 0x28);
