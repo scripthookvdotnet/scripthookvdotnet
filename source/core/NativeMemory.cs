@@ -3884,7 +3884,7 @@ namespace SHVDN
 			[FieldOffset(0x5E)] internal ushort boneCount;
 
 			/// <summary>
-			/// Gets the bone id from specified bone index. Note that bone indexes are sequential values and bone ids are not sequential ones.
+			/// Gets the bone index from specified bone id. Note that bone indexes are sequential values and bone ids are not sequential ones.
 			/// </summary>
 			public int GetBoneIndexByBoneId(int boneId)
 			{
