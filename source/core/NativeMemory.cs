@@ -1554,14 +1554,11 @@ namespace SHVDN
 
 		#region -- CPhysical Functions --
 
-		// return value will be the address of the temporary 4 float storage
-
-		// Only 2 virtural functions are present (one for peds and objects and one for vehicles)
-
 		internal class SetEntityAngularVelocityTask : IScriptTask
 		{
 			#region Fields
 			IntPtr entityAddress;
+			// return value will be the address of the temporary 4 float storage
 			delegate* unmanaged[Stdcall]<IntPtr, float*, void> setAngularVelocityDelegate;
 			float x, y, z;
 			#endregion
@@ -3516,60 +3513,26 @@ namespace SHVDN
 			[FieldOffset(0x1C)]
 			internal uint slot;
 
-			// The function is for the game version b2802 or later ones.
-			// This one directly returns a hash value (not a pointer value) unlike the previous function.
-			delegate uint GetClassNameHashOfCItemInfoDelegate();
-			static Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate> getClassNameHashOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate>();
-			// The function is for game versions prior to b2802.
-			// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
-			// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
-			delegate uint* GetClassNameHashAddressOfCItemInfoDelegate(ulong unused, uint* outVal);
-			static Dictionary<ulong, GetClassNameHashAddressOfCItemInfoDelegate> getClassNameHashAddressOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashAddressOfCItemInfoDelegate>();
-
 			internal uint GetClassNameHash()
 			{
 				// In the b2802 or a later exe, the function returns a hash value (not a pointer value)
 				if (GetGameVersion() >= 80)
 				{
-					var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(vTable[2]);
+					// The function is for the game version b2802 or later ones.
+					// This one directly returns a hash value (not a pointer value) unlike the previous function.
+					var GetClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)(vTable[2]);
 					return GetClassNameHashFunc();
 				}
 				else
 				{
-					var GetClassNameAddressHashFunc = CreateGetClassNameHashAddressDelegateIfNotCreated(vTable[2]);
+					// The function is for game versions prior to b2802.
+					// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
+					// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
+					var GetClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)(vTable[2]);
+
 					uint outVal = 0;
 					var returnValueAddress = GetClassNameAddressHashFunc(0, &outVal);
 					return *returnValueAddress;
-				}
-			}
-
-			private static GetClassNameHashOfCItemInfoDelegate CreateGetClassNameHashDelegateIfNotCreated(ulong virtualFuncAddr)
-			{
-				if (getClassNameHashOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
-				{
-					return outDelegate;
-				}
-				else
-				{
-					var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
-					getClassNameHashOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
-
-					return newDelegate;
-				}
-			}
-
-			private static GetClassNameHashAddressOfCItemInfoDelegate CreateGetClassNameHashAddressDelegateIfNotCreated(ulong virtualFuncAddr)
-			{
-				if (getClassNameHashAddressOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
-				{
-					return outDelegate;
-				}
-				else
-				{
-					var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashAddressOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
-					getClassNameHashAddressOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
-
-					return newDelegate;
 				}
 			}
 		}
@@ -3812,8 +3775,6 @@ namespace SHVDN
 		static ulong** phSimulatorInstPtr;
 		static int colliderCapacityOffset;
 		static int colliderCountOffset;
-
-		// Only 3 virtural functions are present (one for peds and objects and one for vehicles)
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
 		internal unsafe struct FragInst
