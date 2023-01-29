@@ -1445,7 +1445,16 @@ namespace SHVDN
 
 		#region -- Skeleton Data --
 
-		static CrSkeleton* GetCrSkeletonOfEntityHandle(int handle) => GetCrSkeletonOfEntity(new IntPtr((long)GetEntityAddressFunc(handle)));
+		static CrSkeleton* GetCrSkeletonFromEntityHandle(int handle)
+		{
+			var entityAddress = GetEntityAddress(handle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			return GetCrSkeletonOfEntity(entityAddress);
+		}
 		static CrSkeleton* GetCrSkeletonOfEntity(IntPtr entityAddress)
 		{
 			var fragInst = GetFragInstAddressOfEntity(entityAddress);
@@ -1481,7 +1490,7 @@ namespace SHVDN
 
 		public static int GetEntityBoneCount(int handle)
 		{
-			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
 		public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
@@ -1489,7 +1498,7 @@ namespace SHVDN
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
 				return IntPtr.Zero;
 
@@ -1505,7 +1514,7 @@ namespace SHVDN
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
 				return IntPtr.Zero;
 
