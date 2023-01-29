@@ -3807,7 +3807,6 @@ namespace SHVDN
 
 		#region -- Fragment Object for Entity --
 
-
 		static int getFragInstVFuncOffset;
 		static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> detachFragmentPartByIndexFunc;
 		static ulong** phSimulatorInstPtr;
@@ -3920,9 +3919,7 @@ namespace SHVDN
 		[StructLayout(LayoutKind.Explicit)]
 		internal unsafe struct CrSkeletonData
 		{
-			[FieldOffset(0x10)] internal ulong boneIdAndIndexTupleArrayPtr;
-			[FieldOffset(0x18)] internal ushort divisorForBoneIdAndIndexTuple;
-			[FieldOffset(0x1A)] internal ushort unkValue;
+			[FieldOffset(0x10)] internal PgHashMap boneHashMap;
 			[FieldOffset(0x5E)] internal ushort boneCount;
 
 			/// <summary>
@@ -3930,7 +3927,7 @@ namespace SHVDN
 			/// </summary>
 			public int GetBoneIndexByBoneId(int boneId)
 			{
-				if (unkValue == 0)
+				if (boneHashMap.elementCount == 0)
 				{
 					if (boneId < boneCount)
 						return boneId;
@@ -3938,27 +3935,56 @@ namespace SHVDN
 					return -1;
 				}
 
-				if (divisorForBoneIdAndIndexTuple == 0)
+				if (boneHashMap.bucketCount == 0)
 					return -1;
 
-				var firstTuplePtr = ((ulong*)boneIdAndIndexTupleArrayPtr + (boneId % divisorForBoneIdAndIndexTuple));
-
-				for (var boneIdAndIndexTuple = (BoneIdAndIndexTuple*)*firstTuplePtr; boneIdAndIndexTuple != null; boneIdAndIndexTuple = (BoneIdAndIndexTuple*)boneIdAndIndexTuple->nextTupleAddr)
+				if (boneHashMap.Get((uint)boneId, out var returnBoneId))
 				{
-					if (boneId == boneIdAndIndexTuple->boneId)
-						return boneIdAndIndexTuple->boneIndex;
+					return returnBoneId;
 				}
 
 				return -1;
 			}
 		}
 
-		[StructLayout(LayoutKind.Explicit)]
-		internal struct BoneIdAndIndexTuple
+		[StructLayout(LayoutKind.Sequential, Pack = 4)]
+		internal struct HashEntry
 		{
-			[FieldOffset(0x0)] internal int boneId;
-			[FieldOffset(0x4)] internal int boneIndex;
-			[FieldOffset(0x8)] internal ulong nextTupleAddr;
+			internal uint hash;
+			internal int data;
+			internal HashEntry* next;
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		internal unsafe struct PgHashMap
+		{
+			[FieldOffset(0x0)]
+			internal ulong* buckets;
+			[FieldOffset(0x8)]
+			internal ushort bucketCount;
+			[FieldOffset(0xA)]
+			internal ushort elementCount;
+
+			internal ulong GetBucketAddress(int index)
+			{
+				return buckets[index];
+			}
+
+			internal bool Get(uint hash, out int value)
+			{
+				var firstEntryAddr = (ulong*)GetBucketAddress((int)(hash % bucketCount));
+				for (var hashEntry = (HashEntry*)firstEntryAddr; hashEntry != null; hashEntry = hashEntry->next)
+				{
+					if (hash == hashEntry->hash)
+					{
+						value = hashEntry->data;
+						return true;
+					}
+				}
+
+				value = default;
+				return false;
+			}
 		}
 
 		internal class DetachFragmentPartByIndexTask : IScriptTask
