@@ -5,18 +5,20 @@
 
 using GTA.Native;
 using System;
+using System.Drawing.Drawing2D;
 
 namespace GTA
 {
 	/// <summary>
 	/// Represents an animation blend delta that determines the rate at which the animation task will blend in or out.
-	/// The blend in duration is <c>1.0f / (the blend delta value)</c>.
+	/// The blend duration in seconds is equal to <c>1.0f / (the blend delta value)</c>.
 	/// </summary>
 	public readonly struct AnimationBlendDelta : IEquatable<AnimationBlendDelta>
 	{
 		public AnimationBlendDelta(float value)
 		{
-			if (value < 0)
+			// Don't accept zero. If the blend delta is zero, CTaskScriptedAnimation can't finish animation blending because of infinity duration (which will be made by division of 1.0 by 0).
+			if (value <= 0)
 				throw new ArgumentException("The value should be positive.", "value");
 			Value = value;
 		}
