@@ -236,6 +236,20 @@ namespace GTA
 
 		#endregion
 
+		#region Wind
+		public static float WindSpeed
+		{
+			get => Function.Call<float>(Hash.GET_WIND_SPEED);
+			set
+			{
+				if (value >= 0f && value <= 12.0f)
+				{
+					Function.Call(Hash.SET_WIND_SPEED, value);
+				}
+			}
+		}
+		#endregion
+
 		#region Blips
 
 		/// <summary>
