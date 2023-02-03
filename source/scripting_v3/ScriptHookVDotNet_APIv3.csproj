@@ -99,6 +99,7 @@
     <Compile Include="GTA\Entities\InteriorInstance.cs" />
     <Compile Include="GTA\Entities\EntityPopulationType.cs" />
     <Compile Include="GTA\Entities\Building.cs" />
+    <Compile Include="GTA\Entities\Peds\RagdollComponent.cs" />
     <Compile Include="GTA\Entities\Peds\IKControlFlags.cs" />
     <Compile Include="GTA\Entities\Peds\PedMoveBlendRatio.cs" />
     <Compile Include="GTA\Entities\Peds\PedPropAnchorPosition.cs" />
