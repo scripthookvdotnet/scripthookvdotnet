@@ -685,10 +685,10 @@ namespace SHVDN
 				CEventStackOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x0F\x29\x4D\xF0\x48\x8B\x92\x00\x00\x00\x00", "xxxxxxx????");
+			address = FindPattern("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
 			if (address != null)
 			{
-				fragInstNMGtaOffset = *(int*)(address + 7);
+				fragInstNMGtaOffset = *(int*)(address + 16);
 			}
 			address = FindPattern("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
 			if (address != null)
@@ -732,16 +732,12 @@ namespace SHVDN
 				ArmorOffset = *(int*)(address + 3);
 			}
 
-			address = FindPattern("\x49\x3B\xF6\x75\xD3\xF3\x0F\x10\x9F\x00\x00\x00\x00", "xxxxxxxxx????");
+			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\xD9\x48\x8B\x48\x08\x48\x85\xC9\x0F", "xxx????xxxxxxxxxxx");
 			if (address != null)
 			{
-				InjuryHealthThresholdOffset = *(int*)(address + 9);
-			}
-
-			address = FindPattern("\x75\xD0\xF3\x0F\x10\x83\x00\x00\x00\x00\x41\x0F\x2F\x06", "xxxxxx????xxxx");
-			if (address != null)
-			{
-				FatalInjuryHealthThresholdOffset = *(int*)(address + 6);
+				// The order won't change in some updates
+				InjuryHealthThresholdOffset = *(int*)(address + 22);
+				FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 4;
 			}
 
 			address = FindPattern("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
