@@ -205,19 +205,19 @@ namespace SHVDN
 			SendMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmIntAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
+			SetNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmBoolAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
+			SetNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmFloatAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
+			SetNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
-			SetNmStringAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
+			SetNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmVector3Address = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+			SetNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
 			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(address));
@@ -4212,18 +4212,16 @@ namespace SHVDN
 
 		#region -- NaturalMotion Euphoria --
 
+		// These CNmParameter functions can also be called as virtual functions for your information
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmParameterInt;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmParameterBool;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmParameterFloat;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmParameterString;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmParameterVector;
 
-
-
-
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmIntAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmBoolAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmFloatAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmStringAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmVector3Address;
-		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
 		static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> InitMessageMemoryFunc;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendMessageToPedFunc;
+		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
 
 		static int fragInstNMGtaOffset;
 		static int cTaskNMScriptControlTypeIndex;
@@ -4334,16 +4332,16 @@ namespace SHVDN
 						if (argType == typeof(float))
 						{
 							var argValueConverted = *(float*)(&argValue);
-							NativeMemory.SetNmFloatAddress(messageMemory, name, argValueConverted);
+							NativeMemory.SetNmParameterFloat(messageMemory, name, argValueConverted);
 						}
 						else if (argType == typeof(bool))
 						{
 							var argValueConverted = argValue != 0 ? true : false;
-							NativeMemory.SetNmBoolAddress(messageMemory, name, argValueConverted);
+							NativeMemory.SetNmParameterBool(messageMemory, name, argValueConverted);
 						}
 						else if (argType == typeof(int))
 						{
-							NativeMemory.SetNmIntAddress(messageMemory, name, argValue);
+							NativeMemory.SetNmParameterInt(messageMemory, name, argValue);
 						}
 					}
 				}
@@ -4356,9 +4354,9 @@ namespace SHVDN
 
 						var argValue = arg.Value;
 						if (argValue is float[] vector3ArgValue)
-							NativeMemory.SetNmVector3Address(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
+							NativeMemory.SetNmParameterVector(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
 						else if (argValue is string stringArgValue)
-							NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
+							NativeMemory.SetNmParameterString(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
 					}
 				}
 
