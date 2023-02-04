@@ -1449,6 +1449,7 @@ namespace GTA
 
 		/// <summary>
 		/// Applies a world force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
 		/// </summary>
 		/// <inheritdoc cref="ApplyForceCenterOfMassInternal(Vector3, ForceType, RagdollComponent, bool, bool, bool)"/>
 		public void ApplyWorldForceCenterOfMass(Vector3 force, ForceType forceType, RagdollComponent component, bool scaleByMass, bool applyToChildren = false)
@@ -1457,6 +1458,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Applies a relative force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
 		/// </summary>
 		/// <inheritdoc cref="ApplyForceCenterOfMassInternal(Vector3, ForceType, RagdollComponent, bool, bool, bool)"/>
 		public void ApplyRelativeForceCenterOfMass(Vector3 force, ForceType forceType, RagdollComponent component, bool scaleByMass, bool applyToChildren = false)
@@ -1465,6 +1467,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Applies a force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
 		/// </summary>
 		/// <param name="force">The force to be applied.</param>
 		/// <param name="forceType">Type of the force to apply.</param>
