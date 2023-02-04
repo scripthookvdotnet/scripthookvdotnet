@@ -1491,6 +1491,50 @@ namespace SHVDN
 			return fragCacheEntry->crSkeleton;
 		}
 
+		public static int GetBoneIdForEntityBoneIndex(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return -1;
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return -1;
+
+			return crSkeleton->skeletonData->GetBoneIdByIndex(boneIndex);
+		}
+		public static (int boneIndex, int boneTag) GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return (-1, -1);
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return (-1, -1);
+
+			return crSkeleton->skeletonData->GetNextSiblingBoneIndexAndId(boneIndex);
+		}
+		public static (int boneIndex, int boneTag) GetParentBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return (-1, -1);
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return (-1, -1);
+
+			return crSkeleton->skeletonData->GetParentBoneIndexAndId(boneIndex);
+		}
+		public static string GetEntityBoneName(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return null;
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return null;
+
+			return crSkeleton->skeletonData->GetBoneName(boneIndex);
+		}
 		public static int GetEntityBoneCount(int handle)
 		{
 			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
@@ -3889,10 +3933,31 @@ namespace SHVDN
 			}
 		}
 
+		[StructLayout(LayoutKind.Explicit, Size = 0x50)]
+		internal struct CrBoneData
+		{
+			// Rotation (quaternion) is between 0x0 - 0x10
+			// Translation (vector3) is between 0x10 - 0x1C
+			// Scale (vector3?) is between 0x20 - 0x2C
+			[FieldOffset(0x30)]
+			internal ushort nextSiblingBoneIndex;
+			[FieldOffset(0x32)]
+			internal ushort parentBoneIndex;
+			[FieldOffset(0x38)]
+			internal IntPtr namePtr;
+			[FieldOffset(0x42)]
+			internal ushort boneIndex;
+			[FieldOffset(0x44)]
+			internal ushort boneId;
+
+			internal string Name => namePtr == null ? null : Marshal.PtrToStringAnsi(namePtr);
+		};
+
 		[StructLayout(LayoutKind.Explicit)]
 		internal unsafe struct CrSkeletonData
 		{
 			[FieldOffset(0x10)] internal PgHashMap boneHashMap;
+			[FieldOffset(0x20)] internal CrBoneData* boneData;
 			[FieldOffset(0x5E)] internal ushort boneCount;
 
 			/// <summary>
@@ -3917,6 +3982,62 @@ namespace SHVDN
 				}
 
 				return -1;
+			}
+
+			/// <summary>
+			/// Gets the bone id from specified bone index. Note that bone indexes are sequential values and bone ids are not sequential ones.
+			/// </summary>
+			internal int GetBoneIdByIndex(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return -1;
+
+				return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->boneId;
+			}
+
+			/// <summary>
+			/// Gets the next sibling bone index of specified bone index.
+			/// </summary>
+			internal (int boneIndex, int boneId) GetNextSiblingBoneIndexAndId(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return (-1, -1);
+
+				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
+				var nextSiblingBoneIndex = crBoneData->nextSiblingBoneIndex;
+				if (nextSiblingBoneIndex == 0xFFFF)
+				{
+					return (-1, -1);
+				}
+				return (nextSiblingBoneIndex, crBoneData->boneId);
+			}
+
+			/// <summary>
+			/// Gets the next parent bone index of specified bone index.
+			/// </summary>
+			internal (int boneIndex, int boneId) GetParentBoneIndexAndId(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return (-1, -1);
+
+				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
+				var parentBoneIndex = crBoneData->parentBoneIndex;
+				if (parentBoneIndex == 0xFFFF)
+				{
+					return (-1, -1);
+				}
+				return (parentBoneIndex, crBoneData->boneId);
+			}
+
+			/// <summary>
+			/// Gets the bone name string from specified bone index.
+			/// </summary>
+			internal string GetBoneName(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return null;
+
+				return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->Name;
 			}
 		}
 

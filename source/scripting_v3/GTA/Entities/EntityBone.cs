@@ -15,6 +15,22 @@ namespace GTA
 		{
 			Owner = owner;
 			Index = boneIndex;
+
+			if (boneIndex != -1)
+			{
+				Tag = SHVDN.NativeMemory.GetBoneIdForEntityBoneIndex(owner.Handle, boneIndex);
+			}
+			else
+			{
+				Tag = -1;
+			}
+		}
+		// This overload is present to avoid redundant bone id fetching
+		internal EntityBone(Entity owner, int boneIndex, int boneTag)
+		{
+			Owner = owner;
+			Index = boneIndex;
+			Tag = (boneIndex != -1) ? boneTag : -1;
 		}
 		internal EntityBone(Entity owner, string boneName) : this(owner, Function.Call<int>(Hash.GET_ENTITY_BONE_INDEX_BY_NAME, owner.NativeValue, boneName))
 		{
@@ -29,12 +45,57 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the bone tag (identifier) of this <see cref="EntityBone"/>.
+		/// If the bone does not exist, <c>-1</c> will be returned.
+		/// </summary>
+		public int Tag
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets the owner <see cref="Entity"/> this bone belongs to.
 		/// </summary>
 		public Entity Owner
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Gets the next sibling bone of this <see cref="EntityBone"/>.
+		/// To check existence of the next sibling bone, you can use <see cref="EntityBone.Index"/> or <see cref="EntityBone.Tag"/>.
+		/// </summary>
+		public EntityBone NextSibling
+		{
+			get
+			{
+				(int boneIndex, int boneTag) = SHVDN.NativeMemory.GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(Owner.Handle, Index);
+				return new EntityBone(Owner, boneIndex, boneTag);
+			}
+		}
+
+		/// <summary>
+		/// Gets the parent bone of this <see cref="EntityBone"/>.
+		/// To check existence of the next sibling bone, you can use <see cref="EntityBone.Index"/> or <see cref="EntityBone.Tag"/>.
+		/// </summary>
+		public EntityBone Parent
+		{
+			get
+			{
+				(int boneIndex, int boneTag) = SHVDN.NativeMemory.GetParentBoneIndexAndIdOfEntityBoneIndex(Owner.Handle, Index);
+				return new EntityBone(Owner, boneIndex, boneTag);
+			}
+		}
+
+		/// <summary>
+		/// Gets the bone name of this <see cref="EntityBone"/>.
+		/// If the bone does not exist, <see langword="null"/> will be returned.
+		/// </summary>
+		/// <remarks>
+		/// This property return the bone name as registered in the yft file of corresponding model, but the hashed value of this string value may not match <see cref="Tag"/>.
+		/// For example, <see cref="Ped"/>s have the bone in their skeletons whose name is <c>SKEL_Spine3</c> and whose ID is <c>24818</c>, which doesn't match the hashed value of <c>SKEL_Spine3</c> but matches that of <c>BONETAG_SPINE3</c>.
+		/// </remarks>
+		public string Name => SHVDN.NativeMemory.GetEntityBoneName(Owner.Handle, Index);
 
 		/// <summary>
 		/// Determines if this <see cref="EntityBone"/> is valid.
