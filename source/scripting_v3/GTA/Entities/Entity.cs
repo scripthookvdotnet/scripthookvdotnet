@@ -1603,8 +1603,15 @@ namespace GTA
 		/// </para>
 		/// </param>
 		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the speficied component.</param>
+		/// <exception cref="System.ArgumentException">Thrown when <paramref name="forceType"/> is set to <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>, which is not supported by this method.</exception>
 		private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
 		{
+			// The native won't apply the force if apply force type is one of the external types
+			if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
+			{
+				throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
+			}
+
 			// 6th parameter is component index (not bone index), which matters only if the entity is a ped
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, forceType, force.X, force.Y, force.Z, 0, relativeForce, scaleByMass, applyToChildren);
 		}

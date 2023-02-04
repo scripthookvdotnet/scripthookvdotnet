@@ -1434,6 +1434,7 @@ namespace GTA
 		/// <para>Specifies whether scale the force by the current time scale (max: <c>1.0f</c>).</para>
 		///	<para>Only affects when <paramref name="forceType"/> is <see cref="ForceType.InternalImpulse"/> or <see cref="ForceType.ExternalImpulse"/>.</para>
 		/// </param>
+		/// <exception cref="System.ArgumentOutOfRangeException">Thrown when <paramref name="component"/> not a value defined in <see cref="RagdollComponent"/>.</exception>
 		private void ApplyForceInternal(Vector3 force, Vector3 offset, ForceType forceType, RagdollComponent component, bool relativeForce, bool relativeOffset, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
 		{
 			// The game can crash the game if component value is out of bound
@@ -1482,12 +1483,14 @@ namespace GTA
 		/// </para>
 		/// </param>
 		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the speficied component.</param>
+		/// <exception cref="System.ArgumentException">Thrown when <paramref name="forceType"/> is set to <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>, which is not supported by this method.</exception>
+		/// <exception cref="System.ArgumentOutOfRangeException">Thrown when <paramref name="component"/> not a value defined in <see cref="RagdollComponent"/>.</exception>
 		private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, RagdollComponent component, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
 		{
 			// The native won't apply the force if apply force type is one of the external types
 			if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
 			{
-				throw new ArgumentOutOfRangeException(nameof(forceType));
+				throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
 			}
 			// The game can crash the game if component value is out of bound
 			// The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
