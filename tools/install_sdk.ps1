@@ -1,7 +1,7 @@
 # Set the working directory to SDK
 Set-Location "sdk/"
 # Download the file with Invoke-WebRequest
-$source = "http://reshade.me/downloads/ScriptHookV_SDK_1.0.617.1a.zip"
+$source = "https://drive.google.com/uc?export=download&id=1NPh-CQYDUm10vk53LagICROEpDY4aTo8"
 Invoke-WebRequest $source -OutFile "sdk.zip"
 # Extract the contents of the file in the current directory
 7z x sdk.zip
