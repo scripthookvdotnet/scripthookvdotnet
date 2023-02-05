@@ -192,7 +192,22 @@ namespace GTA
 				}
 			}
 		}
-
+		/// <summary>
+		/// Makes the specified radio station appear on the radio wheel.
+		/// </summary>
+		/// <param name="station">Radio station</param>
+		public static void UnlockRadioStation(RadioStation station)
+		{
+			Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], false);
+		}
+		/// <summary>
+		/// Prevents the specified radio station from appearing on the radio wheel.
+		/// </summary>
+		/// <param name="station">Radio station</param>
+		public static void LockRadioStation(RadioStation station)
+		{
+			Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], true);
+		}
 		/// <summary>
 		/// Gets or sets a value indicating whether to render the world with a night vision filter.
 		/// </summary>
