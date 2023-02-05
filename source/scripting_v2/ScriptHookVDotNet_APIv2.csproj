@@ -189,11 +189,7 @@
   <UsingTask TaskName="CL" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <UsingTask TaskName="RC" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
   <UsingTask TaskName="Link" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
-  <Target
-    Name="CoreCompile"
-    Inputs="@(Compile);@(CppCompile);$(ReferencePathWithRefAssemblies)"
-    Outputs="@(IntermediateAssembly);$(IntermediateOutputPath)$(TargetName).cpp.netmodule;$(IntermediateOutputPath)$(TargetName).csharp.netmodule"
-    DependsOnTargets="$(CoreCompileDependsOn)">
+  <Target Name="CoreCompile" Inputs="@(Compile);@(CppCompile);$(ReferencePathWithRefAssemblies)" Outputs="@(IntermediateAssembly);$(IntermediateOutputPath)$(TargetName).cpp.netmodule;$(IntermediateOutputPath)$(TargetName).csharp.netmodule" DependsOnTargets="$(CoreCompileDependsOn)">
     <!-- Keep track of the generated intermediate files so that they are properly cleaned on rebuilds -->
     <ItemGroup>
       <FileWrites Include="$(IntermediateOutputPath)$(TargetName).cpp.netmodule;" />
@@ -205,60 +201,12 @@
       <GenerateDebugInformation Condition="'$(DebugType)' == 'full'">DebugFull</GenerateDebugInformation>
     </PropertyGroup>
     <!-- First build all C++/CLI files -->
-    <CL
-      Sources="@(CppCompile)"
-      AdditionalUsingDirectories="$(TargetFrameworkDirectory);$(OutputPath)"
-      CompileAsManaged="true"
-      ForcedUsingFiles="@(ReferencePathWithRefAssemblies);ScriptHookVDotNet.asi"
-      ObjectFileName="$(IntermediateOutputPath)$(TargetName).cpp.netmodule"
-      SuppressStartupBanner="true"
-      ToolExe="cl.exe"
-      ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
+    <CL Sources="@(CppCompile)" AdditionalUsingDirectories="$(TargetFrameworkDirectory);$(OutputPath)" CompileAsManaged="true" ForcedUsingFiles="@(ReferencePathWithRefAssemblies);ScriptHookVDotNet.asi" ObjectFileName="$(IntermediateOutputPath)$(TargetName).cpp.netmodule" SuppressStartupBanner="true" ToolExe="cl.exe" ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
     <!-- After that build all the C# files -->
-    <CSC
-      Sources="@(Compile)"
-      AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
-      BaseAddress="$(BaseAddress)"
-      DebugType="$(DebugType)"
-      DefineConstants="$(DefineConstants)"
-      DisabledWarnings="$(NoWarn)"
-      DocumentationFile="@(DocFileItem)"
-      EmitDebugInformation="$(DebugSymbols)"
-      EnvironmentVariables="$(CscEnvironment)"
-      FileAlignment="$(FileAlignment)"
-      HighEntropyVA="$(HighEntropyVA)"
-      LangVersion="$(LangVersion)"
-      NoStandardLib="$(NoCompilerStandardLib)"
-      Optimize="$(Optimize)"
-      OutputAssembly="$(IntermediateOutputPath)$(TargetName).csharp.netmodule"
-      PdbFile="$(PdbFile)"
-      References="@(ReferencePathWithRefAssemblies)"
-      TargetType="Module"
-      Utf8Output="$(Utf8Output)"
-      WarningLevel="$(WarningLevel)"
-      WarningsAsErrors="$(WarningsAsErrors)"
-      WarningsNotAsErrors="$(WarningsNotAsErrors)"
-      ToolExe="$(CscToolExe)"
-      ToolPath="$(CscToolPath)" />
+    <CSC Sources="@(Compile)" AllowUnsafeBlocks="$(AllowUnsafeBlocks)" BaseAddress="$(BaseAddress)" DebugType="$(DebugType)" DefineConstants="$(DefineConstants)" DisabledWarnings="$(NoWarn)" DocumentationFile="@(DocFileItem)" EmitDebugInformation="$(DebugSymbols)" EnvironmentVariables="$(CscEnvironment)" FileAlignment="$(FileAlignment)" HighEntropyVA="$(HighEntropyVA)" LangVersion="$(LangVersion)" NoStandardLib="$(NoCompilerStandardLib)" Optimize="$(Optimize)" OutputAssembly="$(IntermediateOutputPath)$(TargetName).csharp.netmodule" PdbFile="$(PdbFile)" References="@(ReferencePathWithRefAssemblies)" TargetType="Module" Utf8Output="$(Utf8Output)" WarningLevel="$(WarningLevel)" WarningsAsErrors="$(WarningsAsErrors)" WarningsNotAsErrors="$(WarningsNotAsErrors)" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
     <!-- Compile version resource -->
-    <RC
-      Source="@(ResourceCompile)"
-      ResourceOutputFileName="$(IntermediateOutputPath)$(TargetName).res"
-      SuppressStartupBanner="true"
-      ToolExe="rc.exe"
-      ToolPath="$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64" />
+    <RC Source="@(ResourceCompile)" ResourceOutputFileName="$(IntermediateOutputPath)$(TargetName).res" SuppressStartupBanner="true" ToolExe="rc.exe" ToolPath="$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64" />
     <!-- Finally link the two modules together into a single assembly -->
-    <Link
-      Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule;$(IntermediateOutputPath)$(TargetName).res"
-      AdditionalLibraryDirectories="$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(OutputPath)"
-      GenerateDebugInformation="$(GenerateDebugInformation)"
-      LinkDLL="true"
-      LinkTimeCodeGeneration="UseLinkTimeCodeGeneration"
-      OutputFile="@(IntermediateAssembly)"
-      RandomizedBaseAddress="$(HighEntropyVA)"
-      SuppressStartupBanner="true"
-      TargetMachine="Machine$(PlatformTarget)"
-      ToolExe="link.exe"
-      ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
+    <Link Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule;$(IntermediateOutputPath)$(TargetName).res" AdditionalLibraryDirectories="$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(OutputPath)" GenerateDebugInformation="$(GenerateDebugInformation)" LinkDLL="true" LinkTimeCodeGeneration="UseLinkTimeCodeGeneration" OutputFile="@(IntermediateAssembly)" RandomizedBaseAddress="$(HighEntropyVA)" SuppressStartupBanner="true" TargetMachine="Machine$(PlatformTarget)" ToolExe="link.exe" ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
   </Target>
 </Project>

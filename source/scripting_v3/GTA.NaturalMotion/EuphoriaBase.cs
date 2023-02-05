@@ -32,7 +32,45 @@ namespace GTA.NaturalMotion
 			_message = message;
 			_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
 			_stringVector3ArrayArguments = new Dictionary<string, object>();
+			ResetOldParameters = false;
 		}
+		private Message(string message, Dictionary<string, (int value, Type type)> boolIntFloatArgs, Dictionary<string, object> stringVector3ArrayArgs, bool resetOldParams)
+		{
+			_message = message;
+			_boolIntFloatArguments = boolIntFloatArgs;
+			_stringVector3ArrayArguments = stringVector3ArrayArgs;
+			ResetOldParameters = resetOldParams;
+		}
+
+		/// <summary>
+		/// Indicates whether this behavior should start the behavior for this message from the beginning (<see langword="true"/>),
+		/// stop it immediately (<see langword="false"/>), or does not explicitly start or stop it (<see langword="null"/>) so the paramater for this behavior can get updated with this message.
+		/// </summary>
+		public bool? Start
+		{
+			set
+			{
+				if (value is bool valueNonNullable)
+				{
+					SetArgument("start", valueNonNullable);
+				}
+				else
+				{
+					_boolIntFloatArguments?.Remove("start");
+				}
+			}
+		}
+		/// <summary>
+		/// <para>
+		/// Indicates whether old parameters for this <see cref="GTA.NaturalMotion.Message"/> behavior should be reset to the default value.
+		/// Will work in the same way as setting <c>CNmParameterResetMessage</c> in task config files such as <c>physicstasks.ymt</c>.
+		/// </para>
+		/// <para>
+		/// Will have an effect only if this message is send via <see cref="Euphoria.ReceiveNmMessages(Message[])"/> or
+		/// <see cref="Euphoria.ReceiveNmMessages(IEnumerable{Message})"/>.
+		/// </para>
+		/// </summary>
+		public bool ResetOldParameters { get; set; }
 
 		/// <summary>
 		/// Stops this Natural Motion behavior on the given <see cref="Ped"/>.
@@ -40,15 +78,23 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
 		{
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _stopArgument, null);
+			if (target == null || !target.Exists())
+				return;
+
+			var message = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _stopArgument, null, false);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, message);
 		}
 
 		/// <summary>
 		/// Starts this Natural Motion behavior on the <see cref="Ped"/> that will loop until manually aborted.
+		/// Starts a <c>CTaskNMControl</c> task if the <see cref="Ped"/> has no such task.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		public void SendTo(Ped target)
 		{
+			if (target == null || !target.Exists())
+				return;
+
 			if (!target.IsRagdoll)
 			{
 				if (!target.CanRagdoll)
@@ -63,16 +109,19 @@ namespace GTA.NaturalMotion
 				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, -1, 1, 1, 1, 0);
 			}
 
-			SetArgument("start", true);
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
+			ConstructNmParametersAndSendToInternal(target);
 		}
 		/// <summary>
 		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
+		///	Always starts a new ragdoll task, making impossible to stack multiple Natural Motion behaviors on this <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void SendTo(Ped target, int duration)
 		{
+			if (target == null || !target.Exists())
+				return;
+
 			if (!target.CanRagdoll)
 			{
 				target.CanRagdoll = true;
@@ -81,6 +130,61 @@ namespace GTA.NaturalMotion
 			// Always call to specify the new duration
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, duration, 1, 1, 1, 0);
 			SendTo(target);
+		}
+
+		/// <summary>
+		/// Sends message this Natural Motion behavior on the <see cref="Ped"/>, but don't start a new ragdoll task so the <see cref="Ped"/> can have multiple NM behaviors.
+		/// You'll need to start a ragdoll task with <see cref="Ped.Ragdoll(int, RagdollType)"/> before the <see cref="Ped"/> can recieve this <see cref="Message"/>.
+		/// If you need to start this Natural Motion behavior from the beginning, you'll also need to set <see cref="Start"/> to <see langword="true"/>.
+		/// </summary>
+		/// <remarks>
+		/// Although <see cref="SendTo(Ped)"/> wouldn't create a new ragdoll tasks if the <see cref="Ped"/> runs a script ragdoll tasks in most cases,
+		/// this method guarantees it sends the message if available but doesn't create a new ragdoll tasks.
+		/// </remarks>
+		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
+		public void SendToNoNewRagdollTask(Ped target)
+		{
+			ConstructNmParametersAndSendToInternal(target, false);
+		}
+
+		internal void ConstructNmParametersAndSendToInternal(Ped target, bool setStartParameterToTrue = true)
+		{
+			if (setStartParameterToTrue)
+			{
+				// Use a cloned dictionary so this message instance can keep the original parameters
+				// Shallow copying should be enough
+				var newBoolIntFloatArguments = GetClonedDictWithStartParamEnabled();
+				var constructedMessageAndParameters = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, newBoolIntFloatArguments, _stringVector3ArrayArguments, ResetOldParameters);
+				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters);
+			}
+			else
+			{
+				var constructedMessageAndParameters = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _boolIntFloatArguments, _stringVector3ArrayArguments, ResetOldParameters);
+				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters);
+			}
+		}
+		internal NativeMemory.NmMessageParameterCollection ConstructNmParameterCollection()
+		{
+			// Use cloned dictionaries so this message instance can keep the original parameters
+			// Shallow copying should be enough
+			var newBoolIntFloatArgumentsShallowCopied = new Dictionary<string, (int, Type)>(_boolIntFloatArguments);
+			var newStringVector3ArrayArgumentsShallowCopied = new Dictionary<string, object>(_stringVector3ArrayArguments);
+			return new SHVDN.NativeMemory.NmMessageParameterCollection(_message, newBoolIntFloatArgumentsShallowCopied, newStringVector3ArrayArgumentsShallowCopied, ResetOldParameters);
+		}
+		private Dictionary<string, (int value, Type type)> GetClonedDictWithStartParamEnabled()
+		{
+			Dictionary<string, (int value, Type type)> clonedDict;
+			if (_boolIntFloatArguments == null)
+			{
+				clonedDict = new Dictionary<string, (int value, Type type)>();
+			}
+			else
+			{
+				clonedDict = new Dictionary<string, (int value, Type type)>(_boolIntFloatArguments);
+			}
+			clonedDict["start"] = (1, typeof(bool));
+
+			return clonedDict;
 		}
 
 		/// <summary>
@@ -175,6 +279,16 @@ namespace GTA.NaturalMotion
 		public override string ToString()
 		{
 			return _message;
+		}
+
+		/// <summary>
+		/// Creates a new object that is a copy of the current instance by performing a shallow copy.
+		/// </summary>
+		public Message Clone()
+		{
+			var newBoolIntFloatArgumentsShallowCopied = new Dictionary<string, (int, Type)>(_boolIntFloatArguments);
+			var newStringVector3ArrayArgumentsShallowCopied = new Dictionary<string, object>(_stringVector3ArrayArguments);
+			return new Message(_message, newBoolIntFloatArgumentsShallowCopied, newStringVector3ArrayArgumentsShallowCopied, ResetOldParameters);
 		}
 	}
 

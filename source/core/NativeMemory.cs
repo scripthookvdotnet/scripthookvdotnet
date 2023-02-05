@@ -202,7 +202,7 @@ namespace SHVDN
 			InitMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
 
 			address = FindPattern("\x41\x83\xFA\xFF\x74\x4A\x48\x85\xD2\x74\x19", "xxxxxxxxxxx") - 0xE;
-			SendMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(new IntPtr(address));
+			SendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
 			SetNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
@@ -218,6 +218,9 @@ namespace SHVDN
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+
+			address = FindPattern("\x48\x63\x41\x08\x83\x61\x0C\x00\xC6\x41\x10\x00\x48\x8B\x09\x4C\x8D\x04\xC0\x33\xD2", "xxxxxxxxxxxxxxxxxxxxx");
+			ResetNmParameterMessage = (delegate* unmanaged[Stdcall]<ulong, IntPtr>)(new IntPtr(address));
 
 			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
 			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(address));
@@ -4218,9 +4221,11 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmParameterFloat;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmParameterString;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmParameterVector;
+		// This function just returns the same address as the argument
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr> ResetNmParameterMessage;
 
 		static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> InitMessageMemoryFunc;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendMessageToPedFunc;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendNmMessageToPedFunc;
 		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
 
 		static int fragInstNMGtaOffset;
@@ -4289,22 +4294,117 @@ namespace SHVDN
 
 		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 
+		// This class is present just for encapsulating data (and an easier update method)
+		public class NmMessageParameterCollection
+		{
+			#region Fields
+			internal string message;
+			internal Dictionary<string, (int value, Type type)> boolIntFloatParameters;
+			internal Dictionary<string, object> stringVector3ArrayParameters;
+			internal bool resetOldParameters;
+			#endregion
 
-		internal class EuphoriaMessageTask : IScriptTask
+			public NmMessageParameterCollection(string message, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
+				: this(message, boolIntFloatParameters, stringVector3ArrayParameters, false)
+			{
+
+			}
+			public NmMessageParameterCollection(string message, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters, bool resetOldParameters)
+			{
+				this.message = message;
+				this.boolIntFloatParameters = boolIntFloatParameters;
+				this.stringVector3ArrayParameters = stringVector3ArrayParameters;
+				this.resetOldParameters = resetOldParameters;
+			}
+
+			internal void Update(NmMessageParameterCollection newParams)
+			{
+				if (boolIntFloatParameters == null && newParams.boolIntFloatParameters != null)
+				{
+					boolIntFloatParameters = new Dictionary<string, (int value, Type type)>();
+				}
+				if (stringVector3ArrayParameters == null && newParams.stringVector3ArrayParameters != null)
+				{
+					stringVector3ArrayParameters = new Dictionary<string, object>();
+				}
+
+				if (newParams.resetOldParameters)
+				{
+					boolIntFloatParameters?.Clear();
+					stringVector3ArrayParameters?.Clear();
+				}
+
+				if (boolIntFloatParameters != null && newParams.boolIntFloatParameters != null)
+				{
+					foreach (var keyValuePair in newParams.boolIntFloatParameters)
+					{
+						boolIntFloatParameters[keyValuePair.Key] = keyValuePair.Value;
+					}
+				}
+				if (stringVector3ArrayParameters != null && newParams.stringVector3ArrayParameters != null)
+				{
+					foreach (var keyValuePair in newParams.stringVector3ArrayParameters)
+					{
+						stringVector3ArrayParameters[keyValuePair.Key] = keyValuePair.Value;
+					}
+				}
+			}
+		}
+
+
+		static private void SetNMParameters(ulong messageMemory, NmMessageParameterCollection messageParameters)
+		{
+			if (messageParameters.boolIntFloatParameters != null)
+			{
+				foreach (var arg in messageParameters.boolIntFloatParameters)
+				{
+					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+
+					(var argValue, var argType) = arg.Value;
+
+					if (argType == typeof(float))
+					{
+						var argValueConverted = *(float*)(&argValue);
+						NativeMemory.SetNmParameterFloat(messageMemory, name, argValueConverted);
+					}
+					else if (argType == typeof(bool))
+					{
+						var argValueConverted = argValue != 0 ? true : false;
+						NativeMemory.SetNmParameterBool(messageMemory, name, argValueConverted);
+					}
+					else if (argType == typeof(int))
+					{
+						NativeMemory.SetNmParameterInt(messageMemory, name, argValue);
+					}
+				}
+			}
+
+			if ((messageParameters.stringVector3ArrayParameters != null))
+			{
+				foreach (var arg in messageParameters.stringVector3ArrayParameters)
+				{
+					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+
+					var argValue = arg.Value;
+					if (argValue is float[] vector3ArgValue)
+						NativeMemory.SetNmParameterVector(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
+					else if (argValue is string stringArgValue)
+						NativeMemory.SetNmParameterString(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
+				}
+			}
+		}
+
+		internal class MultipleNmMessagesTask : IScriptTask
 		{
 			#region Fields
 			int targetHandle;
-			string message;
-			Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
-			Dictionary<string, object> _stringVector3ArrayArguments;
+			List<NmMessageParameterCollection> nmMessageParameters;
 			#endregion
 
-			internal EuphoriaMessageTask(int target, string message, Dictionary<string, (int, Type)> boolIntFloatArguments, Dictionary<string, object> stringVector3ArrayArguments)
+			internal MultipleNmMessagesTask(int target, List<NmMessageParameterCollection> messageParameters)
 			{
 				targetHandle = target;
-				this.message = message;
-				_boolIntFloatArguments = boolIntFloatArguments;
-				_stringVector3ArrayArguments = stringVector3ArrayArguments;
+				nmMessageParameters = messageParameters;
 			}
 
 			public void Run()
@@ -4314,67 +4414,103 @@ namespace SHVDN
 				if (_PedAddress == null)
 					return;
 
-				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
-
-				if (messageMemory == 0)
+				if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
 					return;
 
+				var messageChain = ConsturctMessageChain(nmMessageParameters);
+
+				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
+				if (messageMemory == 0)
+					return;
 				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
 
-				if (_boolIntFloatArguments != null)
+				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
+				foreach (var messageToSend in messageChain)
 				{
-					foreach (var arg in _boolIntFloatArguments)
+					SendMessageTo(fragInstNMGtaAddress, messageToSend, messageMemory);
+					NativeMemory.ResetNmParameterMessage(messageMemory);
+				}
+
+				FreeCoTaskMem(new IntPtr((long)messageMemory));
+
+				List<NmMessageParameterCollection> ConsturctMessageChain(List<NmMessageParameterCollection> messageParams)
+				{
+					// The message order may be important (more research needed)
+					var firstIndexMapForMessage = new Dictionary<string, int>();
+					var messagesToSend = new List<NmMessageParameterCollection>(messageParams.Count);
+					foreach (var parameter in messageParams)
 					{
-						IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
-
-						(var argValue, var argType) = arg.Value;
-
-						if (argType == typeof(float))
+						string messageName = parameter.message;
+						if (firstIndexMapForMessage.TryGetValue(messageName, out var firstIndexForMessage))
 						{
-							var argValueConverted = *(float*)(&argValue);
-							NativeMemory.SetNmParameterFloat(messageMemory, name, argValueConverted);
+							var existingMessage = messagesToSend[firstIndexForMessage];
+							existingMessage.Update(parameter);
 						}
-						else if (argType == typeof(bool))
+						else
 						{
-							var argValueConverted = argValue != 0 ? true : false;
-							NativeMemory.SetNmParameterBool(messageMemory, name, argValueConverted);
-						}
-						else if (argType == typeof(int))
-						{
-							NativeMemory.SetNmParameterInt(messageMemory, name, argValue);
+							messagesToSend.Add(parameter);
+							firstIndexMapForMessage[messageName] = (messagesToSend.Count - 1);
 						}
 					}
-				}
 
-				if (_stringVector3ArrayArguments != null)
+					return messagesToSend;
+				}
+				void SendMessageTo(ulong fragInstNMGtaAddress, NmMessageParameterCollection messageParams, ulong messageMemory)
 				{
-					foreach (var arg in _stringVector3ArrayArguments)
-					{
-						IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
-
-						var argValue = arg.Value;
-						if (argValue is float[] vector3ArgValue)
-							NativeMemory.SetNmParameterVector(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
-						else if (argValue is string stringArgValue)
-							NativeMemory.SetNmParameterString(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
-					}
+					SetNMParameters(messageMemory, messageParams);
+					IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(messageParams.message);
+					SendNmMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
 				}
+			}
+		}
 
-				if (IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
-				{
-					ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
-					IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(message);
-					SendMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
-				}
+		internal class NmMessageTask : IScriptTask
+		{
+			#region Fields
+			int targetHandle;
+			NmMessageParameterCollection nmMessageParameterCollection;
+			#endregion
+
+			internal NmMessageTask(int target, NmMessageParameterCollection messageParamCollection)
+			{
+				targetHandle = target;
+				nmMessageParameterCollection = messageParamCollection;
+			}
+
+			public void Run()
+			{
+				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
+
+				if (_PedAddress == null)
+					return;
+
+				if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
+					return;
+
+				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
+				if (messageMemory == 0)
+					return;
+				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
+
+				SetNMParameters(messageMemory, nmMessageParameterCollection);
+
+				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
+				IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(nmMessageParameterCollection.message);
+				SendNmMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
 
 				FreeCoTaskMem(new IntPtr((long)messageMemory));
 			}
 		}
 
-		public static void SendEuphoriaMessage(int targetHandle, string message, Dictionary<string, (int, Type)> boolIntFloatArguments, Dictionary<string, object> stringVector3ArrayArguments)
+		public static void SendNmMessage(int targetHandle, NmMessageParameterCollection messageParameterCollection)
 		{
-			var task = new EuphoriaMessageTask(targetHandle, message, boolIntFloatArguments, stringVector3ArrayArguments);
+			var task = new NmMessageTask(targetHandle, messageParameterCollection);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
 
+		public static void SendMultipleNmMessages(int targetHandle, List<NmMessageParameterCollection> messageParameterCollections)
+		{
+			var task = new MultipleNmMessagesTask(targetHandle, messageParameterCollections);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 

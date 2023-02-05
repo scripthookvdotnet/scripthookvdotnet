@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace GTA.NaturalMotion
 {
@@ -19,6 +20,66 @@ namespace GTA.NaturalMotion
 		{
 			_ped = ped;
 			_helperCache = new Dictionary<string, CustomHelper>();
+		}
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> can recieve <see cref="Message"/>s.
+		/// </summary>
+		public bool CanReceiveNmMessages
+		{
+			get
+			{
+				var pedAddress = _ped.MemoryAddress;
+				if (pedAddress != IntPtr.Zero)
+					return false;
+
+				return SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(pedAddress);
+			}
+		}
+
+		/// <summary>
+		/// Receives <see cref="Message"/> this <see cref="Ped"/> can alther their Natural Motion behaviors.
+		/// Will apply messages to the <see cref="Ped"/> in the same order as <paramref name="messages"/>' order.
+		/// </summary>
+		public void ReceiveNmMessages(params Message[] messages)
+		{
+			var pedAddress = _ped.MemoryAddress;
+			if (pedAddress == IntPtr.Zero)
+				return;
+
+			var constructedMessageParams = new List<SHVDN.NativeMemory.NmMessageParameterCollection>(messages.Length);
+			foreach (var message in messages)
+			{
+				if (message == null)
+					continue;
+
+				var messageParamCollection = message.ConstructNmParameterCollection();
+				constructedMessageParams.Add(messageParamCollection);
+			}
+
+			SHVDN.NativeMemory.SendMultipleNmMessages(_ped.Handle, constructedMessageParams);
+		}
+		/// <summary>
+		/// Receives <see cref="Message"/> this <see cref="Ped"/> can alther their Natural Motion behaviors.
+		/// Will apply messages to the <see cref="Ped"/> in the same order as <paramref name="messages"/>' order.
+		/// </summary>
+		public void ReceiveNmMessages(IEnumerable<Message> messages)
+		{
+			var pedAddress = _ped.MemoryAddress;
+			if (pedAddress == IntPtr.Zero)
+				return;
+
+			var constructedMessageParams = new List<SHVDN.NativeMemory.NmMessageParameterCollection>();
+			foreach (var message in messages)
+			{
+				if (message == null)
+					continue;
+
+				var messageParamCollection = message.ConstructNmParameterCollection();
+				constructedMessageParams.Add(messageParamCollection);
+			}
+
+			SHVDN.NativeMemory.SendMultipleNmMessages(_ped.Handle, constructedMessageParams);
 		}
 
 		T GetHelper<T>(string message) where T : CustomHelper
