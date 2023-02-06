@@ -739,7 +739,7 @@ namespace SHVDN
 			if (address != null)
 			{
 				// The order won't change in some updates
-				InjuryHealthThresholdOffset = *(int*)(address + 22);
+				InjuryHealthThresholdOffset = *(int*)(address + 27);
 				FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 4;
 			}
 
