@@ -2189,6 +2189,24 @@ namespace SHVDN
 
 			return 0;
 		}
+		static bool IsFwArcheTypeAFragment(IntPtr fwArcheTypeAddress)
+		{
+			if (fwArcheTypeAddress != IntPtr.Zero)
+			{
+				// The game can't draw fragment entities properly if this value is not 1
+				return (*(byte*)((ulong)fwArcheTypeAddress.ToInt64() + 0x60) == 1);
+			}
+
+			return false;
+		}
+		public static bool IsModelAFragment(int modelHash)
+		{
+			IntPtr modelInfo = FindCModelInfo(modelHash);
+			if (modelInfo == IntPtr.Zero)
+				return false;
+
+			return IsFwArcheTypeAFragment(modelInfo);
+		}
 
 		static IntPtr GetModelInfoByIndex(uint index)
 		{
