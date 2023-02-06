@@ -1342,7 +1342,7 @@ namespace GTA
 			{
 				if (value == null)
 				{
-					Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, 0.25f);
+					Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, Handle, 0.25f);
 					Task.ClearAll();
 				}
 				else
@@ -1364,7 +1364,7 @@ namespace GTA
 						}
 					}
 
-					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 0.25f);
+					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, Handle, value, 0.25f);
 				}
 			}
 		}
