@@ -452,6 +452,28 @@ namespace GTA
 
 		public bool IsRagdoll => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
 
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is running a ragdoll task which manages its ragdoll.
+		/// Will return <see langword="true"/> when <see cref="IsRagdoll"/> returns <see langword="true"/> or the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// </summary>
+		public bool IsRunningRagdollTask => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is running a <c>CTaskNMScriptControl</c>, which can be crated with <see cref="Ragdoll(int, RagdollType)"/>.
+		/// </summary>
+		public bool IsRunningNMScriptControlTask
+		{
+			get
+			{
+				var pedAddress = MemoryAddress;
+				if (pedAddress != IntPtr.Zero)
+					return false;
+
+				return SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(pedAddress);
+			}
+		}
+
 		public bool CanRagdoll
 		{
 			get => Function.Call<bool>(Hash.CAN_PED_RAGDOLL, Handle);

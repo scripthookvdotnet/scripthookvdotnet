@@ -4394,17 +4394,21 @@ namespace SHVDN
 			}
 		}
 
+		static internal bool IsPedRagdoll(int pedHandle) => *(bool*)NativeFunc.InvokeInternal(0x47E4E977581C5B55 /*IS_PED_RAGDOLL*/, pedHandle);
+
 		internal class MultipleNmMessagesTask : IScriptTask
 		{
 			#region Fields
 			int targetHandle;
+			bool ifNMScriptControlRunning;
 			List<NmMessageParameterCollection> nmMessageParameters;
 			#endregion
 
-			internal MultipleNmMessagesTask(int target, List<NmMessageParameterCollection> messageParameters)
+			internal MultipleNmMessagesTask(int target, List<NmMessageParameterCollection> messageParameters, bool ifNMScriptControlRunning)
 			{
 				targetHandle = target;
 				nmMessageParameters = messageParameters;
+				this.ifNMScriptControlRunning = ifNMScriptControlRunning;
 			}
 
 			public void Run()
@@ -4414,8 +4418,15 @@ namespace SHVDN
 				if (_PedAddress == null)
 					return;
 
-				if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
+				if (ifNMScriptControlRunning)
+				{
+					if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
+						return;
+				}
+				else if (!IsPedRagdoll(targetHandle))
+				{
 					return;
+				}
 
 				var messageChain = ConsturctMessageChain(nmMessageParameters);
 
@@ -4468,13 +4479,15 @@ namespace SHVDN
 		{
 			#region Fields
 			int targetHandle;
+			bool ifNMScriptControlRunning;
 			NmMessageParameterCollection nmMessageParameterCollection;
 			#endregion
 
-			internal NmMessageTask(int target, NmMessageParameterCollection messageParamCollection)
+			internal NmMessageTask(int target, NmMessageParameterCollection messageParamCollection, bool ifNMScriptControlRunning)
 			{
 				targetHandle = target;
 				nmMessageParameterCollection = messageParamCollection;
+				this.ifNMScriptControlRunning = ifNMScriptControlRunning;
 			}
 
 			public void Run()
@@ -4484,8 +4497,15 @@ namespace SHVDN
 				if (_PedAddress == null)
 					return;
 
-				if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
+				if (ifNMScriptControlRunning)
+				{
+					if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
+						return;
+				}
+				else if (!IsPedRagdoll(targetHandle))
+				{
 					return;
+				}
 
 				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
 				if (messageMemory == 0)
@@ -4502,15 +4522,15 @@ namespace SHVDN
 			}
 		}
 
-		public static void SendNmMessage(int targetHandle, NmMessageParameterCollection messageParameterCollection)
+		public static void SendNmMessage(int targetHandle, NmMessageParameterCollection messageParameterCollection, bool ifScriptControlRunning = true)
 		{
-			var task = new NmMessageTask(targetHandle, messageParameterCollection);
+			var task = new NmMessageTask(targetHandle, messageParameterCollection, ifScriptControlRunning);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 
-		public static void SendMultipleNmMessages(int targetHandle, List<NmMessageParameterCollection> messageParameterCollections)
+		public static void SendMultipleNmMessages(int targetHandle, List<NmMessageParameterCollection> messageParameterCollections, bool ifScriptControlRunning = true)
 		{
-			var task = new MultipleNmMessagesTask(targetHandle, messageParameterCollections);
+			var task = new MultipleNmMessagesTask(targetHandle, messageParameterCollections, ifScriptControlRunning);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 

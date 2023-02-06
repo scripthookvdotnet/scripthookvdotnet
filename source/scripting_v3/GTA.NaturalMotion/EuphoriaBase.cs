@@ -66,14 +66,13 @@ namespace GTA.NaturalMotion
 		/// Will work in the same way as setting <c>CNmParameterResetMessage</c> in task config files such as <c>physicstasks.ymt</c>.
 		/// </para>
 		/// <para>
-		/// Will have an effect only if this message is send via <see cref="Euphoria.ReceiveNmMessages(Message[])"/> or
-		/// <see cref="Euphoria.ReceiveNmMessages(IEnumerable{Message})"/>.
+		/// Will have an effect only if this message is send via <see cref="Euphoria.ReceiveNmMessages(Message[])"/>.
 		/// </para>
 		/// </summary>
 		public bool ResetOldParameters { get; set; }
 
 		/// <summary>
-		/// Stops this Natural Motion behavior on the given <see cref="Ped"/>.
+		/// Stops this NaturalMotion behavior on the given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
@@ -86,7 +85,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Starts this Natural Motion behavior on the <see cref="Ped"/> that will loop until manually aborted.
+		/// Starts this NaturalMotion behavior on the <see cref="Ped"/> that will loop until manually aborted.
 		/// Starts a <c>CTaskNMControl</c> task if the <see cref="Ped"/> has no such task.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
@@ -112,7 +111,7 @@ namespace GTA.NaturalMotion
 			ConstructNmParametersAndSendToInternal(target);
 		}
 		/// <summary>
-		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
+		///	Starts this NaturalMotion behavior on the <see cref="Ped"/> for a specified duration.
 		///	Always starts a new ragdoll task, making impossible to stack multiple Natural Motion behaviors on this <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
@@ -133,21 +132,28 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Sends message this Natural Motion behavior on the <see cref="Ped"/>, but don't start a new ragdoll task so the <see cref="Ped"/> can have multiple NM behaviors.
+		/// Sends message this NaturalMotion behavior on the <see cref="Ped"/>, but don't start a new ragdoll task so the <see cref="Ped"/> can have multiple NM behaviors.
 		/// You'll need to start a ragdoll task with <see cref="Ped.Ragdoll(int, RagdollType)"/> before the <see cref="Ped"/> can recieve this <see cref="Message"/>.
 		/// If you need to start this Natural Motion behavior from the beginning, you'll also need to set <see cref="Start"/> to <see langword="true"/>.
 		/// </summary>
 		/// <remarks>
-		/// Although <see cref="SendTo(Ped)"/> wouldn't create a new ragdoll tasks if the <see cref="Ped"/> runs a script ragdoll tasks in most cases,
-		/// this method guarantees it sends the message if available but doesn't create a new ragdoll tasks.
+		/// Although <see cref="SendTo(Ped)"/> wouldn't create a new ragdoll task if the <see cref="Ped"/> runs a script ragdoll tasks in most cases,
+		/// this method guarantees it sends the message if the <see cref="Ped"/> can receive NM messages but doesn't create a new ragdoll task.
 		/// </remarks>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
-		public void SendToNoNewRagdollTask(Ped target)
+		/// <param name="ifNMScriptControlRunning">
+		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
+		/// <para>
+		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
+		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
+		/// </para>
+		/// </param>
+		public void SendToNoNewRagdollTask(Ped target, bool ifNMScriptControlRunning = true)
 		{
-			ConstructNmParametersAndSendToInternal(target, false);
+			ConstructNmParametersAndSendToInternal(target, false, ifNMScriptControlRunning);
 		}
 
-		internal void ConstructNmParametersAndSendToInternal(Ped target, bool setStartParameterToTrue = true)
+		internal void ConstructNmParametersAndSendToInternal(Ped target, bool setStartParameterToTrue = true, bool sendMessageIfNMScriptControlRunning = true)
 		{
 			if (setStartParameterToTrue)
 			{
@@ -155,12 +161,12 @@ namespace GTA.NaturalMotion
 				// Shallow copying should be enough
 				var newBoolIntFloatArguments = GetClonedDictWithStartParamEnabled();
 				var constructedMessageAndParameters = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, newBoolIntFloatArguments, _stringVector3ArrayArguments, ResetOldParameters);
-				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters);
+				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters, sendMessageIfNMScriptControlRunning);
 			}
 			else
 			{
 				var constructedMessageAndParameters = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _boolIntFloatArguments, _stringVector3ArrayArguments, ResetOldParameters);
-				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters);
+				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters, sendMessageIfNMScriptControlRunning);
 			}
 		}
 		internal NativeMemory.NmMessageParameterCollection ConstructNmParameterCollection()

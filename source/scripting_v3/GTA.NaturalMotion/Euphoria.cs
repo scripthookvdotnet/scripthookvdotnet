@@ -23,25 +23,28 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Indicates whether this <see cref="Ped"/> can recieve <see cref="Message"/>s.
+		/// Receives <see cref="Message"/> this <see cref="Ped"/> can alther their NaturalMotion behaviors.
+		/// Will apply messages to the <see cref="Ped"/> in the same order as <paramref name="messages"/>' order.
+		/// For safety, the messages will be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.
 		/// </summary>
-		public bool CanReceiveNmMessages
+		/// <param name="messages">The NaturalMotion messages.</param>
+		public void ReceiveNmMessages(params Message[] messages)
 		{
-			get
-			{
-				var pedAddress = _ped.MemoryAddress;
-				if (pedAddress != IntPtr.Zero)
-					return false;
-
-				return SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(pedAddress);
-			}
+			ReceiveNmMessages(messages, true);
 		}
-
 		/// <summary>
-		/// Receives <see cref="Message"/> this <see cref="Ped"/> can alther their Natural Motion behaviors.
+		/// Receives <see cref="Message"/> this <see cref="Ped"/> can alther their NaturalMotion behaviors.
 		/// Will apply messages to the <see cref="Ped"/> in the same order as <paramref name="messages"/>' order.
 		/// </summary>
-		public void ReceiveNmMessages(params Message[] messages)
+		/// <param name="ifNMScriptControlRunning">
+		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
+		/// <para>
+		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
+		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
+		/// </para>
+		/// </param>
+		/// <param name="messages">The NaturalMotion messages.</param>
+		public void ReceiveNmMessages(bool ifNMScriptControlRunning = true, params Message[] messages)
 		{
 			var pedAddress = _ped.MemoryAddress;
 			if (pedAddress == IntPtr.Zero)
@@ -57,13 +60,10 @@ namespace GTA.NaturalMotion
 				constructedMessageParams.Add(messageParamCollection);
 			}
 
-			SHVDN.NativeMemory.SendMultipleNmMessages(_ped.Handle, constructedMessageParams);
+			SHVDN.NativeMemory.SendMultipleNmMessages(_ped.Handle, constructedMessageParams, ifNMScriptControlRunning);
 		}
-		/// <summary>
-		/// Receives <see cref="Message"/> this <see cref="Ped"/> can alther their Natural Motion behaviors.
-		/// Will apply messages to the <see cref="Ped"/> in the same order as <paramref name="messages"/>' order.
-		/// </summary>
-		public void ReceiveNmMessages(IEnumerable<Message> messages)
+		/// <inheritdoc cref="ReceiveNmMessages(bool, Message[])"/>
+		public void ReceiveNmMessages(IEnumerable<Message> messages, bool ifNMScriptControlRunning = true)
 		{
 			var pedAddress = _ped.MemoryAddress;
 			if (pedAddress == IntPtr.Zero)
@@ -79,7 +79,7 @@ namespace GTA.NaturalMotion
 				constructedMessageParams.Add(messageParamCollection);
 			}
 
-			SHVDN.NativeMemory.SendMultipleNmMessages(_ped.Handle, constructedMessageParams);
+			SHVDN.NativeMemory.SendMultipleNmMessages(_ped.Handle, constructedMessageParams, ifNMScriptControlRunning);
 		}
 
 		T GetHelper<T>(string message) where T : CustomHelper
