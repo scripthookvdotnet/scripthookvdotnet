@@ -198,7 +198,10 @@ namespace GTA
 		/// <param name="station">Radio station</param>
 		public static void UnlockRadioStation(RadioStation station)
 		{
-			Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], false);
+			if (Enum.IsDefined(typeof(RadioStation), station) && station != RadioStation.RadioOff)
+			{
+			    Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], false);
+			}
 		}
 		/// <summary>
 		/// Prevents the specified radio station from appearing on the radio wheel.
@@ -206,8 +209,22 @@ namespace GTA
 		/// <param name="station">Radio station</param>
 		public static void LockRadioStation(RadioStation station)
 		{
-			Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], true);
+			if (Enum.IsDefined(typeof(RadioStation), station) && station != RadioStation.RadioOff)
+			{
+				Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], true);
+			}
 		}
+		/// <summary>
+		/// Makes all the radio stations appear on the radio wheel.
+		/// </summary>
+		public static void UnlockAllRadioStations()
+		{
+			foreach (string station in radioNames)
+			{
+				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
+			}
+		}
+		
 		/// <summary>
 		/// Gets or sets a value indicating whether to render the world with a night vision filter.
 		/// </summary>
