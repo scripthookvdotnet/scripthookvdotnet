@@ -99,7 +99,7 @@ namespace GTA
 		{
 			EnterVehicle(vehicle, seat, timeout, speed, flag, null);
 		}
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
+		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
 		{
 			float moveBlendRatioArgForNative = 1.0f;
 			if (moveBlendRatio.HasValue)
