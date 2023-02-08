@@ -7,6 +7,10 @@ namespace GTA
 {
 	public enum Bone
 	{
+		/// <summary>
+		/// The correspoinding bone tag value for <c>BONETAG_INVALID</c>, which is used in some meta/xml files such as weapon meta files and <c>damages.meta</c>.
+		/// </summary>
+		Invalid = -1,
 		SkelRoot = 0x0,
 		SkelPelvis = 0x2E28,
 		SkelLeftThigh = 0xE39F,

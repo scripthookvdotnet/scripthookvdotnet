@@ -99,7 +99,7 @@ namespace GTA
 		{
 			EnterVehicle(vehicle, seat, timeout, speed, flag, null);
 		}
-		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
+		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
 		{
 			float moveBlendRatioArgForNative = 1.0f;
 			if (moveBlendRatio.HasValue)
@@ -265,38 +265,43 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName)
 		{
-			PlayAnimation(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(AnimationDictionary animDict, string animName)
 		{
-			PlayAnimation(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
-			PlayAnimation(animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(AnimationDictionary animDict, string animName, AnimationBlendDelta blendSpeed, int duration, float startPhase)
 		{
-			PlayAnimation(animDict, animName, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None, startPhase, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None, startPhase, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
-			PlayAnimation(animDict, animName, blendInSpeed, -8f, duration, flags, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, blendInSpeed, -8f, duration, flags, 0f, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 		{
-			PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(AnimationDictionary animDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)
 		{
-			PlayAnimation(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, startPhase, AnimationIKControlFlags.None);
+			PlayAnimationInternal(animDict, animName, blendInSpeed.Value, blendOutSpeed.Value, duration, flags, startPhase, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(AnimationDictionary animDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, AnimationIKControlFlags ikFlags)
+		{
+			PlayAnimationInternal(animDict, animName, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, ikFlags);
+		}
+
+		private void PlayAnimationInternal(AnimationDictionary animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, AnimationIKControlFlags ikFlags)
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
@@ -312,10 +317,11 @@ namespace GTA
 				}
 			}
 
+			// The sign of blend delta doesn't make any difference in TASK_PLAY_ANIM and TASK_PLAY_ANIM_ADVANCED, but R* might add sign checks for blend delta values in the future so we'll have to check the signs of blend delta values as well.
 			// The third last argument is named phaseControlled in commands_task.sch.
 			// Considering how paparrazo3.ysc calls this function, the third last argument may be useful under a synchronized scene.
 			// The last argument is named bAllowOverrideCloneUpdate and will not be useful in the story mode.
-			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, 0, ikFlags, 0);
+			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, startPhase, 0, ikFlags, 0);
 		}
 
 		public void RappelFromHelicopter()

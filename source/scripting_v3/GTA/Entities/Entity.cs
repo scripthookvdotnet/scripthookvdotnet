@@ -1486,9 +1486,9 @@ namespace GTA
 		/// Applies a force to this <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="direction">The direction to apply the force relative to world coordinates.</param>
-		/// <param name="rotation">The offset from the root bone of this <see cref="Entity"/> where the force applies. "rotation" is incorrectly named parameter but is left for scripts that use the method with named parameters.</param>
+		/// <param name="rotation">The offset from the root component of this <see cref="Entity"/> where the force applies. "rotation" is incorrectly named parameter but is left for scripts that use the method with named parameters.</param>
 		/// <param name="forceType">Type of the force to apply.</param>
-		public void ApplyForce(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.MaxForceRot2)
+		public void ApplyForce(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
 		}
@@ -1496,11 +1496,127 @@ namespace GTA
 		/// Applies a force to this <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="direction">The direction to apply the force relative to this <see cref="Entity"/>s rotation</param>
-		/// <param name="rotation">The offset from the root bone of this <see cref="Entity"/> where the force applies. "rotation" is incorrectly named parameter but is left for scripts that use the method with named parameters.</param>
+		/// <param name="rotation">The offset from the root component of this <see cref="Entity"/> where the force applies. "rotation" is incorrectly named parameter but is left for scripts that use the method with named parameters.</param>
 		/// <param name="forceType">Type of the force to apply.</param>
-		public void ApplyForceRelative(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.MaxForceRot2)
+		public void ApplyForceRelative(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{
 			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+		}
+		/// <summary>
+		/// Applies a world force to this <see cref="Entity"/> using world offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, bool, bool, bool, bool, bool)"/>
+		public void ApplyWorldForceWorldOffset(Vector3 force, Vector3 offset, ForceType forceType, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, false, false, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a world force to this <see cref="Entity"/> using relative offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, bool, bool, bool, bool, bool)"/>
+		public void ApplyWorldForceRelativeOffset(Vector3 force, Vector3 offset, ForceType forceType, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, false, true, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a relative force to this <see cref="Entity"/> using world offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, bool, bool, bool, bool, bool)"/>
+		public void ApplyRelativeForceWorldOffset(Vector3 force, Vector3 offset, ForceType forceType, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, true, false, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a relative force to this <see cref="Entity"/> using relative offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, bool, bool, bool, bool, bool)"/>
+		public void ApplyRelativeForceRelativeOffset(Vector3 force, Vector3 offset, ForceType forceType, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, true, true, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a force to this <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="force">The force to be applied.</param>
+		/// <param name="offset">The offset from center of entity at which to apply force.</param>
+		/// <param name="forceType">Type of the force to apply.</param>
+		/// <param name="relativeForce">
+		/// Specifies whether the force vector passed in is in relative or world coordinates.
+		/// Rocal coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
+		/// </param>
+		/// <param name="relativeOffset">Specifies whether the offset passed in is in relative or world coordinates.</param>
+		/// <param name="scaleByMass">
+		/// <para>Specifies whether to scale the force by mass.</para>
+		/// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
+		/// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+		/// <para>
+		/// In other words, scaling by mass is probably easier in most situations -
+		/// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
+		/// </para>
+		/// </param>
+		/// <param name="triggerAudio">
+		/// <para>Specifies whether to play audio events related to the force being applied. The sound will play only if the entity type is <see cref="Vehicle"/> and will play a suspension squeal depending on the magnitude of the force.</para>
+		/// <para>The sound will play even if regardless of <see cref="ForceType"/> (even with a value other than between 0 to 5).</para>
+		/// </param>
+		/// <param name="scaleByTimeScale">
+		/// <para>Specifies whether scale the force by the current time scale (max: <c>1.0f</c>).</para>
+		///	<para>Only affects when <paramref name="forceType"/> is <see cref="ForceType.InternalImpulse"/> or <see cref="ForceType.ExternalImpulse"/>.</para>
+		/// </param>
+		private void ApplyForceInternal(Vector3 force, Vector3 offset, ForceType forceType, bool relativeForce, bool relativeOffset, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			// 9th parameter is component index (not bone index), which matters only if the entity is a ped
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, 0, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+
+		/// <summary>
+		/// Applies a world force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceCenterOfMassInternal(Vector3, ForceType, bool, bool, bool)"/>
+		public void ApplyWorldForceCenterOfMass(Vector3 force, ForceType forceType, bool scaleByMass, bool applyToChildren = false)
+		{
+			ApplyForceCenterOfMassInternal(force, forceType, false, scaleByMass, applyToChildren);
+		}
+		/// <summary>
+		/// Applies a relative force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceCenterOfMassInternal(Vector3, ForceType, bool, bool, bool)"/>
+		public void ApplyRelativeForceCenterOfMass(Vector3 force, ForceType forceType, bool scaleByMass, bool applyToChildren = false)
+		{
+			ApplyForceCenterOfMassInternal(force, forceType, true, scaleByMass, applyToChildren);
+		}
+		/// <summary>
+		/// Applies a force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
+		/// </summary>
+		/// <param name="force">The force to be applied.</param>
+		/// <param name="forceType">Type of the force to apply.</param>
+		/// <param name="relativeForce">
+		/// Specifies whether the force vector passed in is in relative or world coordinates.
+		/// Relative coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
+		/// </param>
+		/// <param name="scaleByMass">
+		/// <para>Specifies whether to scale the force by mass.</para>
+		/// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
+		/// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+		/// <para>
+		/// In other words, scaling by mass is probably easier in most situations -
+		/// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
+		/// </para>
+		/// </param>
+		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the speficied component.</param>
+		/// <exception cref="System.ArgumentException">Thrown when <paramref name="forceType"/> is set to <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>, which is not supported by this method.</exception>
+		private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
+		{
+			// The native won't apply the force if apply force type is one of the external types
+			if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
+			{
+				throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
+			}
+
+			// 6th parameter is component index (not bone index), which matters only if the entity is a ped
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, forceType, force.X, force.Y, force.Z, 0, relativeForce, scaleByMass, applyToChildren);
 		}
 
 		#endregion

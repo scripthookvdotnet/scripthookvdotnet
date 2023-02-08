@@ -205,19 +205,19 @@ namespace SHVDN
 			SendMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmIntAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
+			SetNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmBoolAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
+			SetNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmFloatAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
+			SetNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
-			SetNmStringAddress = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
+			SetNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmVector3Address = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+			SetNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
 
 			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
 			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(address));
@@ -245,8 +245,15 @@ namespace SHVDN
 			address = FindPattern("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
 			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
 
-			address = FindPattern("\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x18\x89\x54\x24\x10\x56\x57\x41\x56\x48\x83\xEC\x20", "xxxxxxxxxxxxxxxxxxxxxx");
-			GetLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(new IntPtr(address));
+			// Find the function that returns if the corresponding text label exist first.
+			// We have to find GetLabelTextByHashFunc indirectly since Rampage Trainer hooks the function that returns the string address for corresponding text label hash by inserting jmp instruction at the beginning if that trainer is installed.
+			address = FindPattern("\x74\x64\x48\x8D\x15\x00\x00\x00\x00\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x84\xC0\x74\x33", "xxxxx????xxx????x????xxxx");
+			if (address != null)
+			{
+				var doesTextLabelExistFuncAddr = (byte*)(*(int*)(address + 17) + address + 21);
+				var getLabelTextByHashFuncAddr = (long)(*(int*)(doesTextLabelExistFuncAddr + 28) + doesTextLabelExistFuncAddr + 32);
+				GetLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(new IntPtr(getLabelTextByHashFuncAddr));
+			}
 
 			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
 			CheckpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
@@ -678,10 +685,10 @@ namespace SHVDN
 				CEventStackOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x0F\x29\x4D\xF0\x48\x8B\x92\x00\x00\x00\x00", "xxxxxxx????");
+			address = FindPattern("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
 			if (address != null)
 			{
-				fragInstNMGtaOffset = *(int*)(address + 7);
+				fragInstNMGtaOffset = *(int*)(address + 16);
 			}
 			address = FindPattern("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
 			if (address != null)
@@ -725,16 +732,12 @@ namespace SHVDN
 				ArmorOffset = *(int*)(address + 3);
 			}
 
-			address = FindPattern("\x49\x3B\xF6\x75\xD3\xF3\x0F\x10\x9F\x00\x00\x00\x00", "xxxxxxxxx????");
+			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\xD9\x48\x8B\x48\x08\x48\x85\xC9\x0F", "xxx????xxxxxxxxxxx");
 			if (address != null)
 			{
-				InjuryHealthThresholdOffset = *(int*)(address + 9);
-			}
-
-			address = FindPattern("\x75\xD0\xF3\x0F\x10\x83\x00\x00\x00\x00\x41\x0F\x2F\x06", "xxxxxx????xxxx");
-			if (address != null)
-			{
-				FatalInjuryHealthThresholdOffset = *(int*)(address + 6);
+				// The order won't change in some updates
+				InjuryHealthThresholdOffset = *(int*)(address + 27);
+				FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 4;
 			}
 
 			address = FindPattern("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
@@ -1445,7 +1448,16 @@ namespace SHVDN
 
 		#region -- Skeleton Data --
 
-		static CrSkeleton* GetCrSkeletonOfEntityHandle(int handle) => GetCrSkeletonOfEntity(new IntPtr((long)GetEntityAddressFunc(handle)));
+		static CrSkeleton* GetCrSkeletonFromEntityHandle(int handle)
+		{
+			var entityAddress = GetEntityAddress(handle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			return GetCrSkeletonOfEntity(entityAddress);
+		}
 		static CrSkeleton* GetCrSkeletonOfEntity(IntPtr entityAddress)
 		{
 			var fragInst = GetFragInstAddressOfEntity(entityAddress);
@@ -1479,9 +1491,53 @@ namespace SHVDN
 			return fragCacheEntry->crSkeleton;
 		}
 
+		public static int GetBoneIdForEntityBoneIndex(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return -1;
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return -1;
+
+			return crSkeleton->skeletonData->GetBoneIdByIndex(boneIndex);
+		}
+		public static (int boneIndex, int boneTag) GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return (-1, -1);
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return (-1, -1);
+
+			return crSkeleton->skeletonData->GetNextSiblingBoneIndexAndId(boneIndex);
+		}
+		public static (int boneIndex, int boneTag) GetParentBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return (-1, -1);
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return (-1, -1);
+
+			return crSkeleton->skeletonData->GetParentBoneIndexAndId(boneIndex);
+		}
+		public static string GetEntityBoneName(int entityHandle, int boneIndex)
+		{
+			if (boneIndex < 0)
+				return null;
+
+			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			if (crSkeleton == null)
+				return null;
+
+			return crSkeleton->skeletonData->GetBoneName(boneIndex);
+		}
 		public static int GetEntityBoneCount(int handle)
 		{
-			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
 		public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
@@ -1489,7 +1545,7 @@ namespace SHVDN
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
 				return IntPtr.Zero;
 
@@ -1505,7 +1561,7 @@ namespace SHVDN
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
 				return IntPtr.Zero;
 
-			var crSkeleton = GetCrSkeletonOfEntityHandle(handle);
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
 				return IntPtr.Zero;
 
@@ -1554,14 +1610,11 @@ namespace SHVDN
 
 		#region -- CPhysical Functions --
 
-		// return value will be the address of the temporary 4 float storage
-
-		// Only 2 virtural functions are present (one for peds and objects and one for vehicles)
-
 		internal class SetEntityAngularVelocityTask : IScriptTask
 		{
 			#region Fields
 			IntPtr entityAddress;
+			// return value will be the address of the temporary 4 float storage
 			delegate* unmanaged[Stdcall]<IntPtr, float*, void> setAngularVelocityDelegate;
 			float x, y, z;
 			#endregion
@@ -3516,60 +3569,26 @@ namespace SHVDN
 			[FieldOffset(0x1C)]
 			internal uint slot;
 
-			// The function is for the game version b2802 or later ones.
-			// This one directly returns a hash value (not a pointer value) unlike the previous function.
-			delegate uint GetClassNameHashOfCItemInfoDelegate();
-			static Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate> getClassNameHashOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashOfCItemInfoDelegate>();
-			// The function is for game versions prior to b2802.
-			// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
-			// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
-			delegate uint* GetClassNameHashAddressOfCItemInfoDelegate(ulong unused, uint* outVal);
-			static Dictionary<ulong, GetClassNameHashAddressOfCItemInfoDelegate> getClassNameHashAddressOfCItemInfoCacheDict = new Dictionary<ulong, GetClassNameHashAddressOfCItemInfoDelegate>();
-
 			internal uint GetClassNameHash()
 			{
 				// In the b2802 or a later exe, the function returns a hash value (not a pointer value)
 				if (GetGameVersion() >= 80)
 				{
-					var GetClassNameHashFunc = CreateGetClassNameHashDelegateIfNotCreated(vTable[2]);
+					// The function is for the game version b2802 or later ones.
+					// This one directly returns a hash value (not a pointer value) unlike the previous function.
+					var GetClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)(vTable[2]);
 					return GetClassNameHashFunc();
 				}
 				else
 				{
-					var GetClassNameAddressHashFunc = CreateGetClassNameHashAddressDelegateIfNotCreated(vTable[2]);
+					// The function is for game versions prior to b2802.
+					// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
+					// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
+					var GetClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)(vTable[2]);
+
 					uint outVal = 0;
 					var returnValueAddress = GetClassNameAddressHashFunc(0, &outVal);
 					return *returnValueAddress;
-				}
-			}
-
-			private static GetClassNameHashOfCItemInfoDelegate CreateGetClassNameHashDelegateIfNotCreated(ulong virtualFuncAddr)
-			{
-				if (getClassNameHashOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
-				{
-					return outDelegate;
-				}
-				else
-				{
-					var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
-					getClassNameHashOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
-
-					return newDelegate;
-				}
-			}
-
-			private static GetClassNameHashAddressOfCItemInfoDelegate CreateGetClassNameHashAddressDelegateIfNotCreated(ulong virtualFuncAddr)
-			{
-				if (getClassNameHashAddressOfCItemInfoCacheDict.TryGetValue(virtualFuncAddr, out var outDelegate))
-				{
-					return outDelegate;
-				}
-				else
-				{
-					var newDelegate = GetDelegateForFunctionPointer<GetClassNameHashAddressOfCItemInfoDelegate>(new IntPtr((long)virtualFuncAddr));
-					getClassNameHashAddressOfCItemInfoCacheDict.Add(virtualFuncAddr, newDelegate);
-
-					return newDelegate;
 				}
 			}
 		}
@@ -3807,14 +3826,11 @@ namespace SHVDN
 
 		#region -- Fragment Object for Entity --
 
-
 		static int getFragInstVFuncOffset;
 		static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> detachFragmentPartByIndexFunc;
 		static ulong** phSimulatorInstPtr;
 		static int colliderCapacityOffset;
 		static int colliderCountOffset;
-
-		// Only 3 virtural functions are present (one for peds and objects and one for vehicles)
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
 		internal unsafe struct FragInst
@@ -3917,20 +3933,39 @@ namespace SHVDN
 			}
 		}
 
+		[StructLayout(LayoutKind.Explicit, Size = 0x50)]
+		internal struct CrBoneData
+		{
+			// Rotation (quaternion) is between 0x0 - 0x10
+			// Translation (vector3) is between 0x10 - 0x1C
+			// Scale (vector3?) is between 0x20 - 0x2C
+			[FieldOffset(0x30)]
+			internal ushort nextSiblingBoneIndex;
+			[FieldOffset(0x32)]
+			internal ushort parentBoneIndex;
+			[FieldOffset(0x38)]
+			internal IntPtr namePtr;
+			[FieldOffset(0x42)]
+			internal ushort boneIndex;
+			[FieldOffset(0x44)]
+			internal ushort boneId;
+
+			internal string Name => namePtr == null ? null : Marshal.PtrToStringAnsi(namePtr);
+		};
+
 		[StructLayout(LayoutKind.Explicit)]
 		internal unsafe struct CrSkeletonData
 		{
-			[FieldOffset(0x10)] internal ulong boneIdAndIndexTupleArrayPtr;
-			[FieldOffset(0x18)] internal ushort divisorForBoneIdAndIndexTuple;
-			[FieldOffset(0x1A)] internal ushort unkValue;
+			[FieldOffset(0x10)] internal PgHashMap boneHashMap;
+			[FieldOffset(0x20)] internal CrBoneData* boneData;
 			[FieldOffset(0x5E)] internal ushort boneCount;
 
 			/// <summary>
-			/// Gets the bone id from specified bone index. Note that bone indexes are sequential values and bone ids are not sequential ones.
+			/// Gets the bone index from specified bone id. Note that bone indexes are sequential values and bone ids are not sequential ones.
 			/// </summary>
 			public int GetBoneIndexByBoneId(int boneId)
 			{
-				if (unkValue == 0)
+				if (boneHashMap.elementCount == 0)
 				{
 					if (boneId < boneCount)
 						return boneId;
@@ -3938,27 +3973,112 @@ namespace SHVDN
 					return -1;
 				}
 
-				if (divisorForBoneIdAndIndexTuple == 0)
+				if (boneHashMap.bucketCount == 0)
 					return -1;
 
-				var firstTuplePtr = ((ulong*)boneIdAndIndexTupleArrayPtr + (boneId % divisorForBoneIdAndIndexTuple));
-
-				for (var boneIdAndIndexTuple = (BoneIdAndIndexTuple*)*firstTuplePtr; boneIdAndIndexTuple != null; boneIdAndIndexTuple = (BoneIdAndIndexTuple*)boneIdAndIndexTuple->nextTupleAddr)
+				if (boneHashMap.Get((uint)boneId, out var returnBoneId))
 				{
-					if (boneId == boneIdAndIndexTuple->boneId)
-						return boneIdAndIndexTuple->boneIndex;
+					return returnBoneId;
 				}
 
 				return -1;
 			}
+
+			/// <summary>
+			/// Gets the bone id from specified bone index. Note that bone indexes are sequential values and bone ids are not sequential ones.
+			/// </summary>
+			internal int GetBoneIdByIndex(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return -1;
+
+				return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->boneId;
+			}
+
+			/// <summary>
+			/// Gets the next sibling bone index of specified bone index.
+			/// </summary>
+			internal (int boneIndex, int boneId) GetNextSiblingBoneIndexAndId(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return (-1, -1);
+
+				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
+				var nextSiblingBoneIndex = crBoneData->nextSiblingBoneIndex;
+				if (nextSiblingBoneIndex == 0xFFFF)
+				{
+					return (-1, -1);
+				}
+				return (nextSiblingBoneIndex, crBoneData->boneId);
+			}
+
+			/// <summary>
+			/// Gets the next parent bone index of specified bone index.
+			/// </summary>
+			internal (int boneIndex, int boneId) GetParentBoneIndexAndId(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return (-1, -1);
+
+				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
+				var parentBoneIndex = crBoneData->parentBoneIndex;
+				if (parentBoneIndex == 0xFFFF)
+				{
+					return (-1, -1);
+				}
+				return (parentBoneIndex, crBoneData->boneId);
+			}
+
+			/// <summary>
+			/// Gets the bone name string from specified bone index.
+			/// </summary>
+			internal string GetBoneName(int boneIndex)
+			{
+				if (boneIndex < 0 || boneIndex >= boneCount)
+					return null;
+
+				return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->Name;
+			}
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack = 4)]
+		internal struct HashEntry
+		{
+			internal uint hash;
+			internal int data;
+			internal HashEntry* next;
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		internal struct BoneIdAndIndexTuple
+		internal unsafe struct PgHashMap
 		{
-			[FieldOffset(0x0)] internal int boneId;
-			[FieldOffset(0x4)] internal int boneIndex;
-			[FieldOffset(0x8)] internal ulong nextTupleAddr;
+			[FieldOffset(0x0)]
+			internal ulong* buckets;
+			[FieldOffset(0x8)]
+			internal ushort bucketCount;
+			[FieldOffset(0xA)]
+			internal ushort elementCount;
+
+			internal ulong GetBucketAddress(int index)
+			{
+				return buckets[index];
+			}
+
+			internal bool Get(uint hash, out int value)
+			{
+				var firstEntryAddr = (ulong*)GetBucketAddress((int)(hash % bucketCount));
+				for (var hashEntry = (HashEntry*)firstEntryAddr; hashEntry != null; hashEntry = hashEntry->next)
+				{
+					if (hash == hashEntry->hash)
+					{
+						value = hashEntry->data;
+						return true;
+					}
+				}
+
+				value = default;
+				return false;
+			}
 		}
 
 		internal class DetachFragmentPartByIndexTask : IScriptTask
@@ -4092,18 +4212,16 @@ namespace SHVDN
 
 		#region -- NaturalMotion Euphoria --
 
+		// These CNmParameter functions can also be called as virtual functions for your information
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmParameterInt;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmParameterBool;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmParameterFloat;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmParameterString;
+		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmParameterVector;
 
-
-
-
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmIntAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmBoolAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmFloatAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmStringAddress;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmVector3Address;
-		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
 		static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> InitMessageMemoryFunc;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendMessageToPedFunc;
+		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
 
 		static int fragInstNMGtaOffset;
 		static int cTaskNMScriptControlTypeIndex;
@@ -4214,16 +4332,16 @@ namespace SHVDN
 						if (argType == typeof(float))
 						{
 							var argValueConverted = *(float*)(&argValue);
-							NativeMemory.SetNmFloatAddress(messageMemory, name, argValueConverted);
+							NativeMemory.SetNmParameterFloat(messageMemory, name, argValueConverted);
 						}
 						else if (argType == typeof(bool))
 						{
 							var argValueConverted = argValue != 0 ? true : false;
-							NativeMemory.SetNmBoolAddress(messageMemory, name, argValueConverted);
+							NativeMemory.SetNmParameterBool(messageMemory, name, argValueConverted);
 						}
 						else if (argType == typeof(int))
 						{
-							NativeMemory.SetNmIntAddress(messageMemory, name, argValue);
+							NativeMemory.SetNmParameterInt(messageMemory, name, argValue);
 						}
 					}
 				}
@@ -4236,9 +4354,9 @@ namespace SHVDN
 
 						var argValue = arg.Value;
 						if (argValue is float[] vector3ArgValue)
-							NativeMemory.SetNmVector3Address(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
+							NativeMemory.SetNmParameterVector(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
 						else if (argValue is string stringArgValue)
-							NativeMemory.SetNmStringAddress(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
+							NativeMemory.SetNmParameterString(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
 					}
 				}
 

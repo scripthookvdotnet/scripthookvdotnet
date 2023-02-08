@@ -1342,7 +1342,7 @@ namespace GTA
 			{
 				if (value == null)
 				{
-					Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, 0.25f);
+					Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, Handle, 0.25f);
 					Task.ClearAll();
 				}
 				else
@@ -1364,9 +1364,145 @@ namespace GTA
 						}
 					}
 
-					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, value, 0.25f);
+					Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, Handle, value, 0.25f);
 				}
 			}
+		}
+
+		#endregion
+
+		#region Forces
+
+		/// <summary>
+		/// Applies a world force to this <see cref="Entity"/> using world offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, RagdollComponent, bool, bool, bool, bool, bool)"/>
+		public void ApplyWorldForceWorldOffset(Vector3 force, Vector3 offset, ForceType forceType, RagdollComponent component, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, component, false, false, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a world force to this <see cref="Entity"/> using relative offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, RagdollComponent, bool, bool, bool, bool, bool)"/>
+		public void ApplyWorldForceRelativeOffset(Vector3 force, Vector3 offset, ForceType forceType, RagdollComponent component, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, component, false, true, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a relative force to this <see cref="Entity"/> using world offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, RagdollComponent, bool, bool, bool, bool, bool)"/>
+		public void ApplyRelativeForceWorldOffset(Vector3 force, Vector3 offset, ForceType forceType, RagdollComponent component, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, component, true, false, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a relative force to this <see cref="Entity"/> using relative offset.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceInternal(Vector3, Vector3, ForceType, RagdollComponent, bool, bool, bool, bool, bool)"/>
+		public void ApplyRelativeForceRelativeOffset(Vector3 force, Vector3 offset, ForceType forceType, RagdollComponent component, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			ApplyForceInternal(force, offset, forceType, component, true, true, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+		/// <summary>
+		/// Applies a force to this <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="force">The force to be applied.</param>
+		/// <param name="offset">The offset from center of entity at which to apply force.</param>
+		/// <param name="forceType">Type of the force to apply.</param>
+		/// <param name="component">Component of the entity to apply the force.</param>
+		/// <param name="relativeForce">
+		/// Specifies whether the force vector passed in is in relative or world coordinates.
+		/// Relative coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
+		/// </param>
+		/// <param name="relativeOffset">Specifies whether the offset passed in is in relative or world coordinates.</param>
+		/// <param name="scaleByMass">
+		/// <para>Specifies whether to scale the force by mass.</para>
+		/// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
+		/// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+		/// <para>
+		/// In other words, scaling by mass is probably easier in most situations -
+		/// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
+		/// </para>
+		/// </param>
+		/// <param name="triggerAudio">
+		/// <para>Specifies whether to play audio events related to the force being applied. The sound will play only if the entity type is <see cref="Vehicle"/> and will play a suspension squeal depending on the magnitude of the force.</para>
+		/// <para>The sound will play even if regardless of <see cref="ForceType"/> (even with a value other than between 0 to 5).</para>
+		/// </param>
+		/// <param name="scaleByTimeScale">
+		/// <para>Specifies whether scale the force by the current time scale (max: <c>1.0f</c>).</para>
+		///	<para>Only affects when <paramref name="forceType"/> is <see cref="ForceType.InternalImpulse"/> or <see cref="ForceType.ExternalImpulse"/>.</para>
+		/// </param>
+		/// <exception cref="System.ArgumentOutOfRangeException">Thrown when <paramref name="component"/> not a value defined in <see cref="RagdollComponent"/>.</exception>
+		private void ApplyForceInternal(Vector3 force, Vector3 offset, ForceType forceType, RagdollComponent component, bool relativeForce, bool relativeOffset, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
+		{
+			// The game can crash the game if component value is out of bound
+			// The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
+			if ((int)component < (int)RagdollComponent.Buttocks || (int)component > (int)RagdollComponent.Head)
+			{
+				throw new ArgumentOutOfRangeException(nameof(component));
+			}
+
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, component, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
+		}
+
+		/// <summary>
+		/// Applies a world force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceCenterOfMassInternal(Vector3, ForceType, RagdollComponent, bool, bool, bool)"/>
+		public void ApplyWorldForceCenterOfMass(Vector3 force, ForceType forceType, RagdollComponent component, bool scaleByMass, bool applyToChildren = false)
+		{
+			ApplyForceCenterOfMassInternal(force, forceType, component, false, scaleByMass, applyToChildren);
+		}
+		/// <summary>
+		/// Applies a relative force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
+		/// </summary>
+		/// <inheritdoc cref="ApplyForceCenterOfMassInternal(Vector3, ForceType, RagdollComponent, bool, bool, bool)"/>
+		public void ApplyRelativeForceCenterOfMass(Vector3 force, ForceType forceType, RagdollComponent component, bool scaleByMass, bool applyToChildren = false)
+		{
+			ApplyForceCenterOfMassInternal(force, forceType, component, true, scaleByMass, applyToChildren);
+		}
+		/// <summary>
+		/// Applies a force to the center of mass of this <see cref="Entity"/>.
+		/// <paramref name="forceType"/> must not be <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>.
+		/// </summary>
+		/// <param name="force">The force to be applied.</param>
+		/// <param name="forceType">Type of the force to apply.</param>
+		/// <param name="component">Component of the entity to apply the force.</param>
+		/// <param name="relativeForce">
+		/// Specifies whether the force vector passed in is in relative or world coordinates.
+		/// Relative coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
+		/// </param>
+		/// <param name="scaleByMass">
+		/// <para>Specifies whether to scale the force by mass.</para>
+		/// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
+		/// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+		/// <para>
+		/// In other words, scaling by mass is probably easier in most situations -
+		/// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
+		/// </para>
+		/// </param>
+		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the speficied component.</param>
+		/// <exception cref="System.ArgumentException">Thrown when <paramref name="forceType"/> is set to <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>, which is not supported by this method.</exception>
+		/// <exception cref="System.ArgumentOutOfRangeException">Thrown when <paramref name="component"/> not a value defined in <see cref="RagdollComponent"/>.</exception>
+		private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, RagdollComponent component, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
+		{
+			// The native won't apply the force if apply force type is one of the external types
+			if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
+			{
+				throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
+			}
+			// The game can crash the game if component value is out of bound
+			// The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
+			if ((int)component < (int)RagdollComponent.Buttocks || (int)component > (int)RagdollComponent.Head)
+			{
+				throw new ArgumentOutOfRangeException(nameof(component));
+			}
+
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, forceType, force.X, force.Y, force.Z, component, relativeForce, scaleByMass, applyToChildren);
 		}
 
 		#endregion
