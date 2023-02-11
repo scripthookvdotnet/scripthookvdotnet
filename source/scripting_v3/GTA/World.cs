@@ -259,6 +259,19 @@ namespace GTA
 		public static Vector3 WindDirection => Function.Call<Vector3>(Hash.GET_WIND_DIRECTION);
 		#endregion
 
+		#region Focus
+
+		public static void SetFocus(Vector3 position)
+		{
+			Function.Call(Hash.SET_FOCUS_POS_AND_VEL, position.X, position.Y, position.Z, 0, 0, 0);
+		}
+
+		public static void SetFocus(Entity entity)
+		{
+			Function.Call(Hash.SET_FOCUS_ENTITY, entity.Handle);
+		}
+		#endregion
+
 		#region Blips
 
 		/// <summary>
