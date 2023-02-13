@@ -351,6 +351,10 @@ namespace GTA
 
 		public bool IsClimbing => Function.Call<bool>(Hash.IS_PED_CLIMBING, Handle);
 
+		// Rockstar Games use GET_IS_TASK_ACTIVE to detect if the ped is climbing ladder
+		private const int TASK_TYPE_INDEX_FOR_CTaskClimbLadder = 1;
+		public bool IsClimbingLadder => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, TASK_TYPE_INDEX_FOR_CTaskClimbLadder);
+
 		public bool IsWalking => Function.Call<bool>(Hash.IS_PED_WALKING, Handle);
 
 		public bool IsRunning => Function.Call<bool>(Hash.IS_PED_RUNNING, Handle);
@@ -418,6 +422,11 @@ namespace GTA
 		/// Gets the stage of the <see cref="TaskSequence"/> this <see cref="Ped"/> is currently executing.
 		/// </summary>
 		public int TaskSequenceProgress => Function.Call<int>(Hash.GET_SEQUENCE_PROGRESS, Handle);
+
+		/// <summary>
+		/// Gets the task status of specified scripted task on this <see cref="Ped"/>.
+		/// </summary>
+		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, taskNameHash);
 
 		#endregion
 
@@ -558,6 +567,10 @@ namespace GTA
 		public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
 
 		public bool IsGettingIntoVehicle => Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
+
+		// Rockstar Games use GET_IS_TASK_ACTIVE to detect if the ped is exiting a vehicle
+		private const int TASK_TYPE_INDEX_FOR_CTaskExitVehicle = 2;
+		public bool IsExitingVehicle => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, TASK_TYPE_INDEX_FOR_CTaskExitVehicle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Ped"/> is jumping out of their vehicle.
