@@ -190,6 +190,13 @@ namespace GTA
 		/// </value>
 		public bool IsFemalePed => SHVDN.NativeMemory.IsModelAFemalePed(Hash);
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Model"/> is a fragment model.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Model"/> is a fragment model; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsFragment => SHVDN.NativeMemory.IsModelAFragment(Hash);
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="Model"/> is a gangster pedestrian.
 		/// </summary>
 		/// <value>
