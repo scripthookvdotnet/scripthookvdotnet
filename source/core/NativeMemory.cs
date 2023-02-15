@@ -767,6 +767,12 @@ namespace SHVDN
 				VisualFieldCenterAngleOffset = SeeingRangeOffset + 0x1C;
 			}
 
+			address = FindPattern("\x48\x8B\x87\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00", "xxx????xxxxxxxxx");
+			if (address != null)
+			{
+				objParentEntityAddressDetachedFromOffset = *(int*)(address + 3);
+			}
+
 			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
 			if (address != null)
 			{
@@ -1843,6 +1849,34 @@ namespace SHVDN
 		public static int FirstVehicleFlagsOffset { get; }
 
 		#endregion
+
+		#region -- Prop Data --
+
+		static int objParentEntityAddressDetachedFromOffset;
+
+		static IntPtr GetParentEntityOfPropDetachedFrom(int objHandle)
+		{
+			var entityAddress = GetEntityAddress(objHandle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			return (entityAddress + objParentEntityAddressDetachedFromOffset);
+		}
+		public static int GetParentEntityHandleOfPropDetachedFrom(int objHandle)
+		{
+			var parentEntityAddr = GetParentEntityOfPropDetachedFrom(objHandle);
+			if (parentEntityAddr == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(parentEntityAddr);
+		}
+		public static bool IsPropBrokenOffPart(int objHandle) => GetParentEntityOfPropDetachedFrom(objHandle) != IntPtr.Zero;
+
+		#endregion -- Prop Data --
 
 		#region -- Vehicle Wheel Data --
 
