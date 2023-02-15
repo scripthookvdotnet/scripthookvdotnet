@@ -16,13 +16,16 @@ namespace GTA
 		#region Fragment
 
 		/// <summary>
-		/// Determines if this <see cref="Prop"/> is a broken off (detached) child fragment part of some <see cref="Entity"/>.
+		/// Determines if this <see cref="Prop"/> has been created as a <see cref="Prop"/> detached from the parent <see cref="Entity"/>.
+		/// Will return <see langword="true"/> when the <see cref="Prop"/> has been detached from parent <see cref="Ped"/> and has been created as a separate <see cref="Prop"/>
+		/// or when the <see cref="Prop"/> is a fragment part detached from parent <see cref="Vehicle"/> or <see cref="Prop"/> and has been created as a separate <see cref="Prop"/>
 		/// </summary>
-		public bool IsBrokenOffChildFragmentPart => NativeMemory.IsPropBrokenOffPart(Handle);
+		public bool HasBeenDetachedFromParentEntity => NativeMemory.HasPropBeenDetachedFromParentEntity(Handle);
 
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Prop"/> is detached from.
-		/// Will return a <see cref="Vehicle"/> or <see cref="Prop"/> instance if found, and will return <see langword="null"/> if not found.
+		/// If found, will return an instance of any one of <see cref="Ped"/>, <see cref="Vehicle"/>, or <see cref="Prop"/>.
+		/// If not found, will return <see langword="null"/>.
 		/// </summary>
 		public Entity ParentEntityDetachedFrom
 		{

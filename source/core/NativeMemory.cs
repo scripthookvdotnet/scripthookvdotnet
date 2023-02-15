@@ -1874,7 +1874,7 @@ namespace SHVDN
 
 			return GetEntityHandleFromAddress(parentEntityAddr);
 		}
-		public static bool IsPropBrokenOffPart(int objHandle) => GetParentEntityOfPropDetachedFrom(objHandle) != IntPtr.Zero;
+		public static bool HasPropBeenDetachedFromParentEntity(int objHandle) => GetParentEntityOfPropDetachedFrom(objHandle) != IntPtr.Zero;
 
 		#endregion -- Prop Data --
 
