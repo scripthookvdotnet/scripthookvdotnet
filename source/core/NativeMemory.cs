@@ -1857,7 +1857,7 @@ namespace SHVDN
 		static IntPtr GetParentEntityOfPropDetachedFrom(int objHandle)
 		{
 			var entityAddress = GetEntityAddress(objHandle);
-			if (entityAddress == IntPtr.Zero)
+			if (objParentEntityAddressDetachedFromOffset == 0 || entityAddress == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
 			}
