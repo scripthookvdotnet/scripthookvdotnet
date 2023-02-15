@@ -8,8 +8,8 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Set of flags to define the behaviour of the enter and exit vehicle tasks.
-	/// Set of flags to define the behaviour of the enter and exit vehicle tasks.
+	/// An enumeration of all possible scripted task name hashes.
+	/// Used for <see cref="Ped.GetTaskStatus(ScriptTaskNameHash)"/>.
 	/// </summary>
 	public enum ScriptTaskNameHash : uint
 	{
