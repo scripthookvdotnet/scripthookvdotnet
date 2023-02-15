@@ -1862,7 +1862,7 @@ namespace SHVDN
 				return IntPtr.Zero;
 			}
 
-			return (entityAddress + objParentEntityAddressDetachedFromOffset);
+			return new IntPtr(*(long*)(entityAddress + objParentEntityAddressDetachedFromOffset));
 		}
 		public static int GetParentEntityHandleOfPropDetachedFrom(int objHandle)
 		{
