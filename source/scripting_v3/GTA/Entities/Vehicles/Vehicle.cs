@@ -287,14 +287,7 @@ namespace GTA
 				}
 
 				// SET_DISABLE_PRETEND_OCCUPANTS changes the value only if the population type is set to 6 or 7, so change the value manually
-				if (value)
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
-				}
-				else
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7, !value);
 			}
 		}
 
@@ -1516,14 +1509,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0, value);
 			}
 		}
 
@@ -1538,14 +1524,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1, value);
 			}
 		}
 

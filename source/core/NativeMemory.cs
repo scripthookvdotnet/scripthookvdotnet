@@ -1123,30 +1123,21 @@ namespace SHVDN
 		}
 
 		/// <summary>
-		/// Sets a single bit in the 32-bit value at the specified <paramref name="address"/>.
+		/// Sets or clears a single bit in the 32-bit value at the specified <paramref name="address"/>.
 		/// </summary>
 		/// <param name="address">The memory address to access.</param>
 		/// <param name="bit">The bit index to change.</param>
-		public static void SetBit(IntPtr address, int bit)
+		/// <param name="value">Whether to set or clear the bit.</param>
+		public static void SetBit(IntPtr address, int bit, bool value = true)
 		{
 			if (bit < 0 || bit > 31)
 				throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
 
 			var data = (int*)address.ToPointer();
-			*data |= (1 << bit);
-		}
-		/// <summary>
-		/// Clears a single bit in the 32-bit value at the specified <paramref name="address"/>.
-		/// </summary>
-		/// <param name="address">The memory address to access.</param>
-		/// <param name="bit">The bit index to change.</param>
-		public static void ClearBit(IntPtr address, int bit)
-		{
-			if (bit < 0 || bit > 31)
-				throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
-
-			var data = (int*)address.ToPointer();
-			*data &= ~(1 << bit);
+			if (value)
+				*data |= (1 << bit);
+			else
+				*data &= ~(1 << bit);
 		}
 		/// <summary>
 		/// Checks a single bit in the 32-bit value at the specified <paramref name="address"/>.

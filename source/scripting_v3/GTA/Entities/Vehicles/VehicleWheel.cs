@@ -232,14 +232,7 @@ namespace GTA
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 					return;
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset, 3, value);
 			}
 		}
 
@@ -262,14 +255,7 @@ namespace GTA
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 					return;
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 3);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 3);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 3, value);
 			}
 		}
 
@@ -292,14 +278,7 @@ namespace GTA
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 					return;
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 4);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 4);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset + 4, 4, value);
 			}
 		}
 
@@ -434,7 +413,7 @@ namespace GTA
 			if (!leaveOtherBurstedTiresNotShowing)
 			{
 				var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
-				SHVDN.NativeMemory.ClearBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1);
+				SHVDN.NativeMemory.SetBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1, false);
 			}
 		}
 
