@@ -3,7 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using GTA.Math;
 using GTA.Native;
 using System;
 
@@ -30,19 +29,19 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="AnimationDictionary"/> is valid.
 		/// </summary>
-		public bool IsValid => Function.Call<bool>(Native.Hash.DOES_ANIM_DICT_EXIST, Name);
+		public bool IsValid => Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, Name);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="AnimationDictionary"/> is loaded so the animations of this <see cref="AnimationDictionary"/> are ready to use.
 		/// </summary>
-		public bool IsLoaded => Function.Call<bool>(Native.Hash.HAS_ANIM_DICT_LOADED, Name);
+		public bool IsLoaded => Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, Name);
 
 		/// <summary>
 		/// Attempts to load this <see cref="AnimationDictionary"/> into memory.
 		/// </summary>
 		public void Request()
 		{
-			Function.Call(Native.Hash.REQUEST_ANIM_DICT, Name);
+			Function.Call(Hash.REQUEST_ANIM_DICT, Name);
 		}
 		/// <summary>
 		/// Attempts to load this <see cref="AnimationDictionary"/> into memory for a given period of time.
@@ -74,7 +73,7 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			Function.Call(Native.Hash.REMOVE_ANIM_DICT, Name);
+			Function.Call(Hash.REMOVE_ANIM_DICT, Name);
 		}
 
 		public bool Equals(AnimationDictionary animationDictionary)

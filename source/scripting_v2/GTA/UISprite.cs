@@ -83,12 +83,12 @@ namespace GTA
 				return;
 			}
 
-			float scaleX = (float)Scale.Width / WIDTH;
-			float scaleY = (float)Scale.Height / HEIGHT;
-			float positionX = (((float)Position.X + offset.Width) / WIDTH) + scaleX * 0.5f;
-			float positionY = (((float)Position.Y + offset.Height) / HEIGHT) + scaleY * 0.5f;
+			float w = (float)Scale.Width / WIDTH;
+			float h = (float)Scale.Height / HEIGHT;
+			float x = (float)(Position.X + offset.Width) / WIDTH + w * 0.5f;
+			float y = (float)(Position.Y + offset.Height) / HEIGHT + h * 0.5f;
 
-			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, positionX, positionY, scaleX, scaleY, Rotation, Color.R, Color.G, Color.B, Color.A);
+			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, x, y, w, h, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}
 	}
 }

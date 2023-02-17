@@ -121,19 +121,19 @@ namespace GTA
 		{
 			Function.Call(Hash._0x0DF606929C105BE1, Handle, 255, 255, 255, 255, 0);
 		}
-		public void Render2DScreenSpace(PointF location, PointF size)
+		public void Render2DScreenSpace(PointF position, PointF size)
 		{
 			// Keep in sync with UI.WIDTH
 			const float WIDTH = 1280;
 			// Keep in sync with UI.HEIGHT
 			const float HEIGHT = 720;
 
-			float x = location.X / WIDTH;
-			float y = location.Y / HEIGHT;
-			float width = size.X / WIDTH;
-			float height = size.Y / HEIGHT;
+			float x = position.X / WIDTH;
+			float y = position.Y / HEIGHT;
+			float w = size.X / WIDTH;
+			float h = size.Y / HEIGHT;
 
-			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
+			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
 		}
 
 		public void Render3D(Vector3 position, Vector3 rotation, Vector3 scale)

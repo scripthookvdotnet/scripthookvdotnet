@@ -34,15 +34,14 @@ namespace GTA
 		ExternalImpulse,
 		/// <summary>
 		/// Angular velocity will be changed with this value used, but it is unknown what kind of vector should be used.
-		/// Even Rockstar Games rarely use this value.
 		/// </summary>
 		ForceNoRot,
 		/// <summary>
 		/// Angular velocity will be changed with this value used, but it is unknown what kind of vector should be used.
 		/// Basically works just like <see cref="ForceNoRot"/>, but the force will be multiplied by 102.931, which is calculated by <c>1.75f / (0.0340035 / 2.0f)</c>.
-		/// Even Rockstar Games rarely use this value.
 		/// </summary>
 		ForceRotPlusForce,
+
 		[Obsolete("ForceType.MinForce is obsolete because it is incorrect, use ForceType.InternalForce instead.")]
 		MinForce = 0,
 		[Obsolete("ForceType.MaxForceRot is obsolete because it is incorrect, use ForceType.InternalImpulse instead.")]

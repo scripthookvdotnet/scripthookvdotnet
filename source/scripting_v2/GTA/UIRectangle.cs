@@ -59,8 +59,8 @@ namespace GTA
 
 			float w = (float)Size.Width / WIDTH;
 			float h = (float)Size.Height / HEIGHT;
-			float x = (((float)Position.X + offset.Width) / WIDTH) + w * 0.5f;
-			float y = (((float)Position.Y + offset.Height) / HEIGHT) + h * 0.5f;
+			float x = (float)(Position.X + offset.Width) / WIDTH + w * 0.5f;
+			float y = (float)(Position.Y + offset.Height) / HEIGHT + h * 0.5f;
 
 			Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 		}

@@ -14,7 +14,6 @@ using System.Windows.Forms;
 
 namespace SHVDN
 {
-
 	/// <summary>
 	/// The interface for tasks that must be run on the main thread (e.g. calling native functions) because of thread local storage (TLS).
 	/// </summary>
@@ -53,8 +52,6 @@ namespace SHVDN
 		/// Gets the scripting domain for the current application domain.
 		/// </summary>
 		public static ScriptDomain CurrentDomain { get; private set; }
-
-		internal static string CurrentLoadingScriptAssemblyName { get; private set; }
 
 		/// <summary>
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
@@ -262,7 +259,6 @@ namespace SHVDN
 			try
 			{
 				// Note: This loads the assembly only the first time and afterwards returns the already loaded assembly!
-				ScriptDomain.CurrentLoadingScriptAssemblyName = fileNameWithoutPath;
 				assembly = Assembly.LoadFrom(filename);
 			}
 			catch (Exception ex)
@@ -272,8 +268,8 @@ namespace SHVDN
 			}
 
 			// Show the warning "Resolving API version 0.0.0" if the script reference a version-less SHVDN
-			var ShvdnAssembly = assembly.GetReferencedAssemblies().FirstOrDefault(x => x.Name == "ScriptHookVDotNet");
-			if (ShvdnAssembly != null && ShvdnAssembly.Version == new Version(0, 0, 0, 0))
+			var shvdnAssembly = assembly.GetReferencedAssemblies().FirstOrDefault(x => x.Name == "ScriptHookVDotNet");
+			if (shvdnAssembly != null && shvdnAssembly.Version == new Version(0, 0, 0, 0))
 			{
 				Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + fileNameWithoutPath, ".");
 			}
@@ -461,7 +457,7 @@ namespace SHVDN
 
 					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 					{
-						// Delete copies of ScriptHookVDotNet, since these can cause issues with the assembly binder loading multiple copies
+						// Delete copies of SHVDN, since these can cause issues with the assembly binder loading multiple copies
 						File.Delete(filenamesAssembly[i]);
 
 						filenamesAssembly.RemoveAt(i--);
@@ -498,8 +494,8 @@ namespace SHVDN
 		{
 			filename = Path.GetFullPath(filename);
 
-			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ?
-				!LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
+			var isAssembly = Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase);
+			if (isAssembly ? !LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
 				return;
 
 			// Instantiate only those scripts that are from the this assembly

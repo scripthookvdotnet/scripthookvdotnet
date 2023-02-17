@@ -4,7 +4,6 @@
 //
 
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,10 +25,11 @@ namespace GTA
 			// No more than 3 damage records
 			for (uint i = 0; i < 3; i++)
 			{
-				var memoryAddress = _owner.MemoryAddress;
-
-				if (memoryAddress == IntPtr.Zero || !SHVDN.NativeMemory.IsIndexOfEntityDamageRecordValid(memoryAddress, i))
+				var address = _owner.MemoryAddress;
+				if (address == IntPtr.Zero || !SHVDN.NativeMemory.IsIndexOfEntityDamageRecordValid(address, i))
+				{
 					yield break;
+				}
 
 				var returnDamageRecord = SHVDN.NativeMemory.GetEntityDamageRecordEntryAtIndex(_owner.MemoryAddress, i);
 
@@ -48,12 +48,13 @@ namespace GTA
 		/// </summary>
 		public EntityDamageRecord[] GetAllDamageRecords()
 		{
-			var memoryAddress = _owner.MemoryAddress;
-
-			if (memoryAddress == IntPtr.Zero)
+			var address = _owner.MemoryAddress;
+			if (address == IntPtr.Zero)
+			{
 				return new EntityDamageRecord[0];
+			}
 
-			var damageEntries = SHVDN.NativeMemory.GetEntityDamageRecordEntries(memoryAddress);
+			var damageEntries = SHVDN.NativeMemory.GetEntityDamageRecordEntries(address);
 			var returnDamageRecords = new EntityDamageRecord[damageEntries.Length];
 
 			for (int i = 0; i < returnDamageRecords.Length; i++)

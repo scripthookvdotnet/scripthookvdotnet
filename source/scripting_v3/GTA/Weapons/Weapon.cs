@@ -3,8 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System.Linq;
 using GTA.Native;
+using System.Linq;
 
 namespace GTA
 {

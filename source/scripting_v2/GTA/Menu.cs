@@ -92,12 +92,15 @@ namespace GTA
 				rectFooter.Draw(offset);
 				textFooter.Draw(offset);
 			}
+
 			rectHeader.Draw(offset);
 			textHeader.Draw(offset);
+
 			for (int i = 0; i < ItemDrawCount; i++)
 			{
 				Items[i + CurrentScrollOffset].Draw(offset);
 			}
+
 			DrawScrollArrows(CurrentScrollOffset > 0, CurrentScrollOffset < MaxScrollOffset, offset);
 		}
 
@@ -111,21 +114,24 @@ namespace GTA
 			if (Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, "CommonMenu"))
 			{
 				Vector2 Resolution = Function.Call<Vector2>(Hash.GET_TEXTURE_RESOLUTION, "CommonMenu", "arrowright");
+
 				if (up)
 				{
-					float xscale = Resolution.X / WIDTH;
-					float yscale = Resolution.Y / HEIGHT;
-					float xpos = (Width + offset.Width) / WIDTH - xscale * 0.5f;
-					float ypos = (HeaderHeight + offset.Height + ItemHeight / 2) / HEIGHT;
-					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", xpos, ypos, xscale, yscale, -90.0f, 255, 255, 255, 255);
+					float w = Resolution.X / WIDTH;
+					float h = Resolution.Y / HEIGHT;
+					float x = (float)(Width + offset.Width) / WIDTH - w * 0.5f;
+					float y = (float)(HeaderHeight + offset.Height + ItemHeight / 2) / HEIGHT;
+
+					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", x, y, w, h, -90.0f, 255, 255, 255, 255);
 				}
 				if (down)
 				{
-					float xscale = Resolution.X / WIDTH;
-					float yscale = Resolution.Y / HEIGHT;
-					float xpos = (Width + offset.Width) / WIDTH - xscale * 0.5f;
-					float ypos = (HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / HEIGHT;
-					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", xpos, ypos, xscale, yscale, 90.0f, 255, 255, 255, 255);
+					float w = Resolution.X / WIDTH;
+					float h = Resolution.Y / HEIGHT;
+					float x = (float)(Width + offset.Width) / WIDTH - w * 0.5f;
+					float y = (float)(HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / HEIGHT;
+
+					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", x, y, w, h, 90.0f, 255, 255, 255, 255);
 				}
 			}
 			else

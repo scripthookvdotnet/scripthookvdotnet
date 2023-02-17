@@ -4,7 +4,6 @@
 //
 
 using System;
-using System.Drawing;
 
 namespace GTA
 {
@@ -150,6 +149,7 @@ namespace GTA
 		/// so that the game doesn't correct errors (special case such as scrip-side implemented AI tasks, i.e. diving)
 		/// </summary>
 		UseFullBlending = 1073741824,
+
 		[Obsolete("AnimationFlags.AllowRotation is obsolete, use AnimationFlags.Secondary instead.")]
 		AllowRotation = 32,
 		[Obsolete("AnimationFlags.CancelableWithMovement is obsolete, use AnimationFlags.AbortOnPedMovement instead.")]

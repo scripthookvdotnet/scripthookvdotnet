@@ -5,7 +5,6 @@
 
 using GTA.Native;
 using System;
-using System.Drawing.Drawing2D;
 
 namespace GTA
 {
@@ -19,7 +18,10 @@ namespace GTA
 		{
 			// Don't accept zero. If the blend delta is zero, CTaskScriptedAnimation can't finish animation blending because of infinity duration (which will be made by division of 1.0 by 0).
 			if (value <= 0)
+			{
 				throw new ArgumentException("The value should be positive.", "value");
+			}
+
 			Value = value;
 		}
 

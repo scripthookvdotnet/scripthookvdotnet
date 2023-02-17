@@ -39,12 +39,14 @@ namespace GTA
 		/// Returns <see langword="null" /> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
 		public static Entity FromHandle(int handle)
 		{
-			var memoryAddress = SHVDN.NativeMemory.GetEntityAddress(handle);
-			if (memoryAddress == IntPtr.Zero)
+			var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+			if (address == IntPtr.Zero)
+			{
 				return null;
+			}
 
 			// Read the same field as GET_ENTITY_TYPE does
-			var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(memoryAddress + 0x28);
+			var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28);
 
 			switch (entityType)
 			{
@@ -55,6 +57,7 @@ namespace GTA
 				case EntityTypeInternal.Object:
 					return new Prop(handle);
 			}
+
 			return null;
 		}
 

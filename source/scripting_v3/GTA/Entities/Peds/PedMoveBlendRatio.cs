@@ -17,7 +17,10 @@ namespace GTA
 		public PedMoveBlendRatio(float value)
 		{
 			if (value < 0)
+			{
 				throw new ArgumentException("The value should be positive.", "value");
+			}
+
 			Value = value;
 		}
 

@@ -3,8 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System.Linq;
 using GTA.Native;
+using System.Linq;
 
 namespace GTA
 {
@@ -27,14 +27,18 @@ namespace GTA
 			get
 			{
 				if (_weapon == null || _owner == null || !_owner.Exists())
+				{
 					return false;
+				}
 
 				return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, ComponentHash);
 			}
 			set
 			{
 				if (_weapon == null || _owner == null || !_owner.Exists())
+				{
 					return;
+				}
 
 				Function.Call(value ? Hash.GIVE_WEAPON_COMPONENT_TO_PED : Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, _weapon.Hash, ComponentHash);
 			}
@@ -171,21 +175,21 @@ namespace GTA
 					return "WCT_CLIP_BOX";
 			}
 
-			for (int i = 0, count = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
+			for (int i = 0, count = Function.Call<int>(Hash.GET_NUM_DLC_WEAPONS); i < count; i++)
 			{
 				unsafe
 				{
 					DlcWeaponData weaponData;
-					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &weaponData))
+					if (Function.Call<bool>(Hash.GET_DLC_WEAPON_DATA, i, &weaponData))
 					{
 						if (weaponData.Hash == hash)
 						{
-							int maxComp = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
+							int maxComp = Function.Call<int>(Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
 
 							for (int j = 0; j < maxComp; j++)
 							{
 								DlcWeaponComponentData componentData;
-								if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, &componentData))
+								if (Function.Call<bool>(Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, &componentData))
 								{
 									if (componentData.Hash == component)
 									{

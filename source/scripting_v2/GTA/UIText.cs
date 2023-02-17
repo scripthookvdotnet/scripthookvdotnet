@@ -85,8 +85,8 @@ namespace GTA
 				return;
 			}
 
-			float x = ((float)Position.X + offset.Width) / WIDTH;
-			float y = ((float)Position.Y + offset.Height) / HEIGHT;
+			float x = (float)(Position.X + offset.Width) / WIDTH;
+			float y = (float)(Position.Y + offset.Height) / HEIGHT;
 
 			if (Shadow)
 			{
