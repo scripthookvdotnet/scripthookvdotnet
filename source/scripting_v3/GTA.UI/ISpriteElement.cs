@@ -22,6 +22,7 @@ namespace GTA.UI
 		{
 			get; set;
 		}
+
 		/// <summary>
 		/// Gets or sets the rotation to draw thie <see cref="ISpriteElement"/>.
 		/// </summary>

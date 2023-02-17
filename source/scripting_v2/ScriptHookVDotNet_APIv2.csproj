@@ -11,7 +11,8 @@
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(VisualStudioVersion)' &gt;= '16.0'">10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\..\bin\Debug\</OutputPath>
@@ -50,6 +51,7 @@
     <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
       <Name>ScriptHookVDotNet</Name>
       <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
