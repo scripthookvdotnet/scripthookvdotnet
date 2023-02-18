@@ -1312,16 +1312,7 @@ namespace GTA
 		/// </value>
 		public bool IsSirenSilent
 		{
-			get
-			{
-				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HasMutedSirenOffset == 0)
-				{
-					return false;
-				}
-
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.HasMutedSirenOffset, SHVDN.NativeMemory.HasMutedSirenBit);
-			}
+			get => SHVDN.NativeMemory.HasMutedSirens(Handle);
 			set => Function.Call(Hash.SET_VEHICLE_HAS_MUTED_SIRENS, Handle, value);
 		}
 

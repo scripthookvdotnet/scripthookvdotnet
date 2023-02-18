@@ -120,29 +120,6 @@ namespace SHVDN
 			return null;
 		}
 
-		// unfortunately there's no way to avoid bound check in .NET Framework
-		private static byte[] Log2DeBruijn => new byte[32]
-		{
-			00, 09, 01, 10, 13, 21, 02, 29,
-			11, 14, 16, 18, 22, 25, 03, 30,
-			08, 12, 20, 28, 15, 17, 24, 07,
-			19, 27, 23, 06, 26, 05, 04, 31
-		};
-		private static int Log2(uint value)
-		{
-			// Lzcnt is not available in .NET Framework, so use software fallback
-			// Fill trailing zeros with ones, eg 00010010 becomes 00011111
-			value |= value >> 01;
-			value |= value >> 02;
-			value |= value >> 04;
-			value |= value >> 08;
-			value |= value >> 16;
-
-			// uint.MaxValue >> 27 is always in range [0 - 31]
-			// Using deBruijn sequence, k=2, n=5 (2^5=32) : 0b_0000_0111_1100_0100_1010_1100_1101_1101u
-			return Log2DeBruijn[(int)((value * 0x07C4ACDDu) >> 27)];
-		}
-
 		/// <summary>
 		/// Initializes all known functions and offsets based on pattern searching.
 		/// </summary>
@@ -566,8 +543,8 @@ namespace SHVDN
 			address = FindPattern("\x48\x85\xC0\x74\x32\x8A\x88\x00\x00\x00\x00\xF6\xC1\x00\x75\x27", "xxxxxxx????xx?xx");
 			if (address != null)
 			{
-				HasMutedSirenOffset = *(int*)(address + 7);
-				HasMutedSirenBit = Log2(*(byte*)(address + 13)); // the bit is changed between b372 and b2802
+				HasMutedSirensOffset = *(int*)(address + 7);
+				HasMutedSirensBit = *(byte*)(address + 13); // the bit is changed between b372 and b2802
 				CanUseSirenOffset = *(int*)(address + 23);
 			}
 
@@ -1824,8 +1801,8 @@ namespace SHVDN
 		public static int VehicleLodMultiplierOffset { get; }
 
 		public static int CanUseSirenOffset { get; }
-		public static int HasMutedSirenOffset { get; }
-		public static int HasMutedSirenBit { get; }
+		public static int HasMutedSirensOffset { get; }
+		public static int HasMutedSirensBit { get; }
 
 		public static int VehicleDropsMoneyWhenBlownUpOffset { get; }
 
@@ -1838,6 +1815,18 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		public static bool HasMutedSirens(int vehicleHandle)
+		{
+			var address = GetEntityAddress(vehicleHandle);
+
+			if (address == IntPtr.Zero)
+			{
+				return false;
+			}
+
+			return (*(byte*)(address + HasMutedSirensOffset) & HasMutedSirensBit) != 0;
+		}
 
 		#endregion
 
