@@ -3,12 +3,10 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-
 namespace GTA
 {
 	/// <summary>
-	/// An enumeration of hashes ambient peds use and 3 families of protagonists.
+	/// An enumeration of hashes ambient peds use and ones for 3 families of protagonists.
 	/// </summary>
 	public enum RelationshipGroupHash : uint
 	{
