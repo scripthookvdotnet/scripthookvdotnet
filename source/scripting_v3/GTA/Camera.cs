@@ -32,10 +32,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the memory address of this <see cref="Camera"/>.
 		/// </summary>
-		public IntPtr MemoryAddress
-		{
-			get => SHVDN.NativeMemory.GetCameraAddress(Handle);
-		}
+		public IntPtr MemoryAddress => SHVDN.NativeMemory.GetCameraAddress(Handle);
 
 		/// <summary>
 		/// Gets the memory address of the matrix for this <see cref="Camera"/>.
@@ -45,8 +42,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				return address != IntPtr.Zero ? (
-					(SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110) : IntPtr.Zero;
+				if (address == IntPtr.Zero)
+				{
+					return IntPtr.Zero;
+				}
+
+				return (SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
 			}
 		}
 
@@ -70,7 +71,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				return address != IntPtr.Zero ? new Matrix(SHVDN.NativeMemory.ReadMatrix(address)) : new Matrix();
+				if (address == IntPtr.Zero)
+				{
+					return new Matrix();
+				}
+
+				return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
 			}
 		}
 
@@ -104,9 +110,10 @@ namespace GTA
 			set
 			{
 				value.Normalize();
-				Vector3 vector1 = new Vector3(value.X, value.Y, 0f);
-				Vector3 vector2 = new Vector3(value.Z, vector1.Length(), 0f);
-				Vector3 vector3 = Vector3.Normalize(vector2);
+
+				var vector1 = new Vector3(value.X, value.Y, 0f);
+				var vector2 = new Vector3(value.Z, vector1.Length(), 0f);
+				var vector3 = Vector3.Normalize(vector2);
 				Rotation = new Vector3((float)(System.Math.Atan2(vector3.X, vector3.Y) * 57.295779513082323), Rotation.Y, (float)(System.Math.Atan2(value.X, value.Y) * -57.295779513082323));
 			}
 		}
@@ -119,7 +126,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				return address != IntPtr.Zero ? new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20)) : Vector3.RelativeTop;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.RelativeTop;
+				}
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20));
 			}
 		}
 
@@ -131,7 +143,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				return address != IntPtr.Zero ? new Vector3(SHVDN.NativeMemory.ReadVector3(address)) : Vector3.RelativeRight;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.RelativeRight;
+				}
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
 			}
 		}
 
@@ -143,7 +160,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MatrixAddress;
-				return address != IntPtr.Zero ? new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10)) : Vector3.RelativeFront;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.RelativeFront;
+				}
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10));
 			}
 		}
 

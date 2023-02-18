@@ -132,10 +132,12 @@ namespace GTA
 				{
 					_viewport = new Viewport();
 
-					Tick += (object sender, EventArgs e) => {
+					Tick += (object sender, EventArgs e) =>
+					{
 						_viewport.Draw();
 					};
-					KeyUp += (object sender, KeyEventArgs e) => {
+					KeyUp += (object sender, KeyEventArgs e) =>
+					{
 						if (e.KeyCode == ActivateKey) _viewport.HandleActivate();
 						else if (e.KeyCode == BackKey) _viewport.HandleBack();
 						else if (e.KeyCode == LeftKey) _viewport.HandleChangeItem(false);

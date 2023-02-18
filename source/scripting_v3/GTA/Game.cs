@@ -200,7 +200,7 @@ namespace GTA
 		{
 			if (Enum.IsDefined(typeof(RadioStation), station) && station != RadioStation.RadioOff)
 			{
-			    Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], false);
+				Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], false);
 			}
 		}
 		/// <summary>
@@ -224,7 +224,7 @@ namespace GTA
 				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets or sets a value indicating whether to render the world with a night vision filter.
 		/// </summary>
@@ -297,7 +297,7 @@ namespace GTA
 		/// <param name="value">True/false for pause/resume.</param>
 		public static void Pause(bool value)
 		{
-			GTA.Native.Function.Call(GTA.Native.Hash.SET_GAME_PAUSED, value);
+			Function.Call(Hash.SET_GAME_PAUSED, value);
 		}
 
 		/// <summary>

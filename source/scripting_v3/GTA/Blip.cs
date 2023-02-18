@@ -3,10 +3,10 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-using System.Drawing;
 using GTA.Math;
 using GTA.Native;
+using System;
+using System.Drawing;
 
 namespace GTA
 {
@@ -43,11 +43,7 @@ namespace GTA
 				}
 
 				var gameVersion = Game.Version;
-				var offset = 0x58;
-				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
-					offset = 0x5E;
-				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
-					offset = 0x5C;
+				var offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x5E : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5C : 0x58;
 
 				return (BlipDisplayType)SHVDN.NativeMemory.ReadByte(address + offset);
 			}
@@ -68,11 +64,7 @@ namespace GTA
 				}
 
 				var gameVersion = Game.Version;
-				var offset = 0x5A;
-				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
-					offset = 0x60;
-				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
-					offset = 0x5E;
+				var offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x60 : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5E : 0x5A;
 
 				return (BlipCategoryType)SHVDN.NativeMemory.ReadByte(address + offset);
 			}
@@ -105,11 +97,7 @@ namespace GTA
 				}
 
 				var gameVersion = Game.Version;
-				var offset = 0x57;
-				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
-					offset = 0x5D;
-				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
-					offset = 0x5B;
+				var offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x5D : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5B : 0x57;
 
 				return SHVDN.NativeMemory.ReadByte(address + offset);
 			}
@@ -131,11 +119,7 @@ namespace GTA
 				}
 
 				var gameVersion = Game.Version;
-				var offset = 0x5B;
-				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
-					offset = 0x61;
-				else if (gameVersion >= GameVersion.v1_0_463_1_Steam)
-					offset = 0x5F;
+				var offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x61 : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5F : 0x5B;
 
 				var returnValue = (int)SHVDN.NativeMemory.ReadByte(address + offset);
 
@@ -217,7 +201,12 @@ namespace GTA
 				var nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
 
 				// Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
-				return nameLength != 0 ? SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28)) : string.Empty;
+				if (nameLength != 0)
+				{
+					return SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28));
+				}
+
+				return string.Empty;
 			}
 			set
 			{
@@ -278,7 +267,9 @@ namespace GTA
 			get
 			{
 				if (Game.Version >= GameVersion.v1_0_2060_1_Steam)
+				{
 					return Function.Call<int>(Hash.GET_BLIP_ROTATION, Handle);
+				}
 
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
@@ -287,12 +278,15 @@ namespace GTA
 				}
 
 				var gameVersion = Game.Version;
-
 				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+				{
 					return (int)SHVDN.NativeMemory.ReadFloat(address + 0x58);
-
-				var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
-				return SHVDN.NativeMemory.ReadInt16(address + offset);
+				}
+				else
+				{
+					var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
+					return SHVDN.NativeMemory.ReadInt16(address + offset);
+				}
 			}
 			set => Function.Call(Hash.SET_BLIP_ROTATION, Handle, value);
 		}
@@ -315,12 +309,15 @@ namespace GTA
 				}
 
 				var gameVersion = Game.Version;
-
 				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
+				{
 					return SHVDN.NativeMemory.ReadFloat(address + 0x58);
-
-				var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
-				return (float)SHVDN.NativeMemory.ReadInt16(address + offset);
+				}
+				else
+				{
+					var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
+					return (float)SHVDN.NativeMemory.ReadInt16(address + offset);
+				}
 			}
 			set
 			{
@@ -330,24 +327,22 @@ namespace GTA
 					return;
 				}
 
-				var valueNormalized = NormalizeRotation(value);
-				var gameVersion = Game.Version;
+				var valueNormalized = value % 360;
+				if (valueNormalized < 0)
+				{
+					valueNormalized += 360;
+				}
 
+				var gameVersion = Game.Version;
 				if (gameVersion >= GameVersion.v1_0_944_2_Steam)
 				{
 					SHVDN.NativeMemory.WriteFloat(address + 0x58, valueNormalized);
 					return;
 				}
-
-				var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
-				SHVDN.NativeMemory.WriteInt16(address + offset, (short)valueNormalized);
-
-				float NormalizeRotation(float val)
+				else
 				{
-					var normalizedValue = val % 360;
-					if (normalizedValue < 0)
-						normalizedValue += 360;
-					return normalizedValue;
+					var offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
+					SHVDN.NativeMemory.WriteInt16(address + offset, (short)valueNormalized);
 				}
 			}
 		}
@@ -402,7 +397,8 @@ namespace GTA
 					return 0;
 				}
 
-				return Game.Version >= GameVersion.v1_0_463_1_Steam ? SHVDN.NativeMemory.ReadFloat(address + 0x54) : SHVDN.NativeMemory.ReadFloat(address + 0x50);
+				var offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 0x54 : 0x50;
+				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
@@ -412,10 +408,8 @@ namespace GTA
 					return;
 				}
 
-				if (Game.Version >= GameVersion.v1_0_463_1_Steam)
-					SHVDN.NativeMemory.WriteFloat(address + 0x54, value);
-				else
-					SHVDN.NativeMemory.WriteFloat(address + 0x50, value);
+				var offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 0x54 : 0x50;
+				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}
 
@@ -455,7 +449,6 @@ namespace GTA
 				}
 
 				int returnValue = SHVDN.NativeMemory.ReadInt16(address + 0x44);
-
 				if (returnValue == 0xFFFF)
 				{
 					return -1;
@@ -689,9 +682,12 @@ namespace GTA
 			var nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
 
 			// Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
-			return nameLength != 0 ?
-				SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28)) :
-				Game.GetLocalizedString(SHVDN.NativeMemory.ReadInt32(address + 0x38));
+			if (nameLength != 0)
+			{
+				return SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28));
+			}
+
+			return Game.GetLocalizedString(SHVDN.NativeMemory.ReadInt32(address + 0x38));
 		}
 
 		/// <summary>

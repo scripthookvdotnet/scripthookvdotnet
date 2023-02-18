@@ -8,7 +8,6 @@ using GTA.Native;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SHVDN;
 
 namespace GTA
 {
@@ -56,19 +55,22 @@ namespace GTA
 
 		public bool IsConvertible => Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
 		public bool IsBig => Function.Call<bool>(Hash.IS_BIG_VEHICLE, Handle);
-		public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasBulletProofGlass);
-		public bool HasLowriderHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderHydraulics);
-		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
+		public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag2.HasBulletProofGlass);
+		public bool HasLowriderHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag2.HasLowriderHydraulics);
+		public bool HasDonkHydraulics => Game.Version >= GameVersion.v1_0_505_2_Steam && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
 		public bool HasParachute => Game.Version >= GameVersion.v1_0_505_2_Steam && Function.Call<bool>(Hash.GET_VEHICLE_HAS_PARACHUTE, Handle);
 		public bool HasRocketBoost => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.GET_HAS_ROCKET_BOOST, Handle);
-    public bool IsParachuteDeployed => Game.Version >= GameVersion.v1_0_1011_1_Steam && Function.Call<bool>(Hash.IS_VEHICLE_PARACHUTE_DEPLOYED, Handle);
+		public bool IsParachuteDeployed => Game.Version >= GameVersion.v1_0_1011_1_Steam && Function.Call<bool>(Hash.IS_VEHICLE_PARACHUTE_DEPLOYED, Handle);
 		public bool IsRocketBoostActive
 		{
 			get => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.IS_ROCKET_BOOST_ACTIVE, Handle);
 			set
 			{
 				if (Game.Version < GameVersion.v1_0_944_2_Steam)
+				{
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(IsRocketBoostActive));
+				}
+
 				Function.Call(Hash.SET_ROCKET_BOOST_ACTIVE, Handle, value);
 			}
 		}
@@ -287,14 +289,7 @@ namespace GTA
 				}
 
 				// SET_DISABLE_PRETEND_OCCUPANTS changes the value only if the population type is set to 6 or 7, so change the value manually
-				if (value)
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
-				}
-				else
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.DisablePretendOccupantOffset, 7, !value);
 			}
 		}
 
@@ -376,9 +371,9 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Vehicle"/> allows <see cref="Ped"/>s to rappel; otherwise, <see langword="false" />.
 		/// </value>
-		public bool AllowRappel => Game.Version >= GameVersion.v1_0_757_2_Steam
-			? Function.Call<bool>(Hash.DOES_VEHICLE_ALLOW_RAPPEL, Handle)
-			: SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag1.AllowsRappel);
+		public bool AllowRappel => Game.Version >= GameVersion.v1_0_757_2_Steam ?
+			Function.Call<bool>(Hash.DOES_VEHICLE_ALLOW_RAPPEL, Handle) :
+			SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag1.AllowsRappel);
 
 		/// <summary>
 		/// Gets a value indicating whether <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed.
@@ -386,7 +381,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed; otherwise, <see langword="false" />.
 		/// </value>
-		public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, NativeMemory.VehicleFlag1.CanStandOnTop);
+		public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag1.CanStandOnTop);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> can jump.
@@ -1160,8 +1155,7 @@ namespace GTA
 					return;
 				}
 
-				// Need to add 10 degrees to the value for it to apply correctly for some reason
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)((value + (value > 0 ? 10 : -10)) * (System.Math.PI / 180.0)));
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)(value * (System.Math.PI / 180.0)));
 			}
 		}
 
@@ -1407,7 +1401,7 @@ namespace GTA
 		/// </value>
 		public bool IsLeftIndicatorLightOn
 		{
-			get => NativeMemory.IsBitSet(MemoryAddress + NativeMemory.IsInteriorLightOnOffset, 0);
+			get => SHVDN.NativeMemory.IsBitSet(MemoryAddress + SHVDN.NativeMemory.IsInteriorLightOnOffset, 0);
 			set => Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, true, value);
 		}
 
@@ -1419,7 +1413,7 @@ namespace GTA
 		/// </value>
 		public bool IsRightIndicatorLightOn
 		{
-			get => NativeMemory.IsBitSet(MemoryAddress + NativeMemory.IsInteriorLightOnOffset, 1);
+			get => SHVDN.NativeMemory.IsBitSet(MemoryAddress + SHVDN.NativeMemory.IsInteriorLightOnOffset, 1);
 			set => Function.Call(Hash.SET_VEHICLE_INDICATOR_LIGHTS, Handle, false, value);
 		}
 
@@ -1491,7 +1485,9 @@ namespace GTA
 				var targetValue = SHVDN.NativeMemory.ReadByte(address + 0xD8) & 0xF8;
 
 				if (value)
+				{
 					targetValue |= 3;
+				}
 
 				SHVDN.NativeMemory.WriteByte(address + 0xD8, (byte)targetValue);
 			}
@@ -1516,14 +1512,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0, value);
 			}
 		}
 
@@ -1538,14 +1527,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1, value);
 			}
 		}
 
@@ -2037,7 +2019,9 @@ namespace GTA
 		public void StopBringingToHalt()
 		{
 			if (Game.Version < GameVersion.v1_0_1103_2_Steam)
+			{
 				throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(Vehicle), nameof(StopBringingToHalt));
+			}
 
 			Function.Call(Hash.STOP_BRINGING_VEHICLE_TO_HALT, Handle);
 		}
@@ -2060,7 +2044,9 @@ namespace GTA
 		public void StartParachuting(bool allowPlayerToCancel)
 		{
 			if (Game.Version < GameVersion.v1_0_944_2_Steam)
+			{
 				throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(StartParachuting));
+			}
 
 			if (HasParachute)
 			{

@@ -11,7 +11,6 @@
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\..\bin\Debug\</OutputPath>
@@ -50,13 +49,8 @@
     <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
       <Name>ScriptHookVDotNet</Name>
       <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
+      <Private>False</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <!-- Add custom Build Action to Visual Studio Properties -->
-    <AvailableItemName Include="CppCompile">
-      <Targets>CppCompile</Targets>
-    </AvailableItemName>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GTA.Math\Matrix.cs" />
@@ -122,6 +116,7 @@
     <Compile Include="GTA\Global.cs" />
     <Compile Include="GTA\GlobalCollection.cs" />
     <Compile Include="GTA\Handleable.cs" />
+    <Compile Include="GTA\HudComponent.cs" />
     <Compile Include="GTA\InputMode.cs" />
     <Compile Include="GTA\IntersectOptions.cs" />
     <Compile Include="GTA\Language.cs" />
@@ -137,6 +132,7 @@
     <Compile Include="GTA\MenuNumericScroller.cs" />
     <Compile Include="GTA\MenuToggle.cs" />
     <Compile Include="GTA\MessageBox.cs" />
+    <Compile Include="GTA\Notification.cs" />
     <Compile Include="GTA\ParachuteTint.cs" />
     <Compile Include="GTA\Pickup.cs" />
     <Compile Include="GTA\PickupType.cs" />
@@ -151,6 +147,7 @@
     <Compile Include="GTA\Script.cs" />
     <Compile Include="GTA\ScriptSettings.cs" />
     <Compile Include="GTA\SelectedIndexChangedArgs.cs" />
+    <Compile Include="GTA\UI.cs" />
     <Compile Include="GTA\UIContainer.cs" />
     <Compile Include="GTA\UIElement.cs" />
     <Compile Include="GTA\UIRectangle.cs" />
@@ -169,44 +166,35 @@
     <Compile Include="GTA\ZoneID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <CppCompile Include="GTA\UI.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Properties\AssemblyInfo.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="GTA\HudComponent.h" />
-    <None Include="GTA\Notification.h" />
-    <None Include="GTA\UI.h" />
-  </ItemGroup>
-  <!-- Import Cpp targets -->
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props" Condition="Exists('$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props')" />
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Common.props" />
-  <!-- Import CSharp targets-->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- Overwrite core build logic to support a mixed C++/CLI and C# code base -->
-  <UsingTask TaskName="CL" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
-  <UsingTask TaskName="RC" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
-  <UsingTask TaskName="Link" AssemblyFile="$(VCTargetsPath)\Microsoft.Build.CppTasks.Common.dll" />
-  <Target Name="CoreCompile" Inputs="@(Compile);@(CppCompile);$(ReferencePathWithRefAssemblies)" Outputs="@(IntermediateAssembly);$(IntermediateOutputPath)$(TargetName).cpp.netmodule;$(IntermediateOutputPath)$(TargetName).csharp.netmodule" DependsOnTargets="$(CoreCompileDependsOn)">
-    <!-- Keep track of the generated intermediate files so that they are properly cleaned on rebuilds -->
-    <ItemGroup>
-      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).cpp.netmodule;" />
-      <FileWrites Include="$(IntermediateOutputPath)$(TargetName).csharp.netmodule" />
-    </ItemGroup>
+  <!-- Fix some code constructs in the compiled C# code that can normally only be generated with C++/CLI, to retain compatibility with older ScriptHookVDotNet versions -->
+  <UsingTask TaskName="ReplaceTextInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <File ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
+      <PatternExpression ParameterType="System.String" Required="true" />
+      <ReplacementExpression ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+          string text = System.IO.File.ReadAllText(File.ItemSpec);
+          text = System.Text.RegularExpressions.Regex.Replace(text, PatternExpression, ReplacementExpression);
+          System.IO.File.WriteAllText(File.ItemSpec, text);
+        ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="AfterCompile">
     <PropertyGroup>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateDebugInformation Condition="'$(DebugType)' == 'none'">false</GenerateDebugInformation>
-      <GenerateDebugInformation Condition="'$(DebugType)' == 'full'">DebugFull</GenerateDebugInformation>
+      <ILDasmExe>$(TargetFrameworkSDKToolsDirectory)\ildasm.exe</ILDasmExe>
+      <ILDasmExeCommandLineArgs>/quoteallnames /unicode</ILDasmExeCommandLineArgs>
+      <ILDasmExeCommandLineArgs Condition="'$(DebugType)' != 'none'">$(ILDasmExeCommandLineArgs) /linenum</ILDasmExeCommandLineArgs>
+      <ILAsmExe>$(TargetedFrameworkDir)\ilasm.exe</ILAsmExe>
+      <ILAsmCommandLineArgs>/dll /pe64 /x64 /alignment=$(FileAlignment)</ILAsmCommandLineArgs>
+      <ILAsmCommandLineArgs Condition="'$(Optimize)' == 'true'">$(ILAsmCommandLineArgs) /optimize</ILAsmCommandLineArgs>
+      <ILAsmCommandLineArgs Condition="'$(DebugType)' != 'none'">$(ILAsmCommandLineArgs) /debug=impl</ILAsmCommandLineArgs>
+      <ILAsmCommandLineArgs Condition="'$(HighEntropyVA)' == 'true'">$(ILAsmCommandLineArgs) /highentropyva</ILAsmCommandLineArgs>
     </PropertyGroup>
-    <!-- First build all C++/CLI files -->
-    <CL Sources="@(CppCompile)" AdditionalUsingDirectories="$(TargetFrameworkDirectory);$(OutputPath)" CompileAsManaged="true" ForcedUsingFiles="@(ReferencePathWithRefAssemblies);ScriptHookVDotNet.asi" ObjectFileName="$(IntermediateOutputPath)$(TargetName).cpp.netmodule" SuppressStartupBanner="true" ToolExe="cl.exe" ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
-    <!-- After that build all the C# files -->
-    <CSC Sources="@(Compile)" AllowUnsafeBlocks="$(AllowUnsafeBlocks)" BaseAddress="$(BaseAddress)" DebugType="$(DebugType)" DefineConstants="$(DefineConstants)" DisabledWarnings="$(NoWarn)" DocumentationFile="@(DocFileItem)" EmitDebugInformation="$(DebugSymbols)" EnvironmentVariables="$(CscEnvironment)" FileAlignment="$(FileAlignment)" HighEntropyVA="$(HighEntropyVA)" LangVersion="$(LangVersion)" NoStandardLib="$(NoCompilerStandardLib)" Optimize="$(Optimize)" OutputAssembly="$(IntermediateOutputPath)$(TargetName).csharp.netmodule" PdbFile="$(PdbFile)" References="@(ReferencePathWithRefAssemblies)" TargetType="Module" Utf8Output="$(Utf8Output)" WarningLevel="$(WarningLevel)" WarningsAsErrors="$(WarningsAsErrors)" WarningsNotAsErrors="$(WarningsNotAsErrors)" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
-    <!-- Compile version resource -->
-    <RC Source="@(ResourceCompile)" ResourceOutputFileName="$(IntermediateOutputPath)$(TargetName).res" SuppressStartupBanner="true" ToolExe="rc.exe" ToolPath="$(WindowsSdkDir)bin\$(WindowsTargetPlatformVersion)\x64" />
-    <!-- Finally link the two modules together into a single assembly -->
-    <Link Sources="$(IntermediateOutputPath)$(TargetName).*.netmodule;$(IntermediateOutputPath)$(TargetName).res" AdditionalLibraryDirectories="$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(OutputPath)" GenerateDebugInformation="$(GenerateDebugInformation)" LinkDLL="true" LinkTimeCodeGeneration="UseLinkTimeCodeGeneration" OutputFile="@(IntermediateAssembly)" RandomizedBaseAddress="$(HighEntropyVA)" SuppressStartupBanner="true" TargetMachine="Machine$(PlatformTarget)" ToolExe="link.exe" ToolPath="$(VCToolsInstallDir)bin\HostX64\x64" />
+    <Exec Command="&quot;$(ILDasmExe)&quot; /nobar $(ILDasmExeCommandLineArgs) /out=&quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')&quot; &quot;@(IntermediateAssembly)&quot;" />
+    <ReplaceTextInFile File="@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')" PatternExpression="int32 ('GTA'\.'UI'::)?('WIDTH'|'HEIGHT')" ReplacementExpression="int32 modopt([mscorlib]System.Runtime.CompilerServices.IsConst) $1$2" />
+    <Exec Command="&quot;$(ILAsmExe)&quot; /nologo /quiet $(ILAsmCommandLineArgs) /out=&quot;@(IntermediateAssembly)&quot; /resource=&quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.res')&quot; &quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')&quot;" />
   </Target>
 </Project>

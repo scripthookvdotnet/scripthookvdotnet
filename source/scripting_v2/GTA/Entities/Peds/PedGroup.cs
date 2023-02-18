@@ -82,7 +82,7 @@ namespace GTA
 		{
 			if (disposing)
 			{
-				Function.Call(Native.Hash.REMOVE_GROUP, Handle);
+				Function.Call(Hash.REMOVE_GROUP, Handle);
 			}
 		}
 

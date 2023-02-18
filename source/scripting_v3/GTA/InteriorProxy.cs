@@ -3,9 +3,9 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Math;
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -60,7 +60,9 @@ namespace GTA
 			{
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return Vector3.Zero;
+				}
 
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x70));
 			}
@@ -76,7 +78,9 @@ namespace GTA
 			{
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return null;
+				}
 
 				var interiorInstHandle = SHVDN.NativeMemory.GetAssociatedInteriorInstHandleFromInteriorProxy(Handle);
 				return interiorInstHandle != 0 ? new InteriorInstance(interiorInstHandle) : null;
@@ -92,7 +96,9 @@ namespace GTA
 			{
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
+				{
 					return null;
+				}
 
 				return new Model(SHVDN.NativeMemory.ReadInt32(address + 0xE4));
 			}

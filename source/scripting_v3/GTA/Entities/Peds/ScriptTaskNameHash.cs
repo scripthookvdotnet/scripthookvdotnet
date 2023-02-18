@@ -3,8 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-
 namespace GTA
 {
 	/// <summary>

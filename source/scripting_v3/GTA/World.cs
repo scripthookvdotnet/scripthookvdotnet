@@ -1008,7 +1008,9 @@ namespace GTA
 				: loadedAppropriatePedModels.Where(defaultPredicateForCreateRandomPed).ToArray();
 			var filteredModelCount = filteredPedModels.Length;
 			if (filteredModelCount == 0)
+			{
 				return null;
+			}
 
 			var rand = Math.Random.Instance;
 			var pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
@@ -1057,7 +1059,9 @@ namespace GTA
 			var filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
 			var filteredModelCount = filteredVehModels.Length;
 			if (filteredModelCount == 0)
+			{
 				return null;
+			}
 
 			var rand = Math.Random.Instance;
 			var pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));

@@ -115,14 +115,14 @@ namespace GTA
 		{
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE_FULLSCREEN, Handle, 255, 255, 255, 255, 0);
 		}
-		public void Render2DScreenSpace(PointF location, PointF size)
+		public void Render2DScreenSpace(PointF position, PointF size)
 		{
-			float x = location.X / UI.Screen.Width;
-			float y = location.Y / UI.Screen.Height;
-			float width = size.X / UI.Screen.Width;
-			float height = size.Y / UI.Screen.Height;
+			float x = position.X / UI.Screen.Width;
+			float y = position.Y / UI.Screen.Height;
+			float w = size.X / UI.Screen.Width;
+			float h = size.Y / UI.Screen.Height;
 
-			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (width / 2.0f), y + (height / 2.0f), width, height, 255, 255, 255, 255);
+			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
 		}
 
 		public void Render3D(Vector3 position, Vector3 rotation, Vector3 scale)

@@ -351,9 +351,7 @@ namespace GTA
 
 		public bool IsClimbing => Function.Call<bool>(Hash.IS_PED_CLIMBING, Handle);
 
-		// Rockstar Games use GET_IS_TASK_ACTIVE to detect if the ped is climbing ladder
-		private const int TASK_TYPE_INDEX_FOR_CTaskClimbLadder = 1;
-		public bool IsClimbingLadder => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, TASK_TYPE_INDEX_FOR_CTaskClimbLadder);
+		public bool IsClimbingLadder => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, 1 /* CTaskClimbLadder */);
 
 		public bool IsWalking => Function.Call<bool>(Hash.IS_PED_WALKING, Handle);
 
@@ -531,11 +529,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.FiringPatternOffset == 0)
-					return 0.0f;
+				{
+					return 0;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
-					return 0.0f;
+				{
+					return 0;
+				}
 
 				return (FiringPattern)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.FiringPatternOffset);
 			}
@@ -602,9 +604,7 @@ namespace GTA
 
 		public bool IsGettingIntoVehicle => Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
 
-		// Rockstar Games use GET_IS_TASK_ACTIVE to detect if the ped is exiting a vehicle
-		private const int TASK_TYPE_INDEX_FOR_CTaskExitVehicle = 2;
-		public bool IsExitingVehicle => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, TASK_TYPE_INDEX_FOR_CTaskExitVehicle);
+		public bool IsExitingVehicle => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, 2 /* CTaskExitVehicle */);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Ped"/> is jumping out of their vehicle.
@@ -1184,11 +1184,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.SeeingRangeOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.SeeingRangeOffset);
 			}
@@ -1200,11 +1204,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.HearingRangeOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.HearingRangeOffset);
 			}
@@ -1216,11 +1224,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.VisualFieldMinAngleOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMinAngleOffset);
 			}
@@ -1232,11 +1244,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.VisualFieldMaxAngleOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMaxAngleOffset);
 			}
@@ -1248,11 +1264,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.VisualFieldMinElevationAngleOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMinElevationAngleOffset);
 			}
@@ -1264,11 +1284,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.VisualFieldMaxElevationAngleOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldMaxElevationAngleOffset);
 			}
@@ -1280,11 +1304,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.VisualFieldPeripheralRangeOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldPeripheralRangeOffset);
 			}
@@ -1296,11 +1324,15 @@ namespace GTA
 			get
 			{
 				if (SHVDN.NativeMemory.VisualFieldCenterAngleOffset == 0)
+				{
 					return 0.0f;
+				}
 
 				var address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
+				{
 					return 0.0f;
+				}
 
 				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VisualFieldCenterAngleOffset);
 			}

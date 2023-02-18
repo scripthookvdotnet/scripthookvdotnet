@@ -10,11 +10,6 @@ namespace GTA
 {
 	public class UIText : UIElement
 	{
-		// Keep in sync with UI.WIDTH
-		const int WIDTH = 1280;
-		// Keep in sync with UI.HEIGHT
-		const int HEIGHT = 720;
-
 		public UIText(string caption, Point position, float scale) : this(caption, position, scale, Color.WhiteSmoke, Font.ChaletLondon, false, false, false)
 		{
 		}
@@ -85,8 +80,8 @@ namespace GTA
 				return;
 			}
 
-			float x = ((float)Position.X + offset.Width) / WIDTH;
-			float y = ((float)Position.Y + offset.Height) / HEIGHT;
+			float x = (float)(Position.X + offset.Width) / UI.WIDTH;
+			float y = (float)(Position.Y + offset.Height) / UI.HEIGHT;
 
 			if (Shadow)
 			{

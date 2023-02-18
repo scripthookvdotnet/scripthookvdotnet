@@ -7,8 +7,8 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 
@@ -376,7 +376,9 @@ namespace GTA.Native
 				var argPtr = stackalloc ulong[argCount];
 
 				for (int i = 0; i < argCount; ++i)
+				{
 					argPtr[i] = arguments[i]._data;
+				}
 
 				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -1102,7 +1104,9 @@ namespace GTA.Native
 				var argPtr = stackalloc ulong[argCount];
 
 				for (int i = 0; i < argCount; ++i)
+				{
 					argPtr[i] = arguments[i]._data;
+				}
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
