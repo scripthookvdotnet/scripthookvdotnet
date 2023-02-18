@@ -1272,6 +1272,28 @@ namespace GTA
 		public bool HasSiren => Bones.Contains("siren1");
 
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> can use a siren.
+		/// </summary>
+		/// <value>
+		///   <see langword="true" /> if this <see cref="Vehicle"/> can activate a siren; otherwise, <see langword="false" />.
+		/// </value>
+		public bool CanUseSiren
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CanUseSirenOffset == 0)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.CanUseSirenOffset, 1);
+			}
+			// We need to find a way to test if vehicle has a siren setting before we can safely add a setter.
+			// Otherwise, the game will crash if the vehicle doesn't have a siren setting and the game try to activate the siren.
+		}
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
 		/// </summary>
 		/// <value>
@@ -1283,13 +1305,14 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_SIREN, Handle, value);
 		}
 		/// <summary>
-		/// Sets a value indicating whether the siren on this <see cref="Vehicle"/> plays sounds.
+		/// Sets a value indicating whether the siren on this <see cref="Vehicle"/> is muted.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if the siren on this <see cref="Vehicle"/> plays sounds; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if the siren on this <see cref="Vehicle"/> is muted; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSirenSilent
 		{
+			get => SHVDN.NativeMemory.HasMutedSirens(Handle);
 			set => Function.Call(Hash.SET_VEHICLE_HAS_MUTED_SIRENS, Handle, value);
 		}
 

@@ -540,6 +540,14 @@ namespace SHVDN
 				VehicleLodMultiplierOffset = *(int*)(address + 18);
 			}
 
+			address = FindPattern("\x48\x85\xC0\x74\x32\x8A\x88\x00\x00\x00\x00\xF6\xC1\x00\x75\x27", "xxxxxxx????xx?xx");
+			if (address != null)
+			{
+				HasMutedSirensOffset = *(int*)(address + 7);
+				HasMutedSirensBit = *(byte*)(address + 13); // the bit is changed between b372 and b2802
+				CanUseSirenOffset = *(int*)(address + 23);
+			}
+
 			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
 			if (address != null)
 			{
@@ -1792,6 +1800,10 @@ namespace SHVDN
 
 		public static int VehicleLodMultiplierOffset { get; }
 
+		public static int CanUseSirenOffset { get; }
+		public static int HasMutedSirensOffset { get; }
+		public static int HasMutedSirensBit { get; }
+
 		public static int VehicleDropsMoneyWhenBlownUpOffset { get; }
 
 		public static int HeliBladesSpeedOffset { get; }
@@ -1803,6 +1815,18 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		public static bool HasMutedSirens(int vehicleHandle)
+		{
+			var address = GetEntityAddress(vehicleHandle);
+
+			if (address == IntPtr.Zero)
+			{
+				return false;
+			}
+
+			return (*(byte*)(address + HasMutedSirensOffset) & HasMutedSirensBit) != 0;
+		}
 
 		#endregion
 
