@@ -4290,63 +4290,22 @@ namespace SHVDN
 
 		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 
-		// This class is present just for encapsulating data (and an easier update method)
+		// This class is present just for encapsulating data
 		public class NmMessageParameterCollection
 		{
 			#region Fields
 			internal string message;
 			internal Dictionary<string, (int value, Type type)> boolIntFloatParameters;
 			internal Dictionary<string, object> stringVector3ArrayParameters;
-			internal bool resetOldParameters;
 			#endregion
 
 			public NmMessageParameterCollection(string message, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
-				: this(message, boolIntFloatParameters, stringVector3ArrayParameters, false)
-			{
-
-			}
-			public NmMessageParameterCollection(string message, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters, bool resetOldParameters)
 			{
 				this.message = message;
 				this.boolIntFloatParameters = boolIntFloatParameters;
 				this.stringVector3ArrayParameters = stringVector3ArrayParameters;
-				this.resetOldParameters = resetOldParameters;
-			}
-
-			internal void Update(NmMessageParameterCollection newParams)
-			{
-				if (boolIntFloatParameters == null && newParams.boolIntFloatParameters != null)
-				{
-					boolIntFloatParameters = new Dictionary<string, (int value, Type type)>();
-				}
-				if (stringVector3ArrayParameters == null && newParams.stringVector3ArrayParameters != null)
-				{
-					stringVector3ArrayParameters = new Dictionary<string, object>();
-				}
-
-				if (newParams.resetOldParameters)
-				{
-					boolIntFloatParameters?.Clear();
-					stringVector3ArrayParameters?.Clear();
-				}
-
-				if (boolIntFloatParameters != null && newParams.boolIntFloatParameters != null)
-				{
-					foreach (var keyValuePair in newParams.boolIntFloatParameters)
-					{
-						boolIntFloatParameters[keyValuePair.Key] = keyValuePair.Value;
-					}
-				}
-				if (stringVector3ArrayParameters != null && newParams.stringVector3ArrayParameters != null)
-				{
-					foreach (var keyValuePair in newParams.stringVector3ArrayParameters)
-					{
-						stringVector3ArrayParameters[keyValuePair.Key] = keyValuePair.Value;
-					}
-				}
 			}
 		}
-
 
 		static private void SetNMParameters(ulong messageMemory, NmMessageParameterCollection messageParameters)
 		{
@@ -4391,85 +4350,6 @@ namespace SHVDN
 		}
 
 		static internal bool IsPedRagdoll(int pedHandle) => *(bool*)NativeFunc.InvokeInternal(0x47E4E977581C5B55 /*IS_PED_RAGDOLL*/, pedHandle);
-
-		internal class MultipleNmMessagesTask : IScriptTask
-		{
-			#region Fields
-			int targetHandle;
-			bool ifNMScriptControlRunning;
-			List<NmMessageParameterCollection> nmMessageParameters;
-			#endregion
-
-			internal MultipleNmMessagesTask(int target, List<NmMessageParameterCollection> messageParameters, bool ifNMScriptControlRunning)
-			{
-				targetHandle = target;
-				nmMessageParameters = messageParameters;
-				this.ifNMScriptControlRunning = ifNMScriptControlRunning;
-			}
-
-			public void Run()
-			{
-				byte* _PedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
-
-				if (_PedAddress == null)
-					return;
-
-				if (ifNMScriptControlRunning)
-				{
-					if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
-						return;
-				}
-				else if (!IsPedRagdoll(targetHandle))
-				{
-					return;
-				}
-
-				var messageChain = ConsturctMessageChain(nmMessageParameters);
-
-				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
-				if (messageMemory == 0)
-					return;
-				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
-
-				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
-				foreach (var messageToSend in messageChain)
-				{
-					SendMessageTo(fragInstNMGtaAddress, messageToSend, messageMemory);
-					NativeMemory.ClearNmMessage(messageMemory);
-				}
-
-				FreeCoTaskMem(new IntPtr((long)messageMemory));
-
-				List<NmMessageParameterCollection> ConsturctMessageChain(List<NmMessageParameterCollection> messageParams)
-				{
-					// The message order may be important (more research needed)
-					var firstIndexMapForMessage = new Dictionary<string, int>();
-					var messagesToSend = new List<NmMessageParameterCollection>(messageParams.Count);
-					foreach (var parameter in messageParams)
-					{
-						string messageName = parameter.message;
-						if (firstIndexMapForMessage.TryGetValue(messageName, out var firstIndexForMessage))
-						{
-							var existingMessage = messagesToSend[firstIndexForMessage];
-							existingMessage.Update(parameter);
-						}
-						else
-						{
-							messagesToSend.Add(parameter);
-							firstIndexMapForMessage[messageName] = (messagesToSend.Count - 1);
-						}
-					}
-
-					return messagesToSend;
-				}
-				void SendMessageTo(ulong fragInstNMGtaAddress, NmMessageParameterCollection messageParams, ulong messageMemory)
-				{
-					SetNMParameters(messageMemory, messageParams);
-					IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(messageParams.message);
-					SendNmMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
-				}
-			}
-		}
 
 		internal class NmMessageTask : IScriptTask
 		{
@@ -4521,12 +4401,6 @@ namespace SHVDN
 		public static void SendNmMessage(int targetHandle, NmMessageParameterCollection messageParameterCollection, bool ifScriptControlRunning = true)
 		{
 			var task = new NmMessageTask(targetHandle, messageParameterCollection, ifScriptControlRunning);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
-		}
-
-		public static void SendMultipleNmMessages(int targetHandle, List<NmMessageParameterCollection> messageParameterCollections, bool ifScriptControlRunning = true)
-		{
-			var task = new MultipleNmMessagesTask(targetHandle, messageParameterCollections, ifScriptControlRunning);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 

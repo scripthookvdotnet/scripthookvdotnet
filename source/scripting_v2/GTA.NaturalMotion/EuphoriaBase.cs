@@ -37,7 +37,7 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
 		{
-			var message = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _stopArgument, null, false);
+			var message = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _stopArgument, null);
 			SHVDN.NativeMemory.SendNmMessage(target.Handle, message);
 		}
 

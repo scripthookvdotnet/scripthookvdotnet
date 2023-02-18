@@ -8,6 +8,7 @@ using GTA.Native;
 using System;
 using System.Collections.Generic;
 using SHVDN;
+using static SHVDN.NativeMemory;
 
 namespace GTA.NaturalMotion
 {
@@ -32,44 +33,13 @@ namespace GTA.NaturalMotion
 			_message = message;
 			_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
 			_stringVector3ArrayArguments = new Dictionary<string, object>();
-			ResetOldParameters = false;
 		}
-		private Message(string message, Dictionary<string, (int value, Type type)> boolIntFloatArgs, Dictionary<string, object> stringVector3ArrayArgs, bool resetOldParams)
+		private Message(string message, Dictionary<string, (int value, Type type)> boolIntFloatArgs, Dictionary<string, object> stringVector3ArrayArgs)
 		{
 			_message = message;
 			_boolIntFloatArguments = boolIntFloatArgs;
 			_stringVector3ArrayArguments = stringVector3ArrayArgs;
-			ResetOldParameters = resetOldParams;
 		}
-
-		/// <summary>
-		/// Indicates whether this behavior should start the behavior for this message from the beginning (<see langword="true"/>),
-		/// stop it immediately (<see langword="false"/>), or does not explicitly start or stop it (<see langword="null"/>) so the paramater for this behavior can get updated with this message.
-		/// </summary>
-		public bool? Start
-		{
-			set
-			{
-				if (value is bool valueNonNullable)
-				{
-					SetArgument("start", valueNonNullable);
-				}
-				else
-				{
-					_boolIntFloatArguments?.Remove("start");
-				}
-			}
-		}
-		/// <summary>
-		/// <para>
-		/// Indicates whether old parameters for this <see cref="GTA.NaturalMotion.Message"/> behavior should be reset to the default value.
-		/// Will work in the same way as setting <c>CNmParameterResetMessage</c> in task config files such as <c>physicstasks.ymt</c>.
-		/// </para>
-		/// <para>
-		/// Will have an effect only if this message is send via <see cref="Euphoria.ReceiveNmMessages(Message[])"/>.
-		/// </para>
-		/// </summary>
-		public bool ResetOldParameters { get; set; }
 
 		/// <summary>
 		/// Stops this NaturalMotion behavior on the given <see cref="Ped"/>.
@@ -80,7 +50,7 @@ namespace GTA.NaturalMotion
 			if (target == null || !target.Exists())
 				return;
 
-			var message = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _stopArgument, null, false);
+			var message = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _stopArgument, null);
 			SHVDN.NativeMemory.SendNmMessage(target.Handle, message);
 		}
 
@@ -109,7 +79,7 @@ namespace GTA.NaturalMotion
 				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, -1, 1, 1, 1, 0);
 			}
 
-			ConstructNmParametersAndSendToInternal(target);
+			SendMessagesWithStartParamEnabledToInternal(target);
 		}
 		/// <summary>
 		///	Starts this NaturalMotion behavior on the <see cref="Ped"/> for a specified duration.
@@ -135,13 +105,13 @@ namespace GTA.NaturalMotion
 		/// <summary>
 		/// Sends message this NaturalMotion behavior on the <see cref="Ped"/>, but don't start a new ragdoll task so the <see cref="Ped"/> can have multiple NM behaviors.
 		/// You'll need to start a ragdoll task with <see cref="Ped.Ragdoll(int, RagdollType)"/> before the <see cref="Ped"/> can recieve this <see cref="Message"/>.
-		/// If you need to start this Natural Motion behavior from the beginning, you'll also need to set <see cref="Start"/> to <see langword="true"/>.
 		/// </summary>
 		/// <remarks>
 		/// Although <see cref="SendTo(Ped)"/> wouldn't create a new ragdoll task if the <see cref="Ped"/> runs a script ragdoll tasks in most cases,
 		/// this method guarantees it sends the message if the <see cref="Ped"/> can receive NM messages but doesn't create a new ragdoll task.
 		/// </remarks>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
+		/// <param name="startBehavior">Specifies whether this message should start at the beginning.</param>
 		/// <param name="ifNMScriptControlRunning">
 		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
 		/// <para>
@@ -149,35 +119,35 @@ namespace GTA.NaturalMotion
 		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
 		/// </para>
 		/// </param>
-		public void SendToNoNewRagdollTask(Ped target, bool ifNMScriptControlRunning = true)
+		public void SendToNoNewRagdollTask(Ped target, bool startBehavior = true, bool ifNMScriptControlRunning = true)
 		{
-			ConstructNmParametersAndSendToInternal(target, false, ifNMScriptControlRunning);
-		}
-
-		internal void ConstructNmParametersAndSendToInternal(Ped target, bool setStartParameterToTrue = true, bool sendMessageIfNMScriptControlRunning = true)
-		{
-			if (setStartParameterToTrue)
+			if (startBehavior)
 			{
-				// Use a cloned dictionary so this message instance can keep the original parameters
-				// Shallow copying should be enough
-				var newBoolIntFloatArguments = GetClonedDictWithStartParamEnabled();
-				var constructedMessageAndParameters = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, newBoolIntFloatArguments, _stringVector3ArrayArguments, ResetOldParameters);
-				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters, sendMessageIfNMScriptControlRunning);
+				SendMessagesWithStartParamEnabledToInternal(target, ifNMScriptControlRunning);
 			}
 			else
 			{
-				var constructedMessageAndParameters = new SHVDN.NativeMemory.NmMessageParameterCollection(_message, _boolIntFloatArguments, _stringVector3ArrayArguments, ResetOldParameters);
-				SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters, sendMessageIfNMScriptControlRunning);
+				SendMessagesWithoutExplicitStartParamToInternal(target, ifNMScriptControlRunning);
 			}
 		}
-		internal NativeMemory.NmMessageParameterCollection ConstructNmParameterCollection()
+
+		public void SendMessagesWithStartParamEnabledToInternal(Ped target, bool ifNMScriptControlRunning = true)
 		{
-			// Use cloned dictionaries so this message instance can keep the original parameters
+			// Use a cloned dictionary so this message instance can keep the original parameters
 			// Shallow copying should be enough
-			var newBoolIntFloatArgumentsShallowCopied = new Dictionary<string, (int, Type)>(_boolIntFloatArguments);
-			var newStringVector3ArrayArgumentsShallowCopied = new Dictionary<string, object>(_stringVector3ArrayArguments);
-			return new SHVDN.NativeMemory.NmMessageParameterCollection(_message, newBoolIntFloatArgumentsShallowCopied, newStringVector3ArrayArgumentsShallowCopied, ResetOldParameters);
+			var newBoolIntFloatArguments = GetClonedDictWithStartParamEnabled();
+			var constructedMessageAndParameters = new NmMessageParameterCollection(_message, newBoolIntFloatArguments, _stringVector3ArrayArguments);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters, ifNMScriptControlRunning);
 		}
+		public void SendMessagesWithoutExplicitStartParamToInternal(Ped target, bool ifNMScriptControlRunning = true)
+		{
+			// Use a cloned dictionary so this message instance can keep the original parameters
+			// Shallow copying should be enough
+			var newBoolIntFloatArguments = GetClonedDictWithoutExplicitStartParam();
+			var constructedMessageAndParameters = new NmMessageParameterCollection(_message, newBoolIntFloatArguments, _stringVector3ArrayArguments);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, constructedMessageAndParameters, ifNMScriptControlRunning);
+		}
+
 		private Dictionary<string, (int value, Type type)> GetClonedDictWithStartParamEnabled()
 		{
 			Dictionary<string, (int value, Type type)> clonedDict;
@@ -190,6 +160,21 @@ namespace GTA.NaturalMotion
 				clonedDict = new Dictionary<string, (int value, Type type)>(_boolIntFloatArguments);
 			}
 			clonedDict["start"] = (1, typeof(bool));
+
+			return clonedDict;
+		}
+		private Dictionary<string, (int value, Type type)> GetClonedDictWithoutExplicitStartParam()
+		{
+			Dictionary<string, (int value, Type type)> clonedDict;
+			if (_boolIntFloatArguments == null)
+			{
+				clonedDict = new Dictionary<string, (int value, Type type)>();
+			}
+			else
+			{
+				clonedDict = new Dictionary<string, (int value, Type type)>(_boolIntFloatArguments);
+			}
+			clonedDict.Remove("start");
 
 			return clonedDict;
 		}
@@ -295,7 +280,7 @@ namespace GTA.NaturalMotion
 		{
 			var newBoolIntFloatArgumentsShallowCopied = new Dictionary<string, (int, Type)>(_boolIntFloatArguments);
 			var newStringVector3ArrayArgumentsShallowCopied = new Dictionary<string, object>(_stringVector3ArrayArguments);
-			return new Message(_message, newBoolIntFloatArgumentsShallowCopied, newStringVector3ArrayArgumentsShallowCopied, ResetOldParameters);
+			return new Message(_message, newBoolIntFloatArgumentsShallowCopied, newStringVector3ArrayArgumentsShallowCopied);
 		}
 	}
 
@@ -326,7 +311,6 @@ namespace GTA.NaturalMotion
 		public void Start()
 		{
 			_message.SendTo(_ped);
-			_message.ResetArguments();
 		}
 		/// <summary>
 		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
@@ -335,7 +319,20 @@ namespace GTA.NaturalMotion
 		public void Start(int duration)
 		{
 			_message.SendTo(_ped, duration);
-			_message.ResetArguments();
+		}
+		/// <summary>
+		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
+		/// </summary>
+		/// <param name="ifNMScriptControlRunning">
+		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
+		/// <para>
+		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
+		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
+		/// </para>
+		/// </param>
+		public void Update(bool ifNMScriptControlRunning = true)
+		{
+			_message.SendToNoNewRagdollTask(_ped, false, ifNMScriptControlRunning);
 		}
 		/// <summary>
 		/// Stops this Natural Motion behavior on the <see cref="Ped"/>.

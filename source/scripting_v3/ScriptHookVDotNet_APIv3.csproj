@@ -62,7 +62,6 @@
     <Compile Include="GTA.Native\NativeHashes.cs" />
     <Compile Include="GTA.NaturalMotion\Euphoria.cs" />
     <Compile Include="GTA.NaturalMotion\EuphoriaBase.cs" />
-    <Compile Include="GTA.NaturalMotion\EuphoriaMessageHelpers.cs" />
     <Compile Include="GTA.NaturalMotion\EuphoriaHelpers.cs" />
     <Compile Include="GTA.UI\Alignment.cs" />
     <Compile Include="GTA.UI\ContainerElement.cs" />
