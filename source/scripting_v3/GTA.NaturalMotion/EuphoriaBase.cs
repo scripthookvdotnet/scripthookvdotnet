@@ -111,7 +111,7 @@ namespace GTA.NaturalMotion
 		/// this method guarantees it sends the message if the <see cref="Ped"/> can receive NM messages but doesn't create a new ragdoll task.
 		/// </remarks>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
-		/// <param name="startBehavior">Specifies whether this message should start at the beginning.</param>
+		/// <param name="startBehavior">Specifies whether this message should start from the beginning.</param>
 		/// <param name="ifNMScriptControlRunning">
 		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
 		/// <para>
@@ -321,7 +321,21 @@ namespace GTA.NaturalMotion
 			_message.SendTo(_ped, duration);
 		}
 		/// <summary>
-		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
+		/// Starts this NaturalMotion behavior on the <see cref="Ped"/> from the beginning without starting a scripted NM ragdoll task.
+		/// </summary>
+		/// <param name="ifNMScriptControlRunning">
+		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
+		/// <para>
+		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
+		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
+		/// </para>
+		/// </param>
+		public void StartNoNewRagdollTask(bool ifNMScriptControlRunning = true)
+		{
+			_message.SendToNoNewRagdollTask(_ped, true, ifNMScriptControlRunning);
+		}
+		/// <summary>
+		/// Updates this NaturalMotion behavior on the <see cref="Ped"/> if the corresponding behavior is running.
 		/// </summary>
 		/// <param name="ifNMScriptControlRunning">
 		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
