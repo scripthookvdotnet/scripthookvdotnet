@@ -457,14 +457,18 @@ namespace GTA
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, 1, 1, 1, false, false, false);
 		}
 
-		public bool IsRagdoll => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is ragdolling.
+		/// Will return <see langword="false"/> when the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// </summary>
+		public bool IsRagdoll => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
 
 		/// <summary>
 		/// Indicates whether this <see cref="Ped"/> is running a ragdoll task which manages its ragdoll.
 		/// Will return <see langword="true"/> when <see cref="IsRagdoll"/> returns <see langword="true"/> or the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
 		/// </summary>
-		public bool IsRunningRagdollTask => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
+		public bool IsRunningRagdollTask => Function.Call<bool>(Hash.IS_PED_RUNNING_RAGDOLL_TASK, Handle);
 
 		/// <summary>
 		/// Indicates whether this <see cref="Ped"/> is running a <c>CTaskNMScriptControl</c>, which can be crated with <see cref="Ragdoll(int, RagdollType)"/>.
