@@ -99,6 +99,7 @@
     <Compile Include="GTA\Entities\InteriorInstance.cs" />
     <Compile Include="GTA\Entities\EntityPopulationType.cs" />
     <Compile Include="GTA\Entities\Building.cs" />
+    <Compile Include="GTA\Entities\Peds\RelationshipGroupHash.cs" />
     <Compile Include="GTA\Entities\Peds\ScriptTaskStatus.cs" />
     <Compile Include="GTA\Entities\Peds\ScriptTaskNameHash.cs" />
     <Compile Include="GTA\Entities\Peds\RagdollComponent.cs" />
