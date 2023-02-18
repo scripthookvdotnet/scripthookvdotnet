@@ -1150,9 +1150,9 @@ namespace SHVDN
 		}
 
 		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
-		public static readonly IntPtr String = StringToCoTaskMemUTF8("STRING");
-		public static readonly IntPtr NullString = StringToCoTaskMemUTF8(string.Empty);
-		public static readonly IntPtr CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON");
+		public static readonly IntPtr String = StringToCoTaskMemUTF8("STRING"); // "~a~"
+		public static readonly IntPtr NullString = StringToCoTaskMemUTF8(string.Empty); // ""
+		public static readonly IntPtr CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{

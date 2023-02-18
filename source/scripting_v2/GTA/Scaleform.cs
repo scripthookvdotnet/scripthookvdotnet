@@ -82,14 +82,14 @@ namespace GTA
 				}
 				else if (argument is string argString)
 				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_EMAIL_BCON");
-					SHVDN.NativeFunc.PushLongString(argString);
+					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+					Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, argString);
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}
 				else if (argument is char argChar)
 				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_EMAIL_BCON");
-					SHVDN.NativeFunc.PushLongString(argChar.ToString());
+					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+					Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, argChar.ToString());
 					Function.Call(Hash._END_TEXT_COMPONENT);
 				}
 				else if (argument is float argFloat)

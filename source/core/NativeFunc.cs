@@ -83,15 +83,17 @@ namespace SHVDN
 			IntPtr strUtf8 = domain.PinString(str);
 
 			var strArg = (ulong)strUtf8.ToInt64();
-			domain.ExecuteTask(new NativeTaskPtrArgs {
-				Hash = 0x6C188BE134E074AA /*ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME*/,
+			domain.ExecuteTask(new NativeTaskPtrArgs
+			{
+				Hash = 0x6C188BE134E074AA /* ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME */,
 				ArgumentPtr = &strArg,
 				ArgumentCount = 1
 			});
 		}
 
 		/// <summary>
-		/// Splits up a spring into manageable components and pushes them on the text stack.
+		/// Splits up a string into manageable components and adds them as text components to the current text command.
+		/// This requires that a text command that accepts multiple text components is active (e.g. "CELL_EMAIL_BCON").
 		/// </summary>
 		/// <param name="str">The string to split up.</param>
 		public static void PushLongString(string str)

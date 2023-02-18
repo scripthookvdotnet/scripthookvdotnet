@@ -55,9 +55,9 @@ namespace GTA
 		}
 		public static void ShowHelpMessage(string message, int duration, bool sound)
 		{
-			Function.Call((Hash)0x8509B634FBE7DA11, "STRING");
+			Function.Call(Hash._SET_TEXT_COMPONENT_FORMAT, "CELL_EMAIL_BCON");
 			SHVDN.NativeFunc.PushLongString(message);
-			Function.Call((Hash)0x238FFE5C7B0498A6, 0, false, sound, duration);
+			Function.Call(Hash._DISPLAY_HELP_TEXT_FROM_STRING_LABEL, 0, false, sound, duration);
 		}
 
 		public static bool IsHudComponentActive(HudComponent component)

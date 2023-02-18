@@ -30,7 +30,7 @@ namespace GTA.UI
 		{
 			Hide();
 
-			if (loadingText == null)
+			if (string.IsNullOrEmpty(loadingText))
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_BUSYSPINNER_ON, SHVDN.NativeMemory.NullString);
 			}

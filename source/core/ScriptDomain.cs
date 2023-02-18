@@ -296,7 +296,8 @@ namespace SHVDN
 
 					// This function builds a composite key of all dependencies of a script
 					Func<Type, string, string> BuildComparisonString = null;
-					BuildComparisonString = (a, b) => {
+					BuildComparisonString = (a, b) =>
+					{
 						b = a.FullName + "%%" + b;
 						foreach (var attribute in a.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.RequireScript"))
 						{

@@ -635,7 +635,8 @@ namespace SHVDN
 			if (commandHistory.LastOrDefault() != input)
 				commandHistory.Add(input);
 
-			compilerTask = Task.Factory.StartNew(() => {
+			compilerTask = Task.Factory.StartNew(() =>
+			{
 				var compiler = new Microsoft.CSharp.CSharpCodeProvider();
 				var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
 				compilerOptions.GenerateInMemory = true;
@@ -714,7 +715,7 @@ namespace SHVDN
 
 		static unsafe void DisableControlsThisFrame()
 		{
-			NativeFunc.InvokeInternal(0x5F4B6931816E599B /*DISABLE_ALL_CONTROL_ACTIONS */, 0);
+			NativeFunc.InvokeInternal(0x5F4B6931816E599B /* DISABLE_ALL_CONTROL_ACTIONS */, 0);
 
 			// LookLeftRight .. LookRightOnly
 			for (ulong i = 1; i <= 6; i++)

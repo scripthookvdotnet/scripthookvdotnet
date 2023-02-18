@@ -201,7 +201,12 @@ namespace GTA
 				var nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
 
 				// Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
-				return nameLength != 0 ? SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28)) : string.Empty;
+				if (nameLength != 0)
+				{
+					return SHVDN.NativeMemory.PtrToStringUTF8(SHVDN.NativeMemory.ReadAddress(address + 0x28));
+				}
+
+				return string.Empty;
 			}
 			set
 			{
