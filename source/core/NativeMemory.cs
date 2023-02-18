@@ -3947,7 +3947,7 @@ namespace SHVDN
 			[FieldOffset(0x44)]
 			internal ushort boneId;
 
-			internal string Name => namePtr == null ? null : Marshal.PtrToStringAnsi(namePtr);
+			internal string Name => namePtr == default ? null : Marshal.PtrToStringAnsi(namePtr);
 		};
 
 		[StructLayout(LayoutKind.Explicit)]
