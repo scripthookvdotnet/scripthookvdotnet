@@ -27,6 +27,9 @@ namespace GTA
 		public RelationshipGroup(uint hash) : this((int)hash)
 		{
 		}
+		public RelationshipGroup(RelationshipGroupHash hash) : this((int)hash)
+		{
+		}
 
 		/// <summary>
 		/// Gets the hash for this <see cref="RelationshipGroup"/>.
@@ -103,6 +106,10 @@ namespace GTA
 			return new RelationshipGroup(source);
 		}
 		public static implicit operator RelationshipGroup(uint source)
+		{
+			return new RelationshipGroup(source);
+		}
+		public static implicit operator RelationshipGroup(RelationshipGroupHash source)
 		{
 			return new RelationshipGroup(source);
 		}
