@@ -432,15 +432,15 @@ namespace SHVDN
 			}
 
 			// Find all script files and assemblies in the specified script directory
-			var filenamesSource = new List<string>();
-			var filenamesAssembly = new List<string>();
+			var sourceFiles = new List<string>();
+			var assemblyFiles = new List<string>();
 
 			try
 			{
-				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
-				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
+				sourceFiles.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
+				sourceFiles.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
 
-				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
+				assemblyFiles.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
 					.Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
@@ -449,31 +449,31 @@ namespace SHVDN
 			}
 
 			// Filter out non-script assemblies
-			for (int i = 0; i < filenamesAssembly.Count; i++)
+			for (int i = 0; i < assemblyFiles.Count; i++)
 			{
 				try
 				{
-					var assemblyName = AssemblyName.GetAssemblyName(filenamesAssembly[i]);
+					var assemblyName = AssemblyName.GetAssemblyName(assemblyFiles[i]);
 
 					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 					{
 						// Delete copies of SHVDN, since these can cause issues with the assembly binder loading multiple copies
-						File.Delete(filenamesAssembly[i]);
+						File.Delete(assemblyFiles[i]);
 
-						filenamesAssembly.RemoveAt(i--);
+						assemblyFiles.RemoveAt(i--);
 					}
 				}
 				catch (Exception ex)
 				{
-					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenamesAssembly[i]), " because of exception: ", ex.ToString());
+					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(assemblyFiles[i]), " because of exception: ", ex.ToString());
 
-					filenamesAssembly.RemoveAt(i--);
+					assemblyFiles.RemoveAt(i--);
 				}
 			}
 
-			foreach (var filename in filenamesSource)
+			foreach (var filename in sourceFiles)
 				LoadScriptsFromSource(filename);
-			foreach (var filename in filenamesAssembly)
+			foreach (var filename in assemblyFiles)
 				LoadScriptsFromAssembly(filename);
 
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
@@ -858,6 +858,18 @@ namespace SHVDN
 				}
 
 				return compatibleApi;
+			}
+
+			// Try to resolve referenced assemblies that the assembly loader failed to find by itself (e.g. because they are in a subdirectory of the scripts directory)
+			if (CurrentDomain != null)
+			{
+				string filename = Directory.GetFiles(CurrentDomain.ScriptPath, "*.dll", SearchOption.AllDirectories)
+					.Where(x => x.EndsWith(assemblyName.Name + ".dll", StringComparison.OrdinalIgnoreCase))
+					.FirstOrDefault();
+				if (filename != null)
+				{
+					return Assembly.LoadFrom(filename);
+				}
 			}
 
 			return null;
