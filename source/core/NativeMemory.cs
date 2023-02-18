@@ -3044,14 +3044,13 @@ namespace SHVDN
 			var returnHandles = new List<int>();
 			var poolSize = pool->size;
 			float radiusSquared = radius * radius;
+			float* entityPosition = stackalloc float[4];
 			for (uint i = 0; i < poolSize; i++)
 			{
 				if (!pool->IsValid(i))
 					continue;
 
 				var address = pool->GetAddress(i);
-
-				float* entityPosition = stackalloc float[4];
 
 				NativeMemory.EntityPosFunc(address, entityPosition);
 				float x = entityPosition[0] - position[0];
