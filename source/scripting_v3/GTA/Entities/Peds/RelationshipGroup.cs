@@ -109,6 +109,10 @@ namespace GTA
 		{
 			return new RelationshipGroup(source);
 		}
+		public static implicit operator RelationshipGroup(RelationshipGroupHash source)
+		{
+			return new RelationshipGroup(source);
+		}
 		public static implicit operator RelationshipGroup(string source)
 		{
 			return new RelationshipGroup(source);
