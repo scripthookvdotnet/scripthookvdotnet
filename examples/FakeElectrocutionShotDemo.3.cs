@@ -14,15 +14,13 @@ public class FakeElectrocutionShotDemo : Script
 		KeyDown += FakeElectrocutionShotDemo_KeyDown;
 	}
 
-    // Shot_Base (priority: 0)
-	static private List<Message> GetShotBaseNmMessages()
+	// Shot_Base (priority: 0)
+	static private void StartShotBaseNmMessages(Ped ped)
 	{
-		List<Message> messages = new List<Message>();
+		var balancerCollisionsReactionNM = ped.Euphoria.BalancerCollisionsReaction;
+		balancerCollisionsReactionNM.StartNoNewRagdollTask();
 
-		var balancerCollisionsReactionNM = new GTA.NaturalMotion.MessageHelper.BalancerCollisionsReactionMessage();
-		balancerCollisionsReactionNM.Start = true;
-
-		var fallOverWallNM = new GTA.NaturalMotion.MessageHelper.FallOverWallMessage();
+		var fallOverWallNM = ped.Euphoria.FallOverWall;
 		fallOverWallNM.MoveLegs = true;
 		fallOverWallNM.MoveArms = false;
 		fallOverWallNM.BendSpine = true;
@@ -31,39 +29,30 @@ public class FakeElectrocutionShotDemo : Script
 		fallOverWallNM.ForceTimeOut = 2f;
 		fallOverWallNM.MagOfForce = 0.5f;
 		fallOverWallNM.BodyTwist = 0.54f;
-		fallOverWallNM.Start = true;
+		fallOverWallNM.StartNoNewRagdollTask();
 
-		var shotNM = new GTA.NaturalMotion.MessageHelper.ShotMessage();
-		shotNM.Start = true;
+		var shotNM = ped.Euphoria.Shot;
+		shotNM.StartNoNewRagdollTask();
 
-		var ShotConfigureArmsNM = new GTA.NaturalMotion.MessageHelper.ShotConfigureArmsMessage();
+		var ShotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		ShotConfigureArmsNM.PointGun = true;
-		ShotConfigureArmsNM.Start = true;
+		ShotConfigureArmsNM.StartNoNewRagdollTask();
 
-		var ConfigureBalanceNM = new GTA.NaturalMotion.MessageHelper.ConfigureBalanceMessage();
+		// You can send NM message to a ped without setting "start" parameter to true so this message can update parameters of the running behavior
+		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
 		ConfigureBalanceNM.FallMult = 40f;
-
-		messages.Add(balancerCollisionsReactionNM);
-		messages.Add(fallOverWallNM);
-		messages.Add(shotNM);
-		messages.Add(ShotConfigureArmsNM);
-		messages.Add(ConfigureBalanceNM);
-
-		return messages;
+		ConfigureBalanceNM.Update();
 	}
 
-    // normal in WeaponSets (priority: 5)
+	// normal in WeaponSets (priority: 5)
 	// NmShotTuningSet is set to normal in WEAPON_STUNGUN config in weapons.meta.
-	static private List<Message> GetNormalWeapomNmMessages()
+	static private void StartNormalWeapomNmMessages(Ped ped)
 	{
-		List<Message> messages = new List<Message>();
-
-		var ConfigureBalanceNM = new GTA.NaturalMotion.MessageHelper.ConfigureBalanceMessage();
+		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
 		ConfigureBalanceNM.StableLinSpeedThresh = 0.7f;
 		ConfigureBalanceNM.StableRotSpeedThresh = 0.85f;
 		ConfigureBalanceNM.UseComDirTurnVelThresh = 0.6f;
 		ConfigureBalanceNM.StepIfInSupport = true;
-		ConfigureBalanceNM.Start = true;
 		ConfigureBalanceNM.BackwardsLeanCutoff = 0.3f;
 		ConfigureBalanceNM.ExtraSteps = -1;
 		ConfigureBalanceNM.ExtraTime = -1.0f;
@@ -76,10 +65,9 @@ public class FakeElectrocutionShotDemo : Script
 		ConfigureBalanceNM.ExtraFeetApart = 0f;
 		ConfigureBalanceNM.StepDecisionThreshold = 0f;
 		ConfigureBalanceNM.DontStepTime = 0.2f;
-		messages.Add(ConfigureBalanceNM);
+		ConfigureBalanceNM.StartNoNewRagdollTask();
 
-		var shotNM = new GTA.NaturalMotion.MessageHelper.ShotMessage();
-		shotNM.Start = true;
+		var shotNM = ped.Euphoria.Shot;
 		shotNM.InitialNeckStiffness = 5.0f;
 		shotNM.InitialNeckDamping = 2.0f;
 		shotNM.Looseness4Fall = 0.7f;
@@ -104,10 +92,9 @@ public class FakeElectrocutionShotDemo : Script
 		shotNM.Fling = true;
 		shotNM.FlingWidth = 0.5f;
 		shotNM.FlingTime = 0.05f;
-		messages.Add(shotNM);
+		shotNM.StartNoNewRagdollTask();
 
-		var shotSnapNM = new GTA.NaturalMotion.MessageHelper.ShotSnapMessage();
-		shotSnapNM.Start = true;
+		var shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.Snap = true;
 		shotSnapNM.SnapMag = 1f;
 		shotSnapNM.SnapDirectionRandomness = 0f;
@@ -128,18 +115,17 @@ public class FakeElectrocutionShotDemo : Script
 		shotSnapNM.SnapHitPart = false;
 		shotSnapNM.UnSnapRatio = 0.3f;
 		shotSnapNM.SnapUseTorques = true;
-		messages.Add(shotSnapNM);
+		shotSnapNM.StartNoNewRagdollTask();
 
-		var shotShockSpinNM = new GTA.NaturalMotion.MessageHelper.ShotShockSpinMessage();
-		shotShockSpinNM.Start = true;
+		var shotShockSpinNM = ped.Euphoria.ShotShockSpin;
 		shotShockSpinNM.AddShockSpin = false;
 		shotShockSpinNM.AlwaysAddShockSpin = false;
 		shotShockSpinNM.ShockSpinMin = 100f;
 		shotShockSpinNM.ShockSpinMax = 100f;
 		shotShockSpinNM.BracedSideSpinMult = 2f;
-		messages.Add(shotShockSpinNM);
+		shotShockSpinNM.StartNoNewRagdollTask();
 
-		var configureBulletsNM = new GTA.NaturalMotion.MessageHelper.ConfigureBulletsMessage();
+		var configureBulletsNM = ped.Euphoria.ConfigureBullets;
 		configureBulletsNM.LoosenessFix = true;
 		configureBulletsNM.ImpulseReductionPerShot = 0.1f;
 		configureBulletsNM.ImpulseRecovery = 0f;
@@ -154,24 +140,21 @@ public class FakeElectrocutionShotDemo : Script
 		configureBulletsNM.RbMaxTwistMomentArmOneLeg = 1f;
 		configureBulletsNM.RbMaxBroomMomentArmOneLeg = 0f;
 		configureBulletsNM.RbPivot = false;
-		configureBulletsNM.Start = true;
 		configureBulletsNM.ImpulseAirOn = true;
 		configureBulletsNM.ImpulseAirMax = 150f;
 		configureBulletsNM.ImpulseAirMult = 1.0f;
-		messages.Add(configureBulletsNM);
+		configureBulletsNM.StartNoNewRagdollTask();
 
-		var configureShotInjuredLegNM = new GTA.NaturalMotion.MessageHelper.ConfigureShotInjuredLegMessage();
+		var configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
 		configureShotInjuredLegNM.TimeBeforeCollapseWoundLeg = 0f;
 		configureShotInjuredLegNM.LegInjuryTime = 1.4f;
 		configureShotInjuredLegNM.LegLimpBend = 0.2f;
 		configureShotInjuredLegNM.LegInjury = 0f;
 		configureShotInjuredLegNM.LegInjuryHipPitch = -0.2f;
 		configureShotInjuredLegNM.LegInjuryHipPitch = -0.1f;
-		configureShotInjuredLegNM.Start = true;
-		messages.Add(configureShotInjuredLegNM);
+		configureShotInjuredLegNM.StartNoNewRagdollTask();
 
-		var shotConfigureArmsNM = new GTA.NaturalMotion.MessageHelper.ShotConfigureArmsMessage();
-		shotConfigureArmsNM.Start = true;
+		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Brace = false;
 		shotConfigureArmsNM.UseArmsWindmill = false;
 		shotConfigureArmsNM.ReleaseWound = 0;
@@ -179,16 +162,15 @@ public class FakeElectrocutionShotDemo : Script
 		shotConfigureArmsNM.AWSpeedMult = 0f;
 		shotConfigureArmsNM.AWRadiusMult = 0f;
 		shotConfigureArmsNM.AWStiffnessAdd = 0f;
-		messages.Add(shotConfigureArmsNM);
+		shotConfigureArmsNM.StartNoNewRagdollTask();
 
-		var bodyBalanceNM = new GTA.NaturalMotion.MessageHelper.BodyBalanceMessage();
-		bodyBalanceNM.Start = true;
+		var bodyBalanceNM = ped.Euphoria.BodyBalance;
 		bodyBalanceNM.UseBodyTurn = true;
 		bodyBalanceNM.SpineStiffness = 12f;
 		bodyBalanceNM.Shoulder = 1f;
-		messages.Add(bodyBalanceNM);
+		bodyBalanceNM.StartNoNewRagdollTask();
 
-		var shotInGutsNM = new GTA.NaturalMotion.MessageHelper.ShotInGutsMessage();
+		var shotInGutsNM = ped.Euphoria.ShotInGuts;
 		shotInGutsNM.ShotInGuts = true;
 		shotInGutsNM.SigSpineAmount = 2f;
 		shotInGutsNM.SigNeckAmount = 0f;
@@ -197,9 +179,9 @@ public class FakeElectrocutionShotDemo : Script
 		shotInGutsNM.SigPeriod = 0.2f;
 		shotInGutsNM.SigForceBalancePeriod = 0f;
 		shotInGutsNM.SigKneesOnset = 0f;
-		messages.Add(bodyBalanceNM);
+		shotInGutsNM.Update();
 
-		var stayUprightNM = new GTA.NaturalMotion.MessageHelper.StayUprightMessage();
+		var stayUprightNM = ped.Euphoria.StayUpright;
 		stayUprightNM.UseForces = true;
 		stayUprightNM.UseTorques = true;
 		stayUprightNM.LastStandMode = false;
@@ -228,63 +210,51 @@ public class FakeElectrocutionShotDemo : Script
 		stayUprightNM.StepUpHelp = 0f;
 		stayUprightNM.StayUpAcc = 0.7f;
 		stayUprightNM.StayUpAccMax = 5.0f;
-		messages.Add(stayUprightNM);
+		stayUprightNM.Update();
 
-		var smartFallNM = new GTA.NaturalMotion.MessageHelper.SmartFallMessage();
+		var smartFallNM = ped.Euphoria.SmartFall;
 		smartFallNM.SplatWhenStopped = 5.0f;
 		smartFallNM.BlendHeadWhenStopped = 0.8f;
-		messages.Add(smartFallNM);
+		smartFallNM.Update();
 
-		var setFallingReactionNM = new GTA.NaturalMotion.MessageHelper.SetFallingReactionMessage();
+		var setFallingReactionNM = ped.Euphoria.SetFallingReaction;
 		setFallingReactionNM.AntiPropClav = true;
-		setFallingReactionNM.Start = true;
-
-		messages.Add(setFallingReactionNM);
-
-		return messages;
+		setFallingReactionNM.StartNoNewRagdollTask();
 	}
 
-    // Shot_Base (priority: 0)
-	static private List<Message> GetBackShotNmMessages()
+	// Shot_Base (priority: 0)
+	static private void StartBackShotNmMessages(Ped ped)
 	{
-		List<Message> messages = new List<Message>();
-
-		var stayUprightNM = new GTA.NaturalMotion.MessageHelper.StayUprightMessage();
-		stayUprightNM.Start = true;
+		var stayUprightNM = ped.Euphoria.StayUpright;
 		stayUprightNM.UseForces = true;
 		stayUprightNM.TurnTowardsBullets = false;
 		stayUprightNM.ForceStrength = 0f;
-		messages.Add(stayUprightNM);
+		stayUprightNM.StartNoNewRagdollTask();
 
-		// You can send NM message to a ped without setting "start" parameter to true so this message can update parameters of the running behavior
-		var shotNM = new GTA.NaturalMotion.MessageHelper.ShotMessage();
+		var shotNM = ped.Euphoria.Shot;
 		shotNM.BodyStiffness = 7f;
 		shotNM.Fling = false;
 		shotNM.BodyStiffness = 1f;
-		messages.Add(shotNM);
+		shotNM.Update();
 
-		var configureBulletsExtraNM = new GTA.NaturalMotion.MessageHelper.ConfigureBulletsExtraMessage();
-		configureBulletsExtraNM.Start = false;
+		var configureBulletsExtraNM = ped.Euphoria.ConfigureBulletsExtra;
 		configureBulletsExtraNM.RbRatio = 0f;
 		configureBulletsExtraNM.LiftGain = 1f;
-		messages.Add(configureBulletsExtraNM);
+		configureBulletsExtraNM.Stop();
 
-		var applyBulletImpulseNM = new GTA.NaturalMotion.MessageHelper.ApplyBulletImpulseMessage();
-		applyBulletImpulseNM.Start = false;
+		var applyBulletImpulseNM = ped.Euphoria.ApplyBulletImpulse;
 		applyBulletImpulseNM.EqualizeAmount = 0f;
 		applyBulletImpulseNM.PartIndex = 0;
 		applyBulletImpulseNM.Impulse = Vector3.Zero;
 		applyBulletImpulseNM.HitPoint = Vector3.Zero;
 		applyBulletImpulseNM.LocalHitPointInfo = false;
 		applyBulletImpulseNM.ExtraShare = -2f;
-		messages.Add(applyBulletImpulseNM);
+		applyBulletImpulseNM.Stop();
 
-		var shotFromBehindNM = new GTA.NaturalMotion.MessageHelper.ShotFromBehindMessage();
-		shotFromBehindNM.Start = false;
-		messages.Add(shotFromBehindNM);
+		var shotFromBehindNM = ped.Euphoria.ShotFromBehind;
+		shotFromBehindNM.Stop();
 
-		var configureBalanceNM = new GTA.NaturalMotion.MessageHelper.ConfigureBalanceMessage();
-		configureBalanceNM.Start = true;
+		var configureBalanceNM = ped.Euphoria.ConfigureBalance;
 		configureBalanceNM.TaperKneeStrength = true;
 		configureBalanceNM.LegStiffness = 0f;
 		configureBalanceNM.GiveUpHeight = 1f;
@@ -298,28 +268,23 @@ public class FakeElectrocutionShotDemo : Script
 		configureBalanceNM.StableRotSpeedThresh = 0.01f;
 		configureBalanceNM.UseComDirTurnVelThresh = 0.1f;
 		configureBalanceNM.BalanceAbortThreshold = 0.1f;
-		messages.Add(configureBalanceNM);
+		configureBalanceNM.StartNoNewRagdollTask();
 
-		var shotConfigureArmsNM = new GTA.NaturalMotion.MessageHelper.ShotConfigureArmsMessage();
-		shotConfigureArmsNM.Start = true;
+		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Fling2 = true;
 		shotConfigureArmsNM.PointGun = true;
-		messages.Add(shotConfigureArmsNM);
+		shotConfigureArmsNM.StartNoNewRagdollTask();
 
-		var shotSnapNM = new GTA.NaturalMotion.MessageHelper.ShotSnapMessage();
+		var shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.SnapHitPart = false;
 		shotSnapNM.SnapMag = 1.5f;
-		messages.Add(shotSnapNM);
-
-		return messages;
-		}
+		shotSnapNM.Update();
+	}
 
 	// Shot_Electrocute (priority: 15)
-	static private List<Message> GetShotElectrocuteMessages()
+	static private void StartShotElectrocuteMessages(Ped ped)
 	{
-		List<Message> messages = new List<Message>();
-
-		var elecNM = new GTA.NaturalMotion.MessageHelper.ElectrocuteMessage();
+		var elecNM = ped.Euphoria.Electrocute;
 		elecNM.StunMag = 0.2f;
 		elecNM.ApplyStiffness = false;
 		elecNM.UseTorques = true;
@@ -333,65 +298,53 @@ public class FakeElectrocutionShotDemo : Script
 		elecNM.MovingThresh = 1f;
 		elecNM.LeftLeg = true;
 		elecNM.RightLeg = true;
-		elecNM.Start = true;
+		elecNM.StartNoNewRagdollTask();
 
-		var forceLeanRandomNM = new GTA.NaturalMotion.MessageHelper.ForceLeanRandomMessage();
+		var forceLeanRandomNM = ped.Euphoria.ForceLeanRandom;
 		forceLeanRandomNM.LeanAmountMin = 0.1f;
 		forceLeanRandomNM.LeanAmountMax = 0.1f;
 		forceLeanRandomNM.BodyPart = 10;
-		forceLeanRandomNM.Start = true;
+		forceLeanRandomNM.StartNoNewRagdollTask();
 
-
-		var ShotFallToKneesNM = new GTA.NaturalMotion.MessageHelper.ShotFallToKneesMessage();
+		var ShotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
 		ShotFallToKneesNM.FallToKnees = true;
 		ShotFallToKneesNM.FtkAlwaysChangeFall = true;
 		ShotFallToKneesNM.FtkBalanceTime = 1f;
 		ShotFallToKneesNM.FtkHelperForce = 100f;
-		ShotFallToKneesNM.Start = true;
+		ShotFallToKneesNM.StartNoNewRagdollTask();
 
-		var staggerFallNM = new GTA.NaturalMotion.MessageHelper.StaggerFallMessage();
+		var staggerFallNM = ped.Euphoria.StaggerFall;
 		staggerFallNM.UpperBodyReaction = false;
-		staggerFallNM.Start = true;
+		staggerFallNM.StartNoNewRagdollTask();
 
-		var ShotSnapNM = new GTA.NaturalMotion.MessageHelper.ShotSnapMessage();
-		ShotSnapNM.ResetOldParameters = true;
+		var ShotSnapNM = ped.Euphoria.ShotSnap;
+		ShotSnapNM.ResetArguments();
 
-		var setFallingReactionNM = new GTA.NaturalMotion.MessageHelper.SetFallingReactionMessage();
+		var setFallingReactionNM = ped.Euphoria.SetFallingReaction;
 		setFallingReactionNM.HandsAndKnees = false;
 		setFallingReactionNM.CallRDS = false;
+		setFallingReactionNM.Update();
 
-		var pointGunNM = new GTA.NaturalMotion.MessageHelper.PointGunMessage();
-		pointGunNM.ResetOldParameters = false;
+		var pointGunNM = ped.Euphoria.PointGun;
+		pointGunNM.ResetArguments();
 		pointGunNM.EnableLeft = false;
 		pointGunNM.EnableRight = false;
+		pointGunNM.StartNoNewRagdollTask();
 
-		var ConfigureBalanceNM = new GTA.NaturalMotion.MessageHelper.ConfigureBalanceMessage();
-		ConfigureBalanceNM.ResetOldParameters = true;
+		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
+		ConfigureBalanceNM.ResetArguments();
 		ConfigureBalanceNM.FootFriction = 0.5f;
-
-		messages.Add(elecNM);
-		messages.Add(forceLeanRandomNM);
-		messages.Add(ShotFallToKneesNM);
-		messages.Add(staggerFallNM);
-		messages.Add(ShotSnapNM);
-		messages.Add(setFallingReactionNM);
-		messages.Add(pointGunNM);
-		messages.Add(ConfigureBalanceNM);
-
-		return messages;
+		ConfigureBalanceNM.StartNoNewRagdollTask();
 	}
-	
-    // Shot_LegShot (priority: 21)
-	static private List<Message> GetLegShot21Messages()
+
+	// Shot_LegShot (priority: 21)
+	static private void StartLegShot21Messages(Ped ped)
 	{
-		List<Message> messages = new List<Message>();
-
-		var configureBulletsNM = new GTA.NaturalMotion.MessageHelper.ConfigureBulletsMessage();
+		var configureBulletsNM = ped.Euphoria.ConfigureBullets;
 		configureBulletsNM.RbLowerShare = 0.5f;
-		messages.Add(configureBulletsNM);
+		configureBulletsNM.Update();
 
-		var configureShotInjuredLegNM = new GTA.NaturalMotion.MessageHelper.ConfigureShotInjuredLegMessage();
-		configureShotInjuredLegNM.Start = true;
+		var configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
 		configureShotInjuredLegNM.TimeBeforeCollapseWoundLeg = 0.5f;
 		configureShotInjuredLegNM.LegInjuryTime = 0.5f;
 		configureShotInjuredLegNM.LegLimpBend = 0.21f;
@@ -401,9 +354,9 @@ public class FakeElectrocutionShotDemo : Script
 		configureShotInjuredLegNM.LegInjuryLiftHipPitch = 1f;
 		configureShotInjuredLegNM.LegInjurySpineBend = 1f;
 		configureShotInjuredLegNM.LegInjuryLiftSpineBend = 1f;
-		messages.Add(configureShotInjuredLegNM);
+		configureShotInjuredLegNM.StartNoNewRagdollTask();
 
-		var shotConfigureArmsNM = new GTA.NaturalMotion.MessageHelper.ShotConfigureArmsMessage();
+		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Brace = false;
 		shotConfigureArmsNM.PointGun = true;
 		shotConfigureArmsNM.UseArmsWindmill = true;
@@ -416,9 +369,9 @@ public class FakeElectrocutionShotDemo : Script
 		shotConfigureArmsNM.AllowLeftPistolRFW = true;
 		shotConfigureArmsNM.AllowRightPistolRFW = false;
 		shotConfigureArmsNM.RfwWithPistol = false;
-		messages.Add(shotConfigureArmsNM);
+		shotConfigureArmsNM.Update();
 
-		var shotNM = new GTA.NaturalMotion.MessageHelper.ShotMessage();
+		var shotNM = ped.Euphoria.Shot;
 		shotNM.AllowInjuredLeg = true;
 		shotNM.AllowInjuredLowerLegReach = true;
 		shotNM.AllowInjuredThighReach = true;
@@ -475,23 +428,21 @@ public class FakeElectrocutionShotDemo : Script
 		shotNM.CStrLowerMin = 0.1f;
 		shotNM.CStrLowerMax = 1f;
 		shotNM.DeathTime = -1f;
-		messages.Add(shotNM);
+		shotNM.Update();
 
-		var stayUprightNM = new GTA.NaturalMotion.MessageHelper.StayUprightMessage();
-		stayUprightNM.Start = false;
-		messages.Add(stayUprightNM);
+		var stayUprightNM = ped.Euphoria.StayUpright;
+		stayUprightNM.Stop();
 
-		var configureBalanceNM = new GTA.NaturalMotion.MessageHelper.ConfigureBalanceMessage();
+		var configureBalanceNM = ped.Euphoria.ConfigureBalance;
 		configureBalanceNM.StableLinSpeedThresh = 0.35f;
 		configureBalanceNM.StableRotSpeedThresh = 0.4f;
 		configureBalanceNM.BalanceAbortThreshold = 0.6f;
-		messages.Add(configureBalanceNM);
+		configureBalanceNM.Update();
 
-		var shotFallToKneesNM = new GTA.NaturalMotion.MessageHelper.ShotFallToKneesMessage();
-		shotFallToKneesNM.Start = true;
-		messages.Add(shotFallToKneesNM);
+		var shotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
+		shotFallToKneesNM.StartNoNewRagdollTask();
 
-		var shotSnapNM = new GTA.NaturalMotion.MessageHelper.ShotSnapMessage();
+		var shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.Snap = true;
 		shotSnapNM.SnapMag = 1f;
 		shotSnapNM.SnapMovingMult = 1f;
@@ -512,28 +463,24 @@ public class FakeElectrocutionShotDemo : Script
 		shotSnapNM.UnSnapInterval = 0.1f;
 		shotSnapNM.UnSnapRatio = 0.7f;
 		shotSnapNM.SnapUseTorques = true;
-		messages.Add(shotSnapNM);
+		shotSnapNM.Update();
 
-		var headLookNM = new GTA.NaturalMotion.MessageHelper.HeadLookMessage();
+		var headLookNM = ped.Euphoria.HeadLook;
 		headLookNM.AlwaysLook = true;
 		headLookNM.KeepHeadAwayFromGround = true;
-		messages.Add(headLookNM);
+		headLookNM.Update();
 
-		var shotHeadLookNM = new GTA.NaturalMotion.MessageHelper.ShotHeadLookMessage();
+		var shotHeadLookNM = ped.Euphoria.ShotHeadLook;
 		shotHeadLookNM.UseHeadLook = true;
 		shotHeadLookNM.HeadLook = Vector3.Zero;
 		shotHeadLookNM.HeadLookAtWoundMinTimer = 0f;
 		shotHeadLookNM.HeadLookAtWoundMaxTimer = 10f;
 		shotHeadLookNM.HeadLookAtHeadPosMaxTimer = 10f;
 		shotHeadLookNM.HeadLookAtHeadPosMinTimer = 10f;
-		messages.Add(shotHeadLookNM);
+		shotHeadLookNM.Update();
 
-
-		var staggerFallNM = new GTA.NaturalMotion.MessageHelper.StaggerFallMessage();
-		staggerFallNM.Start = false;
-		messages.Add(staggerFallNM);
-
-		return messages;
+		var staggerFallNM = ped.Euphoria.StaggerFall;
+		staggerFallNM.Stop();
 	}
 
 	private void FakeElectrocutionShotDemo_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -547,15 +494,16 @@ public class FakeElectrocutionShotDemo : Script
 			 playerPed.Ragdoll(5000, RagdollType.ScriptControl);
 
 			// Send the player ped message so they will move like when a stun gun bullet hits them in the chest
-			var concattedMessages = GetShotBaseNmMessages().Concat(GetNormalWeapomNmMessages()).Concat(GetShotElectrocuteMessages());
 			playerPed.ApplyRelativeForceRelativeOffset(new Vector3(0f, -1.5f, 0f), Vector3.Zero, ForceType.ExternalImpulse, RagdollComponent.Spine3, true, false, false);
-			playerPed.Euphoria.ReceiveNmMessages(concattedMessages);
+			StartShotBaseNmMessages(playerPed);
+			StartNormalWeapomNmMessages(playerPed);
+			StartShotElectrocuteMessages(playerPed);
 		}
 		else if (e.KeyCode == System.Windows.Forms.Keys.K)
 		{
 			// Send the player ped message so they will move like when a stun gun bullet hits them in the left leg, but never start a new ragdoll task
 			playerPed.ApplyRelativeForceRelativeOffset(new Vector3(0f, -1.5f, 0f), Vector3.Zero, ForceType.ExternalImpulse, RagdollComponent.ShinRight, true, false, false);
-			playerPed.Euphoria.ReceiveNmMessages(GetLegShot21Messages());
+			StartLegShot21Messages(playerPed);
 		}
 	}
 }
