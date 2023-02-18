@@ -11,14 +11,9 @@ using System.Drawing;
 
 namespace GTA
 {
-	//[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
+	// [Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class Menu : MenuBase
 	{
-		// Keep in sync with UI.WIDTH
-		const float WIDTH = 1280;
-		// Keep in sync with UI.HEIGHT
-		const float HEIGHT = 720;
-
 		UIRectangle rectHeader = null;
 		UIRectangle rectFooter = null;
 		UIText textHeader = null;
@@ -117,19 +112,19 @@ namespace GTA
 
 				if (up)
 				{
-					float w = Resolution.X / WIDTH;
-					float h = Resolution.Y / HEIGHT;
-					float x = (float)(Width + offset.Width) / WIDTH - w * 0.5f;
-					float y = (float)(HeaderHeight + offset.Height + ItemHeight / 2) / HEIGHT;
+					float w = Resolution.X / UI.WIDTH;
+					float h = Resolution.Y / UI.HEIGHT;
+					float x = (float)(Width + offset.Width) / UI.WIDTH - w * 0.5f;
+					float y = (float)(HeaderHeight + offset.Height + ItemHeight / 2) / UI.HEIGHT;
 
 					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", x, y, w, h, -90.0f, 255, 255, 255, 255);
 				}
 				if (down)
 				{
-					float w = Resolution.X / WIDTH;
-					float h = Resolution.Y / HEIGHT;
-					float x = (float)(Width + offset.Width) / WIDTH - w * 0.5f;
-					float y = (float)(HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / HEIGHT;
+					float w = Resolution.X / UI.WIDTH;
+					float h = Resolution.Y / UI.HEIGHT;
+					float x = (float)(Width + offset.Width) / UI.WIDTH - w * 0.5f;
+					float y = (float)(HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / UI.HEIGHT;
 
 					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", x, y, w, h, 90.0f, 255, 255, 255, 255);
 				}

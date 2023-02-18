@@ -1,13 +1,11 @@
-/**
- * Copyright (C) 2015 crosire & contributors
- * License: https://github.com/crosire/scripthookvdotnet#license
- */
-
-#pragma once
+//
+// Copyright (C) 2015 crosire & contributors
+// License: https://github.com/crosire/scripthookvdotnet#license
+//
 
 namespace GTA
 {
-	public enum class HudComponent
+	public enum HudComponent
 	{
 		WantedStars = 1,
 		WeaponIcon = 2,
@@ -60,5 +58,5 @@ namespace GTA
 		ReplayBottomLine = 49,
 		ReplayLeftBar = 50,
 		ReplayTimer = 51,
-	};
+	}
 }

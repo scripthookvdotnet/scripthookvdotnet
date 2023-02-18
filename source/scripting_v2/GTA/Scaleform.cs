@@ -123,15 +123,10 @@ namespace GTA
 		}
 		public void Render2DScreenSpace(PointF position, PointF size)
 		{
-			// Keep in sync with UI.WIDTH
-			const float WIDTH = 1280;
-			// Keep in sync with UI.HEIGHT
-			const float HEIGHT = 720;
-
-			float x = position.X / WIDTH;
-			float y = position.Y / HEIGHT;
-			float w = size.X / WIDTH;
-			float h = size.Y / HEIGHT;
+			float x = position.X / UI.WIDTH;
+			float y = position.Y / UI.HEIGHT;
+			float w = size.X / UI.WIDTH;
+			float h = size.Y / UI.HEIGHT;
 
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
 		}
