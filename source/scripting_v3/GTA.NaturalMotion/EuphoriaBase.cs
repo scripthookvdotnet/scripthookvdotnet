@@ -7,7 +7,6 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
-using SHVDN;
 
 namespace GTA.NaturalMotion
 {
@@ -54,8 +53,9 @@ namespace GTA.NaturalMotion
 				if (!target.CanRagdoll)
 				{
 					target.CanRagdoll = true;
-				}	
+				}
 			}
+
 			if (!SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(target.MemoryAddress))
 			{
 				// Does not call when a CTaskNMControl task is active or the CEvent (which usually causes some task) related to CTaskNMControl occured for calling SET_PED_TO_RAGDOLL just like in legacy scripts.

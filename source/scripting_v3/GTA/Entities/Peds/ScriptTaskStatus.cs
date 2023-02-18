@@ -3,8 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-
 namespace GTA
 {
 	public enum ScriptTaskStatus
@@ -24,9 +22,6 @@ namespace GTA
 		/// Eg. When the <see cref="Ped"/> is srumbling since another <see cref="Entity"/> bumped them after the task had started at all.
 		/// </summary>
 		Dormant = 2,
-
-		// Currently unknown if R* have ever used the values from 3 to 6
-
 		/// <summary>
 		/// The task has been done or not performed yet as a primary task.
 		/// </summary>

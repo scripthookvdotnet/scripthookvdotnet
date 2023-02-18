@@ -4,7 +4,6 @@
 //
 
 using System;
-using GTA.NaturalMotion;
 
 namespace GTA
 {
@@ -15,13 +14,14 @@ namespace GTA
 		/// </summary>
 		Relax = 0,
 		/// <summary>
-		/// You can control <see cref="Ped"/>s' ragdoll behaviors by additional configrations. Consider using the <see cref="Euphoria"/> class for advanced and easier ragdoll configrations.
+		/// You can control <see cref="Ped"/>s' ragdoll behaviors by additional configrations. Consider using the <see cref="NaturalMotion.Euphoria"/> class for advanced and easier ragdoll configrations.
 		/// </summary>
 		ScriptControl = 1,
 		/// <summary>
 		/// <see cref="Ped"/>s will try to balance.
 		/// </summary>
 		Balance = 2,
+
 		[Obsolete]
 		Normal = 0,
 		[Obsolete]

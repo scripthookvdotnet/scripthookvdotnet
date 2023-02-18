@@ -271,7 +271,7 @@ namespace GTA.UI
 		/// <param name="helpText">The text to display.</param>
 		public static void ShowHelpTextThisFrame(string helpText)
 		{
-			ShowHelpText(helpText, 1, true, false);			// keeping it DRY :)
+			ShowHelpText(helpText, 1, true, false);
 		}
 		/// <summary>
 		/// Displays a help message in the top corner of the screen this frame. Specify whether beeping sound plays.

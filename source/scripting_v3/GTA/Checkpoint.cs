@@ -27,21 +27,23 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
 				}
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress));
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteVector3(memoryAddress, value.ToArray());
+
+				SHVDN.NativeMemory.WriteVector3(address, value.ToArray());
 			}
 		}
 
@@ -52,21 +54,23 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
 				}
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(memoryAddress + 16));
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 16));
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteVector3(memoryAddress + 16, value.ToArray());
+
+				SHVDN.NativeMemory.WriteVector3(address + 16, value.ToArray());
 			}
 		}
 
@@ -77,21 +81,23 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0;
 				}
-				return (CheckpointIcon)SHVDN.NativeMemory.ReadInt32(memoryAddress + 56);
+
+				return (CheckpointIcon)SHVDN.NativeMemory.ReadInt32(address + 56);
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + 56, (int)value);
+
+				SHVDN.NativeMemory.WriteInt32(address + 56, (int)value);
 			}
 		}
 
@@ -102,22 +108,24 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0;
 				}
-				return SHVDN.NativeMemory.ReadByte(memoryAddress + 52);
+
+				return SHVDN.NativeMemory.ReadByte(address + 52);
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteByte(memoryAddress + 52, value);
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + 56, 44); // Sets the icon to a custom icon
+
+				SHVDN.NativeMemory.WriteByte(address + 52, value);
+				SHVDN.NativeMemory.WriteInt32(address + 56, 44); // Sets the icon to a custom icon
 			}
 		}
 
@@ -128,21 +136,23 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + 60);
+
+				return SHVDN.NativeMemory.ReadFloat(address + 60);
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + 60, value);
+
+				SHVDN.NativeMemory.WriteFloat(address + 60, value);
 			}
 		}
 
@@ -153,24 +163,25 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return System.Drawing.Color.Transparent;
 				}
 
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
-				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + offset));
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(address + offset));
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + offset, Color.ToArgb());
+				SHVDN.NativeMemory.WriteInt32(address + offset, Color.ToArgb());
 			}
 		}
 		/// <summary>
@@ -180,23 +191,25 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return System.Drawing.Color.Transparent;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
-				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(memoryAddress + offset));
+				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(address + offset));
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
-				SHVDN.NativeMemory.WriteInt32(memoryAddress + offset, Color.ToArgb());
+				SHVDN.NativeMemory.WriteInt32(address + offset, Color.ToArgb());
 			}
 		}
 
@@ -207,23 +220,25 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}
 		/// <summary>
@@ -233,23 +248,25 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}
 		/// <summary>
@@ -259,23 +276,25 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
-				return SHVDN.NativeMemory.ReadFloat(memoryAddress + offset);
+				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
-				IntPtr memoryAddress = MemoryAddress;
-				if (memoryAddress == IntPtr.Zero)
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
 				{
 					return;
 				}
+
 				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
-				SHVDN.NativeMemory.WriteFloat(memoryAddress + offset, value);
+				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}
 

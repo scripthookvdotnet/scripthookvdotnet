@@ -49,6 +49,7 @@
     <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
       <Name>ScriptHookVDotNet</Name>
       <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +103,7 @@
     <Compile Include="GTA\Entities\Peds\ScriptTaskStatus.cs" />
     <Compile Include="GTA\Entities\Peds\ScriptTaskNameHash.cs" />
     <Compile Include="GTA\Entities\Peds\RagdollComponent.cs" />
-    <Compile Include="GTA\Entities\Peds\IKControlFlags.cs" />
+    <Compile Include="GTA\Entities\Peds\AnimationIKControlFlags.cs" />
     <Compile Include="GTA\Entities\Peds\PedMoveBlendRatio.cs" />
     <Compile Include="GTA\Entities\Peds\PedPropAnchorPosition.cs" />
     <Compile Include="GTA\Entities\Vehicles\BoatMissionFlags.cs" />

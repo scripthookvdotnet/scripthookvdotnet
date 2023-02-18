@@ -654,7 +654,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)((value + (value > 0 ? 10 : -10)) * (System.Math.PI / 180.0)));
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)(value * (System.Math.PI / 180.0)));
 			}
 		}
 
@@ -824,14 +824,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0, value);
 			}
 		}
 
@@ -846,14 +839,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1);
-				}
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1, value);
 			}
 		}
 
@@ -950,20 +936,20 @@ namespace GTA
 
 		public VehicleDoor[] GetDoors()
 		{
-			System.Collections.Generic.List<VehicleDoor> Doors = new System.Collections.Generic.List<VehicleDoor>();
+			var doors = new List<VehicleDoor>();
 			if (HasBone("door_dside_f"))
-				Doors.Add(VehicleDoor.FrontLeftDoor);
+				doors.Add(VehicleDoor.FrontLeftDoor);
 			if (HasBone("door_pside_f"))
-				Doors.Add(VehicleDoor.FrontRightDoor);
+				doors.Add(VehicleDoor.FrontRightDoor);
 			if (HasBone("door_dside_r"))
-				Doors.Add(VehicleDoor.BackLeftDoor);
+				doors.Add(VehicleDoor.BackLeftDoor);
 			if (HasBone("door_pside_r"))
-				Doors.Add(VehicleDoor.BackRightDoor);
+				doors.Add(VehicleDoor.BackRightDoor);
 			if (HasBone("bonnet"))
-				Doors.Add(VehicleDoor.Hood);
+				doors.Add(VehicleDoor.Hood);
 			if (HasBone("hood"))
-				Doors.Add(VehicleDoor.Trunk);
-			return Doors.ToArray();
+				doors.Add(VehicleDoor.Trunk);
+			return doors.ToArray();
 		}
 
 		public void OpenDoor(VehicleDoor door, bool loose, bool instantly)

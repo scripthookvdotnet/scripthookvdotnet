@@ -255,14 +255,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 5);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 5);
-				}
+				SHVDN.NativeMemory.SetBit(address + 392, 5, value);
 			}
 		}
 
@@ -286,14 +279,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 7);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 7);
-				}
+				SHVDN.NativeMemory.SetBit(address + 392, 7, value);
 			}
 		}
 
@@ -317,14 +303,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 4);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 4);
-				}
+				SHVDN.NativeMemory.SetBit(address + 392, 4, value);
 			}
 		}
 
@@ -348,14 +327,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 11);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 11);
-				}
+				SHVDN.NativeMemory.SetBit(address + 392, 11, value);
 			}
 		}
 
@@ -379,14 +351,7 @@ namespace GTA
 					return;
 				}
 
-				if (value)
-				{
-					SHVDN.NativeMemory.SetBit(address + 392, 6);
-				}
-				else
-				{
-					SHVDN.NativeMemory.ClearBit(address + 392, 6);
-				}
+				SHVDN.NativeMemory.SetBit(address + 392, 6, value);
 			}
 		}
 

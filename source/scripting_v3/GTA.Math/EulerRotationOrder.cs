@@ -3,12 +3,10 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-
 namespace GTA
 {
 	/// <summary>
-	/// Enums for the order in which to apply rotations in local space, just like how Rockstar Games define <c>EULER_ROT_ORDER</c>.
+	/// The order in which to apply rotations in local space.
 	/// </summary>
 	public enum EulerRotationOrder
 	{

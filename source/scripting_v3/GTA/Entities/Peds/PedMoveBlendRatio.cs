@@ -17,7 +17,10 @@ namespace GTA
 		public PedMoveBlendRatio(float value)
 		{
 			if (value < 0)
+			{
 				throw new ArgumentException("The value should be positive.", "value");
+			}
+
 			Value = value;
 		}
 
@@ -26,21 +29,21 @@ namespace GTA
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(0.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Still => new(0.0f);
+		public static PedMoveBlendRatio Still => new PedMoveBlendRatio(0.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(1.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Walk => new(1.0f);
+		public static PedMoveBlendRatio Walk => new PedMoveBlendRatio(1.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(2.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Run => new(2.0f);
+		public static PedMoveBlendRatio Run => new PedMoveBlendRatio(2.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(3.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Sprint => new(3.0f);
+		public static PedMoveBlendRatio Sprint => new PedMoveBlendRatio(3.0f);
 
-		public static implicit operator PedMoveBlendRatio(float value) => new(value);
+		public static implicit operator PedMoveBlendRatio(float value) => new PedMoveBlendRatio(value);
 		public static explicit operator float(PedMoveBlendRatio value) => value.Value;
 		public static implicit operator InputArgument(PedMoveBlendRatio value)
 		{

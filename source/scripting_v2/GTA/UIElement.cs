@@ -16,10 +16,12 @@ namespace GTA
 		{
 			get; set;
 		}
+
 		Point Position
 		{
 			get; set;
 		}
+
 		Color Color
 		{
 			get; set;

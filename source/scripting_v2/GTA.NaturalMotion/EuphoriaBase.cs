@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using GTA.Math;
 using GTA.Native;
-using SHVDN;
 
 namespace GTA.NaturalMotion
 {
@@ -54,6 +53,7 @@ namespace GTA.NaturalMotion
 					target.CanRagdoll = true;
 				}
 			}
+
 			unsafe
 			{
 				if (!SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(target.MemoryAddress)))

@@ -3,8 +3,11 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
+
 namespace GTA
 {
+	[Flags]
 	public enum HeliMissionFlags
 	{
 		AttainRequestedOrientation = 1,

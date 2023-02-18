@@ -3,9 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using GTA.Math;
-using GTA.Native;
-
 namespace GTA
 {
 	/// <summary>
@@ -13,12 +10,14 @@ namespace GTA
 	/// </summary>
 	public interface IStreamingResource
 	{
-		public bool IsLoaded
+		bool IsLoaded
 		{
 			get;
 		}
-		public void Request();
-		public bool Request(int timeout);
-		public void MarkAsNoLongerNeeded();
+
+		void Request();
+		bool Request(int timeout);
+
+		void MarkAsNoLongerNeeded();
 	}
 }

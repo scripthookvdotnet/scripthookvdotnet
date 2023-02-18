@@ -3,8 +3,11 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
+
 namespace GTA
 {
+	[Flags]
 	public enum BoatMissionFlags
 	{
 		StopAtEnd = 1,
@@ -18,6 +21,7 @@ namespace GTA
 		UseWanderRoute = 256,
 		UseFleeRoute = 512,
 		NeverPause = 1024,
+
 		DefaultSettings = StopAtEnd | StopAtShore | AvoidShore,
 		OpenOceanSettings = StopAtEnd | StopAtShore | AvoidShore | PreferForward | NeverNavMesh | NeverRoute
 	}

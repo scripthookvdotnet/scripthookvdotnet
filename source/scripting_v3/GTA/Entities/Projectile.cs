@@ -2,8 +2,8 @@
 // Copyright (C) 2015 crosire & contributors
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
+
 using System;
-using SHVDN;
 
 namespace GTA
 {
@@ -17,7 +17,7 @@ namespace GTA
 		/// Gets the <see cref="Ped"/> this <see cref="Projectile"/> belongs to.
 		/// Can be <see langword="null" /> or a <see cref="Ped"/> instance whose handle is for <see cref="Vehicle"/>, which is not valid as a <see cref="Ped"/> instance.
 		/// </summary>
-		[Obsolete("The Projectile.Owner is obsolete in the v3 API because the actual owner can be a Vehicle, use Projectile.OwnerEntity in the v3 API instead.")]
+		[Obsolete("The Projectile.Owner is obsolete in the v3 API because the actual owner can be a Vehicle, use Projectile.OwnerEntity instead.")]
 		public Ped Owner
 		{
 			get
@@ -48,9 +48,10 @@ namespace GTA
 			}
 
 			IntPtr entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
-
 			if (entityAddress == IntPtr.Zero)
+			{
 				return 0;
+			}
 
 			return SHVDN.NativeMemory.GetEntityHandleFromAddress(entityAddress);
 		}
@@ -65,7 +66,7 @@ namespace GTA
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileAmmoInfoOffset == 0)
 				{
-					return (WeaponHash)0;
+					return 0;
 				}
 
 				return (WeaponHash)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset + 0x8);
@@ -79,7 +80,9 @@ namespace GTA
 		{
 			var address = MemoryAddress;
 			if (address == IntPtr.Zero)
+			{
 				return;
+			}
 
 			SHVDN.NativeMemory.ExplodeProjectile(address);
 		}
@@ -91,10 +94,11 @@ namespace GTA
 		/// <returns>Null if not found or the entity is not a <see cref="Prop"/>, otherwise, a <see cref="Projectile"/></returns>
 		public new static Projectile FromHandle(int handle)
 		{
-			var memoryAddress = NativeMemory.GetEntityAddress(handle);
-
-			if (memoryAddress == IntPtr.Zero || NativeMemory.ReadByte(memoryAddress + 0x28) != 5)
+			var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.ReadByte(address + 0x28) != 5)
+			{
 				return null;
+			}
 
 			return new Projectile(handle);
 		}

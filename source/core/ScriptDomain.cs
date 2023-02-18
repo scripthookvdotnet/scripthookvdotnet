@@ -14,7 +14,6 @@ using System.Windows.Forms;
 
 namespace SHVDN
 {
-
 	/// <summary>
 	/// The interface for tasks that must be run on the main thread (e.g. calling native functions) because of thread local storage (TLS).
 	/// </summary>
@@ -53,8 +52,6 @@ namespace SHVDN
 		/// Gets the scripting domain for the current application domain.
 		/// </summary>
 		public static ScriptDomain CurrentDomain { get; private set; }
-
-		internal static string CurrentLoadingScriptAssemblyName { get; private set; }
 
 		/// <summary>
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
@@ -262,7 +259,6 @@ namespace SHVDN
 			try
 			{
 				// Note: This loads the assembly only the first time and afterwards returns the already loaded assembly!
-				ScriptDomain.CurrentLoadingScriptAssemblyName = fileNameWithoutPath;
 				assembly = Assembly.LoadFrom(filename);
 			}
 			catch (Exception ex)
@@ -272,8 +268,8 @@ namespace SHVDN
 			}
 
 			// Show the warning "Resolving API version 0.0.0" if the script reference a version-less SHVDN
-			var ShvdnAssembly = assembly.GetReferencedAssemblies().FirstOrDefault(x => x.Name == "ScriptHookVDotNet");
-			if (ShvdnAssembly != null && ShvdnAssembly.Version == new Version(0, 0, 0, 0))
+			var shvdnAssembly = assembly.GetReferencedAssemblies().FirstOrDefault(x => x.Name == "ScriptHookVDotNet");
+			if (shvdnAssembly != null && shvdnAssembly.Version == new Version(0, 0, 0, 0))
 			{
 				Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + fileNameWithoutPath, ".");
 			}
@@ -436,15 +432,15 @@ namespace SHVDN
 			}
 
 			// Find all script files and assemblies in the specified script directory
-			var filenamesSource = new List<string>();
-			var filenamesAssembly = new List<string>();
+			var sourceFiles = new List<string>();
+			var assemblyFiles = new List<string>();
 
 			try
 			{
-				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
-				filenamesSource.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
+				sourceFiles.AddRange(Directory.GetFiles(ScriptPath, "*.vb", SearchOption.AllDirectories));
+				sourceFiles.AddRange(Directory.GetFiles(ScriptPath, "*.cs", SearchOption.AllDirectories));
 
-				filenamesAssembly.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
+				assemblyFiles.AddRange(Directory.GetFiles(ScriptPath, "*.dll", SearchOption.AllDirectories)
 					.Where(x => IsManagedAssembly(x)));
 			}
 			catch (Exception ex)
@@ -453,31 +449,31 @@ namespace SHVDN
 			}
 
 			// Filter out non-script assemblies
-			for (int i = 0; i < filenamesAssembly.Count; i++)
+			for (int i = 0; i < assemblyFiles.Count; i++)
 			{
 				try
 				{
-					var assemblyName = AssemblyName.GetAssemblyName(filenamesAssembly[i]);
+					var assemblyName = AssemblyName.GetAssemblyName(assemblyFiles[i]);
 
 					if (assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
 					{
-						// Delete copies of ScriptHookVDotNet, since these can cause issues with the assembly binder loading multiple copies
-						File.Delete(filenamesAssembly[i]);
+						// Delete copies of SHVDN, since these can cause issues with the assembly binder loading multiple copies
+						File.Delete(assemblyFiles[i]);
 
-						filenamesAssembly.RemoveAt(i--);
+						assemblyFiles.RemoveAt(i--);
 					}
 				}
 				catch (Exception ex)
 				{
-					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(filenamesAssembly[i]), " because of exception: ", ex.ToString());
+					Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(assemblyFiles[i]), " because of exception: ", ex.ToString());
 
-					filenamesAssembly.RemoveAt(i--);
+					assemblyFiles.RemoveAt(i--);
 				}
 			}
 
-			foreach (var filename in filenamesSource)
+			foreach (var filename in sourceFiles)
 				LoadScriptsFromSource(filename);
-			foreach (var filename in filenamesAssembly)
+			foreach (var filename in assemblyFiles)
 				LoadScriptsFromAssembly(filename);
 
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
@@ -498,8 +494,8 @@ namespace SHVDN
 		{
 			filename = Path.GetFullPath(filename);
 
-			if (Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase) ?
-				!LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
+			var isAssembly = Path.GetExtension(filename).Equals(".dll", StringComparison.OrdinalIgnoreCase);
+			if (isAssembly ? !LoadScriptsFromAssembly(filename) : !LoadScriptsFromSource(filename))
 				return;
 
 			// Instantiate only those scripts that are from the this assembly
@@ -864,6 +860,18 @@ namespace SHVDN
 				return compatibleApi;
 			}
 
+			// Try to resolve referenced assemblies that the assembly loader failed to find by itself (e.g. because they are in a subdirectory of the scripts directory)
+			if (CurrentDomain != null)
+			{
+				string filename = Directory.GetFiles(CurrentDomain.ScriptPath, "*.dll", SearchOption.AllDirectories)
+					.Where(x => x.EndsWith(assemblyName.Name + ".dll", StringComparison.OrdinalIgnoreCase))
+					.FirstOrDefault();
+				if (filename != null)
+				{
+					return Assembly.LoadFrom(filename);
+				}
+			}
+
 			return null;
 		}
 
@@ -884,9 +892,9 @@ namespace SHVDN
 				{
 					unsafe
 					{
-						NativeFunc.Invoke(0x202709F4C58A0424 /*BEGIN_TEXT_COMMAND_THEFEED_POST*/, NativeMemory.CellEmailBcon);
+						NativeFunc.Invoke(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
 						NativeFunc.PushLongString("~r~Unhandled exception~s~ in script \"~h~" + script.Name + "~h~\"!~n~~n~~r~" + args.ExceptionObject.GetType().Name + "~s~ " + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim());
-						NativeFunc.Invoke(0x2ED7843F8F801023 /*END_TEXT_COMMAND_THEFEED_POST_TICKER*/, true, true);
+						NativeFunc.Invoke(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, true);
 					}
 				}
 			}

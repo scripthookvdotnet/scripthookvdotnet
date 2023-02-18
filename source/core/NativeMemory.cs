@@ -1,8 +1,3 @@
-//
-// Copyright (C) 2015 crosire & contributors
-// License: https://github.com/crosire/scripthookvdotnet#license
-//
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1154,30 +1149,21 @@ namespace SHVDN
 		}
 
 		/// <summary>
-		/// Sets a single bit in the 32-bit value at the specified <paramref name="address"/>.
+		/// Sets or clears a single bit in the 32-bit value at the specified <paramref name="address"/>.
 		/// </summary>
 		/// <param name="address">The memory address to access.</param>
 		/// <param name="bit">The bit index to change.</param>
-		public static void SetBit(IntPtr address, int bit)
+		/// <param name="value">Whether to set or clear the bit.</param>
+		public static void SetBit(IntPtr address, int bit, bool value = true)
 		{
 			if (bit < 0 || bit > 31)
 				throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
 
 			var data = (int*)address.ToPointer();
-			*data |= (1 << bit);
-		}
-		/// <summary>
-		/// Clears a single bit in the 32-bit value at the specified <paramref name="address"/>.
-		/// </summary>
-		/// <param name="address">The memory address to access.</param>
-		/// <param name="bit">The bit index to change.</param>
-		public static void ClearBit(IntPtr address, int bit)
-		{
-			if (bit < 0 || bit > 31)
-				throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
-
-			var data = (int*)address.ToPointer();
-			*data &= ~(1 << bit);
+			if (value)
+				*data |= (1 << bit);
+			else
+				*data &= ~(1 << bit);
 		}
 		/// <summary>
 		/// Checks a single bit in the 32-bit value at the specified <paramref name="address"/>.
@@ -1248,26 +1234,6 @@ namespace SHVDN
 			return dest;
 		}
 
-		#region -- RAGE classes --
-
-		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
-		struct RageAtArrayPtr
-		{
-			[FieldOffset(0x0)]
-			internal ulong* data;
-			[FieldOffset(0x8)]
-			internal ushort size;
-			[FieldOffset(0xA)]
-			internal ushort capacity;
-
-			internal ulong GetElementAddress(int i)
-			{
-				return data[i];
-			}
-		}
-
-		#endregion
-
 		#region -- Cameras --
 
 		static ulong* CameraPoolAddress;
@@ -1293,12 +1259,9 @@ namespace SHVDN
 
 		#region -- Game Data --
 
-		// copied directly from the game -- performs uppercase to lowercase conversions and backslash to slash conversion amongst other things
-		// look at the pattern for more info 48 8B 0B 33 D2 E8 ? ? ? ? 89 03 (which is how you can find rage::atStringHash)
-		// with this lookup table, the hash function will perform faster than using if branches for uppercase characters and backslash (which is how the hash function in GTA IV does to pick characters)
-		private static readonly byte[]
-		 LookupTableForGetHashKey =
-		 {
+		// Performs uppercase to lowercase and backslash to slash conversion etc.
+		static readonly byte[] LookupTableForGetHashKey =
+		{
 			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
 			0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
 			0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20,
@@ -1323,7 +1286,7 @@ namespace SHVDN
 			0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1,
 			0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC,
 			0xFD, 0xFE, 0xFF
-		 };
+		};
 
 		public static uint GetHashKey(string str)
 		{
@@ -1332,15 +1295,14 @@ namespace SHVDN
 				return 0;
 			}
 
-			// rage::atStringHash in the exe checks if the first byte is double quote, but that check is omitted since there are no practical cases for that edge case found
 			uint hash = 0;
-			byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
-			for (int i = 0; i < utf8Bytes.Length; i++)
+			foreach (byte c in Encoding.UTF8.GetBytes(str))
 			{
-				hash += LookupTableForGetHashKey[utf8Bytes[i]];
+				hash += LookupTableForGetHashKey[c];
 				hash += (hash << 10);
 				hash ^= (hash >> 6);
 			}
+
 			hash += (hash << 3);
 			hash ^= (hash >> 11);
 			hash += (hash << 15);
@@ -3587,16 +3549,33 @@ namespace SHVDN
 
 		#region -- Weapon Info And Ammo Info --
 
+		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
+		struct RageAtArrayPtr
+		{
+			[FieldOffset(0x0)]
+			internal ulong* data;
+			[FieldOffset(0x8)]
+			internal ushort size;
+			[FieldOffset(0xA)]
+			internal ushort capacity;
+
+			internal ulong GetElementAddress(int i)
+			{
+				return data[i];
+			}
+		}
+
 		static RageAtArrayPtr* weaponAndAmmoInfoArrayPtr;
-		static HashSet<uint> disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>() {
-				0x1B79F17,  /* weapon_briefcase_02 */
-				0x166218FF, /* weapon_passenger_rocket */
-				0x32A888BD, /* weapon_tranquilizer */
-				0x687652CE, /* weapon_stinger */
-				0x6D5E2801, /* weapon_bird_crap */
-				0x88C78EB7, /* weapon_briefcase */
-				0xFDBADCED, /* weapon_digiscanner */
-			};
+		static HashSet<uint> disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>()
+		{
+			0x1B79F17,  /* weapon_briefcase_02 */
+			0x166218FF, /* weapon_passenger_rocket */
+			0x32A888BD, /* weapon_tranquilizer */
+			0x687652CE, /* weapon_stinger */
+			0x6D5E2801, /* weapon_bird_crap */
+			0x88C78EB7, /* weapon_briefcase */
+			0xFDBADCED, /* weapon_digiscanner */
+		};
 
 		static uint* weaponComponentArrayCountAddr;
 		// Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).

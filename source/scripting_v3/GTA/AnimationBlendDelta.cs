@@ -5,7 +5,6 @@
 
 using GTA.Native;
 using System;
-using System.Drawing.Drawing2D;
 
 namespace GTA
 {
@@ -19,7 +18,10 @@ namespace GTA
 		{
 			// Don't accept zero. If the blend delta is zero, CTaskScriptedAnimation can't finish animation blending because of infinity duration (which will be made by division of 1.0 by 0).
 			if (value <= 0)
+			{
 				throw new ArgumentException("The value should be positive.", "value");
+			}
+
 			Value = value;
 		}
 
@@ -29,29 +31,29 @@ namespace GTA
 		/// The slowest predefined value. Returns the same struct as <c>new AnimationBlendDelta(1.5f)</c>.
 		/// </summary>
 		// commands_task.h (leaked code) defines the const value WALK_BLEND_IN (1.5) and WALK_BLEND_OUT (-1.5)
-		public static AnimationBlendDelta Walk => new(1.5f);
+		public static AnimationBlendDelta Walk => new AnimationBlendDelta(1.5f);
 		/// <summary>
 		/// Returns the same struct as <c>new AnimationBlendDelta(2.0f)</c>.
 		/// </summary>
-		public static AnimationBlendDelta VerySlow => new(2.0f);
+		public static AnimationBlendDelta VerySlow => new AnimationBlendDelta(2.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new AnimationBlendDelta(4.0f)</c>.
 		/// </summary>
-		public static AnimationBlendDelta Slow => new(4.0f);
+		public static AnimationBlendDelta Slow => new AnimationBlendDelta(4.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new AnimationBlendDelta(8.0f)</c>.
 		/// </summary>
-		public static AnimationBlendDelta Normal => new(8.0f);
+		public static AnimationBlendDelta Normal => new AnimationBlendDelta(8.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new AnimationBlendDelta(16.0f)</c>.
 		/// </summary>
-		public static AnimationBlendDelta Fast => new(16.0f);
+		public static AnimationBlendDelta Fast => new AnimationBlendDelta(16.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new AnimationBlendDelta(1000.0f)</c>.
 		/// </summary>
-		public static AnimationBlendDelta Instant => new(1000.0f);
+		public static AnimationBlendDelta Instant => new AnimationBlendDelta(1000.0f);
 
-		public static implicit operator AnimationBlendDelta(float value) => new(value);
+		public static implicit operator AnimationBlendDelta(float value) => new AnimationBlendDelta(value);
 		public static explicit operator float(AnimationBlendDelta value) => value.Value;
 		public static implicit operator InputArgument(AnimationBlendDelta value)
 		{
