@@ -306,7 +306,11 @@ namespace GTA.NaturalMotion
 		/// </param>
 		public void Update(bool ifNMScriptControlRunning = true)
 		{
+			var boolWasStartArgumentSet = _message.RemoveArgument("start");
 			_message.SendToNoNewRagdollTask(_ped, ifNMScriptControlRunning);
+
+			if (boolWasStartArgumentSet)
+				_message.SetArgument("start", true);
 		}
 		/// <summary>
 		/// Stops this Natural Motion behavior on the <see cref="Ped"/>.
