@@ -283,6 +283,7 @@ static void ScriptMain()
 
 		while (!sGameReloaded)
 		{
+			// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
 			auto currentFiber = GetCurrentFiber();
 			if (currentFiber != sGameFiber) {
 				sGameFiber = currentFiber;
