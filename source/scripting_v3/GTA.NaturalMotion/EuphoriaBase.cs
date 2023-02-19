@@ -32,12 +32,6 @@ namespace GTA.NaturalMotion
 			_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
 			_stringVector3ArrayArguments = new Dictionary<string, object>();
 		}
-		private Message(string message, Dictionary<string, (int value, Type type)> boolIntFloatArgs, Dictionary<string, object> stringVector3ArrayArgs)
-		{
-			_message = message;
-			_boolIntFloatArguments = boolIntFloatArgs;
-			_stringVector3ArrayArguments = stringVector3ArrayArgs;
-		}
 
 		/// <summary>
 		/// Stops this NaturalMotion behavior on the given <see cref="Ped"/>.
