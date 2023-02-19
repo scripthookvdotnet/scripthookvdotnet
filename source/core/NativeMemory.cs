@@ -4290,28 +4290,11 @@ namespace SHVDN
 
 		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 
-		// This class is present just for encapsulating data
-		public class NmMessageParameterCollection
+		static private void SetNMParameters(ulong messageMemory, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
 		{
-			#region Fields
-			internal string message;
-			internal Dictionary<string, (int value, Type type)> boolIntFloatParameters;
-			internal Dictionary<string, object> stringVector3ArrayParameters;
-			#endregion
-
-			public NmMessageParameterCollection(string message, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
+			if (boolIntFloatParameters != null)
 			{
-				this.message = message;
-				this.boolIntFloatParameters = boolIntFloatParameters;
-				this.stringVector3ArrayParameters = stringVector3ArrayParameters;
-			}
-		}
-
-		static private void SetNMParameters(ulong messageMemory, NmMessageParameterCollection messageParameters)
-		{
-			if (messageParameters.boolIntFloatParameters != null)
-			{
-				foreach (var arg in messageParameters.boolIntFloatParameters)
+				foreach (var arg in boolIntFloatParameters)
 				{
 					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
@@ -4334,9 +4317,9 @@ namespace SHVDN
 				}
 			}
 
-			if ((messageParameters.stringVector3ArrayParameters != null))
+			if ((stringVector3ArrayParameters != null))
 			{
-				foreach (var arg in messageParameters.stringVector3ArrayParameters)
+				foreach (var arg in stringVector3ArrayParameters)
 				{
 					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
@@ -4356,14 +4339,18 @@ namespace SHVDN
 			#region Fields
 			int targetHandle;
 			bool ifNMScriptControlRunning;
-			NmMessageParameterCollection nmMessageParameterCollection;
+			string messageName;
+			Dictionary<string, (int value, Type type)> boolIntFloatParameters;
+			Dictionary<string, object> stringVector3ArrayParameters;
 			#endregion
 
-			internal NmMessageTask(int target, NmMessageParameterCollection messageParamCollection, bool ifNMScriptControlRunning)
+			internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters, bool ifNMScriptControlRunning)
 			{
 				targetHandle = target;
-				nmMessageParameterCollection = messageParamCollection;
 				this.ifNMScriptControlRunning = ifNMScriptControlRunning;
+				this.messageName = messageName;
+				this.boolIntFloatParameters = boolIntFloatParameters;
+				this.stringVector3ArrayParameters = stringVector3ArrayParameters;
 			}
 
 			public void Run()
@@ -4388,19 +4375,19 @@ namespace SHVDN
 					return;
 				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
 
-				SetNMParameters(messageMemory, nmMessageParameterCollection);
+				SetNMParameters(messageMemory, boolIntFloatParameters, stringVector3ArrayParameters);
 
 				ulong fragInstNMGtaAddress = *(ulong*)(_PedAddress + fragInstNMGtaOffset);
-				IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(nmMessageParameterCollection.message);
+				IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(messageName);
 				SendNmMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
 
 				FreeCoTaskMem(new IntPtr((long)messageMemory));
 			}
 		}
 
-		public static void SendNmMessage(int targetHandle, NmMessageParameterCollection messageParameterCollection, bool ifScriptControlRunning = true)
+		public static void SendNmMessage(int targetHandle, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters, bool ifScriptControlRunning = true)
 		{
-			var task = new NmMessageTask(targetHandle, messageParameterCollection, ifScriptControlRunning);
+			var task = new NmMessageTask(targetHandle, messageName, boolIntFloatParameters, stringVector3ArrayParameters, ifScriptControlRunning);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 
