@@ -7,8 +7,6 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
-using SHVDN;
-using static SHVDN.NativeMemory;
 
 namespace GTA.NaturalMotion
 {
