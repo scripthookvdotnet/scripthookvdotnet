@@ -58,6 +58,10 @@ namespace GTA.NaturalMotion
 		/// Starts a <c>CTaskNMControl</c> task if the <see cref="Ped"/> has no such task and the task that will loop until manually aborted.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
+		/// <remarks>
+		/// Although it's tecnically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task,
+		/// this method will start a <c>CTaskNMControl</c> task in such case.
+		/// </remarks>
 		public void SendTo(Ped target)
 		{
 			if (target == null || !target.Exists())
