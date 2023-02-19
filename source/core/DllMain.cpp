@@ -3,16 +3,9 @@
  * License: https://github.com/crosire/scripthookvdotnet#license
  */
 
-
-#pragma managed(push, off)
-
-#include <Main.h>
-#include <Windows.h>
-
-#pragma managed(pop)
-
 bool sGameReloaded = false;
- // Import C# code base
+
+// Import C# code base
 #using "ScriptHookVDotNet.netmodule"
 
 using namespace System;
@@ -31,7 +24,7 @@ namespace WinForms = System::Windows::Forms;
 // There is no version check performed for assemblies without strong names (https://docs.microsoft.com/en-us/dotnet/framework/deployment/how-the-runtime-locates-assemblies)
 [assembly:AssemblyKeyFileAttribute("PublicKeyToken.snk")];
 
-public ref class ScriptHookVDotNet
+public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it
 {
 public:
 	[SHVDN::ConsoleCommand("Print the default help")]
@@ -119,14 +112,18 @@ internal:
 	static WinForms::Keys reloadKey = WinForms::Keys::None;
 	static WinForms::Keys consoleKey = WinForms::Keys::F4;
 
-
 	static void SetConsole()
 	{
 		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
 	}
 };
 
-static void ScriptHookVDotnet_ManagedInit()
+static void ForceCLRInit()
+{
+	// Just a function that doesn't do anything, except for being compiled to MSIL
+}
+
+static void ScriptHookVDotNet_ManagedInit()
 {
 	SHVDN::Console^% console = ScriptHookVDotNet::console;
 	SHVDN::ScriptDomain^% domain = ScriptHookVDotNet::domain;
@@ -212,7 +209,7 @@ static void ScriptHookVDotnet_ManagedInit()
 	domain->Start();
 }
 
-static void ScriptHookVDotnet_ManagedTick()
+static void ScriptHookVDotNet_ManagedTick()
 {
 	SHVDN::Console ^console = ScriptHookVDotNet::console;
 	if (console != nullptr)
@@ -223,7 +220,7 @@ static void ScriptHookVDotnet_ManagedTick()
 		scriptdomain->DoTick();
 }
 
-static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
+static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
 {
 	// Filter out invalid key codes
 	if (keycode <= 0 || keycode >= 256)
@@ -267,44 +264,44 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	}
 }
 
+#pragma unmanaged
+
+#include <Main.h>
+#include <Windows.h>
+
 PVOID sGameFiber = nullptr;
 
-#pragma managed(push, off)
 static void ScriptMain()
 {
-	// ScriptHookV already turned the current thread into a fiber, so we can safely retrieve it.
+	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
 	sGameFiber = GetCurrentFiber();
 
 	while (true)
 	{
 		sGameReloaded = false;
 
-		ScriptHookVDotnet_ManagedInit();
+		ScriptHookVDotNet_ManagedInit();
 
 		while (!sGameReloaded)
 		{
 			// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
-			auto currentFiber = GetCurrentFiber();
-			if (currentFiber != sGameFiber) {
+			const PVOID currentFiber = GetCurrentFiber();
+			if (currentFiber != sGameFiber)
+			{
 				sGameFiber = currentFiber;
 				sGameReloaded = true;
 				break;
 			}
 
-			ScriptHookVDotnet_ManagedTick();
+			ScriptHookVDotNet_ManagedTick();
 			scriptWait(0);
 		}
 	}
 }
-#pragma managed(pop)
-
-static void ScriptCleanup()
-{
-}
 
 static void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
-	ScriptHookVDotnet_ManagedKeyboardMessage(
+	ScriptHookVDotNet_ManagedKeyboardMessage(
 		key,
 		!isUpNow,
 		(GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0,
@@ -319,13 +316,15 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	case DLL_PROCESS_ATTACH:
 		// Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
 		DisableThreadLibraryCalls(hModule);
+		// Call a managed function to force the CLR to initialize immediately
+		// This is technically not a good idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
+		ForceCLRInit();
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
 		keyboardHandlerRegister(ScriptKeyboardMessage);
 		break;
 	case DLL_PROCESS_DETACH:
-		ScriptCleanup();
 		// Unregister ScriptHookVDotNet native script
 		scriptUnregister(hModule);
 		// Unregister handler for keyboard messages
