@@ -214,9 +214,6 @@ namespace SHVDN
 			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
 
-			address = FindPattern("\x48\x63\x41\x08\x83\x61\x0C\x00\xC6\x41\x10\x00\x48\x8B\x09\x4C\x8D\x04\xC0\x33\xD2", "xxxxxxxxxxxxxxxxxxxxx");
-			ClearNmMessage = (delegate* unmanaged[Stdcall]<ulong, IntPtr>)(new IntPtr(address));
-
 			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
 			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(address));
 
@@ -4217,8 +4214,6 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmParameterFloat;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmParameterString;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmParameterVector;
-		// This function just returns the same address as the argument
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr> ClearNmMessage;
 
 		static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> InitMessageMemoryFunc;
 		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendNmMessageToPedFunc;
