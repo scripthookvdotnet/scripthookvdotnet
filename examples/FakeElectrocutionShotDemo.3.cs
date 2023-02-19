@@ -18,7 +18,7 @@ public class FakeElectrocutionShotDemo : Script
 	static private void StartShotBaseNmMessages(Ped ped)
 	{
 		var balancerCollisionsReactionNM = ped.Euphoria.BalancerCollisionsReaction;
-		balancerCollisionsReactionNM.StartNoNewRagdollTask();
+		balancerCollisionsReactionNM.Start();
 
 		var fallOverWallNM = ped.Euphoria.FallOverWall;
 		fallOverWallNM.MoveLegs = true;
@@ -29,14 +29,14 @@ public class FakeElectrocutionShotDemo : Script
 		fallOverWallNM.ForceTimeOut = 2f;
 		fallOverWallNM.MagOfForce = 0.5f;
 		fallOverWallNM.BodyTwist = 0.54f;
-		fallOverWallNM.StartNoNewRagdollTask();
+		fallOverWallNM.Start();
 
 		var shotNM = ped.Euphoria.Shot;
-		shotNM.StartNoNewRagdollTask();
+		shotNM.Start();
 
 		var ShotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		ShotConfigureArmsNM.PointGun = true;
-		ShotConfigureArmsNM.StartNoNewRagdollTask();
+		ShotConfigureArmsNM.Start();
 
 		// You can send NM message to a ped without setting "start" parameter to true so this message can update parameters of the running behavior
 		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
@@ -65,7 +65,7 @@ public class FakeElectrocutionShotDemo : Script
 		ConfigureBalanceNM.ExtraFeetApart = 0f;
 		ConfigureBalanceNM.StepDecisionThreshold = 0f;
 		ConfigureBalanceNM.DontStepTime = 0.2f;
-		ConfigureBalanceNM.StartNoNewRagdollTask();
+		ConfigureBalanceNM.Start();
 
 		var shotNM = ped.Euphoria.Shot;
 		shotNM.InitialNeckStiffness = 5.0f;
@@ -92,7 +92,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotNM.Fling = true;
 		shotNM.FlingWidth = 0.5f;
 		shotNM.FlingTime = 0.05f;
-		shotNM.StartNoNewRagdollTask();
+		shotNM.Start();
 
 		var shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.Snap = true;
@@ -115,7 +115,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotSnapNM.SnapHitPart = false;
 		shotSnapNM.UnSnapRatio = 0.3f;
 		shotSnapNM.SnapUseTorques = true;
-		shotSnapNM.StartNoNewRagdollTask();
+		shotSnapNM.Start();
 
 		var shotShockSpinNM = ped.Euphoria.ShotShockSpin;
 		shotShockSpinNM.AddShockSpin = false;
@@ -123,7 +123,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotShockSpinNM.ShockSpinMin = 100f;
 		shotShockSpinNM.ShockSpinMax = 100f;
 		shotShockSpinNM.BracedSideSpinMult = 2f;
-		shotShockSpinNM.StartNoNewRagdollTask();
+		shotShockSpinNM.Start();
 
 		var configureBulletsNM = ped.Euphoria.ConfigureBullets;
 		configureBulletsNM.LoosenessFix = true;
@@ -143,7 +143,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureBulletsNM.ImpulseAirOn = true;
 		configureBulletsNM.ImpulseAirMax = 150f;
 		configureBulletsNM.ImpulseAirMult = 1.0f;
-		configureBulletsNM.StartNoNewRagdollTask();
+		configureBulletsNM.Start();
 
 		var configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
 		configureShotInjuredLegNM.TimeBeforeCollapseWoundLeg = 0f;
@@ -152,7 +152,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureShotInjuredLegNM.LegInjury = 0f;
 		configureShotInjuredLegNM.LegInjuryHipPitch = -0.2f;
 		configureShotInjuredLegNM.LegInjuryHipPitch = -0.1f;
-		configureShotInjuredLegNM.StartNoNewRagdollTask();
+		configureShotInjuredLegNM.Start();
 
 		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Brace = false;
@@ -162,13 +162,13 @@ public class FakeElectrocutionShotDemo : Script
 		shotConfigureArmsNM.AWSpeedMult = 0f;
 		shotConfigureArmsNM.AWRadiusMult = 0f;
 		shotConfigureArmsNM.AWStiffnessAdd = 0f;
-		shotConfigureArmsNM.StartNoNewRagdollTask();
+		shotConfigureArmsNM.Start();
 
 		var bodyBalanceNM = ped.Euphoria.BodyBalance;
 		bodyBalanceNM.UseBodyTurn = true;
 		bodyBalanceNM.SpineStiffness = 12f;
 		bodyBalanceNM.Shoulder = 1f;
-		bodyBalanceNM.StartNoNewRagdollTask();
+		bodyBalanceNM.Start();
 
 		var shotInGutsNM = ped.Euphoria.ShotInGuts;
 		shotInGutsNM.ShotInGuts = true;
@@ -219,7 +219,7 @@ public class FakeElectrocutionShotDemo : Script
 
 		var setFallingReactionNM = ped.Euphoria.SetFallingReaction;
 		setFallingReactionNM.AntiPropClav = true;
-		setFallingReactionNM.StartNoNewRagdollTask();
+		setFallingReactionNM.Start();
 	}
 
 	// Shot_Base (priority: 0)
@@ -229,7 +229,7 @@ public class FakeElectrocutionShotDemo : Script
 		stayUprightNM.UseForces = true;
 		stayUprightNM.TurnTowardsBullets = false;
 		stayUprightNM.ForceStrength = 0f;
-		stayUprightNM.StartNoNewRagdollTask();
+		stayUprightNM.Start();
 
 		var shotNM = ped.Euphoria.Shot;
 		shotNM.BodyStiffness = 7f;
@@ -268,12 +268,12 @@ public class FakeElectrocutionShotDemo : Script
 		configureBalanceNM.StableRotSpeedThresh = 0.01f;
 		configureBalanceNM.UseComDirTurnVelThresh = 0.1f;
 		configureBalanceNM.BalanceAbortThreshold = 0.1f;
-		configureBalanceNM.StartNoNewRagdollTask();
+		configureBalanceNM.Start();
 
 		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Fling2 = true;
 		shotConfigureArmsNM.PointGun = true;
-		shotConfigureArmsNM.StartNoNewRagdollTask();
+		shotConfigureArmsNM.Start();
 
 		var shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.SnapHitPart = false;
@@ -298,24 +298,24 @@ public class FakeElectrocutionShotDemo : Script
 		elecNM.MovingThresh = 1f;
 		elecNM.LeftLeg = true;
 		elecNM.RightLeg = true;
-		elecNM.StartNoNewRagdollTask();
+		elecNM.Start();
 
 		var forceLeanRandomNM = ped.Euphoria.ForceLeanRandom;
 		forceLeanRandomNM.LeanAmountMin = 0.1f;
 		forceLeanRandomNM.LeanAmountMax = 0.1f;
 		forceLeanRandomNM.BodyPart = 10;
-		forceLeanRandomNM.StartNoNewRagdollTask();
+		forceLeanRandomNM.Start();
 
 		var ShotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
 		ShotFallToKneesNM.FallToKnees = true;
 		ShotFallToKneesNM.FtkAlwaysChangeFall = true;
 		ShotFallToKneesNM.FtkBalanceTime = 1f;
 		ShotFallToKneesNM.FtkHelperForce = 100f;
-		ShotFallToKneesNM.StartNoNewRagdollTask();
+		ShotFallToKneesNM.Start();
 
 		var staggerFallNM = ped.Euphoria.StaggerFall;
 		staggerFallNM.UpperBodyReaction = false;
-		staggerFallNM.StartNoNewRagdollTask();
+		staggerFallNM.Start();
 
 		var ShotSnapNM = ped.Euphoria.ShotSnap;
 		ShotSnapNM.ResetArguments();
@@ -329,12 +329,12 @@ public class FakeElectrocutionShotDemo : Script
 		pointGunNM.ResetArguments();
 		pointGunNM.EnableLeft = false;
 		pointGunNM.EnableRight = false;
-		pointGunNM.StartNoNewRagdollTask();
+		pointGunNM.Start();
 
 		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
 		ConfigureBalanceNM.ResetArguments();
 		ConfigureBalanceNM.FootFriction = 0.5f;
-		ConfigureBalanceNM.StartNoNewRagdollTask();
+		ConfigureBalanceNM.Start();
 	}
 
 	// Shot_LegShot (priority: 21)
@@ -354,7 +354,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureShotInjuredLegNM.LegInjuryLiftHipPitch = 1f;
 		configureShotInjuredLegNM.LegInjurySpineBend = 1f;
 		configureShotInjuredLegNM.LegInjuryLiftSpineBend = 1f;
-		configureShotInjuredLegNM.StartNoNewRagdollTask();
+		configureShotInjuredLegNM.Start();
 
 		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Brace = false;
@@ -440,7 +440,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureBalanceNM.Update();
 
 		var shotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
-		shotFallToKneesNM.StartNoNewRagdollTask();
+		shotFallToKneesNM.Start();
 
 		var shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.Snap = true;
