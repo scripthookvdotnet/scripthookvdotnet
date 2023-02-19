@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace GTA.NaturalMotion
 {
 	/// <summary>
-	/// A base class for manually building a <see cref="GTA.NaturalMotion.Message"/>.
+	/// A base class for manually building a NaturalMotion Euphoria message.
 	/// </summary>
 	public class Message
 	{
@@ -23,9 +23,9 @@ namespace GTA.NaturalMotion
 		#endregion
 
 		/// <summary>
-		/// Creates a class to manually build <see cref="Message"/>s that can be sent to any <see cref="Ped"/>.
+		/// Creates a class to manually build a NaturalMotion Euphoria message that can be sent to any <see cref="Ped"/>.
 		/// </summary>
-		/// <param name="message">The name of the natural motion message.</param>
+		/// <param name="message">The name of the message.</param>
 		public Message(string message)
 		{
 			_message = message;
@@ -34,9 +34,9 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Stops this NaturalMotion behavior on the given <see cref="Ped"/>.
+		/// Stops this behavior on the given <see cref="Ped"/>.
 		/// </summary>
-		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
+		/// <param name="target">The <see cref="Ped"/> to stop the behavior on.</param>
 		public void Abort(Ped target)
 		{
 			if (target == null || !target.Exists())
@@ -46,13 +46,12 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Send message for this NaturalMotion behavior to the <see cref="Ped"/>. Will not start the behavior unless the <c>"start"</c> argument is set.
-		/// Starts a <c>CTaskNMControl</c> task if the <see cref="Ped"/> has no such task and the task that will loop until manually aborted.
+		/// Sends the message for this behavior to the given <see cref="Ped"/>. Will not start it unless the <c>"start"</c> argument is set.
+		/// Starts a <c>CTaskNMControl</c> task if the <see cref="Ped"/> has no such task and loops it until manually aborted.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		/// <remarks>
-		/// Although it's tecnically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task,
-		/// this method will start a <c>CTaskNMControl</c> task in such case.
+		/// Although it is tecnically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task, this method will always start a <c>CTaskNMControl</c> task.
 		/// </remarks>
 		public void SendTo(Ped target)
 		{
@@ -77,8 +76,8 @@ namespace GTA.NaturalMotion
 			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
 		}
 		/// <summary>
-		///	Starts this NaturalMotion behavior on the <see cref="Ped"/> for a specified duration.
-		///	Always starts a new ragdoll task, making impossible to stack multiple Natural Motion behaviors on this <see cref="Ped"/>.
+		///	Starts this behavior on the given <see cref="Ped"/> for a specified duration.
+		///	Always starts a new ragdoll task, making it impossible to stack multiple behaviors on the <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
@@ -98,7 +97,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value.
+		/// Sets an argument to a <see cref="bool"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -110,7 +109,7 @@ namespace GTA.NaturalMotion
 			_boolIntFloatArguments[argName] = (valueConverted, typeof(bool));
 		}
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value.
+		/// Sets an argument to a <see cref="int"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -121,7 +120,7 @@ namespace GTA.NaturalMotion
 			_boolIntFloatArguments[argName] = (value, typeof(int));
 		}
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value.
+		/// Sets an argument to a <see cref="float"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -136,7 +135,7 @@ namespace GTA.NaturalMotion
 			}
 		}
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value.
+		/// Sets an argument to a <see cref="string"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -147,7 +146,7 @@ namespace GTA.NaturalMotion
 			_stringVector3ArrayArguments[argName] = value;
 		}
 		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value.
+		/// Sets an argument to a <see cref="Vector3"/> value.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		/// <param name="value">The value to set the argument to.</param>
@@ -157,13 +156,13 @@ namespace GTA.NaturalMotion
 
 			_stringVector3ArrayArguments[argName] = value.ToArray();
 		}
+
 		/// <summary>
-		/// Removes a <see cref="Message"/> argument.
+		/// Removes an argument.
 		/// </summary>
 		/// <param name="argName">The argument name.</param>
 		public bool RemoveArgument(string argName)
 		{
-
 			if (_boolIntFloatArguments != null)
 			{
 				var removedFromBoolIntFloatArgs = _boolIntFloatArguments.Remove(argName);
@@ -211,131 +210,6 @@ namespace GTA.NaturalMotion
 		public override string ToString()
 		{
 			return _message;
-		}
-	}
-
-	/// <summary>
-	/// A helper class for building a <seealso cref="GTA.NaturalMotion.Message" /> and sending it to a given <see cref="Ped"/>.
-	/// </summary>
-	public abstract class CustomHelper
-	{
-		#region Fields
-		private readonly Ped _ped;
-		private readonly Message _message;
-		#endregion
-
-		/// <summary>
-		/// Creates a helper class for building Natural Motion messages to send to a given <see cref="Ped"/>.
-		/// </summary>
-		/// <param name="target">The <see cref="Ped"/> that the message will be applied to.</param>
-		/// <param name="message">The name of the natural motion message.</param>
-		protected CustomHelper(Ped target, string message)
-		{
-			_ped = target;
-			_message = new Message(message);
-		}
-
-		/// <summary>
-		/// Starts this Natural Motion behavior on the <see cref="Ped"/> that will loop until manually aborted.
-		/// </summary>
-		public void Start()
-		{
-			_message.SetArgument("start", true);
-			_message.SendTo(_ped);
-			_message.RemoveArgument("start");
-		}
-		/// <summary>
-		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
-		/// </summary>
-		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
-		public void Start(int duration)
-		{
-			_message.SetArgument("start", true);
-			_message.SendTo(_ped, duration);
-			_message.RemoveArgument("start");
-		}
-		/// <summary>
-		/// Updates this NaturalMotion behavior on the <see cref="Ped"/> if the corresponding behavior is running.
-		/// </summary>
-		public void Update()
-		{
-			if (!_ped.IsRagdoll)
-				return;
-
-			var boolWasStartArgumentSet = _message.RemoveArgument("start");
-			_message.SendTo(_ped);
-
-			if (boolWasStartArgumentSet)
-				_message.SetArgument("start", true);
-		}
-		/// <summary>
-		/// Stops this Natural Motion behavior on the <see cref="Ped"/>.
-		/// </summary>
-		public void Stop()
-		{
-			_message.Abort(_ped);
-		}
-
-		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value.
-		/// </summary>
-		/// <param name="argName">The argument name.</param>
-		/// <param name="value">The value to set the argument to.</param>
-		public void SetArgument(string argName, bool value)
-		{
-			_message.SetArgument(argName, value);
-		}
-		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="int"/> value.
-		/// </summary>
-		/// <param name="argName">The argument name.</param>
-		/// <param name="value">The value to set the argument to.</param>
-		public void SetArgument(string argName, int value)
-		{
-			_message.SetArgument(argName, value);
-		}
-		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="float"/> value.
-		/// </summary>
-		/// <param name="argName">The argument name.</param>
-		/// <param name="value">The value to set the argument to.</param>
-		public void SetArgument(string argName, float value)
-		{
-			_message.SetArgument(argName, value);
-		}
-		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="string"/> value.
-		/// </summary>
-		/// <param name="argName">The argument name.</param>
-		/// <param name="value">The value to set the argument to.</param>
-		public void SetArgument(string argName, string value)
-		{
-			_message.SetArgument(argName, value);
-		}
-		/// <summary>
-		/// Sets a <see cref="Message"/> argument to a <see cref="Vector3"/> value.
-		/// </summary>
-		/// <param name="argName">The argument name.</param>
-		/// <param name="value">The value to set the argument to.</param>
-		public void SetArgument(string argName, Vector3 value)
-		{
-			_message.SetArgument(argName, value);
-		}
-
-		/// <summary>
-		/// Resets all arguments to their default values.
-		/// </summary>
-		public void ResetArguments()
-		{
-			_message.ResetArguments();
-		}
-
-		/// <summary>
-		/// Returns the internal message name.
-		/// </summary>
-		public override string ToString()
-		{
-			return _message.ToString();
 		}
 	}
 }

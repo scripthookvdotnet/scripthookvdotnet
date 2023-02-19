@@ -63,8 +63,9 @@
     <Compile Include="GTA.Native\VehicleHash.cs" />
     <Compile Include="GTA.Native\WeaponComponent.cs" />
     <Compile Include="GTA.Native\WeaponHash.cs" />
+    <Compile Include="GTA.NaturalMotion\CustomHelper.cs" />
     <Compile Include="GTA.NaturalMotion\Euphoria.cs" />
-    <Compile Include="GTA.NaturalMotion\EuphoriaBase.cs" />
+    <Compile Include="GTA.NaturalMotion\Message.cs" />
     <Compile Include="GTA.NaturalMotion\EuphoriaHelpers.cs" />
     <Compile Include="GTA\Audio.cs" />
     <Compile Include="GTA\AudioFlag.cs" />
