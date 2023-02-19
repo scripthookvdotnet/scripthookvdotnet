@@ -165,14 +165,12 @@ namespace GTA.NaturalMotion
 		{
 			if (_boolIntFloatArguments != null)
 			{
-				var removedFromBoolIntFloatArgs = _boolIntFloatArguments.Remove(argName);
-				if (removedFromBoolIntFloatArgs)
+				if (_boolIntFloatArguments.Remove(argName))
 					return true;
 			}
-			else if (_stringVector3ArrayArguments != null)
+			if (_stringVector3ArrayArguments != null)
 			{
-				var removedFromStringVector3ArrayArgs = _stringVector3ArrayArguments.Remove(argName);
-				if (removedFromStringVector3ArrayArgs)
+				if (_stringVector3ArrayArguments.Remove(argName))
 					return true;
 			}
 
