@@ -34,20 +34,31 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Stops this Natural Motion behavior on the given <see cref="Ped"/>.
+		/// Stops this NaturalMotion behavior on the given <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
 		{
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _stopArgument, null);
+			if (target == null || !target.Exists())
+				return;
+
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _stopArgument, null);
 		}
 
 		/// <summary>
-		/// Starts this Natural Motion behavior on the <see cref="Ped"/> that will loop until manually aborted.
+		/// Send message for this NaturalMotion behavior to the <see cref="Ped"/>. Will not start the behavior unless the <c>"start"</c> argument is set.
+		/// Starts a <c>CTaskNMControl</c> task if the <see cref="Ped"/> has no such task and the task that will loop until manually aborted.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
+		/// <remarks>
+		/// Although it's tecnically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task,
+		/// this method will start a <c>CTaskNMControl</c> task in such case.
+		/// </remarks>
 		public void SendTo(Ped target)
 		{
+			if (target == null || !target.Exists())
+				return;
+
 			if (!target.IsRagdoll)
 			{
 				if (!target.CanRagdoll)
@@ -63,16 +74,19 @@ namespace GTA.NaturalMotion
 				Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, -1, 1, 1, 1, 0);
 			}
 
-			SetArgument("start", true);
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
 		}
 		/// <summary>
-		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
+		///	Starts this NaturalMotion behavior on the <see cref="Ped"/> for a specified duration.
+		///	Always starts a new ragdoll task, making impossible to stack multiple Natural Motion behaviors on this <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void SendTo(Ped target, int duration)
 		{
+			if (target == null || !target.Exists())
+				return;
+
 			if (!target.CanRagdoll)
 			{
 				target.CanRagdoll = true;
@@ -143,6 +157,28 @@ namespace GTA.NaturalMotion
 
 			_stringVector3ArrayArguments[argName] = value.ToArray();
 		}
+		/// <summary>
+		/// Removes a <see cref="Message"/> argument.
+		/// </summary>
+		/// <param name="argName">The argument name.</param>
+		public bool RemoveArgument(string argName)
+		{
+
+			if (_boolIntFloatArguments != null)
+			{
+				var removedFromBoolIntFloatArgs = _boolIntFloatArguments.Remove(argName);
+				if (removedFromBoolIntFloatArgs)
+					return true;
+			}
+			else if (_stringVector3ArrayArguments != null)
+			{
+				var removedFromStringVector3ArrayArgs = _stringVector3ArrayArguments.Remove(argName);
+				if (removedFromStringVector3ArrayArgs)
+					return true;
+			}
+
+			return false;
+		}
 
 		/// <summary>
 		/// Resets all arguments to their default values.
@@ -204,8 +240,9 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		public void Start()
 		{
+			_message.SetArgument("start", true);
 			_message.SendTo(_ped);
-			_message.ResetArguments();
+			_message.RemoveArgument("start");
 		}
 		/// <summary>
 		/// Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.
@@ -213,8 +250,23 @@ namespace GTA.NaturalMotion
 		/// <param name="duration">How long to apply the behavior for (-1 for looped).</param>
 		public void Start(int duration)
 		{
+			_message.SetArgument("start", true);
 			_message.SendTo(_ped, duration);
-			_message.ResetArguments();
+			_message.RemoveArgument("start");
+		}
+		/// <summary>
+		/// Updates this NaturalMotion behavior on the <see cref="Ped"/> if the corresponding behavior is running.
+		/// </summary>
+		public void Update()
+		{
+			if (!_ped.IsRagdoll)
+				return;
+
+			var boolWasStartArgumentSet = _message.RemoveArgument("start");
+			_message.SendTo(_ped);
+
+			if (boolWasStartArgumentSet)
+				_message.SetArgument("start", true);
 		}
 		/// <summary>
 		/// Stops this Natural Motion behavior on the <see cref="Ped"/>.

@@ -37,7 +37,7 @@ namespace GTA.NaturalMotion
 		/// <param name="target">The <see cref="Ped"/> to send the Abort <see cref="Message"/> to.</param>
 		public void Abort(Ped target)
 		{
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _stopArgument, null);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _stopArgument, null);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace GTA.NaturalMotion
 			}
 
 			SetArgument("start", true);
-			SHVDN.NativeMemory.SendEuphoriaMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments);
 		}
 		/// <summary>
 		///	Starts this Natural Motion behavior on the <see cref="Ped"/> for a specified duration.

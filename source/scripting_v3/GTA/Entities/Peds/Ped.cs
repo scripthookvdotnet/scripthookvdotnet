@@ -430,14 +430,26 @@ namespace GTA
 
 		#region Euphoria & Ragdoll
 
-		/// <summary>
-		/// Enables this <see cref="Ped"/>'s ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
-		/// If <paramref name="ragdollType"/> is not set to <see cref="RagdollType.Relax"/> or <see cref="RagdollType.ScriptControl"/>, the ragdoll behavior for <see cref="RagdollType.Balance"/> will be used.
-		/// </summary>
+		/// <inheritdoc cref="Ragdoll(int, RagdollType, bool)"/>
 		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
 		{
+			Ragdoll(duration, ragdollType, false);
+		}
+		/// <summary>
+		/// Switches this <see cref="Ped"/> to a ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
+		/// If <paramref name="ragdollType"/> is not set to <see cref="RagdollType.Relax"/> or <see cref="RagdollType.ScriptControl"/>, the ragdoll behavior for <see cref="RagdollType.Balance"/> will be used.
+		/// </summary>
+		/// <param name="duration">The duration how long the ragdoll task will run in milliseconds.</param>
+		/// <param name="ragdollType">The ragdoll type.</param>
+		/// <param name="forceScriptControl">
+		/// Specifies whether this <see cref="Ped"/> will not get injured or killed by being lower health than <see cref="InjuryHealthThreshold"/> or <see cref="FatalInjuryHealthThreshold"/>.
+		/// If ped's health goes lower than <see cref="InjuryHealthThreshold"/>, the ragdoll task will keep their health to <see cref="InjuryHealthThreshold"/> plus 5.0 until the task ends.
+		/// </param>
+		public void Ragdoll(int duration, RagdollType ragdollType, bool forceScriptControl = false)
+		{
 			CanRagdoll = true;
-			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, ragdollType, false, false, false);
+			// Looks like 4th and 5th parameter are completely unused
+			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, ragdollType, false, false, forceScriptControl);
 		}
 
 		public void CancelRagdoll()
@@ -445,7 +457,18 @@ namespace GTA
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, 1, 1, 1, false, false, false);
 		}
 
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is ragdolling.
+		/// Will return <see langword="false"/> when the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// </summary>
 		public bool IsRagdoll => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is running a ragdoll task which manages its ragdoll.
+		/// Will return <see langword="true"/> when <see cref="IsRagdoll"/> returns <see langword="true"/> or the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// </summary>
+		public bool IsRunningRagdollTask => Function.Call<bool>(Hash.IS_PED_RUNNING_RAGDOLL_TASK, Handle);
 
 		public bool CanRagdoll
 		{

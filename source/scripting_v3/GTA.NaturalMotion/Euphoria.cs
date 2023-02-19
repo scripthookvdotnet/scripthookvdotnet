@@ -20,7 +20,6 @@ namespace GTA.NaturalMotion
 			_ped = ped;
 			_helperCache = new Dictionary<string, CustomHelper>();
 		}
-
 		T GetHelper<T>(string message) where T : CustomHelper
 		{
 			CustomHelper h;
