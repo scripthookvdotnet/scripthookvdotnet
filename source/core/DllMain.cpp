@@ -3,11 +3,16 @@
  * License: https://github.com/crosire/scripthookvdotnet#license
  */
 
+
+#pragma managed(push, off)
+
+#include <Main.h>
+#include <Windows.h>
+
+#pragma managed(pop)
+
 bool sGameReloaded = false;
-
-#pragma managed
-
-// Import C# code base
+ // Import C# code base
 #using "ScriptHookVDotNet.netmodule"
 
 using namespace System;
@@ -160,7 +165,7 @@ static void ScriptHookVDotnet_ManagedInit()
 			if (data->Length != 2)
 				continue;
 
-			     if (data[0] == "ReloadKey")
+			if (data[0] == "ReloadKey")
 				Enum::TryParse(data[1], true, ScriptHookVDotNet::reloadKey);
 			else if (data[0] == "ConsoleKey")
 				Enum::TryParse(data[1], true, ScriptHookVDotNet::consoleKey);
@@ -262,63 +267,38 @@ static void ScriptHookVDotnet_ManagedKeyboardMessage(unsigned long keycode, bool
 	}
 }
 
-#pragma unmanaged
-
-#include <Main.h>
-#include <Windows.h>
-
 PVOID sGameFiber = nullptr;
-PVOID sScriptFiber = nullptr;
 
+#pragma managed(push, off)
 static void ScriptMain()
 {
-	sGameReloaded = true;
-
 	// ScriptHookV already turned the current thread into a fiber, so we can safely retrieve it.
 	sGameFiber = GetCurrentFiber();
 
-	// Check if our CLR fiber already exists. It should be created only once for the entire lifetime of the game process.
-	if (sScriptFiber == nullptr)
-	{
-		const LPFIBER_START_ROUTINE FiberMain = [](LPVOID lpFiberParameter) {
-			// Main script execution loop
-			while (true)
-			{
-				sGameReloaded = false;
-
-				ScriptHookVDotnet_ManagedInit();
-
-				// If the game is reloaded, ScriptHookV will call the script main function again.
-				// This will set the global 'sGameReloaded' variable to 'true' and on the next fiber switch to our CLR fiber, run into this condition, therefore exiting the inner loop and re-initialize.
-				while (!sGameReloaded)
-				{
-					ScriptHookVDotnet_ManagedTick();
-
-					// Switch back to main script fiber used by ScriptHookV.
-					// Code continues from here the next time the loop below switches back to our CLR fiber.
-					SwitchToFiber(sGameFiber);
-				}
-			}
-		};
-
-		// Create our own fiber for the common language runtime, aka CLR, once.
-		// This is done because ScriptHookV switches its internal fibers sometimes, which would corrupt the CLR stack.
-		sScriptFiber = CreateFiber(0, FiberMain, nullptr);
-	}
-
 	while (true)
 	{
-		// Yield execution and give it back to ScriptHookV.
-		scriptWait(0);
+		sGameReloaded = false;
 
-		// Switch to our CLR fiber and wait for it to switch back.
-		SwitchToFiber(sScriptFiber);
+		ScriptHookVDotnet_ManagedInit();
+
+		while (!sGameReloaded)
+		{
+			auto currentFiber = GetCurrentFiber();
+			if (currentFiber != sGameFiber) {
+				sGameFiber = currentFiber;
+				sGameReloaded = true;
+				break;
+			}
+
+			ScriptHookVDotnet_ManagedTick();
+			scriptWait(0);
+		}
 	}
 }
+#pragma managed(pop)
 
 static void ScriptCleanup()
 {
-	DeleteFiber(sScriptFiber);
 }
 
 static void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
