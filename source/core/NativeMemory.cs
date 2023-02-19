@@ -4332,22 +4332,18 @@ namespace SHVDN
 			}
 		}
 
-		static internal bool IsPedRagdoll(int pedHandle) => *(bool*)NativeFunc.InvokeInternal(0x47E4E977581C5B55 /*IS_PED_RAGDOLL*/, pedHandle);
-
 		internal class NmMessageTask : IScriptTask
 		{
 			#region Fields
 			int targetHandle;
-			bool ifNMScriptControlRunning;
 			string messageName;
 			Dictionary<string, (int value, Type type)> boolIntFloatParameters;
 			Dictionary<string, object> stringVector3ArrayParameters;
 			#endregion
 
-			internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters, bool ifNMScriptControlRunning)
+			internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
 			{
 				targetHandle = target;
-				this.ifNMScriptControlRunning = ifNMScriptControlRunning;
 				this.messageName = messageName;
 				this.boolIntFloatParameters = boolIntFloatParameters;
 				this.stringVector3ArrayParameters = stringVector3ArrayParameters;
@@ -4360,15 +4356,8 @@ namespace SHVDN
 				if (_PedAddress == null)
 					return;
 
-				if (ifNMScriptControlRunning)
-				{
-					if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
-						return;
-				}
-				else if (!IsPedRagdoll(targetHandle))
-				{
+				if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(_PedAddress)))
 					return;
-				}
 
 				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
 				if (messageMemory == 0)
@@ -4385,9 +4374,9 @@ namespace SHVDN
 			}
 		}
 
-		public static void SendNmMessage(int targetHandle, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters, bool ifScriptControlRunning = true)
+		public static void SendNmMessage(int targetHandle, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
 		{
-			var task = new NmMessageTask(targetHandle, messageName, boolIntFloatParameters, stringVector3ArrayParameters, ifScriptControlRunning);
+			var task = new NmMessageTask(targetHandle, messageName, boolIntFloatParameters, stringVector3ArrayParameters);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 

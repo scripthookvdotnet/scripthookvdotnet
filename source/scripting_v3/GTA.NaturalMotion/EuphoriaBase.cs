@@ -100,26 +100,6 @@ namespace GTA.NaturalMotion
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, target.Handle, 10000, duration, 1, 1, 1, 0);
 			SendTo(target);
 		}
-		/// <summary>
-		/// Sends message this NaturalMotion behavior on the <see cref="Ped"/>, but don't start a new ragdoll task so the <see cref="Ped"/> can have multiple NM behaviors.
-		/// You'll need to start a ragdoll task with <see cref="Ped.Ragdoll(int, RagdollType)"/> before the <see cref="Ped"/> can recieve this <see cref="Message"/>.
-		/// </summary>
-		/// <remarks>
-		/// Although <see cref="SendTo(Ped)"/> wouldn't create a new ragdoll task if the <see cref="Ped"/> runs a script ragdoll tasks in most cases,
-		/// this method guarantees it sends the message if the <see cref="Ped"/> can receive NM messages but doesn't create a new ragdoll task.
-		/// </remarks>
-		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
-		/// <param name="ifNMScriptControlRunning">
-		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
-		/// <para>
-		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
-		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
-		/// </para>
-		/// </param>
-		public void SendToNoNewRagdollTask(Ped target, bool ifNMScriptControlRunning = true)
-		{
-			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _boolIntFloatArguments, _stringVector3ArrayArguments, ifNMScriptControlRunning);
-		}
 
 		/// <summary>
 		/// Sets a <see cref="Message"/> argument to a <see cref="bool"/> value.
@@ -279,35 +259,15 @@ namespace GTA.NaturalMotion
 			_message.RemoveArgument("start");
 		}
 		/// <summary>
-		/// Starts this NaturalMotion behavior on the <see cref="Ped"/> from the beginning without starting a scripted NM ragdoll task.
-		/// </summary>
-		/// <param name="ifNMScriptControlRunning">
-		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
-		/// <para>
-		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
-		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
-		/// </para>
-		/// </param>
-		public void StartNoNewRagdollTask(bool ifNMScriptControlRunning = true)
-		{
-			_message.SetArgument("start", true);
-			_message.SendToNoNewRagdollTask(_ped, ifNMScriptControlRunning);
-			_message.RemoveArgument("start");
-		}
-		/// <summary>
 		/// Updates this NaturalMotion behavior on the <see cref="Ped"/> if the corresponding behavior is running.
 		/// </summary>
-		/// <param name="ifNMScriptControlRunning">
-		/// <para>Specifies whether the messages should be sent to the only if they <see cref="Ped"/> has a <c>CTaskNMScriptControl</c> running, which can be started with <see cref="Ped.Ragdoll(int, RagdollType)"/>.</para>
-		/// <para>
-		/// If you set this parameter to <see langword="false"/> and you need to set the <see cref="Ped"/> from a ragdoll state to an animated state after a certain timeout (in game time),
-		/// you should call <see cref="Ped.CancelRagdoll()"/> on them after a certain timeout if they are alive and <see cref="Ped.IsRagdoll"/> returns <see langword="true"/>.
-		/// </para>
-		/// </param>
-		public void Update(bool ifNMScriptControlRunning = true)
+		public void Update()
 		{
+			if (!_ped.IsRagdoll)
+				return;
+
 			var boolWasStartArgumentSet = _message.RemoveArgument("start");
-			_message.SendToNoNewRagdollTask(_ped, ifNMScriptControlRunning);
+			_message.SendTo(_ped);
 
 			if (boolWasStartArgumentSet)
 				_message.SetArgument("start", true);
