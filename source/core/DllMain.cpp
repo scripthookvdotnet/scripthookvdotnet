@@ -3,7 +3,11 @@
  * License: https://github.com/crosire/scripthookvdotnet#license
  */
 
-bool sGameReloaded = false;
+#pragma unmanaged
+
+bool sRequestedToReloadDomain = false;
+
+#pragma managed
 
 // Import C# code base
 #using "ScriptHookVDotNet.netmodule"
@@ -55,7 +59,7 @@ public:
 		console->PrintInfo("~y~Reloading ...");
 
 		// Force a reload on next tick
-		sGameReloaded = true;
+		sRequestedToReloadDomain = true;
 	}
 
 	[SHVDN::ConsoleCommand("Load scripts from a file")]
@@ -269,30 +273,18 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 #include <Main.h>
 #include <Windows.h>
 
-PVOID sGameFiber = nullptr;
-
 static void ScriptMain()
 {
-	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
-	sGameFiber = GetCurrentFiber();
-
+	// The code will stop executing at scriptWait when ScriptHookV disposes this fiber
+	// When ScriptHookV recreates a fiber for SHVDN, ScriptMain will start from the beginning
+	// ScriptHookV recreates a fiber only right after a "Started thread" message is written to the log
 	while (true)
 	{
-		sGameReloaded = false;
-
 		ScriptHookVDotNet_ManagedInit();
+		sRequestedToReloadDomain = false;
 
-		while (!sGameReloaded)
+		while (!sRequestedToReloadDomain)
 		{
-			// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
-			const PVOID currentFiber = GetCurrentFiber();
-			if (currentFiber != sGameFiber)
-			{
-				sGameFiber = currentFiber;
-				sGameReloaded = true;
-				break;
-			}
-
 			ScriptHookVDotNet_ManagedTick();
 			scriptWait(0);
 		}
@@ -316,9 +308,6 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	case DLL_PROCESS_ATTACH:
 		// Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
 		DisableThreadLibraryCalls(hModule);
-		// Call a managed function to force the CLR to initialize immediately
-		// This is technically not a good idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
-		ForceCLRInit();
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
