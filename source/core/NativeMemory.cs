@@ -757,6 +757,13 @@ namespace SHVDN
 				FiringPatternOffset = *(int*)(address + 19);
 			}
 
+			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			if (address != null)
+			{
+				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
+			}
+
 			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
 			if (address != null)
 			{
@@ -768,6 +775,28 @@ namespace SHVDN
 				VisualFieldMaxElevationAngleOffset = SeeingRangeOffset + 0x14;
 				VisualFieldPeripheralRangeOffset = SeeingRangeOffset + 0x18;
 				VisualFieldCenterAngleOffset = SeeingRangeOffset + 0x1C;
+			}
+
+			// Search for the hashed values and indicies of EVENT_ACQUAINTANCE_PED_DISLIKE and EVENT_ACQUAINTANCE_PED_HATE
+			address = FindPattern("\x7A\x3D\xEC\xD1\x00\x00\x00\x00\xDF\xD4\x92\xEB\x01\x00\x00\x00", "xxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				// This address is where the hashed value and the index -1 for EVENT_INVALID are at
+				var endAddressOfEventNameHash = FindPattern("\x89\x5A\x5F\x36\xFF\xFF\xFF\xFF", "xxxxxxxx", new IntPtr(address));
+				if (endAddressOfEventNameHash == null)
+				{
+					// Fallback offset, but offset is the same from b1868 to b2824 and this offset won't need to be updated since network and error events won't be needed in singleplayer modding
+					endAddressOfEventNameHash = address + 0x7F8;
+				}
+
+				for (var eventNameHashAndIndexAddress = address; eventNameHashAndIndexAddress < endAddressOfEventNameHash; eventNameHashAndIndexAddress += 8)
+				{
+					// These values won't conflict with other values unless this array is messed up for some reason
+					int eventNameHash = *(int*)(eventNameHashAndIndexAddress);
+					int eventIndex = *(int*)(eventNameHashAndIndexAddress + 4);
+
+					eventHashDictionary[eventNameHash] = eventIndex;
+				}
 			}
 
 			address = FindPattern("\x48\x8B\x87\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00", "xxx????xxxxxxxxx");
@@ -1282,6 +1311,48 @@ namespace SHVDN
 			foreach (byte c in Encoding.UTF8.GetBytes(str))
 			{
 				hash += LookupTableForGetHashKey[c];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
+		}
+		public static uint GetHashKeyASCII(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			uint hash = 0;
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
+			{
+				hash += LookupTableForGetHashKey[c];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
+		}
+		public static uint GenerateHashASCIINoPreConversion(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			uint hash = 0;
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
+			{
+				hash += c;
 				hash += (hash << 10);
 				hash ^= (hash >> 6);
 			}
@@ -2009,6 +2080,8 @@ namespace SHVDN
 
 		public static int FiringPatternOffset { get; }
 
+		public static int PedIntelligenceDecisionMakerHashOffset { get; }
+
 		public static int SeeingRangeOffset { get; }
 		public static int HearingRangeOffset { get; }
 		public static int VisualFieldMinAngleOffset { get; }
@@ -2025,6 +2098,27 @@ namespace SHVDN
 		static int CEventStackOffset { get; }
 
 		#endregion
+
+		#endregion
+
+		#region -- CEvent Data --
+
+		// The number of event type is 255 since b1868
+		static Dictionary<int, int> eventHashDictionary = new Dictionary<int, int>(255);
+
+		public static bool GetEventIndexByNameHash(int eventNameHash, out int eventTypeIndex)
+		{
+			const int EVENT_INVALID_HASH = 0x365F5A89;
+			if (eventNameHash == EVENT_INVALID_HASH)
+			{
+				eventTypeIndex = -1;
+				return true;
+			}
+
+			bool didIndexFound = eventHashDictionary.TryGetValue(eventNameHash, out var returnIndex);
+			eventTypeIndex = returnIndex;
+			return didIndexFound;
+		}
 
 		#endregion
 
