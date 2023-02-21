@@ -1342,7 +1342,8 @@ namespace SHVDN
 
 			return hash;
 		}
-		public static uint GenerateHashASCIINoPreConversion(string str)
+		// You can find the equivalent function of the method below with "EB 15 0F BE C0 48 FF C1"
+		public static uint GetHashKeyASCIINoPreConversion(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 			{

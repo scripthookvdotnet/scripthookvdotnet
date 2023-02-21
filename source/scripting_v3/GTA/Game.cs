@@ -581,7 +581,7 @@ namespace GTA
 				return 0;
 			}
 
-			return unchecked((int)SHVDN.NativeMemory.GenerateHashASCIINoPreConversion(input));
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCIINoPreConversion(input));
 		}
 
 		/// <summary>
