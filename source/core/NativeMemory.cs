@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
 using static System.Runtime.InteropServices.Marshal;
+using System.Security;
 
 namespace SHVDN
 {
@@ -22,6 +23,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="filename"></param>
 		/// <returns>Internal texture ID.</returns>
+		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?createTexture@@YAHPEBD@Z")]
 		public static extern int CreateTexture([MarshalAs(UnmanagedType.LPStr)] string filename);
 
@@ -44,6 +46,7 @@ namespace SHVDN
 		/// <param name="colorG">Green tint.</param>
 		/// <param name="colorB">Blue tint.</param>
 		/// <param name="colorA">Alpha value.</param>
+		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?drawTexture@@YAXHHHHMMMMMMMMMMMM@Z")]
 		public static extern void DrawTexture(int id, int instance, int level, int time, float sizeX, float sizeY, float centerX, float centerY, float posX, float posY, float rotation, float scaleFactor, float colorR, float colorG, float colorB, float colorA);
 
@@ -58,6 +61,7 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="index">The variable ID to query.</param>
 		/// <returns>Pointer to the variable, or <see cref="IntPtr.Zero"/> if it does not exist.</returns>
+		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?getGlobalPtr@@YAPEA_KH@Z")]
 		public static extern IntPtr GetGlobalPtr(int index);
 		#endregion
@@ -118,6 +122,25 @@ namespace SHVDN
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Disposes unmanaged resources.
+		/// </summary>
+		internal static void DisposeUnmanagedResources()
+		{
+			if (String != IntPtr.Zero)
+			{
+				Marshal.FreeCoTaskMem(String);
+			}
+			if (NullString != IntPtr.Zero)
+			{
+				Marshal.FreeCoTaskMem(NullString);
+			}
+			if (CellEmailBcon != IntPtr.Zero)
+			{
+				Marshal.FreeCoTaskMem(CellEmailBcon);
+			}
 		}
 
 		/// <summary>

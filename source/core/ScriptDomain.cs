@@ -24,6 +24,58 @@ namespace SHVDN
 
 	public class ScriptDomain : MarshalByRefObject, IDisposable
 	{
+		#region Static Methods For thread Local Storage
+
+		const uint PAGE_EXECUTE_READWRITE = 0x40;
+		[DllImport("Kernel32.dll")]
+		public unsafe static extern IntPtr VirtualProtect(IntPtr address, ulong size, uint newProtect, uint* outOldProtect);
+
+		/// <summary>
+		/// Allocates memory for a function that basically does the same as <c>return __readgsqword(0x58)</c>.
+		/// The allocated memory contains <c>mov rax, qword ptr gs:[0x58]</c> and <c>ret</c> instructions.
+		/// </summary>
+		internal static (IntPtr asmPtr, uint oldProtectValue) AllocateMemoryForReadGsQWord58AsmFunc()
+		{
+			var readgsqword58AsmBytes = new byte[] { 0x65, 0x48, 0x8B, 0x04, 0x25, 0x58, 0x00, 0x00, 0x00, 0xc3 }; // "mov rax, qword ptr gs:[0x58]" and "ret"
+			var readgsqword58AsmPtr = Marshal.AllocCoTaskMem(readgsqword58AsmBytes.Length);
+			uint oldProtect = 0;
+
+			if (readgsqword58AsmPtr != IntPtr.Zero)
+			{
+				unsafe
+				{
+					Marshal.Copy(readgsqword58AsmBytes, 0, readgsqword58AsmPtr, readgsqword58AsmBytes.Length);
+					VirtualProtect(readgsqword58AsmPtr, (uint)readgsqword58AsmBytes.Length, PAGE_EXECUTE_READWRITE, &oldProtect);
+				}
+			}
+
+			return (readgsqword58AsmPtr, oldProtect);
+		}
+
+		/// <summary>
+		/// Allocates memory for a function that basically does the same as <c>__writegsqword(0x58, [value]); return</c>.
+		/// The allocated memory contains <c>mov qword ptr gs:[0x58], rcx</c> and <c>ret</c> instructions.
+		/// </summary>
+		internal static (IntPtr asmPtr, uint oldProtectValue) AllocateMemoryForWriteGsQWord58AsmFunc()
+		{
+			var writeGSQword58AsmBytes = new byte[] { 0x65, 0x48, 0x89, 0x0C, 0x25, 0x58, 0x00, 0x00, 0x00, 0xc3 }; // "mov qword ptr gs:[0x58], rcx" and "ret"
+			var writeGSQword58AsmPtr = Marshal.AllocCoTaskMem(writeGSQword58AsmBytes.Length);
+			uint oldProtect = 0;
+
+			if (writeGSQword58AsmPtr != IntPtr.Zero)
+			{
+				unsafe
+				{
+					Marshal.Copy(writeGSQword58AsmBytes, 0, writeGSQword58AsmPtr, writeGSQword58AsmBytes.Length);
+					VirtualProtect(writeGSQword58AsmPtr, (uint)writeGSQword58AsmBytes.Length, PAGE_EXECUTE_READWRITE, &oldProtect);
+				}
+			}
+
+			return (writeGSQword58AsmPtr, oldProtect);
+		}
+
+		#endregion
+
 		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
@@ -34,6 +86,50 @@ namespace SHVDN
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
+
+		#region Fields for Thread Local Storage
+		IntPtr tlsAddressForExecutingThread = IntPtr.Zero;
+
+		private readonly IntPtr readGsQWord58AsmPtr;
+		unsafe delegate* unmanaged[Stdcall]<IntPtr> readGsQWord58Func;
+		readonly uint oldProtectForReadGsQWord58AsmPtr;
+
+		private readonly IntPtr writeGsQWord58AsmPtr;
+		unsafe delegate* unmanaged[Stdcall]<IntPtr, void> writeGsQWord58Func;
+		readonly uint oldProtectForWriteGsQWord58AsmPtr;
+		#endregion
+
+		/// <summary>
+		/// Gets the TLS context address in the current thread.
+		/// </summary>
+		private IntPtr GetCurrentTls()
+		{
+			if (readGsQWord58AsmPtr == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			unsafe
+			{
+				return readGsQWord58Func();
+			}
+		}
+		/// <summary>
+		/// Sets the TLS context address in the current thread.
+		/// </summary>
+		private void SetCurrentTls(IntPtr value)
+		{
+			if (writeGsQWord58AsmPtr == IntPtr.Zero)
+			{
+				return;
+			}
+
+			unsafe
+			{
+				writeGsQWord58Func(value);
+			}
+		}
+		private bool CanSwapTlsContext() => readGsQWord58AsmPtr != IntPtr.Zero && writeGsQWord58AsmPtr != IntPtr.Zero;
 
 		/// <summary>
 		/// Gets the friendly name of this script domain.
@@ -89,6 +185,26 @@ namespace SHVDN
 					Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(apiPath), ": ", ex.ToString());
 				}
 			}
+
+			unsafe
+			{
+				(IntPtr readGsQWord58AsmPtr, uint oldProtectValForReadGsQWord58AsmPtr) = AllocateMemoryForReadGsQWord58AsmFunc();
+				if (readGsQWord58AsmPtr != IntPtr.Zero)
+				{
+					this.readGsQWord58AsmPtr = readGsQWord58AsmPtr;
+					readGsQWord58Func = (delegate* unmanaged[Stdcall]<IntPtr>)(readGsQWord58AsmPtr);
+					oldProtectForReadGsQWord58AsmPtr = oldProtectValForReadGsQWord58AsmPtr;
+
+					tlsAddressForExecutingThread = readGsQWord58Func();
+				}
+				(IntPtr writeGsQWord58AsmPtr, uint oldProtectValForWriteGsQWord58AsmPtr) = AllocateMemoryForWriteGsQWord58AsmFunc();
+				if (writeGsQWord58AsmPtr != IntPtr.Zero)
+				{
+					this.writeGsQWord58AsmPtr = writeGsQWord58AsmPtr;
+					writeGsQWord58Func = (delegate* unmanaged[Stdcall]<IntPtr, void>)(writeGsQWord58AsmPtr);
+					oldProtectForWriteGsQWord58AsmPtr = oldProtectValForWriteGsQWord58AsmPtr;
+				}
+			}
 		}
 
 		~ScriptDomain()
@@ -104,6 +220,28 @@ namespace SHVDN
 		{
 			// Need to free native strings when disposing the script domain
 			CleanupStrings();
+			// Need to free unmanaged resources in NativeMemory
+			NativeMemory.DisposeUnmanagedResources();
+
+			unsafe
+			{
+				// Need to free custom functions built with x64 assembly
+				if (readGsQWord58AsmPtr != IntPtr.Zero)
+				{
+					uint outOldProtectUnused;
+					const uint READGSQWORD58_ASM_FUNC_LENGTH = 10; // "mov rax, qword ptr gs:[0x58]" and "ret", so the function takes 10 bytes
+					VirtualProtect(readGsQWord58AsmPtr, READGSQWORD58_ASM_FUNC_LENGTH, oldProtectForReadGsQWord58AsmPtr, &outOldProtectUnused);
+					Marshal.FreeCoTaskMem(readGsQWord58AsmPtr);
+				}
+				if (writeGsQWord58AsmPtr != IntPtr.Zero)
+				{
+					uint outOldProtectUnused;
+					const uint WRITEGSQWORD58_ASM_FUNC_LENGTH = 10; // "mov qword ptr gs:[0x58], rcx" and "ret", so the function takes 10 bytes
+					VirtualProtect(writeGsQWord58AsmPtr, WRITEGSQWORD58_ASM_FUNC_LENGTH, oldProtectForWriteGsQWord58AsmPtr, &outOldProtectUnused);
+					Marshal.FreeCoTaskMem(writeGsQWord58AsmPtr);
+				}
+			}
+
 		}
 
 		/// <summary>
@@ -548,11 +686,42 @@ namespace SHVDN
 			}
 			else
 			{
-				// Request came from the script thread, so need to pass it to the domain thread and execute there
-				taskQueue.Enqueue(task);
+				// Request came from the script thread
+				if (CanSwapTlsContext())
+				{
+					unsafe
+					{
+						IntPtr oldScriptTls = GetCurrentTls();
+						SetCurrentTls(tlsAddressForExecutingThread);
 
-				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
+						try
+						{
+							task.Run();
+						}
+						catch (Exception)
+						{
+							throw;
+						}
+						// Needs to revert tls context so stuff in the TLS in the script thread can be used
+						finally
+						{
+							SetCurrentTls(oldScriptTls);
+						}
+					}
+				}
+				else
+				{
+					// We can't swap tls context for some reason, so need to pass it to the domain thread and execute there as a fallback.
+					// This is an edge case since code in this scope will be executed only when one of function pointers for TLS is not allocated or one of them couldn't be created for some reason
+					ExecuteTaskBySwitchingToMainThread(task);
+				}
 			}
+		}
+
+		private void ExecuteTaskBySwitchingToMainThread(IScriptTask task)
+		{
+			taskQueue.Enqueue(task);
+			SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
 		}
 
 		/// <summary>
