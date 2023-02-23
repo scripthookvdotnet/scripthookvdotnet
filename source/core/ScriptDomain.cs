@@ -88,6 +88,7 @@ namespace SHVDN
 		List<Assembly> scriptApis = new List<Assembly>();
 
 		#region Fields for Thread Local Storage
+
 		IntPtr tlsAddressForExecutingThread = IntPtr.Zero;
 
 		private readonly IntPtr readGsQWord58AsmPtr;
@@ -97,6 +98,7 @@ namespace SHVDN
 		private readonly IntPtr writeGsQWord58AsmPtr;
 		unsafe delegate* unmanaged[Stdcall]<IntPtr, void> writeGsQWord58Func;
 		readonly uint oldProtectForWriteGsQWord58AsmPtr;
+
 		#endregion
 
 		/// <summary>
@@ -186,6 +188,7 @@ namespace SHVDN
 				}
 			}
 
+			// Set up the custom functions for TLS built with x64 assembly
 			unsafe
 			{
 				(IntPtr readGsQWord58AsmPtr, uint oldProtectValForReadGsQWord58AsmPtr) = AllocateMemoryForReadGsQWord58AsmFunc();
