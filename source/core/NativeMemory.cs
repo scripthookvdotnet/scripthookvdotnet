@@ -273,7 +273,7 @@ namespace SHVDN
 			if (waypointInfoArrayStartAddress != null)
 			{
 				startAddressToSearch = new IntPtr(address);
-				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxxxxxxxxx", startAddressToSearch);
+				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxx", startAddressToSearch);
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
@@ -620,13 +620,14 @@ namespace SHVDN
 				VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
 			}
 
-			// the tire wear multipiler value for vehicle wheels is present only in v1.0.1868.0 or newer versions
+			// the tire wear multipiler value for vehicle wheels is present only in b1868 or newer versions
 			if (gameVersion >= 54)
 			{
-				address = FindPattern("\x76\x31\x0F\x2E\xB3\x00\x00\x00\x00\x75\x28\xC7\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0F\xBA\xB3\x00\x00\x00\x00\x1E", "xxxxx????xxxx????????xxx????x");
+				address = FindPattern("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
 				if (address != null)
 				{
-					VehicleTireWearMultiplierOffset = *(int*)(address + 5);
+					VehicleTireWearMultiplierOffset = *(int*)(address + 0x22);
+					// Note: The values for SET_TYRE_WEAR_RATE_SCALE and SET_TYRE_MAXIMUM_GRIP_DIFFERENCE_DUE_TO_WEAR_RATE are not present in b1868
 				}
 			}
 
@@ -723,16 +724,16 @@ namespace SHVDN
 				PedDropsWeaponsWhenDeadOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x8B\x88\x00\x00\x00\x00\x83\xE1\x04\x31\x88\x00\x00\x00\x00\x55\x48\x8D\x2D", "xx????xxxxx????xxxx");
+			address = FindPattern("\x4D\x8B\xF1\x48\x8B\xFA\xC1\xE8\x02\x48\x8B\xF1\xA8\x01\x0F\x85\xEB\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				PedSuffersCriticalHitOffset = *(int*)(address + 2);
+				PedSuffersCriticalHitOffset = *(int*)(address - 4);
 			}
 
-			address = FindPattern("\x48\x8D\x99\x00\x00\x00\x00\x0F\x29\x74\x24\x20\x48\x8B\xF1", "xxx????xxxxxxxx");
+			address = FindPattern("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02", "xxxxxxxxxxx????xxxxx");
 			if (address != null)
 			{
-				ArmorOffset = *(int*)(address + 3);
+				ArmorOffset = *(int*)(address + 11);
 			}
 
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\xD9\x48\x8B\x48\x08\x48\x85\xC9\x0F", "xxx????xxxxxxxxxxx");
