@@ -460,39 +460,62 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Indicates whether this <see cref="Ped"/> has received the event of <paramref name="nameHash"/>.
-		/// <see cref="EventNameHash.Invalid"/> can be used to test if the <see cref="Ped"/> has received any event.
+		/// Indicates whether this <see cref="Ped"/> has received the event of <paramref name="eventType"/>.
+		/// <see cref="EventType.Invalid"/> can be used to test if the <see cref="Ped"/> has received any event.
 		/// </summary>
 		/// <value>
-		///   <see langword="true"/> if the <see cref="Ped"/> has received the event  of <paramref name="nameHash"/>; otherwise, <see langword="false" />.
+		///   <see langword="true"/> if the <see cref="Ped"/> has received the event  of <paramref name="eventType"/>; otherwise, <see langword="false" />.
 		/// </value>
-		/// <remarks>This is similar to <see cref="IsRespondingToEvent(EventNameHash)"/>, but will work with blocking of non-temporary events with <see cref="BlockPermanentEvents"/>.</remarks>
+		/// <remarks>This is similar to <see cref="IsRespondingToEvent(EventType)"/>, but will work with blocking of non-temporary events with <see cref="BlockPermanentEvents"/>.</remarks>
 
-		public bool HasReceivedEvent(EventNameHash nameHash)
+		public bool HasReceivedEvent(EventType eventType)
 		{
-			if (!SHVDN.NativeMemory.GetEventIndexByNameHash((int)nameHash, out int eventTypeIndex))
+			if ((int)Game.Version < (int)GameVersion.v1_0_1868_0_Steam)
 			{
-				throw new ArgumentException("The event name hash provided was not supported in the current game version.", nameof(nameHash));
+				return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
 			}
 
-			return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventTypeIndex);
+			return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventType);
 		}
 
 		/// <summary>
-		/// Indicates whether this <see cref="Ped"/> is responding to an event of <paramref name="nameHash"/>.
-		/// <see cref="EventNameHash.Invalid"/> can be used to test if the <see cref="Ped"/> is responding to any event.
+		/// Indicates whether this <see cref="Ped"/> is responding to an event of <paramref name="eventType"/>.
+		/// <see cref="EventType.Invalid"/> can be used to test if the <see cref="Ped"/> is responding to any event.
 		/// </summary>
 		/// <value>
-		///   <see langword="true"/> if this <see cref="Ped"/> is responding to an event of <paramref name="nameHash"/> and subsequent tasks are running; otherwise, <see langword="false" />.
+		///   <see langword="true"/> if this <see cref="Ped"/> is responding to an event of <paramref name="eventType"/> and subsequent tasks are running; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsRespondingToEvent(EventNameHash nameHash)
+		public bool IsRespondingToEvent(EventType eventType)
 		{
-			if (!SHVDN.NativeMemory.GetEventIndexByNameHash((int)nameHash, out int eventTypeIndex))
+			if ((int)Game.Version < (int)GameVersion.v1_0_1868_0_Steam)
 			{
-				throw new ArgumentException("The event name hash provided was not supported in the current game version.", nameof(nameHash));
+				return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
 			}
 
-			return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventTypeIndex);
+			return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType);
+		}
+
+		private int GetEventTypeIndexForB1737OrOlder(EventType eventType)
+		{
+			if (eventType == EventType.Incapacitated)
+			{
+				throw new ArgumentException("EventType.Incapacitated is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
+			}
+			if (eventType == EventType.ShockingBrokenGlass)
+			{
+				throw new ArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
+			}
+
+			int eventTypeCorrected = (int)eventType;
+			if (eventTypeCorrected < (int)EventType.LeaderEnteredCarAsDriver)
+			{
+				--eventTypeCorrected;
+			}
+			if (eventTypeCorrected < (int)EventType.ShockingCarAlarm)
+			{
+				--eventTypeCorrected;
+			}
+			return eventTypeCorrected;
 		}
 
 		#endregion

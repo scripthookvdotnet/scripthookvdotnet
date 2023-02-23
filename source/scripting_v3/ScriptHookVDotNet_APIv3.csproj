@@ -104,7 +104,7 @@
     <Compile Include="GTA\Entities\Peds\DecisionMaker.cs" />
     <Compile Include="GTA\Entities\Peds\DecisionMakerTypeHash.cs" />
     <Compile Include="GTA\Entities\Peds\RelationshipGroupHash.cs" />
-    <Compile Include="GTA\Entities\Peds\EventNameHash.cs" />
+    <Compile Include="GTA\Entities\Peds\EventType.cs" />
     <Compile Include="GTA\Entities\Peds\ScriptTaskStatus.cs" />
     <Compile Include="GTA\Entities\Peds\ScriptTaskNameHash.cs" />
     <Compile Include="GTA\Entities\Peds\RagdollComponent.cs" />
