@@ -586,7 +586,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in local space.
 		/// </summary>
-		[Obsolete("Entity.RotationVelocity is obsolete because GET_ENTITY_ROTATION_VELOCITY returns the world angular velocity with local to world conversion (without position translation) applied. Use Entity.LocalRotationVelocity instead.")]
+		[Obsolete("Entity.RotationVelocity is obsolete because GET_ENTITY_ROTATION_VELOCITY returns the world angular velocity with local to world conversion applied. Use Entity.LocalRotationVelocity instead.")]
 		public Vector3 RotationVelocity
 		{
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
