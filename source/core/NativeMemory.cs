@@ -156,9 +156,9 @@ namespace SHVDN
 			GetPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address) + address + 4));
 
-			address = FindPattern("\xE8\x00\x00\x00\x00\x48\x8B\xD8\x48\x85\xC0\x74\x2E\x48\x83\x3D", "x????xxxxxxxxxxx");
+			address = FindPattern("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
 			GetEntityAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
-				new IntPtr(*(int*)(address + 1) + address + 5));
+				new IntPtr(*(int*)(address + 7) + address + 11));
 
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
 			GetPlayerAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
@@ -178,9 +178,9 @@ namespace SHVDN
 				new IntPtr(*(int*)(address + 13) + address + 17));
 			handlingIndexOffsetInModelInfo = *(int*)(address + 8);
 
-			address = FindPattern("\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x5A\xB2\x01", "x????xxxxxxx");
+			address = FindPattern("\x75\x5A\xB2\x01\x48\x8B\xCB\xE8\x00\x00\x00\x00\x41\x8B\xF5\x66\x44\x3B\xAB", "xxxxxxxx????xxxxxxx");
 			GetHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
-				new IntPtr(*(int*)(address + 1) + address + 5));
+				new IntPtr(*(int*)(address - 7) + address - 3));
 
 			// Find entity pools and interior proxy pool
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
@@ -435,7 +435,7 @@ namespace SHVDN
 				HighGearOffset = *(int*)(address + 3) + 6;
 			}
 
-			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83\x24\x08\x00\x00", "x?xxxxxx????x?xxxx????");
+			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83", "xxxxxxxx????xxxxxx");
 			if (address != null)
 			{
 				FuelLevelOffset = *(int*)(address + 8);
@@ -507,10 +507,10 @@ namespace SHVDN
 				EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
 			}
 
-			address = FindPattern("\x74\x00\xF6\x00\x00\x00\x00\x00\x80\x75\x00\x33\x00\x48\x8D", "x?x?????xx?x?xx");
+			address = FindPattern("\x48\x8B\xF8\x48\x85\xC0\x0F\x84\xE2\x00\x00\x00\x80\x88", "xxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				DisablePretendOccupantOffset = *(int*)(address + 4);
+				DisablePretendOccupantOffset = *(int*)(address + 14);
 			}
 
 			address = FindPattern("\x74\x4A\x80\x7A\x28\x03\x75\x44\xF6\x82\x00\x00\x00\x00\x04", "xxxxxxxxxx????x");
@@ -692,10 +692,13 @@ namespace SHVDN
 				}
 			}
 
-			address = FindPattern("\x8B\x00\x00\x00\x00\x00\x0F\xBA\x00\x00\x00\x00\x00\x09\x8B\x05", "x?????xx?????xxx");
+			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
 			if (address != null)
 			{
-				PedIntelligenceOffset = *(int*)(address + 2);
+				PedIntelligenceOffset = *(int*)(address + 0x11);
+
+				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 			}
 
 			address = FindPattern("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
