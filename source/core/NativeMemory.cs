@@ -167,7 +167,7 @@ namespace SHVDN
 			ObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
-			EntityPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			FwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
 			VehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -2481,8 +2481,11 @@ namespace SHVDN
 		#region -- Entity Pools --
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct EntityPool
+		struct FwScriptGuidPool
 		{
+			// The max count value should be at least 3072 as long as ScriptHookV is installed.
+			// Without ScriptHookV, the default value is hardcoded and may be different between different game versions (the value is 300 in b372 and 700 in b2824).
+			// The default value (when running without ScriptHookV) can be found by searching the dumped exe or the game memory with "D7 A8 11 73" (0x7311A8D7).
 			[FieldOffset(0x10)]
 			internal uint maxCount;
 			[FieldOffset(0x14)]
@@ -2608,8 +2611,8 @@ namespace SHVDN
 			}
 		}
 
+		static ulong* FwScriptGuidPoolAddress;
 		static ulong* PedPoolAddress;
-		static ulong* EntityPoolAddress;
 		static ulong* ObjectPoolAddress;
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
@@ -2621,13 +2624,12 @@ namespace SHVDN
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
 
-
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
 		// should be rage::fwScriptGuid::CreateGuid
 		static delegate* unmanaged[Stdcall]<ulong, int> CreateGuid;
 
-		internal class EntityPoolTask : IScriptTask
+		internal class FwScriptGuidPoolTask : IScriptTask
 		{
 			#region Fields
 			internal Type poolType;
@@ -2655,7 +2657,7 @@ namespace SHVDN
 				Projectile = 16,
 			}
 
-			internal EntityPoolTask(Type type)
+			internal FwScriptGuidPoolTask(Type type)
 			{
 				poolType = type;
 			}
@@ -2716,10 +2718,10 @@ namespace SHVDN
 
 			public void Run()
 			{
-				if (*NativeMemory.EntityPoolAddress == 0)
+				if (*NativeMemory.FwScriptGuidPoolAddress == 0)
 					return;
 
-				EntityPool* entityPool = (EntityPool*)(*NativeMemory.EntityPoolAddress);
+				FwScriptGuidPool* fwScriptGuidPool = (FwScriptGuidPool*)(*NativeMemory.FwScriptGuidPoolAddress);
 
 				#region Store Entity Handles to Buffer Arrays
 				int vehicleCountStored = 0;
@@ -2736,7 +2738,7 @@ namespace SHVDN
 					uint poolSize = vehiclePool->size;
 					for (uint i = 0; i < poolSize; i++)
 					{
-						if (entityPool->IsFull())
+						if (fwScriptGuidPool->IsFull())
 							break;
 
 						if (vehiclePool->IsValid(i))
@@ -2904,7 +2906,7 @@ namespace SHVDN
 
 		public static int[] GetPedHandles(int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped);
 			task.modelHashes = modelHashes;
 			task.doModelCheck = modelHashes != null && modelHashes.Length > 0;
 
@@ -2914,7 +2916,7 @@ namespace SHVDN
 		}
 		public static int[] GetPedHandles(float[] position, float radius, int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2928,7 +2930,7 @@ namespace SHVDN
 
 		public static int[] GetPropHandles(int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Object);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Object);
 			task.modelHashes = modelHashes;
 			task.doModelCheck = modelHashes != null && modelHashes.Length > 0;
 
@@ -2938,7 +2940,7 @@ namespace SHVDN
 		}
 		public static int[] GetPropHandles(float[] position, float radius, int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Object);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Object);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2952,7 +2954,7 @@ namespace SHVDN
 
 		public static int[] GetEntityHandles()
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped | EntityPoolTask.Type.Object | EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped | FwScriptGuidPoolTask.Type.Object | FwScriptGuidPoolTask.Type.Vehicle);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -2960,7 +2962,7 @@ namespace SHVDN
 		}
 		public static int[] GetEntityHandles(float[] position, float radius)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped | EntityPoolTask.Type.Object | EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped | FwScriptGuidPoolTask.Type.Object | FwScriptGuidPoolTask.Type.Vehicle);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2972,7 +2974,7 @@ namespace SHVDN
 
 		public static int[] GetVehicleHandles(int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Vehicle);
 			task.modelHashes = modelHashes;
 			task.doModelCheck = modelHashes != null && modelHashes.Length > 0;
 
@@ -2982,7 +2984,7 @@ namespace SHVDN
 		}
 		public static int[] GetVehicleHandles(float[] position, float radius, int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Vehicle);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2996,7 +2998,7 @@ namespace SHVDN
 
 		public static int[] GetPickupObjectHandles()
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.PickupObject);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.PickupObject);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -3004,7 +3006,7 @@ namespace SHVDN
 		}
 		public static int[] GetPickupObjectHandles(float[] position, float radius)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.PickupObject);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.PickupObject);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -3015,7 +3017,7 @@ namespace SHVDN
 		}
 		public static int[] GetProjectileHandles()
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Projectile);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Projectile);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -3023,7 +3025,7 @@ namespace SHVDN
 		}
 		public static int[] GetProjectileHandles(float[] position, float radius)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Projectile);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Projectile);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
