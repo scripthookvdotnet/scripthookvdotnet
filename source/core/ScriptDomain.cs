@@ -46,8 +46,8 @@ namespace SHVDN
 		{
 			unsafe
 			{
-				GetTls = (delegate* unmanaged[Stdcall]<IntPtr>)(getTlsFuncAddr);
-				SetTls = (delegate* unmanaged[Stdcall]<IntPtr, void>)(setTlsFuncAddr);
+				GetTls = (delegate* unmanaged[Cdecl]<IntPtr>)(getTlsFuncAddr);
+				SetTls = (delegate* unmanaged[Cdecl]<IntPtr, void>)(setTlsFuncAddr);
 
 				tlsAddressForExecutingThread = GetTls();
 			}
