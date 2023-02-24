@@ -3,6 +3,22 @@
  * License: https://github.com/crosire/scripthookvdotnet#license
  */
 
+#pragma unmanaged
+
+#include <Windows.h>
+#define DllExport extern "C" __declspec(dllexport)
+
+DllExport void SetTls(LPVOID tls)
+{
+	__writegsqword(0x58, (DWORD64)tls);
+}
+DllExport LPVOID GetTls()
+{
+	return (LPVOID)__readgsqword(0x58);
+}
+
+#pragma managed
+
 bool sGameReloaded = false;
 
 // Import C# code base
@@ -179,6 +195,10 @@ static void ScriptHookVDotNet_ManagedInit()
 	domain = SHVDN::ScriptDomain::Load(".", scriptPath);
 	if (domain == nullptr)
 		return;
+
+	// Set functions for Thread Local Storage so scripts can do tasks that need some variables in the TLS in the main thread
+	// (e.g. invoking natives or functions that may allocate additional memory) without actually switching threads
+	domain->SetUp((IntPtr)GetTls, (IntPtr)SetTls);
 
 	try
 	{

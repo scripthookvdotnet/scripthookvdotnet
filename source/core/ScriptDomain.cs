@@ -24,58 +24,6 @@ namespace SHVDN
 
 	public class ScriptDomain : MarshalByRefObject, IDisposable
 	{
-		#region Static Methods For thread Local Storage
-
-		const uint PAGE_EXECUTE_READWRITE = 0x40;
-		[DllImport("Kernel32.dll")]
-		public unsafe static extern IntPtr VirtualProtect(IntPtr address, ulong size, uint newProtect, uint* outOldProtect);
-
-		/// <summary>
-		/// Allocates memory for a function that basically does the same as <c>return __readgsqword(0x58)</c>.
-		/// The allocated memory contains <c>mov rax, qword ptr gs:[0x58]</c> and <c>ret</c> instructions.
-		/// </summary>
-		internal static (IntPtr asmPtr, uint oldProtectValue) AllocateMemoryForReadGsQWord58AsmFunc()
-		{
-			var readgsqword58AsmBytes = new byte[] { 0x65, 0x48, 0x8B, 0x04, 0x25, 0x58, 0x00, 0x00, 0x00, 0xc3 }; // "mov rax, qword ptr gs:[0x58]" and "ret"
-			var readgsqword58AsmPtr = Marshal.AllocCoTaskMem(readgsqword58AsmBytes.Length);
-			uint oldProtect = 0;
-
-			if (readgsqword58AsmPtr != IntPtr.Zero)
-			{
-				unsafe
-				{
-					Marshal.Copy(readgsqword58AsmBytes, 0, readgsqword58AsmPtr, readgsqword58AsmBytes.Length);
-					VirtualProtect(readgsqword58AsmPtr, (uint)readgsqword58AsmBytes.Length, PAGE_EXECUTE_READWRITE, &oldProtect);
-				}
-			}
-
-			return (readgsqword58AsmPtr, oldProtect);
-		}
-
-		/// <summary>
-		/// Allocates memory for a function that basically does the same as <c>__writegsqword(0x58, [value]); return</c>.
-		/// The allocated memory contains <c>mov qword ptr gs:[0x58], rcx</c> and <c>ret</c> instructions.
-		/// </summary>
-		internal static (IntPtr asmPtr, uint oldProtectValue) AllocateMemoryForWriteGsQWord58AsmFunc()
-		{
-			var writeGSQword58AsmBytes = new byte[] { 0x65, 0x48, 0x89, 0x0C, 0x25, 0x58, 0x00, 0x00, 0x00, 0xc3 }; // "mov qword ptr gs:[0x58], rcx" and "ret"
-			var writeGSQword58AsmPtr = Marshal.AllocCoTaskMem(writeGSQword58AsmBytes.Length);
-			uint oldProtect = 0;
-
-			if (writeGSQword58AsmPtr != IntPtr.Zero)
-			{
-				unsafe
-				{
-					Marshal.Copy(writeGSQword58AsmBytes, 0, writeGSQword58AsmPtr, writeGSQword58AsmBytes.Length);
-					VirtualProtect(writeGSQword58AsmPtr, (uint)writeGSQword58AsmBytes.Length, PAGE_EXECUTE_READWRITE, &oldProtect);
-				}
-			}
-
-			return (writeGSQword58AsmPtr, oldProtect);
-		}
-
-		#endregion
-
 		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
@@ -87,33 +35,32 @@ namespace SHVDN
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
 
-		#region Fields for Thread Local Storage
+		#region Instance Fields And Methods for Thread Local Storage
 
-		IntPtr tlsAddressForExecutingThread = IntPtr.Zero;
+		unsafe delegate* unmanaged[Stdcall]<IntPtr> GetTls;
+		unsafe delegate* unmanaged[Stdcall]<IntPtr, void> SetTls;
 
-		private readonly IntPtr readGsQWord58AsmPtr;
-		unsafe delegate* unmanaged[Stdcall]<IntPtr> readGsQWord58Func;
-		readonly uint oldProtectForReadGsQWord58AsmPtr;
+		IntPtr tlsAddressForExecutingThread;
 
-		private readonly IntPtr writeGsQWord58AsmPtr;
-		unsafe delegate* unmanaged[Stdcall]<IntPtr, void> writeGsQWord58Func;
-		readonly uint oldProtectForWriteGsQWord58AsmPtr;
+		internal void SetUp(IntPtr getTlsFuncAddr, IntPtr setTlsFuncAddr)
+		{
+			unsafe
+			{
+				GetTls = (delegate* unmanaged[Stdcall]<IntPtr>)(getTlsFuncAddr);
+				SetTls = (delegate* unmanaged[Stdcall]<IntPtr, void>)(setTlsFuncAddr);
 
-		#endregion
+				tlsAddressForExecutingThread = GetTls();
+			}
+		}
 
 		/// <summary>
 		/// Gets the TLS context address in the current thread.
 		/// </summary>
 		private IntPtr GetCurrentTls()
 		{
-			if (readGsQWord58AsmPtr == IntPtr.Zero)
-			{
-				return IntPtr.Zero;
-			}
-
 			unsafe
 			{
-				return readGsQWord58Func();
+				return GetTls();
 			}
 		}
 		/// <summary>
@@ -121,17 +68,20 @@ namespace SHVDN
 		/// </summary>
 		private void SetCurrentTls(IntPtr value)
 		{
-			if (writeGsQWord58AsmPtr == IntPtr.Zero)
-			{
-				return;
-			}
-
 			unsafe
 			{
-				writeGsQWord58Func(value);
+				SetTls(value);
 			}
 		}
-		private bool CanSwapTlsContext() => readGsQWord58AsmPtr != IntPtr.Zero && writeGsQWord58AsmPtr != IntPtr.Zero;
+		private bool CanSwapTlsContext()
+		{
+			unsafe
+			{
+				return GetTls != null && SetTls != null;
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Gets the friendly name of this script domain.
@@ -187,27 +137,6 @@ namespace SHVDN
 					Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(apiPath), ": ", ex.ToString());
 				}
 			}
-
-			// Set up the custom functions for TLS built with x64 assembly
-			unsafe
-			{
-				(IntPtr readGsQWord58AsmPtr, uint oldProtectValForReadGsQWord58AsmPtr) = AllocateMemoryForReadGsQWord58AsmFunc();
-				if (readGsQWord58AsmPtr != IntPtr.Zero)
-				{
-					this.readGsQWord58AsmPtr = readGsQWord58AsmPtr;
-					readGsQWord58Func = (delegate* unmanaged[Stdcall]<IntPtr>)(readGsQWord58AsmPtr);
-					oldProtectForReadGsQWord58AsmPtr = oldProtectValForReadGsQWord58AsmPtr;
-
-					tlsAddressForExecutingThread = readGsQWord58Func();
-				}
-				(IntPtr writeGsQWord58AsmPtr, uint oldProtectValForWriteGsQWord58AsmPtr) = AllocateMemoryForWriteGsQWord58AsmFunc();
-				if (writeGsQWord58AsmPtr != IntPtr.Zero)
-				{
-					this.writeGsQWord58AsmPtr = writeGsQWord58AsmPtr;
-					writeGsQWord58Func = (delegate* unmanaged[Stdcall]<IntPtr, void>)(writeGsQWord58AsmPtr);
-					oldProtectForWriteGsQWord58AsmPtr = oldProtectValForWriteGsQWord58AsmPtr;
-				}
-			}
 		}
 
 		~ScriptDomain()
@@ -225,26 +154,6 @@ namespace SHVDN
 			CleanupStrings();
 			// Need to free unmanaged resources in NativeMemory
 			NativeMemory.DisposeUnmanagedResources();
-
-			unsafe
-			{
-				// Need to free custom functions built with x64 assembly
-				if (readGsQWord58AsmPtr != IntPtr.Zero)
-				{
-					uint outOldProtectUnused;
-					const uint READGSQWORD58_ASM_FUNC_LENGTH = 10; // "mov rax, qword ptr gs:[0x58]" and "ret", so the function takes 10 bytes
-					VirtualProtect(readGsQWord58AsmPtr, READGSQWORD58_ASM_FUNC_LENGTH, oldProtectForReadGsQWord58AsmPtr, &outOldProtectUnused);
-					Marshal.FreeCoTaskMem(readGsQWord58AsmPtr);
-				}
-				if (writeGsQWord58AsmPtr != IntPtr.Zero)
-				{
-					uint outOldProtectUnused;
-					const uint WRITEGSQWORD58_ASM_FUNC_LENGTH = 10; // "mov qword ptr gs:[0x58], rcx" and "ret", so the function takes 10 bytes
-					VirtualProtect(writeGsQWord58AsmPtr, WRITEGSQWORD58_ASM_FUNC_LENGTH, oldProtectForWriteGsQWord58AsmPtr, &outOldProtectUnused);
-					Marshal.FreeCoTaskMem(writeGsQWord58AsmPtr);
-				}
-			}
-
 		}
 
 		/// <summary>
