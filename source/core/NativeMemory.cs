@@ -134,7 +134,7 @@ namespace SHVDN
 				new IntPtr(*(int*)(address) + address + 4));
 
 			address = FindPattern("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
-			GetEntityAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+			GetScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 7) + address + 11));
 
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
@@ -142,7 +142,7 @@ namespace SHVDN
 				new IntPtr(*(int*)(address + 3) + address + 7));
 
 			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
-			AddEntityToPoolFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(
+			CreateGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
 				new IntPtr(address - 0x68));
 
 			address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
@@ -2624,7 +2624,8 @@ namespace SHVDN
 
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
-		static delegate* unmanaged[Stdcall]<ulong, int> AddEntityToPoolFunc;
+		// should be rage::fwScriptGuid::CreateGuid
+		static delegate* unmanaged[Stdcall]<ulong, int> CreateGuid;
 
 		internal class EntityPoolTask : IScriptTask
 		{
@@ -2706,7 +2707,7 @@ namespace SHVDN
 					{
 						ulong address = pool->GetAddress(i);
 						if (CheckEntity(address))
-							AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.CreateGuid(address));
 					}
 				}
 
@@ -2742,7 +2743,7 @@ namespace SHVDN
 						{
 							ulong address = vehiclePool->GetAddress(i);
 							if (CheckEntity(address))
-								AddElementAndReallocateIfLengthIsNotLongEnough(ref _vehicleHandleBuffer, vehicleCountStored++, NativeMemory.AddEntityToPoolFunc(address));
+								AddElementAndReallocateIfLengthIsNotLongEnough(ref _vehicleHandleBuffer, vehicleCountStored++, NativeMemory.CreateGuid(address));
 						}
 					}
 				}
@@ -2791,7 +2792,7 @@ namespace SHVDN
 						projectilesLeft--;
 
 						if (CheckEntity(entityAddress))
-							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.AddEntityToPoolFunc(entityAddress));
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.CreateGuid(entityAddress));
 					}
 				}
 				#endregion
@@ -2850,7 +2851,7 @@ namespace SHVDN
 
 			public void Run()
 			{
-				returnEntityHandle = NativeMemory.AddEntityToPoolFunc(entityAddress);
+				returnEntityHandle = NativeMemory.CreateGuid(entityAddress);
 			}
 		}
 
@@ -3495,7 +3496,8 @@ namespace SHVDN
 		#region -- Pool Addresses --
 
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
-		static delegate* unmanaged[Stdcall]<int, ulong> GetEntityAddressFunc;
+		// should be CGameScriptHandler::GetScriptEntity
+		static delegate* unmanaged[Stdcall]<int, ulong> GetScriptEntity;
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerAddressFunc;
 
 		public static IntPtr GetPtfxAddress(int handle)
@@ -3504,7 +3506,7 @@ namespace SHVDN
 		}
 		public static IntPtr GetEntityAddress(int handle)
 		{
-			return new IntPtr((long)GetEntityAddressFunc(handle));
+			return new IntPtr((long)GetScriptEntity(handle));
 		}
 		public static IntPtr GetPlayerAddress(int handle)
 		{
