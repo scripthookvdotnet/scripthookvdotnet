@@ -157,7 +157,7 @@ namespace SHVDN
 				new IntPtr(*(int*)(address) + address + 4));
 
 			address = FindPattern("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
-			GetEntityAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+			GetScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 7) + address + 11));
 
 			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
@@ -165,7 +165,7 @@ namespace SHVDN
 				new IntPtr(*(int*)(address + 3) + address + 7));
 
 			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
-			AddEntityToPoolFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(
+			CreateGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
 				new IntPtr(address - 0x68));
 
 			address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
@@ -190,7 +190,7 @@ namespace SHVDN
 			ObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
-			EntityPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			FwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
 			VehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -2504,8 +2504,11 @@ namespace SHVDN
 		#region -- Entity Pools --
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct EntityPool
+		struct FwScriptGuidPool
 		{
+			// The max count value should be at least 3072 as long as ScriptHookV is installed.
+			// Without ScriptHookV, the default value is hardcoded and may be different between different game versions (the value is 300 in b372 and 700 in b2824).
+			// The default value (when running without ScriptHookV) can be found by searching the dumped exe or the game memory with "D7 A8 11 73" (0x7311A8D7).
 			[FieldOffset(0x10)]
 			internal uint maxCount;
 			[FieldOffset(0x14)]
@@ -2631,8 +2634,8 @@ namespace SHVDN
 			}
 		}
 
+		static ulong* FwScriptGuidPoolAddress;
 		static ulong* PedPoolAddress;
-		static ulong* EntityPoolAddress;
 		static ulong* ObjectPoolAddress;
 		static ulong* PickupObjectPoolAddress;
 		static ulong* VehiclePoolAddress;
@@ -2644,12 +2647,12 @@ namespace SHVDN
 		static ulong* ProjectilePoolAddress;
 		static int* ProjectileCountAddress;
 
-
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
 		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
-		static delegate* unmanaged[Stdcall]<ulong, int> AddEntityToPoolFunc;
+		// should be rage::fwScriptGuid::CreateGuid
+		static delegate* unmanaged[Stdcall]<ulong, int> CreateGuid;
 
-		internal class EntityPoolTask : IScriptTask
+		internal class FwScriptGuidPoolTask : IScriptTask
 		{
 			#region Fields
 			internal Type poolType;
@@ -2677,7 +2680,7 @@ namespace SHVDN
 				Projectile = 16,
 			}
 
-			internal EntityPoolTask(Type type)
+			internal FwScriptGuidPoolTask(Type type)
 			{
 				poolType = type;
 			}
@@ -2729,7 +2732,7 @@ namespace SHVDN
 					{
 						ulong address = pool->GetAddress(i);
 						if (CheckEntity(address))
-							AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.AddEntityToPoolFunc(address));
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref handleBuffer, returnEntityCount++, NativeMemory.CreateGuid(address));
 					}
 				}
 
@@ -2738,10 +2741,10 @@ namespace SHVDN
 
 			public void Run()
 			{
-				if (*NativeMemory.EntityPoolAddress == 0)
+				if (*NativeMemory.FwScriptGuidPoolAddress == 0)
 					return;
 
-				EntityPool* entityPool = (EntityPool*)(*NativeMemory.EntityPoolAddress);
+				FwScriptGuidPool* fwScriptGuidPool = (FwScriptGuidPool*)(*NativeMemory.FwScriptGuidPoolAddress);
 
 				#region Store Entity Handles to Buffer Arrays
 				int vehicleCountStored = 0;
@@ -2758,14 +2761,14 @@ namespace SHVDN
 					uint poolSize = vehiclePool->size;
 					for (uint i = 0; i < poolSize; i++)
 					{
-						if (entityPool->IsFull())
+						if (fwScriptGuidPool->IsFull())
 							break;
 
 						if (vehiclePool->IsValid(i))
 						{
 							ulong address = vehiclePool->GetAddress(i);
 							if (CheckEntity(address))
-								AddElementAndReallocateIfLengthIsNotLongEnough(ref _vehicleHandleBuffer, vehicleCountStored++, NativeMemory.AddEntityToPoolFunc(address));
+								AddElementAndReallocateIfLengthIsNotLongEnough(ref _vehicleHandleBuffer, vehicleCountStored++, NativeMemory.CreateGuid(address));
 						}
 					}
 				}
@@ -2814,7 +2817,7 @@ namespace SHVDN
 						projectilesLeft--;
 
 						if (CheckEntity(entityAddress))
-							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.AddEntityToPoolFunc(entityAddress));
+							AddElementAndReallocateIfLengthIsNotLongEnough(ref _projectileHandleBuffer, projectileCountStored++, NativeMemory.CreateGuid(entityAddress));
 					}
 				}
 				#endregion
@@ -2873,7 +2876,7 @@ namespace SHVDN
 
 			public void Run()
 			{
-				returnEntityHandle = NativeMemory.AddEntityToPoolFunc(entityAddress);
+				returnEntityHandle = NativeMemory.CreateGuid(entityAddress);
 			}
 		}
 
@@ -2926,7 +2929,7 @@ namespace SHVDN
 
 		public static int[] GetPedHandles(int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped);
 			task.modelHashes = modelHashes;
 			task.doModelCheck = modelHashes != null && modelHashes.Length > 0;
 
@@ -2936,7 +2939,7 @@ namespace SHVDN
 		}
 		public static int[] GetPedHandles(float[] position, float radius, int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2950,7 +2953,7 @@ namespace SHVDN
 
 		public static int[] GetPropHandles(int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Object);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Object);
 			task.modelHashes = modelHashes;
 			task.doModelCheck = modelHashes != null && modelHashes.Length > 0;
 
@@ -2960,7 +2963,7 @@ namespace SHVDN
 		}
 		public static int[] GetPropHandles(float[] position, float radius, int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Object);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Object);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2974,7 +2977,7 @@ namespace SHVDN
 
 		public static int[] GetEntityHandles()
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped | EntityPoolTask.Type.Object | EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped | FwScriptGuidPoolTask.Type.Object | FwScriptGuidPoolTask.Type.Vehicle);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -2982,7 +2985,7 @@ namespace SHVDN
 		}
 		public static int[] GetEntityHandles(float[] position, float radius)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Ped | EntityPoolTask.Type.Object | EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Ped | FwScriptGuidPoolTask.Type.Object | FwScriptGuidPoolTask.Type.Vehicle);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -2994,7 +2997,7 @@ namespace SHVDN
 
 		public static int[] GetVehicleHandles(int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Vehicle);
 			task.modelHashes = modelHashes;
 			task.doModelCheck = modelHashes != null && modelHashes.Length > 0;
 
@@ -3004,7 +3007,7 @@ namespace SHVDN
 		}
 		public static int[] GetVehicleHandles(float[] position, float radius, int[] modelHashes = null)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Vehicle);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Vehicle);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -3018,7 +3021,7 @@ namespace SHVDN
 
 		public static int[] GetPickupObjectHandles()
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.PickupObject);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.PickupObject);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -3026,7 +3029,7 @@ namespace SHVDN
 		}
 		public static int[] GetPickupObjectHandles(float[] position, float radius)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.PickupObject);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.PickupObject);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -3037,7 +3040,7 @@ namespace SHVDN
 		}
 		public static int[] GetProjectileHandles()
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Projectile);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Projectile);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
@@ -3045,7 +3048,7 @@ namespace SHVDN
 		}
 		public static int[] GetProjectileHandles(float[] position, float radius)
 		{
-			var task = new EntityPoolTask(EntityPoolTask.Type.Projectile);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.Type.Projectile);
 			task.position = position;
 			task.radiusSquared = radius * radius;
 			task.doPosCheck = true;
@@ -3518,7 +3521,8 @@ namespace SHVDN
 		#region -- Pool Addresses --
 
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
-		static delegate* unmanaged[Stdcall]<int, ulong> GetEntityAddressFunc;
+		// should be CGameScriptHandler::GetScriptEntity
+		static delegate* unmanaged[Stdcall]<int, ulong> GetScriptEntity;
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerAddressFunc;
 
 		public static IntPtr GetPtfxAddress(int handle)
@@ -3527,7 +3531,7 @@ namespace SHVDN
 		}
 		public static IntPtr GetEntityAddress(int handle)
 		{
-			return new IntPtr((long)GetEntityAddressFunc(handle));
+			return new IntPtr((long)GetScriptEntity(handle));
 		}
 		public static IntPtr GetPlayerAddress(int handle)
 		{
