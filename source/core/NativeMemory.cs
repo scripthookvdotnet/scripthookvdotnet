@@ -817,16 +817,16 @@ namespace SHVDN
 				getFragInstVFuncOffset = *(sbyte*)(address + 9);
 				detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
 			}
-			address = FindPattern("\x00\x8B\x0D\x00\x00\x00\x00\x00\x83\x64\x00\x00\x00\x00\x0F\xB7\xD1\x00\x33\xC9\xE8", "?xx?????xx????xxx?xxx");
+			address = FindPattern("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
 			if (address != null)
 			{
-				phSimulatorInstPtr = (ulong**)(*(int*)(address + 3) + address + 7);
+				phSimulatorInstPtr = (ulong**)(*(int*)(address + 5) + address + 9);
 			}
-			address = FindPattern("\x00\x63\x00\x00\x00\x00\x00\x3B\x00\x00\x00\x00\x00\x0F\x8D\x00\x00\x00\x00\x00\x8B\xC8", "?x?????x?????xx?????xx");
+			address = FindPattern("\xC0\xE8\x07\xA8\x01\x74\x57\x0F\xB7\x4E\x18\x85\xC9\x78\x4F", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				colliderCountOffset = *(int*)(address + 3);
-				colliderCapacityOffset = *(int*)(address + 9);
+				colliderCapacityOffset = *(int*)(address - 0x41);
+				colliderCountOffset = colliderCapacityOffset + 4;
 			}
 
 			address = FindPattern("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
