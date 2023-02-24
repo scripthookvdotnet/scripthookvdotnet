@@ -507,11 +507,11 @@ namespace GTA
 			}
 
 			int eventTypeCorrected = (int)eventType;
-			if (eventTypeCorrected < (int)EventType.LeaderEnteredCarAsDriver)
+			if (eventTypeCorrected >= (int)EventType.ShockingCarAlarm)
 			{
-				--eventTypeCorrected;
+				eventTypeCorrected -= 2;
 			}
-			if (eventTypeCorrected < (int)EventType.ShockingCarAlarm)
+			else if (eventTypeCorrected >= (int)EventType.LeaderEnteredCarAsDriver)
 			{
 				--eventTypeCorrected;
 			}
