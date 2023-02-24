@@ -539,6 +539,10 @@ namespace GTA
 		/// </summary>
 		/// <param name="input">The input <see cref="string"/> to hash.</param>
 		/// <returns>The Jenkins hash of the input <see cref="string"/>.</returns>
+		/// <remarks>
+		/// Although the <c>GET_HASH_KEY</c> native compute hash from the substring between two double quotes if the first character is a double quote character,
+		/// This method does not consider such case since no practical occurrences of such edge case are found.
+		/// </remarks>
 		public static int GenerateHash(string input)
 		{
 			if (string.IsNullOrEmpty(input))
@@ -547,6 +551,37 @@ namespace GTA
 			}
 
 			return unchecked((int)SHVDN.NativeMemory.GetHashKey(input));
+		}
+		/// <summary>
+		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> which can then be used by any native function that takes a hash.
+		/// Can be called in any thread and performs much faster than <see cref="GenerateHash(string)"/> and the return value will be the same as long as the input contains only ASCII characters.
+		/// </summary>
+		/// <param name="input">The input <see cref="string"/> to hash.</param>
+		/// <remarks>The behavior is undefined except no exception will be thrown if input has some non-ASCII characters.</remarks>
+		public static int GenerateHashASCII(string input)
+		{
+			if (string.IsNullOrEmpty(input))
+			{
+				return 0;
+			}
+
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCII(input));
+		}
+		/// <summary>
+		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> in the same way as the game converts some config strings in meta files
+		/// (e.g. event names such as <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c> and the game will convert to <c>0xEB92D4DF</c>) except this method expects strictly only ASCII characters
+		/// (although such config strings are not meant to contain non-ASCII ones).
+		/// Can be called in any thread.
+		/// </summary>
+		/// <inheritdoc cref="GenerateHashASCII(string)"/>
+		public static int GenerateHashASCIINoPreConversion(string input)
+		{
+			if (string.IsNullOrEmpty(input))
+			{
+				return 0;
+			}
+
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCIINoPreConversion(input));
 		}
 
 		/// <summary>

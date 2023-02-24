@@ -758,6 +758,13 @@ namespace SHVDN
 				FiringPatternOffset = *(int*)(address + 19);
 			}
 
+			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			if (address != null)
+			{
+				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
+			}
+
 			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
 			if (address != null)
 			{
@@ -1283,6 +1290,49 @@ namespace SHVDN
 			foreach (byte c in Encoding.UTF8.GetBytes(str))
 			{
 				hash += LookupTableForGetHashKey[c];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
+		}
+		public static uint GetHashKeyASCII(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			uint hash = 0;
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
+			{
+				hash += LookupTableForGetHashKey[c];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
+		}
+		// You can find the equivalent function of the method below with "EB 15 0F BE C0 48 FF C1"
+		public static uint GetHashKeyASCIINoPreConversion(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			uint hash = 0;
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
+			{
+				hash += c;
 				hash += (hash << 10);
 				hash ^= (hash >> 6);
 			}
@@ -2009,6 +2059,8 @@ namespace SHVDN
 		public static int PedIntelligenceOffset { get; }
 
 		public static int FiringPatternOffset { get; }
+
+		public static int PedIntelligenceDecisionMakerHashOffset { get; }
 
 		public static int SeeingRangeOffset { get; }
 		public static int HearingRangeOffset { get; }
