@@ -377,38 +377,33 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// <para>
-		/// Sets whether this <see cref="Ped"/> keeps their tasks when they are marked as no longer needed by <see cref="Entity.MarkAsNoLongerNeeded"/> or gets cleaned up by the mission script.
-		/// Despite the property name, this property does not determine whether permanent events can interrupt the <see cref="Ped"/>'s tasks (e.g. seeing hated peds or getting shot at).
-		/// </para>
-		/// <para>
-		/// If set to <see langword="false" />, this <see cref="Ped"/>'s task will be immediately cleared and start some ambient tasks (most likely start wandering) when they are marked as no longer needed.
-		/// </para>
-		/// <para>
-		/// If set to <see langword="true" />, this <see cref="Ped"/> will keep their task until they have nothing to do (where their task stacks only contains <c>CTaskDoNothing</c>).
-		/// Once this <see cref="Ped"/> has nothing to do, their task will clear and they'll start some ambient tasks (one-time-only).
-		/// </para>
+		/// Sets whether this <see cref="Ped"/> keeps their tasks when they are marked as no longer needed by <see cref="Entity.MarkAsNoLongerNeeded"/>.
 		/// </summary>
-
-		public bool AlwaysKeepTask
+		/// <value>
+		/// <para>
+		/// If set to <see langword="false" />, this <see cref="Ped"/>'s task will be immediately cleared and start some ambient tasks
+		/// (most likely start wandering) when they are marked as no longer needed.
+		/// </para>
+		/// <para>
+		/// If set to <see langword="true" />, this <see cref="Ped"/> will keep their scripted task.
+		/// Once this <see cref="Ped"/> has no script tasks, their task will clear and they'll start some ambient tasks (one-time-only).
+		/// </para>
+		/// </value>
+		public bool KeepTaskWhenMarkedAsNoLongerNeeded
 		{
 			set => Function.Call(Hash.SET_PED_KEEP_TASK, Handle, value);
 		}
 
 		/// <summary>
-		/// Sets whether permanent events are blocked for this <see cref="Ped"/>.
-		/// <para>
-		/// If set to <see langword="true" />, this <see cref="Ped"/> will no longer react to permanent events and will only do as they're told.
-		/// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if the decision maker specifies that seeing a hated ped should.
-		/// However, the <see cref="Ped"/> will still respond to temporary events like walking around other peds or vehicles even if this property is set to <see langword="true" />.
-		/// </para>
+		/// Sets whether this <see cref="Ped"/> keeps their tasks when they are marked as no longer needed by <see cref="Entity.MarkAsNoLongerNeeded"/>.
+		/// Despite the property name, this property does not determine whether permanent events can interrupt the <see cref="Ped"/>'s tasks (e.g. seeing hated peds or getting shot at).
 		/// </summary>
-		/// <value>
-		///   <see langword="true" /> if permanent events are blocked; otherwise, <see langword="false" />.
-		/// </value>
-		public bool BlockPermanentEvents
+		/// <inheritdoc cref="KeepTaskWhenMarkedAsNoLongerNeeded"/>
+		[Obsolete("Ped.AlwaysKeepTask is obsolete because it does not indicate it only affects when the ped is marked as no longer needed. Use Ped.KeepTaskWhenMarkedAsNoLongerNeeded instead.")]
+
+		public bool AlwaysKeepTask
 		{
-			set => Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, Handle, value);
+			set => KeepTaskWhenMarkedAsNoLongerNeeded = value;
 		}
 
 		/// <summary>
@@ -425,6 +420,103 @@ namespace GTA
 		/// Gets the task status of specified scripted task on this <see cref="Ped"/>.
 		/// </summary>
 		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, taskNameHash);
+
+		#endregion
+
+		#region Events
+
+		/// <summary>
+		/// Gets or sets the decision maker of this <see cref="Ped"/>, which determines what and how this <see cref="Ped"/> should response to events.
+		/// Events can cause <see cref="Ped"/>s to start certain tasks. You can see how decision makers are configured in <c>events.meta</c>.
+		/// </summary>
+		public DecisionMaker DecisionMaker
+		{
+			get
+			{
+				if (PedIntelligenceAddress == IntPtr.Zero || SHVDN.NativeMemory.PedIntelligenceDecisionMakerHashOffset == 0)
+				{
+					return default;
+				}
+
+				return new DecisionMaker(SHVDN.NativeMemory.ReadInt32(PedIntelligenceAddress + SHVDN.NativeMemory.PedIntelligenceDecisionMakerHashOffset));
+			}
+			set => Function.Call(Hash.SET_DECISION_MAKER, Handle, value.Hash);
+		}
+
+		/// <summary>
+		/// Sets whether permanent events are blocked for this <see cref="Ped"/>.
+		/// <para>
+		/// If set to <see langword="true" />, this <see cref="Ped"/> will no longer react to permanent events and will only do as they're told.
+		/// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if <see cref="DecisionMaker"/> specifies that seeing a hated ped should.
+		/// However, the <see cref="Ped"/> will still respond to temporary events like walking around other peds or vehicles even if this property is set to <see langword="true" />.
+		/// </para>
+		/// </summary>
+		/// <value>
+		///   <see langword="true" /> if permanent events are blocked; otherwise, <see langword="false" />.
+		/// </value>
+		public bool BlockPermanentEvents
+		{
+			set => Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, Handle, value);
+		}
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> has received the event of <paramref name="eventType"/>.
+		/// <see cref="EventType.Invalid"/> can be used to test if the <see cref="Ped"/> has received any event.
+		/// </summary>
+		/// <value>
+		///   <see langword="true"/> if the <see cref="Ped"/> has received the event  of <paramref name="eventType"/>; otherwise, <see langword="false" />.
+		/// </value>
+		/// <remarks>This is similar to <see cref="IsRespondingToEvent(EventType)"/>, but will work with blocking of non-temporary events with <see cref="BlockPermanentEvents"/>.</remarks>
+
+		public bool HasReceivedEvent(EventType eventType)
+		{
+			if ((int)Game.Version < (int)GameVersion.v1_0_1868_0_Steam)
+			{
+				return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
+			}
+
+			return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventType);
+		}
+
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is responding to an event of <paramref name="eventType"/>.
+		/// <see cref="EventType.Invalid"/> can be used to test if the <see cref="Ped"/> is responding to any event.
+		/// </summary>
+		/// <value>
+		///   <see langword="true"/> if this <see cref="Ped"/> is responding to an event of <paramref name="eventType"/> and subsequent tasks are running; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsRespondingToEvent(EventType eventType)
+		{
+			if ((int)Game.Version < (int)GameVersion.v1_0_1868_0_Steam)
+			{
+				return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
+			}
+
+			return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType);
+		}
+
+		private int GetEventTypeIndexForB1737OrOlder(EventType eventType)
+		{
+			if (eventType == EventType.Incapacitated)
+			{
+				throw new ArgumentException("EventType.Incapacitated is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
+			}
+			if (eventType == EventType.ShockingBrokenGlass)
+			{
+				throw new ArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
+			}
+
+			int eventTypeCorrected = (int)eventType;
+			if (eventTypeCorrected >= (int)EventType.ShockingCarAlarm)
+			{
+				eventTypeCorrected -= 2;
+			}
+			else if (eventTypeCorrected >= (int)EventType.LeaderEnteredCarAsDriver)
+			{
+				--eventTypeCorrected;
+			}
+			return eventTypeCorrected;
+		}
 
 		#endregion
 

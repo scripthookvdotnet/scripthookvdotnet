@@ -296,7 +296,7 @@ namespace SHVDN
 			if (waypointInfoArrayStartAddress != null)
 			{
 				startAddressToSearch = new IntPtr(address);
-				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxxxxxxxxx", startAddressToSearch);
+				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxx", startAddressToSearch);
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
@@ -643,13 +643,14 @@ namespace SHVDN
 				VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
 			}
 
-			// the tire wear multipiler value for vehicle wheels is present only in v1.0.1868.0 or newer versions
+			// the tire wear multipiler value for vehicle wheels is present only in b1868 or newer versions
 			if (gameVersion >= 54)
 			{
-				address = FindPattern("\x76\x31\x0F\x2E\xB3\x00\x00\x00\x00\x75\x28\xC7\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0F\xBA\xB3\x00\x00\x00\x00\x1E", "xxxxx????xxxx????????xxx????x");
+				address = FindPattern("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
 				if (address != null)
 				{
-					VehicleTireWearMultiplierOffset = *(int*)(address + 5);
+					VehicleTireWearMultiplierOffset = *(int*)(address + 0x22);
+					// Note: The values for SET_TYRE_WEAR_RATE_SCALE and SET_TYRE_MAXIMUM_GRIP_DIFFERENCE_DUE_TO_WEAR_RATE are not present in b1868
 				}
 			}
 
@@ -746,16 +747,16 @@ namespace SHVDN
 				PedDropsWeaponsWhenDeadOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x8B\x88\x00\x00\x00\x00\x83\xE1\x04\x31\x88\x00\x00\x00\x00\x55\x48\x8D\x2D", "xx????xxxxx????xxxx");
+			address = FindPattern("\x4D\x8B\xF1\x48\x8B\xFA\xC1\xE8\x02\x48\x8B\xF1\xA8\x01\x0F\x85\xEB\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				PedSuffersCriticalHitOffset = *(int*)(address + 2);
+				PedSuffersCriticalHitOffset = *(int*)(address - 4);
 			}
 
-			address = FindPattern("\x48\x8D\x99\x00\x00\x00\x00\x0F\x29\x74\x24\x20\x48\x8B\xF1", "xxx????xxxxxxxx");
+			address = FindPattern("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02", "xxxxxxxxxxx????xxxxx");
 			if (address != null)
 			{
-				ArmorOffset = *(int*)(address + 3);
+				ArmorOffset = *(int*)(address + 11);
 			}
 
 			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\xD9\x48\x8B\x48\x08\x48\x85\xC9\x0F", "xxx????xxxxxxxxxxx");
@@ -778,6 +779,13 @@ namespace SHVDN
 			if (address != null)
 			{
 				FiringPatternOffset = *(int*)(address + 19);
+			}
+
+			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			if (address != null)
+			{
+				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 			}
 
 			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
@@ -832,16 +840,16 @@ namespace SHVDN
 				getFragInstVFuncOffset = *(sbyte*)(address + 9);
 				detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
 			}
-			address = FindPattern("\x00\x8B\x0D\x00\x00\x00\x00\x00\x83\x64\x00\x00\x00\x00\x0F\xB7\xD1\x00\x33\xC9\xE8", "?xx?????xx????xxx?xxx");
+			address = FindPattern("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
 			if (address != null)
 			{
-				phSimulatorInstPtr = (ulong**)(*(int*)(address + 3) + address + 7);
+				phSimulatorInstPtr = (ulong**)(*(int*)(address + 5) + address + 9);
 			}
-			address = FindPattern("\x00\x63\x00\x00\x00\x00\x00\x3B\x00\x00\x00\x00\x00\x0F\x8D\x00\x00\x00\x00\x00\x8B\xC8", "?x?????x?????xx?????xx");
+			address = FindPattern("\xC0\xE8\x07\xA8\x01\x74\x57\x0F\xB7\x4E\x18\x85\xC9\x78\x4F", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				colliderCountOffset = *(int*)(address + 3);
-				colliderCapacityOffset = *(int*)(address + 9);
+				colliderCapacityOffset = *(int*)(address - 0x41);
+				colliderCountOffset = colliderCapacityOffset + 4;
 			}
 
 			address = FindPattern("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
@@ -1305,6 +1313,49 @@ namespace SHVDN
 			foreach (byte c in Encoding.UTF8.GetBytes(str))
 			{
 				hash += LookupTableForGetHashKey[c];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
+		}
+		public static uint GetHashKeyASCII(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			uint hash = 0;
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
+			{
+				hash += LookupTableForGetHashKey[c];
+				hash += (hash << 10);
+				hash ^= (hash >> 6);
+			}
+
+			hash += (hash << 3);
+			hash ^= (hash >> 11);
+			hash += (hash << 15);
+
+			return hash;
+		}
+		// You can find the equivalent function of the method below with "EB 15 0F BE C0 48 FF C1"
+		public static uint GetHashKeyASCIINoPreConversion(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 0;
+			}
+
+			uint hash = 0;
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
+			{
+				hash += c;
 				hash += (hash << 10);
 				hash ^= (hash >> 6);
 			}
@@ -2031,6 +2082,8 @@ namespace SHVDN
 		public static int PedIntelligenceOffset { get; }
 
 		public static int FiringPatternOffset { get; }
+
+		public static int PedIntelligenceDecisionMakerHashOffset { get; }
 
 		public static int SeeingRangeOffset { get; }
 		public static int HearingRangeOffset { get; }
