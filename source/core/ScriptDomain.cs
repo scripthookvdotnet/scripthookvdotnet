@@ -37,8 +37,8 @@ namespace SHVDN
 
 		#region Instance Fields And Methods for Thread Local Storage
 
-		unsafe delegate* unmanaged[Stdcall]<IntPtr> GetTls;
-		unsafe delegate* unmanaged[Stdcall]<IntPtr, void> SetTls;
+		unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTls;
+		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTls;
 
 		IntPtr tlsAddressForExecutingThread;
 
