@@ -287,7 +287,6 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 #pragma unmanaged
 
 #include <Main.h>
-#include <Windows.h>
 
 PVOID sGameFiber = nullptr;
 
