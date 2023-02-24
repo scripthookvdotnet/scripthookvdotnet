@@ -586,6 +586,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in local space.
 		/// </summary>
+		[Obsolete("Entity.RotationVelocity is obsolete because GET_ENTITY_ROTATION_VELOCITY returns the world angular velocity with local to world conversion applied. Use Entity.LocalRotationVelocity instead.")]
 		public Vector3 RotationVelocity
 		{
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
@@ -630,6 +631,40 @@ namespace GTA
 				}
 
 				SHVDN.NativeMemory.SetEntityAngularVelocity(address, value.X, value.Y, value.Z);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the rotation velocity of this <see cref="Entity"/> in local space.
+		/// </summary>
+		public Vector3 LocalRotationVelocity
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				var quaternionInverted = Quaternion;
+				quaternionInverted.Invert();
+				unsafe
+				{
+					var returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
+					return (quaternionInverted * new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]));
+				}
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				var angularVelocityWorldSpace = Quaternion * value;
+				SHVDN.NativeMemory.SetEntityAngularVelocity(address, angularVelocityWorldSpace.X, angularVelocityWorldSpace.Y, angularVelocityWorldSpace.Z);
 			}
 		}
 
