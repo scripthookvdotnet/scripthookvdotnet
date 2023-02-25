@@ -620,7 +620,7 @@ namespace SHVDN
 				else
 				{
 					// We can't swap tls context for some reason, so need to pass it to the domain thread and execute there as a fallback.
-					// This is an edge case since code in this scope will be executed only when one of function pointers for TLS is not allocated or one of them couldn't be created for some reason
+					// This is an edge case since code in this scope will be executed only when one of function pointers for TLS is not set in the script domain.
 					taskQueue.Enqueue(task);
 					SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
 				}
