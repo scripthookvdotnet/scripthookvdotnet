@@ -35,53 +35,20 @@ namespace SHVDN
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
 
-		#region Instance Fields And Methods for Thread Local Storage
+		unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTlsContext;
+		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTlsContext;
+		IntPtr tlsContextOfMainThread;
 
-		unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTls;
-		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTls;
-
-		IntPtr tlsAddressForExecutingThread;
-
-		internal void SetUp(IntPtr getTlsFuncAddr, IntPtr setTlsFuncAddr)
+		internal void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
 		{
 			unsafe
 			{
-				GetTls = (delegate* unmanaged[Cdecl]<IntPtr>)(getTlsFuncAddr);
-				SetTls = (delegate* unmanaged[Cdecl]<IntPtr, void>)(setTlsFuncAddr);
+				GetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
+				SetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
 
-				tlsAddressForExecutingThread = GetTls();
+				tlsContextOfMainThread = GetTlsContext();
 			}
 		}
-
-		/// <summary>
-		/// Gets the TLS context address in the current thread.
-		/// </summary>
-		private IntPtr GetCurrentTls()
-		{
-			unsafe
-			{
-				return GetTls();
-			}
-		}
-		/// <summary>
-		/// Sets the TLS context address in the current thread.
-		/// </summary>
-		private void SetCurrentTls(IntPtr value)
-		{
-			unsafe
-			{
-				SetTls(value);
-			}
-		}
-		private bool CanSwapTlsContext()
-		{
-			unsafe
-			{
-				return GetTls != null && SetTls != null;
-			}
-		}
-
-		#endregion
 
 		/// <summary>
 		/// Gets the friendly name of this script domain.
@@ -599,31 +566,30 @@ namespace SHVDN
 			else
 			{
 				// Request came from the script thread
-				if (CanSwapTlsContext())
+				unsafe
 				{
-					unsafe
+					if (GetTlsContext != null && SetTlsContext != null)
 					{
-						IntPtr oldScriptTls = GetCurrentTls();
-						SetCurrentTls(tlsAddressForExecutingThread);
+						IntPtr tlsContextOfScriptThread = GetTlsContext();
+						SetTlsContext(tlsContextOfMainThread);
 
 						try
 						{
 							task.Run();
 						}
-						// Needs to revert tls context so stuff in the TLS in the script thread can be used
 						finally
 						{
-							SetCurrentTls(oldScriptTls);
+							// Need to revert TLS context to the real one of the script thread
+							SetTlsContext(tlsContextOfScriptThread);
 						}
+						return;
 					}
 				}
-				else
-				{
-					// We can't swap tls context for some reason, so need to pass it to the domain thread and execute there as a fallback.
-					// This is an edge case since code in this scope will be executed only when one of function pointers for TLS is not set in the script domain.
-					taskQueue.Enqueue(task);
-					SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
-				}
+
+				// Need to pass the task to the domain thread and execute it there as a fallback
+				// This is an edge case and is only needed when one of the function pointers for TLS context management is not set in the script domain
+				taskQueue.Enqueue(task);
+				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
 			}
 		}
 
