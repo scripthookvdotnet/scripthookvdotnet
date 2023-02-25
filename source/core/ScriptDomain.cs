@@ -254,7 +254,7 @@ namespace SHVDN
 					errors.AppendLine();
 				}
 
-				Log.Message(Log.Level.Error, "Failed to compile ", Path.GetFileName(filename), " with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
+				Log.Message(Log.Level.Error, "Failed to compile ", Path.GetFileName(filename), " using API version ", scriptApi.GetName().Version.ToString(3), " with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
 				return false;
 			}
 		}
@@ -358,7 +358,7 @@ namespace SHVDN
 				return false;
 			}
 
-			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " resolved to API " + apiVersion.ToString(3) : string.Empty), ".");
+			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " resolved to API version " + apiVersion.ToString(3) : string.Empty), ".");
 
 			return count != 0;
 		}
