@@ -11,7 +11,7 @@ namespace GTA
 	/// <summary>
 	/// Represents a animation dictionary struct.
 	/// </summary>
-	public struct AnimationDictionary : IEquatable<AnimationDictionary>, IStreamingResource
+	public readonly struct AnimationDictionary : IEquatable<AnimationDictionary>, IStreamingResource
 	{
 		public AnimationDictionary(string name) : this()
 		{

@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace GTA
 {
-	public struct ParticleEffectAsset : IEquatable<ParticleEffectAsset>, IStreamingResource
+	public readonly struct ParticleEffectAsset : IEquatable<ParticleEffectAsset>, IStreamingResource
 	{
 		/// <summary>
 		/// Creates a class used for loading <see cref="ParticleEffectAsset"/>s than can be used to start <see cref="ParticleEffect"/>s from inside the Asset
