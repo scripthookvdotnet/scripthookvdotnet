@@ -35,6 +35,54 @@ namespace SHVDN
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
 
+		#region Instance Fields And Methods for Thread Local Storage
+
+		unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTls;
+		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTls;
+
+		IntPtr tlsAddressForExecutingThread;
+
+		internal void SetUp(IntPtr getTlsFuncAddr, IntPtr setTlsFuncAddr)
+		{
+			unsafe
+			{
+				GetTls = (delegate* unmanaged[Cdecl]<IntPtr>)(getTlsFuncAddr);
+				SetTls = (delegate* unmanaged[Cdecl]<IntPtr, void>)(setTlsFuncAddr);
+
+				tlsAddressForExecutingThread = GetTls();
+			}
+		}
+
+		/// <summary>
+		/// Gets the TLS context address in the current thread.
+		/// </summary>
+		private IntPtr GetCurrentTls()
+		{
+			unsafe
+			{
+				return GetTls();
+			}
+		}
+		/// <summary>
+		/// Sets the TLS context address in the current thread.
+		/// </summary>
+		private void SetCurrentTls(IntPtr value)
+		{
+			unsafe
+			{
+				SetTls(value);
+			}
+		}
+		private bool CanSwapTlsContext()
+		{
+			unsafe
+			{
+				return GetTls != null && SetTls != null;
+			}
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Gets the friendly name of this script domain.
 		/// </summary>
@@ -104,6 +152,8 @@ namespace SHVDN
 		{
 			// Need to free native strings when disposing the script domain
 			CleanupStrings();
+			// Need to free unmanaged resources in NativeMemory
+			NativeMemory.DisposeUnmanagedResources();
 		}
 
 		/// <summary>
@@ -548,10 +598,32 @@ namespace SHVDN
 			}
 			else
 			{
-				// Request came from the script thread, so need to pass it to the domain thread and execute there
-				taskQueue.Enqueue(task);
+				// Request came from the script thread
+				if (CanSwapTlsContext())
+				{
+					unsafe
+					{
+						IntPtr oldScriptTls = GetCurrentTls();
+						SetCurrentTls(tlsAddressForExecutingThread);
 
-				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
+						try
+						{
+							task.Run();
+						}
+						// Needs to revert tls context so stuff in the TLS in the script thread can be used
+						finally
+						{
+							SetCurrentTls(oldScriptTls);
+						}
+					}
+				}
+				else
+				{
+					// We can't swap tls context for some reason, so need to pass it to the domain thread and execute there as a fallback.
+					// This is an edge case since code in this scope will be executed only when one of function pointers for TLS is not allocated or one of them couldn't be created for some reason
+					taskQueue.Enqueue(task);
+					SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
+				}
 			}
 		}
 
