@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -24,6 +25,11 @@ namespace SHVDN
 
 	public class ScriptDomain : MarshalByRefObject, IDisposable
 	{
+		// Debugger.IsAttached does not detect a Visual Studio debugger
+		[SuppressUnmanagedCodeSecurity]
+		[DllImport("Kernel32.dll")]
+		internal static extern bool IsDebuggerPresent();
+
 		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
@@ -652,7 +658,8 @@ namespace SHVDN
 
 				executingScript = null;
 
-				if (!finishedInTime)
+				// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
+				if (!finishedInTime && !IsDebuggerPresent())
 				{
 					Log.Message(Log.Level.Error, "Script ", script.Name, " is not responding! Aborting ...");
 
