@@ -232,7 +232,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\shvdn\ScriptHookVDotNet.csproj" />
+    <ProjectReference Include="..\shvdn\ScriptHookVDotNet.csproj">
+      <Project>{8c93599c-fbb4-441a-888c-ec762ed29aa7}</Project>
+      <Name>ScriptHookVDotNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,11 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "source\core\core.vcxproj", "{9FF9BAF3-08D8-4F38-8550-5FF3F464BA95}"
-	ProjectSection(ProjectDependencies) = postProject
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F} = {75C2873D-315B-4DB3-8A34-921CF3668A2F}
-	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptHookVDotNet", "source\shvdn\ScriptHookVDotNet.csproj", "{75C2873D-315B-4DB3-8A34-921CF3668A2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet", "source\shvdn\ScriptHookVDotNet.csproj", "{8C93599C-FBB4-441A-888C-EC762ED29AA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,14 +48,14 @@ Global
 		{9FF9BAF3-08D8-4F38-8550-5FF3F464BA95}.Release|x64.Build.0 = Release|x64
 		{9FF9BAF3-08D8-4F38-8550-5FF3F464BA95}.Run NativeGen|x64.ActiveCfg = Release|x64
 		{9FF9BAF3-08D8-4F38-8550-5FF3F464BA95}.Run NativeGen|x64.Build.0 = Release|x64
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Debug|x64.Build.0 = Debug|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Release + Examples|x64.ActiveCfg = Release|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Release + Examples|x64.Build.0 = Release|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Release|x64.ActiveCfg = Release|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Release|x64.Build.0 = Release|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Run NativeGen|x64.ActiveCfg = Release|Any CPU
-		{75C2873D-315B-4DB3-8A34-921CF3668A2F}.Run NativeGen|x64.Build.0 = Release|Any CPU
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Debug|x64.ActiveCfg = Debug|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Debug|x64.Build.0 = Debug|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Release + Examples|x64.ActiveCfg = Release|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Release + Examples|x64.Build.0 = Release|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Release|x64.ActiveCfg = Release|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Release|x64.Build.0 = Release|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{8C93599C-FBB4-441A-888C-EC762ED29AA7}.Run NativeGen|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

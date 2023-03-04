@@ -160,6 +160,12 @@
     <Compile Include="GTA\ZoneID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\shvdn\ScriptHookVDotNet.csproj">
+      <Project>{8c93599c-fbb4-441a-888c-ec762ed29aa7}</Project>
+      <Name>ScriptHookVDotNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Fix some code constructs in the compiled C# code that can normally only be generated with C++/CLI, to retain compatibility with older ScriptHookVDotNet versions -->
   <UsingTask TaskName="ReplaceTextInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
@@ -191,7 +197,4 @@
     <ReplaceTextInFile File="@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')" PatternExpression="int32 ('GTA'\.'UI'::)?('WIDTH'|'HEIGHT')" ReplacementExpression="int32 modopt([mscorlib]System.Runtime.CompilerServices.IsConst) $1$2" />
     <Exec Command="&quot;$(ILAsmExe)&quot; /nologo /quiet $(ILAsmCommandLineArgs) /out=&quot;@(IntermediateAssembly)&quot; /resource=&quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.res')&quot; &quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')&quot;" />
   </Target>
-  <ItemGroup>
-	<ProjectReference Include="..\shvdn\ScriptHookVDotNet.csproj" />
-  </ItemGroup>
 </Project>

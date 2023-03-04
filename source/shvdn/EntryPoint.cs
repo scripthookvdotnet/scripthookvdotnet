@@ -73,7 +73,7 @@ namespace SHVDN
 			}
 		}
 
-		public static IList<AppDomain> GetAppDomains()
+		static IList<AppDomain> GetAppDomains()
 		{
 			IList<AppDomain> _IList = new List<AppDomain>();
 			IntPtr enumHandle = IntPtr.Zero;
