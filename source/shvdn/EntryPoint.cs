@@ -105,7 +105,7 @@ namespace SHVDN
 				List<string> stashedConsoleCommandHistory = new();
 
 				// Unload previous domains
-				foreach(var appDomain in GetAppDomains().Where(x => x.FriendlyName.StartsWith("ScriptDomain")))
+				foreach (var appDomain in GetAppDomains().Where(x => x.FriendlyName.StartsWith("ScriptDomain")))
 				{
 					var domain = appDomain.GetData("ScriptDomain") as ScriptDomain;
 					var console = appDomain?.GetData("Console") as Console;
@@ -174,8 +174,13 @@ namespace SHVDN
 					// Restore the console command history (set a empty history for the first time)
 					_console.CommandHistory = stashedConsoleCommandHistory;
 
+					// Get latest api assembly version
+					var version = _domain.AppDomain.GetAssemblies()
+						.Where(asm => asm.GetName().Name.StartsWith("ScriptHookVDotNet"))
+						.Select(asm => asm.GetName().Version).Max();
+
 					// Print welcome message
-					_console.PrintInfo($"~c~--- Community Script Hook V .NET {typeof(ScriptDomain).Assembly.GetName().Version} ---");
+					_console.PrintInfo($"~c~--- Community Script Hook V .NET {version} ---");
 					_console.PrintInfo("~c~--- Type \"Help()\" to print an overview of available commands ---");
 
 					// Update console pointer in script domain
