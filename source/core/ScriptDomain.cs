@@ -45,15 +45,12 @@ namespace SHVDN
 		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTlsContext;
 		IntPtr tlsContextOfMainThread;
 
-		internal void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
+		internal unsafe void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
 		{
-			unsafe
-			{
-				GetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
-				SetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
+			GetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
+			SetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
 
-				tlsContextOfMainThread = GetTlsContext();
-			}
+			tlsContextOfMainThread = GetTlsContext();
 		}
 
 		/// <summary>
@@ -95,6 +92,9 @@ namespace SHVDN
 			// Attach resolve handler to new domain
 			AppDomain.AssemblyResolve += HandleResolve;
 			AppDomain.UnhandledException += HandleUnhandledException;
+
+			// Initialize and scan memory at a predictable point
+			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory).TypeHandle);
 
 			// Load API assemblies into this script domain
 			foreach (string apiPath in Directory.EnumerateFiles(apiBasePath, "ScriptHookVDotNet*.dll", SearchOption.TopDirectoryOnly))
