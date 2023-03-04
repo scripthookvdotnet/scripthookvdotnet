@@ -653,12 +653,12 @@ namespace SHVDN
 					if (System.IO.File.Exists(script.Filename) && System.IO.Path.GetExtension(script.Filename) == ".dll")
 						compilerOptions.ReferencedAssemblies.Add(script.Filename);
 
-				const string template =
+				string src =
 					"using System; using System.Linq; using System.Drawing; using System.Windows.Forms; using GTA; using GTA.Math; using GTA.Native; " +
 					// Define some shortcut variables to simplify commands
-					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.Player.Character; var V = P.CurrentVehicle; {0}; return null; }} }}";
+					$"public class ConsoleInput : {typeof(EntryPoint).FullName} {{ public static object Execute() {{ var P = Game.Player.Character; var V = P.CurrentVehicle; {input}; return null; }} }}";
 
-				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
+				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, src);
 
 				if (!compilerResult.Errors.HasErrors)
 				{

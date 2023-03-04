@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,6 +31,41 @@ namespace SHVDN
 		[DllImport("Kernel32.dll")]
 		internal static extern bool IsDebuggerPresent();
 
+
+		[DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+		public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+
+		internal static IntPtr AsiModule;
+		public static IntPtr Import(string entryPoint)
+		{
+			var addr = GetProcAddress(AsiModule, entryPoint);
+			Debug.Assert(addr != default);
+			return addr;
+		}
+
+		internal static unsafe delegate* unmanaged[Cdecl]<string, LPVOID> GetPtr;
+		internal static unsafe delegate* unmanaged[Cdecl]<string, LPVOID, void> SetPtr;
+
+		internal unsafe void SetUp(IntPtr asiModule)
+		{
+			ModuleSetUp(asiModule);
+			var getTlsFuncAddr = GetPtr("SHVDN.ASI.GetTlsFuncAddr");
+			var setTlsFuncAddr = GetPtr("SHVDN.ASI.SetTlsFuncAddr");
+			Debug.Assert(getTlsFuncAddr != default);
+			Debug.Assert(setTlsFuncAddr != default);
+			InitTlsContext(getTlsFuncAddr, setTlsFuncAddr);
+		}
+
+		internal static unsafe void ModuleSetUp(IntPtr asiModule)
+		{
+			AsiModule = asiModule;
+			GetPtr = (delegate* unmanaged[Cdecl]<string, LPVOID>)Import("GetPtr");
+			SetPtr = (delegate* unmanaged[Cdecl]<string, LPVOID, void>)Import("SetPtr");
+			Debug.Assert(GetPtr != default);
+			Debug.Assert(SetPtr != default);
+		}
+
 		int executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		Script executingScript = null;
 		List<IntPtr> pinnedStrings = new List<IntPtr>();
@@ -41,11 +77,11 @@ namespace SHVDN
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
 
-		unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTlsContext;
-		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTlsContext;
-		IntPtr tlsContextOfMainThread;
+		static unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTlsContext;
+		static unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTlsContext;
+		static IntPtr tlsContextOfMainThread;
 
-		internal void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
+		internal static void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
 		{
 			unsafe
 			{

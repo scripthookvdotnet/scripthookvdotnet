@@ -33,21 +33,22 @@ namespace ScriptInstance
 			{
 				SpawnAItwo();
 			}
+			else if ((AIone ?? AItwo) == null)
+			{
+				return;
+			}
 			else if (e.KeyCode == Keys.G) // Changes AIone animation
 			{
-				if (AIone != null)
+				if (AIone.animation == "Jump")
 				{
-					if (AIone.animation == "Jump")
-					{
-						AIone.animation = "HandsUp";
-					}
-					else
-					{
-						AIone.animation = "Jump";
-					}
-
-					GTA.UI.Notification.Show("SpawnAI: Animation(" + AIone.animation + ");");
+					AIone.animation = "HandsUp";
 				}
+				else
+				{
+					AIone.animation = "Jump";
+				}
+
+				GTA.UI.Notification.Show("SpawnAI: Animation(" + AIone.animation + ");");
 			}
 			else if (e.KeyCode == Keys.H) // Sets Wait() for AItwo
 			{

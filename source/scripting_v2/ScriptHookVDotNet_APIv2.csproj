@@ -46,13 +46,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
-      <Name>ScriptHookVDotNet</Name>
-      <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="GTA.Math\Matrix.cs" />
     <Compile Include="GTA.Math\Quaternion.cs" />
     <Compile Include="GTA.Math\Vector2.cs" />
@@ -198,4 +191,7 @@
     <ReplaceTextInFile File="@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')" PatternExpression="int32 ('GTA'\.'UI'::)?('WIDTH'|'HEIGHT')" ReplacementExpression="int32 modopt([mscorlib]System.Runtime.CompilerServices.IsConst) $1$2" />
     <Exec Command="&quot;$(ILAsmExe)&quot; /nologo /quiet $(ILAsmCommandLineArgs) /out=&quot;@(IntermediateAssembly)&quot; /resource=&quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.res')&quot; &quot;@(IntermediateAssembly->'%(RelativeDir)%(Filename)_repack.il')&quot;" />
   </Target>
+  <ItemGroup>
+	<ProjectReference Include="..\shvdn\ScriptHookVDotNet.csproj" />
+  </ItemGroup>
 </Project>

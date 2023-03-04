@@ -46,13 +46,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj">
-      <Name>ScriptHookVDotNet</Name>
-      <Project>{b2933d8f-f922-40bd-bb70-18622a81ab8f}</Project>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="GTA.Math\Matrix.cs" />
     <Compile Include="GTA.Math\Quaternion.cs" />
     <Compile Include="GTA.Math\EulerRotationOrder.cs" />
@@ -237,6 +230,9 @@
     <Compile Include="GTA\WindowTitle.cs" />
     <Compile Include="GTA\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\shvdn\ScriptHookVDotNet.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
