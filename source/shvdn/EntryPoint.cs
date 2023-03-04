@@ -121,6 +121,12 @@ namespace SHVDN
 						{
 							stashedConsoleCommandHistory = console.CommandHistory;
 						}
+						if (domain.AppDomain.Id == _domain?.AppDomain.Id)
+						{
+							// Clear remote object
+							_domain = null;
+							_console = null;
+						}
 						ScriptDomain.Unload(domain);
 					}
 				}
@@ -208,6 +214,7 @@ namespace SHVDN
 				MessageBox.Show(ex.ToString(), "ScriptHookVDotNet error");
 			}
 		}
+
 		static void DoTick()
 		{
 			try
@@ -238,7 +245,6 @@ namespace SHVDN
 				return;
 			try
 			{
-
 				if (_console != null)
 				{
 					if (keydown && key == _reloadKey)
@@ -266,7 +272,7 @@ namespace SHVDN
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "ScriptHookVDotNet error");
+				MessageBox.Show(ex.ToString(), "ScriptHookVDotNet error");
 			}
 		}
 
@@ -281,6 +287,7 @@ namespace SHVDN
 			_console.PrintInfo("~c~--- Commands ---");
 			_console.PrintHelpText();
 		}
+
 		[ConsoleCommand("Print the help for a specific command")]
 		public static void Help(String command)
 		{
@@ -318,6 +325,7 @@ namespace SHVDN
 
 			_domain.StartScripts(filename);
 		}
+
 		[ConsoleCommand("Abort all scripts from a file")]
 		public static void Abort(String filename)
 		{
@@ -334,6 +342,7 @@ namespace SHVDN
 
 			_domain.AbortScripts(filename);
 		}
+
 		[ConsoleCommand("Abort all scripts currently running")]
 		public static void AbortAll()
 		{
@@ -350,6 +359,7 @@ namespace SHVDN
 
 				_console.PrintInfo(Path.GetFileName(script.Filename) + " ~h~" + script.Name + (script.IsRunning ? (script.IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
 		}
+
 		public static void SetConsole()
 		{
 			_domain = ScriptDomain.CurrentDomain;
