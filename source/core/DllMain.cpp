@@ -334,8 +334,9 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 		// Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
 		DisableThreadLibraryCalls(hModule);
 		// Call a managed function to force the CLR to initialize immediately
-		// This is technically not a good idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
-		ForceCLRInit();
+		// This is technically a very bad idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
+		if (!GetModuleHandle(TEXT("clr.dll")))
+			ForceCLRInit();
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
