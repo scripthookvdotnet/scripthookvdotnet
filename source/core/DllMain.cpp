@@ -34,12 +34,7 @@ void OnKeyboard(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL is
 		(GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0,
 		isWithAlt != FALSE);
 }
-LPVOID sGameFiber;
 void ScriptMain() {
-
-	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
-	sGameFiber = GetCurrentFiber();
-
 	while (true)
 	{
 		GameReloaded = false;
@@ -47,14 +42,6 @@ void ScriptMain() {
 
 		while (!GameReloaded)
 		{
-			const PVOID currentFiber = GetCurrentFiber();
-			if (currentFiber != sGameFiber)
-			{
-				// SHV switches the fiber when the game loads a save, so trigger a reload here
-				sGameFiber = currentFiber;
-				GameReloaded = true;
-				break;
-			}
 			CLR_DoTick();
 			scriptWait(0);
 		}
