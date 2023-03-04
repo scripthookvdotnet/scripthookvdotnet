@@ -107,17 +107,29 @@ namespace SHVDN
 		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
 		public static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
 		{
+			// Convert pattern to byte array and check for invalid byte (overflow).
+			var patternBytes = pattern.Select(x => checked((byte)x)).ToArray();
+			var patternId = $"{typeof(NativeMemory).FullName}.Patterns.{BitConverter.ToString(patternBytes)}.{mask}.{startAddress}.{size}";
+
+			// Try to find cached offset
+			var cached = ScriptDomain.GetPtr(patternId);
+			if (cached != default)
+				return (byte*)cached;
+
 			ulong address = (ulong)startAddress.ToInt64();
 			ulong endAddress = address + size;
 
 			for (; address < endAddress; address++)
 			{
-				for (int i = 0; i < pattern.Length; i++)
+				for (int i = 0; i < patternBytes.Length; i++)
 				{
-					if (mask[i] != '?' && ((byte*)address)[i] != pattern[i])
+					if (mask[i] != '?' && ((byte*)address)[i] != patternBytes[i])
 						break;
-					else if (i + 1 == pattern.Length)
+					else if (i + 1 == patternBytes.Length)
+					{
+						ScriptDomain.SetPtr(patternId, (IntPtr)address);
 						return (byte*)address;
+					}
 				}
 			}
 

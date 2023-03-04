@@ -55,6 +55,8 @@ namespace SHVDN
 			Debug.Assert(getTlsFuncAddr != default);
 			Debug.Assert(setTlsFuncAddr != default);
 			InitTlsContext(getTlsFuncAddr, setTlsFuncAddr);
+			// Initialize NativeMemory
+			_ = NativeMemory.AccelerationOffset;
 		}
 
 		internal static unsafe void ModuleSetUp(IntPtr asiModule)

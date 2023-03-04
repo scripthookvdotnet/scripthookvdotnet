@@ -2,7 +2,7 @@
 #pragma once
 
 #define DllExport extern "C" __declspec( dllexport ) inline
-#include <map>
+#include <unordered_map>
 #include <mutex>
 #define LOCK(mtx) std::scoped_lock l(mtx)
 using namespace std;
@@ -16,7 +16,7 @@ const LPCSTR KEY_ASI_HMODULE = "SHVDN.ASI.ModuleHandle";
 const LPCSTR KEY_ASI_PTRRELOADED = "SHVDN.ASI.PtrGameReloaded";
 
 
-inline map<string, LPVOID> PtrMap;
+inline unordered_map<string, LPVOID> PtrMap;
 inline mutex PtrMapMutex;
 inline HMODULE AsiModule;
 inline TCHAR AsiFilePath[MAX_PATH];
