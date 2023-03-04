@@ -44,8 +44,8 @@ namespace SHVDN
 			return addr;
 		}
 
-		internal static unsafe delegate* unmanaged[Cdecl]<string, LPVOID> GetPtr;
-		internal static unsafe delegate* unmanaged[Cdecl]<string, LPVOID, void> SetPtr;
+		internal static unsafe delegate* unmanaged[Cdecl]<string, IntPtr> GetPtr;
+		internal static unsafe delegate* unmanaged[Cdecl]<string, IntPtr, void> SetPtr;
 
 		internal unsafe void SetUp(IntPtr asiModule)
 		{
@@ -60,8 +60,8 @@ namespace SHVDN
 		internal static unsafe void ModuleSetUp(IntPtr asiModule)
 		{
 			AsiModule = asiModule;
-			GetPtr = (delegate* unmanaged[Cdecl]<string, LPVOID>)Import("GetPtr");
-			SetPtr = (delegate* unmanaged[Cdecl]<string, LPVOID, void>)Import("SetPtr");
+			GetPtr = (delegate* unmanaged[Cdecl]<string, IntPtr>)Import("GetPtr");
+			SetPtr = (delegate* unmanaged[Cdecl]<string, IntPtr, void>)Import("SetPtr");
 			Debug.Assert(GetPtr != default);
 			Debug.Assert(SetPtr != default);
 		}

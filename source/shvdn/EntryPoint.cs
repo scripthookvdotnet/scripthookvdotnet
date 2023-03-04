@@ -1,8 +1,4 @@
-﻿global using WORD = System.UInt16;
-global using DWORD = System.UInt32;
-global using DWORD64 = System.UInt64;
-global using LPVOID = System.IntPtr;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
@@ -28,7 +24,7 @@ namespace SHVDN
 	public unsafe class EntryPoint
 	{
 		delegate void VoidDelegate();
-		delegate void KeyboardEventDelegate(DWORD keycode, bool keydown, bool ctrl, bool shift, bool alt);
+		delegate void KeyboardEventDelegate(uint keycode, bool keydown, bool ctrl, bool shift, bool alt);
 
 		// Used to keep reference as the unmnagaed entry created by
 		// Marshal.GetFunctionPointerForDelegate will be destroyed/GC'ed after some timeout.
@@ -215,7 +211,7 @@ namespace SHVDN
 			}
 		}
 
-		static void DoKeyboard(DWORD keycode, bool keydown, bool ctrl, bool shift, bool alt)
+		static void DoKeyboard(uint keycode, bool keydown, bool ctrl, bool shift, bool alt)
 		{
 
 			// Filter out invalid key codes
