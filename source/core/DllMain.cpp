@@ -20,10 +20,10 @@ void Startup() {
 
 	// Set up well-known properties
 	SetEnvironmentVariable(L"SHVDN_ASI_PATH", AsiFilePath);
-	SetPtr("SHVDN.ASI.GetTlsFuncAddr", GetTls);
-	SetPtr("SHVDN.ASI.SetTlsFuncAddr", SetTls);
-	SetPtr("SHVDN.ASI.ModuleHandle", AsiModule);
-	SetPtr("SHVDN.ASI.PtrGameReloaded", &GameReloaded);
+	SetPtr(KEY_ASI_GETTLSFUNC, GetTls);
+	SetPtr(KEY_ASI_SETTLSFUNC, SetTls);
+	SetPtr(KEY_ASI_HMODULE, AsiModule);
+	SetPtr(KEY_ASI_PTRRELOADED, &GameReloaded);
 	CLR_Startup();
 }
 void OnKeyboard(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow) {

@@ -50,8 +50,8 @@ namespace SHVDN
 		internal unsafe void SetUp(IntPtr asiModule)
 		{
 			ModuleSetUp(asiModule);
-			var getTlsFuncAddr = GetPtr("SHVDN.ASI.GetTlsFuncAddr");
-			var setTlsFuncAddr = GetPtr("SHVDN.ASI.SetTlsFuncAddr");
+			var getTlsFuncAddr = GetPtr(EntryPoint.KEY_ASI_GETTLSFUNC);
+			var setTlsFuncAddr = GetPtr(EntryPoint.KEY_ASI_SETTLSFUNC);
 			Debug.Assert(getTlsFuncAddr != default);
 			Debug.Assert(setTlsFuncAddr != default);
 			InitTlsContext(getTlsFuncAddr, setTlsFuncAddr);

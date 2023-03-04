@@ -23,6 +23,14 @@ namespace SHVDN
 	}
 	public unsafe class EntryPoint
 	{
+		public const string KEY_CLR_INITFUNC = "SHVDN.CLR.InitFuncAddr";
+		public const string KEY_CLR_TICKFUNC = "SHVDN.CLR.TickFuncAddr";
+		public const string KEY_CLR_KBHFUNC = "SHVDN.CLR.KeyboardHandlerFuncAddr";
+		public const string KEY_ASI_GETTLSFUNC = "SHVDN.ASI.GetTlsFuncAddr";
+		public const string KEY_ASI_SETTLSFUNC = "SHVDN.ASI.SetTlsFuncAddr";
+		public const string KEY_ASI_HMODULE = "SHVDN.ASI.ModuleHandle";
+		public const string KEY_ASI_PTRRELOADED = "SHVDN.ASI.PtrGameReloaded";
+
 		delegate void VoidDelegate();
 		delegate void KeyboardEventDelegate(uint keycode, bool keydown, bool ctrl, bool shift, bool alt);
 
@@ -32,9 +40,6 @@ namespace SHVDN
 		static readonly VoidDelegate _tickFunc = DoTick;
 		static readonly KeyboardEventDelegate _keyboardFunc = DoKeyboard;
 
-		const string KEY_CLR_INITFUNC = "SHVDN.CLR.InitFuncAddr";
-		const string KEY_CLR_TICKFUNC = "SHVDN.CLR.TickFuncAddr";
-		const string KEY_CLR_KBHFUNC = "SHVDN.CLR.KeyboardHandlerFuncAddr";
 		static Console _console;
 		static ScriptDomain _domain;
 		static Keys _reloadKey;

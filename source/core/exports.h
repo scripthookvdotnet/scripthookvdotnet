@@ -10,6 +10,11 @@ using namespace std;
 const LPCSTR KEY_CLR_INITFUNC = "SHVDN.CLR.InitFuncAddr";
 const LPCSTR KEY_CLR_TICKFUNC = "SHVDN.CLR.TickFuncAddr";
 const LPCSTR KEY_CLR_KBHFUNC = "SHVDN.CLR.KeyboardHandlerFuncAddr";
+const LPCSTR KEY_ASI_GETTLSFUNC = "SHVDN.ASI.GetTlsFuncAddr";
+const LPCSTR KEY_ASI_SETTLSFUNC = "SHVDN.ASI.SetTlsFuncAddr";
+const LPCSTR KEY_ASI_HMODULE = "SHVDN.ASI.ModuleHandle";
+const LPCSTR KEY_ASI_PTRRELOADED = "SHVDN.ASI.PtrGameReloaded";
+
 
 inline map<string, LPVOID> PtrMap;
 inline mutex PtrMapMutex;
