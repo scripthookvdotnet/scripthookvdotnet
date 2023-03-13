@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace SHVDN
 {
@@ -99,6 +100,9 @@ namespace SHVDN
 			// Load API assemblies into this script domain
 			foreach (string apiPath in Directory.EnumerateFiles(apiBasePath, "ScriptHookVDotNet*.dll", SearchOption.TopDirectoryOnly))
 			{
+				if (!Regex.IsMatch(Path.GetFileName(apiPath), @"^ScriptHookVDotNet\d\.dll$"))
+					continue;
+
 				Log.Message(Log.Level.Debug, "Loading API from ", apiPath, " ...");
 
 				try
