@@ -150,9 +150,13 @@ static void ScriptHookVDotNet_ManagedInit()
 		if (console != nullptr)
 		{
 			stashedConsoleCommandHistory = console->CommandHistory;
+			console = nullptr;
 		}
 
-		SHVDN::ScriptDomain::Unload(domain);
+		// Set remoting object to null first to avoid AppDomainUnloadedException in keyboard handler
+		SHVDN::ScriptDomain ^tmp = domain;
+		domain = nullptr;
+		SHVDN::ScriptDomain::Unload(tmp);
 	}
 
 
