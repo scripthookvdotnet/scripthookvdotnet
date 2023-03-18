@@ -7,6 +7,12 @@
 
 #include <Windows.h>
 
+HANDLE hCLRThread;
+HANDLE hCLRWaitEvent;
+HANDLE hCLRContinueEvent;
+LPVOID GameTls;
+bool sGameReloaded = false;
+
 static void SetTlsContext(LPVOID context)
 {
 	__writegsqword(0x58, reinterpret_cast<DWORD64>(context));
@@ -17,8 +23,6 @@ static LPVOID GetTlsContext()
 }
 
 #pragma managed(pop)
-
-bool sGameReloaded = false;
 
 // Import C# code base
 #using "ScriptHookVDotNet.netmodule"
@@ -132,11 +136,6 @@ internal:
 		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
 	}
 };
-
-static void ForceCLRInit()
-{
-	// Just a function that doesn't do anything, except for being compiled to MSIL
-}
 
 static void ScriptHookVDotNet_ManagedInit()
 {
@@ -282,37 +281,41 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 	}
 }
 
+static DWORD CLRThreadProc(LPVOID lparam)
+{
+	LPVOID tlsContextOrg = GetTlsContext();
+	while (true) {
+		WaitForSingleObject(hCLRContinueEvent, INFINITE);
+		SetTlsContext(GameTls);
+		ScriptHookVDotNet_ManagedInit();
+		SetTlsContext(tlsContextOrg);
+		sGameReloaded = false;
+		SetEvent(hCLRWaitEvent);
+
+		while (!sGameReloaded) {
+			WaitForSingleObject(hCLRContinueEvent, INFINITE);
+			SetTlsContext(GameTls);
+			ScriptHookVDotNet_ManagedTick();
+			SetTlsContext(tlsContextOrg);
+			SetEvent(hCLRWaitEvent);
+		}
+	}
+	return 0;
+}
+
 #pragma unmanaged
 
 #include <Main.h>
 
-PVOID sGameFiber = nullptr;
-
 static void ScriptMain()
 {
-	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
-	sGameFiber = GetCurrentFiber();
-
+	sGameReloaded = true;
 	while (true)
 	{
-		sGameReloaded = false;
-
-		ScriptHookVDotNet_ManagedInit();
-
-		while (!sGameReloaded)
-		{
-			// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
-			const PVOID currentFiber = GetCurrentFiber();
-			if (currentFiber != sGameFiber)
-			{
-				sGameFiber = currentFiber;
-				sGameReloaded = true;
-				break;
-			}
-
-			ScriptHookVDotNet_ManagedTick();
-			scriptWait(0);
-		}
+		GameTls = GetTlsContext();
+		SetEvent(hCLRContinueEvent);
+		WaitForSingleObject(hCLRWaitEvent, INFINITE);
+		scriptWait(0);
 	}
 }
 
@@ -333,20 +336,24 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	case DLL_PROCESS_ATTACH:
 		// Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
 		DisableThreadLibraryCalls(hModule);
-		// Call a managed function to force the CLR to initialize immediately
-		// This is technically a very bad idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
-		if (!GetModuleHandle(TEXT("clr.dll")))
-			ForceCLRInit();
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
 		keyboardHandlerRegister(ScriptKeyboardMessage);
+		// Create synchronization events for CLR thread
+		hCLRContinueEvent = CreateEvent(NULL, false, false, NULL);
+		hCLRWaitEvent = CreateEvent(NULL, false, false, NULL);
+		// Create a seperate thread to run CLR
+		hCLRThread = CreateThread(NULL, NULL, CLRThreadProc, NULL, NULL, NULL);
 		break;
 	case DLL_PROCESS_DETACH:
 		// Unregister ScriptHookVDotNet native script
 		scriptUnregister(hModule);
 		// Unregister handler for keyboard messages
 		keyboardHandlerUnregister(ScriptKeyboardMessage);
+		// Cleanup events
+		CloseHandle(hCLRContinueEvent);
+		CloseHandle(hCLRWaitEvent);
 		break;
 	}
 
