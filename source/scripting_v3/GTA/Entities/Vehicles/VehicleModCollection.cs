@@ -233,6 +233,36 @@ namespace GTA
 				return Game.GetLocalizedString(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, Livery));
 			}
 		}
+		public string[] AllNamesOfLiverysLocalized
+		{
+			get
+			{
+				int modCount = this[VehicleModType.Livery].Count;
+
+				if (modCount > 0)
+				{
+					var allNamesOfVMTLiverys
+						= new string[LiveryCount];
+
+					for (int i = 0; i < allNamesOfVMTLiverys.Length; i++)
+					{
+						allNamesOfVMTLiverys[i] = this[VehicleModType.Livery].LocalizedName;
+					}
+
+					return allNamesOfVMTLiverys;
+				}
+
+				var allNamesOfTXDLiverys
+					= new string[LiveryCount];
+
+				for (int i = 0; i < allNamesOfTXDLiverys.Length; i++)
+				{
+					allNamesOfTXDLiverys[i] = Game.GetLocalizedString(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, Livery));
+				}
+
+				return allNamesOfTXDLiverys;
+			}
+		}
 
 		public VehicleWindowTint WindowTint
 		{
