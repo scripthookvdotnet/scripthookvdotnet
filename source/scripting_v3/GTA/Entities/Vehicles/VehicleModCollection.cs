@@ -233,7 +233,7 @@ namespace GTA
 				return Game.GetLocalizedString(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, Livery));
 			}
 		}
-		public string[] AllNamesOfLiverysLocalized
+		public string[] AllNamesOfLiveriesLocalized
 		{
 			get
 			{
@@ -241,24 +241,24 @@ namespace GTA
 
 				if (modCount > 0)
 				{
-					var allNamesOfVMTLiverys = new string[LiveryCount];
+					var allNamesOfVMTLiveries = new string[LiveryCount];
 
-					for (int i = 0; i < allNamesOfVMTLiverys.Length; i++)
+					for (int i = 0; i < allNamesOfVMTLiveries.Length; i++)
 					{
-						allNamesOfVMTLiverys[i] = this[VehicleModType.Livery].LocalizedName;
+						allNamesOfVMTLiveries[i] = this[VehicleModType.Livery].LocalizedName;
 					}
 
-					return allNamesOfVMTLiverys;
+					return allNamesOfVMTLiveries;
 				}
 
-				var allNamesOfTXDLiverys = new string[LiveryCount];
+				var allNamesOfTXDLiveries = new string[LiveryCount];
 
-				for (int i = 0; i < allNamesOfTXDLiverys.Length; i++)
+				for (int i = 0; i < allNamesOfTXDLiveries.Length; i++)
 				{
-					allNamesOfTXDLiverys[i] = Game.GetLocalizedString(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, Livery));
+					allNamesOfTXDLiveries[i] = Game.GetLocalizedString(Function.Call<string>(Hash.GET_LIVERY_NAME, _owner.Handle, Livery));
 				}
 
-				return allNamesOfTXDLiverys;
+				return allNamesOfTXDLiveries;
 			}
 		}
 
