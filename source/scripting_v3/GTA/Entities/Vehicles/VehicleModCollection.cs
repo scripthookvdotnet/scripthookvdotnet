@@ -241,8 +241,7 @@ namespace GTA
 
 				if (modCount > 0)
 				{
-					var allNamesOfVMTLiverys
-						= new string[LiveryCount];
+					var allNamesOfVMTLiverys = new string[LiveryCount];
 
 					for (int i = 0; i < allNamesOfVMTLiverys.Length; i++)
 					{
@@ -252,8 +251,7 @@ namespace GTA
 					return allNamesOfVMTLiverys;
 				}
 
-				var allNamesOfTXDLiverys
-					= new string[LiveryCount];
+				var allNamesOfTXDLiverys = new string[LiveryCount];
 
 				for (int i = 0; i < allNamesOfTXDLiverys.Length; i++)
 				{
