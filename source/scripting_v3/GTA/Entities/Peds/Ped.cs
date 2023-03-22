@@ -6,6 +6,7 @@
 using GTA.Math;
 using GTA.Native;
 using GTA.NaturalMotion;
+using SHVDN;
 using System;
 using System.Linq;
 
@@ -1512,13 +1513,13 @@ namespace GTA
 					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
 
 					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
-					var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+					ulong endtime = WinAPIWrapper.GetTickCount64() + 1000;
 
 					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
 					{
 						Script.Yield();
 
-						if (DateTime.UtcNow >= endtime)
+						if (WinAPIWrapper.GetTickCount64() >= endtime)
 						{
 							return;
 						}

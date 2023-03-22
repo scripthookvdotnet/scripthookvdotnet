@@ -5,6 +5,7 @@
 
 using GTA.Math;
 using GTA.Native;
+using SHVDN;
 using System;
 
 namespace GTA
@@ -381,14 +382,14 @@ namespace GTA
 		{
 			Request();
 
-			DateTime endtime = timeout >= 0 ? DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, timeout) : DateTime.MaxValue;
+			ulong endtime = timeout >= 0 ? WinAPIWrapper.GetTickCount64() + (uint)timeout : ulong.MaxValue;
 
 			while (!IsLoaded)
 			{
 				Script.Yield();
 				Request();
 
-				if (DateTime.UtcNow >= endtime)
+				if (WinAPIWrapper.GetTickCount64() >= endtime)
 				{
 					return false;
 				}
@@ -413,14 +414,14 @@ namespace GTA
 		{
 			Request();
 
-			DateTime endtime = timeout >= 0 ? DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, timeout) : DateTime.MaxValue;
+			ulong endtime = timeout >= 0 ? WinAPIWrapper.GetTickCount64() + (uint)timeout : ulong.MaxValue;
 
 			while (!IsLoaded)
 			{
 				Script.Yield();
 				RequestCollision();
 
-				if (DateTime.UtcNow >= endtime)
+				if (WinAPIWrapper.GetTickCount64() >= endtime)
 				{
 					return false;
 				}

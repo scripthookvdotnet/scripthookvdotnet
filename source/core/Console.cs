@@ -28,7 +28,7 @@ namespace SHVDN
 		List<string> commandHistory; // This must be set via CommandHistory property
 		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
-		DateTime lastClosed;
+		ulong lastClosedTickCount;
 		Task<MethodInfo> compilerTask;
 		const int BASE_WIDTH = 1280;
 		const int BASE_HEIGHT = 720;
@@ -60,7 +60,7 @@ namespace SHVDN
 				isOpen = value;
 				DisableControlsThisFrame();
 				if (!isOpen)
-					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
+					lastClosedTickCount = WinAPIWrapper.GetTickCount64() + 200; // Hack so the input gets blocked long enough
 			}
 		}
 
@@ -272,7 +272,7 @@ namespace SHVDN
 		/// </summary>
 		internal void DoTick()
 		{
-			DateTime now = DateTime.UtcNow;
+			ulong nowTickCount = WinAPIWrapper.GetTickCount64();
 
 			// Execute compiled input line script
 			if (compilerTask != null && compilerTask.IsCompleted)
@@ -305,7 +305,7 @@ namespace SHVDN
 			if (!IsOpen)
 			{
 				// Hack so the input gets blocked long enough
-				if (lastClosed > now)
+				if (lastClosedTickCount > nowTickCount)
 					DisableControlsThisFrame();
 				return; // Nothing more to do here when the console is not open
 			}
@@ -326,7 +326,7 @@ namespace SHVDN
 			DrawText(5, CONSOLE_HEIGHT + INPUT_HEIGHT, "Page " + currentPage + "/" + System.Math.Max(1, ((lineHistory.Count + (LINES_PER_PAGE - 1)) / LINES_PER_PAGE)), InputColor);
 
 			// Draw blinking cursor
-			if (now.Millisecond < 500)
+			if (nowTickCount % 1000 < 500)
 			{
 				float length = GetTextLength(input.Substring(0, cursorPos));
 				DrawText(25 + (length * CONSOLE_WIDTH) - 4, CONSOLE_HEIGHT, "~w~~h~|~w~", InputColor);

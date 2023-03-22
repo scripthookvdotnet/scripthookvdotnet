@@ -5,6 +5,7 @@
 
 using GTA.Math;
 using GTA.Native;
+using SHVDN;
 using System;
 
 namespace GTA
@@ -261,13 +262,13 @@ namespace GTA
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
-			var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+			ulong endtime = WinAPIWrapper.GetTickCount64() + 1000;
 
 			while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, animDict))
 			{
 				Script.Yield();
 
-				if (DateTime.UtcNow >= endtime)
+				if (WinAPIWrapper.GetTickCount64() >= endtime)
 				{
 					return;
 				}
