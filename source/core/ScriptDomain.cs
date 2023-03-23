@@ -566,18 +566,9 @@ namespace SHVDN
 		/// Execute a script task in this script domain.
 		/// </summary>
 		/// <param name="task">The task to execute.</param>
-		public unsafe void ExecuteTask(IScriptTask task)
+		public void ExecuteTask(IScriptTask task)
 		{
-			if (GetTlsContext == null || SetTlsContext == null)
-			{
-				// Need to pass the task to the domain thread and execute it there as a fallback
-				// This is an edge case and is only needed when one of the function pointers for TLS context management is not set in the script domain
-				taskQueue.Enqueue(task);
-				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
-				return;
-			}
-			var tlsOrg = GetTlsContext();
-			if (tlsOrg == tlsContextOfMainThread)
+			if (Thread.CurrentThread.ManagedThreadId == executingThreadId)
 			{
 				// Request came from the main thread, so can just execute it right away
 				task.Run();
@@ -585,17 +576,30 @@ namespace SHVDN
 			else
 			{
 				// Request came from the script thread
-				SetTlsContext(tlsContextOfMainThread);
+				unsafe
+				{
+					if (GetTlsContext != null && SetTlsContext != null)
+					{
+						IntPtr tlsContextOfScriptThread = GetTlsContext();
+						SetTlsContext(tlsContextOfMainThread);
 
-				try
-				{
-					task.Run();
+						try
+						{
+							task.Run();
+						}
+						finally
+						{
+							// Need to revert TLS context to the real one of the script thread
+							SetTlsContext(tlsContextOfScriptThread);
+						}
+						return;
+					}
 				}
-				finally
-				{
-					// Need to revert TLS context to the real one of the script thread
-					SetTlsContext(tlsOrg);
-				}
+
+				// Need to pass the task to the domain thread and execute it there as a fallback
+				// This is an edge case and is only needed when one of the function pointers for TLS context management is not set in the script domain
+				taskQueue.Enqueue(task);
+				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
 			}
 		}
 
