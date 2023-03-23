@@ -187,6 +187,34 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or sets the suspension strength of this <see cref="VehicleWheel"/>.
+		/// After the value is changed, the physics of the owner <see cref="Vehicle"/> must be activated before the change can apply.
+		/// </summary>
+		public float SuspensionStrength
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSuspensionStrengthOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.VehicleWheelSuspensionStrengthOffset);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSuspensionStrengthOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.VehicleWheelSuspensionStrengthOffset, value);
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the temperature of <see cref="VehicleWheel"/>. This value rises when <see cref="Vehicle"/> is drifting, braking, or in burnout.
 		/// If this value is kept at <c>59f</c> when <see cref="Vehicle"/> is on burnout for a short time, the tire will burst.
 		/// </summary>

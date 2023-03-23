@@ -628,6 +628,7 @@ namespace SHVDN
 			if (address != null)
 			{
 				VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 12);
+				VehicleWheelSuspensionStrengthOffset = VehicleWheelSteeringLimitMultiplierOffset - 4;
 			}
 
 			address = FindPattern("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
@@ -1951,6 +1952,8 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> BurstVehicleTireOnRimOldFunc;
 
 		public static int VehicleWheelSteeringLimitMultiplierOffset { get; }
+
+		public static int VehicleWheelSuspensionStrengthOffset { get; }
 
 		public static int VehicleWheelTemperatureOffset { get; }
 
