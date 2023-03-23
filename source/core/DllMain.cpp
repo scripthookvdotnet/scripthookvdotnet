@@ -288,7 +288,7 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 static DWORD CLRThreadProc(LPVOID lparam)
 {
 	LPVOID tlsContextOrg = GetTlsContext();
-	while (true) {
+	while (hCLRContinueEvent) {
 		WaitForSingleObject(hCLRContinueEvent, INFINITE);
 		SetTlsContext(GameTls);
 		ScriptHookVDotNet_ManagedInit();
@@ -296,7 +296,7 @@ static DWORD CLRThreadProc(LPVOID lparam)
 		sGameReloaded = false;
 		SetEvent(hCLRWaitEvent);
 
-		while (!sGameReloaded) {
+		while (!sGameReloaded && hCLRContinueEvent) {
 			WaitForSingleObject(hCLRContinueEvent, INFINITE);
 			SetTlsContext(GameTls);
 			ScriptHookVDotNet_ManagedTick();
@@ -358,6 +358,8 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 		// Cleanup events
 		CloseHandle(hCLRContinueEvent);
 		CloseHandle(hCLRWaitEvent);
+		hCLRContinueEvent = NULL;
+		hCLRWaitEvent = NULL;
 		break;
 	}
 
