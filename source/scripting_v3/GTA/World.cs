@@ -1075,7 +1075,13 @@ namespace GTA
 		/// </summary>
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Prop"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
-		/// <param name="dynamic">if set to <see langword="true" /> the <see cref="Prop"/> will have physics; otherwise, it will be static.</param>
+		/// <param name="dynamic">
+		/// <para>
+		/// If <see langword="true"/>, the prop will always be forced to be an regular prop type (<c>CObject</c>). This applies when creating an object that uses a door model.
+		/// If this is <see langword="false"/>, the prop will be created as a door type (<c>CDoor</c>) and it will work as a door.
+		/// </para>
+		/// <para>Although "dynamic" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
+		/// </param>
 		/// <param name="placeOnGround">if set to <see langword="true" /> place the prop on the ground nearest to the <paramref name="position"/>.</param>
 		/// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
