@@ -421,6 +421,13 @@ namespace GTA
 		/// </summary>
 		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, taskNameHash);
 
+		/// <summary>
+		/// Gets Returns the state of any active <see cref="TaskInvoker.FollowNavMeshTo(Math.Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
+		/// task running on this <see cref="Ped"/>.
+		/// </summary>
+		public NavMeshRouteResult GetNavMeshRouteResult() => Function.Call<NavMeshRouteResult>(Hash.GET_NAVMESH_ROUTE_RESULT, Handle);
+
+
 		#endregion
 
 		#region Events
