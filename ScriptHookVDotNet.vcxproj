@@ -135,7 +135,7 @@
     <CsCompile Include="source\core\NativeMemory.cs" />
     <CsCompile Include="source\core\Script.cs" />
     <CsCompile Include="source\core\ScriptDomain.cs" />
-    <CsCompile Include="source\core\WinAPIWrapper.cs" />
+    <CsCompile Include="source\core\TickCountUtils.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->

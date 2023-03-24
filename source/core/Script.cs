@@ -225,14 +225,14 @@ namespace SHVDN
 		{
 			if (IsUsingThread)
 			{
-				ulong resumeTime = WinAPIWrapper.GetTickCount64() + (uint)ms;
+				int startTickCount = Environment.TickCount;
 
 				do
 				{
 					waitEvent.Release();
 					continueEvent.Wait();
 				}
-				while (WinAPIWrapper.GetTickCount64() < resumeTime);
+				while (SHVDN.TickCountUtils.GetElapsedTickCount(startTickCount) < ms);
 			}
 			else
 			{

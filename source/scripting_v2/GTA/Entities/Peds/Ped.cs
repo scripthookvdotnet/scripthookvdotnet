@@ -639,13 +639,13 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.REQUEST_ANIM_SET, value);
-				ulong endtime = WinAPIWrapper.GetTickCount64() + 1000;
+				int startTime = Environment.TickCount;
 
 				while (!Function.Call<bool>(Hash.HAS_ANIM_SET_LOADED, value))
 				{
 					Script.Yield();
 
-					if (WinAPIWrapper.GetTickCount64() >= endtime)
+					if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= 1000)
 					{
 						return;
 					}

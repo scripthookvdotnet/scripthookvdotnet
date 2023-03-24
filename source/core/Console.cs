@@ -28,7 +28,7 @@ namespace SHVDN
 		List<string> commandHistory; // This must be set via CommandHistory property
 		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
-		ulong lastClosedTickCount;
+		int lastClosedTickCount;
 		Task<MethodInfo> compilerTask;
 		const int BASE_WIDTH = 1280;
 		const int BASE_HEIGHT = 720;
@@ -60,7 +60,7 @@ namespace SHVDN
 				isOpen = value;
 				DisableControlsThisFrame();
 				if (!isOpen)
-					lastClosedTickCount = WinAPIWrapper.GetTickCount64() + 200; // Hack so the input gets blocked long enough
+					lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
 			}
 		}
 
@@ -272,7 +272,7 @@ namespace SHVDN
 		/// </summary>
 		internal void DoTick()
 		{
-			ulong nowTickCount = WinAPIWrapper.GetTickCount64();
+			int nowTickCount = Environment.TickCount;
 
 			// Execute compiled input line script
 			if (compilerTask != null && compilerTask.IsCompleted)
@@ -305,7 +305,7 @@ namespace SHVDN
 			if (!IsOpen)
 			{
 				// Hack so the input gets blocked long enough
-				if (lastClosedTickCount > nowTickCount)
+				if ((lastClosedTickCount - nowTickCount) > 0)
 					DisableControlsThisFrame();
 				return; // Nothing more to do here when the console is not open
 			}

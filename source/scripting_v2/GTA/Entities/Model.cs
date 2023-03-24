@@ -74,13 +74,14 @@ namespace GTA
 		{
 			Request();
 
-			ulong endtime = timeout >= 0 ? WinAPIWrapper.GetTickCount64() + (uint)timeout : ulong.MaxValue;
+			int startTime = Environment.TickCount;
+			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{
 				Script.Yield();
 
-				if (WinAPIWrapper.GetTickCount64() >= endtime)
+				if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= maxElapsedTime)
 					return false;
 			}
 

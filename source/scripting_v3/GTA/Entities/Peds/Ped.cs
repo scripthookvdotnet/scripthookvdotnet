@@ -1513,13 +1513,13 @@ namespace GTA
 					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
 
 					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
-					ulong endtime = WinAPIWrapper.GetTickCount64() + 1000;
+					int startTime = Environment.TickCount;
 
 					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
 					{
 						Script.Yield();
 
-						if (WinAPIWrapper.GetTickCount64() >= endtime)
+						if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= 1000)
 						{
 							return;
 						}
