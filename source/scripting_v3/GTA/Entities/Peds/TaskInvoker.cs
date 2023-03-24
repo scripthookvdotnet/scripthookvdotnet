@@ -218,7 +218,7 @@ namespace GTA
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
 
-		[Obsolete("TaskInvoker.GoTo with the position parameter is obsolete since it is a too vague method. Use TaskInvoker.FollowNavMeshTo instead.")]
+		[Obsolete("TaskInvoker.GoTo with the position parameter may not obvious enough to suggest it uses navigation mesh. Use TaskInvoker.FollowNavMeshTo instead.")]
 		public void GoTo(Vector3 position, int timeout = -1)
 		{
 			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
