@@ -2978,7 +2978,7 @@ namespace SHVDN
 
 			IntPtr vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.VehiclePoolAddress));
 
-			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, position, radius * radius);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, position, radius * radius, modelHashes);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
 			return task.resultHandles;
