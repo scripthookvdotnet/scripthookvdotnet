@@ -327,10 +327,7 @@ namespace GTA
 		/// <param name="vehicle">The driven vehicle.</param>
 		/// <param name="position">The center of the space</param>
 		/// <param name="heading">
-		/// <para>
-		/// Heading of the parking space.
-		/// Can be either positive or negative direction--how the <see cref="Vehicle"/> enters the space is determined by <paramref name="parkType"/>.
-		/// </para>
+		/// <para>Heading of the parking space. Can be either positive or negative direction.</para>
 		/// <para><para>Although "radius" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para></para>
 		/// </param>
 		/// <param name="radius">
