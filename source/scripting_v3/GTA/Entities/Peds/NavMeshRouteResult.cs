@@ -23,7 +23,7 @@ namespace GTA
 		/// </summary>
 		RouteNotFound,
 		/// <summary>
-		/// The task has successfully found a route
+		/// The task has successfully found a route.
 		/// </summary>
 		RouteFound,
 	}

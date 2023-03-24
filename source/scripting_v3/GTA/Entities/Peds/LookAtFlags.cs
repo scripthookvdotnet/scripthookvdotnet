@@ -15,7 +15,7 @@ namespace GTA
 	{
 		Default,
 		/// <summary>
-		/// Turn the head toward the target slowly
+		/// Turn the head toward the target slowly.
 		/// </summary>
 		SlowTurnRate = 1,
 		/// <summary>
