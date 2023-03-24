@@ -3,8 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using System;
-
 namespace GTA
 {
 	/// <summary>
@@ -21,7 +19,7 @@ namespace GTA
 		/// </summary>
 		RouteNotYetTried,
 		/// <summary>
-		/// The task has tried & failed to find a route (will keep trying).
+		/// The task has tried &amp; failed to find a route (will keep trying).
 		/// </summary>
 		RouteNotFound,
 		/// <summary>
