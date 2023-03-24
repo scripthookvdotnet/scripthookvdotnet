@@ -55,7 +55,7 @@ namespace GTA
 		/// </summary>
 		NarrowestPitchLimit = 512,
 		/// <summary>
-		/// Keep tracking the target even if they are not in the hard coded FOV
+		/// Keep tracking the target even if they are not in the hard coded FOV.
 		/// </summary>
 		WhileNotInFov = 2048,
 		/// <summary>
