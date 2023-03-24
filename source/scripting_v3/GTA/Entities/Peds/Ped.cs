@@ -293,6 +293,10 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
 		}
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is a player <see cref="Ped"/>, who has a <c>CPlayerInfo</c> pointer value.
+		/// Returns <see langword="true"/> only on up to one <see cref="Ped"/>.
+		/// </summary>
 		public bool IsPlayer => Function.Call<bool>(Hash.IS_PED_A_PLAYER, Handle);
 
 		public bool GetConfigFlag(int flagID)
@@ -915,13 +919,17 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Ped"/> is injured (<see cref="Entity.Health"/> of the <see cref="Ped"/> is lower than <see cref="InjuryHealthThreshold"/>) or does not exist.
-		/// Can be called safely to check if <see cref="Ped"/>s exist and are not injured without calling <see cref="Exists"/>.
+		/// Can be safely called to check if <see cref="Ped"/>s exist and are not injured without calling <see cref="Exists"/>.
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> this <see cref="Ped"/> is injured or does not exist; otherwise, <see langword="false" />.
 		/// </value>
 		/// <seealso cref="Entity.IsDead"/>
 		/// <seealso cref="Exists"/>
+		/// <remarks>
+		/// Since GTA IV, Rockstar Games use the equivalent native function (<c>IS_PED_INJURED</c> in GTA V) to check if some <see cref="Ped"/> is (almost) dead
+		/// instead of the equivalent one (<c>IS_ENTITY_DEAD</c> in GTA V) of <see cref="Entity.IsDead"/> in most cases.
+		/// </remarks>
 		public bool IsInjured => Function.Call<bool>(Hash.IS_PED_INJURED, Handle);
 
 		public bool IsInStealthMode => Function.Call<bool>(Hash.GET_PED_STEALTH_MOVEMENT, Handle);
@@ -969,6 +977,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_CAN_BE_TARGETTED, Handle, value);
 		}
 
+		/// <summary>
+		/// Sets if this <see cref="Ped"/> can take damage inflicted by regular bullets (not stun gun bullets) while in a <see cref="Vehicle"/>.
+		/// </summary>
 		public bool CanBeShotInVehicle
 		{
 			set => Function.Call(Hash.SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
@@ -1076,7 +1087,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or Sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
-		///  If this <see cref="Ped"/> can't suffer critical damage, they will take base damage of weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
+		/// If <see langword="false"/>, they will take base damage of weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Ped"/> can suffer critical damage; otherwise, <see langword="false" />.
@@ -1118,7 +1129,7 @@ namespace GTA
 
 		/// <summary>
 		/// Sets whether this <see cref="Ped"/> will drop the equipped weapon when they get killed.
-		///  Note that <see cref="Ped"/>s will drop only their equipped weapon when they get killed.
+		/// Note that <see cref="Ped"/>s will drop only their equipped weapon when they get killed.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if <see cref="Ped"/> drops the equipped weapon when killed; otherwise, <see langword="false" />.
