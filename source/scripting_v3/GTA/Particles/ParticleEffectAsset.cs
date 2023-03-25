@@ -4,7 +4,6 @@
 //
 
 using GTA.Native;
-using SHVDN;
 using System;
 using System.Drawing;
 
@@ -86,7 +85,7 @@ namespace GTA
 				Script.Yield();
 				Request();
 
-				if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= maxElapsedTime)
+				if (Environment.TickCount - startTime >= maxElapsedTime)
 				{
 					return false;
 				}

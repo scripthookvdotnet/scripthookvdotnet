@@ -6,7 +6,6 @@
 using GTA.Math;
 using GTA.Native;
 using GTA.NaturalMotion;
-using SHVDN;
 using System;
 using System.Linq;
 
@@ -1519,7 +1518,7 @@ namespace GTA
 					{
 						Script.Yield();
 
-						if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= 1000)
+						if (Environment.TickCount - startTime >= 1000)
 						{
 							return;
 						}

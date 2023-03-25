@@ -232,7 +232,7 @@ namespace SHVDN
 					waitEvent.Release();
 					continueEvent.Wait();
 				}
-				while (SHVDN.TickCountUtils.GetElapsedTickCount(startTickCount) < ms);
+				while (Environment.TickCount - startTickCount < ms);
 			}
 			else
 			{

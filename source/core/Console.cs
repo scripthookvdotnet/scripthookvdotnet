@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace SHVDN
 		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
 		int lastClosedTickCount;
+		bool shouldBlockControls;
 		Task<MethodInfo> compilerTask;
 		const int BASE_WIDTH = 1280;
 		const int BASE_HEIGHT = 720;
@@ -60,7 +62,10 @@ namespace SHVDN
 				isOpen = value;
 				DisableControlsThisFrame();
 				if (!isOpen)
+				{
 					lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
+					shouldBlockControls = true;
+				}				
 			}
 		}
 
@@ -306,7 +311,17 @@ namespace SHVDN
 			{
 				// Hack so the input gets blocked long enough
 				if ((lastClosedTickCount - nowTickCount) > 0)
-					DisableControlsThisFrame();
+				{
+					if (shouldBlockControls)
+					{
+						DisableControlsThisFrame();
+					}
+				}
+				// The console is not open for more than about 24.9 days, calculating the elapsed time with 2 int tick count vars doesn't do the job
+				else if (shouldBlockControls)
+				{
+					shouldBlockControls = false;
+				}
 				return; // Nothing more to do here when the console is not open
 			}
 

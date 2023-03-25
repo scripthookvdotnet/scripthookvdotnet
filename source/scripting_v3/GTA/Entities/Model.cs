@@ -5,7 +5,6 @@
 
 using GTA.Math;
 using GTA.Native;
-using SHVDN;
 using System;
 
 namespace GTA
@@ -390,7 +389,7 @@ namespace GTA
 				Script.Yield();
 				Request();
 
-				if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= maxElapsedTime)
+				if (Environment.TickCount - startTime >= maxElapsedTime)
 				{
 					return false;
 				}
@@ -423,7 +422,7 @@ namespace GTA
 				Script.Yield();
 				RequestCollision();
 
-				if (SHVDN.TickCountUtils.GetElapsedTickCount(startTime) >= maxElapsedTime)
+				if (Environment.TickCount - startTime >= maxElapsedTime)
 				{
 					return false;
 				}
