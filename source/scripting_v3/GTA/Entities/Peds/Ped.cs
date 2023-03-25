@@ -1530,13 +1530,13 @@ namespace GTA
 					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
 
 					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
-					var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+					int startTime = Environment.TickCount;
 
 					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
 					{
 						Script.Yield();
 
-						if (DateTime.UtcNow >= endtime)
+						if (Environment.TickCount - startTime >= 1000)
 						{
 							return;
 						}

@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,7 +29,8 @@ namespace SHVDN
 		List<string> commandHistory; // This must be set via CommandHistory property
 		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
 		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
-		DateTime lastClosed;
+		int lastClosedTickCount;
+		bool shouldBlockControls;
 		Task<MethodInfo> compilerTask;
 		const int BASE_WIDTH = 1280;
 		const int BASE_HEIGHT = 720;
@@ -60,7 +62,10 @@ namespace SHVDN
 				isOpen = value;
 				DisableControlsThisFrame();
 				if (!isOpen)
-					lastClosed = DateTime.UtcNow.AddMilliseconds(200); // Hack so the input gets blocked long enough
+				{
+					lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
+					shouldBlockControls = true;
+				}				
 			}
 		}
 
@@ -272,7 +277,7 @@ namespace SHVDN
 		/// </summary>
 		internal void DoTick()
 		{
-			DateTime now = DateTime.UtcNow;
+			int nowTickCount = Environment.TickCount;
 
 			// Execute compiled input line script
 			if (compilerTask != null && compilerTask.IsCompleted)
@@ -305,8 +310,18 @@ namespace SHVDN
 			if (!IsOpen)
 			{
 				// Hack so the input gets blocked long enough
-				if (lastClosed > now)
-					DisableControlsThisFrame();
+				if ((lastClosedTickCount - nowTickCount) > 0)
+				{
+					if (shouldBlockControls)
+					{
+						DisableControlsThisFrame();
+					}
+				}
+				// The console is not open for more than about 24.9 days, calculating the elapsed time with 2 int tick count vars doesn't do the job
+				else if (shouldBlockControls)
+				{
+					shouldBlockControls = false;
+				}
 				return; // Nothing more to do here when the console is not open
 			}
 
@@ -326,7 +341,7 @@ namespace SHVDN
 			DrawText(5, CONSOLE_HEIGHT + INPUT_HEIGHT, "Page " + currentPage + "/" + System.Math.Max(1, ((lineHistory.Count + (LINES_PER_PAGE - 1)) / LINES_PER_PAGE)), InputColor);
 
 			// Draw blinking cursor
-			if (now.Millisecond < 500)
+			if (nowTickCount % 1000 < 500)
 			{
 				float length = GetTextLength(input.Substring(0, cursorPos));
 				DrawText(25 + (length * CONSOLE_WIDTH) - 4, CONSOLE_HEIGHT, "~w~~h~|~w~", InputColor);

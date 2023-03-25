@@ -413,13 +413,13 @@ namespace GTA
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
-			DateTime endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+			int startTime = Environment.TickCount;
 
 			while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, animDict))
 			{
 				Script.Yield();
 
-				if (DateTime.UtcNow >= endtime)
+				if (Environment.TickCount - startTime >= 1000)
 				{
 					return;
 				}

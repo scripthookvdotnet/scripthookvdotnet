@@ -225,14 +225,14 @@ namespace SHVDN
 		{
 			if (IsUsingThread)
 			{
-				DateTime resumeTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(ms);
+				int startTickCount = Environment.TickCount;
 
 				do
 				{
 					waitEvent.Release();
 					continueEvent.Wait();
 				}
-				while (DateTime.UtcNow < resumeTime);
+				while (Environment.TickCount - startTickCount < ms);
 			}
 			else
 			{

@@ -638,13 +638,13 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.REQUEST_ANIM_SET, value);
-				var endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+				int startTime = Environment.TickCount;
 
 				while (!Function.Call<bool>(Hash.HAS_ANIM_SET_LOADED, value))
 				{
 					Script.Yield();
 
-					if (DateTime.UtcNow >= endtime)
+					if (Environment.TickCount - startTime >= 1000)
 					{
 						return;
 					}
