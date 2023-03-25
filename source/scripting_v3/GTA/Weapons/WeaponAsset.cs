@@ -4,7 +4,6 @@
 //
 
 using GTA.Native;
-using SHVDN;
 using System;
 
 namespace GTA
