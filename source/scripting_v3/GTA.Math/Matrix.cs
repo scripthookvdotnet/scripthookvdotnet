@@ -476,29 +476,30 @@ namespace GTA.Math
 			float safeScaleY = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleY));
 			float safeScaleZ = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleZ));
 
+			Matrix matrixNormalized = this;
 			if (System.Math.Abs(1f - safeScaleX) > FLT_EPSILON)
 			{
 				var xVectorNormalized = (new Vector3(M11, M12, M13)) * safeScaleX;
-				M11 = xVectorNormalized.X;
-				M12 = xVectorNormalized.Y;
-				M13 = xVectorNormalized.Z;
+				matrixNormalized.M11 = xVectorNormalized.X;
+				matrixNormalized.M12 = xVectorNormalized.Y;
+				matrixNormalized.M13 = xVectorNormalized.Z;
 			}
 			if (System.Math.Abs(1f - safeScaleY) > FLT_EPSILON)
 			{
 				var yVectorNormalized = (new Vector3(M21, M22, M23)) * safeScaleY;
-				M21 = yVectorNormalized.X;
-				M22 = yVectorNormalized.Y;
-				M23 = yVectorNormalized.Z;
+				matrixNormalized.M21 = yVectorNormalized.X;
+				matrixNormalized.M22 = yVectorNormalized.Y;
+				matrixNormalized.M23 = yVectorNormalized.Z;
 			}
 			if (System.Math.Abs(1f - safeScaleZ) > FLT_EPSILON)
 			{
 				var zVectorNormalized = (new Vector3(M31, M32, M33)) * safeScaleZ;
-				M31 = zVectorNormalized.X;
-				M32 = zVectorNormalized.Y;
-				M33 = zVectorNormalized.Z;
+				matrixNormalized.M31 = zVectorNormalized.X;
+				matrixNormalized.M32 = zVectorNormalized.Y;
+				matrixNormalized.M33 = zVectorNormalized.Z;
 			}
 
-			Quaternion inverseRotation = Quaternion.RotationMatrix(this);
+			Quaternion inverseRotation = Quaternion.RotationMatrix(matrixNormalized);
 			inverseRotation.Invert();
 			Vector3 vectorUnrotated = inverseRotation * vectorUntranslated;
 
