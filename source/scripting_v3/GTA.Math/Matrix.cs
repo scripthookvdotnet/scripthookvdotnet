@@ -452,9 +452,9 @@ namespace GTA.Math
 		{
 			Vector3 vectorUntranslated = point - new Vector3(M41, M42, M43);
 
-			float safeScaleX = GetSafeScaleReciprocal(new Vector3(M11, M21, M31).Length());
-			float safeScaleY = GetSafeScaleReciprocal(new Vector3(M12, M22, M32).Length());
-			float safeScaleZ = GetSafeScaleReciprocal(new Vector3(M13, M23, M33).Length());
+			float safeScaleX = GetSafeScaleReciprocal(new Vector3(M11, M12, M13).Length());
+			float safeScaleY = GetSafeScaleReciprocal(new Vector3(M21, M22, M23).Length());
+			float safeScaleZ = GetSafeScaleReciprocal(new Vector3(M31, M32, M33).Length());
 
 			Quaternion inverseRotation = Quaternion.RotationMatrix(this);
 			inverseRotation.Invert();
