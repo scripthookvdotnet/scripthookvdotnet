@@ -184,26 +184,6 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Returns the normalized inverse of rotation.
-		/// </summary>
-		public Quaternion Inverse()
-		{
-			Quaternion inverse = default;
-			float lengthSq = LengthSquared();
-			if (lengthSq != 0f)
-			{
-				lengthSq = 1.0f / lengthSq;
-
-				inverse.X = -X * lengthSq;
-				inverse.Y = -Y * lengthSq;
-				inverse.Z = -Z * lengthSq;
-				inverse.W = W * lengthSq;
-			}
-
-			return inverse;
-		}
-
-		/// <summary>
 		/// Reverses the direction of a given quaternion.
 		/// </summary>
 		/// <param name="quaternion">The quaternion to negate.</param>
