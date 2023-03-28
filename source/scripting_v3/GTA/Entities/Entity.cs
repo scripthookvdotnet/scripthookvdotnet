@@ -1468,7 +1468,10 @@ namespace GTA
 		/// Applies a force to this <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="direction">The direction to apply the force relative to world coordinates.</param>
-		/// <param name="rotation">The offset from the root component of this <see cref="Entity"/> where the force applies. "rotation" is incorrectly named parameter but is left for scripts that use the method with named parameters.</param>
+		/// <param name="rotation">
+		/// <para>The offset from the root component of this <see cref="Entity"/> where the force applies.</para>
+		/// <para>Although "rotation" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
+		/// </param>
 		/// <param name="forceType">Type of the force to apply.</param>
 		public void ApplyForce(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{

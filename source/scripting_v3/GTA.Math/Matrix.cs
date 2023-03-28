@@ -443,7 +443,6 @@ namespace GTA.Math
 			}
 		}
 
-
 		/// <summary>
 		/// Calculates the position of a point before this transformation matrix gets applied
 		/// </summary>
@@ -451,7 +450,76 @@ namespace GTA.Math
 		/// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
 		public Vector3 InverseTransformPoint(Vector3 point)
 		{
-			return Invert(this).TransformPoint(point);
+			Vector3 vectorUntranslated = point - new Vector3(M41, M42, M43);
+
+			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
+			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
+			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+
+			if (System.Math.Abs(1f - scaleXSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleYSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleZSquared) > FLT_EPSILON)
+			{
+				// This path is a egde case
+				// In GTA V, entity matrices expect to have no scaling
+				return InverseTransformPointWithScale(vectorUntranslated, scaleXSquared, scaleYSquared, scaleZSquared);
+			}
+
+			Quaternion inverseRotation = Quaternion.RotationMatrix(this);
+			inverseRotation.Invert();
+			Vector3 vectorUnrotated = inverseRotation * vectorUntranslated;
+
+			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
+		}
+
+		private Vector3 InverseTransformPointWithScale(Vector3 vectorUntranslated, float squaredScaleX, float squaredScaleY, float squaredScaleZ)
+		{
+			float safeScaleX = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleX));
+			float safeScaleY = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleY));
+			float safeScaleZ = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleZ));
+
+			Matrix matrixNormalized = this;
+			if (System.Math.Abs(1f - safeScaleX) > FLT_EPSILON)
+			{
+				var xVectorNormalized = (new Vector3(M11, M12, M13)) * safeScaleX;
+				matrixNormalized.M11 = xVectorNormalized.X;
+				matrixNormalized.M12 = xVectorNormalized.Y;
+				matrixNormalized.M13 = xVectorNormalized.Z;
+			}
+			if (System.Math.Abs(1f - safeScaleY) > FLT_EPSILON)
+			{
+				var yVectorNormalized = (new Vector3(M21, M22, M23)) * safeScaleY;
+				matrixNormalized.M21 = yVectorNormalized.X;
+				matrixNormalized.M22 = yVectorNormalized.Y;
+				matrixNormalized.M23 = yVectorNormalized.Z;
+			}
+			if (System.Math.Abs(1f - safeScaleZ) > FLT_EPSILON)
+			{
+				var zVectorNormalized = (new Vector3(M31, M32, M33)) * safeScaleZ;
+				matrixNormalized.M31 = zVectorNormalized.X;
+				matrixNormalized.M32 = zVectorNormalized.Y;
+				matrixNormalized.M33 = zVectorNormalized.Z;
+			}
+
+			Quaternion inverseRotation = Quaternion.RotationMatrix(matrixNormalized);
+			inverseRotation.Invert();
+			Vector3 vectorUnrotated = inverseRotation * vectorUntranslated;
+
+			return new Vector3(vectorUnrotated.X * safeScaleX, vectorUnrotated.Y * safeScaleY, vectorUnrotated.Z * safeScaleZ);
+		}
+
+		const float FLT_EPSILON = 1.19209e-07f;
+
+		// In practice if you have 0 scale, and relative transform doesn't make much sense anymore
+		// because you should be instead of showing gigantic infinite mesh
+		// also returning a big number like 3.4e+38f causes sequential NaN issues by multiplying
+		// so we hardcode as 0
+		private float GetSafeScaleReciprocal(float scale, float tolerance = FLT_EPSILON)
+		{
+			if (System.Math.Abs(scale) <= tolerance)
+			{
+				return 0f;
+			}
+
+			return 1f / scale;
 		}
 
 		/// <summary>

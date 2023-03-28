@@ -149,9 +149,19 @@ namespace GTA
 			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, ped.Handle, 100f, duration, 0, 0);
 		}
 
+		public void FleeFrom(Ped target, float safeDistance, int duration, bool preferPavements = false, bool updateTargetToNearestHatedPed = false)
+		{
+			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, target.Handle, safeDistance, duration, preferPavements, updateTargetToNearestHatedPed);
+		}
+
 		public void FleeFrom(Vector3 position, int duration = -1)
 		{
 			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, 100f, duration, 0, 0);
+		}
+
+		public void FleeFrom(Vector3 position, float safeDistance, int duration, bool preferPavements = false, bool quitIfOutOfRange = false)
+		{
+			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, safeDistance, duration, preferPavements, quitIfOutOfRange);
 		}
 
 		public void FollowPointRoute(params Vector3[] points)
@@ -176,11 +186,54 @@ namespace GTA
 			Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, distanceToFollow, persistFollowing);
 		}
 
+		/// <param name="position">The position to go to.</param>
+		/// <param name="moveBlendRatio">Specifies how much fast the ped will move. If <see langword="null"/>, the value will default to <c>2f</c>.</param>
+		/// <param name="timeBeforeWarp">The time before warping in milliseconds.</param>
+		/// <param name="radius">An Unknown radius parameter (possibly the radius for navmesh search) but does not affect the distance where the ped will stop.</param>
+		/// <param name="navigationFlags">The navigation flags.</param>
+		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <c>40000f</c> to leave as is.</param>
+		/// <inheritdoc cref="FollowNavMeshTo(Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
+		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio? moveBlendRatio = null, int timeBeforeWarp = -1, float radius = 0.25f, FollowNavMeshFlags navigationFlags = FollowNavMeshFlags.Default, float finalHeading = 40000f)
+		{
+			float moveBlendRatioArgForNative = 2.0f;
+			if (moveBlendRatio.HasValue)
+			{
+				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
+			}
+			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatioArgForNative, timeBeforeWarp, radius, navigationFlags, finalHeading);
+		}
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to follow the navmesh to the given coord.
+		/// </summary>
+		/// <param name="position">The position to go to.</param>
+		/// <param name="moveBlendRatio">Specifies how much fast the ped will move.</param>
+		/// <param name="timeBeforeWarp">The time before warping in milliseconds.</param>
+		/// <param name="radius">An Unknown radius parameter (possibly the radius for navmesh search) but does not affect the distance where the ped will stop.</param>
+		/// <param name="navigationFlags">The navigation flags.</param>
+		/// <param name="slideToCoordHeading">The slide-to-coord heading in degrees.</param>
+		/// <param name="maxSlopeNavigable">
+		/// Max slope which this ped can move over (<c>0f</c> = can only move on flat,
+		/// <c>45f</c> means cannot move on anything above 1:1 slope, <c>90f</c> means can move on any slope).</param>
+		/// <param name="clampMaxSearchDistance">
+		/// Clamp the search distance to this value, path-search will not search further than this distance
+		/// (value must be between 1 and 255 inclusive).
+		/// </param>
+		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <c>40000f</c> to leave as is.</param>
+		/// <remarks>Sometimes a path may not be able to be found. This could happen because there simply isn't any way to get there, or maybe a bunch of dynamic objects have blocked the way,
+		///  or maybe the destination is too far away. In this case the <see cref="Ped"/> will simply stand still.
+		///  To identify when this has happened, you can use <see cref="Ped.GetNavMeshRouteResult()"/>. This will help you find situations where <see cref="Ped"/> cannot get to their target.</remarks>
+		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio moveBlendRatio, int timeBeforeWarp, float radius, FollowNavMeshFlags navigationFlags, float slideToCoordHeading, float maxSlopeNavigable, float clampMaxSearchDistance, float finalHeading = 40000f)
+		{
+			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD_ADVANCED, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, radius, navigationFlags, slideToCoordHeading, maxSlopeNavigable, clampMaxSearchDistance, finalHeading);
+		}
+
 		public void GoTo(Entity target, Vector3 offset = default(Vector3), int timeout = -1)
 		{
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
 
+		[Obsolete("TaskInvoker.GoTo with the position parameter may not obvious enough to suggest it uses navigation mesh. Use TaskInvoker.FollowNavMeshTo instead.")]
 		public void GoTo(Vector3 position, int timeout = -1)
 		{
 			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
@@ -188,7 +241,20 @@ namespace GTA
 
 		public void GoStraightTo(Vector3 position, int timeout = -1, float targetHeading = 0f, float distanceToSlide = 0f)
 		{
-			Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, targetHeading, distanceToSlide);
+			GoStraightTo(position, timeout, (PedMoveBlendRatio)1f, targetHeading, distanceToSlide);
+		}
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to go to a coord, without using the navemesh.
+		/// </summary>
+		/// <param name="position">The position to go to.</param>
+		/// <param name="moveBlendRatio">Specifies how much fast the ped will move.</param>
+		/// <param name="timeBeforeWarp">The time before warping in milliseconds.</param>
+		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Set <c>40000f</c> to leave the heading as is.</param>
+		/// <param name="targetRadius">The target radius.</param>
+		public void GoStraightTo(Vector3 position, int timeBeforeWarp, PedMoveBlendRatio moveBlendRatio, float finalHeading, float targetRadius)
+		{
+			Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, finalHeading, targetRadius);
 		}
 
 		public void GuardCurrentPosition()
@@ -227,12 +293,22 @@ namespace GTA
 
 		public void LookAt(Entity target, int duration = -1)
 		{
-			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, 0, 2);
+			LookAt(target, duration, LookAtFlags.Default, LookAtPriority.Medium);
+		}
+
+		public void LookAt(Entity target, int duration, LookAtFlags lookFlags, LookAtPriority priority = LookAtPriority.Medium)
+		{
+			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, lookFlags, priority);
 		}
 
 		public void LookAt(Vector3 position, int duration = -1)
 		{
-			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, 0, 2);
+			LookAt(position, duration, LookAtFlags.Default, LookAtPriority.Medium);
+		}
+
+		public void LookAt(Vector3 position, int duration, LookAtFlags lookFlags, LookAtPriority priority = LookAtPriority.Medium)
+		{
+			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, lookFlags, priority);
 		}
 
 		public void ParachuteTo(Vector3 position)
@@ -245,9 +321,41 @@ namespace GTA
 			Function.Call(Hash.SET_PARACHUTE_TASK_TARGET, ped.Handle, position.X, position.Y, position.Z);
 		}
 
+		/// <summary>
+		/// Gives the <see cref="Ped"/> a task to park the specified <see cref="Vehicle"/> in the specified manner.
+		/// </summary>
+		/// <param name="vehicle">The driven vehicle.</param>
+		/// <param name="position">The center of the space</param>
+		/// <param name="heading">
+		/// <para>Heading of the parking space. Can be either positive or negative direction.</para>
+		/// <para><para>Although "radius" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para></para>
+		/// </param>
+		/// <param name="radius">
+		/// <para>If the vehicle's heading isn't within this amount of <paramref name="heading"/>, the <see cref="Vehicle"/> will back up and try to straighten itself out.</para>
+		/// <para></para>
+		/// </param>
+		/// <param name="keepEngineOn">If <see langword="true"/>, keep the lights on after parking.</param>
 		public void ParkVehicle(Vehicle vehicle, Vector3 position, float heading, float radius = 20.0f, bool keepEngineOn = false)
 		{
-			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, heading, 1, radius, keepEngineOn);
+			ParkVehicle(vehicle, position, heading, ParkType.PerpendicularNoseIn, radius, keepEngineOn);
+		}
+		/// <summary>
+		/// Gives the <see cref="Ped"/> a task to park the specified <see cref="Vehicle"/> in the specified manner.
+		/// </summary>
+		/// <param name="vehicle">The driven vehicle.</param>
+		/// <param name="position">The center of the space</param>
+		/// <param name="directionDegrees">
+		/// Heading of the parking space.
+		/// Can be either positive or negative direction--how the <see cref="Vehicle"/> enters the space is determined by <paramref name="parkType"/>.
+		/// </param>
+		/// <param name="parkType">Style of parking.</param>
+		/// <param name="toleranceDegrees">
+		/// If the vehicle's heading isn't within this amount of <paramref name="directionDegrees"/>, the <see cref="Vehicle"/> will back up and try to straighten itself out.
+		/// </param>
+		/// <param name="keepEngineOn">If <see langword="true"/>, keep the lights on after parking.</param>
+		public void ParkVehicle(Vehicle vehicle, Vector3 position, float directionDegrees, ParkType parkType, float toleranceDegrees = 20.0f, bool keepEngineOn = false)
+		{
+			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, directionDegrees, parkType, toleranceDegrees, keepEngineOn);
 		}
 
 		public void PerformSequence(TaskSequence sequence)
@@ -305,13 +413,13 @@ namespace GTA
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
-			DateTime endtime = DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, 1000);
+			int startTime = Environment.TickCount;
 
 			while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, animDict))
 			{
 				Script.Yield();
 
-				if (DateTime.UtcNow >= endtime)
+				if (Environment.TickCount - startTime >= 1000)
 				{
 					return;
 				}

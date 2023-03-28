@@ -73,13 +73,14 @@ namespace GTA
 		{
 			Request();
 
-			DateTime endtime = timeout >= 0 ? DateTime.UtcNow + new TimeSpan(0, 0, 0, 0, timeout) : DateTime.MaxValue;
+			int startTime = Environment.TickCount;
+			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{
 				Script.Yield();
 
-				if (DateTime.UtcNow >= endtime)
+				if (Environment.TickCount - startTime >= maxElapsedTime)
 					return false;
 			}
 

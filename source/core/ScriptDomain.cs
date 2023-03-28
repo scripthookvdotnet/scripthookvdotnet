@@ -638,14 +638,30 @@ namespace SHVDN
 				executingScript = script;
 
 				bool finishedInTime = true;
+				bool isDebuggerPresent = IsDebuggerPresent();
 
 				try
 				{
 					if (script.IsUsingThread)
 					{
 						// Resume script thread and execute any incoming tasks from it
-						while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
-							taskQueue.Dequeue().Run();
+						if (!isDebuggerPresent)
+						{
+							while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
+								taskQueue.Dequeue().Run();
+						}
+						else
+						{
+							// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
+							// Avoid terminating the script thread for executing too long since the game may crash when the thread is aborted if the thread is doing some task that needs the TLS context of the main thread
+							SignalAndWait(script.continueEvent, script.waitEvent);
+							while (taskQueue.Count > 0)
+							{
+								taskQueue.Dequeue().Run();
+								if (taskQueue.Count > 0)
+									SignalAndWait(script.continueEvent, script.waitEvent);
+							}
+						}
 					}
 					else
 					{
@@ -662,8 +678,7 @@ namespace SHVDN
 
 				executingScript = null;
 
-				// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
-				if (!finishedInTime && !IsDebuggerPresent())
+				if (!finishedInTime && !isDebuggerPresent)
 				{
 					Log.Message(Log.Level.Error, "Script ", script.Name, " is not responding! Aborting ...");
 

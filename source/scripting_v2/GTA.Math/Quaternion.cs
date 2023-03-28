@@ -565,6 +565,7 @@ namespace GTA.Math
 
 		/// <summary>
 		/// Creates a quaternion given a rotation matrix.
+		/// Will NOT work correctly if there is scaling in the matrix.
 		/// </summary>
 		/// <param name="matrix">The rotation matrix.</param>
 		/// <returns>The newly created quaternion.</returns>

@@ -103,6 +103,11 @@
     <Compile Include="GTA\Entities\Building.cs" />
     <Compile Include="GTA\Entities\Peds\DecisionMaker.cs" />
     <Compile Include="GTA\Entities\Peds\DecisionMakerTypeHash.cs" />
+    <Compile Include="GTA\Entities\Peds\NavMeshRouteResult.cs" />
+    <Compile Include="GTA\Entities\Peds\LookAtPriority.cs" />
+    <Compile Include="GTA\Entities\Peds\LookAtFlags.cs" />
+    <Compile Include="GTA\Entities\Peds\ParkType.cs" />
+    <Compile Include="GTA\Entities\Peds\FollowNavMeshFlags.cs" />
     <Compile Include="GTA\Entities\Peds\RelationshipGroupHash.cs" />
     <Compile Include="GTA\Entities\Peds\EventType.cs" />
     <Compile Include="GTA\Entities\Peds\ScriptTaskStatus.cs" />
