@@ -621,21 +621,21 @@ namespace GTA.Math
 		/// The order in which to apply rotations in world space.
 		/// For most methods for the game and native functions, you would like to use <see cref="EulerRotationOrder.YXZ"/>.
 		/// </param>
-		public static Quaternion Euler(Vector3 euler, EulerRotationOrder rotationOrder) => FromEulerInternal(euler.Z, euler.Y, euler.Z, rotationOrder);
+		public static Quaternion Euler(Vector3 euler, EulerRotationOrder rotationOrder) => FromEulerInternal(euler.X, euler.Y, euler.Z, rotationOrder);
 
 		private static Quaternion FromEulerInternal(float x, float y, float z, EulerRotationOrder rotationOrder)
 		{
 			Quaternion result = Zero;
 
-			float halfZ = z * 0.5f * DEG_2_RAD;
-			float sinZ = (float)(System.Math.Sin((double)(halfZ)));
-			float cosZ = (float)(System.Math.Cos((double)(halfZ)));
 			float halfX = x * 0.5f * DEG_2_RAD;
 			float sinX = (float)(System.Math.Sin((double)(halfX)));
 			float cosX = (float)(System.Math.Cos((double)(halfX)));
 			float halfY = y * 0.5f * DEG_2_RAD;
 			float sinY = (float)(System.Math.Sin((double)(halfY)));
 			float cosY = (float)(System.Math.Cos((double)(halfY)));
+			float halfZ = z * 0.5f * DEG_2_RAD;
+			float sinZ = (float)(System.Math.Sin((double)(halfZ)));
+			float cosZ = (float)(System.Math.Cos((double)(halfZ)));
 
 			switch (rotationOrder)
 			{
