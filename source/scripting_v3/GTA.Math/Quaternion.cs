@@ -566,7 +566,7 @@ namespace GTA.Math
 		/// In most cases, you should use the other overload <see cref="Euler(float, float, float, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
 		/// </para>
 		/// </remarks>
-		public static Quaternion Euler(float zaxis, float xaxis, float yaxis) => RotationYawPitchRoll(zaxis * DEG_2_RAD, xaxis* DEG_2_RAD, yaxis* DEG_2_RAD);
+		public static Quaternion Euler(float zaxis, float xaxis, float yaxis) => RotationYawPitchRoll(zaxis * DEG_2_RAD, xaxis * DEG_2_RAD, yaxis * DEG_2_RAD);
 
 		/// <summary>
 		/// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
