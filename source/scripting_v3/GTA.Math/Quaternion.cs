@@ -699,7 +699,7 @@ namespace GTA.Math
 		/// <para>
 		///	If the rotation has singularities, the value for the third axis will be zero just like <see cref="Entity.Rotation"/> does.
 		/// For instance, the return <see cref="Vector3"/> value will have zero as the z value if the rotation has singularities
-		/// and <paramref name="rotationOrder"/> is <see cref="EulerRotationOrder.YXZ"/> or <see cref="EulerRotationOrder.ZXY"/>).
+		/// and <paramref name="rotationOrder"/> is set to <see cref="EulerRotationOrder.XYZ"/> or <see cref="EulerRotationOrder.YXZ"/>).
 		/// </para>
 		/// </remarks>
 		public Vector3 ToEuler(EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
