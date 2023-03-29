@@ -381,7 +381,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Interpolates between two quaternions, using spherical linear interpolation..
+		/// Interpolates between two quaternions, using spherical linear interpolation.
 		/// </summary>
 		/// <param name="start">Start quaternion.</param>
 		/// <param name="end">End quaternion.</param>
@@ -676,7 +676,7 @@ namespace GTA.Math
 					result.W = (cosY * cosX * cosZ) - (sinY * sinX * sinZ);
 					break;
 				default:
-					throw new ArgumentException("rotationOrder");
+					throw new ArgumentException(nameof(rotationOrder));
 			}
 
 			return result;
@@ -709,17 +709,17 @@ namespace GTA.Math
 				case EulerRotationOrder.YXZ:
 					return ToEulerYXZ();
 				case EulerRotationOrder.XYZ:
-					return ToEulerYXZ();
+					return ToEulerXYZ();
 				case EulerRotationOrder.XZY:
-					return ToEulerYXZ();
+					return ToEulerXZY();
 				case EulerRotationOrder.YZX:
-					return ToEulerYXZ();
+					return ToEulerYZX();
 				case EulerRotationOrder.ZXY:
-					return ToEulerYXZ();
+					return ToEulerZXY();
 				case EulerRotationOrder.ZYX:
-					return ToEulerYXZ();
+					return ToEulerZYX();
 				default:
-					throw new ArgumentException("rotationOrder");
+					throw new ArgumentException(nameof(rotationOrder));
 			}
 		}
 
