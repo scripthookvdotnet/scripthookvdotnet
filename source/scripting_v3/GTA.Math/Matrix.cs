@@ -308,6 +308,44 @@ namespace GTA.Math
 			}
 		}
 
+		const float FLT_EPSILON = 1.19209e-07f;
+
+		/// <summary>Gets the origin of the coordinate system.</summary>
+		/// <returns>The origin of the coordinate system.</returns>
+		public Vector3 GetOrigin() => new Vector3(M41, M42, M43);
+
+		/// <summary>Sets the origin of the coordinate system to the given vector.</summary>
+		/// <param name="newOrigin">The new origin of the coordinate system.</param>
+		public void SetOrigin(Vector3 newOrigin)
+		{
+			M41 = newOrigin.X;
+			M42 = newOrigin.Y;
+			M43 = newOrigin.Z;
+		}
+
+		public Vector3 GetScaleVector() => GetScaleVector(FLT_EPSILON);
+
+		/// <summary>Returns a 3D scale vector calculated from this matrix (where each component is the magnitude of a row vector) with error tolerance.</summary>
+		public Vector3 GetScaleVector(float tolerance)
+		{
+			Vector3 scale = default;
+
+			for (int i = 0; i < 3; i++)
+			{
+				float squareSum = (this[i, 0] * this[i, 0]) + (this[i, 1] * this[i, 1]) + (this[i, 2] * this[i,2]);
+				if (squareSum > tolerance)
+				{
+					scale[i] = (float)System.Math.Sqrt(squareSum);
+				}
+				else
+				{
+					scale[i] = 0f;
+				}
+			}
+
+			return scale;
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether this instance is an identity matrix.
 		/// </summary>
@@ -398,8 +436,6 @@ namespace GTA.Math
 			M44 = tM44;
 		}
 
-		//This might need to be fixed
-		//This can get faster with something like System.Numerics.Vectors
 		/// <summary>
 		/// Apply the transformation matrix to a point in world space
 		/// </summary>
@@ -448,10 +484,47 @@ namespace GTA.Math
 		/// </summary>
 		/// <param name="point">The transformed vertex location</param>
 		/// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
-		public Vector3 InverseTransformPoint(Vector3 point)
-		{
-			Vector3 vectorUntranslated = point - new Vector3(M41, M42, M43);
+		public Vector3 InverseTransformPoint(Vector3 point) => InverseTransformVector(point - new Vector3(M41, M42, M43));
 
+		/// <summary>
+		/// Transform a vector with this transformation <see cref="Matrix"/>.
+		/// Will not take into account translation part of the <see cref="Matrix"/>.
+		/// </summary>
+		/// <param name="vector">The vector.</param>
+		/// <returns>The vector transformed by the given <see cref="Matrix"/>.</returns>
+		public Vector3 TransformVector(Vector3 vector)
+		{
+			unsafe
+			{
+				float* VTempX = stackalloc float[3];
+				float* VTempY = stackalloc float[3];
+				float* VTempZ = stackalloc float[3];
+
+				for (int i = 0; i < 3; i++)
+				{
+					VTempX[i] = vector.X * this[0, i];
+					VTempY[i] = vector.Y * this[1, i];
+					VTempZ[i] = vector.Z * this[2, i];
+				}
+
+				// Add them all together
+				for (int i = 0; i < 3; i++)
+				{
+					VTempX[i] = VTempX[i] + VTempY[i] + VTempZ[i];
+				}
+
+				return new Vector3(VTempX[0], VTempX[1], VTempX[2]);
+			}
+		}
+
+		/// <summary>
+		/// Calculates the vector before this transformation matrix gets applied.
+		/// This operation is not affected by position of the transform.
+		/// </summary>
+		/// <param name="vector">The vector.</param>
+		/// <returns>The vector transformed by the inverse of the given <see cref="Matrix"/>.</returns>
+		public Vector3 InverseTransformVector(Vector3 vector)
+		{
 			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
 			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
 			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
@@ -460,53 +533,65 @@ namespace GTA.Math
 			{
 				// This path is a egde case
 				// In GTA V, entity matrices expect to have no scaling
-				return InverseTransformPointWithScale(vectorUntranslated, scaleXSquared, scaleYSquared, scaleZSquared);
+				return InverseTransformVectorWithScale(vector, scaleXSquared, scaleYSquared, scaleZSquared);
 			}
 
 			Quaternion inverseRotation = Quaternion.RotationMatrix(this);
 			inverseRotation.Invert();
-			Vector3 vectorUnrotated = inverseRotation * vectorUntranslated;
+			Vector3 vectorUnrotated = inverseRotation * vector;
 
 			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
 		}
 
-		private Vector3 InverseTransformPointWithScale(Vector3 vectorUntranslated, float squaredScaleX, float squaredScaleY, float squaredScaleZ)
+		private Vector3 InverseTransformVectorWithScale(Vector3 vector, float squaredScaleX, float squaredScaleY, float squaredScaleZ)
 		{
 			float safeScaleX = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleX));
 			float safeScaleY = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleY));
 			float safeScaleZ = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleZ));
 
-			Matrix matrixNormalized = this;
-			if (System.Math.Abs(1f - safeScaleX) > FLT_EPSILON)
-			{
-				var xVectorNormalized = (new Vector3(M11, M12, M13)) * safeScaleX;
-				matrixNormalized.M11 = xVectorNormalized.X;
-				matrixNormalized.M12 = xVectorNormalized.Y;
-				matrixNormalized.M13 = xVectorNormalized.Z;
-			}
-			if (System.Math.Abs(1f - safeScaleY) > FLT_EPSILON)
-			{
-				var yVectorNormalized = (new Vector3(M21, M22, M23)) * safeScaleY;
-				matrixNormalized.M21 = yVectorNormalized.X;
-				matrixNormalized.M22 = yVectorNormalized.Y;
-				matrixNormalized.M23 = yVectorNormalized.Z;
-			}
-			if (System.Math.Abs(1f - safeScaleZ) > FLT_EPSILON)
-			{
-				var zVectorNormalized = (new Vector3(M31, M32, M33)) * safeScaleZ;
-				matrixNormalized.M31 = zVectorNormalized.X;
-				matrixNormalized.M32 = zVectorNormalized.Y;
-				matrixNormalized.M33 = zVectorNormalized.Z;
-			}
-
-			Quaternion inverseRotation = Quaternion.RotationMatrix(matrixNormalized);
+			Matrix matrixNoScaling = GetMatrixWithoutScale();
+			Quaternion inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
 			inverseRotation.Invert();
-			Vector3 vectorUnrotated = inverseRotation * vectorUntranslated;
+			inverseRotation.Normalize();
+			Vector3 vectorUnrotated = inverseRotation * vector;
 
 			return new Vector3(vectorUnrotated.X * safeScaleX, vectorUnrotated.Y * safeScaleY, vectorUnrotated.Z * safeScaleZ);
 		}
 
-		const float FLT_EPSILON = 1.19209e-07f;
+		/// <summary>
+		/// Transform a direction vector with this transformation <see cref="Matrix"/>.
+		/// Will not take into account scale or translation part of the <see cref="Matrix"/>.
+		/// The returned vector has the same length as <paramref name="direction"/>.
+		/// </summary>
+		/// <param name="direction">The direction vector.</param>
+		/// <returns>The direction vector transformed by the given <see cref="Matrix"/>.</returns>
+		/// <remarks>You should use <see cref="TransformPoint(Vector3)"/> for the conversion if the vector represents a position rather than a direction.</remarks>
+		public Vector3 TransformDirection(Vector3 direction)
+		{
+			Matrix matrixNoScaling = GetMatrixWithoutScale();
+			Quaternion inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
+			Vector3 vectorUnrotated = inverseRotation * direction;
+
+			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
+		}
+
+		/// <summary>
+		/// Calculates the direction vector before this transformation matrix gets applied.
+		/// This operation is not affected by scale or position of the transform.
+		/// The returned vector has the same length as <paramref name="direction"/>.
+		/// </summary>
+		/// <param name="direction">The direction vector.</param>
+		/// <returns>The vector transformed by the inverse of the given <see cref="Matrix"/>.</returns>
+		/// <remarks>You should use <see cref="InverseTransformPoint(Vector3)"/> for the conversion if the vector represents a position rather than a direction.</remarks>
+		public Vector3 InverseTransformDirection(Vector3 direction)
+		{
+			Matrix matrixNoScaling = GetMatrixWithoutScale();
+			Quaternion inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
+			inverseRotation.Invert();
+			Vector3 vectorUnrotated = inverseRotation * direction;
+
+			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
+		}
 
 		// In practice if you have 0 scale, and relative transform doesn't make much sense anymore
 		// because you should be instead of showing gigantic infinite mesh
@@ -1090,6 +1175,119 @@ namespace GTA.Math
 			result.M43 = matrix.M34;
 			result.M44 = matrix.M44;
 			return result;
+		}
+
+		/// <summary>
+		/// Applies scale to this matrix.
+		/// </summary>
+		/// <param name="scale">The scale.</param>
+		/// <returns>The matrix applied the scale.</returns>
+		public Matrix ApplyScale(float scale) => Scaling(new Vector3(scale, scale, scale)) * this;
+
+		/// <summary>
+		/// Applies scale to this matrix.
+		/// </summary>
+		/// <param name="scale">The scale vector.</param>
+		/// <returns>The matrix applied the scale.</returns>
+		public Matrix ApplyScale(Vector3 scale) => Scaling(scale) * this;
+
+		/// <summary>
+		/// Returns matrix after RemoveScaling.
+		/// </summary>
+		/// <returns>The matrix without scale information.</returns>
+		public Matrix GetMatrixWithoutScale()
+		{
+			Matrix result = this;
+			result.RemoveScaling(FLT_EPSILON);
+			return result;
+		}
+
+		/// <summary>
+		/// Returns the same matrix but without translation.
+		/// </summary>
+		/// <returns>The matrix without translation information.</returns>
+		public Matrix RemoveTranslation()
+		{
+			Matrix result = this;
+			result.M41 = 0f;
+			result.M42 = 0f;
+			result.M43 = 0f;
+			return result;
+		}
+
+		/// <summary>
+		/// Returns matrix after RemoveScaling with error tolerance.
+		/// </summary>
+		/// <param name="tolerance">The error tolerance.</param>
+		/// <returns>The matrix without scale information.</returns>
+		public void GetMatrixWithoutScale(float tolerance)
+		{
+			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
+			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
+			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+
+			if (System.Math.Abs(1f - scaleXSquared) > tolerance)
+			{
+				float scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
+				M11 *= scaleX;
+				M12 *= scaleX;
+				M13 *= scaleX;
+			}
+			if (System.Math.Abs(1f - scaleYSquared) > tolerance)
+			{
+				float scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
+				M21 *= scaleY;
+				M22 *= scaleY;
+				M23 *= scaleY;
+			}
+			if (System.Math.Abs(1f - scaleZSquared) > tolerance)
+			{
+				float scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
+				M31 *= scaleZ;
+				M32 *= scaleZ;
+				M33 *= scaleZ;
+			}
+		}
+
+		/// <summary>
+		/// Remove any scaling from this matrix (ie magnitude of each row is 1).
+		/// </summary>
+		public void RemoveScaling()
+		{
+			RemoveScaling(FLT_EPSILON);
+		}
+
+		/// <summary>
+		/// Remove any scaling from this matrix (ie magnitude of each row is 1) with error tolerance.
+		/// </summary>
+		/// <param name="tolerance">The error tolerance.</param>
+		public void RemoveScaling(float tolerance)
+		{
+			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
+			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
+			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+
+			if (System.Math.Abs(1f - scaleXSquared) > tolerance)
+			{
+				float scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
+				M11 *= scaleX;
+				M12 *= scaleX;
+				M13 *= scaleX;
+			}
+			if (System.Math.Abs(1f - scaleYSquared) > tolerance)
+			{
+				float scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
+				M21 *= scaleY;
+				M22 *= scaleY;
+				M23 *= scaleY;
+			}
+			if (System.Math.Abs(1f - scaleZSquared) > tolerance)
+			{
+				float scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
+				M31 *= scaleZ;
+				M32 *= scaleZ;
+				M33 *= scaleZ;
+			}
 		}
 
 		/// <summary>

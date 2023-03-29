@@ -381,7 +381,7 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Interpolates between two quaternions, using spherical linear interpolation..
+		/// Interpolates between two quaternions, using spherical linear interpolation.
 		/// </summary>
 		/// <param name="start">Start quaternion.</param>
 		/// <param name="end">End quaternion.</param>
@@ -545,27 +545,387 @@ namespace GTA.Math
 			return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
 		}
 
+		const float DEG_2_RAD = (float)((System.Math.PI / 180.0));
+		const float RAD_2_DEG = (float)((180.0 / System.Math.PI));
+
 		/// <summary>
-		/// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+		/// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
+		/// <para>
+		/// For example, <c>Quaternion.Euler(60f, 30f, 45f)</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
+		/// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
+		/// </para>
 		/// </summary>
 		/// <param name="zaxis">Z degrees.</param>
 		/// <param name ="xaxis">X degrees.</param>
 		/// <param name ="yaxis">Y degrees.</param>
-		public static Quaternion Euler(float zaxis, float xaxis, float yaxis)
+		/// <remarks>
+		/// <para>You should aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
+		/// <para>
+		/// For compatibility with scripts built against v3.6.0 or earlier, this overload does the same as <see cref="Euler(float, float, float, EulerRotationOrder)"/>
+		/// where <see cref="EulerRotationOrder.ZXY"/> is passed as the rotation order.
+		/// In most cases, you should use the other overload <see cref="Euler(float, float, float, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
+		/// </para>
+		/// </remarks>
+		public static Quaternion Euler(float zaxis, float xaxis, float yaxis) => RotationYawPitchRoll(zaxis * DEG_2_RAD, xaxis * DEG_2_RAD, yaxis * DEG_2_RAD);
+
+		/// <summary>
+		/// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
+		/// <para>
+		/// For example, <c>Quaternion.Euler(60f, 30f, 45f, EulerRotationOrder.YXZ)</c> will yield (almost) the same result as
+		/// <c>Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad)</c>
+		/// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
+		/// </para>
+		/// </summary>
+		/// <param name="z">Z degrees.</param>
+		/// <param name ="x">X degrees.</param>
+		/// <param name ="y">Y degrees.</param>
+		/// <param name="rotationOrder">
+		/// The order in which to apply rotations in world space.
+		/// For most methods for the game and native functions, you would like to use <see cref="EulerRotationOrder.YXZ"/>.
+		/// </param>
+		/// <remarks>
+		/// <para>You should aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
+		/// </remarks>
+		public static Quaternion Euler(float z, float x, float y, EulerRotationOrder rotationOrder) => FromEulerInternal(x, y, z, rotationOrder);
+
+		/// <summary>
+		/// <para>
+		/// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+		/// </para>
+		/// <para>
+		/// For example, <c>Quaternion.Euler(new Vector3(30f, 45f, 60f))</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
+		/// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
+		/// </para>
+		/// </summary>
+		/// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
+		/// <remarks>
+		/// For compatibility with scripts built against v3.6.0 or earlier, this overload does the same as <see cref="Euler(Vector3, EulerRotationOrder)"/>
+		/// where <see cref="EulerRotationOrder.ZXY"/> is passed as the rotation order.
+		/// In most cases, you should use the other overload <see cref="Euler(Vector3, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
+		/// </remarks>
+		public static Quaternion Euler(Vector3 euler) => RotationYawPitchRoll(euler.Z * DEG_2_RAD, euler.X * DEG_2_RAD, euler.Y * DEG_2_RAD);
+
+		/// <summary>
+		/// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
+		/// <para>
+		/// For example, <c>Quaternion.Euler(new Vector3(30f, 45f, 60f), EulerRotationOrder.YXZ)</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad)</c>
+		/// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
+		/// </para>
+		/// <para>
+		/// <c>entity.Quaternion = Quaternion.Euler(new Vector3(30f, 45f, 60f), EulerRotationOrder.YXZ)</c> does the same as
+		/// <c>entity.Quaternion = new Vector3(30f, 45f, 60f)</c> provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>..
+		/// </para>
+		/// </summary>
+		/// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
+		/// <param name="rotationOrder">
+		/// The order in which to apply rotations in world space.
+		/// For most methods for the game and native functions, you would like to use <see cref="EulerRotationOrder.YXZ"/>.
+		/// </param>
+		public static Quaternion Euler(Vector3 euler, EulerRotationOrder rotationOrder) => FromEulerInternal(euler.X, euler.Y, euler.Z, rotationOrder);
+
+		private static Quaternion FromEulerInternal(float x, float y, float z, EulerRotationOrder rotationOrder)
 		{
-			float Deg2Rad = (float)((System.Math.PI / 180.0));
-			return RotationYawPitchRoll(zaxis * Deg2Rad, xaxis * Deg2Rad, yaxis * Deg2Rad);
+			Quaternion result = Zero;
+
+			float halfX = x * 0.5f * DEG_2_RAD;
+			float sinX = (float)(System.Math.Sin((double)(halfX)));
+			float cosX = (float)(System.Math.Cos((double)(halfX)));
+			float halfY = y * 0.5f * DEG_2_RAD;
+			float sinY = (float)(System.Math.Sin((double)(halfY)));
+			float cosY = (float)(System.Math.Cos((double)(halfY)));
+			float halfZ = z * 0.5f * DEG_2_RAD;
+			float sinZ = (float)(System.Math.Sin((double)(halfZ)));
+			float cosZ = (float)(System.Math.Cos((double)(halfZ)));
+
+			switch (rotationOrder)
+			{
+				case EulerRotationOrder.XYZ:
+					result.X = (sinX * cosY * cosZ) - (cosX * sinY * sinZ);
+					result.Y = (cosX * sinY * cosZ) + (sinX * cosY * sinZ);
+					result.Z = (cosX * cosY * sinZ) - (sinX * sinY * cosZ);
+					result.W = (cosY * cosX * cosZ) + (sinY * sinX * sinZ);
+					break;
+				case EulerRotationOrder.XZY:
+					result.X = (cosX * sinY * sinZ) + (sinX * cosY * cosZ);
+					result.Y = (cosX * sinY * cosZ) + (sinX * cosY * sinZ);
+					result.Z = (cosX * cosY * sinZ) - (sinX * sinY * cosZ);
+					result.W = (cosX * cosY * cosZ) - (sinX * sinY * sinZ);
+					break;
+				case EulerRotationOrder.YXZ:
+					result.X = (sinX * cosY * cosZ) - (cosX * sinY * sinZ);
+					result.Y = (cosX * sinY * cosZ) + (sinX * cosY * sinZ);
+					result.Z = (cosX * cosY * sinZ) + (sinX * sinY * cosZ);
+					result.W = (cosY * cosX * cosZ) - (sinY * sinX * sinZ);
+					break;
+				case EulerRotationOrder.YZX:
+					result.X = (sinX * cosY * cosZ) - (cosX * sinY * sinZ);
+					result.Y = (cosX * sinY * cosZ) - (sinX * cosY * sinZ);
+					result.Z = (cosX * cosY * sinZ) + (sinX * sinY * cosZ);
+					result.W = (cosY * cosX * cosZ) + (sinY * sinX * sinZ);
+					break;
+				case EulerRotationOrder.ZXY:
+					result.X = (cosX * sinY * sinZ) + (sinX * cosY * cosZ);
+					result.Y = (cosX * sinY * cosZ) - (sinX * cosY * sinZ);
+					result.Z = (cosX * cosY * sinZ) - (sinX * sinY * cosZ);
+					result.W = (cosY * cosX * cosZ) + (sinY * sinX * sinZ);
+					break;
+				case EulerRotationOrder.ZYX:
+					result.X = (cosX * sinY * sinZ) + (sinX * cosY * cosZ);
+					result.Y = (cosX * sinY * cosZ) - (sinX * cosY * sinZ);
+					result.Z = (cosX * cosY * sinZ) + (sinX * sinY * cosZ);
+					result.W = (cosY * cosX * cosZ) - (sinY * sinX * sinZ);
+					break;
+				default:
+					throw new ArgumentException(nameof(rotationOrder));
+			}
+
+			return result;
 		}
 
 		/// <summary>
-		/// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+		/// Returns a <see cref="Vector3"/> that represents euler angles in degrees.
+		/// Each component is in the range of [-180, 180].
 		/// </summary>
-		/// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
-		public static Quaternion Euler(Vector3 euler)
+		/// <param name="rotationOrder">
+		/// The order in which to apply rotations in world space.
+		/// For most methods for the game and native functions, you would like to use <see cref="EulerRotationOrder.YXZ"/>.
+		/// </param>
+		/// <remarks>
+		/// <para>
+		/// May return the other value that represents the same rotation if the rotation has no singularities.
+		/// For instance, <c>Quaternion.Euler(new Vector3(-170f, 45f, 60f), EulerRotationOrder.YXZ).ToEuler(EulerRotationOrder.YXZ)</c>
+		/// will return <c>Vector3(10f, -135f, -120f)</c>
+		/// </para>
+		/// <para>
+		///	If the rotation has singularities, the value for the third axis will be zero just like <see cref="Entity.Rotation"/> does.
+		/// For instance, the return <see cref="Vector3"/> value will have zero as the z value if the rotation has singularities
+		/// and <paramref name="rotationOrder"/> is <see cref="EulerRotationOrder.YXZ"/> or <see cref="EulerRotationOrder.ZXY"/>).
+		/// </para>
+		/// </remarks>
+		public Vector3 ToEuler(EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
 		{
-			Vector3 eulerRad = euler * (float)((System.Math.PI / 180.0));
-			return RotationYawPitchRoll(eulerRad.Z, eulerRad.X, eulerRad.Y);
+			switch (rotationOrder)
+			{
+				case EulerRotationOrder.YXZ:
+					return ToEulerYXZ();
+				case EulerRotationOrder.XYZ:
+					return ToEulerXYZ();
+				case EulerRotationOrder.XZY:
+					return ToEulerXZY();
+				case EulerRotationOrder.YZX:
+					return ToEulerYZX();
+				case EulerRotationOrder.ZXY:
+					return ToEulerZXY();
+				case EulerRotationOrder.ZYX:
+					return ToEulerZYX();
+				default:
+					throw new ArgumentException(nameof(rotationOrder));
+			}
 		}
+
+		#region Internal method for ToEuler
+
+		const float SINGULARITY_THRESHOLD = 0.4999995f;
+		private Vector3 ToEulerYXZ()
+		{
+			float singularityTest = (Y * Z) + (X * W);
+
+			if (singularityTest > SINGULARITY_THRESHOLD)
+			{
+				float m10 = 2 * ((X * Y) + (Z * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+
+				return new Vector3(90f, (float)System.Math.Atan2(m10, m00) * RAD_2_DEG, 0f);
+			}
+			if (singularityTest < -SINGULARITY_THRESHOLD)
+			{
+				float m10 = 2 * ((X * Y) + (Z * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+
+				return new Vector3(-90f, (float)System.Math.Atan2(-m10, m00) * RAD_2_DEG, 0f);
+			}
+			else
+			{
+				float rotX = (float)System.Math.Asin(2 * singularityTest);
+
+				float m20 = 2 * ((X * Z) - (Y * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+				float rotY = (float)System.Math.Atan2(-m20, m22);
+
+				float m01 = 2 * ((X * Y) - (Z * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+				float rotZ = (float)System.Math.Atan2(-m01, m11);
+
+				return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+			}
+		}
+		private Vector3 ToEulerXYZ()
+		{
+			float singularityTest = (X * Z) - (Y * W);
+
+			if (singularityTest < -SINGULARITY_THRESHOLD)
+			{
+				float m01 = 2 * ((X * Y) - (Z * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+
+				return new Vector3((float)System.Math.Atan2(m01, m11) * RAD_2_DEG, 90f, 0f);
+			}
+			else if (singularityTest > SINGULARITY_THRESHOLD)
+			{
+				float m01 = 2 * ((X * Y) - (Z * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+
+				return new Vector3((float)System.Math.Atan2(-m01, m11) * RAD_2_DEG, -90f, 0f);
+			}
+			else
+			{
+				float m21 = 2 * ((Y * Z) + (X * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+				float rotX = (float)System.Math.Atan2(m21, m22);
+
+				float rotY = (float)System.Math.Asin(-2 * singularityTest);
+
+				float m10 = 2 * ((X * Y) + (Z * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+				float rotZ = (float)System.Math.Atan2(m10, m00);
+
+				return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+			}
+		}
+		private Vector3 ToEulerXZY()
+		{
+			float singularityTest = (X * Y) + (Z * W);
+
+			if (singularityTest > SINGULARITY_THRESHOLD)
+			{
+				float m02 = 2 * ((X * Z) + (Y * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+
+				return new Vector3((float)System.Math.Atan2(m02, m22) * RAD_2_DEG, 0f, 90f);
+			}
+			else if (singularityTest < -SINGULARITY_THRESHOLD)
+			{
+				float m02 = 2 * ((X * Z) + (Y * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+
+				return new Vector3((float)System.Math.Atan2(-m02, m22) * RAD_2_DEG, 0f, -90f);
+			}
+			else
+			{
+				float m12 = 2 * ((Y * Z) - (X * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+				float rotX = (float)System.Math.Atan2(-m12, m11);
+
+				float m20 = 2 * ((X * Z) - (Y * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+				float rotY = (float)System.Math.Atan2(-m20, m00);
+
+				float rotZ = (float)System.Math.Asin(2 * singularityTest);
+
+				return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+			}
+		}
+		private Vector3 ToEulerYZX()
+		{
+			float singularityTest = (X * Y) - (Z * W);
+
+			if (singularityTest > SINGULARITY_THRESHOLD)
+			{
+				float m12 = 2 * ((Y * Z) - (X * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+
+				return new Vector3(0f, (float)System.Math.Atan2(-m12, m22) * RAD_2_DEG, -90f);
+			}
+			else if (singularityTest < -SINGULARITY_THRESHOLD)
+			{
+				float m12 = 2 * ((Y * Z) - (X * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+
+				return new Vector3(0f, (float)System.Math.Atan2(m12, m22) * RAD_2_DEG, 90f);
+			}
+			else
+			{
+				float m21 = 2 * ((Y * Z) + (X * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+				float rotX = (float)System.Math.Atan2(m21, m11);
+
+				float m02 = 2 * ((X * Z) + (Y * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+				float rotY = (float)System.Math.Atan2(m02, m00);
+
+				float rotZ = (float)System.Math.Asin(-2 * singularityTest);
+
+				return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+			}
+		}
+		private Vector3 ToEulerZXY()
+		{
+			float singularityTest = (Y * Z) - (X * W);
+
+			if (singularityTest > SINGULARITY_THRESHOLD)
+			{
+				float m20 = 2 * ((X * Z) - (Y * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+
+				return new Vector3(-90f, 0f, (float)System.Math.Atan2(-m20, m00) * RAD_2_DEG);
+			}
+			else if (singularityTest < -SINGULARITY_THRESHOLD)
+			{
+				float m20 = 2 * ((X * Z) - (Y * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+
+				return new Vector3(90f, 0f, (float)System.Math.Atan2(m20, m00) * RAD_2_DEG);
+			}
+			else
+			{
+				float rotX = (float)System.Math.Asin(-2 * singularityTest);
+
+				float m02 = 2 * ((X * Z) + (Y * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+				float rotY = (float)System.Math.Atan2(m02, m22);
+
+				float m10 = 2 * ((X * Y) + (Z * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+				float rotZ = (float)System.Math.Atan2(m10, m11);
+
+				return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+			}
+		}
+		private Vector3 ToEulerZYX()
+		{
+			float singularityTest = (X * Z) + (Y * W);
+
+			if (singularityTest > SINGULARITY_THRESHOLD)
+			{
+				float m21 = 2 * ((Y * Z) + (X * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+
+				return new Vector3(0f, 90f, (float)System.Math.Atan2(m21, m11) * RAD_2_DEG);
+			}
+			else if (singularityTest < -SINGULARITY_THRESHOLD)
+			{
+				float m21 = 2 * ((Y * Z) + (X * W));
+				float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+
+				return new Vector3(0f, -90f, (float)System.Math.Atan2(-m21, m11) * RAD_2_DEG);
+			}
+			else
+			{
+				float m12 = 2 * ((Y * Z) - (X * W));
+				float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+				float rotX = (float)System.Math.Atan2(-m12, m22);
+
+				float rotY = (float)System.Math.Asin(2 * singularityTest);
+
+				float m01 = 2 * ((X * Y) - (Z * W));
+				float m00 = 2 * ((W * W) + (X * X)) - 1;
+				float rotZ = (float)System.Math.Atan2(-m01, m00);
+
+				return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Creates a quaternion given a rotation and an axis.
@@ -649,7 +1009,15 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Creates a Quaternion from the given yaw, pitch, and roll, in radians.
+		/// <para>Creates a Quaternion from the given yaw, pitch, and roll, in radians.</para>
+		/// <para>
+		/// The order of transformations is first yaw, then pitch, then roll (the same as <see cref="EulerRotationOrder.ZXY"/>,
+		/// which is inconvenient to use when calling native functions but the rotation order is kept for compatibility with scripts built against v3.6.0 or earlier.
+		/// Relative to the object's local coordinate axis, this is equivalent to rotation around the y-axis, followed by rotation around the x-axis, followed by rotation around the z-axis.
+		/// For example, <c>Quaternion.RotationYawPitchRoll(60f * deg2Rad, 30f * deg2Rad, 45f * deg2Rad)</c> will yield (almost) the same result as
+		/// <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
+		/// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
+		/// </para>
 		/// </summary>
 		/// <param name="yaw">The yaw angle, in radians, around the Z-axis.</param>
 		/// <param name="pitch">The pitch angle, in radians, around the X-axis.</param>
