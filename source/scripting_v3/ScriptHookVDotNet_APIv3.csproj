@@ -103,6 +103,8 @@
     <Compile Include="GTA\Entities\Building.cs" />
     <Compile Include="GTA\Entities\Peds\DecisionMaker.cs" />
     <Compile Include="GTA\Entities\Peds\DecisionMakerTypeHash.cs" />
+    <Compile Include="GTA\Entities\Peds\NavMeshBlockingObject.cs" />
+    <Compile Include="GTA\Entities\Peds\NavMeshBlockingObjectFlags.cs" />
     <Compile Include="GTA\Entities\Peds\NavMeshRouteResult.cs" />
     <Compile Include="GTA\Entities\Peds\LookAtPriority.cs" />
     <Compile Include="GTA\Entities\Peds\LookAtFlags.cs" />
