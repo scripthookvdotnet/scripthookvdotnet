@@ -13,7 +13,7 @@ namespace GTA
 	/// Does not create any dynamic objects or <see cref="Prop"/>s.
 	/// </summary>
 	/// <remarks>If SHVDN runtime stops working, all the <see cref="NavMeshBlockingObject"/> will get removed from the game.</remarks>
-	public class NavMeshBlockingObject : PoolObject, INativeValue
+	public sealed class NavMeshBlockingObject : PoolObject, INativeValue
 	{
 		internal NavMeshBlockingObject(int handle) : base(handle)
 		{
