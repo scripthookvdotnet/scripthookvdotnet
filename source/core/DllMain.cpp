@@ -21,6 +21,7 @@ static LPVOID GetTlsContext()
 bool sGameReloaded = false;
 
 // Import C# code base
+#include <msclr\lock.h>
 #using "ScriptHookVDotNet.netmodule"
 
 using namespace System;
@@ -126,7 +127,7 @@ internal:
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
 	static WinForms::Keys reloadKey = WinForms::Keys::None;
 	static WinForms::Keys consoleKey = WinForms::Keys::F4;
-
+	static Object^ unloadLock = gcnew Object();
 	static void SetConsole()
 	{
 		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
@@ -145,17 +146,23 @@ static void ScriptHookVDotNet_ManagedInit()
 	List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
 
 	// Unload previous domain (this unloads all script assemblies too)
-	if (domain != nullptr)
 	{
-		// Stash the command history if console is loaded 
-		if (console != nullptr)
+		msclr::lock l(ScriptHookVDotNet::unloadLock);
+
+		if (domain != nullptr)
 		{
-			stashedConsoleCommandHistory = console->CommandHistory;
+			// Stash the command history if console is loaded 
+			if (console != nullptr)
+			{
+				stashedConsoleCommandHistory = console->CommandHistory;
+				console = nullptr;
+			}
+
+			SHVDN::ScriptDomain::Unload(domain);
+			domain = nullptr;
 		}
 
-		SHVDN::ScriptDomain::Unload(domain);
 	}
-
 
 	// Clear log from previous runs
 	SHVDN::Log::Clear();
@@ -250,7 +257,9 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 	if (shift) keys = keys | WinForms::Keys::Shift;
 	if (alt)   keys = keys | WinForms::Keys::Alt;
 
-	SHVDN::Console ^console = ScriptHookVDotNet::console;
+	// Protect against race condition during reload
+	msclr::lock l(ScriptHookVDotNet::unloadLock);
+	SHVDN::Console^ console = ScriptHookVDotNet::console;
 	if (console != nullptr)
 	{
 		if (keydown && keys == ScriptHookVDotNet::reloadKey)
