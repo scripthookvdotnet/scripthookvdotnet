@@ -1805,7 +1805,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.  Considers switched off nodes, where ambient vehicles will not spawn.
 		/// </summary>
 		/// <param name="position">The position to check around.</param>
 		/// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
@@ -1814,36 +1814,31 @@ namespace GTA
 			return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
 		}
 		/// <summary>
-		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
 		/// </summary>
 		/// <param name="position">The position to check around.</param>
 		/// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
 		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
 		{
-			NativeVector3 outPos;
-
-			unsafe
+			if (unoccupied)
 			{
-				if (unoccupied)
+				for (int i = 1; i < 40; i++)
 				{
-					for (int i = 1; i < 40; i++)
+					if (!PathFind.GetNthClosestVehicleNodePosition(position, i, out position, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes))
 					{
-						Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, &outPos, 1, 0x40400000, 0);
+						continue;
+					}
 
-						position = outPos;
-
-						if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f,
-							5.0f, 5.0f, 0))
-						{
-							return position;
-						}
+					if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f,
+						5.0f, 5.0f, 0))
+					{
+						return position;
 					}
 				}
-				else if (Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, 1, &outPos, 1,
-					0x40400000, 0))
-				{
-					return outPos;
-				}
+			}
+			else if (!PathFind.GetNthClosestVehicleNodePosition(position, 1, out position, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes))
+			{
+				return position;
 			}
 
 			return Vector3.Zero;
