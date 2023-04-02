@@ -738,6 +738,29 @@ namespace GTA
 			}
 		}
 
+		public float PetrolConsumptionRate
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x108);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x108, value);
+			}
+		}
+
+
 		/// <summary>
 		/// Gets or sets the rotation values in degree the parts pop-up headlights needs to be rotated when headlights are on.
 		/// </summary>
@@ -1306,6 +1329,29 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0xF4, value);
 			}
 		}
+
+		public float WeaponDamageScaledToVehicleHealthMultiplier
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x168);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x168, value);
+			}
+		}
+
 
 		static public HandlingData GetByHash(int handlingNameHash)
 		{
