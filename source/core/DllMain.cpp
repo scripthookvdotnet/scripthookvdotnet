@@ -122,6 +122,47 @@ public:
 			console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? (script->IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
 	}
 
+	[SHVDN::ConsoleCommand("List all loaded domains")]
+	static void ListDomains()
+	{
+		console->PrintInfo("~c~--- Loaded Domains ---");
+		console->PrintInfo("[ROOT] " + domain->Name + " -> " + domain->ScriptPath);
+		ListSubDomains(domain);
+	}
+
+	static void ListSubDomains(SHVDN::ScriptDomain ^d)
+	{
+		for each (auto sub in d->SubDomains) {
+			console->PrintInfo(sub->Name + " -> " + sub->ScriptPath);
+			ListSubDomains(sub);
+		}
+	}
+
+	[SHVDN::ConsoleCommand("Load a sub domain into root ScriptDomain")]
+	static void LoadSubDomain(String ^scriptDirectory)
+	{
+		domain->LoadSubDomain(scriptDirectory);
+	}
+
+
+	[SHVDN::ConsoleCommand("Unload a sub domain from root ScriptDomain")]
+	static void UnloadSubDomain(String ^name)
+	{
+		try {
+			for each (auto sub in domain->SubDomains) {
+				if (sub->Name == name)
+				{
+					domain->UnloadSubDomain(sub);
+					return;
+				}
+			}
+			throw gcnew KeyNotFoundException("Specified domain was not found");
+		}
+		catch (Exception^ ex) {
+			console->PrintError("Failed to unload domain: " + ex->ToString());
+		}
+	}
+
 internal:
 	static SHVDN::Console ^console = nullptr;
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;

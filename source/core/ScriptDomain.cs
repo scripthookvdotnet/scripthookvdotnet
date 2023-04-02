@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -41,7 +42,8 @@ namespace SHVDN
 		bool recordKeyboardEvents = true;
 		bool[] keyboardState = new bool[256];
 		List<Assembly> scriptApis = new List<Assembly>();
-
+		List<ScriptDomain> subDomains { get; set; } = new List<ScriptDomain>();
+		public ScriptDomain ParentDomain { get; private set; }
 		unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTlsContext;
 		unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTlsContext;
 		IntPtr tlsContextOfMainThread;
@@ -76,10 +78,17 @@ namespace SHVDN
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
 		/// </summary>
 		public Script[] RunningScripts => runningScripts.ToArray();
+
+		/// <summary>
+		/// Gets a readonly collection of loaded sub domains
+		/// </summary>
+		public ReadOnlyCollection<ScriptDomain> SubDomains => subDomains.AsReadOnly();
+
 		/// <summary>
 		/// Gets the currently executing script or <see langword="null" /> if there is none.
 		/// </summary>
 		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
+
 
 		/// <summary>
 		/// Initializes the script domain inside its application domain.
@@ -116,6 +125,68 @@ namespace SHVDN
 			}
 		}
 
+		/// <summary>
+		/// Create a sub domain whose event will be dispatched by the current domain
+		/// </summary>
+		/// <param name="scriptPath">Path to a directory containing scripts to be loaded</param>
+		/// <returns>The newly created domain</returns>
+		/// <exception cref="InvalidOperationException">The method is not called from main thread</exception>
+		/// <remarks>You must call <see cref="UnloadSubDomain(ScriptDomain)"/> to unload the loaded domain instead of calling <see cref="Unload(ScriptDomain)"/> directly</remarks>
+		public unsafe ScriptDomain LoadSubDomain(string scriptPath)
+		{
+			if (Thread.CurrentThread.ManagedThreadId != executingThreadId)
+				throw new InvalidOperationException("Cannot create sub domain from another thread");
+
+			lock (subDomains)
+			{
+				var domain = Load(".", scriptPath);
+				try
+				{
+					domain.ParentDomain = this;
+					domain.AppDomain.SetData("Console", AppDomain.GetData("Console"));
+					if (GetTlsContext != null && SetTlsContext != null)
+					{
+						// Hack to convert function pointer to IntPtr
+						IntPtr getTlsFuncPtr = default;
+						IntPtr setTlsFuncPtr = default;
+						*(delegate* unmanaged[Cdecl]<IntPtr>*)&getTlsFuncPtr = GetTlsContext;
+						*(delegate* unmanaged[Cdecl]<IntPtr, void>*)&setTlsFuncPtr = SetTlsContext;
+
+						domain.InitTlsContext(getTlsFuncPtr, setTlsFuncPtr);
+					}
+					domain.Start();
+					subDomains.Add(domain);
+				}
+				catch (Exception ex)
+				{
+					Log.Message(Log.Level.Error, "Failed to create subdomain: ", ex.ToString());
+					Unload(domain);
+					throw;
+				}
+				return domain;
+			}
+		}
+
+		/// <summary>
+		/// Unload a domain previously loaded with <see cref="LoadSubDomain(string)"/>
+		/// </summary>
+		/// <param name="domain">The domain to be unloaded</param>
+		/// <exception cref="ArgumentException">The specified domain does not belong to the current domain</exception>
+		/// <remarks>Do not call this method while the script is aborting, created sub domain will be unloaded automatically when the parent domain unloads</remarks>
+		public void UnloadSubDomain(ScriptDomain domain)
+		{
+			lock (subDomains)
+			{
+				if (!subDomains.Contains(domain))
+					throw new ArgumentException("Specified domain does not belong to current domain", nameof(domain));
+
+				// Retrive the index first because Remove() will use the equality comparer which raise an AppDomainUnloadedException
+				var i = subDomains.IndexOf(domain);
+				Unload(domain);
+				subDomains.RemoveAt(i);
+			}
+		}
+
 		~ScriptDomain()
 		{
 			Dispose(false);
@@ -139,7 +210,26 @@ namespace SHVDN
 		/// <param name="domain">The script domain to unload.</param>
 		public static void Unload(ScriptDomain domain)
 		{
+
 			Log.Message(Log.Level.Info, "Unloading script domain ...");
+
+			// Unload sub domains
+			lock (domain.subDomains)
+			{
+				foreach (var sub in domain.subDomains)
+				{
+					var name = sub.Name;
+					try
+					{
+						Unload(sub);
+					}
+					catch (Exception ex)
+					{
+						Log.Message(Log.Level.Error, $"Failed to unload sub domain {name}: {ex}");
+					}
+				}
+				domain.subDomains.Clear();
+			}
 
 			domain.Abort();
 			domain.Dispose();
@@ -690,6 +780,15 @@ namespace SHVDN
 
 			// Clean up any pinned strings of this frame
 			CleanupStrings();
+
+			// Tick sub domains
+			lock (subDomains)
+			{
+				for (int i = 0; i < subDomains.Count; i++)
+				{
+					subDomains[i].DoTick();
+				}
+			}
 		}
 		/// <summary>
 		/// Keyboard handling logic of the script domain.
@@ -709,6 +808,14 @@ namespace SHVDN
 
 				foreach (Script script in runningScripts)
 					script.keyboardEvents.Enqueue(eventinfo);
+			}
+
+			lock (subDomains)
+			{
+				for (int i = 0; i < subDomains.Count; i++)
+				{
+					subDomains[i].DoKeyEvent(keys, status);
+				}
 			}
 		}
 
