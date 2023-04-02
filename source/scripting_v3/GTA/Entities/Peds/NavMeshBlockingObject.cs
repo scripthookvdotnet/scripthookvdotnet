@@ -12,7 +12,7 @@ namespace GTA
 	/// Represents a blocking object that blocks <see cref="Ped"/>s using navigation mesh paths in the area the object covers when new <see cref="Ped"/> tasks that use navigation meshes (e.g. <see cref="TaskInvoker.WanderAround()"/>) start for them.
 	/// Does not create any dynamic objects or <see cref="Prop"/>s.
 	/// </summary>
-	/// <remarks>If SHVDN runtime stops working, all the <see cref="NavMeshBlockingObject"/> will get removed from the game.</remarks>
+	/// <remarks>If SHVDN runtime stops working, all the <see cref="NavMeshBlockingObject"/>s created via SHVDN will get removed from the game.</remarks>
 	public sealed class NavMeshBlockingObject : PoolObject, INativeValue
 	{
 		internal NavMeshBlockingObject(int handle) : base(handle)
@@ -36,27 +36,6 @@ namespace GTA
 			return Function.Call<bool>(Hash.DOES_NAVMESH_BLOCKING_OBJECT_EXIST, Handle);
 		}
 
-		const float DEG_2_RAD = (float)(System.Math.PI / 180);
-
-		/// <summary>
-		/// Creates a new <see cref="NavMeshBlockingObject"/>. 
-		/// </summary>
-		/// <param name="position">The origin position.</param>
-		/// <param name="size">The size.</param>
-		/// <param name="headingDegrees">The heading in degrees.</param>
-		/// <param name="flags">The flags that specify what types of paths the blocking object will block new <see cref="Ped"/> tasks that use navigation meshes (e.g. <see cref="TaskInvoker.WanderAround()"/>) from using.</param>
-		/// <returns>The new <see cref="NavMeshBlockingObject"/> if successfully created; otherwise, <see langword="null"/>.</returns>
-		/// <remarks>The new <see cref="NavMeshBlockingObject"/> won't block existing <see cref="Ped"/> tasks that use navigation mesh paths in the area the blocking object covers from using.</remarks>
-		public static NavMeshBlockingObject Create(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags = NavMeshBlockingObjectFlags.AllPaths)
-		{
-			float headingRadians = headingDegrees * DEG_2_RAD;
-
-			// Set the second parameter is bPermanent to false, which determines whether the blocking object will last outside the lifetime of the calling script (scrThread)
-			// If the SHVDN runtime stops working, the blocking object will get deleted (stopping any SHVDN scripts working will not automatically remove any blocking objects)
-			var result = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
-			return result != -1 ? new NavMeshBlockingObject(result) : null;
-		}
-
 		/// <summary>
 		/// Updates the <see cref="NavMeshBlockingObject"/>. 
 		/// </summary>
@@ -68,6 +47,7 @@ namespace GTA
 		/// <remarks>The updated <see cref="NavMeshBlockingObject"/> won't affect existing <see cref="Ped"/> tasks.</remarks>
 		public void Update(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags)
 		{
+			const float DEG_2_RAD = (float)(System.Math.PI / 180);
 			Function.Call(Hash.UPDATE_NAVMESH_BLOCKING_OBJECT, Handle, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingDegrees * DEG_2_RAD, flags);
 		}
 
@@ -78,9 +58,9 @@ namespace GTA
 		/// <returns><see langword="true"/> if the <paramref name="obj"/> is the same navigation mesh blocking object as this <see cref="NavMeshBlockingObject"/>; otherwise, <see langword="false"/>.</returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is NavMeshBlockingObject blip)
+			if (obj is NavMeshBlockingObject navMeshBlockingObject)
 			{
-				return Handle == blip.Handle;
+				return Handle == navMeshBlockingObject.Handle;
 			}
 
 			return false;
