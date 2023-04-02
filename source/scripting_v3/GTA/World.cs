@@ -1310,8 +1310,8 @@ namespace GTA
 
 			// Set the second last parameter bPermanent to false, which determines whether the blocking object will last outside the lifetime of the calling script (scrThread)
 			// If the SHVDN runtime stops working, all the blocking objects created via SHVDN will get deleted (stopping any SHVDN scripts working will not automatically remove any blocking objects)
-			var result = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
-			return result != -1 ? new NavMeshBlockingObject(result) : null;
+			var handle = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
+			return handle != -1 ? new NavMeshBlockingObject(handle) : null;
 		}
 
 		#region Particle Effects
