@@ -7,8 +7,11 @@ namespace GTA
 {
 	public enum VehicleToggleModType
 	{
-		Turbo = 18,
-		TireSmoke = 20,
-		XenonHeadlights = 22,
+		Nitrous = 17,
+		Turbo,
+		SubWoofer,
+		TireSmoke,
+		Hydraulics,
+		XenonHeadlights
 	}
 }
