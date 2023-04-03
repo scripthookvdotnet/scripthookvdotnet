@@ -348,21 +348,42 @@ namespace GTA
 		/// Gets the dimensions of this <see cref="Model"/>.
 		/// </summary>
 		/// <returns>
-		/// rearBottomLeft is the minimum dimensions, which contains the rear bottom left relative offset from the origin of the model,
-		///  frontTopRight is the maximum dimensions, which contains the front top right relative offset from the origin of the model.
+		/// <c>rearBottomLeft</c> is the minimum dimensions, which contains the rear bottom left relative offset from the origin of the model,
+		/// <c>frontTopRight</c> is the maximum dimensions, which contains the front top right relative offset from the origin of the model.
 		/// </returns>
+		/// <remarks>
+		/// When you need to fetch dimensions info from large amount of <see cref="Model"/>s in a short time,
+		/// it may be better to use <see cref="GetDimensions(out Vector3, out Vector3)"/> instead because creating <see cref="ValueTuple"/> costs much (about 10x) more than
+		/// using out parameters in .NET Framework and this property creates a <see cref="ValueTuple"/> instance.
+		/// </remarks>
 		public (Vector3 rearBottomLeft, Vector3 frontTopRight) Dimensions
 		{
 			get
 			{
-				NativeVector3 min, max;
-				unsafe
-				{
-					Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
-				}
-
-				return (min, max);
+				GetDimensions(out var rearBottomLeft, out var frontTopRight);
+				return (rearBottomLeft, frontTopRight);
 			}
+		}
+
+		/// <summary> 
+		/// <para>Gets the dimensions of this <see cref="Model"/>.</para>
+		/// <para>
+		/// When you need to fetch dimensions info from large amount of <see cref="Model"/>s in a short time, it may be better to use this method instead of <see cref="Dimensions"/>
+		/// because creating <see cref="ValueTuple"/> costs much (about 10x) more than using out parameters in .NET Framework.
+		/// </para>
+		/// </summary>
+		/// <param name="rearBottomLeft">The rear bottom left relative offset from the origin of the model.</param>
+		/// <param name="frontTopRight">The front top right relative offset from the origin of the model.</param>
+		public void GetDimensions(out Vector3 rearBottomLeft, out Vector3 frontTopRight)
+		{
+			NativeVector3 min, max;
+			unsafe
+			{
+				Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
+			}
+
+			rearBottomLeft = min;
+			frontTopRight = max;
 		}
 
 		/// <summary>
