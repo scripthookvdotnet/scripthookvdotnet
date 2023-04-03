@@ -3396,6 +3396,22 @@ namespace SHVDN
 
 				internal FVector3 UncompressedPosition => new FVector3((float)PositionX / 4, (float)PositionY / 4, (float)PositionZ / 32);
 
+				internal bool IsSwitchedOff
+				{
+					get => (Flags2 & 0x80) != 0;
+					set
+					{
+						if (value)
+						{
+							Flags2 |= 0x80;
+						}
+						else
+						{
+							Flags2 &= 0x7F;
+						}
+					}
+				}
+
 				/// <summary>
 				/// Get property flags in almost the same way as GET_VEHICLE_NODE_PROPERTIES returns flags as the 5th parameter (seems the flags the native returns will never contain the 1024 flag).
 				/// </summary>
@@ -3548,6 +3564,28 @@ namespace SHVDN
 				}
 
 				return (int)((CPathNode*)pathNode)->GetPropertyFlags();
+			}
+
+			public static bool GetPathNodeSwitchedOffFlag(int handle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return false;
+				}
+
+				return ((CPathNode*)pathNode)->IsSwitchedOff;
+			}
+
+			public static void SetPathNodeSwitchedOffFlag(int handle, bool toggle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return;
+				}
+
+				((CPathNode*)pathNode)->IsSwitchedOff = toggle;
 			}
 
 			[StructLayout(LayoutKind.Explicit, Size = 0x8)]

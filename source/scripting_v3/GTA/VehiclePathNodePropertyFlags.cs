@@ -8,8 +8,8 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Set of flags which may be passed in to methods in <see cref="PathFind"/> such as <see cref="PathFind.GetAllVehiclePathNodes(Func{VehiclePathNodePropertyFlags, bool})"/>.
-	/// All the enums except <see cref="DontAllowGps"/> can be used when calling <c>GET_VEHICLE_NODE_PROPERTIES</c> in the same way as <see cref="PathFind.GetAllVehiclePathNodes(Func{VehiclePathNodePropertyFlags, bool})"/>.
+	/// Set of flags which may be passed in to methods in <see cref="PathFind"/> such as <see cref="PathFind.GetAllVehicleNodes(Func{VehiclePathNodePropertyFlags, bool})"/>.
+	/// All the enums except <see cref="DontAllowGps"/> can be used when calling <c>GET_VEHICLE_NODE_PROPERTIES</c> in the same way as <see cref="PathFind.GetAllVehicleNodes(Func{VehiclePathNodePropertyFlags, bool})"/>.
 	/// </summary>
 	[Flags]
 	public enum VehiclePathNodePropertyFlags

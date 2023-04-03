@@ -78,7 +78,11 @@ namespace GTA
 		/// Determines if this <see cref="PathNode"/> is switched off for ambient population.
 		/// </summary>
 		/// <returns><see langword="true"/> if this <see cref="PathNode"/> is switched off for ambient population; otherwise, <see langword="false"/>.</returns>
-		public bool IsSwitchedOff => (GetVehicleNodePropertyFlags() & VehiclePathNodePropertyFlags.SwitchedOff) != VehiclePathNodePropertyFlags.SwitchedOff;
+		public bool IsSwitchedOff
+		{
+			get => SHVDN.NativeMemory.PathFind.GetPathNodeSwitchedOffFlag(Handle);
+			set => SHVDN.NativeMemory.PathFind.SetPathNodeSwitchedOffFlag(Handle, value);
+		}
 		/// <summary>
 		/// Determines if this <see cref="PathNode"/> has GPS allowed.
 		/// </summary>

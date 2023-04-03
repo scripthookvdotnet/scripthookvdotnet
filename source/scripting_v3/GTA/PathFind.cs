@@ -17,7 +17,7 @@ namespace GTA
 		/// Therefore, you should set pass some predicate as <paramref name="predicate"/> to filter vehicle nodes unless you need to retrieve all loaded vehicle parameters without testing.
 		/// </summary>
 		/// <param name="predicate">The predicate the node must meet to consider.</param>
-		public static PathNode[] GetAllVehiclePathNodes(Func<VehiclePathNodePropertyFlags, bool> predicate = null)
+		public static PathNode[] GetAllVehicleNodes(Func<VehiclePathNodePropertyFlags, bool> predicate = null)
 		{
 			Func<int, bool> convertedPredicate = predicate != null ? predInt => predicate((VehiclePathNodePropertyFlags)predInt) : null;
 			return Array.ConvertAll(SHVDN.NativeMemory.PathFind.GetAllLoadedVehicleNodes(convertedPredicate), handle => new PathNode(handle));
@@ -29,7 +29,7 @@ namespace GTA
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
 		/// <param name="predicate">The predicate the node must meet to consider.</param>
-		public static PathNode[] GetNearbyVehiclePathNodes(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
+		public static PathNode[] GetNearbyVehicleNodes(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
 		{
 			Func<int, bool> convertedPredicate = predicate != null ? predInt => predicate((VehiclePathNodePropertyFlags)predInt) : null;
 			return Array.ConvertAll(SHVDN.NativeMemory.PathFind.GetLoadedVehicleNodesInRange(position.X, position.Y, position.Z, radius, convertedPredicate), handle => new PathNode(handle));
@@ -41,7 +41,7 @@ namespace GTA
 		/// <param name="min">The minimum bound of the area.</param>
 		/// <param name="max">The maximum bound of the area.</param>
 		/// <param name="predicate">The predicate the node must meet to consider.</param>
-		public static PathNode[] GetVehiclePathNodesInArea(Vector3 min, Vector3 max, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
+		public static PathNode[] GetVehicleNodesInArea(Vector3 min, Vector3 max, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
 		{
 			Func<int, bool> convertedPredicate = predicate != null ? predInt => predicate((VehiclePathNodePropertyFlags)predInt) : null;
 			return Array.ConvertAll(SHVDN.NativeMemory.PathFind.GetLoadedVehicleNodesInArea(min.X, min.Y, min.Z, max.X, max.Y, max.Z, convertedPredicate), handle => new PathNode(handle));
@@ -53,7 +53,7 @@ namespace GTA
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
 		/// <param name="predicate">The predicate the node must meet to consider.</param>
-		public static PathNode GetClosestVehiclePathNode(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
+		public static PathNode GetClosestVehicleNode(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
 		{
 			Func<int, bool> convertedPredicate = predicate != null ? predInt => predicate((VehiclePathNodePropertyFlags)predInt) : null;
 			var resultHandle = SHVDN.NativeMemory.PathFind.GetClosestLoadedVehiclePathNode(position.X, position.Y, position.Z, radius, convertedPredicate);
@@ -232,8 +232,7 @@ namespace GTA
 		/// <returns>
 		///   <see langword="true"/> if <see cref="PathNode"/>s are loaded for the region specified; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool AreNodesLoadedForArea(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.ARE_NODES_LOADED_FOR_AREA, min.X, min.Y, max.X, max.Y);
-
+		public static bool ArePathNodesLoadedForArea(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.ARE_NODES_LOADED_FOR_AREA, min.X, min.Y, max.X, max.Y);
 		/// <summary>
 		/// <para>
 		/// Requests the path nodes in the given region to stream this frame.
@@ -250,5 +249,50 @@ namespace GTA
 		///   <see langword="true"/> if <see cref="PathNode"/>s are loaded for the region specified; otherwise, <see langword="false"/>.
 		/// </returns>
 		public static bool RequestPathNodesInAreaThisFrame(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.REQUEST_PATH_NODES_IN_AREA_THIS_FRAME, min.X, min.Y, max.X, max.Y);
+
+		/// <summary>
+		///  Switches vehicle nodes an angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
+		/// A vehicle node is switched off, no <see cref="Vehicle"/>s should be created on it and <see cref="Vehicle"/>s that already exist will try to avoid driving on to it.
+		/// To undo effects of this method, use <see cref="SetVehicleNodesBackToOriginal(Vector3, Vector3)"/> or <see cref="SetVehicleNodesBackToOriginalInAngledArea(Vector3, Vector3, float)"/>.
+		/// </summary>
+		/// <param name="min">The minimum position of the region.</param>
+		/// <param name="max">The maximum position of the region.</param>
+		/// <param name="active">Specifies wheter vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
+		public static void SwitchVehicleNodesInArea(Vector3 min, Vector3 max, bool active) => Function.Call<bool>(Hash.SET_ROADS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, false);
+		/// <summary>
+		/// <para>
+		/// Switches vehicle nodes an angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
+		/// A vehicle node is switched off, no <see cref="Vehicle"/>s should be created on it and <see cref="Vehicle"/>s that already exist will try to avoid driving on to it.
+		/// To undo effects of this method, use <see cref="SetVehicleNodesBackToOriginal(Vector3, Vector3)"/> or <see cref="SetVehicleNodesBackToOriginalInAngledArea(Vector3, Vector3, float)"/>.
+		/// </para>
+		/// <para>
+		/// <paramref name="position1"/> and <paramref name="position2"/> define the midpoints of two parallel sides and <paramref name="areaWidth"/> is the width of these sides.
+		/// </para>
+		/// </summary>
+		/// <param name="position1">One of the midpoints of two parallel sides, which should be different from <paramref name="position2"/>.</param>
+		/// <param name="position2">One of the midpoints of two parallel sides, which should be different from <paramref name="position1"/>.</param>
+		/// <param name="areaWidth">The width of these sides that defines <paramref name="position1"/> and <paramref name="position2"/>.</param>
+		/// <param name="active">Specifies wheter vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
+		public static void SwitchVehicleNodesInAngledArea(Vector3 position1, Vector3 position2, float areaWidth, bool active)
+			=> Function.Call<bool>(Hash.SET_ROADS_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false, active, false);
+		/// <summary>
+		/// Sets all vehicle nodes in area back to their original state as per area a ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
+		/// </summary>
+		/// <param name="min">The minimum position of the region.</param>
+		/// <param name="max">The maximum position of the region.</param>
+		public static void SetVehicleNodesBackToOriginal(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.SET_ROADS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, false);
+		/// <summary>
+		/// <para>
+		/// Sets all vehicle nodes in area back to their original state as per area a ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
+		/// </para>
+		/// <para>
+		/// <paramref name="position1"/> and <paramref name="position2"/> define the midpoints of two parallel sides and <paramref name="areaWidth"/> is the width of these sides.
+		/// </para>
+		/// </summary>
+		/// <param name="position1">One of the midpoints of two parallel sides, which should be different from <paramref name="position2"/>.</param>
+		/// <param name="position2">One of the midpoints of two parallel sides, which should be different from <paramref name="position1"/>.</param>
+		/// <param name="areaWidth">The width of these sides that defines <paramref name="position1"/> and <paramref name="position2"/>.</param>
+		public static void SetVehicleNodesBackToOriginalInAngledArea(Vector3 position1, Vector3 position2, float areaWidth)
+			=> Function.Call<bool>(Hash.SET_ROADS_BACK_TO_ORIGINAL_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false);
 	}
 }
