@@ -2077,6 +2077,94 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the current ratio indicating how much the <see cref="Vehicle"/> is transformed to hover mode for special flight mode,
+		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// </summary>
+		/// <value>The target ratio indicating how much the <see cref="Vehicle"/> will be transformed into hover mode from <c>0f</c> to <c>1f</c>.</value>
+		public float SpecialFlightModeTargetRatio
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.SpecialFlightTargetRatioOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SpecialFlightTargetRatioOffset);
+			}
+			set => Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_TARGET_RATIO, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the current ratio indicating how much the <see cref="Vehicle"/> is transformed to hover mode for special flight mode,
+		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// </summary>
+		/// <value>The current ratio indicating how much the <see cref="Vehicle"/> is transformed to hover mode from <c>0f</c> to <c>1f</c>.</value>
+		public float SpecialFlightModeCurrentRatio
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.SpecialFlightCurrentRatioOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SpecialFlightCurrentRatioOffset);
+			}
+			set => Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_RATIO, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the ratio indicating how much wings are deployed for the special flight mode,
+		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// </summary>
+		/// <value>The ratio indicating how much wings are deployed for the special flight mode from <c>0f</c> to <c>1f</c>.</value>
+		public float SpecialFlightModeWingRatio
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.SpecialFlightWingRatioOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SpecialFlightWingRatioOffset);
+			}
+			set
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.SpecialFlightAreWingsDisabledOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + SHVDN.NativeMemory.SpecialFlightWingRatioOffset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value indicating whether wings are enabled for the special flight mode,
+		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// </summary>
+		public bool AreWingsEnabledForSpecialFlightMode
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.SpecialFlightAreWingsDisabledOffset == 0)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.ReadByte(MemoryAddress + SHVDN.NativeMemory.SpecialFlightAreWingsDisabledOffset) != 0;
+			}
+			set => Function.Call(Hash.SET_DISABLE_HOVER_MODE_FLIGHT, Handle, !value);
+		}
+
 		#endregion
 
 		public static string GetModelDisplayName(Model vehicleModel)
