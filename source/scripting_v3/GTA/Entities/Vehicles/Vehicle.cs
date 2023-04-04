@@ -2080,6 +2080,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the current ratio indicating how much the <see cref="Vehicle"/> is transformed to hover mode for special flight mode,
 		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// Only available in v1.0.1290.1 or later.
 		/// </summary>
 		/// <value>The target ratio indicating how much the <see cref="Vehicle"/> will be transformed into hover mode from <c>0f</c> to <c>1f</c>.</value>
 		public float SpecialFlightModeTargetRatio
@@ -2094,12 +2095,21 @@ namespace GTA
 
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SpecialFlightTargetRatioOffset);
 			}
-			set => Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_TARGET_RATIO, Handle, value);
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
+				}
+
+				Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_TARGET_RATIO, Handle, value);
+			}
 		}
 
 		/// <summary>
 		/// Gets or sets the current ratio indicating how much the <see cref="Vehicle"/> is transformed to hover mode for special flight mode,
 		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// Only available in v1.0.1290.1 or later.
 		/// </summary>
 		/// <value>The current ratio indicating how much the <see cref="Vehicle"/> is transformed to hover mode from <c>0f</c> to <c>1f</c>.</value>
 		public float SpecialFlightModeCurrentRatio
@@ -2114,12 +2124,21 @@ namespace GTA
 
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + SHVDN.NativeMemory.SpecialFlightCurrentRatioOffset);
 			}
-			set => Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_RATIO, Handle, value);
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
+				}
+
+				Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_RATIO, Handle, value);
+			}
 		}
 
 		/// <summary>
 		/// Gets or sets the ratio indicating how much wings are deployed for the special flight mode,
 		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// Only available in v1.0.1290.1 or later.
 		/// </summary>
 		/// <value>The ratio indicating how much wings are deployed for the special flight mode from <c>0f</c> to <c>1f</c>.</value>
 		public float SpecialFlightModeWingRatio
@@ -2136,6 +2155,11 @@ namespace GTA
 			}
 			set
 			{
+				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
+				}
+
 				var address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SpecialFlightAreWingsDisabledOffset == 0)
 				{
@@ -2149,6 +2173,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the value indicating whether wings are enabled for the special flight mode,
 		/// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// Only available in v1.0.1290.1 or later.
 		/// </summary>
 		public bool AreWingsEnabledForSpecialFlightMode
 		{
@@ -2162,7 +2187,15 @@ namespace GTA
 
 				return SHVDN.NativeMemory.ReadByte(MemoryAddress + SHVDN.NativeMemory.SpecialFlightAreWingsDisabledOffset) != 0;
 			}
-			set => Function.Call(Hash.SET_DISABLE_HOVER_MODE_FLIGHT, Handle, !value);
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
+				}
+
+				Function.Call(Hash.SET_DISABLE_HOVER_MODE_FLIGHT, Handle, !value);
+			}
 		}
 
 		#endregion
