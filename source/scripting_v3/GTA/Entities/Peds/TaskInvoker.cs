@@ -267,6 +267,13 @@ namespace GTA
 			Function.Call(Hash.TASK_HANDS_UP, _ped.Handle, duration, 0, -1, false);
 		}
 
+		/// <summary>
+		/// Tells the <see cref="Ped"/> in a plane to land.
+		/// The <see cref="Ped"/> will try to land in between the <paramref name="startPosition"/> and <paramref name="touchdownPosition"/>.
+		/// </summary>
+		/// <param name="startPosition">The start position on a runway.</param>
+		/// <param name="touchdownPosition">The end position on a runway.</param>
+		/// <param name="plane">The plane to land. if <see langword="null"/>, <see cref="Ped.CurrentVehicle"/> will be used as <c>TASK_PLANE_LAND</c> requires a vehicle handle as the 2nd parameter.</param>
 		public void LandPlane(Vector3 startPosition, Vector3 touchdownPosition, Vehicle plane = null)
 		{
 			if (plane == null)

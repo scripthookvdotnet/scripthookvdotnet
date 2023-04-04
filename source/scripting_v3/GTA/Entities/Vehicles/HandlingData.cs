@@ -1395,11 +1395,11 @@ namespace GTA
 
 		public static bool operator ==(HandlingData left, HandlingData right)
 		{
-			return left.Equals(right);
+			return left is null ? right is null : left.Equals(right);
 		}
 		public static bool operator !=(HandlingData left, HandlingData right)
 		{
-			return !left.Equals(right);
+			return !(left == right);
 		}
 
 		public override int GetHashCode()
