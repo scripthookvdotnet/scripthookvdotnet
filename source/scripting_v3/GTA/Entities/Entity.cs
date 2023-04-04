@@ -1615,12 +1615,8 @@ namespace GTA
 		/// </param>
 		public void MarkAsMissionEntity(bool grabFromOtherScript = false)
 		{
-			int handle = Handle;
-			unsafe
-			{
-				// The 2nd parameter is only for multiplayer and we aren't interested in that mode
-				Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, grabFromOtherScript);
-			}
+			// The 2nd parameter is only for multiplayer and we aren't interested in that mode
+			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, grabFromOtherScript);
 		}
 
 		/// <summary>
