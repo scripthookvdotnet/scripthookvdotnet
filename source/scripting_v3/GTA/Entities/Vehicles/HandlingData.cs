@@ -1307,6 +1307,20 @@ namespace GTA
 			}
 		}
 
+		public CarHandlingData CarHandlingData
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return null;
+				}
+
+				var carHandlingDataAddress = SHVDN.NativeMemory.GetSubHandlingData(MemoryAddress, SHVDN.NativeMemory.HandlingType.Car);
+				return carHandlingDataAddress != IntPtr.Zero ? new CarHandlingData(carHandlingDataAddress, this) : null;
+			}
+		}
+
 		static public HandlingData GetByHash(int handlingNameHash)
 		{
 			return new HandlingData(SHVDN.NativeMemory.GetHandlingDataByHandlingNameHash(handlingNameHash));

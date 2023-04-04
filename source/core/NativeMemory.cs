@@ -618,6 +618,12 @@ namespace SHVDN
 				HandlingDataOffset = *(int*)(address + 22);
 			}
 
+			address = FindPattern("\x45\x33\xF6\x8B\xEA\x48\x8B\xF1\x41\x8B\xFE", "xxxxxxxxxxx");
+			if (address != null)
+			{
+				SubHandlingDataArrayOffset = (*(int*)(address + 15) - 8);
+			}
+
 			address = FindPattern("\x48\x85\xC0\x74\x3C\x8B\x80\x00\x00\x00\x00\xC1\xE8\x0F", "xxxxxxx????xxx");
 			if (address != null)
 			{
@@ -1898,7 +1904,54 @@ namespace SHVDN
 
 		public static int HandlingDataOffset { get; }
 
+		public static int SubHandlingDataArrayOffset { get; }
+
 		public static int FirstVehicleFlagsOffset { get; }
+
+		// You can confirm if the name is correct by searching some dumped exe for the hashed values from strings like HANDLING_TYPE_BIKE (without case conversion)
+		public enum HandlingType
+		{
+			Bike,
+			Flying,
+			VerticalFlying,
+			Boat,
+			Seaplane,
+			Submarine,
+			Train,
+			Trailer,
+			Car,
+			Weapon,
+			SpecialFlight,
+		}
+
+		public static IntPtr GetSubHandlingData(IntPtr handlingDataAddr, HandlingType handlingType)
+		{
+			var subHandlingArray = (RageAtArrayPtr*)(handlingDataAddr + SubHandlingDataArrayOffset);
+			var subHandlingCount = subHandlingArray->size;
+			if (subHandlingCount <= 0)
+			{
+				return IntPtr.Zero;
+			}
+
+			for (int i = 0; i < subHandlingCount; i++)
+			{
+				var subHandlingDataAddr = subHandlingArray->GetElementAddress(i);
+				if (subHandlingDataAddr == 0)
+				{
+					continue;
+				}
+
+				var vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
+				var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<IntPtr, HandlingType>)(vFuncAddr);
+				var handlingTypeOfCurrentElement = getSubHandlingDataVFunc(handlingDataAddr);
+				if (handlingTypeOfCurrentElement == handlingType)
+				{
+					return new IntPtr((long)subHandlingDataAddr);
+				}
+			}
+
+			return IntPtr.Zero;
+		}
 
 		public static bool HasMutedSirens(int vehicleHandle)
 		{
