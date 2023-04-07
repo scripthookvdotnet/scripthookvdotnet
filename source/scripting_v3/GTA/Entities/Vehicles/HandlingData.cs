@@ -739,6 +739,40 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or Sets the rate at which a vehicle consumes petrol (gasoline).
+		/// </summary>
+		/// <value>
+		/// The petrol consumption rate.
+		/// </value>
+		/// <remarks>
+		/// <para>The default value in vanilla handling.meta files is 0.5f.</para>
+		/// <para>There is a good chance that this attribute may be used in missions where there is a script that changes the gas level of the vehicle.</para>
+		/// <para>It should probably be used more frequently to adjust how fast the vehicle's petrol leaks.</para>
+		/// </remarks>
+		public float PetrolConsumptionRate
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x108);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x108, value);
+			}
+		}
+
+
+		/// <summary>
 		/// Gets or sets the rotation values in degree the parts pop-up headlights needs to be rotated when headlights are on.
 		/// </summary>
 		/// <value>
@@ -1306,6 +1340,39 @@ namespace GTA
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0xF4, value);
 			}
 		}
+
+		/// <summary>
+		/// Gets of Sets the multiplier for how much damage a vehicle takes from weapons.
+		/// </summary>
+		/// <value>
+		/// The weapon damage scaling multiplier. 
+		/// </value>
+		/// <remarks>
+		/// <para>The default value in vanilla handling.meta files is 0.5f.</para>
+		/// <para>This attribute scales the amount of damage a vehicle takes based on its remaining health. A vehicle that is nearly destroyed will take less damage from weapons than a fully healthy vehicle. Changing this attribute can affect the vehicle's durability in combat situations.</para>
+		/// </remarks>
+		public float WeaponDamageScaledToVehicleHealthMultiplier
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x168);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x168, value);
+			}
+		}
+
 
 		static public HandlingData GetByHash(int handlingNameHash)
 		{
