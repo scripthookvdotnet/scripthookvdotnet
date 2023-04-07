@@ -69,7 +69,7 @@ namespace GTA
 		{
 			get
 			{
-				(int boneIndex, int boneTag) = SHVDN.NativeMemory.GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(Owner.Handle, Index);
+				SHVDN.NativeMemory.GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(Owner.Handle, Index, out var boneIndex, out var boneTag);
 				return new EntityBone(Owner, boneIndex, boneTag);
 			}
 		}
@@ -82,7 +82,7 @@ namespace GTA
 		{
 			get
 			{
-				(int boneIndex, int boneTag) = SHVDN.NativeMemory.GetParentBoneIndexAndIdOfEntityBoneIndex(Owner.Handle, Index);
+				SHVDN.NativeMemory.GetParentBoneIndexAndIdOfEntityBoneIndex(Owner.Handle, Index, out var boneIndex, out var boneTag);
 				return new EntityBone(Owner, boneIndex, boneTag);
 			}
 		}
