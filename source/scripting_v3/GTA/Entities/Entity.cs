@@ -1607,6 +1607,19 @@ namespace GTA
 		#endregion
 
 		/// <summary>
+		/// Marks this <see cref="Entity"/> as a mission entity.
+		/// </summary>
+		/// <param name="grabFromOtherScript">
+		/// If <see langword="true"/>, this <see cref="Entity"/> will be grabbed off any script that currently owns it even if the current owner script is not one of SHVDN scripts.
+		/// If <see langword="false"/>, this method won't do anything if the script that owns this <see cref="Entity"/> is not one of SHVDN scripts (e.g. a ysc script).
+		/// </param>
+		public void MarkAsMissionEntity(bool grabFromOtherScript = false)
+		{
+			// The 2nd parameter is only for multiplayer and we aren't interested in that mode
+			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, false, grabFromOtherScript);
+		}
+
+		/// <summary>
 		/// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when its too far away.
 		/// You can still manipulate this <see cref="Entity"/> as long as the <see cref="Entity"/> exists.
 		/// </summary>
