@@ -1307,18 +1307,75 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="GTA.BikeHandlingData"/> of this <see cref="HandlingData"/>.
+		/// </summary>
+		/// <value>
+		/// The <see cref="GTA.BikeHandlingData"/> of the <see cref="HandlingData"/>.
+		/// If the <see cref="HandlingData"/> does not have a bike handling data, this method returns <see langword="null"/>.
+		/// </value>
+		public BikeHandlingData BikeHandlingData
+		{
+			get
+			{
+				var bikeHandlingDataAddress = GetSubHandlingData(HandlingType.Bike);
+				return bikeHandlingDataAddress != IntPtr.Zero ? new BikeHandlingData(bikeHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>
+		/// Gets the non-vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.
+		/// </summary>
+		/// <value>
+		/// The <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.
+		/// If the <see cref="HandlingData"/> does not have a non-vertical handling data, this method returns <see langword="null"/>.
+		/// </value>
+		public FlyingHandlingData FlyingHandlingData
+		{
+			get
+			{
+				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.Flying);
+				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.Flying) : null;
+			}
+		}
+		/// <summary>
+		/// Gets the vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.
+		/// </summary>
+		/// <value>
+		/// The <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.
+		/// If the <see cref="HandlingData"/> does not have a vertical handling data, this method returns <see langword="null"/>.
+		/// </value>
+		public FlyingHandlingData VerticalFlyingHandlingData
+		{
+			get
+			{
+				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.VerticalFlying);
+				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.VerticalFlying) : null;
+			}
+		}
+		/// <summary>
+		/// Gets the <see cref="GTA.CarHandlingData"/> of this <see cref="HandlingData"/>.
+		/// </summary>
+		/// <value>
+		/// The <see cref="GTA.CarHandlingData"/> of the <see cref="HandlingData"/>.
+		/// If the <see cref="HandlingData"/> does not have a car handling data, this method returns <see langword="null"/>.
+		/// </value>
 		public CarHandlingData CarHandlingData
 		{
 			get
 			{
-				if (!IsValid)
-				{
-					return null;
-				}
-
-				var carHandlingDataAddress = SHVDN.NativeMemory.GetSubHandlingData(MemoryAddress, SHVDN.NativeMemory.HandlingType.Car);
+				var carHandlingDataAddress = GetSubHandlingData(HandlingType.Car);
 				return carHandlingDataAddress != IntPtr.Zero ? new CarHandlingData(carHandlingDataAddress, this) : null;
 			}
+		}
+
+		private IntPtr GetSubHandlingData(HandlingType type)
+		{
+			if (!IsValid)
+			{
+				return IntPtr.Zero;
+			}
+
+			return SHVDN.NativeMemory.GetSubHandlingData(MemoryAddress, (int)type);
 		}
 
 		static public HandlingData GetByHash(int handlingNameHash)

@@ -3,7 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using GTA.Math;
 using System;
 
 namespace GTA
@@ -13,10 +12,11 @@ namespace GTA
 	/// </summary>
 	public abstract class BaseSubHandlingData
 	{
-		internal BaseSubHandlingData(IntPtr address, HandlingData parent)
+		internal BaseSubHandlingData(IntPtr address, HandlingData parent, HandlingType handlingType)
 		{
 			MemoryAddress = address;
 			Parent = parent;
+			HandlingType = handlingType;
 		}
 
 		/// <summary>
@@ -36,6 +36,14 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the handling type.
+		/// </summary>
+		public HandlingType HandlingType
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Returns true if this <see cref="BaseSubHandlingData"/> is valid.
 		/// </summary>
 		/// <value>
@@ -47,7 +55,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same sub handling data as this <see cref="BaseSubHandlingData"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><see langword="true"/> if the <paramref name="obj"/> is the same entity as this <see cref="BaseSubHandlingData"/>; otherwise, <see langword="false"/>.</returns>
+		/// <returns><see langword="true"/> if the <paramref name="obj"/> is the same sub handling data as this <see cref="BaseSubHandlingData"/>; otherwise, <see langword="false"/>.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is BaseSubHandlingData data)
@@ -63,7 +71,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="BaseSubHandlingData"/>.</param>
 		/// <param name="right">The right <see cref="BaseSubHandlingData"/>.</param>
-		/// <returns><see langword="true"/> if <paramref name="left"/> is the same ub handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+		/// <returns><see langword="true"/> if <paramref name="left"/> is the same sub handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(BaseSubHandlingData left, BaseSubHandlingData right)
 		{
 			return left is null ? right is null : left.Equals(right);
@@ -73,7 +81,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="left">The left <see cref="BaseSubHandlingData"/>.</param>
 		/// <param name="right">The right <see cref="BaseSubHandlingData"/>.</param>
-		/// <returns><see langword="true"/> if <paramref name="left"/> is not the same ub handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+		/// <returns><see langword="true"/> if <paramref name="left"/> is not the same sub handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator !=(BaseSubHandlingData left, BaseSubHandlingData right)
 		{
 			return !(left == right);

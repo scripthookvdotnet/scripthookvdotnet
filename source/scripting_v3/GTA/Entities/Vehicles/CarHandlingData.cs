@@ -3,7 +3,6 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
-using GTA.Math;
 using System;
 
 namespace GTA
@@ -14,18 +13,18 @@ namespace GTA
 	/// </para>
 	/// <para>
 	/// Only <c>fBackEndPopUpCarImpulseMult</c>, <c>fBackEndPopUpBuildingImpulseMult</c>, and <c>fBackEndPopUpMaxDeltaSpeed</c> are available in all the versions prior to v1.0.1365.1.
-	/// The other values are only available in v1.0.1365.1 or later versions.
+	/// The other values are available only in v1.0.1365.1 or later game versions.
 	/// </para>
 	/// </summary>
 	public sealed class CarHandlingData : BaseSubHandlingData
 	{
-		internal CarHandlingData(IntPtr address, HandlingData parent) : base(address, parent)
+		internal CarHandlingData(IntPtr address, HandlingData parent) : base(address, parent, HandlingType.Car)
 		{
 		}
 
 		/// <summary>
 		/// Gets or sets the toe of the vehicle's front wheels in radians. Positive value makes front wheels toe-in and Negative value makes front wheels toe-out.
-		/// Only available in v1.0.1365.1 or later versions.
+		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
 		/// The toe of the vehicle's front wheels in radians.
@@ -34,7 +33,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!IsValid)
+				if (!IsValid || Game.Version < GameVersion.v1_0_1365_1_Steam)
 				{
 					return 0.0f;
 				}
@@ -58,7 +57,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the toe of the vehicle's rear wheels in radians. Positive value makes rear wheels toe-in and Negative value makes rear wheels toe-out.
-		/// Only available in v1.0.1365.1 or later versions.
+		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
 		/// The toe of the vehicle's rear wheels in radians.
@@ -67,7 +66,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!IsValid)
+				if (!IsValid || Game.Version < GameVersion.v1_0_1365_1_Steam)
 				{
 					return 0.0f;
 				}
@@ -90,7 +89,8 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the camber of the vehicle's front wheels. Only available in v1.0.1365.1 or later versions.
+		/// Gets or sets the camber of the vehicle's front wheels.
+		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
 		/// The camber of the vehicle's front wheels in radians.
@@ -99,7 +99,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!IsValid)
+				if (!IsValid || Game.Version < GameVersion.v1_0_1365_1_Steam)
 				{
 					return 0.0f;
 				}
@@ -122,7 +122,8 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the camber of the vehicle's rear wheels. Only available in v1.0.1365.1 or later versions.
+		/// Gets or sets the camber of the vehicle's rear wheels.
+		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
 		/// The camber of the vehicle's rear wheels in radians.
@@ -131,7 +132,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!IsValid)
+				if (!IsValid || Game.Version < GameVersion.v1_0_1365_1_Steam)
 				{
 					return 0.0f;
 				}
@@ -154,7 +155,8 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the castor angle of the vehicle's wheels in radians. Only available in v1.0.1365.1 or later versions.
+		/// Gets or sets the castor angle of the vehicle's wheels in radians.
+		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
 		/// The castor angle of the vehicle's wheels in radians.
@@ -163,7 +165,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!IsValid)
+				if (!IsValid || Game.Version < GameVersion.v1_0_1365_1_Steam)
 				{
 					return 0.0f;
 				}
@@ -187,7 +189,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the engine registance. The higher the value is, the slower the vehicles accelerate.
-		/// Only available in v1.0.1365.1 or later versions.
+		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
 		/// The engine registance.
@@ -196,7 +198,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!IsValid)
+				if (!IsValid || Game.Version < GameVersion.v1_0_1365_1_Steam)
 				{
 					return 0.0f;
 				}
@@ -223,7 +225,7 @@ namespace GTA
 		/// Determines if an <see cref="object"/> refers to the same car handling data as this <see cref="CarHandlingData"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><see langword="true"/> if the <paramref name="obj"/> is the same entity as this <see cref="Entity"/>; otherwise, <see langword="false"/>.</returns>
+		/// <returns><see langword="true"/> if the <paramref name="obj"/> is the same car handling data as this <see cref="CarHandlingData"/>; otherwise, <see langword="false"/>.</returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is CarHandlingData data)

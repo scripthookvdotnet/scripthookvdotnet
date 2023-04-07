@@ -1908,23 +1908,7 @@ namespace SHVDN
 
 		public static int FirstVehicleFlagsOffset { get; }
 
-		// You can confirm if the name is correct by searching some dumped exe for the hashed values from strings like HANDLING_TYPE_BIKE (without case conversion)
-		public enum HandlingType
-		{
-			Bike,
-			Flying,
-			VerticalFlying,
-			Boat,
-			Seaplane,
-			Submarine,
-			Train,
-			Trailer,
-			Car,
-			Weapon,
-			SpecialFlight,
-		}
-
-		public static IntPtr GetSubHandlingData(IntPtr handlingDataAddr, HandlingType handlingType)
+		public static IntPtr GetSubHandlingData(IntPtr handlingDataAddr, int handlingType)
 		{
 			var subHandlingArray = (RageAtArrayPtr*)(handlingDataAddr + SubHandlingDataArrayOffset);
 			var subHandlingCount = subHandlingArray->size;
@@ -1942,8 +1926,8 @@ namespace SHVDN
 				}
 
 				var vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
-				var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<IntPtr, HandlingType>)(vFuncAddr);
-				var handlingTypeOfCurrentElement = getSubHandlingDataVFunc(handlingDataAddr);
+				var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(vFuncAddr);
+				var handlingTypeOfCurrentElement = getSubHandlingDataVFunc(subHandlingDataAddr);
 				if (handlingTypeOfCurrentElement == handlingType)
 				{
 					return new IntPtr((long)subHandlingDataAddr);

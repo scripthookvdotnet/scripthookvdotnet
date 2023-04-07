@@ -118,10 +118,13 @@
     <Compile Include="GTA\Entities\Peds\AnimationIKControlFlags.cs" />
     <Compile Include="GTA\Entities\Peds\PedMoveBlendRatio.cs" />
     <Compile Include="GTA\Entities\Peds\PedPropAnchorPosition.cs" />
+    <Compile Include="GTA\Entities\Vehicles\FlyingHandlingData.cs" />
     <Compile Include="GTA\Entities\Vehicles\BoatMissionFlags.cs" />
     <Compile Include="GTA\Entities\Vehicles\BaseSubHandlingData.cs" />
+    <Compile Include="GTA\Entities\Vehicles\BikeHandlingData.cs" />
     <Compile Include="GTA\Entities\Vehicles\CarHandlingData.cs" />
     <Compile Include="GTA\Entities\Vehicles\HeliMissionFlags.cs" />
+    <Compile Include="GTA\Entities\Vehicles\HandlingType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleMissionType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
