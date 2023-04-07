@@ -693,6 +693,19 @@ namespace SHVDN
 				}
 			}
 
+			// The values for special flight mode (e.g. Deluxo) are present only in b1290 or later versions
+			if (gameVersion >= 38)
+			{
+				address = FindPattern("\x41\x0F\x2F\xC1\x72\x2E\xF6\x83", "xxxxxxxx");
+				if (address != null)
+				{
+					SpecialFlightTargetRatioOffset = *(int*)(address + 0x1C);
+					SpecialFlightWingRatioOffset = SpecialFlightTargetRatioOffset + 0x4;
+					SpecialFlightAreWingsDisabledOffset = SpecialFlightTargetRatioOffset + 0x1C;
+					SpecialFlightCurrentRatioOffset = SpecialFlightTargetRatioOffset + 0x28;
+				}
+			}
+
 			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
 			if (address != null)
 			{
@@ -1899,6 +1912,11 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
+
+		public static int SpecialFlightTargetRatioOffset { get; }
+		public static int SpecialFlightWingRatioOffset { get; }
+		public static int SpecialFlightCurrentRatioOffset { get; }
+		public static int SpecialFlightAreWingsDisabledOffset { get; }
 
 		public static bool HasMutedSirens(int vehicleHandle)
 		{
