@@ -1307,13 +1307,9 @@ namespace GTA
 			}
 		}
 
-		/// <summary>
-		/// Gets the <see cref="GTA.BikeHandlingData"/> of this <see cref="HandlingData"/>.
-		/// </summary>
-		/// <value>
-		/// The <see cref="GTA.BikeHandlingData"/> of the <see cref="HandlingData"/>.
-		/// If the <see cref="HandlingData"/> does not have a bike handling data, this method returns <see langword="null"/>.
-		/// </value>
+		/// <summary>Gets the <see cref="GTA.BikeHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.BikeHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a bike handling data, this property returns <see langword="null"/>.</remarks>
 		public BikeHandlingData BikeHandlingData
 		{
 			get
@@ -1322,13 +1318,9 @@ namespace GTA
 				return bikeHandlingDataAddress != IntPtr.Zero ? new BikeHandlingData(bikeHandlingDataAddress, this) : null;
 			}
 		}
-		/// <summary>
-		/// Gets the non-vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.
-		/// </summary>
-		/// <value>
-		/// The <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.
-		/// If the <see cref="HandlingData"/> does not have a non-vertical handling data, this method returns <see langword="null"/>.
-		/// </value>
+		/// <summary>Gets the non-vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A non-vertical <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a non-vertical flying handling data, this property returns <see langword="null"/>.</remarks>
 		public FlyingHandlingData FlyingHandlingData
 		{
 			get
@@ -1337,12 +1329,9 @@ namespace GTA
 				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.Flying) : null;
 			}
 		}
-		/// <summary>
-		/// Gets the vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.
-		/// </summary>
-		/// <value>
-		/// The <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.
-		/// If the <see cref="HandlingData"/> does not have a vertical handling data, this method returns <see langword="null"/>.
+		/// <summary>Gets the vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a vertical flying handling data, this property returns <see langword="null"/>.</remarks>
 		/// </value>
 		public FlyingHandlingData VerticalFlyingHandlingData
 		{
@@ -1352,13 +1341,9 @@ namespace GTA
 				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.VerticalFlying) : null;
 			}
 		}
-		/// <summary>
-		/// Gets the <see cref="GTA.CarHandlingData"/> of this <see cref="HandlingData"/>.
-		/// </summary>
-		/// <value>
-		/// The <see cref="GTA.CarHandlingData"/> of the <see cref="HandlingData"/>.
-		/// If the <see cref="HandlingData"/> does not have a car handling data, this method returns <see langword="null"/>.
-		/// </value>
+		/// <summary>Gets the <see cref="GTA.CarHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A vertical <see cref="GTA.CarHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a car handling data, this property returns <see langword="null"/>.</remarks>
 		public CarHandlingData CarHandlingData
 		{
 			get
