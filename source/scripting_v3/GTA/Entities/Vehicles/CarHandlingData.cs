@@ -237,7 +237,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if two <see cref="CarHandlingData"/>s refer to the car handling data.
+		/// Determines if two <see cref="CarHandlingData"/>s refer to the same car handling data.
 		/// </summary>
 		/// <param name="left">The left <see cref="CarHandlingData"/>.</param>
 		/// <param name="right">The right <see cref="CarHandlingData"/>.</param>

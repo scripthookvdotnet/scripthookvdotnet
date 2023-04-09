@@ -490,7 +490,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if two <see cref="BikeHandlingData"/>s refer to the bike handling data.
+		/// Determines if two <see cref="BikeHandlingData"/>s refer to the same bike handling data.
 		/// </summary>
 		/// <param name="left">The left <see cref="BikeHandlingData"/>.</param>
 		/// <param name="right">The right <see cref="BikeHandlingData"/>.</param>

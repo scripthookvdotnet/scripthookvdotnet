@@ -89,7 +89,9 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return MemoryAddress.GetHashCode();
+			int hash = 17 + MemoryAddress.GetHashCode();
+			hash = Parent != null ? hash * 883 + Parent.MemoryAddress.GetHashCode() : hash;
+			return hash;
 		}
 	}
 }

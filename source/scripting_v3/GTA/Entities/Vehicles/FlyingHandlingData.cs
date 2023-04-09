@@ -638,7 +638,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if two <see cref="FlyingHandlingData"/>s refer to the flying handling data.
+		/// Determines if two <see cref="FlyingHandlingData"/>s refer to the same flying handling data.
 		/// </summary>
 		/// <param name="left">The left <see cref="FlyingHandlingData"/>.</param>
 		/// <param name="right">The right <see cref="FlyingHandlingData"/>.</param>
