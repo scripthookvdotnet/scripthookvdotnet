@@ -1400,13 +1400,56 @@ namespace GTA
 		/// <summary>Gets the vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.</summary>
 		/// <value>A <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.</value>
 		/// <remarks>If the <see cref="HandlingData"/> does not have a vertical flying handling data, this property returns <see langword="null"/>.</remarks>
-		/// </value>
 		public FlyingHandlingData VerticalFlyingHandlingData
 		{
 			get
 			{
 				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.VerticalFlying);
 				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.VerticalFlying) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.BoatHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.BoatHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a boat handling data, this property returns <see langword="null"/>.</remarks>
+		public BoatHandlingData BoatHandlingData
+		{
+			get
+			{
+				var boatHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
+				return boatHandlingDataAddress != IntPtr.Zero ? new BoatHandlingData(boatHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.SeaPlaneHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.SeaPlaneHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a sea plane handling data, this property returns <see langword="null"/>.</remarks>
+		public SeaPlaneHandlingData SeaPlaneHandlingData
+		{
+			get
+			{
+				var seaPlaneHandlingDataAddress = GetSubHandlingData(HandlingType.SeaPlane);
+				return seaPlaneHandlingDataAddress != IntPtr.Zero ? new SeaPlaneHandlingData(seaPlaneHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.SubmarineHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.SubmarineHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a submarine handling data, this property returns <see langword="null"/>.</remarks>
+		public SubmarineHandlingData SubmarineHandlingData
+		{
+			get
+			{
+				var submarineHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
+				return submarineHandlingDataAddress != IntPtr.Zero ? new SubmarineHandlingData(submarineHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.TrailerHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.TrailerHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a trailer handling data, this property returns <see langword="null"/>.</remarks>
+		public TrailerHandlingData TrailerHandlingData
+		{
+			get
+			{
+				var trailerHandlingDataAddress = GetSubHandlingData(HandlingType.Trailer);
+				return trailerHandlingDataAddress != IntPtr.Zero ? new TrailerHandlingData(trailerHandlingDataAddress, this) : null;
 			}
 		}
 		/// <summary>Gets the <see cref="GTA.CarHandlingData"/> of this <see cref="HandlingData"/>.</summary>
