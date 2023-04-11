@@ -64,7 +64,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x29);
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x28);
 			}
 			set
 			{
@@ -295,7 +295,7 @@ namespace GTA
 			return left is null ? right is null : left.Equals(right);
 		}
 		/// <summary>
-		/// Determines if two <see cref="BoatHandlingData"/>s don't refer to the boat boat handling data.
+		/// Determines if two <see cref="BoatHandlingData"/>s don't refer to the boat handling data.
 		/// </summary>
 		/// <param name="left">The left <see cref="BoatHandlingData"/>.</param>
 		/// <param name="right">The right <see cref="BoatHandlingData"/>.</param>

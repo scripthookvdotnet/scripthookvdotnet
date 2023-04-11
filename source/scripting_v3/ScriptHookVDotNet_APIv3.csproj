@@ -118,6 +118,7 @@
     <Compile Include="GTA\Entities\Peds\AnimationIKControlFlags.cs" />
     <Compile Include="GTA\Entities\Peds\PedMoveBlendRatio.cs" />
     <Compile Include="GTA\Entities\Peds\PedPropAnchorPosition.cs" />
+    <Compile Include="GTA\Entities\Vehicles\SubmarineHandlingData.cs" />
     <Compile Include="GTA\Entities\Vehicles\BoatHandlingData.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWeaponHandlingData.cs" />
     <Compile Include="GTA\Entities\Vehicles\FlyingHandlingData.cs" />
