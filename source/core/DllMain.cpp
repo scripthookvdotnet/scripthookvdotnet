@@ -7,6 +7,8 @@
 
 #include <Windows.h>
 
+bool sGameReloaded = false;
+
 static void SetTlsContext(LPVOID context)
 {
 	__writegsqword(0x58, reinterpret_cast<DWORD64>(context));
@@ -16,9 +18,12 @@ static LPVOID GetTlsContext()
 	return reinterpret_cast<LPVOID>(__readgsqword(0x58));
 }
 
-#pragma managed(pop)
+static void ReloadRuntimeNextTick()
+{
+	sGameReloaded = true;
+}
 
-bool sGameReloaded = false;
+#pragma managed(pop)
 
 // Import C# code base
 #include <msclr\lock.h>
@@ -70,8 +75,7 @@ public:
 	{
 		console->PrintInfo("~y~Reloading ...");
 
-		// Force a reload on next tick
-		sGameReloaded = true;
+		ReloadRuntimeNextTick();
 	}
 
 	[SHVDN::ConsoleCommand("Load scripts from a file")]
@@ -314,9 +318,9 @@ static void ScriptMain()
 			const PVOID currentFiber = GetCurrentFiber();
 			if (currentFiber != sGameFiber)
 			{
-				sGameFiber = currentFiber;
-				sGameReloaded = true;
-				break;
+				// Stop calling any functions ScriptHookV provides from the old fiber
+				// The new fiber for SHVDN can handle the SHVDN runtime, so the old fiber has nothing to do any more
+				return;
 			}
 
 			ScriptHookVDotNet_ManagedTick();
@@ -342,10 +346,6 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	case DLL_PROCESS_ATTACH:
 		// Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
 		DisableThreadLibraryCalls(hModule);
-		// Call a managed function to force the CLR to initialize immediately
-		// This is technically a very bad idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
-		if (!GetModuleHandle(TEXT("clr.dll")))
-			ForceCLRInit();
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
