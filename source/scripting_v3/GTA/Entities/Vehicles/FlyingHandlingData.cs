@@ -102,10 +102,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the thrust value.
+		/// Gets or sets the yaw input strength, which scales up with speed.
 		/// </summary>
 		/// <value>
-		/// The thrust value.
+		/// The yaw input strength, which scales up with speed.
 		/// </value>
 		public float YawMultiplier
 		{
@@ -116,7 +116,6 @@ namespace GTA
 					return 0.0f;
 				}
 
-				// fInitialThrust and fInitialThrustFallOff were added in b1180 (although they are likely unused)
 				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x1C : 0x14;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
@@ -204,7 +203,6 @@ namespace GTA
 					return 0.0f;
 				}
 
-				// fInitialYawMult was added along with fInitialThrust and fInitialThrustFallOff in b1180 (although they are likely unused)
 				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x2C : 0x20;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
@@ -263,7 +261,6 @@ namespace GTA
 					return 0.0f;
 				}
 
-				// fInitialRollMult was added along with fInitialThrust, fInitialThrustFallOff, and fInitialYawMult in b1180 (although they are likely unused)
 				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
@@ -324,7 +321,6 @@ namespace GTA
 					return 0.0f;
 				}
 
-				// fInitialPitchMult was added along with fInitialThrust, fInitialThrustFallOff, fInitialYawMult, and fInitialRollMult in b1180 (although they are likely unused)
 				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x44 : 0x30;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
@@ -539,7 +535,6 @@ namespace GTA
 					return Vector3.Zero;
 				}
 
-				// The 4 byte padding is removed in b1180 
 				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x60 : 0x50;
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(MemoryAddress + offset));
 			}

@@ -229,8 +229,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// If the value is less than <c>1f / 60f</c> (or <c>1f / (float)(frameRateValue)</c> if the frame rate is more than 60),
-		/// The vehicle does not transform back to normal properly when it have transformed from special flight mode to normal mode,
-		/// making wheels not placed in correct positions.
+		/// The vehicle does not transform from special flight mode back to normal properly, making wheels not placed in correct positions and wings not retracted.
 		/// </remarks>
 		/// <value>
 		/// The transition duration in seconds.
