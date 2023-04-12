@@ -110,7 +110,7 @@ namespace GTA
 		{
 			if (obj is SeaPlaneHandlingData data)
 			{
-				return MemoryAddress == data.MemoryAddress && Parent == data.Parent;
+				return MemoryAddress == data.MemoryAddress;
 			}
 
 			return false;
