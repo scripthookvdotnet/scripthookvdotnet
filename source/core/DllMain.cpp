@@ -18,6 +18,7 @@ static LPVOID GetTlsContext()
 
 #pragma managed(pop)
 
+// Has to be a managed variable since C++ exceptions will be ruined if this is unmanaged one
 bool sGameReloaded = false;
 
 // Import C# code base
