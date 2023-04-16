@@ -299,7 +299,7 @@ namespace GTA
 		public static T InstantiateScript<T>() where T : Script
 		{
 			var task = new InstantiateScriptTask { type = typeof(T) };
-			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task);
+			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task, true);
 
 			if (task.script == null)
 			{

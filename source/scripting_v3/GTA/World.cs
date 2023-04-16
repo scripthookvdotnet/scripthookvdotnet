@@ -1294,6 +1294,26 @@ namespace GTA
 
 		#endregion
 
+		/// <summary>
+		/// Creates a new <see cref="NavMeshBlockingObject"/>.
+		/// </summary>
+		/// <param name="position">The origin position.</param>
+		/// <param name="size">The size.</param>
+		/// <param name="headingDegrees">The heading in degrees.</param>
+		/// <param name="flags">The flags that specify what types of paths the blocking object will block new <see cref="Ped"/> tasks that use navigation meshes (e.g. <see cref="TaskInvoker.WanderAround()"/>) from using.</param>
+		/// <returns>The new <see cref="NavMeshBlockingObject"/> if successfully created; otherwise, <see langword="null"/>.</returns>
+		/// <remarks>The new <see cref="NavMeshBlockingObject"/> won't block existing <see cref="Ped"/> tasks that use navigation mesh paths in the area the blocking object covers from using.</remarks>
+		public static NavMeshBlockingObject CreateNavMeshBlockingObject(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags = NavMeshBlockingObjectFlags.AllPaths)
+		{
+			const float DEG_2_RAD = (float)(System.Math.PI / 180);
+			float headingRadians = headingDegrees * DEG_2_RAD;
+
+			// Set the second last parameter bPermanent to false, which determines whether the blocking object will last outside the lifetime of the calling script (scrThread)
+			// If the SHVDN runtime stops working, all the blocking objects created via SHVDN will get deleted (stopping any SHVDN scripts working will not automatically remove any blocking objects)
+			var handle = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
+			return handle != -1 ? new NavMeshBlockingObject(handle) : null;
+		}
+
 		#region Particle Effects
 
 		/// <summary>

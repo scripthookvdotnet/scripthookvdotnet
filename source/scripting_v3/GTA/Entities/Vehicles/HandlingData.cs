@@ -10,8 +10,10 @@ namespace GTA
 {
 	/// <summary>
 	/// <para>This class has most regular handling data. Currently compatible with 1.0.2060.0 or later.</para>
-	/// <para>Note that this class gets data from or sets data to the <c>CHandlingData</c> instance as is, and thus not all the handling values don't match the equivalent values in the <c>handling.meta</c> file.
-	/// The game multiplies or divides some values after reading values from the <c>handling.meta</c> file.</para>
+	/// <para>
+	/// Note that this class gets data from or sets data to the <c>CHandlingData</c> instance as is, and thus not all the handling values don't match the equivalent values in the <c>handling.meta</c> file.
+	/// The game multiplies or divides some values after reading values from the <c>handling.meta</c> file.
+	/// </para>
 	/// </summary>
 	public class HandlingData
 	{
@@ -739,6 +741,40 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets or Sets the rate at which a vehicle consumes petrol (gasoline).
+		/// </summary>
+		/// <value>
+		/// The petrol consumption rate.
+		/// </value>
+		/// <remarks>
+		/// <para>The default value in vanilla handling.meta files is 0.5f.</para>
+		/// <para>There is a good chance that this attribute may be used in missions where there is a script that changes the gas level of the vehicle.</para>
+		/// <para>It should probably be used more frequently to adjust how fast the vehicle's petrol leaks.</para>
+		/// </remarks>
+		public float PetrolConsumptionRate
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x108);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x108, value);
+			}
+		}
+
+
+		/// <summary>
 		/// Gets or sets the rotation values in degree the parts pop-up headlights needs to be rotated when headlights are on.
 		/// </summary>
 		/// <value>
@@ -1307,6 +1343,148 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets of Sets the multiplier for how much damage a vehicle takes from weapons.
+		/// </summary>
+		/// <value>
+		/// The weapon damage scaling multiplier. 
+		/// </value>
+		/// <remarks>
+		/// <para>The default value in vanilla handling.meta files is 0.5f.</para>
+		/// <para>This attribute scales the amount of damage a vehicle takes based on its remaining health. A vehicle that is nearly destroyed will take less damage from weapons than a fully healthy vehicle. Changing this attribute can affect the vehicle's durability in combat situations.</para>
+		/// </remarks>
+		public float WeaponDamageScaledToVehicleHealthMultiplier
+		{
+			get
+			{
+				if (!IsValid)
+				{
+					return 0.0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x168);
+			}
+			set
+			{
+				if (!IsValid)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x168, value);
+			}
+		}
+
+		/// <summary>Gets the <see cref="GTA.BikeHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.BikeHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a bike handling data, this property returns <see langword="null"/>.</remarks>
+		public BikeHandlingData BikeHandlingData
+		{
+			get
+			{
+				var bikeHandlingDataAddress = GetSubHandlingData(HandlingType.Bike);
+				return bikeHandlingDataAddress != IntPtr.Zero ? new BikeHandlingData(bikeHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the non-vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A non-vertical <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a non-vertical flying handling data, this property returns <see langword="null"/>.</remarks>
+		public FlyingHandlingData FlyingHandlingData
+		{
+			get
+			{
+				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.Flying);
+				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.Flying) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.FlyingHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.FlyingHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a vertical flying handling data, this property returns <see langword="null"/>.</remarks>
+		public FlyingHandlingData VerticalFlyingHandlingData
+		{
+			get
+			{
+				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.VerticalFlying);
+				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.VerticalFlying) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.BoatHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.BoatHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a boat handling data, this property returns <see langword="null"/>.</remarks>
+		public BoatHandlingData BoatHandlingData
+		{
+			get
+			{
+				var boatHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
+				return boatHandlingDataAddress != IntPtr.Zero ? new BoatHandlingData(boatHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.SeaPlaneHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.SeaPlaneHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a sea plane handling data, this property returns <see langword="null"/>.</remarks>
+		public SeaPlaneHandlingData SeaPlaneHandlingData
+		{
+			get
+			{
+				var seaPlaneHandlingDataAddress = GetSubHandlingData(HandlingType.SeaPlane);
+				return seaPlaneHandlingDataAddress != IntPtr.Zero ? new SeaPlaneHandlingData(seaPlaneHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.SubmarineHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.SubmarineHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a submarine handling data, this property returns <see langword="null"/>.</remarks>
+		public SubmarineHandlingData SubmarineHandlingData
+		{
+			get
+			{
+				var submarineHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
+				return submarineHandlingDataAddress != IntPtr.Zero ? new SubmarineHandlingData(submarineHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the vertical <see cref="GTA.TrailerHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A <see cref="GTA.TrailerHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a trailer handling data, this property returns <see langword="null"/>.</remarks>
+		public TrailerHandlingData TrailerHandlingData
+		{
+			get
+			{
+				var trailerHandlingDataAddress = GetSubHandlingData(HandlingType.Trailer);
+				return trailerHandlingDataAddress != IntPtr.Zero ? new TrailerHandlingData(trailerHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the <see cref="GTA.CarHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A vertical <see cref="GTA.CarHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a car handling data, this property returns <see langword="null"/>.</remarks>
+		public CarHandlingData CarHandlingData
+		{
+			get
+			{
+				var carHandlingDataAddress = GetSubHandlingData(HandlingType.Car);
+				return carHandlingDataAddress != IntPtr.Zero ? new CarHandlingData(carHandlingDataAddress, this) : null;
+			}
+		}
+		/// <summary>Gets the <see cref="GTA.VehicleWeaponHandlingData"/> of this <see cref="HandlingData"/>.</summary>
+		/// <value>A vertical <see cref="GTA.VehicleWeaponHandlingData"/> of the <see cref="HandlingData"/>.</value>
+		/// <remarks>If the <see cref="HandlingData"/> does not have a vehicle weapon handling data, this property returns <see langword="null"/>.</remarks>
+		public VehicleWeaponHandlingData VehicleWeaponHandlingData
+		{
+			get
+			{
+				var vehicleWeaponHandlingDataAddress = GetSubHandlingData(HandlingType.Weapon);
+				return vehicleWeaponHandlingDataAddress != IntPtr.Zero ? new VehicleWeaponHandlingData(vehicleWeaponHandlingDataAddress, this) : null;
+			}
+		}
+
+		private IntPtr GetSubHandlingData(HandlingType type)
+		{
+			if (!IsValid)
+			{
+				return IntPtr.Zero;
+			}
+
+			return SHVDN.NativeMemory.GetSubHandlingData(MemoryAddress, (int)type);
+		}
+
 		static public HandlingData GetByHash(int handlingNameHash)
 		{
 			return new HandlingData(SHVDN.NativeMemory.GetHandlingDataByHandlingNameHash(handlingNameHash));
@@ -1328,11 +1506,11 @@ namespace GTA
 
 		public static bool operator ==(HandlingData left, HandlingData right)
 		{
-			return left.Equals(right);
+			return left is null ? right is null : left.Equals(right);
 		}
 		public static bool operator !=(HandlingData left, HandlingData right)
 		{
-			return !left.Equals(right);
+			return !(left == right);
 		}
 
 		public override int GetHashCode()

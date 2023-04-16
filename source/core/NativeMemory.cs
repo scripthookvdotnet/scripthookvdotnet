@@ -618,6 +618,12 @@ namespace SHVDN
 				HandlingDataOffset = *(int*)(address + 22);
 			}
 
+			address = FindPattern("\x45\x33\xF6\x8B\xEA\x48\x8B\xF1\x41\x8B\xFE", "xxxxxxxxxxx");
+			if (address != null)
+			{
+				SubHandlingDataArrayOffset = (*(int*)(address + 15) - 8);
+			}
+
 			address = FindPattern("\x48\x85\xC0\x74\x3C\x8B\x80\x00\x00\x00\x00\xC1\xE8\x0F", "xxxxxxx????xxx");
 			if (address != null)
 			{
@@ -690,6 +696,19 @@ namespace SHVDN
 					PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
 					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
 					BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
+				}
+			}
+
+			// The values for special flight mode (e.g. Deluxo) are present only in b1290 or later versions
+			if (gameVersion >= 38)
+			{
+				address = FindPattern("\x41\x0F\x2F\xC1\x72\x2E\xF6\x83", "xxxxxxxx");
+				if (address != null)
+				{
+					SpecialFlightTargetRatioOffset = *(int*)(address + 0x1C);
+					SpecialFlightWingRatioOffset = SpecialFlightTargetRatioOffset + 0x4;
+					SpecialFlightAreWingsDisabledOffset = SpecialFlightTargetRatioOffset + 0x1C;
+					SpecialFlightCurrentRatioOffset = SpecialFlightTargetRatioOffset + 0x28;
 				}
 			}
 
@@ -863,16 +882,22 @@ namespace SHVDN
 				InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
 			}
 
-			// These 2 nopping are done by some trainers such as Simple Trainer, Menyoo, and Enhanced Native Trainer, but we try to do this if they are not done yet
+			// These 2 nopping are done by trainers such as Simple Trainer, Menyoo, and Enhanced Native Trainer, but we try to do this if they are not done yet
 			#region -- Bypass model requests block for some models --
 			// Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
 			address = FindPattern("\x48\x85\xC0\x00\x00\x38\x45\x00\x0F", "xxx??xx?x");
-			address = address != null ? (address + 0x4D) : null;
-			if (address != null && *address != 0x90)
+			if (address != null)
 			{
-				const int bytesToWriteInstructions = 0x18;
-				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
-				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
+				// Find address to patch because some of the instructions are changed and offset differs between b1290 and b1180
+				// Skip the region where there are not "lea rcx, [rbp+6F]"
+				address = FindPattern("\x33\xC1\x48\x8D\x4D\x6F", "xxxxxx", new IntPtr(address + 0x30), 0x30);
+				address = address != null ? (address + 0x16) : null;
+				if (address != null && *address != 0x90)
+				{
+					const int bytesToWriteInstructions = 0x18;
+					var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
+					Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
+				}
 			}
 			#endregion
 			#region -- Bypass is player model allowed to spawn checks --
@@ -1584,27 +1609,43 @@ namespace SHVDN
 
 			return crSkeleton->skeletonData->GetBoneIdByIndex(boneIndex);
 		}
-		public static (int boneIndex, int boneTag) GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex)
+		public static void GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneTag)
 		{
 			if (boneIndex < 0)
-				return (-1, -1);
+			{
+				nextSiblingBoneIndex = -1;
+				nextSiblingBoneTag = -1;
+				return;
+			}
 
 			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
 			if (crSkeleton == null)
-				return (-1, -1);
+			{
+				nextSiblingBoneIndex = -1;
+				nextSiblingBoneTag = -1;
+				return;
+			}
 
-			return crSkeleton->skeletonData->GetNextSiblingBoneIndexAndId(boneIndex);
+			crSkeleton->skeletonData->GetNextSiblingBoneIndexAndId(boneIndex, out nextSiblingBoneIndex, out nextSiblingBoneTag);
 		}
-		public static (int boneIndex, int boneTag) GetParentBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex)
+		public static void GetParentBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex, out int parentBoneIndex, out int parentBoneTag)
 		{
 			if (boneIndex < 0)
-				return (-1, -1);
+			{
+				parentBoneIndex = -1;
+				parentBoneTag = -1;
+				return;
+			}
 
 			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
 			if (crSkeleton == null)
-				return (-1, -1);
+			{
+				parentBoneIndex = -1;
+				parentBoneTag = -1;
+				return;
+			}
 
-			return crSkeleton->skeletonData->GetParentBoneIndexAndId(boneIndex);
+			crSkeleton->skeletonData->GetParentBoneIndexAndId(boneIndex, out parentBoneIndex, out parentBoneTag);
 		}
 		public static string GetEntityBoneName(int entityHandle, int boneIndex)
 		{
@@ -1756,6 +1797,21 @@ namespace SHVDN
 			internal int gameTime;
 		}
 
+		[StructLayout(LayoutKind.Sequential)]
+		public struct EntityDamageRecordForReturnValue
+		{
+			public int attackerEntityHandle;
+			public int weaponHash;
+			public int gameTime;
+
+			public EntityDamageRecordForReturnValue(int attackerEntityHandle, int weaponHash, int gameTime)
+			{
+				this.attackerEntityHandle = attackerEntityHandle;
+				this.weaponHash = weaponHash;
+				this.gameTime = gameTime;
+			}
+		}
+
 		public static bool IsIndexOfEntityDamageRecordValid(IntPtr entityAddress, uint index)
 		{
 			if (index < 0 ||
@@ -1773,7 +1829,7 @@ namespace SHVDN
 
 			return index < entryCount;
 		}
-		static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
+		static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
 		{
 			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * elementSizeOfCAttackerArrayOfEntity);
 
@@ -1782,32 +1838,32 @@ namespace SHVDN
 			var gameTime = cAttacker->gameTime;
 			var attackerHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
 
-			return (attackerHandle, weaponHash, gameTime);
+			return new EntityDamageRecordForReturnValue(attackerHandle, weaponHash, gameTime);
 		}
-		public static (int attackerHandle, int weaponHash, int gameTime) GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
+		public static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
 		{
 			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
-				return default((int attackerHandle, int weaponHash, int gameTime));
+				return default(EntityDamageRecordForReturnValue);
 
 			return GetEntityDamageRecordEntryAtIndexInternal(entityCAttackerArrayAddress, index);
 		}
 
-		public static (int attackerHandle, int weaponHash, int gameTime)[] GetEntityDamageRecordEntries(IntPtr entityAddress)
+		public static EntityDamageRecordForReturnValue[] GetEntityDamageRecordEntries(IntPtr entityAddress)
 		{
 			if (cAttackerArrayOfEntityOffset == 0 ||
 				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
 				elementSizeOfCAttackerArrayOfEntity == 0)
-				return Array.Empty<(int handle, int weaponHash, int gameTime)>();
+				return Array.Empty<EntityDamageRecordForReturnValue>();
 
 			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
-				return Array.Empty<(int attackerHandle, int weaponHash, int gameTime)>();
+				return Array.Empty<EntityDamageRecordForReturnValue>();
 
 			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
-			var returnEntries = returnEntrySize != 0 ? new (int attackerHandle, int weaponHash, int gameTime)[returnEntrySize] : Array.Empty<(int attackerHandle, int weaponHash, int gameTime)>();
+			var returnEntries = returnEntrySize != 0 ? new EntityDamageRecordForReturnValue[returnEntrySize] : Array.Empty<EntityDamageRecordForReturnValue>();
 
 			for (uint i = 0; i < returnEntries.Length; i++)
 			{
@@ -1926,7 +1982,43 @@ namespace SHVDN
 
 		public static int HandlingDataOffset { get; }
 
+		public static int SubHandlingDataArrayOffset { get; }
+
 		public static int FirstVehicleFlagsOffset { get; }
+
+		public static IntPtr GetSubHandlingData(IntPtr handlingDataAddr, int handlingType)
+		{
+			var subHandlingArray = (RageAtArrayPtr*)(handlingDataAddr + SubHandlingDataArrayOffset);
+			var subHandlingCount = subHandlingArray->size;
+			if (subHandlingCount <= 0)
+			{
+				return IntPtr.Zero;
+			}
+
+			for (int i = 0; i < subHandlingCount; i++)
+			{
+				var subHandlingDataAddr = subHandlingArray->GetElementAddress(i);
+				if (subHandlingDataAddr == 0)
+				{
+					continue;
+				}
+
+				var vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
+				var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(vFuncAddr);
+				var handlingTypeOfCurrentElement = getSubHandlingDataVFunc(subHandlingDataAddr);
+				if (handlingTypeOfCurrentElement == handlingType)
+				{
+					return new IntPtr((long)subHandlingDataAddr);
+				}
+			}
+
+			return IntPtr.Zero;
+		}
+
+		public static int SpecialFlightTargetRatioOffset { get; }
+		public static int SpecialFlightWingRatioOffset { get; }
+		public static int SpecialFlightCurrentRatioOffset { get; }
+		public static int SpecialFlightAreWingsDisabledOffset { get; }
 
 		public static bool HasMutedSirens(int vehicleHandle)
 		{
@@ -4856,35 +4948,67 @@ namespace SHVDN
 			/// <summary>
 			/// Gets the next sibling bone index of specified bone index.
 			/// </summary>
-			internal (int boneIndex, int boneId) GetNextSiblingBoneIndexAndId(int boneIndex)
+			internal void GetNextSiblingBoneIndexAndId(int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneId)
 			{
 				if (boneIndex < 0 || boneIndex >= boneCount)
-					return (-1, -1);
+				{
+					nextSiblingBoneIndex = -1;
+					nextSiblingBoneId = -1;
+					return;
+				}
 
 				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
-				var nextSiblingBoneIndex = crBoneData->nextSiblingBoneIndex;
-				if (nextSiblingBoneIndex == 0xFFFF)
+				var nextSiblingBoneIndexFetched = crBoneData->nextSiblingBoneIndex;
+				if (nextSiblingBoneIndexFetched == 0xFFFF)
 				{
-					return (-1, -1);
+					nextSiblingBoneIndex = -1;
+					nextSiblingBoneId = -1;
+					return;
 				}
-				return (nextSiblingBoneIndex, crBoneData->boneId);
+
+				var nextSiblingBoneIdFetched = GetBoneIdByIndex(nextSiblingBoneIndexFetched);
+				if (nextSiblingBoneIndexFetched == 0xFFFF)
+				{
+					nextSiblingBoneIndex = -1;
+					nextSiblingBoneId = -1;
+					return;
+				}
+
+				nextSiblingBoneIndex = nextSiblingBoneIndexFetched;
+				nextSiblingBoneId = nextSiblingBoneIdFetched;
 			}
 
 			/// <summary>
 			/// Gets the next parent bone index of specified bone index.
 			/// </summary>
-			internal (int boneIndex, int boneId) GetParentBoneIndexAndId(int boneIndex)
+			internal void GetParentBoneIndexAndId(int boneIndex, out int parentBoneIndex, out int parentBoneId)
 			{
 				if (boneIndex < 0 || boneIndex >= boneCount)
-					return (-1, -1);
+				{
+					parentBoneIndex = -1;
+					parentBoneId = -1;
+					return;
+				}
 
 				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
-				var parentBoneIndex = crBoneData->parentBoneIndex;
-				if (parentBoneIndex == 0xFFFF)
+				var nextParentBoneIndexFetched = crBoneData->parentBoneIndex;
+				if (nextParentBoneIndexFetched == 0xFFFF)
 				{
-					return (-1, -1);
+					parentBoneIndex = -1;
+					parentBoneId = -1;
+					return;
 				}
-				return (parentBoneIndex, crBoneData->boneId);
+
+				var nextParentBoneIdFetched = GetBoneIdByIndex(nextParentBoneIndexFetched);
+				if (nextParentBoneIdFetched == 0xFFFF)
+				{
+					parentBoneIndex = -1;
+					parentBoneId = -1;
+					return;
+				}
+
+				parentBoneIndex = nextParentBoneIndexFetched;
+				parentBoneId = nextParentBoneIdFetched;
 			}
 
 			/// <summary>

@@ -826,14 +826,33 @@ namespace GTA
 
 		#region Driving
 
+		/// <summary>
+		/// <para>
+		/// Sets the driving speed this <see cref="Ped"/> drives at.
+		/// </para>
+		/// <para>
+		/// this <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, this actually changes the cruise speed field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
+		/// </remarks>
 		public float DrivingSpeed
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_CRUISE_SPEED, Handle, value);
 		}
 
 		/// <summary>
+		/// <para>
 		/// Sets the maximum driving speed this <see cref="Ped"/> can drive at.
+		/// </para>
+		/// <para>
+		/// this <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
+		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// Despite the interface, this actually changes the maximum cruise speed field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
+		/// </remarks>
 		public float MaxDrivingSpeed
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_MAX_CRUISE_SPEED, Handle, value);

@@ -7,6 +7,10 @@ namespace GTA
 {
 	public enum VehicleModType
 	{
+		/// <summary>
+		/// Intended to use with <see cref="VehicleWeaponHandlingData.WeaponVehicleModType"/>, not in <see cref="VehicleMod"/> or <see cref="VehicleModCollection"/>.
+		/// </summary>
+		None = -1,
 		Spoilers,
 		FrontBumper,
 		RearBumper,

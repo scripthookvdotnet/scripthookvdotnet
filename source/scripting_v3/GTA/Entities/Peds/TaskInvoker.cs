@@ -267,6 +267,13 @@ namespace GTA
 			Function.Call(Hash.TASK_HANDS_UP, _ped.Handle, duration, 0, -1, false);
 		}
 
+		/// <summary>
+		/// Tells the <see cref="Ped"/> in a plane to land.
+		/// The <see cref="Ped"/> will try to land in between the <paramref name="startPosition"/> and <paramref name="touchdownPosition"/>.
+		/// </summary>
+		/// <param name="startPosition">The start position on a runway.</param>
+		/// <param name="touchdownPosition">The end position on a runway.</param>
+		/// <param name="plane">The plane to land. if <see langword="null"/>, <see cref="Ped.CurrentVehicle"/> will be used as <c>TASK_PLANE_LAND</c> requires a vehicle handle as the 2nd parameter.</param>
 		public void LandPlane(Vector3 startPosition, Vector3 touchdownPosition, Vehicle plane = null)
 		{
 			if (plane == null)
@@ -488,6 +495,42 @@ namespace GTA
 			Function.Call(Hash.TASK_PED_SLIDE_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, heading, 0.7f);
 		}
 
+		/// <summary>
+		/// <para>
+		/// Tasks the <see cref="Ped"/> to do nothing for the specified amount of miliseconds.
+		/// Typically used as a part of <see cref="TaskSequence"/> to add a delay.
+		/// <c>CTaskDoNothing</c> will be issued when this method is called as a standalone task and <c>CTaskPause</c> will be issued when this method is called as a part of <see cref="TaskSequence"/>.
+		/// </para>
+		/// <para>
+		/// Some tasks such as <c>CTaskMeleeActionResult</c>, which is caused by doing melee attacks, may stop immediately when this task is issued
+		/// as a part of <see cref="TaskSequence"/>, which is different from <see cref="StandStill(int)"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="duration">The duration in milliseconds.</param>
+		/// <remarks>Unlike <see cref="StandStill(int)"/>, if no script (including ysc ones or external ones) owns the <see cref="Ped"/>,
+		/// which is possible by creating them or calling <see cref="Entity.MarkAsMissionEntity(bool)"/>,
+		/// the <see cref="Ped"/> will stop doing a pause task immediately and do an ambient task instead.
+		/// </remarks>
+		public void Pause(int duration)
+		{
+			Function.Call(Hash.TASK_PAUSE, _ped.Handle, duration);
+		}
+
+		/// <summary>
+		/// <para>
+		/// Tasks the <see cref="Ped"/> to stand still for the specified amount of miliseconds.
+		/// Typically used as a part of <see cref="TaskSequence"/> to add a stand still task (internally <c>CTaskDoNothing</c> will always be issued).
+		/// </para>
+		/// <para>
+		/// Some tasks such as <c>CTaskMeleeActionResult</c>, which is caused by doing melee attacks, may not stop immediately when this task is issued,
+		/// which is different from <see cref="Pause(int)"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="duration">The duration in milliseconds.</param>
+		/// <remarks>Unlike <see cref="Pause(int)"/>, the <see cref="Ped"/> won't stop doing a pause task even if no script
+		/// (including ysc ones or external ones) owns the <see cref="Ped"/>, which is possible by creating them or
+		/// calling <see cref="Entity.MarkAsMissionEntity(bool)"/>.
+		/// </remarks>
 		public void StandStill(int duration)
 		{
 			Function.Call(Hash.TASK_STAND_STILL, _ped.Handle, duration);
