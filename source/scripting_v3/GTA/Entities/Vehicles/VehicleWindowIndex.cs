@@ -3,6 +3,8 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
+
 namespace GTA
 {
 	public enum VehicleWindowIndex
