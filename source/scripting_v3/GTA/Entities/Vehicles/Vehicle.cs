@@ -429,7 +429,13 @@ namespace GTA
 					return VehicleType.None;
 				}
 
-				return (VehicleType)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				int vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				if (vehTypeInt >= 6 && Game.Version < GameVersion.v1_0_944_2_Steam)
+				{
+					vehTypeInt += 2;
+				}
+
+				return (VehicleType)vehTypeInt;
 			}
 		}
 
