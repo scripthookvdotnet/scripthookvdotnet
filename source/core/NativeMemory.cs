@@ -427,12 +427,20 @@ namespace SHVDN
 			}
 
 			// Find vehicle data offsets
-			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
+			address = FindPattern("\x49\x8B\xF1\x48\x8B\xF9\x0F\x57\xC0\x0F\x28\xF9\x0F\x28\xF2\x74\x4C", "xxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				NextGearOffset = *(int*)(address + 3);
-				GearOffset = *(int*)(address + 3) + 2;
-				HighGearOffset = *(int*)(address + 3) + 6;
+				CVehicleEngineOffset = *(int*)(address + 0x24);
+
+				NextGearOffset = CVehicleEngineOffset;
+				GearOffset = CVehicleEngineOffset + 2;
+				HighGearOffset = CVehicleEngineOffset + 6;
+
+				address = FindPattern("\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC8\x76\x2E\x0F\x2F\xDA\x73\x29\xF3\x0F\x10\x44\x24\x58", "xxxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					CVehicleEngineTurboOffset = (int)*(byte*)(address - 1);
+				}
 			}
 
 			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83", "xxxxxxxx????xxxxxx");
@@ -472,18 +480,6 @@ namespace SHVDN
 				CurrentRPMOffset = *(int*)(address + 10);
 				ClutchOffset = *(int*)(address + 10) + 0xC;
 				AccelerationOffset = *(int*)(address + 10) + 0x10;
-			}
-
-			address = FindPattern("\x49\x8B\xF1\x48\x8B\xF9\x0F\x57\xC0\x0F\x28\xF9\x0F\x28\xF2\x74\x4C", "xxxxxxxxxxxxxxxxx");
-			if (address != null)
-			{
-				CVehicleEngineOffset = *(int*)(address + 0x13);
-
-				address = FindPattern("\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC8\x76\x2E\x0F\x2F\xDA\x73\x29\xF3\x0F\x10\x44\x24\x58", "xxxxxxxxxxxxxxxxxxxxxxx");
-				if (address != null)
-				{
-					CVehicleEngineTurboOffset = (int)*(byte*)(address - 1);
-				}
 			}
 
 			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
