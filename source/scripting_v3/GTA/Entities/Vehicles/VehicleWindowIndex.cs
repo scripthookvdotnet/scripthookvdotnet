@@ -11,10 +11,9 @@ namespace GTA
 		FrontRightWindow,
 		BackLeftWindow,
 		BackRightWindow,
-		// Executable lists 8 possible windows
-		ExtraWindow1,
-		ExtraWindow2,
-		ExtraWindow3,
-		ExtraWindow4,
+		MiddleLeftWindow,
+		MiddleRightWindow,
+		Windshield,
+		BackWindshield,
 	}
 }
