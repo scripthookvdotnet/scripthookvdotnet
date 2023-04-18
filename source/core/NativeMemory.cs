@@ -296,7 +296,7 @@ namespace SHVDN
 			if (waypointInfoArrayStartAddress != null)
 			{
 				startAddressToSearch = new IntPtr(address);
-				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxx", startAddressToSearch);
+				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x00\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx?xxxxxxxxx", startAddressToSearch);
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
@@ -474,14 +474,16 @@ namespace SHVDN
 				AccelerationOffset = *(int*)(address + 10) + 0x10;
 			}
 
-			// use the former pattern if the version is 1.0.1604.0 or newer
-			var gameVersion = GetGameVersion();
-			address = gameVersion >= 46 ?
-						FindPattern("\xF3\x0F\x10\x9F\xD4\x08\x00\x00\x0F\x2F\xDF\x73\x0A", "xxxx????xxxxx") :
-						FindPattern("\xF3\x0F\x10\x8F\x68\x08\x00\x00\x88\x4D\x8C\x0F\x2F\xCF", "xxxx????xxx???");
+			address = FindPattern("\x49\x8B\xF1\x48\x8B\xF9\x0F\x57\xC0\x0F\x28\xF9\x0F\x28\xF2\x74\x4C", "xxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				TurboOffset = *(int*)(address + 4);
+				CVehicleEngineOffset = *(int*)(address + 0x13);
+
+				address = FindPattern("\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC8\x76\x2E\x0F\x2F\xDA\x73\x29\xF3\x0F\x10\x44\x24\x58", "xxxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					CVehicleEngineTurboOffset = (int)*(byte*)(address - 1);
+				}
 			}
 
 			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
@@ -499,12 +501,20 @@ namespace SHVDN
 				EngineTemperatureOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
-			if (address != null)
+			int gameVersion = GetGameVersion();
+
+			// Get the offset that is stored by MODIFY_VEHICLE_TOP_SPEED if the game version is b944 or later for existing script compatibility
+			// MODIFY_VEHICLE_TOP_SPEED stores the 2nd argument value to CVehicle in b944 or later, but that's not the case in earlier ones
+			if (gameVersion >= 28)
 			{
-				var modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
-				var modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
-				EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
+
+				address = FindPattern("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					var modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
+					var modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
+					EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
+				}
 			}
 
 			address = FindPattern("\x48\x8B\xF8\x48\x85\xC0\x0F\x84\xE2\x00\x00\x00\x80\x88", "xxxxxxxxxxxxxx");
@@ -532,10 +542,27 @@ namespace SHVDN
 				IsEngineStartingOffset = IsInteriorLightOnOffset + 1;
 			}
 
-			address = FindPattern("\x84\xC0\x75\x09\x8A\x9F\x00\x00\x00\x00\x80\xE3\x01\x8A\xC3\x48\x8B\x5C\x24\x30", "xxxxxx????xxxxxxxxxx");
+			address = FindPattern("\x39\x00\x75\x0F\x48\xFF\xC1\x48\x83\xC0\x04\x48\x83\xF9\x02\x7C\xEF\xEB\x08\x48\x8B\xCF", "x?xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				IsHeadlightDamagedOffset = *(int*)(address + 6);
+
+				address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\x87", "xxx????x????xx", new IntPtr(address - 0x50), 0x50u);
+				if (address != null)
+				{
+					var unkVehHeadlightOffset = *(int*)(address + 3);
+					var unkFuncAddr = (*(int*)(address + 8) + address + 12);
+					address = FindPattern("\x8B\xC3\x8B\xCB\x48\xC1\xE8\x05\x83\xE1\x1F", "xxxxxxxxxxx", new IntPtr(unkFuncAddr), 0x200u);
+					if (address != null)
+					{
+						IsHeadlightDamagedOffset = *(int*)(address + 14) + unkVehHeadlightOffset;
+					}
+				}
+			}
+
+			address = FindPattern("\x8B\xCB\x89\x87\x90\x00\x00\x00\x8A\x86\xD8\x00\x00\x00\x24\x07\x41\x3A\xC6\x0F\x94\xC1\xC1\xE1\x12\x33\xCA\x81\xE1\x00\x00\x04\x00\x33\xCA", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				VehicleLodMultiplierOffset = *(int*)(address - 4);
 			}
 
 			address = FindPattern("\x8A\x96\x00\x00\x00\x00\x0F\xB6\xC8\x84\xD2\x41", "xx????xxxxxx");
@@ -557,10 +584,10 @@ namespace SHVDN
 				AlarmTimeOffset = *(int*)(address + 52);
 			}
 
-			address = FindPattern("\x0F\x84\xE0\x02\x00\x00\xF3\x0F\x10\x05\x00\x00\x00\x00\x41\x0F\x2F\x86\x00\x00\x00\x00", "xxxxxxxxxx????xxxx????");
+			address = FindPattern("\x8B\xCB\x89\x87\x90\x00\x00\x00\x8A\x86\xD8\x00\x00\x00\x24\x07\x41\x3A\xC6\x0F\x94\xC1\xC1\xE1\x12\x33\xCA\x81\xE1\x00\x00\x04\x00\x33\xCA", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				VehicleLodMultiplierOffset = *(int*)(address + 18);
+				VehicleLodMultiplierOffset = *(int*)(address - 4);
 			}
 
 			address = FindPattern("\x48\x85\xC0\x74\x32\x8A\x88\x00\x00\x00\x00\xF6\xC1\x00\x75\x27", "xxxxxxx????xx?xx");
@@ -571,10 +598,15 @@ namespace SHVDN
 				CanUseSirenOffset = *(int*)(address + 23);
 			}
 
-			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
+			address = FindPattern("\x41\xBB\x07\x00\x00\x00\x8A\xC2\x41\x23\xCB\x41\x22\xC3\x3C\x03\x75\x16", "xxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				VehicleTypeOffsetInCVehicle = *(int*)(address + 2);
+				VehicleTypeOffsetInCVehicle = *(int*)(address - 0x1C);
+			}
+
+			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x00\x77\x12\x80\xA0\x00\x00\x00\x00\xFD\x80\xE3\x01\x02\xDB\x08\x98", "xx?????xxxx????xxxxxxxx");
+			if (address != null)
+			{
 				VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
 			}
 
@@ -584,32 +616,12 @@ namespace SHVDN
 				HeliBladesSpeedOffset = *(int*)(address + 7);
 			}
 
+			address = FindPattern("\xB3\x03\x22\xD3\x48\x8B\xCF\xE8\x00\x00\x00\x00\x48\x8B\xCF\xF3\x0F\x11\x86\x00\x00\x00\x00\x8A\x97\xD4\x00\x00\x00\xC0\xEA\x02\x22\xD3\xE8", "xxxxxxxx????xxxxxxx????xxxxxxxxxxxx");
+			if (address != null)
 			{
-				string patternForHeliHealthOffsets = "\x48\x85\xC0\x74\x18\x8B\x88\x00\x00\x00\x00\x83\xE9\x08\x83\xF9\x01\x77\x0A\xF3\x0F\x10\x80\x00\x00\x00\x00";
-				string maskForHeliHealthOffsets = "xxxxxxx????xxxxxxxxxxxx????";
-				startAddressToSearch = Process.GetCurrentProcess().MainModule.BaseAddress;
-
-				int[] heliHealthOffsets = new int[3];
-
-				// the pattern will match 3 times
-				for (int i = 0; i < 3; i++)
-				{
-					address = FindPattern(patternForHeliHealthOffsets, maskForHeliHealthOffsets, startAddressToSearch);
-
-					if (address != null)
-					{
-						heliHealthOffsets[i] = *(int*)(address + 23);
-						startAddressToSearch = new IntPtr((long)(address + patternForHeliHealthOffsets.Length));
-					}
-				}
-
-				if (!Array.Exists(heliHealthOffsets, (x => x == 0)))
-				{
-					Array.Sort<int>(heliHealthOffsets);
-					HeliMainRotorHealthOffset = heliHealthOffsets[0];
-					HeliTailRotorHealthOffset = heliHealthOffsets[1];
-					HeliTailBoomHealthOffset = heliHealthOffsets[2];
-				}
+				HeliMainRotorHealthOffset = *(int*)(address + 19);
+				HeliTailRotorHealthOffset = HeliMainRotorHealthOffset + 4;
+				HeliTailBoomHealthOffset = HeliMainRotorHealthOffset + 8;
 			}
 
 			address = FindPattern("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
@@ -681,9 +693,10 @@ namespace SHVDN
 				ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
 			}
 
-			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
-			if (address != null)
+			// Vehicle Wheels has the owner vehicle pointer and new wheel functions are used since b1365
+			if (gameVersion >= 40)
 			{
+				address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
 				PunctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
 				address = FindPattern("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
 				BurstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
@@ -691,12 +704,9 @@ namespace SHVDN
 			else
 			{
 				address = FindPattern("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
-				if (address != null)
-				{
-					PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
-					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
-					BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
-				}
+				PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
+				address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
+				BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
 			}
 
 			// The values for special flight mode (e.g. Deluxo) are present only in b1290 or later versions
@@ -746,10 +756,10 @@ namespace SHVDN
 				fragInstNMGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
 			}
 
-			address = FindPattern("\xF3\x44\x0F\x10\xAB\x00\x00\x00\x00\x0F\x5B\xC9\xF3\x45\x0F\x5C\xD4", "xxxxx????xxxxxxxx");
+			address = FindPattern("\x0F\x93\xC0\x84\xC0\x74\x0F\xF3\x41\x0F\x58\xD1\x41\x0F\x2F\xD0\x72\x04\x41\x0F\x28\xD0", "xxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				SweatOffset = *(int*)(address + 5);
+				SweatOffset = *(int*)(address + 26);
 			}
 
 			address = FindPattern("\x8A\x41\x30\xC0\xE8\x03\xA8\x01\x74\x49\x8B\x82\x00\x00\x00\x00", "xxxxxxxxxxxx????");
@@ -764,10 +774,10 @@ namespace SHVDN
 				SeatIndexOffset = *(int*)(address + 8);
 			}
 
-			address = FindPattern("\x74\x14\x8B\x88\x00\x00\x00\x00\x81\xE1\x00\x40\x00\x00\x31\x88", "xxxx????xxxxxxxx");
+			address = FindPattern("\xC1\xE8\x11\xA8\x01\x75\x10\x48\x8B\xCB\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84", "xxxxxxxxxxx????xxxx");
 			if (address != null)
 			{
-				PedDropsWeaponsWhenDeadOffset = *(int*)(address + 4);
+				PedDropsWeaponsWhenDeadOffset = *(int*)(address - 4);
 			}
 
 			address = FindPattern("\x4D\x8B\xF1\x48\x8B\xFA\xC1\xE8\x02\x48\x8B\xF1\xA8\x01\x0F\x85\xEB\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
@@ -776,18 +786,32 @@ namespace SHVDN
 				PedSuffersCriticalHitOffset = *(int*)(address - 4);
 			}
 
-			address = FindPattern("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02", "xxxxxxxxxxx????xxxxx");
-			if (address != null)
+			// Implementation of armor system was different drastically in the game version between b877 and b2699 and the other versions
+			if (gameVersion >= 80 || gameVersion <= 25)
 			{
-				ArmorOffset = *(int*)(address + 11);
+				address = FindPattern("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02\x32\xC0\x48\x8B\x5C\x24\x40", "xxxxxxxxxxx????xxxxxxxxxxxx");
+				if (address != null)
+				{
+					ArmorOffset = *(int*)(address + 0x2C);
+					InjuryHealthThresholdOffset = ArmorOffset + 0xC;
+					FatalInjuryHealthThresholdOffset = ArmorOffset + 0x10;
+				}
 			}
-
-			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\xD9\x48\x8B\x48\x08\x48\x85\xC9\x0F", "xxx????xxxxxxxxxxx");
-			if (address != null)
+			else
 			{
-				// The order won't change in some updates
-				InjuryHealthThresholdOffset = *(int*)(address + 27);
-				FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 4;
+				address = FindPattern("\x0F\x29\x70\xD8\x0F\x29\x78\xC8\x49\x8B\xF0\x48\x8B\xEA\x4C\x8B\xF1\x44\x0F\x29\x40\xB8", "xxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					ArmorOffset = *(int*)(address + 0x1F);
+				}
+
+				// Injury healths value are stored with different distance from the armor value in different game versions, search for another pattern to make sure we get correct injury health offsets
+				address = FindPattern("\xF3\x41\x0F\x10\x16\xF3\x0F\x10\xA7\xA0\x02\x00\x00\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC6\x72\x05\x0F\x28\xCE\xEB\x12", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					InjuryHealthThresholdOffset = *(int*)(address - 4);
+					FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 0x4;
+				}
 			}
 
 			address = FindPattern("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
@@ -1899,7 +1923,8 @@ namespace SHVDN
 		public static int ClutchOffset { get; }
 		public static int AccelerationOffset { get; }
 
-		public static int TurboOffset { get; }
+		public static int CVehicleEngineOffset { get; }
+		public static int CVehicleEngineTurboOffset { get; }
 
 		public static int FuelLevelOffset { get; }
 		public static int OilLevelOffset { get; }
@@ -1985,6 +2010,51 @@ namespace SHVDN
 			}
 
 			return IntPtr.Zero;
+		}
+
+		public static float GetVehicleTurbo(int vehicleHandle)
+		{
+			if (CVehicleEngineTurboOffset == 0)
+			{
+				return 0f;
+			}
+
+			var vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+
+			if (vehEngineStructAddr == null)
+			{
+				return 0f;
+			}
+
+			return *(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset);
+		}
+		public static void SetVehicleTurbo(int vehicleHandle, float value)
+		{
+			if (CVehicleEngineTurboOffset == 0)
+			{
+				return;
+			}
+
+			var vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+
+			if (vehEngineStructAddr == null)
+			{
+				return;
+			}
+
+			*(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset) = value;
+		}
+
+		private static byte* GetCVehicleEngine(int vehicleHandle)
+		{
+			var address = GetEntityAddress(vehicleHandle);
+
+			if (address == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			return (byte*)(address + CVehicleEngineOffset);
 		}
 
 		public static int SpecialFlightTargetRatioOffset { get; }
@@ -2098,7 +2168,7 @@ namespace SHVDN
 			#endregion
 		}
 
-		static bool VehicleWheelHasVehiclePtr() => PunctureVehicleTireNewFunc != null;
+		static bool VehicleWheelHasVehiclePtr() => GetGameVersion() >= 40;
 
 		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
 		{
