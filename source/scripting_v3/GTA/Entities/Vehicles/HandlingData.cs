@@ -1362,7 +1362,8 @@ namespace GTA
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x168);
+				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -1371,7 +1372,8 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x168, value);
+				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 
