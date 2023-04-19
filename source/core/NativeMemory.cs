@@ -869,7 +869,7 @@ namespace SHVDN
 				address = FindPatternBmh("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02\x32\xC0\x48\x8B\x5C\x24\x40", "xxxxxxxxxxx????xxxxxxxxxxxx");
 				if (address != null)
 				{
-					ArmorOffset = *(int*)(address + 0x2C);
+					ArmorOffset = *(int*)(address + 11);
 					InjuryHealthThresholdOffset = ArmorOffset + 0xC;
 					FatalInjuryHealthThresholdOffset = ArmorOffset + 0x10;
 				}
