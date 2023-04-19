@@ -44,6 +44,17 @@ namespace GTA
 			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, Hash, value);
 		}
 
+		/// <summary>
+		/// Gets the number of available color tints for this <see cref="Weapon"/>.
+		/// </summary>
+		public int TintCout
+		{
+			get
+			{
+				return Function.Call<int>(Native.Hash.GET_WEAPON_TINT_COUNT, Hash);
+			}
+		}
+
 		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, Hash);
 
 		public int Ammo
