@@ -136,6 +136,8 @@
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\DrawBoxFlags.cs" />
     <Compile Include="GTA\IStreamingResource.cs" />
+    <Compile Include="GTA\CrimeType.cs" />
+    <Compile Include="GTA\SetPlayerControlFlags.cs" />
     <Compile Include="GTA\ShapeTestOptions.cs" />
     <Compile Include="GTA\ShapeTestStatus.cs" />
     <Compile Include="GTA\PlayerTargetingMode.cs" />

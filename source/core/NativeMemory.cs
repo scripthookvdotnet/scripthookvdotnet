@@ -799,6 +799,70 @@ namespace SHVDN
 				}
 			}
 
+			// None of variables for player targeting and wanted info are not accessed with direct offsets from CPlayerInfo instances in the game code
+			address = FindPatternBmh("\x48\x85\xFF\x74\x23\x48\x85\xDB\x74\x26", "xxxxxxxxxx");
+			if (address != null)
+			{
+				CPlayerPedTargetingOfffset = *(int*)(address - 7);
+			}
+			address = FindPatternBmh("\x48\x85\xFF\x74\x3F\x48\x8B\xCF\xE8", "xxxxxxxxx");
+			if (address != null)
+			{
+				CWantedOffset = *(int*)(address + 0x1B);
+			}
+			address = FindPatternBmh("\x45\x84\xC9\x74\x32\x8B\x41\x00\x85\xC0\x74\x2B", "xxxxxxx?xxxx");
+			if (address != null)
+			{
+				CurrentCrimeValueOffset = (int)*(byte*)(address + 0x2A);
+				TimeToApplyPendingCrimeValueOffset = (int)*(byte*)(address + 0x7);
+				CurrentWantedLevelOffset = *(int*)(address + 0x17);
+				PendingCrimeValueOffset = *(int*)(address + 0x1D);
+			}
+			address = FindPatternBmh("\xF6\x87\x00\x00\x00\x00\x02\x44\x8B\x00\x00\x00\x00\x00\x75\x0E", "xx??xxxxx?????xx");
+			if (address != null)
+			{
+				var isWantedStarFlashingOffset = *(int*)(address + 0x2);
+				// Flags for ignoring player are actually read/written as a byte in the game code, but make this value 4-byte aligned because SetBit and IsBitSet reads/writes as an int value
+				CWantedIgnorePlayerFlagOffset = isWantedStarFlashingOffset - 3;
+
+				CWantedLastTimeSearchAreaRefocusedOffset = isWantedStarFlashingOffset - 0x23;
+				CWantedLastTimeSpottedByPoliceOffset = CWantedLastTimeSearchAreaRefocusedOffset + 0x4;
+				CWantedStartTimeOfHiddenEvasionOffset = CWantedLastTimeSearchAreaRefocusedOffset + 0xC;
+			}
+			address = FindPatternBmh("\xEB\x26\x8B\x87\x00\x00\x00\x00\x25\x00\xF8\xFF\xFF\xC1\xE0\x12", "xxxx????xxxxxxxx");
+			if (address != null)
+			{
+				ActivateSpecialAbilityFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 0x24) + address + 0x28));
+			}
+			// Two special ability slots are available in b2060 and later versions
+			if (gameVersion >= 59)
+			{
+				address = FindPatternBmh("\x0F\x84\x49\x01\x00\x00\x33\xD2\xE8", "xxxxxxxxx");
+				if (address != null)
+				{
+					GetSpecialAbilityAddressFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr>)(new IntPtr(*(int*)(address + 9) + address + 13));
+				}
+			}
+			else
+			{
+				address = FindPatternBmh("\x0F\x84\x46\x01\x00\x00\x48\x8B\x9B", "xxxxxxxxx");
+				if (address != null)
+				{
+					PlayerPedSpecialAbilityOffset = *(int*)(address + 9);
+				}
+			}
+
+			address = FindPatternBmh("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			if (address != null)
+			{
+				PedIntelligenceOffset = *(int*)(address + 0x11);
+
+				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
+
+				PedPlayerInfoOffset = PedIntelligenceOffset + 8;
+			}
+
 			address = FindPatternNaive("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
 			if (address != null)
 			{
@@ -3379,15 +3443,6 @@ namespace SHVDN
 			return returnHandles.ToArray();
 		}
 
-		public static int GetEntityHandleFromAddress(IntPtr address)
-		{
-			var task = new GetEntityHandleTask(address);
-
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
-
-			return task.returnEntityHandle;
-		}
-
 		public static bool BuildingHandleExists(int handle) => BuildingPoolAddress != null ? ((GenericPool*)(*BuildingPoolAddress))->IsHandleValid(handle) : false;
 		public static bool AnimatedBuildingHandleExists(int handle) => AnimatedBuildingPoolAddress != null ? ((GenericPool*)(*AnimatedBuildingPoolAddress))->IsHandleValid(handle) : false;
 		public static bool InteriorInstHandleExists(int handle) => InteriorInstPoolAddress != null ? ((GenericPool*)(*InteriorInstPoolAddress))->IsHandleValid(handle) : false;
@@ -3443,6 +3498,171 @@ namespace SHVDN
 		static int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
 		{
 			return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
+		}
+
+		#endregion
+
+		#region -- CPlayerInfo Data --
+
+		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerPedAddressFunc;
+
+		public static int PedPlayerInfoOffset { get; }
+		public static int CWantedOffset { get; }
+		public static int CPlayerPedTargetingOfffset { get; }
+
+		public static int CurrentWantedLevelOffset { get; }
+		public static int CurrentCrimeValueOffset { get; }
+		public static int PendingCrimeValueOffset { get; }
+		public static int TimeToApplyPendingCrimeValueOffset { get; }
+		public static int CWantedLastTimeSearchAreaRefocusedOffset { get; }
+		public static int CWantedLastTimeSpottedByPoliceOffset { get; }
+		public static int CWantedStartTimeOfHiddenEvasionOffset { get; }
+		public static int CWantedIgnorePlayerFlagOffset { get; }
+
+		static delegate* unmanaged[Stdcall]<IntPtr, void> ActivateSpecialAbilityFunc;
+
+		// The function is for b2060 or later and static offset is for prior to b2060
+		static delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr> GetSpecialAbilityAddressFunc;
+		public static int PlayerPedSpecialAbilityOffset { get; }
+
+		public static IntPtr GetPlayerPedAddress(int playerIndex)
+		{
+			return new IntPtr((long)GetPlayerPedAddressFunc(playerIndex));
+		}
+
+		public static IntPtr GetCPlayerInfoAddress(int playerIndex)
+		{
+			if (PedPlayerInfoOffset == 0)
+			{
+				return IntPtr.Zero;
+			}
+
+			var playerPedAddr = GetPlayerPedAddress(playerIndex);
+			if (playerPedAddr == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			var playerInfoAddr = *(long**)((ulong)playerPedAddr + (uint)PedPlayerInfoOffset);
+			if (playerPedAddr == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			return new IntPtr(playerInfoAddr);
+		}
+		public static IntPtr GetCPlayerPedTargetingAddress(int playerIndex)
+		{
+			if (CPlayerPedTargetingOfffset == 0)
+			{
+				return IntPtr.Zero;
+			}
+
+			var cPlayerInfoAddr = GetCPlayerInfoAddress(playerIndex);
+			if (cPlayerInfoAddr == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			return new IntPtr((long)((ulong)cPlayerInfoAddr + (uint)CPlayerPedTargetingOfffset));
+		}
+		public static IntPtr GetCWantedAddress(int playerIndex)
+		{
+			if (CWantedOffset == 0)
+			{
+				return IntPtr.Zero;
+			}
+
+			var cPlayerInfoAddr = GetCPlayerInfoAddress(playerIndex);
+			if (cPlayerInfoAddr == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			return new IntPtr((long)((ulong)cPlayerInfoAddr + (uint)CWantedOffset));
+		}
+
+		public static int GetTargetedBuildingHandleOfPlayer(int playerIndex)
+		{
+			var playerPedTargetingAddr = GetCPlayerPedTargetingAddress(playerIndex);
+			if (playerPedTargetingAddr == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			var targetedCEntityAddr = *(ulong*)(playerPedTargetingAddr + 0x110);
+			// Return zero if the targeted CEntity address is null or is not null but not a CBuilding instance
+			// Should be a CPhysical address in that case since the value is null if the player is aiming a CAnimatedBuilding instance (e.g. the fan at Ammu-Nation in Little Seoul)
+			if (targetedCEntityAddr == 0 || *(byte*)(targetedCEntityAddr + 0x28) != 1)
+			{
+				return 0;
+			}
+
+			return GetBuildingHandleFromAddress(new IntPtr((long)targetedCEntityAddr));
+		}
+
+		/// <summary>
+		/// Activates the special ability for the player.
+		/// </summary>
+		/// <remarks>
+		/// This function is for v1.0.617.1 and earlier versions, where the native function SPECIAL_ABILITY_ACTIVATE is not present.
+		/// </remarks>
+		public static void ActivateSpecialAbility(int playerIndex)
+		{
+			var specialAbilityAddr = GetPrimarySpecialAbilityStructAddress(playerIndex);
+			if (specialAbilityAddr == IntPtr.Zero)
+			{
+				return;
+			}
+
+			var task = new ActivateSpecialAbilityTask(specialAbilityAddr);
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+		}
+		public static IntPtr GetPrimarySpecialAbilityStructAddress(int playerIndex)
+		{
+			var playerPedAddress = GetPlayerPedAddress(playerIndex);
+
+			if (playerPedAddress == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			// Two special ability slots are available in b2060 and later versions
+			if (GetGameVersion() >= 59)
+			{
+				if (GetSpecialAbilityAddressFunc == null)
+				{
+					return IntPtr.Zero;
+				}
+
+				return GetSpecialAbilityAddressFunc(playerPedAddress, 0);
+			}
+			else
+			{
+				if (PlayerPedSpecialAbilityOffset == 0)
+				{
+					return IntPtr.Zero;
+				}
+
+				return new IntPtr(*(long**)((ulong)playerPedAddress + (uint)PlayerPedSpecialAbilityOffset));
+			}
+		}
+
+		internal class ActivateSpecialAbilityTask : IScriptTask
+		{
+			#region Fields
+			internal IntPtr specialAbilityStructAddress;
+			#endregion
+
+			internal ActivateSpecialAbilityTask(IntPtr specialAbilityStructAddress)
+			{
+				this.specialAbilityStructAddress = specialAbilityStructAddress;
+			}
+
+			public void Run()
+			{
+				ActivateSpecialAbilityFunc(specialAbilityStructAddress);
+			}
 		}
 
 		#endregion
@@ -3740,7 +3960,6 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
 		// should be CGameScriptHandler::GetScriptEntity
 		static delegate* unmanaged[Stdcall]<int, ulong> GetScriptEntity;
-		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerPedAddressFunc;
 
 		public static IntPtr GetPtfxAddress(int handle)
 		{
@@ -3749,10 +3968,6 @@ namespace SHVDN
 		public static IntPtr GetEntityAddress(int handle)
 		{
 			return new IntPtr((long)GetScriptEntity(handle));
-		}
-		public static IntPtr GetPlayerAddress(int handle)
-		{
-			return new IntPtr((long)GetPlayerPedAddressFunc(handle));
 		}
 
 		public static IntPtr GetBuildingAddress(int handle)
@@ -3866,6 +4081,27 @@ namespace SHVDN
 
 			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
 		}
+
+		public static int GetEntityHandleFromAddress(IntPtr address)
+		{
+			var task = new GetEntityHandleTask(address);
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task.returnEntityHandle;
+		}
+
+		static int GetBuildingHandleFromAddress(IntPtr address)
+		{
+			if (BuildingPoolAddress == null)
+			{
+				return 0;
+			}
+
+			return GetHandleForGenericPoolFromAddress(*BuildingPoolAddress, address);
+		}
+
+		static int GetHandleForGenericPoolFromAddress(ulong poolAddress, IntPtr instanceAddress) => ((GenericPool*)poolAddress)->GetGuidHandleFromAddress((ulong)instanceAddress);
 
 		#endregion
 
