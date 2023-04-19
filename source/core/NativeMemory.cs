@@ -3485,14 +3485,14 @@ namespace SHVDN
 			{
 				byte* address;
 
-				address = FindPattern("\x4D\x8B\xF0\x45\x8A\xE1\x48\x8B\xF9\x4C\x8D\x05", "xxxxxxxxxxxx");
+				address = FindPatternBmh("\x4D\x8B\xF0\x45\x8A\xE1\x48\x8B\xF9\x4C\x8D\x05", "xxxxxxxxxxxx");
 				if (address != null)
 				{
 					cPathFindInstanceAddress = (ulong)(*(int*)(address + 12) + address + 16);
 				}
 			}
 
-			// These values hasn't been changed between b372 and b2699
+			// These values hasn't been changed between b372 and b2845
 			const int START_PATH_NODE_OFFSET_OF_C_PATH_FIND = 0x1640;
 			const int MAX_C_PATH_REGION_COUNT = 0x400;
 
