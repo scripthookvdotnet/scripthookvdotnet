@@ -26,9 +26,8 @@ namespace GTA
 	public sealed class VehicleWeaponHandlingData : BaseSubHandlingData
 	{
 		static readonly int _elemCountForWeaponPropertyArrays;
+		// Vehicle turret arrays can have up to 12 elements since b1180, but it looks like only 6 element can be actually used
 		static readonly int _elemCountActuallyUsedForTurretPropertyArrays;
-		// This field is used only when we get how many elements are needed to be filled
-		static readonly int _elemCountForTurretPropertyArrays;
 
 		static VehicleWeaponHandlingData()
 		{
@@ -38,13 +37,11 @@ namespace GTA
 			{
 				_elemCountForWeaponPropertyArrays = 6;
 				_elemCountActuallyUsedForTurretPropertyArrays = 6;
-				_elemCountForTurretPropertyArrays = 12;
 			}
 			else
 			{
 				_elemCountForWeaponPropertyArrays = 4;
 				_elemCountActuallyUsedForTurretPropertyArrays = 3;
-				_elemCountForTurretPropertyArrays = 3;
 			}
 		}
 
@@ -300,7 +297,7 @@ namespace GTA
 					memberOffset = 0x28;
 				}
 
-				var arrayToFill = new float[_elemCountForWeaponPropertyArrays];
+				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
@@ -372,7 +369,7 @@ namespace GTA
 					memberOffset = 0x34;
 				}
 
-				var arrayToFill = new float[_elemCountForWeaponPropertyArrays];
+				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
@@ -444,7 +441,7 @@ namespace GTA
 					memberOffset = 0x40;
 				}
 
-				var arrayToFill = new float[_elemCountForWeaponPropertyArrays];
+				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];

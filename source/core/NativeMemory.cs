@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -66,26 +66,15 @@ namespace SHVDN
 		public static extern IntPtr GetGlobalPtr(int index);
 		#endregion
 
-		/// <summary>
-		/// Searches the address space of the current process for a memory pattern.
-		/// </summary>
-		/// <param name="pattern">The pattern.</param>
-		/// <param name="mask">The pattern mask.</param>
-		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		public static unsafe byte* FindPattern(string pattern, string mask)
+		/// <inheritdoc cref="FindPatternNaive(string, string, IntPtr, ulong)"/>
+		public static unsafe byte* FindPatternNaive(string pattern, string mask)
 		{
 			ProcessModule module = Process.GetCurrentProcess().MainModule;
-			return FindPattern(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
+			return FindPatternNaive(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
 		}
 
-		/// <summary>
-		/// Searches the specific address space of the current process for a memory pattern.
-		/// </summary>
-		/// <param name="pattern">The pattern.</param>
-		/// <param name="mask">The pattern mask.</param>
-		/// <param name="startAddress">The address to start searching at.</param>
-		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		public static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress)
+		/// <inheritdoc cref="FindPatternNaive(string, string, IntPtr, ulong)"/>
+		public static unsafe byte* FindPatternNaive(string pattern, string mask, IntPtr startAddress)
 		{
 			ProcessModule module = Process.GetCurrentProcess().MainModule;
 
@@ -94,18 +83,18 @@ namespace SHVDN
 
 			ulong size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
 
-			return FindPattern(pattern, mask, startAddress, size);
+			return FindPatternNaive(pattern, mask, startAddress, size);
 		}
 
 		/// <summary>
-		/// Searches the specific address space of the current process for a memory pattern.
+		/// Searches the specific address space of the current process for a memory pattern using the naive algorithm.
 		/// </summary>
 		/// <param name="pattern">The pattern.</param>
 		/// <param name="mask">The pattern mask.</param>
 		/// <param name="startAddress">The address to start searching at.</param>
 		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
 		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
-		public static unsafe byte* FindPattern(string pattern, string mask, IntPtr startAddress, ulong size)
+		public static unsafe byte* FindPatternNaive(string pattern, string mask, IntPtr startAddress, ulong size)
 		{
 			ulong address = (ulong)startAddress.ToInt64();
 			ulong endAddress = address + size;
@@ -122,6 +111,97 @@ namespace SHVDN
 			}
 
 			return null;
+		}
+
+		/// <inheritdoc cref="FindPatternBmh(string, string, IntPtr, ulong)"/>
+		public static unsafe byte* FindPatternBmh(string pattern, string mask)
+		{
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
+			return FindPatternBmh(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
+		}
+
+		/// <inheritdoc cref="FindPatternBmh(string, string, IntPtr, ulong)"/>
+		public static unsafe byte* FindPatternBmh(string pattern, string mask, IntPtr startAddress)
+		{
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
+
+			if ((ulong)startAddress.ToInt64() < (ulong)module.BaseAddress.ToInt64())
+				return null;
+
+			ulong size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
+
+			return FindPatternBmh(pattern, mask, startAddress, size);
+		}
+
+		/// <summary>
+		/// Searches the address space of the current process for a memory pattern using the Boyer–Moore–Horspool algorithm.
+		/// Will perform faster than the naive algorithm when the pattern is long enough to expect the bad character skip is consistently high.
+		/// </summary>
+		/// <param name="pattern">The pattern.</param>
+		/// <param name="mask">The pattern mask.</param>
+		/// <param name="startAddress">The address to start searching at.</param>
+		/// <param name="size">The size where the pattern search will be performed from <paramref name="startAddress"/>.</param>
+		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
+		public static unsafe byte* FindPatternBmh(string pattern, string mask, IntPtr startAddress, ulong size)
+		{
+			// Use short array intentionally to spare heap
+			// Warning: throws an exception if length of pattern and mask strings does not match
+			short[] patternArray = new short[pattern.Length];
+			for (int i = 0; i < patternArray.Length; i++)
+			{
+				patternArray[i] = (mask[i] != '?') ? (short)pattern[i] : (short)-1;
+			}
+
+			int lastPatternIndex = patternArray.Length - 1;
+			short[] skipTable = CreateShiftTableForBmh(patternArray);
+
+			byte* endAddressToScan = (byte*)startAddress + size - patternArray.Length;
+
+			// Pin arrays to avoid boundary check and search will be long enough to amortize the pin cost in time wise
+			fixed (short* skipTablePtr = skipTable)
+			fixed (short* patternArrayPtr = patternArray)
+			{
+				for (byte* curHeadAddress = (byte*)startAddress; curHeadAddress <= endAddressToScan; curHeadAddress += Math.Max((int)skipTablePtr[(curHeadAddress)[lastPatternIndex] & 0xFF], 1))
+				{
+					for (var i = lastPatternIndex; patternArrayPtr[i] < 0 || ((byte*)curHeadAddress)[i] == patternArrayPtr[i]; --i)
+					{
+						if (i == 0)
+						{
+							return curHeadAddress;
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private static short[] CreateShiftTableForBmh(short[] pattern)
+		{
+			short[] skipTable = new short[256];
+			int lastIndex = pattern.Length - 1;
+
+			int diff = lastIndex - Math.Max(Array.LastIndexOf<short>(pattern, -1), 0);
+			if (diff == 0)
+			{
+				diff = 1;
+			}
+
+			for (var i = 0; i < skipTable.Length; i++)
+			{
+				skipTable[i] = (short)diff;
+			}
+
+			for (var i = lastIndex - diff; i < lastIndex; i++)
+			{
+				var patternVal = pattern[i];
+				if (patternVal >= 0)
+				{
+					skipTable[patternVal] = (short)(lastIndex - i);
+				}
+			}
+
+			return skipTable;
 		}
 
 		/// <summary>
@@ -152,107 +232,105 @@ namespace SHVDN
 			IntPtr startAddressToSearch;
 
 			// Get relative address and add it to the instruction address.
-			address = FindPattern("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
+			address = FindPatternBmh("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
 			GetPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address) + address + 4));
 
-			address = FindPattern("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
+			address = FindPatternBmh("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
 			GetScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 7) + address + 11));
 
-			address = FindPattern("\xB2\x01\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x1C\x8A\x88", "xxx????xxxxxxx");
-			GetPlayerAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
-				new IntPtr(*(int*)(address + 3) + address + 7));
+			address = FindPatternBmh("\x8B\xC2\xB2\x01\x8B\xC8\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x53\x8A\x88\x00\x00\x00\x00\xF6\xC1\x01\x75\x05\xF6\xC1\x02\x75\x43\x48", "xxxxxxx????xxxxxxx????xxxxxxxxxxx");
+			GetPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+			new IntPtr(*(int*)(address + 7) + address + 11));
 
-			address = FindPattern("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
 			CreateGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
 				new IntPtr(address - 0x68));
 
-			address = FindPattern("\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24", "xxxx????xxxxx");
-			EntityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(
-				new IntPtr((address - 6)));
+			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24\x2C\x33\xC9\xF3\x0F\x11\x43\x0C\x48\x89\x0B\x89\x4B\x08\x48\x85\xC0\x74\x2C", "xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxx");
+			EntityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(address);
 
 			// Find handling data functions
-			address = FindPattern("\x0F\x84\x00\x00\x00\x00\x8B\x8B\x00\x00\x00\x00\xE8\x00\x00\x00\x00\xBA\x09\x00\x00\x00", "xx????xx????x????xxxxx");
-			GetHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(
-				new IntPtr(*(int*)(address + 13) + address + 17));
-			handlingIndexOffsetInModelInfo = *(int*)(address + 8);
+			address = FindPatternBmh("\x8B\xF7\x83\xF8\x01\x77\x08\x44\x8B\xF7\x8D\x77\xFF\xEB\x06\x41\xBE\x03\x00\x00\x00\x8B\x8B", "xxxxxxxxxxxxxxxxxxxxxxx");
+			GetHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(new IntPtr(*(int*)(address + 28) + address + 32));
+			handlingIndexOffsetInModelInfo = *(int*)(address + 23);
 
-			address = FindPattern("\x75\x5A\xB2\x01\x48\x8B\xCB\xE8\x00\x00\x00\x00\x41\x8B\xF5\x66\x44\x3B\xAB", "xxxxxxxx????xxxxxxx");
+			address = FindPatternBmh("\x75\x5A\xB2\x01\x48\x8B\xCB\xE8\x00\x00\x00\x00\x41\x8B\xF5\x66\x44\x3B\xAB", "xxxxxxxx????xxxxxxx");
 			GetHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
 				new IntPtr(*(int*)(address - 7) + address - 3));
 
 			// Find entity pools and interior proxy pool
-			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
+			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
 			PedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
-			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
+			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
 			ObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
-			address = FindPattern("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
+			address = FindPatternBmh("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
 			FwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
-			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
+			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
 			VehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
-			address = FindPattern("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
+			address = FindPatternBmh("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
 			PickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
-			address = FindPattern("\x83\x38\xFF\x74\x27\xD1\xEA\xF6\xC2\x01\x74\x20", "xxxxxxxxxxxx");
+			address = FindPatternBmh("\x83\x38\xFF\x74\x27\xD1\xEA\xF6\xC2\x01\x74\x20", "xxxxxxxxxxxx");
 			if (address != null)
 			{
 				BuildingPoolAddress = (ulong*)(*(int*)(address + 47) + address + 51);
 				AnimatedBuildingPoolAddress = (ulong*)(*(int*)(address + 15) + address + 19);
 			}
-			address = FindPattern("\x83\xBB\x80\x01\x00\x00\x01\x75\x12", "xxxxxxxxx");
+			address = FindPatternBmh("\x83\xBB\x80\x01\x00\x00\x01\x75\x12", "xxxxxxxxx");
 			if (address != null)
 			{
 				InteriorInstPoolAddress = (ulong*)(*(int*)(address + 23) + address + 27);
 			}
-			address = FindPattern("\x0F\x85\xA3\x00\x00\x00\x8B\x52\x0C\x48\x8B\x0D\x00\x00\x00\x00", "xxxxxxxxxxxx????");
+			address = FindPatternBmh("\x0F\x85\xA3\x00\x00\x00\x8B\x52\x0C\x48\x8B\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00\x45\x33\xC9\x45\x33\xC0", "xxxxxxxxxxxx????x????xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
 				InteriorProxyPoolAddress = (ulong*)(*(int*)(address + 12) + address + 16);
 			}
 
 			// Find euphoria functions
-			address = FindPattern("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
 			InitMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
 
-			address = FindPattern("\x41\x83\xFA\xFF\x74\x4A\x48\x85\xD2\x74\x19", "xxxxxxxxxxx") - 0xE;
-			SendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(new IntPtr(address));
+			address = FindPatternBmh("\x0F\x84\x8B\x00\x00\x00\x48\x8B\x47\x30\x48\x8B\x48\x10\x48\x8B\x51\x20\x80\x7A\x10\x0A", "xxxxxxxxxxxxxxxxxxxxxx");
+			SendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)((ulong*)(*(int*)(address - 0x1E) + address - 0x1A));
 
-			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
 			SetNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
 
-			address = FindPattern("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
 			SetNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
 
-			address = FindPattern("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
+			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
 
-			address = FindPattern("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
+			address = FindPatternBmh("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
 			SetNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
 
-			address = FindPattern("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
+			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
 			SetNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
 
-			address = FindPattern("\x83\x79\x10\xFF\x7E\x1D\x48\x63\x41\x10", "xxxxxxxxxx");
-			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(address));
+			address = FindPatternBmh("\x4D\x8B\xF0\x48\x8B\xF2\xE8\x00\x00\x00\x00\x33\xFF\x48\x85\xC0\x75\x07\x32\xC0\xE9\xD8\x03\x00\x00", "xxxxxxx????xxxxxxxxxxxxxx");
+			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(*(int*)(address + 7) + address + 11));
 
-			address = FindPattern("\x75\xEF\x48\x8B\x5C\x24\x30\xB8\x00\x00\x00\x00", "xxxxxxxx????");
+			address = FindPatternBmh("\x75\xEF\x48\x8B\x5C\x24\x30\xB8", "xxxxxxxx");
 			if (address != null)
 			{
 				cTaskNMScriptControlTypeIndex = *(int*)(address + 8);
 			}
 
-			address = FindPattern("\x4C\x8B\x03\x48\x8B\xD5\x48\x8B\xCB\x41\xFF\x50\x00\x83\xFE\x04", "xxxxxxxxxxxx?xxx");
+			address = FindPatternBmh("\x4C\x8B\x03\x48\x8B\xD5\x48\x8B\xCB\x41\xFF\x50\x00\x83\xFE\x04", "xxxxxxxxxxxx?xxx");
 			if (address != null)
 			{
 				// The instruction expects a signed value, but virtual function offsets can't be negative
 				getEventTypeIndexVFuncOffset = (uint)*(byte*)(address + 12);
 			}
-			address = FindPattern("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
+			address = FindPatternBmh("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
 			if (address != null)
 			{
 				var cEventSwitch2NMVfTableArrayAddr = (ulong)(*(int*)(address + 3) + address + 7);
@@ -260,12 +338,12 @@ namespace SHVDN
 				cEventSwitch2NMTypeIndex = *(int*)(getEventTypeOfcEventSwitch2NMFuncAddr + 1);
 			}
 
-			address = FindPattern("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
+			address = FindPatternBmh("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
 			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
 
 			// Find the function that returns if the corresponding text label exist first.
 			// We have to find GetLabelTextByHashFunc indirectly since Rampage Trainer hooks the function that returns the string address for corresponding text label hash by inserting jmp instruction at the beginning if that trainer is installed.
-			address = FindPattern("\x74\x64\x48\x8D\x15\x00\x00\x00\x00\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x84\xC0\x74\x33", "xxxxx????xxx????x????xxxx");
+			address = FindPatternBmh("\x74\x64\x48\x8D\x15\x00\x00\x00\x00\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x84\xC0\x74\x33", "xxxxx????xxx????x????xxxx");
 			if (address != null)
 			{
 				var doesTextLabelExistFuncAddr = (byte*)(*(int*)(address + 17) + address + 21);
@@ -273,103 +351,107 @@ namespace SHVDN
 				GetLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(new IntPtr(getLabelTextByHashFuncAddr));
 			}
 
-			address = FindPattern("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
+			address = FindPatternBmh("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
 			CheckpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
 			GetCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
 
-			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
+			address = FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
 			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
-			address = FindPattern("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
+			address = FindPatternBmh("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
 			PossibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
-			address = FindPattern("\x3B\x35\x00\x00\x00\x00\x74\x2E\x48\x81\xFD\xDB\x05\x00\x00", "xx????xxxxxxxxx");
+			address = FindPatternBmh("\x3B\x35\x00\x00\x00\x00\x74\x2E\x48\x81\xFD\xDB\x05\x00\x00", "xx????xxxxxxxxx");
 			UnkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 2) + address + 6);
-			address = FindPattern("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
+			address = FindPatternBmh("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
 			NorthRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
-			address = FindPattern("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
+			address = FindPatternBmh("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
 			CenterRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
 
-			address = FindPattern("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
+			address = FindPatternBmh("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
 			GetLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address + 3) + address + 7));
 
-			address = FindPattern("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
+			address = FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
 			waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			if (waypointInfoArrayStartAddress != null)
 			{
 				startAddressToSearch = new IntPtr(address);
-				address = FindPattern("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x18\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx????xxxxxx", startAddressToSearch);
+				address = FindPatternBmh("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x00\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx?xxxxxxxxx", startAddressToSearch);
 				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
-			address = FindPattern("\x48\x8D\x4C\x24\x20\x41\xB8\x02\x00\x00\x00\xE8\x00\x00\x00\x00\xF3", "xxxxxxxxxxxx????x");
+			address = FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				GetRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)(new IntPtr(*(int*)(address + 12) + address + 16));
+				GetRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)(new IntPtr(*(int*)(address - 0x14) + address - 0x10));
 			}
-			address = FindPattern("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00", "xxxxxxxxxxx????");
+			address = FindPatternBmh("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00\x0F\x28\xC6\x0F\x28\xCE\xB9\x01\x00\x00\x00\xF3\x0F\x11\x73\x10\x66\x44\x03\xE9", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
 				GetQuaternionFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int>)(new IntPtr(*(int*)(address + 11) + address + 15));
 			}
 
-			address = FindPattern("\x48\x8B\x42\x20\x48\x85\xC0\x74\x09\xF3\x0F\x10\x80", "xxxxxxxxxxxxx");
+			address = FindPatternBmh("\x48\x8B\x42\x20\x48\x85\xC0\x74\x09\xF3\x0F\x10\x80", "xxxxxxxxxxxxx");
 			if (address != null)
 			{
 				EntityMaxHealthOffset = *(int*)(address + 0x25);
 			}
 
-			address = FindPattern("\x75\x11\x48\x8B\x06\x48\x8D\x54\x24\x20\x48\x8B\xCE\xFF\x90", "xxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x75\x11\x48\x8B\x06\x48\x8D\x54\x24\x20\x48\x8B\xCE\xFF\x90", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
 				SetAngularVelocityVFuncOfEntityOffset = *(int*)(address + 15);
 				GetAngularVelocityVFuncOfEntityOffset = SetAngularVelocityVFuncOfEntityOffset + 0x8;
 			}
 
-			address = FindPattern("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
+			address = FindPatternBmh("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
 			cAttackerArrayOfEntityOffset = *(uint*)(address + 3); // the correct name is unknown
 			if (address != null)
 			{
 				startAddressToSearch = new IntPtr(address);
-				address = FindPattern("\x48\x63\x51\x00\x48\x85\xD2", "xxx?xxx", startAddressToSearch);
+				address = FindPatternBmh("\x48\x63\x51\x00\x48\x85\xD2", "xxx?xxx", startAddressToSearch);
 				elementCountOfCAttackerArrayOfEntityOffset = (uint)(*(sbyte*)(address + 3));
 
 				startAddressToSearch = new IntPtr(address);
-				address = FindPattern("\x48\x83\xC1\x00\x48\x3B\xC2\x7C\xEF", "xxx?xxxxx", startAddressToSearch);
+				address = FindPatternBmh("\x48\x83\xC1\x00\x48\x3B\xC2\x7C\xEF", "xxx?xxxxx", startAddressToSearch);
 				// the element size might be 0x10 in older builds (the size is 0x18 at least in b1604 and b2372)
 				elementSizeOfCAttackerArrayOfEntity = (uint)(*(sbyte*)(address + 3));
 			}
 
-			address = FindPattern("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
+			address = FindPatternBmh("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
 			cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
 
-			address = FindPattern("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05\x00\x00\x00\x00", "xxxxxx????xxxxxxxxx????");
+			address = FindPatternBmh("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05", "xxxxxx????xxxxxxxxx");
 			readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
 			writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
 
-			address = FindPattern("\xF3\x0F\x11\x05\x00\x00\x00\x00\xF3\x0F\x10\x08\x0F\x2F\xC8\x73\x03\x0F\x28\xC1\x48\x83\xC0\x04\x49\x2B", "xxxx????xxxxxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\xF3\x0F\x11\x05\x00\x00\x00\x00\xF3\x0F\x10\x08\x0F\x2F\xC8\x73\x03\x0F\x28\xC1\x48\x83\xC0\x04\x49\x2B", "xxxx????xxxxxxxxxxxxxxxxxx");
 			var timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
 			if (timeScaleArrayAddress != null)
 				// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
 				timeScaleAddress = timeScaleArrayAddress + 1;
 
-			address = FindPattern("\x66\x0F\x6E\x05\x00\x00\x00\x00\x0F\x57\xF6", "xxxx????xxx");
-			millisecondsPerGameMinuteAddress = (int*)(*(int*)(address + 4) + address + 8);
+			address = FindPatternBmh("\xF3\x0F\x11\xB5\x60\x01\x00\x00\x84\xC0\x75\x4C\x85\xC9\x79\x1D\x33\xD2\xE8", "xxxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				var unkClockFunc = (byte*)(*(int*)(address + 19) + address + 23);
+				millisecondsPerGameMinuteAddress = (int*)(*(int*)(unkClockFunc + 0x46) + unkClockFunc + 0x4A);
+			}
 
-			address = FindPattern("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
+			address = FindPatternBmh("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
 			isClockPausedAddress = (bool*)(*(int*)(address + 5) + address + 9);
 
 			// Find camera objects
-			address = FindPattern("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
+			address = FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
 			CameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
-			address = FindPattern("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
+			address = FindPatternBmh("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
 			address = address + *(int*)(address) + 4;
 			GameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			// Find model hash table
-			address = FindPattern("\x3C\x05\x75\x16\x8B\x81\x00\x00\x00\x00", "xxxxxx????");
+			address = FindPatternBmh("\x3C\x05\x75\x16\x8B\x81", "xxxxxx");
 			if (address != null)
 				VehicleTypeOffsetInModelInfo = *(int*)(address + 6);
 
-			address = FindPattern("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
+			address = FindPatternBmh("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
 			uint vehicleClassOffset = *(uint*)(address + 0x31);
 
 			address = address + *(int*)(address) + 4;
@@ -380,79 +462,86 @@ namespace SHVDN
 			modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
 			modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
 
-			address = FindPattern("\x33\xD2\x00\x8B\xD0\x00\x2B\x05\x00\x00\x00\x00\xC1\xE6\x10", "xx?xx?xx????xxx");
+			address = FindPatternBmh("\x33\xD2\x00\x8B\xD0\x00\x2B\x05\x00\x00\x00\x00\xC1\xE6\x10", "xx?xx?xx????xxx");
 			modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
 
-			address = FindPattern("\x8B\x54\x00\x00\x00\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\xC3", "xx???xx????x????xx");
-			cStreamingAddr = (ulong*)(*(int*)(address + 7) + address + 11);
+			address = FindPatternBmh("\x48\x83\xEC\x20\x48\x8B\x91\x00\x00\x00\x00\x33\xF6\x48\x8B\xD9\x48\x85\xD2\x74\x2B\x48\x8D\x0D", "xxxxxxx??xxxxxxxxxxxxxxx");
+			cStreamingAddr = (ulong*)(*(int*)(address + 24) + address + 28);
 
-			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
+			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
 			weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
 
-			address = FindPattern("\x48\x85\xC0\x74\x08\x8B\x90\x00\x00\x00\x00\xEB\x02", "xxxxxxx????xx");
-			weaponInfoHumanNameHashOffset = *(int*)(address + 7);
+			address = FindPatternBmh("\x84\xC0\x74\x20\x48\x8B\x47\x40\x48\x85\xC0\x74\x08\x8B\xB0\x00\x00\x00\x00\xEB\x02\x33\xF6\x48\x8D\x4D\x48\xE8", "xxxxxxxxxxxxxxx????xxxxxxxxx");
+			weaponInfoHumanNameHashOffset = *(int*)(address + 15);
 
-			address = FindPattern("\x8B\x05\x00\x00\x00\x00\x44\x8B\xD3\x8D\x48\xFF", "xx????xxxxxx");
+			address = FindPatternBmh("\x8B\x05\x00\x00\x00\x00\x44\x8B\xD3\x8D\x48\xFF", "xx????xxxxxx");
 			if (address != null)
 			{
 				weaponComponentArrayCountAddr = (uint*)(*(int*)(address + 2) + address + 6);
 
-				address = FindPattern("\x46\x8D\x04\x11\x48\x8D\x15\x00\x00\x00\x00\x41\xD1\xF8", "xxxxxxx????xxx", new IntPtr(address));
+				address = FindPatternNaive("\x46\x8D\x04\x11\x48\x8D\x15\x00\x00\x00\x00\x41\xD1\xF8", "xxxxxxx????xxx", new IntPtr(address));
 				offsetForCWeaponComponentArrayAddr = (ulong)(address + 7);
 
-				address = FindPattern("\x74\x10\x49\x8B\xC9\xE8\x00\x00\x00\x00", "xxxxxx????", new IntPtr(address));
+				address = FindPatternNaive("\x74\x10\x49\x8B\xC9\xE8", "xxxxxx", new IntPtr(address));
 				var findAttachPointFuncAddr = new IntPtr((long)(*(int*)(address + 6) + address + 10));
 
-				address = FindPattern("\x4C\x8D\x81\x00\x00\x00\x00", "xxx????", findAttachPointFuncAddr);
+				address = FindPatternNaive("\x4C\x8D\x81", "xxx", findAttachPointFuncAddr);
 				weaponAttachPointsStartOffset = *(int*)(address + 3);
-				address = FindPattern("\x4D\x63\x98\x00\x00\x00\x00", "xxx????", new IntPtr(address));
+				address = FindPatternNaive("\x4D\x63\x98", "xxx", new IntPtr(address));
 				weaponAttachPointsArrayCountOffset = *(int*)(address + 3);
-				address = FindPattern("\x4C\x63\x50\x00", "xxx?", new IntPtr(address));
+				address = FindPatternNaive("\x4C\x63\x50", "xxx", new IntPtr(address));
 				weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
-				address = FindPattern("\x48\x83\xC0\x00", "xxx?", new IntPtr(address));
+				address = FindPatternNaive("\x48\x83\xC0", "xxx", new IntPtr(address));
 				weaponAttachPointElementSize = *(byte*)(address + 3);
 			}
 
-			address = FindPattern("\x24\x1F\x3C\x05\x0F\x85\x00\x00\x00\x00\x48\x8D\x82\x00\x00\x00\x00", "xxxxxx????xxx????");
+			address = FindPatternBmh("\x24\x1F\x3C\x05\x0F\x85\x00\x00\x00\x00\x48\x8D\x82\x00\x00\x00\x00\x48\x8D\xB2\x00\x00\x00\x00\x48\x85\xC0\x74\x09\x80\x38\x00\x74\x04\x8A\xCB", "xxxxxx????xxx????xxx????xxxxxxxxxxxx");
 			if (address != null)
 			{
 				vehicleMakeNameOffsetInModelInfo = *(int*)(address + 13);
 			}
 
-			address = FindPattern("\x33\xD2\x48\x85\xC0\x74\x1E\x0F\xBF\x88\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00", "xxxxxxxxxx????xxx????");
+			address = FindPatternBmh("\x66\x89\x44\x24\x38\x8B\x44\x24\x38\x8B\xC8\x33\x4C\x24\x30\x81\xE1\x00\x00\xFF\x0F\x33\xC1\x0F\xBA\xF0\x1D\x8B\xC8\x33\x4C\x24\x30\x23\xCB\x33\xC1", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 10);
-				pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 17) + address + 21);
+				pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 0x42);
+				pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 0x49) + address + 0x4D);
 			}
 
-			// Find vehicle data offsets
-			address = FindPattern("\x48\x8D\x8F\x00\x00\x00\x00\x4C\x8B\xC3\xF3\x0F\x11\x7C\x24", "xxx????xxxxxxxx");
+			address = FindPatternBmh("\x49\x8B\xF1\x48\x8B\xF9\x0F\x57\xC0\x0F\x28\xF9\x0F\x28\xF2\x74\x4C", "xxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				NextGearOffset = *(int*)(address + 3);
-				GearOffset = *(int*)(address + 3) + 2;
-				HighGearOffset = *(int*)(address + 3) + 6;
+				CVehicleEngineOffset = *(int*)(address + 0x24);
+
+				NextGearOffset = CVehicleEngineOffset;
+				GearOffset = CVehicleEngineOffset + 2;
+				HighGearOffset = CVehicleEngineOffset + 6;
+
+				address = FindPatternBmh("\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC8\x76\x2E\x0F\x2F\xDA\x73\x29\xF3\x0F\x10\x44\x24\x58", "xxxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					CVehicleEngineTurboOffset = (int)*(byte*)(address - 1);
+				}
 			}
 
-			address = FindPattern("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83", "xxxxxxxx????xxxxxx");
+			address = FindPatternBmh("\x74\x26\x0F\x57\xC9\x0F\x2F\x8B\x34\x08\x00\x00\x73\x1A\xF3\x0F\x10\x83", "xxxxxxxx????xxxxxx");
 			if (address != null)
 			{
 				FuelLevelOffset = *(int*)(address + 8);
 			}
-			address = FindPattern("\x74\x2D\x0F\x57\xC0\x0F\x2F\x83\x00\x00\x00\x00", "xxxxxxxx????");
+			address = FindPatternBmh("\x74\x2D\x0F\x57\xC0\x0F\x2F\x83", "xxxxxxxx");
 			if (address != null)
 			{
 				OilLevelOffset = *(int*)(address + 8);
 			}
 
-			address = FindPattern("\xF3\x0F\x10\x8F\x10\x0A\x00\x00\xF3\x0F\x59\x05\x5E\x30\x8D\x00", "xxxx????xxxx????");
+			address = FindPatternBmh("\xF3\x0F\x10\x8F\x10\x0A\x00\x00\xF3\x0F\x59\x05", "xxxx????xxxx");
 			if (address != null)
 			{
 				WheelSpeedOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x48\x63\x99\x00\x00\x00\x00\x45\x33\xC0\x45\x8B\xD0\x48\x85\xDB", "xxx????xxxxxxxxx");
+			address = FindPatternBmh("\x48\x63\x99\x00\x00\x00\x00\x45\x33\xC0\x45\x8B\xD0\x48\x85\xDB", "xxx????xxxxxxxxx");
 			if (address != null)
 			{
 				WheelCountOffset = *(int*)(address + 3);
@@ -460,13 +549,13 @@ namespace SHVDN
 				WheelBoneIdToPtrArrayIndexOffset = WheelCountOffset + 4;
 			}
 
-			address = FindPattern("\x74\x18\x80\xA0\x00\x00\x00\x00\xBF\x84\xDB\x0F\x94\xC1\x80\xE1\x01\xC0\xE1\x06", "xxxx????xxxxxxxxxxxx");
+			address = FindPatternBmh("\x74\x18\x80\xA0\x00\x00\x00\x00\xBF\x84\xDB\x0F\x94\xC1\x80\xE1\x01\xC0\xE1\x06", "xxxx????xxxxxxxxxxxx");
 			if (address != null)
 			{
 				CanWheelBreakOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
+			address = FindPatternBmh("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
 			if (address != null)
 			{
 				CurrentRPMOffset = *(int*)(address + 10);
@@ -474,17 +563,7 @@ namespace SHVDN
 				AccelerationOffset = *(int*)(address + 10) + 0x10;
 			}
 
-			// use the former pattern if the version is 1.0.1604.0 or newer
-			var gameVersion = GetGameVersion();
-			address = gameVersion >= 46 ?
-						FindPattern("\xF3\x0F\x10\x9F\xD4\x08\x00\x00\x0F\x2F\xDF\x73\x0A", "xxxx????xxxxx") :
-						FindPattern("\xF3\x0F\x10\x8F\x68\x08\x00\x00\x88\x4D\x8C\x0F\x2F\xCF", "xxxx????xxx???");
-			if (address != null)
-			{
-				TurboOffset = *(int*)(address + 4);
-			}
-
-			address = FindPattern("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
+			address = FindPatternBmh("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
 			if (address != null)
 			{
 				SteeringScaleOffset = *(int*)(address + 6);
@@ -493,77 +572,102 @@ namespace SHVDN
 				BrakePowerOffset = *(int*)(address + 6) + 0x14;
 			}
 
-			address = FindPattern("\xF3\x0F\x11\x9B\xDC\x09\x00\x00\x0F\x84\xB1\x00\x00\x00", "xxxx????xxx???");
+			address = FindPatternBmh("\xF3\x0F\x11\x9B\xDC\x09\x00\x00\x0F\x84\xB1", "xxxx????xxx");
 			if (address != null)
 			{
 				EngineTemperatureOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
-			if (address != null)
+			int gameVersion = GetGameVersion();
+
+			// Get the offset that is stored by MODIFY_VEHICLE_TOP_SPEED if the game version is b944 or later for existing script compatibility
+			// MODIFY_VEHICLE_TOP_SPEED stores the 2nd argument value to CVehicle in b944 or later, but that's not the case in earlier ones
+			if (gameVersion >= 28)
 			{
-				var modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
-				var modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
-				EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
+
+				address = FindPatternBmh("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					var modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
+					var modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
+					EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
+				}
 			}
 
-			address = FindPattern("\x48\x8B\xF8\x48\x85\xC0\x0F\x84\xE2\x00\x00\x00\x80\x88", "xxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x48\x8B\xF8\x48\x85\xC0\x0F\x84\xE2\x00\x00\x00\x80\x88", "xxxxxxxxxxxxxx");
 			if (address != null)
 			{
 				DisablePretendOccupantOffset = *(int*)(address + 14);
 			}
 
-			address = FindPattern("\x74\x4A\x80\x7A\x28\x03\x75\x44\xF6\x82\x00\x00\x00\x00\x04", "xxxxxxxxxx????x");
+			address = FindPatternBmh("\x48\x83\xEC\x20\x49\x8B\xF8\x48\x8B\xDA\x48\x85\xD2\x74\x4A\x80\x7A\x28\x03\x75\x44\xF6\x82", "xxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				VehicleProvidesCoverOffset = *(int*)(address + 10);
+				VehicleProvidesCoverOffset = *(int*)(address + 23);
 			}
 
-			address = FindPattern("\xF3\x44\x0F\x59\x93\x00\x00\x00\x00\x48\x8B\xCB\xF3\x44\x0F\x59\x97\x00\x00\x00\x00", "xxxxx????xxxxxxxx????");
+			address = FindPatternBmh("\x74\x03\x41\x8A\xF4\xF3\x44\x0F\x59\x93\x00\x00\x00\x00\x48\x8B\xCB\xF3\x44\x0F\x59\x97\xFC\x00\x00\x00\xF3\x44\x0F\x59\xD6", "xxxxxxxxxx????xxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				VehicleLightsMultiplierOffset = *(int*)(address + 5);
+				VehicleLightsMultiplierOffset = *(int*)(address + 10);
 			}
 
-			address = FindPattern("\xFD\x02\xDB\x08\x98\x00\x00\x00\x00\x48\x8B\x5C\x24\x30", "xxxxx????xxxxx");
+			address = FindPatternBmh("\xFD\x02\xDB\x08\x98\x00\x00\x00\x00\x48\x8B\x5C\x24\x30", "xxxxx????xxxxx");
 			if (address != null)
 			{
 				IsInteriorLightOnOffset = *(int*)(address - 4);
 				IsEngineStartingOffset = IsInteriorLightOnOffset + 1;
 			}
 
-			address = FindPattern("\x84\xC0\x75\x09\x8A\x9F\x00\x00\x00\x00\x80\xE3\x01\x8A\xC3\x48\x8B\x5C\x24\x30", "xxxxxx????xxxxxxxxxx");
+			address = FindPatternBmh("\x39\x00\x75\x0F\x48\xFF\xC1\x48\x83\xC0\x04\x48\x83\xF9\x02\x7C\xEF\xEB\x08\x48\x8B\xCF", "x?xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				IsHeadlightDamagedOffset = *(int*)(address + 6);
+
+				address = FindPatternNaive("\x48\x8D\x8F\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\x87", "xxx????x????xx", new IntPtr(address - 0x50), 0x50u);
+				if (address != null)
+				{
+					var unkVehHeadlightOffset = *(int*)(address + 3);
+					var unkFuncAddr = (*(int*)(address + 8) + address + 12);
+					address = FindPatternBmh("\x8B\xC3\x8B\xCB\x48\xC1\xE8\x05\x83\xE1\x1F", "xxxxxxxxxxx", new IntPtr(unkFuncAddr), 0x200u);
+					if (address != null)
+					{
+						IsHeadlightDamagedOffset = *(int*)(address + 14) + unkVehHeadlightOffset;
+					}
+				}
 			}
 
-			address = FindPattern("\x8A\x96\x00\x00\x00\x00\x0F\xB6\xC8\x84\xD2\x41", "xx????xxxxxx");
+			address = FindPatternBmh("\x8B\xCB\x89\x87\x90\x00\x00\x00\x8A\x86\xD8\x00\x00\x00\x24\x07\x41\x3A\xC6\x0F\x94\xC1\xC1\xE1\x12\x33\xCA\x81\xE1\x00\x00\x04\x00\x33\xCA", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				VehicleLodMultiplierOffset = *(int*)(address - 4);
+			}
+
+			address = FindPatternBmh("\x8A\x96\x00\x00\x00\x00\x0F\xB6\xC8\x84\xD2\x41", "xx????xxxxxx");
 			if (address != null)
 			{
 				IsWantedOffset = *(int*)(address + 40);
 			}
 
-			address = FindPattern("\x45\x33\xC9\x41\xB0\x01\x40\x8A\xD7", "xxxxxxxxx");
+			address = FindPatternBmh("\x45\x33\xC9\x41\xB0\x01\x40\x8A\xD7", "xxxxxxxxx");
 			if (address != null)
 			{
 				PreviouslyOwnedByPlayerOffset = *(int*)(address - 5);
 				NeedsToBeHotwiredOffset = PreviouslyOwnedByPlayerOffset;
 			}
 
-			address = FindPattern("\x24\x07\x3C\x03\x74\x00\xE8", "xxxxx?x");
+			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x20\x48\x8B\x81\xD0\x00\x00\x00\x48\x8B\xD9\x48\x85\xC0\x74\x06\x80\x78\x4B\x00\x75\x65", "xxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				AlarmTimeOffset = *(int*)(address + 52);
+				AlarmTimeOffset = *(int*)(address + 0x2C);
 			}
 
-			address = FindPattern("\x0F\x84\xE0\x02\x00\x00\xF3\x0F\x10\x05\x00\x00\x00\x00\x41\x0F\x2F\x86\x00\x00\x00\x00", "xxxxxxxxxx????xxxx????");
+			address = FindPatternBmh("\x8B\xCB\x89\x87\x90\x00\x00\x00\x8A\x86\xD8\x00\x00\x00\x24\x07\x41\x3A\xC6\x0F\x94\xC1\xC1\xE1\x12\x33\xCA\x81\xE1\x00\x00\x04\x00\x33\xCA", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				VehicleLodMultiplierOffset = *(int*)(address + 18);
+				VehicleLodMultiplierOffset = *(int*)(address - 4);
 			}
 
-			address = FindPattern("\x48\x85\xC0\x74\x32\x8A\x88\x00\x00\x00\x00\xF6\xC1\x00\x75\x27", "xxxxxxx????xx?xx");
+			address = FindPatternNaive("\x48\x85\xC0\x74\x32\x8A\x88\x00\x00\x00\x00\xF6\xC1\x00\x75\x27", "xxxxxxx????xx?xx");
 			if (address != null)
 			{
 				HasMutedSirensOffset = *(int*)(address + 7);
@@ -571,79 +675,64 @@ namespace SHVDN
 				CanUseSirenOffset = *(int*)(address + 23);
 			}
 
-			address = FindPattern("\x83\xB8\x00\x00\x00\x00\x0A\x77\x12\x80\xA0\x00\x00\x00\x00\xFD", "xx????xxxxx????x");
+			address = FindPatternBmh("\x41\xBB\x07\x00\x00\x00\x8A\xC2\x41\x23\xCB\x41\x22\xC3\x3C\x03\x75\x16", "xxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				VehicleTypeOffsetInCVehicle = *(int*)(address + 2);
+				VehicleTypeOffsetInCVehicle = *(int*)(address - 0x1C);
+			}
+
+			address = FindPatternBmh("\x83\xB8\x00\x00\x00\x00\x00\x77\x12\x80\xA0\x00\x00\x00\x00\xFD\x80\xE3\x01\x02\xDB\x08\x98", "xx?????xxxx????xxxxxxxx");
+			if (address != null)
+			{
 				VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
 			}
 
-			address = FindPattern("\x73\x1E\xF3\x41\x0F\x59\x86\x00\x00\x00\x00\xF3\x0F\x59\xC2\xF3\x0F\x59\xC7", "xxxxxxx????xxxxxxxx");
+			address = FindPatternBmh("\x73\x1E\xF3\x41\x0F\x59\x86\x00\x00\x00\x00\xF3\x0F\x59\xC2\xF3\x0F\x59\xC7", "xxxxxxx????xxxxxxxx");
 			if (address != null)
 			{
 				HeliBladesSpeedOffset = *(int*)(address + 7);
 			}
 
+			address = FindPatternBmh("\xB3\x03\x22\xD3\x48\x8B\xCF\xE8\x00\x00\x00\x00\x48\x8B\xCF\xF3\x0F\x11\x86\x00\x00\x00\x00\x8A\x97\xD4\x00\x00\x00\xC0\xEA\x02\x22\xD3\xE8", "xxxxxxxx????xxxxxxx????xxxxxxxxxxxx");
+			if (address != null)
 			{
-				string patternForHeliHealthOffsets = "\x48\x85\xC0\x74\x18\x8B\x88\x00\x00\x00\x00\x83\xE9\x08\x83\xF9\x01\x77\x0A\xF3\x0F\x10\x80\x00\x00\x00\x00";
-				string maskForHeliHealthOffsets = "xxxxxxx????xxxxxxxxxxxx????";
-				startAddressToSearch = Process.GetCurrentProcess().MainModule.BaseAddress;
-
-				int[] heliHealthOffsets = new int[3];
-
-				// the pattern will match 3 times
-				for (int i = 0; i < 3; i++)
-				{
-					address = FindPattern(patternForHeliHealthOffsets, maskForHeliHealthOffsets, startAddressToSearch);
-
-					if (address != null)
-					{
-						heliHealthOffsets[i] = *(int*)(address + 23);
-						startAddressToSearch = new IntPtr((long)(address + patternForHeliHealthOffsets.Length));
-					}
-				}
-
-				if (!Array.Exists(heliHealthOffsets, (x => x == 0)))
-				{
-					Array.Sort<int>(heliHealthOffsets);
-					HeliMainRotorHealthOffset = heliHealthOffsets[0];
-					HeliTailRotorHealthOffset = heliHealthOffsets[1];
-					HeliTailBoomHealthOffset = heliHealthOffsets[2];
-				}
+				HeliMainRotorHealthOffset = *(int*)(address + 19);
+				HeliTailRotorHealthOffset = HeliMainRotorHealthOffset + 4;
+				HeliTailBoomHealthOffset = HeliMainRotorHealthOffset + 8;
 			}
 
-			address = FindPattern("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
+			address = FindPatternBmh("\x3C\x03\x0F\x85\x00\x00\x00\x00\x48\x8B\x41\x20\x48\x8B\x88", "xxxx????xxxxxxx");
 			if (address != null)
 			{
 				HandlingDataOffset = *(int*)(address + 22);
 			}
 
-			address = FindPattern("\x45\x33\xF6\x8B\xEA\x48\x8B\xF1\x41\x8B\xFE", "xxxxxxxxxxx");
+			address = FindPatternBmh("\x45\x33\xF6\x8B\xEA\x48\x8B\xF1\x41\x8B\xFE", "xxxxxxxxxxx");
 			if (address != null)
 			{
 				SubHandlingDataArrayOffset = (*(int*)(address + 15) - 8);
 			}
 
-			address = FindPattern("\x48\x85\xC0\x74\x3C\x8B\x80\x00\x00\x00\x00\xC1\xE8\x0F", "xxxxxxx????xxx");
+			address = FindPatternNaive("\x48\x85\xC0\x74\x3C\x8B\x80\x00\x00\x00\x00\xC1\xE8\x0F", "xxxxxxx????xxx");
 			if (address != null)
 			{
 				FirstVehicleFlagsOffset = *(int*)(address + 7);
 			}
 
-			address = FindPattern("\xF3\x0F\x59\x05\x00\x00\x00\x00\xF3\x0F\x59\x83\x00\x00\x00\x00\xF3\x0F\x10\xC8\x0F\xC6\xC9\x00", "xxxx????xxxx????xxxxxxxx");
+			address = FindPatternBmh("\xF3\x0F\x59\x05\x00\x00\x00\x00\xF3\x0F\x59\x83\x00\x00\x00\x00\xF3\x0F\x10\xC8\x0F\xC6\xC9\x00", "xxxx????xxxx????xxxxxxxx");
 			if (address != null)
 			{
 				VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 12);
 				VehicleWheelSuspensionStrengthOffset = VehicleWheelSteeringLimitMultiplierOffset - 4;
 			}
 
-			address = FindPattern("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
+			address = FindPatternBmh("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
 			if (address != null)
 			{
 				VehicleWheelTemperatureOffset = *(int*)(address + 11);
 			}
 
-			address = FindPattern("\x74\x13\x0F\x57\xC0\x0F\x2E\x80\x00\x00\x00\x00", "xxxxxxxx????");
+			address = FindPatternBmh("\x74\x13\x0F\x57\xC0\x0F\x2E\x80", "xxxxxxxx");
 			if (address != null)
 			{
 				VehicleTireHealthOffset = *(int*)(address + 8);
@@ -653,7 +742,7 @@ namespace SHVDN
 			// the tire wear multipiler value for vehicle wheels is present only in b1868 or newer versions
 			if (gameVersion >= 54)
 			{
-				address = FindPattern("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
+				address = FindPatternNaive("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
 				if (address != null)
 				{
 					VehicleTireWearMultiplierOffset = *(int*)(address + 0x22);
@@ -661,48 +750,46 @@ namespace SHVDN
 				}
 			}
 
-			address = FindPattern("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
+			address = FindPatternBmh("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
 			if (address != null)
 			{
 				VehicleWheelIdOffset = *(int*)(address + 3);
 			}
 
-			address = FindPattern("\xEB\x02\x33\xC9\xF6\x81\x00\x00\x00\x00\x01\x75\x43", "xxxxxx????xxx");
+			address = FindPatternNaive("\xEB\x02\x33\xC9\xF6\x81\x00\x00\x00\x00\x01\x75\x43", "xxxxxx????xxx");
 			if (address != null)
 			{
 				VehicleWheelTouchingFlagsOffset = *(int*)(address + 6);
 			}
 
-			address = FindPattern("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8\x00\x00\x00\x00", "xxxxxxxx????xxxx????");
+			address = FindPatternBmh("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxxxxxx????xxxx");
 			if (address != null)
 			{
 				FixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 16) + address + 20));
-				address = FindPattern("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
+				address = FindPatternNaive("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
 				ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
 			}
 
-			address = FindPattern("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
-			if (address != null)
+			// Vehicle Wheels has the owner vehicle pointer and new wheel functions are used since b1365
+			if (gameVersion >= 40)
 			{
+				address = FindPatternBmh("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
 				PunctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
-				address = FindPattern("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
+				address = FindPatternBmh("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
 				BurstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
 			}
 			else
 			{
-				address = FindPattern("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
-				if (address != null)
-				{
-					PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
-					address = FindPattern("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
-					BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
-				}
+				address = FindPatternBmh("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
+				PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
+				address = FindPatternBmh("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
+				BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
 			}
 
 			// The values for special flight mode (e.g. Deluxo) are present only in b1290 or later versions
 			if (gameVersion >= 38)
 			{
-				address = FindPattern("\x41\x0F\x2F\xC1\x72\x2E\xF6\x83", "xxxxxxxx");
+				address = FindPatternBmh("\x41\x0F\x2F\xC1\x72\x2E\xF6\x83", "xxxxxxxx");
 				if (address != null)
 				{
 					SpecialFlightTargetRatioOffset = *(int*)(address + 0x1C);
@@ -712,7 +799,7 @@ namespace SHVDN
 				}
 			}
 
-			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			address = FindPatternNaive("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
 			if (address != null)
 			{
 				PedIntelligenceOffset = *(int*)(address + 0x11);
@@ -721,76 +808,90 @@ namespace SHVDN
 				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 			}
 
-			address = FindPattern("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
+			address = FindPatternBmh("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
 			if (address != null)
 			{
 				CTaskTreePedOffset = *(int*)(address + 3);
 			}
 
-			address = FindPattern("\x40\x38\x3D\x00\x00\x00\x00\x8B\xB6\x00\x00\x00\x00\x74\x0C", "xxx????xx????xx");
+			address = FindPatternNaive("\x40\x38\x3D\x00\x00\x00\x00\x8B\xB6\x00\x00\x00\x00\x74\x0C", "xxx????xx????xx");
 			if (address != null)
 			{
 				CEventCountOffset = *(int*)(address + 9);
-				address = FindPattern("\x48\x8B\xB4\xC6\x00\x00\x00\x00", "xxxx????", new IntPtr(address));
+				address = FindPatternNaive("\x48\x8B\xB4\xC6", "xxxx", new IntPtr(address));
 				CEventStackOffset = *(int*)(address + 4);
 			}
 
-			address = FindPattern("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
+			address = FindPatternNaive("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
 			if (address != null)
 			{
 				fragInstNMGtaOffset = *(int*)(address + 16);
 			}
-			address = FindPattern("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
+			address = FindPatternNaive("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
 			if (address != null)
 			{
 				fragInstNMGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
 			}
 
-			address = FindPattern("\xF3\x44\x0F\x10\xAB\x00\x00\x00\x00\x0F\x5B\xC9\xF3\x45\x0F\x5C\xD4", "xxxxx????xxxxxxxx");
+			address = FindPatternBmh("\x0F\x93\xC0\x84\xC0\x74\x0F\xF3\x41\x0F\x58\xD1\x41\x0F\x2F\xD0\x72\x04\x41\x0F\x28\xD0", "xxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				SweatOffset = *(int*)(address + 5);
+				SweatOffset = *(int*)(address + 26);
 			}
 
-			address = FindPattern("\x8A\x41\x30\xC0\xE8\x03\xA8\x01\x74\x49\x8B\x82\x00\x00\x00\x00", "xxxxxxxxxxxx????");
+			address = FindPatternBmh("\x8A\x41\x30\xC0\xE8\x03\xA8\x01\x74\x49\x8B\x82", "xxxxxxxxxxxx");
 			if (address != null)
 			{
 				PedIsInVehicleOffset = *(int*)(address + 12);
 				PedLastVehicleOffset = *(int*)(address + 0x1A);
 			}
-			address = FindPattern("\x24\x3F\x0F\xB6\xC0\x66\x89\x87\x00\x00\x00\x00", "xxxxxxxx????");
+			address = FindPatternBmh("\x24\x3F\x0F\xB6\xC0\x66\x89\x87", "xxxxxxxx");
 			if (address != null)
 			{
 				SeatIndexOffset = *(int*)(address + 8);
 			}
 
-			address = FindPattern("\x74\x14\x8B\x88\x00\x00\x00\x00\x81\xE1\x00\x40\x00\x00\x31\x88", "xxxx????xxxxxxxx");
+			address = FindPatternBmh("\xC1\xE8\x11\xA8\x01\x75\x10\x48\x8B\xCB\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84", "xxxxxxxxxxx????xxxx");
 			if (address != null)
 			{
-				PedDropsWeaponsWhenDeadOffset = *(int*)(address + 4);
+				PedDropsWeaponsWhenDeadOffset = *(int*)(address - 4);
 			}
 
-			address = FindPattern("\x4D\x8B\xF1\x48\x8B\xFA\xC1\xE8\x02\x48\x8B\xF1\xA8\x01\x0F\x85\xEB\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\x4D\x8B\xF1\x48\x8B\xFA\xC1\xE8\x02\x48\x8B\xF1\xA8\x01\x0F\x85\xEB\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
 				PedSuffersCriticalHitOffset = *(int*)(address - 4);
 			}
 
-			address = FindPattern("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02", "xxxxxxxxxxx????xxxxx");
-			if (address != null)
+			// Implementation of armor system was different drastically in the game version between b877 and b2699 and the other versions
+			if (gameVersion >= 80 || gameVersion <= 25)
 			{
-				ArmorOffset = *(int*)(address + 11);
+				address = FindPatternBmh("\x66\x0F\x6E\xC1\x0F\x5B\xC0\x41\x0F\x2F\x86\x00\x00\x00\x00\x0F\x97\xC0\xEB\x02\x32\xC0\x48\x8B\x5C\x24\x40", "xxxxxxxxxxx????xxxxxxxxxxxx");
+				if (address != null)
+				{
+					ArmorOffset = *(int*)(address + 0x2C);
+					InjuryHealthThresholdOffset = ArmorOffset + 0xC;
+					FatalInjuryHealthThresholdOffset = ArmorOffset + 0x10;
+				}
+			}
+			else
+			{
+				address = FindPatternBmh("\x0F\x29\x70\xD8\x0F\x29\x78\xC8\x49\x8B\xF0\x48\x8B\xEA\x4C\x8B\xF1\x44\x0F\x29\x40\xB8", "xxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					ArmorOffset = *(int*)(address + 0x1F);
+				}
+
+				// Injury healths value are stored with different distance from the armor value in different game versions, search for another pattern to make sure we get correct injury health offsets
+				address = FindPatternBmh("\xF3\x41\x0F\x10\x16\xF3\x0F\x10\xA7\xA0\x02\x00\x00\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC6\x72\x05\x0F\x28\xCE\xEB\x12", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+				if (address != null)
+				{
+					InjuryHealthThresholdOffset = *(int*)(address - 4);
+					FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 0x4;
+				}
 			}
 
-			address = FindPattern("\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\xD9\x48\x8B\x48\x08\x48\x85\xC9\x0F", "xxx????xxxxxxxxxxx");
-			if (address != null)
-			{
-				// The order won't change in some updates
-				InjuryHealthThresholdOffset = *(int*)(address + 27);
-				FatalInjuryHealthThresholdOffset = InjuryHealthThresholdOffset + 4;
-			}
-
-			address = FindPattern("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
+			address = FindPatternBmh("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
 			if (address != null)
 			{
 				PedTimeOfDeathOffset = *(int*)(address + 2);
@@ -798,20 +899,20 @@ namespace SHVDN
 				PedSourceOfDeathOffset = PedTimeOfDeathOffset - 12;
 			}
 
-			address = FindPattern("\x74\x08\x8B\x81\x00\x00\x00\x00\xEB\x0D\x48\x8B\x87\x00\x00\x00\x00\x8B\x80", "xxxx????xxxxx????xx");
+			address = FindPatternNaive("\x74\x08\x8B\x81\x00\x00\x00\x00\xEB\x0D\x48\x8B\x87\x00\x00\x00\x00\x8B\x80", "xxxx????xxxxx????xx");
 			if (address != null)
 			{
 				FiringPatternOffset = *(int*)(address + 19);
 			}
 
-			address = FindPattern("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			address = FindPatternBmh("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
 			if (address != null)
 			{
 				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
 				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 			}
 
-			address = FindPattern("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
+			address = FindPatternBmh("\xC1\xE8\x09\xA8\x01\x74\xAE\x0F\x28\x00\x00\x00\x00\x00\x49\x8B\x47\x30\xF3\x0F\x10\x81", "xxxxxxxxx????xxxxxxxxx");
 			if (address != null)
 			{
 				SeeingRangeOffset = *(int*)(address + 9);
@@ -824,58 +925,58 @@ namespace SHVDN
 				VisualFieldCenterAngleOffset = SeeingRangeOffset + 0x1C;
 			}
 
-			address = FindPattern("\x48\x8B\x87\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00", "xxx????xxxxxxxxx");
+			address = FindPatternBmh("\x48\x8B\x87\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00", "xxx????xxxxxxxxx");
 			if (address != null)
 			{
 				objParentEntityAddressDetachedFromOffset = *(int*)(address + 3);
 			}
 
-			address = FindPattern("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
+			address = FindPatternBmh("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
 			if (address != null)
 			{
 				ProjectilePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 			// Find address of the projectile count, just in case the max number of projectile changes from 50
-			address = FindPattern("\x44\x8B\x0D\x00\x00\x00\x00\x33\xDB\x45\x8A\xF8", "xxx????xxxxx");
+			address = FindPatternBmh("\x44\x8B\x0D\x00\x00\x00\x00\x33\xDB\x45\x8A\xF8", "xxx????xxxxx");
 			if (address != null)
 			{
 				ProjectileCountAddress = (int*)(*(int*)(address + 3) + address + 7);
 			}
-			address = FindPattern("\x48\x85\xED\x74\x09\x48\x39\xA9\x00\x00\x00\x00\x75\x2D", "xxxxxxxx????xx");
+			address = FindPatternBmh("\x48\x85\xED\x74\x09\x48\x39\xA9\x00\x00\x00\x00\x75\x2D", "xxxxxxxx????xx");
 			if (address != null)
 			{
 				ProjectileOwnerOffset = *(int*)(address + 8);
 			}
-			address = FindPattern("\x45\x85\xF6\x74\x0D\x48\x8B\x81\x00\x00\x00\x00\x44\x39\x70\x10", "xxxxxxxx????xxxx");
+			address = FindPatternBmh("\x45\x85\xF6\x74\x0D\x48\x8B\x81\x00\x00\x00\x00\x44\x39\x70\x10", "xxxxxxxx????xxxx");
 			if (address != null)
 			{
 				ProjectileAmmoInfoOffset = *(int*)(address + 8);
 			}
-			address = FindPattern("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
+			address = FindPatternBmh("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
 			if (address != null)
 			{
 				ExplodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)(new IntPtr(*(int*)(address + 13) + address + 17));
 			}
 
-			address = FindPattern("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E\x00", "xxxxxxxxx?xxxxxx????xx?");
+			address = FindPatternNaive("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E", "xxxxxxxxx?xxxxxx????xx");
 			if (address != null)
 			{
 				getFragInstVFuncOffset = *(sbyte*)(address + 9);
 				detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
 			}
-			address = FindPattern("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
+			address = FindPatternBmh("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
 			if (address != null)
 			{
 				phSimulatorInstPtr = (ulong**)(*(int*)(address + 5) + address + 9);
 			}
-			address = FindPattern("\xC0\xE8\x07\xA8\x01\x74\x57\x0F\xB7\x4E\x18\x85\xC9\x78\x4F", "xxxxxxxxxxxxxxx");
+			address = FindPatternBmh("\xC0\xE8\x07\xA8\x01\x74\x57\x0F\xB7\x4E\x18\x85\xC9\x78\x4F", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
 				colliderCapacityOffset = *(int*)(address - 0x41);
 				colliderCountOffset = colliderCapacityOffset + 4;
 			}
 
-			address = FindPattern("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
+			address = FindPatternBmh("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
 			if (address != null)
 			{
 				InteriorProxyPtrFromGameplayCamAddress = (ulong*)(*(int*)(address + 37) + address + 41);
@@ -885,12 +986,12 @@ namespace SHVDN
 			// These 2 nopping are done by trainers such as Simple Trainer, Menyoo, and Enhanced Native Trainer, but we try to do this if they are not done yet
 			#region -- Bypass model requests block for some models --
 			// Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
-			address = FindPattern("\x48\x85\xC0\x00\x00\x38\x45\x00\x0F", "xxx??xx?x");
+			address = FindPatternNaive("\x48\x85\xC0\x00\x00\x38\x45\x00\x0F", "xxx??xx?x");
 			if (address != null)
 			{
 				// Find address to patch because some of the instructions are changed and offset differs between b1290 and b1180
-				// Skip the region where there are not "lea rcx, [rbp+6F]"
-				address = FindPattern("\x33\xC1\x48\x8D\x4D\x6F", "xxxxxx", new IntPtr(address + 0x30), 0x30);
+				// Skip the region where there are no "lea rcx, [rbp+6F]"
+				address = FindPatternNaive("\x33\xC1\x48\x8D\x4D\x6F", "xxxxxx", new IntPtr(address + 0x30), 0x30);
 				address = address != null ? (address + 0x16) : null;
 				if (address != null && *address != 0x90)
 				{
@@ -901,7 +1002,7 @@ namespace SHVDN
 			}
 			#endregion
 			#region -- Bypass is player model allowed to spawn checks --
-			address = FindPattern("\xFF\x52\x00\x84\xC0\x00\x00\x48\x8B\xC3", "xx?xx??xxx");
+			address = FindPatternNaive("\xFF\x52\x00\x84\xC0\x00\x00\x48\x8B\xC3", "xx?xx??xxx");
 			address = address != null ? (address + 5) : null;
 			if (address != null && *address != 0x90)
 			{
@@ -995,7 +1096,7 @@ namespace SHVDN
 				return;
 			}
 
-			address = FindPattern("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
+			address = FindPatternBmh("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
 			var yscScriptTable = (YscScriptTable*)(address + *(int*)(address + 3) + 7);
 
 			// find the shop_controller script
@@ -1025,17 +1126,19 @@ namespace SHVDN
 			var enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
 			var enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
 
-			for (int i = 0; i < shopControllerHeader->CodePageCount(); i++)
+			int codepageCount = shopControllerHeader->CodePageCount();
+			for (int i = 0; i < codepageCount; i++)
 			{
 				int size = shopControllerHeader->GetCodePageSize(i);
 				if (size > 0)
 				{
-					address = FindPattern(enableCarsGlobalPattern, enableCarsGlobalMask, shopControllerHeader->GetCodePageAddress(i), (ulong)size);
+					address = FindPatternNaive(enableCarsGlobalPattern, enableCarsGlobalMask, shopControllerHeader->GetCodePageAddress(i), (ulong)size);
 
 					if (address != null)
 					{
 						int globalindex = *(int*)(address + enableCarsGlobalOffset) & 0xFFFFFF;
 						*(int*)GetGlobalPtr(globalindex).ToPointer() = 1;
+						break;
 					}
 				}
 			}
@@ -1927,7 +2030,8 @@ namespace SHVDN
 		public static int ClutchOffset { get; }
 		public static int AccelerationOffset { get; }
 
-		public static int TurboOffset { get; }
+		public static int CVehicleEngineOffset { get; }
+		public static int CVehicleEngineTurboOffset { get; }
 
 		public static int FuelLevelOffset { get; }
 		public static int OilLevelOffset { get; }
@@ -2013,6 +2117,51 @@ namespace SHVDN
 			}
 
 			return IntPtr.Zero;
+		}
+
+		public static float GetVehicleTurbo(int vehicleHandle)
+		{
+			if (CVehicleEngineTurboOffset == 0)
+			{
+				return 0f;
+			}
+
+			var vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+
+			if (vehEngineStructAddr == null)
+			{
+				return 0f;
+			}
+
+			return *(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset);
+		}
+		public static void SetVehicleTurbo(int vehicleHandle, float value)
+		{
+			if (CVehicleEngineTurboOffset == 0)
+			{
+				return;
+			}
+
+			var vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+
+			if (vehEngineStructAddr == null)
+			{
+				return;
+			}
+
+			*(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset) = value;
+		}
+
+		private static byte* GetCVehicleEngine(int vehicleHandle)
+		{
+			var address = GetEntityAddress(vehicleHandle);
+
+			if (address == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			return (byte*)(address + CVehicleEngineOffset);
 		}
 
 		public static int SpecialFlightTargetRatioOffset { get; }
@@ -2126,7 +2275,7 @@ namespace SHVDN
 			#endregion
 		}
 
-		static bool VehicleWheelHasVehiclePtr() => PunctureVehicleTireNewFunc != null;
+		static bool VehicleWheelHasVehiclePtr() => GetGameVersion() >= 40;
 
 		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
 		{
@@ -4336,7 +4485,7 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
 		// should be CGameScriptHandler::GetScriptEntity
 		static delegate* unmanaged[Stdcall]<int, ulong> GetScriptEntity;
-		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerAddressFunc;
+		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerPedAddressFunc;
 
 		public static IntPtr GetPtfxAddress(int handle)
 		{
@@ -4348,7 +4497,7 @@ namespace SHVDN
 		}
 		public static IntPtr GetPlayerAddress(int handle)
 		{
-			return new IntPtr((long)GetPlayerAddressFunc(handle));
+			return new IntPtr((long)GetPlayerPedAddressFunc(handle));
 		}
 
 		public static IntPtr GetBuildingAddress(int handle)

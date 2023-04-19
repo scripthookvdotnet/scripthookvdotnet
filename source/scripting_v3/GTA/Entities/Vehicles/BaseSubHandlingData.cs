@@ -60,7 +60,7 @@ namespace GTA
 		{
 			if (obj is BaseSubHandlingData data)
 			{
-				return MemoryAddress == data.MemoryAddress && Parent == data.Parent;
+				return MemoryAddress == data.MemoryAddress;
 			}
 
 			return false;
@@ -89,9 +89,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			int hash = 17 + MemoryAddress.GetHashCode();
-			hash = Parent != null ? hash * 883 + Parent.MemoryAddress.GetHashCode() : hash;
-			return hash;
+			return MemoryAddress.GetHashCode();
 		}
 	}
 }

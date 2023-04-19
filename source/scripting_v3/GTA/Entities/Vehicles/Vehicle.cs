@@ -429,7 +429,13 @@ namespace GTA
 					return VehicleType.None;
 				}
 
-				return (VehicleType)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				int vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				if (vehTypeInt >= 6 && Game.Version < GameVersion.v1_0_944_2_Steam)
+				{
+					vehTypeInt += 2;
+				}
+
+				return (VehicleType)vehTypeInt;
 			}
 		}
 
@@ -661,10 +667,17 @@ namespace GTA
 
 		public float EnginePowerMultiplier
 		{
+			[Obsolete("The getter of Vehicle.EnginePowerMultiplier is obsolete since MODIFY_VEHICLE_TOP_SPEED does not store the passed value " +
+				"as the 2nd argument to any of vehicle members in v1.0.887.1 or earlier. This property returns zero in those versions.")]
 			get
 			{
+				if (Game.Version < GameVersion.v1_0_944_2_Steam)
+				{
+					return 0.0f;
+				}
+
 				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.EngineTemperatureOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.EnginePowerMultiplierOffset == 0)
 				{
 					return 0.0f;
 				}
@@ -877,26 +890,8 @@ namespace GTA
 		/// </summary>
 		public float Turbo
 		{
-			get
-			{
-				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.TurboOffset == 0)
-				{
-					return 0.0f;
-				}
-
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.TurboOffset);
-			}
-			set
-			{
-				var address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.TurboOffset == 0)
-				{
-					return;
-				}
-
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.TurboOffset, value);
-			}
+			get => SHVDN.NativeMemory.GetVehicleTurbo(Handle);
+			set => SHVDN.NativeMemory.SetVehicleTurbo(Handle, value);
 		}
 
 		/// <summary>

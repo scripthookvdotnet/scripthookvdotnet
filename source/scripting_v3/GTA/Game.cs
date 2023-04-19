@@ -659,7 +659,7 @@ namespace GTA
 		{
 			unsafe
 			{
-				byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPattern(pattern, mask) : SHVDN.NativeMemory.FindPattern(pattern, mask, startAddress));
+				byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
 				return address == null ? IntPtr.Zero : new IntPtr(address);
 			}
 		}
