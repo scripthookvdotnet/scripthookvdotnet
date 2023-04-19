@@ -47,7 +47,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the number of available color tints for this <see cref="Weapon"/>.
 		/// </summary>
-		public int TintCout
+		public int TintCount
 		{
 			get
 			{
