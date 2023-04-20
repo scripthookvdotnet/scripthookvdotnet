@@ -55,7 +55,8 @@ namespace GTA
 		/// </remarks>
 		ReenableControlOnDeath = 128,
 		/// <summary>
-		/// Leaves the camera control on when disabling player control (off by default if removing player control, turned back on when resuming control).
+		/// Leaves the camera control on when disabling player control by not setting the flag for disabling the camera control
+		/// (off by default if removing player control, turned back on when resuming control).
 		/// </summary>
 		/// <remarks>
 		/// Only works when you disable the controls.

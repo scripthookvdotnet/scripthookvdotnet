@@ -166,7 +166,10 @@ namespace GTA
 		/// Gets the <see cref="Building"/> this <see cref="Player"/> is free aiming.
 		/// You can use this property to detect if the raycast collided with something (although you cannot detect if the raycast collided with <see cref="AnimatedBuilding"/>).
 		/// </summary>
-		/// <remarks>This functions the same as <see cref="TargetedEntity"/> except this property returns a <see cref="Building"/> instead of an <see cref="Entity"/>.</remarks>
+		/// <remarks>
+		/// <para>This functions the same as <see cref="TargetedEntity"/> except this property returns a <see cref="Building"/> instead of an <see cref="Entity"/>.</para>
+		/// <para>You should not expect the returned <see cref="Building"/> instance has meaningful position info as its matrix is set to <see cref="Matrix.Identity"/> most of the time.</para>
+		/// </remarks>
 		/// <returns>The <see cref="Building"/> if this <see cref="Player"/> is free aiming any <see cref="Building"/>; otherwise, <see langword="null"/></returns>
 		public Building TargetedBuilding
 		{
@@ -182,10 +185,15 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// <para>
+		/// Bullets and projectiles this <see cref="Player"/> shoot will go through this point.
+		/// For projectiles, this applies only if the gravity is set to the default value.
+		/// </para>
+		/// <para>
 		/// The value will be the position the current asynchronous shape test yields
 		/// if this <see cref="Player"/> is pressing <see cref="Control.Aim"/> this frame.
+		/// The range how far the shape test will be tested depends on the <c>WeaponRange</c> value in the <c>weapons.meta</c> file.
 		/// You should not use what this property returns as the exact crosshair target position,
-		/// because shape test for crosshair target processes asynchronously.
+		/// because the shape test for crosshair target processes asynchronously.
 		/// </para>
 		/// If <see cref="Player"/> is not pressing <see cref="Control.Aim"/> this frame, The value will be the position of
 		/// the last asynchronous shape test result when this <see cref="Player"/> was pressing <see cref="Control.Aim"/>.
@@ -284,10 +292,10 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the current crime value that determines the real wanted level when the game updates the real wanted level.
 		/// </summary>
-		/// <para>
-		/// For instance, if this value is 35 and a vehicle theft crime you started gets reported (increases by 15) without getting spotted by the police,
+		/// <remarks>
+		/// For instance, if this value is 32 and a vehicle theft crime you started gets reported (increases by 18) without crime directly getting spotted by the police,
 		/// this value will be 50 and the wanted level will be one when the game updates the real wanted level using this value.
-		/// </para>
+		/// </remarks>
 		/// <value>
 		/// The current crime value.
 		/// </value>
