@@ -99,6 +99,7 @@ namespace GTA.UI
 		private readonly string _textureDict, _textureName;
 		private static readonly Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
 		private readonly IntPtr _pinnedDict, _pinnedName;
+		private RectangleF _textureCoordinates;
 		#endregion
 
 		public void Dispose()
@@ -170,13 +171,26 @@ namespace GTA.UI
 		}
 		/// <summary>
 		/// Gets or sets the texture coordinates of this <see cref="Sprite" />.
+		/// Currently only supports in v1.0.1868.0 or later game versions, but may support all game version in the future
+		/// since there is the function that DRAW_SPRITE_ARX_WITH_UV eventually calls in all game versions.
 		/// </summary>
 		/// <value>
 		/// The texture coordinates allows to specify the coordinates (measured in percentage: 1f = 100%), used to draw the sprite.
 		/// </value>
 		public RectangleF TextureCoordinates
 		{
-			get; set;
+			get => _textureCoordinates;
+			set
+			{
+				// Although you can find what DRAW_SPRITE_ARX_WITH_UV eventually calls with ["48 8B 41 10 66 39 70 58 74 06 48 8B 78 50 EB 07" - 0xA],
+				// but we have to prevent the setter from calling in the game versions prior to b1868 since we haven't find a alternative way to do what DRAW_SPRITE_ARX_WITH_UV does
+				if (Game.Version < GameVersion.v1_0_1868_0_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1868_0_Steam, nameof(Sprite), nameof(TextureCoordinates));
+				}
+
+				_textureCoordinates = value;
+			}
 		}
 		/// <summary>
 		/// Gets or sets the size to draw the <see cref="Sprite" />
