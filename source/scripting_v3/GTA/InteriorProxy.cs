@@ -9,6 +9,9 @@ using System;
 
 namespace GTA
 {
+	/// <summary>
+	/// Represents a interior proxy, which is for <c>CInterirorProxy</c> and is used for native functions for interiors.
+	/// </summary>
 	public class InteriorProxy : INativeValue, IExistable
 	{
 		internal InteriorProxy(int handle)
@@ -88,7 +91,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the model this <see cref="InteriorProxy"/> will load.
+		/// Gets the MLO model this <see cref="InteriorProxy"/> will load.
 		/// </summary>
 		public Model Model
 		{
@@ -105,50 +108,60 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="InteriorProxy"/> will behave as if interior is not loaded completely.
+		/// Gets a value indicating whether this <see cref="InteriorProxy"/> will not process, making the interior looks like completely not loaded.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will behave as if interior is not loaded completely; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will not process, making the interior looks like completely not loaded; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsDisabled => Function.Call<bool>(Hash.IS_INTERIOR_DISABLED, Handle);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="InteriorProxy"/> will only load a few elements of the interior.
-		/// Doors can be loaded and the collision is not necessarily completely disabled (e.g. collisions for bullets and projectiles can work).
+		/// Gets a value indicating whether this <see cref="InteriorProxy"/> is capped to load only the shell objects (usually walls + floor + doors + windows),
+		/// prevents most of collisions from loading.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this <see cref="InteriorProxy"/> will only load a few elements of the interior; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="InteriorProxy"/> is capped to load only the shell objects; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// Doors can be loaded and the collision is not necessarily completely disabled (e.g. collisions for bullets and projectiles can work).
+		/// </remarks>
 		public bool IsCapped => Function.Call<bool>(Hash.IS_INTERIOR_CAPPED, Handle);
 
 		/// <summary>
-		/// Refreshs the current <see cref="InteriorInstance"/> if loaded. Does not change the memory address or handle of the <see cref="InteriorInstance"/>.
+		/// Refreshs the current <see cref="InteriorInstance"/> if loaded.
 		/// </summary>
+		/// <remarks>
+		/// Does not change the memory address or handle of the <see cref="CurrentInteriorInstance"/>.
+		/// </remarks>
 		public void Refresh()
 		{
 			Function.Call(Hash.REFRESH_INTERIOR, Handle);
 		}
 
 		/// <summary>
-		/// Disables the interior, making <see cref="InteriorProxy"/> behave as if interior is not loaded completely. Does not prevent from having a <see cref="InteriorInstance"/>.
-		/// Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.
+		/// Disables the interior, making <see cref="InteriorProxy"/> will not process, making the interior looks like completely not loaded.
 		/// </summary>
+		/// <remarks>
+		/// <para>Does not prevent from having a <see cref="InteriorInstance"/>.</para>
+		/// <para>Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.</para>
+		/// </remarks>
 		public void Disable(bool toggle)
 		{
 			Function.Call(Hash.DISABLE_INTERIOR, Handle, toggle);
 		}
 
 		/// <summary>
-		/// Caps the interior so this <see cref="InteriorProxy"/> will only load a few elements of the interior.
-		/// Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.
+		/// Caps the interior so this <see cref="InteriorProxy"/> will load only the shell objects (usually walls + floor + doors + windows),
+		/// prevents most of collisions from loading.
 		/// </summary>
+		/// <remarks>Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.</remarks>
 		public void Cap(bool toggle)
 		{
 			Function.Call(Hash.CAP_INTERIOR, Handle, toggle);
 		}
 
 		/// <summary>
-		/// Makes this <see cref="InteriorProxy"/> keep the <see cref="InteriorProxy"/> this <see cref="InteriorProxy"/> is loaded.
+		/// Makes the game keep the <see cref="InteriorProxy"/>.
 		/// </summary>
 		public void PinInMemory()
 		{
@@ -156,7 +169,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Lets this <see cref="InteriorProxy"/> free the <see cref="InteriorProxy"/> this <see cref="InteriorProxy"/> is loaded.
+		/// Lets the game free the <see cref="InteriorProxy"/>.
 		/// </summary>
 		public void UnpinFromMemory()
 		{
