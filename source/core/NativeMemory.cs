@@ -1405,7 +1405,7 @@ namespace SHVDN
 
 		#region -- Game Data --
 
-		// Performs uppercase to lowercase and backslash to slash conversion etc.
+		// Performs ASCII uppercase to ASCII lowercase and backslash to slash conversion, does not perform any convertions to non-ASCII characters.
 		static readonly byte[] LookupTableForGetHashKey =
 		{
 			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
