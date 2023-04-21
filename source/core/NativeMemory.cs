@@ -986,12 +986,12 @@ namespace SHVDN
 			// These 2 nopping are done by trainers such as Simple Trainer, Menyoo, and Enhanced Native Trainer, but we try to do this if they are not done yet
 			#region -- Bypass model requests block for some models --
 			// Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
-			address = FindPatternNaive("\x48\x85\xC0\x00\x00\x38\x45\x00\x0F", "xxx??xx?x");
+			address = FindPatternBmh("\x40\x84\x00\x74\x13\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x09\x38\x45\x57\x0F\x84", "xx?xxx????xxxxxxxxxx");
 			if (address != null)
 			{
 				// Find address to patch because some of the instructions are changed and offset differs between b1290 and b1180
 				// Skip the region where there are no "lea rcx, [rbp+6F]"
-				address = FindPatternNaive("\x33\xC1\x48\x8D\x4D\x6F", "xxxxxx", new IntPtr(address + 0x30), 0x30);
+				address = FindPatternNaive("\x33\xC1\x48\x8D\x4D\x6F", "xxxxxx", new IntPtr(address + 0x3A), 0x30);
 				address = address != null ? (address + 0x16) : null;
 				if (address != null && *address != 0x90)
 				{
@@ -1002,11 +1002,11 @@ namespace SHVDN
 			}
 			#endregion
 			#region -- Bypass is player model allowed to spawn checks --
-			address = FindPatternNaive("\xFF\x52\x00\x84\xC0\x00\x00\x48\x8B\xC3", "xx?xx??xxx");
-			address = address != null ? (address + 5) : null;
+			address = FindPatternBmh("\x74\x12\x48\x8B\x10\x48\x8B\xC8\xFF\x52\x30\x84\xC0\x74\x05\x48\x8B\xC3", "xxxxxxxxxxxxxxxxxx");
+			address = address != null ? (address + 11) : null;
 			if (address != null && *address != 0x90)
 			{
-				const int bytesToWriteInstructions = 2;
+				const int bytesToWriteInstructions = 4;
 				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
 				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
 			}
