@@ -179,9 +179,34 @@ namespace GTA
 		public Vector3 Position => Function.Call<Vector3>(Hash.GET_WORLD_POSITION_OF_ENTITY_BONE, Owner.Handle, Index);
 
 		/// <summary>
-		/// Gets the  world rotation of this <see cref="EntityBone"/>.
+		/// Gets the world rotation of this <see cref="EntityBone"/>.
 		/// </summary>
-		public Vector3 Rotation => Function.Call<Vector3>(Hash.GET_ENTITY_BONE_ROTATION, Owner.Handle, Index);
+		public Vector3 Rotation
+		{
+			// Do what GET_ENTITY_BONE_OBJECT_ROTATION does but with support for all game versions and less overhead
+			get
+			{
+				IntPtr relativeMatrixAddress = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (relativeMatrixAddress == IntPtr.Zero)
+				{
+					// Should not come here unless the index is invalid or the entity does not exist
+					return Vector3.Zero;
+				}
+
+				Quaternion relativeBoneQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(relativeMatrixAddress)));
+
+				IntPtr transformMatrixAddress = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(Owner.Handle);
+				if (transformMatrixAddress == IntPtr.Zero)
+				{
+					// GET_ENTITY_BONE_OBJECT_ROTATION considers this edge case
+					return relativeBoneQuaternion.ToEuler();
+				}
+
+				Quaternion globalTransformQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(transformMatrixAddress)));
+
+				return (globalTransformQuaternion * relativeBoneQuaternion).ToEuler();
+			}
+		}
 
 		/// <summary>
 		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.

@@ -1738,6 +1738,14 @@ namespace SHVDN
 			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
+		public static IntPtr GetEntityBoneTransformMatrixAddress(int handle)
+		{
+			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
+			if (crSkeleton == null)
+				return IntPtr.Zero;
+
+			return crSkeleton->GetTransformMatrixAddress();
+		}
 		public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
@@ -4270,11 +4278,18 @@ namespace SHVDN
 		internal unsafe struct CrSkeleton
 		{
 			[FieldOffset(0x00)] internal CrSkeletonData* skeletonData;
+			// this field has a pointer to one matrix, not a pointer to an array of matrices for all bones
+			[FieldOffset(0x8)] internal ulong boneTransformMatrixPtr;
 			// object matrices (entity-local space)
 			[FieldOffset(0x10)] internal ulong boneObjectMatrixArrayPtr;
 			// global matrices (world space)
 			[FieldOffset(0x18)] internal ulong boneGlobalMatrixArrayPtr;
 			[FieldOffset(0x20)] internal int boneCount;
+
+			public IntPtr GetTransformMatrixAddress()
+			{
+				return new IntPtr((long)(boneTransformMatrixPtr));
+			}
 
 			public IntPtr GetBoneObjectMatrixAddress(int boneIndex)
 			{
