@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections;
@@ -86,6 +87,26 @@ namespace GTA
 		/// Gets the number of bones that this <see cref="Entity"/> has.
 		/// </summary>
 		public int Count => SHVDN.NativeMemory.GetEntityBoneCount(_owner.Handle);
+
+		/// <summary>
+		/// Gets the transform matrix that represents the same matrix as <see cref="Entity.Matrix"/> on this <see cref="Entity"/> unless this matrix is modified by some external programs.
+		/// </summary>
+		/// <remarks>
+		/// The matrix that this property reads is used in <see cref="EntityBone.Position"/>, <see cref="EntityBone.Quaternion"/>, and <see cref="EntityBone.Rotation"/>.
+		/// </remarks>
+		public Matrix TransformMatrix
+		{
+			get
+			{
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(_owner.Handle);
+				if (address == IntPtr.Zero)
+				{
+					return Matrix.Zero;
+				}
+
+				return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+			}
+		}
 
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> has a bone with the specified bone name
