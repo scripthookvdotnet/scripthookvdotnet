@@ -1407,7 +1407,6 @@ namespace GTA
 		/// <remarks>
 		/// Does not delete non-mission <see cref="Entity"/>s that is protected by conditions other than <see cref="Entity.PopulationType"/>.
 		/// For example, this method does not delete the <see cref="Vehicle"/> the player is in or automobiles (excluding amphibious or submarine cars), bikes, and helicopters (excluding blimps) in some garages.
-		/// This method does not delete <see cref="Ped"/> who are members of the player group as they are protected, either.
 		/// </remarks>
 		public static void ClearAngledAreaOfVehicles(Vector3 position1, Vector3 position2, float areaWidth, bool leaveCarGenCars = false, bool checkViewFrustum = false, bool ifWrecked = false, bool ifAbandoned = false, bool ifEngineOnFire = false)
 			// 14th parameter is supposed to be KeepScriptTrains (available since b2545), but does not seem to change the behavior for trains in any way (does not clear of trains regardless of the 14th argument)
@@ -1429,6 +1428,9 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The center position.</param>
 		/// <param name="radius">The radius for area clearance.</param>
+		/// <remarks>
+		/// Does not delete <see cref="Ped"/> who are members of the player group as they are protected.
+		/// </remarks>
 		public static void ClearAreaOfPeds(Vector3 position, float radius)
 			=> Function.Call(Hash.CLEAR_AREA_OF_PEDS, position.X, position.Y, position.Z, radius, false);
 
@@ -1437,6 +1439,9 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The center position.</param>
 		/// <param name="radius">The radius for area clearance.</param>
+		/// <remarks>
+		/// Does not delete <see cref="Ped"/> who are members of the player group as they are protected.
+		/// </remarks>
 		public static void ClearAreaOfCops(Vector3 position, float radius)
 			=> Function.Call(Hash.CLEAR_AREA_OF_COPS, position.X, position.Y, position.Z, radius, false);
 
