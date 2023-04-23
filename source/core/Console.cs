@@ -343,8 +343,8 @@ namespace SHVDN
 			// Draw blinking cursor
 			if (nowTickCount % 1000 < 500)
 			{
-				float length = GetTextLength(input.Substring(0, cursorPos));
-				DrawText(25 + (length * CONSOLE_WIDTH) - 4, CONSOLE_HEIGHT, "~w~~h~|~w~", InputColor);
+				float lengthBetweenInputStartAndCursor = GetTextLength(input.Substring(0, cursorPos)) - GetMarginLength();
+				DrawRect(26 + (lengthBetweenInputStartAndCursor * CONSOLE_WIDTH), CONSOLE_HEIGHT + 2, 2, INPUT_HEIGHT - 4, Color.White);
 			}
 
 			// Draw console history text
@@ -724,7 +724,7 @@ namespace SHVDN
 			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
 			NativeFunc.InvokeInternal(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
 			NativeFunc.InvokeInternal(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
-			NativeFunc.PushLongString(text);
+			NativeFunc.PushLongString(text, 99);
 			NativeFunc.InvokeInternal(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BASE_WIDTH), (y / BASE_HEIGHT));
 		}
 
@@ -742,8 +742,18 @@ namespace SHVDN
 			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
 			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
 			NativeFunc.InvokeInternal(0x54CE8AC98E120CAB /* BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
-			NativeFunc.PushLongString(text);
+			NativeFunc.PushLongString(text, 98); // 99 byte string chunks don't process properly in END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT
 			return *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /* END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, true);
+		}
+
+		static float GetMarginLength()
+		{
+			unsafe
+			{
+				var len1 = GetTextLength("A");
+				var len2 = GetTextLength("AA");
+				return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
+			}
 		}
 	}
 

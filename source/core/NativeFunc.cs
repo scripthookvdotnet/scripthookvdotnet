@@ -100,19 +100,19 @@ namespace SHVDN
 		/// This requires that a text command that accepts multiple text components is active (e.g. "CELL_EMAIL_BCON").
 		/// </summary>
 		/// <param name="str">The string to split up.</param>
-		public static void PushLongString(string str)
+		/// <param name="maxLengthUtf8">The max byte length per chunk in UTF-8.</param>
+		public static void PushLongString(string str, int maxLengthUtf8 = 99)
 		{
-			PushLongString(str, PushString);
+			PushLongString(str, PushString, maxLengthUtf8);
 		}
 		/// <summary>
 		/// Splits up a string into manageable components and performs an <paramref name="action"/> on them.
 		/// </summary>
 		/// <param name="str">The string to split up.</param>
 		/// <param name="action">The action to perform on the component.</param>
-		public static void PushLongString(string str, Action<string> action)
+		/// <param name="maxLengthUtf8">The max byte length per chunk in UTF-8.</param>
+		public static void PushLongString(string str, Action<string> action, int maxLengthUtf8 = 99)
 		{
-			const int maxLengthUtf8 = 99;
-
 			if (str == null || Encoding.UTF8.GetByteCount(str) <= maxLengthUtf8)
 			{
 				action(str);
