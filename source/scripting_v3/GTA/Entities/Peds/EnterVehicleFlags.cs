@@ -71,10 +71,10 @@ namespace GTA
 		/// </summary>
 		DontJackAnyone = 8388608,
 		[Obsolete("EnterVehicleFlags.AllowJacking is obsolete, use EnterVehicleFlags.JackAnyone instead.")]
-		AllowJacking = 8,
+		AllowJacking = JackAnyone,
 		[Obsolete("EnterVehicleFlags.EnterFromOppositeSide is obsolete, use EnterVehicleFlags.UseRightEntry instead.")]
-		EnterFromOppositeSide = 262144,
+		EnterFromOppositeSide = UseRightEntry,
 		[Obsolete("EnterVehicleFlags.OnlyOpenDoor is obsolete, use EnterVehicleFlags.JustPullPedOut instead.")]
-		OnlyOpenDoor = 524288,
+		OnlyOpenDoor = JustPullPedOut,
 	}
 }

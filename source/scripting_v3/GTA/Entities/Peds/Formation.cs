@@ -19,12 +19,12 @@ namespace GTA
 		FollowInLine,
 
 		[Obsolete("Formation.Default is obsolete, use Formation.Loose instead.")]
-		Default = 0,
+		Default = Loose,
 		[Obsolete("Formation.Circle1 is obsolete, use Formation.SurroundFacingInwards instead.")]
-		Circle1,
+		Circle1 = SurroundFacingInwards,
 		[Obsolete("Formation.Circle2 is obsolete, use Formation.SurroundFacingAhead instead.")]
-		Circle2,
+		Circle2 = SurroundFacingAhead,
 		[Obsolete("Formation.Line is obsolete, use Formation.FollowInLine instead.")]
-		Line,
+		Line = FollowInLine,
 	}
 }
