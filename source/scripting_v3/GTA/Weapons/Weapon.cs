@@ -47,13 +47,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the number of available color tints for this <see cref="Weapon"/>.
 		/// </summary>
-		public int TintCount
-		{
-			get
-			{
-				return Function.Call<int>(Native.Hash.GET_WEAPON_TINT_COUNT, Hash);
-			}
-		}
+		public int TintCount => Function.Call<int>(Native.Hash.GET_WEAPON_TINT_COUNT, Hash);
 
 		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, Hash);
 
