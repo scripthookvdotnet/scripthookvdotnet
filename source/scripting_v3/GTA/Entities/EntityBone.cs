@@ -138,7 +138,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Vehicle"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
 		/// </remarks>
 		public Matrix RelativeMatrix
 		{
@@ -169,7 +169,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
 		/// </remarks>
 		public Vector3 Pose
 		{
@@ -201,7 +201,7 @@ namespace GTA
 		/// <remarks>
 		/// <para>
 		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
 		/// </para>
 		/// <para>
 		/// Remember to normalize the value you are going to set before setting it to this property as the setter does not normalize the value, just like <c>SET_ENTITY_QUATERNION</c> does not.
@@ -248,7 +248,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
 		/// </remarks>
 		public Vector3 PoseRotation
 		{
@@ -331,7 +331,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Vehicle"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
 		/// </remarks>
 		public Vector3 RelativePosition
 		{
@@ -363,7 +363,7 @@ namespace GTA
 		/// <remarks>
 		/// <para>
 		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Vehicle"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
 		/// </para>
 		/// <para>
 		/// Remember to normalize the value you are going to set before setting it to this property as the setter does not normalize the value, just like <c>SET_ENTITY_QUATERNION</c> does not.
@@ -406,11 +406,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the rotation of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of  from <see cref="RelativeMatrix"/>.
+		/// Gets the rotation of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of from <see cref="RelativeMatrix"/>.
 		/// </summary>
 		/// <remarks>
 		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Vehicle"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
 		/// </remarks>
 		public Vector3 RelativeRotation
 		{
