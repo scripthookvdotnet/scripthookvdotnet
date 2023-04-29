@@ -1419,9 +1419,9 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The center position.</param>
 		/// <param name="radius">The radius for area clearance.</param>
-		/// <param name="flags">The flag for area clearance.</param>
+		/// <param name="flags">The flags for area clearance.</param>
 		public static void ClearAreaOfProps(Vector3 position, float radius, ClearPropsFlags flags)
-			=> Function.Call(Hash.CLEAR_AREA_OF_VEHICLES, position.X, position.Y, position.Z, radius, flags);
+			=> Function.Call(Hash.CLEAR_AREA_OF_OBJECTS, position.X, position.Y, position.Z, radius, flags);
 
 		/// <summary>
 		/// Clears non-mission <see cref="Ped"/>s within the defined sphere.
