@@ -26,7 +26,7 @@ namespace GTA
 		/// Clears props with brain ysc scripts, which can be attached with <c>REGISTER_OBJECT_SCRIPT_BRAIN</c>.
 		/// For example, register props can be cleared if this flag is set.
 		/// </summary>
-		IncludePropsWithBrains = 8,
+		IncludePropsWithScriptBrains = 8,
 		/// <summary>
 		/// Does not clear ladders.
 		/// </summary>
