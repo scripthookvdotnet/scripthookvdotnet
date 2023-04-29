@@ -107,7 +107,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
-		/// you cannot change appearrance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
 		/// </remarks>
 		public Matrix PoseMatrix
 		{
