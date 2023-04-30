@@ -15,6 +15,11 @@ namespace GTA
 	/// </summary>
 	public sealed class Scaleform : IDisposable, INativeValue
 	{
+		internal Scaleform(int handle)
+		{
+			Handle = handle;
+		}
+
 		public Scaleform(string scaleformID)
 		{
 			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);

@@ -343,14 +343,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				if (typeof(T).IsValueType || typeof(T).IsEnum)
-				{
-					return Function.ObjectFromNative<T>((ulong*)storage.ToPointer());
-				}
-				else
-				{
-					return (T)Function.ObjectFromNative(typeof(T), (ulong*)storage.ToPointer());
-				}
+				return Function.ReturnValueFromResultAddress<T>((ulong*)storage.ToPointer());
 			}
 		}
 	}
@@ -1079,7 +1072,15 @@ namespace GTA.Native
 				ThrowInvalidOperationExceptionForInvalidNativeCall();
 			}
 
-			if (typeof(T).IsValueType || typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T) == typeof(InteriorProxy) || typeof(T).IsEnum)
+			return ReturnValueFromResultAddress<T>(result);
+		}
+		// have to create this method to let JIT inline ReturnValueFromNativeIfNotNull
+		static void ThrowInvalidOperationExceptionForInvalidNativeCall() => throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+
+		internal static unsafe T ReturnValueFromResultAddress<T>(ulong* result)
+		{
+			// The Entity class is abstract and can't be instantiated with our InstanceCreator class as expected
+			if (IsKnownClassTypeAssignableFromINativeValueAndNotPoolObject(typeof(T)) || typeof(T).IsValueType || typeof(T).IsEnum || (typeof(T) != typeof(Entity) && typeof(T).IsSubclassOf(typeof(PoolObject))))
 			{
 				return ObjectFromNative<T>(result);
 			}
@@ -1088,8 +1089,12 @@ namespace GTA.Native
 				return (T)ObjectFromNative(typeof(T), result);
 			}
 		}
-		// have to create this method to let JIT inline ReturnValueFromNativeIfNotNull
-		static void ThrowInvalidOperationExceptionForInvalidNativeCall() => throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static bool IsKnownClassTypeAssignableFromINativeValueAndNotPoolObject(Type type)
+		{
+			return type == typeof(Player) || type == typeof(Scaleform) || type == typeof(InteriorProxy);
+		}
 
 		/// <summary>
 		/// Calls the specified native script function and ignores its return value.
@@ -1823,20 +1828,6 @@ namespace GTA.Native
 				return InstanceCreator<long, T>.Create((long)(*value));
 			}
 
-			if (typeof(T).IsEnum)
-			{
-				return NativeHelper<T>.Convert(*value);
-			}
-			if (typeof(T).IsPrimitive)
-			{
-				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
-			}
-
-			if (typeof(PoolObject).IsAssignableFrom(typeof(T)) || typeof(T) == typeof(InteriorProxy))
-			{
-				return InstanceCreator<int, T>.Create((int)*value);
-			}
-
 			if (typeof(T) == typeof(Math.Vector2))
 			{
 				var data = (float*)value;
@@ -1850,6 +1841,20 @@ namespace GTA.Native
 			}
 
 			if (typeof(T) == typeof(Model) || typeof(T) == typeof(WeaponAsset) || typeof(T) == typeof(RelationshipGroup) || typeof(T) == typeof(ShapeTestHandle))
+			{
+				return InstanceCreator<int, T>.Create((int)*value);
+			}
+
+			if (typeof(T).IsPrimitive)
+			{
+				return NativeHelper<T>.PtrToStructure(new IntPtr(value));
+			}
+			if (typeof(T).IsEnum)
+			{
+				return NativeHelper<T>.Convert(*value);
+			}
+
+			if (IsKnownClassTypeAssignableFromINativeValueAndNotPoolObject(typeof(T)) || (typeof(T).IsSubclassOf(typeof(PoolObject)) && !typeof(T).IsAbstract))
 			{
 				return InstanceCreator<int, T>.Create((int)*value);
 			}
@@ -1870,6 +1875,10 @@ namespace GTA.Native
 				return SHVDN.NativeMemory.PtrToStringUTF8(new IntPtr((char*)*value));
 			}
 
+			if (type == typeof(Entity))
+			{
+				return Entity.FromHandle((int)*value);
+			}
 			if (typeof(INativeValue).IsAssignableFrom(type))
 			{
 				// Edge case. Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
@@ -1935,14 +1944,7 @@ namespace GTA.Native
 			}
 			else
 			{
-				if (typeof(T).IsValueType || typeof(T).IsEnum)
-				{
-					return Function.ObjectFromNative<T>((ulong*)(MemoryAddress.ToPointer()));
-				}
-				else
-				{
-					return (T)(Function.ObjectFromNative(typeof(T), (ulong*)(MemoryAddress.ToPointer())));
-				}
+				return Function.ReturnValueFromResultAddress<T>((ulong*)(MemoryAddress.ToPointer()));
 			}
 		}
 
