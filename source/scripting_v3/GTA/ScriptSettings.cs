@@ -13,7 +13,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly string _fileName;
-		Dictionary<string, Dictionary<string, List<string>>> _values = new Dictionary<string, Dictionary<string, List<string>>>();
+		Dictionary<string, Dictionary<string, List<string>>> _values = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
 		#endregion
 
 		ScriptSettings(string fileName)
@@ -96,7 +96,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the file saved successfully; otherwise, <see langword="false" /></returns>
 		public bool Save()
 		{
-			var result = new Dictionary<string, List<Tuple<string, string>>>();
+			var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
 
 			foreach (var sectonAndKeyValuePairs in _values)
 			{
@@ -271,7 +271,7 @@ namespace GTA
 			else
 			{
 				var newValueList = new List<string>(1) { valueString };
-				var newKeyAndValuePairs = new Dictionary<string, List<string>>() { [keyName] = newValueList };
+				var newKeyAndValuePairs = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) { [keyName] = newValueList };
 
 				_values.Add(sectionName, newKeyAndValuePairs);
 			}
