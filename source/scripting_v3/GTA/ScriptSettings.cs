@@ -13,7 +13,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly string _fileName;
-		Dictionary<string, string> _values = new Dictionary<string, string>();
+		Dictionary<string, Dictionary<string, List<string>>> _values = new Dictionary<string, Dictionary<string, List<string>>>();
 		#endregion
 
 		ScriptSettings(string fileName)
@@ -35,7 +35,7 @@ namespace GTA
 			}
 
 			string line = null;
-			string section = String.Empty;
+			string tempSectionName = String.Empty;
 			StreamReader reader = null;
 
 			try
@@ -53,42 +53,32 @@ namespace GTA
 				{
 					line = line.Trim();
 
-					if (line.Length == 0 || line.StartsWith(";") || line.StartsWith("//"))
+					if (line.Length == 0 || line.StartsWith(";", StringComparison.Ordinal) || line.StartsWith("//", StringComparison.Ordinal))
 					{
 						continue;
 					}
 
-					if (line.StartsWith("[") && line.Contains("]"))
+					if (line.StartsWith("[", StringComparison.Ordinal) && line.Contains("]"))
 					{
-						section = line.Substring(1, line.IndexOf(']') - 1).Trim();
+						tempSectionName = line.Substring(1, line.IndexOf("]", StringComparison.Ordinal) - 1).Trim();
 						continue;
 					}
 					else if (line.Contains("="))
 					{
-						int index = line.IndexOf('=');
+						int index = line.IndexOf("=", StringComparison.Ordinal);
 						string key = line.Substring(0, index).Trim();
 						string value = line.Substring(index + 1).Trim();
 
 						if (value.Contains("//"))
 						{
-							value = value.Substring(0, value.IndexOf("//") - 1).TrimEnd();
+							value = value.Substring(0, value.IndexOf("//", StringComparison.Ordinal) - 1).TrimEnd();
 						}
-						if (value.StartsWith("\"") && value.EndsWith("\""))
+						if (value.StartsWith("\"", StringComparison.Ordinal) && value.EndsWith("\"", StringComparison.Ordinal))
 						{
 							value = value.Substring(1, value.Length - 2);
 						}
 
-						string lookup = $"[{section}]{key}//0".ToUpper();
-
-						if (result._values.ContainsKey(lookup))
-						{
-							for (int i = 1; result._values.ContainsKey(lookup = $"[{section}]{key}//{i}".ToUpper()); ++i)
-							{
-								continue;
-							}
-						}
-
-						result._values.Add(lookup, value);
+						result.AddNewValueInternal(tempSectionName, key, value);
 					}
 				}
 			}
@@ -108,25 +98,29 @@ namespace GTA
 		{
 			var result = new Dictionary<string, List<Tuple<string, string>>>();
 
-			foreach (var data in _values)
+			foreach (var sectonAndKeyValuePairs in _values)
 			{
-				string key = data.Key.Substring(data.Key.IndexOf("]") + 1);
-				string section = data.Key.Remove(data.Key.IndexOf("]")).Substring(1);
-
-				// Strip array index
-				key = key.Remove(key.LastIndexOf("//"));
-
-				if (!result.ContainsKey(section))
+				var sectionName = sectonAndKeyValuePairs.Key;
+				foreach (var keyValuePairs in sectonAndKeyValuePairs.Value)
 				{
-					var values = new List<Tuple<string, string>> {
-						new Tuple<string, string>(key, data.Value)
-					};
+					var keyName = keyValuePairs.Key;
+					var valueList = keyValuePairs.Value;
 
-					result.Add(section, values);
-				}
-				else
-				{
-					result[section].Add(new Tuple<string, string>(key, data.Value));
+					foreach (var value in valueList)
+					{
+						if (!result.ContainsKey(sectionName))
+						{
+							var values = new List<Tuple<string, string>> {
+								new Tuple<string, string>(keyName, value)
+							};
+
+							result.Add(sectionName, values);
+						}
+						else
+						{
+							result[sectionName].Add(new Tuple<string, string>(keyName, value));
+						}
+					}
 				}
 			}
 
@@ -176,9 +170,11 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
-			string lookup = $"[{section}]{name}//0".ToUpper();
-
-			if (!_values.TryGetValue(lookup, out string internalValue))
+			if (!_values.TryGetValue(section, out var keyValuePairs))
+			{
+				return defaultvalue;
+			}
+			if (!keyValuePairs.TryGetValue(name, out var valueList))
 			{
 				return defaultvalue;
 			}
@@ -187,11 +183,11 @@ namespace GTA
 			{
 				if (typeof(T).IsEnum)
 				{
-					return (T)Enum.Parse(typeof(T), internalValue, true);
+					return (T)Enum.Parse(typeof(T), valueList[0], true);
 				}
 				else
 				{
-					return (T)Convert.ChangeType(internalValue, typeof(T));
+					return (T)Convert.ChangeType(valueList[0], typeof(T));
 				}
 			}
 			catch (Exception)
@@ -207,15 +203,16 @@ namespace GTA
 		/// <param name="value">The value to set the key to.</param>
 		public void SetValue<T>(string section, string name, T value)
 		{
-			string lookup = $"[{section}]{name}//0".ToUpper();
 			string internalValue = value.ToString();
 
-			if (!_values.ContainsKey(lookup))
+			if (_values.TryGetValue(section, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(name, out var valueList))
 			{
-				_values.Add(lookup, internalValue);
+				// Assume the value list already occupies the index 0
+				valueList[0] = internalValue;
+				return;
 			}
 
-			_values[lookup] = internalValue;
+			AddNewValueInternal(section, name, internalValue);
 		}
 
 		/// <summary>
@@ -225,19 +222,27 @@ namespace GTA
 		/// <param name="name">The name of the key the values are saved at.</param>
 		public T[] GetAllValues<T>(string section, string name)
 		{
-			var values = new List<T>();
+			if (!_values.TryGetValue(section, out var keyValuePairs))
+			{
+				return Array.Empty<T>();
+			}
+			if (!keyValuePairs.TryGetValue(name, out var stringValueList))
+			{
+				return Array.Empty<T>();
+			}
 
-			for (int i = 0; _values.TryGetValue($"[{section}]{name}//{i}".ToUpper(), out string internalValue); ++i)
+			var values = new List<T>();
+			foreach (var stringValue in stringValueList)
 			{
 				try
 				{
 					if (typeof(T).IsEnum)
 					{
-						values.Add((T)Enum.Parse(typeof(T), internalValue, true));
+						values.Add((T)Enum.Parse(typeof(T), stringValue, true));
 					}
 					else
 					{
-						values.Add((T)Convert.ChangeType(internalValue, typeof(T)));
+						values.Add((T)Convert.ChangeType(stringValue, typeof(T)));
 					}
 				}
 				catch
@@ -247,6 +252,29 @@ namespace GTA
 			}
 
 			return values.ToArray();
+		}
+
+		private void AddNewValueInternal(string sectionName, string keyName, string valueString)
+		{
+			if (_values.TryGetValue(sectionName, out var keyAndValuePairs))
+			{
+				if (keyAndValuePairs.TryGetValue(keyName, out var valueList))
+				{
+					valueList.Add(valueString);
+				}
+				else
+				{
+					var newValueList = new List<string>(1) { valueString };
+					keyAndValuePairs.Add(keyName, newValueList);
+				}
+			}
+			else
+			{
+				var newValueList = new List<string>(1) { valueString };
+				var newKeyAndValuePairs = new Dictionary<string, List<string>>() { [keyName] = newValueList };
+
+				_values.Add(sectionName, newKeyAndValuePairs);
+			}
 		}
 	}
 }
