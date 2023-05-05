@@ -21,6 +21,10 @@ namespace GTA
 			_fileName = fileName;
 		}
 
+		/// <summary>
+		/// Loads a <see cref="ScriptSettings"/> from the specified file.
+		/// </summary>
+		/// <param name="filename">The filename to load the settings from.</param>
 		public static ScriptSettings Load(string filename)
 		{
 			var result = new ScriptSettings(filename);
@@ -96,6 +100,10 @@ namespace GTA
 			return result;
 		}
 
+		/// <summary>
+		/// Saves this <see cref="ScriptSettings"/> to file.
+		/// </summary>
+		/// <returns><see langword="true" /> if the file saved successfully; otherwise, <see langword="false" /></returns>
 		public bool Save()
 		{
 			var result = new Dictionary<string, List<Tuple<string, string>>>();
@@ -155,6 +163,13 @@ namespace GTA
 			return true;
 		}
 
+		/// <summary>
+		/// Reads a value from this <see cref="ScriptSettings"/>.
+		/// </summary>
+		/// <param name="section">The section where the value is.</param>
+		/// <param name="name">The name of the key the value is saved at.</param>
+		/// <param name="defaultvalue">The fall-back value if the key doesn't exist or casting to type <typeparamref name="T"/> fails.</param>
+		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
 			string value = GetValue(section, name);
@@ -175,10 +190,25 @@ namespace GTA
 				return defaultvalue;
 			}
 		}
+
+		/// <summary>
+		/// Reads a value from this <see cref="ScriptSettings"/>.
+		/// </summary>
+		/// <param name="section">The section where the value is.</param>
+		/// <param name="key">The name of the key the value is saved at.</param>
+		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
+		/// <remarks>If fails to get the value, this method returns <see cref="string.Empty"/>.</remarks>
 		public string GetValue(string section, string key)
 		{
 			return GetValue(section, key, string.Empty);
 		}
+		/// <summary>
+		/// Reads a value from this <see cref="ScriptSettings"/>.
+		/// </summary>
+		/// <param name="section">The section where the value is.</param>
+		/// <param name="key">The name of the key the value is saved at.</param>
+		/// <param name="defaultvalue">The fall-back value if the key doesn't exist.</param>
+		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public string GetValue(string section, string key, string defaultvalue)
 		{
 			string lookup = $"[{section}]{key}".ToUpper();
@@ -189,6 +219,15 @@ namespace GTA
 				return defaultvalue;
 		}
 
+		/// <summary>
+		/// Reads all the values at a specified key and section from this <see cref="ScriptSettings"/>.
+		/// </summary>
+		/// <param name="section">The section where the value is.</param>
+		/// <param name="key">The name of the key the values are saved at.</param>
+		/// <remarks>
+		/// You can set multiple values at a specified section and key by writing key and value pairs
+		/// at the same section and key in multiple lines.
+		/// </remarks>
 		public string[] GetAllValues(string section, string key)
 		{
 			var values = new List<string>();
@@ -205,10 +244,30 @@ namespace GTA
 			return values.ToArray();
 		}
 
+		/// <summary>
+		/// Sets a value in this <see cref="ScriptSettings"/>.
+		/// </summary>
+		/// <param name="section">The section where the value is.</param>
+		/// <param name="name">The name of the key the value is saved at.</param>
+		/// <param name="value">The value to set the key to.</param>
+		/// <remarks>
+		/// Overwrites the first value at a specified section and name and ignore the other values
+		/// if multiple values are set at a specified section and name.
+		/// </remarks>
 		public void SetValue<T>(string section, string name, T value)
 		{
 			SetValue(section, name, value.ToString());
 		}
+		/// <summary>
+		/// Sets a value in this <see cref="ScriptSettings"/>.
+		/// </summary>
+		/// <param name="section">The section where the value is.</param>
+		/// <param name="key">The name of the key the value is saved at.</param>
+		/// <param name="value">The string value to set the key to.</param>
+		/// <remarks>
+		/// Overwrites the first value at a specified section and name and ignore the other values
+		/// if multiple values are set at a specified section and name.
+		/// </remarks>
 		public void SetValue(string section, string key, string value)
 		{
 			string lookup = $"[{section}]{key}".ToUpper();

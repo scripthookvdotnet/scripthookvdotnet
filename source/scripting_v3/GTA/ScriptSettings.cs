@@ -201,6 +201,10 @@ namespace GTA
 		/// <param name="section">The section where the value is.</param>
 		/// <param name="name">The name of the key the value is saved at.</param>
 		/// <param name="value">The value to set the key to.</param>
+		/// <remarks>
+		/// Overwrites the first value at a specified section and name and ignore the other values
+		/// if multiple values are set at a specified section and name.
+		/// </remarks>
 		public void SetValue<T>(string section, string name, T value)
 		{
 			string internalValue = value.ToString();
@@ -220,6 +224,10 @@ namespace GTA
 		/// </summary>
 		/// <param name="section">The section where the value is.</param>
 		/// <param name="name">The name of the key the values are saved at.</param>
+		/// <remarks>
+		/// You can set multiple values at a specified section and key by writing key and value pairs
+		/// at the same section and key in multiple lines.
+		/// </remarks>
 		public T[] GetAllValues<T>(string section, string name)
 		{
 			if (!_values.TryGetValue(section, out var keyValuePairs))
