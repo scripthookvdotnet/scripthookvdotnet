@@ -181,6 +181,11 @@ namespace GTA
 
 			try
 			{
+				if (typeof(T) == typeof(string))
+				{
+					// Performs more than 10x better than converting type via Convert.ChangeType
+					return (T)(object)valueList[0];
+				}
 				if (typeof(T).IsEnum)
 				{
 					return (T)Enum.Parse(typeof(T), valueList[0], true);
@@ -244,6 +249,10 @@ namespace GTA
 			{
 				try
 				{
+					if (typeof(T) == typeof(string))
+					{
+						values.Add((T)(object)stringValue);
+					}
 					if (typeof(T).IsEnum)
 					{
 						values.Add((T)Enum.Parse(typeof(T), stringValue, true));

@@ -13,7 +13,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly string _fileName;
-		Dictionary<string, string> _values = new Dictionary<string, string>();
+		Dictionary<string, Dictionary<string, List<string>>> _values = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
 		#endregion
 
 		ScriptSettings(string fileName)
@@ -35,7 +35,7 @@ namespace GTA
 			}
 
 			string line = null;
-			string section = String.Empty;
+			string tempSectionName = String.Empty;
 			StreamReader reader = null;
 
 			try
@@ -53,42 +53,32 @@ namespace GTA
 				{
 					line = line.Trim();
 
-					if (line.Length == 0 || line.StartsWith(";") || line.StartsWith("//"))
+					if (line.Length == 0 || line.StartsWith(";", StringComparison.Ordinal) || line.StartsWith("//", StringComparison.Ordinal))
 					{
 						continue;
 					}
 
-					if (line.StartsWith("[") && line.Contains("]"))
+					if (line.StartsWith("[", StringComparison.Ordinal) && line.Contains("]"))
 					{
-						section = line.Substring(1, line.IndexOf(']') - 1).Trim();
+						tempSectionName = line.Substring(1, line.IndexOf("]", StringComparison.Ordinal) - 1).Trim();
 						continue;
 					}
 					else if (line.Contains("="))
 					{
-						int index = line.IndexOf('=');
+						int index = line.IndexOf("=", StringComparison.Ordinal);
 						string key = line.Substring(0, index).Trim();
 						string value = line.Substring(index + 1).Trim();
 
 						if (value.Contains("//"))
 						{
-							value = value.Substring(0, value.IndexOf("//") - 1).TrimEnd();
+							value = value.Substring(0, value.IndexOf("//", StringComparison.Ordinal) - 1).TrimEnd();
 						}
-						if (value.StartsWith("\"") && value.EndsWith("\""))
+						if (value.StartsWith("\"", StringComparison.Ordinal) && value.EndsWith("\"", StringComparison.Ordinal))
 						{
 							value = value.Substring(1, value.Length - 2);
 						}
 
-						string lookup = $"[{section}]{key}".ToUpper();
-
-						if (result._values.ContainsKey(lookup))
-						{
-							for (int i = 1; result._values.ContainsKey(lookup = $"[{section}]{key}//{i}".ToUpper()); ++i)
-							{
-								continue;
-							}
-						}
-
-						result._values.Add(lookup, value);
+						result.AddNewValueInternal(tempSectionName, key, value);
 					}
 				}
 			}
@@ -106,23 +96,31 @@ namespace GTA
 		/// <returns><see langword="true" /> if the file saved successfully; otherwise, <see langword="false" /></returns>
 		public bool Save()
 		{
-			var result = new Dictionary<string, List<Tuple<string, string>>>();
+			var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
 
-			foreach (var data in _values)
+			foreach (var sectonAndKeyValuePairs in _values)
 			{
-				string key = data.Key.Substring(data.Key.IndexOf("]") + 1);
-				string section = data.Key.Remove(data.Key.IndexOf("]")).Substring(1);
-
-				if (!result.ContainsKey(section))
+				var sectionName = sectonAndKeyValuePairs.Key;
+				foreach (var keyValuePairs in sectonAndKeyValuePairs.Value)
 				{
-					var values = new List<Tuple<string, string>>();
-					values.Add(new Tuple<string, string>(key, data.Value));
+					var keyName = keyValuePairs.Key;
+					var valueList = keyValuePairs.Value;
 
-					result.Add(section, values);
-				}
-				else
-				{
-					result[section].Add(new Tuple<string, string>(key, data.Value));
+					foreach (var value in valueList)
+					{
+						if (!result.ContainsKey(sectionName))
+						{
+							var values = new List<Tuple<string, string>> {
+								new Tuple<string, string>(keyName, value)
+							};
+
+							result.Add(sectionName, values);
+						}
+						else
+						{
+							result[sectionName].Add(new Tuple<string, string>(keyName, value));
+						}
+					}
 				}
 			}
 
@@ -172,17 +170,29 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
-			string value = GetValue(section, name);
+			if (!_values.TryGetValue(section, out var keyValuePairs))
+			{
+				return defaultvalue;
+			}
+			if (!keyValuePairs.TryGetValue(name, out var valueList))
+			{
+				return defaultvalue;
+			}
 
 			try
 			{
+				if (typeof(T) == typeof(string))
+				{
+					// Performs more than 10x better than converting type via Convert.ChangeType
+					return (T)(object)valueList[0];
+				}
 				if (typeof(T).IsEnum)
 				{
-					return (T)Enum.Parse(typeof(T), value, true);
+					return (T)Enum.Parse(typeof(T), valueList[0], true);
 				}
 				else
 				{
-					return (T)Convert.ChangeType(value, typeof(T));
+					return (T)Convert.ChangeType(valueList[0], typeof(T));
 				}
 			}
 			catch (Exception)
@@ -211,12 +221,16 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public string GetValue(string section, string key, string defaultvalue)
 		{
-			string lookup = $"[{section}]{key}".ToUpper();
-
-			if (_values.TryGetValue(lookup, out string value))
-				return value;
-			else
+			if (!_values.TryGetValue(section, out var keyValuePairs))
+			{
 				return defaultvalue;
+			}
+			if (!keyValuePairs.TryGetValue(key, out var valueList))
+			{
+				return defaultvalue;
+			}
+
+			return valueList[0];
 		}
 
 		/// <summary>
@@ -230,18 +244,16 @@ namespace GTA
 		/// </remarks>
 		public string[] GetAllValues(string section, string key)
 		{
-			var values = new List<string>();
-			string value = GetValue(section, key, null);
-
-			if (!ReferenceEquals(value, null))
+			if (!_values.TryGetValue(section, out var keyValuePairs))
 			{
-				values.Add(value);
-
-				for (int i = 1; _values.TryGetValue($"[{section}]{key}//{i}".ToUpper(), out value); ++i)
-					values.Add(value);
+				return Array.Empty<string>();
+			}
+			if (!keyValuePairs.TryGetValue(key, out var stringValueList))
+			{
+				return Array.Empty<string>();
 			}
 
-			return values.ToArray();
+			return stringValueList.ToArray();
 		}
 
 		/// <summary>
@@ -270,12 +282,39 @@ namespace GTA
 		/// </remarks>
 		public void SetValue(string section, string key, string value)
 		{
-			string lookup = $"[{section}]{key}".ToUpper();
+			string internalValue = value.ToString();
 
-			if (!_values.ContainsKey(lookup))
-				_values.Add(lookup, value);
+			if (_values.TryGetValue(section, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(key, out var valueList))
+			{
+				// Assume the value list already occupies the index 0
+				valueList[0] = internalValue;
+				return;
+			}
+
+			AddNewValueInternal(section, key, internalValue);
+		}
+
+		private void AddNewValueInternal(string sectionName, string keyName, string valueString)
+		{
+			if (_values.TryGetValue(sectionName, out var keyAndValuePairs))
+			{
+				if (keyAndValuePairs.TryGetValue(keyName, out var valueList))
+				{
+					valueList.Add(valueString);
+				}
+				else
+				{
+					var newValueList = new List<string>(1) { valueString };
+					keyAndValuePairs.Add(keyName, newValueList);
+				}
+			}
 			else
-				_values[lookup] = value;
+			{
+				var newValueList = new List<string>(1) { valueString };
+				var newKeyAndValuePairs = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) { [keyName] = newValueList };
+
+				_values.Add(sectionName, newKeyAndValuePairs);
+			}
 		}
 	}
 }
