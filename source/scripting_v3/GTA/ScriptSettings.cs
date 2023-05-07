@@ -257,8 +257,7 @@ namespace GTA
 		/// otherwise, the default value for the type of the value parameter.
 		/// </param>
 		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contains a value with the specified section and key; otherwise, <see langword="false"/>.</returns>
-		public bool TryGetValue<T>(string sectionName, string keyName, out T value)
-			=> TryGetValue(sectionName, keyName, out value, CultureInfo.InvariantCulture);
+		public bool TryGetValue<T>(string sectionName, string keyName, out T value) => TryGetValue(sectionName, keyName, out value, CultureInfo.InvariantCulture);
 
 		/// <summary>
 		/// Reads a value from this <see cref="ScriptSettings"/> using <paramref name="formatProvider"/>.
@@ -381,8 +380,7 @@ namespace GTA
 		/// such as not recognizing a decimal points as a decimal separator for floating-point numbers.
 		/// </para>
 		/// </remarks>
-		public T[] GetAllValues<T>(string section, string name)
-			=> GetAllValues<T>(section, name, null);
+		public T[] GetAllValues<T>(string section, string name) => GetAllValues<T>(section, name, null);
 
 		/// <summary>
 		/// Reads all the values at a specified key and section from this <see cref="ScriptSettings"/>.
@@ -457,19 +455,17 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value that indicates whether this <see cref="ScriptSettings"/> has the specified section.
+		/// Gets a value that indicates whether this <see cref="ScriptSettings"/> contains the specified section.
 		/// </summary>
-		public bool HasSection(string section)
-			=> _values.ContainsKey(section);
+		public bool ContainsSection(string section) => _values.ContainsKey(section);
 
 		/// <summary>
-		/// Gets a value that indicates whether this <see cref="ScriptSettings"/> has the specified key at the specified section.
+		/// Gets a value that indicates whether this <see cref="ScriptSettings"/> contains the specified key at the specified section.
 		/// </summary>
-		public bool HasKey(string sectionName, string keyName)
-			=> _values.TryGetValue(sectionName, out var keyValuePairs) && keyValuePairs.ContainsKey(keyName);
+		public bool ContainsKey(string sectionName, string keyName) => _values.TryGetValue(sectionName, out var keyValuePairs) && keyValuePairs.ContainsKey(keyName);
 
 		/// <summary>
-		/// Gets all of the section names this <see cref="ScriptSettings"/> has.
+		/// Gets all of the section names this <see cref="ScriptSettings"/> contains.
 		/// </summary>
 		public string[] GetAllSectionNames()
 		{
@@ -480,7 +476,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets all of the key names at the specified section name this <see cref="ScriptSettings"/> has.
+		/// Gets all of the key names at the specified section name this <see cref="ScriptSettings"/> contains.
 		/// </summary>
 		/// <param name="sectionName">The section name.</param>
 		public string[] GetAllKeyNames(string sectionName)
@@ -517,13 +513,11 @@ namespace GTA
 		/// </summary>
 		/// <param name="sectionName">The section name where the value is.</param>
 		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contained the specified section and removed the section; otherwise, <see langword="false"/>.</returns>
-		public bool RemoveSection(string sectionName)
-			=> _values.Remove(sectionName);
+		public bool RemoveSection(string sectionName) => _values.Remove(sectionName);
 
 		/// <summary>
 		/// Removes all sections this <see cref="ScriptSettings"/> has.
 		/// </summary>
-		public void RemoveAllSections()
-			=> _values.Clear();
+		public void RemoveAllSections() => _values.Clear();
 	}
 }
