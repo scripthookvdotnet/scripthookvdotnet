@@ -516,8 +516,8 @@ namespace GTA
 		public bool RemoveSection(string sectionName) => _values.Remove(sectionName);
 
 		/// <summary>
-		/// Removes all sections this <see cref="ScriptSettings"/> has.
+		/// Clears all sections this <see cref="ScriptSettings"/> has.
 		/// </summary>
-		public void RemoveAllSections() => _values.Clear();
+		public void Clear() => _values.Clear();
 	}
 }
