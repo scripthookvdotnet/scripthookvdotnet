@@ -497,12 +497,12 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Deletes all of the keys of the specified section this <see cref="ScriptSettings"/> has the key.
+		/// Removes all of the keys of the specified section this <see cref="ScriptSettings"/> has the key.
 		/// </summary>
 		/// <param name="sectionName">The section name.</param>
 		/// <param name="keyName">The name of the key.</param>
-		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contained the specified key at the specified section and deleted the key; otherwise, <see langword="false"/>.</returns>
-		public bool DeleteKey(string sectionName, string keyName)
+		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contained the specified key at the specified section and removed the key; otherwise, <see langword="false"/>.</returns>
+		public bool RemoveKey(string sectionName, string keyName)
 		{
 			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
 			{
@@ -513,17 +513,17 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Deletes the specified section if this <see cref="ScriptSettings"/> has the section.
+		/// Removes the specified section if this <see cref="ScriptSettings"/> has the section.
 		/// </summary>
 		/// <param name="sectionName">The section name where the value is.</param>
-		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contained the specified section and deleted the section; otherwise, <see langword="false"/>.</returns>
-		public bool DeleteSection(string sectionName)
+		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contained the specified section and removed the section; otherwise, <see langword="false"/>.</returns>
+		public bool RemoveSection(string sectionName)
 			=> _values.Remove(sectionName);
 
 		/// <summary>
-		/// Deletes all sections this <see cref="ScriptSettings"/> has.
+		/// Removes all sections this <see cref="ScriptSettings"/> has.
 		/// </summary>
-		public void DeleteAllSections()
+		public void RemoveAllSections()
 			=> _values.Clear();
 	}
 }
