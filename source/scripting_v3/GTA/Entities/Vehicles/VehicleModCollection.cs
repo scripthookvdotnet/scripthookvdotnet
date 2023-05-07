@@ -128,7 +128,7 @@ namespace GTA
 					}
 					return res.ToArray();
 				}
-				return new VehicleWheelType[0];
+				return Array.Empty<VehicleWheelType>();
 			}
 		}
 

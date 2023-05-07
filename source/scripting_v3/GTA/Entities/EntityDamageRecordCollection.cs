@@ -49,7 +49,7 @@ namespace GTA
 			var address = _owner.MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
-				return new EntityDamageRecord[0];
+				return Array.Empty<EntityDamageRecord>();
 			}
 
 			var damageEntries = SHVDN.NativeMemory.GetEntityDamageRecordEntries(address);

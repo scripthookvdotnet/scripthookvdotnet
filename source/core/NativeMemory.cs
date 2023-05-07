@@ -3525,7 +3525,7 @@ namespace SHVDN
 		{
 			if (RadarBlipPoolAddress == null)
 			{
-				return new int[0];
+				return Array.Empty<int>();
 			}
 
 			int possibleBlipCount = *PossibleRadarBlipCountAddress;
