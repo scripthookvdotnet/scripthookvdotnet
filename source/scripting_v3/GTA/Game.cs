@@ -6,6 +6,7 @@
 using GTA.Native;
 using System;
 using System.Globalization;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GTA
@@ -635,10 +636,11 @@ namespace GTA
 		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ? ? 44 8B C6 8B D5 8B D8" for example, where ?? and ? are wildcards).</remarks>
 		public static IntPtr FindPattern(string pattern, IntPtr startAddress = default)
 		{
-			string newPattern = string.Empty;
-			string newMask = string.Empty;
+			var rawHexStringsSplitted = pattern.Split(' ');
+			var newPatternBuilder = new StringBuilder(rawHexStringsSplitted.Length);
+			var newMaskBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 
-			foreach (string rawHex in pattern.Split(' '))
+			foreach (string rawHex in rawHexStringsSplitted)
 			{
 				if (string.IsNullOrEmpty(rawHex))
 				{
@@ -647,17 +649,17 @@ namespace GTA
 
 				if (rawHex == "??" || rawHex == "?")
 				{
-					newPattern += "\x00";
-					newMask += "?";
+					newPatternBuilder.Append("\x00");
+					newMaskBuilder.Append("?");
 					continue;
 				}
 
 				char character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
-				newPattern += character;
-				newMask += "x";
+				newPatternBuilder.Append(character);
+				newMaskBuilder.Append("x");
 			}
 
-			return FindPattern(newPattern, newMask, startAddress);
+			return FindPattern(newPatternBuilder.ToString(), newMaskBuilder.ToString(), startAddress);
 		}
 		/// <summary>
 		/// Searches the address space of the current process for a memory pattern.
