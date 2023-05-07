@@ -888,6 +888,9 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the current turbo value of this <see cref="Vehicle"/>.
 		/// </summary>
+		/// <remarks>
+		/// Affects the engine performance only when <see cref="VehicleToggleModType.Turbo"/> is installed.
+		/// </remarks>
 		public float Turbo
 		{
 			get => SHVDN.NativeMemory.GetVehicleTurbo(Handle);
@@ -1773,6 +1776,14 @@ namespace GTA
 
 		public int PassengerCapacity => Function.Call<int>(Hash.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
 
+		/// <summary>
+		/// Creates a <see cref="Ped"/> on the specified seat.
+		/// </summary>
+		/// <param name="seat">The seat the new <see cref="Ped"/> will be spawned.</param>
+		/// <param name="model">The model for the new <see cref="Ped"/>.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException">Another <see cref="Ped"/> already occupies <paramref name="seat"/> of the <see cref="Vehicle"/>.</exception>
+		/// <remarks>Returns <see langword="null"/> if <paramref name="model"/> is not for a <see cref="Ped"/> or it cannot be loaded within one second.</remarks>
 		public Ped CreatePedOnSeat(VehicleSeat seat, Model model)
 		{
 			if (!IsSeatFree(seat))
@@ -1788,6 +1799,12 @@ namespace GTA
 			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, seat, 1, 1));
 		}
 
+		/// <summary>
+		/// Creates a random <see cref="Ped"/> on the specified seat.
+		/// </summary>
+		/// <param name="seat">The seat the new <see cref="Ped"/> will be spawned.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException">Another <see cref="Ped"/> already occupies <paramref name="seat"/> of the <see cref="Vehicle"/>.</exception>
 		public Ped CreateRandomPedOnSeat(VehicleSeat seat)
 		{
 			if (!IsSeatFree(seat))
@@ -2014,6 +2031,7 @@ namespace GTA
 
 		/// <summary>
 		/// Checks if this <see cref="Vehicle"/> is being brought to a halt.
+		/// Currently supports only in v1.0.1493.0.
 		/// </summary>
 		public bool IsBeingBroughtToHalt => Game.Version >= GameVersion.v1_0_1493_0_Steam && Function.Call<bool>(Hash.IS_VEHICLE_BEING_BROUGHT_TO_HALT, Handle);
 
@@ -2033,6 +2051,7 @@ namespace GTA
 
 		/// <summary>
 		/// Stops bringing this <see cref="Vehicle"/> to a halt.
+		/// Currently supports only in v1.0.1103.2.
 		/// </summary>
 		public void StopBringingToHalt()
 		{

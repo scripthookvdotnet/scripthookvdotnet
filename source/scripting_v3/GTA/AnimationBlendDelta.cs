@@ -12,6 +12,10 @@ namespace GTA
 	/// Represents an animation blend delta that determines the rate at which the animation task will blend in or out.
 	/// The blend duration in seconds is equal to <c>1.0f / (the blend delta value)</c>.
 	/// </summary>
+	/// <remarks>
+	/// To prevent animation blending not getting finished forever, this struct throws an <see cref="ArgumentException"/>
+	/// if the passed value is not more than zero when the constructor is called.
+	/// </remarks>
 	public readonly struct AnimationBlendDelta : IEquatable<AnimationBlendDelta>
 	{
 		public AnimationBlendDelta(float value)
@@ -25,6 +29,9 @@ namespace GTA
 			Value = value;
 		}
 
+		/// <summary>
+		/// Returns the raw value.
+		/// </summary>
 		public float Value { get; }
 
 		/// <summary>

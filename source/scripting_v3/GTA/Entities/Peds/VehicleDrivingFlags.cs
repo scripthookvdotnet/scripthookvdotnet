@@ -7,6 +7,9 @@ using System;
 
 namespace GTA
 {
+	/// <summary>
+	/// A set of flags to define how <see cref="Ped"/>s should drive vehicles.
+	/// </summary>
 	[Flags]
 	public enum VehicleDrivingFlags : uint
 	{
