@@ -65,7 +65,7 @@ namespace SHVDN
 				{
 					lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
 					shouldBlockControls = true;
-				}				
+				}
 			}
 		}
 
@@ -381,10 +381,13 @@ namespace SHVDN
 			switch (e.KeyCode)
 			{
 				case Keys.Back:
-					RemoveCharLeft();
+					if (e.Alt)
+						BackwardKillWord();
+					else
+						BackwardDeleteChar();
 					break;
 				case Keys.Delete:
-					RemoveCharRight();
+					ForwardDeleteChar();
 					break;
 				case Keys.Left:
 					if (e.Control)
@@ -397,6 +400,10 @@ namespace SHVDN
 						ForwardWord();
 					else
 						MoveCursorRight();
+					break;
+				case Keys.Insert:
+					if (e.Shift)
+						AddClipboardContent();
 					break;
 				case Keys.Home:
 					MoveCursorToBegOfLine();
@@ -425,8 +432,10 @@ namespace SHVDN
 						goto default;
 					break;
 				case Keys.D:
-					if (e.Control)
-						RemoveCharRight();
+					if (e.Alt)
+						KillWord();
+					else if (e.Control)
+						ForwardDeleteChar();
 					else
 						goto default;
 					break;
@@ -440,7 +449,7 @@ namespace SHVDN
 					break;
 				case Keys.H:
 					if (e.Control)
-						RemoveCharLeft();
+						BackwardDeleteChar();
 					else
 						goto default;
 					break;
@@ -464,7 +473,13 @@ namespace SHVDN
 					break;
 				case Keys.K:
 					if (e.Control)
-						KillAllCharsRight();
+						BackwardKillLine();
+					else
+						goto default;
+					break;
+				case Keys.M:
+					if (e.Control)
+						CompileExpression();
 					else
 						goto default;
 					break;
@@ -481,20 +496,28 @@ namespace SHVDN
 						goto default;
 					break;
 				case Keys.T:
-					if (e.Control)
+					if (e.Alt)
+						TransposeTwoWords();
+					else if (e.Control)
 						TransposeTwoChars();
 					else
 						goto default;
 					break;
 				case Keys.U:
 					if (e.Control)
-						KillAllCharsLeft();
+						KillLine();
 					else
 						goto default;
 					break;
 				case Keys.V:
 					if (e.Control)
 						AddClipboardContent();
+					else
+						goto default;
+					break;
+				case Keys.W:
+					if (e.Control)
+						UnixWordRubout();
 					else
 						goto default;
 					break;
@@ -542,19 +565,77 @@ namespace SHVDN
 			cursorPos = input.Length;
 		}
 
+		/// <summary>
+		/// Moves to the end of the next word, just like emacs and GNU readline (does not move to the beginning of the next word like zsh does for forward-word).
+		/// Words are composed of letters and digits.
+		/// </summary>
 		void ForwardWord()
 		{
-			var regex = new Regex(@"[^\W_]+");
-			Match match = regex.Match(input, cursorPos);
-			cursorPos = match.Success ? match.Index + match.Length : input.Length;
+			if (cursorPos >= input.Length)
+			{
+				return;
+			}
+
+			// Note: Char.IsLetterOrDigit returns true for most characters where iswalnum returns true in Windows (exactly same result in the ASCII range), but does not apply for all of them
+			// bash (GNU readline) and zsh use iswalnum (zsh uses iswalnum only if tested char is a non-ASCII one) to detect if characters can be used as words for your information
+			if (!char.IsLetterOrDigit(input[cursorPos]))
+			{
+				cursorPos++;
+				for (; cursorPos < input.Length; cursorPos++)
+				{
+					if (char.IsLetterOrDigit(input[cursorPos]))
+					{
+						break;
+					}
+				}
+			}
+
+			for (; cursorPos < input.Length; cursorPos++)
+			{
+				if (!char.IsLetterOrDigit(input[cursorPos]))
+				{
+					break;
+				}
+			}
 		}
+		/// <summary>
+		/// Moves back to the start of the current or previous word.
+		/// Words are composed of letters and digits.
+		/// </summary>
 		void BackwardWord()
 		{
-			var regex = new Regex(@"[^\W_]+");
-			MatchCollection matches = regex.Matches(input);
-			cursorPos = matches.Cast<Match>().Where(x => x.Index < cursorPos).Select(x => x.Index).LastOrDefault();
+			if (cursorPos == 0)
+			{
+				return;
+			}
+
+			char prevChar = input[cursorPos - 1];
+			if (!char.IsLetterOrDigit(prevChar))
+			{
+				cursorPos--;
+				for (; cursorPos > 0; cursorPos--)
+				{
+					prevChar = input[cursorPos - 1];
+					if (char.IsLetterOrDigit(prevChar))
+					{
+						break;
+					}
+				}
+			}
+
+			for (; cursorPos > 0; cursorPos--)
+			{
+				prevChar = input[cursorPos - 1];
+				if (!char.IsLetterOrDigit(prevChar))
+				{
+					break;
+				}
+			}
 		}
-		void RemoveCharLeft()
+		/// <summary>
+		/// Deletes the character behind the cursor.
+		/// </summary>
+		void BackwardDeleteChar()
 		{
 			if (input.Length > 0 && cursorPos > 0)
 			{
@@ -562,31 +643,101 @@ namespace SHVDN
 				cursorPos--;
 			}
 		}
-		void RemoveCharRight()
+		/// <summary>
+		/// Deletes the character at point.
+		/// </summary>
+		void DeleteChar()
 		{
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
 				input = input.Remove(cursorPos, 1);
 			}
 		}
-		void KillAllCharsLeft()
+
+		/// <summary>
+		/// Kills the text from the cursor to the end of the line.
+		/// </summary>
+		void KillLine()
 		{
 			if (input.Length > 0 && cursorPos > 0)
 			{
-				Clipboard.SetText(input.Substring(0, cursorPos));
-				input = input.Remove(0, cursorPos);
+				KillText(ref input, 0, cursorPos);
 				cursorPos = 0;
 			}
 		}
-		void KillAllCharsRight()
+		/// <summary>
+		/// Kills backward from the cursor to the beginning of the current line.
+		/// </summary>
+		void BackwardKillLine()
 		{
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
-				Clipboard.SetText(input.Substring(cursorPos, input.Length - cursorPos));
-				input = input.Remove(cursorPos, input.Length - cursorPos);
+				KillText(ref input, cursorPos, input.Length - cursorPos);
 			}
 		}
+		/// <summary>
+		/// Kills from point to the end of the current word, or if between words, to the end of the next word.
+		/// Word boundaries are the same as <see cref="ForwardWord"/>.
+		/// </summary>
+		void KillWord()
+		{
+			var origCursorPos = cursorPos;
+			ForwardWord();
 
+			if (cursorPos != origCursorPos)
+			{
+				KillText(ref input, origCursorPos, cursorPos - origCursorPos);
+				cursorPos = origCursorPos;
+			}
+		}
+		/// <summary>
+		/// Kill the word behind the cursor.
+		/// Word boundaries are the same as <see cref="BackwardWord"/>.
+		/// </summary>
+		void BackwardKillWord()
+		{
+			var origCursorPos = cursorPos;
+			BackwardWord();
+
+			if (cursorPos != origCursorPos)
+			{
+				KillText(ref input, cursorPos, origCursorPos - cursorPos);
+			}
+		}
+		/// <summary>
+		/// Kills the word behind the cursor, using white space as a word boundary.
+		/// </summary>
+		void UnixWordRubout()
+		{
+			if (cursorPos == 0)
+			{
+				return;
+			}
+
+			var origCursorPos = cursorPos;
+
+			while (cursorPos > 0 && IsRegularWhiteSpaceOrTab(input[cursorPos - 1]))
+			{
+				cursorPos--;
+			}
+
+
+			while (cursorPos > 0 && !IsRegularWhiteSpaceOrTab(input[cursorPos - 1]))
+			{
+				cursorPos--;
+			}
+
+
+			KillText(ref input, cursorPos, origCursorPos - cursorPos);
+
+			// yields exactly the same result as a internal "whitespace" function in bash
+			static bool IsRegularWhiteSpaceOrTab(char ch) => ch == ' ' || ch == '\t';
+		}
+
+		/// <summary>
+		/// Drags the character before the cursor forward over the character at the cursor, moving the cursor forward as well.
+		/// If the insertion point is at the end of the line, then this transposes the last two characters of the line.
+		/// </summary>
 		void TransposeTwoChars()
 		{
 			var inputLength = input.Length;
@@ -622,6 +773,55 @@ namespace SHVDN
 					}
 				}
 			}
+		}
+		/// <summary>
+		/// Drags the word before point past the word after point, moving point past that word as well.
+		/// If the insertion point is at the end of the line, this transposes the last two words on the line.
+		/// </summary>
+		void TransposeTwoWords()
+		{
+			if (input.Length < 3)
+			{
+				return;
+			}
+
+			var origCursorPos = cursorPos;
+
+			ForwardWord();
+			var word2End = cursorPos;
+			BackwardWord();
+			var word2Beg = cursorPos;
+			BackwardWord();
+			var word1Beg = cursorPos;
+			ForwardWord();
+			var word1End = cursorPos;
+
+			if ((word1Beg == word2Beg) || (word2Beg < word1End))
+			{
+				cursorPos = origCursorPos;
+				return;
+			}
+
+			var word1 = input.Substring(word1Beg, word1End - word1Beg);
+			var word2 = input.Substring(word2Beg, word2End - word2Beg);
+
+			var stringBuilder = new StringBuilder(input.Length + Math.Max((word1.Length - word2.Length), 0)); // Prevent reallocation of internal array
+			stringBuilder.Append(input);
+
+			stringBuilder.Remove(word2Beg, word2.Length);
+			stringBuilder.Insert(word2Beg, word1);
+
+			stringBuilder.Remove(word1Beg, word1.Length);
+			stringBuilder.Insert(word1Beg, word2);
+
+			input = stringBuilder.ToString();
+			cursorPos = word2End;
+		}
+
+		void KillText(ref string str, int startIndex, int length)
+		{
+			Clipboard.SetText(str.Substring(startIndex, length));
+			str = str.Remove(startIndex, length);
 		}
 
 		void MoveCursorLeft()
