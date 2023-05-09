@@ -464,7 +464,7 @@ namespace SHVDN
 					break;
 				case Keys.K:
 					if (e.Control)
-						RemoveAllCharsRight();
+						KillAllCharsRight();
 					else
 						goto default;
 					break;
@@ -488,7 +488,7 @@ namespace SHVDN
 					break;
 				case Keys.U:
 					if (e.Control)
-						RemoveAllCharsLeft();
+						KillAllCharsLeft();
 					else
 						goto default;
 					break;
@@ -569,18 +569,20 @@ namespace SHVDN
 				input = input.Remove(cursorPos, 1);
 			}
 		}
-		void RemoveAllCharsLeft()
+		void KillAllCharsLeft()
 		{
 			if (input.Length > 0 && cursorPos > 0)
 			{
+				Clipboard.SetText(input.Substring(0, cursorPos));
 				input = input.Remove(0, cursorPos);
 				cursorPos = 0;
 			}
 		}
-		void RemoveAllCharsRight()
+		void KillAllCharsRight()
 		{
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
+				Clipboard.SetText(input.Substring(cursorPos, input.Length - cursorPos));
 				input = input.Remove(cursorPos, input.Length - cursorPos);
 			}
 		}
