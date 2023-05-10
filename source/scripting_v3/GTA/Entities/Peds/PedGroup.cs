@@ -89,7 +89,7 @@ namespace GTA
 
 		public Formation Formation
 		{
-			set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, value);
+			set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, (int)value);
 		}
 
 		public void Add(Ped ped, bool leader)

@@ -57,7 +57,7 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartTestBoundingBox(Entity entity, IntersectFlags intersectFlags = IntersectFlags.BoundingBox, ShapeTestOptions options = ShapeTestOptions.IgnoreNoCollision)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_BOUNDING_BOX, entity.Handle, intersectFlags, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_BOUNDING_BOX, entity.Handle, (int)intersectFlags, (int)options));
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace GTA
 		/// <param name="sourcePosition">The source position.</param>
 		/// <param name="dimension">The dimensions how much the shape test will search from the source position.</param>
 		/// <param name="rotationAngles">The rotations in degree how much the dimension will be rotated before the shape test starts.</param>
-		/// <param name="rotationOrder">The rotation order in local space the dimentions will be rotated in.</param>
+		/// <param name="rotationOrder">The rotation order in local space the dimensions will be rotated in.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
 		/// <param name="options">Specify options for the shape test.</param>
@@ -86,12 +86,12 @@ namespace GTA
 				rotationAngles.X,
 				rotationAngles.Y,
 				rotationAngles.Z,
-				rotationOrder,
-				intersectFlags,
+				(int)rotationOrder,
+				(int)intersectFlags,
 				excludeEntity == null
 					? 0
 					: excludeEntity.Handle,
-				options));
+				(int)options));
 		}
 
 		/// <summary>
@@ -106,7 +106,7 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartTestBound(Entity entity, IntersectFlags intersectFlags = IntersectFlags.Map, ShapeTestOptions options = ShapeTestOptions.IgnoreNoCollision)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_BOUND, entity.Handle, intersectFlags, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_BOUND, entity.Handle, (int)intersectFlags, (int)options));
 		}
 
 		/// <summary>
@@ -124,7 +124,19 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartTestCapsule(Vector3 startPosition, Vector3 endPosition, float radius, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.IgnoreNoCollision)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, startPosition.X, startPosition.Y, startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, radius, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE,
+				startPosition.X,
+				startPosition.Y,
+				startPosition.Z,
+				endPosition.X,
+				endPosition.Y,
+				endPosition.Z,
+				radius,
+				(int)intersectFlags,
+				excludeEntity == null
+					? 0
+					: excludeEntity.Handle,
+				(int)options));
 		}
 
 		/// <summary>
@@ -142,7 +154,19 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartTestSweptSphere(Vector3 startPosition, Vector3 endPosition, float radius, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.IgnoreNoCollision)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_SWEPT_SPHERE, startPosition.X, startPosition.Y, startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, radius, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_SWEPT_SPHERE,
+				startPosition.X,
+				startPosition.Y,
+				startPosition.Z,
+				endPosition.X,
+				endPosition.Y,
+				endPosition.Z,
+				radius,
+				(int)intersectFlags,
+				excludeEntity == null
+					? 0
+					: excludeEntity.Handle,
+				(int)options));
 		}
 
 		/// <summary>
@@ -166,7 +190,14 @@ namespace GTA
 
 			unsafe
 			{
-				handle = new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_MOUSE_CURSOR_LOS_PROBE, &outProbeStartPositionNative, &outProbeEndPositionNative, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
+				handle = new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_MOUSE_CURSOR_LOS_PROBE,
+					&outProbeStartPositionNative,
+					&outProbeEndPositionNative,
+					(int)intersectFlags,
+					excludeEntity == null
+						? 0
+						: excludeEntity.Handle,
+					(int)options));
 			}
 
 			probeStartPosition = outProbeStartPositionNative;

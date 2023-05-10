@@ -24,7 +24,7 @@ namespace GTA
 			Tag = (Bone)boneId;
 		}
 		internal PedBone(Ped owner, Bone boneId)
-			: base(owner, Function.Call<int>(Hash.GET_PED_BONE_INDEX, owner.Handle, boneId), (int)boneId)
+			: base(owner, Function.Call<int>(Hash.GET_PED_BONE_INDEX, owner.Handle, (int)boneId), (int)boneId)
 		{
 			Owner = owner;
 			// Call the base Tag getter to set the tested value (will set the PedBone.Tag to -1 if the base Index property returns -1)

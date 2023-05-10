@@ -269,7 +269,7 @@ namespace GTA.UI
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
 
-				Function.Call(Hash.SET_TEXT_FONT, Font);
+				Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
 				return Screen.Width * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -289,7 +289,7 @@ namespace GTA.UI
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
 
-				Function.Call(Hash.SET_TEXT_FONT, Font);
+				Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
 				return Screen.ScaledWidth * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -309,7 +309,7 @@ namespace GTA.UI
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(text);
-			Function.Call(Hash.SET_TEXT_FONT, font);
+			Function.Call(Hash.SET_TEXT_FONT, (int)font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
 			return Screen.Width * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -327,7 +327,7 @@ namespace GTA.UI
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(text);
-			Function.Call(Hash.SET_TEXT_FONT, font);
+			Function.Call(Hash.SET_TEXT_FONT, (int)font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
 			return Screen.ScaledWidth * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -424,10 +424,10 @@ namespace GTA.UI
 				Function.Call(Hash.SET_TEXT_OUTLINE);
 			}
 
-			Function.Call(Hash.SET_TEXT_FONT, Font);
+			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-			Function.Call(Hash.SET_TEXT_JUSTIFICATION, Alignment);
+			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
 
 			if (WrapWidth > 0.0f)
 			{

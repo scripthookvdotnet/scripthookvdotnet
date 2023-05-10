@@ -822,7 +822,7 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			return String.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(), Y.ToString(), Z.ToString(), W.ToString());
+			return $"X:{X.ToString()} Y:{Y.ToString()} Z:{Z.ToString()} W:{W.ToString()}";
 		}
 
 		/// <summary>
@@ -832,7 +832,8 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public string ToString(string format)
 		{
-			return String.Format(CultureInfo.InvariantCulture, "X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format), Y.ToString(format), Z.ToString(format), W.ToString(format));
+			var invariantCulture = CultureInfo.InvariantCulture;
+			return $"X:{X.ToString(format, invariantCulture)} Y:{Y.ToString(format, invariantCulture)} Z:{Z.ToString(format, invariantCulture)} W:{W.ToString(format, invariantCulture)}";
 		}
 
 		/// <summary>

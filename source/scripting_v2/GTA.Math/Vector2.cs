@@ -451,7 +451,7 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1}", X, Y);
+			return $"X:{X.ToString()} Y:{Y.ToString()}";
 		}
 
 		/// <summary>
@@ -462,9 +462,11 @@ namespace GTA.Math
 		public string ToString(string format)
 		{
 			if (format == null)
+			{
 				return ToString();
+			}
 
-			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1}", X.ToString(format, CultureInfo.CurrentCulture), Y.ToString(format, CultureInfo.CurrentCulture));
+			return $"X:{X.ToString(format)} Y:{Y.ToString(format)}";
 		}
 
 		/// <summary>

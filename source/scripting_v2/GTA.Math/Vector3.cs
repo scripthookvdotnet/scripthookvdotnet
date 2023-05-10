@@ -618,7 +618,7 @@ namespace GTA.Math
 		/// Converts the value of the object to its equivalent string representation.
 		/// </summary>
 		/// <returns>The string representation of the value of this instance.</returns>
-		public override string ToString() => string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2}", X, Y, Z);
+		public override string ToString() => $"X:{X.ToString()} Y:{Y.ToString()} Z:{Z.ToString()}";
 
 		/// <summary>
 		/// Returns the hash code for this instance.

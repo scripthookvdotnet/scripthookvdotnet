@@ -68,7 +68,7 @@ namespace GTA
 
 		public bool Contains(VehicleModType type)
 		{
-			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, _owner.Handle, type) > 0;
+			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, _owner.Handle, (int)type) > 0;
 		}
 
 		public VehicleMod[] ToArray()
@@ -79,7 +79,7 @@ namespace GTA
 		public VehicleWheelType WheelType
 		{
 			get => Function.Call<VehicleWheelType>(Hash.GET_VEHICLE_WHEEL_TYPE, _owner.Handle);
-			set => Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, _owner.Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, _owner.Handle, (int)value);
 		}
 
 		public VehicleWheelType[] AllowedWheelTypes
@@ -233,7 +233,7 @@ namespace GTA
 		public VehicleWindowTint WindowTint
 		{
 			get => Function.Call<VehicleWindowTint>(Hash.GET_VEHICLE_WINDOW_TINT, _owner.Handle);
-			set => Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, _owner.Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, _owner.Handle, (int)value);
 		}
 
 		public VehicleColor PrimaryColor
@@ -248,7 +248,7 @@ namespace GTA
 
 				return (VehicleColor)color1;
 			}
-			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, value, SecondaryColor);
+			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)value, (int)SecondaryColor);
 		}
 		public VehicleColor SecondaryColor
 		{
@@ -262,7 +262,7 @@ namespace GTA
 
 				return (VehicleColor)color2;
 			}
-			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, PrimaryColor, value);
+			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)PrimaryColor, value);
 		}
 
 		public VehicleColor RimColor
@@ -277,7 +277,7 @@ namespace GTA
 
 				return (VehicleColor)color2;
 			}
-			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, PearlescentColor, value);
+			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, (int)PearlescentColor, (int)value);
 		}
 		public VehicleColor PearlescentColor
 		{
@@ -291,7 +291,7 @@ namespace GTA
 
 				return (VehicleColor)color1;
 			}
-			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, value, RimColor);
+			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, value, (int)RimColor);
 		}
 		public VehicleColor TrimColor
 		{
@@ -344,7 +344,7 @@ namespace GTA
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(DashboardColor));
 				}
 
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, value);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, (int)value);
 			}
 		}
 
@@ -406,11 +406,11 @@ namespace GTA
 
 		public bool IsNeonLightsOn(VehicleNeonLight light)
 		{
-			return Function.Call<bool>(Hash.GET_VEHICLE_NEON_ENABLED, _owner.Handle, light);
+			return Function.Call<bool>(Hash.GET_VEHICLE_NEON_ENABLED, _owner.Handle, (int)light);
 		}
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
-			Function.Call(Hash.SET_VEHICLE_NEON_ENABLED, _owner.Handle, light, on);
+			Function.Call(Hash.SET_VEHICLE_NEON_ENABLED, _owner.Handle, (int)light, on);
 		}
 
 		public Color CustomPrimaryColor
@@ -466,7 +466,7 @@ namespace GTA
 		public LicensePlateStyle LicensePlateStyle
 		{
 			get => Function.Call<LicensePlateStyle>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, _owner.Handle);
-			set => Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, _owner.Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, _owner.Handle, (int)value);
 		}
 	}
 }

@@ -31,7 +31,7 @@ namespace GTA
 					return false;
 				}
 
-				return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, _weapon.Hash, ComponentHash);
+				return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner.Handle, (uint)_weapon.Hash, (uint)ComponentHash);
 			}
 			set
 			{
@@ -40,7 +40,7 @@ namespace GTA
 					return;
 				}
 
-				Function.Call(value ? Hash.GIVE_WEAPON_COMPONENT_TO_PED : Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, _weapon.Hash, ComponentHash);
+				Function.Call(value ? Hash.GIVE_WEAPON_COMPONENT_TO_PED : Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner.Handle, (uint)_weapon.Hash, (uint)ComponentHash);
 			}
 		}
 

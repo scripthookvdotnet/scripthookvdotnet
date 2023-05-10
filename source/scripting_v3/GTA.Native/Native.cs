@@ -217,6 +217,7 @@ namespace GTA.Native
 		}
 		public static implicit operator InputArgument(Enum value)
 		{
+			// Note: The value will be boxed if the original value is a concrete enum
 			var enumDataType = Enum.GetUnderlyingType(value.GetType());
 			ulong ulongValue = 0;
 

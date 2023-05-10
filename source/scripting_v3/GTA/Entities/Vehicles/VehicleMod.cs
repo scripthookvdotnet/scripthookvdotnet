@@ -85,23 +85,23 @@ namespace GTA
 			get;
 		}
 
-		public int Count => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Vehicle.Handle, Type);
+		public int Count => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Vehicle.Handle, (int)Type);
 
 		public int Index
 		{
-			get => Function.Call<int>(Hash.GET_VEHICLE_MOD, Vehicle.Handle, Type);
-			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, Type, value, Variation);
+			get => Function.Call<int>(Hash.GET_VEHICLE_MOD, Vehicle.Handle, (int)Type);
+			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, (int)Type, value, Variation);
 		}
 
 		public void Remove()
 		{
-			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, Type);
+			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, (int)Type);
 		}
 
 		public bool Variation
 		{
-			get => Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, Vehicle.Handle, Type);
-			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, Type, Index, value);
+			get => Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, Vehicle.Handle, (int)Type);
+			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, (int)Type, Index, value);
 		}
 
 		public string LocalizedName
@@ -150,11 +150,11 @@ namespace GTA
 					if (index >= count / 2)
 					{
 						return Game.GetLocalizedString("CHROME") + " " +
-							   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index));
+							   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
 					}
 					else
 					{
-						return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index));
+						return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
 					}
 				}
 
@@ -178,7 +178,7 @@ namespace GTA
 				}
 				if (index > -1)
 				{
-					cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index);
+					cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index);
 					if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 					{
 						cur = Game.GetLocalizedString(cur);
@@ -416,7 +416,7 @@ namespace GTA
 						break;
 
 					default:
-						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, Type);
+						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, (int)Type);
 						if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 						{
 							cur = Game.GetLocalizedString(cur);

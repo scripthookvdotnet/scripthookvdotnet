@@ -36,19 +36,19 @@ namespace GTA
 			get;
 		}
 
-		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, AnchorPosition) + 1;
+		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, _ped.Handle, (int)AnchorPosition) + 1;
 
 		public int Index
 		{
-			get => Function.Call<int>(Hash.GET_PED_PROP_INDEX, _ped.Handle, AnchorPosition) + 1;
+			get => Function.Call<int>(Hash.GET_PED_PROP_INDEX, _ped.Handle, (int)AnchorPosition) + 1;
 			set => SetVariation(value);
 		}
 
-		public int TextureCount => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, _ped.Handle, AnchorPosition, Index - 1);
+		public int TextureCount => Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, _ped.Handle, (int)AnchorPosition, Index - 1);
 
 		public int TextureIndex
 		{
-			get => Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, AnchorPosition);
+			get => Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, (int)AnchorPosition);
 			set
 			{
 				if (Index > 0)
@@ -62,7 +62,7 @@ namespace GTA
 		{
 			if (index == 0)
 			{
-				Function.Call(Hash.CLEAR_PED_PROP, _ped.Handle, AnchorPosition);
+				Function.Call(Hash.CLEAR_PED_PROP, _ped.Handle, (int)AnchorPosition);
 				return true;
 			}
 
@@ -71,7 +71,7 @@ namespace GTA
 				return false;
 			}
 
-			Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, AnchorPosition, index - 1, textureIndex, 1);
+			Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, (int)AnchorPosition, index - 1, textureIndex, 1);
 			return true;
 		}
 
@@ -82,7 +82,7 @@ namespace GTA
 				return true; // No prop is always valid
 			}
 
-			return Function.Call<bool>(Hash.SET_PED_PRELOAD_PROP_DATA, _ped.Handle, AnchorPosition, index - 1, textureIndex);
+			return Function.Call<bool>(Hash.SET_PED_PRELOAD_PROP_DATA, _ped.Handle, (int)AnchorPosition, index - 1, textureIndex);
 		}
 
 		public bool HasVariations => Count > 1;

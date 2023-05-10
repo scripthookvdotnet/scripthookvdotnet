@@ -697,7 +697,7 @@ namespace GTA
 		/// </returns>
 		public virtual bool HasBeenDamagedBy(WeaponHash weapon)
 		{
-			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, weapon, 0);
+			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, (uint)weapon, 0);
 		}
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> has been damaged by any weapon.
@@ -1466,7 +1466,7 @@ namespace GTA
 		/// <param name="forceType">Type of the force to apply.</param>
 		public void ApplyForce(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
 		}
 		/// <summary>
 		/// Applies a force to this <see cref="Entity"/>.
@@ -1476,7 +1476,7 @@ namespace GTA
 		/// <param name="forceType">Type of the force to apply.</param>
 		public void ApplyForceRelative(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 		}
 		/// <summary>
 		/// Applies a world force to this <see cref="Entity"/> using world offset.
@@ -1541,7 +1541,7 @@ namespace GTA
 		private void ApplyForceInternal(Vector3 force, Vector3 offset, ForceType forceType, bool relativeForce, bool relativeOffset, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
 		{
 			// 9th parameter is component index (not bone index), which matters only if the entity is a ped
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, 0, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, 0, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
 		}
 
 		/// <summary>
@@ -1592,7 +1592,7 @@ namespace GTA
 			}
 
 			// 6th parameter is component index (not bone index), which matters only if the entity is a ped
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, forceType, force.X, force.Y, force.Z, 0, relativeForce, scaleByMass, applyToChildren);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, (int)forceType, force.X, force.Y, force.Z, 0, relativeForce, scaleByMass, applyToChildren);
 		}
 
 		#endregion

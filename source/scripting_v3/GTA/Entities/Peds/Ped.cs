@@ -153,7 +153,7 @@ namespace GTA
 
 		public void GiveHelmet(bool canBeRemovedByPed, Helmet helmetType, int textureIndex)
 		{
-			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, helmetType, textureIndex);
+			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, (int)helmetType, textureIndex);
 		}
 
 		public void RemoveHelmet(bool instantly)
@@ -423,7 +423,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the task status of specified scripted task on this <see cref="Ped"/>.
 		/// </summary>
-		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, taskNameHash);
+		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
 
 		/// <summary>
 		/// Gets Returns the state of any active <see cref="TaskInvoker.FollowNavMeshTo(Math.Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
@@ -451,7 +451,7 @@ namespace GTA
 
 				return new DecisionMaker(SHVDN.NativeMemory.ReadInt32(PedIntelligenceAddress + SHVDN.NativeMemory.PedIntelligenceDecisionMakerHashOffset));
 			}
-			set => Function.Call(Hash.SET_DECISION_MAKER, Handle, value.Hash);
+			set => Function.Call(Hash.SET_DECISION_MAKER, Handle, (uint)value.Hash);
 		}
 
 		/// <summary>
@@ -486,7 +486,7 @@ namespace GTA
 				return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
 			}
 
-			return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventType);
+			return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, (int)eventType);
 		}
 
 		/// <summary>
@@ -503,7 +503,7 @@ namespace GTA
 				return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
 			}
 
-			return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType);
+			return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, (int)eventType);
 		}
 
 		private int GetEventTypeIndexForB1737OrOlder(EventType eventType)
@@ -552,7 +552,7 @@ namespace GTA
 		{
 			CanRagdoll = true;
 			// Looks like 4th and 5th parameter are completely unused
-			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, ragdollType, false, false, forceScriptControl);
+			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, (int)ragdollType, false, false, forceScriptControl);
 		}
 
 		public void CancelRagdoll()
@@ -633,7 +633,7 @@ namespace GTA
 
 				return (FiringPattern)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.FiringPatternOffset);
 			}
-			set => Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, value);
+			set => Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, (uint)value);
 		}
 
 		/// <summary>
@@ -656,7 +656,7 @@ namespace GTA
 						(VehicleWeaponHash)hash : VehicleWeaponHash.Invalid;
 				}
 			}
-			set => Function.Call(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, value);
+			set => Function.Call(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, (uint)value);
 		}
 
 		/// <summary>
@@ -741,7 +741,7 @@ namespace GTA
 
 		public void SetIntoVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
-			Function.Call(Hash.SET_PED_INTO_VEHICLE, Handle, vehicle.Handle, seat);
+			Function.Call(Hash.SET_PED_INTO_VEHICLE, Handle, vehicle.Handle, (int)seat);
 		}
 
 		/// <summary>
@@ -857,12 +857,12 @@ namespace GTA
 
 		public DrivingStyle DrivingStyle
 		{
-			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, value);
+			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (int)value);
 		}
 
 		public VehicleDrivingFlags VehicleDrivingFlags
 		{
-			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, value);
+			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (uint)value);
 		}
 
 		#endregion
@@ -1172,7 +1172,7 @@ namespace GTA
 
 		public override bool HasBeenDamagedBy(WeaponHash weapon)
 		{
-			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, weapon, 0);
+			return Function.Call<bool>(Hash.HAS_PED_BEEN_DAMAGED_BY_WEAPON, Handle, (uint)weapon, 0);
 		}
 
 		public override bool HasBeenDamagedByAnyWeapon()
@@ -1638,7 +1638,7 @@ namespace GTA
 				throw new ArgumentOutOfRangeException(nameof(component));
 			}
 
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, component, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, (int)component, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
 		}
 
 		/// <summary>
@@ -1696,7 +1696,7 @@ namespace GTA
 				throw new ArgumentOutOfRangeException(nameof(component));
 			}
 
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, forceType, force.X, force.Y, force.Z, component, relativeForce, scaleByMass, applyToChildren);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, (int)forceType, force.X, force.Y, force.Z, (int)component, relativeForce, scaleByMass, applyToChildren);
 		}
 
 		#endregion

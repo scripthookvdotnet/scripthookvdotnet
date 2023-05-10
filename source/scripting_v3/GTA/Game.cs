@@ -401,7 +401,7 @@ namespace GTA
 		/// <returns>The <see cref="Control"/> value.</returns>
 		public static int GetControlValue(Control control)
 		{
-			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, control);
+			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
@@ -410,7 +410,7 @@ namespace GTA
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
 		public static float GetControlValueNormalized(Control control)
 		{
-			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, control);
+			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets an analog value of a disabled <see cref="Control"/> input between -1.0f and 1.0f.
@@ -419,7 +419,7 @@ namespace GTA
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
 		public static float GetDisabledControlValueNormalized(Control control)
 		{
-			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, control);
+			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, (int)control);
 		}
 		/// <summary>
 		/// Override a <see cref="Control"/> by giving it a user-defined value this frame.
@@ -428,7 +428,7 @@ namespace GTA
 		/// <param name="value">the value to set the control to.</param>
 		public static void SetControlValueNormalized(Control control, float value)
 		{
-			Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, control, value);
+			Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, (int)control, value);
 		}
 
 		/// <summary>
@@ -446,7 +446,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsControlPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just pressed this frame
@@ -455,7 +455,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsControlJustPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just released this frame
@@ -464,7 +464,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsControlJustReleased(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and currently pressed.
@@ -473,7 +473,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
@@ -482,7 +482,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
@@ -491,7 +491,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustReleased(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, (int)control);
 		}
 
 		/// <summary>
@@ -501,7 +501,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is Enabled; otherwise, <see langword="false" /></returns>
 		public static bool IsControlEnabled(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, (int)control);
 		}
 		/// <summary>
 		/// Makes the engine respond to the given <see cref="Control"/> this frame.
@@ -509,7 +509,7 @@ namespace GTA
 		/// <param name="control">The <see cref="Control"/> to enable..</param>
 		public static void EnableControlThisFrame(Control control)
 		{
-			Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, control, true);
+			Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control, true);
 		}
 		/// <summary>
 		/// Makes the engine ignore input from the given <see cref="Control"/> this frame.
@@ -517,7 +517,7 @@ namespace GTA
 		/// <param name="control">The <see cref="Control"/>.</param>
 		public static void DisableControlThisFrame(Control control)
 		{
-			Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, control, true);
+			Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, (int)control, true);
 		}
 		/// <summary>
 		/// Enables all <see cref="Control"/>s this frame.

@@ -1113,8 +1113,28 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			return string.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-				M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
+			var currentCulture = CultureInfo.CurrentCulture;
+			var m11Str = M11.ToString(currentCulture);
+			var m12Str = M12.ToString(currentCulture);
+			var m13Str = M13.ToString(currentCulture);
+			var m14Str = M14.ToString(currentCulture);
+
+			var m21Str = M21.ToString(currentCulture);
+			var m22Str = M22.ToString(currentCulture);
+			var m23Str = M23.ToString(currentCulture);
+			var m24Str = M24.ToString(currentCulture);
+
+			var m31Str = M31.ToString(currentCulture);
+			var m32Str = M32.ToString(currentCulture);
+			var m33Str = M33.ToString(currentCulture);
+			var m34Str = M34.ToString(currentCulture);
+
+			var m41Str = M41.ToString(currentCulture);
+			var m42Str = M42.ToString(currentCulture);
+			var m43Str = M43.ToString(currentCulture);
+			var m44Str = M44.ToString(currentCulture);
+
+			return $"[M11:{m11Str} M12:{m12Str} M13:{m13Str} M14:{m14Str}] [M21:{m21Str} M22:{m22Str} M23:{m23Str} M24:{m24Str}] [M31:{m31Str} M32:{m32Str} M33:{m33Str} M34:{m34Str}] [M41:{m41Str} M42:{m42Str} M43:{m43Str} M44:{m44Str}]";
 		}
 
 		/// <summary>

@@ -82,17 +82,17 @@ namespace GTA
 
 		public void CruiseWithVehicle(Vehicle vehicle, float speed, DrivingStyle style = DrivingStyle.Normal)
 		{
-			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, style);
+			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)style);
 		}
 
 		public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed, DrivingStyle style = DrivingStyle.Normal)
 		{
-			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, style, radius);
+			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)style, radius);
 		}
 
 		public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
 		{
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, seat, speed, flag, 0);
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, seat, speed, (int)flag, 0);
 		}
 
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
@@ -106,7 +106,7 @@ namespace GTA
 			{
 				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
 			}
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, seat, moveBlendRatioArgForNative, flag, overriddenClipSet);
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, vehicle.Handle, timeout, (int)seat, moveBlendRatioArgForNative, (int)flag, overriddenClipSet);
 		}
 
 		public void OpenVehicleDoor(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, PedMoveBlendRatio? moveBlendRatio = null)
@@ -116,7 +116,7 @@ namespace GTA
 			{
 				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
 			}
-			Function.Call(Hash.TASK_OPEN_VEHICLE_DOOR, _ped.Handle, vehicle.Handle, timeout, seat, moveBlendRatioArgForNative);
+			Function.Call(Hash.TASK_OPEN_VEHICLE_DOOR, _ped.Handle, vehicle.Handle, timeout, (int)seat, moveBlendRatioArgForNative);
 		}
 
 		public static void EveryoneLeaveVehicle(Vehicle vehicle)
@@ -200,7 +200,7 @@ namespace GTA
 			{
 				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
 			}
-			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatioArgForNative, timeBeforeWarp, radius, navigationFlags, finalHeading);
+			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatioArgForNative, timeBeforeWarp, radius, (int)navigationFlags, finalHeading);
 		}
 
 		/// <summary>
@@ -225,7 +225,7 @@ namespace GTA
 		///  To identify when this has happened, you can use <see cref="Ped.GetNavMeshRouteResult()"/>. This will help you find situations where <see cref="Ped"/> cannot get to their target.</remarks>
 		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio moveBlendRatio, int timeBeforeWarp, float radius, FollowNavMeshFlags navigationFlags, float slideToCoordHeading, float maxSlopeNavigable, float clampMaxSearchDistance, float finalHeading = 40000f)
 		{
-			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD_ADVANCED, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, radius, navigationFlags, slideToCoordHeading, maxSlopeNavigable, clampMaxSearchDistance, finalHeading);
+			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD_ADVANCED, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, radius, (int)navigationFlags, slideToCoordHeading, maxSlopeNavigable, clampMaxSearchDistance, finalHeading);
 		}
 
 		public void GoTo(Entity target, Vector3 offset = default(Vector3), int timeout = -1)
@@ -285,7 +285,7 @@ namespace GTA
 
 		public void LeaveVehicle(LeaveVehicleFlags flags = LeaveVehicleFlags.None)
 		{
-			Function.Call(Hash.TASK_LEAVE_ANY_VEHICLE, _ped.Handle, 0, flags);
+			Function.Call(Hash.TASK_LEAVE_ANY_VEHICLE, _ped.Handle, 0, (int)flags);
 		}
 
 		public void LeaveVehicle(Vehicle vehicle, bool closeDoor)
@@ -295,7 +295,7 @@ namespace GTA
 
 		public void LeaveVehicle(Vehicle vehicle, LeaveVehicleFlags flags)
 		{
-			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, flags);
+			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, (int)flags);
 		}
 
 		public void LookAt(Entity target, int duration = -1)
@@ -305,7 +305,7 @@ namespace GTA
 
 		public void LookAt(Entity target, int duration, LookAtFlags lookFlags, LookAtPriority priority = LookAtPriority.Medium)
 		{
-			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, lookFlags, priority);
+			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, (int)lookFlags, (int)priority);
 		}
 
 		public void LookAt(Vector3 position, int duration = -1)
@@ -315,7 +315,7 @@ namespace GTA
 
 		public void LookAt(Vector3 position, int duration, LookAtFlags lookFlags, LookAtPriority priority = LookAtPriority.Medium)
 		{
-			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, lookFlags, priority);
+			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, (int)lookFlags, (int)priority);
 		}
 
 		public void ParachuteTo(Vector3 position)
@@ -362,7 +362,7 @@ namespace GTA
 		/// <param name="keepEngineOn">If <see langword="true"/>, keep the lights on after parking.</param>
 		public void ParkVehicle(Vehicle vehicle, Vector3 position, float directionDegrees, ParkType parkType, float toleranceDegrees = 20.0f, bool keepEngineOn = false)
 		{
-			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, directionDegrees, parkType, toleranceDegrees, keepEngineOn);
+			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, directionDegrees, (int)parkType, toleranceDegrees, keepEngineOn);
 		}
 
 		public void PerformSequence(TaskSequence sequence)
@@ -436,7 +436,7 @@ namespace GTA
 			// The third last argument is named phaseControlled in commands_task.sch.
 			// Considering how paparrazo3.ysc calls this function, the third last argument may be useful under a synchronized scene.
 			// The last argument is named bAllowOverrideCloneUpdate and will not be useful in the story mode.
-			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, startPhase, 0, ikFlags, 0);
+			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, animDict, animName, blendInSpeed, blendOutSpeed, duration, (int)flags, startPhase, 0, (int)ikFlags, 0);
 		}
 
 		public void RappelFromHelicopter()
@@ -468,12 +468,12 @@ namespace GTA
 
 		public void ShootAt(Ped target, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
-			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, pattern);
+			Function.Call(Hash.TASK_SHOOT_AT_ENTITY, _ped.Handle, target.Handle, duration, (uint)pattern);
 		}
 
 		public void ShootAt(Vector3 position, int duration = -1, FiringPattern pattern = FiringPattern.Default)
 		{
-			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, pattern);
+			Function.Call(Hash.TASK_SHOOT_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, (uint)pattern);
 		}
 
 		public void ShuffleToNextVehicleSeat(Vehicle vehicle = null)
@@ -482,7 +482,7 @@ namespace GTA
 			{
 				vehicle = _ped.CurrentVehicle;
 			}
-			Function.Call(Hash.TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, _ped.Handle, vehicle.NativeValue);
+			Function.Call(Hash.TASK_SHUFFLE_TO_NEXT_VEHICLE_SEAT, _ped.Handle, vehicle);
 		}
 
 		public void Skydive()
@@ -557,7 +557,7 @@ namespace GTA
 		/// <param name="driveAgainstTraffic">if set to <see langword="true" />, allows the car to drive on the opposite side of the road into incoming traffic.</param>
 		public void StartVehicleMission(Vehicle vehicle, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, float straightLineDist, bool driveAgainstTraffic = true)
 		{
-			Function.Call(Hash.TASK_VEHICLE_MISSION, _ped.Handle, vehicle.Handle, target.Handle, missionType, cruiseSpeed, drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
+			Function.Call(Hash.TASK_VEHICLE_MISSION, _ped.Handle, vehicle.Handle, target.Handle, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
 		}
 
 		/// <summary>Tells the <see cref="Ped"/> to target another ped with a vehicle.</summary>
@@ -571,7 +571,7 @@ namespace GTA
 		/// <param name="driveAgainstTraffic">if set to <see langword="true" />, allows the car to drive on the opposite side of the road into incoming traffic.</param>
 		public void StartVehicleMission(Vehicle vehicle, Ped target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, float straightLineDist, bool driveAgainstTraffic = true)
 		{
-			Function.Call(Hash.TASK_VEHICLE_MISSION_PED_TARGET, _ped.Handle, vehicle.Handle, target.Handle, missionType, cruiseSpeed, drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
+			Function.Call(Hash.TASK_VEHICLE_MISSION_PED_TARGET, _ped.Handle, vehicle.Handle, target.Handle, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
 		}
 
 		/// <summary>Tells the <see cref="Ped"/> to target a coord with a <see cref="Vehicle"/>.</summary>
@@ -585,7 +585,7 @@ namespace GTA
 		/// <param name="driveAgainstTraffic">if set to <see langword="true" />, allows the car to drive on the opposite side of the road into incoming traffic.</param>
 		public void StartVehicleMission(Vehicle vehicle, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, float straightLineDist, bool driveAgainstTraffic = true)
 		{
-			Function.Call(Hash.TASK_VEHICLE_MISSION_COORS_TARGET, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, missionType, cruiseSpeed, drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
+			Function.Call(Hash.TASK_VEHICLE_MISSION_COORS_TARGET, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
 		}
 
 		/// <summary>Gives the helicopter a mission.</summary>
@@ -601,7 +601,7 @@ namespace GTA
 		/// <param name="missionFlags">The heli mission flags for the task.</param>
 		public void StartHeliMission(Vehicle heli, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float heliOrientation = -1f, float slowDownDistance = -1f, HeliMissionFlags missionFlags = HeliMissionFlags.None)
 		{
-			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, target.Handle, 0, 0f, 0f, 0f, missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, missionFlags);
+			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, target.Handle, 0, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
 		}
 
 		/// <summary>Gives the helicopter a mission.</summary>
@@ -617,12 +617,12 @@ namespace GTA
 		/// <param name="missionFlags">The heli mission flags for the task.</param>
 		public void StartHeliMission(Vehicle heli, Ped target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float heliOrientation = -1f, float slowDownDistance = -1f, HeliMissionFlags missionFlags = HeliMissionFlags.None)
 		{
-			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, target.Handle, 0f, 0f, 0f, missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, missionFlags);
+			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, target.Handle, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
 		}
 
 		/// <summary>Gives the helicopter a mission.</summary>
 		/// <param name="heli">The helicopter.</param>
-		/// <param name="target">The target coodinate.</param>
+		/// <param name="target">The target coordinate.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
 		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
 		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
@@ -633,7 +633,7 @@ namespace GTA
 		/// <param name="missionFlags">The heli mission flags for the task.</param>
 		public void StartHeliMission(Vehicle heli, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float heliOrientation = -1f, float slowDownDistance = -1f, HeliMissionFlags missionFlags = HeliMissionFlags.None)
 		{
-			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, 0, target.X, target.Y, target.Z, missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, missionFlags);
+			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
 		}
 
 		/// <summary>Gives the plane a mission.</summary>
@@ -646,11 +646,11 @@ namespace GTA
 		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
 		/// <param name="planeOrientation">The orientation the plane tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
 #pragma warning disable CS1573
-		// More rearch needed for the parameter "precise". Even one of the leaked source didn't have the info for "bPrecise".
+		// More research needed for the parameter "precise". Even one of the leaked source didn't have the info for "bPrecise".
 		public void StartPlaneMission(Vehicle plane, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f, bool precise = true)
 #pragma warning restore CS1573
 		{
-			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, target.Handle, 0, 0f, 0f, 0f, missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
+			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, target.Handle, 0, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
 
 		/// <summary>Gives the plane a mission.</summary>
@@ -666,12 +666,12 @@ namespace GTA
 		public void StartPlaneMission(Vehicle plane, Ped target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f, bool precise = true)
 #pragma warning restore CS1573
 		{
-			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, target.Handle, 0f, 0f, 0f, missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
+			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, target.Handle, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
 
 		/// <summary>Gives the plane a mission.</summary>
 		/// <param name="plane">The plane.</param>
-		/// <param name="target">The target coodinate.</param>
+		/// <param name="target">The target coordinate.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
 		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
 		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
@@ -682,7 +682,7 @@ namespace GTA
 		public void StartPlaneMission(Vehicle plane, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f, bool precise = true)
 #pragma warning restore CS1573
 		{
-			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, 0, target.X, target.Y, target.Z, missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
+			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
 
 		/// <summary>Gives the boat a mission.</summary>
@@ -695,7 +695,7 @@ namespace GTA
 		/// <param name="missionFlags">The boat mission flags for the task.</param>
 		public void StartBoatMission(Vehicle boat, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
-			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, target.Handle, 0, 0f, 0f, 0f, missionType, cruiseSpeed, drivingFlags, targetReachedDist, missionFlags);
+			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, target.Handle, 0, 0f, 0f, 0f, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
 		}
 
 		/// <summary>Gives the boat a mission.</summary>
@@ -708,7 +708,7 @@ namespace GTA
 		/// <param name="missionFlags">The boat mission flags for the task.</param>
 		public void StartBoatMission(Vehicle boat, Ped target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
-			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, target.Handle, 0f, 0f, 0f, missionType, cruiseSpeed, drivingFlags, targetReachedDist, missionFlags);
+			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, target.Handle, 0f, 0f, 0f, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
 		}
 
 		/// <summary>Gives the boat a mission.</summary>
@@ -721,7 +721,7 @@ namespace GTA
 		/// <param name="missionFlags">The boat mission flags for the task.</param>
 		public void StartBoatMission(Vehicle boat, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
-			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, 0, target.X, target.Y, target.Z, missionType, cruiseSpeed, drivingFlags, targetReachedDist, missionFlags);
+			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
 		}
 
 		public void SwapWeapon()
@@ -791,7 +791,7 @@ namespace GTA
 
 		public void WarpIntoVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
-			Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, _ped.Handle, vehicle.Handle, seat);
+			Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, _ped.Handle, vehicle.Handle, (int)seat);
 		}
 
 		public void WarpOutOfVehicle(Vehicle vehicle)

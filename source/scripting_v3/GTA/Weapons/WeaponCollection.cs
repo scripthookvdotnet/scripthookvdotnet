@@ -25,7 +25,7 @@ namespace GTA
 			get
 			{
 				if (weapons.TryGetValue(hash, out var weapon)) return weapon;
-				if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, hash, 0))
+				if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)hash, 0))
 				{
 					return null;
 				}
@@ -81,12 +81,12 @@ namespace GTA
 
 		public bool HasWeapon(WeaponHash weaponHash)
 		{
-			return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, weaponHash);
+			return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)weaponHash);
 		}
 
 		public bool IsWeaponValid(WeaponHash hash)
 		{
-			return Function.Call<bool>(Hash.IS_WEAPON_VALID, hash);
+			return Function.Call<bool>(Hash.IS_WEAPON_VALID, (uint)hash);
 		}
 
 		public Prop CurrentWeaponObject
@@ -109,7 +109,7 @@ namespace GTA
 				return false;
 			}
 
-			Function.Call(Hash.SET_CURRENT_PED_WEAPON, owner.Handle, weapon.Hash, true);
+			Function.Call(Hash.SET_CURRENT_PED_WEAPON, owner.Handle, (uint)weapon.Hash, true);
 
 			return true;
 		}
@@ -119,12 +119,12 @@ namespace GTA
 		}
 		public bool Select(WeaponHash weaponHash, bool equipNow)
 		{
-			if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, weaponHash))
+			if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)weaponHash))
 			{
 				return false;
 			}
 
-			Function.Call(Hash.SET_CURRENT_PED_WEAPON, owner.Handle, weaponHash, equipNow);
+			Function.Call(Hash.SET_CURRENT_PED_WEAPON, owner.Handle, (uint)weaponHash, equipNow);
 
 			return true;
 		}
@@ -159,7 +159,7 @@ namespace GTA
 			else
 			{
 				// Set the 4th argument to false for consistency. If 4th argument is set to true when 5th one is set to true, the ped will instantly select the added weapon in any case.
-				Function.Call(Hash.GIVE_WEAPON_TO_PED, owner.Handle, weapon.Hash, ammoCount, false, equipNow);
+				Function.Call(Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)weapon.Hash, ammoCount, false, equipNow);
 			}
 
 			return weapon;
@@ -188,7 +188,7 @@ namespace GTA
 		}
 		public void Remove(WeaponHash weaponHash)
 		{
-			Function.Call(Hash.REMOVE_WEAPON_FROM_PED, owner.Handle, weaponHash);
+			Function.Call(Hash.REMOVE_WEAPON_FROM_PED, owner.Handle, (uint)weaponHash);
 		}
 
 		public void RemoveAll()

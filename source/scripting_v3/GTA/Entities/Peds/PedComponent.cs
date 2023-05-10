@@ -26,11 +26,11 @@ namespace GTA
 			get;
 		}
 
-		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS, _ped.Handle, Type);
+		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS, _ped.Handle, (int)Type);
 
 		public int Index
 		{
-			get => Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, _ped.Handle, Type);
+			get => Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, _ped.Handle, (int)Type);
 			set => SetVariation(value);
 		}
 
@@ -38,7 +38,7 @@ namespace GTA
 		{
 			get
 			{
-				var count = Function.Call<int>(Hash.GET_NUMBER_OF_PED_TEXTURE_VARIATIONS, _ped.Handle, Type, Index) + 1;
+				var count = Function.Call<int>(Hash.GET_NUMBER_OF_PED_TEXTURE_VARIATIONS, _ped.Handle, (int)Type, Index) + 1;
 				while (count > 0)
 				{
 					if (IsVariationValid(Index, count - 1))
@@ -53,7 +53,7 @@ namespace GTA
 
 		public int TextureIndex
 		{
-			get => Function.Call<int>(Hash.GET_PED_TEXTURE_VARIATION, _ped.Handle, Type);
+			get => Function.Call<int>(Hash.GET_PED_TEXTURE_VARIATION, _ped.Handle, (int)Type);
 			set => SetVariation(Index, value);
 		}
 
@@ -64,13 +64,13 @@ namespace GTA
 				return false;
 			}
 
-			Function.Call(Hash.SET_PED_COMPONENT_VARIATION, _ped.Handle, Type, index, textureIndex, 0);
+			Function.Call(Hash.SET_PED_COMPONENT_VARIATION, _ped.Handle, (int)Type, index, textureIndex, 0);
 			return true;
 		}
 
 		public bool IsVariationValid(int index, int textureIndex = 0)
 		{
-			return Function.Call<bool>(Hash.IS_PED_COMPONENT_VARIATION_VALID, _ped.Handle, Type, index, textureIndex);
+			return Function.Call<bool>(Hash.IS_PED_COMPONENT_VARIATION_VALID, _ped.Handle, (int)Type, index, textureIndex);
 		}
 
 		public bool HasVariations => Count > 1;

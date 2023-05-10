@@ -64,7 +64,7 @@ namespace GTA
 		public static explicit operator float(AnimationBlendDelta value) => value.Value;
 		public static implicit operator InputArgument(AnimationBlendDelta value)
 		{
-			return new InputArgument(value.Value);
+			return value.Value;
 		}
 
 		/// <summary>

@@ -1654,7 +1654,7 @@ namespace GTA
 		public VehicleLockStatus LockStatus
 		{
 			get => Function.Call<VehicleLockStatus>(Hash.GET_VEHICLE_DOOR_LOCK_STATUS, Handle);
-			set => Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, Handle, (int)value);
 		}
 
 		public VehicleLandingGearState LandingGearState
@@ -1720,7 +1720,7 @@ namespace GTA
 
 		public Ped GetPedOnSeat(VehicleSeat seat)
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, seat));
+			var ped = new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)seat));
 			return ped.Exists() ? ped : null;
 		}
 
@@ -1796,7 +1796,7 @@ namespace GTA
 				return null;
 			}
 
-			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, seat, 1, 1));
+			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, (int)seat, 1, 1));
 		}
 
 		/// <summary>
@@ -1818,14 +1818,14 @@ namespace GTA
 			}
 
 			var pedHandle = Function.Call<int>(Hash.CREATE_RANDOM_PED, 0f, 0f, 0f);
-			Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, seat);
+			Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, (int)seat);
 
 			return new Ped(pedHandle);
 		}
 
 		public bool IsSeatFree(VehicleSeat seat)
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, seat);
+			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)seat);
 		}
 
 		#endregion
@@ -1970,7 +1970,7 @@ namespace GTA
 		{
 			if (Model.IsCargobob)
 			{
-				Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, hook);
+				Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
 			}
 		}
 

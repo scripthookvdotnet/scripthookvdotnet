@@ -159,7 +159,7 @@ namespace GTA
 				}
 				return (ParachuteTint)result;
 			}
-			set => Function.Call(Hash.SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, value);
+			set => Function.Call(Hash.SET_PLAYER_PARACHUTE_TINT_INDEX, Handle, (int)value);
 		}
 		/// <summary>
 		/// Gets or sets the reserve parachute tint for this <see cref="Player"/>.
@@ -175,7 +175,7 @@ namespace GTA
 				}
 				return (ParachuteTint)result;
 			}
-			set => Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, value);
+			set => Function.Call(Hash.SET_PLAYER_RESERVE_PARACHUTE_TINT_INDEX, Handle, (int)value);
 		}
 
 		/// <summary>

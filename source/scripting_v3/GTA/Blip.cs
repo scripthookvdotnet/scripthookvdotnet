@@ -65,7 +65,7 @@ namespace GTA
 
 				return (BlipCategoryType)SHVDN.NativeMemory.ReadByte(address + offset);
 			}
-			set => Function.Call<int>(Hash.SET_BLIP_CATEGORY, Handle, value);
+			set => Function.Call<int>(Hash.SET_BLIP_CATEGORY, Handle, (int)value);
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace GTA
 		public int Alpha
 		{
 			get => Function.Call<int>(Hash.GET_BLIP_ALPHA, Handle);
-			set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
+			set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, (int)value);
 		}
 
 		/// <summary>
@@ -145,7 +145,7 @@ namespace GTA
 		public BlipColor Color
 		{
 			get => (BlipColor)Function.Call<int>(Hash.GET_BLIP_COLOUR, Handle);
-			set => Function.Call(Hash.SET_BLIP_COLOUR, Handle, value);
+			set => Function.Call(Hash.SET_BLIP_COLOUR, Handle, (int)value);
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace GTA
 		public BlipSprite Sprite
 		{
 			get => (BlipSprite)Function.Call<int>(Hash.GET_BLIP_SPRITE, Handle);
-			set => Function.Call(Hash.SET_BLIP_SPRITE, Handle, value);
+			set => Function.Call(Hash.SET_BLIP_SPRITE, Handle, (int)value);
 		}
 
 		/// <summary>

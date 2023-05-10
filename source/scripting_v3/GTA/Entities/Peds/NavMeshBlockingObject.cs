@@ -37,7 +37,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Updates the <see cref="NavMeshBlockingObject"/>. 
+		/// Updates the <see cref="NavMeshBlockingObject"/>.
 		/// </summary>
 		/// <param name="position">The origin position.</param>
 		/// <param name="size">The size.</param>
@@ -48,7 +48,7 @@ namespace GTA
 		public void Update(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags)
 		{
 			const float DEG_2_RAD = (float)(System.Math.PI / 180);
-			Function.Call(Hash.UPDATE_NAVMESH_BLOCKING_OBJECT, Handle, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingDegrees * DEG_2_RAD, flags);
+			Function.Call(Hash.UPDATE_NAVMESH_BLOCKING_OBJECT, Handle, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingDegrees * DEG_2_RAD, (int)flags);
 		}
 
 		/// <summary>
