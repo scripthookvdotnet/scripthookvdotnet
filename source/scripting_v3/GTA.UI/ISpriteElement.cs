@@ -24,7 +24,7 @@ namespace GTA.UI
 		}
 
 		/// <summary>
-		/// Gets or sets the rotation to draw thie <see cref="ISpriteElement"/>.
+		/// Gets or sets the rotation to draw this <see cref="ISpriteElement"/>.
 		/// </summary>
 		/// <value>
 		/// The rotation measured in degrees, clockwise increasing, 0.0 at vertical

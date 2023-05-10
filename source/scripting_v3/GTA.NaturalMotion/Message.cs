@@ -51,7 +51,7 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		/// <remarks>
-		/// Although it is tecnically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task, this method will always start a <c>CTaskNMControl</c> task.
+		/// Although it is technically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task, this method will always start a <c>CTaskNMControl</c> task.
 		/// </remarks>
 		public void SendTo(Ped target)
 		{

@@ -371,7 +371,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets all the compatible weapon component hashes for the speficied weapon hash.
+		/// Gets all the compatible weapon component hashes for the specified weapon hash.
 		/// </summary>
 		/// <param name="hash">The weapon hash.</param>
 		static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)

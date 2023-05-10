@@ -14,7 +14,7 @@ namespace GTA
 {
 	public static class UI
 	{
-		// These two definitions need to have 'modopt(System.Runtime.Compilerservices.IsConst)'
+		// These two definitions need to have 'modopt(System.Runtime.CompilerServices.IsConst)'
 		public static int WIDTH = 1280;
 		public static int HEIGHT = 720;
 

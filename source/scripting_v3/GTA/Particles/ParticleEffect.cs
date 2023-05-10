@@ -197,7 +197,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Modifys parameters of this <see cref="ParticleEffect"/>.
+		/// Modifies parameters of this <see cref="ParticleEffect"/>.
 		/// </summary>
 		/// <param name="parameterName">Name of the parameter you want to modify, these are stored inside the effect files.</param>
 		/// <param name="value">The new value for the parameter.</param>

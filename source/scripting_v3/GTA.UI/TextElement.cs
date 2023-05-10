@@ -306,8 +306,8 @@ namespace GTA.UI
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
-		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
-		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
+		/// <param name="font">The <see cref="GTA.UI.Font"/> of the texture to measure.</param>
+		/// <param name="scale">Sets a scale value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled on a 1280 pixel width base
 		/// </returns>
@@ -324,8 +324,8 @@ namespace GTA.UI
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
-		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
-		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
+		/// <param name="font">The <see cref="GTA.UI.Font"/> of the texture to measure.</param>
+		/// <param name="scale">Sets a scale value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled by the pixel width base return in <see cref="Screen.ScaledWidth"/>
 		/// </returns>

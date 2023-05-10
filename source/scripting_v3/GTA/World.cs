@@ -313,10 +313,7 @@ namespace GTA
 				position.Z = GetGroundHeight((Vector2)position);
 				return position;
 			}
-			set
-			{
-				Function.Call(Hash.SET_NEW_WAYPOINT, value.X, value.Y);
-			}
+			set => Function.Call(Hash.SET_NEW_WAYPOINT, value.X, value.Y);
 		}
 
 		/// <summary>
@@ -479,7 +476,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		/// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
 		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
@@ -505,7 +502,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
 		{
@@ -538,7 +535,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		/// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
@@ -565,7 +562,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
 		{
@@ -598,7 +595,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
 		{
@@ -628,7 +625,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World associated with a <see cref="Pickup"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToArray(), radius), handle => new Prop(handle));
@@ -671,7 +668,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Entity"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetEntityHandles(position.ToArray(), radius), Entity.FromHandle);
@@ -738,17 +735,15 @@ namespace GTA
 		/// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
 		{
-			ISpatial closest = null;
-			float closestDistance = 3e38f;
+			var closest = default(T);
+			var closestDistance = 3e38f;
 
 			foreach (var spatial in spatials)
 			{
 				var distance = position.DistanceToSquared(spatial.Position);
-				if (distance <= closestDistance)
-				{
-					closest = spatial;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = spatial;
+				closestDistance = distance;
 			}
 			return (T)closest;
 		}
@@ -761,18 +756,16 @@ namespace GTA
 		/// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
 		public static T GetClosest<T>(Vector2 position, params T[] spatials) where T : ISpatial
 		{
-			ISpatial closest = null;
-			float closestDistance = 3e38f;
+			var closest = default(T);
+			var closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
 			foreach (var spatial in spatials)
 			{
 				var distance = position3D.DistanceToSquared2D(spatial.Position);
-				if (distance <= closestDistance)
-				{
-					closest = spatial;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = spatial;
+				closestDistance = distance;
 			}
 			return (T)closest;
 		}
@@ -785,7 +778,7 @@ namespace GTA
 		public static Building GetClosest(Vector3 position, params Building[] buildings)
 		{
 			Building closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 
 			foreach (var building in buildings)
 			{
@@ -1481,7 +1474,7 @@ namespace GTA
 		/// <param name="off">The offset from the <paramref name="entity"/> to attach the effect.</param>
 		/// <param name="rot">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exhaust you may need to flip in the Y Axis</param>
 		/// <returns><see langword="true" />If the effect was able to start; otherwise, <see langword="false" />.</returns>
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
@@ -1505,7 +1498,7 @@ namespace GTA
 		/// <param name="off">The offset from the <paramref name="entityBone"/> to attach the effect.</param>
 		/// <param name="rot">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exhaust you may need to flip in the Y Axis</param>
 		/// <returns><see langword="true" />If the effect was able to start; otherwise, <see langword="false" />.</returns>
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{

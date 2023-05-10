@@ -771,7 +771,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Detachs a fragment part of this <see cref="Entity"/>. Can create a new <see cref="Entity"/>.
+		/// Detaches a fragment part of this <see cref="Entity"/>. Can create a new <see cref="Entity"/>.
 		/// </summary>
 		/// <returns>
 		///   <para><see langword="true" /> if a new <see cref="Entity"/> is created; otherwise, <see langword="false" />.</para>
@@ -1373,7 +1373,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Blip"/> attached to this <see cref="Entity"/>.
 		/// </summary>
-		/// <remarks>returns <see langword="null" /> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
+		/// <remarks>Returns <see langword="null" /> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
 		public Blip AttachedBlip
 		{
 			get
@@ -1453,7 +1453,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
-		/// <remarks>returns <see langword="null" /> if this <see cref="Entity"/> isnt attached to any entity</remarks>
+		/// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> isn't attached to any entity</remarks>
 		/// </summary>
 		public Entity AttachedEntity
 		{
@@ -1527,7 +1527,7 @@ namespace GTA
 		/// <param name="forceType">Type of the force to apply.</param>
 		/// <param name="relativeForce">
 		/// Specifies whether the force vector passed in is in relative or world coordinates.
-		/// Rocal coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
+		/// Local coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
 		/// </param>
 		/// <param name="relativeOffset">Specifies whether the offset passed in is in relative or world coordinates.</param>
 		/// <param name="scaleByMass">

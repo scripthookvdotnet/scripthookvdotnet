@@ -327,7 +327,7 @@ namespace GTA
 		/// </remarks>
 		public void SetValue<T>(string section, string name, T value)
 		{
-			string internalValue = value.ToString();
+			var internalValue = value.ToString();
 
 			if (_values.TryGetValue(section, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(name, out var valueList))
 			{
@@ -352,7 +352,7 @@ namespace GTA
 		/// </remarks>
 		public void SetValue<T>(string sectionName, string keyName, T value, string format, IFormatProvider formatProvider) where T : IFormattable
 		{
-			string internalValue = formatProvider != null ? value.ToString(format, formatProvider) : value.ToString();
+			var internalValue = formatProvider != null ? value.ToString(format, formatProvider) : value.ToString();
 
 			if (_values.TryGetValue(sectionName, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(keyName, out var valueList))
 			{

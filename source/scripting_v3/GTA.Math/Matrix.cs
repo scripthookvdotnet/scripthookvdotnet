@@ -531,7 +531,7 @@ namespace GTA.Math
 
 			if (System.Math.Abs(1f - scaleXSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleYSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleZSquared) > FLT_EPSILON)
 			{
-				// This path is a egde case
+				// This path is an edge case
 				// In GTA V, entity matrices expect to have no scaling
 				return InverseTransformVectorWithScale(vector, scaleXSquared, scaleYSquared, scaleZSquared);
 			}

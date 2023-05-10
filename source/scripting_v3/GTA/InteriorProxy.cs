@@ -10,7 +10,7 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Represents a interior proxy, which is for <c>CInterirorProxy</c> and is used for native functions for interiors.
+	/// Represents a interior proxy, which is for <c>CInteriorProxy</c> and is used for native functions for interiors.
 	/// </summary>
 	public class InteriorProxy : INativeValue, IExistable
 	{
@@ -128,7 +128,7 @@ namespace GTA
 		public bool IsCapped => Function.Call<bool>(Hash.IS_INTERIOR_CAPPED, Handle);
 
 		/// <summary>
-		/// Refreshs the current <see cref="InteriorInstance"/> if loaded.
+		/// Refreshes the current <see cref="InteriorInstance"/> if loaded.
 		/// </summary>
 		/// <remarks>
 		/// Does not change the memory address or handle of the <see cref="CurrentInteriorInstance"/>.

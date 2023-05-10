@@ -69,7 +69,7 @@ namespace GTA
 		/// To access to the chassis bone of <see cref="Vehicle"/>, use <see cref="this[int]"/> with the index <c>0</c> as the chassis bone index and ID will always be <c>0</c> (hardcoded to the exe).
 		/// </para>
 		/// <para>
-		/// This method will try to find the corresponding bone by the hash calcutated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
+		/// This method will try to find the corresponding bone by the hash calculated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
 		/// where <c>ElfHashUppercased(string)</c> will convert ASCII lowercase characters to uppercase ones before hashing characters.
 		/// </para>
 		/// </summary>

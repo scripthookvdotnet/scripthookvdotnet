@@ -151,7 +151,7 @@ namespace GTA.UI
 			get; set;
 		}
 		/// <summary>
-		/// Gets or sets the rotation to draw thie <see cref="CustomSprite" />.
+		/// Gets or sets the rotation to draw this <see cref="CustomSprite" />.
 		/// </summary>
 		/// <value>
 		/// The rotation measured in degrees, clockwise increasing, 0.0 at vertical

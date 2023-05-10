@@ -112,7 +112,7 @@ namespace GTA
 
 			//The last index should be drawn without offset
 			//And the second-last with the offset generated from the easing function
-			//All the indices before that should be drawn a full offset from eachother
+			//All the indices before that should be drawn a full offset from each other
 			//This means that we can subtract
 			int i = 0;
 			foreach (MenuBase menu in mMenuStack)

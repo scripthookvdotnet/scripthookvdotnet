@@ -13,11 +13,11 @@ namespace GTA
 		/// <summary>
 		/// Start a line-of-sight world probe shape test between 2 points.
 		/// </summary>
-		/// <param name="startPosition">The positon where the shape test starts.</param>
-		/// <param name="endPosition">The positon where the shape test ends.</param>
+		/// <param name="startPosition">The position where the shape test starts.</param>
+		/// <param name="endPosition">The position where the shape test ends.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -30,11 +30,11 @@ namespace GTA
 		/// <summary>
 		/// Start a expensive synchronous line-of-sight world probe shape test between 2 points and blocks the game until the shape test completes.
 		/// </summary>
-		/// <param name="startPosition">The positon where the shape test starts.</param>
-		/// <param name="endPosition">The positon where the shape test ends.</param>
+		/// <param name="startPosition">The position where the shape test starts.</param>
+		/// <param name="endPosition">The position where the shape test ends.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <remarks>This method is much more expensive than the asynchronous version (<see cref="StartTestLOSProbe(Vector3, Vector3, IntersectFlags, Entity, ShapeTestOptions)"/>).</remarks>
 		/// <value>
 		/// The shape test handle.
@@ -50,7 +50,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="entity">The entity to inspect.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -69,7 +69,7 @@ namespace GTA
 		/// <param name="rotationOrder">The rotation order in local space the dimentions will be rotated in.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -84,7 +84,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="entity">The entity to inspect.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -97,12 +97,12 @@ namespace GTA
 		/// <summary>
 		/// Start a shape test against the area where shape test capsule covers.
 		/// </summary>
-		/// <param name="startPosition">The positon where the shape test starts.</param>
-		/// <param name="endPosition">The positon where the shape test ends.</param>
+		/// <param name="startPosition">The position where the shape test starts.</param>
+		/// <param name="endPosition">The position where the shape test ends.</param>
 		/// <param name="radius">The radius of the shape test capsule.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -115,12 +115,12 @@ namespace GTA
 		/// <summary>
 		/// Start a shape test against the area where swept sphere (ellipsoid) for shape test covers.
 		/// </summary>
-		/// <param name="startPosition">The positon where the shape test starts.</param>
-		/// <param name="endPosition">The positon where the shape test ends.</param>
+		/// <param name="startPosition">The position where the shape test starts.</param>
+		/// <param name="endPosition">The position where the shape test ends.</param>
 		/// <param name="radius">The radius of the swept sphere.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -138,7 +138,7 @@ namespace GTA
 		/// <param name="probeEndPosition">The returned end position of the probe in world space.</param>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.
@@ -165,7 +165,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="intersectFlags">What type of objects the shape test should intersect with.</param>
 		/// <param name="excludeEntity">Specify an <see cref="Entity"/> that the shape test should exclude, leave null for no entities ignored.</param>
-		/// <param name="options">Specify options for the spape test.</param>
+		/// <param name="options">Specify options for the shape test.</param>
 		/// <value>
 		/// The shape test handle and the start and end points of the probe are calculated based on the mouse cursor position projected into the world.
 		/// If this method fails to create the shape test request because there are too many ongoing requests, <see cref="ShapeTestHandle.IsRequestFailed"/> will return <see langword="true" /> on the handle struct.

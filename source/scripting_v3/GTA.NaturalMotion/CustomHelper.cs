@@ -64,7 +64,7 @@ namespace GTA.NaturalMotion
 		}
 
 		/// <summary>
-		/// Stops this Nbehavior on the <see cref="Ped"/>.
+		/// Stops this behavior on the <see cref="Ped"/>.
 		/// </summary>
 		public void Stop()
 		{

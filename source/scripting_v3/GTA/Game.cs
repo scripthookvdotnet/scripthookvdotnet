@@ -581,7 +581,7 @@ namespace GTA
 			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCII(input));
 		}
 		/// <summary>
-		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> without preconvertion before hashing.
+		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> without pre conversion before hashing.
 		/// This converts strings just like how the RAGE parser converts the strings, which is used for config files such as <c>.meta</c> files.
 		/// For example, <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c>, will be converted into <c>0xEB92D4DF</c>.
 		/// Can be called in any thread.
