@@ -1800,9 +1800,9 @@ namespace GTA.Native
 				return (ulong)SHVDN.ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
 			}
 
-			if (value is INativeValue)
+			if (value is INativeValue nativeValue)
 			{
-				return ((INativeValue)value).NativeValue;
+				return nativeValue.NativeValue;
 			}
 
 			ThrowExceptionForObjectToNative(value);
