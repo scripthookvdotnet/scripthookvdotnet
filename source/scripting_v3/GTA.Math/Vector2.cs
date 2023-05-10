@@ -58,37 +58,37 @@ namespace GTA.Math
 		/// <summary>
 		/// Returns a null vector. (0,0)
 		/// </summary>
-		public static Vector2 Zero => new Vector2(0.0f, 0.0f);
+		public static Vector2 Zero => new(0.0f, 0.0f);
 
 		/// <summary>
 		/// The X unit <see cref="Vector2"/> (1, 0).
 		/// </summary>
-		public static Vector2 UnitX => new Vector2(1.0f, 0.0f);
+		public static Vector2 UnitX => new(1.0f, 0.0f);
 
 		/// <summary>
 		/// The Y unit <see cref="Vector2"/> (0, 1).
 		/// </summary>
-		public static Vector2 UnitY => new Vector2(0.0f, 1.0f);
+		public static Vector2 UnitY => new(0.0f, 1.0f);
 
 		/// <summary>
 		/// Returns the up vector. (0,1)
 		/// </summary>
-		public static Vector2 Up => new Vector2(0.0f, 1.0f);
+		public static Vector2 Up => new(0.0f, 1.0f);
 
 		/// <summary>
 		/// Returns the down vector. (0,-1)
 		/// </summary>
-		public static Vector2 Down => new Vector2(0.0f, -1.0f);
+		public static Vector2 Down => new(0.0f, -1.0f);
 
 		/// <summary>
 		/// Returns the right vector. (1,0)
 		/// </summary>
-		public static Vector2 Right => new Vector2(1.0f, 0.0f);
+		public static Vector2 Right => new(1.0f, 0.0f);
 
 		/// <summary>
 		/// Returns the left vector. (-1,0)
 		/// </summary>
-		public static Vector2 Left => new Vector2(-1.0f, 0.0f);
+		public static Vector2 Left => new(-1.0f, 0.0f);
 
 		/// <summary>
 		/// Gets or sets the component at the specified index.
@@ -109,7 +109,7 @@ namespace GTA.Math
 						return Y;
 				}
 
-				throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+				throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
 			}
 
 			set
@@ -123,7 +123,7 @@ namespace GTA.Math
 						Y = value;
 						break;
 					default:
-						throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+						throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
 				}
 			}
 		}
@@ -151,13 +151,13 @@ namespace GTA.Math
 		/// </summary>
 		public void Normalize()
 		{
-			float length = Length();
+			var length = Length();
 			if (length == 0)
 			{
 				return;
 			}
 
-			float num = 1 / length;
+			var num = 1 / length;
 			X *= num;
 			Y *= num;
 		}
@@ -235,7 +235,7 @@ namespace GTA.Math
 		public static Vector2 RandomXY()
 		{
 			Vector2 v;
-			double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
+			var radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
 			v.X = (float)(System.Math.Cos(radian));
 			v.Y = (float)(System.Math.Sin(radian));
 			v.Normalize();
@@ -248,7 +248,7 @@ namespace GTA.Math
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
 		/// <returns>The sum of the two vectors.</returns>
-		public static Vector2 Add(Vector2 left, Vector2 right) => new Vector2(left.X + right.X, left.Y + right.Y);
+		public static Vector2 Add(Vector2 left, Vector2 right) => new(left.X + right.X, left.Y + right.Y);
 
 		/// <summary>
 		/// Subtracts two vectors.
@@ -256,7 +256,7 @@ namespace GTA.Math
 		/// <param name="left">The first vector to subtract.</param>
 		/// <param name="right">The second vector to subtract.</param>
 		/// <returns>The difference of the two vectors.</returns>
-		public static Vector2 Subtract(Vector2 left, Vector2 right) => new Vector2(left.X - right.X, left.Y - right.Y);
+		public static Vector2 Subtract(Vector2 left, Vector2 right) => new(left.X - right.X, left.Y - right.Y);
 
 		/// <summary>
 		/// Scales a vector by the given value.
@@ -264,7 +264,7 @@ namespace GTA.Math
 		/// <param name="value">The vector to scale.</param>
 		/// <param name="scale">The amount by which to scale the vector.</param>
 		/// <returns>The scaled vector.</returns>
-		public static Vector2 Multiply(Vector2 value, float scale) => new Vector2(value.X * scale, value.Y * scale);
+		public static Vector2 Multiply(Vector2 value, float scale) => new(value.X * scale, value.Y * scale);
 
 		/// <summary>
 		/// Multiplies a vector with another by performing component-wise multiplication.
@@ -272,7 +272,7 @@ namespace GTA.Math
 		/// <param name="left">The first vector to multiply.</param>
 		/// <param name="right">The second vector to multiply.</param>
 		/// <returns>The multiplied vector.</returns>
-		public static Vector2 Multiply(Vector2 left, Vector2 right) => new Vector2(left.X * right.X, left.Y * right.Y);
+		public static Vector2 Multiply(Vector2 left, Vector2 right) => new(left.X * right.X, left.Y * right.Y);
 
 		/// <summary>
 		/// Scales a vector by the given value.
@@ -280,14 +280,14 @@ namespace GTA.Math
 		/// <param name="value">The vector to scale.</param>
 		/// <param name="scale">The amount by which to scale the vector.</param>
 		/// <returns>The scaled vector.</returns>
-		public static Vector2 Divide(Vector2 value, float scale) => new Vector2(value.X / scale, value.Y / scale);
+		public static Vector2 Divide(Vector2 value, float scale) => new(value.X / scale, value.Y / scale);
 
 		/// <summary>
 		/// Reverses the direction of a given vector.
 		/// </summary>
 		/// <param name="value">The vector to negate.</param>
 		/// <returns>A vector facing in the opposite direction.</returns>
-		public static Vector2 Negate(Vector2 value) => new Vector2(-value.X, -value.Y);
+		public static Vector2 Negate(Vector2 value) => new(-value.X, -value.Y);
 
 		/// <summary>
 		/// Restricts a value to be within a specified range.
@@ -298,11 +298,11 @@ namespace GTA.Math
 		/// <returns>The clamped value.</returns>
 		public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
 		{
-			float x = value.X;
+			var x = value.X;
 			x = (x > max.X) ? max.X : x;
 			x = (x < min.X) ? min.X : x;
 
-			float y = value.Y;
+			var y = value.Y;
 			y = (y > max.Y) ? max.Y : y;
 			y = (y < min.Y) ? min.Y : y;
 
@@ -361,7 +361,7 @@ namespace GTA.Math
 		public static Vector2 Reflect(Vector2 vector, Vector2 normal)
 		{
 			Vector2 result;
-			float dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
+			var dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
 
 			result.X = vector.X - ((2.0f * dot) * normal.X);
 			result.Y = vector.Y - ((2.0f * dot) * normal.Y);
@@ -402,7 +402,7 @@ namespace GTA.Math
 		/// <param name="left">The first vector to add.</param>
 		/// <param name="right">The second vector to add.</param>
 		/// <returns>The sum of the two vectors.</returns>
-		public static Vector2 operator +(Vector2 left, Vector2 right) => new Vector2(left.X + right.X, left.Y + right.Y);
+		public static Vector2 operator +(Vector2 left, Vector2 right) => new(left.X + right.X, left.Y + right.Y);
 
 		/// <summary>
 		/// Subtracts two vectors.
@@ -410,14 +410,14 @@ namespace GTA.Math
 		/// <param name="left">The first vector to subtract.</param>
 		/// <param name="right">The second vector to subtract.</param>
 		/// <returns>The difference of the two vectors.</returns>
-		public static Vector2 operator -(Vector2 left, Vector2 right) => new Vector2(left.X - right.X, left.Y - right.Y);
+		public static Vector2 operator -(Vector2 left, Vector2 right) => new(left.X - right.X, left.Y - right.Y);
 
 		/// <summary>
 		/// Reverses the direction of a given vector.
 		/// </summary>
 		/// <param name="value">The vector to negate.</param>
 		/// <returns>A vector facing in the opposite direction.</returns>
-		public static Vector2 operator -(Vector2 value) => new Vector2(-value.X, -value.Y);
+		public static Vector2 operator -(Vector2 value) => new(-value.X, -value.Y);
 
 		/// <summary>
 		/// Scales a vector by the given value.
@@ -425,7 +425,7 @@ namespace GTA.Math
 		/// <param name="vector">The vector to scale.</param>
 		/// <param name="scale">The amount by which to scale the vector.</param>
 		/// <returns>The scaled vector.</returns>
-		public static Vector2 operator *(Vector2 vector, float scale) => new Vector2(vector.X * scale, vector.Y * scale);
+		public static Vector2 operator *(Vector2 vector, float scale) => new(vector.X * scale, vector.Y * scale);
 
 		/// <summary>
 		/// Scales a vector by the given value.
@@ -433,7 +433,7 @@ namespace GTA.Math
 		/// <param name="vector">The vector to scale.</param>
 		/// <param name="scale">The amount by which to scale the vector.</param>
 		/// <returns>The scaled vector.</returns>
-		public static Vector2 operator *(float scale, Vector2 vector) => new Vector2(vector.X * scale, vector.Y * scale);
+		public static Vector2 operator *(float scale, Vector2 vector) => new(vector.X * scale, vector.Y * scale);
 
 		/// <summary>
 		/// Scales a vector by the given value.
@@ -441,7 +441,7 @@ namespace GTA.Math
 		/// <param name="vector">The vector to scale.</param>
 		/// <param name="scale">The amount by which to scale the vector.</param>
 		/// <returns>The scaled vector.</returns>
-		public static Vector2 operator /(Vector2 vector, float scale) => new Vector2(vector.X / scale, vector.Y / scale);
+		public static Vector2 operator /(Vector2 vector, float scale) => new(vector.X / scale, vector.Y / scale);
 
 		/// <summary>
 		/// Tests for equality between two objects.
@@ -449,7 +449,7 @@ namespace GTA.Math
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator ==(Vector2 left, Vector2 right) => Equals(left, right);
+		public static bool operator ==(Vector2 left, Vector2 right) => left.Equals(right);
 
 		/// <summary>
 		/// Tests for inequality between two objects.
@@ -457,12 +457,12 @@ namespace GTA.Math
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator !=(Vector2 left, Vector2 right) => !Equals(left, right);
+		public static bool operator !=(Vector2 left, Vector2 right) => !left.Equals(right);
 
 		/// <summary>
 		/// Converts a Vector2 to a Vector3 implicitly.
 		/// </summary>
-		public static implicit operator Vector3(Vector2 vector) => new Vector3(vector.X, vector.Y, 0);
+		public static implicit operator Vector3(Vector2 vector) => new(vector.X, vector.Y, 0);
 
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.

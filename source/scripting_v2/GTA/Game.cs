@@ -64,7 +64,7 @@ namespace GTA
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.PLAYER_ID);
+				var handle = Function.Call<int>(Hash.PLAYER_ID);
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
@@ -79,7 +79,7 @@ namespace GTA
 
 		public static GameVersion Version => (GameVersion)(SHVDN.NativeMemory.GetGameVersion() + 1);
 
-		public static GlobalCollection Globals { get; private set; } = new GlobalCollection();
+		public static GlobalCollection Globals { get; private set; } = new();
 
 		public static void Pause(bool value)
 		{

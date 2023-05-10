@@ -195,7 +195,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same entity as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(InteriorInstance left, InteriorInstance right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="InteriorInstance"/>s don't refer to the same entity.

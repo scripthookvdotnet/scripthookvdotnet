@@ -19,7 +19,7 @@ namespace GTA.NaturalMotion
 		private readonly string _message;
 		private Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
 		private Dictionary<string, object> _stringVector3ArrayArguments;
-		private static readonly Dictionary<string, (int value, Type type)> _stopArgument = new Dictionary<string, (int value, Type type)>() { { "start", (0, typeof(bool)) } };
+		private static readonly Dictionary<string, (int value, Type type)> _stopArgument = new() { { "start", (0, typeof(bool)) } };
 		#endregion
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace GTA.NaturalMotion
 		{
 			CreateBoolIntFloatArgDictIfNotCreated();
 
-			int valueConverted = value ? 1 : 0;
+			var valueConverted = value ? 1 : 0;
 			_boolIntFloatArguments[message] = (valueConverted, typeof(bool));
 		}
 		/// <summary>
@@ -118,7 +118,7 @@ namespace GTA.NaturalMotion
 
 			unsafe
 			{
-				int valueConverted = *(int*)&value;
+				var valueConverted = *(int*)&value;
 				_boolIntFloatArguments[message] = (valueConverted, typeof(float));
 			}
 		}
@@ -156,18 +156,12 @@ namespace GTA.NaturalMotion
 
 		public void CreateBoolIntFloatArgDictIfNotCreated()
 		{
-			if (_boolIntFloatArguments == null)
-			{
-				_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
-			}
+			_boolIntFloatArguments ??= new Dictionary<string, (int value, Type type)>();
 		}
 
 		public void CreateStringVector3ArrayArgDictIfNotCreated()
 		{
-			if (_stringVector3ArrayArguments == null)
-			{
-				_stringVector3ArrayArguments = new Dictionary<string, object>();
-			}
+			_stringVector3ArrayArguments ??= new Dictionary<string, object>();
 		}
 
 		/// <summary>

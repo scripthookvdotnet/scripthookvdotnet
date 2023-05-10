@@ -116,23 +116,23 @@ namespace GTA
 
 		void UpdateText()
 		{
-			double number = Min + Increment * TimesIncremented;
+			var number = Min + Increment * TimesIncremented;
 			string numberString;
 
-			if (DecimalFigures == -1)
+			switch (DecimalFigures)
 			{
-				numberString = number.ToString();
-			}
-			else if (DecimalFigures == 0)
-			{
-				numberString = ((int)number).ToString();
-			}
-			else
-			{
-				numberString = number.ToString("F" + DecimalFigures);
+				case -1:
+					numberString = number.ToString();
+					break;
+				case 0:
+					numberString = ((int)number).ToString();
+					break;
+				default:
+					numberString = number.ToString($"F{DecimalFigures.ToString()}");
+					break;
 			}
 
-			text.Caption = Caption + " <" + numberString + ">";
+			text.Caption = $"{Caption} <{numberString}>";
 		}
 
 		public event EventHandler<MenuItemDoubleValueArgs> Changed;

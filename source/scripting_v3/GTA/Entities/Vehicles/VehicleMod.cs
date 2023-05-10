@@ -13,7 +13,7 @@ namespace GTA
 	public sealed class VehicleMod
 	{
 		#region Fields
-		static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new ReadOnlyDictionary<int, Tuple<string, string>>(
+		static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new(
 			new Dictionary<int, Tuple<string, string>>
 			{
 				{-1,  new Tuple<string, string>("CMOD_HRN_0", "Stock Horn")},
@@ -108,8 +108,8 @@ namespace GTA
 		{
 			get
 			{
-				int index = Index;
-				int count = Count;
+				var index = Index;
+				var count = Count;
 				// This still needs a little more work, but its better than what it used to be
 				if (count == 0)
 				{
@@ -129,15 +129,10 @@ namespace GTA
 				string cur;
 				if (Type == VehicleModType.Horns)
 				{
-					if (_hornNames.ContainsKey(index))
-					{
-						if (!string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
-						{
-							return Game.GetLocalizedString(_hornNames[index].Item1);
-						}
+					if (!_hornNames.ContainsKey(index)) return string.Empty;
+					if (string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
 						return _hornNames[index].Item2;
-					}
-					return string.Empty;
+					return Game.GetLocalizedString(_hornNames[index].Item1);
 				}
 				if (Type == VehicleModType.FrontWheel || Type == VehicleModType.RearWheel)
 				{
@@ -229,7 +224,7 @@ namespace GTA
 					Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 					Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
 				}
-				string cur = string.Empty;
+				var cur = string.Empty;
 				switch (Type)
 				{
 					case VehicleModType.Armor:

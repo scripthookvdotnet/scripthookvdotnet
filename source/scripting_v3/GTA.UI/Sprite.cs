@@ -66,7 +66,7 @@ namespace GTA.UI
 		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
 		{
-			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
+			var data = Encoding.UTF8.GetBytes(textureDict + "\0");
 			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
 			Marshal.Copy(data, 0, _pinnedDict, data.Length);
 			data = Encoding.UTF8.GetBytes(textureName + "\0");
@@ -97,7 +97,11 @@ namespace GTA.UI
 
 		#region Fields
 		private readonly string _textureDict, _textureName;
-		private static readonly Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
+		/// <summary>
+		/// The dictionary to count how many instances use the same texture dictionary.
+		/// Using hashes for texture dictionary names should do the job since the game uses hashes for those names in the fwTxdStore.
+		/// </summary>
+		private static readonly Dictionary<string, int> _activeTextures = new();
 		private readonly IntPtr _pinnedDict, _pinnedName;
 		private RectangleF _textureCoordinates;
 		#endregion
@@ -109,31 +113,30 @@ namespace GTA.UI
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing)
-			{
-				if (_activeTextures.ContainsKey(_textureDict.ToLower()))
-				{
-					int current = _activeTextures[_textureDict.ToLower()];
+			if (!disposing) return;
 
-					if (current == 1)
-					{
-						Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
-						_activeTextures.Remove(_textureDict.ToLower());
-					}
-					else
-					{
-						_activeTextures[_textureDict.ToLower()] = current - 1;
-					}
+			if (_activeTextures.ContainsKey(_textureDict.ToLower()))
+			{
+				var current = _activeTextures[_textureDict.ToLower()];
+
+				if (current == 1)
+				{
+					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+					_activeTextures.Remove(_textureDict.ToLower());
 				}
 				else
 				{
-					// In practice this should never get executed
-					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+					_activeTextures[_textureDict.ToLower()] = current - 1;
 				}
-
-				Marshal.FreeCoTaskMem(_pinnedDict);
-				Marshal.FreeCoTaskMem(_pinnedName);
 			}
+			else
+			{
+				// In practice this should never get executed
+				Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+			}
+
+			Marshal.FreeCoTaskMem(_pinnedDict);
+			Marshal.FreeCoTaskMem(_pinnedName);
 		}
 
 		/// <summary>
@@ -304,10 +307,10 @@ namespace GTA.UI
 				return;
 			}
 
-			float scaleX = Size.Width / screenWidth;
-			float scaleY = Size.Height / screenHeight;
-			float positionX = (Position.X + offset.Width) / screenWidth;
-			float positionY = (Position.Y + offset.Height) / screenHeight;
+			var scaleX = Size.Width / screenWidth;
+			var scaleY = Size.Height / screenHeight;
+			var positionX = (Position.X + offset.Width) / screenWidth;
+			var positionY = (Position.Y + offset.Height) / screenHeight;
 
 			if (!Centered)
 			{
@@ -317,10 +320,10 @@ namespace GTA.UI
 
 			if (TextureCoordinates != RectangleF.Empty)
 			{
-				float u1 = TextureCoordinates.Top;
-				float v1 = TextureCoordinates.Left;
-				float u2 = TextureCoordinates.Right;
-				float v2 = TextureCoordinates.Bottom;
+				var u1 = TextureCoordinates.Top;
+				var v1 = TextureCoordinates.Left;
+				var u2 = TextureCoordinates.Right;
+				var v2 = TextureCoordinates.Bottom;
 
 				Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, u1, v1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
 

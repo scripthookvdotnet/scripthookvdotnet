@@ -69,9 +69,9 @@ namespace GTA.UI
 				throw new FileNotFoundException(filename);
 			}
 
-			if (_textures.ContainsKey(filename))
+			if (_textures.TryGetValue(filename, out var texture))
 			{
-				_id = _textures[filename];
+				_id = texture;
 			}
 			else
 			{
@@ -99,9 +99,9 @@ namespace GTA.UI
 		#region Fields
 		int _id;
 		static int _globalLevel = 0, _globalLastDrawFrame = 0;
-		static Dictionary<string, int> _textures = new Dictionary<string, int>();
-		static Dictionary<int, int> _lastDraw = new Dictionary<int, int>();
-		static Dictionary<int, int> _indexes = new Dictionary<int, int>();
+		static Dictionary<string, int> _textures = new();
+		static Dictionary<int, int> _lastDraw = new();
+		static Dictionary<int, int> _indexes = new();
 		#endregion
 
 		/// <summary>
@@ -219,7 +219,7 @@ namespace GTA.UI
 		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a 1280*720 pixel base.</param>
 		public virtual void WorldDraw(Vector3 position, SizeF offset)
 		{
-			PointF pointF = Screen.WorldToScreen(position);
+			var pointF = Screen.WorldToScreen(position);
 			if (!(pointF == PointF.Empty))
 			{
 				InternalDraw(new SizeF(pointF) + offset, Screen.Width, Screen.Height);
@@ -242,7 +242,7 @@ namespace GTA.UI
 		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base.</param>
 		public virtual void WorldScaledDraw(Vector3 position, SizeF offset)
 		{
-			PointF pointF = Screen.WorldToScreen(position, scaleWidth: true);
+			var pointF = Screen.WorldToScreen(position, scaleWidth: true);
 			if (!(pointF == PointF.Empty))
 			{
 				InternalDraw(new SizeF(pointF) + offset, Screen.ScaledWidth, Screen.Height);
@@ -256,7 +256,7 @@ namespace GTA.UI
 				return;
 			}
 
-			int frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
+			var frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
 
 			if (_lastDraw[_id] != frameCount)
 			{
@@ -269,11 +269,11 @@ namespace GTA.UI
 				_globalLastDrawFrame = frameCount;
 			}
 
-			float scaleX = Size.Width / screenWidth;
-			float scaleY = Size.Height / screenHeight;
-			float positionX = (Position.X + offset.Width) / screenWidth;
-			float positionY = (Position.Y + offset.Height) / screenHeight;
-			float aspectRatio = Screen.AspectRatio;
+			var scaleX = Size.Width / screenWidth;
+			var scaleY = Size.Height / screenHeight;
+			var positionX = (Position.X + offset.Width) / screenWidth;
+			var positionY = (Position.Y + offset.Height) / screenHeight;
+			var aspectRatio = Screen.AspectRatio;
 
 			if (!Centered)
 			{

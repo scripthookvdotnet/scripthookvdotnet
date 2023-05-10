@@ -74,7 +74,7 @@ namespace GTA
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.PLAYER_ID);
+				var handle = Function.Call<int>(Hash.PLAYER_ID);
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
@@ -88,7 +88,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the blip of the <see cref="GTA.Player"/> that you are controlling.
 		/// </summary>
-		public static Blip PlayerBlip => new Blip(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
+		public static Blip PlayerBlip => new(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
 
 		/// <summary>
 		/// Gets the north blip, which is shown on the radar.
@@ -172,9 +172,9 @@ namespace GTA
 		{
 			get
 			{
-				string radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
+				var radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
 
-				if (String.IsNullOrEmpty(radioName))
+				if (string.IsNullOrEmpty(radioName))
 				{
 					return RadioStation.RadioOff;
 				}
@@ -220,7 +220,7 @@ namespace GTA
 		/// </summary>
 		public static void UnlockAllRadioStations()
 		{
-			foreach (string station in radioNames)
+			foreach (var station in radioNames)
 			{
 				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
 			}
@@ -365,7 +365,7 @@ namespace GTA
 
 			uint hash = 0;
 
-			foreach (Button button in buttons)
+			foreach (var button in buttons)
 			{
 				hash += (uint)button;
 				hash += (hash << 10);
@@ -640,7 +640,7 @@ namespace GTA
 			var newPatternBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 			var newMaskBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 
-			foreach (string rawHex in rawHexStringsSplitted)
+			foreach (var rawHex in rawHexStringsSplitted)
 			{
 				if (string.IsNullOrEmpty(rawHex))
 				{
@@ -654,7 +654,7 @@ namespace GTA
 					continue;
 				}
 
-				char character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
+				var character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
 				newPatternBuilder.Append(character);
 				newMaskBuilder.Append("x");
 			}
@@ -673,7 +673,7 @@ namespace GTA
 		{
 			unsafe
 			{
-				byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
+				var address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
 				return address == null ? IntPtr.Zero : new IntPtr(address);
 			}
 		}

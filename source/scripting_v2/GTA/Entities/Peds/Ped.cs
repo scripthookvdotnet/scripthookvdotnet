@@ -562,7 +562,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
@@ -638,7 +638,7 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.REQUEST_ANIM_SET, value);
-				int startTime = Environment.TickCount;
+				var startTime = Environment.TickCount;
 
 				while (!Function.Call<bool>(Hash.HAS_ANIM_SET_LOADED, value))
 				{

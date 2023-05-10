@@ -76,7 +76,22 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartTestBox(Vector3 sourcePosition, Vector3 dimension, Vector3 rotationAngles, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.IgnoreNoCollision)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_BOX, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, dimension.X, dimension.Y, dimension.Z, rotationAngles.X, rotationAngles.Y, rotationAngles.Z, rotationOrder, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_BOX,
+				sourcePosition.X,
+				sourcePosition.Y,
+				sourcePosition.Z,
+				dimension.X,
+				dimension.Y,
+				dimension.Z,
+				rotationAngles.X,
+				rotationAngles.Y,
+				rotationAngles.Z,
+				rotationOrder,
+				intersectFlags,
+				excludeEntity == null
+					? 0
+					: excludeEntity.Handle,
+				options));
 		}
 
 		/// <summary>

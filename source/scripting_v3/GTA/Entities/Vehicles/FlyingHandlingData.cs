@@ -10,7 +10,7 @@ namespace GTA
 {
 	/// <summary>
 	/// <para>
-	/// Represents the flying handling data class for <c>CFlyingHandlingData</c>, which is for aircrafts.
+	/// Represents the flying handling data class for <c>CFlyingHandlingData</c>, which is for aircraft.
 	/// </para>
 	/// </summary>
 	public sealed class FlyingHandlingData : BaseSubHandlingData
@@ -116,7 +116,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x1C : 0x14;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x1C : 0x14;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -126,7 +126,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x1C : 0x14;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x1C : 0x14;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -145,7 +145,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -155,7 +155,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -174,7 +174,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x24 : 0x1C;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x24 : 0x1C;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -184,7 +184,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x24 : 0x1C;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x24 : 0x1C;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -203,7 +203,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x2C : 0x20;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x2C : 0x20;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -213,7 +213,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x2C : 0x20;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x2C : 0x20;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -232,7 +232,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x30 : 0x24;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x30 : 0x24;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -242,7 +242,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x30 : 0x24;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x30 : 0x24;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -261,7 +261,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -271,7 +271,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -290,7 +290,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x3C : 0x2C;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x3C : 0x2C;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -300,7 +300,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x3C : 0x2C;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x3C : 0x2C;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -321,7 +321,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x44 : 0x30;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x44 : 0x30;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -331,7 +331,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x44 : 0x30;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x44 : 0x30;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -351,7 +351,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x48 : 0x34;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x48 : 0x34;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -361,7 +361,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x48 : 0x34;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x48 : 0x34;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -381,7 +381,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x4C : 0x38;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x4C : 0x38;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -391,7 +391,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x4C : 0x38;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x4C : 0x38;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -411,7 +411,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x50 : 0x3C;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x50 : 0x3C;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -421,7 +421,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x50 : 0x3C;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x50 : 0x3C;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -441,7 +441,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x54 : 0x40;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x54 : 0x40;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -451,7 +451,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x54 : 0x40;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x54 : 0x40;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -471,7 +471,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x58 : 0x44;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x58 : 0x44;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -481,7 +481,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x58 : 0x44;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x58 : 0x44;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -502,7 +502,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x5C : 0x48;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x5C : 0x48;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -512,7 +512,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x5C : 0x48;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x5C : 0x48;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -535,7 +535,7 @@ namespace GTA
 					return Vector3.Zero;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x60 : 0x50;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x60 : 0x50;
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(MemoryAddress + offset));
 			}
 			set
@@ -545,7 +545,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x60 : 0x50;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x60 : 0x50;
 				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToArray());
 			}
 		}
@@ -568,7 +568,7 @@ namespace GTA
 					return Vector3.Zero;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x70 : 0x60;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x70 : 0x60;
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(MemoryAddress + offset));
 			}
 			set
@@ -578,7 +578,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x70 : 0x60;
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x70 : 0x60;
 				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToArray());
 			}
 		}
@@ -640,7 +640,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same flying handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(FlyingHandlingData left, FlyingHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="FlyingHandlingData"/>s don't refer to the same flying handling data.

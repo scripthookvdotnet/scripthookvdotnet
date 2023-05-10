@@ -51,19 +51,13 @@ namespace GTA
 		/// Gets the <see cref="PedBone"/> with the specified <paramref name="boneId"/>.
 		/// </summary>
 		/// <param name="boneId">The bone Id.</param>
-		public PedBone this[Bone boneId]
-		{
-			get => new PedBone((Ped)_owner, boneId);
-		}
+		public PedBone this[Bone boneId] => new((Ped)_owner, boneId);
 
 		/// <summary>
 		/// Gets the <see cref="PedBone"/> at the specified bone index.
 		/// </summary>
 		/// <param name="boneIndex">The bone index.</param>
-		public new PedBone this[int boneIndex]
-		{
-			get => new PedBone((Ped)_owner, boneIndex);
-		}
+		public new PedBone this[int boneIndex] => new((Ped)_owner, boneIndex);
 
 		/// <summary>
 		/// <para>
@@ -81,15 +75,12 @@ namespace GTA
 		/// For example, <see cref="Ped"/>s have the bones in their skeletons whose name is <c>SKEL_Spine3</c> and whose ID is <c>24818</c>, which doesn't match the hashed value of <c>SKEL_Spine3</c> but matches that of <c>BONETAG_SPINE3</c>.
 		/// On the other hand, <see cref="Ped"/>s have the bone in their skeletons whose name is <c>IK_Head</c> and whose ID is <c>12844</c>, which matches the hashed value of <c>IK_Head</c>.
 		/// </remarks>
-		public new PedBone this[string boneName]
-		{
-			get => new PedBone((Ped)_owner, boneName);
-		}
+		public new PedBone this[string boneName] => new((Ped)_owner, boneName);
 
 		/// <summary>
 		/// Gets the core bone of this <see cref="Ped"/>.
 		/// </summary>
-		public new PedBone Core => new PedBone((Ped)_owner, -1);
+		public new PedBone Core => new((Ped)_owner, -1);
 
 		/// <summary>
 		/// Gets the last damaged bone for this <see cref="Ped"/>.

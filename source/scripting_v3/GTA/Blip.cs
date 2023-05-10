@@ -24,10 +24,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the type of this <see cref="Blip"/>.
 		/// </summary>
-		public int Type
-		{
-			get => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
-		}
+		public int Type => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
 
 		/// <summary>
 		/// Gets or sets the display type of this <see cref="Blip"/>.
@@ -462,10 +459,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Blip"/> is attached to.
 		/// </summary>
-		public Entity Entity
-		{
-			get => Entity.FromHandle(Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, Handle));
-		}
+		public Entity Entity => Entity.FromHandle(Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, Handle));
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the route to this <see cref="Blip"/> should be shown on the map.
@@ -625,10 +619,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Blip"/> is on minimap; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsOnMinimap
-		{
-			get => Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
-		}
+		public bool IsOnMinimap => Function.Call<bool>(Hash.IS_BLIP_ON_MINIMAP, Handle);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Blip"/> is short range.
@@ -706,7 +697,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.REMOVE_BLIP, &handle);
@@ -746,7 +737,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same blip as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Blip left, Blip right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Blip"/>s don't refer to the same blip.

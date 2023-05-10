@@ -48,10 +48,7 @@ namespace GTA
 
 		public int TextureIndex
 		{
-			get
-			{
-				return Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, AnchorPosition);
-			}
+			get => Index == 0 ? 0 : Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, _ped.Handle, AnchorPosition);
 			set
 			{
 				if (Index > 0)

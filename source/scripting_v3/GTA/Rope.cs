@@ -118,7 +118,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.DELETE_ROPE, &handle);
@@ -132,7 +132,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if this <see cref="Rope"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);
@@ -162,7 +162,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same rope as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Rope left, Rope right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Rope"/>s don't refer to the same rope.

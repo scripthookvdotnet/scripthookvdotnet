@@ -87,8 +87,8 @@ namespace GTA
 		/// </summary>
 		public void Resurrect()
 		{
-			int health = MaxHealth;
-			bool isCollisionEnabled = IsCollisionEnabled;
+			var health = MaxHealth;
+			var isCollisionEnabled = IsCollisionEnabled;
 
 			Function.Call(Hash.RESURRECT_PED, Handle);
 			Health = MaxHealth = health;
@@ -517,7 +517,7 @@ namespace GTA
 				throw new ArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
 			}
 
-			int eventTypeCorrected = (int)eventType;
+			var eventTypeCorrected = (int)eventType;
 			if (eventTypeCorrected >= (int)EventType.ShockingCarAlarm)
 			{
 				eventTypeCorrected -= 2;
@@ -656,10 +656,7 @@ namespace GTA
 						(VehicleWeaponHash)hash : VehicleWeaponHash.Invalid;
 				}
 			}
-			set
-			{
-				Function.Call(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, value);
-			}
+			set => Function.Call(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, value);
 		}
 
 		/// <summary>
@@ -1289,7 +1286,7 @@ namespace GTA
 
 		public RelationshipGroup RelationshipGroup
 		{
-			get => new RelationshipGroup(Function.Call<int>(Hash.GET_PED_RELATIONSHIP_GROUP_HASH, Handle));
+			get => new(Function.Call<int>(Hash.GET_PED_RELATIONSHIP_GROUP_HASH, Handle));
 			set => Function.Call(Hash.SET_PED_RELATIONSHIP_GROUP_HASH, Handle, value.Hash);
 		}
 
@@ -1546,10 +1543,10 @@ namespace GTA
 				{
 					// Movement sets can be applied from animation dictionaries and animation sets (also clip sets but they use the same native as animation sets).
 					// So check if the string is a valid dictionary, if so load it as such. Otherwise load it as an animation set.
-					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
+					var isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
 
 					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
-					int startTime = Environment.TickCount;
+					var startTime = Environment.TickCount;
 
 					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
 					{

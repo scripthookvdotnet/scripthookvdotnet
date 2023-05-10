@@ -134,7 +134,7 @@ namespace GTA
 
 			if (includingLeader)
 			{
-				Ped leader = Leader;
+				var leader = Leader;
 
 				if (leader != null)
 				{
@@ -142,9 +142,9 @@ namespace GTA
 				}
 			}
 
-			for (int i = 0; i < memberCount; i++)
+			for (var i = 0; i < memberCount; i++)
 			{
-				Ped member = GetMember(i);
+				var member = GetMember(i);
 
 				if (member != null)
 				{
@@ -195,7 +195,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same group as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(PedGroup left, PedGroup right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="PedGroup"/>s don't refer to the same group.

@@ -137,7 +137,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the model of the current <see cref="Entity"/>.
 		/// </summary>
-		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
+		public Model Model => new(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
 
 		/// <summary>
 		/// Gets or sets how opaque this <see cref="Entity"/> is.
@@ -1104,10 +1104,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Entity"/> is occluded; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsOccluded
-		{
-			get => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
-		}
+		public bool IsOccluded => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is rendered.
@@ -1378,7 +1375,7 @@ namespace GTA
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.GET_BLIP_FROM_ENTITY, Handle);
+				var handle = Function.Call<int>(Hash.GET_BLIP_FROM_ENTITY, Handle);
 
 				if (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
 				{
@@ -1392,10 +1389,7 @@ namespace GTA
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Blip"/>s attached to this <see cref="Entity"/>.
 		/// </summary>
-		public Blip[] AttachedBlips
-		{
-			get => World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x.NativeValue) == Handle).ToArray();
-		}
+		public Blip[] AttachedBlips => World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x.NativeValue) == Handle).ToArray();
 
 		#endregion
 
@@ -1455,10 +1449,7 @@ namespace GTA
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
 		/// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> isn't attached to any entity</remarks>
 		/// </summary>
-		public Entity AttachedEntity
-		{
-			get => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
-		}
+		public Entity AttachedEntity => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 
 		#endregion
 
@@ -1590,14 +1581,14 @@ namespace GTA
 		/// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
 		/// </para>
 		/// </param>
-		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the speficied component.</param>
+		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the specified component.</param>
 		/// <exception cref="System.ArgumentException">Thrown when <paramref name="forceType"/> is set to <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>, which is not supported by this method.</exception>
 		private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
 		{
 			// The native won't apply the force if apply force type is one of the external types
-			if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
+			if (forceType is ForceType.ExternalForce or ForceType.ExternalImpulse)
 			{
-				throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
+				throw new ArgumentException("ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.", nameof(forceType));
 			}
 
 			// 6th parameter is component index (not bone index), which matters only if the entity is a ped
@@ -1625,7 +1616,7 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -1645,7 +1636,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{
@@ -1688,7 +1679,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same entity as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Entity left, Entity right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Entity"/>s don't refer to the same entity.

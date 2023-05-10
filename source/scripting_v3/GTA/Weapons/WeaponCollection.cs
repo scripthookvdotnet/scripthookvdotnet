@@ -12,7 +12,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly Ped owner;
-		readonly Dictionary<WeaponHash, Weapon> weapons = new Dictionary<WeaponHash, Weapon>();
+		readonly Dictionary<WeaponHash, Weapon> weapons = new();
 		#endregion
 
 		internal WeaponCollection(Ped owner)
@@ -24,16 +24,14 @@ namespace GTA
 		{
 			get
 			{
-				if (!weapons.TryGetValue(hash, out Weapon weapon))
+				if (weapons.TryGetValue(hash, out var weapon)) return weapon;
+				if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, hash, 0))
 				{
-					if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, hash, 0))
-					{
-						return null;
-					}
-
-					weapon = new Weapon(owner, hash);
-					weapons.Add(hash, weapon);
+					return null;
 				}
+
+				weapon = new Weapon(owner, hash);
+				weapons.Add(hash, weapon);
 
 				return weapon;
 			}
@@ -51,17 +49,15 @@ namespace GTA
 
 				var hash = (WeaponHash)currentWeapon;
 
-				if (weapons.ContainsKey(hash))
+				if (weapons.TryGetValue(hash, out var current))
 				{
-					return weapons[hash];
+					return current;
 				}
-				else
-				{
-					var weapon = new Weapon(owner, hash);
-					weapons.Add(hash, weapon);
 
-					return weapon;
-				}
+				var weapon = new Weapon(owner, hash);
+				weapons.Add(hash, weapon);
+
+				return weapon;
 			}
 		}
 
@@ -69,19 +65,17 @@ namespace GTA
 		{
 			get
 			{
-				WeaponHash hash = Function.Call<WeaponHash>(Hash.GET_BEST_PED_WEAPON, owner.Handle, 0);
+				var hash = Function.Call<WeaponHash>(Hash.GET_BEST_PED_WEAPON, owner.Handle, 0);
 
-				if (weapons.ContainsKey(hash))
+				if (weapons.TryGetValue(hash, out var bestWeapon))
 				{
-					return weapons[hash];
+					return bestWeapon;
 				}
-				else
-				{
-					var weapon = new Weapon(owner, (WeaponHash)hash);
-					weapons.Add(hash, weapon);
 
-					return weapon;
-				}
+				var weapon = new Weapon(owner, (WeaponHash)hash);
+				weapons.Add(hash, weapon);
+
+				return weapon;
 			}
 		}
 
@@ -137,7 +131,7 @@ namespace GTA
 
 
 		/// <summary>
-		/// Gives the speficied weapon if the owner <see cref="Ped"/> does not have one, or selects the weapon if they have one and <paramref name="equipNow"/> is set to <see langword="true" />.
+		/// Gives the specified weapon if the owner <see cref="Ped"/> does not have one, or selects the weapon if they have one and <paramref name="equipNow"/> is set to <see langword="true" />.
 		/// </summary>
 		/// <param name="weaponHash">The weapon hash.</param>
 		/// <param name="ammoCount">The ammo count to be added to the weapon inventory of the owner <see cref="Ped"/>.</param>
@@ -149,7 +143,7 @@ namespace GTA
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
 		public Weapon Give(WeaponHash weaponHash, int ammoCount, bool equipNow, bool isAmmoLoaded)
 		{
-			if (!weapons.TryGetValue(weaponHash, out Weapon weapon))
+			if (!weapons.TryGetValue(weaponHash, out var weapon))
 			{
 				weapon = new Weapon(owner, weaponHash);
 				weapons.Add(weaponHash, weapon);
@@ -183,7 +177,7 @@ namespace GTA
 
 		public void Remove(Weapon weapon)
 		{
-			WeaponHash hash = weapon.Hash;
+			var hash = weapon.Hash;
 
 			if (weapons.ContainsKey(hash))
 			{

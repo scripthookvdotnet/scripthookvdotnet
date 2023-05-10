@@ -25,10 +25,10 @@ namespace SHVDN
 		int currentPage = 1;
 		bool isOpen = false;
 		string input = string.Empty;
-		List<string> lineHistory = new List<string>();
+		List<string> lineHistory = new();
 		List<string> commandHistory; // This must be set via CommandHistory property
-		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
-		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
+		ConcurrentQueue<string[]> outputQueue = new();
+		Dictionary<string, List<ConsoleCommand>> commands = new();
 		int lastClosedTickCount;
 		bool shouldBlockControls;
 		Task<MethodInfo> compilerTask;
@@ -61,11 +61,10 @@ namespace SHVDN
 			{
 				isOpen = value;
 				DisableControlsThisFrame();
-				if (!isOpen)
-				{
-					lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
-					shouldBlockControls = true;
-				}
+				if (isOpen) return;
+
+				lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
+				shouldBlockControls = true;
 			}
 		}
 
@@ -120,15 +119,14 @@ namespace SHVDN
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
-				string space = method.DeclaringType.FullName;
+				var space = method.DeclaringType.FullName;
 
-				if (commands.ContainsKey(space))
-				{
-					commands[space].RemoveAll(x => x.MethodInfo == method);
+				if (!commands.TryGetValue(space, out var command)) continue;
 
-					if (commands[space].Count == 0)
-						commands.Remove(space);
-				}
+				command.RemoveAll(x => x.MethodInfo == method);
+
+				if (command.Count == 0)
+					commands.Remove(space);
 			}
 		}
 
@@ -149,7 +147,7 @@ namespace SHVDN
 		/// <param name="color">The color of those lines.</param>
 		void AddLines(string prefix, string[] messages, string color)
 		{
-			for (int i = 0; i < messages.Length; i++) // Add proper styling
+			for (var i = 0; i < messages.Length; i++) // Add proper styling
 				messages[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {color}{messages[i]}";
 
 			outputQueue.Enqueue(messages);
@@ -171,7 +169,7 @@ namespace SHVDN
 		/// </summary>
 		void AddClipboardContent()
 		{
-			string text = Clipboard.GetText();
+			var text = Clipboard.GetText();
 			text = text.Replace("\n", string.Empty); // TODO Keep this?
 
 			AddToInput(text);
@@ -233,7 +231,7 @@ namespace SHVDN
 		/// </summary>
 		internal void PrintHelpText()
 		{
-			StringBuilder help = new StringBuilder();
+			var help = new StringBuilder();
 			foreach (var space in commands.Keys)
 			{
 				help.AppendLine($"[{space}]");
@@ -263,11 +261,9 @@ namespace SHVDN
 			{
 				foreach (var command in commands[space])
 				{
-					if (command.Name == commandName)
-					{
-						PrintInfo(command.Name + ": " + command.Help);
-						return;
-					}
+					if (command.Name != commandName) continue;
+					PrintInfo(command.Name + ": " + command.Help);
+					return;
 				}
 			}
 		}
@@ -277,7 +273,7 @@ namespace SHVDN
 		/// </summary>
 		internal void DoTick()
 		{
-			int nowTickCount = Environment.TickCount;
+			var nowTickCount = Environment.TickCount;
 
 			// Execute compiled input line script
 			if (compilerTask != null && compilerTask.IsCompleted)
@@ -303,8 +299,8 @@ namespace SHVDN
 			}
 
 			// Add lines from concurrent queue to history
-			if (outputQueue.TryDequeue(out string[] lines))
-				foreach (string line in lines)
+			if (outputQueue.TryDequeue(out var lines))
+				foreach (var line in lines)
 					lineHistory.Add(line);
 
 			if (!IsOpen)
@@ -343,14 +339,14 @@ namespace SHVDN
 			// Draw blinking cursor
 			if (nowTickCount % 1000 < 500)
 			{
-				float lengthBetweenInputStartAndCursor = GetTextLength(input.Substring(0, cursorPos)) - GetMarginLength();
+				var lengthBetweenInputStartAndCursor = GetTextLength(input.Substring(0, cursorPos)) - GetMarginLength();
 				DrawRect(26 + (lengthBetweenInputStartAndCursor * CONSOLE_WIDTH), CONSOLE_HEIGHT + 2, 2, INPUT_HEIGHT - 4, Color.White);
 			}
 
 			// Draw console history text
-			int historyOffset = lineHistory.Count - (LINES_PER_PAGE * currentPage);
-			int historyLength = historyOffset + LINES_PER_PAGE;
-			for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
+			var historyOffset = lineHistory.Count - (LINES_PER_PAGE * currentPage);
+			var historyLength = historyOffset + LINES_PER_PAGE;
+			for (var i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
 			{
 				DrawText(2, (float)((i - historyOffset) * 14), lineHistory[i], OutputColor);
 			}
@@ -609,7 +605,7 @@ namespace SHVDN
 				return;
 			}
 
-			char prevChar = input[cursorPos - 1];
+			var prevChar = input[cursorPos - 1];
 			if (!char.IsLetterOrDigit(prevChar))
 			{
 				cursorPos--;
@@ -637,21 +633,17 @@ namespace SHVDN
 		/// </summary>
 		void BackwardDeleteChar()
 		{
-			if (input.Length > 0 && cursorPos > 0)
-			{
-				input = input.Remove(cursorPos - 1, 1);
-				cursorPos--;
-			}
+			if (input.Length <= 0 || cursorPos <= 0) return;
+			input = input.Remove(cursorPos - 1, 1);
+			cursorPos--;
 		}
 		/// <summary>
 		/// Deletes the character at point.
 		/// </summary>
 		void ForwardDeleteChar()
 		{
-			if (input.Length > 0 && cursorPos < input.Length)
-			{
-				input = input.Remove(cursorPos, 1);
-			}
+			if (input.Length <= 0 || cursorPos >= input.Length) return;
+			input = input.Remove(cursorPos, 1);
 		}
 
 		/// <summary>
@@ -659,21 +651,17 @@ namespace SHVDN
 		/// </summary>
 		void KillLine()
 		{
-			if (input.Length > 0 && cursorPos > 0)
-			{
-				KillText(ref input, 0, cursorPos);
-				cursorPos = 0;
-			}
+			if (input.Length <= 0 || cursorPos <= 0) return;
+			KillText(ref input, 0, cursorPos);
+			cursorPos = 0;
 		}
 		/// <summary>
 		/// Kills backward from the cursor to the beginning of the current line.
 		/// </summary>
 		void BackwardKillLine()
 		{
-			if (input.Length > 0 && cursorPos < input.Length)
-			{
-				KillText(ref input, cursorPos, input.Length - cursorPos);
-			}
+			if (input.Length <= 0 || cursorPos >= input.Length) return;
+			KillText(ref input, cursorPos, input.Length - cursorPos);
 		}
 		/// <summary>
 		/// Kills from point to the end of the current word, or if between words, to the end of the next word.
@@ -684,11 +672,9 @@ namespace SHVDN
 			var origCursorPos = cursorPos;
 			ForwardWord();
 
-			if (cursorPos != origCursorPos)
-			{
-				KillText(ref input, origCursorPos, cursorPos - origCursorPos);
-				cursorPos = origCursorPos;
-			}
+			if (cursorPos == origCursorPos) return;
+			KillText(ref input, origCursorPos, cursorPos - origCursorPos);
+			cursorPos = origCursorPos;
 		}
 		/// <summary>
 		/// Kill the word behind the cursor.
@@ -699,10 +685,8 @@ namespace SHVDN
 			var origCursorPos = cursorPos;
 			BackwardWord();
 
-			if (cursorPos != origCursorPos)
-			{
-				KillText(ref input, cursorPos, origCursorPos - cursorPos);
-			}
+			if (cursorPos == origCursorPos) return;
+			KillText(ref input, cursorPos, origCursorPos - cursorPos);
 		}
 		/// <summary>
 		/// Kills the word behind the cursor, using white space as a word boundary.
@@ -767,7 +751,7 @@ namespace SHVDN
 				{
 					fixed (char* stringPtr = str)
 					{
-						char tmp = stringPtr[index];
+						var tmp = stringPtr[index];
 						stringPtr[index] = stringPtr[index + 1];
 						stringPtr[index + 1] = tmp;
 					}
@@ -875,32 +859,30 @@ namespace SHVDN
 					// Define some shortcut variables to simplify commands
 					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.Player.Character; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
-				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
+				var compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
 				if (!compilerResult.Errors.HasErrors)
 				{
 					return compilerResult.CompiledAssembly.GetType("ConsoleInput").GetMethod("Execute");
 				}
-				else
+
+				PrintError($"Couldn't compile input expression: {input}");
+
+				var errors = new StringBuilder();
+
+				for (var i = 0; i < compilerResult.Errors.Count; ++i)
 				{
-					PrintError($"Couldn't compile input expression: {input}");
+					errors.Append("   at line ");
+					errors.Append(compilerResult.Errors[i].Line);
+					errors.Append(": ");
+					errors.Append(compilerResult.Errors[i].ErrorText);
 
-					StringBuilder errors = new StringBuilder();
-
-					for (int i = 0; i < compilerResult.Errors.Count; ++i)
-					{
-						errors.Append("   at line ");
-						errors.Append(compilerResult.Errors[i].Line);
-						errors.Append(": ");
-						errors.Append(compilerResult.Errors[i].ErrorText);
-
-						if (i < compilerResult.Errors.Count - 1)
-							errors.AppendLine();
-					}
-
-					PrintError(errors.ToString());
-					return null;
+					if (i < compilerResult.Errors.Count - 1)
+						errors.AppendLine();
 				}
+
+				PrintError(errors.ToString());
+				return null;
 			});
 		}
 
@@ -911,8 +893,8 @@ namespace SHVDN
 
 		static unsafe void DrawRect(float x, float y, int width, int height, Color color)
 		{
-			float w = (float)(width) / BASE_WIDTH;
-			float h = (float)(height) / BASE_HEIGHT;
+			var w = (float)(width) / BASE_WIDTH;
+			var h = (float)(height) / BASE_HEIGHT;
 
 			NativeFunc.InvokeInternal(0x3A618A217E5154F0ul /* DRAW_RECT */,
 				(x / BASE_WIDTH) + w * 0.5f,
@@ -950,12 +932,9 @@ namespace SHVDN
 
 		static float GetMarginLength()
 		{
-			unsafe
-			{
-				var len1 = GetTextLength("A");
-				var len2 = GetTextLength("AA");
-				return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
-			}
+			var len1 = GetTextLength("A");
+			var len2 = GetTextLength("AA");
+			return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
 		}
 	}
 

@@ -188,11 +188,11 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the engine registance. The higher the value is, the slower the vehicles accelerate.
+		/// Gets or sets the engine resistance. The higher the value is, the slower the vehicles accelerate.
 		/// Only available in v1.0.1365.1 or later game versions.
 		/// </summary>
 		/// <value>
-		/// The engine registance.
+		/// The engine resistance.
 		/// </value>
 		public float EngineResistance
 		{
@@ -244,7 +244,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same car handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(CarHandlingData left, CarHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="CarHandlingData"/>s don't refer to the same car handling data.

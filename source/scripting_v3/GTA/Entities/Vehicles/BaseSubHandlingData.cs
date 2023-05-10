@@ -74,7 +74,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same sub handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(BaseSubHandlingData left, BaseSubHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="BaseSubHandlingData"/>s don't refer to the same car handling data.

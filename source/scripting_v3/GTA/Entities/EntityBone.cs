@@ -113,7 +113,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -123,7 +123,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -144,7 +144,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -154,7 +154,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -175,7 +175,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -185,7 +185,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -212,7 +212,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Quaternion.Zero;
@@ -228,7 +228,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -254,7 +254,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -268,10 +268,7 @@ namespace GTA
 					return new Vector3(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2]);
 				}
 			}
-			set
-			{
-				PoseQuaternion = Quaternion.Euler(value, EulerRotationOrder.YXZ);
-			}
+			set => PoseQuaternion = Quaternion.Euler(value, EulerRotationOrder.YXZ);
 		}
 
 		/// <summary>
@@ -287,22 +284,22 @@ namespace GTA
 			// The result is basically the same as GET_ENTITY_BONE_OBJECT_ROTATION but this getter calculates via quaternions (not matrices)
 			get
 			{
-				IntPtr relativeMatrixAddress = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var relativeMatrixAddress = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (relativeMatrixAddress == IntPtr.Zero)
 				{
 					return Quaternion.Zero;
 				}
 
-				Quaternion relativeBoneQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(relativeMatrixAddress)));
+				var relativeBoneQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(relativeMatrixAddress)));
 
-				IntPtr transformMatrixAddress = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(Owner.Handle);
+				var transformMatrixAddress = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(Owner.Handle);
 				if (transformMatrixAddress == IntPtr.Zero)
 				{
 					// GET_ENTITY_BONE_OBJECT_ROTATION considers this edge case
 					return relativeBoneQuaternion;
 				}
 
-				Quaternion globalTransformQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(transformMatrixAddress)));
+				var globalTransformQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(transformMatrixAddress)));
 
 				return globalTransformQuaternion * relativeBoneQuaternion;
 			}
@@ -337,7 +334,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -347,7 +344,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -374,7 +371,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Quaternion.Zero;
@@ -390,7 +387,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -416,7 +413,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -430,10 +427,7 @@ namespace GTA
 					return new Vector3(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2]);
 				}
 			}
-			set
-			{
-				RelativeQuaternion = Quaternion.Euler(value, EulerRotationOrder.YXZ);
-			}
+			set => RelativeQuaternion = Quaternion.Euler(value, EulerRotationOrder.YXZ);
 		}
 
 		/// <summary>
@@ -443,7 +437,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.UpVector;
@@ -459,7 +453,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.RightVector;
@@ -475,7 +469,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.ForwardVector;
@@ -491,7 +485,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
@@ -507,7 +501,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
@@ -523,7 +517,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
@@ -539,7 +533,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = Owner.MemoryAddress;
+				var address = Owner.MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return -1;
@@ -555,7 +549,7 @@ namespace GTA
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
 		public Vector3 GetOffsetPosition(Vector3 offset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return Owner.Matrix.TransformPoint(offset);
@@ -569,7 +563,7 @@ namespace GTA
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
 		public Vector3 GetRelativeOffsetPosition(Vector3 offset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return offset;
@@ -583,7 +577,7 @@ namespace GTA
 		/// <param name="worldCoords">The world coordinates.</param>
 		public Vector3 GetPositionOffset(Vector3 worldCoords)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return Owner.Matrix.InverseTransformPoint(worldCoords);
@@ -597,7 +591,7 @@ namespace GTA
 		/// <param name="entityOffset">The <see cref="Entity"/> offset.</param>
 		public Vector3 GetRelativePositionOffset(Vector3 entityOffset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return entityOffset;
@@ -628,7 +622,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same bone as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(EntityBone left, EntityBone right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="EntityBone"/>s don't refer to the same bone.
@@ -672,7 +666,7 @@ namespace GTA
 		/// </summary>
 		public static implicit operator int(EntityBone entityBone)
 		{
-			return entityBone is null ? -1 : entityBone.Index;
+			return entityBone?.Index ?? -1;
 		}
 		/// <summary>
 		/// Converts an <see cref="EntityBone"/> to a native input argument.

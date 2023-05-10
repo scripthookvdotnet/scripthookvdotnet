@@ -153,35 +153,17 @@ namespace GTA
 		/// <summary>
 		/// Checks if this <see cref="Script"/> is paused.
 		/// </summary>
-		public bool IsPaused
-		{
-			get
-			{
-				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused;
-			}
-		}
+		public bool IsPaused => SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsPaused;
 
 		/// <summary>
 		/// Checks if this <see cref="Script"/> is running.
 		/// </summary>
-		public bool IsRunning
-		{
-			get
-			{
-				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning;
-			}
-		}
+		public bool IsRunning => SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsRunning;
 
 		/// <summary>
 		/// Checks if this <see cref="Script"/> is executing.
 		/// </summary>
-		public bool IsExecuting
-		{
-			get
-			{
-				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting;
-			}
-		}
+		public bool IsExecuting => SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).IsExecuting;
 
 		/// <summary>
 		/// Gets an INI file associated with this <see cref="Script"/>.
@@ -192,12 +174,10 @@ namespace GTA
 		{
 			get
 			{
-				if (_settings == null)
-				{
-					string path = Path.ChangeExtension(Filename, ".ini");
+				if (_settings != null) return _settings;
+				var path = Path.ChangeExtension(Filename, ".ini");
 
-					_settings = ScriptSettings.Load(path);
-				}
+				_settings = ScriptSettings.Load(path);
 
 				return _settings;
 			}
@@ -209,10 +189,7 @@ namespace GTA
 		/// </summary>
 		protected int Interval
 		{
-			get
-			{
-				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
-			}
+			get => SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
 			set
 			{
 				if (value < 0)

@@ -82,11 +82,11 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_DIRT_LEVEL, Handle, value);
 		}
 
-		public VehicleModCollection Mods => _mods ?? (_mods = new VehicleModCollection(this));
+		public VehicleModCollection Mods => _mods ??= new VehicleModCollection(this);
 
-		public VehicleWheelCollection Wheels => _wheels ?? (_wheels = new VehicleWheelCollection(this));
+		public VehicleWheelCollection Wheels => _wheels ??= new VehicleWheelCollection(this);
 
-		public VehicleWindowCollection Windows => _windows ?? (_windows = new VehicleWindowCollection(this));
+		public VehicleWindowCollection Windows => _windows ??= new VehicleWindowCollection(this);
 
 		public void Wash()
 		{
@@ -135,7 +135,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.Automobile || vehicleType == VehicleType.AmphibiousAutomobile || vehicleType == VehicleType.SubmarineCar);
+				return vehicleType is VehicleType.Automobile or VehicleType.AmphibiousAutomobile or VehicleType.SubmarineCar;
 			}
 		}
 
@@ -157,7 +157,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.QuadBike || vehicleType == VehicleType.AmphibiousQuadBike);
+				return vehicleType is VehicleType.QuadBike or VehicleType.AmphibiousQuadBike;
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.AmphibiousAutomobile || vehicleType == VehicleType.AmphibiousQuadBike);
+				return vehicleType is VehicleType.AmphibiousAutomobile or VehicleType.AmphibiousQuadBike;
 			}
 		}
 
@@ -201,7 +201,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.Plane || vehicleType == VehicleType.Helicopter || vehicleType == VehicleType.Blimp);
+				return vehicleType is VehicleType.Plane or VehicleType.Helicopter or VehicleType.Blimp;
 			}
 		}
 
@@ -429,7 +429,7 @@ namespace GTA
 					return VehicleType.None;
 				}
 
-				int vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				var vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
 				if (vehTypeInt >= 6 && Game.Version < GameVersion.v1_0_944_2_Steam)
 				{
 					vehTypeInt += 2;
@@ -819,12 +819,12 @@ namespace GTA
 				{
 					if (value > 10)
 					{
-						throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 10, inclusive.");
+						throw new ArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 10, inclusive.");
 					}
 				}
 				else if (value > 7)
 				{
-					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
+					throw new ArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 7, inclusive.");
 				}
 
 				SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.HighGearOffset, (byte)value);
@@ -1234,7 +1234,7 @@ namespace GTA
 					return 0;
 				}
 
-				ushort alarmTime = (ushort)SHVDN.NativeMemory.ReadInt16(address + SHVDN.NativeMemory.AlarmTimeOffset);
+				var alarmTime = (ushort)SHVDN.NativeMemory.ReadInt16(address + SHVDN.NativeMemory.AlarmTimeOffset);
 				return alarmTime != ushort.MaxValue ? alarmTime : 0;
 			}
 			set
@@ -1662,7 +1662,7 @@ namespace GTA
 			get => Function.Call<VehicleLandingGearState>(Hash.GET_LANDING_GEAR_STATE, Handle);
 			set
 			{
-				int state = 0;
+				var state = 0;
 				switch (value)
 				{
 					case VehicleLandingGearState.Deploying:
@@ -1728,7 +1728,7 @@ namespace GTA
 		{
 			get
 			{
-				Ped driver = Driver;
+				var driver = Driver;
 
 				if (driver == null)
 				{
@@ -1816,13 +1816,11 @@ namespace GTA
 			{
 				return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED_AS_DRIVER, Handle, true));
 			}
-			else
-			{
-				int pedHandle = Function.Call<int>(Hash.CREATE_RANDOM_PED, 0f, 0f, 0f);
-				Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, seat);
 
-				return new Ped(pedHandle);
-			}
+			var pedHandle = Function.Call<int>(Hash.CREATE_RANDOM_PED, 0f, 0f, 0f);
+			Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, seat);
+
+			return new Ped(pedHandle);
 		}
 
 		public bool IsSeatFree(VehicleSeat seat)
@@ -1847,12 +1845,12 @@ namespace GTA
 
 		public void PlaceOnNextStreet()
 		{
-			Vector3 currentPosition = Position;
+			var currentPosition = Position;
 			NativeVector3 newPosition;
 			float heading;
 			long unkn;
 
-			for (int i = 1; i < 40; i++)
+			for (var i = 1; i < 40; i++)
 			{
 				unsafe
 				{
@@ -1921,7 +1919,7 @@ namespace GTA
 
 		public void DetachTowedVehicle()
 		{
-			Vehicle vehicle = TowedVehicle;
+			var vehicle = TowedVehicle;
 
 			if (vehicle != null)
 			{
@@ -2239,7 +2237,7 @@ namespace GTA
 		public static int[] GetAllModelValues()
 		{
 			var allModels = new List<int>();
-			for (int i = 0; i < 0x20; i++)
+			for (var i = 0; i < 0x20; i++)
 			{
 				allModels.AddRange(SHVDN.NativeMemory.VehicleModels[i].ToArray());
 			}
@@ -2249,7 +2247,7 @@ namespace GTA
 		public static VehicleHash[] GetAllModels()
 		{
 			var allModels = new List<VehicleHash>();
-			for (int i = 0; i < 0x20; i++)
+			for (var i = 0; i < 0x20; i++)
 			{
 				allModels.AddRange(Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[i].ToArray(), item => (VehicleHash)item));
 			}

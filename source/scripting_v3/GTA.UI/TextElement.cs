@@ -176,10 +176,7 @@ namespace GTA.UI
 		/// </value>
 		public string Caption
 		{
-			get
-			{
-				return _caption;
-			}
+			get => _caption;
 			set
 			{
 				_caption = value;
@@ -191,8 +188,8 @@ namespace GTA.UI
 
 				SHVDN.NativeFunc.PushLongString(value, (string str) =>
 				{
-					byte[] data = Encoding.UTF8.GetBytes(str + "\0");
-					IntPtr next = Marshal.AllocCoTaskMem(data.Length);
+					var data = Encoding.UTF8.GetBytes(str + "\0");
+					var next = Marshal.AllocCoTaskMem(data.Length);
 					Marshal.Copy(data, 0, next, data.Length);
 					_pinnedText.Add(next);
 				});
@@ -248,10 +245,7 @@ namespace GTA.UI
 		/// </value>
 		public bool Centered
 		{
-			get
-			{
-				return Alignment == Alignment.Center;
-			}
+			get => Alignment == Alignment.Center;
 			set
 			{
 				if (value)
@@ -270,7 +264,7 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-				foreach (IntPtr ptr in _pinnedText)
+				foreach (var ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
@@ -290,7 +284,7 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-				foreach (IntPtr ptr in _pinnedText)
+				foreach (var ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
@@ -417,9 +411,9 @@ namespace GTA.UI
 				return;
 			}
 
-			float x = (Position.X + offset.Width) / screenWidth;
-			float y = (Position.Y + offset.Height) / screenHeight;
-			float w = WrapWidth / screenWidth;
+			var x = (Position.X + offset.Width) / screenWidth;
+			var y = (Position.Y + offset.Height) / screenHeight;
+			var w = WrapWidth / screenWidth;
 
 			if (Shadow)
 			{
@@ -457,7 +451,7 @@ namespace GTA.UI
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-			foreach (IntPtr ptr in _pinnedText)
+			foreach (var ptr in _pinnedText)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 			}

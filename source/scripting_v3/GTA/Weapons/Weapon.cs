@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
 using GTA.Native;
 using System.Linq;
 
@@ -36,7 +37,7 @@ namespace GTA
 
 		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, Hash);
 
-		public Model Model => new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
+		public Model Model => new(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
 
 		public WeaponTint Tint
 		{
@@ -317,12 +318,10 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data))
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data)) continue;
+					if (data.Hash == hash)
 					{
-						if (data.Hash == hash)
-						{
-							return data.DisplayName;
-						}
+						return data.DisplayName;
 					}
 				}
 			}

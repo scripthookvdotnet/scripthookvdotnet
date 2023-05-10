@@ -13,7 +13,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly string _fileName;
-		Dictionary<string, Dictionary<string, List<string>>> _values = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
+		readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
 		#endregion
 
 		ScriptSettings(string fileName)
@@ -35,7 +35,7 @@ namespace GTA
 			}
 
 			string line = null;
-			string tempSectionName = String.Empty;
+			var tempSectionName = string.Empty;
 			StreamReader reader = null;
 
 			try
@@ -63,11 +63,12 @@ namespace GTA
 						tempSectionName = line.Substring(1, line.IndexOf("]", StringComparison.Ordinal) - 1).Trim();
 						continue;
 					}
-					else if (line.Contains("="))
+
+					if (line.Contains("="))
 					{
-						int index = line.IndexOf("=", StringComparison.Ordinal);
-						string key = line.Substring(0, index).Trim();
-						string value = line.Substring(index + 1).Trim();
+						var index = line.IndexOf("=", StringComparison.Ordinal);
+						var key = line.Substring(0, index).Trim();
+						var value = line.Substring(index + 1).Trim();
 
 						if (value.Contains("//"))
 						{
@@ -98,10 +99,10 @@ namespace GTA
 		{
 			var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
 
-			foreach (var sectonAndKeyValuePairs in _values)
+			foreach (var sectionAndKeyValuePairs in _values)
 			{
-				var sectionName = sectonAndKeyValuePairs.Key;
-				foreach (var keyValuePairs in sectonAndKeyValuePairs.Value)
+				var sectionName = sectionAndKeyValuePairs.Key;
+				foreach (var keyValuePairs in sectionAndKeyValuePairs.Value)
 				{
 					var keyName = keyValuePairs.Key;
 					var valueList = keyValuePairs.Value;
@@ -190,10 +191,8 @@ namespace GTA
 				{
 					return (T)Enum.Parse(typeof(T), valueList[0], true);
 				}
-				else
-				{
-					return (T)Convert.ChangeType(valueList[0], typeof(T));
-				}
+
+				return (T)Convert.ChangeType(valueList[0], typeof(T));
 			}
 			catch (Exception)
 			{
@@ -282,16 +281,14 @@ namespace GTA
 		/// </remarks>
 		public void SetValue(string section, string key, string value)
 		{
-			string internalValue = value.ToString();
-
 			if (_values.TryGetValue(section, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(key, out var valueList))
 			{
 				// Assume the value list already occupies the index 0
-				valueList[0] = internalValue;
+				valueList[0] = value;
 				return;
 			}
 
-			AddNewValueInternal(section, key, internalValue);
+			AddNewValueInternal(section, key, value);
 		}
 
 		private void AddNewValueInternal(string sectionName, string keyName, string valueString)

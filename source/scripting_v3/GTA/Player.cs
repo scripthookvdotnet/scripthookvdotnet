@@ -39,7 +39,7 @@ namespace GTA
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.GET_PLAYER_PED, Handle);
+				var handle = Function.Call<int>(Hash.GET_PLAYER_PED, Handle);
 
 				if (ped == null || handle != ped.Handle)
 				{
@@ -327,10 +327,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Player"/> can start a mission; otherwise, <see langword="false" />.
 		/// </value>
-		public bool CanStartMission
-		{
-			get => Function.Call<bool>(Hash.CAN_PLAYER_START_MISSION, Handle);
-		}
+		public bool CanStartMission => Function.Call<bool>(Hash.CAN_PLAYER_START_MISSION, Handle);
 
 		/// <summary>
 		/// Sets a value indicating whether this <see cref="Player"/> can control ragdoll.
@@ -626,7 +623,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same player as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Player left, Player right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Player"/>s don't refer to the same player.

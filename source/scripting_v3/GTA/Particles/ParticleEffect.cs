@@ -27,10 +27,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="GTA.Entity"/> this <see cref="ParticleEffect"/> is attached to or <see langword="null" /> if there is none.
 		/// </summary>
-		public Entity Entity
-		{
-			get => Bone?.Owner;
-		}
+		public Entity Entity => Bone?.Owner;
 
 		/// <summary>
 		/// Gets the <see cref="EntityBone"/> that this <see cref="ParticleEffect"/> is attached to or <see langword="null" /> if there is none.
@@ -65,7 +62,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -81,7 +78,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -117,22 +114,22 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return default;
 				}
 
 				address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
-				byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
-				byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
-				byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
-				byte a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
+				var r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
+				var g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
+				var b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
+				var a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
 				return Color.FromArgb(a, r, g, b);
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -158,7 +155,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -168,7 +165,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -185,7 +182,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -246,7 +243,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same effect as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(ParticleEffect left, ParticleEffect right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="ParticleEffect"/>s don't refer to the same effect.

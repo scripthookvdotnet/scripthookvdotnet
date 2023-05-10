@@ -14,7 +14,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly string _fileName;
-		Dictionary<string, Dictionary<string, List<string>>> _values = new Dictionary<string, Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase);
+		Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
 		#endregion
 
 		ScriptSettings(string fileName)
@@ -36,7 +36,7 @@ namespace GTA
 			}
 
 			string line = null;
-			string tempSectionName = String.Empty;
+			var tempSectionName = string.Empty;
 			StreamReader reader = null;
 
 			try
@@ -66,9 +66,9 @@ namespace GTA
 					}
 					else if (line.Contains("="))
 					{
-						int index = line.IndexOf("=", StringComparison.Ordinal);
-						string key = line.Substring(0, index).Trim();
-						string value = line.Substring(index + 1).Trim();
+						var index = line.IndexOf("=", StringComparison.Ordinal);
+						var key = line.Substring(0, index).Trim();
+						var value = line.Substring(index + 1).Trim();
 
 						if (value.Contains("//"))
 						{
@@ -112,7 +112,7 @@ namespace GTA
 						if (!result.ContainsKey(sectionName))
 						{
 							var values = new List<Tuple<string, string>> {
-								new Tuple<string, string>(keyName, value)
+								new(keyName, value)
 							};
 
 							result.Add(sectionName, values);
@@ -196,10 +196,8 @@ namespace GTA
 				{
 					return (T)Enum.Parse(typeof(T), valueList[0], true);
 				}
-				else
-				{
-					return (T)Convert.ChangeType(valueList[0], typeof(T));
-				}
+
+				return (T)Convert.ChangeType(valueList[0], typeof(T));
 			}
 			catch (Exception)
 			{
@@ -236,10 +234,8 @@ namespace GTA
 				{
 					return (T)Enum.Parse(typeof(T), valueList[0], true);
 				}
-				else
-				{
-					return formatProvider != null ? (T)Convert.ChangeType(valueList[0], typeof(T), formatProvider) : (T)Convert.ChangeType(valueList[0], typeof(T));
-				}
+
+				return formatProvider != null ? (T)Convert.ChangeType(valueList[0], typeof(T), formatProvider) : (T)Convert.ChangeType(valueList[0], typeof(T));
 			}
 			catch (Exception)
 			{
@@ -295,11 +291,9 @@ namespace GTA
 					value = (T)Enum.Parse(typeof(T), valueList[0], true);
 					return true;
 				}
-				else
-				{
-					value = (T)Convert.ChangeType(valueList[0], typeof(T), formatProvider);
-					return true;
-				}
+
+				value = (T)Convert.ChangeType(valueList[0], typeof(T), formatProvider);
+				return true;
 			}
 			catch (Exception)
 			{

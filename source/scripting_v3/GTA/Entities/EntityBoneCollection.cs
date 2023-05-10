@@ -57,10 +57,7 @@ namespace GTA
 		/// Gets the <see cref="EntityBone"/> at the specified bone index.
 		/// </summary>
 		/// <param name="boneIndex">The bone index.</param>
-		public EntityBone this[int boneIndex]
-		{
-			get => new EntityBone(_owner, boneIndex);
-		}
+		public EntityBone this[int boneIndex] => new(_owner, boneIndex);
 
 		/// <summary>
 		/// <para>
@@ -78,10 +75,7 @@ namespace GTA
 		/// Registered bone tag values (in the model) may be different from the calculated hashes from corresponding bone names.
 		/// For example, <see cref="Ped"/>s have the bone in their skeletons whose name is <c>SKEL_Spine3</c> and whose ID is <c>24818</c>, which doesn't match the hashed value of <c>SKEL_Spine3</c> but matches that of <c>BONETAG_SPINE3</c>.
 		/// </remarks>
-		public EntityBone this[string boneName]
-		{
-			get => new EntityBone(_owner, boneName);
-		}
+		public EntityBone this[string boneName] => new(_owner, boneName);
 
 		/// <summary>
 		/// Gets the number of bones that this <see cref="Entity"/> has.
@@ -98,7 +92,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(_owner.Handle);
+				var address = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(_owner.Handle);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -123,7 +117,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the core bone of this <see cref="Entity"/>.
 		/// </summary>
-		public EntityBone Core => new EntityBone(_owner, -1);
+		public EntityBone Core => new(_owner, -1);
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{

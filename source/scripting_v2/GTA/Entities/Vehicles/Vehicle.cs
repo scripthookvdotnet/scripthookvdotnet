@@ -318,17 +318,7 @@ namespace GTA
 
 		public int Livery
 		{
-			get
-			{
-				if (GetModCount(VehicleMod.Livery) >= 1)
-				{
-					return GetMod(VehicleMod.Livery);
-				}
-				else
-				{
-					return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, Handle);
-				}
-			}
+			get => GetModCount(VehicleMod.Livery) >= 1 ? GetMod(VehicleMod.Livery) : Function.Call<int>(Hash.GET_VEHICLE_LIVERY, Handle);
 			set
 			{
 				if (GetModCount(VehicleMod.Livery) >= 1)
@@ -346,16 +336,9 @@ namespace GTA
 		{
 			get
 			{
-				int bennysLiveryCount = GetModCount(VehicleMod.Livery);
+				var bennysLiveryCount = GetModCount(VehicleMod.Livery);
 
-				if (bennysLiveryCount > 0)
-				{
-					return bennysLiveryCount;
-				}
-				else
-				{
-					return Function.Call<int>(Hash.GET_VEHICLE_LIVERY_COUNT, Handle);
-				}
+				return bennysLiveryCount > 0 ? bennysLiveryCount : Function.Call<int>(Hash.GET_VEHICLE_LIVERY_COUNT, Handle);
 			}
 		}
 
@@ -718,7 +701,7 @@ namespace GTA
 
 		public void SoundHorn(int duration)
 		{
-			int heldDownHash = Game.GenerateHash("HELDDOWN");
+			var heldDownHash = Game.GenerateHash("HELDDOWN");
 			Function.Call(Hash.START_VEHICLE_HORN, Handle, duration, heldDownHash, 0);
 		}
 
@@ -1046,11 +1029,11 @@ namespace GTA
 		{
 			get
 			{
-				Ped driver = Driver;
+				var driver = Driver;
 
-				int arraySize = Entity.Exists(driver) ? PassengerCount + 1 : PassengerCount;
-				Ped[] occupantsArray = new Ped[arraySize];
-				int occupantIndex = 0;
+				var arraySize = Entity.Exists(driver) ? PassengerCount + 1 : PassengerCount;
+				var occupantsArray = new Ped[arraySize];
+				var occupantIndex = 0;
 
 				if (arraySize == 0)
 				{
@@ -1065,7 +1048,7 @@ namespace GTA
 
 				for (int i = 0, seats = PassengerSeats; i < seats; i++)
 				{
-					Ped ped = GetPedOnSeat((VehicleSeat)i);
+					var ped = GetPedOnSeat((VehicleSeat)i);
 
 					if (!Entity.Exists(ped))
 					{
@@ -1090,7 +1073,7 @@ namespace GTA
 			get
 			{
 				var passengersArray = new Ped[PassengerCount];
-				int passengerIndex = 0;
+				var passengerIndex = 0;
 
 				if (passengersArray.Length == 0)
 				{
@@ -1099,9 +1082,9 @@ namespace GTA
 
 				for (int i = 0, seats = PassengerSeats; i < seats; i++)
 				{
-					Ped ped = GetPedOnSeat((VehicleSeat)i);
+					var ped = GetPedOnSeat((VehicleSeat)i);
 
-					if (!Entity.Exists(ped))
+					if (!Exists(ped))
 					{
 						continue;
 					}
@@ -1141,7 +1124,7 @@ namespace GTA
 			}
 			else
 			{
-				Ped ped = Function.Call<Ped>(Hash.CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
+				var ped = Function.Call<Ped>(Hash.CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
 				Function.Call(Hash.SET_PED_INTO_VEHICLE, ped.Handle, Handle, (int)seat);
 
 				return ped;
@@ -1170,18 +1153,18 @@ namespace GTA
 
 		public void PlaceOnNextStreet()
 		{
-			Vector3 pos = Position;
-			OutputArgument outPos = new OutputArgument();
+			var pos = Position;
+			var outPos = new OutputArgument();
 
-			for (int i = 1; i < 40; i++)
+			for (var i = 1; i < 40; i++)
 			{
 				float heading;
-				float val;
 				unsafe
 				{
+					float val;
 					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, pos.X, pos.Y, pos.Z, i, outPos, &heading, &val, 1, 0x40400000, 0);
 				}
-				Vector3 newPos = outPos.GetResult<Vector3>();
+				var newPos = outPos.GetResult<Vector3>();
 
 				if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPos.X, newPos.Y, newPos.Z, 5.0f, 5.0f, 5.0f, 0))
 				{
@@ -1223,7 +1206,7 @@ namespace GTA
 
 		public void DetachTowedVehicle()
 		{
-			Vehicle vehicle = TowedVehicle;
+			var vehicle = TowedVehicle;
 
 			if (Entity.Exists(vehicle))
 			{
@@ -1301,15 +1284,13 @@ namespace GTA
 		}
 		public bool IsCargobobHookActive(CargobobHook hookType)
 		{
-			if (Model.IsCargobob)
+			if (!Model.IsCargobob) return false;
+			switch (hookType)
 			{
-				switch (hookType)
-				{
-					case CargobobHook.Hook:
-						return Function.Call<bool>(Hash._0x1821D91AD4B56108, Handle);
-					case CargobobHook.Magnet:
-						return Function.Call<bool>(Hash._0x6E08BF5B3722BAC9, Handle);
-				}
+				case CargobobHook.Hook:
+					return Function.Call<bool>(Hash._0x1821D91AD4B56108, Handle);
+				case CargobobHook.Magnet:
+					return Function.Call<bool>(Hash._0x6E08BF5B3722BAC9, Handle);
 			}
 
 			return false;

@@ -43,7 +43,7 @@ namespace GTA.Native
 			var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
 				new Type[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
 
-			ILGenerator generator = ptrToStrMethod.GetILGenerator();
+			var generator = ptrToStrMethod.GetILGenerator();
 			generator.Emit(OpCodes.Ldarg_0);
 			generator.Emit(OpCodes.Ldobj, typeof(T));
 			generator.Emit(OpCodes.Ret);
@@ -365,10 +365,10 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				var argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
 				var argPtr = stackalloc ulong[argCount];
 
-				for (int i = 0; i < argCount; ++i)
+				for (var i = 0; i < argCount; ++i)
 				{
 					argPtr[i] = arguments[i]._data;
 				}
@@ -1105,10 +1105,10 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				var argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
 				var argPtr = stackalloc ulong[argCount];
 
-				for (int i = 0; i < argCount; ++i)
+				for (var i = 0; i < argCount; ++i)
 				{
 					argPtr[i] = arguments[i]._data;
 				}
@@ -1799,7 +1799,7 @@ namespace GTA.Native
 				return (ulong)SHVDN.ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
 			}
 
-			if (typeof(INativeValue).IsAssignableFrom(value.GetType()))
+			if (value is INativeValue)
 			{
 				return ((INativeValue)value).NativeValue;
 			}
@@ -1820,7 +1820,7 @@ namespace GTA.Native
 			if (typeof(T) == typeof(bool))
 			{
 				// Return proper boolean values (true if non-zero and false if zero)
-				bool valueBool = *value != 0;
+				var valueBool = *value != 0;
 				return NativeHelper<T>.PtrToStructure(new IntPtr(&valueBool));
 			}
 			if (typeof(T) == typeof(IntPtr)) // Has to be before 'IsPrimitive' check
@@ -1915,7 +1915,7 @@ namespace GTA.Native
 		/// <returns>A <see cref="GlobalVariable"/> instance representing the global variable.</returns>
 		public static GlobalVariable Get(int index)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetGlobalPtr(index);
+			var address = SHVDN.NativeMemory.GetGlobalPtr(index);
 
 			if (address == IntPtr.Zero)
 			{
@@ -2013,7 +2013,7 @@ namespace GTA.Native
 		{
 			if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
 			{
-				throw new ArgumentException("The string maximum size should be one of 8, 16, 24, 32 or 64.", "maxSize");
+				throw new ArgumentException("The string maximum size should be one of 8, 16, 24, 32 or 64.", nameof(maxSize));
 			}
 
 			// Null-terminate string
@@ -2094,10 +2094,10 @@ namespace GTA.Native
 		{
 			if (itemSize <= 0)
 			{
-				throw new ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
+				throw new ArgumentOutOfRangeException(nameof(itemSize), "The item size for an array must be positive.");
 			}
 
-			int count = Read<int>();
+			var count = Read<int>();
 
 			// Globals are stored in pages that hold a maximum of 65536 items
 			if (count < 1 || count >= 65536 / itemSize)
@@ -2107,7 +2107,7 @@ namespace GTA.Native
 
 			var result = new GlobalVariable[count];
 
-			for (int i = 0; i < count; i++)
+			for (var i = 0; i < count; i++)
 			{
 				result[i] = new GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
 			}
@@ -2124,10 +2124,10 @@ namespace GTA.Native
 		{
 			if (itemSize <= 0)
 			{
-				throw new ArgumentOutOfRangeException("itemSize", "The item size for an array must be positive.");
+				throw new ArgumentOutOfRangeException(nameof(itemSize), "The item size for an array must be positive.");
 			}
 
-			int count = Read<int>();
+			var count = Read<int>();
 
 			// Globals are stored in pages that hold a maximum of 65536 items
 			if (count < 1 || count >= 65536 / itemSize)

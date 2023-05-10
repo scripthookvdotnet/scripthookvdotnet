@@ -231,10 +231,10 @@ namespace GTA.UI
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
-			float w = Size.Width / screenWidth;
-			float h = Size.Height / screenHeight;
-			float x = (Position.X + offset.Width) / screenWidth;
-			float y = (Position.Y + offset.Height) / screenHeight;
+			var w = Size.Width / screenWidth;
+			var h = Size.Height / screenHeight;
+			var x = (Position.X + offset.Width) / screenWidth;
+			var y = (Position.Y + offset.Height) / screenHeight;
 
 			if (!Centered)
 			{

@@ -38,7 +38,7 @@ namespace GTA
 		{
 			get
 			{
-				int count = Function.Call<int>(Hash.GET_NUMBER_OF_PED_TEXTURE_VARIATIONS, _ped.Handle, Type, Index) + 1;
+				var count = Function.Call<int>(Hash.GET_NUMBER_OF_PED_TEXTURE_VARIATIONS, _ped.Handle, Type, Index) + 1;
 				while (count > 0)
 				{
 					if (IsVariationValid(Index, count - 1))
