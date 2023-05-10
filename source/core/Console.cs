@@ -646,7 +646,7 @@ namespace SHVDN
 		/// <summary>
 		/// Deletes the character at point.
 		/// </summary>
-		void DeleteChar()
+		void ForwardDeleteChar()
 		{
 			if (input.Length > 0 && cursorPos < input.Length)
 			{
