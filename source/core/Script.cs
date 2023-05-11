@@ -154,6 +154,10 @@ namespace SHVDN
 				continueEvent = new SemaphoreSlim(0);
 
 				thread = new Thread(MainLoop);
+				// By setting this property to true, script thread should stop executing when the main thread stops executing
+				// Note: The exe may not stop executing if some scripts create Thread instances and use them without setting Thread.IsBackground false
+				thread.IsBackground = true;
+
 				thread.Start();
 			}
 			else
