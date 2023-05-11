@@ -1398,9 +1398,21 @@ namespace GTA
 		/// <summary>
 		/// Detaches this <see cref="Entity"/> from any <see cref="Entity"/> it may be attached to.
 		/// </summary>
-		public void Detach()
+		public void Detach() => Detach(true, true);
+		/// <summary>
+		/// Detaches this <see cref="Entity"/> from any <see cref="Entity"/> it may be attached to.
+		/// </summary>
+		/// <param name="applyVelocity">
+		/// If <see langword="true"/> and this <see cref="Entity"/> is not a <see cref="Ped"/>,
+		/// this <see cref="Entity"/> will detach while apply velocity of the parent <see cref="Entity"/>.
+		/// </param>
+		/// <param name="noCollisionUntilClear">
+		/// If <see langword="true"/> and this <see cref="Entity"/> is not a <see cref="Vehicle"/>,
+		/// this method will set states to disable collision between this <see cref="Entity"/> and the parent <see cref="Entity"/> until they are clear of one another.
+		/// </param>
+		public void Detach(bool applyVelocity, bool noCollisionUntilClear)
 		{
-			Function.Call(Hash.DETACH_ENTITY, Handle, true, true);
+			Function.Call(Hash.DETACH_ENTITY, Handle, applyVelocity, noCollisionUntilClear);
 		}
 		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
@@ -1410,8 +1422,10 @@ namespace GTA
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/></param>
 		public void AttachTo(Entity entity, Vector3 position = default, Vector3 rotation = default)
 		{
+			// Note: bActiveCollisions (12th argument) will not work if -1 is passed as the bone index value
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, -1, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
 		}
+
 		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
 		/// </summary>
@@ -1419,8 +1433,33 @@ namespace GTA
 		/// <param name="position">The position relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
 		public void AttachTo(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
+			=> AttachTo(entityBone, position, rotation, false, EulerRotationOrder.YXZ);
+		/// <summary>
+		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
+		/// </summary>
+		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="offset">The offset relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
+		/// <param name="leaveCollisionActivated">Specifies whether the collision of this <see cref="Entity"/> will be left activated.</param>
+		/// <param name="rotationOrder">The rotation order.</param>
+		public void AttachTo(EntityBone entityBone, Vector3 offset, Vector3 rotation, bool leaveCollisionActivated, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
 		{
-			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entityBone.Owner.Handle, entityBone, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
+				Handle,
+				entityBone.Owner.Handle,
+				entityBone,
+				offset.X,
+				offset.Y,
+				offset.Z,
+				rotation.X,
+				rotation.Y,
+				rotation.Z,
+				false,
+				false,
+				leaveCollisionActivated,
+				false,
+				(int)rotationOrder,
+				true);
 		}
 
 		/// <summary>
