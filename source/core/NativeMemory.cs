@@ -3721,10 +3721,19 @@ namespace SHVDN
 		{
 			return new IntPtr((long)GetPlayerPedAddressFunc(handle));
 		}
+		public static IntPtr GetLocalPlayerPedAddress()
+		{
+			return new IntPtr((long)GetLocalPlayerPedAddressFunc());
+		}
 		public static int GetPlayerPedHandle(int handle)
 		{
 			var playerPedAddress = GetPlayerAddress(handle);
 			return playerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(playerPedAddress) : 0;
+		}
+		public static int GetLocalPlayerPedHandle()
+		{
+			var localPlayerPedAddress = GetLocalPlayerPedAddress();
+			return localPlayerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(localPlayerPedAddress) : 0;
 		}
 		public static int GetLocalPlayerIndex()
 		{

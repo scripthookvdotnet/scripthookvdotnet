@@ -15,6 +15,7 @@ namespace GTA
 	{
 		#region Fields
 		static Player cachedPlayer = null;
+		static Ped cachedLocalPlayerPed = null;
 
 		internal static readonly string[] radioNames = {
 			"RADIO_01_CLASS_ROCK",
@@ -82,6 +83,26 @@ namespace GTA
 				}
 
 				return cachedPlayer;
+			}
+		}
+
+		/// <summary>
+		/// Gets the local player <see cref="Ped"/> that you are controlling.
+		/// Use this property instead of <see cref="GTA.Player.Character"/> when you are only interested in the player <see cref="Ped"/>
+		/// and not the <see cref="GTA.Player"/> instance where a lot of player specific states are stored.
+		/// </summary>
+		public static Ped LocalPlayerPed
+		{
+			get
+			{
+				var handle = SHVDN.NativeMemory.GetLocalPlayerPedHandle();
+
+				if (cachedLocalPlayerPed == null || handle != cachedLocalPlayerPed.Handle)
+				{
+					cachedLocalPlayerPed = new Ped(handle);
+				}
+
+				return cachedLocalPlayerPed;
 			}
 		}
 
