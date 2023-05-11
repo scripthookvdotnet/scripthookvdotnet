@@ -39,7 +39,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_PLAYER_PED, Handle);
+				var handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
 
 				if (ped == null || handle != ped.Handle)
 				{

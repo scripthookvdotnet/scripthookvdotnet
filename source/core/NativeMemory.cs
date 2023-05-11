@@ -243,6 +243,12 @@ namespace SHVDN
 			GetPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 			new IntPtr(*(int*)(address + 7) + address + 11));
 
+			address = FindPatternBmh("\x0F\x84\xA1\x00\x00\x00\x33\xC9\x48\x89\x35", "xxxxxxxxxxx");
+			if (address != null)
+			{
+				isGameMultiplayerAddr = (bool*)(*(int*)(address + 0x27) + address + 0x2B);
+			}
+
 			address = FindPatternBmh("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
 			CreateGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
 				new IntPtr(address - 0x68));
@@ -3701,6 +3707,8 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<int, ulong> GetScriptEntity;
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerPedAddressFunc;
 
+		static bool* isGameMultiplayerAddr;
+
 		public static IntPtr GetPtfxAddress(int handle)
 		{
 			return new IntPtr((long)GetPtfxAddressFunc(handle));
@@ -3712,6 +3720,24 @@ namespace SHVDN
 		public static IntPtr GetPlayerAddress(int handle)
 		{
 			return new IntPtr((long)GetPlayerPedAddressFunc(handle));
+		}
+		public static int GetPlayerPedHandle(int handle)
+		{
+			var playerPedAddress = GetPlayerAddress(handle);
+			return playerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(playerPedAddress) : 0;
+		}
+		public static int GetLocalPlayerIndex()
+		{
+			if (isGameMultiplayerAddr == null || *isGameMultiplayerAddr)
+			{
+				// A fallback path if the variable could not found to make sure the same value will be returned as what PLAYER_ID returns, an extreme edge case if the variable was found
+				// You even have to disable SHV to call NETWORK_GET_NUM_CONNECTED_PLAYERS (for preventing the game from going Online) before custom scripts (for enabling multiplayer) can use features for multiplayer
+
+				NativeFunc.Invoke(0x4F8644AF03D0E0D6 /* PLAYER_ID */, null, 0);
+			}
+
+			// The same value as what PLAYER_ID returns if the game mode is singleplayer and not multiplayer
+			return 0;
 		}
 
 		public static IntPtr GetBuildingAddress(int handle)

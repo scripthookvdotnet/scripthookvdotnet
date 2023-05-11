@@ -74,7 +74,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.PLAYER_ID);
+				var handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
