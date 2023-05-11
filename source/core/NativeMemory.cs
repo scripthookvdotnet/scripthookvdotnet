@@ -209,18 +209,13 @@ namespace SHVDN
 		/// </summary>
 		internal static void DisposeUnmanagedResources()
 		{
-			if (String != IntPtr.Zero)
-			{
-				Marshal.FreeCoTaskMem(String);
-			}
-			if (NullString != IntPtr.Zero)
-			{
-				Marshal.FreeCoTaskMem(NullString);
-			}
-			if (CellEmailBcon != IntPtr.Zero)
-			{
-				Marshal.FreeCoTaskMem(CellEmailBcon);
-			}
+			Marshal.FreeCoTaskMem(String);
+			Marshal.FreeCoTaskMem(NullString);
+			Marshal.FreeCoTaskMem(CellEmailBcon);
+
+			String = IntPtr.Zero;
+			NullString = IntPtr.Zero;
+			CellEmailBcon = IntPtr.Zero;
 		}
 
 		/// <summary>
@@ -228,6 +223,10 @@ namespace SHVDN
 		/// </summary>
 		static NativeMemory()
 		{
+			String = StringToCoTaskMemUTF8("STRING"); // "~a~"
+			NullString = StringToCoTaskMemUTF8(string.Empty); // ""
+			CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
+
 			byte* address;
 			IntPtr startAddressToSearch;
 
@@ -1322,9 +1321,9 @@ namespace SHVDN
 		}
 
 		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
-		public static readonly IntPtr String = StringToCoTaskMemUTF8("STRING"); // "~a~"
-		public static readonly IntPtr NullString = StringToCoTaskMemUTF8(string.Empty); // ""
-		public static readonly IntPtr CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
+		public static IntPtr String { get; private set; } // "~a~"
+		public static IntPtr NullString { get; private set; } // ""
+		public static IntPtr CellEmailBcon { get; private set; } // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
 		public static string PtrToStringUTF8(IntPtr ptr)
 		{
