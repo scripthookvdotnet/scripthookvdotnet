@@ -85,13 +85,14 @@ namespace GTA.UI
 
 			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
 
-			if (_activeTextures.ContainsKey(textureDict.ToLower()))
+			var hashedDictName = Game.GenerateHash(textureDict);
+			if (_activeTextures.ContainsKey(hashedDictName))
 			{
-				_activeTextures[textureDict.ToLower()] += 1;
+				_activeTextures[hashedDictName] += 1;
 			}
 			else
 			{
-				_activeTextures.Add(textureDict.ToLower(), 1);
+				_activeTextures.Add(hashedDictName, 1);
 			}
 		}
 
@@ -101,7 +102,7 @@ namespace GTA.UI
 		/// The dictionary to count how many instances use the same texture dictionary.
 		/// Using hashes for texture dictionary names should do the job since the game uses hashes for those names in the fwTxdStore.
 		/// </summary>
-		private static readonly Dictionary<string, int> _activeTextures = new();
+		private static readonly Dictionary<int, int> _activeTextures = new();
 		private IntPtr _pinnedDict, _pinnedName;
 		private bool _disposed;
 		private RectangleF _textureCoordinates;
@@ -116,18 +117,17 @@ namespace GTA.UI
 		{
 			if (!disposing || _disposed) return;
 
-			if (_activeTextures.ContainsKey(_textureDict.ToLower()))
+			var hashedDictName = Game.GenerateHash(_textureDict);
+			if (_activeTextures.TryGetValue(hashedDictName, out var currentCount))
 			{
-				var current = _activeTextures[_textureDict.ToLower()];
-
-				if (current == 1)
+				if (currentCount == 1)
 				{
 					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
-					_activeTextures.Remove(_textureDict.ToLower());
+					_activeTextures.Remove(hashedDictName);
 				}
 				else
 				{
-					_activeTextures[_textureDict.ToLower()] = current - 1;
+					_activeTextures[hashedDictName] = currentCount - 1;
 				}
 			}
 			else
