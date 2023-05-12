@@ -102,7 +102,8 @@ namespace GTA.UI
 		/// Using hashes for texture dictionary names should do the job since the game uses hashes for those names in the fwTxdStore.
 		/// </summary>
 		private static readonly Dictionary<string, int> _activeTextures = new();
-		private readonly IntPtr _pinnedDict, _pinnedName;
+		private IntPtr _pinnedDict, _pinnedName;
+		private bool _disposed;
 		private RectangleF _textureCoordinates;
 		#endregion
 
@@ -113,7 +114,7 @@ namespace GTA.UI
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!disposing) return;
+			if (!disposing || _disposed) return;
 
 			if (_activeTextures.ContainsKey(_textureDict.ToLower()))
 			{
@@ -137,6 +138,10 @@ namespace GTA.UI
 
 			Marshal.FreeCoTaskMem(_pinnedDict);
 			Marshal.FreeCoTaskMem(_pinnedName);
+			_pinnedDict = IntPtr.Zero;
+			_pinnedName = IntPtr.Zero;
+
+			_disposed = true;
 		}
 
 		/// <summary>
