@@ -18,6 +18,9 @@ namespace GTA
 		{
 		}
 
+		/// <summary>
+		/// Restores the health of this <see cref="Vehicle"/> and fixes any damage instantaneously.
+		/// </summary>
 		public void Repair()
 		{
 			Function.Call(Hash.SET_VEHICLE_FIXED, Handle);
@@ -40,6 +43,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Explodes this <see cref="Vehicle"/>.
+		/// </summary>
 		public void Explode()
 		{
 			Function.Call(Hash.EXPLODE_VEHICLE, Handle, true, false);
@@ -49,6 +55,9 @@ namespace GTA
 
 		public bool IsConvertible => Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
 
+		/// <summary>
+		/// Gets or sets dirt level of this <see cref="Vehicle"/> between 0.0 (clean) to 15.0 (dirty).
+		/// </summary>
 		public float DirtLevel
 		{
 			get => Function.Call<float>(Hash.GET_VEHICLE_DIRT_LEVEL, Handle);

@@ -25,7 +25,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Repair all damage to this <see cref="Vehicle"/> instantaneously.
+		/// Restores the health of this <see cref="Vehicle"/> and fixes any damage instantaneously.
 		/// </summary>
 		public void Repair()
 		{
@@ -34,7 +34,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Explode this <see cref="Vehicle"/> instantaneously.
+		/// Explodes this <see cref="Vehicle"/>.
 		/// </summary>
 		public void Explode()
 		{
@@ -75,7 +75,9 @@ namespace GTA
 			}
 		}
 
-
+		/// <summary>
+		/// Gets or sets dirt level of this <see cref="Vehicle"/> between 0.0 (clean) to 15.0 (dirty).
+		/// </summary>
 		public float DirtLevel
 		{
 			get => Function.Call<float>(Hash.GET_VEHICLE_DIRT_LEVEL, Handle);
@@ -439,6 +441,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a lod multiplier for this <see cref="Vehicle"/>.
+		/// </summary>
+		/// <remarks>
+		/// When you try to find an appropriate lod multiplier to set, start by using low values (1.1, 1.5, etc) until the wanted result is achieved.
+		/// Large values are not appropriate and will be expensive to draw.
+		/// </remarks>
 		public float LodMultiplier
 		{
 			get
@@ -454,6 +463,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets the handling data attached to this <see cref="Vehicle"/>.
+		/// </summary>
 		public HandlingData HandlingData
 		{
 			get
@@ -482,7 +494,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> engine health.
+		/// <para>Gets or sets this <see cref="Vehicle"/> engine health.</para>
+		/// <para>
+		/// When this value is less than 0.0, the engine will not work.
+		/// </para>
+		/// <para>
+		/// When this value is between -1000.0 and 0.0 exclusive, the engine is on fire and the value will decrease until it reaches -1000.0.
+		/// While on fire, burning engine "may" set the petrol tank on fire as well, but there's only a chance of this.
+		/// </para>
 		/// </summary>
 		public float EngineHealth
 		{
@@ -491,7 +510,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> petrol tank health.
+		/// <para>Gets or sets this <see cref="Vehicle"/> petrol tank health.</para>
+		/// <para>
+		/// When this value is between -1000.0 and 0.0 exclusive, the petrol tank is on fire and the value will decrease until it reaches -1000.0.
+		/// The <see cref="Vehicle"/> will explode when this health reaches -1000.0.
+		/// </para>
 		/// </summary>
 		public float PetrolTankHealth
 		{
@@ -795,6 +818,9 @@ namespace GTA
 			set => HighGear = value;
 		}
 
+		/// <summary>
+		/// Gets or sets the high gear value of this <see cref="Vehicle"/>.
+		/// </summary>
 		public int HighGear
 		{
 			get
@@ -1902,6 +1928,9 @@ namespace GTA
 
 		public bool HasTowArm => Bones.Contains("tow_arm");
 
+		/// <summary>
+		/// Sets a tow truck arm position, 0.0 on the ground 1.0 in the air.
+		/// </summary>
 		public float TowArmPosition
 		{
 			set => Function.Call(Hash.SET_VEHICLE_TOW_TRUCK_ARM_POSITION, Handle, value);
@@ -1912,11 +1941,18 @@ namespace GTA
 			Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle.Handle, rear, 0f, 0f, 0f);
 		}
 
+		/// <summary>
+		/// Detaches specified vehicle from any tow truck it might be attached through, loops through all vehicles so could be expensive.
+		/// If you know the tow truck <see cref="Vehicle"/> that tows this <see cref="Vehicle"/>, you should call <see cref="DetachTowedVehicle"/> on the tow truck.
+		/// </summary>
 		public void DetachFromTowTruck()
 		{
 			Function.Call(Hash.DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
 		}
 
+		/// <summary>
+		/// Detach the towed <see cref="Vehicle"/> to from this tow truck <see cref="Vehicle"/>.
+		/// </summary>
 		public void DetachTowedVehicle()
 		{
 			var vehicle = TowedVehicle;
@@ -2234,6 +2270,9 @@ namespace GTA
 			return (VehicleType)SHVDN.NativeMemory.GetVehicleType(vehicleModel);
 		}
 
+		/// <summary>
+		/// Gets an array of all model values.
+		/// </summary>
 		public static int[] GetAllModelValues()
 		{
 			var allModels = new List<int>();
@@ -2244,6 +2283,9 @@ namespace GTA
 			return allModels.ToArray();
 		}
 
+		/// <summary>
+		/// Gets an array of all <see cref="VehicleHash"/>es.
+		/// </summary>
 		public static VehicleHash[] GetAllModels()
 		{
 			var allModels = new List<VehicleHash>();
@@ -2255,7 +2297,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <c>array</c> of all loaded <see cref="VehicleHash"/>s that is appropriate to spawn as ambient vehicles.
+		/// Gets an array of all loaded <see cref="VehicleHash"/>es that is appropriate to spawn as ambient vehicles.
 		/// All the model hashes of the elements are loaded and the <see cref="Vehicle"/>s with the model hashes can be spawned immediately.
 		/// </summary>
 		public static VehicleHash[] GetAllLoadedModelsAppropriateForAmbientVehicles()
@@ -2265,11 +2307,17 @@ namespace GTA
 				.ToArray();
 		}
 
+		/// <summary>
+		/// Gets an array of all <see cref="VehicleHash"/>es whose <see cref="VehicleClass"/>es belong to the specified one.
+		/// </summary>
 		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
 		}
 
+		/// <summary>
+		/// Gets an array of all <see cref="VehicleHash"/>es whose <see cref="VehicleType"/>es belong to the specified one.
+		/// </summary>
 		public static VehicleHash[] GetAllModelsOfType(VehicleType vehicleType)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModelsGroupedByType[(int)vehicleType].ToArray(), item => (VehicleHash)item);

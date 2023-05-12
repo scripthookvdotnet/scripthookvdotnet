@@ -293,13 +293,23 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
 		}
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is a player <see cref="Ped"/>, who has a <c>CPlayerInfo</c> pointer value.
+		/// Returns <see langword="true"/> only on up to one <see cref="Ped"/>.
+		/// </summary>
 		public bool IsPlayer => Function.Call<bool>(Hash.IS_PED_A_PLAYER, Handle);
 
+		/// <summary>
+		/// Gets the config flag bit on this <see cref="Ped"/>.
+		/// </summary>
 		public bool GetConfigFlag(int flagID)
 		{
 			return Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, flagID, true);
 		}
 
+		/// <summary>
+		/// Sets the config flag bit on this <see cref="Ped"/>.
+		/// </summary>
 		public void SetConfigFlag(int flagID, bool value)
 		{
 			Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, flagID, value);
@@ -342,40 +352,93 @@ namespace GTA
 
 		public bool IsIdle => !IsInjured && !IsRagdoll && !IsInAir && !IsOnFire && !IsDucking && !IsGettingIntoVehicle && !IsInCombat && !IsInMeleeCombat && (!IsInVehicle() || IsSittingInVehicle());
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is basically lying on the ground.
+		/// </summary>
 		public bool IsProne => Function.Call<bool>(Hash.IS_PED_PRONE, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is getting up.
+		/// </summary>
 		public bool IsGettingUp => Function.Call<bool>(Hash.IS_PED_GETTING_UP, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently diving (includes jump launch/clamber phase).
+		/// </summary>
 		public bool IsDiving => Function.Call<bool>(Hash.IS_PED_DIVING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently jumping.
+		/// </summary>
 		public bool IsJumping => Function.Call<bool>(Hash.IS_PED_JUMPING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently falling.
+		/// </summary>
 		public bool IsFalling => Function.Call<bool>(Hash.IS_PED_FALLING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently climbing or vaulting or doing a drop down.
+		/// </summary>
 		public bool IsVaulting => Function.Call<bool>(Hash.IS_PED_VAULTING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently climbing.
+		/// </summary>
 		public bool IsClimbing => Function.Call<bool>(Hash.IS_PED_CLIMBING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently climbing a ladder.
+		/// </summary>
 		public bool IsClimbingLadder => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, 1 /* CTaskClimbLadder */);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently walking.
+		/// </summary>
 		public bool IsWalking => Function.Call<bool>(Hash.IS_PED_WALKING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently running.
+		/// </summary>
 		public bool IsRunning => Function.Call<bool>(Hash.IS_PED_RUNNING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is currently sprinting.
+		/// </summary>
 		public bool IsSprinting => Function.Call<bool>(Hash.IS_PED_SPRINTING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is stood still or in a stationary vehicle.
+		/// </summary>
 		public bool IsStopped => Function.Call<bool>(Hash.IS_PED_STOPPED, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is swimming.
+		/// </summary>
 		public bool IsSwimming => Function.Call<bool>(Hash.IS_PED_SWIMMING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is underwater.
+		/// </summary>
 		public bool IsSwimmingUnderWater => Function.Call<bool>(Hash.IS_PED_SWIMMING_UNDER_WATER, Handle);
 
+		/// <summary>
+		/// Gets or sets whether this <see cref="Ped"/> is ducking (crouching).
+		/// </summary>
+		/// <remarks>
+		/// You need to let <see cref="Ped"/>s duck by setting <c>AllowCrouchedMovement</c> to <c>CB_TRUE</c> (and setting <c>AllowStealthMovement</c> to <c>CB_FALSE</c>) in <c>gameconfig.xml</c>
+		/// or changing the values for crouching with a script such as Zolika1351's Trainer before this property can return <see langword="true"/> or setting this property to <see langword="true"/> can actually make a <see cref="Ped"/> crouch.
+		/// For clarification, changing stance of the player <see cref="Ped"/> with Stance by jedijosh920 does not make this property return <see langword="true"/> as it only changes strafe clipset.
+		/// </remarks>
 		public bool IsDucking
 		{
 			get => Function.Call<bool>(Hash.IS_PED_DUCKING, Handle);
 			set => Function.Call(Hash.SET_PED_DUCKING, Handle, value);
 		}
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is looking at the target entity.
+		/// </summary>
 		public bool IsHeadtracking(Entity entity)
 		{
 			return Function.Call<bool>(Hash.IS_PED_HEADTRACKING_ENTITY, Handle, entity.Handle);
@@ -556,6 +619,7 @@ namespace GTA
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, (int)ragdollType, false, false, forceScriptControl);
 		}
 
+		/// <summary>Stops this <see cref="Ped"/> ragdolling.</summary>
 		public void CancelRagdoll()
 		{
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, 1, 1, 1, false, false, false);
@@ -563,17 +627,27 @@ namespace GTA
 
 
 		/// <summary>
-		/// Indicates whether this <see cref="Ped"/> is ragdolling.
-		/// Will return <see langword="false"/> when the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// Gets or sets whether this <see cref="Ped"/> is ragdolling.
 		/// </summary>
+		/// <remarks>
+		/// Will return <see langword="false"/> when the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// </remarks>
 		public bool IsRagdoll => Function.Call<bool>(Hash.IS_PED_RAGDOLL, Handle);
 
 		/// <summary>
 		/// Indicates whether this <see cref="Ped"/> is running a ragdoll task which manages its ragdoll.
-		/// Will return <see langword="true"/> when <see cref="IsRagdoll"/> returns <see langword="true"/> or the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
 		/// </summary>
+		/// <remarks>
+		/// Will return <see langword="true"/> when <see cref="IsRagdoll"/> returns <see langword="true"/> or the <see cref="Ped"/> is getting up or writhing as a part of a ragdoll task.
+		/// </remarks>
 		public bool IsRunningRagdollTask => Function.Call<bool>(Hash.IS_PED_RUNNING_RAGDOLL_TASK, Handle);
 
+		/// <summary>
+		/// Gets or sets whether this <see cref="Ped"/> can be set into a ragdoll state.
+		/// </summary>
+		/// <remarks>
+		/// <see cref="Ped"/>s will only switch to a ragdoll if they are onscreen and within range of the player.
+		/// </remarks>
 		public bool CanRagdoll
 		{
 			get => Function.Call<bool>(Hash.CAN_PED_RAGDOLL, Handle);
@@ -686,14 +760,23 @@ namespace GTA
 
 		public bool IsInPlane => Function.Call<bool>(Hash.IS_PED_IN_ANY_PLANE, Handle);
 
+		/// <summary>
+		/// Indicates whether is in a plane or helicopter.
+		/// </summary>
 		public bool IsInFlyingVehicle => Function.Call<bool>(Hash.IS_PED_IN_FLYING_VEHICLE, Handle);
 
 		public bool IsInBoat => Function.Call<bool>(Hash.IS_PED_IN_ANY_BOAT, Handle);
 
 		public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
 
+		/// <summary>
+		/// Indicates whether is getting into a <see cref="Vehicle"/> but not sitting in a <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsGettingIntoVehicle => Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
 
+		/// <summary>
+		/// Indicates whether is currently exiting a <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsExitingVehicle => Function.Call<bool>(Hash.GET_IS_TASK_ACTIVE, Handle, 2 /* CTaskExitVehicle */);
 
 		/// <summary>
@@ -711,6 +794,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_CAN_BE_DRAGGED_OUT, Handle, value);
 		}
 
+		/// <summary>
+		/// Sets that this <see cref="Ped"/> can be knocked off a <see cref="Vehicle"/> (not limited to a bike despite the property name).
+		/// </summary>
 		public bool CanBeKnockedOffBike
 		{
 			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, !value);
@@ -722,24 +808,41 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, 32, value);
 		}
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is sitting in or getting out any <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsInVehicle()
 		{
 			return Function.Call<bool>(Hash.IS_PED_IN_ANY_VEHICLE, Handle, 0);
 		}
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is sitting in or getting out the specified <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsInVehicle(Vehicle vehicle)
 		{
 			return Function.Call<bool>(Hash.IS_PED_IN_VEHICLE, Handle, vehicle.Handle, 0);
 		}
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is sitting in any <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsSittingInVehicle()
 		{
 			return Function.Call<bool>(Hash.IS_PED_SITTING_IN_ANY_VEHICLE, Handle);
 		}
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is sitting in the specified <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsSittingInVehicle(Vehicle vehicle)
 		{
 			return Function.Call<bool>(Hash.IS_PED_SITTING_IN_VEHICLE, Handle, vehicle.Handle);
 		}
 
+		/// <summary>
+		/// Sets this <see cref="Ped"/> into the relevant seat of the specified <see cref="Vehicle"/>.
+		/// </summary>
+		/// <param name="vehicle">The vehicle this <see cref="Ped"/> will be set into.</param>
+		/// <param name="seat">The seat to set.</param>
 		public void SetIntoVehicle(Vehicle vehicle, VehicleSeat seat)
 		{
 			Function.Call(Hash.SET_PED_INTO_VEHICLE, Handle, vehicle.Handle, (int)seat);
@@ -845,7 +948,7 @@ namespace GTA
 		/// Sets the maximum driving speed this <see cref="Ped"/> can drive at.
 		/// </para>
 		/// <para>
-		/// this <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
+		/// This <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
 		/// </para>
 		/// </summary>
 		/// <remarks>
@@ -856,11 +959,33 @@ namespace GTA
 			set => Function.Call(Hash.SET_DRIVE_TASK_MAX_CRUISE_SPEED, Handle, value);
 		}
 
+		/// <summary>
+		/// <para>
+		/// Sets the the drive tasks driving style.
+		/// </para>
+		/// <para>
+		/// This <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, this actually changes the driving flags field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
+		/// </remarks>
 		public DrivingStyle DrivingStyle
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (int)value);
 		}
 
+		/// <summary>
+		/// <para>
+		/// Sets the the drive tasks driving style.
+		/// </para>
+		/// <para>
+		/// This <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, this actually changes the driving flags field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
+		/// </remarks>
 		public VehicleDrivingFlags VehicleDrivingFlags
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (uint)value);
@@ -870,8 +995,14 @@ namespace GTA
 
 		#region Jacking
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is in the process of dragging another <see cref="Ped"/> from a <see cref="Vehicle"/>.
+		/// </summary>
 		public bool IsJacking => Function.Call<bool>(Hash.IS_PED_JACKING, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is being dragged from their <see cref="Vehicle"/> by another <see cref="Ped"/>.
+		/// </summary>
 		public bool IsBeingJacked => Function.Call<bool>(Hash.IS_PED_BEING_JACKED, Handle);
 
 		/// <summary>
@@ -907,15 +1038,33 @@ namespace GTA
 
 		#region Parachuting
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is in free-fall and ready to use a parachute.
+		/// </summary>
 		public bool IsInParachuteFreeFall => Function.Call<bool>(Hash.IS_PED_IN_PARACHUTE_FREE_FALL, Handle);
 
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> running parachute task to open their parachute.
+		/// </summary>
 		public void OpenParachute()
 		{
 			Function.Call(Hash.FORCE_PED_TO_OPEN_PARACHUTE, Handle);
 		}
 
+		/// <summary>
+		/// Gets the current state of this parachuting <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns <see cref="ParachuteState.None"/> if this <see cref="Ped"/> is not parachuting.
+		/// </remarks>
 		public ParachuteState ParachuteState => Function.Call<ParachuteState>(Hash.GET_PED_PARACHUTE_STATE, Handle);
 
+		/// <summary>
+		/// Gets the current landing type of this parachuting <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns <see cref="ParachuteState.None"/> if this <see cref="Ped"/> is not landing.
+		/// </remarks>
 		public ParachuteLandingType ParachuteLandingType => Function.Call<ParachuteLandingType>(Hash.GET_PED_PARACHUTE_LANDING_TYPE, Handle);
 
 		#endregion
@@ -1134,33 +1283,52 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
 
+		/// <summary>
+		/// Intended to set whether this <see cref="Ped"/> will die when injured, but practically do nothing meaningful.
+		/// </summary>
 		public bool DiesOnLowHealth
 		{
 			set => Function.Call(Hash.SET_PED_DIES_WHEN_INJURED, Handle, value);
 		}
 
+		/// <summary>
+		/// Sets whether this <see cref="Ped"/> will die instantly if they find themselves in a body of water.
+		/// </summary>
+		/// <remarks>
+		/// The complete submersion into water does not guarantee this <see cref="Ped"/> will die if this <see cref="Ped"/> is the player one.
+		/// </remarks>
 		public bool DiesInstantlyInWater
 		{
 			set => Function.Call(Hash.SET_PED_DIES_INSTANTLY_IN_WATER, Handle, value);
 		}
 
+		/// <summary>
+		/// Sets whether this <see cref="Ped"/> can take damage for being deep water.
+		/// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be deep water without taking <c>WEAPON_DROWNING</c> damage.
+		/// </summary>
 		public bool DrownsInWater
 		{
 			set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
 		}
 
+		/// <summary>
+		/// Sets whether this <see cref="Ped"/> can take <c>WEAPON_DROWNING</c> damage in a sinking vehicle.
+		/// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be in a sinking vehicle without taking <c>WEAPON_DROWNING</c> damage.
+		/// </summary>
 		public bool DrownsInSinkingVehicle
 		{
 			set => Function.Call(Hash.SET_PED_DIES_IN_SINKING_VEHICLE, Handle, value);
 		}
 
 		/// <summary>
-		/// Sets whether this <see cref="Ped"/> will drop the equipped weapon when they get killed.
-		/// Note that <see cref="Ped"/>s will drop only their equipped weapon when they get killed.
+		/// Sets whether this <see cref="Ped"/> will drop the current weapon when they get killed.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if <see cref="Ped"/> drops the equipped weapon when killed; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if <see cref="Ped"/> drops the current weapon when killed; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// <see cref="Ped"/>s will drop only their current weapon when they get killed.
+		/// </remarks>
 		public bool DropsEquippedWeaponOnDeath
 		{
 			get
@@ -1270,6 +1438,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the last position a weapon of this <see cref="Ped"/> was impacted at this frame.
+		/// </summary>
+		/// <remarks>
+		/// This property should be called every frame as the the last valid result lasts only the frame a weapon of this <see cref="Ped"/>
+		/// was impacted at and else it returns <see cref="Vector3.Zero"/>.
+		/// </remarks>
 		public Vector3 LastWeaponImpactPosition
 		{
 			get
@@ -1290,11 +1465,21 @@ namespace GTA
 
 		#region Relationship
 
+		/// <summary>
+		/// Gets the relationship between this <see cref="Ped"/> and <paramref name="ped"/>.
+		/// </summary>
+		/// <param name="ped"></param>
+		/// <remarks>
+		/// This property returns <see cref="Relationship.Pedestrians"/> if the relationship is not set.
+		/// </remarks>
 		public Relationship GetRelationshipWithPed(Ped ped)
 		{
 			return (Relationship)Function.Call<int>(Hash.GET_RELATIONSHIP_BETWEEN_PEDS, Handle, ped.Handle);
 		}
 
+		/// <summary>
+		/// Gets or sets the <see cref="RelationshipGroup"/> this <see cref="Ped"/> belongs to. 
+		/// </summary>
 		public RelationshipGroup RelationshipGroup
 		{
 			get => new(Function.Call<int>(Hash.GET_PED_RELATIONSHIP_GROUP_HASH, Handle));
@@ -1305,6 +1490,9 @@ namespace GTA
 
 		#region Perception
 
+		/// <summary>
+		/// Gets or sets how far this <see cref="Ped"/> can see. 
+		/// </summary>
 		public float SeeingRange
 		{
 			get
@@ -1325,6 +1513,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_SEEING_RANGE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets how far this <see cref="Ped"/> can hear. 
+		/// </summary>
 		public float HearingRange
 		{
 			get
@@ -1345,6 +1536,10 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_HEARING_RANGE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the minimum horizontal field of view for this <see cref="Ped"/>.
+		/// Should be negative.
+		/// </summary>
 		public float VisualFieldMinAngle
 		{
 			get
@@ -1365,6 +1560,10 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MIN_ANGLE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the maximum horizontal field of view for this <see cref="Ped"/>.
+		/// Should be positive.
+		/// </summary>
 		public float VisualFieldMaxAngle
 		{
 			get
@@ -1385,6 +1584,10 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MAX_ANGLE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the minimum vertical field of view for this <see cref="Ped"/>.
+		/// Should be negative.
+		/// </summary>
 		public float VisualFieldMinElevationAngle
 		{
 			get
@@ -1405,6 +1608,10 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MIN_ELEVATION_ANGLE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the maximum vertical field of view for this <see cref="Ped"/>.
+		/// Should be positive.
+		/// </summary>
 		public float VisualFieldMaxElevationAngle
 		{
 			get
@@ -1425,6 +1632,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MAX_ELEVATION_ANGLE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets how far the perhiperal vision of this <see cref="Ped"/> extends.
+		/// </summary>
 		public float VisualFieldPeripheralRange
 		{
 			get
@@ -1445,6 +1655,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_VISUAL_FIELD_PERIPHERAL_RANGE, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the central visual field angle of this <see cref="Ped"/>.
+		/// </summary>
 		public float VisualFieldCenterAngle
 		{
 			get
@@ -1717,8 +1930,8 @@ namespace GTA
 			return SHVDN.NativeMemory.PedModels.Select(x => (PedHash)x).ToArray();
 		}
 		/// <summary>
-		/// Gets an <c>array</c> of all loaded <see cref="PedHash"/>s that is appropriate to spawn as ambient vehicles.
-		/// The result array can contains animal hashes, which CREATE_RANDOM_PED excludes to spawn.
+		/// Gets an array of all loaded <see cref="PedHash"/>s that are appropriate to spawn as ambient peds.
+		/// The result array can contain animal hashes and gang ped hashes, which CREATE_RANDOM_PED excludes from spawning.
 		/// All the model hashes of the elements are loaded and the <see cref="Ped"/>s with the model hashes can be spawned immediately.
 		/// </summary>
 		public static PedHash[] GetAllLoadedModelsAppropriateForAmbientPeds()
