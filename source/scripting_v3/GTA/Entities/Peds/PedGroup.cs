@@ -110,15 +110,15 @@ namespace GTA
 		{
 			get
 			{
-				var ped = new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle));
-				return ped.Exists() ? ped : null;
+				var handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle);
+				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
 
 		public Ped GetMember(int index)
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index));
-			return ped.Exists() ? ped : null;
+			var handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index);
+			return handle != 0 ? new Ped(handle) : null;
 		}
 
 		public Ped[] ToArray(bool includingLeader = true)

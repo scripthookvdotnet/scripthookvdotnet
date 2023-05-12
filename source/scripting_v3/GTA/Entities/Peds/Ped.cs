@@ -793,8 +793,8 @@ namespace GTA
 		{
 			get
 			{
-				var veh = new Vehicle(Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle));
-				return veh.Exists() ? veh : null;
+				var handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+				return handle != 0 ? new Vehicle(handle) : null;
 			}
 		}
 
@@ -888,8 +888,8 @@ namespace GTA
 		{
 			get
 			{
-				var ped = new Ped(Function.Call<int>(Hash.GET_PEDS_JACKER, Handle));
-				return ped.Exists() ? ped : null;
+				var handle = Function.Call<int>(Hash.GET_PEDS_JACKER, Handle);
+				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
 
@@ -897,8 +897,8 @@ namespace GTA
 		{
 			get
 			{
-				var ped = new Ped(Function.Call<int>(Hash.GET_JACK_TARGET, Handle));
-				return ped.Exists() ? ped : null;
+				var handle = Function.Call<int>(Hash.GET_JACK_TARGET, Handle);
+				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
 
@@ -1031,8 +1031,8 @@ namespace GTA
 		{
 			get
 			{
-				var ped = new Ped(Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle));
-				return ped.Exists() ? ped : null;
+				var handle = Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle);
+				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
 

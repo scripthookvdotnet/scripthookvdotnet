@@ -1720,8 +1720,8 @@ namespace GTA
 
 		public Ped GetPedOnSeat(VehicleSeat seat)
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)seat));
-			return ped.Exists() ? ped : null;
+			var handle = Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)seat);
+			return handle != 0 ? new Ped(handle) : null;
 		}
 
 		public Ped[] Occupants
@@ -1931,8 +1931,8 @@ namespace GTA
 		{
 			get
 			{
-				var veh = new Vehicle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle));
-				return veh.Exists() ? veh : null;
+				var handle = Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle);
+				return handle != 0 ? new Vehicle(handle) : null;
 			}
 		}
 
