@@ -293,10 +293,6 @@ namespace GTA
 			set => Function.Call(Hash.SET_PED_MAX_HEALTH, Handle, value);
 		}
 
-		/// <summary>
-		/// Indicates whether this <see cref="Ped"/> is a player <see cref="Ped"/>, who has a <c>CPlayerInfo</c> pointer value.
-		/// Returns <see langword="true"/> only on up to one <see cref="Ped"/>.
-		/// </summary>
 		public bool IsPlayer => Function.Call<bool>(Hash.IS_PED_A_PLAYER, Handle);
 
 		public bool GetConfigFlag(int flagID)
@@ -309,6 +305,11 @@ namespace GTA
 			Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, flagID, value);
 		}
 
+		/// <summary>
+		/// Do not use this method as <c>SET_PED_RESET_FLAG</c> uses different flag IDs from the IDs <see cref="GetConfigFlag(int)"/> and <see cref="SetConfigFlag(int, bool)"/> use.
+		/// </summary>
+		[Obsolete("Ped.ResetConfigFlag is obsolete since SET_PED_RESET_FLAG uses different flag IDs from the IDs GET_PED_CONFIG_FLAG and SET_PED_CONFIG_FLAG use " +
+			"and the said overload always set the flag (2nd argument of SET_PED_RESET_FLAG) to true.", true)]
 		public void ResetConfigFlag(int flagID)
 		{
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, flagID, true);
