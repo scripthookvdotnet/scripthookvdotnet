@@ -934,8 +934,18 @@ namespace GTA
 		public bool IsFleeing => Function.Call<bool>(Hash.IS_PED_FLEEING, Handle);
 
 		/// <summary>
+		/// <para>
 		/// Gets a value indicating whether this <see cref="Ped"/> is injured (<see cref="Entity.Health"/> of the <see cref="Ped"/> is lower than <see cref="InjuryHealthThreshold"/>) or does not exist.
+		/// </para>
+		/// <para>
+		/// Since <see cref="Ped"/>s cannot start any scripted tasks if you try to give injured <see cref="Ped"/>s some of them,
+		/// this property should be used to determine if the <see cref="Ped"/> is able to do anything in the game (i.e. run scripted tasks) instead of <see cref="Entity.IsDead"/>.
+		/// You can reproduce the case where you give some <see cref="Ped"/> a scripted task but it will not start by modifying <see cref="InjuryHealthThreshold"/> and then giving them a scripted task.
+		/// <see cref="Entity.IsDead"/> should be used only if you want to specifically know that the <see cref="Ped"/> is dead.
+		/// </para>
+		/// <para>
 		/// Can be safely called to check if <see cref="Ped"/>s exist and are not injured without calling <see cref="Exists"/>.
+		/// </para>
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> this <see cref="Ped"/> is injured or does not exist; otherwise, <see langword="false" />.
@@ -1192,7 +1202,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the injury health threshold for this <see cref="Ped"/>.
-		/// The pedestrian is considered injured when its health drops below this value.
+		/// The pedestrian is considered injured and cannot start any scripted tasks when its health drops below this value.
 		/// The pedestrian dies on attacks when its health is below this value.
 		/// </summary>
 		/// <value>

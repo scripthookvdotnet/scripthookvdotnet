@@ -116,7 +116,13 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// <para>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
+		/// </para>
+		/// <para>
+		/// For <see cref="Ped"/>s, use <see cref="Ped.IsInjured"/> unless you specifically need to know they are dead
+		/// since this property does not guarantee whether if the <see cref="Ped"/> can start scripted tasks.
+		/// </para>
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Entity"/> is dead or does not exist; otherwise, <see langword="false" />.
@@ -127,6 +133,10 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> exists and is alive.
 		/// </summary>
+		/// <para>
+		/// For <see cref="Ped"/>s, use <see cref="Ped.IsInjured"/> unless you specifically need to know they are alive at all
+		/// since this property does not guarantee whether if the <see cref="Ped"/> can start scripted tasks.
+		/// </para>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Entity"/> exists and is alive; otherwise, <see langword="false" />.
 		/// </value>
