@@ -66,7 +66,7 @@ namespace GTA.UI
 		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
 		{
-			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
+			var data = Encoding.UTF8.GetBytes(textureDict + "\0");
 			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
 			Marshal.Copy(data, 0, _pinnedDict, data.Length);
 			data = Encoding.UTF8.GetBytes(textureName + "\0");
@@ -85,20 +85,27 @@ namespace GTA.UI
 
 			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
 
-			if (_activeTextures.ContainsKey(textureDict.ToLower()))
+			var hashedDictName = Game.GenerateHash(textureDict);
+			if (_activeTextures.ContainsKey(hashedDictName))
 			{
-				_activeTextures[textureDict.ToLower()] += 1;
+				_activeTextures[hashedDictName] += 1;
 			}
 			else
 			{
-				_activeTextures.Add(textureDict.ToLower(), 1);
+				_activeTextures.Add(hashedDictName, 1);
 			}
 		}
 
 		#region Fields
 		private readonly string _textureDict, _textureName;
-		private static readonly Dictionary<string, int> _activeTextures = new Dictionary<string, int>();
-		private readonly IntPtr _pinnedDict, _pinnedName;
+		/// <summary>
+		/// The dictionary to count how many instances use the same texture dictionary.
+		/// Using hashes for texture dictionary names should do the job since the game uses hashes for those names in the fwTxdStore.
+		/// </summary>
+		private static readonly Dictionary<int, int> _activeTextures = new();
+		private IntPtr _pinnedDict, _pinnedName;
+		private bool _disposed;
+		private RectangleF _textureCoordinates;
 		#endregion
 
 		public void Dispose()
@@ -108,31 +115,33 @@ namespace GTA.UI
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing)
-			{
-				if (_activeTextures.ContainsKey(_textureDict.ToLower()))
-				{
-					int current = _activeTextures[_textureDict.ToLower()];
+			if (!disposing || _disposed) return;
 
-					if (current == 1)
-					{
-						Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
-						_activeTextures.Remove(_textureDict.ToLower());
-					}
-					else
-					{
-						_activeTextures[_textureDict.ToLower()] = current - 1;
-					}
+			var hashedDictName = Game.GenerateHash(_textureDict);
+			if (_activeTextures.TryGetValue(hashedDictName, out var currentCount))
+			{
+				if (currentCount == 1)
+				{
+					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+					_activeTextures.Remove(hashedDictName);
 				}
 				else
 				{
-					// In practice this should never get executed
-					Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+					_activeTextures[hashedDictName] = currentCount - 1;
 				}
-
-				Marshal.FreeCoTaskMem(_pinnedDict);
-				Marshal.FreeCoTaskMem(_pinnedName);
 			}
+			else
+			{
+				// In practice this should never get executed
+				Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, _pinnedDict);
+			}
+
+			Marshal.FreeCoTaskMem(_pinnedDict);
+			Marshal.FreeCoTaskMem(_pinnedName);
+			_pinnedDict = IntPtr.Zero;
+			_pinnedName = IntPtr.Zero;
+
+			_disposed = true;
 		}
 
 		/// <summary>
@@ -170,13 +179,26 @@ namespace GTA.UI
 		}
 		/// <summary>
 		/// Gets or sets the texture coordinates of this <see cref="Sprite" />.
+		/// Currently only supports in v1.0.1868.0 or later game versions, but may support all game version in the future
+		/// since there is the function that DRAW_SPRITE_ARX_WITH_UV eventually calls in all game versions.
 		/// </summary>
 		/// <value>
 		/// The texture coordinates allows to specify the coordinates (measured in percentage: 1f = 100%), used to draw the sprite.
 		/// </value>
 		public RectangleF TextureCoordinates
 		{
-			get; set;
+			get => _textureCoordinates;
+			set
+			{
+				// Although you can find what DRAW_SPRITE_ARX_WITH_UV eventually calls with ["48 8B 41 10 66 39 70 58 74 06 48 8B 78 50 EB 07" - 0xA],
+				// but we have to prevent the setter from calling in the game versions prior to b1868 since we haven't find a alternative way to do what DRAW_SPRITE_ARX_WITH_UV does
+				if (Game.Version < GameVersion.v1_0_1868_0_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1868_0_Steam, nameof(Sprite), nameof(TextureCoordinates));
+				}
+
+				_textureCoordinates = value;
+			}
 		}
 		/// <summary>
 		/// Gets or sets the size to draw the <see cref="Sprite" />
@@ -192,7 +214,7 @@ namespace GTA.UI
 			get; set;
 		}
 		/// <summary>
-		/// Gets or sets the rotation to draw thie <see cref="Sprite" />.
+		/// Gets or sets the rotation to draw this <see cref="Sprite" />.
 		/// </summary>
 		/// <value>
 		/// The rotation measured in degrees, clockwise increasing, 0.0 at vertical
@@ -290,10 +312,10 @@ namespace GTA.UI
 				return;
 			}
 
-			float scaleX = Size.Width / screenWidth;
-			float scaleY = Size.Height / screenHeight;
-			float positionX = (Position.X + offset.Width) / screenWidth;
-			float positionY = (Position.Y + offset.Height) / screenHeight;
+			var scaleX = Size.Width / screenWidth;
+			var scaleY = Size.Height / screenHeight;
+			var positionX = (Position.X + offset.Width) / screenWidth;
+			var positionY = (Position.Y + offset.Height) / screenHeight;
 
 			if (!Centered)
 			{
@@ -303,10 +325,10 @@ namespace GTA.UI
 
 			if (TextureCoordinates != RectangleF.Empty)
 			{
-				float u1 = TextureCoordinates.Top;
-				float v1 = TextureCoordinates.Left;
-				float u2 = TextureCoordinates.Right;
-				float v2 = TextureCoordinates.Bottom;
+				var u1 = TextureCoordinates.Top;
+				var v1 = TextureCoordinates.Left;
+				var u2 = TextureCoordinates.Right;
+				var v2 = TextureCoordinates.Bottom;
 
 				Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, u1, v1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
 

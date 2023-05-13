@@ -15,7 +15,7 @@ namespace GTA
 		/// Creates a class used for loading <see cref="ParticleEffectAsset"/>s than can be used to start <see cref="ParticleEffect"/>s from inside the Asset
 		/// </summary>
 		/// <param name="assetName">The name of the asset file which contains all the <see cref="ParticleEffect"/>s you are wanting to start</param>
-		/// <remarks>The files have the extension *.ypt in OpenIV, use the file name withouth the extension for the <paramref name="assetName"/></remarks>
+		/// <remarks>The files have the extension *.ypt in OpenIV, use the file name without the extension for the <paramref name="assetName"/></remarks>
 		public ParticleEffectAsset(string assetName)
 		{
 			AssetName = assetName;
@@ -77,8 +77,8 @@ namespace GTA
 		{
 			Request();
 
-			int startTime = Environment.TickCount;
-			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			var startTime = Environment.TickCount;
+			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{

@@ -34,7 +34,7 @@ namespace WinForms = System::Windows::Forms;
 [assembly:AssemblyDescription("An ASI plugin for Grand Theft Auto V, which allows running scripts written in any .NET language in-game.")];
 [assembly:AssemblyCompany("crosire & contributors")];
 [assembly:AssemblyProduct("ScriptHookVDotNet")];
-[assembly:AssemblyCopyright("Copyright © 2015 crosire")];
+[assembly:AssemblyCopyright("Copyright Â© 2015 crosire")];
 [assembly:AssemblyVersion(SHVDN_VERSION)];
 [assembly:AssemblyFileVersion(SHVDN_VERSION)];
 // Sign with a strong name to distinguish from older versions and cause .NET framework runtime to bind the correct assemblies
@@ -152,7 +152,7 @@ static void ScriptHookVDotNet_ManagedInit()
 
 		if (domain != nullptr)
 		{
-			// Stash the command history if console is loaded 
+			// Stash the command history if console is loaded
 			if (console != nullptr)
 			{
 				stashedConsoleCommandHistory = console->CommandHistory;
@@ -204,7 +204,7 @@ static void ScriptHookVDotNet_ManagedInit()
 		return;
 
 	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
-	domain->InitTlsContext((IntPtr)GetTlsContext, (IntPtr)SetTlsContext);
+	domain->InitTlsContext(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
 
 	try
 	{
@@ -241,9 +241,9 @@ static void ScriptHookVDotNet_ManagedTick()
 	if (console != nullptr)
 		console->DoTick();
 
-	SHVDN::ScriptDomain ^scriptdomain = ScriptHookVDotNet::domain;
-	if (scriptdomain != nullptr)
-		scriptdomain->DoTick();
+	SHVDN::ScriptDomain ^scriptDomain = ScriptHookVDotNet::domain;
+	if (scriptDomain != nullptr)
+		scriptDomain->DoTick();
 }
 
 static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
@@ -284,11 +284,11 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 			return;
 	}
 
-	SHVDN::ScriptDomain ^scriptdomain = ScriptHookVDotNet::domain;
-	if (scriptdomain != nullptr)
+	SHVDN::ScriptDomain ^scriptDomain = ScriptHookVDotNet::domain;
+	if (scriptDomain != nullptr)
 	{
 		// Send key events to all scripts
-		scriptdomain->DoKeyEvent(keys, keydown);
+		scriptDomain->DoKeyEvent(keys, keydown);
 	}
 }
 

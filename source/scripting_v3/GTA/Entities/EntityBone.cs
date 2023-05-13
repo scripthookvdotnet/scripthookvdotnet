@@ -105,11 +105,15 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the dynamic <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
+		/// <remarks>
+		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// </remarks>
 		public Matrix PoseMatrix
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -119,7 +123,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -132,11 +136,15 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Matrix"/> of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
+		/// <remarks>
+		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
+		/// </remarks>
 		public Matrix RelativeMatrix
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -144,16 +152,30 @@ namespace GTA
 
 				return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
 			}
+			set
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteMatrix(address, value.ToArray());
+			}
 		}
 
 		/// <summary>
 		/// Gets or sets the current pose offset (dynamic position) of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
+		/// <remarks>
+		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// </remarks>
 		public Vector3 Pose
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -163,7 +185,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -174,40 +196,65 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position of this <see cref="EntityBone"/> in world coordinates.
+		/// Gets or sets the current pose quaternion of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
-		public Vector3 Position => Function.Call<Vector3>(Hash.GET_WORLD_POSITION_OF_ENTITY_BONE, Owner.Handle, Index);
-
-		/// <summary>
-		/// Gets the  world rotation of this <see cref="EntityBone"/>.
-		/// </summary>
-		public Vector3 Rotation => Function.Call<Vector3>(Hash.GET_ENTITY_BONE_ROTATION, Owner.Handle, Index);
-
-		/// <summary>
-		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
-		/// </summary>
-		public Vector3 RelativePosition
+		/// <remarks>
+		/// <para>
+		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// </para>
+		/// <para>
+		/// Remember to normalize the value you are going to set before setting it to this property as the setter does not normalize the value, just like <c>SET_ENTITY_QUATERNION</c> does not.
+		/// Setting an unnormalized quaternion may result in unintended scale change if the <see cref="Entity"/> is not playing animations that affect this bone or not simulating physics for this bone.
+		/// </para>
+		/// </remarks>
+		public Quaternion PoseQuaternion
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
-					return Vector3.Zero;
+					return Quaternion.Zero;
 				}
 
-				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x30));
+				unsafe
+				{
+					var tempRotationArray = stackalloc float[4];
+					SHVDN.NativeMemory.GetQuaternionFromMatrix(tempRotationArray, address);
+
+					return new Quaternion(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2], tempRotationArray[3]);
+				}
+			}
+			set
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				var matrixToWrite = new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+				var scale = matrixToWrite.GetScaleVector();
+				var translation = new Vector3(matrixToWrite.M41, matrixToWrite.M42, matrixToWrite.M43);
+
+				matrixToWrite = Matrix.Scaling(scale) * Matrix.RotationQuaternion(value) * Matrix.Translation(translation);
+				SHVDN.NativeMemory.WriteMatrix(address, matrixToWrite.ToArray());
 			}
 		}
 
 		/// <summary>
-		/// Gets the rotation of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// Gets or sets the current pose rotation of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
 		/// </summary>
-		public Vector3 RelativeRotation
+		/// <remarks>
+		/// While you can change appearance for <see cref="Vehicle"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property.
+		/// </remarks>
+		public Vector3 PoseRotation
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneObjectMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -221,6 +268,166 @@ namespace GTA
 					return new Vector3(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2]);
 				}
 			}
+			set => PoseQuaternion = Quaternion.Euler(value, EulerRotationOrder.YXZ);
+		}
+
+		/// <summary>
+		/// Gets the position of this <see cref="EntityBone"/> in world coordinates.
+		/// </summary>
+		public Vector3 Position => Function.Call<Vector3>(Hash.GET_WORLD_POSITION_OF_ENTITY_BONE, Owner.Handle, Index);
+
+		/// <summary>
+		/// Gets the world quaternion of this <see cref="EntityBone"/>.
+		/// </summary>
+		public Quaternion Quaternion
+		{
+			// The result is basically the same as GET_ENTITY_BONE_OBJECT_ROTATION but this getter calculates via quaternions (not matrices)
+			get
+			{
+				var relativeMatrixAddress = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (relativeMatrixAddress == IntPtr.Zero)
+				{
+					return Quaternion.Zero;
+				}
+
+				var relativeBoneQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(relativeMatrixAddress)));
+
+				var transformMatrixAddress = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(Owner.Handle);
+				if (transformMatrixAddress == IntPtr.Zero)
+				{
+					// GET_ENTITY_BONE_OBJECT_ROTATION considers this edge case
+					return relativeBoneQuaternion;
+				}
+
+				var globalTransformQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(transformMatrixAddress)));
+
+				return globalTransformQuaternion * relativeBoneQuaternion;
+			}
+		}
+
+		/// <summary>
+		/// Gets the world rotation of this <see cref="EntityBone"/>.
+		/// </summary>
+		public Vector3 Rotation
+		{
+			get
+			{
+				var quaternion = Quaternion;
+				if (quaternion == Quaternion.Zero)
+				{
+					// Failed to get the relative matrix
+					return Vector3.Zero;
+				}
+
+				return quaternion.ToEuler();
+			}
+		}
+
+		/// <summary>
+		/// Gets the position of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of.
+		/// </summary>
+		/// <remarks>
+		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
+		/// </remarks>
+		public Vector3 RelativePosition
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x30));
+			}
+			set
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteVector3((address + 0x30), value.ToArray());
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the quaternion of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of from <see cref="RelativeMatrix"/>.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
+		/// </para>
+		/// <para>
+		/// Remember to normalize the value you are going to set before setting it to this property as the setter does not normalize the value, just like <c>SET_ENTITY_QUATERNION</c> does not.
+		/// Setting an unnormalized quaternion may result in unintended scale change if the <see cref="Entity"/> is not playing animations that affect this bone or not simulating physics for this bone.
+		/// </para>
+		/// </remarks>
+		public Quaternion RelativeQuaternion
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return Quaternion.Zero;
+				}
+
+				unsafe
+				{
+					var tempRotationArray = stackalloc float[4];
+					SHVDN.NativeMemory.GetQuaternionFromMatrix(tempRotationArray, address);
+
+					return new Quaternion(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2], tempRotationArray[3]);
+				}
+			}
+			set
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return;
+				}
+
+				var matrixToWrite = new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+				var scale = matrixToWrite.GetScaleVector();
+				var translation = new Vector3(matrixToWrite.M41, matrixToWrite.M42, matrixToWrite.M43);
+
+				matrixToWrite = Matrix.Scaling(scale) * Matrix.RotationQuaternion(value) * Matrix.Translation(translation);
+				SHVDN.NativeMemory.WriteMatrix(address, matrixToWrite.ToArray());
+			}
+		}
+
+		/// <summary>
+		/// Gets the rotation of this <see cref="EntityBone"/> relative to the <see cref="Entity"/> its part of from <see cref="RelativeMatrix"/>.
+		/// </summary>
+		/// <remarks>
+		/// While you can change appearance for <see cref="Ped"/>s or <see cref="Prop"/>s by modifying this property,
+		/// you cannot change appearance for <see cref="Vehicle"/>s by modifying this property.
+		/// </remarks>
+		public Vector3 RelativeRotation
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				unsafe
+				{
+					var tempRotationArray = stackalloc float[3];
+					SHVDN.NativeMemory.GetRotationFromMatrix(tempRotationArray, address);
+
+					return new Vector3(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2]);
+				}
+			}
+			set => RelativeQuaternion = Quaternion.Euler(value, EulerRotationOrder.YXZ);
 		}
 
 		/// <summary>
@@ -230,7 +437,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.UpVector;
@@ -246,7 +453,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.RightVector;
@@ -262,7 +469,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Owner.ForwardVector;
@@ -278,7 +485,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
@@ -294,7 +501,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
@@ -310,7 +517,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+				var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
@@ -326,7 +533,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = Owner.MemoryAddress;
+				var address = Owner.MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return -1;
@@ -342,7 +549,7 @@ namespace GTA
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
 		public Vector3 GetOffsetPosition(Vector3 offset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return Owner.Matrix.TransformPoint(offset);
@@ -356,7 +563,7 @@ namespace GTA
 		/// <param name="offset">The offset from this <see cref="EntityBone"/>.</param>
 		public Vector3 GetRelativeOffsetPosition(Vector3 offset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return offset;
@@ -370,7 +577,7 @@ namespace GTA
 		/// <param name="worldCoords">The world coordinates.</param>
 		public Vector3 GetPositionOffset(Vector3 worldCoords)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return Owner.Matrix.InverseTransformPoint(worldCoords);
@@ -384,7 +591,7 @@ namespace GTA
 		/// <param name="entityOffset">The <see cref="Entity"/> offset.</param>
 		public Vector3 GetRelativePositionOffset(Vector3 entityOffset)
 		{
-			IntPtr address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
+			var address = SHVDN.NativeMemory.GetEntityBoneGlobalMatrixAddress(Owner.Handle, Index);
 			if (address == IntPtr.Zero)
 			{
 				return entityOffset;
@@ -415,7 +622,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same bone as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(EntityBone left, EntityBone right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="EntityBone"/>s don't refer to the same bone.
@@ -459,7 +666,7 @@ namespace GTA
 		/// </summary>
 		public static implicit operator int(EntityBone entityBone)
 		{
-			return entityBone is null ? -1 : entityBone.Index;
+			return entityBone?.Index ?? -1;
 		}
 		/// <summary>
 		/// Converts an <see cref="EntityBone"/> to a native input argument.

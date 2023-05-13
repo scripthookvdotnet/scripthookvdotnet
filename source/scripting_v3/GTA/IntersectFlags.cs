@@ -33,8 +33,8 @@ namespace GTA
 		BoundingBox = Vehicles | PedCapsules | Ragdolls | Objects | Pickups | Glass,
 
 		[Obsolete("IntersectFlags.MissionEntities is obsolete because it is incorrect, use IntersectFlags.Vehicles instead.")]
-		MissionEntities = 2,
+		MissionEntities = Vehicles,
 		[Obsolete("IntersectFlags.Vegetation is obsolete because it is incorrect, use IntersectFlags.Foliage instead.")]
-		Vegetation = 256,
+		Vegetation = Foliage,
 	}
 }

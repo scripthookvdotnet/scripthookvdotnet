@@ -69,8 +69,8 @@ namespace GTA
 		{
 			Request();
 
-			int startTime = Environment.TickCount;
-			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			var startTime = Environment.TickCount;
+			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{

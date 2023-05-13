@@ -47,7 +47,7 @@ namespace GTA
 				return 0;
 			}
 
-			IntPtr entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
+			var entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
 			if (entityAddress == IntPtr.Zero)
 			{
 				return 0;

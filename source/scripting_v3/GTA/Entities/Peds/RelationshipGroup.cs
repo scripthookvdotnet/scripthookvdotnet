@@ -55,21 +55,21 @@ namespace GTA
 
 		public void SetRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool bidirectionally = false)
 		{
-			Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup.NativeValue);
+			Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, Hash, targetGroup);
 
 			if (bidirectionally)
 			{
-				Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup.NativeValue, Hash);
+				Function.Call(Native.Hash.SET_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, targetGroup, Hash);
 			}
 		}
 
 		public void ClearRelationshipBetweenGroups(RelationshipGroup targetGroup, Relationship relationship, bool bidirectionally = false)
 		{
-			Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, Hash, targetGroup.NativeValue);
+			Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, Hash, targetGroup);
 
 			if (bidirectionally)
 			{
-				Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, relationship, targetGroup.NativeValue, Hash);
+				Function.Call(Native.Hash.CLEAR_RELATIONSHIP_BETWEEN_GROUPS, (int)relationship, targetGroup, Hash);
 			}
 		}
 

@@ -25,7 +25,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Repair all damage to this <see cref="Vehicle"/> instantaneously.
+		/// Restores the health of this <see cref="Vehicle"/> and fixes any damage instantaneously.
 		/// </summary>
 		public void Repair()
 		{
@@ -34,7 +34,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Explode this <see cref="Vehicle"/> instantaneously.
+		/// Explodes this <see cref="Vehicle"/>.
 		/// </summary>
 		public void Explode()
 		{
@@ -75,18 +75,20 @@ namespace GTA
 			}
 		}
 
-
+		/// <summary>
+		/// Gets or sets dirt level of this <see cref="Vehicle"/> between 0.0 (clean) to 15.0 (dirty).
+		/// </summary>
 		public float DirtLevel
 		{
 			get => Function.Call<float>(Hash.GET_VEHICLE_DIRT_LEVEL, Handle);
 			set => Function.Call(Hash.SET_VEHICLE_DIRT_LEVEL, Handle, value);
 		}
 
-		public VehicleModCollection Mods => _mods ?? (_mods = new VehicleModCollection(this));
+		public VehicleModCollection Mods => _mods ??= new VehicleModCollection(this);
 
-		public VehicleWheelCollection Wheels => _wheels ?? (_wheels = new VehicleWheelCollection(this));
+		public VehicleWheelCollection Wheels => _wheels ??= new VehicleWheelCollection(this);
 
-		public VehicleWindowCollection Windows => _windows ?? (_windows = new VehicleWindowCollection(this));
+		public VehicleWindowCollection Windows => _windows ??= new VehicleWindowCollection(this);
 
 		public void Wash()
 		{
@@ -135,7 +137,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.Automobile || vehicleType == VehicleType.AmphibiousAutomobile || vehicleType == VehicleType.SubmarineCar);
+				return vehicleType is VehicleType.Automobile or VehicleType.AmphibiousAutomobile or VehicleType.SubmarineCar;
 			}
 		}
 
@@ -157,7 +159,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.QuadBike || vehicleType == VehicleType.AmphibiousQuadBike);
+				return vehicleType is VehicleType.QuadBike or VehicleType.AmphibiousQuadBike;
 			}
 		}
 
@@ -169,7 +171,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.AmphibiousAutomobile || vehicleType == VehicleType.AmphibiousQuadBike);
+				return vehicleType is VehicleType.AmphibiousAutomobile or VehicleType.AmphibiousQuadBike;
 			}
 		}
 
@@ -201,7 +203,7 @@ namespace GTA
 			get
 			{
 				var vehicleType = Type;
-				return (vehicleType == VehicleType.Plane || vehicleType == VehicleType.Helicopter || vehicleType == VehicleType.Blimp);
+				return vehicleType is VehicleType.Plane or VehicleType.Helicopter or VehicleType.Blimp;
 			}
 		}
 
@@ -429,7 +431,7 @@ namespace GTA
 					return VehicleType.None;
 				}
 
-				int vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				var vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
 				if (vehTypeInt >= 6 && Game.Version < GameVersion.v1_0_944_2_Steam)
 				{
 					vehTypeInt += 2;
@@ -439,6 +441,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a lod multiplier for this <see cref="Vehicle"/>.
+		/// </summary>
+		/// <remarks>
+		/// When you try to find an appropriate lod multiplier to set, start by using low values (1.1, 1.5, etc) until the wanted result is achieved.
+		/// Large values are not appropriate and will be expensive to draw.
+		/// </remarks>
 		public float LodMultiplier
 		{
 			get
@@ -454,6 +463,9 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets the handling data attached to this <see cref="Vehicle"/>.
+		/// </summary>
 		public HandlingData HandlingData
 		{
 			get
@@ -482,7 +494,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> engine health.
+		/// <para>Gets or sets this <see cref="Vehicle"/> engine health.</para>
+		/// <para>
+		/// When this value is less than 0.0, the engine will not work.
+		/// </para>
+		/// <para>
+		/// When this value is between -1000.0 and 0.0 exclusive, the engine is on fire and the value will decrease until it reaches -1000.0.
+		/// While on fire, burning engine "may" set the petrol tank on fire as well, but there's only a chance of this.
+		/// </para>
 		/// </summary>
 		public float EngineHealth
 		{
@@ -491,7 +510,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets this <see cref="Vehicle"/> petrol tank health.
+		/// <para>Gets or sets this <see cref="Vehicle"/> petrol tank health.</para>
+		/// <para>
+		/// When this value is between -1000.0 and 0.0 exclusive, the petrol tank is on fire and the value will decrease until it reaches -1000.0.
+		/// The <see cref="Vehicle"/> will explode when this health reaches -1000.0.
+		/// </para>
 		/// </summary>
 		public float PetrolTankHealth
 		{
@@ -795,6 +818,9 @@ namespace GTA
 			set => HighGear = value;
 		}
 
+		/// <summary>
+		/// Gets or sets the high gear value of this <see cref="Vehicle"/>.
+		/// </summary>
 		public int HighGear
 		{
 			get
@@ -819,12 +845,12 @@ namespace GTA
 				{
 					if (value > 10)
 					{
-						throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 10, inclusive.");
+						throw new ArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 10, inclusive.");
 					}
 				}
 				else if (value > 7)
 				{
-					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
+					throw new ArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 7, inclusive.");
 				}
 
 				SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.HighGearOffset, (byte)value);
@@ -888,6 +914,9 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the current turbo value of this <see cref="Vehicle"/>.
 		/// </summary>
+		/// <remarks>
+		/// Affects the engine performance only when <see cref="VehicleToggleModType.Turbo"/> is installed.
+		/// </remarks>
 		public float Turbo
 		{
 			get => SHVDN.NativeMemory.GetVehicleTurbo(Handle);
@@ -1231,7 +1260,7 @@ namespace GTA
 					return 0;
 				}
 
-				ushort alarmTime = (ushort)SHVDN.NativeMemory.ReadInt16(address + SHVDN.NativeMemory.AlarmTimeOffset);
+				var alarmTime = (ushort)SHVDN.NativeMemory.ReadInt16(address + SHVDN.NativeMemory.AlarmTimeOffset);
 				return alarmTime != ushort.MaxValue ? alarmTime : 0;
 			}
 			set
@@ -1651,7 +1680,7 @@ namespace GTA
 		public VehicleLockStatus LockStatus
 		{
 			get => Function.Call<VehicleLockStatus>(Hash.GET_VEHICLE_DOOR_LOCK_STATUS, Handle);
-			set => Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, Handle, (int)value);
 		}
 
 		public VehicleLandingGearState LandingGearState
@@ -1659,7 +1688,7 @@ namespace GTA
 			get => Function.Call<VehicleLandingGearState>(Hash.GET_LANDING_GEAR_STATE, Handle);
 			set
 			{
-				int state = 0;
+				var state = 0;
 				switch (value)
 				{
 					case VehicleLandingGearState.Deploying:
@@ -1717,15 +1746,15 @@ namespace GTA
 
 		public Ped GetPedOnSeat(VehicleSeat seat)
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, seat));
-			return ped.Exists() ? ped : null;
+			var handle = Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)seat);
+			return handle != 0 ? new Ped(handle) : null;
 		}
 
 		public Ped[] Occupants
 		{
 			get
 			{
-				Ped driver = Driver;
+				var driver = Driver;
 
 				if (driver == null)
 				{
@@ -1773,6 +1802,14 @@ namespace GTA
 
 		public int PassengerCapacity => Function.Call<int>(Hash.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
 
+		/// <summary>
+		/// Creates a <see cref="Ped"/> on the specified seat.
+		/// </summary>
+		/// <param name="seat">The seat the new <see cref="Ped"/> will be spawned.</param>
+		/// <param name="model">The model for the new <see cref="Ped"/>.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException">Another <see cref="Ped"/> already occupies <paramref name="seat"/> of the <see cref="Vehicle"/>.</exception>
+		/// <remarks>Returns <see langword="null"/> if <paramref name="model"/> is not for a <see cref="Ped"/> or it cannot be loaded within one second.</remarks>
 		public Ped CreatePedOnSeat(VehicleSeat seat, Model model)
 		{
 			if (!IsSeatFree(seat))
@@ -1785,9 +1822,15 @@ namespace GTA
 				return null;
 			}
 
-			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, seat, 1, 1));
+			return new Ped(Function.Call<int>(Hash.CREATE_PED_INSIDE_VEHICLE, Handle, 26, model.Hash, (int)seat, 1, 1));
 		}
 
+		/// <summary>
+		/// Creates a random <see cref="Ped"/> on the specified seat.
+		/// </summary>
+		/// <param name="seat">The seat the new <see cref="Ped"/> will be spawned.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException">Another <see cref="Ped"/> already occupies <paramref name="seat"/> of the <see cref="Vehicle"/>.</exception>
 		public Ped CreateRandomPedOnSeat(VehicleSeat seat)
 		{
 			if (!IsSeatFree(seat))
@@ -1799,18 +1842,16 @@ namespace GTA
 			{
 				return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED_AS_DRIVER, Handle, true));
 			}
-			else
-			{
-				int pedHandle = Function.Call<int>(Hash.CREATE_RANDOM_PED, 0f, 0f, 0f);
-				Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, seat);
 
-				return new Ped(pedHandle);
-			}
+			var pedHandle = Function.Call<int>(Hash.CREATE_RANDOM_PED, 0f, 0f, 0f);
+			Function.Call(Hash.SET_PED_INTO_VEHICLE, pedHandle, Handle, (int)seat);
+
+			return new Ped(pedHandle);
 		}
 
 		public bool IsSeatFree(VehicleSeat seat)
 		{
-			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, seat);
+			return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)seat);
 		}
 
 		#endregion
@@ -1830,12 +1871,12 @@ namespace GTA
 
 		public void PlaceOnNextStreet()
 		{
-			Vector3 currentPosition = Position;
+			var currentPosition = Position;
 			NativeVector3 newPosition;
 			float heading;
 			long unkn;
 
-			for (int i = 1; i < 40; i++)
+			for (var i = 1; i < 40; i++)
 			{
 				unsafe
 				{
@@ -1887,6 +1928,9 @@ namespace GTA
 
 		public bool HasTowArm => Bones.Contains("tow_arm");
 
+		/// <summary>
+		/// Sets a tow truck arm position, 0.0 on the ground 1.0 in the air.
+		/// </summary>
 		public float TowArmPosition
 		{
 			set => Function.Call(Hash.SET_VEHICLE_TOW_TRUCK_ARM_POSITION, Handle, value);
@@ -1897,14 +1941,21 @@ namespace GTA
 			Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle.Handle, rear, 0f, 0f, 0f);
 		}
 
+		/// <summary>
+		/// Detaches specified vehicle from any tow truck it might be attached through, loops through all vehicles so could be expensive.
+		/// If you know the tow truck <see cref="Vehicle"/> that tows this <see cref="Vehicle"/>, you should call <see cref="DetachTowedVehicle"/> on the tow truck.
+		/// </summary>
 		public void DetachFromTowTruck()
 		{
 			Function.Call(Hash.DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
 		}
 
+		/// <summary>
+		/// Detach the towed <see cref="Vehicle"/> to from this tow truck <see cref="Vehicle"/>.
+		/// </summary>
 		public void DetachTowedVehicle()
 		{
-			Vehicle vehicle = TowedVehicle;
+			var vehicle = TowedVehicle;
 
 			if (vehicle != null)
 			{
@@ -1916,8 +1967,8 @@ namespace GTA
 		{
 			get
 			{
-				var veh = new Vehicle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle));
-				return veh.Exists() ? veh : null;
+				var handle = Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO_TOW_TRUCK, Handle);
+				return handle != 0 ? new Vehicle(handle) : null;
 			}
 		}
 
@@ -1955,7 +2006,7 @@ namespace GTA
 		{
 			if (Model.IsCargobob)
 			{
-				Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, hook);
+				Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
 			}
 		}
 
@@ -2014,6 +2065,7 @@ namespace GTA
 
 		/// <summary>
 		/// Checks if this <see cref="Vehicle"/> is being brought to a halt.
+		/// Currently supports only in v1.0.1493.0.
 		/// </summary>
 		public bool IsBeingBroughtToHalt => Game.Version >= GameVersion.v1_0_1493_0_Steam && Function.Call<bool>(Hash.IS_VEHICLE_BEING_BROUGHT_TO_HALT, Handle);
 
@@ -2033,6 +2085,7 @@ namespace GTA
 
 		/// <summary>
 		/// Stops bringing this <see cref="Vehicle"/> to a halt.
+		/// Currently supports only in v1.0.1103.2.
 		/// </summary>
 		public void StopBringingToHalt()
 		{
@@ -2217,20 +2270,26 @@ namespace GTA
 			return (VehicleType)SHVDN.NativeMemory.GetVehicleType(vehicleModel);
 		}
 
+		/// <summary>
+		/// Gets an array of all model values.
+		/// </summary>
 		public static int[] GetAllModelValues()
 		{
 			var allModels = new List<int>();
-			for (int i = 0; i < 0x20; i++)
+			for (var i = 0; i < 0x20; i++)
 			{
 				allModels.AddRange(SHVDN.NativeMemory.VehicleModels[i].ToArray());
 			}
 			return allModels.ToArray();
 		}
 
+		/// <summary>
+		/// Gets an array of all <see cref="VehicleHash"/>es.
+		/// </summary>
 		public static VehicleHash[] GetAllModels()
 		{
 			var allModels = new List<VehicleHash>();
-			for (int i = 0; i < 0x20; i++)
+			for (var i = 0; i < 0x20; i++)
 			{
 				allModels.AddRange(Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[i].ToArray(), item => (VehicleHash)item));
 			}
@@ -2238,7 +2297,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets an <c>array</c> of all loaded <see cref="VehicleHash"/>s that is appropriate to spawn as ambient vehicles.
+		/// Gets an array of all loaded <see cref="VehicleHash"/>es that is appropriate to spawn as ambient vehicles.
 		/// All the model hashes of the elements are loaded and the <see cref="Vehicle"/>s with the model hashes can be spawned immediately.
 		/// </summary>
 		public static VehicleHash[] GetAllLoadedModelsAppropriateForAmbientVehicles()
@@ -2248,11 +2307,17 @@ namespace GTA
 				.ToArray();
 		}
 
+		/// <summary>
+		/// Gets an array of all <see cref="VehicleHash"/>es whose <see cref="VehicleClass"/>es belong to the specified one.
+		/// </summary>
 		public static VehicleHash[] GetAllModelsOfClass(VehicleClass vehicleClass)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModels[(int)vehicleClass].ToArray(), item => (VehicleHash)item);
 		}
 
+		/// <summary>
+		/// Gets an array of all <see cref="VehicleHash"/>es whose <see cref="VehicleType"/>es belong to the specified one.
+		/// </summary>
 		public static VehicleHash[] GetAllModelsOfType(VehicleType vehicleType)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.VehicleModelsGroupedByType[(int)vehicleType].ToArray(), item => (VehicleHash)item);

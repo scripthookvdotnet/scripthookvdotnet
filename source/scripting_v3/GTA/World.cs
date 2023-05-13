@@ -34,7 +34,7 @@ namespace GTA
 			"HALLOWEEN"
 		};
 
-		static readonly GregorianCalendar calendar = new GregorianCalendar();
+		static readonly GregorianCalendar calendar = new();
 
 		// removes gang and animal ped models just like CREATE_RANDOM_PED does
 		static readonly Func<Model, bool> defaultPredicateForCreateRandomPed = (x => x.IsHumanPed && !x.IsGangPed);
@@ -71,12 +71,12 @@ namespace GTA
 		{
 			get
 			{
-				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
-				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
-				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
-				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-				int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
+				var year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
+				var month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
+				var day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
+				var hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
+				var minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
+				var second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
 
 				return new DateTime(year, month, day, hour, minute, second);
 			}
@@ -97,9 +97,9 @@ namespace GTA
 		{
 			get
 			{
-				int hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-				int minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-				int seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
+				var hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
+				var minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
+				var seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
 
 				return new TimeSpan(hours, minutes, seconds);
 			}
@@ -143,7 +143,7 @@ namespace GTA
 		{
 			get
 			{
-				for (int i = 0; i < weatherNames.Length; i++)
+				for (var i = 0; i < weatherNames.Length; i++)
 				{
 					if (Function.Call<int>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == Game.GenerateHash(weatherNames[i]))
 					{
@@ -171,7 +171,7 @@ namespace GTA
 		{
 			get
 			{
-				for (int i = 0; i < weatherNames.Length; i++)
+				for (var i = 0; i < weatherNames.Length; i++)
 				{
 					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, weatherNames[i]))
 					{
@@ -183,16 +183,14 @@ namespace GTA
 			}
 			set
 			{
-				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
+				if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown) return;
+				int currentWeatherHash, nextWeatherHash;
+				float weatherTransition;
+				unsafe
 				{
-					int currentWeatherHash, nextWeatherHash;
-					float weatherTransition;
-					unsafe
-					{
-						Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
-					}
-					Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, Game.GenerateHash(weatherNames[(int)value]), 0.0f);
+					Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 				}
+				Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, Game.GenerateHash(weatherNames[(int)value]), 0.0f);
 			}
 		}
 
@@ -303,20 +301,17 @@ namespace GTA
 		{
 			get
 			{
-				Blip waypointBlip = WaypointBlip;
+				var waypointBlip = WaypointBlip;
 				if (waypointBlip == null)
 				{
 					return Vector3.Zero;
 				}
 
-				Vector3 position = waypointBlip.Position;
+				var position = waypointBlip.Position;
 				position.Z = GetGroundHeight((Vector2)position);
 				return position;
 			}
-			set
-			{
-				Function.Call(Hash.SET_NEW_WAYPOINT, value.X, value.Y);
-			}
+			set => Function.Call(Hash.SET_NEW_WAYPOINT, value.X, value.Y);
 		}
 
 		/// <summary>
@@ -325,7 +320,7 @@ namespace GTA
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetAllBlips(params BlipSprite[] blipTypes)
 		{
-			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			var blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(blipTypesInt), handle => new Blip(handle));
 		}
 
@@ -337,7 +332,7 @@ namespace GTA
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetNearbyBlips(Vector3 position, float radius, params BlipSprite[] blipTypes)
 		{
-			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			var blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToArray(), radius, blipTypesInt), handle => new Blip(handle));
 		}
 
@@ -472,24 +467,29 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetAllPeds(params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(hashes), handle => new Ped(handle));
 		}
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		/// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
 		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
-			int[] handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToArray(), radius, hashes);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
+			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToArray(), radius, hashes);
 
-			var result = new List<Ped>();
+			if (handles.Length == 0)
+			{
+				return Array.Empty<Ped>();
+			}
 
-			foreach (int handle in handles)
+			var result = new List<Ped>(handles.Length - 1);
+
+			foreach (var handle in handles)
 			{
 				if (handle == ped.Handle)
 				{
@@ -505,11 +505,11 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius, hashes), handle => new Ped(handle));
 		}
 
@@ -531,25 +531,25 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetAllVehicles(params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(hashes), handle => new Vehicle(handle));
 		}
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
 		/// </summary>
 		/// <param name="ped">The ped to check.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		/// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
-			int[] handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToArray(), radius, hashes);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
+			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToArray(), radius, hashes);
 
 			var result = new List<Vehicle>();
-			Vehicle ignore = ped.CurrentVehicle;
+			var ignore = ped.CurrentVehicle;
 
-			foreach (int handle in handles)
+			foreach (var handle in handles)
 			{
 				if (ignore != null && handle == ignore.Handle)
 				{
@@ -565,11 +565,11 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius, hashes), handle => new Vehicle(handle));
 		}
 
@@ -591,18 +591,18 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetAllProps(params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(hashes), handle => new Prop(handle));
 		}
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
 		{
-			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			var hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToArray(), radius, hashes), handle => new Prop(handle));
 		}
 
@@ -628,7 +628,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World associated with a <see cref="Pickup"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToArray(), radius), handle => new Prop(handle));
@@ -671,7 +671,7 @@ namespace GTA
 		/// Gets an <c>array</c> of all <see cref="Entity"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetEntityHandles(position.ToArray(), radius), Entity.FromHandle);
@@ -738,17 +738,15 @@ namespace GTA
 		/// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
 		{
-			ISpatial closest = null;
-			float closestDistance = 3e38f;
+			var closest = default(T);
+			var closestDistance = 3e38f;
 
 			foreach (var spatial in spatials)
 			{
 				var distance = position.DistanceToSquared(spatial.Position);
-				if (distance <= closestDistance)
-				{
-					closest = spatial;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = spatial;
+				closestDistance = distance;
 			}
 			return (T)closest;
 		}
@@ -761,18 +759,16 @@ namespace GTA
 		/// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
 		public static T GetClosest<T>(Vector2 position, params T[] spatials) where T : ISpatial
 		{
-			ISpatial closest = null;
-			float closestDistance = 3e38f;
+			var closest = default(T);
+			var closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
 			foreach (var spatial in spatials)
 			{
 				var distance = position3D.DistanceToSquared2D(spatial.Position);
-				if (distance <= closestDistance)
-				{
-					closest = spatial;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = spatial;
+				closestDistance = distance;
 			}
 			return (T)closest;
 		}
@@ -785,16 +781,14 @@ namespace GTA
 		public static Building GetClosest(Vector3 position, params Building[] buildings)
 		{
 			Building closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 
 			foreach (var building in buildings)
 			{
 				var distance = position.DistanceToSquared(building.Position);
-				if (distance <= closestDistance)
-				{
-					closest = building;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = building;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -807,17 +801,15 @@ namespace GTA
 		public static Building GetClosest(Vector2 position, params Building[] buildings)
 		{
 			Building closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
 			foreach (var building in buildings)
 			{
 				var distance = position3D.DistanceToSquared2D(building.Position);
-				if (distance <= closestDistance)
-				{
-					closest = building;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = building;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -830,16 +822,14 @@ namespace GTA
 		public static AnimatedBuilding GetClosest(Vector3 position, params AnimatedBuilding[] animatedBuildings)
 		{
 			AnimatedBuilding closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 
 			foreach (var animatedBuilding in animatedBuildings)
 			{
 				var distance = position.DistanceToSquared(animatedBuilding.Position);
-				if (distance <= closestDistance)
-				{
-					closest = animatedBuilding;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = animatedBuilding;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -852,17 +842,15 @@ namespace GTA
 		public static AnimatedBuilding GetClosest(Vector2 position, params AnimatedBuilding[] animatedBuildings)
 		{
 			AnimatedBuilding closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
 			foreach (var animatedBuilding in animatedBuildings)
 			{
 				var distance = position3D.DistanceToSquared2D(animatedBuilding.Position);
-				if (distance <= closestDistance)
-				{
-					closest = animatedBuilding;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = animatedBuilding;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -875,16 +863,14 @@ namespace GTA
 		public static InteriorInstance GetClosest(Vector3 position, params InteriorInstance[] interiorInstances)
 		{
 			InteriorInstance closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 
 			foreach (var interiorInstance in interiorInstances)
 			{
 				var distance = position.DistanceToSquared(interiorInstance.Position);
-				if (distance <= closestDistance)
-				{
-					closest = interiorInstance;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = interiorInstance;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -897,17 +883,15 @@ namespace GTA
 		public static InteriorInstance GetClosest(Vector2 position, params InteriorInstance[] interiorInstances)
 		{
 			InteriorInstance closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
 			foreach (var interiorInstance in interiorInstances)
 			{
 				var distance = position3D.DistanceToSquared2D(interiorInstance.Position);
-				if (distance <= closestDistance)
-				{
-					closest = interiorInstance;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = interiorInstance;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -920,16 +904,14 @@ namespace GTA
 		public static InteriorProxy GetClosest(Vector3 position, params InteriorProxy[] interiorProxies)
 		{
 			InteriorProxy closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 
 			foreach (var interiorProxy in interiorProxies)
 			{
 				var distance = position.DistanceToSquared(interiorProxy.Position);
-				if (distance <= closestDistance)
-				{
-					closest = interiorProxy;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = interiorProxy;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -942,17 +924,15 @@ namespace GTA
 		public static InteriorProxy GetClosest(Vector2 position, params InteriorProxy[] interiorProxies)
 		{
 			InteriorProxy closest = null;
-			float closestDistance = 3e38f;
+			var closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
 			foreach (var interiorProxy in interiorProxies)
 			{
 				var distance = position3D.DistanceToSquared2D(interiorProxy.Position);
-				if (distance <= closestDistance)
-				{
-					closest = interiorProxy;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = interiorProxy;
+				closestDistance = distance;
 			}
 			return closest;
 		}
@@ -1102,7 +1082,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
 		{
-			Prop prop = CreateProp(model, position, dynamic, placeOnGround);
+			var prop = CreateProp(model, position, dynamic, placeOnGround);
 
 			if (prop != null)
 			{
@@ -1130,7 +1110,7 @@ namespace GTA
 		/// <inheritdoc cref="CreateProp(Model, Vector3, Vector3, bool, bool)"/>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
 		{
-			Prop prop = CreatePropNoOffset(model, position, dynamic);
+			var prop = CreatePropNoOffset(model, position, dynamic);
 
 			if (prop != null)
 			{
@@ -1150,14 +1130,9 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+			var handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
 
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new Prop(handle);
+			return handle == 0 ? null : new Prop(handle);
 		}
 
 		/// <summary>
@@ -1170,14 +1145,9 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
+			var handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
 
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new Pickup(handle);
+			return handle == 0 ? null : new Pickup(handle);
 		}
 		/// <summary>
 		/// Spawns a <see cref="Pickup"/> at the specified position.
@@ -1189,14 +1159,9 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
+			var handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
 
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new Pickup(handle);
+			return handle == 0 ? null : new Pickup(handle);
 		}
 
 		#endregion
@@ -1222,7 +1187,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
 		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
-			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
+			var handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
 			return handle != 0 ? new Checkpoint(handle) : null;
 		}
 		/// <summary>
@@ -1236,7 +1201,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
 		public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
-			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 44, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
+			var handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 44, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
 			return handle != 0 ? new Checkpoint(handle) : null;
 		}
 
@@ -1274,10 +1239,7 @@ namespace GTA
 		/// </remarks>
 		public static Camera RenderingCamera
 		{
-			get
-			{
-				return new Camera(Function.Call<int>(Hash.GET_RENDERING_CAM));
-			}
+			get => new(Function.Call<int>(Hash.GET_RENDERING_CAM));
 			set
 			{
 				if (value == null)
@@ -1306,13 +1268,146 @@ namespace GTA
 		public static NavMeshBlockingObject CreateNavMeshBlockingObject(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags = NavMeshBlockingObjectFlags.AllPaths)
 		{
 			const float DEG_2_RAD = (float)(System.Math.PI / 180);
-			float headingRadians = headingDegrees * DEG_2_RAD;
+			var headingRadians = headingDegrees * DEG_2_RAD;
 
 			// Set the second last parameter bPermanent to false, which determines whether the blocking object will last outside the lifetime of the calling script (scrThread)
 			// If the SHVDN runtime stops working, all the blocking objects created via SHVDN will get deleted (stopping any SHVDN scripts working will not automatically remove any blocking objects)
 			var handle = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
 			return handle != -1 ? new NavMeshBlockingObject(handle) : null;
 		}
+
+		#region Area Clearance
+
+		/// <summary>
+		/// Clears non-mission <see cref="Entity"/>s and cleans <see cref="Building"/>s and <see cref="AnimatedBuilding"/>s within the defined sphere.
+		/// All fires and explosions in the area are also cleared.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The radius for area clearance.</param>
+		/// <param name="deleteProjectiles">
+		/// If <see langword="true"/>, all <see cref="Projectile"/>s in the area will also be cleared
+		/// except for ones that are on <see cref="Ped"/>s' hands or rocket <see cref="Projectile"/>s that are attached to rocket weapon <see cref="Prop"/>s.
+		/// </param>
+		/// <param name="leaveCarGenCars">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s generated by vehicle generators will be cleared even if they have been entered.
+		/// </param>
+		/// <param name="clearLowPriorityPickupsOnly">
+		/// If <see langword="true"/>, none of pickup <see cref="Prop"/>s will get deleted except for low priority ones (although the exact condition is unknown).
+		/// </param>
+		/// <remarks>
+		/// Does not delete non-mission <see cref="Entity"/>s that is protected by conditions other than <see cref="Entity.PopulationType"/>.
+		/// For example, this method does not delete the <see cref="Vehicle"/> the player is in or automobiles (excluding amphibious or submarine cars), bikes, and helicopters (excluding blimps) in some garages.
+		/// This method does not delete <see cref="Ped"/> who are members of the player group as they are protected, either.
+		/// </remarks>
+		public static void ClearArea(Vector3 position, float radius, bool deleteProjectiles, bool leaveCarGenCars = false, bool clearLowPriorityPickupsOnly = false)
+			=> Function.Call(Hash.CLEAR_AREA, position.X, position.Y, position.Z, radius, deleteProjectiles, leaveCarGenCars, clearLowPriorityPickupsOnly, false);
+
+
+		/// <summary>
+		/// Clears <see cref="Projectile"/> within the defined sphere except for ones that are on <see cref="Ped"/>s' hands or rocket <see cref="Projectile"/>s that are attached to rocket weapon <see cref="Prop"/>s.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The radius for area clearance.</param>
+		public static void ClearAreaOfProjectiles(Vector3 position, float radius) => Function.Call(Hash.CLEAR_AREA_OF_PROJECTILES, position.X, position.Y, position.Z, radius, false);
+
+		/// <summary>
+		/// Clears non-mission <see cref="Vehicle"/>s within the defined sphere.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The radius for area clearance.</param>
+		/// <param name="leaveCarGenCars">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s generated by vehicle generators will be cleared even if they have been entered.
+		/// </param>
+		/// <param name="checkViewFrustum">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s on screen will be cleared.
+		/// </param>
+		/// <param name="ifWrecked">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s on which <see cref="Entity.IsDead"/> returns <see langword="true"/> will be cleared.
+		/// </param>
+		/// <param name="ifAbandoned">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s that has a non-mission driver <see cref="Ped"/> will be cleared.
+		/// None of <see cref="Vehicle"/>s has a mission driver <see cref="Ped"/> will be cleared even if this parameter is set to <see langword="false"/>.
+		/// </param>
+		/// <param name="ifEngineOnFire">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s on which <see cref="Vehicle.EngineHealth"/> return a value more than zero will be cleared.
+		/// </param>
+		/// <remarks>
+		/// Does not delete non-mission <see cref="Entity"/>s that is protected by conditions other than <see cref="Entity.PopulationType"/>.
+		/// For example, this method does not delete the <see cref="Vehicle"/> the player is in or automobiles (excluding amphibious or submarine cars), bikes, and helicopters (excluding blimps) in some garages.
+		/// </remarks>
+		public static void ClearAreaOfVehicles(Vector3 position, float radius, bool leaveCarGenCars = false, bool checkViewFrustum = false, bool ifWrecked = false, bool ifAbandoned = false, bool ifEngineOnFire = false)
+			// 11th parameter is supposed to be KeepScriptTrains (available since b2545), but does not seem to change the behavior for trains in any way (does not clear of trains regardless of the 11th argument)
+			=> Function.Call(Hash.CLEAR_AREA_OF_VEHICLES, position.X, position.Y, position.Z, radius, leaveCarGenCars, checkViewFrustum, ifWrecked, ifAbandoned, false, ifEngineOnFire, false);
+
+		/// <summary>
+		/// <para>
+		/// Clears the non axis aligned area of non-mission <see cref="Vehicle"/>s.
+		/// </para>
+		/// <para>
+		/// <paramref name="position1"/> and <paramref name="position2"/> define the midpoints of two parallel sides and <paramref name="areaWidth"/> is the width of these sides.
+		/// </para>
+		/// </summary>
+		/// <param name="position1">One of the midpoints of two parallel sides, which should be different from <paramref name="position2"/>.</param>
+		/// <param name="position2">One of the midpoints of two parallel sides, which should be different from <paramref name="position1"/>.</param>
+		/// <param name="areaWidth">The width of these sides that defines <paramref name="position1"/> and <paramref name="position2"/>.</param>
+		/// <param name="leaveCarGenCars">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s generated by vehicle generators will be cleared even if they have been entered.
+		/// </param>
+		/// <param name="checkViewFrustum">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s on screen will be cleared.
+		/// </param>
+		/// <param name="ifWrecked">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s on which <see cref="Entity.IsDead"/> returns <see langword="true"/> will be cleared.
+		/// </param>
+		/// <param name="ifAbandoned">
+		/// If <see langword="true"/>, none of <see cref="Vehicle"/>s that has a non-mission driver <see cref="Ped"/> will be cleared.
+		/// None of <see cref="Vehicle"/>s has a mission driver <see cref="Ped"/> will be cleared even if this parameter is set to <see langword="false"/>.
+		/// </param>
+		/// <param name="ifEngineOnFire">
+		/// If <see langword="true"/> and the game version is v1.0.1180.2 or later, none of <see cref="Vehicle"/>s on which <see cref="Vehicle.EngineHealth"/> return a value more than zero will be cleared.
+		/// </param>
+		/// <remarks>
+		/// Does not delete non-mission <see cref="Entity"/>s that is protected by conditions other than <see cref="Entity.PopulationType"/>.
+		/// For example, this method does not delete the <see cref="Vehicle"/> the player is in or automobiles (excluding amphibious or submarine cars), bikes, and helicopters (excluding blimps) in some garages.
+		/// </remarks>
+		public static void ClearAngledAreaOfVehicles(Vector3 position1, Vector3 position2, float areaWidth, bool leaveCarGenCars = false, bool checkViewFrustum = false, bool ifWrecked = false, bool ifAbandoned = false, bool ifEngineOnFire = false)
+			// 14th parameter is supposed to be KeepScriptTrains (available since b2545), but does not seem to change the behavior for trains in any way (does not clear of trains regardless of the 14th argument)
+			=> Function.Call(Hash.CLEAR_ANGLED_AREA_OF_VEHICLES, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, leaveCarGenCars, checkViewFrustum, ifWrecked, ifAbandoned, false, ifEngineOnFire, false);
+
+		/// <summary>
+		/// Clears non-mission <see cref="Prop"/>s within the defined sphere. Does not clear pickup <see cref="Prop"/>s or <see cref="Projectile"/>s.
+		/// As calling <see cref="Entity.Delete"/> on random <see cref="Prop"/>s (most likely on which population types are set to <see cref="EntityPopulationType.Unknown"/>)
+		/// will result in the almost immediate game crash, you should clear area of ambient <see cref="Prop"/>s with this method instead of the said way.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The radius for area clearance.</param>
+		/// <param name="flags">The flags for area clearance.</param>
+		public static void ClearAreaOfProps(Vector3 position, float radius, ClearPropsFlags flags)
+			=> Function.Call(Hash.CLEAR_AREA_OF_OBJECTS, position.X, position.Y, position.Z, radius, flags);
+
+		/// <summary>
+		/// Clears non-mission <see cref="Ped"/>s within the defined sphere.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The radius for area clearance.</param>
+		/// <remarks>
+		/// Does not delete <see cref="Ped"/> who are members of the player group as they are protected.
+		/// </remarks>
+		public static void ClearAreaOfPeds(Vector3 position, float radius)
+			=> Function.Call(Hash.CLEAR_AREA_OF_PEDS, position.X, position.Y, position.Z, radius, false);
+
+		/// <summary>
+		/// Clears non-mission cop <see cref="Ped"/>s within the defined sphere.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The radius for area clearance.</param>
+		/// <remarks>
+		/// Does not delete <see cref="Ped"/> who are members of the player group as they are protected.
+		/// </remarks>
+		public static void ClearAreaOfCops(Vector3 position, float radius)
+			=> Function.Call(Hash.CLEAR_AREA_OF_COPS, position.X, position.Y, position.Z, radius, false);
+
+		#endregion
 
 		#region Particle Effects
 
@@ -1348,7 +1443,7 @@ namespace GTA
 		/// <param name="off">The offset from the <paramref name="entity"/> to attach the effect.</param>
 		/// <param name="rot">The rotation, relative to the <paramref name="entity"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exhaust you may need to flip in the Y Axis</param>
 		/// <returns><see langword="true" />If the effect was able to start; otherwise, <see langword="false" />.</returns>
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, Entity entity, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
@@ -1372,7 +1467,7 @@ namespace GTA
 		/// <param name="off">The offset from the <paramref name="entityBone"/> to attach the effect.</param>
 		/// <param name="rot">The rotation, relative to the <paramref name="entityBone"/>, the effect has.</param>
 		/// <param name="scale">How much to scale the size of the effect by.</param>
-		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exahust you may need to flip in the Y Axis</param>
+		/// <param name="invertAxis">Which axis to flip the effect in. For a car side exhaust you may need to flip in the Y Axis</param>
 		/// <returns><see langword="true" />If the effect was able to start; otherwise, <see langword="false" />.</returns>
 		public static bool CreateParticleEffectNonLooped(ParticleEffectAsset asset, string effectName, EntityBone entityBone, Vector3 off = default, Vector3 rot = default, float scale = 1.0f, InvertAxisFlags invertAxis = InvertAxisFlags.None)
 		{
@@ -1423,7 +1518,7 @@ namespace GTA
 			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
 			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
+			var handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 			if (handle == 0)
 			{
 				return null;
@@ -1451,13 +1546,8 @@ namespace GTA
 			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
 			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ, false);
-			if (handle == 0)
-			{
-				return null;
-			}
-
-			return new ParticleEffect(handle, asset.AssetName, effectName, null);
+			var handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ, false);
+			return handle == 0 ? null : new ParticleEffect(handle, asset.AssetName, effectName, null);
 		}
 
 		private static bool HasFlagFast(InvertAxisFlags flagValues, InvertAxisFlags flag) => (flagValues & flag) == flag;
@@ -1633,12 +1723,12 @@ namespace GTA
 
 		private static void DrawBoxForAngledAreaOutsideInternal(Vector3 origin, Vector3 extent, float width, Color color)
 		{
-			Vector3 point1 = origin;
-			Vector3 point2 = extent;
-			Vector3 point3 = new Vector3(point2.X, point2.Y, point1.Z);
-			Vector3 normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
+			var point1 = origin;
+			var point2 = extent;
+			var point3 = new Vector3(point2.X, point2.Y, point1.Z);
+			var normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
 
-			Vector3 point4 = new Vector3(point1.X, point1.Y, point2.Z);
+			var point4 = new Vector3(point1.X, point1.Y, point2.Z);
 
 			DrawQuadPolygonInternal(point1 + normalVector, point2 + normalVector, point3 + normalVector, point4 + normalVector, color);
 			DrawQuadPolygonInternal(point2 - normalVector, point1 - normalVector, point3 - normalVector, point4 - normalVector, color);
@@ -1652,12 +1742,12 @@ namespace GTA
 
 		private static void DrawBoxForAngledAreaInsideInternal(Vector3 origin, Vector3 extent, float width, Color color)
 		{
-			Vector3 point1 = origin;
-			Vector3 point2 = extent;
-			Vector3 point3 = new Vector3(point2.X, point2.Y, point1.Z);
-			Vector3 normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
+			var point1 = origin;
+			var point2 = extent;
+			var point3 = new Vector3(point2.X, point2.Y, point1.Z);
+			var normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
 
-			Vector3 point4 = new Vector3(point1.X, point1.Y, point2.Z);
+			var point4 = new Vector3(point1.X, point1.Y, point2.Z);
 
 			DrawQuadPolygonInternal(point2 + normalVector, point1 + normalVector, point3 + normalVector, point4 + normalVector, color);
 			DrawQuadPolygonInternal(point1 - normalVector, point2 - normalVector, point3 - normalVector, point4 - normalVector, color);
@@ -1700,7 +1790,7 @@ namespace GTA
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectFlags options, Entity ignoreEntity = null)
 		{
-			Vector3 target = source + direction * maxDistance;
+			var target = source + direction * maxDistance;
 
 			return new RaycastResult(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1730,7 +1820,7 @@ namespace GTA
 		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
-			Vector3 target = source + direction * maxDistance;
+			var target = source + direction * maxDistance;
 
 			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1846,7 +1936,7 @@ namespace GTA
 			{
 				if (unoccupied)
 				{
-					for (int i = 1; i < 40; i++)
+					for (var i = 1; i < 40; i++)
 					{
 						Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, i, &outPos, 1, 0x40400000, 0);
 

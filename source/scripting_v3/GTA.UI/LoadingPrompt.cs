@@ -40,7 +40,7 @@ namespace GTA.UI
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, loadingText);
 			}
 
-			Function.Call(Hash.END_TEXT_COMMAND_BUSYSPINNER_ON, spinnerType);
+			Function.Call(Hash.END_TEXT_COMMAND_BUSYSPINNER_ON, (int)spinnerType);
 		}
 
 		/// <summary>

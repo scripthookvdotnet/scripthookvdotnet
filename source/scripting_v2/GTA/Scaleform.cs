@@ -12,16 +12,16 @@ namespace GTA
 {
 	public sealed class Scaleform : IDisposable
 	{
-		string scaleformID;
+		string _scaleformID;
 
-		[Obsolete("Scaleform(int handle) is obselete, Please Use Scaleform(string scaleformID) instead")]
+		[Obsolete("Scaleform(int handle) is obsolete, Please Use Scaleform(string scaleformID) instead")]
 		public Scaleform(int handle)
 		{
 			Handle = handle;
 		}
 		public Scaleform(string scaleformID)
 		{
-			this.scaleformID = scaleformID;
+			this._scaleformID = scaleformID;
 
 			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
 		}
@@ -29,7 +29,6 @@ namespace GTA
 		public void Dispose()
 		{
 			Unload();
-			GC.SuppressFinalize(this);
 		}
 
 		public int Handle
@@ -41,7 +40,7 @@ namespace GTA
 		public bool IsValid => Handle != 0;
 		public bool IsLoaded => Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, Handle);
 
-		[Obsolete("Scaleform.Load(string scaleformID) is obselete, Please Use Scaleform(string scaleformID) instead")]
+		[Obsolete("Scaleform.Load(string scaleformID) is obsolete, Please Use Scaleform(string scaleformID) instead")]
 		public bool Load(string scaleformID)
 		{
 			int handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
@@ -51,7 +50,7 @@ namespace GTA
 			}
 
 			Handle = handle;
-			this.scaleformID = scaleformID;
+			this._scaleformID = scaleformID;
 
 			return true;
 		}
@@ -62,7 +61,7 @@ namespace GTA
 				return;
 			}
 
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, &handle);
@@ -74,43 +73,38 @@ namespace GTA
 		{
 			Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, Handle, function);
 
-			foreach (object argument in arguments)
+			foreach (var argument in arguments)
 			{
-				if (argument is int argInt)
+				switch (argument)
 				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, argInt);
-				}
-				else if (argument is string argString)
-				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
-					Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, argString);
-					Function.Call(Hash._END_TEXT_COMPONENT);
-				}
-				else if (argument is char argChar)
-				{
-					Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
-					Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, argChar.ToString());
-					Function.Call(Hash._END_TEXT_COMPONENT);
-				}
-				else if (argument is float argFloat)
-				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, argFloat);
-				}
-				else if (argument is double argDouble)
-				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, (float)argDouble);
-				}
-				else if (argument is bool argBool)
-				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, argBool);
-				}
-				else if (argument is ScaleformArgumentTXD argTxd)
-				{
-					Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, argTxd.txd);
-				}
-				else
-				{
-					throw new ArgumentException(string.Format("Unknown argument type {0} passed to scaleform with handle {1}.", argument.GetType().Name, Handle));
+					case int argInt:
+						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, argInt);
+						break;
+					case string argString:
+						Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+						Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, argString);
+						Function.Call(Hash._END_TEXT_COMPONENT);
+						break;
+					case char argChar:
+						Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
+						Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, argChar.ToString());
+						Function.Call(Hash._END_TEXT_COMPONENT);
+						break;
+					case float argFloat:
+						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, argFloat);
+						break;
+					case double argDouble:
+						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_FLOAT, (float)argDouble);
+						break;
+					case bool argBool:
+						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, argBool);
+						break;
+					case ScaleformArgumentTXD argTxd:
+						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, argTxd.txd);
+						break;
+					default:
+						throw new ArgumentException(
+							$"Unknown argument type {argument.GetType().Name} passed to scaleform with handle {Handle.ToString()}.");
 				}
 			}
 
@@ -123,10 +117,10 @@ namespace GTA
 		}
 		public void Render2DScreenSpace(PointF position, PointF size)
 		{
-			float x = position.X / UI.WIDTH;
-			float y = position.Y / UI.HEIGHT;
-			float w = size.X / UI.WIDTH;
-			float h = size.Y / UI.HEIGHT;
+			var x = position.X / UI.WIDTH;
+			var y = position.Y / UI.HEIGHT;
+			var w = size.X / UI.WIDTH;
+			var h = size.Y / UI.HEIGHT;
 
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
 		}

@@ -49,13 +49,12 @@ namespace GTA
 		/// </summary>
 		public void Dispose()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);
 			}
 			Handle = handle;
-			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>
@@ -86,7 +85,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the deticated <see cref="TaskInvoker"/>.
+		/// Gets the dedicated <see cref="TaskInvoker"/>.
 		/// You should invoke tasks like <c>taskSequence.AddTask.StandStill(1000)</c> (not via a cached TaskInvoker instance)
 		/// so you can get the correct task count via <see cref="Count"/>.
 		/// </summary>

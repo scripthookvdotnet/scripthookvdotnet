@@ -18,10 +18,10 @@ namespace GTA
 		{
 			get
 			{
-				Vector3 rot = Rotation;
-				double rotX = rot.X / 57.295779513082320876798154814105;
-				double rotZ = rot.Z / 57.295779513082320876798154814105;
-				double multXY = System.Math.Abs(System.Math.Cos(rotX));
+				var rot = Rotation;
+				var rotX = rot.X / 57.295779513082320876798154814105;
+				var rotZ = rot.Z / 57.295779513082320876798154814105;
+				var multXY = System.Math.Abs(System.Math.Cos(rotX));
 
 				return new Vector3((float)(-System.Math.Sin(rotZ) * multXY), (float)(System.Math.Cos(rotZ) * multXY), (float)System.Math.Sin(rotX));
 			}
@@ -29,29 +29,29 @@ namespace GTA
 
 		public static Vector3 GetOffsetInWorldCoords(Vector3 offset)
 		{
-			Vector3 Forward = Direction;
+			var forward = Direction;
 			const double D2R = 0.01745329251994329576923690768489;
-			double num1 = System.Math.Cos(Rotation.Y * D2R);
-			double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-			double y = num1 * System.Math.Sin(Rotation.Z * D2R);
-			double z = System.Math.Sin(-Rotation.Y * D2R);
-			Vector3 Right = new Vector3((float)x, (float)y, (float)z);
-			Vector3 Up = Vector3.Cross(Right, Forward);
-			return Position + (Right * offset.X) + (Forward * offset.Y) + (Up * offset.Z);
+			var num1 = System.Math.Cos(Rotation.Y * D2R);
+			var x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+			var y = num1 * System.Math.Sin(Rotation.Z * D2R);
+			var z = System.Math.Sin(-Rotation.Y * D2R);
+			var right = new Vector3((float)x, (float)y, (float)z);
+			var up = Vector3.Cross(right, forward);
+			return Position + (right * offset.X) + (forward * offset.Y) + (up * offset.Z);
 		}
 
 		public static Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
 		{
-			Vector3 Forward = Direction;
+			var forward = Direction;
 			const double D2R = 0.01745329251994329576923690768489;
-			double num1 = System.Math.Cos(Rotation.Y * D2R);
-			double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-			double y = num1 * System.Math.Sin(Rotation.Z * D2R);
-			double z = System.Math.Sin(-Rotation.Y * D2R);
-			Vector3 Right = new Vector3((float)x, (float)y, (float)z);
-			Vector3 Up = Vector3.Cross(Right, Forward);
-			Vector3 Delta = worldCoords - Position;
-			return new Vector3(Vector3.Dot(Right, Delta), Vector3.Dot(Forward, Delta), Vector3.Dot(Up, Delta));
+			var num1 = System.Math.Cos(Rotation.Y * D2R);
+			var x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+			var y = num1 * System.Math.Sin(Rotation.Z * D2R);
+			var z = System.Math.Sin(-Rotation.Y * D2R);
+			var right = new Vector3((float)x, (float)y, (float)z);
+			var up = Vector3.Cross(right, forward);
+			var delta = worldCoords - Position;
+			return new Vector3(Vector3.Dot(right, delta), Vector3.Dot(forward, delta), Vector3.Dot(up, delta));
 		}
 
 		public static void ClampYaw(float min, float max)

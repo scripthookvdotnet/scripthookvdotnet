@@ -38,7 +38,7 @@ namespace SHVDN
 		/// <returns>A pointer to the return value of the call.</returns>
 		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeCall@@YAPEA_KXZ")]
-		static unsafe extern ulong* NativeCall();
+		static extern ulong* NativeCall();
 		#endregion
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace SHVDN
 		{
 			internal ulong Hash;
 			internal ulong[] Arguments;
-			internal unsafe ulong* Result;
+			internal ulong* Result;
 
 			public void Run()
 			{
@@ -64,7 +64,7 @@ namespace SHVDN
 			internal ulong Hash;
 			internal ulong* ArgumentPtr;
 			internal int ArgumentCount;
-			internal unsafe ulong* Result;
+			internal ulong* Result;
 
 			public void Run()
 			{
@@ -84,7 +84,7 @@ namespace SHVDN
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			IntPtr strUtf8 = domain.PinString(str);
+			var strUtf8 = domain.PinString(str);
 
 			var strArg = (ulong)strUtf8.ToInt64();
 			domain.ExecuteTask(new NativeTaskPtrArgs
@@ -100,32 +100,32 @@ namespace SHVDN
 		/// This requires that a text command that accepts multiple text components is active (e.g. "CELL_EMAIL_BCON").
 		/// </summary>
 		/// <param name="str">The string to split up.</param>
-		public static void PushLongString(string str)
+		/// <param name="maxLengthUtf8">The max byte length per chunk in UTF-8.</param>
+		public static void PushLongString(string str, int maxLengthUtf8 = 99)
 		{
-			PushLongString(str, PushString);
+			PushLongString(str, PushString, maxLengthUtf8);
 		}
 		/// <summary>
 		/// Splits up a string into manageable components and performs an <paramref name="action"/> on them.
 		/// </summary>
 		/// <param name="str">The string to split up.</param>
 		/// <param name="action">The action to perform on the component.</param>
-		public static void PushLongString(string str, Action<string> action)
+		/// <param name="maxLengthUtf8">The max byte length per chunk in UTF-8.</param>
+		public static void PushLongString(string str, Action<string> action, int maxLengthUtf8 = 99)
 		{
-			const int maxLengthUtf8 = 99;
-
 			if (str == null || Encoding.UTF8.GetByteCount(str) <= maxLengthUtf8)
 			{
 				action(str);
 				return;
 			}
 
-			int startPos = 0;
-			int currentPos = 0;
-			int currentUtf8StrLength = 0;
+			var startPos = 0;
+			var currentPos = 0;
+			var currentUtf8StrLength = 0;
 
 			while (currentPos < str.Length)
 			{
-				int codePointSize = 0;
+				var codePointSize = 0;
 
 				// Calculate the UTF-8 code point size of the current character
 				var chr = str[currentPos];
@@ -198,45 +198,34 @@ namespace SHVDN
 		static ulong[] ConvertPrimitiveArguments(object[] args)
 		{
 			var result = new ulong[args.Length];
-			for (int i = 0; i < args.Length; ++i)
+			for (var i = 0; i < args.Length; ++i)
 			{
-				if (args[i] is bool valueBool)
+				switch (args[i])
 				{
-					result[i] = valueBool ? 1ul : 0ul;
-					continue;
+					case bool valueBool:
+						result[i] = valueBool ? 1ul : 0ul;
+						continue;
+					case byte valueByte:
+						result[i] = (ulong)valueByte;
+						continue;
+					case int valueInt32:
+						result[i] = (ulong)valueInt32;
+						continue;
+					case ulong valueUInt64:
+						result[i] = valueUInt64;
+						continue;
+					case float valueFloat:
+						result[i] = *(ulong*)&valueFloat;
+						continue;
+					case IntPtr valueIntPtr:
+						result[i] = (ulong)valueIntPtr.ToInt64();
+						continue;
+					case string valueString:
+						result[i] = (ulong)ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
+						continue;
+					default:
+						throw new ArgumentException("Unknown primitive type in native argument list", nameof(args));
 				}
-				if (args[i] is byte valueByte)
-				{
-					result[i] = (ulong)valueByte;
-					continue;
-				}
-				if (args[i] is int valueInt32)
-				{
-					result[i] = (ulong)valueInt32;
-					continue;
-				}
-				if (args[i] is ulong valueUInt64)
-				{
-					result[i] = valueUInt64;
-					continue;
-				}
-				if (args[i] is float valueFloat)
-				{
-					result[i] = *(ulong*)&valueFloat;
-					continue;
-				}
-				if (args[i] is IntPtr valueIntPtr)
-				{
-					result[i] = (ulong)valueIntPtr.ToInt64();
-					continue;
-				}
-				if (args[i] is string valueString)
-				{
-					result[i] = (ulong)ScriptDomain.CurrentDomain.PinString(valueString).ToInt64();
-					continue;
-				}
-
-				throw new ArgumentException("Unknown primitive type in native argument list", nameof(args));
 			}
 
 			return result;
@@ -296,7 +285,7 @@ namespace SHVDN
 		public static ulong* InvokeInternal(ulong hash, ulong* argPtr, int argCount)
 		{
 			NativeInit(hash);
-			for (int i = 0; i < argCount; i++)
+			for (var i = 0; i < argCount; i++)
 				NativePush64(argPtr[i]);
 			return NativeCall();
 		}

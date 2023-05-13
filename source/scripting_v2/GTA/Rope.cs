@@ -98,16 +98,16 @@ namespace GTA
 
 		public bool Equals(Rope obj)
 		{
-			return !(obj is null) && Handle == obj.Handle;
+			return obj is not null && Handle == obj.Handle;
 		}
 		public override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((Rope)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((Rope)obj);
 		}
 
 		public static bool operator ==(Rope left, Rope right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(Rope left, Rope right)
 		{

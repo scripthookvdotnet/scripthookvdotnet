@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections;
@@ -56,10 +57,7 @@ namespace GTA
 		/// Gets the <see cref="EntityBone"/> at the specified bone index.
 		/// </summary>
 		/// <param name="boneIndex">The bone index.</param>
-		public EntityBone this[int boneIndex]
-		{
-			get => new EntityBone(_owner, boneIndex);
-		}
+		public EntityBone this[int boneIndex] => new(_owner, boneIndex);
 
 		/// <summary>
 		/// <para>
@@ -68,7 +66,7 @@ namespace GTA
 		/// To access to the chassis bone of <see cref="Vehicle"/>, use <see cref="this[int]"/> with the index <c>0</c> as the chassis bone index and ID will always be <c>0</c> (hardcoded to the exe).
 		/// </para>
 		/// <para>
-		/// This method will try to find the corresponding bone by the hash calcutated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
+		/// This method will try to find the corresponding bone by the hash calculated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
 		/// where <c>ElfHashUppercased(string)</c> will convert ASCII lowercase characters to uppercase ones before hashing characters.
 		/// </para>
 		/// </summary>
@@ -77,15 +75,32 @@ namespace GTA
 		/// Registered bone tag values (in the model) may be different from the calculated hashes from corresponding bone names.
 		/// For example, <see cref="Ped"/>s have the bone in their skeletons whose name is <c>SKEL_Spine3</c> and whose ID is <c>24818</c>, which doesn't match the hashed value of <c>SKEL_Spine3</c> but matches that of <c>BONETAG_SPINE3</c>.
 		/// </remarks>
-		public EntityBone this[string boneName]
-		{
-			get => new EntityBone(_owner, boneName);
-		}
+		public EntityBone this[string boneName] => new(_owner, boneName);
 
 		/// <summary>
 		/// Gets the number of bones that this <see cref="Entity"/> has.
 		/// </summary>
 		public int Count => SHVDN.NativeMemory.GetEntityBoneCount(_owner.Handle);
+
+		/// <summary>
+		/// Gets the transform matrix that represents the same matrix as <see cref="Entity.Matrix"/> on this <see cref="Entity"/> unless this matrix is modified by some external programs.
+		/// </summary>
+		/// <remarks>
+		/// The matrix that this property reads is used in <see cref="EntityBone.Position"/>, <see cref="EntityBone.Quaternion"/>, and <see cref="EntityBone.Rotation"/>.
+		/// </remarks>
+		public Matrix TransformMatrix
+		{
+			get
+			{
+				var address = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(_owner.Handle);
+				if (address == IntPtr.Zero)
+				{
+					return Matrix.Zero;
+				}
+
+				return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+			}
+		}
 
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> has a bone with the specified bone name
@@ -102,7 +117,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the core bone of this <see cref="Entity"/>.
 		/// </summary>
-		public EntityBone Core => new EntityBone(_owner, -1);
+		public EntityBone Core => new(_owner, -1);
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{

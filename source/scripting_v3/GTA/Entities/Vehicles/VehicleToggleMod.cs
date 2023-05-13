@@ -27,15 +27,15 @@ namespace GTA
 
 		public void Remove()
 		{
-			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, Type);
+			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, (int)Type);
 		}
 
 		public bool IsInstalled
 		{
-			get => Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Vehicle.Handle, Type);
-			set => Function.Call(Hash.TOGGLE_VEHICLE_MOD, Vehicle.Handle, Type, value);
+			get => Function.Call<bool>(Hash.IS_TOGGLE_MOD_ON, Vehicle.Handle, (int)Type);
+			set => Function.Call(Hash.TOGGLE_VEHICLE_MOD, Vehicle.Handle, (int)Type, value);
 		}
 
-		public string LocalizedTypeName => Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, Type);
+		public string LocalizedTypeName => Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, (int)Type);
 	}
 }

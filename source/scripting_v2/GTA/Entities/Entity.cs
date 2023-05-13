@@ -178,28 +178,22 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_QUATERNION, Handle, value.X, value.Y, value.Z, value.W);
 		}
 
-		public Vector3 UpVector
-		{
-			get => Vector3.Cross(RightVector, ForwardVector);
-		}
+		public Vector3 UpVector => Vector3.Cross(RightVector, ForwardVector);
 
 		public Vector3 RightVector
 		{
 			get
 			{
 				const double D2R = 0.01745329251994329576923690768489;
-				double num1 = System.Math.Cos(Rotation.Y * D2R);
-				double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-				double y = num1 * System.Math.Sin(Rotation.Z * D2R);
-				double z = System.Math.Sin(-Rotation.Y * D2R);
+				var num1 = System.Math.Cos(Rotation.Y * D2R);
+				var x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+				var y = num1 * System.Math.Sin(Rotation.Z * D2R);
+				var z = System.Math.Sin(-Rotation.Y * D2R);
 				return new Vector3((float)x, (float)y, (float)z);
 			}
 		}
 
-		public Vector3 ForwardVector
-		{
-			get => Function.Call<Vector3>(Hash.GET_ENTITY_FORWARD_VECTOR, Handle);
-		}
+		public Vector3 ForwardVector => Function.Call<Vector3>(Hash.GET_ENTITY_FORWARD_VECTOR, Handle);
 
 		public Vector3 GetOffsetInWorldCoords(Vector3 offset)
 		{
@@ -553,7 +547,7 @@ namespace GTA
 
 		public void MarkAsNoLongerNeeded()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -562,7 +556,7 @@ namespace GTA
 
 		public void Delete()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{
@@ -585,12 +579,12 @@ namespace GTA
 		}
 		public override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((Entity)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((Entity)obj);
 		}
 
 		public static bool operator ==(Entity left, Entity right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(Entity left, Entity right)
 		{

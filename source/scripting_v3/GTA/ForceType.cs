@@ -43,12 +43,12 @@ namespace GTA
 		ForceRotPlusForce,
 
 		[Obsolete("ForceType.MinForce is obsolete because it is incorrect, use ForceType.InternalForce instead.")]
-		MinForce = 0,
+		MinForce = InternalForce,
 		[Obsolete("ForceType.MaxForceRot is obsolete because it is incorrect, use ForceType.InternalImpulse instead.")]
-		MaxForceRot = 1,
+		MaxForceRot = InternalImpulse,
 		[Obsolete("ForceType.MinForce2 is obsolete because it is incorrect, use ForceType.ExternalForce instead.")]
-		MinForce2 = 2,
+		MinForce2 = ExternalForce,
 		[Obsolete("ForceType.MaxForceRot2 is obsolete because it is incorrect, use ForceType.ExternalImpulse instead.")]
-		MaxForceRot2 = 3,
+		MaxForceRot2 = ExternalImpulse,
 	}
 }

@@ -18,7 +18,7 @@ namespace GTA
 		{
 			if (value < 0)
 			{
-				throw new ArgumentException("The value should be positive.", "value");
+				throw new ArgumentException("The value should be positive.", nameof(value));
 			}
 
 			Value = value;
@@ -29,25 +29,25 @@ namespace GTA
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(0.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Still => new PedMoveBlendRatio(0.0f);
+		public static PedMoveBlendRatio Still => new(0.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(1.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Walk => new PedMoveBlendRatio(1.0f);
+		public static PedMoveBlendRatio Walk => new(1.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(2.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Run => new PedMoveBlendRatio(2.0f);
+		public static PedMoveBlendRatio Run => new(2.0f);
 		/// <summary>
 		/// Returns the same struct as <c>new PedMoveBlendRatio(3.0f)</c>.
 		/// </summary>
-		public static PedMoveBlendRatio Sprint => new PedMoveBlendRatio(3.0f);
+		public static PedMoveBlendRatio Sprint => new(3.0f);
 
-		public static implicit operator PedMoveBlendRatio(float value) => new PedMoveBlendRatio(value);
+		public static implicit operator PedMoveBlendRatio(float value) => new(value);
 		public static explicit operator float(PedMoveBlendRatio value) => value.Value;
 		public static implicit operator InputArgument(PedMoveBlendRatio value)
 		{
-			return new InputArgument(value.Value);
+			return value.Value;
 		}
 
 		/// <summary>
@@ -56,14 +56,14 @@ namespace GTA
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator ==(PedMoveBlendRatio left, PedMoveBlendRatio right) => Equals(left, right);
+		public static bool operator ==(PedMoveBlendRatio left, PedMoveBlendRatio right) => left.Equals(right);
 		/// <summary>
 		/// Tests for inequality between two objects.
 		/// </summary>
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator !=(PedMoveBlendRatio left, PedMoveBlendRatio right) => !Equals(left, right);
+		public static bool operator !=(PedMoveBlendRatio left, PedMoveBlendRatio right) => !left.Equals(right);
 
 		public bool Equals(PedMoveBlendRatio moveBlendRatio)
 		{

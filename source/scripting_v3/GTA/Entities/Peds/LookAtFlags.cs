@@ -8,7 +8,8 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Set of flags for the look at task for <see cref="TaskInvoker.ParkVehicle(Vehicle, Math.Vector3, float, float, bool)"/>.
+	/// Set of flags for the look at task for <see cref="TaskInvoker.LookAt(Entity, int, LookAtFlags, LookAtPriority)"/>
+	/// and <see cref="TaskInvoker.LookAt(Math.Vector3, int, LookAtFlags, LookAtPriority)"/>.
 	/// </summary>
 	[Flags]
 	public enum LookAtFlags

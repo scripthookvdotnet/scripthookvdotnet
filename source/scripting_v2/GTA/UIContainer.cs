@@ -20,7 +20,7 @@ namespace GTA
 		{
 		}
 
-		public List<UIElement> Items { get; set; } = new List<UIElement>();
+		public List<UIElement> Items { get; set; } = new();
 
 		public override void Draw()
 		{
@@ -35,7 +35,7 @@ namespace GTA
 
 			base.Draw(offset);
 
-			foreach (UIElement item in Items)
+			foreach (var item in Items)
 			{
 				item.Draw(new Size(base.Position + offset));
 			}

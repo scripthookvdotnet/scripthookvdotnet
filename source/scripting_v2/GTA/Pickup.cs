@@ -46,16 +46,16 @@ namespace GTA
 
 		public bool Equals(Pickup obj)
 		{
-			return !(obj is null) && Handle == obj.Handle;
+			return obj is not null && Handle == obj.Handle;
 		}
 		public sealed override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((Pickup)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((Pickup)obj);
 		}
 
 		public static bool operator ==(Pickup left, Pickup right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(Pickup left, Pickup right)
 		{

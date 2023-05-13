@@ -13,8 +13,8 @@ namespace GTA
 	{
 		#region Fields
 		readonly Ped _ped;
-		Dictionary<PedPropAnchorPosition, PedProp> _pedProps = new Dictionary<PedPropAnchorPosition, PedProp>();
-		Dictionary<PedComponentType, PedComponent> _pedComponents = new Dictionary<PedComponentType, PedComponent>();
+		Dictionary<PedPropAnchorPosition, PedProp> _pedProps = new();
+		Dictionary<PedComponentType, PedComponent> _pedComponents = new();
 		#endregion
 
 		internal Style(Ped ped)
@@ -26,11 +26,10 @@ namespace GTA
 		{
 			get
 			{
-				if (!_pedProps.TryGetValue(anchorPosition, out PedProp prop))
-				{
-					prop = new PedProp(_ped, anchorPosition);
-					_pedProps.Add(anchorPosition, prop);
-				}
+				if (_pedProps.TryGetValue(anchorPosition, out var prop)) return prop;
+
+				prop = new PedProp(_ped, anchorPosition);
+				_pedProps.Add(anchorPosition, prop);
 				return prop;
 			}
 		}
@@ -39,11 +38,10 @@ namespace GTA
 		{
 			get
 			{
-				if (!_pedComponents.TryGetValue(componentId, out PedComponent variation))
-				{
-					variation = new PedComponent(_ped, componentId);
-					_pedComponents.Add(componentId, variation);
-				}
+				if (_pedComponents.TryGetValue(componentId, out var variation)) return variation;
+
+				variation = new PedComponent(_ped, componentId);
+				_pedComponents.Add(componentId, variation);
 				return variation;
 			}
 		}
@@ -56,7 +54,7 @@ namespace GTA
 			var props = new List<PedProp>();
 			foreach (PedPropAnchorPosition anchorPosition in Enum.GetValues(typeof(PedPropAnchorPosition)))
 			{
-				PedProp prop = this[anchorPosition];
+				var prop = this[anchorPosition];
 				if (prop.HasAnyVariations)
 				{
 					props.Add(prop);
@@ -70,7 +68,7 @@ namespace GTA
 			var components = new List<PedComponent>();
 			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
 			{
-				PedComponent component = this[componentId];
+				var component = this[componentId];
 				if (component.HasAnyVariations)
 				{
 					components.Add(component);

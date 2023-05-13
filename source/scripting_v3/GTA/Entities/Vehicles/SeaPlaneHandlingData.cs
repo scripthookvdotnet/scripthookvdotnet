@@ -18,10 +18,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the coeffient that adds drag to the pontoon of the sea plane when travelling on water in a similar way to the vehicle's initial drag.
+		/// Gets or sets the coefficient that adds drag to the pontoon of the sea plane when travelling on water in a similar way to the vehicle's initial drag.
 		/// </summary>
 		/// <value>
-		/// The coeffient that adds drag to the pontoon of the sea plane when travelling on water in a similar way to the vehicle's initial drag.
+		/// The coefficient that adds drag to the pontoon of the sea plane when travelling on water in a similar way to the vehicle's initial drag.
 		/// </value>
 		public float PontoonDragCoefficient
 		{
@@ -124,7 +124,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same sea plane handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(SeaPlaneHandlingData left, SeaPlaneHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="SeaPlaneHandlingData"/>s don't refer to the sea plane handling data.

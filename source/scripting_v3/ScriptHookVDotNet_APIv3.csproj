@@ -135,6 +135,7 @@
     <Compile Include="GTA\Entities\Vehicles\VehicleType.cs" />
     <Compile Include="GTA\Entities\Vehicles\VehicleWheelBoneId.cs" />
     <Compile Include="GTA\DrawBoxFlags.cs" />
+    <Compile Include="GTA\ClearPropsFlags.cs" />
     <Compile Include="GTA\IStreamingResource.cs" />
     <Compile Include="GTA\CrimeType.cs" />
     <Compile Include="GTA\SetPlayerControlFlags.cs" />

@@ -151,8 +151,8 @@ namespace GTA
 		UseFullBlending = 1073741824,
 
 		[Obsolete("AnimationFlags.AllowRotation is obsolete, use AnimationFlags.Secondary instead.")]
-		AllowRotation = 32,
+		AllowRotation = Secondary,
 		[Obsolete("AnimationFlags.CancelableWithMovement is obsolete, use AnimationFlags.AbortOnPedMovement instead.")]
-		CancelableWithMovement = 128,
+		CancelableWithMovement = AbortOnPedMovement,
 	}
 }

@@ -18,7 +18,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the multiplier value that incidates how much water wave the boat produce.
+		/// Gets or sets the multiplier value that indicates how much water wave the boat produce.
 		/// Faster boat move will create more water wave.
 		/// </summary>
 		/// <remarks>
@@ -26,7 +26,7 @@ namespace GTA
 		/// <see cref="AquaplanePushWaterCap"/> will cap the multiplied value.
 		/// </remarks>
 		/// <value>
-		/// The multiplier value that incidates how much water wave the boat produce.
+		/// The multiplier value that indicates how much water wave the boat produce.
 		/// </value>
 		public float AquaplanePushWaterMultiplier
 		{
@@ -50,10 +50,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the multiplier value that incidates how much water wave the boat can produce.
+		/// Gets or sets the multiplier value that indicates how much water wave the boat can produce.
 		/// </summary>
 		/// <value>
-		/// The multiplier value that incidates how much water wave the boat can produce.
+		/// The multiplier value that indicates how much water wave the boat can produce.
 		/// </value>
 		public float AquaplanePushWaterCap
 		{
@@ -77,10 +77,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the multiplier value that incidates how much water the boat pushes by moving through the water.
+		/// Gets or sets the multiplier value that indicates how much water the boat pushes by moving through the water.
 		/// </summary>
 		/// <value>
-		/// The multiplier value that incidates how much water the boat pushes by moving through the water.
+		/// The multiplier value that indicates how much water the boat pushes by moving through the water.
 		/// </value>
 		public float AquaplanePushWaterApply
 		{
@@ -292,7 +292,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same boat handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(BoatHandlingData left, BoatHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="BoatHandlingData"/>s don't refer to the boat handling data.

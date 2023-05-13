@@ -17,13 +17,14 @@ namespace GTA
 		MiddleRightWindow,
 		Windshield,
 		BackWindshield,
+
 		[Obsolete("ExtraWindow1 is obsolete, please use MiddleLeftWindow instead.")]
-		ExtraWindow1 = 4,
+		ExtraWindow1 = MiddleLeftWindow,
 		[Obsolete("ExtraWindow2 is obsolete, please use MiddleRightWindow instead.")]
-		ExtraWindow2 = 5,
+		ExtraWindow2 = MiddleRightWindow,
 		[Obsolete("ExtraWindow3 is obsolete, please use Windshield instead.")]
-		ExtraWindow3 = 6,
+		ExtraWindow3 = Windshield,
 		[Obsolete("ExtraWindow4 is obsolete, please use BackWindshield instead.")]
-		ExtraWindow4 = 7,
+		ExtraWindow4 = BackWindshield,
 	}
 }

@@ -16,6 +16,7 @@ The issues page should be primarily used for bug reports and enhancement ideas. 
 ## Downloads
 
 Pre-built binaries can be found on the [releases](https://github.com/crosire/scripthookvdotnet/releases) page.
+You need to use the ASI file and the DLL files for APIs in an archive of the same version as internal structure can be changed without notices.
 
 ## Contributing
 

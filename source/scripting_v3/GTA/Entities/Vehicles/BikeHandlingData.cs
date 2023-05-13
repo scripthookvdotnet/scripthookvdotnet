@@ -209,10 +209,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the multiplier incidating how quickly the bike leans by steering.
+		/// Gets or sets the multiplier indicating how quickly the bike leans by steering.
 		/// </summary>
 		/// <value>
-		/// The multiplier incidating how quickly the bike leans by steering.
+		/// The multiplier indicating how quickly the bike leans by steering.
 		/// </value>
 		public float StickLeanMultiplier
 		{
@@ -296,16 +296,16 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the value that affects how much x-axis rotation is needed in radians before an additonal positive x-Axis angular force applies to the bike, which will keep the bike from easily wheelieing more.
-		/// Only affects when the bike is wheelieing. Should be positve to not let the bike easily wheelie more than a certain angle, but easily wheelie to the specified angle.
+		/// Gets or sets the value that affects how much x-axis rotation is needed in radians before an additional positive x-Axis angular force applies to the bike, which will keep the bike from easily wheelieing more.
+		/// Only affects when the bike is wheelieing. Should be positive to not let the bike easily wheelie more than a certain angle, but easily wheelie to the specified angle.
 		/// The more the difference is, the more positive x-Axis angular force the bike will receive.
 		/// </summary>
 		/// <remarks>
 		/// The formula <c>(float)Math.Asin(Vector3.Dot(Vehicle.ForwardVector, VehicleWheel.SurfaceNormalVector)) - fWheelieBalancePoint</c> (where the deg to rad conversion has been already applied to <c>fWheelieBalancePoint</c>) determines whether to apply negative x-Axis angular force.
-		/// If the result is more than 0.05, an additonal positve x-Axis angular force will be applied.
+		/// If the result is more than 0.05, an additional positive x-Axis angular force will be applied.
 		/// </remarks>
 		/// <value>
-		/// The value that affects how much x-axis rotation is needed before an additonal positive x-Axis angular force applies to the bike when the bike is wheelieing in radians.
+		/// The value that affects how much x-axis rotation is needed before an additional positive x-Axis angular force applies to the bike when the bike is wheelieing in radians.
 		/// </value>
 		public float WheelieBalancePoint
 		{
@@ -329,16 +329,16 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the value that affects how much x-axis rotation is needed in radians before an additonal negative x-Axis angular force applies to the bike, which will keep the bike from easily stoppieing more.
+		/// Gets or sets the value that affects how much x-axis rotation is needed in radians before an additional negative x-Axis angular force applies to the bike, which will keep the bike from easily stoppieing more.
 		/// Only affects when the bike is stoppieing. Should be negative to not let the bike stoppie wheelie more than a certain angle, but easily stoppie to the specified angle.
 		/// The more the difference is, the more negative x-Axis angular force the bike will receive.
 		/// </summary>
 		/// <remarks>
 		/// The formula <c>(float)Math.Asin(Vehicle.ForwardVector.Z) - fStoppieBalancePoint</c> (where the deg to rad conversion has been already applied to <c>fStoppieBalancePoint</c>) determines whether to apply negative x-Axis angular force.
-		/// If the result is less than -0.05, an additonal negative x-Axis angular force will be applied. Unlike wheelieing, the normal vector of the wheel does not affect in physics for stopping at all.
+		/// If the result is less than -0.05, an additional negative x-Axis angular force will be applied. Unlike wheelieing, the normal vector of the wheel does not affect in physics for stopping at all.
 		/// </remarks>
 		/// <value>
-		/// The value that affects how much x-axis rotation is needed before an additonal negative x-Axis angular force applies to the bike when the bike is stoppieing in radians.
+		/// The value that affects how much x-axis rotation is needed before an additional negative x-Axis angular force applies to the bike when the bike is stoppieing in radians.
 		/// </value>
 		public float StoppieBalancePoint
 		{
@@ -497,7 +497,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same bike handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(BikeHandlingData left, BikeHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="BikeHandlingData"/>s don't refer to the same bike handling data.

@@ -16,11 +16,10 @@ namespace GTA
 	{
 		#region Fields
 		readonly Vehicle _owner;
-		readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new Dictionary<VehicleModType, VehicleMod>();
-		readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new Dictionary<VehicleToggleModType, VehicleToggleMod>();
+		readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new();
+		readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new();
 
-		private static readonly ReadOnlyDictionary<VehicleWheelType, Tuple<string, string>> _wheelNames = new ReadOnlyDictionary
-			<VehicleWheelType, Tuple<string, string>>(
+		private static readonly ReadOnlyDictionary<VehicleWheelType, Tuple<string, string>> _wheelNames = new(
 			new Dictionary<VehicleWheelType, Tuple<string, string>>
 			{
 				{VehicleWheelType.BikeWheels, new Tuple<string, string>("CMOD_WHE1_0", "Bike")},
@@ -45,11 +44,10 @@ namespace GTA
 		{
 			get
 			{
-				if (!_vehicleMods.TryGetValue(modType, out VehicleMod vehicleMod))
-				{
-					vehicleMod = new VehicleMod(_owner, modType);
-					_vehicleMods.Add(modType, vehicleMod);
-				}
+				if (_vehicleMods.TryGetValue(modType, out var vehicleMod)) return vehicleMod;
+
+				vehicleMod = new VehicleMod(_owner, modType);
+				_vehicleMods.Add(modType, vehicleMod);
 
 				return vehicleMod;
 			}
@@ -59,11 +57,10 @@ namespace GTA
 		{
 			get
 			{
-				if (!_vehicleToggleMods.TryGetValue(modType, out VehicleToggleMod vehicleToggleMod))
-				{
-					vehicleToggleMod = new VehicleToggleMod(_owner, modType);
-					_vehicleToggleMods.Add(modType, vehicleToggleMod);
-				}
+				if (_vehicleToggleMods.TryGetValue(modType, out var vehicleToggleMod)) return vehicleToggleMod;
+
+				vehicleToggleMod = new VehicleToggleMod(_owner, modType);
+				_vehicleToggleMods.Add(modType, vehicleToggleMod);
 
 				return vehicleToggleMod;
 			}
@@ -71,7 +68,7 @@ namespace GTA
 
 		public bool Contains(VehicleModType type)
 		{
-			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, _owner.Handle, type) > 0;
+			return Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, _owner.Handle, (int)type) > 0;
 		}
 
 		public VehicleMod[] ToArray()
@@ -82,7 +79,7 @@ namespace GTA
 		public VehicleWheelType WheelType
 		{
 			get => Function.Call<VehicleWheelType>(Hash.GET_VEHICLE_WHEEL_TYPE, _owner.Handle);
-			set => Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, _owner.Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_WHEEL_TYPE, _owner.Handle, (int)value);
 		}
 
 		public VehicleWheelType[] AllowedWheelTypes
@@ -93,42 +90,41 @@ namespace GTA
 				{
 					return new VehicleWheelType[] { VehicleWheelType.BikeWheels };
 				}
-				if (_owner.Model.IsCar)
+
+				if (!_owner.Model.IsCar) return Array.Empty<VehicleWheelType>();
+
+				var res = new List<VehicleWheelType>()
 				{
-					var res = new List<VehicleWheelType>()
-					{
-						VehicleWheelType.Sport,
-						VehicleWheelType.Muscle,
-						VehicleWheelType.Lowrider,
-						VehicleWheelType.SUV,
-						VehicleWheelType.Offroad,
-						VehicleWheelType.Tuner,
-						VehicleWheelType.HighEnd
-					};
-					switch ((VehicleHash)_owner.Model)
-					{
-						case VehicleHash.Faction2:
-						case VehicleHash.Buccaneer2:
-						case VehicleHash.Chino2:
-						case VehicleHash.Moonbeam2:
-						case VehicleHash.Primo2:
-						case VehicleHash.Voodoo2:
-						case VehicleHash.SabreGT2:
-						case VehicleHash.Tornado5:
-						case VehicleHash.Virgo2:
-						case VehicleHash.Minivan2:
-						case VehicleHash.SlamVan3:
-						case VehicleHash.Faction3:
-							res.AddRange(new VehicleWheelType[] { VehicleWheelType.BennysOriginals, VehicleWheelType.BennysBespoke });
-							break;
-						case VehicleHash.SultanRS:
-						case VehicleHash.Banshee2:
-							res.Add(VehicleWheelType.BennysOriginals);
-							break;
-					}
-					return res.ToArray();
+					VehicleWheelType.Sport,
+					VehicleWheelType.Muscle,
+					VehicleWheelType.Lowrider,
+					VehicleWheelType.SUV,
+					VehicleWheelType.Offroad,
+					VehicleWheelType.Tuner,
+					VehicleWheelType.HighEnd
+				};
+				switch ((VehicleHash)_owner.Model)
+				{
+					case VehicleHash.Faction2:
+					case VehicleHash.Buccaneer2:
+					case VehicleHash.Chino2:
+					case VehicleHash.Moonbeam2:
+					case VehicleHash.Primo2:
+					case VehicleHash.Voodoo2:
+					case VehicleHash.SabreGT2:
+					case VehicleHash.Tornado5:
+					case VehicleHash.Virgo2:
+					case VehicleHash.Minivan2:
+					case VehicleHash.SlamVan3:
+					case VehicleHash.Faction3:
+						res.AddRange(new VehicleWheelType[] { VehicleWheelType.BennysOriginals, VehicleWheelType.BennysBespoke });
+						break;
+					case VehicleHash.SultanRS:
+					case VehicleHash.Banshee2:
+						res.Add(VehicleWheelType.BennysOriginals);
+						break;
 				}
-				return new VehicleWheelType[0];
+				return res.ToArray();
 			}
 		}
 
@@ -141,15 +137,15 @@ namespace GTA
 				Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 				Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
 			}
-			if (_wheelNames.ContainsKey(wheelType))
+
+			if (!_wheelNames.ContainsKey(wheelType))
+				throw new ArgumentException("Wheel Type is undefined", nameof(wheelType));
+
+			if (!string.IsNullOrEmpty(Game.GetLocalizedString(_wheelNames[wheelType].Item1)))
 			{
-				if (!string.IsNullOrEmpty(Game.GetLocalizedString(_wheelNames[wheelType].Item1)))
-				{
-					return Game.GetLocalizedString(_wheelNames[wheelType].Item1);
-				}
-				return _wheelNames[wheelType].Item2;
+				return Game.GetLocalizedString(_wheelNames[wheelType].Item1);
 			}
-			throw new ArgumentException("Wheel Type is undefined", "wheelType");
+			return _wheelNames[wheelType].Item2;
 		}
 
 		public void InstallModKit()
@@ -163,7 +159,7 @@ namespace GTA
 			{
 				Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 				Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
-				int end = Game.GameTime + timeout;
+				var end = Game.GameTime + timeout;
 				{
 					while (Game.GameTime < end)
 					{
@@ -209,7 +205,7 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = this[VehicleModType.Livery].Count;
+				var modCount = this[VehicleModType.Livery].Count;
 
 				if (modCount > 0)
 				{
@@ -224,7 +220,7 @@ namespace GTA
 		{
 			get
 			{
-				int modCount = this[VehicleModType.Livery].Count;
+				var modCount = this[VehicleModType.Livery].Count;
 
 				if (modCount > 0)
 				{
@@ -237,7 +233,7 @@ namespace GTA
 		public VehicleWindowTint WindowTint
 		{
 			get => Function.Call<VehicleWindowTint>(Hash.GET_VEHICLE_WINDOW_TINT, _owner.Handle);
-			set => Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, _owner.Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_WINDOW_TINT, _owner.Handle, (int)value);
 		}
 
 		public VehicleColor PrimaryColor
@@ -252,10 +248,7 @@ namespace GTA
 
 				return (VehicleColor)color1;
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, value, SecondaryColor);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)value, (int)SecondaryColor);
 		}
 		public VehicleColor SecondaryColor
 		{
@@ -269,10 +262,7 @@ namespace GTA
 
 				return (VehicleColor)color2;
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, PrimaryColor, value);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)PrimaryColor, value);
 		}
 
 		public VehicleColor RimColor
@@ -287,10 +277,7 @@ namespace GTA
 
 				return (VehicleColor)color2;
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, PearlescentColor, value);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, (int)PearlescentColor, (int)value);
 		}
 		public VehicleColor PearlescentColor
 		{
@@ -304,10 +291,7 @@ namespace GTA
 
 				return (VehicleColor)color1;
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, value, RimColor);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, value, (int)RimColor);
 		}
 		public VehicleColor TrimColor
 		{
@@ -360,7 +344,7 @@ namespace GTA
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(DashboardColor));
 				}
 
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, value);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, (int)value);
 			}
 		}
 
@@ -384,10 +368,7 @@ namespace GTA
 
 				return Color.FromArgb(red, green, blue);
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_TYRE_SMOKE_COLOR, _owner.Handle, value.R, value.G, value.B);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_TYRE_SMOKE_COLOR, _owner.Handle, value.R, value.G, value.B);
 		}
 		public Color NeonLightsColor
 		{
@@ -401,10 +382,7 @@ namespace GTA
 
 				return Color.FromArgb(red, green, blue);
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_NEON_COLOUR, _owner.Handle, value.R, value.G, value.B);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_NEON_COLOUR, _owner.Handle, value.R, value.G, value.B);
 		}
 
 		public bool HasNeonLight(VehicleNeonLight neonLight)
@@ -428,11 +406,11 @@ namespace GTA
 
 		public bool IsNeonLightsOn(VehicleNeonLight light)
 		{
-			return Function.Call<bool>(Hash.GET_VEHICLE_NEON_ENABLED, _owner.Handle, light);
+			return Function.Call<bool>(Hash.GET_VEHICLE_NEON_ENABLED, _owner.Handle, (int)light);
 		}
 		public void SetNeonLightsOn(VehicleNeonLight light, bool on)
 		{
-			Function.Call(Hash.SET_VEHICLE_NEON_ENABLED, _owner.Handle, light, on);
+			Function.Call(Hash.SET_VEHICLE_NEON_ENABLED, _owner.Handle, (int)light, on);
 		}
 
 		public Color CustomPrimaryColor
@@ -448,10 +426,7 @@ namespace GTA
 				return Color.FromArgb(red, green, blue);
 
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, _owner.Handle, value.R, value.G, value.B);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_CUSTOM_PRIMARY_COLOUR, _owner.Handle, value.R, value.G, value.B);
 		}
 		public Color CustomSecondaryColor
 		{
@@ -465,10 +440,7 @@ namespace GTA
 
 				return Color.FromArgb(red, green, blue);
 			}
-			set
-			{
-				Function.Call(Hash.SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, _owner.Handle, value.R, value.G, value.B);
-			}
+			set => Function.Call(Hash.SET_VEHICLE_CUSTOM_SECONDARY_COLOUR, _owner.Handle, value.R, value.G, value.B);
 		}
 
 		public bool IsPrimaryColorCustom => Function.Call<bool>(Hash.GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM, _owner.Handle);
@@ -494,7 +466,7 @@ namespace GTA
 		public LicensePlateStyle LicensePlateStyle
 		{
 			get => Function.Call<LicensePlateStyle>(Hash.GET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, _owner.Handle);
-			set => Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, _owner.Handle, value);
+			set => Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, _owner.Handle, (int)value);
 		}
 	}
 }
