@@ -108,7 +108,7 @@ namespace GTA
 
 		public void Remove()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.REMOVE_BLIP, &handle);
@@ -126,16 +126,16 @@ namespace GTA
 
 		public bool Equals(Blip obj)
 		{
-			return !(obj is null) && Handle == obj.Handle;
+			return obj is not null && Handle == obj.Handle;
 		}
 		public override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((Blip)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((Blip)obj);
 		}
 
 		public static bool operator ==(Blip left, Blip right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(Blip left, Blip right)
 		{

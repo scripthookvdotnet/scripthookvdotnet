@@ -128,24 +128,22 @@ namespace GTA
 		{
 			get
 			{
-				if (_viewport == null)
-				{
-					_viewport = new Viewport();
+				if (_viewport != null) return _viewport;
+				_viewport = new Viewport();
 
-					Tick += (object sender, EventArgs e) =>
-					{
-						_viewport.Draw();
-					};
-					KeyUp += (object sender, KeyEventArgs e) =>
-					{
-						if (e.KeyCode == ActivateKey) _viewport.HandleActivate();
-						else if (e.KeyCode == BackKey) _viewport.HandleBack();
-						else if (e.KeyCode == LeftKey) _viewport.HandleChangeItem(false);
-						else if (e.KeyCode == RightKey) _viewport.HandleChangeItem(true);
-						else if (e.KeyCode == UpKey) _viewport.HandleChangeSelection(false);
-						else if (e.KeyCode == DownKey) _viewport.HandleChangeSelection(true);
-					};
-				}
+				Tick += (sender, e) =>
+				{
+					_viewport.Draw();
+				};
+				KeyUp += (sender, e) =>
+				{
+					if (e.KeyCode == ActivateKey) _viewport.HandleActivate();
+					else if (e.KeyCode == BackKey) _viewport.HandleBack();
+					else if (e.KeyCode == LeftKey) _viewport.HandleChangeItem(false);
+					else if (e.KeyCode == RightKey) _viewport.HandleChangeItem(true);
+					else if (e.KeyCode == UpKey) _viewport.HandleChangeSelection(false);
+					else if (e.KeyCode == DownKey) _viewport.HandleChangeSelection(true);
+				};
 
 				return _viewport;
 			}
@@ -154,12 +152,10 @@ namespace GTA
 		{
 			get
 			{
-				if (_settings == null)
-				{
-					string path = Path.ChangeExtension(Filename, ".ini");
+				if (_settings != null) return _settings;
+				string path = Path.ChangeExtension(Filename, ".ini");
 
-					_settings = ScriptSettings.Load(path);
-				}
+				_settings = ScriptSettings.Load(path);
 
 				return _settings;
 			}
@@ -167,10 +163,7 @@ namespace GTA
 
 		protected int Interval
 		{
-			get
-			{
-				return SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
-			}
+			get => SHVDN.ScriptDomain.CurrentDomain.LookupScript(this).Interval;
 			set
 			{
 				if (value < 0)

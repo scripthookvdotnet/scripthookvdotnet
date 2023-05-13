@@ -63,8 +63,8 @@ namespace GTA
 
 				var result = new VehicleWeaponHash[_elemCountForWeaponPropertyArrays];
 
-				var memberOffset = 0x8;
-				for (int i = 0; i < result.Length; i++)
+				const int memberOffset = 0x8;
+				for (var i = 0; i < result.Length; i++)
 				{
 					result[i] = (VehicleWeaponHash)SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
 				}
@@ -75,7 +75,7 @@ namespace GTA
 			{
 				if (value.Length > _elemCountForWeaponPropertyArrays)
 				{
-					throw new ArgumentException("The amount of WeaponHash must be between 0 and " + _elemCountForWeaponPropertyArrays.ToString(), nameof(value));
+					throw new ArgumentException($"The amount of {nameof(WeaponHash)} values values must be between 0 and {_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -83,7 +83,7 @@ namespace GTA
 				}
 
 				var arrayToFill = new int[_elemCountForWeaponPropertyArrays];
-				for (int i = 0; i < value.Length; i++)
+				for (var i = 0; i < value.Length; i++)
 				{
 					// VehicleWeaponHash.Invalid should have been zero since the game always treats zero as a invalid weapon hash but not necessarily for 0xFFFFFFFF
 					if (value[i] == VehicleWeaponHash.Invalid)
@@ -94,8 +94,8 @@ namespace GTA
 					arrayToFill[i] = (int)value[i];
 				}
 
-				var memberOffset = 0x8;
-				for (int i = 0; i < arrayToFill.Length; i++)
+				const int memberOffset = 0x8;
+				for (var i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, (int)arrayToFill[i]);
 				}
@@ -103,7 +103,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the seat number indicies that can control the weapons.
+		/// Gets or sets the seat number indices that can control the weapons.
 		/// For example, when <see cref="VehicleSeat.Passenger"/> is set at index 1,
 		/// the <see cref="Ped"/> on the passenger seat can use the weapon at the index 1 of <see cref="WeaponHash"/>.
 		/// </summary>
@@ -122,13 +122,13 @@ namespace GTA
 				var result = new VehicleSeat[_elemCountForWeaponPropertyArrays];
 
 				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
-				for (int i = 0; i < result.Length; i++)
+				for (var i = 0; i < result.Length; i++)
 				{
 					result[i] = (VehicleSeat)SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
 				}
 
 				// Make values match what native functions uses for vehicle seats
-				for (int i = 0; i < result.Length; i++)
+				for (var i = 0; i < result.Length; i++)
 				{
 					result[i] = (VehicleSeat)((int)result[i] - 1);
 				}
@@ -139,7 +139,7 @@ namespace GTA
 			{
 				if (value.Length > _elemCountForWeaponPropertyArrays)
 				{
-					throw new ArgumentException("The amount of VehicleSeat must be between 0 and " + _elemCountForWeaponPropertyArrays.ToString(), nameof(value));
+					throw new ArgumentException($"The amount of {nameof(VehicleSeat)} values must be between 0 and {_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -147,14 +147,14 @@ namespace GTA
 				}
 
 				var arrayToFill = new int[_elemCountForWeaponPropertyArrays];
-				for (int i = 0; i < value.Length; i++)
+				for (var i = 0; i < value.Length; i++)
 				{
 					// Make values match what game code uses outside native functions
 					arrayToFill[i] = (int)value[i] + 1;
 				}
 
 				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
-				for (int i = 0; i < arrayToFill.Length; i++)
+				for (var i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -167,7 +167,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// <see cref="VehicleModType.None"/> incidates no mod type is related, which will be set when no value is specified in the <c>handling.meta</c> file.
+		/// <see cref="VehicleModType.None"/> indicates no mod type is related, which will be set when no value is specified in the <c>handling.meta</c> file.
 		/// </para>
 		/// <para>
 		/// Only available in v1.0.1103.2 or later game versions.
@@ -188,7 +188,7 @@ namespace GTA
 
 				var result = new VehicleModType[_elemCountForWeaponPropertyArrays];
 				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
-				for (int i = 0; i < result.Length; i++)
+				for (var i = 0; i < result.Length; i++)
 				{
 					var modTypeForNative = SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
 					if (modTypeForNative == (int)VehicleModType.None)
@@ -210,7 +210,7 @@ namespace GTA
 				}
 				if (value.Length > _elemCountForWeaponPropertyArrays)
 				{
-					throw new ArgumentException("The amount of VehicleModType must be between 0 and " + _elemCountForWeaponPropertyArrays.ToString(), nameof(value));
+					throw new ArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -218,7 +218,7 @@ namespace GTA
 				}
 
 				var arrayToFill = new int[_elemCountForWeaponPropertyArrays];
-				for (int i = 0; i < value.Length; i++)
+				for (var i = 0; i < value.Length; i++)
 				{
 					var currentValue = value[i];
 					if (currentValue == VehicleModType.None)
@@ -231,7 +231,7 @@ namespace GTA
 				}
 
 				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
-				for (int i = 0; i < arrayToFill.Length; i++)
+				for (var i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -265,7 +265,7 @@ namespace GTA
 				}
 
 				var result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (int i = 0; i < result.Length; i++)
+				for (var i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
 				}
@@ -276,7 +276,7 @@ namespace GTA
 			{
 				if (value.Length > _elemCountActuallyUsedForTurretPropertyArrays)
 				{
-					throw new ArgumentException("The amount of turret speed values must be between 0 and " + _elemCountActuallyUsedForTurretPropertyArrays.ToString(), nameof(value));
+					throw new ArgumentException($"The amount of turret speed values must be between 0 and {_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -298,12 +298,12 @@ namespace GTA
 				}
 
 				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (int i = 0; i < value.Length; i++)
+				for (var i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
 				}
 
-				for (int i = 0; i < arrayToFill.Length; i++)
+				for (var i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -337,7 +337,7 @@ namespace GTA
 				}
 
 				var result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (int i = 0; i < result.Length; i++)
+				for (var i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
 				}
@@ -348,7 +348,7 @@ namespace GTA
 			{
 				if (value.Length > _elemCountActuallyUsedForTurretPropertyArrays)
 				{
-					throw new ArgumentException("The amount of minimum turret pitch values must be between 0 and " + _elemCountActuallyUsedForTurretPropertyArrays.ToString(), nameof(value));
+					throw new ArgumentException($"The amount of minimum turret pitch values must be between 0 and {_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -370,12 +370,12 @@ namespace GTA
 				}
 
 				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (int i = 0; i < value.Length; i++)
+				for (var i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
 				}
 
-				for (int i = 0; i < arrayToFill.Length; i++)
+				for (var i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -409,7 +409,7 @@ namespace GTA
 				}
 
 				var result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (int i = 0; i < result.Length; i++)
+				for (var i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
 				}
@@ -420,7 +420,7 @@ namespace GTA
 			{
 				if (value.Length > _elemCountActuallyUsedForTurretPropertyArrays)
 				{
-					throw new ArgumentException("The amount of maximum turret pitch values must be between 0 and " + _elemCountActuallyUsedForTurretPropertyArrays.ToString(), nameof(value));
+					throw new ArgumentException($"The amount of maximum turret pitch values must be between 0 and {_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -442,12 +442,12 @@ namespace GTA
 				}
 
 				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (int i = 0; i < value.Length; i++)
+				for (var i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
 				}
 
-				for (int i = 0; i < arrayToFill.Length; i++)
+				for (var i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -462,7 +462,7 @@ namespace GTA
 				return (int)modTypeForNativeFunction;
 			}
 
-			int modTypeForNativeFunctionInt = (int)modTypeForNativeFunction;
+			var modTypeForNativeFunctionInt = (int)modTypeForNativeFunction;
 			if (modTypeForNativeFunctionInt > 10)
 			{
 				if ((uint)modTypeForNativeFunctionInt > 24u)
@@ -520,7 +520,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same vehicle weapon handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(VehicleWeaponHandlingData left, VehicleWeaponHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="VehicleWeaponHandlingData"/>s don't refer to the same vehicle weapon handling data.

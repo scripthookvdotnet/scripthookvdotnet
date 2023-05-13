@@ -13,7 +13,7 @@ namespace GTA
 	public sealed class VehicleMod
 	{
 		#region Fields
-		static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new ReadOnlyDictionary<int, Tuple<string, string>>(
+		static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new(
 			new Dictionary<int, Tuple<string, string>>
 			{
 				{-1,  new Tuple<string, string>("CMOD_HRN_0", "Stock Horn")},
@@ -85,31 +85,31 @@ namespace GTA
 			get;
 		}
 
-		public int Count => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Vehicle.Handle, Type);
+		public int Count => Function.Call<int>(Hash.GET_NUM_VEHICLE_MODS, Vehicle.Handle, (int)Type);
 
 		public int Index
 		{
-			get => Function.Call<int>(Hash.GET_VEHICLE_MOD, Vehicle.Handle, Type);
-			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, Type, value, Variation);
+			get => Function.Call<int>(Hash.GET_VEHICLE_MOD, Vehicle.Handle, (int)Type);
+			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, (int)Type, value, Variation);
 		}
 
 		public void Remove()
 		{
-			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, Type);
+			Function.Call(Hash.REMOVE_VEHICLE_MOD, Vehicle.Handle, (int)Type);
 		}
 
 		public bool Variation
 		{
-			get => Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, Vehicle.Handle, Type);
-			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, Type, Index, value);
+			get => Function.Call<bool>(Hash.GET_VEHICLE_MOD_VARIATION, Vehicle.Handle, (int)Type);
+			set => Function.Call(Hash.SET_VEHICLE_MOD, Vehicle.Handle, (int)Type, Index, value);
 		}
 
 		public string LocalizedName
 		{
 			get
 			{
-				int index = Index;
-				int count = Count;
+				var index = Index;
+				var count = Count;
 				// This still needs a little more work, but its better than what it used to be
 				if (count == 0)
 				{
@@ -129,15 +129,10 @@ namespace GTA
 				string cur;
 				if (Type == VehicleModType.Horns)
 				{
-					if (_hornNames.ContainsKey(index))
-					{
-						if (!string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
-						{
-							return Game.GetLocalizedString(_hornNames[index].Item1);
-						}
+					if (!_hornNames.ContainsKey(index)) return string.Empty;
+					if (string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
 						return _hornNames[index].Item2;
-					}
-					return string.Empty;
+					return Game.GetLocalizedString(_hornNames[index].Item1);
 				}
 				if (Type == VehicleModType.FrontWheel || Type == VehicleModType.RearWheel)
 				{
@@ -155,11 +150,11 @@ namespace GTA
 					if (index >= count / 2)
 					{
 						return Game.GetLocalizedString("CHROME") + " " +
-							   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index));
+							   Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
 					}
 					else
 					{
-						return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index));
+						return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
 					}
 				}
 
@@ -183,7 +178,7 @@ namespace GTA
 				}
 				if (index > -1)
 				{
-					cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, Type, index);
+					cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index);
 					if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 					{
 						cur = Game.GetLocalizedString(cur);
@@ -229,7 +224,7 @@ namespace GTA
 					Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 					Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
 				}
-				string cur = string.Empty;
+				var cur = string.Empty;
 				switch (Type)
 				{
 					case VehicleModType.Armor:
@@ -421,7 +416,7 @@ namespace GTA
 						break;
 
 					default:
-						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, Type);
+						cur = Function.Call<string>(Hash.GET_MOD_SLOT_NAME, Vehicle.Handle, (int)Type);
 						if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
 						{
 							cur = Game.GetLocalizedString(cur);

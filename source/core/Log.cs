@@ -64,7 +64,7 @@ namespace SHVDN
 								break;
 						}
 
-						foreach (string str in message)
+						foreach (var str in message)
 						{
 							sw.Write(str);
 						}

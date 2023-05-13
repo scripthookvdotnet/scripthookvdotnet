@@ -97,7 +97,7 @@ namespace GTA.Math
 					case 1: return Y;
 				}
 
-				throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+				throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
 			}
 
 			set
@@ -106,7 +106,7 @@ namespace GTA.Math
 				{
 					case 0: X = value; break;
 					case 1: Y = value; break;
-					default: throw new ArgumentOutOfRangeException("index", "Indices for Vector2 run from 0 to 1, inclusive.");
+					default: throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
 				}
 			}
 		}
@@ -134,10 +134,10 @@ namespace GTA.Math
 		/// </summary>
 		public void Normalize()
 		{
-			float length = Length();
+			var length = Length();
 			if (length == 0) return;
 
-			float num = 1 / length;
+			var num = 1 / length;
 			X *= num;
 			Y *= num;
 		}
@@ -215,7 +215,7 @@ namespace GTA.Math
 		public static Vector2 RandomXY()
 		{
 			Vector2 v;
-			double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
+			var radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
 			v.X = (float)(System.Math.Cos(radian));
 			v.Y = (float)(System.Math.Sin(radian));
 			v.Normalize();
@@ -278,11 +278,11 @@ namespace GTA.Math
 		/// <returns>The clamped value.</returns>
 		public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
 		{
-			float x = value.X;
+			var x = value.X;
 			x = (x > max.X) ? max.X : x;
 			x = (x < min.X) ? min.X : x;
 
-			float y = value.Y;
+			var y = value.Y;
 			y = (y > max.Y) ? max.Y : y;
 			y = (y < min.Y) ? min.Y : y;
 
@@ -341,7 +341,7 @@ namespace GTA.Math
 		public static Vector2 Reflect(Vector2 vector, Vector2 normal)
 		{
 			Vector2 result;
-			float dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
+			var dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
 
 			result.X = vector.X - ((2.0f * dot) * normal.X);
 			result.Y = vector.Y - ((2.0f * dot) * normal.Y);
@@ -430,7 +430,7 @@ namespace GTA.Math
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator ==(Vector2 left, Vector2 right) => Equals(left, right);
+		public static bool operator ==(Vector2 left, Vector2 right) => left.Equals(right);
 
 		/// <summary>
 		/// Tests for inequality between two objects.
@@ -438,7 +438,7 @@ namespace GTA.Math
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator !=(Vector2 left, Vector2 right) => !Equals(left, right);
+		public static bool operator !=(Vector2 left, Vector2 right) => !left.Equals(right);
 
 		/// <summary>
 		/// Converts a Vector2 to a Vector3 implicitly.
@@ -451,7 +451,7 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1}", X, Y);
+			return $"X:{X.ToString()} Y:{Y.ToString()}";
 		}
 
 		/// <summary>
@@ -462,9 +462,11 @@ namespace GTA.Math
 		public string ToString(string format)
 		{
 			if (format == null)
+			{
 				return ToString();
+			}
 
-			return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1}", X.ToString(format, CultureInfo.CurrentCulture), Y.ToString(format, CultureInfo.CurrentCulture));
+			return $"X:{X.ToString(format)} Y:{Y.ToString(format)}";
 		}
 
 		/// <summary>

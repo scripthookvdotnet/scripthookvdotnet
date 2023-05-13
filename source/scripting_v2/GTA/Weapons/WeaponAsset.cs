@@ -37,8 +37,8 @@ namespace GTA
 		{
 			Request();
 
-			int startTime = Environment.TickCount;
-			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			var startTime = Environment.TickCount;
+			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{
@@ -65,7 +65,7 @@ namespace GTA
 		}
 		public override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((WeaponAsset)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((WeaponAsset)obj);
 		}
 
 		public static bool operator ==(WeaponAsset left, WeaponAsset right)

@@ -19,7 +19,7 @@ namespace GTA.NaturalMotion
 		private string _message;
 		private Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
 		private Dictionary<string, object> _stringVector3ArrayArguments;
-		private static readonly Dictionary<string, (int value, Type type)> _stopArgument = new Dictionary<string, (int value, Type type)>() { { "start", (0, typeof(bool)) } };
+		private static readonly Dictionary<string, (int value, Type type)> _stopArgument = new() { { "start", (0, typeof(bool)) } };
 		#endregion
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace GTA.NaturalMotion
 		/// </summary>
 		/// <param name="target">The <see cref="Ped"/> to send the <see cref="Message"/> to.</param>
 		/// <remarks>
-		/// Although it is tecnically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task, this method will always start a <c>CTaskNMControl</c> task.
+		/// Although it is technically possible to send NM messages to peds that are running a NM task other than <c>CTaskNMControl</c> without starting a <c>CTaskNMControl</c> task, this method will always start a <c>CTaskNMControl</c> task.
 		/// </remarks>
 		public void SendTo(Ped target)
 		{
@@ -105,7 +105,7 @@ namespace GTA.NaturalMotion
 		{
 			CreateBoolIntFloatArgDictIfNotCreated();
 
-			int valueConverted = value ? 1 : 0;
+			var valueConverted = value ? 1 : 0;
 			_boolIntFloatArguments[argName] = (valueConverted, typeof(bool));
 		}
 		/// <summary>
@@ -130,7 +130,7 @@ namespace GTA.NaturalMotion
 
 			unsafe
 			{
-				int valueConverted = *(int*)&value;
+				var valueConverted = *(int*)&value;
 				_boolIntFloatArguments[argName] = (valueConverted, typeof(float));
 			}
 		}
@@ -165,16 +165,11 @@ namespace GTA.NaturalMotion
 		{
 			if (_boolIntFloatArguments != null)
 			{
-				if (_boolIntFloatArguments.Remove(argName))
-					return true;
-			}
-			if (_stringVector3ArrayArguments != null)
-			{
-				if (_stringVector3ArrayArguments.Remove(argName))
-					return true;
+				return _boolIntFloatArguments.Remove(argName);
 			}
 
-			return false;
+			if (_stringVector3ArrayArguments == null) return false;
+			return _stringVector3ArrayArguments.Remove(argName);
 		}
 
 		/// <summary>
@@ -188,18 +183,12 @@ namespace GTA.NaturalMotion
 
 		public void CreateBoolIntFloatArgDictIfNotCreated()
 		{
-			if (_boolIntFloatArguments == null)
-			{
-				_boolIntFloatArguments = new Dictionary<string, (int value, Type type)>();
-			}
+			_boolIntFloatArguments ??= new Dictionary<string, (int value, Type type)>();
 		}
 
 		public void CreateStringVector3ArrayArgDictIfNotCreated()
 		{
-			if (_stringVector3ArrayArguments == null)
-			{
-				_stringVector3ArrayArguments = new Dictionary<string, object>();
-			}
+			_stringVector3ArrayArguments ??= new Dictionary<string, object>();
 		}
 
 		/// <summary>

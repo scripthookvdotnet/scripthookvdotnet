@@ -112,7 +112,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			int hash = 17;
+			var hash = 17;
 			hash = Victim != null ? hash * 5039 + Victim.Handle.GetHashCode() : hash;
 			hash = Attacker != null ? hash * 883 + Attacker.Handle.GetHashCode() : hash;
 			hash = hash * 9719 + ((int)WeaponHash).GetHashCode();

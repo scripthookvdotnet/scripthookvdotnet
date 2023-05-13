@@ -77,15 +77,13 @@ namespace GTA
 		{
 			//Menus should be drawn from lowest index to highest index
 			//This way the unfocused menus will be placed behind the current focused menu
-			int menuCount = mMenuStack.Count;
+			var menuCount = mMenuStack.Count;
 
 			if (!MenuTransitions)
 			{
-				if (mMenuStack.Count != 0)
-				{
-					Size offset = new Size(MenuPosition.X, MenuPosition.Y);
-					mMenuStack[mMenuStack.Count - 1].Draw(offset);
-				}
+				if (mMenuStack.Count == 0) return;
+				var offset = new Size(MenuPosition.X, MenuPosition.Y);
+				mMenuStack[mMenuStack.Count - 1].Draw(offset);
 				return;
 			}
 
@@ -99,8 +97,8 @@ namespace GTA
 					mEaseTime = 1.0f;
 					mIsEasing = false;
 				}
-				float varOffsetX = EaseOut(mEaseTime, 1.0f, 0.0f, (float)MenuOffset.X);
-				float varOffsetY = EaseOut(mEaseTime, 1.0f, 0.0f, (float)MenuOffset.Y);
+				var varOffsetX = EaseOut(mEaseTime, 1.0f, 0.0f, MenuOffset.X);
+				var varOffsetY = EaseOut(mEaseTime, 1.0f, 0.0f, MenuOffset.Y);
 				mEaseOffset = new Point((int)varOffsetX, (int)varOffsetY);
 			}
 			else
@@ -112,27 +110,27 @@ namespace GTA
 
 			//The last index should be drawn without offset
 			//And the second-last with the offset generated from the easing function
-			//All the indices before that should be drawn a full offset from eachother
+			//All the indices before that should be drawn a full offset from each other
 			//This means that we can subtract
-			int i = 0;
-			foreach (MenuBase menu in mMenuStack)
+			var i = 0;
+			foreach (var menu in mMenuStack)
 			{
 				if (mIsEasing)
 				{
 					if (mEaseDirection)
 					{
-						float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 2) + MenuPosition.X);
-						float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 2) + MenuPosition.Y);
+						var baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 2) + MenuPosition.X);
+						var baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 2) + MenuPosition.Y);
 
-						Size offset = new Size((int)(baseOffsetX + mEaseOffset.X), (int)(baseOffsetY + mEaseOffset.Y));
+						var offset = new Size((int)(baseOffsetX + mEaseOffset.X), (int)(baseOffsetY + mEaseOffset.Y));
 						menu.Draw(offset);
 					}
 					else
 					{
-						float baseOffsetX = (float)(MenuOffset.X * (menuCount - i) + MenuPosition.X);
-						float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i) + MenuPosition.Y);
+						var baseOffsetX = (float)(MenuOffset.X * (menuCount - i) + MenuPosition.X);
+						var baseOffsetY = (float)(MenuOffset.Y * (menuCount - i) + MenuPosition.Y);
 
-						Size offset = new Size((int)(baseOffsetX - mEaseOffset.X), (int)(baseOffsetY - mEaseOffset.Y));
+						var offset = new Size((int)(baseOffsetX - mEaseOffset.X), (int)(baseOffsetY - mEaseOffset.Y));
 						menu.Draw(offset);
 					}
 				}
@@ -144,10 +142,10 @@ namespace GTA
 					}
 					else
 					{
-						float baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 1) + MenuPosition.X);
-						float baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 1) + MenuPosition.Y);
+						var baseOffsetX = (float)(MenuOffset.X * (menuCount - i - 1) + MenuPosition.X);
+						var baseOffsetY = (float)(MenuOffset.Y * (menuCount - i - 1) + MenuPosition.Y);
 
-						Size offset = new Size((int)(baseOffsetX), (int)(baseOffsetY));
+						var offset = new Size((int)(baseOffsetX), (int)(baseOffsetY));
 						menu.Draw(offset);
 					}
 				}
@@ -207,15 +205,15 @@ namespace GTA
 		}
 
 		//easeOutBack function
-		float EaseOut(float time, float duration, float value0, float deltaValue)
+		static float EaseOut(float time, float duration, float value0, float deltaValue)
 		{
-			float s = 1.70158f;
+			const float s = 1.70158f;
 			return deltaValue * ((time = time / duration - 1) * time * ((s + 1) * time + s) + 1) + value0;
 		}
 
 		// This is a list (or stack) of the active menus, the highest index is the one that's currently in focus
 		// The reason this is a List and not a Stack is because we need to be able to access and draw the unfocused windows too
-		List<MenuBase> mMenuStack = new List<MenuBase>();
+		readonly List<MenuBase> mMenuStack = new List<MenuBase>();
 
 		// The current time input for the ease function for the menu offset
 		// 1f means that the offset is full;

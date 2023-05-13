@@ -3,6 +3,7 @@
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
 
+using System;
 using GTA.Native;
 using System.Linq;
 
@@ -34,18 +35,30 @@ namespace GTA
 
 		public string LocalizedName => Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)Hash));
 
-		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, Hash);
+		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)Hash);
 
-		public Model Model => new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, Hash));
+		public Model Model => new(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, (uint)Hash));
 
 		public WeaponTint Tint
 		{
-			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, owner.Handle, Hash);
-			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, Hash, value);
+			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash);
+			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash, value);
 		}
 
-		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, Hash);
+		/// <summary>
+		/// Gets the number of available color tints for this <see cref="Weapon"/>.
+		/// </summary>
+		public int TintCount => Function.Call<int>(Native.Hash.GET_WEAPON_TINT_COUNT, (uint)Hash);
 
+		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, (uint)Hash);
+
+		/// <summary>
+		/// Gets or sets the amount of ammo for this weapon.
+		/// If this weapon is using special ammo, this property will return the value for it.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int Ammo
 		{
 			get
@@ -60,7 +73,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, owner.Handle, Hash);
+				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, owner.Handle, (uint)Hash);
 			}
 			set
 			{
@@ -71,14 +84,20 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_PED_AMMO, owner.Handle, Hash, value);
+					Function.Call(Native.Hash.SET_PED_AMMO, owner.Handle, (uint)Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, Hash, value, false, true);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)Hash, value, false, true);
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the current amount of ammo in a clip.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int AmmoInClip
 		{
 			get
@@ -96,7 +115,7 @@ namespace GTA
 				int ammoInClip;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, owner.Handle, Hash, &ammoInClip);
+					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, owner.Handle, (uint)Hash, &ammoInClip);
 				}
 				return ammoInClip;
 			}
@@ -109,15 +128,21 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, owner.Handle, Hash, value);
+					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, owner.Handle, (uint)Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, Hash, value, true, false);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)Hash, value, true, false);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the max amount of ammo this weapon can have.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int MaxAmmo
 		{
 			get
@@ -130,11 +155,17 @@ namespace GTA
 				int maxAmmo;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_MAX_AMMO, owner.Handle, Hash, &maxAmmo);
+					Function.Call(Native.Hash.GET_MAX_AMMO, owner.Handle, (uint)Hash, &maxAmmo);
 				}
 				return maxAmmo;
 			}
 		}
+		/// <summary>
+		/// Gets or sets the max amount of ammo this weapon can have in a clip.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int MaxAmmoInClip
 		{
 			get
@@ -149,12 +180,20 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, owner.Handle, Hash, true);
+				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, owner.Handle, (uint)Hash, true);
 			}
 		}
 
-		public int DefaultClipSize => Function.Call<int>(Native.Hash.GET_WEAPON_CLIP_SIZE, Hash);
+		public int DefaultClipSize => Function.Call<int>(Native.Hash.GET_WEAPON_CLIP_SIZE, (uint)Hash);
 
+
+		/// <summary>
+		/// Sets whether this ped will not consume the current ammo this weapon is using from the weapon ammo inventory.
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, setting this value globally affects any of the weapons that uses the ammo the current weapon is using
+		/// as <c>SET_PED_INFINITE_AMMO</c> modifies a of member of weapon ammo item in <c>CPedInventory</c> of the owner <see cref="Ped"/>.
+		/// </remarks>
 		public bool InfiniteAmmo
 		{
 			set
@@ -164,15 +203,21 @@ namespace GTA
 					return;
 				}
 
-				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, owner.Handle, value, Hash);
+				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, owner.Handle, value, (uint)Hash);
 			}
 		}
+		/// <summary>
+		/// Sets whether this ped will not consume any ammo in any clips or that of the weapon ammo inventory of the owner <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, setting this value globally affects all of the weapons of the owner <see cref="Ped"/>.
+		/// </remarks>
 		public bool InfiniteAmmoClip
 		{
 			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, owner.Handle, value);
 		}
 
-		public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, Hash);
+		public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (uint)Hash);
 
 		public WeaponComponentCollection Components => components ?? (components = new WeaponComponentCollection(owner, this));
 
@@ -312,12 +357,10 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data))
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data)) continue;
+					if (data.Hash == hash)
 					{
-						if (data.Hash == hash)
-						{
-							return data.DisplayName;
-						}
+						return data.DisplayName;
 					}
 				}
 			}

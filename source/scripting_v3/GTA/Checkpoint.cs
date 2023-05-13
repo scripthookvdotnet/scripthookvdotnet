@@ -27,7 +27,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -37,7 +37,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -54,7 +54,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -64,7 +64,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -81,7 +81,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -91,7 +91,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -108,7 +108,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -118,7 +118,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -136,7 +136,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -146,7 +146,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -163,7 +163,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return System.Drawing.Color.Transparent;
@@ -174,7 +174,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -191,7 +191,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return System.Drawing.Color.Transparent;
@@ -202,7 +202,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -220,7 +220,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -231,7 +231,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -248,7 +248,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -259,7 +259,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -276,7 +276,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -287,7 +287,7 @@ namespace GTA
 			}
 			set
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -338,7 +338,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same checkpoint as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Checkpoint left, Checkpoint right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Checkpoint"/>s don't refer to the same checkpoint.

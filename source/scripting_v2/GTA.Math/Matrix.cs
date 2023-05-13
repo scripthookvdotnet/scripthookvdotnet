@@ -119,9 +119,9 @@ namespace GTA.Math
 		public Matrix(float[] values)
 		{
 			if (values == null)
-				throw new ArgumentNullException("values");
+				throw new ArgumentNullException(nameof(values));
 			if (values.Length != 16)
-				throw new ArgumentOutOfRangeException("values", "There must be sixteen and only sixteen input values for Matrix.");
+				throw new ArgumentOutOfRangeException(nameof(values), "There must be sixteen and only sixteen input values for Matrix.");
 
 			M11 = values[0];
 			M12 = values[1];
@@ -162,11 +162,11 @@ namespace GTA.Math
 			get
 			{
 				if (row < 0 || row > 3)
-					throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+					throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
 				if (column < 0 || column > 3)
-					throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+					throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
 
-				int index = row * 4 + column;
+				var index = row * 4 + column;
 
 				switch (index)
 				{
@@ -194,11 +194,11 @@ namespace GTA.Math
 			set
 			{
 				if (row < 0 || row > 3)
-					throw new ArgumentOutOfRangeException("row", "Rows and columns for matrices run from 0 to 3, inclusive.");
+					throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
 				if (column < 0 || column > 3)
-					throw new ArgumentOutOfRangeException("column", "Rows and columns for matrices run from 0 to 3, inclusive.");
+					throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
 
-				int index = row * 4 + column;
+				var index = row * 4 + column;
 				switch (index)
 				{
 					case 0: M11 = value; break;
@@ -245,12 +245,12 @@ namespace GTA.Math
 		/// <returns>The determinant of the matrix.</returns>
 		public float Determinant()
 		{
-			float temp1 = (M33 * M44) - (M34 * M43);
-			float temp2 = (M32 * M44) - (M34 * M42);
-			float temp3 = (M32 * M43) - (M33 * M42);
-			float temp4 = (M31 * M44) - (M34 * M41);
-			float temp5 = (M31 * M43) - (M33 * M41);
-			float temp6 = (M31 * M42) - (M32 * M41);
+			var temp1 = (M33 * M44) - (M34 * M43);
+			var temp2 = (M32 * M44) - (M34 * M42);
+			var temp3 = (M32 * M43) - (M33 * M42);
+			var temp4 = (M31 * M44) - (M34 * M41);
+			var temp5 = (M31 * M43) - (M33 * M41);
+			var temp6 = (M31 * M42) - (M32 * M41);
 
 			return ((((M11 * (((M22 * temp1) - (M23 * temp2)) + (M24 * temp3))) - (M12 * (((M21 * temp1) -
 				(M23 * temp4)) + (M24 * temp5)))) + (M13 * (((M21 * temp2) - (M22 * temp4)) + (M24 * temp6)))) -
@@ -267,31 +267,31 @@ namespace GTA.Math
 		/// </summary>
 		public void Inverse()
 		{
-			float Det = Determinant();
+			var Det = Determinant();
 
 			if (Det == 0.0f)
 				return;
 
-			float invDet = 1.0f / Det;
-			float tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
-			float tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
-			float tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
-			float tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
+			var invDet = 1.0f / Det;
+			var tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
+			var tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
+			var tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
+			var tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
 
-			float tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
-			float tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
-			float tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
-			float tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
+			var tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
+			var tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
+			var tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
+			var tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
 
-			float tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
-			float tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
-			float tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
-			float tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
+			var tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
+			var tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
+			var tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
+			var tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
 
-			float tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
-			float tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
-			float tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
-			float tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
+			var tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
+			var tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
+			var tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
+			var tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
 
 			M11 = tM11;
 			M12 = tM12;
@@ -463,7 +463,7 @@ namespace GTA.Math
 		public static Matrix Divide(Matrix left, float right)
 		{
 			Matrix result;
-			float inv = 1.0f / right;
+			var inv = 1.0f / right;
 
 			result.M11 = left.M11 * inv;
 			result.M12 = left.M12 * inv;
@@ -563,8 +563,8 @@ namespace GTA.Math
 		public static Matrix RotationX(float angle)
 		{
 			Matrix result;
-			float cos = (float)System.Math.Cos(angle);
-			float sin = (float)(System.Math.Sin(angle));
+			var cos = (float)System.Math.Cos(angle);
+			var sin = (float)(System.Math.Sin(angle));
 
 			result.M11 = 1.0f;
 			result.M12 = 0.0f;
@@ -594,8 +594,8 @@ namespace GTA.Math
 		public static Matrix RotationY(float angle)
 		{
 			Matrix result;
-			float cos = (float)(System.Math.Cos(angle));
-			float sin = (float)(System.Math.Sin(angle));
+			var cos = (float)(System.Math.Cos(angle));
+			var sin = (float)(System.Math.Sin(angle));
 
 			result.M11 = cos;
 			result.M12 = 0.0f;
@@ -625,8 +625,8 @@ namespace GTA.Math
 		public static Matrix RotationZ(float angle)
 		{
 			Matrix result;
-			float cos = (float)(System.Math.Cos(angle));
-			float sin = (float)(System.Math.Sin(angle));
+			var cos = (float)(System.Math.Cos(angle));
+			var sin = (float)(System.Math.Sin(angle));
 
 			result.M11 = cos;
 			result.M12 = sin;
@@ -660,17 +660,17 @@ namespace GTA.Math
 				axis.Normalize();
 
 			Matrix result;
-			float x = axis.X;
-			float y = axis.Y;
-			float z = axis.Z;
-			float cos = (float)(System.Math.Cos(angle));
-			float sin = (float)(System.Math.Sin(angle));
-			float xx = x * x;
-			float yy = y * y;
-			float zz = z * z;
-			float xy = x * y;
-			float xz = x * z;
-			float yz = y * z;
+			var x = axis.X;
+			var y = axis.Y;
+			var z = axis.Z;
+			var cos = (float)(System.Math.Cos(angle));
+			var sin = (float)(System.Math.Sin(angle));
+			var xx = x * x;
+			var yy = y * y;
+			var zz = z * z;
+			var xy = x * y;
+			var xz = x * z;
+			var yz = y * z;
 
 			result.M11 = xx + (cos * (1.0f - xx));
 			result.M12 = (xy - (cos * xy)) + (sin * z);
@@ -701,15 +701,15 @@ namespace GTA.Math
 		{
 			Matrix result;
 
-			float xx = rotation.X * rotation.X;
-			float yy = rotation.Y * rotation.Y;
-			float zz = rotation.Z * rotation.Z;
-			float xy = rotation.X * rotation.Y;
-			float zw = rotation.Z * rotation.W;
-			float zx = rotation.Z * rotation.X;
-			float yw = rotation.Y * rotation.W;
-			float yz = rotation.Y * rotation.Z;
-			float xw = rotation.X * rotation.W;
+			var xx = rotation.X * rotation.X;
+			var yy = rotation.Y * rotation.Y;
+			var zz = rotation.Z * rotation.Z;
+			var xy = rotation.X * rotation.Y;
+			var zw = rotation.Z * rotation.W;
+			var zx = rotation.Z * rotation.X;
+			var yw = rotation.Y * rotation.W;
+			var yz = rotation.Y * rotation.Z;
+			var xw = rotation.X * rotation.W;
 			result.M11 = 1.0f - (2.0f * (yy + zz));
 			result.M12 = 2.0f * (xy + zw);
 			result.M13 = 2.0f * (zx - yw);
@@ -739,7 +739,7 @@ namespace GTA.Math
 		/// <returns>The created rotation matrix.</returns>
 		public static Matrix RotationYawPitchRoll(float yaw, float pitch, float roll)
 		{
-			Quaternion quaternion = Quaternion.RotationYawPitchRoll(yaw, pitch, roll);
+			var quaternion = Quaternion.RotationYawPitchRoll(yaw, pitch, roll);
 			return RotationQuaternion(quaternion);
 		}
 
@@ -835,7 +835,7 @@ namespace GTA.Math
 		/// <returns>The created translation matrix.</returns>
 		public static Matrix Translation(Vector3 amount)
 		{
-			Matrix result = Identity;
+			var result = Identity;
 			result.M11 = 1.0f;
 			result.M12 = 0.0f;
 			result.M13 = 0.0f;
@@ -1002,7 +1002,7 @@ namespace GTA.Math
 		public static Matrix operator /(Matrix left, float right)
 		{
 			Matrix result;
-			float invRight = 1.0f / right;
+			var invRight = 1.0f / right;
 			result.M11 = left.M11 * invRight;
 			result.M12 = left.M12 * invRight;
 			result.M13 = left.M13 * invRight;
@@ -1092,7 +1092,7 @@ namespace GTA.Math
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has the same value as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator ==(Matrix left, Matrix right) => Matrix.Equals(left, right);
+		public static bool operator ==(Matrix left, Matrix right) => left.Equals(right);
 
 		/// <summary>
 		/// Tests for inequality between two objects.
@@ -1100,7 +1100,7 @@ namespace GTA.Math
 		/// <param name="left">The first value to compare.</param>
 		/// <param name="right">The second value to compare.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
-		public static bool operator !=(Matrix left, Matrix right) => !Matrix.Equals(left, right);
+		public static bool operator !=(Matrix left, Matrix right) => !left.Equals(right);
 
 		/// <summary>
 		/// Converts the matrix to an array of floats.
@@ -1113,8 +1113,28 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			return string.Format(CultureInfo.CurrentCulture, "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] [M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-				M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
+			var currentCulture = CultureInfo.CurrentCulture;
+			var m11Str = M11.ToString(currentCulture);
+			var m12Str = M12.ToString(currentCulture);
+			var m13Str = M13.ToString(currentCulture);
+			var m14Str = M14.ToString(currentCulture);
+
+			var m21Str = M21.ToString(currentCulture);
+			var m22Str = M22.ToString(currentCulture);
+			var m23Str = M23.ToString(currentCulture);
+			var m24Str = M24.ToString(currentCulture);
+
+			var m31Str = M31.ToString(currentCulture);
+			var m32Str = M32.ToString(currentCulture);
+			var m33Str = M33.ToString(currentCulture);
+			var m34Str = M34.ToString(currentCulture);
+
+			var m41Str = M41.ToString(currentCulture);
+			var m42Str = M42.ToString(currentCulture);
+			var m43Str = M43.ToString(currentCulture);
+			var m44Str = M44.ToString(currentCulture);
+
+			return $"[M11:{m11Str} M12:{m12Str} M13:{m13Str} M14:{m14Str}] [M21:{m21Str} M22:{m22Str} M23:{m23Str} M24:{m24Str}] [M31:{m31Str} M32:{m32Str} M33:{m33Str} M34:{m34Str}] [M41:{m41Str} M42:{m42Str} M43:{m43Str} M44:{m44Str}]";
 		}
 
 		/// <summary>

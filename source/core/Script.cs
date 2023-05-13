@@ -13,9 +13,9 @@ namespace SHVDN
 	public class Script
 	{
 		Thread thread; // The thread hosting the execution of the script
-		internal SemaphoreSlim waitEvent = null;
-		internal SemaphoreSlim continueEvent = null;
-		internal ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new ConcurrentQueue<Tuple<bool, KeyEventArgs>>();
+		internal SemaphoreSlim waitEvent;
+		internal SemaphoreSlim continueEvent;
+		internal readonly ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new();
 
 		/// <summary>
 		/// Gets or sets the interval in ms between each <see cref="Tick"/>.
@@ -104,7 +104,7 @@ namespace SHVDN
 		internal void DoTick()
 		{
 			// Process keyboard events
-			while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
+			while (keyboardEvents.TryDequeue(out var ev))
 			{
 				try
 				{
@@ -153,7 +153,11 @@ namespace SHVDN
 				waitEvent = new SemaphoreSlim(0);
 				continueEvent = new SemaphoreSlim(0);
 
-				thread = new Thread(new ThreadStart(MainLoop));
+				thread = new Thread(MainLoop);
+				// By setting this property to true, script thread should stop executing when the main thread stops executing
+				// Note: The exe may not stop executing if some scripts create Thread instances and use them without setting Thread.IsBackground false
+				thread.IsBackground = true;
+
 				thread.Start();
 			}
 			else
@@ -225,7 +229,7 @@ namespace SHVDN
 		{
 			if (IsUsingThread)
 			{
-				int startTickCount = Environment.TickCount;
+				var startTickCount = Environment.TickCount;
 
 				do
 				{

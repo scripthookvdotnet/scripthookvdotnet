@@ -41,7 +41,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MemoryAddress;
+				var address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return IntPtr.Zero;
@@ -70,7 +70,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MatrixAddress;
+				var address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return new Matrix();
@@ -125,7 +125,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MatrixAddress;
+				var address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
@@ -142,7 +142,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MatrixAddress;
+				var address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
@@ -159,7 +159,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr address = MatrixAddress;
+				var address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
@@ -271,10 +271,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Camera"/> is shaking; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsShaking
-		{
-			get => Function.Call<bool>(Hash.IS_CAM_SHAKING, Handle);
-		}
+		public bool IsShaking => Function.Call<bool>(Hash.IS_CAM_SHAKING, Handle);
 
 		/// <summary>
 		/// Sets the shake amplitude for this <see cref="Camera"/>.
@@ -333,10 +330,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Camera"/> is interpolating; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsInterpolating
-		{
-			get => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
-		}
+		public bool IsInterpolating => Function.Call<bool>(Hash.IS_CAM_INTERPOLATING, Handle);
 
 		/// <summary>
 		/// Attaches this <see cref="Camera"/> to a specific <see cref="Entity"/>.
@@ -405,7 +399,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same camera as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Camera left, Camera right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Checkpoint"/>s don't refer to the same camera.

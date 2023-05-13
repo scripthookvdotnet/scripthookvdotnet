@@ -9,7 +9,7 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Represents the special flight handling data class for <c>CSpecialFlightHandlingData</c>, which is for vehicles that have spefical flight feature.
+	/// Represents the special flight handling data class for <c>CSpecialFlightHandlingData</c>, which is for vehicles that have special flight feature.
 	/// </summary>
 	public sealed class SpecialFlightHandlingData : BaseSubHandlingData
 	{
@@ -91,7 +91,7 @@ namespace GTA
 					return Vector3.Zero;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x30 : 0x20;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x30 : 0x20;
 				return new Vector3(SHVDN.NativeMemory.ReadVector3(MemoryAddress + offset));
 			}
 			set
@@ -101,7 +101,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x30 : 0x20;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x30 : 0x20;
 				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToArray());
 			}
 		}
@@ -152,7 +152,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x70 : 0x50;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x70 : 0x50;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -162,7 +162,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x70 : 0x50;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x70 : 0x50;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -181,7 +181,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x7C : 0x5C;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x7C : 0x5C;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -191,7 +191,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x7C : 0x5C;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x7C : 0x5C;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -210,7 +210,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x90 : 0x70;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x90 : 0x70;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -220,7 +220,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x90 : 0x70;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x90 : 0x70;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -243,7 +243,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x9C : 0x7C;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x9C : 0x7C;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -253,7 +253,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x9C : 0x7C;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x9C : 0x7C;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -272,7 +272,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0xA0 : 0x80;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0xA0 : 0x80;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -282,7 +282,7 @@ namespace GTA
 					return;
 				}
 
-				int offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0xA0 : 0x80;
+				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0xA0 : 0x80;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -374,7 +374,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same special flight handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(SpecialFlightHandlingData left, SpecialFlightHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="SpecialFlightHandlingData"/>s don't refer to the special flight handling data.

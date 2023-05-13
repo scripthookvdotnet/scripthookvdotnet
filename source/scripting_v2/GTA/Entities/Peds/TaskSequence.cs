@@ -40,12 +40,11 @@ namespace GTA
 
 		public void Dispose()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);
 			}
-			GC.SuppressFinalize(this);
 		}
 
 		public int Handle

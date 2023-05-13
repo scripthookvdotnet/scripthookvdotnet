@@ -116,7 +116,13 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// <para>
 		/// Gets a value indicating whether this <see cref="Entity"/> is dead or does not exist.
+		/// </para>
+		/// <para>
+		/// For <see cref="Ped"/>s, use <see cref="Ped.IsInjured"/> unless you specifically need to know they are dead
+		/// since this property does not guarantee whether if the <see cref="Ped"/> can start scripted tasks.
+		/// </para>
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Entity"/> is dead or does not exist; otherwise, <see langword="false" />.
@@ -127,6 +133,10 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> exists and is alive.
 		/// </summary>
+		/// <para>
+		/// For <see cref="Ped"/>s, use <see cref="Ped.IsInjured"/> unless you specifically need to know they are alive at all
+		/// since this property does not guarantee whether if the <see cref="Ped"/> can start scripted tasks.
+		/// </para>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Entity"/> exists and is alive; otherwise, <see langword="false" />.
 		/// </value>
@@ -137,7 +147,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the model of the current <see cref="Entity"/>.
 		/// </summary>
-		public Model Model => new Model(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
+		public Model Model => new(Function.Call<int>(Hash.GET_ENTITY_MODEL, Handle));
 
 		/// <summary>
 		/// Gets or sets how opaque this <see cref="Entity"/> is.
@@ -697,7 +707,7 @@ namespace GTA
 		/// </returns>
 		public virtual bool HasBeenDamagedBy(WeaponHash weapon)
 		{
-			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, weapon, 0);
+			return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, Handle, (uint)weapon, 0);
 		}
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> has been damaged by any weapon.
@@ -771,7 +781,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Detachs a fragment part of this <see cref="Entity"/>. Can create a new <see cref="Entity"/>.
+		/// Detaches a fragment part of this <see cref="Entity"/>. Can create a new <see cref="Entity"/>.
 		/// </summary>
 		/// <returns>
 		///   <para><see langword="true" /> if a new <see cref="Entity"/> is created; otherwise, <see langword="false" />.</para>
@@ -1104,10 +1114,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Entity"/> is occluded; otherwise, <see langword="false" />.
 		/// </value>
-		public bool IsOccluded
-		{
-			get => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
-		}
+		public bool IsOccluded => Function.Call<bool>(Hash.IS_ENTITY_OCCLUDED, Handle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Entity"/> is rendered.
@@ -1373,12 +1380,12 @@ namespace GTA
 		/// <summary>
 		/// Gets the <see cref="Blip"/> attached to this <see cref="Entity"/>.
 		/// </summary>
-		/// <remarks>returns <see langword="null" /> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
+		/// <remarks>Returns <see langword="null" /> if no <see cref="Blip"/>s are attached to this <see cref="Entity"/></remarks>
 		public Blip AttachedBlip
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.GET_BLIP_FROM_ENTITY, Handle);
+				var handle = Function.Call<int>(Hash.GET_BLIP_FROM_ENTITY, Handle);
 
 				if (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
 				{
@@ -1392,10 +1399,7 @@ namespace GTA
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Blip"/>s attached to this <see cref="Entity"/>.
 		/// </summary>
-		public Blip[] AttachedBlips
-		{
-			get => World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x.NativeValue) == Handle).ToArray();
-		}
+		public Blip[] AttachedBlips => World.GetAllBlips().Where(x => Function.Call<int>(Hash.GET_BLIP_INFO_ID_ENTITY_INDEX, x.NativeValue) == Handle).ToArray();
 
 		#endregion
 
@@ -1453,12 +1457,9 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
-		/// <remarks>returns <see langword="null" /> if this <see cref="Entity"/> isnt attached to any entity</remarks>
+		/// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> isn't attached to any entity</remarks>
 		/// </summary>
-		public Entity AttachedEntity
-		{
-			get => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
-		}
+		public Entity AttachedEntity => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 
 		#endregion
 
@@ -1475,7 +1476,7 @@ namespace GTA
 		/// <param name="forceType">Type of the force to apply.</param>
 		public void ApplyForce(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, false, true, true, false, true);
 		}
 		/// <summary>
 		/// Applies a force to this <see cref="Entity"/>.
@@ -1485,7 +1486,7 @@ namespace GTA
 		/// <param name="forceType">Type of the force to apply.</param>
 		public void ApplyForceRelative(Vector3 direction, Vector3 rotation = default, ForceType forceType = ForceType.ExternalImpulse)
 		{
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, direction.X, direction.Y, direction.Z, rotation.X, rotation.Y, rotation.Z, false, true, true, true, false, true);
 		}
 		/// <summary>
 		/// Applies a world force to this <see cref="Entity"/> using world offset.
@@ -1527,7 +1528,7 @@ namespace GTA
 		/// <param name="forceType">Type of the force to apply.</param>
 		/// <param name="relativeForce">
 		/// Specifies whether the force vector passed in is in relative or world coordinates.
-		/// Rocal coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
+		/// Local coordinates (<see langword="true"/>) means the force will get automatically transformed into world space before being applied.
 		/// </param>
 		/// <param name="relativeOffset">Specifies whether the offset passed in is in relative or world coordinates.</param>
 		/// <param name="scaleByMass">
@@ -1550,7 +1551,7 @@ namespace GTA
 		private void ApplyForceInternal(Vector3 force, Vector3 offset, ForceType forceType, bool relativeForce, bool relativeOffset, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
 		{
 			// 9th parameter is component index (not bone index), which matters only if the entity is a ped
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, 0, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, 0, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
 		}
 
 		/// <summary>
@@ -1590,18 +1591,18 @@ namespace GTA
 		/// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
 		/// </para>
 		/// </param>
-		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the speficied component.</param>
+		/// <param name="applyToChildren">Specifies whether to apply force to children components as well as the specified component.</param>
 		/// <exception cref="System.ArgumentException">Thrown when <paramref name="forceType"/> is set to <see cref="ForceType.ExternalForce"/> or <see cref="ForceType.ExternalImpulse"/>, which is not supported by this method.</exception>
 		private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
 		{
 			// The native won't apply the force if apply force type is one of the external types
-			if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
+			if (forceType is ForceType.ExternalForce or ForceType.ExternalImpulse)
 			{
-				throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
+				throw new ArgumentException("ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.", nameof(forceType));
 			}
 
 			// 6th parameter is component index (not bone index), which matters only if the entity is a ped
-			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, forceType, force.X, force.Y, force.Z, 0, relativeForce, scaleByMass, applyToChildren);
+			Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, (int)forceType, force.X, force.Y, force.Z, 0, relativeForce, scaleByMass, applyToChildren);
 		}
 
 		#endregion
@@ -1625,7 +1626,7 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -1645,7 +1646,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			int handle = Handle;
+			var handle = Handle;
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{
@@ -1688,7 +1689,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same entity as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Entity left, Entity right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="Entity"/>s don't refer to the same entity.

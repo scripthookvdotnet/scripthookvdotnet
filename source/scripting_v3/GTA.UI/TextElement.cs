@@ -176,10 +176,7 @@ namespace GTA.UI
 		/// </value>
 		public string Caption
 		{
-			get
-			{
-				return _caption;
-			}
+			get => _caption;
 			set
 			{
 				_caption = value;
@@ -191,8 +188,8 @@ namespace GTA.UI
 
 				SHVDN.NativeFunc.PushLongString(value, (string str) =>
 				{
-					byte[] data = Encoding.UTF8.GetBytes(str + "\0");
-					IntPtr next = Marshal.AllocCoTaskMem(data.Length);
+					var data = Encoding.UTF8.GetBytes(str + "\0");
+					var next = Marshal.AllocCoTaskMem(data.Length);
 					Marshal.Copy(data, 0, next, data.Length);
 					_pinnedText.Add(next);
 				});
@@ -248,10 +245,7 @@ namespace GTA.UI
 		/// </value>
 		public bool Centered
 		{
-			get
-			{
-				return Alignment == Alignment.Center;
-			}
+			get => Alignment == Alignment.Center;
 			set
 			{
 				if (value)
@@ -270,12 +264,12 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-				foreach (IntPtr ptr in _pinnedText)
+				foreach (var ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
 
-				Function.Call(Hash.SET_TEXT_FONT, Font);
+				Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
 				return Screen.Width * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -290,12 +284,12 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-				foreach (IntPtr ptr in _pinnedText)
+				foreach (var ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
 
-				Function.Call(Hash.SET_TEXT_FONT, Font);
+				Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 				Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
 				return Screen.ScaledWidth * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -306,8 +300,8 @@ namespace GTA.UI
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
-		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
-		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
+		/// <param name="font">The <see cref="GTA.UI.Font"/> of the texture to measure.</param>
+		/// <param name="scale">Sets a scale value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled on a 1280 pixel width base
 		/// </returns>
@@ -315,7 +309,7 @@ namespace GTA.UI
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(text);
-			Function.Call(Hash.SET_TEXT_FONT, font);
+			Function.Call(Hash.SET_TEXT_FONT, (int)font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
 			return Screen.Width * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -324,8 +318,8 @@ namespace GTA.UI
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
-		/// <param name="font">The <see cref="GTA.UI.Font"/> of the textu to measure.</param>
-		/// <param name="scale">Sets a sclae value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
+		/// <param name="font">The <see cref="GTA.UI.Font"/> of the texture to measure.</param>
+		/// <param name="scale">Sets a scale value for increasing or decreasing the size of the text, default value 1.0f - no scaling.</param>
 		/// <returns>
 		/// The amount of pixels scaled by the pixel width base return in <see cref="Screen.ScaledWidth"/>
 		/// </returns>
@@ -333,7 +327,7 @@ namespace GTA.UI
 		{
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(text);
-			Function.Call(Hash.SET_TEXT_FONT, font);
+			Function.Call(Hash.SET_TEXT_FONT, (int)font);
 			Function.Call(Hash.SET_TEXT_SCALE, scale, scale);
 
 			return Screen.ScaledWidth * Function.Call<float>(Hash.END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, 1);
@@ -417,9 +411,9 @@ namespace GTA.UI
 				return;
 			}
 
-			float x = (Position.X + offset.Width) / screenWidth;
-			float y = (Position.Y + offset.Height) / screenHeight;
-			float w = WrapWidth / screenWidth;
+			var x = (Position.X + offset.Width) / screenWidth;
+			var y = (Position.Y + offset.Height) / screenHeight;
+			var w = WrapWidth / screenWidth;
 
 			if (Shadow)
 			{
@@ -430,10 +424,10 @@ namespace GTA.UI
 				Function.Call(Hash.SET_TEXT_OUTLINE);
 			}
 
-			Function.Call(Hash.SET_TEXT_FONT, Font);
+			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
-			Function.Call(Hash.SET_TEXT_JUSTIFICATION, Alignment);
+			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
 
 			if (WrapWidth > 0.0f)
 			{
@@ -457,7 +451,7 @@ namespace GTA.UI
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-			foreach (IntPtr ptr in _pinnedText)
+			foreach (var ptr in _pinnedText)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 			}

@@ -22,16 +22,12 @@ namespace GTA.NaturalMotion
 		}
 		T GetHelper<T>(string message) where T : CustomHelper
 		{
-			CustomHelper h;
+			if (_helperCache.TryGetValue(message, out var cachedHelper)) return (T)cachedHelper;
 
-			if (!_helperCache.TryGetValue(message, out h))
-			{
-				h = (CustomHelper)Activator.CreateInstance(typeof(T), _ped);
+			var newHelper = (CustomHelper)Activator.CreateInstance(typeof(T), _ped);
+			_helperCache.Add(message, newHelper);
 
-				_helperCache.Add(message, h);
-			}
-
-			return (T)h;
+			return (T)newHelper;
 		}
 
 		/// <summary>

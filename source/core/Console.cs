@@ -25,10 +25,10 @@ namespace SHVDN
 		int currentPage = 1;
 		bool isOpen = false;
 		string input = string.Empty;
-		List<string> lineHistory = new List<string>();
+		List<string> lineHistory = new();
 		List<string> commandHistory; // This must be set via CommandHistory property
-		ConcurrentQueue<string[]> outputQueue = new ConcurrentQueue<string[]>();
-		Dictionary<string, List<ConsoleCommand>> commands = new Dictionary<string, List<ConsoleCommand>>();
+		ConcurrentQueue<string[]> outputQueue = new();
+		Dictionary<string, List<ConsoleCommand>> commands = new();
 		int lastClosedTickCount;
 		bool shouldBlockControls;
 		Task<MethodInfo> compilerTask;
@@ -61,11 +61,10 @@ namespace SHVDN
 			{
 				isOpen = value;
 				DisableControlsThisFrame();
-				if (!isOpen)
-				{
-					lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
-					shouldBlockControls = true;
-				}				
+				if (isOpen) return;
+
+				lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
+				shouldBlockControls = true;
 			}
 		}
 
@@ -120,15 +119,14 @@ namespace SHVDN
 		{
 			foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
 			{
-				string space = method.DeclaringType.FullName;
+				var space = method.DeclaringType.FullName;
 
-				if (commands.ContainsKey(space))
-				{
-					commands[space].RemoveAll(x => x.MethodInfo == method);
+				if (!commands.TryGetValue(space, out var command)) continue;
 
-					if (commands[space].Count == 0)
-						commands.Remove(space);
-				}
+				command.RemoveAll(x => x.MethodInfo == method);
+
+				if (command.Count == 0)
+					commands.Remove(space);
 			}
 		}
 
@@ -149,7 +147,7 @@ namespace SHVDN
 		/// <param name="color">The color of those lines.</param>
 		void AddLines(string prefix, string[] messages, string color)
 		{
-			for (int i = 0; i < messages.Length; i++) // Add proper styling
+			for (var i = 0; i < messages.Length; i++) // Add proper styling
 				messages[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {color}{messages[i]}";
 
 			outputQueue.Enqueue(messages);
@@ -171,7 +169,7 @@ namespace SHVDN
 		/// </summary>
 		void AddClipboardContent()
 		{
-			string text = Clipboard.GetText();
+			var text = Clipboard.GetText();
 			text = text.Replace("\n", string.Empty); // TODO Keep this?
 
 			AddToInput(text);
@@ -233,7 +231,7 @@ namespace SHVDN
 		/// </summary>
 		internal void PrintHelpText()
 		{
-			StringBuilder help = new StringBuilder();
+			var help = new StringBuilder();
 			foreach (var space in commands.Keys)
 			{
 				help.AppendLine($"[{space}]");
@@ -263,11 +261,9 @@ namespace SHVDN
 			{
 				foreach (var command in commands[space])
 				{
-					if (command.Name == commandName)
-					{
-						PrintInfo(command.Name + ": " + command.Help);
-						return;
-					}
+					if (command.Name != commandName) continue;
+					PrintInfo(command.Name + ": " + command.Help);
+					return;
 				}
 			}
 		}
@@ -277,7 +273,7 @@ namespace SHVDN
 		/// </summary>
 		internal void DoTick()
 		{
-			int nowTickCount = Environment.TickCount;
+			var nowTickCount = Environment.TickCount;
 
 			// Execute compiled input line script
 			if (compilerTask != null && compilerTask.IsCompleted)
@@ -303,8 +299,8 @@ namespace SHVDN
 			}
 
 			// Add lines from concurrent queue to history
-			if (outputQueue.TryDequeue(out string[] lines))
-				foreach (string line in lines)
+			if (outputQueue.TryDequeue(out var lines))
+				foreach (var line in lines)
 					lineHistory.Add(line);
 
 			if (!IsOpen)
@@ -343,14 +339,14 @@ namespace SHVDN
 			// Draw blinking cursor
 			if (nowTickCount % 1000 < 500)
 			{
-				float length = GetTextLength(input.Substring(0, cursorPos));
-				DrawText(25 + (length * CONSOLE_WIDTH) - 4, CONSOLE_HEIGHT, "~w~~h~|~w~", InputColor);
+				var lengthBetweenInputStartAndCursor = GetTextLength(input.Substring(0, cursorPos)) - GetMarginLength();
+				DrawRect(26 + (lengthBetweenInputStartAndCursor * CONSOLE_WIDTH), CONSOLE_HEIGHT + 2, 2, INPUT_HEIGHT - 4, Color.White);
 			}
 
 			// Draw console history text
-			int historyOffset = lineHistory.Count - (LINES_PER_PAGE * currentPage);
-			int historyLength = historyOffset + LINES_PER_PAGE;
-			for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
+			var historyOffset = lineHistory.Count - (LINES_PER_PAGE * currentPage);
+			var historyLength = historyOffset + LINES_PER_PAGE;
+			for (var i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
 			{
 				DrawText(2, (float)((i - historyOffset) * 14), lineHistory[i], OutputColor);
 			}
@@ -381,10 +377,13 @@ namespace SHVDN
 			switch (e.KeyCode)
 			{
 				case Keys.Back:
-					RemoveCharLeft();
+					if (e.Alt)
+						BackwardKillWord();
+					else
+						BackwardDeleteChar();
 					break;
 				case Keys.Delete:
-					RemoveCharRight();
+					ForwardDeleteChar();
 					break;
 				case Keys.Left:
 					if (e.Control)
@@ -397,6 +396,10 @@ namespace SHVDN
 						ForwardWord();
 					else
 						MoveCursorRight();
+					break;
+				case Keys.Insert:
+					if (e.Shift)
+						AddClipboardContent();
 					break;
 				case Keys.Home:
 					MoveCursorToBegOfLine();
@@ -425,8 +428,10 @@ namespace SHVDN
 						goto default;
 					break;
 				case Keys.D:
-					if (e.Control)
-						RemoveCharRight();
+					if (e.Alt)
+						KillWord();
+					else if (e.Control)
+						ForwardDeleteChar();
 					else
 						goto default;
 					break;
@@ -440,7 +445,7 @@ namespace SHVDN
 					break;
 				case Keys.H:
 					if (e.Control)
-						RemoveCharLeft();
+						BackwardDeleteChar();
 					else
 						goto default;
 					break;
@@ -464,7 +469,13 @@ namespace SHVDN
 					break;
 				case Keys.K:
 					if (e.Control)
-						RemoveAllCharsRight();
+						BackwardKillLine();
+					else
+						goto default;
+					break;
+				case Keys.M:
+					if (e.Control)
+						CompileExpression();
 					else
 						goto default;
 					break;
@@ -481,20 +492,28 @@ namespace SHVDN
 						goto default;
 					break;
 				case Keys.T:
-					if (e.Control)
+					if (e.Alt)
+						TransposeTwoWords();
+					else if (e.Control)
 						TransposeTwoChars();
 					else
 						goto default;
 					break;
 				case Keys.U:
 					if (e.Control)
-						RemoveAllCharsLeft();
+						KillLine();
 					else
 						goto default;
 					break;
 				case Keys.V:
 					if (e.Control)
 						AddClipboardContent();
+					else
+						goto default;
+					break;
+				case Keys.W:
+					if (e.Control)
+						UnixWordRubout();
 					else
 						goto default;
 					break;
@@ -542,49 +561,167 @@ namespace SHVDN
 			cursorPos = input.Length;
 		}
 
+		/// <summary>
+		/// Moves to the end of the next word, just like emacs and GNU readline (does not move to the beginning of the next word like zsh does for forward-word).
+		/// Words are composed of letters and digits.
+		/// </summary>
 		void ForwardWord()
 		{
-			var regex = new Regex(@"[^\W_]+");
-			Match match = regex.Match(input, cursorPos);
-			cursorPos = match.Success ? match.Index + match.Length : input.Length;
+			if (cursorPos >= input.Length)
+			{
+				return;
+			}
+
+			// Note: Char.IsLetterOrDigit returns true for most characters where iswalnum returns true in Windows (exactly same result in the ASCII range), but does not apply for all of them
+			// bash (GNU readline) and zsh use iswalnum (zsh uses iswalnum only if tested char is a non-ASCII one) to detect if characters can be used as words for your information
+			if (!char.IsLetterOrDigit(input[cursorPos]))
+			{
+				cursorPos++;
+				for (; cursorPos < input.Length; cursorPos++)
+				{
+					if (char.IsLetterOrDigit(input[cursorPos]))
+					{
+						break;
+					}
+				}
+			}
+
+			for (; cursorPos < input.Length; cursorPos++)
+			{
+				if (!char.IsLetterOrDigit(input[cursorPos]))
+				{
+					break;
+				}
+			}
 		}
+		/// <summary>
+		/// Moves back to the start of the current or previous word.
+		/// Words are composed of letters and digits.
+		/// </summary>
 		void BackwardWord()
 		{
-			var regex = new Regex(@"[^\W_]+");
-			MatchCollection matches = regex.Matches(input);
-			cursorPos = matches.Cast<Match>().Where(x => x.Index < cursorPos).Select(x => x.Index).LastOrDefault();
-		}
-		void RemoveCharLeft()
-		{
-			if (input.Length > 0 && cursorPos > 0)
+			if (cursorPos == 0)
 			{
-				input = input.Remove(cursorPos - 1, 1);
+				return;
+			}
+
+			var prevChar = input[cursorPos - 1];
+			if (!char.IsLetterOrDigit(prevChar))
+			{
 				cursorPos--;
+				for (; cursorPos > 0; cursorPos--)
+				{
+					prevChar = input[cursorPos - 1];
+					if (char.IsLetterOrDigit(prevChar))
+					{
+						break;
+					}
+				}
+			}
+
+			for (; cursorPos > 0; cursorPos--)
+			{
+				prevChar = input[cursorPos - 1];
+				if (!char.IsLetterOrDigit(prevChar))
+				{
+					break;
+				}
 			}
 		}
-		void RemoveCharRight()
+		/// <summary>
+		/// Deletes the character behind the cursor.
+		/// </summary>
+		void BackwardDeleteChar()
 		{
-			if (input.Length > 0 && cursorPos < input.Length)
-			{
-				input = input.Remove(cursorPos, 1);
-			}
+			if (input.Length <= 0 || cursorPos <= 0) return;
+			input = input.Remove(cursorPos - 1, 1);
+			cursorPos--;
 		}
-		void RemoveAllCharsLeft()
+		/// <summary>
+		/// Deletes the character at point.
+		/// </summary>
+		void ForwardDeleteChar()
 		{
-			if (input.Length > 0 && cursorPos > 0)
-			{
-				input = input.Remove(0, cursorPos);
-				cursorPos = 0;
-			}
-		}
-		void RemoveAllCharsRight()
-		{
-			if (input.Length > 0 && cursorPos < input.Length)
-			{
-				input = input.Remove(cursorPos, input.Length - cursorPos);
-			}
+			if (input.Length <= 0 || cursorPos >= input.Length) return;
+			input = input.Remove(cursorPos, 1);
 		}
 
+		/// <summary>
+		/// Kills the text from the cursor to the end of the line.
+		/// </summary>
+		void KillLine()
+		{
+			if (input.Length <= 0 || cursorPos <= 0) return;
+			KillText(ref input, 0, cursorPos);
+			cursorPos = 0;
+		}
+		/// <summary>
+		/// Kills backward from the cursor to the beginning of the current line.
+		/// </summary>
+		void BackwardKillLine()
+		{
+			if (input.Length <= 0 || cursorPos >= input.Length) return;
+			KillText(ref input, cursorPos, input.Length - cursorPos);
+		}
+		/// <summary>
+		/// Kills from point to the end of the current word, or if between words, to the end of the next word.
+		/// Word boundaries are the same as <see cref="ForwardWord"/>.
+		/// </summary>
+		void KillWord()
+		{
+			var origCursorPos = cursorPos;
+			ForwardWord();
+
+			if (cursorPos == origCursorPos) return;
+			KillText(ref input, origCursorPos, cursorPos - origCursorPos);
+			cursorPos = origCursorPos;
+		}
+		/// <summary>
+		/// Kill the word behind the cursor.
+		/// Word boundaries are the same as <see cref="BackwardWord"/>.
+		/// </summary>
+		void BackwardKillWord()
+		{
+			var origCursorPos = cursorPos;
+			BackwardWord();
+
+			if (cursorPos == origCursorPos) return;
+			KillText(ref input, cursorPos, origCursorPos - cursorPos);
+		}
+		/// <summary>
+		/// Kills the word behind the cursor, using white space as a word boundary.
+		/// </summary>
+		void UnixWordRubout()
+		{
+			if (cursorPos == 0)
+			{
+				return;
+			}
+
+			var origCursorPos = cursorPos;
+
+			while (cursorPos > 0 && IsRegularWhiteSpaceOrTab(input[cursorPos - 1]))
+			{
+				cursorPos--;
+			}
+
+
+			while (cursorPos > 0 && !IsRegularWhiteSpaceOrTab(input[cursorPos - 1]))
+			{
+				cursorPos--;
+			}
+
+
+			KillText(ref input, cursorPos, origCursorPos - cursorPos);
+
+			// yields exactly the same result as a internal "whitespace" function in bash
+			static bool IsRegularWhiteSpaceOrTab(char ch) => ch == ' ' || ch == '\t';
+		}
+
+		/// <summary>
+		/// Drags the character before the cursor forward over the character at the cursor, moving the cursor forward as well.
+		/// If the insertion point is at the end of the line, then this transposes the last two characters of the line.
+		/// </summary>
 		void TransposeTwoChars()
 		{
 			var inputLength = input.Length;
@@ -614,12 +751,61 @@ namespace SHVDN
 				{
 					fixed (char* stringPtr = str)
 					{
-						char tmp = stringPtr[index];
+						var tmp = stringPtr[index];
 						stringPtr[index] = stringPtr[index + 1];
 						stringPtr[index + 1] = tmp;
 					}
 				}
 			}
+		}
+		/// <summary>
+		/// Drags the word before point past the word after point, moving point past that word as well.
+		/// If the insertion point is at the end of the line, this transposes the last two words on the line.
+		/// </summary>
+		void TransposeTwoWords()
+		{
+			if (input.Length < 3)
+			{
+				return;
+			}
+
+			var origCursorPos = cursorPos;
+
+			ForwardWord();
+			var word2End = cursorPos;
+			BackwardWord();
+			var word2Beg = cursorPos;
+			BackwardWord();
+			var word1Beg = cursorPos;
+			ForwardWord();
+			var word1End = cursorPos;
+
+			if ((word1Beg == word2Beg) || (word2Beg < word1End))
+			{
+				cursorPos = origCursorPos;
+				return;
+			}
+
+			var word1 = input.Substring(word1Beg, word1End - word1Beg);
+			var word2 = input.Substring(word2Beg, word2End - word2Beg);
+
+			var stringBuilder = new StringBuilder(input.Length + Math.Max((word1.Length - word2.Length), 0)); // Prevent reallocation of internal array
+			stringBuilder.Append(input);
+
+			stringBuilder.Remove(word2Beg, word2.Length);
+			stringBuilder.Insert(word2Beg, word1);
+
+			stringBuilder.Remove(word1Beg, word1.Length);
+			stringBuilder.Insert(word1Beg, word2);
+
+			input = stringBuilder.ToString();
+			cursorPos = word2End;
+		}
+
+		void KillText(ref string str, int startIndex, int length)
+		{
+			Clipboard.SetText(str.Substring(startIndex, length));
+			str = str.Remove(startIndex, length);
 		}
 
 		void MoveCursorLeft()
@@ -673,32 +859,30 @@ namespace SHVDN
 					// Define some shortcut variables to simplify commands
 					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.Player.Character; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
-				System.CodeDom.Compiler.CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
+				var compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
 				if (!compilerResult.Errors.HasErrors)
 				{
 					return compilerResult.CompiledAssembly.GetType("ConsoleInput").GetMethod("Execute");
 				}
-				else
+
+				PrintError($"Couldn't compile input expression: {input}");
+
+				var errors = new StringBuilder();
+
+				for (var i = 0; i < compilerResult.Errors.Count; ++i)
 				{
-					PrintError($"Couldn't compile input expression: {input}");
+					errors.Append("   at line ");
+					errors.Append(compilerResult.Errors[i].Line);
+					errors.Append(": ");
+					errors.Append(compilerResult.Errors[i].ErrorText);
 
-					StringBuilder errors = new StringBuilder();
-
-					for (int i = 0; i < compilerResult.Errors.Count; ++i)
-					{
-						errors.Append("   at line ");
-						errors.Append(compilerResult.Errors[i].Line);
-						errors.Append(": ");
-						errors.Append(compilerResult.Errors[i].ErrorText);
-
-						if (i < compilerResult.Errors.Count - 1)
-							errors.AppendLine();
-					}
-
-					PrintError(errors.ToString());
-					return null;
+					if (i < compilerResult.Errors.Count - 1)
+						errors.AppendLine();
 				}
+
+				PrintError(errors.ToString());
+				return null;
 			});
 		}
 
@@ -709,8 +893,8 @@ namespace SHVDN
 
 		static unsafe void DrawRect(float x, float y, int width, int height, Color color)
 		{
-			float w = (float)(width) / BASE_WIDTH;
-			float h = (float)(height) / BASE_HEIGHT;
+			var w = (float)(width) / BASE_WIDTH;
+			var h = (float)(height) / BASE_HEIGHT;
 
 			NativeFunc.InvokeInternal(0x3A618A217E5154F0ul /* DRAW_RECT */,
 				(x / BASE_WIDTH) + w * 0.5f,
@@ -724,7 +908,7 @@ namespace SHVDN
 			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
 			NativeFunc.InvokeInternal(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
 			NativeFunc.InvokeInternal(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
-			NativeFunc.PushLongString(text);
+			NativeFunc.PushLongString(text, 99);
 			NativeFunc.InvokeInternal(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BASE_WIDTH), (y / BASE_HEIGHT));
 		}
 
@@ -742,8 +926,15 @@ namespace SHVDN
 			NativeFunc.InvokeInternal(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
 			NativeFunc.InvokeInternal(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
 			NativeFunc.InvokeInternal(0x54CE8AC98E120CAB /* BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
-			NativeFunc.PushLongString(text);
+			NativeFunc.PushLongString(text, 98); // 99 byte string chunks don't process properly in END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT
 			return *(float*)NativeFunc.InvokeInternal(0x85F061DA64ED2F67 /* END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, true);
+		}
+
+		static float GetMarginLength()
+		{
+			var len1 = GetTextLength("A");
+			var len2 = GetTextLength("AA");
+			return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
 		}
 	}
 

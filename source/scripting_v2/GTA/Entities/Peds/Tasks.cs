@@ -126,7 +126,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_FLUSH_ROUTE);
 
-			foreach (Vector3 point in points)
+			foreach (var point in points)
 			{
 				Function.Call(Hash.TASK_EXTEND_ROUTE, point.X, point.Y, point.Z);
 			}
@@ -261,7 +261,7 @@ namespace GTA
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
-			int startTime = Environment.TickCount;
+			var startTime = Environment.TickCount;
 
 			while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, animDict))
 			{

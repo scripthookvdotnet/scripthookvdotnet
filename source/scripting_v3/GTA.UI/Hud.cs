@@ -19,7 +19,7 @@ namespace GTA.UI
 		/// <returns><see langword="true" /> if the <see cref="HudComponent"/> is active; otherwise, <see langword="false" /></returns>
 		public static bool IsComponentActive(HudComponent component)
 		{
-			return Function.Call<bool>(Hash.IS_HUD_COMPONENT_ACTIVE, component);
+			return Function.Call<bool>(Hash.IS_HUD_COMPONENT_ACTIVE, (int)component);
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace GTA.UI
 		///<remarks>This will only draw the <see cref="HudComponent"/> if the <see cref="HudComponent"/> can be drawn</remarks>
 		public static void ShowComponentThisFrame(HudComponent component)
 		{
-			Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, component);
+			Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, (int)component);
 		}
 		/// <summary>
 		/// Hides the specified <see cref="HudComponent"/> this frame.
@@ -37,7 +37,7 @@ namespace GTA.UI
 		/// <param name="component">The <see cref="HudComponent"/> to hide.</param>
 		public static void HideComponentThisFrame(HudComponent component)
 		{
-			Function.Call(Hash.HIDE_HUD_COMPONENT_THIS_FRAME, component);
+			Function.Call(Hash.HIDE_HUD_COMPONENT_THIS_FRAME, (int)component);
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace GTA.UI
 		public static CursorSprite CursorSprite
 		{
 			get => (CursorSprite)SHVDN.NativeMemory.CursorSprite;
-			set => Function.Call(Hash.SET_MOUSE_CURSOR_STYLE, value);
+			set => Function.Call(Hash.SET_MOUSE_CURSOR_STYLE, (int)value);
 		}
 
 		/// <summary>

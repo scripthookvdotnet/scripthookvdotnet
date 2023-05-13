@@ -53,15 +53,15 @@ namespace GTA
 
 		public void GetDimensions(out Vector3 minimum, out Vector3 maximum)
 		{
-			var outmin = new OutputArgument();
-			var outmax = new OutputArgument();
-			Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, outmin, outmax);
-			minimum = outmin.GetResult<Vector3>();
-			maximum = outmax.GetResult<Vector3>();
+			var outMin = new OutputArgument();
+			var outMax = new OutputArgument();
+			Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, outMin, outMax);
+			minimum = outMin.GetResult<Vector3>();
+			maximum = outMax.GetResult<Vector3>();
 		}
 		public Vector3 GetDimensions()
 		{
-			GetDimensions(out Vector3 min, out Vector3 max);
+			GetDimensions(out var min, out var max);
 			return Vector3.Subtract(max, min);
 		}
 
@@ -73,8 +73,8 @@ namespace GTA
 		{
 			Request();
 
-			int startTime = Environment.TickCount;
-			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			var startTime = Environment.TickCount;
+			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{
@@ -155,7 +155,7 @@ namespace GTA
 
 		public override string ToString()
 		{
-			return "0x" + Hash.ToString("X");
+			return $"0x{Hash.ToString("X")}";
 		}
 	}
 }

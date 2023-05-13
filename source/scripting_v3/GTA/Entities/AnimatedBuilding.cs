@@ -8,6 +8,9 @@ using System;
 
 namespace GTA
 {
+	/// <summary>
+	/// Represents a interior proxy, which is for <c>CAnimatedBuilding</c>.
+	/// </summary>
 	public class AnimatedBuilding : IExistable
 	{
 		internal AnimatedBuilding(int handle)
@@ -173,7 +176,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same entity as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(AnimatedBuilding left, AnimatedBuilding right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="AnimatedBuilding"/>s don't refer to the same entity.

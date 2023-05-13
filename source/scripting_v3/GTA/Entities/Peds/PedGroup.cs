@@ -89,7 +89,7 @@ namespace GTA
 
 		public Formation Formation
 		{
-			set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, value);
+			set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, (int)value);
 		}
 
 		public void Add(Ped ped, bool leader)
@@ -110,15 +110,15 @@ namespace GTA
 		{
 			get
 			{
-				var ped = new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle));
-				return ped.Exists() ? ped : null;
+				var handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle);
+				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
 
 		public Ped GetMember(int index)
 		{
-			var ped = new Ped(Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index));
-			return ped.Exists() ? ped : null;
+			var handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index);
+			return handle != 0 ? new Ped(handle) : null;
 		}
 
 		public Ped[] ToArray(bool includingLeader = true)
@@ -134,7 +134,7 @@ namespace GTA
 
 			if (includingLeader)
 			{
-				Ped leader = Leader;
+				var leader = Leader;
 
 				if (leader != null)
 				{
@@ -142,9 +142,9 @@ namespace GTA
 				}
 			}
 
-			for (int i = 0; i < memberCount; i++)
+			for (var i = 0; i < memberCount; i++)
 			{
-				Ped member = GetMember(i);
+				var member = GetMember(i);
 
 				if (member != null)
 				{
@@ -195,7 +195,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same group as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(PedGroup left, PedGroup right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="PedGroup"/>s don't refer to the same group.

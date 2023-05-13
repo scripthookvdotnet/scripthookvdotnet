@@ -30,7 +30,7 @@ namespace GTA
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.GET_PLAYER_PED, Handle);
+				var handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
 
 				if (ped == null || handle != ped.Handle)
 				{
@@ -195,10 +195,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_PLAYER_CAN_USE_COVER, Handle, value);
 		}
 
-		public bool CanStartMission
-		{
-			get => Function.Call<bool>(Hash.CAN_PLAYER_START_MISSION, Handle);
-		}
+		public bool CanStartMission => Function.Call<bool>(Hash.CAN_PLAYER_START_MISSION, Handle);
 
 		public bool CanControlRagdoll
 		{
@@ -243,7 +240,7 @@ namespace GTA
 
 		public Entity GetTargetedEntity()
 		{
-			int entity = 0;
+			var entity = 0;
 			unsafe
 			{
 				if (Function.Call<bool>(Hash._GET_AIMED_ENTITY, Handle, &entity))
@@ -309,16 +306,16 @@ namespace GTA
 
 		public bool Equals(Player obj)
 		{
-			return !(obj is null) && Handle == obj.Handle;
+			return obj is not null && Handle == obj.Handle;
 		}
 		public override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((Player)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((Player)obj);
 		}
 
 		public static bool operator ==(Player left, Player right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(Player left, Player right)
 		{

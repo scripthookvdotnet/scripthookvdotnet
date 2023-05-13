@@ -18,10 +18,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the multiplier value that incidates how fast the submarine rotates in the pitch axis (local x-axis).
+		/// Gets or sets the multiplier value that indicates how fast the submarine rotates in the pitch axis (local x-axis).
 		/// </summary>
 		/// <value>
-		/// The multiplier value that incidates how fast the submarine rotates in the pitch axis (local x-axis).
+		/// The multiplier value that indicates how fast the submarine rotates in the pitch axis (local x-axis).
 		/// </value>
 		public float PitchMultiplier
 		{
@@ -45,10 +45,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the maximum angle in degrees that incidates how much the submarine can rotate in the pitch axis (local x-axis).
+		/// Gets or sets the maximum angle in degrees that indicates how much the submarine can rotate in the pitch axis (local x-axis).
 		/// </summary>
 		/// <value>
-		/// The multiplier value that incidates how much the submarine can rotate in the pitch axis (local x-axis).
+		/// The multiplier value that indicates how much the submarine can rotate in the pitch axis (local x-axis).
 		/// </value>
 		public float PitchAngle
 		{
@@ -72,10 +72,10 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// Gets or sets the multiplier value that incidates how much the submarine can rotate in the yaw axis (local z-axis).
+		/// Gets or sets the multiplier value that indicates how much the submarine can rotate in the yaw axis (local z-axis).
 		/// </summary>
 		/// <value>
-		/// The multiplier value that incidates how much the submarine can rotate in the yaw axis (local z-axis).
+		/// The multiplier value that indicates how much the submarine can rotate in the yaw axis (local z-axis).
 		/// </value>
 		public float YawMultiplier
 		{
@@ -149,7 +149,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if <paramref name="left"/> is the same submarine handling data as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(SubmarineHandlingData left, SubmarineHandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
 		/// Determines if two <see cref="SubmarineHandlingData"/>s don't refer to the submarine handling data.

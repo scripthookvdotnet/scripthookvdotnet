@@ -42,9 +42,9 @@ namespace GTA.UI
 		/// You should use <see cref="ChaletComprimeCologneNotGamerName"/> if you want to draw strings with condensed font if possible but strings can contain some CJK characters (e.g. localized strings from gxt files).
 		/// </para>
 		/// <para>
-		/// The native functions for text drawing will use the condensed font Chalet Comprim? Cologne 1960 regardness of the game language setting.
+		/// The native functions for text drawing will use the condensed font Chalet Comprimé Cologne 1960 regardless of the game language setting.
 		/// The natives will draw strings that contain only non-CJK characters without any trouble,
-		/// but without having custom font files installed, the natives will draw rectangles (a.k.a. tofus) instead of CJK characters because Chalet Comprim? Cologne 1960 doesn't contain any CJK characters.
+		/// but without having custom font files installed, the natives will draw rectangles (a.k.a. tofus) instead of CJK characters because Chalet Comprimé Cologne 1960 doesn't contain any CJK characters.
 		/// </para>
 		/// <para>This font style specifies the same font unless the player have custom font files installed.</para>
 		/// </summary>

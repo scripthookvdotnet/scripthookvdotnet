@@ -15,14 +15,14 @@ namespace GTA
 		public class enumerator : IEnumerator<Ped>
 		{
 			#region Fields
-			int index;
-			readonly PedGroup group;
+			int _index;
+			readonly PedGroup _group;
 			#endregion
 
 			public enumerator(PedGroup group)
 			{
-				index = -2;
-				this.group = group;
+				_index = -2;
+				this._group = group;
 			}
 
 			public virtual Ped Current
@@ -49,19 +49,16 @@ namespace GTA
 
 			public virtual bool MoveNext()
 			{
-				if (index++ < (group.MemberCount - 1))
+				while (true)
 				{
-					Current = index < 0 ? group.Leader : group.GetMember(index);
+					if (_index++ >= (_group.MemberCount - 1)) return false;
+					Current = _index < 0 ? _group.Leader : _group.GetMember(_index);
 
 					if (Entity.Exists(Current))
 					{
 						return true;
 					}
-
-					return MoveNext();
 				}
-
-				return false;
 			}
 		}
 
@@ -95,9 +92,10 @@ namespace GTA
 		{
 			get
 			{
-				int count, val1;
+				int count;
 				unsafe
 				{
+					int val1;
 					Function.Call(Hash.GET_GROUP_SIZE, Handle, &val1, &count);
 				}
 				return count;
@@ -145,7 +143,7 @@ namespace GTA
 
 			if (includingLeader)
 			{
-				Ped leader = Leader;
+				var leader = Leader;
 
 				if (Entity.Exists(leader))
 				{
@@ -153,9 +151,9 @@ namespace GTA
 				}
 			}
 
-			for (int i = 0; i < MemberCount; i++)
+			for (var i = 0; i < MemberCount; i++)
 			{
-				Ped member = GetMember(i);
+				var member = GetMember(i);
 
 				if (Entity.Exists(member))
 				{
@@ -177,16 +175,16 @@ namespace GTA
 
 		public bool Equals(PedGroup obj)
 		{
-			return !(obj is null) && Handle == obj.Handle;
+			return obj is not null && Handle == obj.Handle;
 		}
 		public override bool Equals(object obj)
 		{
-			return !(obj is null) && obj.GetType() == GetType() && Equals((PedGroup)obj);
+			return obj is not null && obj.GetType() == GetType() && Equals((PedGroup)obj);
 		}
 
 		public static bool operator ==(PedGroup left, PedGroup right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(PedGroup left, PedGroup right)
 		{

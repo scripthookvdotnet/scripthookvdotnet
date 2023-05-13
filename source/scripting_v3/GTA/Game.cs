@@ -6,6 +6,7 @@
 using GTA.Native;
 using System;
 using System.Globalization;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GTA
@@ -73,7 +74,7 @@ namespace GTA
 		{
 			get
 			{
-				int handle = Function.Call<int>(Hash.PLAYER_ID);
+				var handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
@@ -87,7 +88,7 @@ namespace GTA
 		/// <summary>
 		/// Gets the blip of the <see cref="GTA.Player"/> that you are controlling.
 		/// </summary>
-		public static Blip PlayerBlip => new Blip(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
+		public static Blip PlayerBlip => new(Function.Call<int>(Hash.GET_MAIN_PLAYER_BLIP_ID));
 
 		/// <summary>
 		/// Gets the north blip, which is shown on the radar.
@@ -171,9 +172,9 @@ namespace GTA
 		{
 			get
 			{
-				string radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
+				var radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
 
-				if (String.IsNullOrEmpty(radioName))
+				if (string.IsNullOrEmpty(radioName))
 				{
 					return RadioStation.RadioOff;
 				}
@@ -219,7 +220,7 @@ namespace GTA
 		/// </summary>
 		public static void UnlockAllRadioStations()
 		{
-			foreach (string station in radioNames)
+			foreach (var station in radioNames)
 			{
 				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
 			}
@@ -364,7 +365,7 @@ namespace GTA
 
 			uint hash = 0;
 
-			foreach (Button button in buttons)
+			foreach (var button in buttons)
 			{
 				hash += (uint)button;
 				hash += (hash << 10);
@@ -400,7 +401,7 @@ namespace GTA
 		/// <returns>The <see cref="Control"/> value.</returns>
 		public static int GetControlValue(Control control)
 		{
-			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, control);
+			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
@@ -409,7 +410,7 @@ namespace GTA
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
 		public static float GetControlValueNormalized(Control control)
 		{
-			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, control);
+			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets an analog value of a disabled <see cref="Control"/> input between -1.0f and 1.0f.
@@ -418,7 +419,7 @@ namespace GTA
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
 		public static float GetDisabledControlValueNormalized(Control control)
 		{
-			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, control);
+			return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, (int)control);
 		}
 		/// <summary>
 		/// Override a <see cref="Control"/> by giving it a user-defined value this frame.
@@ -427,7 +428,7 @@ namespace GTA
 		/// <param name="value">the value to set the control to.</param>
 		public static void SetControlValueNormalized(Control control, float value)
 		{
-			Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, control, value);
+			Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, (int)control, value);
 		}
 
 		/// <summary>
@@ -445,7 +446,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsControlPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just pressed this frame
@@ -454,7 +455,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsControlJustPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just released this frame
@@ -463,7 +464,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsControlJustReleased(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, control);
+			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and currently pressed.
@@ -472,7 +473,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
@@ -481,7 +482,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustPressed(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, (int)control);
 		}
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
@@ -490,7 +491,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustReleased(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, (int)control);
 		}
 
 		/// <summary>
@@ -500,7 +501,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is Enabled; otherwise, <see langword="false" /></returns>
 		public static bool IsControlEnabled(Control control)
 		{
-			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, control);
+			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, (int)control);
 		}
 		/// <summary>
 		/// Makes the engine respond to the given <see cref="Control"/> this frame.
@@ -508,7 +509,7 @@ namespace GTA
 		/// <param name="control">The <see cref="Control"/> to enable..</param>
 		public static void EnableControlThisFrame(Control control)
 		{
-			Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, control, true);
+			Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control, true);
 		}
 		/// <summary>
 		/// Makes the engine ignore input from the given <see cref="Control"/> this frame.
@@ -516,7 +517,7 @@ namespace GTA
 		/// <param name="control">The <see cref="Control"/>.</param>
 		public static void DisableControlThisFrame(Control control)
 		{
-			Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, control, true);
+			Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, (int)control, true);
 		}
 		/// <summary>
 		/// Enables all <see cref="Control"/>s this frame.
@@ -540,8 +541,11 @@ namespace GTA
 		/// <param name="input">The input <see cref="string"/> to hash.</param>
 		/// <returns>The Jenkins hash of the input <see cref="string"/>.</returns>
 		/// <remarks>
+		/// <para>Converts ASCII uppercase characters to lowercase ones and backslash characters to slash ones before converting into a hash.</para>
+		/// <para>
 		/// Although the <c>GET_HASH_KEY</c> native compute hash from the substring between two double quotes if the first character is a double quote character,
 		/// This method does not consider such case since no practical occurrences of such edge case are found.
+		/// </para>
 		/// </remarks>
 		public static int GenerateHash(string input)
 		{
@@ -557,7 +561,16 @@ namespace GTA
 		/// Can be called in any thread and performs much faster than <see cref="GenerateHash(string)"/> and the return value will be the same as long as the input contains only ASCII characters.
 		/// </summary>
 		/// <param name="input">The input <see cref="string"/> to hash.</param>
-		/// <remarks>The behavior is undefined except no exception will be thrown if input has some non-ASCII characters.</remarks>
+		/// <remarks>
+		/// <para>Converts uppercase characters to lowercase ones and backslash characters to slash ones before converting into a hash.</para>
+		/// <para>
+		/// Although the <c>GET_HASH_KEY</c> native compute hash from the substring between two double quotes if the first character is a double quote character,
+		/// This method does not consider such case since no practical occurrences of such edge case are found.
+		/// </para>
+		/// <para>
+		/// The behavior is undefined except no exception will be thrown if input has some non-ASCII characters.
+		/// </para>
+		/// </remarks>
 		public static int GenerateHashASCII(string input)
 		{
 			if (string.IsNullOrEmpty(input))
@@ -568,9 +581,9 @@ namespace GTA
 			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCII(input));
 		}
 		/// <summary>
-		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> in the same way as the game converts some config strings in meta files
-		/// (e.g. event names such as <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c> and the game will convert to <c>0xEB92D4DF</c>) except this method expects strictly only ASCII characters
-		/// (although such config strings are not meant to contain non-ASCII ones).
+		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> without pre conversion before hashing.
+		/// This converts strings just like how the RAGE parser converts the strings, which is used for config files such as <c>.meta</c> files.
+		/// For example, <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c>, will be converted into <c>0xEB92D4DF</c>.
 		/// Can be called in any thread.
 		/// </summary>
 		/// <inheritdoc cref="GenerateHashASCII(string)"/>
@@ -623,10 +636,11 @@ namespace GTA
 		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ? ? 44 8B C6 8B D5 8B D8" for example, where ?? and ? are wildcards).</remarks>
 		public static IntPtr FindPattern(string pattern, IntPtr startAddress = default)
 		{
-			string newPattern = string.Empty;
-			string newMask = string.Empty;
+			var rawHexStringsSplitted = pattern.Split(' ');
+			var newPatternBuilder = new StringBuilder(rawHexStringsSplitted.Length);
+			var newMaskBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 
-			foreach (string rawHex in pattern.Split(' '))
+			foreach (var rawHex in rawHexStringsSplitted)
 			{
 				if (string.IsNullOrEmpty(rawHex))
 				{
@@ -635,17 +649,17 @@ namespace GTA
 
 				if (rawHex == "??" || rawHex == "?")
 				{
-					newPattern += "\x00";
-					newMask += "?";
+					newPatternBuilder.Append("\x00");
+					newMaskBuilder.Append("?");
 					continue;
 				}
 
-				char character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
-				newPattern += character;
-				newMask += "x";
+				var character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
+				newPatternBuilder.Append(character);
+				newMaskBuilder.Append("x");
 			}
 
-			return FindPattern(newPattern, newMask, startAddress);
+			return FindPattern(newPatternBuilder.ToString(), newMaskBuilder.ToString(), startAddress);
 		}
 		/// <summary>
 		/// Searches the address space of the current process for a memory pattern.
@@ -659,7 +673,7 @@ namespace GTA
 		{
 			unsafe
 			{
-				byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
+				var address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
 				return address == null ? IntPtr.Zero : new IntPtr(address);
 			}
 		}

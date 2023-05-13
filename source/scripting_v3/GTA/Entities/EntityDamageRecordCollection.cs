@@ -49,13 +49,13 @@ namespace GTA
 			var address = _owner.MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
-				return new EntityDamageRecord[0];
+				return Array.Empty<EntityDamageRecord>();
 			}
 
 			var damageEntries = SHVDN.NativeMemory.GetEntityDamageRecordEntries(address);
 			var returnDamageRecords = new EntityDamageRecord[damageEntries.Length];
 
-			for (int i = 0; i < returnDamageRecords.Length; i++)
+			for (var i = 0; i < returnDamageRecords.Length; i++)
 			{
 				var damageRecord = damageEntries[i];
 				var attackerEntity = damageRecord.attackerEntityHandle != 0 ? Entity.FromHandle(damageRecord.attackerEntityHandle) : null;

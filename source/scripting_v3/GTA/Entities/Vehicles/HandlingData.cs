@@ -1347,7 +1347,7 @@ namespace GTA
 		/// Gets of Sets the multiplier for how much damage a vehicle takes from weapons.
 		/// </summary>
 		/// <value>
-		/// The weapon damage scaling multiplier. 
+		/// The weapon damage scaling multiplier.
 		/// </value>
 		/// <remarks>
 		/// <para>The default value in vanilla handling.meta files is 0.5f.</para>
@@ -1362,7 +1362,8 @@ namespace GTA
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x168);
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
+				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
 			{
@@ -1371,7 +1372,8 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x168, value);
+				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
+				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
 
@@ -1485,11 +1487,11 @@ namespace GTA
 			return SHVDN.NativeMemory.GetSubHandlingData(MemoryAddress, (int)type);
 		}
 
-		static public HandlingData GetByHash(int handlingNameHash)
+		public static HandlingData GetByHash(int handlingNameHash)
 		{
 			return new HandlingData(SHVDN.NativeMemory.GetHandlingDataByHandlingNameHash(handlingNameHash));
 		}
-		static public HandlingData GetByVehicleModel(Model VehicleModel)
+		public static HandlingData GetByVehicleModel(Model VehicleModel)
 		{
 			return new HandlingData(SHVDN.NativeMemory.GetHandlingDataByModelHash(VehicleModel.Hash));
 		}
@@ -1506,7 +1508,7 @@ namespace GTA
 
 		public static bool operator ==(HandlingData left, HandlingData right)
 		{
-			return left is null ? right is null : left.Equals(right);
+			return left?.Equals(right) ?? right is null;
 		}
 		public static bool operator !=(HandlingData left, HandlingData right)
 		{

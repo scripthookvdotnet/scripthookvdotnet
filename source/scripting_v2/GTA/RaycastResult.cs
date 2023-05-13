@@ -32,10 +32,7 @@ namespace GTA
 			get;
 		}
 
-		public bool DitHitEntity
-		{
-			get => HitEntity != null;
-		}
+		public bool DitHitEntity => HitEntity != null;
 
 		public bool DitHitAnything
 		{

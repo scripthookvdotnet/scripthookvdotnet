@@ -5,6 +5,11 @@
 
 namespace GTA
 {
+	/// <summary>
+	/// An enumeration of frequently used driving styles.
+	/// Consider using <see cref="VehicleDrivingFlags"/> since it represents how flags affects how <see cref="Ped"/>s should drive vehicles
+	/// more accurately than this enumeration.
+	/// </summary>
 	public enum DrivingStyle
 	{
 		Normal = 786603,

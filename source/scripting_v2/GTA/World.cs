@@ -33,7 +33,7 @@ namespace GTA
 			"HALLOWEEN"
 		};
 
-		static readonly GregorianCalendar calendar = new GregorianCalendar();
+		static readonly GregorianCalendar calendar = new();
 		#endregion
 
 		#region Time & Day
@@ -118,16 +118,15 @@ namespace GTA
 			}
 			set
 			{
-				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
+				if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown) return;
+				int currentWeatherHash;
+				unsafe
 				{
-					int currentWeatherHash, nextWeatherHash;
+					int nextWeatherHash;
 					float weatherTransition;
-					unsafe
-					{
-						Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
-					}
-					Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, Game.GenerateHash(weatherNames[(int)value]), 0.0f);
+					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 				}
+				Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, currentWeatherHash, Game.GenerateHash(weatherNames[(int)value]), 0.0f);
 			}
 		}
 
@@ -143,10 +142,10 @@ namespace GTA
 		{
 			get
 			{
-				int currentWeatherHash, nextWeatherHash;
 				float weatherTransition;
 				unsafe
 				{
+					int currentWeatherHash, nextWeatherHash;
 					Function.Call(Hash._GET_WEATHER_TYPE_TRANSITION, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 				}
 				return weatherTransition;
@@ -181,30 +180,28 @@ namespace GTA
 				blipFound = true;
 			}
 
-			if (blipFound)
+			if (!blipFound) return position;
+			bool groundFound = false;
+			float height = 0.0f;
+
+			for (int i = 800; i >= 0; i -= 50)
 			{
-				bool groundFound = false;
-				float height = 0.0f;
-
-				for (int i = 800; i >= 0; i -= 50)
+				unsafe
 				{
-					unsafe
+					if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, (float)i, &height))
 					{
-						if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, (float)i, &height))
-						{
-							groundFound = true;
-							position.Z = height;
-							break;
-						}
+						groundFound = true;
+						position.Z = height;
+						break;
 					}
-
-					Script.Wait(100);
 				}
 
-				if (!groundFound)
-				{
-					position.Z = 1000.0f;
-				}
+				Script.Wait(100);
+			}
+
+			if (!groundFound)
+			{
+				position.Z = 1000.0f;
 			}
 
 			return position;
@@ -227,17 +224,23 @@ namespace GTA
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(), handle => new Ped(handle));
 		}
+
 		public static Ped[] GetAllPeds(Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(new[] { model.Hash }), handle => new Ped(handle));
 		}
 		public static Ped[] GetNearbyPeds(Ped ped, float radius)
 		{
-			int[] handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToArray(), radius);
+			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToArray(), radius);
 
-			var result = new List<Ped>();
+			if (handles.Length == 0)
+			{
+				return Array.Empty<Ped>();
+			}
 
-			foreach (int handle in handles)
+			var result = new List<Ped>(handles.Length - 1);
+
+			foreach (var handle in handles)
 			{
 				if (handle == ped.Handle)
 				{
@@ -268,13 +271,18 @@ namespace GTA
 		}
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius)
 		{
-			int[] handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToArray(), radius);
+			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToArray(), radius);
 
-			var result = new List<Vehicle>();
+			if (handles.Length == 0)
+			{
+				return Array.Empty<Vehicle>();
+			}
+
+			var result = new List<Vehicle>(handles.Length - 1);
 			Vehicle ignore = ped.CurrentVehicle;
-			int ignoreHandle = Vehicle.Exists(ignore) ? ignore.Handle : 0;
+			int ignoreHandle = Entity.Exists(ignore) ? ignore.Handle : 0;
 
-			foreach (int handle in handles)
+			foreach (var handle in handles)
 			{
 				if (handle == ignoreHandle)
 				{
@@ -328,29 +336,27 @@ namespace GTA
 
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
 		{
-			ISpatial closest = null;
-			float closestDistance = 3e38f;
+			var closest = default(T);
+			var closestDistance = 3e38f;
 
 			foreach (var spatial in spatials)
 			{
-				float distance = position.DistanceToSquared(spatial.Position);
+				var distance = position.DistanceToSquared(spatial.Position);
 
-				if (distance <= closestDistance)
-				{
-					closest = spatial;
-					closestDistance = distance;
-				}
+				if (!(distance <= closestDistance)) continue;
+				closest = spatial;
+				closestDistance = distance;
 			}
 			return (T)closest;
 		}
 		public static Ped GetClosestPed(Vector3 position, float radius)
 		{
-			Ped[] peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius), handle => new Ped(handle));
+			var peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius), handle => new Ped(handle));
 			return GetClosest(position, peds);
 		}
 		public static Vehicle GetClosestVehicle(Vector3 position, float radius)
 		{
-			Vehicle[] vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius), handle => new Vehicle(handle));
+			var vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius), handle => new Vehicle(handle));
 			return GetClosest(position, vehicles);
 
 		}
@@ -628,7 +634,7 @@ namespace GTA
 		}
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity)
 		{
-			Vector3 target = source + (direction * maxDistance);
+			var target = source + (direction * maxDistance);
 			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options)
@@ -645,7 +651,7 @@ namespace GTA
 		}
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity)
 		{
-			Vector3 target = source + (direction * maxDistance);
+			var target = source + (direction * maxDistance);
 			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 
@@ -692,16 +698,14 @@ namespace GTA
 		}
 		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk, int flags)
 		{
-			OutputArgument outPos = new OutputArgument();
+			var outPos = new OutputArgument();
 
 			if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, outPos, flags))
 			{
 				return outPos.GetResult<Vector3>();
 			}
-			else
-			{
-				return Vector3.Zero;
-			}
+
+			return Vector3.Zero;
 		}
 
 		public static Vector3 GetNextPositionOnStreet(Vector3 position)
@@ -714,7 +718,7 @@ namespace GTA
 		}
 		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied)
 		{
-			OutputArgument outPos = new OutputArgument();
+			var outPos = new OutputArgument();
 
 			if (unoccupied)
 			{
@@ -743,7 +747,7 @@ namespace GTA
 		}
 		public static Vector3 GetNextPositionOnSidewalk(Vector3 position)
 		{
-			OutputArgument outPos = new OutputArgument();
+			var outPos = new OutputArgument();
 
 			if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, true, outPos, 0))
 			{
