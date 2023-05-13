@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -3732,12 +3732,22 @@ namespace SHVDN
 			{
 				// A fallback path if the variable could not found to make sure the same value will be returned as what PLAYER_ID returns, an extreme edge case if the variable was found
 				// You even have to disable SHV to call NETWORK_GET_NUM_CONNECTED_PLAYERS (for preventing the game from going Online) before custom scripts (for enabling multiplayer) can use features for multiplayer
-
-				NativeFunc.Invoke(0x4F8644AF03D0E0D6 /* PLAYER_ID */, null, 0);
+				return GetLocalPlayerIndexViaNativeCall();
 			}
 
 			// The same value as what PLAYER_ID returns if the game mode is singleplayer and not multiplayer
 			return 0;
+
+			static int GetLocalPlayerIndexViaNativeCall()
+			{
+				var resultAddr = NativeFunc.Invoke(0x4F8644AF03D0E0D6 /* PLAYER_ID */, null, 0);
+				if (resultAddr == null)
+				{
+					throw new InvalidOperationException("Game.Player can only be called from the main thread.");
+				}
+
+				return *(int*)resultAddr;
+			}
 		}
 
 		public static IntPtr GetBuildingAddress(int handle)
