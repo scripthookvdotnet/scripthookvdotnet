@@ -37,6 +37,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the current <see cref="Weapon"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns the target <see cref="Weapon"/> if the <c>CWeaponInventory</c> of the owner <see cref="Ped"/> is trying to switch the current weapon to another
+		/// but not finished doing (e.g. calls <see cref="Select(WeaponHash)"/> on the <see cref="Ped"/> but they are ragdolling at that time).
+		/// </remarks>
 		public Weapon Current
 		{
 			get
@@ -79,6 +86,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the value that indicates whether the owner <see cref="Ped"/> has the weapon for <paramref name="weaponHash"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns <see langword="true"/> for <see cref="WeaponHash.Unarmed"/> unless the item for the hash is removed from <c>CWeaponInventory</c> of the owner <see cref="Ped"/>.
+		/// </remarks>
 		public bool HasWeapon(WeaponHash weaponHash)
 		{
 			return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)weaponHash);
@@ -89,6 +102,15 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_WEAPON_VALID, (uint)hash);
 		}
 
+		/// <summary>
+		/// Gets the current weapon <see cref="Prop"/>.
+		/// </summary>
+		/// <remarks>
+		/// Always check if the returned value is valid with the null check and <see cref="Entity.Exists"/>.
+		/// This method returns <see langword="null"/> if the current weapon is <see cref="WeaponHash.Unarmed"/>, but always returns a <see cref="Prop"/> instance otherwise
+		/// even if the owner <see cref="Ped"/> is not using the weapon <see cref="Prop"/> (For example, when the <see cref="Ped"/> is ragdolling and the current weapon cannot hold with one hand),
+		/// which is kept for compatibility as calling methods on a invalid <see cref="Prop"/> will not cause serious issues in general (just do nothing or return zero values in most cases).
+		/// </remarks>
 		public Prop CurrentWeaponObject
 		{
 			get
@@ -117,6 +139,12 @@ namespace GTA
 		{
 			return Select(weaponHash, true);
 		}
+		/// <summary>
+		/// Selects the specified weapon.
+		/// </summary>
+		/// <param name="weaponHash">The weapon hash.</param>
+		/// <param name="equipNow">Specifies if the owner ped will equip in hands immediately.</param>
+		/// <returns></returns>
 		public bool Select(WeaponHash weaponHash, bool equipNow)
 		{
 			if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)weaponHash))
@@ -170,11 +198,20 @@ namespace GTA
 			return Give((WeaponHash)Game.GenerateHash(name), ammoCount, equipNow, isAmmoLoaded);
 		}
 
+		/// <summary>
+		/// Drops the current weapon and creates a pickup <see cref="Prop"/> with the owner address set to that of the owner <see cref="Ped"/>.
+		/// </summary>
 		public void Drop()
 		{
 			Function.Call(Hash.SET_PED_DROPS_WEAPON, owner.Handle);
 		}
 
+		/// <summary>
+		/// Removes the specified weapon.
+		/// </summary>
+		/// <remarks>
+		/// This method can remove <see cref="WeaponHash.Unarmed"/> from the weapon inventory.
+		/// </remarks>
 		public void Remove(Weapon weapon)
 		{
 			var hash = weapon.Hash;
@@ -186,11 +223,15 @@ namespace GTA
 
 			Remove(weapon.Hash);
 		}
+		/// <inheritdoc cref="Remove(Weapon)"/>
 		public void Remove(WeaponHash weaponHash)
 		{
 			Function.Call(Hash.REMOVE_WEAPON_FROM_PED, owner.Handle, (uint)weaponHash);
 		}
 
+		/// <summary>
+		/// Removes all weapons from the weapon inventory except for <see cref="WeaponHash.Unarmed"/>.
+		/// </summary>
 		public void RemoveAll()
 		{
 			Function.Call(Hash.REMOVE_ALL_PED_WEAPONS, owner.Handle, true);

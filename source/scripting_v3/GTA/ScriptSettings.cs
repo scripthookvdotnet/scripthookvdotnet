@@ -10,6 +10,12 @@ using System.IO;
 
 namespace GTA
 {
+	/// <summary>
+	/// Represents a script settings written in the INI format.
+	/// </summary>
+	/// <remarks>
+	/// The file encoding must be UTF-8 without BOM.
+	/// </remarks>
 	public sealed class ScriptSettings
 	{
 		#region Fields
@@ -26,6 +32,9 @@ namespace GTA
 		/// Loads a <see cref="ScriptSettings"/> from the specified file.
 		/// </summary>
 		/// <param name="filename">The filename to load the settings from.</param>
+		/// <remarks>
+		/// If this method cannot load the file due to <see cref="IOException"/>, the created instance will not contain any setting values.
+		/// </remarks>
 		public static ScriptSettings Load(string filename)
 		{
 			var result = new ScriptSettings(filename);

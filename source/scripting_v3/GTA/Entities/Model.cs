@@ -46,18 +46,28 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets if this <see cref="Model"/> is valid.
+		/// Gets a value that indicates whether this <see cref="Model"/> exists.
+		/// This property is practically the same as <see cref="IsInCdImage"/> since an additional check this method does does not work in practical.
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Model"/> is valid; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// You may want to use <see cref="IsInCdImage"/> to avoid a redundant additional check,
+		/// where <c>!(~(((modelIndex | 0xFFF0000) &amp; 0xEFFFFFFF) &lt;&lt; 28) &amp; 1)</c> is evaluated (but always evaluated as false in the range of uint32_t)
+		/// after checking if the model index is not <c>0xFFFF</c> (which means the index could not found) just like <see cref="IsInCdImage"/> does.
+		/// </remarks>
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_MODEL_VALID, Hash);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is in the CD image.
+		/// Gets a value that indicates whether this <see cref="Model"/> is in the CD image.
+		/// This property is practically the same as <see cref="IsValid"/> since its additional check does not work in practical.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Model"/> is in the CD image; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// The hash of a streamed archetype might only be valid at certain locations on the map.
+		/// </remarks>
 		public bool IsInCdImage => Function.Call<bool>(Native.Hash.IS_MODEL_IN_CDIMAGE, Hash);
 
 		/// <summary>
@@ -365,7 +375,7 @@ namespace GTA
 			}
 		}
 
-		/// <summary> 
+		/// <summary>
 		/// <para>Gets the dimensions of this <see cref="Model"/>.</para>
 		/// <para>
 		/// When you need to fetch dimensions info from large amount of <see cref="Model"/>s in a short time, it may be better to use this method instead of <see cref="Dimensions"/>

@@ -52,6 +52,13 @@ namespace GTA
 
 		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, (uint)Hash);
 
+		/// <summary>
+		/// Gets or sets the amount of ammo for this weapon.
+		/// If this weapon is using special ammo, this property will return the value for it.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int Ammo
 		{
 			get
@@ -85,6 +92,12 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the current amount of ammo in a clip.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int AmmoInClip
 		{
 			get
@@ -124,6 +137,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the max amount of ammo this weapon can have.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int MaxAmmo
 		{
 			get
@@ -141,6 +160,12 @@ namespace GTA
 				return maxAmmo;
 			}
 		}
+		/// <summary>
+		/// Gets or sets the max amount of ammo this weapon can have in a clip.
+		/// </summary>
+		/// <remarks>
+		/// Will return 1 if <see cref="Hash"/> is <see cref="WeaponHash.Unarmed"/> instead of 0.
+		/// </remarks>
 		public int MaxAmmoInClip
 		{
 			get
@@ -161,6 +186,14 @@ namespace GTA
 
 		public int DefaultClipSize => Function.Call<int>(Native.Hash.GET_WEAPON_CLIP_SIZE, (uint)Hash);
 
+
+		/// <summary>
+		/// Sets whether this ped will not consume the current ammo this weapon is using from the weapon ammo inventory.
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, setting this value globally affects any of the weapons that uses the ammo the current weapon is using
+		/// as <c>SET_PED_INFINITE_AMMO</c> modifies a of member of weapon ammo item in <c>CPedInventory</c> of the owner <see cref="Ped"/>.
+		/// </remarks>
 		public bool InfiniteAmmo
 		{
 			set
@@ -173,6 +206,12 @@ namespace GTA
 				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, owner.Handle, value, (uint)Hash);
 			}
 		}
+		/// <summary>
+		/// Sets whether this ped will not consume any ammo in any clips or that of the weapon ammo inventory of the owner <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Despite the interface, setting this value globally affects all of the weapons of the owner <see cref="Ped"/>.
+		/// </remarks>
 		public bool InfiniteAmmoClip
 		{
 			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, owner.Handle, value);
