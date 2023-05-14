@@ -16,6 +16,8 @@ build:
   publish_nuget: true
   parallel: true
   verbosity: minimal
+before_build:
+  - nuget restore
 before_package:
 - cmd: >-
     del bin\Release\ScriptHookVDotNet*.metagen
