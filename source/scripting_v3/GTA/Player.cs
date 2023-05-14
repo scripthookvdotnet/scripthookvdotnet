@@ -338,7 +338,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// The game sets this value only when this <see cref="Player"/> commit a crime that will immediately increase their wanted level such as targeting a police officer,
-		/// <c>SET_PLAYER_WANTED_LEVEL</c> is called and the wanted level is to increase, or when the game applies this value to <see cref="CurrentCrimeValue"/>.
+		/// when <c>SET_PLAYER_WANTED_LEVEL</c> is called and the wanted level is to increase, or when the game applies this value to <see cref="CurrentCrimeValue"/>.
 		/// </remarks>
 		/// <value>
 		/// The pending crime value.
@@ -652,16 +652,18 @@ namespace GTA
 				return;
 			}
 
-			// Clamps and/or sets the wanted level just like SET_PLAYER_WANTED_LEVEL does
-			if (wantedLevel <= 0)
+			var currentWantedLevel = SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset);
+
+			if (wantedLevel <= 0 || wantedLevel >= currentWantedLevel)
 			{
-				CurrentCrimeValue = 0;
-				PendingCrimeValue = 0;
-				SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset, 0);
+				// Just call SET_PLAYER_WANTED_LEVEL and SET_PLAYER_WANTED_LEVEL_NOW, because setting to the current wanted level or above won't refocus the search area (the crime value will be reset)
+				Function.Call(Hash.SET_PLAYER_WANTED_LEVEL, Handle, wantedLevel, false);
+				Function.Call(Hash.SET_PLAYER_WANTED_LEVEL_NOW, Handle, false);
 				return;
 			}
 
-			int wantedLevelToApply = wantedLevel;
+			// Clamps and/or sets the wanted level just like SET_PLAYER_WANTED_LEVEL does
+			var wantedLevelToApply = wantedLevel;
 			if (wantedLevelToApply >= 6)
 			{
 				wantedLevelToApply = 5;
@@ -669,7 +671,7 @@ namespace GTA
 
 			// This additional crime value is hardcoded in a function that is called by SET_PLAYER_WANTED_LEVEL
 			const int ADDITIONAL_CRIME_VALUE = 20;
-			int threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, Handle, wantedLevelToApply);
+			var threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, Handle, wantedLevelToApply);
 
 			CurrentCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
 			SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset, wantedLevelToApply);
