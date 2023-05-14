@@ -234,13 +234,13 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position where this <see cref="Player"/> is automatically targetting at.
+		/// Gets the position where this <see cref="Player"/> is automatically targeting at.
 		/// The position should be where the <see cref="Bone.SkelSpine3"/> bone is if the target is <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// The value will be <see cref="Vector3.Zero"/> when <see cref="LockedOnEntity"/> returns <see langword="null"/>.
 		/// </remarks>
-		/// <returns>The position where this <see cref="Player"/> is automatically targetting at.</returns>
+		/// <returns>The position where this <see cref="Player"/> is automatically targeting at.</returns>
 		public Vector3 AutoTargetPosition
 		{
 			get
@@ -337,7 +337,7 @@ namespace GTA
 		/// if <see cref="TimeToApplyPendingCrimeValue"/> is not zero and less than <see cref="Game.GameTime"/>.
 		/// </summary>
 		/// <remarks>
-		/// The game sets this value only when this <see cref="Player"/> commit a crime that will immediately increase their wanted level such as targetting a police officer,
+		/// The game sets this value only when this <see cref="Player"/> commit a crime that will immediately increase their wanted level such as targeting a police officer,
 		/// <c>SET_PLAYER_WANTED_LEVEL</c> is called and the wanted level is to increase, or when the game applies this value to <see cref="CurrentCrimeValue"/>.
 		/// </remarks>
 		/// <value>
@@ -510,7 +510,7 @@ namespace GTA
 		/// <remarks>
 		/// The game will set to zero when this <see cref="Player"/> is spotted by the police each frame,
 		/// but you can set small value (but not zero) to clear the wanted level when the <see cref="Player"/> is in the hidden evasion phase
-		/// if not supressed by SUPPRESS_LOSING_WANTED_LEVEL_IF_HIDDEN_THIS_FRAME.
+		/// if not supressed by <c>SUPPRESS_LOSING_WANTED_LEVEL_IF_HIDDEN_THIS_FRAME</c>.
 		/// </remarks>
 		public int StartTimeOfHiddenEvasion
 		{
