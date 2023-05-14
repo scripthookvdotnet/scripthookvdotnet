@@ -1,8 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+    <PropertyGroup>
+      <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet3\</BaseIntermediateOutputPath>
+    </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>GTA</RootNamespace>
-    <AssemblyName>ScriptHookVDotNet2</AssemblyName>
+    <AssemblyName>ScriptHookVDotNet3</AssemblyName>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Platforms>x64</Platforms>
@@ -10,7 +14,7 @@
     <ErrorReport>prompt</ErrorReport>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <DocumentationFile>..\..\bin\Release\ScriptHookVDotNet2.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Release\ScriptHookVDotNet3.xml</DocumentationFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -60,4 +64,5 @@
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
