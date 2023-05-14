@@ -1789,6 +1789,78 @@ namespace GTA
 
 		#endregion
 
+		#region Attaching
+
+		/// <summary>
+		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
+		/// </summary>
+		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="offset">The offset relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/></param>
+		/// <param name="detachWhenDead">Specifies whether this <see cref="Ped"/> will be detached when they are dead.</param>
+		/// <param name="detachWhenRagdoll">Specifies whether this <see cref="Ped"/> will be detached when they are ragdolling.</param>
+		/// <param name="useBasicAttach">
+		/// Specifies whether all the three rotation components will be used for this <see cref="Ped"/> without modifying just like <see cref="Vehicle"/>s and <see cref="Prop"/>s.
+		/// if <see langword="false"/>, pitch will not work and roll will only work on negative numbers.
+		/// </param>
+		/// <param name="rotationOrder">The rotation order.</param>
+		public void AttachTo(Entity entity, Vector3 offset, Vector3 rotation, bool detachWhenDead = false, bool detachWhenRagdoll = false, bool useBasicAttach = false, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		{
+			// Note: bActiveCollisions (12th argument) will not work if -1 is passed as the bone index value
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
+				Handle,
+				entity.Handle,
+				-1,
+				offset.X,
+				offset.Y,
+				offset.Z,
+				rotation.X,
+				rotation.Y,
+				rotation.Z,
+				detachWhenDead,
+				detachWhenRagdoll,
+				false,
+				useBasicAttach,
+				(int)rotationOrder,
+				true);
+		}
+
+		/// <summary>
+		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
+		/// </summary>
+		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="offset">The offset relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
+		/// <param name="detachWhenDead">Specifies whether this <see cref="Ped"/> will be detached when they are dead.</param>
+		/// <param name="detachWhenRagdoll">Specifies whether this <see cref="Ped"/> will be detached when they are ragdolling.</param>
+		/// <param name="leaveCollisionActivated">Specifies whether the collision of this <see cref="Entity"/> will be left activated.</param>
+		/// <param name="useBasicAttach">
+		/// Specifies whether all the three rotation components will be used for this <see cref="Ped"/> without modifying just like <see cref="Vehicle"/>s and <see cref="Prop"/>s.
+		/// if <see langword="false"/>, pitch will not work and roll will only work on negative numbers.
+		/// </param>
+		/// <param name="rotationOrder">The rotation order.</param>
+		public void AttachTo(EntityBone entityBone, Vector3 offset, Vector3 rotation, bool detachWhenDead = false, bool detachWhenRagdoll = false, bool leaveCollisionActivated = false, bool useBasicAttach = false, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		{
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
+				Handle,
+				entityBone.Owner.Handle,
+				entityBone,
+				offset.X,
+				offset.Y,
+				offset.Z,
+				rotation.X,
+				rotation.Y,
+				rotation.Z,
+				detachWhenDead,
+				detachWhenRagdoll,
+				leaveCollisionActivated,
+				useBasicAttach,
+				(int)rotationOrder,
+				true);
+		}
+
+		#endregion
+
 		#region Forces
 
 		/// <summary>
