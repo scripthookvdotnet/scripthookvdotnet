@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (C) 2015 crosire & contributors
 // License: https://github.com/crosire/scripthookvdotnet#license
 //
@@ -90,7 +90,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(address + 144, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(address + 144, value.ToInternalFVector3());
 			}
 		}
 

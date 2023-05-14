@@ -41,7 +41,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x10, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x10, value.ToInternalFVector3());
 			}
 		}
 		/// <summary>
@@ -73,7 +73,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x20, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x20, value.ToInternalFVector3());
 			}
 		}
 		/// <summary>
@@ -102,7 +102,7 @@ namespace GTA
 				}
 
 				var offset = Game.Version >= GameVersion.v1_0_1493_0_Steam ? 0x30 : 0x20;
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToInternalFVector3());
 			}
 		}
 		/// <summary>
@@ -134,7 +134,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x40, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x40, value.ToInternalFVector3());
 			}
 		}
 		/// <summary>

@@ -37,7 +37,7 @@ namespace GTA
 		}
 		public unsafe void SetVector3(Vector3 value)
 		{
-			SHVDN.NativeMemory.WriteVector3(address, value.ToArray());
+			SHVDN.NativeMemory.WriteVector3(address, value.ToInternalFVector3());
 		}
 
 		public unsafe int GetInt()
@@ -54,8 +54,7 @@ namespace GTA
 		}
 		public unsafe Vector3 GetVector3()
 		{
-			var data = SHVDN.NativeMemory.ReadVector3(address);
-			return new Vector3(data[0], data[1], data[2]);
+			return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
 		}
 	}
 }

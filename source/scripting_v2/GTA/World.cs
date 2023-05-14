@@ -231,7 +231,7 @@ namespace GTA
 		}
 		public static Ped[] GetNearbyPeds(Ped ped, float radius)
 		{
-			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToArray(), radius);
+			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius);
 
 			if (handles.Length == 0)
 			{
@@ -254,11 +254,11 @@ namespace GTA
 		}
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius), handle => new Ped(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius), handle => new Ped(handle));
 		}
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, Model model)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius, new[] { model.Hash }), handle => new Ped(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius, new[] { model.Hash }), handle => new Ped(handle));
 		}
 
 		public static Vehicle[] GetAllVehicles()
@@ -271,7 +271,7 @@ namespace GTA
 		}
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius)
 		{
-			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToArray(), radius);
+			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius);
 
 			if (handles.Length == 0)
 			{
@@ -296,11 +296,11 @@ namespace GTA
 		}
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius), handle => new Vehicle(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius), handle => new Vehicle(handle));
 		}
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, Model model)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius, new[] { model.Hash }), handle => new Vehicle(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius, new[] { model.Hash }), handle => new Vehicle(handle));
 		}
 
 		public static Prop[] GetAllProps()
@@ -313,11 +313,11 @@ namespace GTA
 		}
 		public static Prop[] GetNearbyProps(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToArray(), radius), handle => new Prop(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToInternalFVector3(), radius), handle => new Prop(handle));
 		}
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, Model model)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToArray(), radius, new[] { model.Hash }), handle => new Prop(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToInternalFVector3(), radius, new[] { model.Hash }), handle => new Prop(handle));
 		}
 
 		public static Blip[] GetActiveBlips()
@@ -331,7 +331,7 @@ namespace GTA
 		}
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
-			return Array.ConvertAll<int, Entity>(SHVDN.NativeMemory.GetEntityHandles(position.ToArray(), radius), Entity.FromHandle);
+			return Array.ConvertAll<int, Entity>(SHVDN.NativeMemory.GetEntityHandles(position.ToInternalFVector3(), radius), Entity.FromHandle);
 		}
 
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
@@ -351,12 +351,12 @@ namespace GTA
 		}
 		public static Ped GetClosestPed(Vector3 position, float radius)
 		{
-			var peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius), handle => new Ped(handle));
+			var peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius), handle => new Ped(handle));
 			return GetClosest(position, peds);
 		}
 		public static Vehicle GetClosestVehicle(Vector3 position, float radius)
 		{
-			var vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius), handle => new Vehicle(handle));
+			var vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius), handle => new Vehicle(handle));
 			return GetClosest(position, vehicles);
 
 		}

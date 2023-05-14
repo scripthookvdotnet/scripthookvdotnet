@@ -211,7 +211,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x60, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x60, value.ToInternalFVector3());
 			}
 		}
 		/// <summary>

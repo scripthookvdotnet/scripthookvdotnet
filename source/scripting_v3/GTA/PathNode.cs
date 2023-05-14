@@ -73,7 +73,7 @@ namespace GTA
 		/// Determines if this <see cref="PathNode"/> is loaded.
 		/// </summary>
 		/// <returns><see langword="true"/> if this <see cref="PathNode"/> is loaded; otherwise, <see langword="false"/>.</returns>
-		public Vector3 Position => SHVDN.NativeMemory.PathFind.GetPathNodePosition(Handle);
+		public Vector3 Position => new Vector3(SHVDN.NativeMemory.PathFind.GetPathNodePosition(Handle));
 		/// <summary>
 		/// Determines if this <see cref="PathNode"/> is switched off for ambient population.
 		/// </summary>

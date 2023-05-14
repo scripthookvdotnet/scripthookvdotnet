@@ -546,7 +546,7 @@ namespace GTA
 				}
 
 				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x60 : 0x50;
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToInternalFVector3());
 			}
 		}
 
@@ -579,7 +579,7 @@ namespace GTA
 				}
 
 				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x70 : 0x60;
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + offset, value.ToInternalFVector3());
 			}
 		}
 

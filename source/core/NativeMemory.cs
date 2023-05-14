@@ -1278,10 +1278,9 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="address">The memory address to access.</param>
 		/// <returns>All elements of the vector.</returns>
-		public static float[] ReadVector3(IntPtr address)
+		public static FVector3 ReadVector3(IntPtr address)
 		{
-			var data = (float*)address.ToPointer();
-			return new float[3] { data[0], data[1], data[2] };
+			return *(FVector3*)address.ToPointer();
 		}
 
 		/// <summary>
@@ -1340,12 +1339,9 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="address">The memory address to access.</param>
 		/// <param name="value">The vector components to write.</param>
-		public static void WriteVector3(IntPtr address, float[] value)
+		public static void WriteVector3(IntPtr address, FVector3 value)
 		{
-			var data = (float*)address.ToPointer();
-			data[0] = value[0];
-			data[1] = value[1];
-			data[2] = value[2];
+			*(FVector3*)address.ToPointer() = value;
 		}
 		/// <summary>
 		/// Writes a single 64-bit value from the specified <paramref name="address"/>.
@@ -2987,7 +2983,7 @@ namespace SHVDN
 			internal bool doPosCheck = false;
 			internal bool doModelCheck = false;
 			internal float radiusSquared;
-			internal float[] position;
+			internal FVector3? position;
 			internal HashSet<int> modelHashes;
 			internal int[] resultHandles = Array.Empty<int>();
 
@@ -3004,7 +3000,7 @@ namespace SHVDN
 				doModelCheck = true;
 				this.modelHashes = new HashSet<int>(modelHashes);
 			}
-			internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, float[] position, float radiusSquared, int[] modelHashes = null) : this(type, poolAddress)
+			internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared, int[] modelHashes = null) : this(type, poolAddress)
 			{
 				doPosCheck = true;
 				this.radiusSquared = radiusSquared;
@@ -3061,7 +3057,7 @@ namespace SHVDN
 
 					var address = genericPool->GetAddress(i);
 
-					if (doPosCheck && !CheckEntityDistance(address, position, radiusSquared))
+					if (doPosCheck && !CheckEntityDistance(address, position.GetValueOrDefault(), radiusSquared))
 						continue;
 					if (doModelCheck && !CheckEntityModel(address, modelHashes))
 						continue;
@@ -3090,7 +3086,7 @@ namespace SHVDN
 
 					var address = vehiclePool->GetAddress(i);
 
-					if (doPosCheck && !CheckEntityDistance(address, position, radiusSquared))
+					if (doPosCheck && !CheckEntityDistance(address, position.GetValueOrDefault(), radiusSquared))
 						continue;
 					if (doModelCheck && !CheckEntityModel(address, modelHashes))
 						continue;
@@ -3120,7 +3116,7 @@ namespace SHVDN
 
 					projectilesLeft--;
 
-					if (doPosCheck && !CheckEntityDistance(entityAddress, position, radiusSquared))
+					if (doPosCheck && !CheckEntityDistance(entityAddress, position.GetValueOrDefault(), radiusSquared))
 						continue;
 					if (doModelCheck && !CheckEntityModel(entityAddress, modelHashes))
 						continue;
@@ -3132,14 +3128,15 @@ namespace SHVDN
 				return resultList.ToArray();
 			}
 
-			static bool CheckEntityDistance(ulong address, float[] position, float radiusSquared)
+			static bool CheckEntityDistance(ulong address, FVector3 position, float radiusSquared)
 			{
 				var entityPosition = stackalloc float[4];
 
 				NativeMemory.EntityPosFunc(address, entityPosition);
-				var x = position[0] - entityPosition[0];
-				var y = position[1] - entityPosition[1];
-				var z = position[2] - entityPosition[2];
+
+				var x = position.X - entityPosition[0];
+				var y = position.Y - entityPosition[1];
+				var z = position.Z - entityPosition[2];
 
 				var distanceSquared = (x * x) + (y * y) + (z * z);
 				if (distanceSquared > radiusSquared)
@@ -3222,7 +3219,7 @@ namespace SHVDN
 		{
 			return GetGuidsInGenericPool(NativeMemory.PedPoolAddress, modelHashes);
 		}
-		public static int[] GetPedHandles(float[] position, float radius, int[] modelHashes = null)
+		public static int[] GetPedHandles(FVector3 position, float radius, int[] modelHashes = null)
 		{
 			return GetGuidsInGenericPool(NativeMemory.PedPoolAddress, position, radius, modelHashes);
 		}
@@ -3231,7 +3228,7 @@ namespace SHVDN
 		{
 			return GetGuidsInGenericPool(NativeMemory.ObjectPoolAddress, modelHashes);
 		}
-		public static int[] GetPropHandles(float[] position, float radius, int[] modelHashes = null)
+		public static int[] GetPropHandles(FVector3 position, float radius, int[] modelHashes = null)
 		{
 			return GetGuidsInGenericPool(NativeMemory.ObjectPoolAddress, position, radius, modelHashes);
 		}
@@ -3244,7 +3241,7 @@ namespace SHVDN
 
 			return BuildOneArrayFromElementsOfEntityHandleArrays(vehicleHandles, pedHandles, propHandles);
 		}
-		public static int[] GetEntityHandles(float[] position, float radius)
+		public static int[] GetEntityHandles(FVector3 position, float radius)
 		{
 			var vehicleHandles = GetVehicleHandles(position, radius);
 			var pedHandles = GetPedHandles(position, radius);
@@ -3277,7 +3274,7 @@ namespace SHVDN
 
 			return task.resultHandles;
 		}
-		public static int[] GetVehicleHandles(float[] position, float radius, int[] modelHashes = null)
+		public static int[] GetVehicleHandles(FVector3 position, float radius, int[] modelHashes = null)
 		{
 			if (*NativeMemory.VehiclePoolAddress == 0)
 				return Array.Empty<int>();
@@ -3294,7 +3291,7 @@ namespace SHVDN
 		{
 			return GetGuidsInGenericPool(NativeMemory.PickupObjectPoolAddress);
 		}
-		public static int[] GetPickupObjectHandles(float[] position, float radius)
+		public static int[] GetPickupObjectHandles(FVector3 position, float radius)
 		{
 			return GetGuidsInGenericPool(NativeMemory.PickupObjectPoolAddress, position, radius);
 		}
@@ -3308,7 +3305,7 @@ namespace SHVDN
 
 			return task.resultHandles;
 		}
-		public static int[] GetProjectileHandles(float[] position, float radius)
+		public static int[] GetProjectileHandles(FVector3 position, float radius)
 		{
 			if (NativeMemory.ProjectilePoolAddress == null)
 				return Array.Empty<int>();
@@ -3343,7 +3340,7 @@ namespace SHVDN
 
 			return task.resultHandles;
 		}
-		private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr, float[] position, float radius, int[] modelHashes = null)
+		private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr, FVector3 position, float radius, int[] modelHashes = null)
 		{
 			var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
 
@@ -3364,7 +3361,7 @@ namespace SHVDN
 			return GetHandlesInGenericPool(*NativeMemory.BuildingPoolAddress);
 		}
 
-		public static int[] GetBuildingHandles(float[] position, float radius)
+		public static int[] GetBuildingHandles(FVector3 position, float radius)
 		{
 			if (BuildingPoolAddress == null)
 				return Array.Empty<int>();
@@ -3380,7 +3377,7 @@ namespace SHVDN
 			return GetHandlesInGenericPool(*NativeMemory.AnimatedBuildingPoolAddress);
 		}
 
-		public static int[] GetAnimatedBuildingHandles(float[] position, float radius)
+		public static int[] GetAnimatedBuildingHandles(FVector3 position, float radius)
 		{
 			if (AnimatedBuildingPoolAddress == null)
 				return Array.Empty<int>();
@@ -3396,7 +3393,7 @@ namespace SHVDN
 			return GetHandlesInGenericPool(*NativeMemory.InteriorInstPoolAddress);
 		}
 
-		public static int[] GetInteriorInstHandles(float[] position, float radius)
+		public static int[] GetInteriorInstHandles(FVector3 position, float radius)
 		{
 			if (InteriorInstPoolAddress == null)
 				return Array.Empty<int>();
@@ -3412,7 +3409,7 @@ namespace SHVDN
 			return GetHandlesInGenericPool(*NativeMemory.InteriorProxyPoolAddress);
 		}
 
-		public static int[] GetInteriorProxyHandles(float[] position, float radius)
+		public static int[] GetInteriorProxyHandles(FVector3 position, float radius)
 		{
 			if (InteriorProxyPoolAddress == null)
 				return Array.Empty<int>();
@@ -3430,9 +3427,9 @@ namespace SHVDN
 
 				var address = pool->GetAddress(i);
 
-				var x = *(float*)(address + 0x70) - position[0];
-				var y = *(float*)(address + 0x74) - position[1];
-				var z = *(float*)(address + 0x78) - position[2];
+				var x = *(float*)(address + 0x70) - position.X;
+				var y = *(float*)(address + 0x74) - position.Y;
+				var z = *(float*)(address + 0x78) - position.Z;
 
 				var distanceSquared = (x * x) + (y * y) + (z * z);
 				if (distanceSquared > radiusSquared)
@@ -3466,7 +3463,7 @@ namespace SHVDN
 			return returnHandles.ToArray();
 		}
 
-		static int[] GetCEntityHandlesInRange(ulong poolAddress, float[] position, float radius)
+		static int[] GetCEntityHandlesInRange(ulong poolAddress, FVector3 position, float radius)
 		{
 			var pool = (GenericPool*)poolAddress;
 
@@ -3482,9 +3479,9 @@ namespace SHVDN
 				var address = pool->GetAddress(i);
 
 				NativeMemory.EntityPosFunc(address, entityPosition);
-				var x = entityPosition[0] - position[0];
-				var y = entityPosition[1] - position[1];
-				var z = entityPosition[2] - position[2];
+				var x = entityPosition[0] - position.X;
+				var y = entityPosition[1] - position.Y;
+				var z = entityPosition[2] - position.Z;
 
 				var distanceSquared = (x * x) + (y * y) + (z * z);
 				if (distanceSquared > radiusSquared)
@@ -4432,7 +4429,7 @@ namespace SHVDN
 		static int* NorthRadarBlipHandleAddress;
 		static int* CenterRadarBlipHandleAddress;
 
-		static bool CheckBlip(ulong blipAddress, float[] position, float radius, params int[] spriteTypes)
+		static bool CheckBlip(ulong blipAddress, FVector3? position, float radius, params int[] spriteTypes)
 		{
 			if (spriteTypes.Length > 0)
 			{
@@ -4443,15 +4440,16 @@ namespace SHVDN
 
 			if (position == null || !(radius > 0f)) return true;
 
+			var positionNonNullable = position.GetValueOrDefault();
 			var blipPosition = stackalloc float[3];
 
 			blipPosition[0] = *(float*)(blipAddress + 0x10);
 			blipPosition[1] = *(float*)(blipAddress + 0x14);
 			blipPosition[2] = *(float*)(blipAddress + 0x18);
 
-			var x = blipPosition[0] - position[0];
-			var y = blipPosition[1] - position[1];
-			var z = blipPosition[2] - position[2];
+			var x = blipPosition[0] - positionNonNullable.X;
+			var y = blipPosition[1] - positionNonNullable.Y;
+			var z = blipPosition[2] - positionNonNullable.Z;
 			var distanceSquared = (x * x) + (y * y) + (z * z);
 			var radiusSquared = radius * radius;
 
@@ -4484,7 +4482,7 @@ namespace SHVDN
 		{
 			return GetNonCriticalRadarBlipHandles(null, 0f, spriteTypes);
 		}
-		public static int[] GetNonCriticalRadarBlipHandles(float[] position = null, float radius = 0f, params int[] spriteTypes)
+		public static int[] GetNonCriticalRadarBlipHandles(FVector3? position = default, float radius = 0f, params int[] spriteTypes)
 		{
 			if (RadarBlipPoolAddress == null)
 			{

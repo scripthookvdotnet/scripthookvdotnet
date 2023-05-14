@@ -202,7 +202,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x20, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x20, value.ToInternalFVector3());
 			}
 		}
 
@@ -456,7 +456,7 @@ namespace GTA
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x30, value.ToArray());
+				SHVDN.NativeMemory.WriteVector3(MemoryAddress + 0x30, value.ToInternalFVector3());
 			}
 		}
 

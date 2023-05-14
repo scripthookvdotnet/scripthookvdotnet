@@ -333,7 +333,7 @@ namespace GTA
 		public static Blip[] GetNearbyBlips(Vector3 position, float radius, params BlipSprite[] blipTypes)
 		{
 			var blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
-			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToArray(), radius, blipTypesInt), handle => new Blip(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToInternalFVector3(), radius, blipTypesInt), handle => new Blip(handle));
 		}
 
 		/// <summary>
@@ -480,7 +480,7 @@ namespace GTA
 		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
 		{
 			var hashes = Array.ConvertAll(models, model => model.Hash);
-			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToArray(), radius, hashes);
+			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius, hashes);
 
 			if (handles.Length == 0)
 			{
@@ -510,7 +510,7 @@ namespace GTA
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
 		{
 			var hashes = Array.ConvertAll(models, model => model.Hash);
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToArray(), radius, hashes), handle => new Ped(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius, hashes), handle => new Ped(handle));
 		}
 
 		/// <summary>
@@ -544,7 +544,7 @@ namespace GTA
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
 		{
 			var hashes = Array.ConvertAll(models, model => model.Hash);
-			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToArray(), radius, hashes);
+			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius, hashes);
 
 			var result = new List<Vehicle>();
 			var ignore = ped.CurrentVehicle;
@@ -570,7 +570,7 @@ namespace GTA
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
 		{
 			var hashes = Array.ConvertAll(models, model => model.Hash);
-			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToArray(), radius, hashes), handle => new Vehicle(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius, hashes), handle => new Vehicle(handle));
 		}
 
 		/// <summary>
@@ -603,7 +603,7 @@ namespace GTA
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
 		{
 			var hashes = Array.ConvertAll(models, model => model.Hash);
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToArray(), radius, hashes), handle => new Prop(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToInternalFVector3(), radius, hashes), handle => new Prop(handle));
 		}
 
 		/// <summary>
@@ -631,7 +631,7 @@ namespace GTA
 		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToArray(), radius), handle => new Prop(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius), handle => new Prop(handle));
 		}
 		/// <summary>
 		/// Gets the closest <see cref="Projectile"/> to a given position in the World.
@@ -657,7 +657,7 @@ namespace GTA
 		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Projectile"/>s.</param>
 		public static Projectile[] GetNearbyProjectiles(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetProjectileHandles(position.ToArray(), radius), handle => new Projectile(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetProjectileHandles(position.ToInternalFVector3(), radius), handle => new Projectile(handle));
 		}
 
 		/// <summary>
@@ -674,7 +674,7 @@ namespace GTA
 		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetEntityHandles(position.ToArray(), radius), Entity.FromHandle);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetEntityHandles(position.ToInternalFVector3(), radius), Entity.FromHandle);
 		}
 
 		public static Building[] GetAllBuildings()
@@ -683,7 +683,7 @@ namespace GTA
 		}
 		public static Building[] GetNearbyBuildings(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetBuildingHandles(position.ToArray(), radius), Building.FromHandle);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetBuildingHandles(position.ToInternalFVector3(), radius), Building.FromHandle);
 		}
 		public static Building GetClosestBuilding(Vector3 position, float radius)
 		{
@@ -696,7 +696,7 @@ namespace GTA
 		}
 		public static AnimatedBuilding[] GetNearbyAnimatedBuildings(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetAnimatedBuildingHandles(position.ToArray(), radius), AnimatedBuilding.FromHandle);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetAnimatedBuildingHandles(position.ToInternalFVector3(), radius), AnimatedBuilding.FromHandle);
 		}
 		public static AnimatedBuilding GetClosestAnimatedBuilding(Vector3 position, float radius)
 		{
@@ -709,7 +709,7 @@ namespace GTA
 		}
 		public static InteriorInstance[] GetNearbyInteriorInstances(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetInteriorInstHandles(position.ToArray(), radius), InteriorInstance.FromHandle);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetInteriorInstHandles(position.ToInternalFVector3(), radius), InteriorInstance.FromHandle);
 		}
 		public static InteriorInstance GetClosestInteriorInstance(Vector3 position, float radius)
 		{
@@ -722,7 +722,7 @@ namespace GTA
 		}
 		public static InteriorProxy[] GetNearbyInteriorProxies(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetInteriorProxyHandles(position.ToArray(), radius), InteriorProxy.FromHandle);
+			return Array.ConvertAll(SHVDN.NativeMemory.GetInteriorProxyHandles(position.ToInternalFVector3(), radius), InteriorProxy.FromHandle);
 		}
 		public static InteriorProxy GetClosestInteriorProxy(Vector3 position, float radius)
 		{

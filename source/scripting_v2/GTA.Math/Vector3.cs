@@ -62,6 +62,9 @@ namespace GTA.Math
 			Y = y;
 			Z = z;
 		}
+		internal Vector3(SHVDN.NativeMemory.FVector3 value) : this(value.X, value.Y, value.Z)
+		{
+		}
 
 		/// <summary>
 		/// Returns this vector with a magnitude of 1.
@@ -663,5 +666,7 @@ namespace GTA.Math
 		/// <returns><see langword="true" /> if <paramref name="value1"/> is the same instance as <paramref name="value2"/> or
 		/// if both are <see langword="null" /> references or if <c>value1.Equals(value2)</c> returns <see langword="true" />; otherwise, <see langword="false" />.</returns>
 		public static bool Equals(ref Vector3 value1, ref Vector3 value2) => value1.Equals(value2);
+
+		internal SHVDN.NativeMemory.FVector3 ToInternalFVector3() => new SHVDN.NativeMemory.FVector3(X, Y, Z);
 	}
 }
