@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv2", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv3", "source\scripting_v3\ScriptHookVDotNet_APIv3.csproj", "{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "examples\Examples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
