@@ -78,6 +78,11 @@ namespace GTA
 		public EntityBone this[string boneName] => new(_owner, boneName);
 
 		/// <summary>
+		/// Gets the root bone of this <see cref="Entity"/>.
+		/// </summary>
+		public EntityBone Root => new(_owner, 0);
+
+		/// <summary>
 		/// Gets the number of bones that this <see cref="Entity"/> has.
 		/// </summary>
 		public int Count => SHVDN.NativeMemory.GetEntityBoneCount(_owner.Handle);

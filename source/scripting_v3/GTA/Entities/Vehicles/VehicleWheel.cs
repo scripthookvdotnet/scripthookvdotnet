@@ -160,6 +160,23 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the normal vector of surface this <see cref="VehicleWheel"/> is contacting.
+		/// </summary>
+		public Vector3 SurfaceNormalVector
+		{
+			get
+			{
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return Vector3.Zero;
+				}
+
+				return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x70));
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the limit multiplier that affects how much this <see cref="VehicleWheel"/> can turn.
 		/// </summary>
 		public float SteeringLimitMultiplier
