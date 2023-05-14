@@ -605,7 +605,7 @@ namespace GTA
 		#region Radio
 
 		/// <summary>
-		/// Turns this <see cref="Vehicle"/>s radio on or off
+		/// Turns this <see cref="Vehicle"/>s radio on or off.
 		/// </summary>
 		public bool IsRadioEnabled
 		{
@@ -1615,7 +1615,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> drops money when destroyed.
-		/// Only works when the vehicle model is a car, quad bikes or trikes (strictly when the internal vehicle class is CAutomobile or derived class from CAutomobile).
+		/// Only works if the vehicle model is a car, quad bikes or trikes (strictly if the internal vehicle class is CAutomobile or derived class from CAutomobile).
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Vehicle"/> drops money when destroyed; otherwise, <see langword="false" />.
@@ -1807,7 +1807,6 @@ namespace GTA
 		/// </summary>
 		/// <param name="seat">The seat the new <see cref="Ped"/> will be spawned.</param>
 		/// <param name="model">The model for the new <see cref="Ped"/>.</param>
-		/// <returns></returns>
 		/// <exception cref="ArgumentException">Another <see cref="Ped"/> already occupies <paramref name="seat"/> of the <see cref="Vehicle"/>.</exception>
 		/// <remarks>Returns <see langword="null"/> if <paramref name="model"/> is not for a <see cref="Ped"/> or it cannot be loaded within one second.</remarks>
 		public Ped CreatePedOnSeat(VehicleSeat seat, Model model)
@@ -1829,7 +1828,6 @@ namespace GTA
 		/// Creates a random <see cref="Ped"/> on the specified seat.
 		/// </summary>
 		/// <param name="seat">The seat the new <see cref="Ped"/> will be spawned.</param>
-		/// <returns></returns>
 		/// <exception cref="ArgumentException">Another <see cref="Ped"/> already occupies <paramref name="seat"/> of the <see cref="Vehicle"/>.</exception>
 		public Ped CreateRandomPedOnSeat(VehicleSeat seat)
 		{

@@ -263,9 +263,14 @@ namespace GTA
 		/// Gets or sets the wanted level for this <see cref="Player"/>.
 		/// </summary>
 		/// <remarks>
+		/// <para>
+		/// Will refocus the search area if you set a value less than the current value and is not zero.
+		/// </para>
+		/// <para>
 		/// Hardcoded to clamp to at most 5 since <c>SET_PLAYER_WANTED_LEVEL</c> just sets the pending crime value to zero
 		/// when passed wanted level is a value other than from 1 to 5 (inclusive).
 		/// Also, the game does not read <c>WantedLevel6</c> items from <c>dispatch.meta</c>.
+		/// </para>
 		/// </remarks>
 		public int WantedLevel
 		{
@@ -998,10 +1003,10 @@ namespace GTA
 		public bool IsPressingHorn => Function.Call<bool>(Hash.IS_PLAYER_PRESSING_HORN, Handle);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Player"/> is playing.
+		/// Returns <see langword="false"/> if the screen is fading due to this <see cref="Player"/> being killed or arrested or failing a critical mission.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this <see cref="Player"/> is playing; otherwise, <see langword="false" />.
+		///  <see langword="false"/> if the screen is fading due to this <see cref="Player"/> being killed or arrested or failing a critical mission.; otherwise, <see langword="true"/>.
 		/// </value>
 		public bool IsPlaying => Function.Call<bool>(Hash.IS_PLAYER_PLAYING, Handle);
 

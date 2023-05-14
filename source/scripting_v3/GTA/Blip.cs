@@ -178,7 +178,7 @@ namespace GTA
 
 		/// <summary>
 		/// Get or sets the custom name of this <see cref="Blip"/>.
-		/// The custom name appears in the legends list on the map.
+		/// The custom name will appear in the legends list on the map after a string is set via this property.
 		/// </summary>
 		/// <remarks>
 		/// Returns <see langword="null" /> if the <see cref="Blip"/> does not exist.
@@ -253,11 +253,14 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the rotation of this <see cref="Blip"/> on the map as an <see cref="int"/>.
-		/// <para>Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely, since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/> in v1.0.944.2 or later versions.</para>
 		/// </summary>
 		/// <value>
 		/// The rotation as an <see cref="int"/>.
 		/// </value>
+		/// <remarks>
+		/// Use <see cref="RotationFloat"/> instead if you need to get or set the value precisely,
+		/// since a rotation value of a <see cref="Blip"/> are stored as a <see cref="float"/> in v1.0.944.2 or later versions.
+		/// </remarks>
 		/// <seealso cref="RotationFloat"/>
 		public int Rotation
 		{
@@ -732,8 +735,8 @@ namespace GTA
 		/// <summary>
 		/// Determines if two <see cref="Blip"/>s refer to the same blip.
 		/// </summary>
-		/// <param name="left">The left <see cref="Pickup"/>.</param>
-		/// <param name="right">The right <see cref="Pickup"/>.</param>
+		/// <param name="left">The left <see cref="Blip"/>.</param>
+		/// <param name="right">The right <see cref="Blip"/>.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> is the same blip as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Blip left, Blip right)
 		{
@@ -742,8 +745,8 @@ namespace GTA
 		/// <summary>
 		/// Determines if two <see cref="Blip"/>s don't refer to the same blip.
 		/// </summary>
-		/// <param name="left">The left <see cref="Pickup"/>.</param>
-		/// <param name="right">The right <see cref="Pickup"/>.</param>
+		/// <param name="left">The left <see cref="Blip"/>.</param>
+		/// <param name="right">The right <see cref="Blip"/>.</param>
 		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same blip as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(Blip left, Blip right)
 		{

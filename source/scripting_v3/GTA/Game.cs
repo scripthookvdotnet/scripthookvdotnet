@@ -69,7 +69,7 @@ namespace GTA
 		#endregion
 
 		/// <summary>
-		/// Gets the <see cref="GTA.Player"/> that you are controlling.
+		/// Gets the local <see cref="GTA.Player"/> that you are controlling.
 		/// </summary>
 		public static Player Player
 		{
@@ -137,7 +137,7 @@ namespace GTA
 		public static int GameTime => Function.Call<int>(Hash.GET_GAME_TIMER);
 
 		/// <summary>
-		/// Gets or Sets the time scale of the game.
+		/// Gets or sets the time scale of the game.
 		/// </summary>
 		/// <value>
 		/// The time scale, only accepts values in range 0.0f to 1.0f.
@@ -166,7 +166,7 @@ namespace GTA
 		/// Gets or sets the maximum wanted level a <see cref="GTA.Player"/> can receive.
 		/// </summary>
 		/// <value>
-		/// The maximum wanted level, only accepts values 0 to 5.
+		/// The maximum wanted level, only accepts values 0 to 5 inclusive.
 		/// </value>
 		public static int MaxWantedLevel
 		{
@@ -290,7 +290,7 @@ namespace GTA
 		public static bool IsWaypointActive => Function.Call<bool>(Hash.IS_WAYPOINT_ACTIVE);
 
 		/// <summary>
-		/// Performs an automatic game save.
+		/// Performs an automatic game save if allowed by the game settings.
 		/// </summary>
 		public static void DoAutoSave()
 		{
@@ -470,7 +470,7 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> was just pressed this frame
+		/// Gets whether a <see cref="Control"/> was just pressed this frame.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
@@ -479,7 +479,7 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
 		}
 		/// <summary>
-		/// Gets whether a <see cref="Control"/> was just released this frame
+		/// Gets whether a <see cref="Control"/> was just released this frame.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
@@ -527,7 +527,7 @@ namespace GTA
 		/// <summary>
 		/// Makes the engine respond to the given <see cref="Control"/> this frame.
 		/// </summary>
-		/// <param name="control">The <see cref="Control"/> to enable..</param>
+		/// <param name="control">The <see cref="Control"/> to enable.</param>
 		public static void EnableControlThisFrame(Control control)
 		{
 			Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control, true);

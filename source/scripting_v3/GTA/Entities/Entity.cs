@@ -33,10 +33,12 @@ namespace GTA
 		/// Creates a new instance of an <see cref="Entity"/> from the given handle.
 		/// </summary>
 		/// <param name="handle">The entity handle.</param>
-		/// <returns>Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
+		/// <returns>
+		/// Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
 		/// Returns a <see cref="Vehicle"/> if this handle corresponds to a Vehicle.
 		/// Returns a <see cref="Prop"/> if this handle corresponds to a Prop.
-		/// Returns <see langword="null" /> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/></returns>
+		/// Returns <see langword="null" /> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/>.
+		/// </returns>
 		public static Entity FromHandle(int handle)
 		{
 			var address = SHVDN.NativeMemory.GetEntityAddress(handle);
@@ -162,7 +164,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Resets the <seealso cref="Opacity"/>.
+		/// Resets the <see cref="Opacity"/>.
 		/// </summary>
 		public void ResetOpacity()
 		{
@@ -190,7 +192,7 @@ namespace GTA
 		/// </value>
 		/// <remarks>
 		/// If this <see cref="Entity"/> is <see cref="Ped"/>, setting to <see langword="true" /> can clear ambient tasks and setting to <see langword="false" /> will clear all tasks immediately.
-		/// Use <see cref="Ped.SetIsPersistentNoClearTask(bool)"/> instead if you need to keep assigned tasks.
+		/// Set <see cref="Ped.KeepTaskWhenMarkedAsNoLongerNeeded"/> to <see langword="true"/> before calling this method or use <see cref="Ped.SetIsPersistentNoClearTask(bool)"/> instead if you need to keep assigned tasks.
 		/// </remarks>
 		public bool IsPersistent
 		{
@@ -240,11 +242,13 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="HealthFloat"/> instead if you need to get or set the value precisely, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
 		/// The health as an <see cref="int"/>.
 		/// </value>
+		/// <remarks>
+		/// Use <see cref="HealthFloat"/> instead if you need to get or set the value precisely, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.
+		/// </remarks>
 		/// <seealso cref="HealthFloat"/>
 		public int Health
 		{
@@ -253,11 +257,13 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the maximum health of this <see cref="Entity"/> as an <see cref="int"/>.
-		/// <para>Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value precisely, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.</para>
 		/// </summary>
 		/// <value>
 		/// The maximum health as a <see cref="int"/>.
 		/// </value>
+		/// <remarks>
+		/// Use <see cref="MaxHealthFloat"/> instead if you need to get or set the value precisely, since a max health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.
+		/// </remarks>
 		public virtual int MaxHealth
 		{
 			get => Function.Call<int>(Hash.GET_ENTITY_MAX_HEALTH, Handle);
@@ -346,11 +352,13 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the position of this <see cref="Entity"/>.
-		/// If the <see cref="Entity"/> is <see cref="Ped"/> and the <see cref="Ped"/> is in a <see cref="Vehicle"/>, the <see cref="Vehicle"/>'s position will be returned or changed.
 		/// </summary>
 		/// <value>
 		/// The position in world space.
 		/// </value>
+		/// <remarks>
+		/// If the <see cref="Entity"/> is <see cref="Ped"/> and the <see cref="Ped"/> is in a <see cref="Vehicle"/>, the <see cref="Vehicle"/>'s position will be returned or changed.
+		/// </remarks>
 		public virtual Vector3 Position
 		{
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_COORDS, Handle, 0);
@@ -369,10 +377,11 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the rotation of this <see cref="Entity"/>.
+		/// Gets or sets the rotation of this <see cref="Entity"/> in degrees.
 		/// </summary>
 		/// <value>
-		/// The yaw, pitch, roll rotation values.
+		/// The yaw, pitch, roll rotation values in degrees, where roll represents X rotation, pitch represents Y rotation, yaw represents Z rotation.
+		/// The rotation order is <see cref="EulerRotationOrder.YXZ"/>.
 		/// </value>
 		public virtual Vector3 Rotation
 		{
@@ -1153,7 +1162,7 @@ namespace GTA
 		public bool IsOnScreen => Function.Call<bool>(Hash.IS_ENTITY_ON_SCREEN, Handle);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Entity"/> is upright.
+		/// Gets a value indicating whether this <see cref="Entity"/> is upright within 30f degrees.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Entity"/> is upright; otherwise, <see langword="false" />.
@@ -1276,7 +1285,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines whether this <see cref="Entity"/> is in a specified area
+		/// Determines whether this <see cref="Entity"/> is in a specified area.
 		/// </summary>
 		/// <param name="minBounds">The minimum bounds.</param>
 		/// <param name="maxBounds">The maximum bounds.</param>
@@ -1288,7 +1297,7 @@ namespace GTA
 			return Function.Call<bool>(Hash.IS_ENTITY_IN_AREA, Handle, minBounds.X, minBounds.Y, minBounds.Z, maxBounds.X, maxBounds.Y, maxBounds.Z);
 		}
 		/// <summary>
-		/// Determines whether this <see cref="Entity"/> is in a specified angled area
+		/// Determines whether this <see cref="Entity"/> is in a specified angled area.
 		/// </summary>
 		/// <param name="origin">The mid-point along a base edge of the rectangle.</param>
 		/// <param name="edge">The mid-point of opposite base edge on the other Z.</param>
@@ -1425,11 +1434,11 @@ namespace GTA
 			Function.Call(Hash.DETACH_ENTITY, Handle, applyVelocity, noCollisionUntilClear);
 		}
 		/// <summary>
-		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
+		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="position">The position relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/></param>
+		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/>.</param>
 		public void AttachTo(Entity entity, Vector3 position = default, Vector3 rotation = default)
 		{
 			// Note: bActiveCollisions (12th argument) will not work if -1 is passed as the bone index value
@@ -1496,7 +1505,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
-		/// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> isn't attached to any entity</remarks>
+		/// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> isn't attached to any entity.</remarks>
 		/// </summary>
 		public Entity AttachedEntity => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 

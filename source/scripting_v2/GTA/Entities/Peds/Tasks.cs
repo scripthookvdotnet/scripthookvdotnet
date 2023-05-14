@@ -220,14 +220,30 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_PARACHUTE_TO_TARGET, _ped.Handle, position.X, position.Y, position.Z);
 		}
+		/// <inheritdoc cref="ParkVehicle(Vehicle, Vector3, float, float, bool)"/>
 		public void ParkVehicle(Vehicle vehicle, Vector3 position, float heading)
 		{
 			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, heading, 1, 20.0f, false);
 		}
+		/// <inheritdoc cref="ParkVehicle(Vehicle, Vector3, float, float, bool)"/>
 		public void ParkVehicle(Vehicle vehicle, Vector3 position, float heading, float radius)
 		{
 			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, heading, 1, radius, false);
 		}
+		/// <summary>
+		/// Gives the <see cref="Ped"/> a task to park the specified <see cref="Vehicle"/> in the specified manner.
+		/// </summary>
+		/// <param name="vehicle">The driven vehicle.</param>
+		/// <param name="position">The center of the space.</param>
+		/// <param name="heading">
+		/// <para>Heading of the parking space. Can be either positive or negative direction.</para>
+		/// <para>Although "radius" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
+		/// </param>
+		/// <param name="radius">
+		/// <para>If the vehicle's heading isn't within this amount of <paramref name="heading"/>, the <see cref="Vehicle"/> will back up and try to straighten itself out.</para>
+		/// <para></para>
+		/// </param>
+		/// <param name="keepEngineOn">If <see langword="true"/>, keep the lights on after parking.</param>
 		public void ParkVehicle(Vehicle vehicle, Vector3 position, float heading, float radius, bool keepEngineOn)
 		{
 			Function.Call(Hash.TASK_VEHICLE_PARK, _ped.Handle, vehicle.Handle, position.X, position.Y, position.Z, heading, 1, radius, keepEngineOn);
@@ -346,6 +362,21 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_PED_SLIDE_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, heading, 0.7f);
 		}
+		/// <summary>
+		/// <para>
+		/// Tasks the <see cref="Ped"/> to stand still for the specified amount of miliseconds.
+		/// Typically used as a part of <see cref="TaskSequence"/> to add a stand still task (internally <c>CTaskDoNothing</c> will always be issued).
+		/// </para>
+		/// <para>
+		/// Some tasks such as <c>CTaskMeleeActionResult</c>, which is caused by doing melee attacks, may not stop immediately when this task is issued,
+		/// which is different from <see cref="Wait(int)"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="duration">The duration in milliseconds.</param>
+		/// <remarks>Unlike <see cref="Wait(int)"/>, the <see cref="Ped"/> won't stop doing a pause task even if no script
+		/// (including ysc ones or external ones) owns the <see cref="Ped"/>, which is possible by creating them or
+		/// setting <see cref="Entity.IsPersistent"/> to <see langword="true"/>.
+		/// </remarks>
 		public void StandStill(int duration)
 		{
 			Function.Call(Hash.TASK_STAND_STILL, _ped.Handle, duration);
@@ -402,6 +433,22 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_VEHICLE_SHOOT_AT_PED, _ped.Handle, target.Handle, 20.0f);
 		}
+		/// <summary>
+		/// <para>
+		/// Tasks the <see cref="Ped"/> to do nothing for the specified amount of miliseconds.
+		/// Typically used as a part of <see cref="TaskSequence"/> to add a delay.
+		/// <c>CTaskDoNothing</c> will be issued when this method is called as a standalone task and <c>CTaskPause</c> will be issued when this method is called as a part of <see cref="TaskSequence"/>.
+		/// </para>
+		/// <para>
+		/// Some tasks such as <c>CTaskMeleeActionResult</c>, which is caused by doing melee attacks, may stop immediately when this task is issued
+		/// as a part of <see cref="TaskSequence"/>, which is different from <see cref="StandStill(int)"/>.
+		/// </para>
+		/// </summary>
+		/// <param name="duration">The duration in milliseconds.</param>
+		/// <remarks>Unlike <see cref="StandStill(int)"/>, if no script (including ysc ones or external ones) owns the <see cref="Ped"/>,
+		/// which is possible by creating them or setting <see cref="Entity.IsPersistent"/> to <see langword="true"/>,
+		/// the <see cref="Ped"/> will stop doing a pause task immediately and do an ambient task instead.
+		/// </remarks>
 		public void Wait(int duration)
 		{
 			Function.Call(Hash.TASK_PAUSE, _ped.Handle, duration);

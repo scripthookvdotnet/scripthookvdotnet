@@ -156,10 +156,10 @@ namespace GTA
 		/// </value>
 		public bool IsBus => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.NativeMemory.VehicleFlag1.IsBus);
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a car.
+		/// Gets a value indicating whether this <see cref="Model"/> is a car and not an amphibious one.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this <see cref="Model"/> is a car; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Model"/> is a car and not an amphibious one; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsCar => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_CAR, Hash);
 		/// <summary>
@@ -298,10 +298,10 @@ namespace GTA
 		/// </value>
 		public bool IsProp => IsValid && !IsPed && !IsVehicle;
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Model"/> is a quad bike.
+		/// Gets a value indicating whether this <see cref="Model"/> is a quad bike and not an amphibious one.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this <see cref="Model"/> is a quad bike; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Model"/> is a quad bike and not an amphibious one; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsQuadBike => Function.Call<bool>(Native.Hash.IS_THIS_MODEL_A_QUADBIKE, Hash);
 		/// <summary>

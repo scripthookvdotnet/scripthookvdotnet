@@ -38,6 +38,12 @@ namespace GTA
 
 		#region Time & Day
 
+		/// <summary>
+		/// Gets or sets the current date and time in the GTA World.
+		/// </summary>
+		/// <value>
+		/// The current date and time.
+		/// </value>
 		public static DateTime CurrentDate
 		{
 			get
@@ -58,6 +64,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the current time of day in the GTA World.
+		/// </summary>
+		/// <value>
+		/// The current time of day
+		/// </value>
 		public static TimeSpan CurrentDayTime
 		{
 			get
@@ -75,11 +87,23 @@ namespace GTA
 
 		#region Weather & Effects
 
+		/// <summary>
+		/// Sets a value indicating whether artificial lights in the <see cref="World"/> should be rendered.
+		/// </summary>
+		/// <value>
+		///   <see langword="true" /> if blackout; otherwise, <see langword="false" />.
+		/// </value>
 		public static void SetBlackout(bool enable)
 		{
 			Function.Call(Hash._SET_BLACKOUT, enable);
 		}
 
+		/// <summary>
+		/// Gets or sets the previous weather.
+		/// </summary>
+		/// <value>
+		/// The previous weather.
+		/// </value>
 		public static Weather Weather
 		{
 			get
@@ -102,6 +126,12 @@ namespace GTA
 				}
 			}
 		}
+		/// <summary>
+		/// Gets or sets the next weather.
+		/// </summary>
+		/// <value>
+		/// The next weather.
+		/// </value>
 		public static Weather NextWeather
 		{
 			get
@@ -130,6 +160,11 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Transitions to weather.
+		/// </summary>
+		/// <param name="value">The weather.</param>
+		/// <param name="duration">The duration.</param>
 		public static void TransitionToWeather(Weather value, float duration)
 		{
 			if (Enum.IsDefined(value.GetType(), value) && value != Weather.Unknown)
@@ -153,6 +188,16 @@ namespace GTA
 			set => Function.Call(Hash._SET_WEATHER_TYPE_TRANSITION, 0, 0, value);
 		}
 
+		/// <summary>
+		/// Sets the gravity level for all <see cref="World"/> objects.
+		/// </summary>
+		/// <value>
+		/// The gravity level:
+		/// 0 - Default gravity (9.8f).
+		/// 1 - Moon gravity (2.4f).
+		/// 2 - Very low gravity (0.1f).
+		/// 3 - No gravity (0.0f).
+		/// </value>
 		public static int GravityLevel
 		{
 			set => Function.Call(Hash.SET_GRAVITY_LEVEL, value);
@@ -162,6 +207,14 @@ namespace GTA
 
 		#region Blips
 
+		/// <summary>
+		/// Gets the waypoint position.
+		/// </summary>
+		/// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
+		/// <remarks>
+		/// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
+		/// If the game engine cant extract height information the Z component will be 0.0f
+		/// </remarks>
 		public static Vector3 GetWaypointPosition()
 		{
 			if (!Game.IsWaypointActive)
@@ -207,10 +260,19 @@ namespace GTA
 			return position;
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Blip"/> at the given position on the map.
+		/// </summary>
+		/// <param name="position">The position of the blip on the map.</param>
 		public static Blip CreateBlip(Vector3 position)
 		{
 			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z);
 		}
+		/// <summary>
+		/// Creates a <see cref="Blip"/> for a circular area at the given position on the map.
+		/// </summary>
+		/// <param name="position">The position of the blip on the map.</param>
+		/// <param name="radius">The radius of the area on the map.</param>
 		public static Blip CreateBlip(Vector3 position, float radius)
 		{
 			return Function.Call<Blip>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius);
@@ -220,15 +282,29 @@ namespace GTA
 
 		#region Entities
 
+		/// <summary>
+		/// Gets an <c>array</c>of all <see cref="Ped"/>s in the World.
+		/// </summary>
 		public static Ped[] GetAllPeds()
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(), handle => new Ped(handle));
 		}
 
+		/// <summary>
+		/// Gets an <c>array</c>of all <see cref="Ped"/>s in the World.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of <see cref="Ped"/>s to get.</param>
 		public static Ped[] GetAllPeds(Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(new[] { model.Hash }), handle => new Ped(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s near a given <see cref="Ped"/> in the world
+		/// </summary>
+		/// <param name="ped">The ped to check.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Ped"/>s.</param>
+		/// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
+
 		public static Ped[] GetNearbyPeds(Ped ped, float radius)
 		{
 			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius);
@@ -252,23 +328,47 @@ namespace GTA
 
 			return result.ToArray();
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius), handle => new Ped(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Ped"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <param name="model">The <see cref="Model"/> of <see cref="Ped"/>s to get.</param>
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius, new[] { model.Hash }), handle => new Ped(handle));
 		}
-
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
+		/// </summary>	
 		public static Vehicle[] GetAllVehicles()
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(), handle => new Vehicle(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of <see cref="Vehicle"/>s to get.</param>
 		public static Vehicle[] GetAllVehicles(Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(new[] { model.Hash }), handle => new Vehicle(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s near a given <see cref="Ped"/> in the world
+		/// </summary>
+		/// <param name="ped">The ped to check.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
+
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius)
 		{
 			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius);
@@ -294,46 +394,92 @@ namespace GTA
 
 			return result.ToArray();
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius), handle => new Vehicle(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Vehicle"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <param name="model">The <see cref="Model"/> of <see cref="Vehicle"/>s to get.</param>
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius, new[] { model.Hash }), handle => new Vehicle(handle));
 		}
-
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
+		/// </summary>
 		public static Prop[] GetAllProps()
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(), handle => new Prop(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of <see cref="Prop"/>s to get.</param>
 		public static Prop[] GetAllProps(Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(new[] { model.Hash }), handle => new Prop(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		public static Prop[] GetNearbyProps(Vector3 position, float radius)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToInternalFVector3(), radius), handle => new Prop(handle));
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Prop"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <param name="model">The <see cref="Model"/> of <see cref="Prop"/>s to get.</param>
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, Model model)
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToInternalFVector3(), radius, new[] { model.Hash }), handle => new Prop(handle));
 		}
 
+		/// <summary>
+		/// Gets an <c>array</c> of all the <see cref="Blip"/>s on the map.
+		/// </summary>
 		public static Blip[] GetActiveBlips()
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(), handle => new Blip(handle));
 		}
 
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Entity"/>s in the World.
+		/// </summary>
 		public static Entity[] GetAllEntities()
 		{
 			return Array.ConvertAll<int, Entity>(SHVDN.NativeMemory.GetEntityHandles(), Entity.FromHandle);
 		}
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="Entity"/>s in a given region in the World.
+		/// </summary>
+		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Entity"/>s.</param>
 		public static Entity[] GetNearbyEntities(Vector3 position, float radius)
 		{
 			return Array.ConvertAll<int, Entity>(SHVDN.NativeMemory.GetEntityHandles(position.ToInternalFVector3(), radius), Entity.FromHandle);
 		}
 
+		/// <summary>
+		/// Gets the closest <see cref="ISpatial"/> to a given position in the World.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="position">The position to check against.</param>
+		/// <param name="spatials">The spatials to check.</param>
+		/// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
 		{
 			var closest = default(T);
@@ -349,11 +495,23 @@ namespace GTA
 			}
 			return (T)closest;
 		}
+		/// <summary>
+		/// Gets the closest <see cref="Ped"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Ped"/>.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Ped"/>s.</param>
+		/// <remarks>Returns <see langword="null" /> if no <see cref="Ped"/> was in the given region.</remarks>
 		public static Ped GetClosestPed(Vector3 position, float radius)
 		{
 			var peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius), handle => new Ped(handle));
 			return GetClosest(position, peds);
 		}
+		/// <summary>
+		/// Gets the closest <see cref="Vehicle"/> to a given position in the World.
+		/// </summary>
+		/// <param name="position">The position to find the nearest <see cref="Vehicle"/>.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Vehicle"/>s.</param>
+		/// <remarks>Returns <see langword="null" /> if no <see cref="Vehicle"/> was in the given region.</remarks>
 		public static Vehicle GetClosestVehicle(Vector3 position, float radius)
 		{
 			var vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius), handle => new Vehicle(handle));
@@ -361,18 +519,52 @@ namespace GTA
 
 		}
 
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Vehicle"/>s spawned in the world.
+		/// </summary>
 		private static int VehicleCount => SHVDN.NativeMemory.GetVehicleCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Ped"/>s spawned in the world.
+		/// </summary>
 		private static int PedCount => SHVDN.NativeMemory.GetPedCount();
+		/// <summary>
+		/// A fast way to get the total number of <see cref="Prop"/>s spawned in the world.
+		/// </summary>
 		private static int PropCount => SHVDN.NativeMemory.GetObjectCount();
 
+		/// <summary>
+		/// The total number of <see cref="Vehicle"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Vehicle"/> is the same as this limit and the game tries to create a <see cref="Vehicle"/>.</remarks>
 		private static int VehicleCapacity => SHVDN.NativeMemory.GetVehicleCapacity();
+		/// <summary>
+		/// The total number of <see cref="Ped"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Ped"/> is the same as this limit and the game tries to create a <see cref="Ped"/>.</remarks>
 		private static int PedCapacity => SHVDN.NativeMemory.GetPedCapacity();
+		/// <summary>
+		/// The total number of <see cref="Prop"/>s that can exist in the world.
+		/// </summary>
+		/// <remarks>The game will crash when the number of <see cref="Prop"/> is the same as this limit and the game tries to create a <see cref="Prop"/>.</remarks>
 		private static int PropCapacity => SHVDN.NativeMemory.GetObjectCapacity();
 
+		/// <summary>
+		/// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
+		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Ped"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Ped CreatePed(Model model, Vector3 position)
 		{
 			return CreatePed(model, position, 0.0f);
 		}
+		/// <summary>
+		/// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
+		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+		/// <param name="heading">The heading of the <see cref="Ped"/>.</param>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Ped"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Ped CreatePed(Model model, Vector3 position, float heading)
 		{
 			if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
@@ -382,6 +574,10 @@ namespace GTA
 
 			return Function.Call<Ped>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
 		}
+		/// <summary>
+		/// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
+		/// </summary>
+		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
 		public static Ped CreateRandomPed(Vector3 position)
 		{
 			if (PedCount >= PedCapacity)
@@ -392,10 +588,23 @@ namespace GTA
 			return Function.Call<Ped>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z);
 		}
 
+		/// <summary>
+		/// Spawns a <see cref="Vehicle"/> of the given <see cref="Model"/> at the position and heading specified.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
+		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Vehicle CreateVehicle(Model model, Vector3 position)
 		{
 			return CreateVehicle(model, position, 0.0f);
 		}
+		/// <summary>
+		/// Spawns a <see cref="Vehicle"/> of the given <see cref="Model"/> at the position and heading specified.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
+		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
+		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading)
 		{
 			if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
@@ -406,6 +615,7 @@ namespace GTA
 			return Function.Call<Vehicle>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false);
 		}
 
+		/// <inheritdoc cref="CreateProp(Model, Vector3, Vector3, bool, bool)"/>
 		public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
 		{
 			if (PropCount >= PropCapacity)
@@ -425,6 +635,21 @@ namespace GTA
 
 			return Function.Call<Prop>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic);
 		}
+		/// <summary>
+		/// Spawns a <see cref="Prop"/> of the given <see cref="Model"/> at the specified position.
+		/// </summary>
+		/// <param name="model">The <see cref="Model"/> of the <see cref="Prop"/>.</param>
+		/// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
+		/// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
+		/// <param name="dynamic">
+		/// <para>
+		/// If <see langword="true"/>, the <see cref="Prop"/> will always be forced to be an regular prop type (<c>CObject</c>). This applies when creating a <see cref="Prop"/> that uses a door <see cref="Model"/>.
+		/// If this is <see langword="false"/>, the <see cref="Prop"/> will be created as a door type (<c>CDoor</c>) and it will work as a door.
+		/// </para>
+		/// <para>Although "dynamic" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
+		/// </param>
+		/// <param name="placeOnGround">if set to <see langword="true" /> place the prop on the ground nearest to the <paramref name="position"/>.</param>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
 		{
 			Prop p = CreateProp(model, position, dynamic, placeOnGround);
@@ -439,6 +664,9 @@ namespace GTA
 			return p;
 		}
 
+		/// <summary>
+		/// Spawns a pickup <see cref="Prop"/> at the specified position.
+		/// </summary>
 		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
 		{
 			if (!model.Request(1000))
@@ -454,6 +682,9 @@ namespace GTA
 
 			return new Prop(handle);
 		}
+		/// <summary>
+		/// Spawns a <see cref="Pickup"/> at the specified position.
+		/// </summary>
 		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
 		{
 			if (!model.Request(1000))
@@ -469,6 +700,9 @@ namespace GTA
 
 			return new Pickup(handle);
 		}
+		/// <summary>
+		/// Spawns a <see cref="Pickup"/> at the specified position.
+		/// </summary>
 		public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
 		{
 			if (!model.Request(1000))
@@ -489,16 +723,34 @@ namespace GTA
 
 		#region Cameras
 
+		/// <summary>
+		/// Destroys all user created <see cref="Camera"/>s.
+		/// </summary>
 		public static void DestroyAllCameras()
 		{
 			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Camera"/>, use <see cref="World.RenderingCamera"/> to switch to this camera
+		/// </summary>
+		/// <param name="position">The position of the camera.</param>
+		/// <param name="rotation">The rotation of the camera.</param>
+		/// <param name="fov">The field of view of the camera.</param>
 		public static Camera CreateCamera(Vector3 position, Vector3 rotation, float fov)
 		{
 			return Function.Call<Camera>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2);
 		}
 
+		/// <summary>
+		/// Gets or sets the rendering camera.
+		/// </summary>
+		/// <value>
+		/// The rendering <see cref="Camera"/>.
+		/// </value>
+		/// <remarks>
+		/// Setting to <see langword="null" /> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>.
+		/// </remarks>
 		public static Camera RenderingCamera
 		{
 			get => new Camera(Function.Call<int>(Hash.GET_RENDERING_CAM));
@@ -520,38 +772,100 @@ namespace GTA
 
 		#region Others
 
+		/// <summary>
+		/// Spawns a <see cref="Rope"/>.
+		/// </summary>
+		/// <param name="type">The type of <see cref="Rope"/>.</param>
+		/// <param name="position">The position of the <see cref="Rope"/>.</param>
+		/// <param name="rotation">The rotation of the <see cref="Rope"/>.</param>
+		/// <param name="length">The length of the <see cref="Rope"/>.</param>
+		/// <param name="minLength">The minimum length of the <see cref="Rope"/>.</param>
+		/// <param name="breakable">if set to <see langword="true" /> the <see cref="Rope"/> will break if shot.</param>
 		public static Rope AddRope(RopeType type, Vector3 position, Vector3 rotation, float length, float minLength, bool breakable)
 		{
 			Function.Call(Hash.ROPE_LOAD_TEXTURES);
 			return Function.Call<Rope>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, (int)type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0);
 		}
 
+		/// <inheritdoc cref="ShootBullet(Vector3, Vector3, Ped, Model, int, float)"/>
 		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage)
 		{
 			ShootBullet(sourcePosition, targetPosition, owner, model, damage, -1.0f);
 		}
+		/// <summary>
+		/// Fires a single bullet in the world.
+		/// </summary>
+		/// <param name="sourcePosition">Where the bullet is fired from.</param>
+		/// <param name="targetPosition">Where the bullet is fired to.</param>
+		/// <param name="owner">The <see cref="Ped"/> who fired the bullet, leave <see langword="null" /> for no one.</param>
+		/// <param name="model">The weapon hash that the bullet is fired from. The <see cref="Model"/> type is incorrectly used here.</param>
+		/// <param name="damage">The damage the bullet will cause.</param>
+		/// <param name="speed">The speed, only affects projectile weapons, leave -1 for default.</param>
+
 		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, Model model, int damage, float speed)
 		{
 			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, model.Hash, owner.Handle, 1, 0, speed);
 		}
 
+		/// <summary>
+		/// Creates an explosion in the world.
+		/// </summary>
+		/// <param name="position">The position of the explosion.</param>
+		/// <param name="type">The type of explosion.</param>
+		/// <param name="radius">The radius of the explosion.</param>
+		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
 		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake)
 		{
 			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, true, false, cameraShake);
 		}
+		/// <summary>
+		/// Creates an explosion in the world.
+		/// </summary>
+		/// <param name="position">The position of the explosion.</param>
+		/// <param name="type">The type of explosion.</param>
+		/// <param name="radius">The radius of the explosion.</param>
+		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
+		/// <param name="Aubidble">If set to <see langword="true" />, explosion can be heard.</param>
+		/// <param name="Invis">If set to <see langword="true" />, explosion will not create particle effects.</param>
+
 		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
 		{
 			Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, (int)type, radius, Aubidble, Invis, cameraShake);
 		}
+		/// <summary>
+		/// Creates an explosion in the world owned by the specified <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="ped">The <see cref="Ped"/> who caused the explosion.</param>
+		/// <param name="position">The position of the explosion.</param>
+		/// <param name="type">The type of explosion.</param>
+		/// <param name="radius">The radius of the explosion.</param>
+		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
+
 		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake)
 		{
 			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, true, false, cameraShake);
 		}
+		/// <summary>
+		/// Creates an explosion in the world owned by the specified <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="ped">The <see cref="Ped"/> who caused the explosion.</param>
+		/// <param name="position">The position of the explosion.</param>
+		/// <param name="type">The type of explosion.</param>
+		/// <param name="radius">The radius of the explosion.</param>
+		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
+		/// <param name="Aubidble">If set to <see langword="true" />, explosion can be heard.</param>
+		/// <param name="Invis">If set to <see langword="true" />, explosion will not create particle effects.</param>
+
 		public static void AddOwnedExplosion(Ped ped, Vector3 position, ExplosionType type, float radius, float cameraShake, bool Aubidble, bool Invis)
 		{
 			Function.Call(Hash.ADD_OWNED_EXPLOSION, ped.Handle, position.X, position.Y, position.Z, (int)type, radius, Aubidble, Invis, cameraShake);
 		}
 
+		/// <summary>
+		/// Creates a relationship group with the given name.
+		/// </summary>
+		/// <param name="groupName">The name of the relationship group.</param>
+		/// <returns>The hash of the created relationship group.</returns>
 		public static int AddRelationshipGroup(string groupName)
 		{
 			int handle = 0;
@@ -561,6 +875,10 @@ namespace GTA
 			};
 			return handle;
 		}
+		/// <summary>
+		/// Removes a relationship group with the given name.
+		/// </summary>
+		/// <param name="group">The hash of the relationship group.</param>
 		public static void RemoveRelationshipGroup(int group)
 		{
 			Function.Call(Hash.REMOVE_RELATIONSHIP_GROUP, group);
@@ -584,10 +902,27 @@ namespace GTA
 
 		#region Drawing
 
+		/// <inheritdoc cref="DrawMarker(MarkerType, Vector3, Vector3, Vector3, Vector3, Color, bool, bool, int, bool, string, string, bool)"/>
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color)
 		{
 			DrawMarker(type, pos, dir, rot, scale, color, false, false, 2, false, null, null, false);
 		}
+		/// <summary>
+		/// Draws a marker in the world, this needs to be done on a per frame basis
+		/// </summary>
+		/// <param name="type">The type of marker.</param>
+		/// <param name="pos">The position of the marker.</param>
+		/// <param name="dir">The direction the marker points in.</param>
+		/// <param name="rot">The rotation of the marker.</param>
+		/// <param name="scale">The amount to scale the marker by.</param>
+		/// <param name="color">The color of the marker.</param>
+		/// <param name="bobUpAndDown">if set to <see langword="true" /> the marker will bob up and down.</param>
+		/// <param name="faceCamY">if set to <see langword="true" /> the marker will always face the camera, regardless of its rotation.</param>
+		/// <param name="unk2">The euler rotation order. You would like to set 2, which will rotate Y, X, Z axis in word space in that order.</param>
+		/// <param name="rotateY">if set to <see langword="true" /> rotates only on the y axis(heading).</param>
+		/// <param name="textueDict">Name of texture dictionary to load the texture from, leave null for no texture in the marker.</param>
+		/// <param name="textureName">Name of texture inside the dictionary to load the texture from, leave null for no texture in the marker.</param>
+		/// <param name="drawOnEnt">if set to <see langword="true" /> draw on any <see cref="Entity"/> that intersects the marker.</param>
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamY, int unk2, bool rotateY, string textueDict, string textureName, bool drawOnEnt)
 		{
 			InputArgument dict = new InputArgument(0), name = new InputArgument(0);
@@ -603,6 +938,13 @@ namespace GTA
 
 			Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamY, unk2, rotateY, dict, name, drawOnEnt);
 		}
+		/// <summary>
+		/// Draws light around a region.
+		/// </summary>
+		/// <param name="position">The position to center the light around.</param>
+		/// <param name="color">The color of the light.</param>
+		/// <param name="range">How far the light should extend to.</param>
+		/// <param name="intensity">The intensity: should be positive.</param>
 		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
 		{
 			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range, intensity);
@@ -620,41 +962,81 @@ namespace GTA
 
 		#region Raycasting
 
+		/// <inheritdoc cref="Raycast(Vector3, Vector3, IntersectOptions, Entity)"/>
 		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options)
 		{
 			return Raycast(source, target, options, null);
 		}
+		/// <summary>
+		/// Creates a raycast between 2 points.
+		/// </summary>
+		/// <param name="source">The source of the raycast.</param>
+		/// <param name="target">The target of the raycast.</param>
+		/// <param name="options">What type of objects the raycast should intersect with.</param>
+		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore.</param>
 		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectOptions options, Entity ignoreEntity)
 		{
 			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
+		/// <inheritdoc cref="Raycast(Vector3, Vector3, float, IntersectOptions, Entity)"/>
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options)
 		{
 			return Raycast(source, direction, maxDistance, options, null);
 		}
+		/// <summary>
+		/// Creates a raycast between 2 points.
+		/// </summary>
+		/// <param name="source">The source of the raycast.</param>
+		/// <param name="direction">The direction of the raycast.</param>
+		/// <param name="maxDistance">How far the raycast should go out to.</param>
+		/// <param name="options">What type of objects the raycast should intersect with.</param>
+		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore.</param>
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity)
 		{
 			var target = source + (direction * maxDistance);
 			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
+		/// <inheritdoc cref="RaycastCapsule(Vector3, Vector3, float, IntersectOptions, Entity)"/>
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options)
 		{
 			return RaycastCapsule(source, target, radius, options, null);
 		}
+		/// <summary>
+		/// Creates a 3D raycast between 2 points.
+		/// </summary>
+		/// <param name="source">The source of the raycast.</param>
+		/// <param name="target">The target of the raycast.</param>
+		/// <param name="radius">The radius of the raycast.</param>
+		/// <param name="options">What type of objects the raycast should intersect with.</param>
+		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore.</param>
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectOptions options, Entity ignoreEntity)
 		{
 			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
+		/// <inheritdoc cref="RaycastCapsule(Vector3, Vector3, float, float, IntersectOptions, Entity)"/>
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options)
 		{
 			return RaycastCapsule(source, direction, maxDistance, radius, options, null);
 		}
+		/// <summary>
+		/// Creates a 3D raycast between 2 points.
+		/// </summary>
+		/// <param name="source">The source of the raycast.</param>
+		/// <param name="direction">The direction of the raycast.</param>
+		/// <param name="radius">The radius of the raycast.</param>
+		/// <param name="maxDistance">How far the raycast should go out to.</param>
+		/// <param name="options">What type of objects the raycast should intersect with.</param>
+		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity)
 		{
 			var target = source + (direction * maxDistance);
 			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 
+		/// <summary>
+		/// Determines where the crosshair intersects with the world.
+		/// </summary>
+		/// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
 		public static RaycastResult GetCrosshairCoordinates()
 		{
 			return Raycast(GameplayCamera.Position, GameplayCamera.Direction, 1000.0f, IntersectOptions.Everything);
@@ -664,18 +1046,42 @@ namespace GTA
 
 		#region Positioning
 
+		/// <summary>
+		/// Gets the straight line distance between 2 positions.
+		/// </summary>
+		/// <param name="origin">The origin.</param>
+		/// <param name="destination">The destination.</param>
+		/// <returns>The distance.</returns>
 		public static float GetDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
 		}
+		/// <summary>
+		/// Calculates the travel distance using roads and paths between 2 positions.
+		/// </summary>
+		/// <param name="origin">The origin.</param>
+		/// <param name="destination">The destination.</param>
+		/// <returns>The travel distance.</returns>
 		public static float CalculateTravelDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.CALCULATE_TRAVEL_DISTANCE_BETWEEN_POINTS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z);
 		}
+		/// <summary>
+		/// Gets the height of the ground at a given position.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector2 position)
 		{
 			return GetGroundHeight(new Vector3(position.X, position.Y, 1000f));
 		}
+		/// <summary>
+		/// Gets the height of the ground at a given position.
+		/// Note : If the Vector3 is already below the ground, this will return 0.
+		/// You may want to use the other overloaded function to be safe.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <returns>The height measured in meters</returns>
 		public static float GetGroundHeight(Vector3 position)
 		{
 			float resultArg;
@@ -688,14 +1094,22 @@ namespace GTA
 			return resultArg;
 		}
 
+		/// <inheritdoc cref="GetSafeCoordForPed(Vector3, bool, int)"/>
 		public static Vector3 GetSafeCoordForPed(Vector3 position)
 		{
 			return GetSafeCoordForPed(position, true, 0);
 		}
+		/// <inheritdoc cref="GetSafeCoordForPed(Vector3, bool, int)"/>
 		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk)
 		{
 			return GetSafeCoordForPed(position, sidewalk, 0);
 		}
+		/// <summary>
+		/// Gets the nearest safe coordinate to position a <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="sidewalk">if set to <see langword="true" /> Only find positions on the sidewalk.</param>
+		/// <param name="flags">The flags.</param>
 		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk, int flags)
 		{
 			var outPos = new OutputArgument();
@@ -708,14 +1122,28 @@ namespace GTA
 			return Vector3.Zero;
 		}
 
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
 		public static Vector3 GetNextPositionOnStreet(Vector3 position)
 		{
 			return GetNextPositionOnStreet(position, false);
 		}
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.  Considers switched off nodes, where ambient vehicles will not spawn.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
 		public static Vector3 GetNextPositionOnStreet(Vector2 position, bool unoccupied)
 		{
 			return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0), unoccupied);
 		}
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
 		public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied)
 		{
 			var outPos = new OutputArgument();
@@ -741,10 +1169,18 @@ namespace GTA
 			return Vector3.Zero;
 		}
 
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Ped"/> can be placed.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
 		public static Vector3 GetNextPositionOnSidewalk(Vector2 position)
 		{
 			return GetNextPositionOnSidewalk(new Vector3(position.X, position.Y, 0));
 		}
+		/// <summary>
+		/// Gets the next position on the street where a <see cref="Ped"/> can be placed.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
 		public static Vector3 GetNextPositionOnSidewalk(Vector3 position)
 		{
 			var outPos = new OutputArgument();

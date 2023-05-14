@@ -332,10 +332,10 @@ namespace GTA
 		/// Gives the <see cref="Ped"/> a task to park the specified <see cref="Vehicle"/> in the specified manner.
 		/// </summary>
 		/// <param name="vehicle">The driven vehicle.</param>
-		/// <param name="position">The center of the space</param>
+		/// <param name="position">The center of the space.</param>
 		/// <param name="heading">
 		/// <para>Heading of the parking space. Can be either positive or negative direction.</para>
-		/// <para><para>Although "radius" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para></para>
+		/// <para>Although "radius" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
 		/// </param>
 		/// <param name="radius">
 		/// <para>If the vehicle's heading isn't within this amount of <paramref name="heading"/>, the <see cref="Vehicle"/> will back up and try to straighten itself out.</para>
@@ -350,7 +350,7 @@ namespace GTA
 		/// Gives the <see cref="Ped"/> a task to park the specified <see cref="Vehicle"/> in the specified manner.
 		/// </summary>
 		/// <param name="vehicle">The driven vehicle.</param>
-		/// <param name="position">The center of the space</param>
+		/// <param name="position">The center of the space.</param>
 		/// <param name="directionDegrees">
 		/// Heading of the parking space.
 		/// Can be either positive or negative direction--how the <see cref="Vehicle"/> enters the space is determined by <paramref name="parkType"/>.

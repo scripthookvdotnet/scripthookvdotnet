@@ -123,7 +123,7 @@ namespace GTA
 		#region Weather & Effects
 
 		/// <summary>
-		/// Sets a value indicating whether lights in the <see cref="World"/> should be rendered.
+		/// Sets a value indicating whether artificial lights in the <see cref="World"/> should be rendered.
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if blackout; otherwise, <see langword="false" />.
@@ -134,10 +134,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the weather.
+		/// Gets or sets the previous weather.
 		/// </summary>
 		/// <value>
-		/// The weather.
+		/// The previous weather.
 		/// </value>
 		public static Weather Weather
 		{
@@ -943,7 +943,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Ped"/>.</param>
-		/// <remarks>returns <see langword="null" /> if the <see cref="Ped"/> could not be spawned.</remarks>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Ped"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
 		{
 			if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
@@ -1011,7 +1011,7 @@ namespace GTA
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
 		/// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
 		/// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-		/// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned.</remarks>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
 		{
 			if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
@@ -1079,7 +1079,7 @@ namespace GTA
 		/// <para>Although "dynamic" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
 		/// </param>
 		/// <param name="placeOnGround">if set to <see langword="true" /> place the prop on the ground nearest to the <paramref name="position"/>.</param>
-		/// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned.</remarks>
+		/// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
 		{
 			var prop = CreateProp(model, position, dynamic, placeOnGround);
@@ -1583,7 +1583,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Fires a single bullet in the world
+		/// Fires a single bullet in the world.
 		/// </summary>
 		/// <param name="sourcePosition">Where the bullet is fired from.</param>
 		/// <param name="targetPosition">Where the bullet is fired to.</param>
@@ -1597,15 +1597,15 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Creates an explosion in the world
+		/// Creates an explosion in the world.
 		/// </summary>
 		/// <param name="position">The position of the explosion.</param>
 		/// <param name="type">The type of explosion.</param>
 		/// <param name="radius">The radius of the explosion.</param>
 		/// <param name="cameraShake">The amount of camera shake to apply to nearby cameras.</param>
 		/// <param name="owner">The <see cref="Ped"/> who caused the explosion, leave null if no one caused the explosion.</param>
-		/// <param name="aubidble">if set to <see langword="true" /> explosion can be heard.</param>
-		/// <param name="invisible">if set to <see langword="true" /> explosion is invisible.</param>
+		/// <param name="aubidble">If set to <see langword="true" />, explosion can be heard.</param>
+		/// <param name="invisible">If set to <see langword="true" />, explosion will not create particle effects.</param>
 		public static void AddExplosion(Vector3 position, ExplosionType type, float radius, float cameraShake, Ped owner = null, bool aubidble = true, bool invisible = false)
 		{
 			if (owner?.Exists() == true)
@@ -1673,7 +1673,7 @@ namespace GTA
 		/// <param name="position">The position to center the light around.</param>
 		/// <param name="color">The color of the light.</param>
 		/// <param name="range">How far the light should extend to.</param>
-		/// <param name="intensity">The intensity: <c>0.0f</c> being no intensity, <c>1.0f</c> being full intensity.</param>
+		/// <param name="intensity">The intensity: should be positive.</param>
 		public static void DrawLightWithRange(Vector3 position, Color color, float range, float intensity)
 		{
 			Function.Call(Hash.DRAW_LIGHT_WITH_RANGE, position.X, position.Y, position.Z, color.R, color.G, color.B, range,
@@ -1853,7 +1853,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="origin">The origin.</param>
 		/// <param name="destination">The destination.</param>
-		/// <returns>The distance</returns>
+		/// <returns>The distance.</returns>
 		public static float GetDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
@@ -1863,7 +1863,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="origin">The origin.</param>
 		/// <param name="destination">The destination.</param>
-		/// <returns>The travel distance</returns>
+		/// <returns>The travel distance.</returns>
 		public static float CalculateTravelDistance(Vector3 origin, Vector3 destination)
 		{
 			return Function.Call<float>(Hash.CALCULATE_TRAVEL_DISTANCE_BETWEEN_POINTS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z);

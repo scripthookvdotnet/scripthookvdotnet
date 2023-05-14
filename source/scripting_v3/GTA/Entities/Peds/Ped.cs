@@ -134,11 +134,17 @@ namespace GTA
 
 		public bool IsCuffed => Function.Call<bool>(Hash.IS_PED_CUFFED, Handle);
 
+		/// <summary>
+		/// Sets a value that indicates whether this <see cref="Ped"/> will use a helmet on their own.
+		/// </summary>
 		public bool CanWearHelmet
 		{
 			set => Function.Call(Hash.SET_PED_HELMET, Handle, value);
 		}
 
+		/// <summary>
+		/// Sets a value that indicates whether this <see cref="Ped"/> will use a helmet on their own.
+		/// </summary>
 		public bool IsWearingHelmet => Function.Call<bool>(Hash.IS_PED_WEARING_HELMET, Handle);
 
 		public void ClearBloodDamage()
@@ -274,6 +280,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets how much money this <see cref="Ped"/> is carrying.
+		/// The max value is 65535.
 		/// </summary>
 		public int Money
 		{
@@ -418,7 +425,7 @@ namespace GTA
 		public bool IsSwimming => Function.Call<bool>(Hash.IS_PED_SWIMMING, Handle);
 
 		/// <summary>
-		/// Indicates whether this <see cref="Ped"/> is underwater.
+		/// Indicates whether this <see cref="Ped"/> is swimming underwater.
 		/// </summary>
 		public bool IsSwimmingUnderWater => Function.Call<bool>(Hash.IS_PED_SWIMMING_UNDER_WATER, Handle);
 
@@ -665,11 +672,11 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets how accurate this <see cref="Ped"/>s shooting ability is.
-		///  The higher the value of this property is, the more likely it is that this <see cref="Ped"/> will shoot at exactly where they are aiming at.
+		/// The higher the value of this property is, the more likely it is that this <see cref="Ped"/> will shoot at exactly where they are aiming at.
 		/// </summary>
 		/// <value>
 		/// The accuracy from 0 to 100, 0 being very inaccurate, which means this <see cref="Ped"/> cannot shoot at exactly where they are aiming at,
-		///  100 being perfectly accurate.
+		/// 100 being perfectly accurate.
 		/// </value>
 		public int Accuracy
 		{
@@ -1478,7 +1485,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the <see cref="RelationshipGroup"/> this <see cref="Ped"/> belongs to. 
+		/// Gets or sets the <see cref="RelationshipGroup"/> this <see cref="Ped"/> belongs to.
 		/// </summary>
 		public RelationshipGroup RelationshipGroup
 		{

@@ -128,7 +128,7 @@ namespace GTA.UI
 			}
 		}
 		/// <summary>
-		/// Gets the current screen aspect ratio
+		/// Gets the current screen aspect ratio of the main window.
 		/// </summary>
 		public static float AspectRatio => Function.Call<float>(Hash.GET_ASPECT_RATIO, 0);
 		/// <summary>
@@ -170,17 +170,17 @@ namespace GTA.UI
 		public static bool IsFadingOut => Function.Call<bool>(Hash.IS_SCREEN_FADING_OUT);
 
 		/// <summary>
-		/// Fades the screen in over a specific time, useful for transitioning
+		/// Fades the screen in over a specific time, useful for transitioning.
 		/// </summary>
-		/// <param name="time">The time for the fade in to take</param>
+		/// <param name="time">The time for the fade in to take.</param>
 		public static void FadeIn(int time)
 		{
 			Function.Call(Hash.DO_SCREEN_FADE_IN, time);
 		}
 		/// <summary>
-		/// Fades the screen out over a specific time, useful for transitioning
+		/// Fades the screen out over a specific time, useful for transitioning.
 		/// </summary>
-		/// <param name="time">The time for the fade out to take</param>
+		/// <param name="time">The time for the fade out to take.</param>
 		public static void FadeOut(int time)
 		{
 			Function.Call(Hash.DO_SCREEN_FADE_OUT, time);
