@@ -1444,6 +1444,34 @@ namespace SHVDN
 			return dest;
 		}
 
+		// To avoid unnessesary GC pressure for creating temp managed arrays when you pass methods vector 3 values to method in NativeMemory that take ones.
+		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
+		public struct FVector3
+		{
+			[FieldOffset(0x0)]
+			public float X;
+			[FieldOffset(0x4)]
+			public float Y;
+			[FieldOffset(0x8)]
+			public float Z;
+
+			public FVector3(float x, float y, float z)
+			{
+				X = x;
+				Y = y;
+				Z = z;
+			}
+		}
+
+		private static float DistanceToSquared(float x1, float y1, float z1, float x2, float y2, float z2)
+		{
+			float deltaX = x1 - x2;
+			float deltaY = y1 - y2;
+			float deltaZ = z1 - z2;
+
+			return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+		}
+
 		#region -- Cameras --
 
 		static ulong* CameraPoolAddress;
@@ -3674,6 +3702,723 @@ namespace SHVDN
 			public void Run()
 			{
 				ActivateSpecialAbilityFunc(specialAbilityStructAddress);
+			}
+		}
+
+		#endregion
+
+		#region -- CPathFind Data --
+
+		public static unsafe class PathFind
+		{
+			static ulong cPathFindInstanceAddress;
+
+			static PathFind()
+			{
+				byte* address;
+
+				address = FindPatternBmh("\x4D\x8B\xF0\x45\x8A\xE1\x48\x8B\xF9\x4C\x8D\x05", "xxxxxxxxxxxx");
+				if (address != null)
+				{
+					cPathFindInstanceAddress = (ulong)(*(int*)(address + 12) + address + 16);
+				}
+			}
+
+			// These values hasn't been changed between b372 and b2845
+			const int START_PATH_NODE_OFFSET_OF_C_PATH_FIND = 0x1640;
+			const int MAX_C_PATH_REGION_COUNT = 0x400;
+
+			[StructLayout(LayoutKind.Explicit, Size = 0x70)]
+			internal struct CPathRegion
+			{
+				[FieldOffset(0x10)]
+				internal IntPtr NodeArrayPtr;
+				[FieldOffset(0x18)]
+				internal uint NodeCount;
+				[FieldOffset(0x1C)]
+				internal uint NodeCountVehicle;
+				[FieldOffset(0x20)]
+				internal uint NodeCountPed;
+				[FieldOffset(0x28)]
+				internal IntPtr NodeLinkPtr;
+				[FieldOffset(0x30)]
+				internal uint NodeLinkCount;
+				[FieldOffset(0x38)]
+				internal IntPtr JunctionPtr;
+				[FieldOffset(0x40)]
+				internal IntPtr JunctionHeightMapBytesPtr;
+				[FieldOffset(0x50)]
+				internal IntPtr JunctionRefsPtr;
+				[FieldOffset(0x58)]
+				internal ushort JunctionRefsCount0;
+				[FieldOffset(0x5A)]
+				internal ushort JunctionRefsCount1;
+				[FieldOffset(0x60)]
+				internal uint JunctionCount;
+				[FieldOffset(0x64)]
+				internal uint JunctionHeightMapBytesCount;
+
+				internal CPathNode* GetPathNode(uint nodeId)
+				{
+					if (NodeArrayPtr == IntPtr.Zero && nodeId >= NodeCount)
+					{
+						return null;
+					}
+
+					return GetPathNodeUnsafe(nodeId);
+				}
+				internal CPathNode* GetPathNodeUnsafe(uint nodeId) => (CPathNode*)((ulong)NodeArrayPtr + nodeId * (uint)sizeof(CPathNode));
+
+				internal CPathNodeLink* GetPathNodeLink(uint index)
+				{
+					if (NodeLinkPtr == IntPtr.Zero && index >= NodeLinkCount)
+					{
+						return null;
+					}
+
+					return GetPathNodeLinkUnsafe(index);
+				}
+				internal CPathNodeLink* GetPathNodeLinkUnsafe(uint index) => (CPathNodeLink*)((ulong)NodeLinkPtr + index * (uint)sizeof(CPathNodeLink));
+			}
+
+			static CPathRegion* GetCPathRegion(uint areaId)
+			{
+				if (areaId >= MAX_C_PATH_REGION_COUNT || cPathFindInstanceAddress == 0)
+				{
+					return null;
+				}
+
+				return *(CPathRegion**)(cPathFindInstanceAddress + START_PATH_NODE_OFFSET_OF_C_PATH_FIND + areaId * 0x8);
+			}
+
+			public enum VehiclePathNodeProperties
+			{
+				None = 0,
+				OffRoad = 1,
+				OnPlayersRoad = 2,
+				NoBigVehicles = 4,
+				SwitchedOff = 8,
+				TunnelOrInterior = 16,
+				LeadsToDeadEnd = 32,
+				/// <summary>
+				/// <see cref="Boat"/> takes precedence over this flag.
+				/// </summary>
+				Highway = 64,
+				Junction = 128,
+				/// <summary>
+				/// Cannot be used with <see cref="GiveWay"/>, because vehicle nodes can have either traffic-light or give-way feature as a special function but cannot have both of them.
+				/// </summary>
+				TrafficLight = 256,
+				/// <summary>
+				/// Cannot be used with <see cref="TrafficLight"/>, because vehicle nodes can have either traffic-light or give-way feature as a special function but cannot have both of them.
+				/// </summary>
+				GiveWay = 512,
+				/// <summary>
+				/// Cannot be used with <see cref="Highway"/>.
+				/// </summary>
+				Boat = 1024,
+
+				// GET_VEHICLE_NODE_PROPERTIES will not set any of the values below set as flags
+				DontAllowGps = 2048,
+			}
+
+			[StructLayout(LayoutKind.Explicit, Size = 0x28)]
+			internal struct CPathNode
+			{
+				// 0x0 to 0xF region is unused
+				[FieldOffset(0x10)]
+				internal ushort AreaId;
+				[FieldOffset(0x12)]
+				internal ushort NodeId;
+				[FieldOffset(0x14)]
+				internal uint StreetHash;
+
+				[FieldOffset(0x1A)]
+				internal ushort LinkId;
+
+				// These 2 fields should be multiplied by 4 when you convert back to float
+				[FieldOffset(0x1C)]
+				internal short PositionX;
+				[FieldOffset(0x1E)]
+				internal short PositionY;
+
+				[FieldOffset(0x20)]
+				internal ushort Flags1;
+
+				// This field should be multiplied by 32 when you convert back to float
+				[FieldOffset(0x22)]
+				internal short PositionZ;
+
+				[FieldOffset(0x24)]
+				internal byte Flags2;
+				[FieldOffset(0x25)]
+				internal byte Flags3AndLinkCount;
+				[FieldOffset(0x26)]
+				internal byte Flags4;
+				// 1st to 4th bits are used for density
+				[FieldOffset(0x27)]
+				internal byte Flag5AndDensity;
+
+				internal int Density => Flag5AndDensity & 0xF;
+
+				internal int LinkCount => Flags3AndLinkCount >> 3;
+
+				// Native functions for path nodes get area IDs and node IDs from the values subtracted by one from passed values
+				// When the lower half of bits (of passed values) are equal to zero, the natives considers the null handle is passed
+				internal int GetHandleForNativeFunctions() => ((NodeId << 0x10) + AreaId + 1);
+
+				internal FVector3 UncompressedPosition => new FVector3((float)PositionX / 4, (float)PositionY / 4, (float)PositionZ / 32);
+
+				internal bool IsSwitchedOff
+				{
+					get => (Flags2 & 0x80) != 0;
+					set
+					{
+						if (value)
+						{
+							Flags2 |= 0x80;
+						}
+						else
+						{
+							Flags2 &= 0x7F;
+						}
+					}
+				}
+
+				/// <summary>
+				/// Get property flags in almost the same way as GET_VEHICLE_NODE_PROPERTIES returns flags as the 5th parameter (seems the flags the native returns will never contain the 1024 flag).
+				/// </summary>
+				internal VehiclePathNodeProperties GetPropertyFlags()
+				{
+					VehiclePathNodeProperties propertyFlags = VehiclePathNodeProperties.None;
+					if ((Flags1 & 8) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.OffRoad;
+					}
+					if ((Flags1 & 0x10) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.OnPlayersRoad;
+					}
+					if ((Flags1 & 0x20) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.NoBigVehicles;
+					}
+					if ((Flags2 & 0x80) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.SwitchedOff;
+					}
+					if ((Flags4 & 0x1) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.TunnelOrInterior;
+					}
+					if ((Flag5AndDensity & 0x7) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.LeadsToDeadEnd;
+					}
+					// The water/boat bit takes precedence over this highway flag
+					if (((Flags2 & 0x40) != 0 || (Flags2 & 0x20) == 0))
+					{
+						propertyFlags |= VehiclePathNodeProperties.Highway;
+					}
+					if ((((Flags2 & 0x40) >> 8) & 1) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.Junction;
+					}
+					if ((Flags1 & 0xF800) == 0x7800)
+					{
+						propertyFlags |= VehiclePathNodeProperties.TrafficLight;
+					}
+					if ((Flags1 & 0xF800) == 0x8000)
+					{
+						propertyFlags |= VehiclePathNodeProperties.GiveWay;
+					}
+					if ((Flags2 & 0x20) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.Boat;
+					}
+
+					return propertyFlags;
+				}
+
+				internal bool IsInArea(float x1, float y1, float z1, float x2, float y2, float z2)
+				{
+					float posXUncompressed = (float)PositionX / 4;
+					float posYUncompressed = (float)PositionY / 4;
+					float posZUncompressed = (float)PositionZ / 32;
+
+					if (posXUncompressed < x1 || posXUncompressed > x2)
+					{
+						return false;
+					}
+					if (posYUncompressed < y1 || posYUncompressed > y2)
+					{
+						return false;
+					}
+					if (posZUncompressed < z1 || posYUncompressed > z2)
+					{
+						return false;
+					}
+
+					return true;
+				}
+				internal bool IsInCircle(float x, float y, float z, float radius)
+				{
+					float posXUncompressed = (float)PositionX / 4;
+					float posYUncompressed = (float)PositionY / 4;
+					float posZUncompressed = (float)PositionZ / 32;
+
+					float deltaX = (float)x - posXUncompressed;
+					float deltaY = (float)y - posYUncompressed;
+					float deltaZ = (float)z - posZUncompressed;
+
+					return ((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ)) <= radius * radius;
+				}
+			}
+
+			public static IntPtr GetPathNodeAddress(int handle)
+			{
+				GetCorrectedNodeAndAreaIdFromPathNodeHandle(handle, out uint areaId, out uint nodeId);
+
+				var pathRegion = GetCPathRegion(areaId);
+				if (pathRegion == null)
+				{
+					return IntPtr.Zero;
+				}
+
+				return new IntPtr(pathRegion->GetPathNode(nodeId));
+			}
+
+			public static IntPtr GetPathNodeLinkAddress(int areaId, int nodeLinkIndex)
+			{
+				var pathRegion = GetCPathRegion((uint)areaId);
+				if (pathRegion == null)
+				{
+					return IntPtr.Zero;
+				}
+
+				return new IntPtr(pathRegion->GetPathNodeLink((uint)nodeLinkIndex));
+			}
+
+			static void GetCorrectedNodeAndAreaIdFromPathNodeHandle(int handleForNatives, out uint areaId, out uint nodeId)
+			{
+				uint handleCorrected = (uint)handleForNatives - 1;
+				areaId = (ushort)(handleCorrected & 0xFFFF);
+				nodeId = (ushort)(handleCorrected >> 0x10);
+			}
+
+			public static FVector3 GetPathNodePosition(int handle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return default;
+				}
+
+				return ((CPathNode*)pathNode)->UncompressedPosition;
+			}
+
+			public static int GetVehiclePathNodeDensity(int handle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return 0;
+				}
+
+				return ((CPathNode*)pathNode)->Density;
+			}
+
+			public static int GetVehiclePathNodePropertyFlags(int handle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return 0;
+				}
+
+				return (int)((CPathNode*)pathNode)->GetPropertyFlags();
+			}
+
+			public static bool GetPathNodeSwitchedOffFlag(int handle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return false;
+				}
+
+				return ((CPathNode*)pathNode)->IsSwitchedOff;
+			}
+
+			public static void SetPathNodeSwitchedOffFlag(int handle, bool toggle)
+			{
+				var pathNode = GetPathNodeAddress(handle);
+				if (pathNode == null)
+				{
+					return;
+				}
+
+				((CPathNode*)pathNode)->IsSwitchedOff = toggle;
+			}
+
+			[StructLayout(LayoutKind.Explicit, Size = 0x8)]
+			internal struct CPathNodeLink
+			{
+				[FieldOffset(0x0)]
+				internal ushort AreaId;
+				[FieldOffset(0x2)]
+				internal ushort NodeId;
+
+				[FieldOffset(0x4)]
+				internal byte Flags0;
+				[FieldOffset(0x5)]
+				internal byte Flags1;
+				[FieldOffset(0x6)]
+				internal byte Flags2;
+				[FieldOffset(0x7)]
+				internal byte LinkLength;
+
+				internal int ForwardLaneCount => (Flags2 >> 5) & 7;
+				internal int BackwardLaneCount => (Flags2 >> 2) & 7;
+
+				internal void GetForwardAndBackwardCount(out int forwardCount, out int backwardCount)
+				{
+					forwardCount = (Flags2 >> 5) & 7;
+					backwardCount = (Flags2 >> 2) & 7;
+				}
+
+				internal void GetTargetAreaAndNodeId(out int areaId, out int nodeId)
+				{
+					areaId = AreaId;
+					nodeId = NodeId;
+				}
+			}
+
+			// Use this buffer when we get all loaded path nodes to avoid allocating new large objects for buffer space and costing a significant time, since the number of path node handles can even exceed more than 21250
+			// On the other hand, each vanilla ynd file (each ynd file has nodes in an area of 512 meters x 512 meters) contains likely 100 to 1500 nodes, and getting nodes nearby 512 meters will likely get less than 1500 nodes.
+			// Therefore, using this buffer won't make much difference in how many CPU cycles will be used when we get nodes in certain area
+			static List<int> _pathNodeBuffer = new List<int>();
+
+			public static int[] GetAllLoadedVehicleNodes(Func<int, bool> predicateForFlags)
+			{
+				_pathNodeBuffer.Clear();
+
+				for (uint i = 0; i < MAX_C_PATH_REGION_COUNT; i++)
+				{
+					var pathRegion = GetCPathRegion(i);
+					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+					{
+						continue;
+					}
+
+					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
+					{
+						var pathNode = pathRegion->GetPathNodeUnsafe(j);
+						if (predicateForFlags == null || predicateForFlags((int)pathNode->GetPropertyFlags()))
+						{
+							_pathNodeBuffer.Add(pathNode->GetHandleForNativeFunctions());
+						}
+					}
+				}
+
+				return _pathNodeBuffer.ToArray();
+			}
+
+			public static int[] GetLoadedVehicleNodesInRange(float x, float y, float z, float radius, Func<int, bool> predicateForFlags)
+			{
+				var result = new List<int>();
+
+				foreach (var areaId in GetAreaIdsInRange(x, y, radius))
+				{
+					var pathRegion = GetCPathRegion(areaId);
+					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+					{
+						continue;
+					}
+
+					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
+					{
+						var vehPathNode = pathRegion->GetPathNodeUnsafe(j);
+						if (!CheckVehPathNodePropertyPredicateAndPosition(vehPathNode, predicateForFlags, x, y, z, radius))
+						{
+							continue;
+						}
+
+						result.Add(vehPathNode->GetHandleForNativeFunctions());
+					}
+				}
+
+				return result.ToArray();
+			}
+
+			public static int GetClosestLoadedVehiclePathNode(float x, float y, float z, float radius, Func<int, bool> predicateForFlags)
+			{
+				int result = 0;
+				float closestDistance = 3e38f;
+
+				foreach (var areaId in GetAreaIdsInRange(x, y, radius))
+				{
+					var pathRegion = GetCPathRegion(areaId);
+					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+					{
+						continue;
+					}
+
+					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
+					{
+						var vehPathNode = pathRegion->GetPathNodeUnsafe(j);
+						if (!CheckVehPathNodePropertyPredicateAndPosition(vehPathNode, predicateForFlags, x, y, z, radius))
+						{
+							continue;
+						}
+
+						var nodePos = vehPathNode->UncompressedPosition;
+						var nodeDist = DistanceToSquared(x, y, z, nodePos.X, nodePos.Y, nodePos.Z);
+						if (nodeDist < closestDistance)
+						{
+							result = vehPathNode->GetHandleForNativeFunctions();
+							closestDistance = nodeDist;
+						}
+					}
+				}
+
+				return result;
+			}
+
+			public static int[] GetLoadedVehicleNodesInArea(float x1, float y1, float z1, float x2, float y2, float z2, Func<int, bool> predicateForFlags)
+			{
+				var minX = Math.Min(x1, x2);
+				var minY = Math.Min(y1, y2);
+				var minZ = Math.Min(z1, z2);
+				var maxX = Math.Max(x1, x2);
+				var maxY = Math.Max(y1, y2);
+				var maxZ = Math.Max(z1, z2);
+
+				var result = new List<int>();
+
+				foreach (var areaId in GetAreaIdsInArea(minX, minY, maxX, maxY))
+				{
+					var pathRegion = GetCPathRegion(areaId);
+					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+					{
+						continue;
+					}
+
+					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
+					{
+						var vehPathNode = pathRegion->GetPathNodeUnsafe(j);
+
+						if (!CheckVehPathNodePropertyPredicateAndPosition(vehPathNode, predicateForFlags, minX, minY, minZ, maxX, maxY, maxZ))
+						{
+							continue;
+						}
+
+						result.Add(vehPathNode->GetHandleForNativeFunctions());
+					}
+				}
+
+				return result.ToArray();
+			}
+
+			public static int[] GetPathNodeLinkIndicesOfPathNode(int handleOfPathNode)
+			{
+				GetCorrectedNodeAndAreaIdFromPathNodeHandle(handleOfPathNode, out uint areaId, out uint nodeId);
+
+				var pathRegion = GetCPathRegion(areaId);
+				if (pathRegion == null)
+				{
+					return Array.Empty<int>();
+				}
+
+				var pathNode = pathRegion->GetPathNode(nodeId);
+				if (pathNode == null)
+				{
+					return Array.Empty<int>();
+				}
+
+				var pathNodeLinkStartId = pathNode->LinkId;
+				var pathNodeLinkCount = pathNode->LinkCount;
+
+				var result = new int[pathNodeLinkCount];
+				for (int i = 0; i < pathNodeLinkCount; i++)
+				{
+					result[i] = pathNodeLinkStartId + i;
+				}
+				return result;
+			}
+
+			public static bool GetPathNodeLinkLanes(int areaId, int nodeLinkIndex, out int forwardLaneCount, out int backwardLaneCount)
+			{
+				var pathRegion = GetCPathRegion((uint)areaId);
+				if (pathRegion == null)
+				{
+					forwardLaneCount = 0;
+					backwardLaneCount = 0;
+
+					return false;
+				}
+
+				var pathNodeLink = pathRegion->GetPathNodeLink((uint)nodeLinkIndex);
+				if (pathNodeLink == null)
+				{
+					forwardLaneCount = 0;
+					backwardLaneCount = 0;
+
+					return false;
+				}
+
+				pathNodeLink->GetForwardAndBackwardCount(out forwardLaneCount, out backwardLaneCount);
+				return true;
+			}
+
+			public static bool GetTargetAreaAndNodeIdToTargetNode(int areaIdOfNodeLink, int nodeLinkIndex, out int targetAreaId, out int targetNodeId)
+			{
+				var pathRegion = GetCPathRegion((uint)areaIdOfNodeLink);
+				if (pathRegion == null)
+				{
+					targetAreaId = 0;
+					targetNodeId = 0;
+
+					return false;
+				}
+
+				var pathNodeLink = pathRegion->GetPathNodeLink((uint)nodeLinkIndex);
+				if (pathNodeLink == null)
+				{
+					targetAreaId = 0;
+					targetNodeId = 0;
+
+					return false;
+				}
+
+				pathNodeLink->GetTargetAreaAndNodeId(out targetAreaId, out targetNodeId);
+				return true;
+			}
+
+			public static int GetTargetNodeHandleFromNodeLink(int areaIdOfNodeLink, int nodeLinkIndex)
+			{
+				var pathRegionOfNodeLink = GetCPathRegion((uint)areaIdOfNodeLink);
+				if (pathRegionOfNodeLink == null)
+				{
+					return 0;
+				}
+				var pathNodeLink = pathRegionOfNodeLink->GetPathNodeLink((uint)nodeLinkIndex);
+				if (pathNodeLink == null)
+				{
+					return 0;
+				}
+
+				pathNodeLink->GetTargetAreaAndNodeId(out var targetAreaId, out var targetNodeId);
+				var pathRegionOfTargetNode = GetCPathRegion((uint)targetAreaId);
+				if (pathRegionOfTargetNode == null)
+				{
+					return 0;
+				}
+				var targetPathNode = pathRegionOfTargetNode->GetPathNode((uint)targetNodeId);
+				if (targetPathNode == null)
+				{
+					return 0;
+				}
+
+				return targetPathNode->GetHandleForNativeFunctions();
+			}
+
+			static bool CheckVehPathNodePropertyPredicateAndPosition(CPathNode* vehPathNode, Func<int, bool> predicateForFlags, float x, float y, float z, float maxDistRadius)
+			{
+				if (predicateForFlags != null && !predicateForFlags((int)vehPathNode->GetPropertyFlags()))
+				{
+					return false;
+				}
+				if (!vehPathNode->IsInCircle(x, y, z, maxDistRadius))
+				{
+					return false;
+				}
+
+				return true;
+			}
+
+			static bool CheckVehPathNodePropertyPredicateAndPosition(CPathNode* vehPathNode, Func<int, bool> predicateForFlags, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
+			{
+				if (predicateForFlags != null && !predicateForFlags((int)vehPathNode->GetPropertyFlags()))
+				{
+					return false;
+				}
+				if (!vehPathNode->IsInArea(minX, minY, minZ, maxX, maxY, maxZ))
+				{
+					return false;
+				}
+
+				return true;
+			}
+
+			static IEnumerable<uint> GetAreaIdsInArea(float x1, float y1, float x2, float y2)
+			{
+				var minX = Math.Min(x1, x2);
+				var minY = Math.Min(y1, y2);
+				var maxX = Math.Max(x1, x2);
+				var maxY = Math.Max(y1, y2);
+
+				var minAreaRegionX = Math.Min(Math.Max((int)((minX + 8192f) / 512), 0), 32);
+				var minAreaRegionY = Math.Min(Math.Max((int)((minY + 8192f) / 512), 0), 32);
+				var maxAreaRegionX = Math.Min(Math.Max((int)((maxX + 8192f) / 512), 0), 32);
+				var maxAreaRegionY = Math.Min(Math.Max((int)((maxY + 8192f) / 512), 0), 32);
+
+				var areaIdCount = (maxAreaRegionX - minAreaRegionX + 1) * (maxAreaRegionY - minAreaRegionY + 1);
+
+				for (int regionY = minAreaRegionY; regionY <= maxAreaRegionY; regionY++)
+				{
+					for (int regionX = minAreaRegionX; regionX <= maxAreaRegionX; regionX++)
+					{
+						yield return ComposeAreaIdByIndex(regionX, regionY);
+					}
+				}
+			}
+
+			static IEnumerable<uint> GetAreaIdsInRange(float x, float y, float radius)
+			{
+				var rectMinX = x - radius;
+				var rectMinY = y - radius;
+				var rectMaxX = x + radius;
+				var rectMaxY = y + radius;
+
+				var minAreaRegionXIndex = Math.Min(Math.Max((int)((rectMinX + 8192f) / 512), 0), 32);
+				var minAreaRegionYIndex = Math.Min(Math.Max((int)((rectMinY + 8192f) / 512), 0), 32);
+				var maxAreaRegionXIndex = Math.Min(Math.Max((int)((rectMaxX + 8192f) / 512), 0), 32);
+				var maxAreaRegionYIndex = Math.Min(Math.Max((int)((rectMaxY + 8192f) / 512), 0), 32);
+
+				for (int regionYIndex = minAreaRegionYIndex; regionYIndex <= maxAreaRegionYIndex; regionYIndex++)
+				{
+					for (int regionXIndex = minAreaRegionXIndex; regionXIndex <= maxAreaRegionXIndex; regionXIndex++)
+					{
+						float currectRegionMinXBound = (float)regionXIndex * 512 - 8192f;
+						float currectRegionMinYBound = (float)regionYIndex * 512 - 8192f;
+						float currectRegionMaxXBound = currectRegionMinXBound + 512f;
+						float currectRegionMaxYBound = currectRegionMinYBound + 512f;
+
+						if (DoCircleAndRectIntersectOrTouch(radius, x, y, currectRegionMinXBound, currectRegionMinYBound, currectRegionMaxXBound, currectRegionMaxYBound))
+						{
+							yield return ComposeAreaIdByIndex(regionXIndex, regionYIndex);
+						}
+					}
+				}
+			}
+
+			static uint ComposeAreaIdByIndex(int x, int y) => (uint)(x + y * 0x20);
+
+			// Nodes at bound can be included in either area (e.g. a vehicle node at (0, 263, 10) can be included in either of the ynd files for the area IDs 527 (0x20F) or 528 (0x210))
+			static bool DoCircleAndRectIntersectOrTouch(float radius, float xCenter, float yCenter, float x1, float y1, float x2, float y2)
+			{
+				// Nearest position will be calculated wrong if x1 and y2 parameters are passed as x2 and y2 and vice versa
+				var nearestX = Math.Max(x1, Math.Min(xCenter, x2));
+				var nearestY = Math.Max(y1, Math.Min(yCenter, y2));
+				var deltaX = xCenter - nearestX;
+				var deltaY = yCenter - nearestY;
+
+				return (deltaX * deltaX + deltaY * deltaY) <= (radius * radius);
 			}
 		}
 

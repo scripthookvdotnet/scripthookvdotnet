@@ -96,6 +96,7 @@ namespace SHVDN
 
 			// Initialize and scan memory at a predictable point
 			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory).TypeHandle);
+			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory.PathFind).TypeHandle);
 
 			// Load API assemblies into this script domain
 			foreach (var apiPath in Directory.EnumerateFiles(apiBasePath, "ScriptHookVDotNet*.dll", SearchOption.TopDirectoryOnly))

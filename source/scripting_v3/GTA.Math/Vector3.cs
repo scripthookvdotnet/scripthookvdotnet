@@ -720,6 +720,8 @@ namespace GTA.Math
 		/// <param name="other">Object to make the comparison with.</param>
 		/// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
 		public bool Equals(Vector3 other) => (X == other.X && Y == other.Y && Z == other.Z);
+
+		public static implicit operator Vector3(SHVDN.NativeMemory.FVector3 value) => new Vector3(value.X, value.Y, value.Z);
 	}
 
 	// For natives that require pointers to vectors and are called internally in the scripting section.
