@@ -13,7 +13,7 @@ public class ExitVehicle : Script
 
 	void OnTick(object sender, EventArgs e)
 	{
-		Ped playerPed = Game.Player.Character;
+		Ped playerPed = Game.LocalPlayerPed;
 
 		if (Game.IsControlPressed(Control.VehicleExit) && DateTime.Now > _lastExit && playerPed.IsInVehicle())
 		{

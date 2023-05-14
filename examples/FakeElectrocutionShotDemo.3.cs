@@ -485,7 +485,7 @@ public class FakeElectrocutionShotDemo : Script
 
 	private void FakeElectrocutionShotDemo_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 	{
-		Ped playerPed = Game.Player.Character;
+		Ped playerPed = Game.LocalPlayerPed;
 
 		if (e.KeyCode == System.Windows.Forms.Keys.J)
 		{

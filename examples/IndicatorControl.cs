@@ -14,7 +14,7 @@ public class IndicatorControl : Script
 
 	void OnTick(object sender, EventArgs e)
 	{
-		Ped playerPed = Game.Player.Character;
+		Ped playerPed = Game.LocalPlayerPed;
 
 		if (playerPed.IsInVehicle())
 		{

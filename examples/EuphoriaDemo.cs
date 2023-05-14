@@ -1,4 +1,4 @@
-﻿using GTA;
+using GTA;
 
 public class EuphoriaDemo : Script
 {
@@ -9,7 +9,7 @@ public class EuphoriaDemo : Script
 
 	private void EuphoriaDemo_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 	{
-		Ped playerPed = Game.Player.Character;
+		Ped playerPed = Game.LocalPlayerPed;
 
 		if (e.KeyCode == System.Windows.Forms.Keys.J)
 		{

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using GTA;
 
@@ -142,7 +142,7 @@ namespace ScriptInstance
 
 			if (ped == null)
 			{
-				ped = World.CreatePed(PedHash.Beach01AMY, Game.Player.Character.Position + (GTA.Math.Vector3.RelativeFront * 3));
+				ped = World.CreatePed(PedHash.Beach01AMY, Game.LocalPlayerPed.Position + (GTA.Math.Vector3.RelativeFront * 3));
 			}
 
 			// Repeat animation if alive
