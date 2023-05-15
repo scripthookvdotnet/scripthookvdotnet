@@ -26,13 +26,30 @@ namespace GTA
 			Hash = hash;
 		}
 
+		/// <summary>
+		/// Gets the hash for this <see cref="Weapon"/>.
+		/// </summary>
 		public WeaponHash Hash
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Gets the slot hash for this <see cref="Weapon"/>.
+		/// </summary>
+		/// <remarks>
+		/// The slot hash must be unique in a weapon inventory of a <see cref="Ped"/>, so a <see cref="Ped"/> cannot have multiple <see cref="Weapon"/> items with the same slot hash in their inventory.
+		/// </remarks>
+		public int SlotHash => Function.Call<int>(Native.Hash.GET_WEAPONTYPE_SLOT, (uint)Hash);
+
+		/// <summary>
+		/// Gets the display name label string for this <see cref="Weapon"/>.
+		/// </summary>
 		public string DisplayName => GetDisplayNameFromHash(Hash);
 
+		/// <summary>
+		/// Gets the localized human name for this <see cref="Weapon"/>.
+		/// </summary>
 		public string LocalizedName => Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)Hash));
 
 		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)Hash);
@@ -226,6 +243,9 @@ namespace GTA
 			return weapon.Hash;
 		}
 
+		/// <summary>
+		/// Gets the display name label string for the <see cref="WeaponHash"/>.
+		/// </summary>
 		public static string GetDisplayNameFromHash(WeaponHash hash)
 		{
 			// Will be found in this switch statement if the hash is one of the weapon hashes for singleplayer
@@ -367,6 +387,11 @@ namespace GTA
 
 			return "WT_INVALID";
 		}
+
+		/// <summary>
+		/// Gets the localized human name for the <see cref="WeaponHash"/>.
+		/// </summary>
+		public static string GetHumanNameFromHash(WeaponHash hash) => Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)hash));
 
 		public static WeaponHash[] GetAllWeaponHashesForHumanPeds()
 		{
