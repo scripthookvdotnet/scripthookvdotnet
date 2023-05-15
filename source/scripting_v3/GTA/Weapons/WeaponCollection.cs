@@ -71,6 +71,33 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the number of <see cref="Weapon"/> items contained in the <see cref="WeaponCollection"/>.
+		/// </summary>
+		/// <remarks>
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// </remarks>
+		public int Count
+		{
+			get
+			{
+				var pedInventoryAddr = SHVDN.NativeMemory.GetCPedInventoryAddressFromPedHandle(owner.Handle);
+				if (pedInventoryAddr == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				unsafe
+				{
+					return ((RageAtArrayPtr*)(pedInventoryAddr + 0x18))->size;
+				}
+			}
+		}
+
+		/// <remarks>
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// </remarks>
+		/// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
 		public IEnumerator<Weapon> GetEnumerator()
 		{
 			var currentIndex = 0;
@@ -119,6 +146,10 @@ namespace GTA
 			}
 		}
 
+		/// <remarks>
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// </remarks>
+		/// <inheritdoc cref="IEnumerable.GetEnumerator"/>
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		/// <summary>
