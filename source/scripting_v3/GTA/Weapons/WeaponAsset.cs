@@ -30,6 +30,14 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the slot hash for this <see cref="WeaponAsset"/>.
+		/// </summary>
+		/// <remarks>
+		/// The slot hash must be unique in a weapon inventory of a <see cref="Ped"/> , so a <see cref="Ped"/> cannot have multiple weapon items with the same slot hash in their inventory.
+		/// </remarks>
+		public int SlotHash => Function.Call<int>(Native.Hash.GET_WEAPONTYPE_SLOT, (uint)Hash);
+
+		/// <summary>
 		/// Gets the native representation of this <see cref="WeaponAsset"/>.
 		/// </summary>
 		public ulong NativeValue
@@ -94,9 +102,21 @@ namespace GTA
 			Function.Call(Native.Hash.REMOVE_WEAPON_ASSET, Hash);
 		}
 
+		/// <summary>
+		/// Gets the display name label string for this <see cref="WeaponAsset"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns <see cref="string.Empty"/> if this <see cref="WeaponAsset"/> is not valid as a weapon hash.
+		/// </remarks>
 		public string DisplayName => IsValidAsWeaponHash ? Weapon.GetDisplayNameFromHash((WeaponHash)Hash) : string.Empty;
 
-		public string LocalizedName => IsValidAsWeaponHash ? Game.GetLocalizedString(Weapon.GetDisplayNameFromHash((WeaponHash)Hash)) : string.Empty;
+		/// <summary>
+		/// Gets the localized human name for this <see cref="WeaponAsset"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns <see cref="string.Empty"/> if this <see cref="WeaponAsset"/> is not valid as a weapon hash.
+		/// </remarks>
+		public string HumanName => IsValidAsWeaponHash ? Weapon.GetHumanNameFromHash((WeaponHash)Hash) : string.Empty;
 
 		public bool Equals(WeaponAsset weaponAsset)
 		{

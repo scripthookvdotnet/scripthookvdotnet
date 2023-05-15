@@ -4,12 +4,38 @@
 //
 
 using GTA.Native;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace GTA
 {
-	public sealed class WeaponCollection
+	public sealed class WeaponCollection : IEnumerable<Weapon>, IEnumerable
 	{
+		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
+		unsafe internal struct RageAtArrayPtr
+		{
+			[FieldOffset(0x0)]
+			internal ulong* data;
+			[FieldOffset(0x8)]
+			internal ushort size;
+			[FieldOffset(0xA)]
+			internal ushort capacity;
+
+			internal ulong GetElementAddress(int i)
+			{
+				return data[i];
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit, Size = 0x14)]
+		struct ItemInfo
+		{
+			[FieldOffset(0x10)]
+			internal uint nameHash;
+		}
+
 		#region Fields
 		readonly Ped owner;
 		readonly Dictionary<WeaponHash, Weapon> weapons = new();
@@ -20,6 +46,14 @@ namespace GTA
 			this.owner = owner;
 		}
 
+		/// <summary>
+		/// Gets the <see cref="Weapon"/> associated with the specified <see cref="WeaponHash"/>.
+		/// </summary>
+		/// <param name="hash">The <see cref="WeaponHash"/> of the <see cref="Weapon"/> to get</param>
+		/// <value>
+		/// The value associated with the specified <see cref="WeaponHash"/>.
+		/// If the specified <see cref="WeaponHash"/> is not found, this property will return <see langword="null"/>.
+		/// </value>
 		public Weapon this[WeaponHash hash]
 		{
 			get
@@ -35,6 +69,140 @@ namespace GTA
 
 				return weapon;
 			}
+		}
+
+		/// <summary>
+		/// Gets the number of <see cref="Weapon"/> items contained in the <see cref="WeaponCollection"/>.
+		/// </summary>
+		/// <remarks>
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// </remarks>
+		public int Count
+		{
+			get
+			{
+				var pedInventoryAddr = SHVDN.NativeMemory.GetCPedInventoryAddressFromPedHandle(owner.Handle);
+				if (pedInventoryAddr == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				unsafe
+				{
+					return ((RageAtArrayPtr*)(pedInventoryAddr + 0x18))->size;
+				}
+			}
+		}
+
+		/// <remarks>
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// </remarks>
+		/// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
+		public IEnumerator<Weapon> GetEnumerator()
+		{
+			var currentIndex = 0;
+			while (true)
+			{
+				var currentWeaponInstance = GetWeaponInstanceByIndexOfPedInventory(currentIndex++);
+				if (currentWeaponInstance == null)
+				{
+					yield break;
+				}
+
+				yield return currentWeaponInstance;
+			}
+		}
+
+		private Weapon GetWeaponInstanceByIndexOfPedInventory(int index)
+		{
+			unsafe
+			{
+				var pedInventoryAddr = SHVDN.NativeMemory.GetCPedInventoryAddressFromPedHandle(owner.Handle);
+				if (pedInventoryAddr == IntPtr.Zero)
+				{
+					return null;
+				}
+
+				var weaponInventoryArray = (RageAtArrayPtr*)(pedInventoryAddr + 0x18);
+				if (index >= weaponInventoryArray->size)
+				{
+					return null;
+				}
+
+				var itemAddress = weaponInventoryArray->GetElementAddress(index);
+				var weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
+				if (weaponInfo == null)
+				{
+					return null;
+				}
+
+				var weaponHash = (WeaponHash)weaponInfo->nameHash;
+				if (weapons.TryGetValue(weaponHash, out var weapon)) return weapon;
+
+				weapon = new Weapon(owner, weaponHash);
+				weapons.Add(weaponHash, weapon);
+
+				return weapon;
+			}
+		}
+
+		/// <remarks>
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// </remarks>
+		/// <inheritdoc cref="IEnumerable.GetEnumerator"/>
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+		/// <summary>
+		/// Gets an <c>array</c> of all <see cref="WeaponHash"/>es this <see cref="WeaponCollection"/> has.
+		/// </summary>
+		public WeaponHash[] GetAllWeaponHashes()
+		{
+			return Array.ConvertAll(SHVDN.NativeMemory.GetAllWeaponHashesOfPedInventory(owner.Handle), x => (WeaponHash)x);
+		}
+
+		/// <summary>
+		/// Gets the <see cref="WeaponHash"/> associated with the slot hash in the weapon inventory of the owner <see cref="Ped"/>.
+		/// Can fetch the weapon hash faster than <see cref="this[WeaponHash]"/> since the internal weapon inventory array is sorted in acsending order by slot hashes.
+		/// </summary>
+		/// <param name="slotHash">The slot hash key of the value to get.</param>
+		/// <param name="weaponHash">
+		/// When this method returns, contains the <see cref="WeaponHash"/> associated with the slot hash,
+		/// if the weapon inventory of the owner <see cref="Ped"/> has a weapon for the slot hash; otherwise, the zero <see cref="WeaponHash"/>.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		/// <returns><see langword="true"/> if the <see cref="WeaponCollection"/> contains a <see cref="WeaponHash"/> with the specified slot hash; otherwise, <see langword="false"/>.</returns>
+		public bool TryGetWeaponHashBySlotHash(int slotHash, out WeaponHash weaponHash)
+		{
+			var foundWeaponHash = SHVDN.NativeMemory.TryGetWeaponHashInPedInventoryBySlotHash(owner.Handle, (uint)slotHash, out uint weaponHashUInt);
+
+			weaponHash = (WeaponHash)weaponHashUInt;
+			return foundWeaponHash;
+		}
+		/// <summary>
+		/// Gets the <see cref="Weapon"/> associated with the slot hash in the weapon inventory of the owner <see cref="Ped"/>.
+		/// Can fetch the weapon hash faster than <see cref="this[WeaponHash]"/> since the internal weapon inventory array is sorted in acsending order by slot hashes.
+		/// </summary>
+		/// <param name="slotHash">The slot hash key of the value to get.</param>
+		/// <param name="weapon">
+		/// When this method returns, contains the <see cref="Weapon"/> associated with the slot hash,
+		/// if the weapon inventory of the owner <see cref="Ped"/> has a weapon for the slot hash; otherwise, <see langword="null"/>.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		/// <returns><see langword="true"/> if the <see cref="WeaponCollection"/> contains a <see cref="Weapon"/> with the specified slot hash; otherwise, <see langword="false"/>.</returns>
+		public bool TryGetWeaponBySlotHash(int slotHash, out Weapon weapon)
+		{
+			if (!TryGetWeaponHashBySlotHash(slotHash, out var weaponHash))
+			{
+				weapon = null;
+				return false;
+			}
+
+			if (weapons.TryGetValue(weaponHash, out weapon)) return true;
+
+			weapon = new Weapon(owner, weaponHash);
+			weapons.Add(weaponHash, weapon);
+
+			return true;
 		}
 
 		/// <summary>

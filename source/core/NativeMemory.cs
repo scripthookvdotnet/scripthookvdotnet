@@ -865,7 +865,8 @@ namespace SHVDN
 				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
 				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 
-				PedPlayerInfoOffset = PedIntelligenceOffset + 8;
+				PedPlayerInfoOffset = PedIntelligenceOffset + 0x8;
+				CPedIntentoryOfCPedOffset = PedIntelligenceOffset + 0x10;
 			}
 
 			address = FindPatternNaive("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
@@ -2390,6 +2391,8 @@ namespace SHVDN
 
 		public static int SweatOffset { get; }
 
+		public static int CPedIntentoryOfCPedOffset { get; }
+
 		// the same offset as the offset for SET_PED_CAN_BE_TARGETTED
 		public static int PedDropsWeaponsWhenDeadOffset { get; }
 
@@ -2432,6 +2435,111 @@ namespace SHVDN
 		static int CEventStackOffset { get; }
 
 		#endregion
+
+		#endregion
+
+		#region -- CPedInventory Data --
+
+		public static IntPtr GetCPedInventoryAddressFromPedHandle(int pedHandle)
+		{
+			if (CPedIntentoryOfCPedOffset == 0)
+			{
+				return IntPtr.Zero;
+			}
+
+			var cPedAddress = GetEntityAddress(pedHandle);
+			if (cPedAddress == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			return new IntPtr(*(long**)(cPedAddress + CPedIntentoryOfCPedOffset));
+		}
+
+		public static uint[] GetAllWeaponHashesOfPedInventory(int pedHandle)
+		{
+			var weaponInventoryArray = GetWeaponInventoryArrayOfCPedInventory(pedHandle);
+			if (weaponInventoryArray == null)
+			{
+				return Array.Empty<uint>();
+			}
+
+			var weaponInventoryCount = weaponInventoryArray->size;
+			var result = new List<uint>(weaponInventoryCount);
+			for (int i = 0; i < weaponInventoryCount; i++)
+			{
+				var itemAddress = weaponInventoryArray->GetElementAddress(i);
+				var weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
+				if (weaponInfo != null)
+				{
+					result.Add(weaponInfo->nameHash);
+				}
+			}
+
+			return result.ToArray();
+		}
+
+		public static bool TryGetWeaponHashInPedInventoryBySlotHash(int pedHandle, uint slotHash, out uint weaponHash)
+		{
+			var weaponInventoryArray = GetWeaponInventoryArrayOfCPedInventory(pedHandle);
+			if (weaponInventoryArray == null)
+			{
+				weaponHash = 0;
+				return false;
+			}
+
+			int low = 0, high = weaponInventoryArray->size - 1;
+			while (true)
+			{
+				unsafe
+				{
+					int indexToRead = (low + high) >> 1;
+					var currentItem = weaponInventoryArray->GetElementAddress(indexToRead);
+
+					var slotHashOfCurrentItem = *(uint*)(currentItem);
+					var weaponInfo = *(ItemInfo**)(currentItem + 0x8);
+					if (slotHashOfCurrentItem == slotHash && weaponInfo != null)
+					{
+						weaponHash = weaponInfo->nameHash;
+						return true;
+					}
+
+					// The array is sorted in ascending order
+					if (slotHashOfCurrentItem <= slotHash)
+						low = indexToRead + 1;
+					else
+						high = indexToRead - 1;
+
+					if (low > high)
+					{
+						weaponHash = 0;
+						return false;
+					}
+				}
+			}
+		}
+
+		private static RageAtArrayPtr* GetWeaponInventoryArrayOfCPedInventory(int pedHandle)
+		{
+			if (CPedIntentoryOfCPedOffset == 0)
+			{
+				return null;
+			}
+
+			var cPedAddress = GetEntityAddress(pedHandle);
+			if (cPedAddress == IntPtr.Zero)
+			{
+				return null;
+			}
+
+			var cPedInventoryAddress = *(ulong*)(cPedAddress + CPedIntentoryOfCPedOffset);
+			if (cPedInventoryAddress == 0)
+			{
+				return null;
+			}
+
+			return (RageAtArrayPtr*)(cPedInventoryAddress + 0x18);
+		}
 
 		#endregion
 
