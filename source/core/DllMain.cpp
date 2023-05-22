@@ -30,17 +30,6 @@ using namespace System::Collections::Generic;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
-[assembly:AssemblyTitle("Community Script Hook V .NET")];
-[assembly:AssemblyDescription("An ASI plugin for Grand Theft Auto V, which allows running scripts written in any .NET language in-game.")];
-[assembly:AssemblyCompany("crosire & contributors")];
-[assembly:AssemblyProduct("ScriptHookVDotNet")];
-[assembly:AssemblyCopyright("Copyright © 2015 crosire")];
-[assembly:AssemblyVersion(SHVDN_VERSION)];
-[assembly:AssemblyFileVersion(SHVDN_VERSION)];
-// Sign with a strong name to distinguish from older versions and cause .NET framework runtime to bind the correct assemblies
-// There is no version check performed for assemblies without strong names (https://docs.microsoft.com/en-us/dotnet/framework/deployment/how-the-runtime-locates-assemblies)
-[assembly:AssemblyKeyFileAttribute("PublicKeyToken.snk")];
-
 public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it
 {
 public:

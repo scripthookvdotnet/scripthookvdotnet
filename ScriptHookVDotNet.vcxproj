@@ -126,6 +126,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="source\core\DllMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,9 +165,7 @@
       ToolPath="$(CscToolPath)" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
-  <Target
-    Name="VerifySDKFiles"
-    BeforeTargets="BeforeBuildGenerateSources">
+  <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>
       <!-- Look for the header files and the library -->
       <SDKFiles Include="sdk\inc\*.h" />

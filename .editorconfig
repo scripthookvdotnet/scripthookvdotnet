@@ -6,3 +6,6 @@ indent_size = 4
 indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+[AssemblyInfo.cpp]
+charset = utf-8-bom # utf-8-bom has to be specified for assembly attributes for C++/CLI programs so the ANSI encoding won't have influence

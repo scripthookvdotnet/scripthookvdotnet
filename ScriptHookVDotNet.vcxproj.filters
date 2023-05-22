@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\DllMain.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp" />
   </ItemGroup>
 </Project>
