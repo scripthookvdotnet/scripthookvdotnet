@@ -27,8 +27,9 @@ jobs:
     - name: Define SHVDN version
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        $env:SHVDN_VERSION = git describe --abbrev=0 --tags
-        echo "Version: ${env:SHVDN_VERSION}"
+        git fetch --unshallow
+        echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })" >> $Env:GITHUB_ENV
+        echo "Version: ${{env.SHVDN_VERSION}}"
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
