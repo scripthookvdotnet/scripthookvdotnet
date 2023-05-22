@@ -12,4 +12,10 @@
     <ClCompile Include="source\core\DllMain.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ScriptHookVDotNet.rc" />
+  </ItemGroup>
 </Project>

@@ -137,6 +137,12 @@
     <CsCompile Include="source\core\Script.cs" />
     <CsCompile Include="source\core\ScriptDomain.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ScriptHookVDotNet.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->
   <Target
