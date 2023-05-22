@@ -16,45 +16,32 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v1.3.1
       with:
         msbuild-architecture: x64
         vs-version: 16.1.6
-
     - name: Install ScriptHookV SDK
       working-directory: ${{env.SOLUTION_FILE_PATH}}
-      run: powershell ./tools/install_sdk.ps1
-      shell: cmd
-      
+      run: ./tools/install_sdk.ps1
     - name: Define SHVDN version
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        for /f %%i in ('git describe --abbrev^=0 --tags') do set SHVDN_VERSION=%%i
-        echo Version: "%SHVDN_VERSION%"
-      shell: cmd
-
+        $env:SHVDN_VERSION = git describe --abbrev=0 --tags
+        echo "Version: ${env:SHVDN_VERSION}"
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-
-    - name: Build solution
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: msbuild /m /p:configuration=Release /p:platform=x64 ScriptHookVDotNet.sln
-      
-    - name: Remove metagen
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: del bin\Release\ScriptHookVDotNet*.metagen
-      
-    - name: Include README, LICENSE, and setting ini file
+    - name: Build solution and put misc files for packing
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        type README.md | more /P > bin\Release\README.txt
-        type LICENSE.txt | more /P > bin\Release\LICENSE.txt
-        echo ReloadKey=None > bin\Release\ScriptHookVDotNet.ini
-        echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini
-      
+        msbuild /m /p:configuration=Release /p:platform=x64 ScriptHookVDotNet.sln `
+        && del bin\Release\ScriptHookVDotNet*.metagen `
+        && type README.md | more /P > bin\Release\README.txt `
+        && type LICENSE.txt | more /P > bin\Release\LICENSE.txt `
+        && echo ReloadKey=None > bin\Release\ScriptHookVDotNet.ini `
+        && echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini
+
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
