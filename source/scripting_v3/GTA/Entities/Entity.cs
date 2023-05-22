@@ -277,6 +277,9 @@ namespace GTA
 		/// <value>
 		/// The health as a <see cref="float"/>.
 		/// </value>
+		/// <remarks>
+		/// This property does not check <see cref="MaxHealth"/> (for any <see cref="Entity"/>s that are not player <see cref="Ped"/>s) or <see cref="Player.MaxHealth"/> (for player <see cref="Ped"/>s) values.
+		/// </remarks>
 		public float HealthFloat
 		{
 			get
