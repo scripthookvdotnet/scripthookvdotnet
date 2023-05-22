@@ -294,6 +294,11 @@ namespace GTA
 		/// <value>
 		/// The maximum health as an <see cref="int"/>.
 		/// </value>
+		/// <remarks>
+		/// You should not set a value larger than <c>65535</c> or a negative value for the player ped(s) as the game uses the 16-bit unsigned integer value for the max health of the player ped(s) on <c>CPlayerInfo</c>
+		/// and it is used when respawning and in <c>SET_ENTITY_MAX_HEALTH</c> as the max limit.
+		/// Setting a value larger than <c>65535</c> will result in the overflow of the 16-bit unsigned integer value for the max health of <c>CPlayerInfo</c>.
+		/// </remarks>
 		public override int MaxHealth
 		{
 			get => Function.Call<int>(Hash.GET_PED_MAX_HEALTH, Handle);

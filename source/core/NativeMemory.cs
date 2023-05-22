@@ -804,6 +804,11 @@ namespace SHVDN
 				}
 			}
 
+			address = FindPatternBmh("\x66\x0F\x6E\xF0\x0F\x5B\xF6\xE8\x00\x00\x00\x00\x0F\x28\xCE\x41\xB1\x01\x45\x33\xC0\x48\x8B\xC8\xE8", "xxxxxxxx????xxxxxxxxxxxxx");
+			if (address != null)
+			{
+				CPlayerInfoMaxHealthOffset = *(int*)(address - 4);
+			}
 			// None of variables for player targeting and wanted info are not accessed with direct offsets from CPlayerInfo instances in the game code
 			address = FindPatternBmh("\x48\x85\xFF\x74\x23\x48\x85\xDB\x74\x26", "xxxxxxxxxx");
 			if (address != null)
@@ -867,6 +872,7 @@ namespace SHVDN
 
 				PedPlayerInfoOffset = PedIntelligenceOffset + 0x8;
 				CPedIntentoryOfCPedOffset = PedIntelligenceOffset + 0x10;
+				UnkCPedStateOffset = PedIntelligenceOffset - 0x10;
 			}
 
 			address = FindPatternNaive("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
@@ -1229,6 +1235,15 @@ namespace SHVDN
 			return *(short*)address.ToPointer();
 		}
 		/// <summary>
+		/// Reads an unsigned single 16-bit value from the specified <paramref name="address"/>.
+		/// </summary>
+		/// <param name="address">The memory address to access.</param>
+		/// <returns>The value at the address.</returns>
+		public static ushort ReadUInt16(IntPtr address)
+		{
+			return *(ushort*)address.ToPointer();
+		}
+		/// <summary>
 		/// Reads a single 32-bit value from the specified <paramref name="address"/>.
 		/// </summary>
 		/// <param name="address">The memory address to access.</param>
@@ -1302,6 +1317,16 @@ namespace SHVDN
 		public static void WriteInt16(IntPtr address, short value)
 		{
 			var data = (short*)address.ToPointer();
+			*data = value;
+		}
+		/// <summary>
+		/// Writes an unsigned single 16-bit value to the specified <paramref name="address"/>.
+		/// </summary>
+		/// <param name="address">The memory address to access.</param>
+		/// <param name="value">The value to write.</param>
+		public static void WriteUInt16(IntPtr address, ushort value)
+		{
+			var data = (ushort*)address.ToPointer();
 			*data = value;
 		}
 		/// <summary>
@@ -2390,6 +2415,11 @@ namespace SHVDN
 		#region -- Ped Offsets --
 
 		public static int SweatOffset { get; }
+
+		/// <summary>
+		/// The value at this offset should be 2 if the ped is a player ped.
+		/// </summary>
+		public static int UnkCPedStateOffset { get; }
 
 		public static int CPedIntentoryOfCPedOffset { get; }
 
@@ -3613,6 +3643,11 @@ namespace SHVDN
 		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerPedAddressFunc;
 
 		static bool* isGameMultiplayerAddr;
+
+		/// <summary>
+		/// The offset for max health of CPlayerInfo, which is stored as an uint16_t.
+		/// </summary>
+		public static int CPlayerInfoMaxHealthOffset { get; }
 
 		public static int PedPlayerInfoOffset { get; }
 		public static int CWantedOffset { get; }

@@ -248,6 +248,7 @@ namespace GTA
 		/// </value>
 		/// <remarks>
 		/// Use <see cref="HealthFloat"/> instead if you need to get or set the value precisely, since a health value of a <see cref="Entity"/> are stored as a <see cref="float"/>.
+		/// You should note <see cref="HealthFloat"/> does not care about the 16-bit unsigned integer value for the max health of the player ped(s) on <c>CPlayerInfo</c> even if the <see cref="Entity"/> is the player <see cref="Ped"/>s, however.
 		/// </remarks>
 		/// <seealso cref="HealthFloat"/>
 		public int Health
@@ -305,6 +306,17 @@ namespace GTA
 		/// <value>
 		/// The maximum health as a <see cref="float"/>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// This method also set value to the 16-bit unsigned integer field for the max health of the player ped(s) on <c>CPlayerInfo</c> to prevent them from having inconsistent max health values.
+		/// while the base implementation of <see cref="MaxHealth"/> does not care about it at all since there is <see cref="Ped.MaxHealth"/>, where the max health of the player ped(s) on <c>CPlayerInfo</c> is considered.
+		/// </para>
+		/// <para>
+		/// You should not set a value larger than <c>65535.0</c> or a negative value for the player ped(s) as the game uses the 16-bit unsigned integer value for the max health of the player ped(s) on <c>CPlayerInfo</c>
+		/// and it is used when respawning and in <c>SET_ENTITY_MAX_HEALTH</c> as the max limit.
+		/// Setting a value larger than <c>65535.0</c> will result in the overflow of the 16-bit unsigned integer value for the max health of <c>CPlayerInfo</c>.
+		/// </para>
+		/// </remarks>
 		public float MaxHealthFloat
 		{
 			get
@@ -326,6 +338,38 @@ namespace GTA
 				}
 
 				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.EntityMaxHealthOffset, value);
+
+				// Only needed for setter as GET_ENTITY_HEALTH doesn't use the the uint16_t max health value of CPlayerInfo in any cases
+				// SET_ENTITY_HEALTH ignores the float max health value of CPhysical and instead uses the max health value of CPlayerInfo for the player ped
+				// SET_ENTITY_MAX_HEALTH sets both values for player peds as thw health display on HUD uses the float max health value of CPhysical
+				#region Special Max Health Treatment for Player Ped
+				if (SHVDN.NativeMemory.UnkCPedStateOffset == 0 || SHVDN.NativeMemory.PedPlayerInfoOffset == 0)
+				{
+					return;
+				}
+
+				var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28);
+				if (entityType != EntityTypeInternal.Ped)
+				{
+					return;
+				}
+
+				var unkPedState = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.UnkCPedStateOffset);
+				if (unkPedState != 2)
+				{
+					return;
+				}
+
+
+				var cPlayerInfo = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.PedPlayerInfoOffset);
+				if (cPlayerInfo == IntPtr.Zero)
+				{
+					return;
+				}
+
+				// SET_ENTITY_MAX_HEALTH doesn't care about overflow either
+				SHVDN.NativeMemory.WriteUInt16(address + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset, (ushort)System.Math.Ceiling(value));
+				#endregion
 			}
 		}
 
