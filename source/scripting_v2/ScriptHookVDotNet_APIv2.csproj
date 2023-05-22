@@ -21,7 +21,7 @@
   <PropertyGroup>
     <Version>2.11.6.0</Version>
     <FileVersion>2.11.6.0</FileVersion>
-    <Authors>crosire &amp; contributors</Authors>
+    <Authors>crosire &amp; kagikn &amp; contributors</Authors>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/crosire/scripthookvdotnet</RepositoryUrl>
@@ -29,7 +29,7 @@
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/crosire/scripthookvdotnet/releases</PackageReleaseNotes>
     <Description>The .NET scripting API for Grand Theft Auto V.</Description>
-    <Copyright>Copyright © 2015 crosire</Copyright>
+    <Copyright>Copyright © 2015 crosire &amp; kagikn</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
