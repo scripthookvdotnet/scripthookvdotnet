@@ -303,7 +303,7 @@ namespace GTA.UI
 		/// <summary>
 		/// Measures how many lines the text string will use when drawn on screen against a <see cref="Screen.ScaledWidth"/> pixel base.
 		/// </summary>
-		public float ScaledLineCount => CalculateLineCountInternal(Screen.ScaledWidth, Screen.Height);
+		public int ScaledLineCount => CalculateLineCountInternal(Screen.ScaledWidth, Screen.Height);
 
 		private int CalculateLineCountInternal(float screenWidth, float screenHeight)
 		{
