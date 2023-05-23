@@ -679,6 +679,12 @@ namespace SHVDN
 				HasMutedSirensBit = *(byte*)(address + 13); // the bit is changed between b372 and b2802
 				CanUseSirenOffset = *(int*)(address + 23);
 			}
+			address = FindPatternBmh("\xC1\xE9\x1C\xC0\xE1\x06\x32\xC8\x80\xE1\x40\x32\xC8\x88\x8E", "xxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				VehicleModelSirenIdOffset = *(int*)(address + 0x1F);
+				VehicleSirenBufferOffset = *(int*)(address + 0x26);
+			}
 
 			address = FindPatternBmh("\x41\xBB\x07\x00\x00\x00\x8A\xC2\x41\x23\xCB\x41\x22\xC3\x3C\x03\x75\x16", "xxxxxxxxxxxxxxxxxx");
 			if (address != null)
@@ -2158,6 +2164,8 @@ namespace SHVDN
 		public static int HasMutedSirensOffset { get; }
 		public static int HasMutedSirensBit { get; }
 
+		public static int VehicleSirenBufferOffset { get; }
+
 		public static int VehicleDropsMoneyWhenBlownUpOffset { get; }
 
 		public static int HeliBladesSpeedOffset { get; }
@@ -2169,6 +2177,8 @@ namespace SHVDN
 		public static int HandlingDataOffset { get; }
 
 		public static int SubHandlingDataArrayOffset { get; }
+
+		public static int VehicleModelSirenIdOffset { get; }
 
 		public static int FirstVehicleFlagsOffset { get; }
 
@@ -2261,6 +2271,33 @@ namespace SHVDN
 			}
 
 			return (*(byte*)(address + HasMutedSirensOffset) & HasMutedSirensBit) != 0;
+		}
+
+		public static bool VehicleHasSiren(int vehicleHandle)
+		{
+			var address = GetEntityAddress(vehicleHandle);
+
+			if (address == IntPtr.Zero)
+			{
+				return false;
+			}
+
+			var modelAddress = GetModelInfo(address);
+
+			if (modelAddress == IntPtr.Zero)
+			{
+				return false;
+			}
+
+			// The siren id must not be zero to use the siren
+			return (*(ulong**)(address + VehicleSirenBufferOffset) != null) && GetSirenIdOfVehicleModel(modelAddress) != 0;
+		}
+
+		public static int GetSirenIdOfVehicleModel(IntPtr vehicleModelAddress)
+		{
+			// This implementation doesn't consider SirenSetting Limit Adjuster by cp702
+			// We can consider it by calling EnableRphIntegration of SirenSetting Limit Adjuster and adding the expression (uint)(*(byte*)([upper bit] + (some offset)) * 256) to the original value like RPH does
+			return *(byte*)(vehicleModelAddress + VehicleModelSirenIdOffset);
 		}
 
 		#endregion

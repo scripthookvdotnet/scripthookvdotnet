@@ -1293,7 +1293,7 @@ namespace GTA
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Vehicle"/> has a siren; otherwise, <see langword="false" />.
 		/// </value>
-		public bool HasSiren => Bones.Contains("siren1");
+		public bool HasSiren => SHVDN.NativeMemory.VehicleHasSiren(Handle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> can use a siren.
