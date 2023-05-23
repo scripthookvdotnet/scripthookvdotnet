@@ -429,6 +429,8 @@ namespace GTA.UI
 			Function.Call(Hash.SET_TEXT_COLOUR, Color.R, Color.G, Color.B, Color.A);
 			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
 
+			bool shouldSetWrapToDefault = false;
+
 			if (WrapWidth > 0.0f)
 			{
 				switch (Alignment)
@@ -443,10 +445,12 @@ namespace GTA.UI
 						Function.Call(Hash.SET_TEXT_WRAP, x - w, x);
 						break;
 				}
+				shouldSetWrapToDefault = true;
 			}
 			else if (Alignment == Alignment.Right)
 			{
 				Function.Call(Hash.SET_TEXT_WRAP, 0.0f, x);
+				shouldSetWrapToDefault = true;
 			}
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
@@ -457,6 +461,12 @@ namespace GTA.UI
 			}
 
 			Function.Call(Hash.END_TEXT_COMMAND_DISPLAY_TEXT, x, y);
+
+			if (shouldSetWrapToDefault)
+			{
+				// The static start x value (that 2nd argument changes) is set to 0 and the static end x value (that 2nd argument changes) is set to 1f when the exe gets loaded
+				Function.Call(Hash.SET_TEXT_WRAP, 0f, 1f);
+			}
 		}
 	}
 }
