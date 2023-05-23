@@ -398,6 +398,10 @@ namespace GTA
 		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently pressed.
+		/// like <c>IS_CONTROL_PRESSED</c> does.
+		/// </remarks>
 		public static bool IsControlPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, index, (int)control);
@@ -408,6 +412,10 @@ namespace GTA
 		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just pressed this frame
+		/// like <c>IS_CONTROL_JUST_PRESSED</c> does.
+		/// </remarks>
 		public static bool IsControlJustPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, index, (int)control);
@@ -418,6 +426,10 @@ namespace GTA
 		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just released this frame
+		/// like <c>IS_CONTROL_JUST_RELEASED</c> does.
+		/// </remarks>
 		public static bool IsControlJustReleased(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, (int)control);
