@@ -422,6 +422,8 @@ namespace GTA
 		/// <returns>The <see cref="Control"/> value.</returns>
 		public static int GetControlValue(Control control)
 		{
+			// The 1st parameter is supposed to be the control type index, but it has no practical effect
+			// as control native functions eventually use the same CControl instance in any cases (applies to all the control natives)
 			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, (int)control);
 		}
 		/// <summary>
