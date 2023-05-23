@@ -297,6 +297,67 @@ namespace GTA.UI
 		}
 
 		/// <summary>
+		/// Measures how many lines the text string will use when drawn on screen against a <see cref="Screen.Width"/> pixel base.
+		/// </summary>
+		public int LineCount => CalculateLineCountInternal(Screen.Width, Screen.Height);
+		/// <summary>
+		/// Measures how many lines the text string will use when drawn on screen against a <see cref="Screen.ScaledWidth"/> pixel base.
+		/// </summary>
+		public float ScaledLineCount => CalculateLineCountInternal(Screen.ScaledWidth, Screen.Height);
+
+		private int CalculateLineCountInternal(float screenWidth, float screenHeight)
+		{
+			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
+			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
+
+			var x = Position.X / screenWidth;
+			var y = Position.Y / screenHeight;
+			var w = WrapWidth / screenWidth;
+
+			bool shouldSetWrapToDefault = false;
+
+			if (WrapWidth > 0.0f)
+			{
+				switch (Alignment)
+				{
+					case Alignment.Center:
+						Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
+						break;
+					case Alignment.Left:
+						Function.Call(Hash.SET_TEXT_WRAP, x, x + w);
+						break;
+					case Alignment.Right:
+						Function.Call(Hash.SET_TEXT_WRAP, x - w, x);
+						break;
+				}
+				shouldSetWrapToDefault = true;
+			}
+			else if (Alignment == Alignment.Right)
+			{
+				Function.Call(Hash.SET_TEXT_WRAP, 0.0f, x);
+				shouldSetWrapToDefault = true;
+			}
+			Function.Call(Hash.SET_TEXT_JUSTIFICATION, (int)Alignment);
+
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING, SHVDN.NativeMemory.CellEmailBcon);
+
+			foreach (var ptr in _pinnedText)
+			{
+				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
+			}
+
+			var result = Function.Call<int>(Hash.END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING, x, y);
+
+			if (shouldSetWrapToDefault)
+			{
+				// The static start x value (that 2nd argument changes) is set to 0 and the static end x value (that 2nd argument changes) is set to 1f when the exe gets loaded
+				Function.Call(Hash.SET_TEXT_WRAP, 0f, 1f);
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Measures how many pixels in the horizontal axis the string will use when drawn
 		/// </summary>
 		/// <param name="text">The string of text to measure.</param>
