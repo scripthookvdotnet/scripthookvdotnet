@@ -175,16 +175,20 @@ static void ScriptHookVDotNet_ManagedInit()
 			if (data->Length != 2)
 				continue;
 
-			if (data[0] == "ReloadKey")
-				Enum::TryParse(data[1], true, ScriptHookVDotNet::reloadKey);
-			else if (data[0] == "ConsoleKey")
-				Enum::TryParse(data[1], true, ScriptHookVDotNet::consoleKey);
-			else if (data[0] == "ScriptsLocation")
-				scriptPath = data[1];
-			else if (data[0] == "WarnOfDeprecatedScriptsWithTicker")
+			// May fail to parse without trimming whitespaces
+			String^ keyStr = data[0]->Trim();
+			String^ valueStr = data[1]->Trim();
+
+			if (String::Equals(keyStr, "ReloadKey", StringComparison::OrdinalIgnoreCase))
+				Enum::TryParse(valueStr, true, ScriptHookVDotNet::reloadKey);
+			else if (String::Equals(keyStr, "ConsoleKey", StringComparison::OrdinalIgnoreCase))
+				Enum::TryParse(keyStr, true, ScriptHookVDotNet::consoleKey);
+			else if (String::Equals(keyStr, "ScriptsLocation", StringComparison::OrdinalIgnoreCase))
+				scriptPath = valueStr;
+			else if (String::Equals(keyStr, "WarnOfDeprecatedScriptsWithTicker", StringComparison::OrdinalIgnoreCase))
 			{
 				bool outVal;
-				if (Boolean::TryParse(data[1], outVal))
+				if (Boolean::TryParse(valueStr, outVal))
 				{
 					ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = outVal;
 				}
