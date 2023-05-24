@@ -517,7 +517,7 @@ namespace SHVDN
 			foreach (var filename in assemblyFiles)
 				LoadScriptsFromAssembly(filename);
 
-			WarnScriptsUsingDeprecatedApi();
+			WarnOfScriptsUsingDeprecatedApi();
 
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
@@ -529,7 +529,7 @@ namespace SHVDN
 				InstantiateScript(type)?.Start(!(GetScriptAttribute(type, "NoScriptThread") is bool NoScriptThread) || !NoScriptThread);
 			}
 
-			void WarnScriptsUsingDeprecatedApi()
+			void WarnOfScriptsUsingDeprecatedApi()
 			{
 				unsafe
 				{
