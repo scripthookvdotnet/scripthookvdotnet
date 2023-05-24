@@ -117,6 +117,7 @@ internal:
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
 	static WinForms::Keys reloadKey = WinForms::Keys::None;
 	static WinForms::Keys consoleKey = WinForms::Keys::F4;
+	static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
 	static Object^ unloadLock = gcnew Object();
 	static void SetConsole()
 	{
@@ -180,6 +181,14 @@ static void ScriptHookVDotNet_ManagedInit()
 				Enum::TryParse(data[1], true, ScriptHookVDotNet::consoleKey);
 			else if (data[0] == "ScriptsLocation")
 				scriptPath = data[1];
+			else if (data[0] == "WarnOfDeprecatedScriptsWithTicker")
+			{
+				bool outVal;
+				if (Boolean::TryParse(data[1], outVal))
+				{
+					ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = outVal;
+				}
+			}
 		}
 	}
 	catch (Exception ^ex)
@@ -194,6 +203,8 @@ static void ScriptHookVDotNet_ManagedInit()
 
 	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
 	domain->InitTlsContext(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
+
+	domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
 
 	try
 	{

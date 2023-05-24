@@ -82,6 +82,15 @@ namespace SHVDN
 		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
 
 		/// <summary>
+		/// Gets the dictionary of deprecated script names.
+		/// </summary>
+		private Dictionary<int, List<string>> DeprecatedScriptAssemblyNamesPerApiVersion { get; set; } = new();
+		/// <summary>
+		/// Gets the value that indicates whether the script domain should warn of deprecated scripts with a ticker.
+		/// </summary>
+		public bool ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker { get; set; }
+
+		/// <summary>
 		/// Initializes the script domain inside its application domain.
 		/// </summary>
 		/// <param name="apiBasePath">The path to the root directory containing the scripting API assemblies.</param>
@@ -370,6 +379,11 @@ namespace SHVDN
 
 			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " resolved to API version " + apiVersion.ToString(3) : string.Empty), ".");
 
+			if (apiVersion != null && IsApiVersionDeprecated(apiVersion))
+			{
+				AddScriptAssemblyNameBuiltAgainstApiVersion(apiVersion.Major, Path.GetFileName(filename));
+			}
+
 			return count != 0;
 		}
 
@@ -503,6 +517,8 @@ namespace SHVDN
 			foreach (var filename in assemblyFiles)
 				LoadScriptsFromAssembly(filename);
 
+			WarnScriptsUsingDeprecatedApi();
+
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
@@ -511,6 +527,35 @@ namespace SHVDN
 					continue;
 
 				InstantiateScript(type)?.Start(!(GetScriptAttribute(type, "NoScriptThread") is bool NoScriptThread) || !NoScriptThread);
+			}
+
+			void WarnScriptsUsingDeprecatedApi()
+			{
+				unsafe
+				{
+					if (ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker)
+					{
+						var scriptCountUsingDeprecatedApi = DeprecatedScriptAssemblyNamesPerApiVersion.Values.Aggregate(0, (result, current) => result + current.Count);
+
+						NativeFunc.InvokeInternal(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
+						NativeFunc.PushLongString($"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is not actively supported. Check the console or the log file for more details.");
+						NativeFunc.InvokeInternal(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
+					}
+					
+					foreach (var apiVersionAndScriptNameDict in DeprecatedScriptAssemblyNamesPerApiVersion)
+					{
+						var apiVersion = apiVersionAndScriptNameDict.Key;
+						var scriptAssemblyCount = apiVersionAndScriptNameDict.Value.Count;
+
+						var apiVersionString = apiVersion != 0 ? $"{apiVersion}.x" : "0.x or 1.x (fallbacked to the v2 API)";
+
+						Log.Message(Log.Level.Warning, $"Found {scriptAssemblyCount} script(s) resolved to the API version {apiVersionString}. The v2 API is no longer actively supported. Please report to script developers. The list of script names:");
+						foreach (var scriptName in apiVersionAndScriptNameDict.Value)
+						{
+							Log.Message(Log.Level.Warning, scriptName);
+						}
+					}
+				}
 			}
 		}
 		/// <summary>
@@ -951,5 +996,19 @@ namespace SHVDN
 				}
 			}
 		}
+
+		private void AddScriptAssemblyNameBuiltAgainstApiVersion(int apiVersion, string fileName)
+		{
+			if (!DeprecatedScriptAssemblyNamesPerApiVersion.TryGetValue(apiVersion, out var list))
+			{
+				DeprecatedScriptAssemblyNamesPerApiVersion[apiVersion] = new List<string>() { fileName };
+				return;
+			}
+
+			list.Add(fileName);
+			return;
+		}
+
+		private static bool IsApiVersionDeprecated(Version apiVersion) => apiVersion.Major < 3;
 	}
 }

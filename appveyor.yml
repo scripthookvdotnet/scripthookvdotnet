@@ -30,6 +30,8 @@ before_package:
 
     echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini
 
+    echo WarnOfDeprecatedScriptsWithTicker=false >> bin\Release\ScriptHookVDotNet.ini
+
 test: off
 artifacts:
 - path: bin/Release/
