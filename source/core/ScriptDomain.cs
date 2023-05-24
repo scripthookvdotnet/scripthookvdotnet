@@ -235,8 +235,8 @@ namespace SHVDN
 			var apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
 			if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out var apiVersion))
 				scriptApi = CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
-			// Reference the oldest scripting API by default to stay compatible with existing scripts
-			scriptApi ??= scriptApis.First();
+			// Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
+			scriptApi ??= scriptApis.First(x => !IsApiVersionDeprecated(x.GetName().Version));
 			compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
 			var extension = Path.GetExtension(filename);
