@@ -124,6 +124,9 @@ namespace SHVDN
 					Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(apiPath), ": ", ex.ToString());
 				}
 			}
+			// Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
+			// as long as all of major versions are unique
+			scriptApis.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
 		}
 
 		~ScriptDomain()
