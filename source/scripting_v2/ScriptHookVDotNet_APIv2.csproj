@@ -11,6 +11,7 @@
     <LangVersion>9.0</LangVersion>
     <Platforms>x64</Platforms>
     <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
@@ -37,13 +38,11 @@
     <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>false</Optimize>
-    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt">
