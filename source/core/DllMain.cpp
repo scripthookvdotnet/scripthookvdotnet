@@ -184,7 +184,7 @@ static void ScriptHookVDotNet_ManagedInit()
 			else if (String::Equals(keyStr, "ConsoleKey", StringComparison::OrdinalIgnoreCase))
 				Enum::TryParse(keyStr, true, ScriptHookVDotNet::consoleKey);
 			else if (String::Equals(keyStr, "ScriptsLocation", StringComparison::OrdinalIgnoreCase))
-				scriptPath = valueStr;
+				scriptPath = valueStr->Trim('"');
 			else if (String::Equals(keyStr, "WarnOfDeprecatedScriptsWithTicker", StringComparison::OrdinalIgnoreCase))
 			{
 				bool outVal;
