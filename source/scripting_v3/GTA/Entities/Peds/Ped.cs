@@ -987,6 +987,7 @@ namespace GTA
 		/// <remarks>
 		/// Despite the interface, this actually changes the driving flags field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
 		/// </remarks>
+		[Obsolete("Ped.DrivingStyle is obsolete, use VehicleDrivingFlags instead.")]
 		public DrivingStyle DrivingStyle
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (int)value);
