@@ -9,7 +9,7 @@ using System;
 
 namespace GTA
 {
-	public class TaskInvoker
+	public sealed class TaskInvoker
 	{
 		#region Fields
 		readonly Ped _ped;

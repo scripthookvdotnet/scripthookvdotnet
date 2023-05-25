@@ -7,7 +7,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class PedBone : EntityBone
+	public sealed class PedBone : EntityBone
 	{
 		internal PedBone(Ped owner, int boneIndex) : base(owner, boneIndex)
 		{

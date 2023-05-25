@@ -11,7 +11,7 @@ namespace GTA
 	/// <summary>
 	/// Represents a static building, which is for <c>CBuilding</c>.
 	/// </summary>
-	public class Building : IExistable
+	public sealed class Building : IExistable
 	{
 		internal Building(int handle)
 		{

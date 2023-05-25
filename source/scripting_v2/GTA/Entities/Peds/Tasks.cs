@@ -9,7 +9,7 @@ using System;
 
 namespace GTA
 {
-	public class Tasks
+	public sealed class Tasks
 	{
 		Ped _ped;
 

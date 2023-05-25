@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 namespace GTA
 {
-	public class PedBoneCollection : EntityBoneCollection, IEnumerable<PedBone>
+	public sealed class PedBoneCollection : EntityBoneCollection, IEnumerable<PedBone>
 	{
-		public new class Enumerator : IEnumerator<PedBone>
+		public new sealed class Enumerator : IEnumerator<PedBone>
 		{
 			#region Fields
 			readonly PedBoneCollection collection;

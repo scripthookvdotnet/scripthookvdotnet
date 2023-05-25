@@ -11,7 +11,7 @@ namespace GTA
 	/// <summary>
 	/// Represents a interior instance, which is for <c>CInteriorInst</c> (a subclass of <c>CBuilding</c>) and is not used for native functions for interiors.
 	/// </summary>
-	public class InteriorInstance : IExistable
+	public sealed class InteriorInstance : IExistable
 	{
 		internal InteriorInstance(int handle)
 		{

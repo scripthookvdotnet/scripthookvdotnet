@@ -7,7 +7,8 @@ using System;
 
 namespace GTA
 {
-	public class Projectile : Prop
+	// Actually there's CProjectileRocket and CProjectileThrown, but mark this class as sealed until wrapper classes are implemented for either of them
+	public sealed class Projectile : Prop
 	{
 		internal Projectile(int handle) : base(handle)
 		{

@@ -9,10 +9,10 @@ using System.Collections.Generic;
 
 namespace GTA
 {
-	public class EntityDamageRecordCollection : IEnumerable<EntityDamageRecord>, IEnumerable
+	public sealed class EntityDamageRecordCollection : IEnumerable<EntityDamageRecord>, IEnumerable
 	{
 		#region Fields
-		protected readonly Entity _owner;
+		private readonly Entity _owner;
 		#endregion
 
 		internal EntityDamageRecordCollection(Entity owner)

@@ -12,7 +12,7 @@ namespace GTA
 	/// <summary>
 	/// Represents a interior proxy, which is for <c>CInteriorProxy</c> and is used for native functions for interiors.
 	/// </summary>
-	public class InteriorProxy : INativeValue, IExistable
+	public sealed class InteriorProxy : INativeValue, IExistable
 	{
 		internal InteriorProxy(int handle)
 		{

@@ -11,7 +11,7 @@ namespace GTA
 	/// <summary>
 	/// Represents a interior proxy, which is for <c>CAnimatedBuilding</c>.
 	/// </summary>
-	public class AnimatedBuilding : IExistable
+	public sealed class AnimatedBuilding : IExistable
 	{
 		internal AnimatedBuilding(int handle)
 		{

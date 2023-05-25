@@ -7,7 +7,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class PedComponent : IPedVariation
+	public sealed class PedComponent : IPedVariation
 	{
 		#region Fields
 		readonly Ped _ped;

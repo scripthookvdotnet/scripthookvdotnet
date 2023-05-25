@@ -8,7 +8,7 @@ using System;
 
 namespace GTA
 {
-	public class PedProp : IPedVariation
+	public sealed class PedProp : IPedVariation
 	{
 		#region Fields
 		readonly Ped _ped;
