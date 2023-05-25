@@ -1925,7 +1925,7 @@ namespace SHVDN
 
 		#region -- CPhysical Functions --
 
-		internal class SetEntityAngularVelocityTask : IScriptTask
+		internal sealed class SetEntityAngularVelocityTask : IScriptTask
 		{
 			#region Fields
 			IntPtr entityAddress;
@@ -2412,7 +2412,7 @@ namespace SHVDN
 
 		// the function BurstVehicleTireOnRimNew(Old)Func calls must be called in the main thread or the game will crash
 		// the function PunctureVehicleTireNew(Old)Func calls should be called in the main thread or the game might crash in some cases
-		internal class VehicleWheelPunctureTask : IScriptTask
+		internal sealed class VehicleWheelPunctureTask : IScriptTask
 		{
 			#region Fields
 			IntPtr wheelAddress;
@@ -3332,7 +3332,7 @@ namespace SHVDN
 			}
 		}
 
-		internal class GetEntityHandleTask : IScriptTask
+		internal sealed class GetEntityHandleTask : IScriptTask
 		{
 			#region Fields
 			internal ulong entityAddress;
@@ -3867,7 +3867,7 @@ namespace SHVDN
 			}
 		}
 
-		internal class ActivateSpecialAbilityTask : IScriptTask
+		internal sealed class ActivateSpecialAbilityTask : IScriptTask
 		{
 			#region Fields
 			internal IntPtr specialAbilityStructAddress;
@@ -4748,7 +4748,7 @@ namespace SHVDN
 			internal CGameScriptResource* prev;
 		}
 
-		internal class GetAllCScriptResourceHandlesTask : IScriptTask
+		internal sealed class GetAllCScriptResourceHandlesTask : IScriptTask
 		{
 			#region Fields
 			internal CScriptResourceTypeNameIndex typeNameIndex;
@@ -4788,7 +4788,7 @@ namespace SHVDN
 			}
 		}
 
-		internal class GetCScriptResourceAddressTask : IScriptTask
+		internal sealed class GetCScriptResourceAddressTask : IScriptTask
 		{
 			#region Fields
 			internal int targetHandle;
@@ -4945,7 +4945,7 @@ namespace SHVDN
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 		}
 
-		internal class ExplodeProjectileTask : IScriptTask
+		internal sealed class ExplodeProjectileTask : IScriptTask
 		{
 			#region Fields
 			internal IntPtr projectileAddress;
@@ -5635,7 +5635,7 @@ namespace SHVDN
 			}
 		}
 
-		internal class DetachFragmentPartByIndexTask : IScriptTask
+		internal sealed class DetachFragmentPartByIndexTask : IScriptTask
 		{
 			#region Fields
 			internal FragInst* fragInst;
@@ -5882,7 +5882,7 @@ namespace SHVDN
 			}
 		}
 
-		internal class NmMessageTask : IScriptTask
+		internal sealed class NmMessageTask : IScriptTask
 		{
 			#region Fields
 			int targetHandle;

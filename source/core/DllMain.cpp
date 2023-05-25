@@ -30,7 +30,7 @@ using namespace System::Collections::Generic;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
-public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it
+public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it for ConsoleInput class
 {
 public:
 	[SHVDN::ConsoleCommand("Print the default help")]

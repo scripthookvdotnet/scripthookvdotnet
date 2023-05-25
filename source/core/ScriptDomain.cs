@@ -24,7 +24,7 @@ namespace SHVDN
 		void Run();
 	}
 
-	public class ScriptDomain : MarshalByRefObject, IDisposable
+	public sealed class ScriptDomain : MarshalByRefObject, IDisposable
 	{
 		// Debugger.IsAttached does not detect a Visual Studio debugger
 		[SuppressUnmanagedCodeSecurity]
@@ -131,14 +131,15 @@ namespace SHVDN
 
 		~ScriptDomain()
 		{
-			Dispose(false);
+			DisposeUnmanagedResource();
 		}
 		public void Dispose()
 		{
-			Dispose(true);
+			DisposeUnmanagedResource();
 			GC.SuppressFinalize(this);
 		}
-		protected virtual void Dispose(bool disposing)
+
+		private void DisposeUnmanagedResource()
 		{
 			// Need to free native strings when disposing the script domain
 			CleanupStrings();
