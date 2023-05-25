@@ -82,6 +82,11 @@ namespace SHVDN
 		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
 
 		/// <summary>
+		/// Gets or sets the value how long script can execute in one tick without getting terminated after the tick ends.
+		/// </summary>
+		public uint ScriptTimeoutThreshold { get; set; }
+
+		/// <summary>
 		/// Gets the dictionary of deprecated script names.
 		/// </summary>
 		private Dictionary<int, List<string>> DeprecatedScriptAssemblyNamesPerApiVersion { get; set; } = new();
@@ -719,9 +724,8 @@ namespace SHVDN
 
 				executingScript = null;
 
-				const int timeoutThreshold = 5000;
 				// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
-				if ((Environment.TickCount - startTimeTickCount) < timeoutThreshold || IsDebuggerPresent()) continue;
+				if ((uint)(Environment.TickCount - startTimeTickCount) < ScriptTimeoutThreshold || IsDebuggerPresent()) continue;
 				Log.Message(Log.Level.Error, $"Blocking script! Script {script.Name} (file name: {Path.GetFileName(script.Filename)}) was terminated because it caused the game to freeze too long.");
 
 				// Wait operation above timed out, which means that the script did not send any task for some time, so abort it

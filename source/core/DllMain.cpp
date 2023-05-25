@@ -117,6 +117,7 @@ internal:
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
 	static WinForms::Keys reloadKey = WinForms::Keys::None;
 	static WinForms::Keys consoleKey = WinForms::Keys::F4;
+	static unsigned int scriptTimeoutThreshold = 5000;
 	static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
 	static Object^ unloadLock = gcnew Object();
 	static void SetConsole()
@@ -183,6 +184,14 @@ static void ScriptHookVDotNet_ManagedInit()
 				Enum::TryParse(valueStr, true, ScriptHookVDotNet::reloadKey);
 			else if (String::Equals(keyStr, "ConsoleKey", StringComparison::OrdinalIgnoreCase))
 				Enum::TryParse(valueStr, true, ScriptHookVDotNet::consoleKey);
+			else if (String::Equals(keyStr, "ScriptTimeoutThreshold", StringComparison::OrdinalIgnoreCase))
+			{
+				unsigned int outVal;
+				if (UInt32::TryParse(valueStr, outVal))
+				{
+					ScriptHookVDotNet::scriptTimeoutThreshold = outVal;
+				}
+			}
 			else if (String::Equals(keyStr, "ScriptsLocation", StringComparison::OrdinalIgnoreCase))
 				scriptPath = valueStr->Trim('"');
 			else if (String::Equals(keyStr, "WarnOfDeprecatedScriptsWithTicker", StringComparison::OrdinalIgnoreCase))
@@ -208,6 +217,7 @@ static void ScriptHookVDotNet_ManagedInit()
 	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
 	domain->InitTlsContext(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
 
+	domain->ScriptTimeoutThreshold = ScriptHookVDotNet::scriptTimeoutThreshold;
 	domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
 
 	try
