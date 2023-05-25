@@ -109,11 +109,8 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the upright spring constant that have effects when the trailer is rotated too much in the pitch axis.
-		/// Lower value will make higher spring force.
+		/// Lower value will make higher spring force. The value should be negative.
 		/// </summary>
-		/// <remarks>
-		/// The value should be negative.
-		/// </remarks>
 		/// <value>
 		/// The upright spring constant that have effects when the trailer is rotated too much in the pitch axis.
 		/// </value>
@@ -167,7 +164,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the attachment distance constraint max distance.
-		/// Less than or equal to zero will default to the old spherical constraint.
+		/// Any value less than or equal to zero will default to the old spherical constraint.
 		/// </summary>
 		/// <value>
 		/// The attachment distance constraint max distance.
@@ -195,7 +192,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets or sets the attachment distance constraint max penetration.
-		/// Less than or equal to zero will default to the old spherical constraint.
+		/// Any value less than or equal to zero will default to the old spherical constraint.
 		/// </summary>
 		/// <value>
 		/// The attachment distance constraint max penetration.
