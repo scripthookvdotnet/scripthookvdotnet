@@ -688,30 +688,17 @@ namespace SHVDN
 
 				executingScript = script;
 
-				var finishedInTime = true;
-				var isDebuggerPresent = IsDebuggerPresent();
-
+				var startTimeTickCount = Environment.TickCount;
 				try
 				{
 					if (script.IsUsingThread)
 					{
 						// Resume script thread and execute any incoming tasks from it
-						if (!isDebuggerPresent)
+						SignalAndWait(script.continueEvent, script.waitEvent);
+						while (taskQueue.Count > 0)
 						{
-							while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
-								taskQueue.Dequeue().Run();
-						}
-						else
-						{
-							// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
-							// Avoid terminating the script thread for executing too long since the game may crash when the thread is aborted if the thread is doing some task that needs the TLS context of the main thread
+							taskQueue.Dequeue().Run();
 							SignalAndWait(script.continueEvent, script.waitEvent);
-							while (taskQueue.Count > 0)
-							{
-								taskQueue.Dequeue().Run();
-								if (taskQueue.Count > 0)
-									SignalAndWait(script.continueEvent, script.waitEvent);
-							}
 						}
 					}
 					else
@@ -725,12 +712,17 @@ namespace SHVDN
 
 					// Stop script in case of an unhandled exception during task execution
 					script.Abort();
+
+					executingScript = null;
+					continue;
 				}
 
 				executingScript = null;
 
-				if (finishedInTime || isDebuggerPresent) continue;
-				Log.Message(Log.Level.Error, "Script ", script.Name, " is not responding! Aborting ...");
+				const int timeoutThreshold = 5000;
+				// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
+				if ((Environment.TickCount - startTimeTickCount) < timeoutThreshold || IsDebuggerPresent()) continue;
+				Log.Message(Log.Level.Error, $"Blocking script! Script {script.Name} (file name: {Path.GetFileName(script.Filename)}) was terminated because it caused the game to freeze too long.");
 
 				// Wait operation above timed out, which means that the script did not send any task for some time, so abort it
 				script.Abort();
@@ -849,11 +841,6 @@ namespace SHVDN
 		{
 			toSignal.Release();
 			toWaitOn.Wait();
-		}
-		static bool SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn, int timeout)
-		{
-			toSignal.Release();
-			return toWaitOn.Wait(timeout);
 		}
 
 		static bool IsSubclassOf(Type type, string baseTypeName)
