@@ -319,24 +319,49 @@ namespace GTA
 		/// <summary>
 		/// Gets the config flag bit on this <see cref="Ped"/>.
 		/// </summary>
-		public bool GetConfigFlag(int flagID)
+		public bool GetConfigFlag(PedConfigFlags configFlag)
 		{
-			return Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, flagID, true);
+			return Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, (int)configFlag, false);
 		}
-
 		/// <summary>
 		/// Sets the config flag bit on this <see cref="Ped"/>.
 		/// </summary>
-		public void SetConfigFlag(int flagID, bool value)
+		public void SetConfigFlag(PedConfigFlags configFlag, bool value)
 		{
-			Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, flagID, value);
+			Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, (int)configFlag, value);
 		}
 
 		/// <summary>
-		/// Do not use this method as <c>SET_PED_RESET_FLAG</c> uses different flag IDs from the IDs <see cref="GetConfigFlag(int)"/> and <see cref="SetConfigFlag(int, bool)"/> use.
+		/// Gets the reset flag bit on this <see cref="Ped"/>.
+		/// You will need to call this method every frame you want to get, since the values of <see cref="PedConfigFlags"/> are reset every frame.
+		/// </summary>
+		public bool GetResetFlag(PedResetFlags configFlag)
+		{
+			return Function.Call<bool>(Hash.GET_PED_RESET_FLAG, Handle, (int)configFlag, false);
+		}
+		/// <summary>
+		/// Sets the reset flag bit on this <see cref="Ped"/>.
+		/// You will need to call this method every frame you want to set, since the values of <see cref="PedConfigFlags"/> are reset every frame.
+		/// </summary>
+		public void SetResetFlag(PedResetFlags configFlag, bool value)
+		{
+			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, (int)configFlag, value);
+		}
+
+
+		[Obsolete("The Ped.GetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
+		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
+		public bool GetConfigFlag(int flagID) => GetConfigFlag((PedConfigFlags)flagID);
+		[Obsolete("The Ped.SetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
+		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
+		public void SetConfigFlag(int flagID, bool value) => SetConfigFlag((PedConfigFlags)flagID, value);
+
+		/// <summary>
+		/// Do not use this method and use <see cref="Ped.SetResetFlag(PedResetFlags, bool)"/> or <see cref="Ped.GetResetFlag(PedResetFlags)"/> instead,
+		/// because <c>SET_PED_RESET_FLAG</c> uses different flag IDs from the IDs <see cref="GetConfigFlag(int)"/> and <see cref="SetConfigFlag(int, bool)"/> use.
 		/// </summary>
 		[Obsolete("Ped.ResetConfigFlag is obsolete since SET_PED_RESET_FLAG uses different flag IDs from the IDs GET_PED_CONFIG_FLAG and SET_PED_CONFIG_FLAG use " +
-			"and the said overload always set the flag (2nd argument of SET_PED_RESET_FLAG) to true.", true)]
+			"and the said overload always set the flag (2nd argument of SET_PED_RESET_FLAG) to true. Use Ped.SetResetFlag or Ped.GetResetFlag instead", true)]
 		public void ResetConfigFlag(int flagID)
 		{
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, flagID, true);
