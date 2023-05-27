@@ -1,0 +1,91 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug or regression related to ScriptHookVDotNet (SHVDN).
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Self Check
+        - Please note: **ScriptHookVDotNet is NOT ScriptHookV**!
+          - If you get the `FATAL: Unknown game version` error after a game update, then this project is not responsible. Instead, you need to wait for [**ScriptHookV**](http://www.dev-c.com/gtav/scripthookv/) to update.
+        - Look for similar errors in existing [GitHub Issues](https://github.com/scripthookvdotnet/scripthookvdotnet/issues?q=is%3Aissue) (open or closed) before creating a new issue.
+        - If you are not familiar with how to program and you are encountering some issues related to some SHVDN scripts such as compatibility issues due to game versions, please try to seek help from the authors and ask them to find out the causes.
+  - type: dropdown
+    id: modules-with-problem
+    validations:
+      required: true
+    attributes:
+      label: What modules are you seeing the problem on?
+      multiple: true
+      options:
+        - ScriptHookVDotNet.asi (runtime)
+        - ScriptHookVDotNet3.dll (v3 SDK/API)
+        - ScriptHookVDotNet2.dll (v2 SDK/API)
+  - type: input
+    id: shvdn-version
+    validations:
+      required: true
+    attributes:
+      label: SHVDN Version
+      description: |
+        For dev versions, write an unique commit hash (like 0d5b09b). Don't use a short commit hash less than 7 characters to avoid easy hash collisions.
+        For stable release versions, open the console to check.
+      placeholder: "0d5b09b"
+  - type: input
+    id: game-version
+    validations:
+      required: true
+    attributes:
+      label: Game Version
+      description: See ScriptHookV.dll to check. You should see a string like "VER_1_0_2845_0", and convert it to like "v1.0.2845.0" to fill in.
+      placeholder: "v1.0.2845.0"
+  - type: textarea
+    id: bug-desc
+    validations:
+      required: true
+    attributes:
+      label: Bug Description
+      description: |
+       Please provide a clear and concise description of what the bug is. Include appropriate logs or screenshots if needed.
+       Please test using the latest dev version of SHVDN to make sure your issue has not already been fixed.
+  - type: textarea
+    id: steps-to-repro
+    validations:
+      required: true
+    attributes:
+      label: Steps To Reproduce
+      description: |
+        Steps to reproduce the problem.
+        Your bug will get fixed much faster if we can run your code and it doesn't have dependencies other than a SHVDN SDK.
+        Issues without reproduction steps or code examples may be immediately closed as not actionable.
+      placeholder: |
+        For example:
+        1. Try to get the oil level of a vehicle via Vehicle.OilLevel
+        2. Always returns zero
+
+        Another example:
+        1. Enumerate a WeaponComponentCollection instance via foreach
+        2. The SHVDN runtime crashes and ScriptHookV shows the string "CORE: An exception occurred while executing"
+  - type: input
+    id: link-to-code-example
+    validations:
+      required: false
+    attributes:
+      label: Link To Code Example
+      description: |
+        Please provide a link to a minimal code example if the bug is related to an API layer.
+  - type: textarea
+    id: current-behavior
+    validations:
+      required: true
+    attributes:
+      label: The Current Behavior
+      description: A brief description of what is happening.
+  - type: textarea
+    id: expected-behavior
+    validations:
+      required: true
+    attributes:
+      label: The Expected Behavior
+      description: A brief description of what should happen.
