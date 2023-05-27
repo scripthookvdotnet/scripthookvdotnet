@@ -4,7 +4,7 @@ namespace GTA
 	/// An enumeration of known config flags for <see cref="Ped"/>.
 	/// </summary>
 	/// <remarks>
-	/// You can check if names of this enum are included by searching the dumped exe for hashed values of names like <c>CPED_CONFIG_FLAG_[enum name]</c> without case conversion
+	/// You can check if names of this enum are included in the exe by searching the dumped exe for hashed values of names like <c>CPED_CONFIG_FLAG_[enum name]</c> without case conversion
 	/// (for example, search the dumped exe for 0x583B5E2D, which is the hashed value of <c>CPED_CONFIG_FLAG_AllowMedicsToReviveMe</c>).
 	/// </remarks>
 	public enum PedConfigFlags

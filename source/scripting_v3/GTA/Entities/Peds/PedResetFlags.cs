@@ -4,7 +4,7 @@ namespace GTA
 	/// An enumeration of known reset flags for <see cref="Ped"/>, which will be required to set or get every frame you need to set or get.
 	/// </summary>
 	/// <remarks>
-	/// You can check if names of this enum are included by searching the dumped exe for hashed values of names like <c>CPED_RESET_FLAG_[enum name]</c> without case conversion
+	/// You can check if names of this enum are included in the exe by searching the dumped exe for hashed values of names like <c>CPED_RESET_FLAG_[enum name]</c> without case conversion
 	/// (for example, search the dumped exe for 0x49F290D0, which is the hashed value of <c>CPED_RESET_FLAG_DisablePlayerJumping</c>).
 	/// </remarks>
 	public enum PedResetFlags
