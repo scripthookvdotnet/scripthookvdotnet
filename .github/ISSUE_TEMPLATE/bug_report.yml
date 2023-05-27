@@ -63,6 +63,7 @@ body:
         For example:
         1. Try to get the oil level of a vehicle via Vehicle.OilLevel
         2. Always returns zero
+
         Another example:
         1. Enumerate a WeaponComponentCollection instance via foreach
         2. The SHVDN runtime crashes and ScriptHookV shows the string "CORE: An exception occurred while executing"
