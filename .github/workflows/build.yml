@@ -41,7 +41,9 @@ jobs:
         && type README.md | more /P > bin\Release\README.txt `
         && type LICENSE.txt | more /P > bin\Release\LICENSE.txt `
         && echo ReloadKey=None > bin\Release\ScriptHookVDotNet.ini `
-        && echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini
+        && echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini `
+        && echo ScriptTimeoutThreshold=5000 >> bin\Release\ScriptHookVDotNet.ini `
+        && echo WarnOfDeprecatedScriptsWithTicker=true >> bin\Release\ScriptHookVDotNet.ini
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
