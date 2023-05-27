@@ -6,6 +6,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>GTA</RootNamespace>
+    <Title>ScriptHookVDotNet2</Title>
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>9.0</LangVersion>
@@ -22,14 +23,15 @@
   <PropertyGroup>
     <Version>2.11.6.0</Version>
     <FileVersion>2.11.6.0</FileVersion>
+    <AssemblyVersion>2.11.6.0</AssemblyVersion>
     <Authors>crosire &amp; kagikn &amp; contributors</Authors>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/crosire/scripthookvdotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/scripthookvdotnet/scripthookvdotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/crosire/scripthookvdotnet/releases</PackageReleaseNotes>
-    <Description>The .NET scripting API for Grand Theft Auto V.</Description>
+    <PackageReleaseNotes>https://github.com/scripthookvdotnet/scripthookvdotnet/releases</PackageReleaseNotes>
+    <Description>The developer SDK for ScriptHookVDotNet v2 scripts for Grand Theft Auto V.</Description>
     <Copyright>Copyright © 2015 crosire &amp; kagikn</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
