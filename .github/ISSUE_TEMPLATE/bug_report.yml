@@ -10,7 +10,7 @@ body:
         - Please note: **ScriptHookVDotNet is NOT ScriptHookV**!
           - If you get the `FATAL: Unknown game version` error after a game update, then this project is not responsible. Instead, you need to wait for [**ScriptHookV**](http://www.dev-c.com/gtav/scripthookv/) to update.
         - Look for similar errors in existing [GitHub Issues](https://github.com/scripthookvdotnet/scripthookvdotnet/issues?q=is%3Aissue) (open or closed) before creating a new issue.
-        - If you are not familiar with how to program and you are encountering some issues related to some SHVDN scripts such as compatibility issues due to game versions, try to seek help from the authors and ask them to find out the causes.
+        - If you are not familiar with how to program and you are encountering some issues related to some SHVDN scripts such as compatibility issues due to game versions, please try to seek help from the authors and ask them to find out the causes.
   - type: dropdown
     id: modules-with-problem
     validations:
