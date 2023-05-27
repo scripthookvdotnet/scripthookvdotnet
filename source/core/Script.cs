@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SHVDN
 {
-	public class Script
+	public sealed class Script
 	{
 		Thread thread; // The thread hosting the execution of the script
 		internal SemaphoreSlim waitEvent;

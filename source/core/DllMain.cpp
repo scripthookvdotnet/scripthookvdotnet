@@ -30,18 +30,7 @@ using namespace System::Collections::Generic;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
-[assembly:AssemblyTitle("Community Script Hook V .NET")];
-[assembly:AssemblyDescription("An ASI plugin for Grand Theft Auto V, which allows running scripts written in any .NET language in-game.")];
-[assembly:AssemblyCompany("crosire & contributors")];
-[assembly:AssemblyProduct("ScriptHookVDotNet")];
-[assembly:AssemblyCopyright("Copyright © 2015 crosire")];
-[assembly:AssemblyVersion(SHVDN_VERSION)];
-[assembly:AssemblyFileVersion(SHVDN_VERSION)];
-// Sign with a strong name to distinguish from older versions and cause .NET framework runtime to bind the correct assemblies
-// There is no version check performed for assemblies without strong names (https://docs.microsoft.com/en-us/dotnet/framework/deployment/how-the-runtime-locates-assemblies)
-[assembly:AssemblyKeyFileAttribute("PublicKeyToken.snk")];
-
-public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it
+public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it for ConsoleInput class
 {
 public:
 	[SHVDN::ConsoleCommand("Print the default help")]
@@ -128,6 +117,8 @@ internal:
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
 	static WinForms::Keys reloadKey = WinForms::Keys::None;
 	static WinForms::Keys consoleKey = WinForms::Keys::F4;
+	static unsigned int scriptTimeoutThreshold = 5000;
+	static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
 	static Object^ unloadLock = gcnew Object();
 	static void SetConsole()
 	{
@@ -185,12 +176,32 @@ static void ScriptHookVDotNet_ManagedInit()
 			if (data->Length != 2)
 				continue;
 
-			if (data[0] == "ReloadKey")
-				Enum::TryParse(data[1], true, ScriptHookVDotNet::reloadKey);
-			else if (data[0] == "ConsoleKey")
-				Enum::TryParse(data[1], true, ScriptHookVDotNet::consoleKey);
-			else if (data[0] == "ScriptsLocation")
-				scriptPath = data[1];
+			// May fail to parse without trimming whitespaces
+			String^ keyStr = data[0]->Trim();
+			String^ valueStr = data[1]->Trim();
+
+			if (String::Equals(keyStr, "ReloadKey", StringComparison::OrdinalIgnoreCase))
+				Enum::TryParse(valueStr, true, ScriptHookVDotNet::reloadKey);
+			else if (String::Equals(keyStr, "ConsoleKey", StringComparison::OrdinalIgnoreCase))
+				Enum::TryParse(valueStr, true, ScriptHookVDotNet::consoleKey);
+			else if (String::Equals(keyStr, "ScriptTimeoutThreshold", StringComparison::OrdinalIgnoreCase))
+			{
+				unsigned int outVal;
+				if (UInt32::TryParse(valueStr, outVal))
+				{
+					ScriptHookVDotNet::scriptTimeoutThreshold = outVal;
+				}
+			}
+			else if (String::Equals(keyStr, "ScriptsLocation", StringComparison::OrdinalIgnoreCase))
+				scriptPath = valueStr->Trim('"');
+			else if (String::Equals(keyStr, "WarnOfDeprecatedScriptsWithTicker", StringComparison::OrdinalIgnoreCase))
+			{
+				bool outVal;
+				if (Boolean::TryParse(valueStr, outVal))
+				{
+					ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = outVal;
+				}
+			}
 		}
 	}
 	catch (Exception ^ex)
@@ -205,6 +216,9 @@ static void ScriptHookVDotNet_ManagedInit()
 
 	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
 	domain->InitTlsContext(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
+
+	domain->ScriptTimeoutThreshold = ScriptHookVDotNet::scriptTimeoutThreshold;
+	domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
 
 	try
 	{

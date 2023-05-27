@@ -13,7 +13,7 @@ namespace GTA
 {
 	public class EntityBoneCollection : IEnumerable<EntityBone>
 	{
-		public class Enumerator : IEnumerator<EntityBone>
+		public sealed class Enumerator : IEnumerator<EntityBone>
 		{
 			#region Fields
 			readonly EntityBoneCollection collection;

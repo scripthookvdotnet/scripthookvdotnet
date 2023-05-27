@@ -882,7 +882,49 @@ namespace GTA
 		#endregion
 
 		/// <summary>
+		/// Gets or sets the maximum amount of armor this <see cref="Player"/> can have.
+		/// The value range is between 0 and 65535.
+		/// </summary>
+		/// <remarks>
+		/// This value is used for the setter of <see cref="Entity.MaxHealth"/> and when the game respawns player <see cref="Ped"/>s.
+		/// </remarks>
+		public int MaxHealth
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset == 0)
+				{
+					return 0;
+				}
+
+				var cPlayerInfoAddress = SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
+				if (cPlayerInfoAddress == IntPtr.Zero)
+				{
+					return 0;
+				}
+
+				return SHVDN.NativeMemory.ReadUInt16(cPlayerInfoAddress + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset);
+			}
+			set
+			{
+				if (SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset == 0)
+				{
+					return;
+				}
+
+				var cPlayerInfoAddress = SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
+				if (cPlayerInfoAddress == IntPtr.Zero)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteUInt16(cPlayerInfoAddress + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset, (ushort)value);
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the maximum amount of armor this <see cref="Player"/> can carry.
+		/// The value range is between 0 and 65535.
 		/// </summary>
 		public int MaxArmor
 		{

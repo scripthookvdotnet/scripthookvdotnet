@@ -422,6 +422,8 @@ namespace GTA
 		/// <returns>The <see cref="Control"/> value.</returns>
 		public static int GetControlValue(Control control)
 		{
+			// The 1st parameter is supposed to be the control type index, but it has no practical effect
+			// as control native functions eventually use the same CControl instance in any cases (applies to all the control natives)
 			return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, (int)control);
 		}
 		/// <summary>
@@ -429,12 +431,16 @@ namespace GTA
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
+		/// <remarks>
+		/// Tests whether the control is disabled before getting an analog value of a given <see cref="Control"/>.
+		/// Will return zero if the control is disabled.
+		/// </remarks>
 		public static float GetControlValueNormalized(Control control)
 		{
 			return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
 		}
 		/// <summary>
-		/// Gets an analog value of a disabled <see cref="Control"/> input between -1.0f and 1.0f.
+		/// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f even if the <see cref="Control"/> is disabled.
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
@@ -447,6 +453,10 @@ namespace GTA
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <param name="value">the value to set the control to.</param>
+		/// <remarks>
+		/// Tests whether the control is disabled before setting a control value for a given <see cref="Control"/>.
+		/// Does not return a bool value despite the fact <c>SET_CONTROL_VALUE_NEXT_FRAME</c> returns <see langword="true"/> if the value was set.
+		/// </remarks>
 		public static void SetControlValueNormalized(Control control, float value)
 		{
 			Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, (int)control, value);
@@ -465,6 +475,10 @@ namespace GTA
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently pressed.
+		/// like <c>IS_CONTROL_PRESSED</c> does.
+		/// </remarks>
 		public static bool IsControlPressed(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
@@ -474,6 +488,10 @@ namespace GTA
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just pressed this frame
+		/// like <c>IS_CONTROL_JUST_PRESSED</c> does.
+		/// </remarks>
 		public static bool IsControlJustPressed(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
@@ -483,6 +501,10 @@ namespace GTA
 		/// </summary>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just released this frame
+		/// like <c>IS_CONTROL_JUST_RELEASED</c> does.
+		/// </remarks>
 		public static bool IsControlJustReleased(Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, (int)control);

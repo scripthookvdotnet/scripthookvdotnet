@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 
 namespace GTA.Math
 {
-	internal class Random
+	internal sealed class Random
 	{
 		internal static readonly System.Random Instance = new System.Random();
 	}

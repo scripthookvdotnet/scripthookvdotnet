@@ -100,24 +100,28 @@ namespace GTA
 		DrivingModeAvoidVehiclesStopForPedsObeyLights = SwerveAroundAllVehicles | StopAtTrafficLights | StopForPeds | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions | StopForVehicles,
 
 		[Obsolete("VehicleDrivingFlags.UseBlinkers is obsolete because it is incorrect, please use VehicleDrivingFlags.GoOffRoadWhenAvoiding instead.")]
-		UseBlinkers = 256,
+		UseBlinkers = GoOffRoadWhenAvoiding,
 		[Obsolete("VehicleDrivingFlags.FollowTraffic is obsolete because  it has less obvious name, please use VehicleDrivingFlags.StopForVehicles instead.")]
-		FollowTraffic = 1,
+		FollowTraffic = StopForVehicles,
 		[Obsolete("VehicleDrivingFlags.YieldToPeds is obsolete, please use VehicleDrivingFlags.StopForPeds instead.")]
-		YieldToPeds = 2,
+		YieldToPeds = StopForPeds,
 		[Obsolete("VehicleDrivingFlags.AvoidVehicles is obsolete because has less obvious name, please use VehicleDrivingFlags.SwerveAroundAllVehicles instead.")]
-		AvoidVehicles = 4,
+		AvoidVehicles = SwerveAroundAllVehicles,
+		/// <summary>
+		/// Use <see cref="SteerAroundStationaryVehicles"/> instead.
+		/// Even with this flag set, the ped may avoid vehicles that have drivers when they are stationary.
+		/// </summary>
 		[Obsolete("VehicleDrivingFlags.AvoidEmptyVehicles is obsolete because it is inaccurate, please use VehicleDrivingFlags.SteerAroundStationaryVehicles instead.")]
-		AvoidEmptyVehicles = 8, // Even with this flag set, the ped may avoid vehicles that have the drivers when it is stationary
+		AvoidEmptyVehicles = SteerAroundStationaryVehicles,
 		[Obsolete("VehicleDrivingFlags.AvoidPeds is obsolete because it has less obvious name, please use VehicleDrivingFlags.SteerAroundPeds instead.")]
-		AvoidPeds = 16,
+		AvoidPeds = SteerAroundPeds,
 		[Obsolete("VehicleDrivingFlags.AvoidObjects is obsolete because it has less obvious name, please use VehicleDrivingFlags.SteerAroundObjects instead.")]
-		AvoidObjects = 32,
+		AvoidObjects = SteerAroundObjects,
 		[Obsolete("VehicleDrivingFlags.AllowMedianCrossing is obsolete because it is inaccurate, please use VehicleDrivingFlags.UseShortCutLinks instead.")]
-		AllowMedianCrossing = 262144,
+		AllowMedianCrossing = UseShortCutLinks,
 		[Obsolete("VehicleDrivingFlags.IgnorePathFinding is obsolete because it has less obvious name, please use VehicleDrivingFlags.ForceStraightLine instead.")]
-		IgnorePathFinding = 16777216,
+		IgnorePathFinding = ForceStraightLine,
 		[Obsolete("VehicleDrivingFlags.DriveBySight is obsolete because it is inaccurate, please use VehicleDrivingFlags.PreferNavmeshRoute instead.")]
-		DriveBySight = 4194304,
+		DriveBySight = PreferNavmeshRoute,
 	}
 }

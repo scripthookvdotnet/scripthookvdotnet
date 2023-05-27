@@ -114,7 +114,7 @@ namespace GTA.Native
 	/// <summary>
 	/// An input argument passed to a script function.
 	/// </summary>
-	public class InputArgument
+	public sealed class InputArgument
 	{
 		internal ulong _data;
 

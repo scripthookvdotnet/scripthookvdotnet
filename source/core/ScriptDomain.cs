@@ -24,7 +24,7 @@ namespace SHVDN
 		void Run();
 	}
 
-	public class ScriptDomain : MarshalByRefObject, IDisposable
+	public sealed class ScriptDomain : MarshalByRefObject, IDisposable
 	{
 		// Debugger.IsAttached does not detect a Visual Studio debugger
 		[SuppressUnmanagedCodeSecurity]
@@ -82,6 +82,20 @@ namespace SHVDN
 		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
 
 		/// <summary>
+		/// Gets or sets the value how long script can execute in one tick without getting terminated after the tick ends.
+		/// </summary>
+		public uint ScriptTimeoutThreshold { get; set; }
+
+		/// <summary>
+		/// Gets the dictionary of deprecated script names.
+		/// </summary>
+		private Dictionary<int, List<string>> DeprecatedScriptAssemblyNamesPerApiVersion { get; set; } = new();
+		/// <summary>
+		/// Gets the value that indicates whether the script domain should warn of deprecated scripts with a ticker.
+		/// </summary>
+		public bool ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker { get; set; }
+
+		/// <summary>
 		/// Initializes the script domain inside its application domain.
 		/// </summary>
 		/// <param name="apiBasePath">The path to the root directory containing the scripting API assemblies.</param>
@@ -115,18 +129,22 @@ namespace SHVDN
 					Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(apiPath), ": ", ex.ToString());
 				}
 			}
+			// Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
+			// as long as all of major versions are unique
+			scriptApis.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
 		}
 
 		~ScriptDomain()
 		{
-			Dispose(false);
+			DisposeUnmanagedResource();
 		}
 		public void Dispose()
 		{
-			Dispose(true);
+			DisposeUnmanagedResource();
 			GC.SuppressFinalize(this);
 		}
-		protected virtual void Dispose(bool disposing)
+
+		private void DisposeUnmanagedResource()
 		{
 			// Need to free native strings when disposing the script domain
 			CleanupStrings();
@@ -223,8 +241,8 @@ namespace SHVDN
 			var apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
 			if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out var apiVersion))
 				scriptApi = CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
-			// Reference the oldest scripting API by default to stay compatible with existing scripts
-			scriptApi ??= scriptApis.First();
+			// Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
+			scriptApi ??= scriptApis.First(x => !IsApiVersionDeprecated(x.GetName().Version));
 			compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
 			var extension = Path.GetExtension(filename);
@@ -370,6 +388,11 @@ namespace SHVDN
 
 			Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " resolved to API version " + apiVersion.ToString(3) : string.Empty), ".");
 
+			if (apiVersion != null && IsApiVersionDeprecated(apiVersion))
+			{
+				AddScriptAssemblyNameBuiltAgainstApiVersion(apiVersion.Major, Path.GetFileName(filename));
+			}
+
 			return count != 0;
 		}
 
@@ -503,6 +526,8 @@ namespace SHVDN
 			foreach (var filename in assemblyFiles)
 				LoadScriptsFromAssembly(filename);
 
+			WarnOfScriptsUsingDeprecatedApi();
+
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
 			foreach (var type in scriptTypes.Values.Select(x => x.Item2))
 			{
@@ -511,6 +536,35 @@ namespace SHVDN
 					continue;
 
 				InstantiateScript(type)?.Start(!(GetScriptAttribute(type, "NoScriptThread") is bool NoScriptThread) || !NoScriptThread);
+			}
+
+			void WarnOfScriptsUsingDeprecatedApi()
+			{
+				unsafe
+				{
+					if (ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker)
+					{
+						var scriptCountUsingDeprecatedApi = DeprecatedScriptAssemblyNamesPerApiVersion.Values.Aggregate(0, (result, current) => result + current.Count);
+
+						NativeFunc.InvokeInternal(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
+						NativeFunc.PushLongString($"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is not actively supported. Check the console or the log file for more details.");
+						NativeFunc.InvokeInternal(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
+					}
+					
+					foreach (var apiVersionAndScriptNameDict in DeprecatedScriptAssemblyNamesPerApiVersion)
+					{
+						var apiVersion = apiVersionAndScriptNameDict.Key;
+						var scriptAssemblyCount = apiVersionAndScriptNameDict.Value.Count;
+
+						var apiVersionString = apiVersion != 0 ? $"{apiVersion}.x" : "0.x or 1.x (fallbacked to the v2 API)";
+
+						Log.Message(Log.Level.Warning, $"Found {scriptAssemblyCount} script(s) resolved to the API version {apiVersionString}. The v2 API is no longer actively supported. Please report to script developers. The list of script names:");
+						foreach (var scriptName in apiVersionAndScriptNameDict.Value)
+						{
+							Log.Message(Log.Level.Warning, scriptName);
+						}
+					}
+				}
 			}
 		}
 		/// <summary>
@@ -639,30 +693,17 @@ namespace SHVDN
 
 				executingScript = script;
 
-				var finishedInTime = true;
-				var isDebuggerPresent = IsDebuggerPresent();
-
+				var startTimeTickCount = Environment.TickCount;
 				try
 				{
 					if (script.IsUsingThread)
 					{
 						// Resume script thread and execute any incoming tasks from it
-						if (!isDebuggerPresent)
+						SignalAndWait(script.continueEvent, script.waitEvent);
+						while (taskQueue.Count > 0)
 						{
-							while ((finishedInTime = SignalAndWait(script.continueEvent, script.waitEvent, 5000)) && taskQueue.Count > 0)
-								taskQueue.Dequeue().Run();
-						}
-						else
-						{
-							// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
-							// Avoid terminating the script thread for executing too long since the game may crash when the thread is aborted if the thread is doing some task that needs the TLS context of the main thread
+							taskQueue.Dequeue().Run();
 							SignalAndWait(script.continueEvent, script.waitEvent);
-							while (taskQueue.Count > 0)
-							{
-								taskQueue.Dequeue().Run();
-								if (taskQueue.Count > 0)
-									SignalAndWait(script.continueEvent, script.waitEvent);
-							}
 						}
 					}
 					else
@@ -676,12 +717,16 @@ namespace SHVDN
 
 					// Stop script in case of an unhandled exception during task execution
 					script.Abort();
+
+					executingScript = null;
+					continue;
 				}
 
 				executingScript = null;
 
-				if (finishedInTime || isDebuggerPresent) continue;
-				Log.Message(Log.Level.Error, "Script ", script.Name, " is not responding! Aborting ...");
+				// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
+				if ((uint)(Environment.TickCount - startTimeTickCount) < ScriptTimeoutThreshold || IsDebuggerPresent()) continue;
+				Log.Message(Log.Level.Error, $"Blocking script! Script {script.Name} (file name: {Path.GetFileName(script.Filename)}) was terminated because it caused the game to freeze too long.");
 
 				// Wait operation above timed out, which means that the script did not send any task for some time, so abort it
 				script.Abort();
@@ -800,11 +845,6 @@ namespace SHVDN
 		{
 			toSignal.Release();
 			toWaitOn.Wait();
-		}
-		static bool SignalAndWait(SemaphoreSlim toSignal, SemaphoreSlim toWaitOn, int timeout)
-		{
-			toSignal.Release();
-			return toWaitOn.Wait(timeout);
 		}
 
 		static bool IsSubclassOf(Type type, string baseTypeName)
@@ -951,5 +991,19 @@ namespace SHVDN
 				}
 			}
 		}
+
+		private void AddScriptAssemblyNameBuiltAgainstApiVersion(int apiVersion, string fileName)
+		{
+			if (!DeprecatedScriptAssemblyNamesPerApiVersion.TryGetValue(apiVersion, out var list))
+			{
+				DeprecatedScriptAssemblyNamesPerApiVersion[apiVersion] = new List<string>() { fileName };
+				return;
+			}
+
+			list.Add(fileName);
+			return;
+		}
+
+		private static bool IsApiVersionDeprecated(Version apiVersion) => apiVersion.Major < 3;
 	}
 }

@@ -18,7 +18,7 @@ using System.Windows.Forms;
 
 namespace SHVDN
 {
-	public class Console : MarshalByRefObject
+	public sealed class Console : MarshalByRefObject
 	{
 		int cursorPos = 0;
 		int commandPos = -1;
@@ -857,7 +857,7 @@ namespace SHVDN
 				const string template =
 					"using System; using System.Linq; using System.Drawing; using System.Windows.Forms; using GTA; using GTA.Math; using GTA.Native; " +
 					// Define some shortcut variables to simplify commands
-					"public class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.LocalPlayerPed; var V = P.CurrentVehicle; {0}; return null; }} }}";
+					"public sealed class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.LocalPlayerPed; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
 				var compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(template, input));
 
@@ -938,7 +938,7 @@ namespace SHVDN
 		}
 	}
 
-	public class ConsoleCommand : Attribute
+	public sealed class ConsoleCommand : Attribute
 	{
 		public ConsoleCommand() : this(string.Empty)
 		{

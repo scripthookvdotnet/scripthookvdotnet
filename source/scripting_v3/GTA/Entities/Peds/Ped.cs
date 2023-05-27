@@ -294,6 +294,16 @@ namespace GTA
 		/// <value>
 		/// The maximum health as an <see cref="int"/>.
 		/// </value>
+		/// <remarks>
+		/// <para>
+		/// <see cref="Player.MaxHealth"/> will be changed when the setter is called if the <see cref="Ped"/> is one for a player.
+		/// </para>
+		/// <para>
+		/// You should not set a value larger than <c>65535</c> or a negative value for the player ped(s) as the game uses the 16-bit unsigned integer value for the max health of the player ped(s) on <c>CPlayerInfo</c>
+		/// and it is used when respawning and in <c>SET_ENTITY_MAX_HEALTH</c> as the max limit.
+		/// Setting a value larger than <c>65535</c> will result in the overflow of the 16-bit unsigned integer value for the max health of <c>CPlayerInfo</c>.
+		/// </para>
+		/// </remarks>
 		public override int MaxHealth
 		{
 			get => Function.Call<int>(Hash.GET_PED_MAX_HEALTH, Handle);
@@ -309,24 +319,48 @@ namespace GTA
 		/// <summary>
 		/// Gets the config flag bit on this <see cref="Ped"/>.
 		/// </summary>
-		public bool GetConfigFlag(int flagID)
+		public bool GetConfigFlag(PedConfigFlags configFlag)
 		{
-			return Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, flagID, true);
+			return Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, (int)configFlag, false);
 		}
-
 		/// <summary>
 		/// Sets the config flag bit on this <see cref="Ped"/>.
 		/// </summary>
-		public void SetConfigFlag(int flagID, bool value)
+		public void SetConfigFlag(PedConfigFlags configFlag, bool value)
 		{
-			Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, flagID, value);
+			Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, (int)configFlag, value);
 		}
 
 		/// <summary>
-		/// Do not use this method as <c>SET_PED_RESET_FLAG</c> uses different flag IDs from the IDs <see cref="GetConfigFlag(int)"/> and <see cref="SetConfigFlag(int, bool)"/> use.
+		/// Gets the reset flag bit on this <see cref="Ped"/>.
+		/// You will need to call this method every frame you want to get, since the values of <see cref="PedConfigFlags"/> are reset every frame.
+		/// </summary>
+		public bool GetResetFlag(PedResetFlags configFlag)
+		{
+			return Function.Call<bool>(Hash.GET_PED_RESET_FLAG, Handle, (int)configFlag, false);
+		}
+		/// <summary>
+		/// Sets the reset flag bit on this <see cref="Ped"/>.
+		/// You will need to call this method every frame you want to set, since the values of <see cref="PedConfigFlags"/> are reset every frame.
+		/// </summary>
+		public void SetResetFlag(PedResetFlags configFlag, bool value)
+		{
+			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, (int)configFlag, value);
+		}
+
+		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
+		[Obsolete("The Ped.GetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
+		public bool GetConfigFlag(int flagID) => GetConfigFlag((PedConfigFlags)flagID);
+		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
+		[Obsolete("The Ped.SetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
+		public void SetConfigFlag(int flagID, bool value) => SetConfigFlag((PedConfigFlags)flagID, value);
+
+		/// <summary>
+		/// Do not use this method and use <see cref="Ped.SetResetFlag(PedResetFlags, bool)"/> or <see cref="Ped.GetResetFlag(PedResetFlags)"/> instead,
+		/// because <c>SET_PED_RESET_FLAG</c> uses different flag IDs from the IDs <see cref="GetConfigFlag(int)"/> and <see cref="SetConfigFlag(int, bool)"/> use.
 		/// </summary>
 		[Obsolete("Ped.ResetConfigFlag is obsolete since SET_PED_RESET_FLAG uses different flag IDs from the IDs GET_PED_CONFIG_FLAG and SET_PED_CONFIG_FLAG use " +
-			"and the said overload always set the flag (2nd argument of SET_PED_RESET_FLAG) to true.", true)]
+			"and the said overload always set the flag (2nd argument of SET_PED_RESET_FLAG) to true. Use Ped.SetResetFlag or Ped.GetResetFlag instead", true)]
 		public void ResetConfigFlag(int flagID)
 		{
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, flagID, true);
@@ -977,6 +1011,7 @@ namespace GTA
 		/// <remarks>
 		/// Despite the interface, this actually changes the driving flags field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
 		/// </remarks>
+		[Obsolete("Ped.DrivingStyle is obsolete, use VehicleDrivingFlags instead.")]
 		public DrivingStyle DrivingStyle
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (int)value);
@@ -1121,7 +1156,7 @@ namespace GTA
 
 		public bool IsInMeleeCombat => Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, Handle);
 
-		public bool IsAiming => GetConfigFlag(78);
+		public bool IsAiming => GetConfigFlag(PedConfigFlags.IsAimingGun);
 
 		public bool IsPlantingBomb => Function.Call<bool>(Hash.IS_PED_PLANTING_BOMB, Handle);
 
@@ -1264,8 +1299,8 @@ namespace GTA
 
 		public bool CanWrithe
 		{
-			get => !GetConfigFlag(281);
-			set => SetConfigFlag(281, !value);
+			get => !GetConfigFlag(PedConfigFlags.DisableGoToWritheWhenInjured);
+			set => SetConfigFlag(PedConfigFlags.DisableGoToWritheWhenInjured, !value);
 		}
 
 		/// <summary>
@@ -1498,7 +1533,7 @@ namespace GTA
 		#region Perception
 
 		/// <summary>
-		/// Gets or sets how far this <see cref="Ped"/> can see. 
+		/// Gets or sets how far this <see cref="Ped"/> can see.
 		/// </summary>
 		public float SeeingRange
 		{
@@ -1521,7 +1556,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets how far this <see cref="Ped"/> can hear. 
+		/// Gets or sets how far this <see cref="Ped"/> can hear.
 		/// </summary>
 		public float HearingRange
 		{

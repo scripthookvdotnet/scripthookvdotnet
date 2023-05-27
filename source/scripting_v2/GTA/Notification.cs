@@ -7,7 +7,7 @@ using GTA.Native;
 
 namespace GTA
 {
-	public class Notification
+	public sealed class Notification
 	{
 		readonly int handle;
 

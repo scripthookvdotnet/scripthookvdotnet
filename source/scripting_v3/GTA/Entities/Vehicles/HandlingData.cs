@@ -15,7 +15,7 @@ namespace GTA
 	/// The game multiplies or divides some values after reading values from the <c>handling.meta</c> file.
 	/// </para>
 	/// </summary>
-	public class HandlingData
+	public sealed class HandlingData
 	{
 		internal HandlingData(IntPtr address)
 		{

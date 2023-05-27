@@ -9,7 +9,7 @@ using System;
 
 namespace GTA
 {
-	public class TaskInvoker
+	public sealed class TaskInvoker
 	{
 		#region Fields
 		readonly Ped _ped;
@@ -80,11 +80,21 @@ namespace GTA
 			Function.Call(Hash.TASK_PLANE_CHASE, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z);
 		}
 
+		public void CruiseWithVehicle(Vehicle vehicle, float speed, VehicleDrivingFlags drivingFlags)
+		{
+			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)drivingFlags);
+		}
+		[Obsolete("The CruiseWithVehicle overload with DrivingStyle enum is obsolete, use the overload with VehicleDrivingFlags enum.")]
 		public void CruiseWithVehicle(Vehicle vehicle, float speed, DrivingStyle style = DrivingStyle.Normal)
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)style);
 		}
 
+		public void DriveTo(Vehicle vehicle, Vector3 target, float speed, VehicleDrivingFlags drivingFlags, float radius)
+		{
+			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)drivingFlags, radius);
+		}
+		[Obsolete("The DriveTo overload with DrivingStyle enum is obsolete, use the overload with VehicleDrivingFlags enum.")]
 		public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed, DrivingStyle style = DrivingStyle.Normal)
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)style, radius);

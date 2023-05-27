@@ -350,7 +350,10 @@ namespace GTA
 		/// <summary>
 		/// Gets an analog value of a <see cref="Control"/> input.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns>The <see cref="Control"/> value.</returns>
 		public static int GetControlValue(int index, Control control)
@@ -360,7 +363,10 @@ namespace GTA
 		/// <summary>
 		/// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns>The <see cref="Control"/> value.</returns>
 		public static float GetControlNormal(int index, Control control)
@@ -370,7 +376,10 @@ namespace GTA
 		/// <summary>
 		/// Gets an analog value of a disabled <see cref="Control"/> input between -1.0f and 1.0f.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns>The normalized <see cref="Control"/> value.</returns>
 		public static float GetDisabledControlNormal(int index, Control control)
@@ -380,7 +389,10 @@ namespace GTA
 		/// <summary>
 		/// Override a <see cref="Control"/> by giving it a user-defined value this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <param name="value">the value to set the control to.</param>
 		public static void SetControlNormal(int index, Control control, float value)
@@ -395,9 +407,16 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is currently pressed.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently pressed.
+		/// like <c>IS_CONTROL_PRESSED</c> does.
+		/// </remarks>
 		public static bool IsControlPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, index, (int)control);
@@ -405,9 +424,16 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just pressed this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just pressed this frame
+		/// like <c>IS_CONTROL_JUST_PRESSED</c> does.
+		/// </remarks>
 		public static bool IsControlJustPressed(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, index, (int)control);
@@ -415,9 +441,16 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> was just released this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+		/// <remarks>
+		/// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just released this frame
+		/// like <c>IS_CONTROL_JUST_RELEASED</c> does.
+		/// </remarks>
 		public static bool IsControlJustReleased(int index, Control control)
 		{
 			return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, (int)control);
@@ -425,7 +458,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is disabled and currently pressed.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsDisabledControlPressed(int index, Control control)
@@ -435,7 +471,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is disabled and was just pressed this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsDisabledControlJustPressed(int index, Control control)
@@ -445,7 +484,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsDisabledControlJustReleased(int index, Control control)
@@ -455,7 +497,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and currently pressed.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlPressed(int index, Control control)
@@ -465,7 +510,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustPressed(int index, Control control)
@@ -475,7 +523,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
 		public static bool IsEnabledControlJustReleased(int index, Control control)
@@ -486,7 +537,10 @@ namespace GTA
 		/// <summary>
 		/// Gets whether a <see cref="Control"/> is enabled or disabled this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to check.</param>
 		/// <returns><see langword="true" /> if the <see cref="Control"/> is Enabled; otherwise, <see langword="false" /></returns>
 		public static bool IsControlEnabled(int index, Control control)
@@ -502,7 +556,10 @@ namespace GTA
 		/// <summary>
 		/// Makes the engine respond to the given <see cref="Control"/> this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/> to enable.</param>
 		public static void EnableControlThisFrame(int index, Control control)
 		{
@@ -517,7 +574,10 @@ namespace GTA
 		/// <summary>
 		/// Makes the engine ignore input from the given <see cref="Control"/> this frame.
 		/// </summary>
-		/// <param name="index">The control type index. 0 means player control, 1 means camera control, and 2 means frontend control.</param>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		/// <param name="control">The <see cref="Control"/>.</param>
 		public static void DisableControlThisFrame(int index, Control control)
 		{
@@ -526,6 +586,10 @@ namespace GTA
 		/// <summary>
 		/// Enables all <see cref="Control"/>s this frame.
 		/// </summary>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		public static void EnableAllControlsThisFrame(int index)
 		{
 			Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, index);
@@ -533,6 +597,10 @@ namespace GTA
 		/// <summary>
 		/// Disables all <see cref="Control"/>s this frame.
 		/// </summary>
+		/// <param name="index">
+		/// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
+		/// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+		/// </param>
 		public static void DisableAllControlsThisFrame(int index)
 		{
 			Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, index);

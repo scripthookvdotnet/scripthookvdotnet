@@ -6,11 +6,13 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>GTA</RootNamespace>
+    <Title>ScriptHookVDotNet2</Title>
     <AssemblyName>ScriptHookVDotNet2</AssemblyName>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Platforms>x64</Platforms>
     <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
@@ -21,15 +23,16 @@
   <PropertyGroup>
     <Version>2.11.6.0</Version>
     <FileVersion>2.11.6.0</FileVersion>
-    <Authors>crosire &amp; contributors</Authors>
+    <AssemblyVersion>2.11.6.0</AssemblyVersion>
+    <Authors>crosire &amp; kagikn &amp; contributors</Authors>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/crosire/scripthookvdotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/scripthookvdotnet/scripthookvdotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/crosire/scripthookvdotnet/releases</PackageReleaseNotes>
-    <Description>The .NET scripting API for Grand Theft Auto V.</Description>
-    <Copyright>Copyright © 2015 crosire</Copyright>
+    <PackageReleaseNotes>https://github.com/scripthookvdotnet/scripthookvdotnet/releases</PackageReleaseNotes>
+    <Description>The developer SDK for ScriptHookVDotNet v2 scripts for Grand Theft Auto V.</Description>
+    <Copyright>Copyright © 2015 crosire &amp; kagikn</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
@@ -37,13 +40,11 @@
     <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>false</Optimize>
-    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt">

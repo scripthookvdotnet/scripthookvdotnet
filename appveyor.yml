@@ -30,6 +30,10 @@ before_package:
 
     echo ConsoleKey=F4 >> bin\Release\ScriptHookVDotNet.ini
 
+    echo ScriptTimeoutThreshold=5000 >> bin\Release\ScriptHookVDotNet.ini
+
+    echo WarnOfDeprecatedScriptsWithTicker=true >> bin\Release\ScriptHookVDotNet.ini
+
 test: off
 artifacts:
 - path: bin/Release/
