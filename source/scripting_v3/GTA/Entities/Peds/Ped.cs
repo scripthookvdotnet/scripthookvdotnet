@@ -348,12 +348,11 @@ namespace GTA
 			Function.Call(Hash.SET_PED_RESET_FLAG, Handle, (int)configFlag, value);
 		}
 
-
+		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
 		[Obsolete("The Ped.GetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
-		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
 		public bool GetConfigFlag(int flagID) => GetConfigFlag((PedConfigFlags)flagID);
-		[Obsolete("The Ped.SetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
 		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
+		[Obsolete("The Ped.SetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
 		public void SetConfigFlag(int flagID, bool value) => SetConfigFlag((PedConfigFlags)flagID, value);
 
 		/// <summary>
@@ -1157,7 +1156,7 @@ namespace GTA
 
 		public bool IsInMeleeCombat => Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, Handle);
 
-		public bool IsAiming => GetConfigFlag(78);
+		public bool IsAiming => GetConfigFlag(PedConfigFlags.IsAimingGun);
 
 		public bool IsPlantingBomb => Function.Call<bool>(Hash.IS_PED_PLANTING_BOMB, Handle);
 
@@ -1300,8 +1299,8 @@ namespace GTA
 
 		public bool CanWrithe
 		{
-			get => !GetConfigFlag(281);
-			set => SetConfigFlag(281, !value);
+			get => !GetConfigFlag(PedConfigFlags.DisableGoToWritheWhenInjured);
+			set => SetConfigFlag(PedConfigFlags.DisableGoToWritheWhenInjured, !value);
 		}
 
 		/// <summary>
@@ -1534,7 +1533,7 @@ namespace GTA
 		#region Perception
 
 		/// <summary>
-		/// Gets or sets how far this <see cref="Ped"/> can see. 
+		/// Gets or sets how far this <see cref="Ped"/> can see.
 		/// </summary>
 		public float SeeingRange
 		{
@@ -1557,7 +1556,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets how far this <see cref="Ped"/> can hear. 
+		/// Gets or sets how far this <see cref="Ped"/> can hear.
 		/// </summary>
 		public float HearingRange
 		{
