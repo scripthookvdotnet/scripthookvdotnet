@@ -70,6 +70,7 @@ namespace GTA
 				return weapon;
 			}
 		}
+		public Weapon this[string weaponName] => this[(WeaponHash)Game.GenerateHash(weaponName)];
 
 		/// <summary>
 		/// Gets the number of <see cref="Weapon"/> items contained in the <see cref="WeaponCollection"/>.
@@ -264,11 +265,27 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)weaponHash);
 		}
+		/// <summary>
+		/// Gets the value that indicates whether the owner <see cref="Ped"/> has the weapon for <paramref name="weaponName"/>.
+		/// </summary>
+		/// <remarks>
+		/// Returns <see langword="true"/> for <see cref="WeaponHash.Unarmed"/> unless the item for the hash is removed from <c>CWeaponInventory</c> of the owner <see cref="Ped"/>.
+		/// </remarks>
+		public bool HasWeapon(string weaponName) => HasWeapon((WeaponHash)Game.GenerateHash(weaponName));
 
+		/// <summary>
+		/// Gets the value that indicates whether <paramref name="hash"/> is valid.
+		/// Strictly, this method checks whether the array for <c>CWeaponInfo</c> contains an CWeaponInfo instance with <paramref name="hash"/>.
+		/// </summary>
 		public bool IsWeaponValid(WeaponHash hash)
 		{
 			return Function.Call<bool>(Hash.IS_WEAPON_VALID, (uint)hash);
 		}
+		/// <summary>
+		/// Gets the value that indicates whether <paramref name="weaponName"/> is valid.
+		/// Strictly, this method checks whether the array for <c>CWeaponInfo</c> contains an CWeaponInfo instance with the hash generated from <paramref name="weaponName"/>.
+		/// </summary>
+		public bool IsWeaponValid(string weaponName) => IsWeaponValid((WeaponHash)Game.GenerateHash(weaponName));
 
 		/// <summary>
 		/// Gets the current weapon <see cref="Prop"/>.
@@ -312,7 +329,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="weaponHash">The weapon hash.</param>
 		/// <param name="equipNow">Specifies if the owner ped will equip in hands immediately.</param>
-		/// <returns></returns>
+		/// <returns><see langword="true"/> if the ped has the weapon; otherwise, <see langword="false"/>.</returns>
 		public bool Select(WeaponHash weaponHash, bool equipNow)
 		{
 			if (!Function.Call<bool>(Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)weaponHash))
@@ -324,7 +341,13 @@ namespace GTA
 
 			return true;
 		}
-
+		/// <summary>
+		/// Selects the specified weapon.
+		/// </summary>
+		/// <param name="weaponName">The weapon name.</param>
+		/// <param name="forceInHand">Specifies if the owner ped will equip in hands immediately.</param>
+		/// <returns><see langword="true"/> if the ped has the weapon; otherwise, <see langword="false"/>.</returns>
+		public bool IsWeaponValid(string weaponName, bool forceInHand) => Select((WeaponHash)Game.GenerateHash(weaponName), forceInHand);
 
 		/// <summary>
 		/// Gives the specified weapon if the owner <see cref="Ped"/> does not have one, or selects the weapon if they have one and <paramref name="equipNow"/> is set to <see langword="true" />.
@@ -361,6 +384,16 @@ namespace GTA
 			return weapon;
 		}
 
+		/// <summary>
+		/// Gives the specified weapon if the owner <see cref="Ped"/> does not have one, or selects the weapon if they have one and <paramref name="equipNow"/> is set to <see langword="true" />.
+		/// </summary>
+		/// <param name="name">The weapon name.</param>
+		/// <param name="ammoCount">The ammo count to be added to the weapon inventory of the owner <see cref="Ped"/>.</param>
+		/// <param name="equipNow">If set to <see langword="true" />, the owner <see cref="Ped"/> will switch their weapon to the weapon of <paramref name="name"/> as soon as they can (not instantly).</param>
+		/// <param name="isAmmoLoaded">
+		/// Does not work since the ammo in clip is always full if not selected unless the game code related to auto-reload is modified.
+		/// This was supposed to determine if the ammo will be loaded after the weapon is given to the owner <see cref="Ped"/>.
+		/// </param>
 		public Weapon Give(string name, int ammoCount, bool equipNow, bool isAmmoLoaded)
 		{
 			return Give((WeaponHash)Game.GenerateHash(name), ammoCount, equipNow, isAmmoLoaded);
@@ -396,6 +429,8 @@ namespace GTA
 		{
 			Function.Call(Hash.REMOVE_WEAPON_FROM_PED, owner.Handle, (uint)weaponHash);
 		}
+		/// <inheritdoc cref="Remove(Weapon)"/>
+		public void Remove(string weaponName) => Remove((WeaponHash)Game.GenerateHash(weaponName));
 
 		/// <summary>
 		/// Removes all weapons from the weapon inventory except for <see cref="WeaponHash.Unarmed"/>.
