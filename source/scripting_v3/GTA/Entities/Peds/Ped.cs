@@ -143,9 +143,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets a value that indicates whether this <see cref="Ped"/> will use a helmet on their own.
+		/// Sets a value that indicates whether this <see cref="Ped"/> is currently wearing a helmet.
 		/// </summary>
 		public bool IsWearingHelmet => Function.Call<bool>(Hash.IS_PED_WEARING_HELMET, Handle);
+
+		/// <summary>
+		/// Sets a value that indicates whether this <see cref="Ped"/> is currently taking off their helmet.
+		/// </summary>
+		public bool IsTakingOffHelmet => Function.Call<bool>(Hash.IS_PED_TAKING_OFF_HELMET, Handle);
 
 		public void ClearBloodDamage()
 		{
@@ -185,6 +190,10 @@ namespace GTA
 			Function.Call(Hash.GIVE_PED_HELMET, Handle, dontTakeOffHelmet, (uint)helmetPropFlags, overwriteHelmetTexureId);
 		}
 
+		/// <summary>
+		/// Removes a helmet from this <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="instantly">If <see langword="true"/>, the helmet will be immediately removed without an animation.</param>
 		public void RemoveHelmet(bool instantly)
 		{
 			Function.Call(Hash.REMOVE_PED_HELMET, Handle, instantly);
