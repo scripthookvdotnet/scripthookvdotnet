@@ -157,9 +157,32 @@ namespace GTA
 			Function.Call(Hash.RESET_PED_VISIBLE_DAMAGE, Handle);
 		}
 
+		[Obsolete("The Ped.GiveHelmet overload with Helmet enum parameter is obsolete, use the overload with HelmetPropFlags enum parameter instead.")]
 		public void GiveHelmet(bool canBeRemovedByPed, Helmet helmetType, int textureIndex)
 		{
 			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, (int)helmetType, textureIndex);
+		}
+
+		/// <summary>
+		/// Gives this <see cref="Ped"/> a helmet.
+		/// </summary>
+		/// <param name="dontTakeOffHelmet">If <see langword="true"/>, the <see cref="Ped"/> will not take off their helmet automatically.</param>
+		/// <param name="helmetPropFlags">
+		/// The helmet prop flags to test. If none of helmets for this <see cref="Ped"/> do not meet the requirements specified by the flags,
+		/// The <see cref="Ped"/> will not have a helmet.
+		/// </param>
+		/// <param name="overwriteHelmetTexureId">
+		/// If negative, a random texture will be used.
+		/// If non-negative and the specified texture id is present, the texture with specified id will be used.
+		/// If non-negative and the specified texture id is not present, the previous texture will be used
+		/// (texture with zero id will be used if the <see cref="Ped"/> has not been given a helmet before).
+		/// </param>
+		/// <remarks>
+		/// This method will not give the <see cref="Ped"/> a new helmet if they already has one.
+		/// </remarks>
+		public void GiveHelmet(bool dontTakeOffHelmet = true, HelmetPropFlags helmetPropFlags = HelmetPropFlags.DefaultHelmet, int overwriteHelmetTexureId = -1)
+		{
+			Function.Call(Hash.GIVE_PED_HELMET, Handle, dontTakeOffHelmet, (uint)helmetPropFlags, overwriteHelmetTexureId);
 		}
 
 		public void RemoveHelmet(bool instantly)
