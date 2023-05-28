@@ -868,8 +868,42 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets that this <see cref="Ped"/> can be knocked off a <see cref="Vehicle"/> (not limited to a bike despite the property name).
+		/// Sets the vehicle knock off type that determines how easy this <see cref="Ped"/> can be knocked off (fall off) a <see cref="Vehicle"/>.
 		/// </summary>
+		public KnockOffVehicleType KnockOffVehicleType
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.PedKnockOffVehicleTypeOffset == 0)
+				{
+					return KnockOffVehicleType.Default;
+				}
+
+				var address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return KnockOffVehicleType.Default;
+				}
+
+				// The knock off vehicle type value uses the first 2 bits
+				return (KnockOffVehicleType)(SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.PedKnockOffVehicleTypeOffset) & 3);
+			}
+			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, (int)value);
+		}
+
+		/// <summary>
+		/// Get the value that indicates whether this <see cref="Ped"/> is in a bike and <see cref="KnockOffVehicleType"/> is not set to <see cref="GTA.KnockOffVehicleType.Never"/>
+		/// so the <see cref="Ped"/> can be be knocked off (fall off) a <see cref="Vehicle"/>.
+		/// </summary>
+		public bool CanBeKnockedOffVehicle
+		{
+			get => Function.Call<bool>(Hash.CAN_KNOCK_PED_OFF_VEHICLE, Handle);
+		}
+
+		/// <summary>
+		/// Sets the value that indicates whether this <see cref="Ped"/> can be knocked off a <see cref="Vehicle"/> (not limited to a bike despite the property name).
+		/// </summary>
+		[Obsolete("Ped.CanBeKnockedOffBike is obsolete, use Ped.KnockOffVehicleType instead.")]
 		public bool CanBeKnockedOffBike
 		{
 			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, !value);

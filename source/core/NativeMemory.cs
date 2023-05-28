@@ -908,6 +908,7 @@ namespace SHVDN
 			if (address != null)
 			{
 				fragInstNMGtaOffset = *(int*)(address + 16);
+				PedKnockOffVehicleTypeOffset = fragInstNMGtaOffset + 0xC;
 			}
 			address = FindPatternNaive("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
 			if (address != null)
@@ -2479,6 +2480,8 @@ namespace SHVDN
 		public static int PedSourceOfDeathOffset { get; }
 		public static int PedCauseOfDeathOffset { get; }
 		public static int PedTimeOfDeathOffset { get; }
+
+		public static int PedKnockOffVehicleTypeOffset { get; }
 
 		#region -- Ped Intelligence Offsets --
 
