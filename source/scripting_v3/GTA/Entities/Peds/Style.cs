@@ -13,7 +13,7 @@ namespace GTA
 	{
 		#region Fields
 		readonly Ped _ped;
-		Dictionary<PedPropAnchorPosition, PedProp> _pedProps = new();
+		Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
 		Dictionary<PedComponentType, PedComponent> _pedComponents = new();
 		#endregion
 
@@ -22,14 +22,14 @@ namespace GTA
 			_ped = ped;
 		}
 
-		public PedProp this[PedPropAnchorPosition anchorPosition]
+		public PedProp this[PedPropAnchorPoint anchorPoint]
 		{
 			get
 			{
-				if (_pedProps.TryGetValue(anchorPosition, out var prop)) return prop;
+				if (_pedProps.TryGetValue(anchorPoint, out var prop)) return prop;
 
-				prop = new PedProp(_ped, anchorPosition);
-				_pedProps.Add(anchorPosition, prop);
+				prop = new PedProp(_ped, anchorPoint);
+				_pedProps.Add(anchorPoint, prop);
 				return prop;
 			}
 		}
@@ -46,13 +46,13 @@ namespace GTA
 			}
 		}
 
-		[Obsolete("The indexer overload with the type PedPropType is obsolete, use the indexer overload with the type PedPropAnchorPosition instead.")]
-		public PedProp this[PedPropType propId] => this[(PedPropAnchorPosition)propId];
+		[Obsolete("The indexer overload with the type PedPropType is obsolete, use the indexer overload with the type PedPropAnchorPoint instead.")]
+		public PedProp this[PedPropType propId] => this[(PedPropAnchorPoint)propId];
 
 		public PedProp[] GetAllProps()
 		{
 			var props = new List<PedProp>();
-			foreach (PedPropAnchorPosition anchorPosition in Enum.GetValues(typeof(PedPropAnchorPosition)))
+			foreach (PedPropAnchorPoint anchorPosition in Enum.GetValues(typeof(PedPropAnchorPoint)))
 			{
 				var prop = this[anchorPosition];
 				if (prop.HasAnyVariations)
