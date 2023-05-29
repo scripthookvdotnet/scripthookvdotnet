@@ -15,6 +15,9 @@ namespace GTA
 		readonly Ped _ped;
 		#endregion
 
+		// this value is unlikely to get changed in future updates as some of the script task natives use this value as a constant float value
+		const float DefaultNavmeshFinalHeading = 40000f;
+
 		internal TaskInvoker(Ped ped)
 		{
 			_ped = ped;
@@ -201,9 +204,9 @@ namespace GTA
 		/// <param name="timeBeforeWarp">The time before warping in milliseconds.</param>
 		/// <param name="radius">An Unknown radius parameter (possibly the radius for navmesh search) but does not affect the distance where the ped will stop.</param>
 		/// <param name="navigationFlags">The navigation flags.</param>
-		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <c>40000f</c> to leave as is.</param>
+		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <see cref="DefaultNavmeshFinalHeading"/> to leave as is.</param>
 		/// <inheritdoc cref="FollowNavMeshTo(Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
-		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio? moveBlendRatio = null, int timeBeforeWarp = -1, float radius = 0.25f, FollowNavMeshFlags navigationFlags = FollowNavMeshFlags.Default, float finalHeading = 40000f)
+		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio? moveBlendRatio = null, int timeBeforeWarp = -1, float radius = 0.25f, FollowNavMeshFlags navigationFlags = FollowNavMeshFlags.Default, float finalHeading = DefaultNavmeshFinalHeading)
 		{
 			var moveBlendRatioArgForNative = 2.0f;
 			if (moveBlendRatio.HasValue)
@@ -229,11 +232,11 @@ namespace GTA
 		/// Clamp the search distance to this value, path-search will not search further than this distance
 		/// (value must be between 1 and 255 inclusive).
 		/// </param>
-		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <c>40000f</c> to leave as is.</param>
+		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <see cref="DefaultNavmeshFinalHeading"/> to leave as is.</param>
 		/// <remarks>Sometimes a path may not be able to be found. This could happen because there simply isn't any way to get there, or maybe a bunch of dynamic objects have blocked the way,
 		///  or maybe the destination is too far away. In this case the <see cref="Ped"/> will simply stand still.
 		///  To identify when this has happened, you can use <see cref="Ped.GetNavMeshRouteResult()"/>. This will help you find situations where <see cref="Ped"/> cannot get to their target.</remarks>
-		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio moveBlendRatio, int timeBeforeWarp, float radius, FollowNavMeshFlags navigationFlags, float slideToCoordHeading, float maxSlopeNavigable, float clampMaxSearchDistance, float finalHeading = 40000f)
+		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio moveBlendRatio, int timeBeforeWarp, float radius, FollowNavMeshFlags navigationFlags, float slideToCoordHeading, float maxSlopeNavigable, float clampMaxSearchDistance, float finalHeading = DefaultNavmeshFinalHeading)
 		{
 			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD_ADVANCED, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, radius, (int)navigationFlags, slideToCoordHeading, maxSlopeNavigable, clampMaxSearchDistance, finalHeading);
 		}
@@ -260,7 +263,7 @@ namespace GTA
 		/// <param name="position">The position to go to.</param>
 		/// <param name="moveBlendRatio">Specifies how much fast the ped will move.</param>
 		/// <param name="timeBeforeWarp">The time before warping in milliseconds.</param>
-		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Set <c>40000f</c> to leave the heading as is.</param>
+		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Set <see cref="DefaultNavmeshFinalHeading"/> to leave the heading as is.</param>
 		/// <param name="targetRadius">The target radius.</param>
 		public void GoStraightTo(Vector3 position, int timeBeforeWarp, PedMoveBlendRatio moveBlendRatio, float finalHeading, float targetRadius)
 		{
@@ -546,14 +549,59 @@ namespace GTA
 			Function.Call(Hash.TASK_STAND_STILL, _ped.Handle, duration);
 		}
 
-		public void StartScenario(string name, float heading)
+		[Obsolete("TaskInvoker.StartScenario is obsolete, use TaskInvoker.StartScenarioInPlace instead.")]
+		public void StartScenario(string name, float heading) => StartScenarioInPlace(name);
+
+		[Obsolete("TaskInvoker.StartScenario is obsolete, use TaskInvoker.StartScenarioAtPosition instead.")]
+		public void StartScenario(string name, Vector3 position, float heading) => StartScenarioAtPosition(name, position, heading, playIntroClip : false);
+
+		/// <summary>
+		/// Puts this <see cref="Ped"/> into the given scenario immediately in place.
+		/// </summary>
+		/// <param name="scenarioName">The scenario name.</param>
+		/// <param name="timeToLeave">
+		/// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they starts to leave.</para>
+		/// <para>If zero, the initiated task will not have the <see cref="Ped"/> leave the scenario by elapsing time.</para>
+		/// <para>If positive, the initiated task will have the <see cref="Ped"/> leave the scenario after the specified time elapsed.</para>
+		/// <para>
+		/// If negative, the initiated task will will not stop the <see cref="Ped"/> leaving the scenario by elapsing time (behaves the same as zero in this way)
+		/// but this method will start a <c>CTaskUseScenario</c> task with "idle forever" flag (although it is unknown what difference the flag makes).
+		/// </para>
+		/// </param>
+		/// <param name="playIntroClip">If <see langword="false"/>, the initiated task will skip the enter clip.</param>
+		/// <remarks>
+		/// This method will not start a <c>CTask</c> and the <see cref="Ped"/> will do nothing for the <c>CTask</c>
+		/// if the scenario manager does not have the registered hash for <paramref name="scenarioName"/>.
+		/// </remarks>
+		public void StartScenarioInPlace(string scenarioName, int timeToLeave = 0, bool playIntroClip = true)
 		{
-			Function.Call(Hash.TASK_START_SCENARIO_IN_PLACE, _ped.Handle, name, 0, 1);
+			Function.Call(Hash.TASK_START_SCENARIO_IN_PLACE, _ped.Handle, scenarioName, timeToLeave, playIntroClip);
 		}
 
-		public void StartScenario(string name, Vector3 position, float heading)
+		/// <summary>
+		/// Tell this <see cref="Ped"/> to move or warp to the position and heading given, then start the scenario passed.
+		/// </summary>
+		/// <param name="scenarioName">The scenario name.</param>
+		/// <param name="position">The position to put the <see cref="Ped"/> into the given scenario.</param>
+		/// <param name="heading">The heading to put the <see cref="Ped"/> into the given scenario.</param>
+		/// <param name="timeToLeave">
+		/// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they starts to leave.</para>
+		/// <para>If zero, the initiated task will not have the <see cref="Ped"/> leave the scenario by elapsing time.</para>
+		/// <para>If positive, the initiated task will have the <see cref="Ped"/> leave the scenario after the specified time elapsed.</para>
+		/// <para>
+		/// If negative, the initiated task will will not stop the <see cref="Ped"/> leaving the scenario by elapsing time (behaves the same as zero in this way)
+		/// but this method will start a <c>CTaskUseScenario</c> task with "idle forever" flag (although it is unknown what difference the flag makes).
+		/// </para>
+		/// </param>
+		/// <param name="playIntroClip">If <see langword="false"/>, the initiated task will skip the enter clip.</param>
+		/// <param name="warp">If <see langword="true"/>, the initiated task will warp the <see cref="Ped"/> rather than tell them to go to the position themselves.</param>
+		/// <remarks>
+		/// This method will not start a <c>CTask</c> and the <see cref="Ped"/> will do nothing for the <c>CTask</c>
+		/// if the scenario manager does not have the registered hash for <paramref name="scenarioName"/>.
+		/// </remarks>
+		public void StartScenarioAtPosition(string scenarioName, Vector3 position, float heading, int timeToLeave = 0, bool playIntroClip = true, bool warp = true)
 		{
-			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, name, position.X, position.Y, position.Z, heading, 0, 0, 1);
+			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, scenarioName, position.X, position.Y, position.Z, heading, timeToLeave, playIntroClip, warp);
 		}
 
 		/// <summary>Tells the <see cref="Ped"/> to perform a task when in a <see cref="Vehicle"/> against another <see cref="Vehicle"/>.</summary>
@@ -734,9 +782,15 @@ namespace GTA
 			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
 		}
 
-		public void SwapWeapon()
+		/// <inheritdoc cref="SwapWeapon(bool)"/>
+		public void SwapWeapon() => SwapWeapon(false);
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to swap their weapon.
+		/// </summary>
+		/// <param name="drawWeapon">If <see langword="true"/>, the <see cref="Ped"/> will start to swap while the current weapon is drawn.</param>
+		public void SwapWeapon(bool drawWeapon)
 		{
-			Function.Call(Hash.TASK_SWAP_WEAPON, _ped.Handle, false);
+			Function.Call(Hash.TASK_SWAP_WEAPON, _ped.Handle, drawWeapon);
 		}
 
 		public void TurnTo(Entity target, int duration = -1)
@@ -789,14 +843,40 @@ namespace GTA
 			Function.Call(Hash.TASK_PAUSE, _ped.Handle, duration);
 		}
 
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to wander.
+		/// </summary>
+		public void Wander(float heading = DefaultNavmeshFinalHeading, bool keepMovingWhilstWaitingForFirstPath = false)
+		{
+			// the 3nd argument is actually a flag value, but seems only the 1st bit is used as of b2699
+			Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, heading, keepMovingWhilstWaitingForFirstPath ? 1 : 0);
+		}
 		public void WanderAround()
 		{
 			Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, 0, 0);
 		}
 
-		public void WanderAround(Vector3 position, float radius)
+		/// <inheritdoc cref="WanderAround(Vector3, float, float, float)"/>
+		public void WanderAround(Vector3 position, float radius) => WanderAround(position, radius, 0, 0);
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to wander within a certain radius from the given position indefinitely.
+		/// </summary>
+		/// <param name="position">The center position.</param>
+		/// <param name="radius">The max radius the <see cref="Ped"/> can wander around <paramref name="position"/>.</param>
+		/// <param name="minTime">
+		/// The minimum time for the wait time before the <see cref="Ped"/> starts wandering.
+		/// Must not be negative or more than <paramref name="maxTime"/>.
+		/// </param>
+		/// <param name="maxTime">
+		/// The maximum time for the wait time before the <see cref="Ped"/> starts wandering.
+		/// Must not be negative or less than <paramref name="maxTime"/>.
+		/// </param>
+		/// <remarks>
+		/// The initiated task will put the <see cref="Ped"/> to the wait state if the <see cref="Ped"/> gets interrupted by a <c>CEvent</c> after the interruption.
+		/// </remarks>
+		public void WanderAround(Vector3 position, float radius, float minTime, float maxTime)
 		{
-			Function.Call(Hash.TASK_WANDER_IN_AREA, _ped.Handle, position.X, position.Y, position.Z, radius, 0, 0);
+			Function.Call(Hash.TASK_WANDER_IN_AREA, _ped.Handle, position.X, position.Y, position.Z, radius, minTime, maxTime);
 		}
 
 		public void WarpIntoVehicle(Vehicle vehicle, VehicleSeat seat)
