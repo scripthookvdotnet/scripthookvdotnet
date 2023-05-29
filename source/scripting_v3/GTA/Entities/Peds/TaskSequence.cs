@@ -14,8 +14,8 @@ namespace GTA
 	/// right after the instance creation statement.
 	/// </summary>
 	/// <remarks>
-	/// If you forget to close or dispose of your <see cref="TaskSequence"/>s and <see cref="Ped"/>s cannot start any <see cref="TaskSequence"/>s afterwards,
-	/// Try restarting the game session by loading a save or starting a new game.
+	/// If you forget to close or dispose of your <see cref="TaskSequence"/>s and <see cref="Ped"/>s cannot start any <see cref="TaskSequence"/>s afterwards during script development,
+	/// try restarting the game session by loading a save or starting a new game.
 	/// </remarks>
 	public sealed class TaskSequence : IDisposable
 	{
