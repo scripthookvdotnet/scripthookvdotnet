@@ -1313,8 +1313,28 @@ namespace GTA
 
 				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.CanUseSirenOffset, 1);
 			}
-			// We need to find a way to test if vehicle has a siren setting before we can safely add a setter.
-			// Otherwise, the game will crash if the vehicle doesn't have a siren setting and the game try to activate the siren.
+		}
+		/// <summary>
+		/// Sets the value that determines this <see cref="Vehicle"/> can use siren if a given <see langword="bool"/> is <see langword="false"/>
+		/// or the <see langword="bool"/> is <see langword="true"/> and <see cref="CanUseSiren"/> returns <see langword="true"/> on the <see cref="Vehicle"/>.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns>Returns <see langword="true"/> if the supplied value can be set.</returns>
+		public bool TrySetCanUseSiren(bool value)
+		{
+			var address = MemoryAddress;
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.CanUseSirenOffset == 0)
+			{
+				return false;
+			}
+
+			if (value && !CanUseSiren)
+			{
+				return false;
+			}
+
+			SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.CanUseSirenOffset, 1, value);
+			return true;
 		}
 
 		/// <summary>
