@@ -221,7 +221,7 @@ namespace GTA
 		/// <param name="defaultValue">The fall-back value if the key doesn't exist or casting to type <typeparamref name="T"/> fails.</param>
 		/// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
-		public T GetValue<T>(string sectionName, string keyName, T defaultValue, IFormatProvider formatProvider)
+		public T GetValue<T>(string sectionName, string keyName, T defaultValue, IFormatProvider formatProvider) where T : IConvertible
 		{
 			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
 			{
@@ -262,7 +262,8 @@ namespace GTA
 		/// otherwise, the default value for the type of the value parameter.
 		/// </param>
 		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contains a value with the specified section and key; otherwise, <see langword="false"/>.</returns>
-		public bool TryGetValue<T>(string sectionName, string keyName, out T value) => TryGetValue(sectionName, keyName, out value, CultureInfo.InvariantCulture);
+		public bool TryGetValue<T>(string sectionName, string keyName, out T value) where T : IConvertible
+			=> TryGetValue(sectionName, keyName, out value, CultureInfo.InvariantCulture);
 
 		/// <summary>
 		/// Reads a value from this <see cref="ScriptSettings"/> using <paramref name="formatProvider"/>.
@@ -275,7 +276,7 @@ namespace GTA
 		/// </param>
 		/// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
 		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contains a value with the specified section and key; otherwise, <see langword="false"/>.</returns>
-		public bool TryGetValue<T>(string sectionName, string keyName, out T value, IFormatProvider formatProvider)
+		public bool TryGetValue<T>(string sectionName, string keyName, out T value, IFormatProvider formatProvider) where T : IConvertible
 		{
 			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
 			{
@@ -353,7 +354,7 @@ namespace GTA
 		/// Overwrites the first value at a specified section and name and ignore the other values
 		/// if multiple values are set at a specified section and name.
 		/// </remarks>
-		public void SetValue<T>(string sectionName, string keyName, T value, string format, IFormatProvider formatProvider) where T : IFormattable
+		public void SetValue<T>(string sectionName, string keyName, T value, string format, IFormatProvider formatProvider) where T : IConvertible, IFormattable
 		{
 			var internalValue = formatProvider != null ? value.ToString(format, formatProvider) : value.ToString();
 
@@ -383,7 +384,44 @@ namespace GTA
 		/// such as not recognizing a decimal points as a decimal separator for floating-point numbers.
 		/// </para>
 		/// </remarks>
-		public T[] GetAllValues<T>(string section, string name) => GetAllValues<T>(section, name, null);
+		public T[] GetAllValues<T>(string section, string name)
+		{
+			if (!_values.TryGetValue(section, out var keyValuePairs))
+			{
+				return Array.Empty<T>();
+			}
+			if (!keyValuePairs.TryGetValue(name, out var stringValueList))
+			{
+				return Array.Empty<T>();
+			}
+
+			var values = new List<T>();
+			foreach (var stringValue in stringValueList)
+			{
+				try
+				{
+					if (typeof(T) == typeof(string))
+					{
+						values.Add((T)(object)stringValue);
+					}
+					if (typeof(T).IsEnum)
+					{
+						values.Add((T)Enum.Parse(typeof(T), stringValue, true));
+					}
+					else
+					{
+						var parsedValue = (T)Convert.ChangeType(stringValue, typeof(T));
+						values.Add(parsedValue);
+					}
+				}
+				catch
+				{
+					continue;
+				}
+			}
+
+			return values.ToArray();
+		}
 
 		/// <summary>
 		/// Reads all the values at a specified key and section from this <see cref="ScriptSettings"/>.
@@ -395,7 +433,7 @@ namespace GTA
 		/// You can set multiple values at a specified section and key by writing key and value pairs
 		/// at the same section and key in multiple lines.
 		/// </remarks>
-		public T[] GetAllValues<T>(string sectionName, string keyName, IFormatProvider formatProvider)
+		public T[] GetAllValues<T>(string sectionName, string keyName, IFormatProvider formatProvider) where T : IConvertible
 		{
 			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
 			{
