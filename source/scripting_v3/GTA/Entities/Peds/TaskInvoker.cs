@@ -373,7 +373,7 @@ namespace GTA
 			LookAt(target, duration, LookAtFlags.Default, LookAtPriority.Medium);
 		}
 
-		public void LookAt(Entity target, int duration, LookAtFlags lookFlags, LookAtPriority priority = LookAtPriority.Medium)
+		public void LookAt(Entity target, int duration, LookAtFlags lookFlags = LookAtFlags.Default, LookAtPriority priority = LookAtPriority.Medium)
 		{
 			Function.Call(Hash.TASK_LOOK_AT_ENTITY, _ped.Handle, target.Handle, duration, (int)lookFlags, (int)priority);
 		}
@@ -383,7 +383,7 @@ namespace GTA
 			LookAt(position, duration, LookAtFlags.Default, LookAtPriority.Medium);
 		}
 
-		public void LookAt(Vector3 position, int duration, LookAtFlags lookFlags, LookAtPriority priority = LookAtPriority.Medium)
+		public void LookAt(Vector3 position, int duration, LookAtFlags lookFlags = LookAtFlags.Default, LookAtPriority priority = LookAtPriority.Medium)
 		{
 			Function.Call(Hash.TASK_LOOK_AT_COORD, _ped.Handle, position.X, position.Y, position.Z, duration, (int)lookFlags, (int)priority);
 		}
