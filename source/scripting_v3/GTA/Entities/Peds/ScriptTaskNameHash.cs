@@ -7,7 +7,7 @@ namespace GTA
 {
 	/// <summary>
 	/// An enumeration of all possible scripted task name hashes.
-	/// Used for <see cref="Ped.GetTaskStatus(ScriptTaskNameHash)"/>.
+	/// Used for <see cref="Ped.GetScriptTaskStatus(ScriptTaskNameHash)"/>.
 	/// </summary>
 	public enum ScriptTaskNameHash : uint
 	{

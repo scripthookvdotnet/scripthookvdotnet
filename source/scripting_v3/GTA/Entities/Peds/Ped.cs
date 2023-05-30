@@ -558,9 +558,9 @@ namespace GTA
 		public int TaskSequenceProgress => Function.Call<int>(Hash.GET_SEQUENCE_PROGRESS, Handle);
 
 		/// <summary>
-		/// Gets the task status of specified scripted task on this <see cref="Ped"/>.
+		/// Gets the script task status of specified scripted task on this <see cref="Ped"/>.
 		/// </summary>
-		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
+		public ScriptTaskStatus GetScriptTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
 
 		/// <summary>
 		/// Gets Returns the state of any active <see cref="TaskInvoker.FollowNavMeshTo(GTA.Math.Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
