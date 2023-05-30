@@ -582,7 +582,7 @@ namespace GTA
 		/// otherwise, <see cref="ScriptTaskStatus.Vacant"/> as it is internally used in the game code outside native functions.
 		/// This parameter is passed uninitialized.
 		/// </param>
-		public void GetScriptTaskNameHashAndStatus(out ScriptTaskNameHash nameHash, out ScriptTaskStatus status)
+		public void GetCurrentScriptTaskNameHashAndStatus(out ScriptTaskNameHash nameHash, out ScriptTaskStatus status)
 		{
 			SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out uint nameHashUInt, out uint statusUInt);
 			nameHash = (ScriptTaskNameHash)nameHashUInt;
