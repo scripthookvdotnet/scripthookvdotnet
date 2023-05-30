@@ -28,14 +28,41 @@ namespace GTA
 			Function.Call(Hash.TASK_ACHIEVE_HEADING, _ped.Handle, heading, timeout);
 		}
 
+		[Obsolete("TaskInvoker.AimAt is obsolete, use TaskInvoker.AimGunAtEntity for entity targets instead.")]
 		public void AimAt(Entity target, int duration)
 		{
 			Function.Call(Hash.TASK_AIM_GUN_AT_ENTITY, _ped.Handle, target.Handle, duration, 0);
 		}
-
+		[Obsolete("TaskInvoker.AimAt is obsolete, use TaskInvoker.AimGunAtPosition for coordinate targets instead.")]
 		public void AimAt(Vector3 target, int duration)
 		{
 			Function.Call(Hash.TASK_AIM_GUN_AT_COORD, _ped.Handle, target.X, target.Y, target.Z, duration, 0, 0);
+		}
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to aim a gun at an <see cref="Entity"/>.
+		/// The <see cref="Ped"/> must equip a weapon where its <c>CWeaponInfo</c> has the <c>"Gun"</c> flag (the RAGE parser will create ones from weapon meta files).
+		/// For instance, the <see cref="Ped"/> a task for aiming when they are equipping a pistol or rocket launcher, but not when equipping a melee weapon or thrown weapon.
+		/// </summary>
+		/// <param name="target">The target <see cref="Entity"/>.</param>
+		/// <param name="duration">The duration in milliseconds.</param>
+		/// <param name="instantBlendToAim">If <see langword="true"/>, the task will skip the idle transition and instantly blend to the aim pose.</param>
+		public void AimGunAtEntity(Entity target, int duration, bool instantBlendToAim = false)
+		{
+			Function.Call(Hash.TASK_AIM_GUN_AT_ENTITY, _ped.Handle, target.Handle, duration, instantBlendToAim);
+		}
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to aim a gun at the specified position.
+		/// The <see cref="Ped"/> must equip a weapon where its <c>CWeaponInfo</c> has the <c>"Gun"</c> flag (the RAGE parser will create ones from weapon meta files).
+		/// For instance, the <see cref="Ped"/> a task for aiming when they are equipping a pistol or rocket launcher, but not when equipping a melee weapon or thrown weapon.
+		/// </summary>
+		/// <param name="target">The target position.</param>
+		/// <param name="duration">The duration in milliseconds.</param>
+		/// <param name="instantBlendToAim">If <see langword="true"/>, the task will skip the idle transition and instantly blend to the aim pose.</param>
+		/// <param name="playAimIntro">If <see langword="true"/>, the task will play the aim intro.</param>
+		public void AimGunAtPosition(Vector3 target, int duration, bool instantBlendToAim = false, bool playAimIntro = false)
+		{
+			Function.Call(Hash.TASK_AIM_GUN_AT_COORD, _ped.Handle, target.X, target.Y, target.Z, duration, instantBlendToAim, playAimIntro);
 		}
 
 		public void Arrest(Ped ped)
@@ -48,19 +75,55 @@ namespace GTA
 			Function.Call(Hash.TASK_CHAT_TO_PED, _ped.Handle, ped.Handle, 16, 0f, 0f, 0f, 0f, 0f);
 		}
 
-		public void Jump()
+		/// <inheritdoc cref="Jump(bool, bool)"/>
+		public void Jump() => Jump(false, false);
+		/// <summary>
+		/// Forces the <see cref="Ped"/> to jump.
+		/// </summary>
+		/// <param name="doSuperJump">
+		/// If <see langword="true"/>, the <see cref="Ped"/> will do super jump.
+		/// Internally, the super jump and the beast jump flags will be used for a new <c>CTaskJumpVault</c>.
+		/// Does nothing in (probably) v1.0.505.2 or earlier game versions.
+		/// </param>
+		/// <param name="useFullSuperJumpForce">
+		///	If <see langword="true"/> and <paramref name="doSuperJump"/> is <see langword="true"/> as well, the super jump height will be doubled.
+		/// Internally, the super jump and the beast jump flags will be used for a new <c>CTaskJumpVault</c> (even if <paramref name="doSuperJump"/> is <see langword="false"/>).
+		/// Does nothing in (probably) v1.0.505.2 or earlier game versions.
+		/// </param>
+		public void Jump(bool doSuperJump, bool useFullSuperJumpForce)
 		{
-			Function.Call(Hash.TASK_JUMP, _ped.Handle, true);
+			// 2nd arugment is unused
+			Function.Call(Hash.TASK_JUMP, _ped.Handle, false, doSuperJump, useFullSuperJumpForce);
 		}
 
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to perform the climb task (<c>CTaskJumpVault</c>).
+		/// </summary>
+		/// <remarks>
+		/// The <see cref="Ped"/> needs to be positioned and oriented so that a jump will locate an edge for the ped to grab.
+		/// If an edge can’t be found, the ped will just do a normal jump and land.
+		/// If an edge can be found then the ped will climb and then stand on top of the found edge.
+		/// </remarks>
 		public void Climb()
 		{
+			// 2nd arugment is unused
 			Function.Call(Hash.TASK_CLIMB, _ped.Handle, true);
 		}
 
-		public void ClimbLadder()
+		/// <inheritdoc cref="ClimbLadder(bool)"/>
+		public void ClimbLadder() => ClimbLadder(true);
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to perform a climb ladder task (<c>CTaskClimbLadderFully</c>).
+		/// </summary>
+		/// <remarks>
+		/// The task decides whether the <see cref="Ped"/> is supposed to climb or descend by examining which end of the ladder is nearest.
+		/// The <see cref="Ped"/> needs to be positioned right next to the ladder they are supposed to use, and should also be facing it.
+		/// There are two possibilities for mounting the ladder - at the base of the ladder facing towards the front of it, and at the top of the ladder facing the reverse of the ladder.
+		/// If successful, the <see cref="Ped"/> will get on the ladder, climb, and then get off.
+		/// </remarks>
+		public void ClimbLadder(bool fast)
 		{
-			Function.Call(Hash.TASK_CLIMB_LADDER, _ped.Handle, 1);
+			Function.Call(Hash.TASK_CLIMB_LADDER, _ped.Handle, fast);
 		}
 
 		public void Cower(int duration)
@@ -157,22 +220,14 @@ namespace GTA
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, duration, 0);
 		}
 
-		public void FleeFrom(Ped ped, int duration = -1)
-		{
-			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, ped.Handle, 100f, duration, 0, 0);
-		}
-
+		public void FleeFrom(Ped ped, int duration = -1) => FleeFrom(ped, 100f, duration);
 		public void FleeFrom(Ped otherPed, float safeDistance, int duration)
 		{
 			// 5th argument bPreferPavements and 6th argument bUpdateToNearestHatedPed are unused
 			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, otherPed.Handle, safeDistance, duration, false, false);
 		}
 
-		public void FleeFrom(Vector3 position, int duration = -1)
-		{
-			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, 100f, duration, 0, 0);
-		}
-
+		public void FleeFrom(Vector3 position, int duration = -1) => FleeFrom(position, 100f, duration);
 		public void FleeFrom(Vector3 position, float safeDistance, int duration, bool quitIfOutOfRange = false)
 		{
 			// 7th argument bPreferPavements is unused
@@ -466,6 +521,7 @@ namespace GTA
 
 		public void ReloadWeapon()
 		{
+			// 2nd parameter is unused
 			Function.Call(Hash.TASK_RELOAD_WEAPON, _ped.Handle, true);
 		}
 
