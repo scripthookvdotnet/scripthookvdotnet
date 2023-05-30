@@ -881,15 +881,6 @@ namespace SHVDN
 				UnkCPedStateOffset = PedIntelligenceOffset - 0x10;
 			}
 
-			address = FindPatternNaive("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
-			if (address != null)
-			{
-				PedIntelligenceOffset = *(int*)(address + 0x11);
-
-				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
-				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
-			}
-
 			address = FindPatternBmh("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
 			if (address != null)
 			{
@@ -902,6 +893,15 @@ namespace SHVDN
 				CEventCountOffset = *(int*)(address + 9);
 				address = FindPatternNaive("\x48\x8B\xB4\xC6", "xxxx", new IntPtr(address));
 				CEventStackOffset = *(int*)(address + 4);
+			}
+
+			address = FindPatternNaive("\x48\x8B\xF0\x48\x3B\xC8\x74\x20\x48\x85\xC9\x74\x08\x49\x8B\xD6\xE8", "xxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				PedIntelligenceCTaskInfoOffset = *(int*)(address - 0x1F);
+				PedIntelligenceCombatTargetPedAddressOffset = PedIntelligenceCTaskInfoOffset + 0x18;
+				PedIntelligenceCurrentScriptTaskHashOffset = PedIntelligenceCTaskInfoOffset + 0x20;
+				PedIntelligenceCurrentScriptTaskStatusOffset = PedIntelligenceCTaskInfoOffset + 0x24;
 			}
 
 			address = FindPatternNaive("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
@@ -2506,7 +2506,104 @@ namespace SHVDN
 
 		static int CEventStackOffset { get; }
 
+		public static int PedIntelligenceCTaskInfoOffset { get; }
+
+		public static int PedIntelligenceCombatTargetPedAddressOffset { get; }
+
+		public static int PedIntelligenceCurrentScriptTaskHashOffset { get; }
+		public static int PedIntelligenceCurrentScriptTaskStatusOffset { get; }
+
 		#endregion
+
+		#endregion
+
+		#region -- CPedIntelligence Data --
+
+		public static IntPtr GetCPedIntelligence(IntPtr pedAddress)
+			=> PedIntelligenceOffset != 0 ? new IntPtr(*(long*)(pedAddress + PedIntelligenceOffset)) : IntPtr.Zero;
+
+		public static int GetCombatTargetPedHandleFromCombatPed(IntPtr pedAddress)
+		{
+			if (PedIntelligenceCTaskInfoOffset == 0)
+			{
+				return 0;
+			}
+
+			var pedIntelligence = GetCPedIntelligence(pedAddress);
+			if (pedIntelligence == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			// Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
+			// and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
+			// In practical, however, it looks like we can use the target address without testing the 2 checks
+
+			var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
+			if (targetPedAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(targetPedAddress);
+		}
+
+		public static int GetCombatTargetPedHandleFromCombatPed(int pedHandle)
+		{
+			if (PedIntelligenceCTaskInfoOffset == 0)
+			{
+				return 0;
+			}
+
+			var pedAddress = GetEntityAddress(pedHandle);
+			if (pedAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			var pedIntelligence = GetCPedIntelligence(pedAddress);
+			if (pedIntelligence == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			// Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
+			// and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
+			// In practical, however, it looks like we can use the target address without testing the 2 checks
+
+			var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
+			if (targetPedAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(targetPedAddress);
+		}
+
+		public static void GetScriptTaskHashAndStatus(int pedHandle, out uint taskHash, out uint taskStatus)
+		{
+			taskHash = 0x811E343C; // the hashed value of SCRIPT_TASK_INVALID, hardcoded in a lot of places
+			taskStatus = 3; // the vacant status, hardcoded nearby most of the places where the hashed value of SCRIPT_TASK_INVALID is hardcoded
+			if (PedIntelligenceCurrentScriptTaskHashOffset == 0 || PedIntelligenceCurrentScriptTaskStatusOffset == 0)
+			{
+				return;
+			}
+
+			var pedAddress = GetEntityAddress(pedHandle);
+			if (pedAddress == IntPtr.Zero)
+			{
+				return;
+			}
+
+			var pedIntelligence = GetCPedIntelligence(pedAddress);
+			if (pedIntelligence == IntPtr.Zero)
+			{
+				return;
+			}
+
+			taskHash = *(uint*)(pedIntelligence + PedIntelligenceCurrentScriptTaskHashOffset);
+			taskStatus = *(uint*)(pedIntelligence + PedIntelligenceCurrentScriptTaskStatusOffset);
+		}
 
 		#endregion
 

@@ -560,7 +560,65 @@ namespace GTA
 		/// <summary>
 		/// Gets the script task status of specified scripted task on this <see cref="Ped"/>.
 		/// </summary>
-		public ScriptTaskStatus GetScriptTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
+		/// <value>
+		/// The value of the current script task status if the <see cref="Ped"/> exists and has their intelligence instance,
+		/// and then <paramref name="taskNameHash"/> matches the current task name hash or <see cref="ScriptTaskNameHash.Any"/>;
+		/// otherwise, <see cref="ScriptTaskStatus.Finished"/>.
+		/// </value>
+		public ScriptTaskStatus GetScriptTaskStatus(ScriptTaskNameHash taskNameHash)
+			// Although GET_SCRIPT_TASK_STATUS does additional check if the game is multiplier mode and the hash does not match, we won't encounter such case
+			=> Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
+
+		/// <summary>
+		/// Gets the current script task name hash and status on this <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="nameHash">
+		/// When this method returns, contains the value of the current script task name hash, if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskNameHash.Invalid"/> as it is internally used in the game code outside native functions.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		/// <param name="status">
+		/// When this method returns, contains the value of the current script task status, if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskStatus.Vacant"/> as it is internally used in the game code outside native functions.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		public void GetCurrentScriptTaskNameHashAndStatus(out ScriptTaskNameHash nameHash, out ScriptTaskStatus status)
+		{
+			SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out uint nameHashUInt, out uint statusUInt);
+			nameHash = (ScriptTaskNameHash)nameHashUInt;
+			status = (ScriptTaskStatus)statusUInt;
+		}
+
+		/// <summary>
+		/// Gets the current script task name hash on this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The value of the current script task name hash if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskNameHash.Invalid"/> as it is internally used in the game code outside native functions.
+		/// </value>
+		public ScriptTaskStatus CurrentScriptTaskNameHash
+		{
+			get
+			{
+				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, _, out uint scriptTaskStatus);
+				return (ScriptTaskStatus)scriptTaskStatus;
+			}
+		}
+		/// <summary>
+		/// Gets the current script task status on this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The value of the current script task status if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskStatus.Vacant"/> as it is internally used in the game code outside native functions.
+		/// </value>
+		public ScriptTaskStatus CurrentScriptTaskStatus
+		{
+			get
+			{
+				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, _, out uint scriptTaskStatus);
+				return (ScriptTaskStatus)scriptTaskStatus;
+			}
+		}
 
 		/// <summary>
 		/// Gets Returns the state of any active <see cref="TaskInvoker.FollowNavMeshTo(GTA.Math.Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
@@ -1284,6 +1342,22 @@ namespace GTA
 		/// <see langword="true" /> if this <see cref="Ped"/> was killed by a takedown; otherwise, <see langword="false" />.
 		/// </value>
 		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
+
+		/// <summary>
+		/// Gets the combat target <see cref="Ped"/> who this <see cref="Ped"/> is in combat with for a <c>CTaskCombat</c> of this <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Although <c>GET_PED_TARGET_FROM_COMBAT_PED</c> does not present in v1.0.2245.0 or earlier game versions,
+		/// this property supports all game versions.
+		/// </remarks>
+		public Ped CombatTarget
+		{
+			get
+			{
+				var targetEntityHandle = SHVDN.NativeMemory.GetCombatTargetPedHandleFromCombatPed(Handle);
+				return targetEntityHandle != 0 ? new Ped(targetEntityHandle) : null;
+			}
+		}
 
 		public Ped MeleeTarget
 		{

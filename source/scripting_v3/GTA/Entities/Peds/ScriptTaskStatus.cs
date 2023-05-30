@@ -23,7 +23,14 @@ namespace GTA
 		/// </summary>
 		Dormant = 2,
 		/// <summary>
+		/// The script task has nothing to do.
+		/// <see cref="ScriptTaskNameHash.Invalid"/> basically goes to this status.
+		/// </summary>
+		Vacant = 3,
+		/// <summary>
 		/// The task has been done or not performed yet as a primary task.
+		/// Strictly, <see cref="Ped.GetScriptTaskStatus(ScriptTaskNameHash)"/> returns this value
+		/// if the specified hash does not match the current one and the specified hash is not <see cref="ScriptTaskNameHash.Any"/>.
 		/// </summary>
 		Finished = 7,
 	}
