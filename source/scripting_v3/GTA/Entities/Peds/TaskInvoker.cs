@@ -848,13 +848,11 @@ namespace GTA
 		/// </summary>
 		public void Wander(float heading = DefaultNavmeshFinalHeading, bool keepMovingWhilstWaitingForFirstPath = false)
 		{
-			// the 3nd argument is actually a flag value, but seems only the 1st bit is used as of b2699
+			// the 3nd argument is actually a flag value, but only the 1st bit is used as of b2845
 			Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, heading, keepMovingWhilstWaitingForFirstPath ? 1 : 0);
 		}
-		public void WanderAround()
-		{
-			Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, 0, 0);
-		}
+		[Obsolete("the overload of TaskInvoker.WanderAround with no parameters is obsolete, use TaskInvoker.Wander instead.")]
+		public void WanderAround() => Wander(0, false);
 
 		/// <inheritdoc cref="WanderAround(Vector3, float, float, float)"/>
 		public void WanderAround(Vector3 position, float radius) => WanderAround(position, radius, 0, 0);
@@ -864,11 +862,11 @@ namespace GTA
 		/// <param name="position">The center position.</param>
 		/// <param name="radius">The max radius the <see cref="Ped"/> can wander around <paramref name="position"/>.</param>
 		/// <param name="minTime">
-		/// The minimum time for the wait time before the <see cref="Ped"/> starts wandering.
+		/// The minimum time for the wait time in seconds before the <see cref="Ped"/> starts wandering.
 		/// Must not be negative or more than <paramref name="maxTime"/>.
 		/// </param>
 		/// <param name="maxTime">
-		/// The maximum time for the wait time before the <see cref="Ped"/> starts wandering.
+		/// The maximum time for the wait time in seconds before the <see cref="Ped"/> starts wandering.
 		/// Must not be negative or less than <paramref name="maxTime"/>.
 		/// </param>
 		/// <remarks>
