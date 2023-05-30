@@ -596,12 +596,12 @@ namespace GTA
 		/// The value of the current script task name hash if the <see cref="Ped"/> exists and has their intelligence instance;
 		/// otherwise, <see cref="ScriptTaskNameHash.Invalid"/> as it is internally used in the game code outside native functions.
 		/// </value>
-		public ScriptTaskStatus CurrentScriptTaskNameHash
+		public ScriptTaskNameHash CurrentScriptTaskNameHash
 		{
 			get
 			{
-				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, _, out uint scriptTaskStatus);
-				return (ScriptTaskStatus)scriptTaskStatus;
+				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out uint nameHash, out _);
+				return (ScriptTaskNameHash)nameHash;
 			}
 		}
 		/// <summary>
@@ -615,8 +615,8 @@ namespace GTA
 		{
 			get
 			{
-				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, _, out uint scriptTaskStatus);
-				return (ScriptTaskStatus)scriptTaskStatus;
+				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out _, out uint status);
+				return (ScriptTaskStatus)status;
 			}
 		}
 
