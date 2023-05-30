@@ -162,9 +162,10 @@ namespace GTA
 			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, ped.Handle, 100f, duration, 0, 0);
 		}
 
-		public void FleeFrom(Ped target, float safeDistance, int duration, bool preferPavements = false, bool updateTargetToNearestHatedPed = false)
+		public void FleeFrom(Ped otherPed, float safeDistance, int duration)
 		{
-			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, target.Handle, safeDistance, duration, preferPavements, updateTargetToNearestHatedPed);
+			// 5th argument bPreferPavements and 6th argument bUpdateToNearestHatedPed are unused
+			Function.Call(Hash.TASK_SMART_FLEE_PED, _ped.Handle, otherPed.Handle, safeDistance, duration, false, false);
 		}
 
 		public void FleeFrom(Vector3 position, int duration = -1)
@@ -172,9 +173,10 @@ namespace GTA
 			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, 100f, duration, 0, 0);
 		}
 
-		public void FleeFrom(Vector3 position, float safeDistance, int duration, bool preferPavements = false, bool quitIfOutOfRange = false)
+		public void FleeFrom(Vector3 position, float safeDistance, int duration, bool quitIfOutOfRange = false)
 		{
-			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, safeDistance, duration, preferPavements, quitIfOutOfRange);
+			// 7th argument bPreferPavements is unused
+			Function.Call(Hash.TASK_SMART_FLEE_COORD, _ped.Handle, position.X, position.Y, position.Z, safeDistance, duration, false, quitIfOutOfRange);
 		}
 
 		public void FollowPointRoute(params Vector3[] points)
@@ -882,10 +884,7 @@ namespace GTA
 			Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, _ped.Handle, vehicle.Handle, (int)seat);
 		}
 
-		public void WarpOutOfVehicle(Vehicle vehicle)
-		{
-			Function.Call(Hash.TASK_LEAVE_VEHICLE, _ped.Handle, vehicle.Handle, 16);
-		}
+		public void WarpOutOfVehicle(Vehicle vehicle) => LeaveVehicle(vehicle, LeaveVehicleFlags.WarpOut);
 
 		public void ClearAll()
 		{
