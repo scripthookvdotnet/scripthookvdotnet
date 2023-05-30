@@ -578,7 +578,8 @@ namespace GTA
 		/// </para>
 		/// </summary>
 		/// <param name="duration">The duration in milliseconds.</param>
-		/// <remarks>Unlike <see cref="StandStill(int)"/>, if no script (including ysc ones or external ones) owns the <see cref="Ped"/>,
+		/// <remarks>
+		/// Unlike <see cref="StandStill(int)"/>, if no script (including ysc ones or external ones) owns the <see cref="Ped"/>,
 		/// which is possible by creating them or calling <see cref="Entity.MarkAsMissionEntity(bool)"/>,
 		/// the <see cref="Ped"/> will stop doing a pause task immediately and do an ambient task instead.
 		/// </remarks>
@@ -598,7 +599,8 @@ namespace GTA
 		/// </para>
 		/// </summary>
 		/// <param name="duration">The duration in milliseconds.</param>
-		/// <remarks>Unlike <see cref="Pause(int)"/>, the <see cref="Ped"/> won't stop doing a pause task even if no script
+		/// <remarks>
+		/// Unlike <see cref="Pause(int)"/>, the <see cref="Ped"/> won't stop doing a pause task even if no script
 		/// (including ysc ones or external ones) owns the <see cref="Ped"/>, which is possible by creating them or
 		/// calling <see cref="Entity.MarkAsMissionEntity(bool)"/>.
 		/// </remarks>
@@ -886,6 +888,10 @@ namespace GTA
 			Function.Call(Hash.TASK_USE_MOBILE_PHONE, _ped.Handle, false);
 		}
 
+		/// <summary>
+		/// The <see cref="Ped"/> will chase the target <see cref="Ped"/>'s <see cref="Vehicle"/> with their own <see cref="Vehicle"/>.
+		/// Both <see cref="Ped"/>s must be in <see cref="Vehicle"/>s, or the task will abort.
+		/// </summary>
 		public void VehicleChase(Ped target)
 		{
 			Function.Call(Hash.TASK_VEHICLE_CHASE, _ped.Handle, target.Handle);
@@ -896,10 +902,8 @@ namespace GTA
 			Function.Call(Hash.TASK_VEHICLE_SHOOT_AT_PED, _ped.Handle, target.Handle, 20f);
 		}
 
-		public void Wait(int duration)
-		{
-			Function.Call(Hash.TASK_PAUSE, _ped.Handle, duration);
-		}
+		[Obsolete("TaskInvoke.Wait is obsolete, use TaskInvoker.Pause instead.")]
+		public void Wait(int duration) => Pause(duration);
 
 		/// <summary>
 		/// Tells the <see cref="Ped"/> to wander.
