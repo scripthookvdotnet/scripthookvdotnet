@@ -1294,7 +1294,7 @@ namespace GTA
 		/// <see langword="true" /> if this <see cref="Entity"/> has collided; otherwise, <see langword="false" />.
 		/// </value>
 		/// <remarks><see cref="IsRecordingCollisions"/> must be <see langword="true" /> for this to work.</remarks>
-		public bool HasCollidedWithBuildingOrAnimatedBuilding => Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
+		public bool HasCollidedWithBuildingOrAnimatedBuilding => SHVDN.NativeMemory.HasEntityCollidedWithBuildingOrAnimatedBuilding(Handle);
 
 		/// <summary>
 		/// Gets the material this <see cref="Entity"/> is pushing up against.
