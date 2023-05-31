@@ -614,7 +614,7 @@ namespace GTA
 		/// The behavior is undefined except no exception will be thrown if input has some non-ASCII characters.
 		/// </para>
 		/// </remarks>
-		public static int GenerateHashASCII(string input)
+		public static int GenerateHashAscii(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{
@@ -629,8 +629,8 @@ namespace GTA
 		/// For example, <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c>, will be converted into <c>0xEB92D4DF</c>.
 		/// Can be called in any thread.
 		/// </summary>
-		/// <inheritdoc cref="GenerateHashASCII(string)"/>
-		public static int GenerateHashASCIINoPreConversion(string input)
+		/// <inheritdoc cref="GenerateHashAscii(string)"/>
+		public static int GenerateHashAsciiNoPreConversion(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{
