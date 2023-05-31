@@ -32,27 +32,27 @@ namespace SHVDN
 		[DllImport("Kernel32.dll")]
 		internal static extern bool IsDebuggerPresent();
 
-		private int executingThreadId = Thread.CurrentThread.ManagedThreadId;
-		private Script executingScript = null;
-		private List<IntPtr> pinnedStrings = new();
-		private List<Script> runningScripts = new();
-		private Queue<IScriptTask> taskQueue = new();
-		private Dictionary<string, int> scriptInstances = new();
-		private SortedList<string, Tuple<string, Type>> scriptTypes = new();
-		private bool recordKeyboardEvents = true;
-		private bool[] keyboardState = new bool[256];
-		private List<Assembly> scriptApis = new List<Assembly>();
+		private int _executingThreadId = Thread.CurrentThread.ManagedThreadId;
+		private Script _executingScript = null;
+		private List<IntPtr> _pinnedStrings = new();
+		private List<Script> _runningScripts = new();
+		private Queue<IScriptTask> _taskQueue = new();
+		private Dictionary<string, int> _scriptInstances = new();
+		private SortedList<string, Tuple<string, Type>> _scriptTypes = new();
+		private bool _recordKeyboardEvents = true;
+		private bool[] _keyboardState = new bool[256];
+		private List<Assembly> _scriptApis = new List<Assembly>();
 
-		private unsafe delegate* unmanaged[Cdecl]<IntPtr> GetTlsContext;
-		private unsafe delegate* unmanaged[Cdecl]<IntPtr, void> SetTlsContext;
-		private IntPtr tlsContextOfMainThread;
+		private unsafe delegate* unmanaged[Cdecl]<IntPtr> _getTlsContext;
+		private unsafe delegate* unmanaged[Cdecl]<IntPtr, void> _setTlsContext;
+		private IntPtr _tlsContextOfMainThread;
 
 		internal unsafe void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
 		{
-			GetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
-			SetTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
+			_getTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
+			_setTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
 
-			tlsContextOfMainThread = GetTlsContext();
+			_tlsContextOfMainThread = _getTlsContext();
 		}
 
 		/// <summary>
@@ -76,11 +76,11 @@ namespace SHVDN
 		/// <summary>
 		/// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
 		/// </summary>
-		public Script[] RunningScripts => runningScripts.ToArray();
+		public Script[] RunningScripts => _runningScripts.ToArray();
 		/// <summary>
 		/// Gets the currently executing script or <see langword="null" /> if there is none.
 		/// </summary>
-		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain.executingScript : null;
+		public static Script ExecutingScript => CurrentDomain != null ? CurrentDomain._executingScript : null;
 
 		/// <summary>
 		/// Gets or sets the value how long script can execute in one tick without getting terminated after the tick ends.
@@ -125,7 +125,7 @@ namespace SHVDN
 
 				try
 				{
-					scriptApis.Add(Assembly.LoadFrom(apiPath));
+					_scriptApis.Add(Assembly.LoadFrom(apiPath));
 				}
 				catch (Exception ex)
 				{
@@ -134,7 +134,7 @@ namespace SHVDN
 			}
 			// Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
 			// as long as all of major versions are unique
-			scriptApis.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
+			_scriptApis.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
 		}
 
 		~ScriptDomain()
@@ -247,11 +247,11 @@ namespace SHVDN
 			string apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
 			if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out int apiVersion))
 			{
-				scriptApi = ScriptDomain.CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
+				scriptApi = ScriptDomain.CurrentDomain._scriptApis.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
 			}
 
 			// Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
-			scriptApi ??= scriptApis.First(x => !IsApiVersionDeprecated(x.GetName().Version));
+			scriptApi ??= _scriptApis.First(x => !IsApiVersionDeprecated(x.GetName().Version));
 			compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
 			string extension = Path.GetExtension(filename);
@@ -368,13 +368,13 @@ namespace SHVDN
 					string key = BuildComparisonString(type, string.Empty);
 					key = assembly.GetName().Name + "-" + assembly.GetName().Version + key;
 
-					if (scriptTypes.TryGetValue(key, out Tuple<string, Type> scriptType))
+					if (_scriptTypes.TryGetValue(key, out Tuple<string, Type> scriptType))
 					{
 						Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptType.Item1), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
 						continue; // Skip types that were already added previously are ignored
 					}
 
-					scriptTypes.Add(key, new Tuple<string, Type>(filename, type));
+					_scriptTypes.Add(key, new Tuple<string, Type>(filename, type));
 
 					if (apiVersion == null) // Check API version for one of the types (should be the same for all)
 					{
@@ -416,7 +416,7 @@ namespace SHVDN
 		/// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
 		public Script InstantiateScript(Type scriptType)
 		{
-			if (Thread.CurrentThread.ManagedThreadId != executingThreadId)
+			if (Thread.CurrentThread.ManagedThreadId != _executingThreadId)
 			{
 				return null; // This must only be called in the main thread (since changing 'executingScript' during 'DoTick' of another script would break)
 			}
@@ -430,21 +430,21 @@ namespace SHVDN
 
 			var script = new Script();
 			// Keep track of current script, so it can be restored down below
-			Script previousScript = executingScript;
+			Script previousScript = _executingScript;
 
-			executingScript = script;
+			_executingScript = script;
 
 			// Create a name for the new script instance
-			if (scriptInstances.ContainsKey(scriptType.FullName))
+			if (_scriptInstances.ContainsKey(scriptType.FullName))
 			{
-				int instanceIndex = scriptInstances[scriptType.FullName] + 1;
-				scriptInstances[scriptType.FullName] = instanceIndex;
+				int instanceIndex = _scriptInstances[scriptType.FullName] + 1;
+				_scriptInstances[scriptType.FullName] = instanceIndex;
 
 				script.Name = scriptType.FullName + instanceIndex.ToString();
 			}
 			else
 			{
-				scriptInstances.Add(scriptType.FullName, 0);
+				_scriptInstances.Add(scriptType.FullName, 0);
 
 				// Do not append instance index to the default instance name
 				script.Name = scriptType.FullName;
@@ -478,10 +478,10 @@ namespace SHVDN
 				return null;
 			}
 
-			runningScripts.Add(script);
+			_runningScripts.Add(script);
 
 			// Restore previously executing script
-			executingScript = previousScript;
+			_executingScript = previousScript;
 
 			return script;
 		}
@@ -491,7 +491,7 @@ namespace SHVDN
 		/// </summary>
 		public void Start()
 		{
-			if (scriptTypes.Count != 0 || runningScripts.Count != 0)
+			if (_scriptTypes.Count != 0 || _runningScripts.Count != 0)
 			{
 				return; // Cannot start script domain if scripts are already running
 			}
@@ -559,7 +559,7 @@ namespace SHVDN
 			WarnOfScriptsUsingDeprecatedApi();
 
 			// Instantiate scripts after they were all loaded, so that dependencies are launched with the right ordering
-			foreach (Type type in scriptTypes.Values.Select(x => x.Item2))
+			foreach (Type type in _scriptTypes.Values.Select(x => x.Item2))
 			{
 				// Start the script unless script does not want a default instance
 				if (GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance && NoDefaultInstance)
@@ -614,10 +614,10 @@ namespace SHVDN
 			}
 
 			// Instantiate only those scripts that are from the this assembly
-			foreach (Type type in scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
+			foreach (Type type in _scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
 			{
 				// Make sure there are no others instances of this script
-				runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
+				_runningScripts.RemoveAll(x => x.Filename == filename && x.ScriptInstance.GetType() == type);
 
 				// Start the script unless script does not want a default instance
 				if (GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance && NoDefaultInstance)
@@ -633,13 +633,13 @@ namespace SHVDN
 		/// </summary>
 		public void Abort()
 		{
-			foreach (Script script in runningScripts)
+			foreach (Script script in _runningScripts)
 			{
 				script.Abort();
 			}
 
-			scriptTypes.Clear();
-			runningScripts.Clear();
+			_scriptTypes.Clear();
+			_runningScripts.Clear();
 		}
 		/// <summary>
 		/// Aborts all running scripts from the specified file.
@@ -649,7 +649,7 @@ namespace SHVDN
 		{
 			filename = Path.GetFullPath(filename);
 
-			foreach (Script script in runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
+			foreach (Script script in _runningScripts.Where(x => filename.Equals(x.Filename, StringComparison.OrdinalIgnoreCase)))
 			{
 				script.Abort();
 			}
@@ -662,7 +662,7 @@ namespace SHVDN
 		/// <param name="forceMainThread">Specifies whether to force to execute the task on the main thread.</param>
 		public void ExecuteTask(IScriptTask task, bool forceMainThread = false)
 		{
-			if (Thread.CurrentThread.ManagedThreadId == executingThreadId)
+			if (Thread.CurrentThread.ManagedThreadId == _executingThreadId)
 			{
 				// Request came from the main thread, so can just execute it right away
 				task.Run();
@@ -674,10 +674,10 @@ namespace SHVDN
 				{
 					unsafe
 					{
-						if (GetTlsContext != null && SetTlsContext != null)
+						if (_getTlsContext != null && _setTlsContext != null)
 						{
-							IntPtr tlsContextOfScriptThread = GetTlsContext();
-							SetTlsContext(tlsContextOfMainThread);
+							IntPtr tlsContextOfScriptThread = _getTlsContext();
+							_setTlsContext(_tlsContextOfMainThread);
 
 							try
 							{
@@ -686,7 +686,7 @@ namespace SHVDN
 							finally
 							{
 								// Need to revert TLS context to the real one of the script thread
-								SetTlsContext(tlsContextOfScriptThread);
+								_setTlsContext(tlsContextOfScriptThread);
 							}
 							return;
 						}
@@ -694,8 +694,8 @@ namespace SHVDN
 				}
 
 				// Need to pass the task to the domain thread and execute it there as a fallback
-				taskQueue.Enqueue(task);
-				SignalAndWait(executingScript.waitEvent, executingScript.continueEvent);
+				_taskQueue.Enqueue(task);
+				SignalAndWait(_executingScript._waitEvent, _executingScript._continueEvent);
 			}
 		}
 
@@ -706,7 +706,7 @@ namespace SHVDN
 		/// <returns><see langword="true" /> if the key is currently pressed or <see langword="false" /> otherwise</returns>
 		public bool IsKeyPressed(Keys key)
 		{
-			return keyboardState[(int)key];
+			return _keyboardState[(int)key];
 		}
 		/// <summary>
 		/// Pauses or resumes handling of keyboard events in this script domain.
@@ -714,7 +714,7 @@ namespace SHVDN
 		/// <param name="pause"><see langword="true" /> to pause or <see langword="false" /> to resume</param>
 		public void PauseKeyEvents(bool pause)
 		{
-			recordKeyboardEvents = !pause;
+			_recordKeyboardEvents = !pause;
 		}
 
 		/// <summary>
@@ -723,9 +723,9 @@ namespace SHVDN
 		internal void DoTick()
 		{
 			// Execute running scripts
-			for (int i = 0; i < runningScripts.Count; i++)
+			for (int i = 0; i < _runningScripts.Count; i++)
 			{
-				Script script = runningScripts[i];
+				Script script = _runningScripts[i];
 
 				// Ignore terminated scripts
 				if (!script.IsRunning || script.IsPaused)
@@ -733,7 +733,7 @@ namespace SHVDN
 					continue;
 				}
 
-				executingScript = script;
+				_executingScript = script;
 
 				int startTimeTickCount = Environment.TickCount;
 				try
@@ -741,11 +741,11 @@ namespace SHVDN
 					if (script.IsUsingThread)
 					{
 						// Resume script thread and execute any incoming tasks from it
-						SignalAndWait(script.continueEvent, script.waitEvent);
-						while (taskQueue.Count > 0)
+						SignalAndWait(script._continueEvent, script._waitEvent);
+						while (_taskQueue.Count > 0)
 						{
-							taskQueue.Dequeue().Run();
-							SignalAndWait(script.continueEvent, script.waitEvent);
+							_taskQueue.Dequeue().Run();
+							SignalAndWait(script._continueEvent, script._waitEvent);
 						}
 					}
 					else
@@ -760,11 +760,11 @@ namespace SHVDN
 					// Stop script in case of an unhandled exception during task execution
 					script.Abort();
 
-					executingScript = null;
+					_executingScript = null;
 					continue;
 				}
 
-				executingScript = null;
+				_executingScript = null;
 
 				// Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
 				if ((uint)(Environment.TickCount - startTimeTickCount) < ScriptTimeoutThreshold || IsDebuggerPresent())
@@ -792,18 +792,18 @@ namespace SHVDN
 			var e = new KeyEventArgs(keys);
 
 			// Only update state of the primary key (without modifiers) here
-			keyboardState[(int)e.KeyCode] = status;
+			_keyboardState[(int)e.KeyCode] = status;
 
-			if (!recordKeyboardEvents)
+			if (!_recordKeyboardEvents)
 			{
 				return;
 			}
 
 			var eventInfo = new Tuple<bool, KeyEventArgs>(status, e);
 
-			foreach (Script script in runningScripts)
+			foreach (Script script in _runningScripts)
 			{
-				script.keyboardEvents.Enqueue(eventInfo);
+				script._keyboardEvents.Enqueue(eventInfo);
 			}
 		}
 
@@ -812,12 +812,12 @@ namespace SHVDN
 		/// </summary>
 		private void CleanupStrings()
 		{
-			foreach (IntPtr handle in pinnedStrings)
+			foreach (IntPtr handle in _pinnedStrings)
 			{
 				Marshal.FreeCoTaskMem(handle);
 			}
 
-			pinnedStrings.Clear();
+			_pinnedStrings.Clear();
 		}
 		/// <summary>
 		/// Pins the memory of a string so that it can be used in native calls without worrying about the GC invalidating its pointer.
@@ -826,14 +826,14 @@ namespace SHVDN
 		/// <returns>A pointer to the pinned memory containing the string.</returns>
 		public IntPtr PinString(string str)
 		{
-			IntPtr handle = NativeMemory.StringToCoTaskMemUTF8(str);
+			IntPtr handle = NativeMemory.StringToCoTaskMemUtf8(str);
 
 			if (handle == IntPtr.Zero)
 			{
 				return NativeMemory.NullString;
 			}
 
-			pinnedStrings.Add(handle);
+			_pinnedStrings.Add(handle);
 			return handle;
 		}
 
@@ -849,29 +849,29 @@ namespace SHVDN
 			}
 
 			// Return matching script in running script list if one is found
-			Script script = runningScripts.FirstOrDefault(x => x.ScriptInstance == scriptInstance);
+			Script script = _runningScripts.FirstOrDefault(x => x.ScriptInstance == scriptInstance);
 
 			// Otherwise return the executing script, since during constructor execution the running script list was not yet updated
-			if (script != null || executingScript == null || executingScript.ScriptInstance != null)
+			if (script != null || _executingScript == null || _executingScript.ScriptInstance != null)
 			{
 				return script;
 			}
 
 			// Handle the case where a script creates a custom instance of a script class that is not managed by SHVDN
 			// These may attempt to set events, but are not allowed to do so, since SHVDN will never call them, so just return null
-			if (!executingScript.Name.Contains(scriptInstance.GetType().FullName))
+			if (!_executingScript.Name.Contains(scriptInstance.GetType().FullName))
 			{
 				Log.Message(Log.Level.Warning, "A script tried to use a custom script instance of type ", scriptInstance.GetType().FullName, " that was not instantiated by ScriptHookVDotNet.");
 				return null;
 			}
 
-			script = executingScript;
+			script = _executingScript;
 
 			return script;
 		}
 		public string LookupScriptFilename(Type scriptType)
 		{
-			return scriptTypes.Values.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
+			return _scriptTypes.Values.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
 		}
 
 		/// <summary>
@@ -1013,12 +1013,12 @@ namespace SHVDN
 				// No warning will be printed from here. Once one script that references a version-less SHVDN is resolved, SHVDN will not execute this block when SHVDN resolves other script that reference a version-less SHVDN.
 				if (assemblyName.Version == bestVersion)
 				{
-					return CurrentDomain.scriptApis.FirstOrDefault(x => x.GetName().Version.Major == 2);
+					return CurrentDomain._scriptApis.FirstOrDefault(x => x.GetName().Version.Major == 2);
 				}
 
 				Assembly compatibleApi = null;
 
-				foreach (Assembly api in CurrentDomain.scriptApis)
+				foreach (Assembly api in CurrentDomain._scriptApis)
 				{
 					Version apiVersion = api.GetName().Version;
 
@@ -1077,7 +1077,7 @@ namespace SHVDN
 
 			// Show a notification with the script crash information
 			ScriptDomain domain = ScriptDomain.CurrentDomain;
-			if (domain != null && domain.executingScript != null && !args.IsTerminating)
+			if (domain != null && domain._executingScript != null && !args.IsTerminating)
 			{
 				unsafe
 				{

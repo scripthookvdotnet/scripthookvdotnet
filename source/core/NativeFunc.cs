@@ -46,13 +46,13 @@ namespace SHVDN
 		/// </summary>
 		private class NativeTask : IScriptTask
 		{
-			internal ulong Hash;
-			internal ulong[] Arguments;
-			internal ulong* Result;
+			internal ulong _hash;
+			internal ulong[] _arguments;
+			internal ulong* _result;
 
 			public void Run()
 			{
-				Result = InvokeInternal(Hash, Arguments);
+				_result = InvokeInternal(_hash, _arguments);
 			}
 		}
 
@@ -61,14 +61,14 @@ namespace SHVDN
 		/// </summary>
 		private class NativeTaskPtrArgs : IScriptTask
 		{
-			internal ulong Hash;
-			internal ulong* ArgumentPtr;
-			internal int ArgumentCount;
-			internal ulong* Result;
+			internal ulong _hash;
+			internal ulong* _argumentPtr;
+			internal int _argumentCount;
+			internal ulong* _result;
 
 			public void Run()
 			{
-				Result = InvokeInternal(Hash, ArgumentPtr, ArgumentCount);
+				_result = InvokeInternal(_hash, _argumentPtr, _argumentCount);
 			}
 		}
 
@@ -89,9 +89,9 @@ namespace SHVDN
 			ulong strArg = (ulong)strUtf8.ToInt64();
 			domain.ExecuteTask(new NativeTaskPtrArgs
 			{
-				Hash = 0x6C188BE134E074AA /* ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME */,
-				ArgumentPtr = &strArg,
-				ArgumentCount = 1
+				_hash = 0x6C188BE134E074AA /* ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME */,
+				_argumentPtr = &strArg,
+				_argumentCount = 1
 			});
 		}
 
@@ -144,16 +144,16 @@ namespace SHVDN
 				else
 				{
 					#region Surrogate check
-					const int LowSurrogateStart = 0xD800;
-					const int HighSurrogateStart = 0xD800;
+					const int lowSurrogateStart = 0xD800;
+					const int highSurrogateStart = 0xD800;
 
-					int temp1 = (int)chr - HighSurrogateStart;
+					int temp1 = (int)chr - highSurrogateStart;
 					if (temp1 >= 0 && temp1 <= 0x7ff)
 					{
 						// Found a high surrogate
 						if (currentPos < str.Length - 1)
 						{
-							int temp2 = str[currentPos + 1] - LowSurrogateStart;
+							int temp2 = str[currentPos + 1] - lowSurrogateStart;
 							if (temp2 >= 0 && temp2 <= 0x3ff)
 							{
 								// Found a low surrogate
@@ -250,10 +250,10 @@ namespace SHVDN
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			var task = new NativeTaskPtrArgs { Hash = hash, ArgumentPtr = argPtr, ArgumentCount = argCount };
+			var task = new NativeTaskPtrArgs { _hash = hash, _argumentPtr = argPtr, _argumentCount = argCount };
 			domain.ExecuteTask(task);
 
-			return task.Result;
+			return task._result;
 		}
 		/// <summary>
 		/// Executes a script function inside the current script domain.
@@ -269,10 +269,10 @@ namespace SHVDN
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			var task = new NativeTask { Hash = hash, Arguments = args };
+			var task = new NativeTask { _hash = hash, _arguments = args };
 			domain.ExecuteTask(task);
 
-			return task.Result;
+			return task._result;
 		}
 		public static ulong* Invoke(ulong hash, params object[] args)
 		{

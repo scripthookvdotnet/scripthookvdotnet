@@ -12,10 +12,10 @@ namespace SHVDN
 {
 	public sealed class Script
 	{
-		private Thread thread; // The thread hosting the execution of the script
-		internal SemaphoreSlim waitEvent;
-		internal SemaphoreSlim continueEvent;
-		internal readonly ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new();
+		private Thread _thread; // The thread hosting the execution of the script
+		internal SemaphoreSlim _waitEvent;
+		internal SemaphoreSlim _continueEvent;
+		internal readonly ConcurrentQueue<Tuple<bool, KeyEventArgs>> _keyboardEvents = new();
 
 		/// <summary>
 		/// Gets or sets the interval in ms between each <see cref="Tick"/>.
@@ -41,7 +41,7 @@ namespace SHVDN
 		/// <summary>
 		/// Gets whether a dedicated thread is hosting the execution of this script.
 		/// </summary>
-		public bool IsUsingThread => thread != null;
+		public bool IsUsingThread => _thread != null;
 
 		/// <summary>
 		/// An event that is raised every tick of the script.
@@ -86,7 +86,7 @@ namespace SHVDN
 			try
 			{
 				// Wait for script domain to continue this script
-				continueEvent.Wait();
+				_continueEvent.Wait();
 
 				while (IsRunning)
 				{
@@ -104,7 +104,7 @@ namespace SHVDN
 		internal void DoTick()
 		{
 			// Process keyboard events
-			while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
+			while (_keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
 			{
 				try
 				{
@@ -154,15 +154,15 @@ namespace SHVDN
 		{
 			if (useThread)
 			{
-				waitEvent = new SemaphoreSlim(0);
-				continueEvent = new SemaphoreSlim(0);
+				_waitEvent = new SemaphoreSlim(0);
+				_continueEvent = new SemaphoreSlim(0);
 
-				thread = new Thread(MainLoop);
+				_thread = new Thread(MainLoop);
 				// By setting this property to true, script thread should stop executing when the main thread stops executing
 				// Note: The exe may not stop executing if some scripts create Thread instances and use them without setting Thread.IsBackground false
-				thread.IsBackground = true;
+				_thread.IsBackground = true;
 
-				thread.Start();
+				_thread.Start();
 			}
 			else
 			{
@@ -189,10 +189,10 @@ namespace SHVDN
 
 			if (IsUsingThread)
 			{
-				waitEvent.Release();
+				_waitEvent.Release();
 
-				thread.Abort();
-				thread = null;
+				_thread.Abort();
+				_thread = null;
 			}
 			else
 			{
@@ -241,8 +241,8 @@ namespace SHVDN
 
 				do
 				{
-					waitEvent.Release();
-					continueEvent.Wait();
+					_waitEvent.Release();
+					_continueEvent.Wait();
 				}
 				while (Environment.TickCount - startTickCount < ms);
 			}

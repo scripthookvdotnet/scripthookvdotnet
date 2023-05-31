@@ -33,7 +33,7 @@ namespace GTA
 
 		public string Name
 		{
-			get => SHVDN.NativeMemory.GetGXTEntryByHash((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)Hash));
+			get => SHVDN.NativeMemory.GetGxtEntryByHash((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)Hash));
 		}
 
 		public string ComponentName(WeaponComponent component)

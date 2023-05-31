@@ -621,7 +621,7 @@ namespace GTA
 				return 0;
 			}
 
-			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCII(input));
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyAscii(input));
 		}
 		/// <summary>
 		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> without pre conversion before hashing.
@@ -637,7 +637,7 @@ namespace GTA
 				return 0;
 			}
 
-			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCIINoPreConversion(input));
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyAsciiNoPreConversion(input));
 		}
 
 		/// <summary>
@@ -656,7 +656,7 @@ namespace GTA
 		/// <returns>The localized <see cref="string"/> if the key hash exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetLocalizedString(int entryLabelHash)
 		{
-			return SHVDN.NativeMemory.GetGXTEntryByHash(entryLabelHash);
+			return SHVDN.NativeMemory.GetGxtEntryByHash(entryLabelHash);
 		}
 
 		/// <summary>

@@ -1117,22 +1117,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRPMOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRpmOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CurrentRPMOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CurrentRpmOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRPMOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRpmOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CurrentRPMOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CurrentRpmOffset, value);
 			}
 		}
 

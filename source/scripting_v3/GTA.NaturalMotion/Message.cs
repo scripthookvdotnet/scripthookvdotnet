@@ -70,7 +70,7 @@ namespace GTA.NaturalMotion
 				}
 			}
 
-			if (!SHVDN.NativeMemory.IsTaskNMScriptControlOrEventSwitch2NMActive(target.MemoryAddress))
+			if (!SHVDN.NativeMemory.IsTaskNmScriptControlOrEventSwitch2NmActive(target.MemoryAddress))
 			{
 				// Does not call when a CTaskNMControl task is active or the CEvent (which usually causes some task) related to CTaskNMControl occured for calling SET_PED_TO_RAGDOLL just like in legacy scripts.
 				// Otherwise, the ragdoll duration will be overridden.

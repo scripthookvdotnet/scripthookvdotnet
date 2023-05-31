@@ -1416,7 +1416,7 @@ namespace GTA.Native
 		{
 			if (type == typeof(string))
 			{
-				return SHVDN.NativeMemory.PtrToStringUTF8(new IntPtr((char*)*value));
+				return SHVDN.NativeMemory.PtrToStringUtf8(new IntPtr((char*)*value));
 			}
 
 			// Scripting types
