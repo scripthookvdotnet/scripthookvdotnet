@@ -12,7 +12,7 @@ namespace SHVDN
 {
 	public sealed class Script
 	{
-		Thread thread; // The thread hosting the execution of the script
+		private Thread thread; // The thread hosting the execution of the script
 		internal SemaphoreSlim waitEvent;
 		internal SemaphoreSlim continueEvent;
 		internal readonly ConcurrentQueue<Tuple<bool, KeyEventArgs>> keyboardEvents = new();
@@ -79,7 +79,7 @@ namespace SHVDN
 		/// <summary>
 		/// The main execution logic of all scripts.
 		/// </summary>
-		void MainLoop()
+		private void MainLoop()
 		{
 			IsRunning = true;
 
@@ -104,14 +104,18 @@ namespace SHVDN
 		internal void DoTick()
 		{
 			// Process keyboard events
-			while (keyboardEvents.TryDequeue(out var ev))
+			while (keyboardEvents.TryDequeue(out Tuple<bool, KeyEventArgs> ev))
 			{
 				try
 				{
 					if (!ev.Item1)
+					{
 						KeyUp?.Invoke(this, ev.Item2);
+					}
 					else
+					{
 						KeyDown?.Invoke(this, ev.Item2);
+					}
 				}
 				catch (ThreadAbortException)
 				{
@@ -202,7 +206,9 @@ namespace SHVDN
 		public void Pause()
 		{
 			if (IsPaused)
+			{
 				return; // Pause status has not changed, so nothing to do
+			}
 
 			IsPaused = true;
 
@@ -214,7 +220,9 @@ namespace SHVDN
 		public void Resume()
 		{
 			if (!IsPaused)
+			{
 				return;
+			}
 
 			IsPaused = false;
 
@@ -229,7 +237,7 @@ namespace SHVDN
 		{
 			if (IsUsingThread)
 			{
-				var startTickCount = Environment.TickCount;
+				int startTickCount = Environment.TickCount;
 
 				do
 				{

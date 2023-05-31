@@ -13,7 +13,8 @@ namespace GTA
 	public sealed class Player : IEquatable<Player>, IHandleable
 	{
 		#region Fields
-		Ped ped;
+
+		private Ped ped;
 		#endregion
 
 		public Player(int handle)
@@ -33,7 +34,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
+				int handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
 
 				if (ped == null || handle != ped.Handle)
 				{
@@ -399,7 +400,7 @@ namespace GTA
 		/// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is free aiming any <see cref="Entity"/>; otherwise, <see langword="null" /></returns>
 		public Entity GetTargetedEntity()
 		{
-			var entity = 0;
+			int entity = 0;
 			unsafe
 			{
 				if (Function.Call<bool>(Hash._GET_AIMED_ENTITY, Handle, &entity))

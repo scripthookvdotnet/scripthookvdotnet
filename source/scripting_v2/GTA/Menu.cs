@@ -14,15 +14,15 @@ namespace GTA
 	// [Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class Menu : MenuBase
 	{
-		UIRectangle rectHeader = null;
-		UIRectangle rectFooter = null;
-		UIText textHeader = null;
-		UIText textFooter = null;
-		int selectedIndex = -1;
-		int maxDrawLimit = 10;
-		int startScrollOffset = 2;
-		int scrollOffset = 0;
-		string footerDescription = "footer description";
+		private UIRectangle rectHeader = null;
+		private UIRectangle rectFooter = null;
+		private UIText textHeader = null;
+		private UIText textFooter = null;
+		private int selectedIndex = -1;
+		private int maxDrawLimit = 10;
+		private int startScrollOffset = 2;
+		private int scrollOffset = 0;
+		private string footerDescription = "footer description";
 
 		public Menu(string headerCaption, IMenuItem[] items) : this(headerCaption, items, 10)
 		{
@@ -31,7 +31,7 @@ namespace GTA
 		{
 			// Put the items in the item stack
 			// The menu itself will be initialized when it gets added to the viewport
-			foreach (var item in items)
+			foreach (IMenuItem item in items)
 			{
 				Items.Add(item);
 				item.Parent = this;
@@ -91,7 +91,7 @@ namespace GTA
 			rectHeader.Draw(offset);
 			textHeader.Draw(offset);
 
-			for (var i = 0; i < ItemDrawCount; i++)
+			for (int i = 0; i < ItemDrawCount; i++)
 			{
 				Items[i + CurrentScrollOffset].Draw(offset);
 			}
@@ -99,7 +99,7 @@ namespace GTA
 			DrawScrollArrows(CurrentScrollOffset > 0, CurrentScrollOffset < MaxScrollOffset, offset);
 		}
 
-		void DrawScrollArrows(bool up, bool down, Size offset)
+		private void DrawScrollArrows(bool up, bool down, Size offset)
 		{
 			if (!up && !down)
 			{
@@ -108,23 +108,23 @@ namespace GTA
 
 			if (Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, "CommonMenu"))
 			{
-				var resolution = Function.Call<Vector2>(Hash.GET_TEXTURE_RESOLUTION, "CommonMenu", "arrowright");
+				Vector2 resolution = Function.Call<Vector2>(Hash.GET_TEXTURE_RESOLUTION, "CommonMenu", "arrowright");
 
 				if (up)
 				{
-					var w = resolution.X / UI.WIDTH;
-					var h = resolution.Y / UI.HEIGHT;
-					var x = (float)(Width + offset.Width) / UI.WIDTH - w * 0.5f;
-					var y = (float)(HeaderHeight + offset.Height + ItemHeight / 2) / UI.HEIGHT;
+					float w = resolution.X / UI.WIDTH;
+					float h = resolution.Y / UI.HEIGHT;
+					float x = (float)(Width + offset.Width) / UI.WIDTH - w * 0.5f;
+					float y = (float)(HeaderHeight + offset.Height + ItemHeight / 2) / UI.HEIGHT;
 
 					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", x, y, w, h, -90.0f, 255, 255, 255, 255);
 				}
 				if (down)
 				{
-					var w = resolution.X / UI.WIDTH;
-					var h = resolution.Y / UI.HEIGHT;
-					var x = (float)(Width + offset.Width) / UI.WIDTH - w * 0.5f;
-					var y = (float)(HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / UI.HEIGHT;
+					float w = resolution.X / UI.WIDTH;
+					float h = resolution.Y / UI.HEIGHT;
+					float x = (float)(Width + offset.Width) / UI.WIDTH - w * 0.5f;
+					float y = (float)(HeaderHeight + offset.Height + ItemHeight * ItemDrawCount - ItemHeight / 2) / UI.HEIGHT;
 
 					Function.Call(Hash.DRAW_SPRITE, "CommonMenu", "arrowright", x, y, w, h, 90.0f, 255, 255, 255, 255);
 				}
@@ -137,9 +137,9 @@ namespace GTA
 
 		public override void Initialize()
 		{
-			var currentY = HeaderHeight;
+			int currentY = HeaderHeight;
 			var itemSize = new Size(Width, ItemHeight);
-			for (var i = 0; i < ItemDrawCount; i++)
+			for (int i = 0; i < ItemDrawCount; i++)
 			{
 				Items[i + CurrentScrollOffset].SetOriginAndSize(new Point(0, currentY), itemSize);
 				currentY += ItemHeight;
@@ -149,7 +149,7 @@ namespace GTA
 			footerDescription = Items[selectedIndex].Description;
 			Items[selectedIndex].Select();
 
-			var itemsHeight = ItemDrawCount * ItemHeight;
+			int itemsHeight = ItemDrawCount * ItemHeight;
 			rectHeader = new UIRectangle(default, new Size(Width, HeaderHeight), HeaderColor);
 			if (HasFooter)
 			{
@@ -204,7 +204,7 @@ namespace GTA
 			// Update footer
 			if (HasFooter)
 			{
-				var itemsHeight = Items.Count * ItemHeight;
+				int itemsHeight = Items.Count * ItemHeight;
 				textFooter = new UIText(footerDescription, FooterCentered ? new Point(Width / 2, HeaderHeight + itemsHeight) : new Point(0, HeaderHeight + itemsHeight), FooterTextScale, FooterTextColor, FooterFont, FooterCentered);
 			}
 
@@ -221,7 +221,7 @@ namespace GTA
 		}
 		public override void OnChangeSelection(bool down)
 		{
-			var newIndex = down ? selectedIndex + 1 : selectedIndex - 1;
+			int newIndex = down ? selectedIndex + 1 : selectedIndex - 1;
 			if (newIndex >= Items.Count)
 			{
 				newIndex = 0;
@@ -250,7 +250,7 @@ namespace GTA
 			OnChangeSelection(newIndex);
 		}
 
-		void OnChangeDrawLimit()
+		private void OnChangeDrawLimit()
 		{
 			if (CurrentScrollOffset > MaxScrollOffset)
 			{
@@ -273,7 +273,7 @@ namespace GTA
 			}
 		}
 
-		void UpdateItemPositions()
+		private void UpdateItemPositions()
 		{
 		}
 
@@ -346,9 +346,10 @@ namespace GTA
 
 		public event EventHandler<SelectedIndexChangedArgs> SelectedIndexChanged;
 
-		int ItemDrawCount => Items.Count < maxDrawLimit ? Items.Count : maxDrawLimit;
-		int MaxScrollOffset => Items.Count < ItemDrawCount ? 0 : Items.Count - ItemDrawCount;
-		int CurrentScrollOffset
+		private int ItemDrawCount => Items.Count < maxDrawLimit ? Items.Count : maxDrawLimit;
+		private int MaxScrollOffset => Items.Count < ItemDrawCount ? 0 : Items.Count - ItemDrawCount;
+
+		private int CurrentScrollOffset
 		{
 			get => scrollOffset;
 			set

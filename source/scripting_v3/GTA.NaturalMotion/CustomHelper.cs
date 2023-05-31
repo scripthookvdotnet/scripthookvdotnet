@@ -54,13 +54,17 @@ namespace GTA.NaturalMotion
 		public void Update()
 		{
 			if (!_ped.IsRagdoll)
+			{
 				return;
+			}
 
-			var boolWasStartArgumentSet = _message.RemoveArgument("start");
+			bool boolWasStartArgumentSet = _message.RemoveArgument("start");
 			_message.SendTo(_ped);
 
 			if (boolWasStartArgumentSet)
+			{
 				_message.SetArgument("start", true);
+			}
 		}
 
 		/// <summary>

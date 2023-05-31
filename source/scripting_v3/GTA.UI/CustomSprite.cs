@@ -69,7 +69,7 @@ namespace GTA.UI
 				throw new FileNotFoundException(filename);
 			}
 
-			if (_textures.TryGetValue(filename, out var texture))
+			if (_textures.TryGetValue(filename, out int texture))
 			{
 				_id = texture;
 			}
@@ -219,7 +219,7 @@ namespace GTA.UI
 		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a 1280*720 pixel base.</param>
 		public virtual void WorldDraw(Vector3 position, SizeF offset)
 		{
-			var pointF = Screen.WorldToScreen(position);
+			PointF pointF = Screen.WorldToScreen(position);
 			if (!(pointF == PointF.Empty))
 			{
 				InternalDraw(new SizeF(pointF) + offset, Screen.Width, Screen.Height);
@@ -242,7 +242,7 @@ namespace GTA.UI
 		/// <param name="offset">The offset to shift the draw position of this <see cref="CustomSprite"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base.</param>
 		public virtual void WorldScaledDraw(Vector3 position, SizeF offset)
 		{
-			var pointF = Screen.WorldToScreen(position, scaleWidth: true);
+			PointF pointF = Screen.WorldToScreen(position, scaleWidth: true);
 			if (!(pointF == PointF.Empty))
 			{
 				InternalDraw(new SizeF(pointF) + offset, Screen.ScaledWidth, Screen.Height);
@@ -256,7 +256,7 @@ namespace GTA.UI
 				return;
 			}
 
-			var frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
+			int frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
 
 			if (_lastDraw[_id] != frameCount)
 			{
@@ -269,11 +269,11 @@ namespace GTA.UI
 				_globalLastDrawFrame = frameCount;
 			}
 
-			var scaleX = Size.Width / screenWidth;
-			var scaleY = Size.Height / screenHeight;
-			var positionX = (Position.X + offset.Width) / screenWidth;
-			var positionY = (Position.Y + offset.Height) / screenHeight;
-			var aspectRatio = Screen.AspectRatio;
+			float scaleX = Size.Width / screenWidth;
+			float scaleY = Size.Height / screenHeight;
+			float positionX = (Position.X + offset.Width) / screenWidth;
+			float positionY = (Position.Y + offset.Height) / screenHeight;
+			float aspectRatio = Screen.AspectRatio;
 
 			if (!Centered)
 			{

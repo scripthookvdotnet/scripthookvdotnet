@@ -24,7 +24,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!_vehicleDoors.TryGetValue(index, out var vehicleDoor))
+				if (!_vehicleDoors.TryGetValue(index, out VehicleDoor vehicleDoor))
 				{
 					vehicleDoor = new VehicleDoor(_owner, index);
 					_vehicleDoors.Add(index, vehicleDoor);

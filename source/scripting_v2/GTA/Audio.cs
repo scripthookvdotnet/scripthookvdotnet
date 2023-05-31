@@ -12,38 +12,38 @@ namespace GTA
 	{
 		public static int PlaySoundAt(Entity entity, string soundFile)
 		{
-			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
 			Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, id, soundFile, entity.Handle, 0, 0, 0);
 			return id;
 		}
 		public static int PlaySoundAt(Entity entity, string soundFile, string soundSet)
 		{
-			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
 			Function.Call(Hash.PLAY_SOUND_FROM_ENTITY, id, soundFile, entity.Handle, soundSet, 0, 0);
 			return id;
 		}
 		public static int PlaySoundAt(Vector3 position, string soundFile)
 		{
-			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
 			Function.Call(Hash.PLAY_SOUND_FROM_COORD, id, soundFile, position.X, position.Y, position.Z, 0, 0, 0, 0);
 			return id;
 		}
 		public static int PlaySoundAt(Vector3 position, string soundFile, string soundSet)
 		{
-			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
 			Function.Call(Hash.PLAY_SOUND_FROM_COORD, id, soundFile, position.X, position.Y, position.Z, soundSet, 0, 0, 0);
 			return id;
 		}
 
 		public static int PlaySoundFrontend(string soundFile)
 		{
-			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
 			Function.Call(Hash.PLAY_SOUND_FRONTEND, id, soundFile, 0, 0);
 			return id;
 		}
 		public static int PlaySoundFrontend(string soundFile, string soundSet)
 		{
-			var id = Function.Call<int>(Hash.GET_SOUND_ID);
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
 			Function.Call(Hash.PLAY_SOUND_FRONTEND, id, soundFile, soundSet, 0);
 			return id;
 		}

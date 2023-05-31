@@ -34,10 +34,10 @@ namespace GTA
 
 		internal static string BuildErrorMessage(GameVersion minimumSupportedGameVersion, string className, string propertyOrMethodName)
 		{
-			var maximumNotSupportedGameVersionEnumStr = Enum.GetName(typeof(GameVersion), (GameVersion)((int)minimumSupportedGameVersion - 1)).Replace('_', '.');
+			string maximumNotSupportedGameVersionEnumStr = Enum.GetName(typeof(GameVersion), (GameVersion)((int)minimumSupportedGameVersion - 1)).Replace('_', '.');
 
-			var versionRegexPattern = @"v1\.0\.\d{3,5}\.\d";
-			var maximumNotSupportedGameVersionWithoutPlatformName = Regex.Match(maximumNotSupportedGameVersionEnumStr, versionRegexPattern).Value;
+			string versionRegexPattern = @"v1\.0\.\d{3,5}\.\d";
+			string maximumNotSupportedGameVersionWithoutPlatformName = Regex.Match(maximumNotSupportedGameVersionEnumStr, versionRegexPattern).Value;
 
 			return $"{className}.{propertyOrMethodName} is not supported in from v1.0.335.2 to {maximumNotSupportedGameVersionWithoutPlatformName}, inclusive.";
 		}

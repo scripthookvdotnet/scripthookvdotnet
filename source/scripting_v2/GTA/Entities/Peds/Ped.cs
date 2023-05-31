@@ -13,9 +13,10 @@ namespace GTA
 	public sealed class Ped : Entity
 	{
 		#region Fields
-		Tasks _tasks;
-		NaturalMotion.Euphoria _euphoria;
-		WeaponCollection _weapons;
+
+		private Tasks _tasks;
+		private NaturalMotion.Euphoria _euphoria;
+		private WeaponCollection _weapons;
 
 		internal static readonly string[] _speechModifierNames = {
 			"SPEECH_PARAMS_STANDARD",
@@ -624,7 +625,7 @@ namespace GTA
 						return null;
 					}
 
-					var vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
+					int vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
 					return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 				}
 			}
@@ -649,7 +650,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SeatIndexOffset == 0)
 				{
 					return VehicleSeat.None;
@@ -893,7 +894,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSuffersCriticalHitOffset == 0)
 				{
 					return false;
@@ -954,7 +955,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
@@ -981,7 +982,10 @@ namespace GTA
 		{
 			var outCoords = new OutputArgument();
 			if (Function.Call<bool>(Hash.GET_PED_LAST_WEAPON_IMPACT_COORD, Handle, outCoords))
+			{
 				return outCoords.GetResult<Vector3>();
+			}
+
 			return Vector3.Zero;
 		}
 
@@ -1053,7 +1057,7 @@ namespace GTA
 			set
 			{
 				Function.Call(Hash.REQUEST_ANIM_SET, value);
-				var startTime = Environment.TickCount;
+				int startTime = Environment.TickCount;
 
 				while (!Function.Call<bool>(Hash.HAS_ANIM_SET_LOADED, value))
 				{

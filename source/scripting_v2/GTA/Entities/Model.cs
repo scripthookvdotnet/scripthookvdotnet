@@ -175,7 +175,7 @@ namespace GTA
 		/// </summary>
 		public Vector3 GetDimensions()
 		{
-			GetDimensions(out var min, out var max);
+			GetDimensions(out Vector3 min, out Vector3 max);
 			return Vector3.Subtract(max, min);
 		}
 
@@ -195,15 +195,17 @@ namespace GTA
 		{
 			Request();
 
-			var startTime = Environment.TickCount;
-			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			int startTime = Environment.TickCount;
+			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{
 				Script.Yield();
 
 				if (Environment.TickCount - startTime >= maxElapsedTime)
+				{
 					return false;
+				}
 			}
 
 			return true;

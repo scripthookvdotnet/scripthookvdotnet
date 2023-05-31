@@ -26,7 +26,10 @@ namespace GTA
 		{
 			get
 			{
-				if (_pedProps.TryGetValue(anchorPoint, out var prop)) return prop;
+				if (_pedProps.TryGetValue(anchorPoint, out PedProp prop))
+				{
+					return prop;
+				}
 
 				prop = new PedProp(_ped, anchorPoint);
 				_pedProps.Add(anchorPoint, prop);
@@ -38,7 +41,10 @@ namespace GTA
 		{
 			get
 			{
-				if (_pedComponents.TryGetValue(componentId, out var variation)) return variation;
+				if (_pedComponents.TryGetValue(componentId, out PedComponent variation))
+				{
+					return variation;
+				}
 
 				variation = new PedComponent(_ped, componentId);
 				_pedComponents.Add(componentId, variation);
@@ -54,7 +60,7 @@ namespace GTA
 			var props = new List<PedProp>();
 			foreach (PedPropAnchorPoint anchorPosition in Enum.GetValues(typeof(PedPropAnchorPoint)))
 			{
-				var prop = this[anchorPosition];
+				PedProp prop = this[anchorPosition];
 				if (prop.HasAnyVariations)
 				{
 					props.Add(prop);
@@ -68,7 +74,7 @@ namespace GTA
 			var components = new List<PedComponent>();
 			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
 			{
-				var component = this[componentId];
+				PedComponent component = this[componentId];
 				if (component.HasAnyVariations)
 				{
 					components.Add(component);

@@ -75,9 +75,9 @@ namespace GTA.Math
 		{
 			axis = Vector3.Normalize(axis);
 
-			var half = angle * 0.5f;
-			var sin = (float)(System.Math.Sin((double)(half)));
-			var cos = (float)(System.Math.Cos((double)(half)));
+			float half = angle * 0.5f;
+			float sin = (float)(System.Math.Sin((double)(half)));
+			float cos = (float)(System.Math.Cos((double)(half)));
 
 			X = axis.X * sin;
 			Y = axis.Y * sin;
@@ -98,7 +98,7 @@ namespace GTA.Math
 			get
 			{
 				Vector3 axis;
-				var length = Length();
+				float length = Length();
 
 				if (length != 0.0f)
 				{
@@ -139,7 +139,7 @@ namespace GTA.Math
 		/// </summary>
 		public void Normalize()
 		{
-			var length = 1.0f / Length();
+			float length = 1.0f / Length();
 			X *= length;
 			Y *= length;
 			Z *= length;
@@ -161,7 +161,7 @@ namespace GTA.Math
 		/// </summary>
 		public void Invert()
 		{
-			var lengthSq = 1.0f / LengthSquared();
+			float lengthSq = 1.0f / LengthSquared();
 			X = -X * lengthSq;
 			Y = -Y * lengthSq;
 			Z = -Z * lengthSq;
@@ -224,14 +224,14 @@ namespace GTA.Math
 		public static Quaternion Multiply(Quaternion left, Quaternion right)
 		{
 			Quaternion quaternion;
-			var lx = left.X;
-			var ly = left.Y;
-			var lz = left.Z;
-			var lw = left.W;
-			var rx = right.X;
-			var ry = right.Y;
-			var rz = right.Z;
-			var rw = right.W;
+			float lx = left.X;
+			float ly = left.Y;
+			float lz = left.Z;
+			float lw = left.W;
+			float rx = right.X;
+			float ry = right.Y;
+			float rz = right.Z;
+			float rw = right.W;
 
 			quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
 			quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
@@ -304,7 +304,7 @@ namespace GTA.Math
 		public static Quaternion Invert(Quaternion quaternion)
 		{
 			var result = new Quaternion();
-			var lengthSq = 1.0f / ((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
+			float lengthSq = 1.0f / ((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
 
 			result.X = -quaternion.X * lengthSq;
 			result.Y = -quaternion.Y * lengthSq;
@@ -337,8 +337,8 @@ namespace GTA.Math
 		public static Quaternion Lerp(Quaternion start, Quaternion end, float amount)
 		{
 			var result = new Quaternion();
-			var inverse = 1.0f - amount;
-			var dot = (start.X * end.X) + (start.Y * end.Y) + (start.Z * end.Z) + (start.W * end.W);
+			float inverse = 1.0f - amount;
+			float dot = (start.X * end.X) + (start.Y * end.Y) + (start.Z * end.Z) + (start.W * end.W);
 
 			if (dot >= 0.0f)
 			{
@@ -355,7 +355,7 @@ namespace GTA.Math
 				result.W = (inverse * start.W) - (amount * end.W);
 			}
 
-			var invLength = 1.0f / result.Length();
+			float invLength = 1.0f / result.Length();
 
 			result.X *= invLength;
 			result.Y *= invLength;
@@ -375,10 +375,10 @@ namespace GTA.Math
 		public static Quaternion Slerp(Quaternion start, Quaternion end, float amount)
 		{
 			var result = new Quaternion();
-			var kEpsilon = (float)(1.192093E-07);
+			float kEpsilon = (float)(1.192093E-07);
 			float opposite;
 			float inverse;
-			var dot = Dot(start, end);
+			float dot = Dot(start, end);
 
 			if (System.Math.Abs(dot) > (1.0f - kEpsilon))
 			{
@@ -387,8 +387,8 @@ namespace GTA.Math
 			}
 			else
 			{
-				var aCos = (float)System.Math.Acos(System.Math.Abs(dot));
-				var invSin = (float)(1.0 / System.Math.Sin(aCos));
+				float aCos = (float)System.Math.Acos(System.Math.Abs(dot));
+				float invSin = (float)(1.0 / System.Math.Sin(aCos));
 
 				inverse = (float)(System.Math.Sin((1.0f - amount) * aCos) * invSin);
 				opposite = (float)(System.Math.Sin(amount * aCos) * invSin * System.Math.Sign(dot));
@@ -424,7 +424,7 @@ namespace GTA.Math
 			}
 
 
-			var cosHalfAngle = a.W * b.W + Vector3.Dot(a.Axis, b.Axis);
+			float cosHalfAngle = a.W * b.W + Vector3.Dot(a.Axis, b.Axis);
 
 			if (cosHalfAngle >= 1.0f || cosHalfAngle <= -1.0f)
 			{
@@ -444,9 +444,9 @@ namespace GTA.Math
 			float blendB;
 			if (cosHalfAngle < 0.99f)
 			{
-				var halfAngle = (float)System.Math.Acos(cosHalfAngle);
-				var sinHalfAngle = (float)System.Math.Sin(halfAngle);
-				var oneOverSinHalfAngle = 1.0f / sinHalfAngle;
+				float halfAngle = (float)System.Math.Acos(cosHalfAngle);
+				float sinHalfAngle = (float)System.Math.Sin(halfAngle);
+				float oneOverSinHalfAngle = 1.0f / sinHalfAngle;
 				blendA = (float)System.Math.Sin(halfAngle * (1.0f - t)) * oneOverSinHalfAngle;
 				blendB = (float)System.Math.Sin(halfAngle * t) * oneOverSinHalfAngle;
 			}
@@ -465,9 +465,9 @@ namespace GTA.Math
 		/// </summary>
 		public static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection)
 		{
-			var NormAB = (float)(System.Math.Sqrt(fromDirection.LengthSquared() * fromDirection.LengthSquared()));
+			float NormAB = (float)(System.Math.Sqrt(fromDirection.LengthSquared() * fromDirection.LengthSquared()));
 
-			var w = NormAB + Vector3.Dot(fromDirection, toDirection);
+			float w = NormAB + Vector3.Dot(fromDirection, toDirection);
 			Quaternion result;
 
 			if (w >= 1e-6f * NormAB)
@@ -494,12 +494,12 @@ namespace GTA.Math
 		/// <param name ="maxDegreesDelta"></param>
 		public static Quaternion RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta)
 		{
-			var angle = AngleBetween(from, to);
+			float angle = AngleBetween(from, to);
 			if (angle == 0.0f)
 			{
 				return to;
 			}
-			var t = System.Math.Min(1.0f, maxDegreesDelta / angle);
+			float t = System.Math.Min(1.0f, maxDegreesDelta / angle);
 			return SlerpUnclamped(from, to, t);
 		}
 
@@ -511,7 +511,7 @@ namespace GTA.Math
 		/// <returns>The angle in degrees between two rotations a and b.</returns>
 		public static float AngleBetween(Quaternion a, Quaternion b)
 		{
-			var dot = Dot(a, b);
+			float dot = Dot(a, b);
 			return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
 		}
 
@@ -523,7 +523,7 @@ namespace GTA.Math
 		/// <param name ="yaxis">Y degrees.</param>
 		public static Quaternion Euler(float zaxis, float xaxis, float yaxis)
 		{
-			var Deg2Rad = (float)((System.Math.PI / 180.0));
+			float Deg2Rad = (float)((System.Math.PI / 180.0));
 			return RotationYawPitchRoll(zaxis * Deg2Rad, xaxis * Deg2Rad, yaxis * Deg2Rad);
 		}
 
@@ -533,7 +533,7 @@ namespace GTA.Math
 		/// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
 		public static Quaternion Euler(Vector3 euler)
 		{
-			var eulerRad = euler * (float)((System.Math.PI / 180.0));
+			Vector3 eulerRad = euler * (float)((System.Math.PI / 180.0));
 			return RotationYawPitchRoll(eulerRad.Z, eulerRad.X, eulerRad.Y);
 		}
 
@@ -549,9 +549,9 @@ namespace GTA.Math
 
 			axis = Vector3.Normalize(axis);
 
-			var half = angle * 0.5f;
-			var sin = (float)(System.Math.Sin((double)(half)));
-			var cos = (float)(System.Math.Cos((double)(half)));
+			float half = angle * 0.5f;
+			float sin = (float)(System.Math.Sin((double)(half)));
+			float cos = (float)(System.Math.Cos((double)(half)));
 
 			result.X = axis.X * sin;
 			result.Y = axis.Y * sin;
@@ -572,7 +572,7 @@ namespace GTA.Math
 			var result = new Quaternion();
 			float sqrt;
 			float half;
-			var scale = matrix.M11 + matrix.M22 + matrix.M33;
+			float scale = matrix.M11 + matrix.M22 + matrix.M33;
 
 			if (scale > 0.0f)
 			{
@@ -629,15 +629,15 @@ namespace GTA.Math
 		{
 			var result = new Quaternion();
 
-			var halfYaw = yaw * 0.5f;
-			var sinYaw = (float)(System.Math.Sin((double)(halfYaw)));
-			var cosYaw = (float)(System.Math.Cos((double)(halfYaw)));
-			var halfPitch = pitch * 0.5f;
-			var sinPitch = (float)(System.Math.Sin((double)(halfPitch)));
-			var cosPitch = (float)(System.Math.Cos((double)(halfPitch)));
-			var halfRoll = roll * 0.5f;
-			var sinRoll = (float)(System.Math.Sin((double)(halfRoll)));
-			var cosRoll = (float)(System.Math.Cos((double)(halfRoll)));
+			float halfYaw = yaw * 0.5f;
+			float sinYaw = (float)(System.Math.Sin((double)(halfYaw)));
+			float cosYaw = (float)(System.Math.Cos((double)(halfYaw)));
+			float halfPitch = pitch * 0.5f;
+			float sinPitch = (float)(System.Math.Sin((double)(halfPitch)));
+			float cosPitch = (float)(System.Math.Cos((double)(halfPitch)));
+			float halfRoll = roll * 0.5f;
+			float sinRoll = (float)(System.Math.Sin((double)(halfRoll)));
+			float cosRoll = (float)(System.Math.Cos((double)(halfRoll)));
 
 			result.X = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
 			result.Y = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
@@ -703,14 +703,14 @@ namespace GTA.Math
 		public static Quaternion operator *(Quaternion left, Quaternion right)
 		{
 			var quaternion = new Quaternion();
-			var lx = left.X;
-			var ly = left.Y;
-			var lz = left.Z;
-			var lw = left.W;
-			var rx = right.X;
-			var ry = right.Y;
-			var rz = right.Z;
-			var rw = right.W;
+			float lx = left.X;
+			float ly = left.Y;
+			float lz = left.Z;
+			float lw = left.W;
+			float rx = right.X;
+			float ry = right.Y;
+			float rz = right.Z;
+			float rw = right.W;
 
 			quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
 			quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
@@ -729,8 +729,8 @@ namespace GTA.Math
 		public static Vector3 operator *(Quaternion rotation, Vector3 point)
 		{
 			var q = new Vector3(rotation.X, rotation.Y, rotation.Z);
-			var t = 2.0f * Vector3.Cross(q, point);
-			var result = point + (rotation.W * t) + Vector3.Cross(q, t);
+			Vector3 t = 2.0f * Vector3.Cross(q, point);
+			Vector3 result = point + (rotation.W * t) + Vector3.Cross(q, t);
 			return result;
 		}
 
@@ -776,20 +776,20 @@ namespace GTA.Math
 		{
 			var quaternion = new Quaternion();
 
-			var lx = left.X;
-			var ly = left.Y;
-			var lz = left.Z;
-			var lw = left.W;
+			float lx = left.X;
+			float ly = left.Y;
+			float lz = left.Z;
+			float lw = left.W;
 
 			// Inverse part.
-			var ls = right.X * right.X + right.Y * right.Y +
-			         right.Z * right.Z + right.W * right.W;
-			var invNorm = 1.0f / ls;
+			float ls = right.X * right.X + right.Y * right.Y +
+			           right.Z * right.Z + right.W * right.W;
+			float invNorm = 1.0f / ls;
 
-			var rx = -right.X * invNorm;
-			var ry = -right.Y * invNorm;
-			var rz = -right.Z * invNorm;
-			var rw = right.W * invNorm;
+			float rx = -right.X * invNorm;
+			float ry = -right.Y * invNorm;
+			float rz = -right.Z * invNorm;
+			float rw = right.W * invNorm;
 
 			// Multiply part.
 			quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
@@ -832,7 +832,7 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public string ToString(string format)
 		{
-			var invariantCulture = CultureInfo.InvariantCulture;
+			CultureInfo invariantCulture = CultureInfo.InvariantCulture;
 			return $"X:{X.ToString(format, invariantCulture)} Y:{Y.ToString(format, invariantCulture)} Z:{Z.ToString(format, invariantCulture)} W:{W.ToString(format, invariantCulture)}";
 		}
 
@@ -850,7 +850,9 @@ namespace GTA.Math
 		public override bool Equals(object obj)
 		{
 			if (obj == null || obj.GetType() != GetType())
+			{
 				return false;
+			}
 
 			return Equals((Quaternion)(obj));
 		}

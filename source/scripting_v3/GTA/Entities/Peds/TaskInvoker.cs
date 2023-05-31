@@ -177,7 +177,7 @@ namespace GTA
 		}
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
 		{
-			var moveBlendRatioArgForNative = 1.0f;
+			float moveBlendRatioArgForNative = 1.0f;
 			if (moveBlendRatio.HasValue)
 			{
 				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
@@ -187,7 +187,7 @@ namespace GTA
 
 		public void OpenVehicleDoor(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, PedMoveBlendRatio? moveBlendRatio = null)
 		{
-			var moveBlendRatioArgForNative = 2.0f;
+			float moveBlendRatioArgForNative = 2.0f;
 			if (moveBlendRatio.HasValue)
 			{
 				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
@@ -243,7 +243,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_FLUSH_ROUTE);
 
-			foreach (var point in points)
+			foreach (Vector3 point in points)
 			{
 				Function.Call(Hash.TASK_EXTEND_ROUTE, point.X, point.Y, point.Z);
 			}
@@ -265,7 +265,7 @@ namespace GTA
 		/// <inheritdoc cref="FollowNavMeshTo(Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
 		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio? moveBlendRatio = null, int timeBeforeWarp = -1, float radius = 0.25f, FollowNavMeshFlags navigationFlags = FollowNavMeshFlags.Default, float finalHeading = DefaultNavmeshFinalHeading)
 		{
-			var moveBlendRatioArgForNative = 2.0f;
+			float moveBlendRatioArgForNative = 2.0f;
 			if (moveBlendRatio.HasValue)
 			{
 				moveBlendRatioArgForNative = (float)moveBlendRatio.Value;
@@ -490,7 +490,7 @@ namespace GTA
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
-			var startTime = Environment.TickCount;
+			int startTime = Environment.TickCount;
 
 			while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, animDict))
 			{

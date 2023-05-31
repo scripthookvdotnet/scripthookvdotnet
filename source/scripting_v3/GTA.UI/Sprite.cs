@@ -66,7 +66,7 @@ namespace GTA.UI
 		/// <param name="centered">Position the <see cref="Sprite"/> based on its center instead of top left corner, see also <seealso cref="Centered"/>.</param>
 		public Sprite(string textureDict, string textureName, SizeF size, PointF position, Color color, float rotation, bool centered)
 		{
-			var data = Encoding.UTF8.GetBytes(textureDict + "\0");
+			byte[] data = Encoding.UTF8.GetBytes(textureDict + "\0");
 			_pinnedDict = Marshal.AllocCoTaskMem(data.Length);
 			Marshal.Copy(data, 0, _pinnedDict, data.Length);
 			data = Encoding.UTF8.GetBytes(textureName + "\0");
@@ -85,7 +85,7 @@ namespace GTA.UI
 
 			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
 
-			var hashedDictName = Game.GenerateHash(textureDict);
+			int hashedDictName = Game.GenerateHash(textureDict);
 			if (_activeTextures.ContainsKey(hashedDictName))
 			{
 				_activeTextures[hashedDictName] += 1;
@@ -115,10 +115,13 @@ namespace GTA.UI
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!disposing || _disposed) return;
+			if (!disposing || _disposed)
+			{
+				return;
+			}
 
-			var hashedDictName = Game.GenerateHash(_textureDict);
-			if (_activeTextures.TryGetValue(hashedDictName, out var currentCount))
+			int hashedDictName = Game.GenerateHash(_textureDict);
+			if (_activeTextures.TryGetValue(hashedDictName, out int currentCount))
 			{
 				if (currentCount == 1)
 				{
@@ -312,10 +315,10 @@ namespace GTA.UI
 				return;
 			}
 
-			var scaleX = Size.Width / screenWidth;
-			var scaleY = Size.Height / screenHeight;
-			var positionX = (Position.X + offset.Width) / screenWidth;
-			var positionY = (Position.Y + offset.Height) / screenHeight;
+			float scaleX = Size.Width / screenWidth;
+			float scaleY = Size.Height / screenHeight;
+			float positionX = (Position.X + offset.Width) / screenWidth;
+			float positionY = (Position.Y + offset.Height) / screenHeight;
 
 			if (!Centered)
 			{
@@ -325,10 +328,10 @@ namespace GTA.UI
 
 			if (TextureCoordinates != RectangleF.Empty)
 			{
-				var u1 = TextureCoordinates.Top;
-				var v1 = TextureCoordinates.Left;
-				var u2 = TextureCoordinates.Right;
-				var v2 = TextureCoordinates.Bottom;
+				float u1 = TextureCoordinates.Top;
+				float v1 = TextureCoordinates.Left;
+				float u2 = TextureCoordinates.Right;
+				float v2 = TextureCoordinates.Bottom;
 
 				Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, u1, v1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
 

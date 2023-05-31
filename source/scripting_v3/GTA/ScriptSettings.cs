@@ -45,7 +45,7 @@ namespace GTA
 			}
 
 			string line = null;
-			var tempSectionName = string.Empty;
+			string tempSectionName = string.Empty;
 			StreamReader reader = null;
 
 			try
@@ -75,9 +75,9 @@ namespace GTA
 					}
 					else if (line.Contains("="))
 					{
-						var index = line.IndexOf("=", StringComparison.Ordinal);
-						var key = line.Substring(0, index).Trim();
-						var value = line.Substring(index + 1).Trim();
+						int index = line.IndexOf("=", StringComparison.Ordinal);
+						string key = line.Substring(0, index).Trim();
+						string value = line.Substring(index + 1).Trim();
 
 						if (value.Contains("//"))
 						{
@@ -108,15 +108,15 @@ namespace GTA
 		{
 			var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
 
-			foreach (var sectonAndKeyValuePairs in _values)
+			foreach (KeyValuePair<string, Dictionary<string, List<string>>> sectonAndKeyValuePairs in _values)
 			{
-				var sectionName = sectonAndKeyValuePairs.Key;
-				foreach (var keyValuePairs in sectonAndKeyValuePairs.Value)
+				string sectionName = sectonAndKeyValuePairs.Key;
+				foreach (KeyValuePair<string, List<string>> keyValuePairs in sectonAndKeyValuePairs.Value)
 				{
-					var keyName = keyValuePairs.Key;
-					var valueList = keyValuePairs.Value;
+					string keyName = keyValuePairs.Key;
+					List<string> valueList = keyValuePairs.Value;
 
-					foreach (var value in valueList)
+					foreach (string value in valueList)
 					{
 						if (!result.ContainsKey(sectionName))
 						{
@@ -147,11 +147,11 @@ namespace GTA
 
 			try
 			{
-				foreach (var section in result)
+				foreach (KeyValuePair<string, List<Tuple<string, string>>> section in result)
 				{
 					writer.WriteLine("[" + section.Key + "]");
 
-					foreach (var value in section.Value)
+					foreach (Tuple<string, string> value in section.Value)
 					{
 						writer.WriteLine(value.Item1 + " = " + value.Item2);
 					}
@@ -185,11 +185,11 @@ namespace GTA
 		/// </remarks>
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
-			if (!_values.TryGetValue(section, out var keyValuePairs))
+			if (!_values.TryGetValue(section, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return defaultvalue;
 			}
-			if (!keyValuePairs.TryGetValue(name, out var valueList))
+			if (!keyValuePairs.TryGetValue(name, out List<string> valueList))
 			{
 				return defaultvalue;
 			}
@@ -223,11 +223,11 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public T GetValue<T>(string sectionName, string keyName, T defaultValue, IFormatProvider formatProvider) where T : IConvertible
 		{
-			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
+			if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return defaultValue;
 			}
-			if (!keyValuePairs.TryGetValue(keyName, out var valueList))
+			if (!keyValuePairs.TryGetValue(keyName, out List<string> valueList))
 			{
 				return defaultValue;
 			}
@@ -278,12 +278,12 @@ namespace GTA
 		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contains a value with the specified section and key; otherwise, <see langword="false"/>.</returns>
 		public bool TryGetValue<T>(string sectionName, string keyName, out T value, IFormatProvider formatProvider) where T : IConvertible
 		{
-			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
+			if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				value = default(T);
 				return false;
 			}
-			if (!keyValuePairs.TryGetValue(keyName, out var valueList))
+			if (!keyValuePairs.TryGetValue(keyName, out List<string> valueList))
 			{
 				value = default(T);
 				return false;
@@ -331,9 +331,9 @@ namespace GTA
 		/// </remarks>
 		public void SetValue<T>(string section, string name, T value)
 		{
-			var internalValue = value.ToString();
+			string internalValue = value.ToString();
 
-			if (_values.TryGetValue(section, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(name, out var valueList))
+			if (_values.TryGetValue(section, out Dictionary<string, List<string>> keyAndValuePairs) && keyAndValuePairs.TryGetValue(name, out List<string> valueList))
 			{
 				// Assume the value list already occupies the index 0
 				valueList[0] = internalValue;
@@ -356,9 +356,9 @@ namespace GTA
 		/// </remarks>
 		public void SetValue<T>(string sectionName, string keyName, T value, string format, IFormatProvider formatProvider) where T : IConvertible, IFormattable
 		{
-			var internalValue = formatProvider != null ? value.ToString(format, formatProvider) : value.ToString();
+			string internalValue = formatProvider != null ? value.ToString(format, formatProvider) : value.ToString();
 
-			if (_values.TryGetValue(sectionName, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(keyName, out var valueList))
+			if (_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyAndValuePairs) && keyAndValuePairs.TryGetValue(keyName, out List<string> valueList))
 			{
 				// Assume the value list already occupies the index 0
 				valueList[0] = internalValue;
@@ -386,17 +386,17 @@ namespace GTA
 		/// </remarks>
 		public T[] GetAllValues<T>(string section, string name)
 		{
-			if (!_values.TryGetValue(section, out var keyValuePairs))
+			if (!_values.TryGetValue(section, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return Array.Empty<T>();
 			}
-			if (!keyValuePairs.TryGetValue(name, out var stringValueList))
+			if (!keyValuePairs.TryGetValue(name, out List<string> stringValueList))
 			{
 				return Array.Empty<T>();
 			}
 
 			var values = new List<T>();
-			foreach (var stringValue in stringValueList)
+			foreach (string stringValue in stringValueList)
 			{
 				try
 				{
@@ -435,17 +435,17 @@ namespace GTA
 		/// </remarks>
 		public T[] GetAllValues<T>(string sectionName, string keyName, IFormatProvider formatProvider) where T : IConvertible
 		{
-			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
+			if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return Array.Empty<T>();
 			}
-			if (!keyValuePairs.TryGetValue(keyName, out var stringValueList))
+			if (!keyValuePairs.TryGetValue(keyName, out List<string> stringValueList))
 			{
 				return Array.Empty<T>();
 			}
 
 			var values = new List<T>();
-			foreach (var stringValue in stringValueList)
+			foreach (string stringValue in stringValueList)
 			{
 				try
 				{
@@ -459,7 +459,7 @@ namespace GTA
 					}
 					else
 					{
-						var parsedValue = formatProvider != null ? (T)Convert.ChangeType(stringValue, typeof(T), formatProvider) : (T)Convert.ChangeType(stringValue, typeof(T));
+						T parsedValue = formatProvider != null ? (T)Convert.ChangeType(stringValue, typeof(T), formatProvider) : (T)Convert.ChangeType(stringValue, typeof(T));
 						values.Add(parsedValue);
 					}
 				}
@@ -474,9 +474,9 @@ namespace GTA
 
 		private void AddNewValueInternal(string sectionName, string keyName, string valueString)
 		{
-			if (_values.TryGetValue(sectionName, out var keyAndValuePairs))
+			if (_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyAndValuePairs))
 			{
-				if (keyAndValuePairs.TryGetValue(keyName, out var valueList))
+				if (keyAndValuePairs.TryGetValue(keyName, out List<string> valueList))
 				{
 					valueList.Add(valueString);
 				}
@@ -503,14 +503,14 @@ namespace GTA
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="ScriptSettings"/> contains the specified key at the specified section.
 		/// </summary>
-		public bool ContainsKey(string sectionName, string keyName) => _values.TryGetValue(sectionName, out var keyValuePairs) && keyValuePairs.ContainsKey(keyName);
+		public bool ContainsKey(string sectionName, string keyName) => _values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs) && keyValuePairs.ContainsKey(keyName);
 
 		/// <summary>
 		/// Gets all of the section names this <see cref="ScriptSettings"/> contains.
 		/// </summary>
 		public string[] GetAllSectionNames()
 		{
-			var result = new string[_values.Count];
+			string[] result = new string[_values.Count];
 			_values.Keys.CopyTo(result, 0);
 
 			return result;
@@ -522,12 +522,12 @@ namespace GTA
 		/// <param name="sectionName">The section name.</param>
 		public string[] GetAllKeyNames(string sectionName)
 		{
-			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
+			if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return Array.Empty<string>();
 			}
 
-			var result = new string[keyValuePairs.Count];
+			string[] result = new string[keyValuePairs.Count];
 			keyValuePairs.Keys.CopyTo(result, 0);
 
 			return result;
@@ -541,7 +541,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if the <see cref="ScriptSettings"/> contained the specified key at the specified section and removed the key; otherwise, <see langword="false"/>.</returns>
 		public bool RemoveKey(string sectionName, string keyName)
 		{
-			if (!_values.TryGetValue(sectionName, out var keyValuePairs))
+			if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return false;
 			}

@@ -53,7 +53,7 @@ namespace GTA
 		/// </summary>
 		public void Dispose()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);

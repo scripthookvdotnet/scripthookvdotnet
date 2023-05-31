@@ -222,13 +222,13 @@ namespace GTA.Math
 		/// </summary>
 		public void Normalize()
 		{
-			var length = Length();
+			float length = Length();
 			if (length == 0)
 			{
 				return;
 			}
 
-			var num = 1 / length;
+			float num = 1 / length;
 			X *= num;
 			Y *= num;
 			Z *= num;
@@ -333,7 +333,7 @@ namespace GTA.Math
 		/// </summary>
 		public static float SignedAngle(Vector3 from, Vector3 to, Vector3 planeNormal)
 		{
-			var perpVector = Cross(planeNormal, from);
+			Vector3 perpVector = Cross(planeNormal, from);
 
 			double angle = Angle(from, to);
 			double dot = Dot(perpVector, to);
@@ -370,8 +370,8 @@ namespace GTA.Math
 		/// </summary>
 		public static Vector3 RandomXY()
 		{
-			var v = Zero;
-			var radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
+			Vector3 v = Zero;
+			double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
 
 			v.X = (float)(System.Math.Cos(radian));
 			v.Y = (float)(System.Math.Sin(radian));
@@ -384,10 +384,10 @@ namespace GTA.Math
 		/// </summary>
 		public static Vector3 RandomXYZ()
 		{
-			var v = Zero;
-			var radian = Random.Instance.NextDouble() * 2.0 * System.Math.PI;
-			var cosTheta = (Random.Instance.NextDouble() * 2.0) - 1.0;
-			var theta = System.Math.Acos(cosTheta);
+			Vector3 v = Zero;
+			double radian = Random.Instance.NextDouble() * 2.0 * System.Math.PI;
+			double cosTheta = (Random.Instance.NextDouble() * 2.0) - 1.0;
+			double theta = System.Math.Acos(cosTheta);
 
 			v.X = (float)(System.Math.Sin(theta) * System.Math.Cos(radian));
 			v.Y = (float)(System.Math.Sin(theta) * System.Math.Sin(radian));
@@ -452,15 +452,15 @@ namespace GTA.Math
 		/// <returns>The clamped value.</returns>
 		public static Vector3 Clamp(Vector3 value, Vector3 min, Vector3 max)
 		{
-			var x = value.X;
+			float x = value.X;
 			x = (x > max.X) ? max.X : x;
 			x = (x < min.X) ? min.X : x;
 
-			var y = value.Y;
+			float y = value.Y;
 			y = (y > max.Y) ? max.Y : y;
 			y = (y < min.Y) ? min.Y : y;
 
-			var z = value.Z;
+			float z = value.Z;
 			z = (z > max.Z) ? max.Z : z;
 			z = (z < min.Z) ? min.Z : z;
 
@@ -481,7 +481,7 @@ namespace GTA.Math
 		/// </remarks>
 		public static Vector3 Lerp(Vector3 start, Vector3 end, float amount)
 		{
-			var vector = Zero;
+			Vector3 vector = Zero;
 
 			vector.X = start.X + ((end.X - start.X) * amount);
 			vector.Y = start.Y + ((end.Y - start.Y) * amount);
@@ -517,7 +517,7 @@ namespace GTA.Math
 		/// <returns>The cross product of the two vectors.</returns>
 		public static Vector3 Cross(Vector3 left, Vector3 right)
 		{
-			var result = Zero;
+			Vector3 result = Zero;
 			result.X = left.Y * right.Z - left.Z * right.Y;
 			result.Y = left.Z * right.X - left.X * right.Z;
 			result.Z = left.X * right.Y - left.Y * right.X;
@@ -549,8 +549,8 @@ namespace GTA.Math
 		/// whether the original vector was close enough to the surface to hit it.</remarks>
 		public static Vector3 Reflect(Vector3 vector, Vector3 normal)
 		{
-			var result = Zero;
-			var dot = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
+			Vector3 result = Zero;
+			float dot = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
 
 			result.X = vector.X - ((2.0f * dot) * normal.X);
 			result.Y = vector.Y - ((2.0f * dot) * normal.Y);
@@ -567,7 +567,7 @@ namespace GTA.Math
 		/// <returns>A vector containing the smallest components of the source vectors.</returns>
 		public static Vector3 Minimize(Vector3 left, Vector3 right)
 		{
-			var vector = Zero;
+			Vector3 vector = Zero;
 			vector.X = (left.X < right.X) ? left.X : right.X;
 			vector.Y = (left.Y < right.Y) ? left.Y : right.Y;
 			vector.Z = (left.Z < right.Z) ? left.Z : right.Z;
@@ -582,7 +582,7 @@ namespace GTA.Math
 		/// <returns>A vector containing the largest components of the source vectors.</returns>
 		public static Vector3 Maximize(Vector3 left, Vector3 right)
 		{
-			var vector = Zero;
+			Vector3 vector = Zero;
 			vector.X = (left.X > right.X) ? left.X : right.X;
 			vector.Y = (left.Y > right.Y) ? left.Y : right.Y;
 			vector.Z = (left.Z > right.Z) ? left.Z : right.Z;
@@ -636,7 +636,7 @@ namespace GTA.Math
 		/// <returns>The scaled vector.</returns>
 		public static Vector3 operator /(Vector3 vector, float scale)
 		{
-			var invScale = 1.0f / scale;
+			float invScale = 1.0f / scale;
 			return new Vector3(vector.X * invScale, vector.Y * invScale, vector.Z * invScale);
 		}
 
@@ -695,7 +695,7 @@ namespace GTA.Math
 		{
 			unchecked
 			{
-				var hashCode = X.GetHashCode();
+				int hashCode = X.GetHashCode();
 				hashCode = (hashCode * 397) ^ Y.GetHashCode();
 				hashCode = (hashCode * 397) ^ Z.GetHashCode();
 				return hashCode;

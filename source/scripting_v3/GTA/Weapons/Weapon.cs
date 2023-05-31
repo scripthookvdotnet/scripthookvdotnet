@@ -377,7 +377,11 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data)) continue;
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data))
+					{
+						continue;
+					}
+
 					if (data.Hash == hash)
 					{
 						return data.DisplayName;

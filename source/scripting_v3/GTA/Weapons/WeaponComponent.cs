@@ -184,9 +184,9 @@ namespace GTA
 					{
 						if (weaponData.Hash == hash)
 						{
-							var maxComp = Function.Call<int>(Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
+							int maxComp = Function.Call<int>(Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
 
-							for (var j = 0; j < maxComp; j++)
+							for (int j = 0; j < maxComp; j++)
 							{
 								DlcWeaponComponentData componentData;
 								if (Function.Call<bool>(Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, &componentData))

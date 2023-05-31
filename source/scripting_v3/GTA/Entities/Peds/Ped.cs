@@ -87,8 +87,8 @@ namespace GTA
 		/// </summary>
 		public void Resurrect()
 		{
-			var health = MaxHealth;
-			var isCollisionEnabled = IsCollisionEnabled;
+			int health = MaxHealth;
+			bool isCollisionEnabled = IsCollisionEnabled;
 
 			Function.Call(Hash.RESURRECT_PED, Handle);
 			Health = MaxHealth = health;
@@ -112,7 +112,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return IntPtr.Zero;
@@ -219,7 +219,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SweatOffset == 0)
 				{
 					return 0.0f;
@@ -290,7 +290,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.ArmorOffset == 0)
 				{
 					return 0.0f;
@@ -300,7 +300,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.ArmorOffset == 0)
 				{
 					return;
@@ -712,7 +712,7 @@ namespace GTA
 				throw new ArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
 			}
 
-			var eventTypeCorrected = (int)eventType;
+			int eventTypeCorrected = (int)eventType;
 			if (eventTypeCorrected >= (int)EventType.ShockingCarAlarm)
 			{
 				eventTypeCorrected -= 2;
@@ -831,7 +831,7 @@ namespace GTA
 					return 0;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -937,7 +937,7 @@ namespace GTA
 					return KnockOffVehicleType.Default;
 				}
 
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return KnockOffVehicleType.Default;
@@ -1021,7 +1021,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
@@ -1029,7 +1029,7 @@ namespace GTA
 
 				// GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
 				// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
-				var vehicleHandle = SHVDN.NativeMemory.GetLastVehicleHandleOfPed(address);
+				int vehicleHandle = SHVDN.NativeMemory.GetLastVehicleHandleOfPed(address);
 				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
@@ -1043,13 +1043,13 @@ namespace GTA
 			get
 			{
 				// In b2699, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
 				}
 
-				var vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
+				int vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
 				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
@@ -1062,7 +1062,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+				int handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
 				return handle != 0 ? new Vehicle(handle) : null;
 			}
 		}
@@ -1077,7 +1077,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SeatIndexOffset == 0)
 				{
 					return VehicleSeat.None;
@@ -1186,7 +1186,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_PEDS_JACKER, Handle);
+				int handle = Function.Call<int>(Hash.GET_PEDS_JACKER, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
@@ -1195,7 +1195,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_JACK_TARGET, Handle);
+				int handle = Function.Call<int>(Hash.GET_JACK_TARGET, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
@@ -1308,7 +1308,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
@@ -1354,7 +1354,7 @@ namespace GTA
 		{
 			get
 			{
-				var targetEntityHandle = SHVDN.NativeMemory.GetCombatTargetPedHandleFromCombatPed(Handle);
+				int targetEntityHandle = SHVDN.NativeMemory.GetCombatTargetPedHandleFromCombatPed(Handle);
 				return targetEntityHandle != 0 ? new Ped(targetEntityHandle) : null;
 			}
 		}
@@ -1363,7 +1363,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle);
+				int handle = Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
@@ -1394,7 +1394,7 @@ namespace GTA
 		/// </summary>
 		public void ClearKillerRecord()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSourceOfDeathOffset == 0)
 			{
 				return;
@@ -1409,7 +1409,7 @@ namespace GTA
 		/// </summary>
 		public void ClearCauseOfDeathRecord()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedCauseOfDeathOffset == 0)
 			{
 				return;
@@ -1424,7 +1424,7 @@ namespace GTA
 		/// </summary>
 		public void ClearTimeOfDeathRecord()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedTimeOfDeathOffset == 0)
 			{
 				return;
@@ -1454,7 +1454,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSuffersCriticalHitOffset == 0)
 				{
 					return false;
@@ -1515,7 +1515,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
@@ -1566,7 +1566,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.InjuryHealthThresholdOffset == 0)
 				{
 					return 0.0f;
@@ -1576,7 +1576,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.InjuryHealthThresholdOffset == 0)
 				{
 					return;
@@ -1600,7 +1600,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.FatalInjuryHealthThresholdOffset == 0)
 				{
 					return 0.0f;
@@ -1610,7 +1610,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.FatalInjuryHealthThresholdOffset == 0)
 				{
 					return;
@@ -1684,7 +1684,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1707,7 +1707,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1731,7 +1731,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1755,7 +1755,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1779,7 +1779,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1803,7 +1803,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1826,7 +1826,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1849,7 +1849,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1949,10 +1949,10 @@ namespace GTA
 				{
 					// Movement sets can be applied from animation dictionaries and animation sets (also clip sets but they use the same native as animation sets).
 					// So check if the string is a valid dictionary, if so load it as such. Otherwise load it as an animation set.
-					var isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
+					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
 
 					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
-					var startTime = Environment.TickCount;
+					int startTime = Environment.TickCount;
 
 					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
 					{

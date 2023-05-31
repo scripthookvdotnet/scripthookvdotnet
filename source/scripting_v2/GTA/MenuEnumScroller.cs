@@ -11,10 +11,10 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuEnumScroller : IMenuItem
 	{
-		UIText text = null;
-		UIRectangle button = null;
-		int selectedIndex;
-		string[] entries;
+		private UIText text = null;
+		private UIRectangle button = null;
+		private int selectedIndex;
+		private string[] entries;
 
 		public MenuEnumScroller(string caption, string description, string[] entries) : this(caption, description, entries, 0)
 		{
@@ -112,7 +112,7 @@ namespace GTA
 			UpdateText();
 		}
 
-		void UpdateText()
+		private void UpdateText()
 		{
 			text.Caption = Caption + " <" + entries[selectedIndex] + ">";
 		}

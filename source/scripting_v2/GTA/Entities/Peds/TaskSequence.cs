@@ -16,7 +16,8 @@ namespace GTA
 	public sealed class TaskSequence : IDisposable
 	{
 		#region Fields
-		static Ped nullPed = null;
+
+		private static Ped nullPed = null;
 		#endregion
 
 		public TaskSequence()
@@ -49,7 +50,7 @@ namespace GTA
 		/// </summary>
 		public void Dispose()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);

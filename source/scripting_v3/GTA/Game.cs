@@ -75,7 +75,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
+				int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
@@ -95,7 +95,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetLocalPlayerPedHandle();
+				int handle = SHVDN.NativeMemory.GetLocalPlayerPedHandle();
 
 				if (cachedLocalPlayerPed == null || handle != cachedLocalPlayerPed.Handle)
 				{
@@ -193,7 +193,7 @@ namespace GTA
 		{
 			get
 			{
-				var radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
+				string radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
 
 				if (string.IsNullOrEmpty(radioName))
 				{
@@ -241,7 +241,7 @@ namespace GTA
 		/// </summary>
 		public static void UnlockAllRadioStations()
 		{
-			foreach (var station in radioNames)
+			foreach (string station in radioNames)
 			{
 				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
 			}
@@ -386,7 +386,7 @@ namespace GTA
 
 			uint hash = 0;
 
-			foreach (var button in buttons)
+			foreach (Button button in buttons)
 			{
 				hash += (uint)button;
 				hash += (hash << 10);
@@ -679,11 +679,11 @@ namespace GTA
 		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ? ? 44 8B C6 8B D5 8B D8" for example, where ?? and ? are wildcards).</remarks>
 		public static IntPtr FindPattern(string pattern, IntPtr startAddress = default)
 		{
-			var rawHexStringsSplitted = pattern.Split(' ');
+			string[] rawHexStringsSplitted = pattern.Split(' ');
 			var newPatternBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 			var newMaskBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 
-			foreach (var rawHex in rawHexStringsSplitted)
+			foreach (string rawHex in rawHexStringsSplitted)
 			{
 				if (string.IsNullOrEmpty(rawHex))
 				{
@@ -697,7 +697,7 @@ namespace GTA
 					continue;
 				}
 
-				var character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
+				char character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
 				newPatternBuilder.Append(character);
 				newMaskBuilder.Append("x");
 			}
@@ -716,7 +716,7 @@ namespace GTA
 		{
 			unsafe
 			{
-				var address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
+				byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
 				return address == null ? IntPtr.Zero : new IntPtr(address);
 			}
 		}

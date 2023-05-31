@@ -12,11 +12,12 @@ namespace GTA
 	public sealed class ScriptSettings
 	{
 		#region Fields
-		readonly string _fileName;
-		readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
+
+		private readonly string _fileName;
+		private readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
 		#endregion
 
-		ScriptSettings(string fileName)
+		private ScriptSettings(string fileName)
 		{
 			_fileName = fileName;
 		}
@@ -35,7 +36,7 @@ namespace GTA
 			}
 
 			string line = null;
-			var tempSectionName = string.Empty;
+			string tempSectionName = string.Empty;
 			StreamReader reader = null;
 
 			try
@@ -66,9 +67,9 @@ namespace GTA
 
 					if (line.Contains("="))
 					{
-						var index = line.IndexOf("=", StringComparison.Ordinal);
-						var key = line.Substring(0, index).Trim();
-						var value = line.Substring(index + 1).Trim();
+						int index = line.IndexOf("=", StringComparison.Ordinal);
+						string key = line.Substring(0, index).Trim();
+						string value = line.Substring(index + 1).Trim();
 
 						if (value.Contains("//"))
 						{
@@ -99,15 +100,15 @@ namespace GTA
 		{
 			var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
 
-			foreach (var sectionAndKeyValuePairs in _values)
+			foreach (KeyValuePair<string, Dictionary<string, List<string>>> sectionAndKeyValuePairs in _values)
 			{
-				var sectionName = sectionAndKeyValuePairs.Key;
-				foreach (var keyValuePairs in sectionAndKeyValuePairs.Value)
+				string sectionName = sectionAndKeyValuePairs.Key;
+				foreach (KeyValuePair<string, List<string>> keyValuePairs in sectionAndKeyValuePairs.Value)
 				{
-					var keyName = keyValuePairs.Key;
-					var valueList = keyValuePairs.Value;
+					string keyName = keyValuePairs.Key;
+					List<string> valueList = keyValuePairs.Value;
 
-					foreach (var value in valueList)
+					foreach (string value in valueList)
 					{
 						if (!result.ContainsKey(sectionName))
 						{
@@ -138,11 +139,11 @@ namespace GTA
 
 			try
 			{
-				foreach (var section in result)
+				foreach (KeyValuePair<string, List<Tuple<string, string>>> section in result)
 				{
 					writer.WriteLine("[" + section.Key + "]");
 
-					foreach (var value in section.Value)
+					foreach (Tuple<string, string> value in section.Value)
 					{
 						writer.WriteLine(value.Item1 + " = " + value.Item2);
 					}
@@ -171,11 +172,11 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public T GetValue<T>(string section, string name, T defaultvalue)
 		{
-			if (!_values.TryGetValue(section, out var keyValuePairs))
+			if (!_values.TryGetValue(section, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return defaultvalue;
 			}
-			if (!keyValuePairs.TryGetValue(name, out var valueList))
+			if (!keyValuePairs.TryGetValue(name, out List<string> valueList))
 			{
 				return defaultvalue;
 			}
@@ -220,11 +221,11 @@ namespace GTA
 		/// <returns>The value at <see paramref="name"/> in <see paramref="section"/>.</returns>
 		public string GetValue(string section, string key, string defaultvalue)
 		{
-			if (!_values.TryGetValue(section, out var keyValuePairs))
+			if (!_values.TryGetValue(section, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return defaultvalue;
 			}
-			if (!keyValuePairs.TryGetValue(key, out var valueList))
+			if (!keyValuePairs.TryGetValue(key, out List<string> valueList))
 			{
 				return defaultvalue;
 			}
@@ -243,11 +244,11 @@ namespace GTA
 		/// </remarks>
 		public string[] GetAllValues(string section, string key)
 		{
-			if (!_values.TryGetValue(section, out var keyValuePairs))
+			if (!_values.TryGetValue(section, out Dictionary<string, List<string>> keyValuePairs))
 			{
 				return Array.Empty<string>();
 			}
-			if (!keyValuePairs.TryGetValue(key, out var stringValueList))
+			if (!keyValuePairs.TryGetValue(key, out List<string> stringValueList))
 			{
 				return Array.Empty<string>();
 			}
@@ -281,7 +282,7 @@ namespace GTA
 		/// </remarks>
 		public void SetValue(string section, string key, string value)
 		{
-			if (_values.TryGetValue(section, out var keyAndValuePairs) && keyAndValuePairs.TryGetValue(key, out var valueList))
+			if (_values.TryGetValue(section, out Dictionary<string, List<string>> keyAndValuePairs) && keyAndValuePairs.TryGetValue(key, out List<string> valueList))
 			{
 				// Assume the value list already occupies the index 0
 				valueList[0] = value;
@@ -293,9 +294,9 @@ namespace GTA
 
 		private void AddNewValueInternal(string sectionName, string keyName, string valueString)
 		{
-			if (_values.TryGetValue(sectionName, out var keyAndValuePairs))
+			if (_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyAndValuePairs))
 			{
-				if (keyAndValuePairs.TryGetValue(keyName, out var valueList))
+				if (keyAndValuePairs.TryGetValue(keyName, out List<string> valueList))
 				{
 					valueList.Add(valueString);
 				}

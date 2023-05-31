@@ -41,7 +41,7 @@ namespace GTA
 		/// </returns>
 		public static Entity FromHandle(int handle)
 		{
-			var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+			IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
 			if (address == IntPtr.Zero)
 			{
 				return null;
@@ -75,7 +75,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return EntityType.Invalid;
@@ -107,7 +107,7 @@ namespace GTA
 			get => (EntityPopulationType)Function.Call<int>(Hash.GET_ENTITY_POPULATION_TYPE, Handle);
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -220,7 +220,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -284,7 +284,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -294,7 +294,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -324,7 +324,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.EntityMaxHealthOffset == 0)
 				{
 					return 0.0f;
@@ -334,7 +334,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.EntityMaxHealthOffset == 0)
 				{
 					return;
@@ -357,14 +357,14 @@ namespace GTA
 					return;
 				}
 
-				var unkPedState = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.UnkCPedStateOffset);
+				byte unkPedState = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.UnkCPedStateOffset);
 				if (unkPedState != 2)
 				{
 					return;
 				}
 
 
-				var cPlayerInfo = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.PedPlayerInfoOffset);
+				IntPtr cPlayerInfo = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.PedPlayerInfoOffset);
 				if (cPlayerInfo == IntPtr.Zero)
 				{
 					return;
@@ -387,7 +387,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return new Matrix();
@@ -486,7 +486,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
@@ -503,7 +503,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
@@ -520,7 +520,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;
@@ -537,7 +537,7 @@ namespace GTA
 		{
 			get
 			{
-				Model.GetDimensions(out var rearBottomLeft, out _);
+				Model.GetDimensions(out Vector3 rearBottomLeft, out _);
 				return GetOffsetPosition(new Vector3(rearBottomLeft.X, 0, 0));
 			}
 		}
@@ -549,7 +549,7 @@ namespace GTA
 		{
 			get
 			{
-				Model.GetDimensions(out _, out var frontTopRight);
+				Model.GetDimensions(out _, out Vector3 frontTopRight);
 				return GetOffsetPosition(new Vector3(frontTopRight.X, 0, 0));
 			}
 		}
@@ -561,7 +561,7 @@ namespace GTA
 		{
 			get
 			{
-				Model.GetDimensions(out var rearBottomLeft, out _);
+				Model.GetDimensions(out Vector3 rearBottomLeft, out _);
 				return GetOffsetPosition(new Vector3(0, rearBottomLeft.Y, 0));
 			}
 		}
@@ -573,7 +573,7 @@ namespace GTA
 		{
 			get
 			{
-				Model.GetDimensions(out _, out var frontTopRight);
+				Model.GetDimensions(out _, out Vector3 frontTopRight);
 				return GetOffsetPosition(new Vector3(0, frontTopRight.Y, 0));
 			}
 		}
@@ -585,7 +585,7 @@ namespace GTA
 		{
 			get
 			{
-				Model.GetDimensions(out _, out var frontTopRight);
+				Model.GetDimensions(out _, out Vector3 frontTopRight);
 				return GetOffsetPosition(new Vector3(0, 0, frontTopRight.Z));
 			}
 		}
@@ -597,7 +597,7 @@ namespace GTA
 		{
 			get
 			{
-				Model.GetDimensions(out var rearBottomLeft, out _);
+				Model.GetDimensions(out Vector3 rearBottomLeft, out _);
 				return GetOffsetPosition(new Vector3(0, 0, rearBottomLeft.Z));
 			}
 		}
@@ -658,13 +658,13 @@ namespace GTA
 			get => Function.Call<Vector3>(Hash.GET_ENTITY_ROTATION_VELOCITY, Handle);
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var angularVelocityInLocalAxes = Quaternion * value;
+				Vector3 angularVelocityInLocalAxes = Quaternion * value;
 				SHVDN.NativeMemory.SetEntityAngularVelocity(address, angularVelocityInLocalAxes.X, angularVelocityInLocalAxes.Y, angularVelocityInLocalAxes.Z);
 			}
 		}
@@ -676,7 +676,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -684,13 +684,13 @@ namespace GTA
 
 				unsafe
 				{
-					var returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
+					float* returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
 					return new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]);
 				}
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -707,29 +707,29 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
 				}
 
-				var quaternionInverted = Quaternion;
+				Quaternion quaternionInverted = Quaternion;
 				quaternionInverted.Invert();
 				unsafe
 				{
-					var returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
+					float* returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
 					return (quaternionInverted * new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]));
 				}
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var angularVelocityWorldSpace = Quaternion * value;
+				Vector3 angularVelocityWorldSpace = Quaternion * value;
 				SHVDN.NativeMemory.SetEntityAngularVelocity(address, angularVelocityWorldSpace.X, angularVelocityWorldSpace.Y, angularVelocityWorldSpace.Z);
 			}
 		}
@@ -805,7 +805,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -826,7 +826,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -846,7 +846,7 @@ namespace GTA
 		/// </returns>
 		public bool DetachFragmentPart(int fragmentGroupIndex)
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
 				return false;
@@ -870,7 +870,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -880,7 +880,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -901,7 +901,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -911,7 +911,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -931,7 +931,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -941,7 +941,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -962,7 +962,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -972,7 +972,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -993,7 +993,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1003,7 +1003,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -1024,7 +1024,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1034,7 +1034,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -1054,7 +1054,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1064,7 +1064,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -1084,7 +1084,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1094,7 +1094,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -1115,7 +1115,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1137,7 +1137,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1182,7 +1182,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -1250,7 +1250,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return true;
@@ -1441,7 +1441,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_BLIP_FROM_ENTITY, Handle);
+				int handle = Function.Call<int>(Hash.GET_BLIP_FROM_ENTITY, Handle);
 
 				if (Function.Call<bool>(Hash.DOES_BLIP_EXIST, handle))
 				{
@@ -1721,7 +1721,7 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -1741,7 +1741,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{

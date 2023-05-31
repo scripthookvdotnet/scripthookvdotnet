@@ -176,7 +176,7 @@ namespace GTA
 		/// </summary>
 		public void Remove()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.REMOVE_BLIP, &handle);

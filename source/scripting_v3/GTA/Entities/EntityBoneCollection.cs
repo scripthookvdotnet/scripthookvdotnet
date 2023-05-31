@@ -97,7 +97,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(_owner.Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(_owner.Handle);
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;

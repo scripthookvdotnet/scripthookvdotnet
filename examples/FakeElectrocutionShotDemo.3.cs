@@ -15,12 +15,12 @@ public class FakeElectrocutionShotDemo : Script
 	}
 
 	// Shot_Base (priority: 0)
-	static private void StartShotBaseNmMessages(Ped ped)
+	private static void StartShotBaseNmMessages(Ped ped)
 	{
-		var balancerCollisionsReactionNM = ped.Euphoria.BalancerCollisionsReaction;
+		BalancerCollisionsReactionHelper balancerCollisionsReactionNM = ped.Euphoria.BalancerCollisionsReaction;
 		balancerCollisionsReactionNM.Start();
 
-		var fallOverWallNM = ped.Euphoria.FallOverWall;
+		FallOverWallHelper fallOverWallNM = ped.Euphoria.FallOverWall;
 		fallOverWallNM.MoveLegs = true;
 		fallOverWallNM.MoveArms = false;
 		fallOverWallNM.BendSpine = true;
@@ -31,24 +31,24 @@ public class FakeElectrocutionShotDemo : Script
 		fallOverWallNM.BodyTwist = 0.54f;
 		fallOverWallNM.Start();
 
-		var shotNM = ped.Euphoria.Shot;
+		ShotHelper shotNM = ped.Euphoria.Shot;
 		shotNM.Start();
 
-		var ShotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
+		ShotConfigureArmsHelper ShotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		ShotConfigureArmsNM.PointGun = true;
 		ShotConfigureArmsNM.Start();
 
 		// You can send NM message to a ped without setting "start" parameter to true so this message can update parameters of the running behavior
-		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
+		ConfigureBalanceHelper ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
 		ConfigureBalanceNM.FallMult = 40f;
 		ConfigureBalanceNM.Update();
 	}
 
 	// normal in WeaponSets (priority: 5)
 	// NmShotTuningSet is set to normal in WEAPON_STUNGUN config in weapons.meta.
-	static private void StartNormalWeapomNmMessages(Ped ped)
+	private static void StartNormalWeapomNmMessages(Ped ped)
 	{
-		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
+		ConfigureBalanceHelper ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
 		ConfigureBalanceNM.StableLinSpeedThresh = 0.7f;
 		ConfigureBalanceNM.StableRotSpeedThresh = 0.85f;
 		ConfigureBalanceNM.UseComDirTurnVelThresh = 0.6f;
@@ -67,7 +67,7 @@ public class FakeElectrocutionShotDemo : Script
 		ConfigureBalanceNM.DontStepTime = 0.2f;
 		ConfigureBalanceNM.Start();
 
-		var shotNM = ped.Euphoria.Shot;
+		ShotHelper shotNM = ped.Euphoria.Shot;
 		shotNM.InitialNeckStiffness = 5.0f;
 		shotNM.InitialNeckDamping = 2.0f;
 		shotNM.Looseness4Fall = 0.7f;
@@ -94,7 +94,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotNM.FlingTime = 0.05f;
 		shotNM.Start();
 
-		var shotSnapNM = ped.Euphoria.ShotSnap;
+		ShotSnapHelper shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.Snap = true;
 		shotSnapNM.SnapMag = 1f;
 		shotSnapNM.SnapDirectionRandomness = 0f;
@@ -117,7 +117,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotSnapNM.SnapUseTorques = true;
 		shotSnapNM.Start();
 
-		var shotShockSpinNM = ped.Euphoria.ShotShockSpin;
+		ShotShockSpinHelper shotShockSpinNM = ped.Euphoria.ShotShockSpin;
 		shotShockSpinNM.AddShockSpin = false;
 		shotShockSpinNM.AlwaysAddShockSpin = false;
 		shotShockSpinNM.ShockSpinMin = 100f;
@@ -125,7 +125,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotShockSpinNM.BracedSideSpinMult = 2f;
 		shotShockSpinNM.Start();
 
-		var configureBulletsNM = ped.Euphoria.ConfigureBullets;
+		ConfigureBulletsHelper configureBulletsNM = ped.Euphoria.ConfigureBullets;
 		configureBulletsNM.LoosenessFix = true;
 		configureBulletsNM.ImpulseReductionPerShot = 0.1f;
 		configureBulletsNM.ImpulseRecovery = 0f;
@@ -145,7 +145,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureBulletsNM.ImpulseAirMult = 1.0f;
 		configureBulletsNM.Start();
 
-		var configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
+		ConfigureShotInjuredLegHelper configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
 		configureShotInjuredLegNM.TimeBeforeCollapseWoundLeg = 0f;
 		configureShotInjuredLegNM.LegInjuryTime = 1.4f;
 		configureShotInjuredLegNM.LegLimpBend = 0.2f;
@@ -154,7 +154,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureShotInjuredLegNM.LegInjuryHipPitch = -0.1f;
 		configureShotInjuredLegNM.Start();
 
-		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
+		ShotConfigureArmsHelper shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Brace = false;
 		shotConfigureArmsNM.UseArmsWindmill = false;
 		shotConfigureArmsNM.ReleaseWound = 0;
@@ -164,13 +164,13 @@ public class FakeElectrocutionShotDemo : Script
 		shotConfigureArmsNM.AWStiffnessAdd = 0f;
 		shotConfigureArmsNM.Start();
 
-		var bodyBalanceNM = ped.Euphoria.BodyBalance;
+		BodyBalanceHelper bodyBalanceNM = ped.Euphoria.BodyBalance;
 		bodyBalanceNM.UseBodyTurn = true;
 		bodyBalanceNM.SpineStiffness = 12f;
 		bodyBalanceNM.Shoulder = 1f;
 		bodyBalanceNM.Start();
 
-		var shotInGutsNM = ped.Euphoria.ShotInGuts;
+		ShotInGutsHelper shotInGutsNM = ped.Euphoria.ShotInGuts;
 		shotInGutsNM.ShotInGuts = true;
 		shotInGutsNM.SigSpineAmount = 2f;
 		shotInGutsNM.SigNeckAmount = 0f;
@@ -181,7 +181,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotInGutsNM.SigKneesOnset = 0f;
 		shotInGutsNM.Update();
 
-		var stayUprightNM = ped.Euphoria.StayUpright;
+		StayUprightHelper stayUprightNM = ped.Euphoria.StayUpright;
 		stayUprightNM.UseForces = true;
 		stayUprightNM.UseTorques = true;
 		stayUprightNM.LastStandMode = false;
@@ -212,37 +212,37 @@ public class FakeElectrocutionShotDemo : Script
 		stayUprightNM.StayUpAccMax = 5.0f;
 		stayUprightNM.Update();
 
-		var smartFallNM = ped.Euphoria.SmartFall;
+		SmartFallHelper smartFallNM = ped.Euphoria.SmartFall;
 		smartFallNM.SplatWhenStopped = 5.0f;
 		smartFallNM.BlendHeadWhenStopped = 0.8f;
 		smartFallNM.Update();
 
-		var setFallingReactionNM = ped.Euphoria.SetFallingReaction;
+		SetFallingReactionHelper setFallingReactionNM = ped.Euphoria.SetFallingReaction;
 		setFallingReactionNM.AntiPropClav = true;
 		setFallingReactionNM.Start();
 	}
 
 	// Shot_Base (priority: 0)
-	static private void StartBackShotNmMessages(Ped ped)
+	private static void StartBackShotNmMessages(Ped ped)
 	{
-		var stayUprightNM = ped.Euphoria.StayUpright;
+		StayUprightHelper stayUprightNM = ped.Euphoria.StayUpright;
 		stayUprightNM.UseForces = true;
 		stayUprightNM.TurnTowardsBullets = false;
 		stayUprightNM.ForceStrength = 0f;
 		stayUprightNM.Start();
 
-		var shotNM = ped.Euphoria.Shot;
+		ShotHelper shotNM = ped.Euphoria.Shot;
 		shotNM.BodyStiffness = 7f;
 		shotNM.Fling = false;
 		shotNM.BodyStiffness = 1f;
 		shotNM.Update();
 
-		var configureBulletsExtraNM = ped.Euphoria.ConfigureBulletsExtra;
+		ConfigureBulletsExtraHelper configureBulletsExtraNM = ped.Euphoria.ConfigureBulletsExtra;
 		configureBulletsExtraNM.RbRatio = 0f;
 		configureBulletsExtraNM.LiftGain = 1f;
 		configureBulletsExtraNM.Stop();
 
-		var applyBulletImpulseNM = ped.Euphoria.ApplyBulletImpulse;
+		ApplyBulletImpulseHelper applyBulletImpulseNM = ped.Euphoria.ApplyBulletImpulse;
 		applyBulletImpulseNM.EqualizeAmount = 0f;
 		applyBulletImpulseNM.PartIndex = 0;
 		applyBulletImpulseNM.Impulse = Vector3.Zero;
@@ -251,10 +251,10 @@ public class FakeElectrocutionShotDemo : Script
 		applyBulletImpulseNM.ExtraShare = -2f;
 		applyBulletImpulseNM.Stop();
 
-		var shotFromBehindNM = ped.Euphoria.ShotFromBehind;
+		ShotFromBehindHelper shotFromBehindNM = ped.Euphoria.ShotFromBehind;
 		shotFromBehindNM.Stop();
 
-		var configureBalanceNM = ped.Euphoria.ConfigureBalance;
+		ConfigureBalanceHelper configureBalanceNM = ped.Euphoria.ConfigureBalance;
 		configureBalanceNM.TaperKneeStrength = true;
 		configureBalanceNM.LegStiffness = 0f;
 		configureBalanceNM.GiveUpHeight = 1f;
@@ -270,21 +270,21 @@ public class FakeElectrocutionShotDemo : Script
 		configureBalanceNM.BalanceAbortThreshold = 0.1f;
 		configureBalanceNM.Start();
 
-		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
+		ShotConfigureArmsHelper shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Fling2 = true;
 		shotConfigureArmsNM.PointGun = true;
 		shotConfigureArmsNM.Start();
 
-		var shotSnapNM = ped.Euphoria.ShotSnap;
+		ShotSnapHelper shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.SnapHitPart = false;
 		shotSnapNM.SnapMag = 1.5f;
 		shotSnapNM.Update();
 	}
 
 	// Shot_Electrocute (priority: 15)
-	static private void StartShotElectrocuteMessages(Ped ped)
+	private static void StartShotElectrocuteMessages(Ped ped)
 	{
-		var elecNM = ped.Euphoria.Electrocute;
+		ElectrocuteHelper elecNM = ped.Euphoria.Electrocute;
 		elecNM.StunMag = 0.2f;
 		elecNM.ApplyStiffness = false;
 		elecNM.UseTorques = true;
@@ -300,51 +300,51 @@ public class FakeElectrocutionShotDemo : Script
 		elecNM.RightLeg = true;
 		elecNM.Start();
 
-		var forceLeanRandomNM = ped.Euphoria.ForceLeanRandom;
+		ForceLeanRandomHelper forceLeanRandomNM = ped.Euphoria.ForceLeanRandom;
 		forceLeanRandomNM.LeanAmountMin = 0.1f;
 		forceLeanRandomNM.LeanAmountMax = 0.1f;
 		forceLeanRandomNM.BodyPart = 10;
 		forceLeanRandomNM.Start();
 
-		var ShotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
+		ShotFallToKneesHelper ShotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
 		ShotFallToKneesNM.FallToKnees = true;
 		ShotFallToKneesNM.FtkAlwaysChangeFall = true;
 		ShotFallToKneesNM.FtkBalanceTime = 1f;
 		ShotFallToKneesNM.FtkHelperForce = 100f;
 		ShotFallToKneesNM.Start();
 
-		var staggerFallNM = ped.Euphoria.StaggerFall;
+		StaggerFallHelper staggerFallNM = ped.Euphoria.StaggerFall;
 		staggerFallNM.UpperBodyReaction = false;
 		staggerFallNM.Start();
 
-		var ShotSnapNM = ped.Euphoria.ShotSnap;
+		ShotSnapHelper ShotSnapNM = ped.Euphoria.ShotSnap;
 		ShotSnapNM.ResetArguments();
 
-		var setFallingReactionNM = ped.Euphoria.SetFallingReaction;
+		SetFallingReactionHelper setFallingReactionNM = ped.Euphoria.SetFallingReaction;
 		setFallingReactionNM.HandsAndKnees = false;
 		setFallingReactionNM.CallRDS = false;
 		setFallingReactionNM.Update();
 
-		var pointGunNM = ped.Euphoria.PointGun;
+		PointGunHelper pointGunNM = ped.Euphoria.PointGun;
 		pointGunNM.ResetArguments();
 		pointGunNM.EnableLeft = false;
 		pointGunNM.EnableRight = false;
 		pointGunNM.Start();
 
-		var ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
+		ConfigureBalanceHelper ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
 		ConfigureBalanceNM.ResetArguments();
 		ConfigureBalanceNM.FootFriction = 0.5f;
 		ConfigureBalanceNM.Start();
 	}
 
 	// Shot_LegShot (priority: 21)
-	static private void StartLegShot21Messages(Ped ped)
+	private static void StartLegShot21Messages(Ped ped)
 	{
-		var configureBulletsNM = ped.Euphoria.ConfigureBullets;
+		ConfigureBulletsHelper configureBulletsNM = ped.Euphoria.ConfigureBullets;
 		configureBulletsNM.RbLowerShare = 0.5f;
 		configureBulletsNM.Update();
 
-		var configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
+		ConfigureShotInjuredLegHelper configureShotInjuredLegNM = ped.Euphoria.ConfigureShotInjuredLeg;
 		configureShotInjuredLegNM.TimeBeforeCollapseWoundLeg = 0.5f;
 		configureShotInjuredLegNM.LegInjuryTime = 0.5f;
 		configureShotInjuredLegNM.LegLimpBend = 0.21f;
@@ -356,7 +356,7 @@ public class FakeElectrocutionShotDemo : Script
 		configureShotInjuredLegNM.LegInjuryLiftSpineBend = 1f;
 		configureShotInjuredLegNM.Start();
 
-		var shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
+		ShotConfigureArmsHelper shotConfigureArmsNM = ped.Euphoria.ShotConfigureArms;
 		shotConfigureArmsNM.Brace = false;
 		shotConfigureArmsNM.PointGun = true;
 		shotConfigureArmsNM.UseArmsWindmill = true;
@@ -371,7 +371,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotConfigureArmsNM.RfwWithPistol = false;
 		shotConfigureArmsNM.Update();
 
-		var shotNM = ped.Euphoria.Shot;
+		ShotHelper shotNM = ped.Euphoria.Shot;
 		shotNM.AllowInjuredLeg = true;
 		shotNM.AllowInjuredLowerLegReach = true;
 		shotNM.AllowInjuredThighReach = true;
@@ -430,19 +430,19 @@ public class FakeElectrocutionShotDemo : Script
 		shotNM.DeathTime = -1f;
 		shotNM.Update();
 
-		var stayUprightNM = ped.Euphoria.StayUpright;
+		StayUprightHelper stayUprightNM = ped.Euphoria.StayUpright;
 		stayUprightNM.Stop();
 
-		var configureBalanceNM = ped.Euphoria.ConfigureBalance;
+		ConfigureBalanceHelper configureBalanceNM = ped.Euphoria.ConfigureBalance;
 		configureBalanceNM.StableLinSpeedThresh = 0.35f;
 		configureBalanceNM.StableRotSpeedThresh = 0.4f;
 		configureBalanceNM.BalanceAbortThreshold = 0.6f;
 		configureBalanceNM.Update();
 
-		var shotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
+		ShotFallToKneesHelper shotFallToKneesNM = ped.Euphoria.ShotFallToKnees;
 		shotFallToKneesNM.Start();
 
-		var shotSnapNM = ped.Euphoria.ShotSnap;
+		ShotSnapHelper shotSnapNM = ped.Euphoria.ShotSnap;
 		shotSnapNM.Snap = true;
 		shotSnapNM.SnapMag = 1f;
 		shotSnapNM.SnapMovingMult = 1f;
@@ -465,12 +465,12 @@ public class FakeElectrocutionShotDemo : Script
 		shotSnapNM.SnapUseTorques = true;
 		shotSnapNM.Update();
 
-		var headLookNM = ped.Euphoria.HeadLook;
+		HeadLookHelper headLookNM = ped.Euphoria.HeadLook;
 		headLookNM.AlwaysLook = true;
 		headLookNM.KeepHeadAwayFromGround = true;
 		headLookNM.Update();
 
-		var shotHeadLookNM = ped.Euphoria.ShotHeadLook;
+		ShotHeadLookHelper shotHeadLookNM = ped.Euphoria.ShotHeadLook;
 		shotHeadLookNM.UseHeadLook = true;
 		shotHeadLookNM.HeadLook = Vector3.Zero;
 		shotHeadLookNM.HeadLookAtWoundMinTimer = 0f;
@@ -479,7 +479,7 @@ public class FakeElectrocutionShotDemo : Script
 		shotHeadLookNM.HeadLookAtHeadPosMinTimer = 10f;
 		shotHeadLookNM.Update();
 
-		var staggerFallNM = ped.Euphoria.StaggerFall;
+		StaggerFallHelper staggerFallNM = ped.Euphoria.StaggerFall;
 		staggerFallNM.Stop();
 	}
 

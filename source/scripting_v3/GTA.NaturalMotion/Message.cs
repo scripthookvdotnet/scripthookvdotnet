@@ -40,7 +40,9 @@ namespace GTA.NaturalMotion
 		public void Abort(Ped target)
 		{
 			if (target == null || !target.Exists())
+			{
 				return;
+			}
 
 			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _stopArgument, null);
 		}
@@ -56,7 +58,9 @@ namespace GTA.NaturalMotion
 		public void SendTo(Ped target)
 		{
 			if (target == null || !target.Exists())
+			{
 				return;
+			}
 
 			if (!target.IsRagdoll)
 			{
@@ -84,7 +88,9 @@ namespace GTA.NaturalMotion
 		public void SendTo(Ped target, int duration)
 		{
 			if (target == null || !target.Exists())
+			{
 				return;
+			}
 
 			if (!target.CanRagdoll)
 			{
@@ -105,7 +111,7 @@ namespace GTA.NaturalMotion
 		{
 			CreateBoolIntFloatArgDictIfNotCreated();
 
-			var valueConverted = value ? 1 : 0;
+			int valueConverted = value ? 1 : 0;
 			_boolIntFloatArguments[argName] = (valueConverted, typeof(bool));
 		}
 		/// <summary>
@@ -130,7 +136,7 @@ namespace GTA.NaturalMotion
 
 			unsafe
 			{
-				var valueConverted = *(int*)&value;
+				int valueConverted = *(int*)&value;
 				_boolIntFloatArguments[argName] = (valueConverted, typeof(float));
 			}
 		}
@@ -168,7 +174,11 @@ namespace GTA.NaturalMotion
 				return _boolIntFloatArguments.Remove(argName);
 			}
 
-			if (_stringVector3ArrayArguments == null) return false;
+			if (_stringVector3ArrayArguments == null)
+			{
+				return false;
+			}
+
 			return _stringVector3ArrayArguments.Remove(argName);
 		}
 

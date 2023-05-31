@@ -9,10 +9,10 @@ public class IndicatorControl : Script
 		Interval = 100;
 	}
 
-	readonly bool[] _active = new bool[2];
-	readonly DateTime[] _timeLeft = new DateTime[2];
+	private readonly bool[] _active = new bool[2];
+	private readonly DateTime[] _timeLeft = new DateTime[2];
 
-	void OnTick(object sender, EventArgs e)
+	private void OnTick(object sender, EventArgs e)
 	{
 		Ped playerPed = Game.LocalPlayerPed;
 

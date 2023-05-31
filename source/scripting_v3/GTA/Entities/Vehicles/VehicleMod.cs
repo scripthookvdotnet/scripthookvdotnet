@@ -108,8 +108,8 @@ namespace GTA
 		{
 			get
 			{
-				var index = Index;
-				var count = Count;
+				int index = Index;
+				int count = Count;
 				// This still needs a little more work, but its better than what it used to be
 				if (count == 0)
 				{
@@ -129,9 +129,16 @@ namespace GTA
 				string cur;
 				if (Type == VehicleModType.Horns)
 				{
-					if (!_hornNames.ContainsKey(index)) return string.Empty;
+					if (!_hornNames.ContainsKey(index))
+					{
+						return string.Empty;
+					}
+
 					if (string.IsNullOrEmpty(Game.GetLocalizedString(_hornNames[index].Item1)))
+					{
 						return _hornNames[index].Item2;
+					}
+
 					return Game.GetLocalizedString(_hornNames[index].Item1);
 				}
 				if (Type == VehicleModType.FrontWheel || Type == VehicleModType.RearWheel)
@@ -224,7 +231,7 @@ namespace GTA
 					Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 					Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
 				}
-				var cur = string.Empty;
+				string cur = string.Empty;
 				switch (Type)
 				{
 					case VehicleModType.Armor:

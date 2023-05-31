@@ -11,9 +11,9 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuButton : IMenuItem
 	{
-		UIText text = null;
-		UIRectangle button = null;
-		string caption;
+		private UIText text = null;
+		private UIRectangle button = null;
+		private string caption;
 
 		public MenuButton(string caption) : this(caption, string.Empty)
 		{
@@ -90,7 +90,7 @@ namespace GTA
 				Parent.UnselectedItemColor);
 		}
 
-		void UpdateText()
+		private void UpdateText()
 		{
 			text.Caption = Caption;
 		}

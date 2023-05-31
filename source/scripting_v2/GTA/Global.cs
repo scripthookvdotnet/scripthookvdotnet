@@ -12,7 +12,7 @@ namespace GTA
 {
 	public unsafe struct Global
 	{
-		readonly IntPtr address;
+		private readonly IntPtr address;
 
 		internal Global(int index)
 		{
@@ -31,7 +31,7 @@ namespace GTA
 		}
 		public unsafe void SetString(string value)
 		{
-			var size = Encoding.UTF8.GetByteCount(value);
+			int size = Encoding.UTF8.GetByteCount(value);
 			Marshal.Copy(Encoding.UTF8.GetBytes(value), 0, address, size);
 			*((byte*)MemoryAddress + size) = 0;
 		}

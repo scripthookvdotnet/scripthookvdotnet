@@ -93,7 +93,7 @@ namespace GTA.NaturalMotion
 		{
 			CreateBoolIntFloatArgDictIfNotCreated();
 
-			var valueConverted = value ? 1 : 0;
+			int valueConverted = value ? 1 : 0;
 			_boolIntFloatArguments[message] = (valueConverted, typeof(bool));
 		}
 		/// <summary>
@@ -118,7 +118,7 @@ namespace GTA.NaturalMotion
 
 			unsafe
 			{
-				var valueConverted = *(int*)&value;
+				int valueConverted = *(int*)&value;
 				_boolIntFloatArguments[message] = (valueConverted, typeof(float));
 			}
 		}

@@ -10,6 +10,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using GTA.Math;
 
 
 namespace GTA.Native
@@ -30,8 +31,8 @@ namespace GTA.Native
 
 			static CastCache()
 			{
-				var paramExp = Expression.Parameter(typeof(TFrom));
-				var convertExp = Expression.Convert(paramExp, typeof(T));
+				ParameterExpression paramExp = Expression.Parameter(typeof(TFrom));
+				UnaryExpression convertExp = Expression.Convert(paramExp, typeof(T));
 				Cast = Expression.Lambda<Func<TFrom, T>>(convertExp, paramExp).Compile();
 			}
 		}
@@ -43,7 +44,7 @@ namespace GTA.Native
 			var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
 				new Type[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
 
-			var generator = ptrToStrMethod.GetILGenerator();
+			ILGenerator generator = ptrToStrMethod.GetILGenerator();
 			generator.Emit(OpCodes.Ldarg_0);
 			generator.Emit(OpCodes.Ldobj, typeof(T));
 			generator.Emit(OpCodes.Ret);
@@ -67,11 +68,11 @@ namespace GTA.Native
 
 		static InstanceCreator()
 		{
-			var constructorInfo = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
+			ConstructorInfo constructorInfo = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
 				new[] { typeof(T1) }, null);
-			var arg1Exp = Expression.Parameter(typeof(T1));
+			ParameterExpression arg1Exp = Expression.Parameter(typeof(T1));
 
-			var newExp = Expression.New(constructorInfo, arg1Exp);
+			NewExpression newExp = Expression.New(constructorInfo, arg1Exp);
 			var lambdaExp = Expression.Lambda<Func<T1, TInstance>>(newExp, arg1Exp);
 			Create = lambdaExp.Compile();
 		}
@@ -82,12 +83,12 @@ namespace GTA.Native
 
 		static InstanceCreator()
 		{
-			var constructorInfo = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
+			ConstructorInfo constructorInfo = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
 				new[] { typeof(T1), typeof(T2) }, null);
-			var arg1Exp = Expression.Parameter(typeof(T1));
-			var arg2Exp = Expression.Parameter(typeof(T2));
+			ParameterExpression arg1Exp = Expression.Parameter(typeof(T1));
+			ParameterExpression arg2Exp = Expression.Parameter(typeof(T2));
 
-			var newExp = Expression.New(constructorInfo, arg1Exp, arg2Exp);
+			NewExpression newExp = Expression.New(constructorInfo, arg1Exp, arg2Exp);
 			var lambdaExp = Expression.Lambda<Func<T1, T2, TInstance>>(newExp, arg1Exp, arg2Exp);
 			Create = lambdaExp.Compile();
 		}
@@ -98,13 +99,13 @@ namespace GTA.Native
 
 		static InstanceCreator()
 		{
-			var constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
+			ConstructorInfo constructor = typeof(TInstance).GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, Type.DefaultBinder,
 				new[] { typeof(T1), typeof(T2), typeof(T3) }, null);
-			var arg1 = Expression.Parameter(typeof(T1));
-			var arg2 = Expression.Parameter(typeof(T2));
-			var arg3 = Expression.Parameter(typeof(T3));
+			ParameterExpression arg1 = Expression.Parameter(typeof(T1));
+			ParameterExpression arg2 = Expression.Parameter(typeof(T2));
+			ParameterExpression arg3 = Expression.Parameter(typeof(T3));
 
-			var newExp = Expression.New(constructor, arg1, arg2, arg3);
+			NewExpression newExp = Expression.New(constructor, arg1, arg2, arg3);
 			var lambdaExp = Expression.Lambda<Func<T1, T2, T3, TInstance>>(newExp, arg1, arg2, arg3);
 			Create = lambdaExp.Compile();
 		}
@@ -218,7 +219,7 @@ namespace GTA.Native
 		public static implicit operator InputArgument(Enum value)
 		{
 			// Note: The value will be boxed if the original value is a concrete enum
-			var enumDataType = Enum.GetUnderlyingType(value.GetType());
+			Type enumDataType = Enum.GetUnderlyingType(value.GetType());
 			ulong ulongValue = 0;
 
 			if (enumDataType == typeof(int))
@@ -366,15 +367,15 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
-				var argPtr = stackalloc ulong[argCount];
+				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				ulong* argPtr = stackalloc ulong[argCount];
 
-				for (var i = 0; i < argCount; ++i)
+				for (int i = 0; i < argCount; ++i)
 				{
 					argPtr[i] = arguments[i]._data;
 				}
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -389,7 +390,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, null, 0);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -404,11 +405,11 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 1;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -424,12 +425,12 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 2;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -446,13 +447,13 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 3;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
 				argPtr[2] = argument2._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -470,14 +471,14 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 4;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
 				argPtr[2] = argument2._data;
 				argPtr[3] = argument3._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -501,7 +502,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 5;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -509,7 +510,7 @@ namespace GTA.Native
 				argPtr[3] = argument3._data;
 				argPtr[4] = argument4._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -535,7 +536,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 6;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -544,7 +545,7 @@ namespace GTA.Native
 				argPtr[4] = argument4._data;
 				argPtr[5] = argument5._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -572,7 +573,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 7;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -582,7 +583,7 @@ namespace GTA.Native
 				argPtr[5] = argument5._data;
 				argPtr[6] = argument6._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -612,7 +613,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 8;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -623,7 +624,7 @@ namespace GTA.Native
 				argPtr[6] = argument6._data;
 				argPtr[7] = argument7._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -655,7 +656,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 9;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -667,7 +668,7 @@ namespace GTA.Native
 				argPtr[7] = argument7._data;
 				argPtr[8] = argument8._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -701,7 +702,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 10;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -714,7 +715,7 @@ namespace GTA.Native
 				argPtr[8] = argument8._data;
 				argPtr[9] = argument9._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -750,7 +751,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 11;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -764,7 +765,7 @@ namespace GTA.Native
 				argPtr[9] = argument9._data;
 				argPtr[10] = argument10._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -802,7 +803,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 12;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -817,7 +818,7 @@ namespace GTA.Native
 				argPtr[10] = argument10._data;
 				argPtr[11] = argument11._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -857,7 +858,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 13;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -873,7 +874,7 @@ namespace GTA.Native
 				argPtr[11] = argument11._data;
 				argPtr[12] = argument12._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -915,7 +916,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 14;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -932,7 +933,7 @@ namespace GTA.Native
 				argPtr[12] = argument12._data;
 				argPtr[13] = argument13._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -976,7 +977,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 15;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -994,7 +995,7 @@ namespace GTA.Native
 				argPtr[13] = argument13._data;
 				argPtr[14] = argument14._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -1040,7 +1041,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 16;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1059,7 +1060,7 @@ namespace GTA.Native
 				argPtr[14] = argument14._data;
 				argPtr[15] = argument15._data;
 
-				var res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
 			}
 		}
@@ -1106,10 +1107,10 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				var argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
-				var argPtr = stackalloc ulong[argCount];
+				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				ulong* argPtr = stackalloc ulong[argCount];
 
-				for (var i = 0; i < argCount; ++i)
+				for (int i = 0; i < argCount; ++i)
 				{
 					argPtr[i] = arguments[i]._data;
 				}
@@ -1140,7 +1141,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 1;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 
@@ -1158,7 +1159,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 2;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1178,7 +1179,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 3;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1200,7 +1201,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 4;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1230,7 +1231,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 5;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1263,7 +1264,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 6;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1299,7 +1300,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 7;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1338,7 +1339,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 8;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1380,7 +1381,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 9;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1425,7 +1426,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 10;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1473,7 +1474,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 11;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1524,7 +1525,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 12;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1578,7 +1579,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 13;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1635,7 +1636,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 14;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1695,7 +1696,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 15;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1758,7 +1759,7 @@ namespace GTA.Native
 			unsafe
 			{
 				const int argCount = 16;
-				var argPtr = stackalloc ulong[argCount];
+				ulong* argPtr = stackalloc ulong[argCount];
 
 				argPtr[0] = argument0._data;
 				argPtr[1] = argument1._data;
@@ -1821,7 +1822,7 @@ namespace GTA.Native
 			if (typeof(T) == typeof(bool))
 			{
 				// Return proper boolean values (true if non-zero and false if zero)
-				var valueBool = *value != 0;
+				bool valueBool = *value != 0;
 				return NativeHelper<T>.PtrToStructure(new IntPtr(&valueBool));
 			}
 			if (typeof(T) == typeof(IntPtr)) // Has to be before 'IsPrimitive' check
@@ -1831,13 +1832,13 @@ namespace GTA.Native
 
 			if (typeof(T) == typeof(Math.Vector2))
 			{
-				var data = (float*)value;
+				float* data = (float*)value;
 				return InstanceCreator<float, float, T>.Create(data[0], data[2]);
 
 			}
 			if (typeof(T) == typeof(Math.Vector3))
 			{
-				var data = (float*)value;
+				float* data = (float*)value;
 				return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
 			}
 
@@ -1916,7 +1917,7 @@ namespace GTA.Native
 		/// <returns>A <see cref="GlobalVariable"/> instance representing the global variable.</returns>
 		public static GlobalVariable Get(int index)
 		{
-			var address = SHVDN.NativeMemory.GetGlobalPtr(index);
+			IntPtr address = SHVDN.NativeMemory.GetGlobalPtr(index);
 
 			if (address == IntPtr.Zero)
 			{
@@ -1963,7 +1964,7 @@ namespace GTA.Native
 			if (typeof(T) == typeof(Math.Vector2))
 			{
 				var val = (Math.Vector2)(object)value;
-				var data = (float*)(MemoryAddress.ToPointer());
+				float* data = (float*)(MemoryAddress.ToPointer());
 
 				data[0] = val.X;
 				data[2] = val.Y;
@@ -1972,7 +1973,7 @@ namespace GTA.Native
 			if (typeof(T) == typeof(Math.Vector3))
 			{
 				var val = (Math.Vector3)(object)(value);
-				var data = (float*)(MemoryAddress.ToPointer());
+				float* data = (float*)(MemoryAddress.ToPointer());
 
 				data[0] = val.X;
 				data[2] = val.Y;
@@ -2021,7 +2022,7 @@ namespace GTA.Native
 			value += '\0';
 
 			// Write UTF-8 string to memory
-			var size = Encoding.UTF8.GetByteCount(value);
+			int size = Encoding.UTF8.GetByteCount(value);
 
 			if (size >= maxSize)
 			{
@@ -2098,7 +2099,7 @@ namespace GTA.Native
 				throw new ArgumentOutOfRangeException(nameof(itemSize), "The item size for an array must be positive.");
 			}
 
-			var count = Read<int>();
+			int count = Read<int>();
 
 			// Globals are stored in pages that hold a maximum of 65536 items
 			if (count < 1 || count >= 65536 / itemSize)
@@ -2108,7 +2109,7 @@ namespace GTA.Native
 
 			var result = new GlobalVariable[count];
 
-			for (var i = 0; i < count; i++)
+			for (int i = 0; i < count; i++)
 			{
 				result[i] = new GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
 			}
@@ -2128,7 +2129,7 @@ namespace GTA.Native
 				throw new ArgumentOutOfRangeException(nameof(itemSize), "The item size for an array must be positive.");
 			}
 
-			var count = Read<int>();
+			int count = Read<int>();
 
 			// Globals are stored in pages that hold a maximum of 65536 items
 			if (count < 1 || count >= 65536 / itemSize)

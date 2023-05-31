@@ -31,7 +31,7 @@ namespace GTA
 			{
 				unsafe
 				{
-					var handle = Handle;
+					int handle = Handle;
 					Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, &handle);
 				}
 			}
@@ -58,7 +58,7 @@ namespace GTA
 		{
 			Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, Handle, function);
 
-			foreach (var argument in arguments)
+			foreach (object argument in arguments)
 			{
 				switch (argument)
 				{
@@ -111,10 +111,10 @@ namespace GTA
 		}
 		public void Render2DScreenSpace(PointF position, PointF size)
 		{
-			var x = position.X / UI.Screen.Width;
-			var y = position.Y / UI.Screen.Height;
-			var w = size.X / UI.Screen.Width;
-			var h = size.Y / UI.Screen.Height;
+			float x = position.X / UI.Screen.Width;
+			float y = position.Y / UI.Screen.Height;
+			float w = size.X / UI.Screen.Width;
+			float h = size.Y / UI.Screen.Height;
 
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
 		}

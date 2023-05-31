@@ -23,7 +23,7 @@ namespace GTA
 		{
 			get
 			{
-				var ownerHandle = GetOwnerEntityInternal();
+				int ownerHandle = GetOwnerEntityInternal();
 				return ownerHandle != 0 ? new Ped(ownerHandle) : null;
 			}
 		}
@@ -35,20 +35,20 @@ namespace GTA
 		{
 			get
 			{
-				var ownerHandle = GetOwnerEntityInternal();
+				int ownerHandle = GetOwnerEntityInternal();
 				return ownerHandle != 0 ? Entity.FromHandle(ownerHandle) : null;
 			}
 		}
 
 		private int GetOwnerEntityInternal()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileOwnerOffset == 0)
 			{
 				return 0;
 			}
 
-			var entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
+			IntPtr entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
 			if (entityAddress == IntPtr.Zero)
 			{
 				return 0;
@@ -64,7 +64,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileAmmoInfoOffset == 0)
 				{
 					return 0;
@@ -79,7 +79,7 @@ namespace GTA
 		/// </summary>
 		public void Explode()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
 				return;
@@ -95,7 +95,7 @@ namespace GTA
 		/// <returns>Null if not found or the entity is not a <see cref="Prop"/>, otherwise, a <see cref="Projectile"/></returns>
 		public new static Projectile FromHandle(int handle)
 		{
-			var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+			IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.ReadByte(address + 0x28) != 5)
 			{
 				return null;

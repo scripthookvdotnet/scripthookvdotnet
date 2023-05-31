@@ -11,8 +11,9 @@ namespace GTA
 	public sealed class WeaponCollection
 	{
 		#region Fields
-		readonly Ped owner;
-		readonly Dictionary<WeaponHash, Weapon> weapons = new Dictionary<WeaponHash, Weapon>();
+
+		private readonly Ped owner;
+		private readonly Dictionary<WeaponHash, Weapon> weapons = new Dictionary<WeaponHash, Weapon>();
 		#endregion
 
 		internal WeaponCollection(Ped owner)

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using Random = System.Random;
 
 namespace GTA
 {
@@ -71,12 +72,12 @@ namespace GTA
 		{
 			get
 			{
-				var year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
-				var month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
-				var day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
-				var hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-				var minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-				var second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
+				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
+				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
+				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
+				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
+				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
+				int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
 
 				return new DateTime(year, month, day, hour, minute, second);
 			}
@@ -97,9 +98,9 @@ namespace GTA
 		{
 			get
 			{
-				var hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-				var minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-				var seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
+				int hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
+				int minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
+				int seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
 
 				return new TimeSpan(hours, minutes, seconds);
 			}
@@ -143,7 +144,7 @@ namespace GTA
 		{
 			get
 			{
-				for (var i = 0; i < weatherNames.Length; i++)
+				for (int i = 0; i < weatherNames.Length; i++)
 				{
 					if (Function.Call<int>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == Game.GenerateHash(weatherNames[i]))
 					{
@@ -171,7 +172,7 @@ namespace GTA
 		{
 			get
 			{
-				for (var i = 0; i < weatherNames.Length; i++)
+				for (int i = 0; i < weatherNames.Length; i++)
 				{
 					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, weatherNames[i]))
 					{
@@ -183,7 +184,11 @@ namespace GTA
 			}
 			set
 			{
-				if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown) return;
+				if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown)
+				{
+					return;
+				}
+
 				int currentWeatherHash, nextWeatherHash;
 				float weatherTransition;
 				unsafe
@@ -270,7 +275,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetWaypointBlip();
+				int handle = SHVDN.NativeMemory.GetWaypointBlip();
 
 				if (handle != 0)
 				{
@@ -301,13 +306,13 @@ namespace GTA
 		{
 			get
 			{
-				var waypointBlip = WaypointBlip;
+				Blip waypointBlip = WaypointBlip;
 				if (waypointBlip == null)
 				{
 					return Vector3.Zero;
 				}
 
-				var position = waypointBlip.Position;
+				Vector3 position = waypointBlip.Position;
 				position.Z = GetGroundHeight((Vector2)position);
 				return position;
 			}
@@ -320,7 +325,7 @@ namespace GTA
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetAllBlips(params BlipSprite[] blipTypes)
 		{
-			var blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(blipTypesInt), handle => new Blip(handle));
 		}
 
@@ -332,7 +337,7 @@ namespace GTA
 		/// <param name="blipTypes">The blip types to include, leave blank to get all <see cref="Blip"/>s.</param>
 		public static Blip[] GetNearbyBlips(Vector3 position, float radius, params BlipSprite[] blipTypes)
 		{
-			var blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
+			int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToInternalFVector3(), radius, blipTypesInt), handle => new Blip(handle));
 		}
 
@@ -467,7 +472,7 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetAllPeds(params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(hashes), handle => new Ped(handle));
 		}
 		/// <summary>
@@ -479,8 +484,8 @@ namespace GTA
 		/// <remarks>Doesnt include the <paramref name="ped"/> in the result</remarks>
 		public static Ped[] GetNearbyPeds(Ped ped, float radius, params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
-			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius, hashes);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius, hashes);
 
 			if (handles.Length == 0)
 			{
@@ -489,7 +494,7 @@ namespace GTA
 
 			var result = new List<Ped>(handles.Length - 1);
 
-			foreach (var handle in handles)
+			foreach (int handle in handles)
 			{
 				if (handle == ped.Handle)
 				{
@@ -509,7 +514,7 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Ped"/>s to get, leave blank for all <see cref="Ped"/> <see cref="Model"/>s.</param>
 		public static Ped[] GetNearbyPeds(Vector3 position, float radius, params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius, hashes), handle => new Ped(handle));
 		}
 
@@ -531,7 +536,7 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetAllVehicles(params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(hashes), handle => new Vehicle(handle));
 		}
 		/// <summary>
@@ -543,13 +548,13 @@ namespace GTA
 		/// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
-			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius, hashes);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius, hashes);
 
 			var result = new List<Vehicle>();
-			var ignore = ped.CurrentVehicle;
+			Vehicle ignore = ped.CurrentVehicle;
 
-			foreach (var handle in handles)
+			foreach (int handle in handles)
 			{
 				if (ignore != null && handle == ignore.Handle)
 				{
@@ -569,7 +574,7 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
 		public static Vehicle[] GetNearbyVehicles(Vector3 position, float radius, params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius, hashes), handle => new Vehicle(handle));
 		}
 
@@ -591,7 +596,7 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetAllProps(params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(hashes), handle => new Prop(handle));
 		}
 		/// <summary>
@@ -602,7 +607,7 @@ namespace GTA
 		/// <param name="models">The <see cref="Model"/> of <see cref="Prop"/>s to get, leave blank for all <see cref="Prop"/> <see cref="Model"/>s.</param>
 		public static Prop[] GetNearbyProps(Vector3 position, float radius, params Model[] models)
 		{
-			var hashes = Array.ConvertAll(models, model => model.Hash);
+			int[] hashes = Array.ConvertAll(models, model => model.Hash);
 			return Array.ConvertAll(SHVDN.NativeMemory.GetPropHandles(position.ToInternalFVector3(), radius, hashes), handle => new Prop(handle));
 		}
 
@@ -739,12 +744,16 @@ namespace GTA
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
 		{
 			var closest = default(T);
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 
-			foreach (var spatial in spatials)
+			foreach (T spatial in spatials)
 			{
-				var distance = position.DistanceToSquared(spatial.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position.DistanceToSquared(spatial.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = spatial;
 				closestDistance = distance;
 			}
@@ -760,13 +769,17 @@ namespace GTA
 		public static T GetClosest<T>(Vector2 position, params T[] spatials) where T : ISpatial
 		{
 			var closest = default(T);
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
-			foreach (var spatial in spatials)
+			foreach (T spatial in spatials)
 			{
-				var distance = position3D.DistanceToSquared2D(spatial.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position3D.DistanceToSquared2D(spatial.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = spatial;
 				closestDistance = distance;
 			}
@@ -781,12 +794,16 @@ namespace GTA
 		public static Building GetClosest(Vector3 position, params Building[] buildings)
 		{
 			Building closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 
-			foreach (var building in buildings)
+			foreach (Building building in buildings)
 			{
-				var distance = position.DistanceToSquared(building.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position.DistanceToSquared(building.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = building;
 				closestDistance = distance;
 			}
@@ -801,13 +818,17 @@ namespace GTA
 		public static Building GetClosest(Vector2 position, params Building[] buildings)
 		{
 			Building closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
-			foreach (var building in buildings)
+			foreach (Building building in buildings)
 			{
-				var distance = position3D.DistanceToSquared2D(building.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position3D.DistanceToSquared2D(building.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = building;
 				closestDistance = distance;
 			}
@@ -822,12 +843,16 @@ namespace GTA
 		public static AnimatedBuilding GetClosest(Vector3 position, params AnimatedBuilding[] animatedBuildings)
 		{
 			AnimatedBuilding closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 
-			foreach (var animatedBuilding in animatedBuildings)
+			foreach (AnimatedBuilding animatedBuilding in animatedBuildings)
 			{
-				var distance = position.DistanceToSquared(animatedBuilding.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position.DistanceToSquared(animatedBuilding.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = animatedBuilding;
 				closestDistance = distance;
 			}
@@ -842,13 +867,17 @@ namespace GTA
 		public static AnimatedBuilding GetClosest(Vector2 position, params AnimatedBuilding[] animatedBuildings)
 		{
 			AnimatedBuilding closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
-			foreach (var animatedBuilding in animatedBuildings)
+			foreach (AnimatedBuilding animatedBuilding in animatedBuildings)
 			{
-				var distance = position3D.DistanceToSquared2D(animatedBuilding.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position3D.DistanceToSquared2D(animatedBuilding.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = animatedBuilding;
 				closestDistance = distance;
 			}
@@ -863,12 +892,16 @@ namespace GTA
 		public static InteriorInstance GetClosest(Vector3 position, params InteriorInstance[] interiorInstances)
 		{
 			InteriorInstance closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 
-			foreach (var interiorInstance in interiorInstances)
+			foreach (InteriorInstance interiorInstance in interiorInstances)
 			{
-				var distance = position.DistanceToSquared(interiorInstance.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position.DistanceToSquared(interiorInstance.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = interiorInstance;
 				closestDistance = distance;
 			}
@@ -883,13 +916,17 @@ namespace GTA
 		public static InteriorInstance GetClosest(Vector2 position, params InteriorInstance[] interiorInstances)
 		{
 			InteriorInstance closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
-			foreach (var interiorInstance in interiorInstances)
+			foreach (InteriorInstance interiorInstance in interiorInstances)
 			{
-				var distance = position3D.DistanceToSquared2D(interiorInstance.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position3D.DistanceToSquared2D(interiorInstance.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = interiorInstance;
 				closestDistance = distance;
 			}
@@ -904,12 +941,16 @@ namespace GTA
 		public static InteriorProxy GetClosest(Vector3 position, params InteriorProxy[] interiorProxies)
 		{
 			InteriorProxy closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 
-			foreach (var interiorProxy in interiorProxies)
+			foreach (InteriorProxy interiorProxy in interiorProxies)
 			{
-				var distance = position.DistanceToSquared(interiorProxy.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position.DistanceToSquared(interiorProxy.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = interiorProxy;
 				closestDistance = distance;
 			}
@@ -924,13 +965,17 @@ namespace GTA
 		public static InteriorProxy GetClosest(Vector2 position, params InteriorProxy[] interiorProxies)
 		{
 			InteriorProxy closest = null;
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 			var position3D = new Vector3(position.X, position.Y, 0.0f);
 
-			foreach (var interiorProxy in interiorProxies)
+			foreach (InteriorProxy interiorProxy in interiorProxies)
 			{
-				var distance = position3D.DistanceToSquared2D(interiorProxy.Position);
-				if (!(distance <= closestDistance)) continue;
+				float distance = position3D.DistanceToSquared2D(interiorProxy.Position);
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = interiorProxy;
 				closestDistance = distance;
 			}
@@ -982,18 +1027,18 @@ namespace GTA
 				return null;
 			}
 
-			var loadedAppropriatePedModels = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
-			var filteredPedModels = predicate != null
+			IEnumerable<Model> loadedAppropriatePedModels = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+			Model[] filteredPedModels = predicate != null
 				? loadedAppropriatePedModels.Where(predicate).ToArray()
 				: loadedAppropriatePedModels.Where(defaultPredicateForCreateRandomPed).ToArray();
-			var filteredModelCount = filteredPedModels.Length;
+			int filteredModelCount = filteredPedModels.Length;
 			if (filteredModelCount == 0)
 			{
 				return null;
 			}
 
-			var rand = Math.Random.Instance;
-			var pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
+			Random rand = Math.Random.Instance;
+			Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
 
 			// the model should be loaded at this moment, so call CREATE_PED immediately
 			var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y, position.Z, heading, false, false));
@@ -1035,16 +1080,16 @@ namespace GTA
 				return null;
 			}
 
-			var loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
-			var filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
-			var filteredModelCount = filteredVehModels.Length;
+			IEnumerable<Model> loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+			Model[] filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+			int filteredModelCount = filteredVehModels.Length;
 			if (filteredModelCount == 0)
 			{
 				return null;
 			}
 
-			var rand = Math.Random.Instance;
-			var pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
+			Random rand = Math.Random.Instance;
+			Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
 
 			// the model should be loaded at this moment, so call CREATE_VEHICLE immediately
 			return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
@@ -1082,7 +1127,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
 		public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
 		{
-			var prop = CreateProp(model, position, dynamic, placeOnGround);
+			Prop prop = CreateProp(model, position, dynamic, placeOnGround);
 
 			if (prop != null)
 			{
@@ -1110,7 +1155,7 @@ namespace GTA
 		/// <inheritdoc cref="CreateProp(Model, Vector3, Vector3, bool, bool)"/>
 		public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
 		{
-			var prop = CreatePropNoOffset(model, position, dynamic);
+			Prop prop = CreatePropNoOffset(model, position, dynamic);
 
 			if (prop != null)
 			{
@@ -1130,7 +1175,7 @@ namespace GTA
 				return null;
 			}
 
-			var handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
 
 			return handle == 0 ? null : new Prop(handle);
 		}
@@ -1145,7 +1190,7 @@ namespace GTA
 				return null;
 			}
 
-			var handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
 
 			return handle == 0 ? null : new Pickup(handle);
 		}
@@ -1159,7 +1204,7 @@ namespace GTA
 				return null;
 			}
 
-			var handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
 
 			return handle == 0 ? null : new Pickup(handle);
 		}
@@ -1187,7 +1232,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
 		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
-			var handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
 			return handle != 0 ? new Checkpoint(handle) : null;
 		}
 		/// <summary>
@@ -1201,7 +1246,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
 		public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
 		{
-			var handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 44, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 44, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
 			return handle != 0 ? new Checkpoint(handle) : null;
 		}
 
@@ -1268,11 +1313,11 @@ namespace GTA
 		public static NavMeshBlockingObject CreateNavMeshBlockingObject(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags = NavMeshBlockingObjectFlags.AllPaths)
 		{
 			const float DEG_2_RAD = (float)(System.Math.PI / 180);
-			var headingRadians = headingDegrees * DEG_2_RAD;
+			float headingRadians = headingDegrees * DEG_2_RAD;
 
 			// Set the second last parameter bPermanent to false, which determines whether the blocking object will last outside the lifetime of the calling script (scrThread)
 			// If the SHVDN runtime stops working, all the blocking objects created via SHVDN will get deleted (stopping any SHVDN scripts working will not automatically remove any blocking objects)
-			var handle = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
+			int handle = Function.Call<int>(Hash.ADD_NAVMESH_BLOCKING_OBJECT, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingRadians, false, flags);
 			return handle != -1 ? new NavMeshBlockingObject(handle) : null;
 		}
 
@@ -1428,9 +1473,9 @@ namespace GTA
 				return false;
 			}
 
-			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
-			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
-			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+			bool invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			bool invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			bool invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_AT_COORD, effectName, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
@@ -1452,9 +1497,9 @@ namespace GTA
 				return false;
 			}
 
-			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
-			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
-			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+			bool invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			bool invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			bool invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_ENTITY, effectName, entity.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
@@ -1476,9 +1521,9 @@ namespace GTA
 				return false;
 			}
 
-			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
-			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
-			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+			bool invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			bool invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			bool invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
 			return Function.Call<bool>(Hash.START_PARTICLE_FX_NON_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, off.X, off.Y, off.Z, rot.X, rot.Y, rot.Z, entityBone, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 		}
@@ -1514,11 +1559,11 @@ namespace GTA
 				return null;
 			}
 
-			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
-			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
-			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+			bool invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			bool invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			bool invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			var handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
+			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_ON_ENTITY_BONE, effectName, entityBone.Owner.Handle, offset.X, offset.Y, offset.Z, rotation.X, rotation.Y, rotation.Z, entityBone.Index, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ);
 			if (handle == 0)
 			{
 				return null;
@@ -1542,11 +1587,11 @@ namespace GTA
 				return null;
 			}
 
-			var invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
-			var invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
-			var invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
+			bool invertAxisFlagX = HasFlagFast(invertAxis, InvertAxisFlags.X);
+			bool invertAxisFlagY = HasFlagFast(invertAxis, InvertAxisFlags.Y);
+			bool invertAxisFlagZ = HasFlagFast(invertAxis, InvertAxisFlags.Z);
 
-			var handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ, false);
+			int handle = Function.Call<int>(Hash.START_PARTICLE_FX_LOOPED_AT_COORD, effectName, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, scale, invertAxisFlagX, invertAxisFlagY, invertAxisFlagZ, false);
 			return handle == 0 ? null : new ParticleEffect(handle, asset.AssetName, effectName, null);
 		}
 
@@ -1723,10 +1768,10 @@ namespace GTA
 
 		private static void DrawBoxForAngledAreaOutsideInternal(Vector3 origin, Vector3 extent, float width, Color color)
 		{
-			var point1 = origin;
-			var point2 = extent;
+			Vector3 point1 = origin;
+			Vector3 point2 = extent;
 			var point3 = new Vector3(point2.X, point2.Y, point1.Z);
-			var normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
+			Vector3 normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
 
 			var point4 = new Vector3(point1.X, point1.Y, point2.Z);
 
@@ -1742,10 +1787,10 @@ namespace GTA
 
 		private static void DrawBoxForAngledAreaInsideInternal(Vector3 origin, Vector3 extent, float width, Color color)
 		{
-			var point1 = origin;
-			var point2 = extent;
+			Vector3 point1 = origin;
+			Vector3 point2 = extent;
 			var point3 = new Vector3(point2.X, point2.Y, point1.Z);
-			var normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
+			Vector3 normalVector = Vector3.Cross(point2 - point1, point3 - point1).Normalized * (width / 2);
 
 			var point4 = new Vector3(point1.X, point1.Y, point2.Z);
 
@@ -1790,7 +1835,7 @@ namespace GTA
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectFlags options, Entity ignoreEntity = null)
 		{
-			var target = source + direction * maxDistance;
+			Vector3 target = source + direction * maxDistance;
 
 			return new RaycastResult(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
@@ -1820,7 +1865,7 @@ namespace GTA
 		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
-			var target = source + direction * maxDistance;
+			Vector3 target = source + direction * maxDistance;
 
 			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}

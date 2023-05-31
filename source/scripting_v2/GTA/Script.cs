@@ -12,8 +12,9 @@ namespace GTA
 	public abstract class Script : IDisposable
 	{
 		#region Fields
-		Viewport _viewport;
-		ScriptSettings _settings;
+
+		private Viewport _viewport;
+		private ScriptSettings _settings;
 		#endregion
 
 		public Script()
@@ -34,7 +35,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Tick += value;
@@ -42,7 +43,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Tick -= value;
@@ -53,7 +54,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Aborted += value;
@@ -61,7 +62,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Aborted -= value;
@@ -73,7 +74,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyUp += value;
@@ -81,7 +82,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyUp -= value;
@@ -92,7 +93,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyDown += value;
@@ -100,7 +101,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyDown -= value;
@@ -128,7 +129,11 @@ namespace GTA
 		{
 			get
 			{
-				if (_viewport != null) return _viewport;
+				if (_viewport != null)
+				{
+					return _viewport;
+				}
+
 				_viewport = new Viewport();
 
 				Tick += (sender, e) =>
@@ -137,12 +142,30 @@ namespace GTA
 				};
 				KeyUp += (sender, e) =>
 				{
-					if (e.KeyCode == ActivateKey) _viewport.HandleActivate();
-					else if (e.KeyCode == BackKey) _viewport.HandleBack();
-					else if (e.KeyCode == LeftKey) _viewport.HandleChangeItem(false);
-					else if (e.KeyCode == RightKey) _viewport.HandleChangeItem(true);
-					else if (e.KeyCode == UpKey) _viewport.HandleChangeSelection(false);
-					else if (e.KeyCode == DownKey) _viewport.HandleChangeSelection(true);
+					if (e.KeyCode == ActivateKey)
+					{
+						_viewport.HandleActivate();
+					}
+					else if (e.KeyCode == BackKey)
+					{
+						_viewport.HandleBack();
+					}
+					else if (e.KeyCode == LeftKey)
+					{
+						_viewport.HandleChangeItem(false);
+					}
+					else if (e.KeyCode == RightKey)
+					{
+						_viewport.HandleChangeItem(true);
+					}
+					else if (e.KeyCode == UpKey)
+					{
+						_viewport.HandleChangeSelection(false);
+					}
+					else if (e.KeyCode == DownKey)
+					{
+						_viewport.HandleChangeSelection(true);
+					}
 				};
 
 				return _viewport;
@@ -152,7 +175,11 @@ namespace GTA
 		{
 			get
 			{
-				if (_settings != null) return _settings;
+				if (_settings != null)
+				{
+					return _settings;
+				}
+
 				string path = Path.ChangeExtension(Filename, ".ini");
 
 				_settings = ScriptSettings.Load(path);
@@ -171,7 +198,7 @@ namespace GTA
 					value = 0;
 				}
 
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Interval = value;
@@ -191,7 +218,7 @@ namespace GTA
 
 		public static void Wait(int ms)
 		{
-			var script = SHVDN.ScriptDomain.ExecutingScript;
+			SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
 			if (script == null || !script.IsRunning)
 			{
 				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");

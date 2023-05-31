@@ -11,7 +11,8 @@ namespace GTA
 	public sealed class Weapon
 	{
 		#region Fields
-		readonly Ped owner;
+
+		private readonly Ped owner;
 		#endregion
 
 		internal Weapon()
@@ -340,7 +341,11 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)(void*)&data)) continue;
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)(void*)&data))
+					{
+						continue;
+					}
+
 					if (data.Hash == hash)
 					{
 						return data.DisplayName;
@@ -472,13 +477,24 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)(void*)&data)) continue;
-					if (data.Hash != hash) continue;
-					var maxComp = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
-
-					for (var j = 0; j < maxComp; j++)
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)(void*)&data))
 					{
-						if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, (int*)&componentData)) continue;
+						continue;
+					}
+
+					if (data.Hash != hash)
+					{
+						continue;
+					}
+
+					int maxComp = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPON_COMPONENTS, i);
+
+					for (int j = 0; j < maxComp; j++)
+					{
+						if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_COMPONENT_DATA, i, j, (int*)&componentData))
+						{
+							continue;
+						}
 
 						if (componentData.Hash == component)
 						{

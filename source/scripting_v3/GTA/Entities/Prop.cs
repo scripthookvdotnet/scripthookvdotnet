@@ -31,9 +31,11 @@ namespace GTA
 		{
 			get
 			{
-				var parentEntityHandle = NativeMemory.GetParentEntityHandleOfPropDetachedFrom(Handle);
+				int parentEntityHandle = NativeMemory.GetParentEntityHandleOfPropDetachedFrom(Handle);
 				if (parentEntityHandle == 0)
+				{
 					return null;
+				}
 
 				return FromHandle(parentEntityHandle);
 			}

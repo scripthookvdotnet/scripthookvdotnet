@@ -52,10 +52,10 @@ namespace GTA
 				return;
 			}
 
-			var w = (float)Size.Width / UI.WIDTH;
-			var h = (float)Size.Height / UI.HEIGHT;
-			var x = (float)(Position.X + offset.Width) / UI.WIDTH + w * 0.5f;
-			var y = (float)(Position.Y + offset.Height) / UI.HEIGHT + h * 0.5f;
+			float w = (float)Size.Width / UI.WIDTH;
+			float h = (float)Size.Height / UI.HEIGHT;
+			float x = (float)(Position.X + offset.Width) / UI.WIDTH + w * 0.5f;
+			float y = (float)(Position.Y + offset.Height) / UI.HEIGHT + h * 0.5f;
 
 			Function.Call(Hash.DRAW_RECT, x, y, w, h, Color.R, Color.G, Color.B, Color.A);
 		}

@@ -149,7 +149,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -166,7 +166,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -183,7 +183,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSteeringLimitMultiplierOffset == 0)
 				{
 					return 0f;
@@ -193,7 +193,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSteeringLimitMultiplierOffset == 0)
 				{
 					return;
@@ -211,7 +211,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSuspensionStrengthOffset == 0)
 				{
 					return 0f;
@@ -221,7 +221,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelSuspensionStrengthOffset == 0)
 				{
 					return;
@@ -239,7 +239,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTemperatureOffset == 0)
 				{
 					return 0f;
@@ -249,7 +249,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTemperatureOffset == 0)
 				{
 					return;
@@ -266,7 +266,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -282,7 +282,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 				{
 					return false;
@@ -292,7 +292,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 				{
 					return;
@@ -309,7 +309,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 				{
 					return false;
@@ -319,7 +319,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 				{
 					return;
@@ -336,7 +336,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 				{
 					return false;
@@ -346,7 +346,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelTouchingFlagsOffset == 0)
 				{
 					return;
@@ -363,7 +363,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireHealthOffset == 0)
 				{
 					return false;
@@ -379,7 +379,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireHealthOffset == 0)
 				{
 					return false;
@@ -395,7 +395,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelHealthOffset == 0)
 				{
 					return 0f;
@@ -405,7 +405,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleWheelHealthOffset == 0)
 				{
 					return;
@@ -422,7 +422,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireHealthOffset == 0)
 				{
 					return 0f;
@@ -432,7 +432,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireHealthOffset == 0)
 				{
 					return;
@@ -461,7 +461,7 @@ namespace GTA
 					return 0f;
 				}
 
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireWearMultiplierOffset == 0)
 				{
 					return 0f;
@@ -476,7 +476,7 @@ namespace GTA
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_1868_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 				}
 
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTireWearMultiplierOffset == 0)
 				{
 					return;
@@ -500,7 +500,7 @@ namespace GTA
 		/// <param name="leaveOtherBurstedTiresNotShowing">If set to <see langword="false"/>, bursted tires will appear again just like <c>SET_VEHICLE_TYRE_FIXED</c> does.</param>
 		public void Fix(bool leaveOtherBurstedTiresNotShowing)
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
 				return;
@@ -508,9 +508,12 @@ namespace GTA
 
 			SHVDN.NativeMemory.FixVehicleWheel(address);
 
-			if (leaveOtherBurstedTiresNotShowing) return;
+			if (leaveOtherBurstedTiresNotShowing)
+			{
+				return;
+			}
 
-			var customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
+			IntPtr customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
 			SHVDN.NativeMemory.SetBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1, false);
 		}
 
@@ -520,7 +523,7 @@ namespace GTA
 		/// <param name="damage">How much damage this <see cref="VehicleWheel"/> will take.</param>
 		public void Puncture(float damage = 1000f)
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
 				return;
@@ -535,7 +538,7 @@ namespace GTA
 		/// </summary>
 		public void Burst()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero)
 			{
 				return;
@@ -549,15 +552,15 @@ namespace GTA
 		internal static bool CanVehicleHaveWheels(Vehicle vehicle) => (uint)vehicle.Type <= 0xC;
 		private IntPtr GetMemoryAddressInit()
 		{
-			var vehicleAddr = Vehicle.MemoryAddress;
+			IntPtr vehicleAddr = Vehicle.MemoryAddress;
 
-			var wheelIndexOfArrayPtr = SHVDN.NativeMemory.ReadByte(vehicleAddr + SHVDN.NativeMemory.WheelBoneIdToPtrArrayIndexOffset + ((int)BoneId - 11));
+			byte wheelIndexOfArrayPtr = SHVDN.NativeMemory.ReadByte(vehicleAddr + SHVDN.NativeMemory.WheelBoneIdToPtrArrayIndexOffset + ((int)BoneId - 11));
 			if (wheelIndexOfArrayPtr == 0xFF)
 			{
 				return IntPtr.Zero;
 			}
 
-			var vehicleWheelArrayAddr = SHVDN.NativeMemory.ReadAddress(vehicleAddr + SHVDN.NativeMemory.WheelPtrArrayOffset);
+			IntPtr vehicleWheelArrayAddr = SHVDN.NativeMemory.ReadAddress(vehicleAddr + SHVDN.NativeMemory.WheelPtrArrayOffset);
 			_cachedAddress = SHVDN.NativeMemory.ReadAddress(vehicleWheelArrayAddr + 0x8 * wheelIndexOfArrayPtr);
 
 			return _cachedAddress;

@@ -11,8 +11,9 @@ namespace GTA.NaturalMotion
 	public sealed class Euphoria
 	{
 		#region Fields
-		readonly Ped _ped;
-		readonly Dictionary<string, CustomHelper> _helperCache;
+
+		private readonly Ped _ped;
+		private readonly Dictionary<string, CustomHelper> _helperCache;
 		#endregion
 
 		internal Euphoria(Ped ped)
@@ -21,9 +22,12 @@ namespace GTA.NaturalMotion
 			_helperCache = new Dictionary<string, CustomHelper>();
 		}
 
-		T GetHelper<T>(string message) where T : CustomHelper
+		private T GetHelper<T>(string message) where T : CustomHelper
 		{
-			if (_helperCache.TryGetValue(message, out var cachedHelper)) return (T)cachedHelper;
+			if (_helperCache.TryGetValue(message, out CustomHelper cachedHelper))
+			{
+				return (T)cachedHelper;
+			}
 
 			var newHelper = (CustomHelper)Activator.CreateInstance(typeof(T), _ped);
 			_helperCache.Add(message, newHelper);

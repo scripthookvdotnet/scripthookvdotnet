@@ -28,7 +28,7 @@ namespace GTA
 
 			void RemoveDestroyedFlag(int vehicleHandle)
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(vehicleHandle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(vehicleHandle);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -37,7 +37,9 @@ namespace GTA
 				int targetValue = SHVDN.NativeMemory.ReadByte(address + 0xD8);
 
 				if ((targetValue & 7) == 3)
+				{
 					targetValue &= 0xF8;
+				}
 
 				SHVDN.NativeMemory.WriteByte(address + 0xD8, (byte)targetValue);
 			}
@@ -345,7 +347,7 @@ namespace GTA
 		{
 			get
 			{
-				var bennysLiveryCount = GetModCount(VehicleMod.Livery);
+				int bennysLiveryCount = GetModCount(VehicleMod.Livery);
 
 				return bennysLiveryCount > 0 ? bennysLiveryCount : Function.Call<int>(Hash.GET_VEHICLE_LIVERY_COUNT, Handle);
 			}
@@ -385,7 +387,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.NeedsToBeHotwiredOffset == 0)
 				{
 					return false;
@@ -406,7 +408,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PreviouslyOwnedByPlayerOffset == 0)
 				{
 					return false;
@@ -542,7 +544,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
 				{
 					return 0.0f;
@@ -552,7 +554,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
 				{
 					return;
@@ -573,7 +575,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
 				{
 					return 0;
@@ -583,7 +585,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
 				{
 					return;
@@ -612,7 +614,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.GearOffset == 0)
 				{
 					return 0;
@@ -656,7 +658,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.WheelSpeedOffset == 0)
 				{
 					return 0.0f;
@@ -676,7 +678,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRPMOffset == 0)
 				{
 					return 0.0f;
@@ -686,7 +688,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRPMOffset == 0)
 				{
 					return;
@@ -703,7 +705,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.AccelerationOffset == 0)
 				{
 					return 0.0f;
@@ -726,7 +728,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringAngleOffset == 0)
 				{
 					return 0.0f;
@@ -736,7 +738,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringAngleOffset == 0)
 				{
 					return;
@@ -753,7 +755,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringScaleOffset == 0)
 				{
 					return 0.0f;
@@ -763,7 +765,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringScaleOffset == 0)
 				{
 					return;
@@ -846,7 +848,7 @@ namespace GTA
 		/// <param name="duration">The duration in milliseconds to sound the horn for.</param>
 		public void SoundHorn(int duration)
 		{
-			var heldDownHash = Game.GenerateHash("HELDDOWN");
+			int heldDownHash = Game.GenerateHash("HELDDOWN");
 			Function.Call(Hash.START_VEHICLE_HORN, Handle, duration, heldDownHash, 0);
 		}
 
@@ -994,7 +996,7 @@ namespace GTA
 			get => Function.Call<bool>(Hash._IS_HEADLIGHT_L_BROKEN, Handle);
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.IsHeadlightDamagedOffset == 0)
 				{
 					return;
@@ -1009,7 +1011,7 @@ namespace GTA
 			get => Function.Call<bool>(Hash._IS_HEADLIGHT_R_BROKEN, Handle);
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.IsHeadlightDamagedOffset == 0)
 				{
 					return;
@@ -1121,17 +1123,35 @@ namespace GTA
 		{
 			var doors = new List<VehicleDoor>();
 			if (HasBone("door_dside_f"))
+			{
 				doors.Add(VehicleDoor.FrontLeftDoor);
+			}
+
 			if (HasBone("door_pside_f"))
+			{
 				doors.Add(VehicleDoor.FrontRightDoor);
+			}
+
 			if (HasBone("door_dside_r"))
+			{
 				doors.Add(VehicleDoor.BackLeftDoor);
+			}
+
 			if (HasBone("door_pside_r"))
+			{
 				doors.Add(VehicleDoor.BackRightDoor);
+			}
+
 			if (HasBone("bonnet"))
+			{
 				doors.Add(VehicleDoor.Hood);
+			}
+
 			if (HasBone("hood"))
+			{
 				doors.Add(VehicleDoor.Trunk);
+			}
+
 			return doors.ToArray();
 		}
 
@@ -1229,11 +1249,11 @@ namespace GTA
 		{
 			get
 			{
-				var driver = Driver;
+				Ped driver = Driver;
 
-				var arraySize = Entity.Exists(driver) ? PassengerCount + 1 : PassengerCount;
+				int arraySize = Entity.Exists(driver) ? PassengerCount + 1 : PassengerCount;
 				var occupantsArray = new Ped[arraySize];
-				var occupantIndex = 0;
+				int occupantIndex = 0;
 
 				if (arraySize == 0)
 				{
@@ -1248,7 +1268,7 @@ namespace GTA
 
 				for (int i = 0, seats = PassengerSeats; i < seats; i++)
 				{
-					var ped = GetPedOnSeat((VehicleSeat)i);
+					Ped ped = GetPedOnSeat((VehicleSeat)i);
 
 					if (!Entity.Exists(ped))
 					{
@@ -1273,7 +1293,7 @@ namespace GTA
 			get
 			{
 				var passengersArray = new Ped[PassengerCount];
-				var passengerIndex = 0;
+				int passengerIndex = 0;
 
 				if (passengersArray.Length == 0)
 				{
@@ -1282,7 +1302,7 @@ namespace GTA
 
 				for (int i = 0, seats = PassengerSeats; i < seats; i++)
 				{
-					var ped = GetPedOnSeat((VehicleSeat)i);
+					Ped ped = GetPedOnSeat((VehicleSeat)i);
 
 					if (!Exists(ped))
 					{
@@ -1342,7 +1362,7 @@ namespace GTA
 			}
 			else
 			{
-				var ped = Function.Call<Ped>(Hash.CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
+				Ped ped = Function.Call<Ped>(Hash.CREATE_RANDOM_PED, 0.0f, 0.0f, 0.0f);
 				Function.Call(Hash.SET_PED_INTO_VEHICLE, ped.Handle, Handle, (int)seat);
 
 				return ped;
@@ -1371,10 +1391,10 @@ namespace GTA
 
 		public void PlaceOnNextStreet()
 		{
-			var pos = Position;
+			Vector3 pos = Position;
 			var outPos = new OutputArgument();
 
-			for (var i = 1; i < 40; i++)
+			for (int i = 1; i < 40; i++)
 			{
 				float heading;
 				unsafe
@@ -1382,7 +1402,7 @@ namespace GTA
 					float val;
 					Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, pos.X, pos.Y, pos.Z, i, outPos, &heading, &val, 1, 0x40400000, 0);
 				}
-				var newPos = outPos.GetResult<Vector3>();
+				Vector3 newPos = outPos.GetResult<Vector3>();
 
 				if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPos.X, newPos.Y, newPos.Z, 5.0f, 5.0f, 5.0f, 0))
 				{
@@ -1446,7 +1466,7 @@ namespace GTA
 		/// </summary>
 		public void DetachTowedVehicle()
 		{
-			var vehicle = TowedVehicle;
+			Vehicle vehicle = TowedVehicle;
 
 			if (Entity.Exists(vehicle))
 			{
@@ -1486,13 +1506,13 @@ namespace GTA
 
 			bool IsVehicleHeliOrBlimp(int handle)
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle == 0)
 				{
 					return false;
 				}
 
-				var vehicleTypeValue = (uint)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
+				uint vehicleTypeValue = (uint)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
 				return (vehicleTypeValue - 8) <= 1;
 			}
 		}
@@ -1524,7 +1544,11 @@ namespace GTA
 		}
 		public bool IsCargobobHookActive(CargobobHook hookType)
 		{
-			if (!Model.IsCargobob) return false;
+			if (!Model.IsCargobob)
+			{
+				return false;
+			}
+
 			switch (hookType)
 			{
 				case CargobobHook.Hook:

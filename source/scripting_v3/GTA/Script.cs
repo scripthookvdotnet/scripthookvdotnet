@@ -44,7 +44,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Tick += value;
@@ -52,7 +52,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Tick -= value;
@@ -67,7 +67,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Aborted += value;
@@ -75,7 +75,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Aborted -= value;
@@ -91,7 +91,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyUp += value;
@@ -99,7 +99,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyUp -= value;
@@ -114,7 +114,7 @@ namespace GTA
 		{
 			add
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyDown += value;
@@ -122,7 +122,7 @@ namespace GTA
 			}
 			remove
 			{
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.KeyDown -= value;
@@ -174,8 +174,12 @@ namespace GTA
 		{
 			get
 			{
-				if (_settings != null) return _settings;
-				var path = Path.ChangeExtension(Filename, ".ini");
+				if (_settings != null)
+				{
+					return _settings;
+				}
+
+				string path = Path.ChangeExtension(Filename, ".ini");
 
 				_settings = ScriptSettings.Load(path);
 
@@ -197,7 +201,7 @@ namespace GTA
 					value = 0;
 				}
 
-				var script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
+				SHVDN.Script script = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this);
 				if (script != null)
 				{
 					script.Interval = value;
@@ -254,7 +258,7 @@ namespace GTA
 		/// <param name="ms">The time in milliseconds to pause for.</param>
 		public static void Wait(int ms)
 		{
-			var script = SHVDN.ScriptDomain.ExecutingScript;
+			SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
 			if (script == null || !script.IsRunning || !script.IsUsingThread)
 			{
 				throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");

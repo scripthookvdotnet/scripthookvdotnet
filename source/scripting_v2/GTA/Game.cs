@@ -13,7 +13,8 @@ namespace GTA
 	public static class Game
 	{
 		#region Fields
-		static Player cachedPlayer = null;
+
+		private static Player cachedPlayer = null;
 
 		internal static readonly string[] radioNames = {
 			"RADIO_01_CLASS_ROCK",
@@ -76,7 +77,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
+				int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{

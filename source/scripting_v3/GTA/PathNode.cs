@@ -23,7 +23,7 @@ namespace GTA
 		{
 			get
 			{
-				var areaIdAndNodeIdCorrected = (uint)Handle - 1;
+				uint areaIdAndNodeIdCorrected = (uint)Handle - 1;
 				return (int)(areaIdAndNodeIdCorrected & 0xFFFF);
 			}
 		}
@@ -35,7 +35,7 @@ namespace GTA
 		{
 			get
 			{
-				var areaIdAndNodeIdCorrected = (uint)Handle - 1;
+				uint areaIdAndNodeIdCorrected = (uint)Handle - 1;
 				return ((ushort)areaIdAndNodeIdCorrected >> 0x10);
 			}
 		}
@@ -111,8 +111,8 @@ namespace GTA
 		/// <returns>The <see cref="PathNodeLink"/> this <see cref="PathNode"/> links to if this <see cref="PathNode"/> is loaded; otherwise, the empty array.</returns>
 		public PathNodeLink[] GetAllPathNodeLinks()
 		{
-			var nodeLinkIndices = SHVDN.NativeMemory.PathFind.GetPathNodeLinkIndicesOfPathNode(Handle);
-			var nodeLinkCount = nodeLinkIndices.Length;
+			int[] nodeLinkIndices = SHVDN.NativeMemory.PathFind.GetPathNodeLinkIndicesOfPathNode(Handle);
+			int nodeLinkCount = nodeLinkIndices.Length;
 			if (nodeLinkCount == 0)
 			{
 				return Array.Empty<PathNodeLink>();

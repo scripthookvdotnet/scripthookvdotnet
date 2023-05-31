@@ -151,13 +151,13 @@ namespace GTA.Math
 		/// </summary>
 		public void Normalize()
 		{
-			var length = Length();
+			float length = Length();
 			if (length == 0)
 			{
 				return;
 			}
 
-			var num = 1 / length;
+			float num = 1 / length;
 			X *= num;
 			Y *= num;
 		}
@@ -235,7 +235,7 @@ namespace GTA.Math
 		public static Vector2 RandomXY()
 		{
 			Vector2 v;
-			var radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
+			double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
 			v.X = (float)(System.Math.Cos(radian));
 			v.Y = (float)(System.Math.Sin(radian));
 			v.Normalize();
@@ -298,11 +298,11 @@ namespace GTA.Math
 		/// <returns>The clamped value.</returns>
 		public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
 		{
-			var x = value.X;
+			float x = value.X;
 			x = (x > max.X) ? max.X : x;
 			x = (x < min.X) ? min.X : x;
 
-			var y = value.Y;
+			float y = value.Y;
 			y = (y > max.Y) ? max.Y : y;
 			y = (y < min.Y) ? min.Y : y;
 
@@ -361,7 +361,7 @@ namespace GTA.Math
 		public static Vector2 Reflect(Vector2 vector, Vector2 normal)
 		{
 			Vector2 result;
-			var dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
+			float dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
 
 			result.X = vector.X - ((2.0f * dot) * normal.X);
 			result.Y = vector.Y - ((2.0f * dot) * normal.Y);
