@@ -1288,6 +1288,15 @@ namespace GTA
 		public bool HasCollided => Function.Call<bool>(Hash.HAS_ENTITY_COLLIDED_WITH_ANYTHING, Handle);
 
 		/// <summary>
+		/// Gets a value indicating whether this <see cref="Entity"/> has collided with a <see cref="Building"/> or an <see cref="AnimatedBuilding"/>.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Entity"/> has collided; otherwise, <see langword="false" />.
+		/// </value>
+		/// <remarks><see cref="IsRecordingCollisions"/> must be <see langword="true" /> for this to work.</remarks>
+		public bool HasCollidedWithBuildingOrAnimatedBuilding => SHVDN.NativeMemory.HasEntityCollidedWithBuildingOrAnimatedBuilding(Handle);
+
+		/// <summary>
 		/// Gets the material this <see cref="Entity"/> is pushing up against.
 		/// </summary>
 		/// <value>
@@ -1300,6 +1309,62 @@ namespace GTA
 		/// <para>Note that when this <see cref = "Entity"/> is a this <see cref = "Vehicle"/> and only its wheels touches something, the game will consider the entity touching nothing and this returns <see cref = "MaterialHash.None"/>.</para>
 		/// </remarks>
 		public MaterialHash MaterialCollidingWith => (MaterialHash)Function.Call<uint>(Hash.GET_LAST_MATERIAL_HIT_BY_ENTITY, Handle);
+
+		/// <summary>
+		/// Gets the <see cref="Vehicle"/> this <see cref="Entity"/> has collided with.
+		/// </summary>
+		public Vehicle VehicleCollidingWith
+		{
+			get
+			{
+				int vehicleHandle = SHVDN.NativeMemory.GetVehicleHandleEntityIsCollidingWith(Handle);
+				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="Ped"/> this <see cref="Entity"/> has collided with.
+		/// </summary>
+		public Ped PedCollidingWith
+		{
+			get
+			{
+				int pedHandle = SHVDN.NativeMemory.GetPedHandleEntityIsCollidingWith(Handle);
+				return pedHandle != 0 ? new Ped(pedHandle) : null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the <see cref="Prop"/> this <see cref="Entity"/> has collided with.
+		/// </summary>
+		public Prop PropCollidingWith
+		{
+			get
+			{
+				int propHandle = SHVDN.NativeMemory.GetPropHandleEntityIsCollidingWith(Handle);
+				return propHandle != 0 ? new Prop(propHandle) : null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the physical <see cref="Entity"/> this <see cref="Entity"/> has collided with from the last collision record,
+		/// where a <see cref="Building"/> or an <see cref="AnimatedBuilding"/> can be stored instead of a physical entity.
+		/// </summary>
+		/// <param name="entity">
+		/// When this method returns, contains the physical <see cref="Entity"/> this <see cref="Entity"/> has collided with,
+		/// if the last collision record exists on this <see cref="Entity"/> and the collision record has a has a physical <see cref="Entity"/> address as a target;
+		/// otherwise, <see langword="null"/>.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the last collision record exists on this <see cref="Entity"/> and the collision record has a has a physical <see cref="Entity"/> address as a target;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
+		public bool TryGetPhysicalEntityFromLastCollisionRecord(out Entity entity)
+		{
+			entity = FromHandle(SHVDN.NativeMemory.GetPhysicalEntityHandleFromLastCollisionEntryOfEntity(Handle));
+			return entity is not null;
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> has collision.
@@ -1315,9 +1380,12 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> is recording collisions.
+		/// This value must be set to <see langword="true"/> before this <see cref="Entity"/> can record their collision records and you can properly fetch some of the records,
+		/// via properties such as <see cref="HasCollided"/> and <see cref="TryGetPhysicalEntityFromLastCollisionRecord(out Entity)"/>.
 		/// </summary>
 		public bool IsRecordingCollisions
 		{
+			get => SHVDN.NativeMemory.EntityRecordsCollision(Handle);
 			set => Function.Call(Hash.SET_ENTITY_RECORDS_COLLISIONS, Handle, value);
 		}
 
