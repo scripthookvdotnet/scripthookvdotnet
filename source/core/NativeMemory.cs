@@ -417,17 +417,17 @@ namespace SHVDN
 			}
 
 			address = FindPatternBmh("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
-			NativeMemory.CAttackerArrayOfEntityOffset = *(uint*)(address + 3); // the correct name is unknown
+			NativeMemory.CAttackerArrayOfEntityOffset = *(int*)(address + 3); // the correct name is unknown
 			if (address != null)
 			{
 				startAddressToSearch = new IntPtr(address);
 				address = FindPatternBmh("\x48\x63\x51\x00\x48\x85\xD2", "xxx?xxx", startAddressToSearch);
-				NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset = (uint)(*(sbyte*)(address + 3));
+				NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset = (*(sbyte*)(address + 3));
 
 				startAddressToSearch = new IntPtr(address);
 				address = FindPatternBmh("\x48\x83\xC1\x00\x48\x3B\xC2\x7C\xEF", "xxx?xxxxx", startAddressToSearch);
 				// the element size might be 0x10 in older builds (the size is 0x18 at least in b1604 and b2372)
-				NativeMemory.ElementSizeOfCAttackerArrayOfEntity = (uint)(*(sbyte*)(address + 3));
+				NativeMemory.ElementSizeOfCAttackerArrayOfEntity = (*(sbyte*)(address + 3));
 			}
 
 			address = FindPatternBmh("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
@@ -2006,9 +2006,9 @@ namespace SHVDN
 		public static int SetAngularVelocityVFuncOfEntityOffset { get; }
 		public static int GetAngularVelocityVFuncOfEntityOffset { get; }
 
-		public static uint CAttackerArrayOfEntityOffset { get; }
-		public static uint ElementCountOfCAttackerArrayOfEntityOffset { get; }
-		public static uint ElementSizeOfCAttackerArrayOfEntity { get; }
+		public static int CAttackerArrayOfEntityOffset { get; }
+		public static int ElementCountOfCAttackerArrayOfEntityOffset { get; }
+		public static int ElementSizeOfCAttackerArrayOfEntity { get; }
 
 		#endregion
 
@@ -2103,21 +2103,21 @@ namespace SHVDN
 				return false;
 			}
 
-			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
 			{
 				return false;
 			}
 
-			int entryCount = *(int*)(entityCAttackerArrayAddress + NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset);
+			int entryCount = *(int*)((byte*)entityCAttackerArrayAddress + NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset);
 
 			return index < entryCount;
 		}
 
 		private static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
 		{
-			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * NativeMemory.ElementSizeOfCAttackerArrayOfEntity);
+			var cAttacker = (CAttacker*)((byte*)cAttackerArrayAddress + index * NativeMemory.ElementSizeOfCAttackerArrayOfEntity);
 
 			ulong attackerEntityAddress = cAttacker->attackerEntityAddress;
 			int weaponHash = cAttacker->weaponHash;
@@ -2128,7 +2128,7 @@ namespace SHVDN
 		}
 		public static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
 		{
-			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
 			{
@@ -2147,14 +2147,14 @@ namespace SHVDN
 				return Array.Empty<EntityDamageRecordForReturnValue>();
 			}
 
-			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
 			{
 				return Array.Empty<EntityDamageRecordForReturnValue>();
 			}
 
-			int returnEntrySize = *(int*)(entityCAttackerArrayAddress + NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset);
+			int returnEntrySize = *(int*)((byte*)entityCAttackerArrayAddress + NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset);
 			EntityDamageRecordForReturnValue[] returnEntries = returnEntrySize != 0 ? new EntityDamageRecordForReturnValue[returnEntrySize] : Array.Empty<EntityDamageRecordForReturnValue>();
 
 			for (uint i = 0; i < returnEntries.Length; i++)
@@ -2163,6 +2163,149 @@ namespace SHVDN
 			}
 
 			return returnEntries;
+		}
+
+		public static bool EntityRecordsCollision(int entityHandle)
+		{
+			IntPtr entityAddress = GetEntityAddress(entityHandle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return false;
+			}
+
+			return CPhysicalRecordsCollision(entityAddress);
+		}
+
+		public static bool CPhysicalRecordsCollision(IntPtr cPhysicalAddress)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return false;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x47;
+			return *(byte*)(cPhysicalAddress + offsetToRead) != 0;
+		}
+
+		public static bool HasEntityCollidedWithBuildingOrAnimatedBuilding(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return false;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x8;
+			return GetTargetCEntityAddressCollidingWith(entityHandle, offsetToRead) != IntPtr.Zero;
+		}
+
+		public static int GetVehicleHandleEntityIsCollidingWith(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x10;
+			return GetPhysicalEntityHandleEntityIsCollidingWith(entityHandle, offsetToRead);
+		}
+
+		public static int GetPedHandleEntityIsCollidingWith(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x18;
+			return GetPhysicalEntityHandleEntityIsCollidingWith(entityHandle, offsetToRead);
+		}
+
+		// maybe there's another collision record entry for CObject, but we're not sure about this
+		public static int GetPropHandleEntityIsCollidingWith(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x20;
+			return GetPhysicalEntityHandleEntityIsCollidingWith(entityHandle, offsetToRead);
+		}
+
+		public static int GetPhysicalEntityHandleFromLastCollisionEntryOfEntity(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x30;
+			IntPtr targetCEntityAddress = GetTargetCEntityAddressCollidingWith(entityHandle, offsetToRead);
+
+			if (targetCEntityAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			var targetCEntityType = (EntityTypeInternal)(*(byte*)(targetCEntityAddress + 0x28));
+			switch (targetCEntityType)
+			{
+				case EntityTypeInternal.Vehicle:
+				case EntityTypeInternal.Ped:
+				case EntityTypeInternal.Object:
+					return GetEntityHandleFromAddress(targetCEntityAddress);
+				default:
+					return 0;
+			}
+		}
+
+		private static int GetPhysicalEntityHandleEntityIsCollidingWith(int entityHandle, int offsetOfCollisionRecord)
+		{
+			IntPtr targetCEntityAddress = GetTargetCEntityAddressCollidingWith(entityHandle, offsetOfCollisionRecord);
+			if (targetCEntityAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(targetCEntityAddress);
+		}
+
+		private static IntPtr GetTargetCEntityAddressCollidingWith(int entityHandle, int offsetOfCollisionRecord)
+		{
+			IntPtr entityAddress = GetEntityAddress(entityHandle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			if (!CPhysicalRecordsCollision(entityAddress))
+			{
+				return IntPtr.Zero;
+			}
+
+			long** collisionRecord = *(long***)(entityAddress + offsetOfCollisionRecord);
+			if (collisionRecord == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			long* targetCEntityAddress = *collisionRecord;
+			if (targetCEntityAddress == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			return new IntPtr(targetCEntityAddress);
+		}
+
+		private enum EntityTypeInternal
+		{
+			Invalid = 0,
+			Building = 1,
+			AnimatedBuilding = 2,
+			Vehicle = 3,
+			Ped = 4,
+			Object = 5
 		}
 
 		#endregion
