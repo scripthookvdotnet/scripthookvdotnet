@@ -246,8 +246,14 @@ namespace GTA
 		/// Sets how high up on this <see cref="Ped"/>s body water should be visible.
 		/// </summary>
 		/// <value>
-		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water.
+		/// The height offset ranges from -2f to 1.99f inclusive, -2f being no water visible, 1.99f being fully covered in water.
 		/// </value>
+		/// <remarks>
+		/// Although zero sets the height offset of the water line to zero in meters on water height members of <c>CPed</c>,
+		/// This property will clear the wet/soaked effect if the value is set to the zero for the compatibility of scripts built against v3.6.0.
+		/// </remarks>
+		[Obsolete("Ped.WetnessHeight is obsolete because it does not indicate that it clears the wetness effect from the ped if the value is exactly zero," +
+			"while the value can take any values in the range of -2f to 1.99f inclusive. Please use Ped.Wet or Ped.ClearWetnessEffect instead.")]
 		public float WetnessHeight
 		{
 			set
@@ -258,10 +264,237 @@ namespace GTA
 				}
 				else
 				{
-					Function.Call<float>(Hash.SET_PED_WETNESS_HEIGHT, Handle, value);
+					Function.Call(Hash.SET_PED_WETNESS_HEIGHT, Handle, value);
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the lower wetness height of this <see cref="Ped"/>.
+		/// The value should be in the range of 0 and 1 inclusive.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="UpperWetnessLevel"/> and <see cref="UpperWetnessHeight"/> must be set before this value can have affect.
+		/// If <see cref="UpperWetnessLevel"/> is <c>-2f</c> or less or and <see cref="UpperWetnessHeight"/> is zero or less,
+		/// this value will be transferred to <see cref="UpperWetnessHeight"/> and then this value will be set to <c>-2f</c>.
+		/// </para>
+		/// <para>
+		/// The value must be less than <see cref="UpperWetnessHeight"/>, otherwise the value will be reset to <c>-2f</c> in a few frames.
+		/// </para>
+		/// </remarks>
+		public float LowerWetnessHeight
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessHeightOffset == 0)
+				{
+					return -2f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedLowerWetnessHeightOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessHeightOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedLowerWetnessHeightOffset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the upper wetness height of this <see cref="Ped"/>.
+		/// The value should be in the range of 0 and 1 inclusive.
+		/// </summary>
+		public float UpperWetnessHeight
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessHeightOffset == 0)
+				{
+					return -2f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedUpperWetnessHeightOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessHeightOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedUpperWetnessHeightOffset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the lower wetness level of this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The height offset of the lower water line in meters.
+		/// Should be in the range of <c>-2f</c> exclusive and <c>1.99f</c> inclusive.
+		/// If the value is <c>-2f</c> or less, the wetness effect will be cleared in a few frames.
+		/// If the value is more than <c>1.99f</c> (not <c>2f</c>), the value will be clamped to <c>1.99f</c>.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// If the <see cref="Ped"/> does not exist, this method will return <c>-2f</c>,
+		/// which is the default value that indicates the <see cref="Ped"/> is not wet.
+		/// </para>
+		/// <para>
+		/// <see cref="UpperWetnessLevel"/> and <see cref="UpperWetnessHeight"/> must be set before this value can have affect.
+		/// If <see cref="UpperWetnessLevel"/> is <c>-2f</c> or less or and <see cref="UpperWetnessHeight"/> is zero or less,
+		/// this value will be transferred to <see cref="UpperWetnessLevel"/> and then this value will be set to zero.
+		/// </para>
+		/// </remarks>
+		public float LowerWetnessLevel
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessLevelOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedLowerWetnessLevelOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessLevelOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedLowerWetnessLevelOffset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the upper wetness level of this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The height offset of the upper water line in meters.
+		/// Should be in the range of <c>-2f</c> exclusive and <c>1.99f</c> inclusive.
+		/// If the value is <c>-2f</c> or less, the wetness effect will be cleared in a few frames.
+		/// If the value is more than <c>1.99f</c> (not <c>2f</c>), the value will be clamped to <c>1.99f</c>.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// If the <see cref="Ped"/> does not exist, this method will return <c>-2f</c>,
+		/// which is the default value that indicates the <see cref="Ped"/> is not wet.
+		/// </para>
+		/// <para>
+		/// This value and <see cref="UpperWetnessHeight"/> must be set before <see cref="LowerWetnessLevel"/> can have affect.
+		/// </para>
+		/// </remarks>
+		public float UpperWetnessLevel
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessLevelOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedUpperWetnessLevelOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessLevelOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedUpperWetnessLevelOffset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets the value that indicates this <see cref="Ped"/> is wet at all.
+		/// Strictly, this method checks if the bit is set that determines wet/soaked effect is being used on this <see cref="Ped"/>.
+		/// </summary>
+		public bool IsWet
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedIsUsingWetEffectOffset == 0)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.CPedIsUsingWetEffectOffset, 0);
+			}
+		}
+
+		/// <remarks>
+		/// <para>
+		/// This method changes <see cref="UpperWetnessHeight"/> to <paramref name="height"/> and <see cref="UpperWetnessLevel"/> to <c>1f</c>,
+		/// but <see cref="LowerWetnessHeight"/> will be set to <c>-2f</c> and <see cref="LowerWetnessLevel"/> will be set to zero.
+		/// </para>
+		/// <para>
+		/// If there are some cloth controllers (<c>rage::characterClothController</c>) of this <see cref="Ped"/> for physics,
+		/// the wind multiplier for physics will be set to 0.3 instead of 1.0 for the normal state.
+		/// </para>
+		/// </remarks>
+		/// <inheritdoc cref="Wet(float, float)"/>
+		public void Wet(float height) => Function.Call(Hash.SET_PED_WETNESS_HEIGHT, Handle, height);
+		/// <summary>
+		/// Makes this <see cref="Ped"/> wet.
+		/// </summary>
+		/// <param name="height">
+		/// The height offset of the water line in meters. Should be in the range of <c>-2f</c> exclusive and <c>1.99f</c> inclusive.
+		/// If the value is <c>-2f</c> or less, the wetness effect will be cleared in a few frames.
+		/// If the value is more than <c>1.99f</c> (not <c>2f</c>), the value will be clamped to <c>1.99f</c>.
+		/// </param>
+		/// <param name="wetLevel">The wet level between 0 and 1.</param>
+		/// <remarks>
+		/// <para>
+		/// This method changes <see cref="UpperWetnessHeight"/> to <paramref name="height"/> and <see cref="UpperWetnessLevel"/> to <paramref name="wetLevel"/>,
+		/// but <see cref="LowerWetnessHeight"/> will be set to <c>-2f</c> and <see cref="LowerWetnessLevel"/> will be set to zero.
+		/// </para>
+		/// <para>
+		/// If there are some cloth controllers (<c>rage::characterClothController</c>) of this <see cref="Ped"/> for physics,
+		/// the wind multiplier for physics will be set to 0.3 instead of 1.0 for the normal state.
+		/// </para>
+		/// </remarks>
+		public void Wet(float height, float wetLevel)
+		{
+			IntPtr address = MemoryAddress;
+			if (address == IntPtr.Zero)
+			{
+				return;
+			}
+
+			Wet(height);
+
+			if (SHVDN.NativeMemory.CPedUpperWetnessLevelOffset != 0)
+			{
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedUpperWetnessLevelOffset, wetLevel);
+			}
+		}
+		/// <summary>
+		/// Dries this <see cref="Ped"/>. In other words, clears the wet/soaked effect from the <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// If there are some cloth controllers (<c>rage::characterClothController</c>) of this <see cref="Ped"/> for physics,
+		/// the wind multiplier for physics will be set to 1.0 for the normal state.
+		/// </remarks>
+		public void DryOff() => Function.Call(Hash.CLEAR_PED_WETNESS, Handle);
+		/// <summary>
+		/// Enables a non-player <see cref="Ped"/> to get wet this frame from systems that it otherwise wouldn't (e.g. particle effects).
+		/// Since the system let the player <see cref="Ped"/> wet without this method, you do not need to call this method on the player <see cref="Ped"/>.
+		/// </summary>
+		public void SetWetnessEnabledThisFrame() => Function.Call(Hash.SET_PED_WETNESS_ENABLED_THIS_FRAME, Handle);
 
 		#endregion
 

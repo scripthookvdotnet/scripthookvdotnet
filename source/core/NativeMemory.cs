@@ -929,6 +929,18 @@ namespace SHVDN
 				s_fragInstNmGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
 			}
 
+			address = FindPatternBmh("\x76\x20\xEB\x17\x76\x1C\xF3\x0F\x59\xE1\xF3\x0F\x5C\xC4\x0F\x2F\xC2", "xxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				CPedLowerWetnessLevelOffset = *(int*)(address - 4);
+				CPedUpperWetnessLevelOffset = CPedLowerWetnessLevelOffset + 4;
+				CPedLowerWetnessHeightOffset = CPedLowerWetnessLevelOffset - 8;
+				CPedUpperWetnessHeightOffset = CPedLowerWetnessLevelOffset - 4;
+
+				// this may look too risky, but this offset fetching do work in b372, b2699, and b2845
+				CPedIsUsingWetEffectOffset = *(int*)(address + 0x85);
+			}
+
 			address = FindPatternBmh("\x0F\x93\xC0\x84\xC0\x74\x0F\xF3\x41\x0F\x58\xD1\x41\x0F\x2F\xD0\x72\x04\x41\x0F\x28\xD0", "xxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
@@ -2719,6 +2731,13 @@ namespace SHVDN
 		#endregion
 
 		#region -- Ped Offsets --
+
+		public static int CPedLowerWetnessHeightOffset { get; }
+		public static int CPedUpperWetnessHeightOffset { get; }
+		public static int CPedLowerWetnessLevelOffset { get; }
+		public static int CPedUpperWetnessLevelOffset { get; }
+
+		public static int CPedIsUsingWetEffectOffset { get; }
 
 		public static int SweatOffset { get; }
 
