@@ -1580,7 +1580,7 @@ namespace GTA
 		/// Gets the combat target <see cref="Ped"/> who this <see cref="Ped"/> is in combat with for a <c>CTaskCombat</c> of this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
-		/// Although <c>GET_PED_TARGET_FROM_COMBAT_PED</c> does not present in v1.0.2245.0 or earlier game versions,
+		/// Although <c>GET_PED_TARGET_FROM_COMBAT_PED</c> is not present in v1.0.2245.0 or earlier game versions,
 		/// this property supports all game versions.
 		/// </remarks>
 		public Ped CombatTarget
