@@ -193,9 +193,12 @@ namespace SHVDN
 			scriptPath = Path.GetFullPath(scriptPath);
 
 			// Create application and script domain for all the scripts to reside in
-			string name = "ScriptDomain_" + (scriptPath.GetHashCode() ^ Environment.TickCount).ToString("X");
+			int hashCodeForAppDomain = 17;
+			hashCodeForAppDomain = hashCodeForAppDomain * 23 + scriptPath.GetHashCode();
+			hashCodeForAppDomain = hashCodeForAppDomain * 23 + Environment.TickCount.GetHashCode();
+			string name = "SHVDN_ScriptDomain_" + hashCodeForAppDomain.ToString("X");
 			var setup = new AppDomainSetup();
-			setup.ShadowCopyFiles = "true"; // Copy assemblies into memory rather than locking the file, so they can be updated while the domain is still loaded
+			setup.ShadowCopyFiles = "true"; // Copy assemblies to another location than locking the file, so the original assembly files can be updated while the domain is still loaded (the copied assemblies will be locked)
 			setup.ShadowCopyDirectories = scriptPath; // Only shadow copy files in the scripts directory
 			setup.ApplicationBase = scriptPath;
 
