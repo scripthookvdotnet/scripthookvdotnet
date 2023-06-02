@@ -75,7 +75,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
+				int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
 				if (cachedPlayer == null || handle != cachedPlayer.Handle)
 				{
@@ -95,7 +95,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetLocalPlayerPedHandle();
+				int handle = SHVDN.NativeMemory.GetLocalPlayerPedHandle();
 
 				if (cachedLocalPlayerPed == null || handle != cachedLocalPlayerPed.Handle)
 				{
@@ -193,7 +193,7 @@ namespace GTA
 		{
 			get
 			{
-				var radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
+				string radioName = Function.Call<string>(Hash.GET_PLAYER_RADIO_STATION_NAME);
 
 				if (string.IsNullOrEmpty(radioName))
 				{
@@ -241,7 +241,7 @@ namespace GTA
 		/// </summary>
 		public static void UnlockAllRadioStations()
 		{
-			foreach (var station in radioNames)
+			foreach (string station in radioNames)
 			{
 				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
 			}
@@ -386,7 +386,7 @@ namespace GTA
 
 			uint hash = 0;
 
-			foreach (var button in buttons)
+			foreach (Button button in buttons)
 			{
 				hash += (uint)button;
 				hash += (hash << 10);
@@ -614,14 +614,14 @@ namespace GTA
 		/// The behavior is undefined except no exception will be thrown if input has some non-ASCII characters.
 		/// </para>
 		/// </remarks>
-		public static int GenerateHashASCII(string input)
+		public static int GenerateHashAscii(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{
 				return 0;
 			}
 
-			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCII(input));
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyAscii(input));
 		}
 		/// <summary>
 		/// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> without pre conversion before hashing.
@@ -629,15 +629,15 @@ namespace GTA
 		/// For example, <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c>, will be converted into <c>0xEB92D4DF</c>.
 		/// Can be called in any thread.
 		/// </summary>
-		/// <inheritdoc cref="GenerateHashASCII(string)"/>
-		public static int GenerateHashASCIINoPreConversion(string input)
+		/// <inheritdoc cref="GenerateHashAscii(string)"/>
+		public static int GenerateHashAsciiNoPreConversion(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{
 				return 0;
 			}
 
-			return unchecked((int)SHVDN.NativeMemory.GetHashKeyASCIINoPreConversion(input));
+			return unchecked((int)SHVDN.NativeMemory.GetHashKeyAsciiNoPreConversion(input));
 		}
 
 		/// <summary>
@@ -656,7 +656,7 @@ namespace GTA
 		/// <returns>The localized <see cref="string"/> if the key hash exists; otherwise, <see cref="string.Empty"/></returns>
 		public static string GetLocalizedString(int entryLabelHash)
 		{
-			return SHVDN.NativeMemory.GetGXTEntryByHash(entryLabelHash);
+			return SHVDN.NativeMemory.GetGxtEntryByHash(entryLabelHash);
 		}
 
 		/// <summary>
@@ -679,11 +679,11 @@ namespace GTA
 		/// <remarks>This function takes the Cheat Engine/IDA format ("48 8B 0D ?? ?? ? ? 44 8B C6 8B D5 8B D8" for example, where ?? and ? are wildcards).</remarks>
 		public static IntPtr FindPattern(string pattern, IntPtr startAddress = default)
 		{
-			var rawHexStringsSplitted = pattern.Split(' ');
+			string[] rawHexStringsSplitted = pattern.Split(' ');
 			var newPatternBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 			var newMaskBuilder = new StringBuilder(rawHexStringsSplitted.Length);
 
-			foreach (var rawHex in rawHexStringsSplitted)
+			foreach (string rawHex in rawHexStringsSplitted)
 			{
 				if (string.IsNullOrEmpty(rawHex))
 				{
@@ -697,7 +697,7 @@ namespace GTA
 					continue;
 				}
 
-				var character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
+				char character = (char)short.Parse(rawHex, NumberStyles.AllowHexSpecifier);
 				newPatternBuilder.Append(character);
 				newMaskBuilder.Append("x");
 			}
@@ -716,7 +716,7 @@ namespace GTA
 		{
 			unsafe
 			{
-				var address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
+				byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
 				return address == null ? IntPtr.Zero : new IntPtr(address);
 			}
 		}

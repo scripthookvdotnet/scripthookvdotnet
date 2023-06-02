@@ -15,7 +15,8 @@ namespace GTA
 	public static class World
 	{
 		#region Fields
-		static readonly string[] weatherNames = {
+
+		private static readonly string[] weatherNames = {
 			"EXTRASUNNY",
 			"CLEAR",
 			"CLOUDS",
@@ -33,7 +34,7 @@ namespace GTA
 			"HALLOWEEN"
 		};
 
-		static readonly GregorianCalendar calendar = new();
+		private static readonly GregorianCalendar calendar = new();
 		#endregion
 
 		#region Time & Day
@@ -148,7 +149,11 @@ namespace GTA
 			}
 			set
 			{
-				if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown) return;
+				if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown)
+				{
+					return;
+				}
+
 				int currentWeatherHash;
 				unsafe
 				{
@@ -225,7 +230,7 @@ namespace GTA
 			bool blipFound = false;
 			Vector3 position = Vector3.Zero;
 
-			var waypointBlipHandle = SHVDN.NativeMemory.GetWaypointBlip();
+			int waypointBlipHandle = SHVDN.NativeMemory.GetWaypointBlip();
 
 			if (waypointBlipHandle != 0)
 			{
@@ -233,7 +238,11 @@ namespace GTA
 				blipFound = true;
 			}
 
-			if (!blipFound) return position;
+			if (!blipFound)
+			{
+				return position;
+			}
+
 			bool groundFound = false;
 			float height = 0.0f;
 
@@ -307,7 +316,7 @@ namespace GTA
 
 		public static Ped[] GetNearbyPeds(Ped ped, float radius)
 		{
-			var handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius);
+			int[] handles = SHVDN.NativeMemory.GetPedHandles(ped.Position.ToInternalFVector3(), radius);
 
 			if (handles.Length == 0)
 			{
@@ -316,7 +325,7 @@ namespace GTA
 
 			var result = new List<Ped>(handles.Length - 1);
 
-			foreach (var handle in handles)
+			foreach (int handle in handles)
 			{
 				if (handle == ped.Handle)
 				{
@@ -349,7 +358,7 @@ namespace GTA
 		}
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="Vehicle"/>s in the World.
-		/// </summary>	
+		/// </summary>
 		public static Vehicle[] GetAllVehicles()
 		{
 			return Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(), handle => new Vehicle(handle));
@@ -371,7 +380,7 @@ namespace GTA
 
 		public static Vehicle[] GetNearbyVehicles(Ped ped, float radius)
 		{
-			var handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius);
+			int[] handles = SHVDN.NativeMemory.GetVehicleHandles(ped.Position.ToInternalFVector3(), radius);
 
 			if (handles.Length == 0)
 			{
@@ -382,7 +391,7 @@ namespace GTA
 			Vehicle ignore = ped.CurrentVehicle;
 			int ignoreHandle = Entity.Exists(ignore) ? ignore.Handle : 0;
 
-			foreach (var handle in handles)
+			foreach (int handle in handles)
 			{
 				if (handle == ignoreHandle)
 				{
@@ -483,13 +492,17 @@ namespace GTA
 		public static T GetClosest<T>(Vector3 position, params T[] spatials) where T : ISpatial
 		{
 			var closest = default(T);
-			var closestDistance = 3e38f;
+			float closestDistance = 3e38f;
 
-			foreach (var spatial in spatials)
+			foreach (T spatial in spatials)
 			{
-				var distance = position.DistanceToSquared(spatial.Position);
+				float distance = position.DistanceToSquared(spatial.Position);
 
-				if (!(distance <= closestDistance)) continue;
+				if (!(distance <= closestDistance))
+				{
+					continue;
+				}
+
 				closest = spatial;
 				closestDistance = distance;
 			}
@@ -503,7 +516,7 @@ namespace GTA
 		/// <remarks>Returns <see langword="null" /> if no <see cref="Ped"/> was in the given region.</remarks>
 		public static Ped GetClosestPed(Vector3 position, float radius)
 		{
-			var peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius), handle => new Ped(handle));
+			Ped[] peds = Array.ConvertAll(SHVDN.NativeMemory.GetPedHandles(position.ToInternalFVector3(), radius), handle => new Ped(handle));
 			return GetClosest(position, peds);
 		}
 		/// <summary>
@@ -514,7 +527,7 @@ namespace GTA
 		/// <remarks>Returns <see langword="null" /> if no <see cref="Vehicle"/> was in the given region.</remarks>
 		public static Vehicle GetClosestVehicle(Vector3 position, float radius)
 		{
-			var vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius), handle => new Vehicle(handle));
+			Vehicle[] vehicles = Array.ConvertAll(SHVDN.NativeMemory.GetVehicleHandles(position.ToInternalFVector3(), radius), handle => new Vehicle(handle));
 			return GetClosest(position, vehicles);
 
 		}
@@ -993,7 +1006,7 @@ namespace GTA
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore.</param>
 		public static RaycastResult Raycast(Vector3 source, Vector3 direction, float maxDistance, IntersectOptions options, Entity ignoreEntity)
 		{
-			var target = source + (direction * maxDistance);
+			Vector3 target = source + (direction * maxDistance);
 			return new RaycastResult(Function.Call<int>(Hash._CAST_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 		/// <inheritdoc cref="RaycastCapsule(Vector3, Vector3, float, IntersectOptions, Entity)"/>
@@ -1029,7 +1042,7 @@ namespace GTA
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectOptions options, Entity ignoreEntity)
 		{
-			var target = source + (direction * maxDistance);
+			Vector3 target = source + (direction * maxDistance);
 			return new RaycastResult(Function.Call<int>(Hash._CAST_3D_RAY_POINT_TO_POINT, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, (int)options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
 		}
 

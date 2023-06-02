@@ -64,7 +64,7 @@ namespace GTA
 				var result = new VehicleWeaponHash[_elemCountForWeaponPropertyArrays];
 
 				const int memberOffset = 0x8;
-				for (var i = 0; i < result.Length; i++)
+				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = (VehicleWeaponHash)SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
 				}
@@ -82,8 +82,8 @@ namespace GTA
 					return;
 				}
 
-				var arrayToFill = new int[_elemCountForWeaponPropertyArrays];
-				for (var i = 0; i < value.Length; i++)
+				int[] arrayToFill = new int[_elemCountForWeaponPropertyArrays];
+				for (int i = 0; i < value.Length; i++)
 				{
 					// VehicleWeaponHash.Invalid should have been zero since the game always treats zero as a invalid weapon hash but not necessarily for 0xFFFFFFFF
 					if (value[i] == VehicleWeaponHash.Invalid)
@@ -95,7 +95,7 @@ namespace GTA
 				}
 
 				const int memberOffset = 0x8;
-				for (var i = 0; i < arrayToFill.Length; i++)
+				for (int i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, (int)arrayToFill[i]);
 				}
@@ -121,14 +121,14 @@ namespace GTA
 
 				var result = new VehicleSeat[_elemCountForWeaponPropertyArrays];
 
-				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
-				for (var i = 0; i < result.Length; i++)
+				int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
+				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = (VehicleSeat)SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
 				}
 
 				// Make values match what native functions uses for vehicle seats
-				for (var i = 0; i < result.Length; i++)
+				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = (VehicleSeat)((int)result[i] - 1);
 				}
@@ -146,15 +146,15 @@ namespace GTA
 					return;
 				}
 
-				var arrayToFill = new int[_elemCountForWeaponPropertyArrays];
-				for (var i = 0; i < value.Length; i++)
+				int[] arrayToFill = new int[_elemCountForWeaponPropertyArrays];
+				for (int i = 0; i < value.Length; i++)
 				{
 					// Make values match what game code uses outside native functions
 					arrayToFill[i] = (int)value[i] + 1;
 				}
 
-				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
-				for (var i = 0; i < arrayToFill.Length; i++)
+				int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
+				for (int i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -187,10 +187,10 @@ namespace GTA
 				}
 
 				var result = new VehicleModType[_elemCountForWeaponPropertyArrays];
-				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
-				for (var i = 0; i < result.Length; i++)
+				int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
+				for (int i = 0; i < result.Length; i++)
 				{
-					var modTypeForNative = SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
+					int modTypeForNative = SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
 					if (modTypeForNative == (int)VehicleModType.None)
 					{
 						result[i] = VehicleModType.None;
@@ -217,10 +217,10 @@ namespace GTA
 					return;
 				}
 
-				var arrayToFill = new int[_elemCountForWeaponPropertyArrays];
-				for (var i = 0; i < value.Length; i++)
+				int[] arrayToFill = new int[_elemCountForWeaponPropertyArrays];
+				for (int i = 0; i < value.Length; i++)
 				{
-					var currentValue = value[i];
+					VehicleModType currentValue = value[i];
 					if (currentValue == VehicleModType.None)
 					{
 						arrayToFill[i] = (int)VehicleModType.None;
@@ -230,8 +230,8 @@ namespace GTA
 					arrayToFill[i] = GetModTypeValueForInternalGameCode(currentValue);
 				}
 
-				var memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
-				for (var i = 0; i < arrayToFill.Length; i++)
+				int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
+				for (int i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -264,8 +264,8 @@ namespace GTA
 					memberOffset = 0x28;
 				}
 
-				var result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (var i = 0; i < result.Length; i++)
+				float[] result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
 				}
@@ -297,13 +297,13 @@ namespace GTA
 					memberOffset = 0x28;
 				}
 
-				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (var i = 0; i < value.Length; i++)
+				float[] arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
 				}
 
-				for (var i = 0; i < arrayToFill.Length; i++)
+				for (int i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -336,8 +336,8 @@ namespace GTA
 					memberOffset = 0x34;
 				}
 
-				var result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (var i = 0; i < result.Length; i++)
+				float[] result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
 				}
@@ -369,13 +369,13 @@ namespace GTA
 					memberOffset = 0x34;
 				}
 
-				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (var i = 0; i < value.Length; i++)
+				float[] arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
 				}
 
-				for (var i = 0; i < arrayToFill.Length; i++)
+				for (int i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -408,8 +408,8 @@ namespace GTA
 					memberOffset = 0x40;
 				}
 
-				var result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (var i = 0; i < result.Length; i++)
+				float[] result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
 				}
@@ -441,13 +441,13 @@ namespace GTA
 					memberOffset = 0x40;
 				}
 
-				var arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
-				for (var i = 0; i < value.Length; i++)
+				float[] arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
 				}
 
-				for (var i = 0; i < arrayToFill.Length; i++)
+				for (int i = 0; i < arrayToFill.Length; i++)
 				{
 					SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
 				}
@@ -462,7 +462,7 @@ namespace GTA
 				return (int)modTypeForNativeFunction;
 			}
 
-			var modTypeForNativeFunctionInt = (int)modTypeForNativeFunction;
+			int modTypeForNativeFunctionInt = (int)modTypeForNativeFunction;
 			if (modTypeForNativeFunctionInt > 10)
 			{
 				if ((uint)modTypeForNativeFunctionInt > 24u)

@@ -80,7 +80,7 @@ namespace GTA
 		/// </remarks>
 		public (ShapeTestStatus status, ShapeTestResult result) GetResult()
 		{
-			var status = GetResult(out var result);
+			ShapeTestStatus status = GetResult(out ShapeTestResult result);
 			return (status, result);
 		}
 
@@ -121,7 +121,7 @@ namespace GTA
 		/// </remarks>
 		public (ShapeTestStatus status, ShapeTestResult result, MaterialHash materialHash) GetResultIncludingMaterial()
 		{
-			var status = GetResultIncludingMaterial(out var result, out var materialHash);
+			ShapeTestStatus status = GetResultIncludingMaterial(out ShapeTestResult result, out MaterialHash materialHash);
 			return (status, result, materialHash);
 		}
 

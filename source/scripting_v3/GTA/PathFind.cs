@@ -56,7 +56,7 @@ namespace GTA
 		public static PathNode GetClosestVehicleNode(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
 		{
 			Func<int, bool> convertedPredicate = predicate != null ? predInt => predicate((VehiclePathNodePropertyFlags)predInt) : null;
-			var resultHandle = SHVDN.NativeMemory.PathFind.GetClosestLoadedVehiclePathNode(position.X, position.Y, position.Z, radius, convertedPredicate);
+			int resultHandle = SHVDN.NativeMemory.PathFind.GetClosestLoadedVehiclePathNode(position.X, position.Y, position.Z, radius, convertedPredicate);
 			return resultHandle != 0 ? new PathNode(resultHandle) : null;
 		}
 
@@ -80,7 +80,7 @@ namespace GTA
 			unsafe
 			{
 				NativeVector3 outPos;
-				var foundNode = Function.Call<bool>(Hash.GET_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, &outPos, flags, zMeasureMult, zTolerance);
+				bool foundNode = Function.Call<bool>(Hash.GET_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, &outPos, flags, zMeasureMult, zTolerance);
 
 				closestNodePosition = outPos;
 				return foundNode;
@@ -136,7 +136,7 @@ namespace GTA
 			unsafe
 			{
 				NativeVector3 outPos;
-				var foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, nthClosest, &outPos, flags, zMeasureMult, zTolerance);
+				bool foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, nthClosest, &outPos, flags, zMeasureMult, zTolerance);
 
 				closestNodePosition = outPos;
 				return foundNode;
@@ -215,7 +215,7 @@ namespace GTA
 				NativeVector3 outPos;
 				float outHeading;
 				int outNumLanes;
-				var foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, position.X, position.Y, position.Z, nthClosest, &outPos, &outHeading, &outNumLanes, flags, zMeasureMult, zTolerance);
+				bool foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, position.X, position.Y, position.Z, nthClosest, &outPos, &outHeading, &outNumLanes, flags, zMeasureMult, zTolerance);
 
 				closestNodePosition = outPos;
 				heading = outHeading;

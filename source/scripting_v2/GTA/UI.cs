@@ -108,7 +108,7 @@ namespace GTA
 
 			int id;
 
-			if (_textures.TryGetValue(filename, out var texture))
+			if (_textures.TryGetValue(filename, out int texture))
 			{
 				id = texture;
 			}
@@ -119,10 +119,10 @@ namespace GTA
 				_textures.Add(filename, id);
 			}
 
-			var x = (float)pos.X / WIDTH;
-			var y = (float)pos.Y / HEIGHT;
-			var w = (float)size.Width / WIDTH;
-			var h = (float)size.Height / HEIGHT;
+			float x = (float)pos.X / WIDTH;
+			float y = (float)pos.Y / HEIGHT;
+			float w = (float)size.Width / WIDTH;
+			float h = (float)size.Height / HEIGHT;
 
 			SHVDN.NativeMemory.DrawTexture(id, index, level, time, w, h, center.X, center.Y, x, y, rotation, aspectRatio, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f);
 		}

@@ -36,7 +36,7 @@ namespace GTA
 		/// </returns>
 		internal static Entity FromHandle(int handle)
 		{
-			var address = SHVDN.NativeMemory.GetEntityAddress(handle);
+			IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
 			if (address == IntPtr.Zero)
 			{
 				return null;
@@ -175,7 +175,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -336,10 +336,10 @@ namespace GTA
 			get
 			{
 				const double D2R = 0.01745329251994329576923690768489;
-				var num1 = System.Math.Cos(Rotation.Y * D2R);
-				var x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-				var y = num1 * System.Math.Sin(Rotation.Z * D2R);
-				var z = System.Math.Sin(-Rotation.Y * D2R);
+				double num1 = System.Math.Cos(Rotation.Y * D2R);
+				double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+				double y = num1 * System.Math.Sin(Rotation.Z * D2R);
+				double z = System.Math.Sin(-Rotation.Y * D2R);
 				return new Vector3((float)x, (float)y, (float)z);
 			}
 		}
@@ -416,7 +416,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -426,7 +426,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -447,7 +447,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -457,7 +457,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -477,7 +477,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -487,7 +487,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -508,7 +508,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -518,7 +518,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -539,7 +539,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -549,7 +549,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -570,7 +570,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -592,7 +592,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -706,7 +706,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = SHVDN.NativeMemory.GetEntityAddress(Handle);
+				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
 				if (address == IntPtr.Zero)
 				{
 					return false;
@@ -942,7 +942,7 @@ namespace GTA
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_ENTITY_AS_NO_LONGER_NEEDED, &handle);
@@ -957,7 +957,7 @@ namespace GTA
 		/// </summary>
 		public void Delete()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, handle, false, true);
 			unsafe
 			{

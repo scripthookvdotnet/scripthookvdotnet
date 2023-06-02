@@ -13,6 +13,10 @@ namespace GTA
 	/// After you create a <see cref="TaskSequence"/> instance, call <see cref="AddTask"/> as many as you want and call <see cref="Close()"/> or <see cref="Close(bool)"/>
 	/// right after the instance creation statement.
 	/// </summary>
+	/// <remarks>
+	/// If you forget to close or dispose of your <see cref="TaskSequence"/>s and <see cref="Ped"/>s cannot start any <see cref="TaskSequence"/>s afterwards during script development,
+	/// try restarting the game session by loading a save or starting a new game.
+	/// </remarks>
 	public sealed class TaskSequence : IDisposable
 	{
 		#region Fields
@@ -49,7 +53,7 @@ namespace GTA
 		/// </summary>
 		public void Dispose()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.CLEAR_SEQUENCE_TASK, &handle);

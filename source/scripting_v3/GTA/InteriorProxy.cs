@@ -61,7 +61,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -79,13 +79,13 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
 				}
 
-				var interiorInstHandle = SHVDN.NativeMemory.GetAssociatedInteriorInstHandleFromInteriorProxy(Handle);
+				int interiorInstHandle = SHVDN.NativeMemory.GetAssociatedInteriorInstHandleFromInteriorProxy(Handle);
 				return interiorInstHandle != 0 ? new InteriorInstance(interiorInstHandle) : null;
 			}
 		}
@@ -97,7 +97,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
@@ -187,7 +187,7 @@ namespace GTA
 		/// <remarks>returns <see langword="null" /> if the gameplay camera is not in any interior space.</remarks>
 		static public InteriorProxy GetInteriorProxyFromGameplayCam()
 		{
-			var interiorInstHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromGameplayCam();
+			int interiorInstHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromGameplayCam();
 			return interiorInstHandle != 0 ? new InteriorProxy(interiorInstHandle) : null;
 		}
 

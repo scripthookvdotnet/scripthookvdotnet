@@ -80,8 +80,8 @@ namespace GTA
 				return;
 			}
 
-			var x = (float)(Position.X + offset.Width) / UI.WIDTH;
-			var y = (float)(Position.Y + offset.Height) / UI.HEIGHT;
+			float x = (float)(Position.X + offset.Width) / UI.WIDTH;
+			float y = (float)(Position.Y + offset.Height) / UI.HEIGHT;
 
 			if (Shadow)
 			{

@@ -38,7 +38,7 @@ namespace GTA
 		{
 			get
 			{
-				GetAreaIdAndNodeIdToTargetNode(out var targetAreaId, out _);
+				GetAreaIdAndNodeIdToTargetNode(out int targetAreaId, out _);
 				return targetAreaId;
 			}
 		}
@@ -50,7 +50,7 @@ namespace GTA
 		{
 			get
 			{
-				GetAreaIdAndNodeIdToTargetNode(out _, out var targetNodeId);
+				GetAreaIdAndNodeIdToTargetNode(out _, out int targetNodeId);
 				return targetNodeId;
 			}
 		}
@@ -66,7 +66,7 @@ namespace GTA
 		{
 			get
 			{
-				var targetNodeHandle = SHVDN.NativeMemory.PathFind.GetTargetNodeHandleFromNodeLink(AreaId, Index);
+				int targetNodeHandle = SHVDN.NativeMemory.PathFind.GetTargetNodeHandleFromNodeLink(AreaId, Index);
 				if (targetNodeHandle == 0)
 				{
 					return null;

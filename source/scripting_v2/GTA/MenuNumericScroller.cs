@@ -11,9 +11,9 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuNumericScroller : IMenuItem
 	{
-		UIText text = null;
-		UIRectangle button = null;
-		int timesIncremented;
+		private UIText text = null;
+		private UIRectangle button = null;
+		private int timesIncremented;
 
 		public MenuNumericScroller(string caption, string description, double min, double max, double inc) : this(caption, description, min, max, inc, 0)
 		{
@@ -114,9 +114,9 @@ namespace GTA
 			UpdateText();
 		}
 
-		void UpdateText()
+		private void UpdateText()
 		{
-			var number = Min + Increment * TimesIncremented;
+			double number = Min + Increment * TimesIncremented;
 			string numberString;
 
 			switch (DecimalFigures)

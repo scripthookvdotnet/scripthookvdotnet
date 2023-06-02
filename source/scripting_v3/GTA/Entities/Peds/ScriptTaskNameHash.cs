@@ -7,11 +7,18 @@ namespace GTA
 {
 	/// <summary>
 	/// An enumeration of all possible scripted task name hashes.
-	/// Used for <see cref="Ped.GetTaskStatus(ScriptTaskNameHash)"/>.
+	/// Used for <see cref="Ped.GetScriptTaskStatus(ScriptTaskNameHash)"/>.
 	/// </summary>
 	public enum ScriptTaskNameHash : uint
 	{
+		/// <summary>
+		/// This is the special hash that makes <see cref="Ped.GetScriptTaskStatus(ScriptTaskNameHash)"/> returns the current task status
+		/// regardless of the current script task hash.
+		/// </summary>
 		Any = 0x55966344,
+		/// <summary>
+		/// This value is used when no scripted task is performed.
+		/// </summary>
 		Invalid = 0x811E343C,
 		Pause = 0x03C990EC,
 		StandStill = 0xC572E06A,

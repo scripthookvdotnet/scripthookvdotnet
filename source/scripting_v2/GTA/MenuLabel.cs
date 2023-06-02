@@ -11,11 +11,11 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuLabel : IMenuItem
 	{
-		UIText text = null;
-		UIRectangle button = null;
-		UIRectangle underlineAbove = null;
-		UIRectangle underlineBelow = null;
-		string caption;
+		private UIText text = null;
+		private UIRectangle button = null;
+		private UIRectangle underlineAbove = null;
+		private UIRectangle underlineBelow = null;
+		private string caption;
 
 		public MenuLabel(string caption) : this(caption, false)
 		{
@@ -129,7 +129,7 @@ namespace GTA
 			}
 		}
 
-		void UpdateText()
+		private void UpdateText()
 		{
 			text.Caption = Caption;
 		}

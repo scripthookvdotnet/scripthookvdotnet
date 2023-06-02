@@ -5,7 +5,10 @@
 
 namespace GTA
 {
-	public enum PedPropAnchorPosition
+	/// <summary>
+	/// An enumeration of anchor points for <see cref="Ped"/> props (represents what <c>eAnchorPoints</c> in the game represents).
+	/// </summary>
+	public enum PedPropAnchorPoint
 	{
 		Head,
 		Eyes,

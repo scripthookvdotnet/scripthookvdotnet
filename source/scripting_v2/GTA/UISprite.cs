@@ -11,8 +11,8 @@ namespace GTA
 {
 	public class UISprite : UIElement, IDisposable
 	{
-		readonly string _textureDict;
-		readonly string _textureName;
+		private readonly string _textureDict;
+		private readonly string _textureName;
 
 		public UISprite(string textureDict, string textureName, Size scale, Point position) : this(textureDict, textureName, scale, position, Color.White, 0.0f)
 		{
@@ -78,10 +78,10 @@ namespace GTA
 				return;
 			}
 
-			var w = (float)Scale.Width / UI.WIDTH;
-			var h = (float)Scale.Height / UI.HEIGHT;
-			var x = (float)(Position.X + offset.Width) / UI.WIDTH + w * 0.5f;
-			var y = (float)(Position.Y + offset.Height) / UI.HEIGHT + h * 0.5f;
+			float w = (float)Scale.Width / UI.WIDTH;
+			float h = (float)Scale.Height / UI.HEIGHT;
+			float x = (float)(Position.X + offset.Width) / UI.WIDTH + w * 0.5f;
+			float y = (float)(Position.Y + offset.Height) / UI.HEIGHT + h * 0.5f;
 
 			Function.Call(Hash.DRAW_SPRITE, _textureDict, _textureName, x, y, w, h, Rotation, Color.R, Color.G, Color.B, Color.A);
 		}

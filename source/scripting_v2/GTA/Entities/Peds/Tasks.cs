@@ -11,7 +11,7 @@ namespace GTA
 {
 	public sealed class Tasks
 	{
-		Ped _ped;
+		private Ped _ped;
 
 		internal Tasks(Ped ped)
 		{
@@ -126,7 +126,7 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_FLUSH_ROUTE);
 
-			foreach (var point in points)
+			foreach (Vector3 point in points)
 			{
 				Function.Call(Hash.TASK_EXTEND_ROUTE, point.X, point.Y, point.Z);
 			}
@@ -277,7 +277,7 @@ namespace GTA
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, animDict);
 
-			var startTime = Environment.TickCount;
+			int startTime = Environment.TickCount;
 
 			while (!Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, animDict))
 			{

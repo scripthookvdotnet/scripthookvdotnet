@@ -49,7 +49,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
+				int handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
 
 				if (ped == null || handle != ped.Handle)
 				{
@@ -175,7 +175,7 @@ namespace GTA
 		{
 			get
 			{
-				var buildingHandle = SHVDN.NativeMemory.GetTargetedBuildingHandleOfPlayer(Handle);
+				int buildingHandle = SHVDN.NativeMemory.GetTargetedBuildingHandleOfPlayer(Handle);
 				return buildingHandle != 0 ? new Building(buildingHandle) : null;
 			}
 		}
@@ -203,7 +203,7 @@ namespace GTA
 		{
 			get
 			{
-				var cPlayerPedTargetingAddr = SHVDN.NativeMemory.GetCPlayerPedTargetingAddress(Handle);
+				IntPtr cPlayerPedTargetingAddr = SHVDN.NativeMemory.GetCPlayerPedTargetingAddress(Handle);
 				if (cPlayerPedTargetingAddr == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -245,7 +245,7 @@ namespace GTA
 		{
 			get
 			{
-				var cPlayerPedTargetingAddr = SHVDN.NativeMemory.GetCPlayerPedTargetingAddress(Handle);
+				IntPtr cPlayerPedTargetingAddr = SHVDN.NativeMemory.GetCPlayerPedTargetingAddress(Handle);
 				if (cPlayerPedTargetingAddr == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -313,7 +313,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -328,7 +328,7 @@ namespace GTA
 					return;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return;
@@ -357,7 +357,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -372,7 +372,7 @@ namespace GTA
 					return;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return;
@@ -401,7 +401,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -416,7 +416,7 @@ namespace GTA
 					return;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return;
@@ -442,7 +442,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -457,7 +457,7 @@ namespace GTA
 					return;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return;
@@ -484,7 +484,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -499,7 +499,7 @@ namespace GTA
 					return;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return;
@@ -526,7 +526,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -541,7 +541,7 @@ namespace GTA
 					return;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return;
@@ -575,7 +575,7 @@ namespace GTA
 					return false;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return false;
@@ -601,7 +601,7 @@ namespace GTA
 					return false;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return false;
@@ -627,7 +627,7 @@ namespace GTA
 					return false;
 				}
 
-				var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+				IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 				if (cWantedAddress == IntPtr.Zero)
 				{
 					return false;
@@ -651,13 +651,13 @@ namespace GTA
 				return;
 			}
 
-			var cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
+			IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
 			if (cWantedAddress == IntPtr.Zero)
 			{
 				return;
 			}
 
-			var currentWantedLevel = SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset);
+			int currentWantedLevel = SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset);
 
 			if (wantedLevel <= 0 || wantedLevel >= currentWantedLevel)
 			{
@@ -668,7 +668,7 @@ namespace GTA
 			}
 
 			// Clamps and/or sets the wanted level just like SET_PLAYER_WANTED_LEVEL does
-			var wantedLevelToApply = wantedLevel;
+			int wantedLevelToApply = wantedLevel;
 			if (wantedLevelToApply >= 6)
 			{
 				wantedLevelToApply = 5;
@@ -676,7 +676,7 @@ namespace GTA
 
 			// This additional crime value is hardcoded in a function that is called by SET_PLAYER_WANTED_LEVEL
 			const int ADDITIONAL_CRIME_VALUE = 20;
-			var threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, Handle, wantedLevelToApply);
+			int threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, Handle, wantedLevelToApply);
 
 			CurrentCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
 			SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset, wantedLevelToApply);
@@ -728,7 +728,7 @@ namespace GTA
 		{
 			get
 			{
-				var specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
+				IntPtr specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
 				if (specialAbilityStructAddr == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -738,7 +738,7 @@ namespace GTA
 			}
 			set
 			{
-				var specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
+				IntPtr specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
 				if (specialAbilityStructAddr == IntPtr.Zero)
 				{
 					return;
@@ -761,7 +761,7 @@ namespace GTA
 		{
 			get
 			{
-				var specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
+				IntPtr specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
 				if (specialAbilityStructAddr == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -771,7 +771,7 @@ namespace GTA
 			}
 			set
 			{
-				var specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
+				IntPtr specialAbilityStructAddr = SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle);
 				if (specialAbilityStructAddr == IntPtr.Zero)
 				{
 					return;
@@ -897,7 +897,7 @@ namespace GTA
 					return 0;
 				}
 
-				var cPlayerInfoAddress = SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
+				IntPtr cPlayerInfoAddress = SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
 				if (cPlayerInfoAddress == IntPtr.Zero)
 				{
 					return 0;
@@ -912,7 +912,7 @@ namespace GTA
 					return;
 				}
 
-				var cPlayerInfoAddress = SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
+				IntPtr cPlayerInfoAddress = SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
 				if (cPlayerInfoAddress == IntPtr.Zero)
 				{
 					return;

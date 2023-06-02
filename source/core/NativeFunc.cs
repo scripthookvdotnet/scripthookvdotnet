@@ -22,7 +22,7 @@ namespace SHVDN
 		/// <param name="hash">The function hash to call.</param>
 		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeInit@@YAX_K@Z")]
-		static extern void NativeInit(ulong hash);
+		private static extern void NativeInit(ulong hash);
 
 		/// <summary>
 		/// Pushes a function argument on the script function stack.
@@ -30,7 +30,7 @@ namespace SHVDN
 		/// <param name="val">The argument value.</param>
 		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativePush64@@YAX_K@Z")]
-		static extern void NativePush64(ulong val);
+		private static extern void NativePush64(ulong val);
 
 		/// <summary>
 		/// Executes the script function call.
@@ -38,37 +38,37 @@ namespace SHVDN
 		/// <returns>A pointer to the return value of the call.</returns>
 		[SuppressUnmanagedCodeSecurity]
 		[DllImport("ScriptHookV.dll", ExactSpelling = true, EntryPoint = "?nativeCall@@YAPEA_KXZ")]
-		static extern ulong* NativeCall();
+		private static extern ulong* NativeCall();
 		#endregion
 
 		/// <summary>
 		/// Internal script task which holds all data necessary for a script function call.
 		/// </summary>
-		class NativeTask : IScriptTask
+		private class NativeTask : IScriptTask
 		{
-			internal ulong Hash;
-			internal ulong[] Arguments;
-			internal ulong* Result;
+			internal ulong _hash;
+			internal ulong[] _arguments;
+			internal ulong* _result;
 
 			public void Run()
 			{
-				Result = InvokeInternal(Hash, Arguments);
+				_result = InvokeInternal(_hash, _arguments);
 			}
 		}
 
 		/// <summary>
 		/// Internal script task which holds all data necessary for a script function call.
 		/// </summary>
-		class NativeTaskPtrArgs : IScriptTask
+		private class NativeTaskPtrArgs : IScriptTask
 		{
-			internal ulong Hash;
-			internal ulong* ArgumentPtr;
-			internal int ArgumentCount;
-			internal ulong* Result;
+			internal ulong _hash;
+			internal ulong* _argumentPtr;
+			internal int _argumentCount;
+			internal ulong* _result;
 
 			public void Run()
 			{
-				Result = InvokeInternal(Hash, ArgumentPtr, ArgumentCount);
+				_result = InvokeInternal(_hash, _argumentPtr, _argumentCount);
 			}
 		}
 
@@ -76,22 +76,22 @@ namespace SHVDN
 		/// Pushes a single string component on the text stack.
 		/// </summary>
 		/// <param name="str">The string to push.</param>
-		static void PushString(string str)
+		private static void PushString(string str)
 		{
-			var domain = SHVDN.ScriptDomain.CurrentDomain;
+			ScriptDomain domain = SHVDN.ScriptDomain.CurrentDomain;
 			if (domain == null)
 			{
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			var strUtf8 = domain.PinString(str);
+			IntPtr strUtf8 = domain.PinString(str);
 
-			var strArg = (ulong)strUtf8.ToInt64();
+			ulong strArg = (ulong)strUtf8.ToInt64();
 			domain.ExecuteTask(new NativeTaskPtrArgs
 			{
-				Hash = 0x6C188BE134E074AA /* ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME */,
-				ArgumentPtr = &strArg,
-				ArgumentCount = 1
+				_hash = 0x6C188BE134E074AA /* ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME */,
+				_argumentPtr = &strArg,
+				_argumentCount = 1
 			});
 		}
 
@@ -119,16 +119,16 @@ namespace SHVDN
 				return;
 			}
 
-			var startPos = 0;
-			var currentPos = 0;
-			var currentUtf8StrLength = 0;
+			int startPos = 0;
+			int currentPos = 0;
+			int currentUtf8StrLength = 0;
 
 			while (currentPos < str.Length)
 			{
-				var codePointSize = 0;
+				int codePointSize = 0;
 
 				// Calculate the UTF-8 code point size of the current character
-				var chr = str[currentPos];
+				char chr = str[currentPos];
 				if (chr < 0x80)
 				{
 					codePointSize = 1;
@@ -144,16 +144,16 @@ namespace SHVDN
 				else
 				{
 					#region Surrogate check
-					const int LowSurrogateStart = 0xD800;
-					const int HighSurrogateStart = 0xD800;
+					const int lowSurrogateStart = 0xD800;
+					const int highSurrogateStart = 0xD800;
 
-					var temp1 = (int)chr - HighSurrogateStart;
+					int temp1 = (int)chr - highSurrogateStart;
 					if (temp1 >= 0 && temp1 <= 0x7ff)
 					{
 						// Found a high surrogate
 						if (currentPos < str.Length - 1)
 						{
-							var temp2 = str[currentPos + 1] - LowSurrogateStart;
+							int temp2 = str[currentPos + 1] - lowSurrogateStart;
 							if (temp2 >= 0 && temp2 <= 0x3ff)
 							{
 								// Found a low surrogate
@@ -185,9 +185,13 @@ namespace SHVDN
 			}
 
 			if (startPos == 0)
+			{
 				action(str);
+			}
 			else
+			{
 				action(str.Substring(startPos, str.Length - startPos));
+			}
 		}
 
 		/// <summary>
@@ -195,10 +199,10 @@ namespace SHVDN
 		/// </summary>
 		/// <param name="args"></param>
 		/// <returns></returns>
-		static ulong[] ConvertPrimitiveArguments(object[] args)
+		private static ulong[] ConvertPrimitiveArguments(object[] args)
 		{
-			var result = new ulong[args.Length];
-			for (var i = 0; i < args.Length; ++i)
+			ulong[] result = new ulong[args.Length];
+			for (int i = 0; i < args.Length; ++i)
 			{
 				switch (args[i])
 				{
@@ -240,16 +244,16 @@ namespace SHVDN
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* Invoke(ulong hash, ulong* argPtr, int argCount)
 		{
-			var domain = ScriptDomain.CurrentDomain;
+			ScriptDomain domain = ScriptDomain.CurrentDomain;
 			if (domain == null)
 			{
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			var task = new NativeTaskPtrArgs { Hash = hash, ArgumentPtr = argPtr, ArgumentCount = argCount };
+			var task = new NativeTaskPtrArgs { _hash = hash, _argumentPtr = argPtr, _argumentCount = argCount };
 			domain.ExecuteTask(task);
 
-			return task.Result;
+			return task._result;
 		}
 		/// <summary>
 		/// Executes a script function inside the current script domain.
@@ -259,16 +263,16 @@ namespace SHVDN
 		/// <returns>A pointer to the return value of the call.</returns>
 		public static ulong* Invoke(ulong hash, params ulong[] args)
 		{
-			var domain = ScriptDomain.CurrentDomain;
+			ScriptDomain domain = ScriptDomain.CurrentDomain;
 			if (domain == null)
 			{
 				throw new InvalidOperationException("Illegal scripting call outside script domain.");
 			}
 
-			var task = new NativeTask { Hash = hash, Arguments = args };
+			var task = new NativeTask { _hash = hash, _arguments = args };
 			domain.ExecuteTask(task);
 
-			return task.Result;
+			return task._result;
 		}
 		public static ulong* Invoke(ulong hash, params object[] args)
 		{
@@ -285,8 +289,11 @@ namespace SHVDN
 		public static ulong* InvokeInternal(ulong hash, ulong* argPtr, int argCount)
 		{
 			NativeInit(hash);
-			for (var i = 0; i < argCount; i++)
+			for (int i = 0; i < argCount; i++)
+			{
 				NativePush64(argPtr[i]);
+			}
+
 			return NativeCall();
 		}
 		/// <summary>
@@ -298,8 +305,11 @@ namespace SHVDN
 		public static ulong* InvokeInternal(ulong hash, params ulong[] args)
 		{
 			NativeInit(hash);
-			foreach (var arg in args)
+			foreach (ulong arg in args)
+			{
 				NativePush64(arg);
+			}
+
 			return NativeCall();
 		}
 		public static ulong* InvokeInternal(ulong hash, params object[] args)

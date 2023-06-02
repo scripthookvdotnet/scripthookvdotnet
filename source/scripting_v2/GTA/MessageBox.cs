@@ -11,13 +11,13 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MessageBox : MenuBase
 	{
-		UIRectangle rectNo = null;
-		UIRectangle rectYes = null;
-		UIRectangle rectBody = null;
-		UIText text = null;
-		UIText textNo = null;
-		UIText textYes = null;
-		bool selection = true;
+		private UIRectangle rectNo = null;
+		private UIRectangle rectYes = null;
+		private UIRectangle rectBody = null;
+		private UIText text = null;
+		private UIText textNo = null;
+		private UIText textYes = null;
+		private bool selection = true;
 
 		public MessageBox(string headerCaption)
 		{

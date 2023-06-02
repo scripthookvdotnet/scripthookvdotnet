@@ -44,7 +44,10 @@ namespace GTA
 		{
 			get
 			{
-				if (_vehicleMods.TryGetValue(modType, out var vehicleMod)) return vehicleMod;
+				if (_vehicleMods.TryGetValue(modType, out VehicleMod vehicleMod))
+				{
+					return vehicleMod;
+				}
 
 				vehicleMod = new VehicleMod(_owner, modType);
 				_vehicleMods.Add(modType, vehicleMod);
@@ -57,7 +60,10 @@ namespace GTA
 		{
 			get
 			{
-				if (_vehicleToggleMods.TryGetValue(modType, out var vehicleToggleMod)) return vehicleToggleMod;
+				if (_vehicleToggleMods.TryGetValue(modType, out VehicleToggleMod vehicleToggleMod))
+				{
+					return vehicleToggleMod;
+				}
 
 				vehicleToggleMod = new VehicleToggleMod(_owner, modType);
 				_vehicleToggleMods.Add(modType, vehicleToggleMod);
@@ -91,7 +97,10 @@ namespace GTA
 					return new VehicleWheelType[] { VehicleWheelType.BikeWheels };
 				}
 
-				if (!_owner.Model.IsCar) return Array.Empty<VehicleWheelType>();
+				if (!_owner.Model.IsCar)
+				{
+					return Array.Empty<VehicleWheelType>();
+				}
 
 				var res = new List<VehicleWheelType>()
 				{
@@ -139,7 +148,9 @@ namespace GTA
 			}
 
 			if (!_wheelNames.ContainsKey(wheelType))
+			{
 				throw new ArgumentException("Wheel Type is undefined", nameof(wheelType));
+			}
 
 			if (!string.IsNullOrEmpty(Game.GetLocalizedString(_wheelNames[wheelType].Item1)))
 			{
@@ -159,7 +170,7 @@ namespace GTA
 			{
 				Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
 				Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
-				var end = Game.GameTime + timeout;
+				int end = Game.GameTime + timeout;
 				{
 					while (Game.GameTime < end)
 					{
@@ -205,7 +216,7 @@ namespace GTA
 		{
 			get
 			{
-				var modCount = this[VehicleModType.Livery].Count;
+				int modCount = this[VehicleModType.Livery].Count;
 
 				if (modCount > 0)
 				{
@@ -220,7 +231,7 @@ namespace GTA
 		{
 			get
 			{
-				var modCount = this[VehicleModType.Livery].Count;
+				int modCount = this[VehicleModType.Livery].Count;
 
 				if (modCount > 0)
 				{

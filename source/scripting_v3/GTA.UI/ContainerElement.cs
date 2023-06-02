@@ -151,7 +151,7 @@ namespace GTA.UI
 				offset -= new SizeF(Size.Width * 0.5f, Size.Height * 0.5f);
 			}
 
-			foreach (var item in Items)
+			foreach (IElement item in Items)
 			{
 				item.Draw(offset);
 			}
@@ -184,7 +184,7 @@ namespace GTA.UI
 				offset -= new SizeF(Size.Width * 0.5f, Size.Height * 0.5f);
 			}
 
-			foreach (var item in Items)
+			foreach (IElement item in Items)
 			{
 				item.ScaledDraw(offset);
 			}
@@ -231,10 +231,10 @@ namespace GTA.UI
 
 		void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
 		{
-			var w = Size.Width / screenWidth;
-			var h = Size.Height / screenHeight;
-			var x = (Position.X + offset.Width) / screenWidth;
-			var y = (Position.Y + offset.Height) / screenHeight;
+			float w = Size.Width / screenWidth;
+			float h = Size.Height / screenHeight;
+			float x = (Position.X + offset.Width) / screenWidth;
+			float y = (Position.Y + offset.Height) / screenHeight;
 
 			if (!Centered)
 			{

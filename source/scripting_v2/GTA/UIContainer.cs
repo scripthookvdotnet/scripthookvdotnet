@@ -35,7 +35,7 @@ namespace GTA
 
 			base.Draw(offset);
 
-			foreach (var item in Items)
+			foreach (UIElement item in Items)
 			{
 				item.Draw(new Size(base.Position + offset));
 			}

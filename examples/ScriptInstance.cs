@@ -13,8 +13,8 @@ namespace ScriptInstance
 
 	public class Main : Script
 	{
-		AI AIone = null;
-		AI AItwo = null;
+		private AI AIone = null;
+		private AI AItwo = null;
 
 		public Main()
 		{

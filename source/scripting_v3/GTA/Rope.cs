@@ -118,7 +118,7 @@ namespace GTA
 		/// </summary>
 		public override void Delete()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.DELETE_ROPE, &handle);
@@ -132,7 +132,7 @@ namespace GTA
 		/// <returns><see langword="true" /> if this <see cref="Rope"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
 		{
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				return Function.Call<bool>(Hash.DOES_ROPE_EXIST, &handle);

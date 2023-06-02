@@ -110,14 +110,14 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle);
+				int handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_LEADER, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
 
 		public Ped GetMember(int index)
 		{
-			var handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index);
+			int handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index);
 			return handle != 0 ? new Ped(handle) : null;
 		}
 
@@ -128,13 +128,13 @@ namespace GTA
 
 		public List<Ped> ToList(bool includingLeader = true)
 		{
-			var memberCount = MemberCount;
-			var expectedListSize = includingLeader ? 1 + memberCount : memberCount;
+			int memberCount = MemberCount;
+			int expectedListSize = includingLeader ? 1 + memberCount : memberCount;
 			var result = new List<Ped>(expectedListSize);
 
 			if (includingLeader)
 			{
-				var leader = Leader;
+				Ped leader = Leader;
 
 				if (leader != null)
 				{
@@ -142,9 +142,9 @@ namespace GTA
 				}
 			}
 
-			for (var i = 0; i < memberCount; i++)
+			for (int i = 0; i < memberCount; i++)
 			{
-				var member = GetMember(i);
+				Ped member = GetMember(i);
 
 				if (member != null)
 				{

@@ -69,19 +69,21 @@ namespace SHVDN
 		/// <inheritdoc cref="FindPatternNaive(string, string, IntPtr, ulong)"/>
 		public static unsafe byte* FindPatternNaive(string pattern, string mask)
 		{
-			var module = Process.GetCurrentProcess().MainModule;
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
 			return FindPatternNaive(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
 		}
 
 		/// <inheritdoc cref="FindPatternNaive(string, string, IntPtr, ulong)"/>
 		public static unsafe byte* FindPatternNaive(string pattern, string mask, IntPtr startAddress)
 		{
-			var module = Process.GetCurrentProcess().MainModule;
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
 
 			if ((ulong)startAddress.ToInt64() < (ulong)module.BaseAddress.ToInt64())
+			{
 				return null;
+			}
 
-			var size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
+			ulong size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
 
 			return FindPatternNaive(pattern, mask, startAddress, size);
 		}
@@ -96,17 +98,22 @@ namespace SHVDN
 		/// <returns>The address of a region matching the pattern or <see langword="null" /> if none was found.</returns>
 		public static unsafe byte* FindPatternNaive(string pattern, string mask, IntPtr startAddress, ulong size)
 		{
-			var address = (ulong)startAddress.ToInt64();
-			var endAddress = address + size;
+			ulong address = (ulong)startAddress.ToInt64();
+			ulong endAddress = address + size;
 
 			for (; address < endAddress; address++)
 			{
-				for (var i = 0; i < pattern.Length; i++)
+				for (int i = 0; i < pattern.Length; i++)
 				{
 					if (mask[i] != '?' && ((byte*)address)[i] != pattern[i])
+					{
 						break;
+					}
+
 					if (i + 1 == pattern.Length)
+					{
 						return (byte*)address;
+					}
 				}
 			}
 
@@ -116,19 +123,21 @@ namespace SHVDN
 		/// <inheritdoc cref="FindPatternBmh(string, string, IntPtr, ulong)"/>
 		public static unsafe byte* FindPatternBmh(string pattern, string mask)
 		{
-			var module = Process.GetCurrentProcess().MainModule;
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
 			return FindPatternBmh(pattern, mask, module.BaseAddress, (ulong)module.ModuleMemorySize);
 		}
 
 		/// <inheritdoc cref="FindPatternBmh(string, string, IntPtr, ulong)"/>
 		public static unsafe byte* FindPatternBmh(string pattern, string mask, IntPtr startAddress)
 		{
-			var module = Process.GetCurrentProcess().MainModule;
+			ProcessModule module = Process.GetCurrentProcess().MainModule;
 
 			if ((ulong)startAddress.ToInt64() < (ulong)module.BaseAddress.ToInt64())
+			{
 				return null;
+			}
 
-			var size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
+			ulong size = (ulong)module.ModuleMemorySize - ((ulong)startAddress - (ulong)module.BaseAddress);
 
 			return FindPatternBmh(pattern, mask, startAddress, size);
 		}
@@ -146,24 +155,24 @@ namespace SHVDN
 		{
 			// Use short array intentionally to spare heap
 			// Warning: throws an exception if length of pattern and mask strings does not match
-			var patternArray = new short[pattern.Length];
-			for (var i = 0; i < patternArray.Length; i++)
+			short[] patternArray = new short[pattern.Length];
+			for (int i = 0; i < patternArray.Length; i++)
 			{
 				patternArray[i] = (mask[i] != '?') ? (short)pattern[i] : (short)-1;
 			}
 
-			var lastPatternIndex = patternArray.Length - 1;
-			var skipTable = CreateShiftTableForBmh(patternArray);
+			int lastPatternIndex = patternArray.Length - 1;
+			short[] skipTable = CreateShiftTableForBmh(patternArray);
 
-			var endAddressToScan = (byte*)startAddress + size - patternArray.Length;
+			byte* endAddressToScan = (byte*)startAddress + size - patternArray.Length;
 
 			// Pin arrays to avoid boundary check and search will be long enough to amortize the pin cost in time wise
 			fixed (short* skipTablePtr = skipTable)
 			fixed (short* patternArrayPtr = patternArray)
 			{
-				for (var curHeadAddress = (byte*)startAddress; curHeadAddress <= endAddressToScan; curHeadAddress += Math.Max((int)skipTablePtr[(curHeadAddress)[lastPatternIndex] & 0xFF], 1))
+				for (byte* curHeadAddress = (byte*)startAddress; curHeadAddress <= endAddressToScan; curHeadAddress += Math.Max((int)skipTablePtr[(curHeadAddress)[lastPatternIndex] & 0xFF], 1))
 				{
-					for (var i = lastPatternIndex; patternArrayPtr[i] < 0 || ((byte*)curHeadAddress)[i] == patternArrayPtr[i]; --i)
+					for (int i = lastPatternIndex; patternArrayPtr[i] < 0 || ((byte*)curHeadAddress)[i] == patternArrayPtr[i]; --i)
 					{
 						if (i == 0)
 						{
@@ -178,23 +187,23 @@ namespace SHVDN
 
 		private static short[] CreateShiftTableForBmh(short[] pattern)
 		{
-			var skipTable = new short[256];
-			var lastIndex = pattern.Length - 1;
+			short[] skipTable = new short[256];
+			int lastIndex = pattern.Length - 1;
 
-			var diff = lastIndex - Math.Max(Array.LastIndexOf<short>(pattern, -1), 0);
+			int diff = lastIndex - Math.Max(Array.LastIndexOf<short>(pattern, -1), 0);
 			if (diff == 0)
 			{
 				diff = 1;
 			}
 
-			for (var i = 0; i < skipTable.Length; i++)
+			for (int i = 0; i < skipTable.Length; i++)
 			{
 				skipTable[i] = (short)diff;
 			}
 
-			for (var i = lastIndex - diff; i < lastIndex; i++)
+			for (int i = lastIndex - diff; i < lastIndex; i++)
 			{
-				var patternVal = pattern[i];
+				short patternVal = pattern[i];
 				if (patternVal >= 0)
 				{
 					skipTable[patternVal] = (short)(lastIndex - i);
@@ -223,175 +232,175 @@ namespace SHVDN
 		/// </summary>
 		static NativeMemory()
 		{
-			String = StringToCoTaskMemUTF8("STRING"); // "~a~"
-			NullString = StringToCoTaskMemUTF8(string.Empty); // ""
-			CellEmailBcon = StringToCoTaskMemUTF8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
+			String = StringToCoTaskMemUtf8("STRING"); // "~a~"
+			NullString = StringToCoTaskMemUtf8(string.Empty); // ""
+			CellEmailBcon = StringToCoTaskMemUtf8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
 			byte* address;
 			IntPtr startAddressToSearch;
 
 			// Get relative address and add it to the instruction address.
 			address = FindPatternBmh("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
-			GetPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+			s_getPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address) + address + 4));
 
 			address = FindPatternBmh("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
-			GetScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
+			s_getScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
 				new IntPtr(*(int*)(address + 7) + address + 11));
 
 			address = FindPatternBmh("\x8B\xC2\xB2\x01\x8B\xC8\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x53\x8A\x88\x00\x00\x00\x00\xF6\xC1\x01\x75\x05\xF6\xC1\x02\x75\x43\x48", "xxxxxxx????xxxxxxx????xxxxxxxxxxx");
-			GetPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+			s_getPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
 			new IntPtr(*(int*)(address + 7) + address + 11));
 
 			address = FindPatternBmh("\x0F\x84\xA1\x00\x00\x00\x33\xC9\x48\x89\x35", "xxxxxxxxxxx");
 			if (address != null)
 			{
-				isGameMultiplayerAddr = (bool*)(*(int*)(address + 0x27) + address + 0x2B);
+				s_isGameMultiplayerAddr = (bool*)(*(int*)(address + 0x27) + address + 0x2B);
 			}
 
 			address = FindPatternBmh("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
-			CreateGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
+			s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
 				new IntPtr(address - 0x68));
 
 			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24\x2C\x33\xC9\xF3\x0F\x11\x43\x0C\x48\x89\x0B\x89\x4B\x08\x48\x85\xC0\x74\x2C", "xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxx");
-			EntityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(address);
+			s_entityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(address);
 
 			// Find handling data functions
 			address = FindPatternBmh("\x8B\xF7\x83\xF8\x01\x77\x08\x44\x8B\xF7\x8D\x77\xFF\xEB\x06\x41\xBE\x03\x00\x00\x00\x8B\x8B", "xxxxxxxxxxxxxxxxxxxxxxx");
-			GetHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(new IntPtr(*(int*)(address + 28) + address + 32));
-			handlingIndexOffsetInModelInfo = *(int*)(address + 23);
+			s_getHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(new IntPtr(*(int*)(address + 28) + address + 32));
+			s_handlingIndexOffsetInModelInfo = *(int*)(address + 23);
 
 			address = FindPatternBmh("\x75\x5A\xB2\x01\x48\x8B\xCB\xE8\x00\x00\x00\x00\x41\x8B\xF5\x66\x44\x3B\xAB", "xxxxxxxx????xxxxxxx");
-			GetHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
+			s_getHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
 				new IntPtr(*(int*)(address - 7) + address - 3));
 
 			// Find entity pools and interior proxy pool
 			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
-			PedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_pedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
-			ObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_objectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPatternBmh("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
-			FwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_fwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
-			VehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_vehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPatternBmh("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
-			PickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_pickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPatternBmh("\x83\x38\xFF\x74\x27\xD1\xEA\xF6\xC2\x01\x74\x20", "xxxxxxxxxxxx");
 			if (address != null)
 			{
-				BuildingPoolAddress = (ulong*)(*(int*)(address + 47) + address + 51);
-				AnimatedBuildingPoolAddress = (ulong*)(*(int*)(address + 15) + address + 19);
+				s_buildingPoolAddress = (ulong*)(*(int*)(address + 47) + address + 51);
+				s_animatedBuildingPoolAddress = (ulong*)(*(int*)(address + 15) + address + 19);
 			}
 			address = FindPatternBmh("\x83\xBB\x80\x01\x00\x00\x01\x75\x12", "xxxxxxxxx");
 			if (address != null)
 			{
-				InteriorInstPoolAddress = (ulong*)(*(int*)(address + 23) + address + 27);
+				s_interiorInstPoolAddress = (ulong*)(*(int*)(address + 23) + address + 27);
 			}
 			address = FindPatternBmh("\x0F\x85\xA3\x00\x00\x00\x8B\x52\x0C\x48\x8B\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00\x45\x33\xC9\x45\x33\xC0", "xxxxxxxxxxxx????x????xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				InteriorProxyPoolAddress = (ulong*)(*(int*)(address + 12) + address + 16);
+				s_interiorProxyPoolAddress = (ulong*)(*(int*)(address + 12) + address + 16);
 			}
 
 			// Find euphoria functions
 			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
-			InitMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
+			s_initMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
 
 			address = FindPatternBmh("\x0F\x84\x8B\x00\x00\x00\x48\x8B\x47\x30\x48\x8B\x48\x10\x48\x8B\x51\x20\x80\x7A\x10\x0A", "xxxxxxxxxxxxxxxxxxxxxx");
-			SendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)((ulong*)(*(int*)(address - 0x1E) + address - 0x1A));
+			s_sendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)((ulong*)(*(int*)(address - 0x1E) + address - 0x1A));
 
 			address = FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
+			s_setNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
 
 			address = FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
-			SetNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
+			s_setNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
 
 			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
+			s_setNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
 
 			address = FindPatternBmh("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
-			SetNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
+			s_setNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
 
 			address = FindPatternBmh("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-			SetNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+			s_setNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
 
 			address = FindPatternBmh("\x4D\x8B\xF0\x48\x8B\xF2\xE8\x00\x00\x00\x00\x33\xFF\x48\x85\xC0\x75\x07\x32\xC0\xE9\xD8\x03\x00\x00", "xxxxxxx????xxxxxxxxxxxxxx");
-			GetActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(*(int*)(address + 7) + address + 11));
+			s_getActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(*(int*)(address + 7) + address + 11));
 
 			address = FindPatternBmh("\x75\xEF\x48\x8B\x5C\x24\x30\xB8", "xxxxxxxx");
 			if (address != null)
 			{
-				cTaskNMScriptControlTypeIndex = *(int*)(address + 8);
+				s_cTaskNmScriptControlTypeIndex = *(int*)(address + 8);
 			}
 
 			address = FindPatternBmh("\x4C\x8B\x03\x48\x8B\xD5\x48\x8B\xCB\x41\xFF\x50\x00\x83\xFE\x04", "xxxxxxxxxxxx?xxx");
 			if (address != null)
 			{
 				// The instruction expects a signed value, but virtual function offsets can't be negative
-				getEventTypeIndexVFuncOffset = (uint)*(byte*)(address + 12);
+				s_getEventTypeIndexVFuncOffset = (uint)*(byte*)(address + 12);
 			}
 			address = FindPatternBmh("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
 			if (address != null)
 			{
-				var cEventSwitch2NMVfTableArrayAddr = (ulong)(*(int*)(address + 3) + address + 7);
-				var getEventTypeOfcEventSwitch2NMFuncAddr = *(ulong*)(cEventSwitch2NMVfTableArrayAddr + getEventTypeIndexVFuncOffset);
-				cEventSwitch2NMTypeIndex = *(int*)(getEventTypeOfcEventSwitch2NMFuncAddr + 1);
+				ulong cEventSwitch2NmVfTableArrayAddr = (ulong)(*(int*)(address + 3) + address + 7);
+				ulong getEventTypeOfcEventSwitch2NmFuncAddr = *(ulong*)(cEventSwitch2NmVfTableArrayAddr + s_getEventTypeIndexVFuncOffset);
+				s_cEventSwitch2NmTypeIndex = *(int*)(getEventTypeOfcEventSwitch2NmFuncAddr + 1);
 			}
 
 			address = FindPatternBmh("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
-			GetLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
+			s_getLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
 
 			// Find the function that returns if the corresponding text label exist first.
 			// We have to find GetLabelTextByHashFunc indirectly since Rampage Trainer hooks the function that returns the string address for corresponding text label hash by inserting jmp instruction at the beginning if that trainer is installed.
 			address = FindPatternBmh("\x74\x64\x48\x8D\x15\x00\x00\x00\x00\x48\x8D\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x84\xC0\x74\x33", "xxxxx????xxx????x????xxxx");
 			if (address != null)
 			{
-				var doesTextLabelExistFuncAddr = (byte*)(*(int*)(address + 17) + address + 21);
-				var getLabelTextByHashFuncAddr = (long)(*(int*)(doesTextLabelExistFuncAddr + 28) + doesTextLabelExistFuncAddr + 32);
-				GetLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(new IntPtr(getLabelTextByHashFuncAddr));
+				byte* doesTextLabelExistFuncAddr = (byte*)(*(int*)(address + 17) + address + 21);
+				long getLabelTextByHashFuncAddr = (long)(*(int*)(doesTextLabelExistFuncAddr + 28) + doesTextLabelExistFuncAddr + 32);
+				s_getLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(new IntPtr(getLabelTextByHashFuncAddr));
 			}
 
 			address = FindPatternBmh("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
-			CheckpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
-			GetCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
+			s_checkpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
+			s_getCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
 
 			address = FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
-			RadarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_radarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			address = FindPatternBmh("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
-			PossibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
+			s_possibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
 			address = FindPatternBmh("\x3B\x35\x00\x00\x00\x00\x74\x2E\x48\x81\xFD\xDB\x05\x00\x00", "xx????xxxxxxxxx");
-			UnkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 2) + address + 6);
+			s_unkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 2) + address + 6);
 			address = FindPatternBmh("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
-			NorthRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+			s_northRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
 			address = FindPatternBmh("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
-			CenterRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+			s_centerRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
 
 			address = FindPatternBmh("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
-			GetLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address + 3) + address + 7));
+			s_getLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address + 3) + address + 7));
 
 			address = FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
-			waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
-			if (waypointInfoArrayStartAddress != null)
+			s_waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			if (s_waypointInfoArrayStartAddress != null)
 			{
 				startAddressToSearch = new IntPtr(address);
 				address = FindPatternBmh("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x00\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx?xxxxxxxxx", startAddressToSearch);
-				waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+				s_waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
 			address = FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				GetRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)(new IntPtr(*(int*)(address - 0x14) + address - 0x10));
+				s_getRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)(new IntPtr(*(int*)(address - 0x14) + address - 0x10));
 			}
 			address = FindPatternBmh("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00\x0F\x28\xC6\x0F\x28\xCE\xB9\x01\x00\x00\x00\xF3\x0F\x11\x73\x10\x66\x44\x03\xE9", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				GetQuaternionFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int>)(new IntPtr(*(int*)(address + 11) + address + 15));
+				s_getQuaternionFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int>)(new IntPtr(*(int*)(address + 11) + address + 15));
 			}
 
 			address = FindPatternBmh("\x48\x8B\x42\x20\x48\x85\xC0\x74\x09\xF3\x0F\x10\x80", "xxxxxxxxxxxxx");
@@ -408,109 +417,113 @@ namespace SHVDN
 			}
 
 			address = FindPatternBmh("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
-			cAttackerArrayOfEntityOffset = *(uint*)(address + 3); // the correct name is unknown
+			NativeMemory.CAttackerArrayOfEntityOffset = *(int*)(address + 3); // the correct name is unknown
 			if (address != null)
 			{
 				startAddressToSearch = new IntPtr(address);
 				address = FindPatternBmh("\x48\x63\x51\x00\x48\x85\xD2", "xxx?xxx", startAddressToSearch);
-				elementCountOfCAttackerArrayOfEntityOffset = (uint)(*(sbyte*)(address + 3));
+				NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset = (*(sbyte*)(address + 3));
 
 				startAddressToSearch = new IntPtr(address);
 				address = FindPatternBmh("\x48\x83\xC1\x00\x48\x3B\xC2\x7C\xEF", "xxx?xxxxx", startAddressToSearch);
 				// the element size might be 0x10 in older builds (the size is 0x18 at least in b1604 and b2372)
-				elementSizeOfCAttackerArrayOfEntity = (uint)(*(sbyte*)(address + 3));
+				NativeMemory.ElementSizeOfCAttackerArrayOfEntity = (*(sbyte*)(address + 3));
 			}
 
 			address = FindPatternBmh("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
-			cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
+			s_cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
 
 			address = FindPatternBmh("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05", "xxxxxx????xxxxxxxxx");
-			readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
-			writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
+			s_readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
+			s_writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
 
 			address = FindPatternBmh("\xF3\x0F\x11\x05\x00\x00\x00\x00\xF3\x0F\x10\x08\x0F\x2F\xC8\x73\x03\x0F\x28\xC1\x48\x83\xC0\x04\x49\x2B", "xxxx????xxxxxxxxxxxxxxxxxx");
-			var timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
+			float* timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
 			if (timeScaleArrayAddress != null)
 				// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
-				timeScaleAddress = timeScaleArrayAddress + 1;
+			{
+				s_timeScaleAddress = timeScaleArrayAddress + 1;
+			}
 
 			address = FindPatternBmh("\xF3\x0F\x11\xB5\x60\x01\x00\x00\x84\xC0\x75\x4C\x85\xC9\x79\x1D\x33\xD2\xE8", "xxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				var unkClockFunc = (byte*)(*(int*)(address + 19) + address + 23);
-				millisecondsPerGameMinuteAddress = (int*)(*(int*)(unkClockFunc + 0x46) + unkClockFunc + 0x4A);
+				byte* unkClockFunc = (byte*)(*(int*)(address + 19) + address + 23);
+				s_millisecondsPerGameMinuteAddress = (int*)(*(int*)(unkClockFunc + 0x46) + unkClockFunc + 0x4A);
 			}
 
 			address = FindPatternBmh("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
-			isClockPausedAddress = (bool*)(*(int*)(address + 5) + address + 9);
+			s_isClockPausedAddress = (bool*)(*(int*)(address + 5) + address + 9);
 
 			// Find camera objects
 			address = FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
-			CameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
+			s_cameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
 			address = FindPatternBmh("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
 			address = address + *(int*)(address) + 4;
-			GameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+			s_gameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 
 			// Find model hash table
 			address = FindPatternBmh("\x3C\x05\x75\x16\x8B\x81", "xxxxxx");
 			if (address != null)
-				VehicleTypeOffsetInModelInfo = *(int*)(address + 6);
+			{
+				s_vehicleTypeOffsetInModelInfo = *(int*)(address + 6);
+			}
 
 			address = FindPatternBmh("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
-			var vehicleClassOffset = *(uint*)(address + 0x31);
+			uint vehicleClassOffset = *(uint*)(address + 0x31);
 
 			address = address + *(int*)(address) + 4;
-			modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
-			modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
-			modelNum3 = *(UInt64*)(*(int*)(address + 0x7A) + address + 0x7E);
-			modelNum4 = *(UInt64*)(*(int*)(address + 0x81) + address + 0x85);
-			modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
-			modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
+			s_modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
+			s_modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
+			s_modelNum3 = *(UInt64*)(*(int*)(address + 0x7A) + address + 0x7E);
+			s_modelNum4 = *(UInt64*)(*(int*)(address + 0x81) + address + 0x85);
+			s_modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
+			s_modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
 
 			address = FindPatternBmh("\x33\xD2\x00\x8B\xD0\x00\x2B\x05\x00\x00\x00\x00\xC1\xE6\x10", "xx?xx?xx????xxx");
-			modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
+			s_modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
 
 			address = FindPatternBmh("\x48\x83\xEC\x20\x48\x8B\x91\x00\x00\x00\x00\x33\xF6\x48\x8B\xD9\x48\x85\xD2\x74\x2B\x48\x8D\x0D", "xxxxxxx??xxxxxxxxxxxxxxx");
-			cStreamingAddr = (ulong*)(*(int*)(address + 24) + address + 28);
+			s_cStreamingAddr = (ulong*)(*(int*)(address + 24) + address + 28);
 
 			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
-			weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
+			s_weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
 
 			address = FindPatternBmh("\x84\xC0\x74\x20\x48\x8B\x47\x40\x48\x85\xC0\x74\x08\x8B\xB0\x00\x00\x00\x00\xEB\x02\x33\xF6\x48\x8D\x4D\x48\xE8", "xxxxxxxxxxxxxxx????xxxxxxxxx");
-			weaponInfoHumanNameHashOffset = *(int*)(address + 15);
+			s_weaponInfoHumanNameHashOffset = *(int*)(address + 15);
 
 			address = FindPatternBmh("\x8B\x05\x00\x00\x00\x00\x44\x8B\xD3\x8D\x48\xFF", "xx????xxxxxx");
 			if (address != null)
 			{
-				weaponComponentArrayCountAddr = (uint*)(*(int*)(address + 2) + address + 6);
+				s_weaponComponentArrayCountAddr = (uint*)(*(int*)(address + 2) + address + 6);
 
 				address = FindPatternNaive("\x46\x8D\x04\x11\x48\x8D\x15\x00\x00\x00\x00\x41\xD1\xF8", "xxxxxxx????xxx", new IntPtr(address));
-				offsetForCWeaponComponentArrayAddr = (ulong)(address + 7);
+				s_offsetForCWeaponComponentArrayAddr = (ulong)(address + 7);
 
 				address = FindPatternNaive("\x74\x10\x49\x8B\xC9\xE8", "xxxxxx", new IntPtr(address));
 				var findAttachPointFuncAddr = new IntPtr((long)(*(int*)(address + 6) + address + 10));
 
 				address = FindPatternNaive("\x4C\x8D\x81", "xxx", findAttachPointFuncAddr);
-				weaponAttachPointsStartOffset = *(int*)(address + 3);
+				s_weaponAttachPointsStartOffset = *(int*)(address + 3);
 				address = FindPatternNaive("\x4D\x63\x98", "xxx", new IntPtr(address));
-				weaponAttachPointsArrayCountOffset = *(int*)(address + 3);
+				s_weaponAttachPointsArrayCountOffset = *(int*)(address + 3);
 				address = FindPatternNaive("\x4C\x63\x50", "xxx", new IntPtr(address));
-				weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
+				s_weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
 				address = FindPatternNaive("\x48\x83\xC0", "xxx", new IntPtr(address));
-				weaponAttachPointElementSize = *(byte*)(address + 3);
+				s_weaponAttachPointElementSize = *(byte*)(address + 3);
 			}
 
 			address = FindPatternBmh("\x24\x1F\x3C\x05\x0F\x85\x00\x00\x00\x00\x48\x8D\x82\x00\x00\x00\x00\x48\x8D\xB2\x00\x00\x00\x00\x48\x85\xC0\x74\x09\x80\x38\x00\x74\x04\x8A\xCB", "xxxxxx????xxx????xxx????xxxxxxxxxxxx");
 			if (address != null)
 			{
-				vehicleMakeNameOffsetInModelInfo = *(int*)(address + 13);
+				s_vehicleMakeNameOffsetInModelInfo = *(int*)(address + 13);
 			}
 
 			address = FindPatternBmh("\x66\x89\x44\x24\x38\x8B\x44\x24\x38\x8B\xC8\x33\x4C\x24\x30\x81\xE1\x00\x00\xFF\x0F\x33\xC1\x0F\xBA\xF0\x1D\x8B\xC8\x33\x4C\x24\x30\x23\xCB\x33\xC1", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 0x42);
-				pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 0x49) + address + 0x4D);
+				s_pedPersonalityIndexOffsetInModelInfo = *(int*)(address + 0x42);
+				s_pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 0x49) + address + 0x4D);
 			}
 
 			address = FindPatternBmh("\x49\x8B\xF1\x48\x8B\xF9\x0F\x57\xC0\x0F\x28\xF9\x0F\x28\xF2\x74\x4C", "xxxxxxxxxxxxxxxxx");
@@ -563,7 +576,7 @@ namespace SHVDN
 			address = FindPatternBmh("\x76\x03\x0F\x28\xF0\xF3\x44\x0F\x10\x93", "xxxxxxxxxx");
 			if (address != null)
 			{
-				CurrentRPMOffset = *(int*)(address + 10);
+				NativeMemory.CurrentRpmOffset = *(int*)(address + 10);
 				ClutchOffset = *(int*)(address + 10) + 0xC;
 				AccelerationOffset = *(int*)(address + 10) + 0x10;
 			}
@@ -583,7 +596,7 @@ namespace SHVDN
 				EngineTemperatureOffset = *(int*)(address + 4);
 			}
 
-			var gameVersion = GetGameVersion();
+			int gameVersion = GetGameVersion();
 
 			// Get the offset that is stored by MODIFY_VEHICLE_TOP_SPEED if the game version is b944 or later for existing script compatibility
 			// MODIFY_VEHICLE_TOP_SPEED stores the 2nd argument value to CVehicle in b944 or later, but that's not the case in earlier ones
@@ -593,8 +606,8 @@ namespace SHVDN
 				address = FindPatternBmh("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					var modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
-					var modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
+					int modifyVehicleTopSpeedOffset1 = *(int*)(address - 4);
+					int modifyVehicleTopSpeedOffset2 = *(int*)(address + 22);
 					EnginePowerMultiplierOffset = modifyVehicleTopSpeedOffset1 + modifyVehicleTopSpeedOffset2;
 				}
 			}
@@ -631,8 +644,8 @@ namespace SHVDN
 				address = FindPatternNaive("\x48\x8D\x8F\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\x87", "xxx????x????xx", new IntPtr(address - 0x50), 0x50u);
 				if (address != null)
 				{
-					var unkVehHeadlightOffset = *(int*)(address + 3);
-					var unkFuncAddr = (*(int*)(address + 8) + address + 12);
+					int unkVehHeadlightOffset = *(int*)(address + 3);
+					byte* unkFuncAddr = (*(int*)(address + 8) + address + 12);
 					address = FindPatternBmh("\x8B\xC3\x8B\xCB\x48\xC1\xE8\x05\x83\xE1\x1F", "xxxxxxxxxxx", new IntPtr(unkFuncAddr), 0x200u);
 					if (address != null)
 					{
@@ -776,7 +789,7 @@ namespace SHVDN
 			address = FindPatternBmh("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxxxxxx????xxxx");
 			if (address != null)
 			{
-				FixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 16) + address + 20));
+				s_fixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 16) + address + 20));
 				address = FindPatternNaive("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
 				ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
 			}
@@ -785,16 +798,16 @@ namespace SHVDN
 			if (gameVersion >= 40)
 			{
 				address = FindPatternBmh("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
-				PunctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
+				s_punctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
 				address = FindPatternBmh("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
-				BurstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
+				s_burstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
 			}
 			else
 			{
 				address = FindPatternBmh("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
-				PunctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
+				s_punctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
 				address = FindPatternBmh("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
-				BurstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
+				s_burstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
 			}
 
 			// The values for special flight mode (e.g. Deluxo) are present only in b1290 or later versions
@@ -837,7 +850,7 @@ namespace SHVDN
 			address = FindPatternBmh("\xF6\x87\x00\x00\x00\x00\x02\x44\x8B\x00\x00\x00\x00\x00\x75\x0E", "xx??xxxxx?????xx");
 			if (address != null)
 			{
-				var isWantedStarFlashingOffset = *(int*)(address + 0x2);
+				int isWantedStarFlashingOffset = *(int*)(address + 0x2);
 				// Flags for ignoring player are actually read/written as a byte in the game code, but make this value 4-byte aligned because SetBit and IsBitSet reads/writes as an int value
 				CWantedIgnorePlayerFlagOffset = isWantedStarFlashingOffset - 3;
 
@@ -848,7 +861,7 @@ namespace SHVDN
 			address = FindPatternBmh("\xEB\x26\x8B\x87\x00\x00\x00\x00\x25\x00\xF8\xFF\xFF\xC1\xE0\x12", "xxxx????xxxxxxxx");
 			if (address != null)
 			{
-				ActivateSpecialAbilityFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 0x24) + address + 0x28));
+				s_activateSpecialAbilityFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 0x24) + address + 0x28));
 			}
 			// Two special ability slots are available in b2060 and later versions
 			if (gameVersion >= 59)
@@ -856,7 +869,7 @@ namespace SHVDN
 				address = FindPatternBmh("\x0F\x84\x49\x01\x00\x00\x33\xD2\xE8", "xxxxxxxxx");
 				if (address != null)
 				{
-					GetSpecialAbilityAddressFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr>)(new IntPtr(*(int*)(address + 9) + address + 13));
+					s_getSpecialAbilityAddressFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr>)(new IntPtr(*(int*)(address + 9) + address + 13));
 				}
 			}
 			else
@@ -873,21 +886,12 @@ namespace SHVDN
 			{
 				PedIntelligenceOffset = *(int*)(address + 0x11);
 
-				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				byte* setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
 				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 
 				PedPlayerInfoOffset = PedIntelligenceOffset + 0x8;
 				CPedIntentoryOfCPedOffset = PedIntelligenceOffset + 0x10;
 				UnkCPedStateOffset = PedIntelligenceOffset - 0x10;
-			}
-
-			address = FindPatternNaive("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
-			if (address != null)
-			{
-				PedIntelligenceOffset = *(int*)(address + 0x11);
-
-				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
-				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 			}
 
 			address = FindPatternBmh("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
@@ -904,15 +908,37 @@ namespace SHVDN
 				CEventStackOffset = *(int*)(address + 4);
 			}
 
+			address = FindPatternNaive("\x48\x8B\xF0\x48\x3B\xC8\x74\x20\x48\x85\xC9\x74\x08\x49\x8B\xD6\xE8", "xxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				PedIntelligenceCTaskInfoOffset = *(int*)(address - 0x1F);
+				PedIntelligenceCombatTargetPedAddressOffset = PedIntelligenceCTaskInfoOffset + 0x18;
+				PedIntelligenceCurrentScriptTaskHashOffset = PedIntelligenceCTaskInfoOffset + 0x20;
+				PedIntelligenceCurrentScriptTaskStatusOffset = PedIntelligenceCTaskInfoOffset + 0x24;
+			}
+
 			address = FindPatternNaive("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
 			if (address != null)
 			{
-				fragInstNMGtaOffset = *(int*)(address + 16);
+				s_fragInstNmGtaOffset = *(int*)(address + 16);
+				PedKnockOffVehicleTypeOffset = s_fragInstNmGtaOffset + 0xC;
 			}
 			address = FindPatternNaive("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
 			if (address != null)
 			{
-				fragInstNMGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
+				s_fragInstNmGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
+			}
+
+			address = FindPatternBmh("\x76\x20\xEB\x17\x76\x1C\xF3\x0F\x59\xE1\xF3\x0F\x5C\xC4\x0F\x2F\xC2", "xxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				CPedLowerWetnessLevelOffset = *(int*)(address - 4);
+				CPedUpperWetnessLevelOffset = CPedLowerWetnessLevelOffset + 4;
+				CPedLowerWetnessHeightOffset = CPedLowerWetnessLevelOffset - 8;
+				CPedUpperWetnessHeightOffset = CPedLowerWetnessLevelOffset - 4;
+
+				// this may look too risky, but this offset fetching do work in b372, b2699, and b2845
+				CPedIsUsingWetEffectOffset = *(int*)(address + 0x85);
 			}
 
 			address = FindPatternBmh("\x0F\x93\xC0\x84\xC0\x74\x0F\xF3\x41\x0F\x58\xD1\x41\x0F\x2F\xD0\x72\x04\x41\x0F\x28\xD0", "xxxxxxxxxxxxxxxxxxxxxx");
@@ -990,7 +1016,7 @@ namespace SHVDN
 			address = FindPatternBmh("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
 			if (address != null)
 			{
-				var setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
+				byte* setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
 				PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 			}
 
@@ -1010,19 +1036,19 @@ namespace SHVDN
 			address = FindPatternBmh("\x48\x8B\x87\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00", "xxx????xxxxxxxxx");
 			if (address != null)
 			{
-				objParentEntityAddressDetachedFromOffset = *(int*)(address + 3);
+				s_objParentEntityAddressDetachedFromOffset = *(int*)(address + 3);
 			}
 
 			address = FindPatternBmh("\x48\x8D\x1D\x00\x00\x00\x00\x4C\x8B\x0B\x4D\x85\xC9\x74\x67", "xxx????xxxxxxxx");
 			if (address != null)
 			{
-				ProjectilePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+				s_projectilePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 			// Find address of the projectile count, just in case the max number of projectile changes from 50
 			address = FindPatternBmh("\x44\x8B\x0D\x00\x00\x00\x00\x33\xDB\x45\x8A\xF8", "xxx????xxxxx");
 			if (address != null)
 			{
-				ProjectileCountAddress = (int*)(*(int*)(address + 3) + address + 7);
+				s_projectileCountAddress = (int*)(*(int*)(address + 3) + address + 7);
 			}
 			address = FindPatternBmh("\x48\x85\xED\x74\x09\x48\x39\xA9\x00\x00\x00\x00\x75\x2D", "xxxxxxxx????xx");
 			if (address != null)
@@ -1037,25 +1063,25 @@ namespace SHVDN
 			address = FindPatternBmh("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
 			if (address != null)
 			{
-				ExplodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)(new IntPtr(*(int*)(address + 13) + address + 17));
+				s_explodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)(new IntPtr(*(int*)(address + 13) + address + 17));
 			}
 
 			address = FindPatternNaive("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E", "xxxxxxxxx?xxxxxx????xx");
 			if (address != null)
 			{
-				getFragInstVFuncOffset = *(sbyte*)(address + 9);
-				detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
+				s_getFragInstVFuncOffset = *(sbyte*)(address + 9);
+				s_detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
 			}
 			address = FindPatternBmh("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
 			if (address != null)
 			{
-				phSimulatorInstPtr = (ulong**)(*(int*)(address + 5) + address + 9);
+				s_phSimulatorInstPtr = (ulong**)(*(int*)(address + 5) + address + 9);
 			}
 			address = FindPatternBmh("\xC0\xE8\x07\xA8\x01\x74\x57\x0F\xB7\x4E\x18\x85\xC9\x78\x4F", "xxxxxxxxxxxxxxx");
 			if (address != null)
 			{
-				colliderCapacityOffset = *(int*)(address - 0x41);
-				colliderCountOffset = colliderCapacityOffset + 4;
+				s_colliderCapacityOffset = *(int*)(address - 0x41);
+				s_colliderCountOffset = s_colliderCapacityOffset + 4;
 			}
 
 			address = FindPatternBmh("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
@@ -1078,7 +1104,7 @@ namespace SHVDN
 				if (address != null && *address != 0x90)
 				{
 					const int bytesToWriteInstructions = 0x18;
-					var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
+					byte[] nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
 					Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
 				}
 			}
@@ -1089,19 +1115,23 @@ namespace SHVDN
 			if (address != null && *address != 0x90)
 			{
 				const int bytesToWriteInstructions = 4;
-				var nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
+				byte[] nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
 				Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
 			}
 			#endregion
 
 			// Generate vehicle model list
 			var vehicleHashesGroupedByClass = new List<int>[0x20];
-			for (var i = 0; i < 0x20; i++)
+			for (int i = 0; i < 0x20; i++)
+			{
 				vehicleHashesGroupedByClass[i] = new List<int>();
+			}
 
 			var vehicleHashesGroupedByType = new List<int>[0x10];
-			for (var i = 0; i < 0x10; i++)
+			for (int i = 0; i < 0x10; i++)
+			{
 				vehicleHashesGroupedByType[i] = new List<int>();
+			}
 
 			var weaponObjectHashes = new List<int>();
 			var pedHashes = new List<int>();
@@ -1115,18 +1145,24 @@ namespace SHVDN
 				0x438F6593, /* s95 */
 			};
 
-			for (var i = 0; i < modelHashEntries; i++)
+			for (int i = 0; i < s_modelHashEntries; i++)
 			{
-				for (var cur = ((HashNode**)modelHashTable)[i]; cur != null; cur = cur->next)
+				for (HashNode* cur = ((HashNode**)s_modelHashTable)[i]; cur != null; cur = cur->next)
 				{
-					var data = cur->data;
-					var bitTest = ((*(int*)(modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
-					if (data >= modelNum1 || !bitTest) continue;
+					ushort data = cur->data;
+					bool bitTest = ((*(int*)(s_modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
+					if (data >= s_modelNum1 || !bitTest)
+					{
+						continue;
+					}
 
-					var addr1 = modelNum4 + modelNum3 * data;
-					if (addr1 == 0) continue;
+					ulong addr1 = s_modelNum4 + s_modelNum3 * data;
+					if (addr1 == 0)
+					{
+						continue;
+					}
 
-					var addr2 = *(ulong*)(addr1);
+					ulong addr2 = *(ulong*)(addr1);
 					if (addr2 != 0)
 					{
 						switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
@@ -1137,14 +1173,20 @@ namespace SHVDN
 							case ModelInfoClassType.Vehicle:
 								// Avoid loading stub vehicles since it will crash the game
 								if (stubVehicles.Contains((uint)cur->hash))
+								{
 									continue;
+								}
+
 								vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
 
 								// Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
 								// The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
-								var vehicleTypeInt = *(int*)((byte*)addr2 + VehicleTypeOffsetInModelInfo);
+								int vehicleTypeInt = *(int*)((byte*)addr2 + s_vehicleTypeOffsetInModelInfo);
 								if (gameVersion < 28 && vehicleTypeInt >= 6)
+								{
 									vehicleTypeInt += 2;
+								}
+
 								vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->hash);
 
 								break;
@@ -1157,13 +1199,19 @@ namespace SHVDN
 			}
 
 			var vehicleResult = new ReadOnlyCollection<int>[0x20];
-			for (var i = 0; i < 0x20; i++)
+			for (int i = 0; i < 0x20; i++)
+			{
 				vehicleResult[i] = Array.AsReadOnly(vehicleHashesGroupedByClass[i].ToArray());
+			}
+
 			VehicleModels = Array.AsReadOnly(vehicleResult);
 
 			vehicleResult = new ReadOnlyCollection<int>[0x10];
-			for (var i = 0; i < 0x10; i++)
+			for (int i = 0; i < 0x10; i++)
+			{
 				vehicleResult[i] = Array.AsReadOnly(vehicleHashesGroupedByType[i].ToArray());
+			}
+
 			VehicleModelsGroupedByType = Array.AsReadOnly(vehicleResult);
 
 			WeaponModels = Array.AsReadOnly(weaponObjectHashes.ToArray());
@@ -1180,14 +1228,14 @@ namespace SHVDN
 			var yscScriptTable = (YscScriptTable*)(address + *(int*)(address + 3) + 7);
 
 			// find the shop_controller script
-			var shopControllerItem = yscScriptTable->FindScript(0x39DA738B);
+			YscScriptTableItem* shopControllerItem = yscScriptTable->FindScript(0x39DA738B);
 
 			if (shopControllerItem == null || !shopControllerItem->IsLoaded())
 			{
 				return;
 			}
 
-			var shopControllerHeader = shopControllerItem->header;
+			YscScriptHeader* shopControllerHeader = shopControllerItem->header;
 
 			string enableCarsGlobalPattern;
 			if (gameVersion >= 80)
@@ -1203,19 +1251,25 @@ namespace SHVDN
 			{
 				enableCarsGlobalPattern = "\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01";
 			}
-			var enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
-			var enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
+			string enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
+			int enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
 
-			var codepageCount = shopControllerHeader->CodePageCount();
-			for (var i = 0; i < codepageCount; i++)
+			int codepageCount = shopControllerHeader->CodePageCount();
+			for (int i = 0; i < codepageCount; i++)
 			{
-				var size = shopControllerHeader->GetCodePageSize(i);
-				if (size <= 0) continue;
+				int size = shopControllerHeader->GetCodePageSize(i);
+				if (size <= 0)
+				{
+					continue;
+				}
 
 				address = FindPatternNaive(enableCarsGlobalPattern, enableCarsGlobalMask, shopControllerHeader->GetCodePageAddress(i), (ulong)size);
-				if (address == null) continue;
+				if (address == null)
+				{
+					continue;
+				}
 
-				var globalIndex = *(int*)(address + enableCarsGlobalOffset) & 0xFFFFFF;
+				int globalIndex = *(int*)(address + enableCarsGlobalOffset) & 0xFFFFFF;
 				*(int*)GetGlobalPtr(globalIndex).ToPointer() = 1;
 				break;
 			}
@@ -1274,7 +1328,7 @@ namespace SHVDN
 		/// <returns>The string at the address.</returns>
 		public static string ReadString(IntPtr address)
 		{
-			return PtrToStringUTF8(address);
+			return PtrToStringUtf8(address);
 		}
 		/// <summary>
 		/// Reads a single 64-bit value from the specified <paramref name="address"/>.
@@ -1292,7 +1346,7 @@ namespace SHVDN
 		/// <returns>All elements of the matrix in row major arrangement.</returns>
 		public static float[] ReadMatrix(IntPtr address)
 		{
-			var data = (float*)address.ToPointer();
+			float* data = (float*)address.ToPointer();
 			return new float[16] { data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15] };
 		}
 		/// <summary>
@@ -1312,7 +1366,7 @@ namespace SHVDN
 		/// <param name="value">The value to write.</param>
 		public static void WriteByte(IntPtr address, byte value)
 		{
-			var data = (byte*)address.ToPointer();
+			byte* data = (byte*)address.ToPointer();
 			*data = value;
 		}
 		/// <summary>
@@ -1322,7 +1376,7 @@ namespace SHVDN
 		/// <param name="value">The value to write.</param>
 		public static void WriteInt16(IntPtr address, short value)
 		{
-			var data = (short*)address.ToPointer();
+			short* data = (short*)address.ToPointer();
 			*data = value;
 		}
 		/// <summary>
@@ -1332,7 +1386,7 @@ namespace SHVDN
 		/// <param name="value">The value to write.</param>
 		public static void WriteUInt16(IntPtr address, ushort value)
 		{
-			var data = (ushort*)address.ToPointer();
+			ushort* data = (ushort*)address.ToPointer();
 			*data = value;
 		}
 		/// <summary>
@@ -1342,7 +1396,7 @@ namespace SHVDN
 		/// <param name="value">The value to write.</param>
 		public static void WriteInt32(IntPtr address, int value)
 		{
-			var data = (int*)address.ToPointer();
+			int* data = (int*)address.ToPointer();
 			*data = value;
 		}
 		/// <summary>
@@ -1352,7 +1406,7 @@ namespace SHVDN
 		/// <param name="value">The value to write.</param>
 		public static void WriteFloat(IntPtr address, float value)
 		{
-			var data = (float*)address.ToPointer();
+			float* data = (float*)address.ToPointer();
 			*data = value;
 		}
 		/// <summary>
@@ -1362,9 +1416,11 @@ namespace SHVDN
 		/// <param name="value">The elements of the matrix in row major arrangement to write.</param>
 		public static void WriteMatrix(IntPtr address, float[] value)
 		{
-			var data = (float*)(address.ToPointer());
-			for (var i = 0; i < value.Length; i++)
+			float* data = (float*)(address.ToPointer());
+			for (int i = 0; i < value.Length; i++)
+			{
 				data[i] = value[i];
+			}
 		}
 		/// <summary>
 		/// Writes a 3-component floating-point to the specified <paramref name="address"/>.
@@ -1382,7 +1438,7 @@ namespace SHVDN
 		/// <param name="value">The value to write.</param>
 		public static void WriteAddress(IntPtr address, IntPtr value)
 		{
-			var data = (long*)address.ToPointer();
+			long* data = (long*)address.ToPointer();
 			*data = value.ToInt64();
 		}
 
@@ -1395,13 +1451,19 @@ namespace SHVDN
 		public static void SetBit(IntPtr address, int bit, bool value = true)
 		{
 			if (bit < 0 || bit > 31)
+			{
 				throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
+			}
 
-			var data = (int*)address.ToPointer();
+			int* data = (int*)address.ToPointer();
 			if (value)
+			{
 				*data |= (1 << bit);
+			}
 			else
+			{
 				*data &= ~(1 << bit);
+			}
 		}
 		/// <summary>
 		/// Checks a single bit in the 32-bit value at the specified <paramref name="address"/>.
@@ -1412,60 +1474,77 @@ namespace SHVDN
 		public static bool IsBitSet(IntPtr address, int bit)
 		{
 			if (bit < 0 || bit > 31)
+			{
 				throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
+			}
 
-			var data = (int*)address.ToPointer();
+			int* data = (int*)address.ToPointer();
 			return (*data & (1 << bit)) != 0;
 		}
 
-		static byte[] _strBufferForStringToCoTaskMemUTF8 = new byte[100];
+		private static byte[] s_strBufferForStringToCoTaskMemUtf8 = new byte[100];
 		public static IntPtr String { get; private set; } // "~a~"
 		public static IntPtr NullString { get; private set; } // ""
 		public static IntPtr CellEmailBcon { get; private set; } // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
-		public static string PtrToStringUTF8(IntPtr ptr)
+		public static string PtrToStringUtf8(IntPtr ptr)
 		{
 			if (ptr == IntPtr.Zero)
+			{
 				return string.Empty;
+			}
 
-			var data = (byte*)ptr.ToPointer();
+			byte* data = (byte*)ptr.ToPointer();
 
 			// Calculate length of null-terminated string
-			var len = 0;
+			int len = 0;
 			while (data[len] != 0)
+			{
 				++len;
+			}
 
-			return PtrToStringUTF8(ptr, len);
+			return PtrToStringUtf8(ptr, len);
 		}
-		public static string PtrToStringUTF8(IntPtr ptr, int len)
+		public static string PtrToStringUtf8(IntPtr ptr, int len)
 		{
 			if (len < 0)
+			{
 				throw new ArgumentException(null, nameof(len));
+			}
 
 			if (ptr == IntPtr.Zero)
+			{
 				return null;
+			}
+
 			if (len == 0)
+			{
 				return string.Empty;
+			}
 
 			return Encoding.UTF8.GetString((byte*)ptr.ToPointer(), len);
 		}
-		public static IntPtr StringToCoTaskMemUTF8(string s)
+		public static IntPtr StringToCoTaskMemUtf8(string s)
 		{
 			if (s == null)
-				return IntPtr.Zero;
-
-			var byteCountUtf8 = Encoding.UTF8.GetByteCount(s);
-			if (byteCountUtf8 > _strBufferForStringToCoTaskMemUTF8.Length)
 			{
-				_strBufferForStringToCoTaskMemUTF8 = new byte[byteCountUtf8 * 2];
+				return IntPtr.Zero;
 			}
 
-			Encoding.UTF8.GetBytes(s, 0, s.Length, _strBufferForStringToCoTaskMemUTF8, 0);
-			var dest = AllocCoTaskMem(byteCountUtf8 + 1);
-			if (dest == IntPtr.Zero)
-				throw new OutOfMemoryException();
+			int byteCountUtf8 = Encoding.UTF8.GetByteCount(s);
+			if (byteCountUtf8 > s_strBufferForStringToCoTaskMemUtf8.Length)
+			{
+				s_strBufferForStringToCoTaskMemUtf8 = new byte[byteCountUtf8 * 2];
+			}
 
-			Copy(_strBufferForStringToCoTaskMemUTF8, 0, dest, byteCountUtf8);
+			Encoding.UTF8.GetBytes(s, 0, s.Length, s_strBufferForStringToCoTaskMemUtf8, 0);
+			IntPtr dest = AllocCoTaskMem(byteCountUtf8 + 1);
+			if (dest == IntPtr.Zero)
+			{
+				throw new OutOfMemoryException();
+			}
+
+			Copy(s_strBufferForStringToCoTaskMemUtf8, 0, dest, byteCountUtf8);
 			// Add null-terminator to end
 			((byte*)dest.ToPointer())[byteCountUtf8] = 0;
 
@@ -1502,13 +1581,13 @@ namespace SHVDN
 
 		#region -- Cameras --
 
-		static ulong* CameraPoolAddress;
-		static ulong* GameplayCameraAddress;
+		private static ulong* s_cameraPoolAddress;
+		private static ulong* s_gameplayCameraAddress;
 
 		public static IntPtr GetCameraAddress(int handle)
 		{
-			var index = (uint)(handle >> 8);
-			var poolAddr = *CameraPoolAddress;
+			uint index = (uint)(handle >> 8);
+			ulong poolAddr = *s_cameraPoolAddress;
 			if (*(byte*)(index + *(long*)(poolAddr + 8)) == (byte)(handle & 0xFF))
 			{
 				return new IntPtr(*(long*)poolAddr + (index * *(uint*)(poolAddr + 20)));
@@ -1518,7 +1597,7 @@ namespace SHVDN
 		}
 		public static IntPtr GetGameplayCameraAddress()
 		{
-			return new IntPtr((long)*GameplayCameraAddress);
+			return new IntPtr((long)*s_gameplayCameraAddress);
 		}
 
 		#endregion
@@ -1528,7 +1607,7 @@ namespace SHVDN
 		// Performs ASCII uppercase to ASCII lowercase and backslash to slash conversion, does not perform any convertions to non-ASCII characters.
 		// Use this table because character conversion with this table performs faster than calculating converted characters using branch jump instructions.
 		// The former method is used in GTA5.exe and the latter one is used in GTAIV.exe.
-		static readonly byte[] LookupTableForGetHashKey =
+		private static readonly byte[] s_lookupTableForGetHashKey =
 		{
 			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
 			0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
@@ -1564,9 +1643,9 @@ namespace SHVDN
 			}
 
 			uint hash = 0;
-			foreach (var c in Encoding.UTF8.GetBytes(str))
+			foreach (byte c in Encoding.UTF8.GetBytes(str))
 			{
-				hash += LookupTableForGetHashKey[c];
+				hash += s_lookupTableForGetHashKey[c];
 				hash += (hash << 10);
 				hash ^= (hash >> 6);
 			}
@@ -1577,7 +1656,7 @@ namespace SHVDN
 
 			return hash;
 		}
-		public static uint GetHashKeyASCII(string str)
+		public static uint GetHashKeyAscii(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 			{
@@ -1585,9 +1664,9 @@ namespace SHVDN
 			}
 
 			uint hash = 0;
-			foreach (var c in Encoding.ASCII.GetBytes(str))
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
 			{
-				hash += LookupTableForGetHashKey[c];
+				hash += s_lookupTableForGetHashKey[c];
 				hash += (hash << 10);
 				hash ^= (hash >> 6);
 			}
@@ -1599,7 +1678,7 @@ namespace SHVDN
 			return hash;
 		}
 		// You can find the equivalent function of the method below with "EB 15 0F BE C0 48 FF C1"
-		public static uint GetHashKeyASCIINoPreConversion(string str)
+		public static uint GetHashKeyAsciiNoPreConversion(string str)
 		{
 			if (string.IsNullOrEmpty(str))
 			{
@@ -1607,7 +1686,7 @@ namespace SHVDN
 			}
 
 			uint hash = 0;
-			foreach (var c in Encoding.ASCII.GetBytes(str))
+			foreach (byte c in Encoding.ASCII.GetBytes(str))
 			{
 				hash += c;
 				hash += (hash << 10);
@@ -1621,13 +1700,13 @@ namespace SHVDN
 			return hash;
 		}
 
-		static ulong GetLabelTextByHashAddress;
-		static delegate* unmanaged[Stdcall]<ulong, int, ulong> GetLabelTextByHashFunc;
+		private static ulong s_getLabelTextByHashAddress;
+		private static delegate* unmanaged[Stdcall]<ulong, int, ulong> s_getLabelTextByHashFunc;
 
-		public static string GetGXTEntryByHash(int entryLabelHash)
+		public static string GetGxtEntryByHash(int entryLabelHash)
 		{
-			var entryText = (char*)GetLabelTextByHashFunc(GetLabelTextByHashAddress, entryLabelHash);
-			return entryText != null ? PtrToStringUTF8(new IntPtr(entryText)) : string.Empty;
+			char* entryText = (char*)s_getLabelTextByHashFunc(s_getLabelTextByHashAddress, entryLabelHash);
+			return entryText != null ? PtrToStringUtf8(new IntPtr(entryText)) : string.Empty;
 		}
 
 		#endregion
@@ -1635,7 +1714,7 @@ namespace SHVDN
 		#region -- YSC Script Data --
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct YscScriptHeader
+		private struct YscScriptHeader
 		{
 			[FieldOffset(0x10)]
 			internal byte** codeBlocksOffset;
@@ -1667,7 +1746,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct YscScriptTableItem
+		private struct YscScriptTableItem
 		{
 			[FieldOffset(0x0)]
 			internal YscScriptHeader* header;
@@ -1682,7 +1761,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct YscScriptTable
+		private struct YscScriptTable
 		{
 			[FieldOffset(0x0)]
 			internal YscScriptTableItem* TablePtr;
@@ -1695,7 +1774,7 @@ namespace SHVDN
 				{
 					return null; //table initialisation hasn't happened yet
 				}
-				for (var i = 0; i < count; i++)
+				for (int i = 0; i < count; i++)
 				{
 					if (TablePtr[i].hash == hash)
 					{
@@ -1711,41 +1790,41 @@ namespace SHVDN
 
 		#region -- World Data --
 
-		static int* cursorSpriteAddr;
+		private static int* s_cursorSpriteAddr;
 
-		public static int CursorSprite => *cursorSpriteAddr;
+		public static int CursorSprite => *s_cursorSpriteAddr;
 
-		static float* timeScaleAddress;
+		private static float* s_timeScaleAddress;
 
-		public static float TimeScale => *timeScaleAddress;
+		public static float TimeScale => *s_timeScaleAddress;
 
-		static int* millisecondsPerGameMinuteAddress;
+		private static int* s_millisecondsPerGameMinuteAddress;
 
 		public static int MillisecondsPerGameMinute
 		{
-			set => *millisecondsPerGameMinuteAddress = value;
+			set => *s_millisecondsPerGameMinuteAddress = value;
 		}
 
-		static bool* isClockPausedAddress;
+		private static bool* s_isClockPausedAddress;
 
-		public static bool IsClockPaused => *isClockPausedAddress;
+		public static bool IsClockPaused => *s_isClockPausedAddress;
 
-		static float* readWorldGravityAddress;
-		static float* writeWorldGravityAddress;
+		private static float* s_readWorldGravityAddress;
+		private static float* s_writeWorldGravityAddress;
 
 		public static float WorldGravity
 		{
-			get => *readWorldGravityAddress;
-			set => *writeWorldGravityAddress = value;
+			get => *s_readWorldGravityAddress;
+			set => *s_writeWorldGravityAddress = value;
 		}
 
 		#endregion
 
 		#region -- Skeleton Data --
 
-		static CrSkeleton* GetCrSkeletonFromEntityHandle(int handle)
+		private static CrSkeleton* GetCrSkeletonFromEntityHandle(int handle)
 		{
-			var entityAddress = GetEntityAddress(handle);
+			IntPtr entityAddress = GetEntityAddress(handle);
 			if (entityAddress == IntPtr.Zero)
 			{
 				return null;
@@ -1753,16 +1832,17 @@ namespace SHVDN
 
 			return GetCrSkeletonOfEntity(entityAddress);
 		}
-		static CrSkeleton* GetCrSkeletonOfEntity(IntPtr entityAddress)
+
+		private static CrSkeleton* GetCrSkeletonOfEntity(IntPtr entityAddress)
 		{
-			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			FragInst* fragInst = GetFragInstAddressOfEntity(entityAddress);
 			// Return value will not be null if the entity is a CVehicle or a CPed
 			if (fragInst != null)
 			{
 				return GetEntityCrSkeletonOfFragInst(fragInst);
 			}
 
-			var unkAddr = *(ulong*)(entityAddress + 80);
+			ulong unkAddr = *(ulong*)(entityAddress + 80);
 			if (unkAddr == 0)
 			{
 				return null;
@@ -1770,14 +1850,17 @@ namespace SHVDN
 
 			return (CrSkeleton*)*(ulong*)(unkAddr + 40);
 		}
-		static CrSkeleton* GetEntityCrSkeletonOfFragInst(FragInst* fragInst)
+
+		private static CrSkeleton* GetEntityCrSkeletonOfFragInst(FragInst* fragInst)
 		{
-			var fragCacheEntry = fragInst->fragCacheEntry;
-			var gtaFragType = fragInst->gtaFragType;
+			FragCacheEntry* fragCacheEntry = fragInst->fragCacheEntry;
+			GtaFragType* gtaFragType = fragInst->gtaFragType;
 
 			// Check if either pointer is null just like native functions that take a bone index argument
 			if (fragCacheEntry == null || gtaFragType == null)
+			{
 				return null;
+			}
 
 			return fragCacheEntry->crSkeleton;
 		}
@@ -1785,11 +1868,15 @@ namespace SHVDN
 		public static int GetBoneIdForEntityBoneIndex(int entityHandle, int boneIndex)
 		{
 			if (boneIndex < 0)
+			{
 				return -1;
+			}
 
-			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
 			if (crSkeleton == null)
+			{
 				return -1;
+			}
 
 			return crSkeleton->skeletonData->GetBoneIdByIndex(boneIndex);
 		}
@@ -1802,7 +1889,7 @@ namespace SHVDN
 				return;
 			}
 
-			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
 			if (crSkeleton == null)
 			{
 				nextSiblingBoneIndex = -1;
@@ -1821,7 +1908,7 @@ namespace SHVDN
 				return;
 			}
 
-			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
 			if (crSkeleton == null)
 			{
 				parentBoneIndex = -1;
@@ -1834,35 +1921,45 @@ namespace SHVDN
 		public static string GetEntityBoneName(int entityHandle, int boneIndex)
 		{
 			if (boneIndex < 0)
+			{
 				return null;
+			}
 
-			var crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(entityHandle);
 			if (crSkeleton == null)
+			{
 				return null;
+			}
 
 			return crSkeleton->skeletonData->GetBoneName(boneIndex);
 		}
 		public static int GetEntityBoneCount(int handle)
 		{
-			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			return crSkeleton != null ? crSkeleton->boneCount : 0;
 		}
 		public static IntPtr GetEntityBoneTransformMatrixAddress(int handle)
 		{
-			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
+			{
 				return IntPtr.Zero;
+			}
 
 			return crSkeleton->GetTransformMatrixAddress();
 		}
 		public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
+			{
 				return IntPtr.Zero;
+			}
 
-			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
+			{
 				return IntPtr.Zero;
+			}
 
 			if (boneIndex < crSkeleton->boneCount)
 			{
@@ -1874,11 +1971,15 @@ namespace SHVDN
 		public static IntPtr GetEntityBoneGlobalMatrixAddress(int handle, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
+			{
 				return IntPtr.Zero;
+			}
 
-			var crSkeleton = GetCrSkeletonFromEntityHandle(handle);
+			CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
 			if (crSkeleton == null)
+			{
 				return IntPtr.Zero;
+			}
 
 			if (boneIndex < crSkeleton->boneCount)
 			{
@@ -1892,21 +1993,21 @@ namespace SHVDN
 
 		#region -- CEntity Functions --
 
-		static delegate* unmanaged[Stdcall]<float*, ulong, int, float*> GetRotationFromMatrixFunc;
-		static delegate* unmanaged[Stdcall]<float*, ulong, int> GetQuaternionFromMatrixFunc;
+		private static delegate* unmanaged[Stdcall]<float*, ulong, int, float*> s_getRotationFromMatrixFunc;
+		private static delegate* unmanaged[Stdcall]<float*, ulong, int> s_getQuaternionFromMatrixFunc;
 
 		public static void GetRotationFromMatrix(float* returnRotationArray, IntPtr matrixAddress, int rotationOrder = 2)
 		{
-			GetRotationFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64(), rotationOrder);
+			s_getRotationFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64(), rotationOrder);
 
-			const float RAD_2_DEG = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
-			returnRotationArray[0] *= RAD_2_DEG;
-			returnRotationArray[1] *= RAD_2_DEG;
-			returnRotationArray[2] *= RAD_2_DEG;
+			const float rad2Deg = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
+			returnRotationArray[0] *= rad2Deg;
+			returnRotationArray[1] *= rad2Deg;
+			returnRotationArray[2] *= rad2Deg;
 		}
 		public static void GetQuaternionFromMatrix(float* returnRotationArray, IntPtr matrixAddress)
 		{
-			GetQuaternionFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64());
+			s_getQuaternionFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64());
 		}
 
 		#endregion
@@ -1917,9 +2018,9 @@ namespace SHVDN
 		public static int SetAngularVelocityVFuncOfEntityOffset { get; }
 		public static int GetAngularVelocityVFuncOfEntityOffset { get; }
 
-		public static uint cAttackerArrayOfEntityOffset { get; }
-		public static uint elementCountOfCAttackerArrayOfEntityOffset { get; }
-		public static uint elementSizeOfCAttackerArrayOfEntity { get; }
+		public static int CAttackerArrayOfEntityOffset { get; }
+		public static int ElementCountOfCAttackerArrayOfEntityOffset { get; }
+		public static int ElementSizeOfCAttackerArrayOfEntity { get; }
 
 		#endregion
 
@@ -1928,35 +2029,36 @@ namespace SHVDN
 		internal sealed class SetEntityAngularVelocityTask : IScriptTask
 		{
 			#region Fields
-			IntPtr entityAddress;
+
+			private IntPtr _entityAddress;
 			// return value will be the address of the temporary 4 float storage
-			delegate* unmanaged[Stdcall]<IntPtr, float*, void> setAngularVelocityDelegate;
-			float x, y, z;
+			private delegate* unmanaged[Stdcall]<IntPtr, float*, void> _setAngularVelocityDelegate;
+			private float _x, _y, _z;
 			#endregion
 
 			internal SetEntityAngularVelocityTask(IntPtr entityAddress, delegate* unmanaged[Stdcall]<IntPtr, float*, void> vFuncDelegate, float x, float y, float z)
 			{
-				this.entityAddress = entityAddress;
-				this.setAngularVelocityDelegate = vFuncDelegate;
-				this.x = x;
-				this.y = y;
-				this.z = z;
+				this._entityAddress = entityAddress;
+				this._setAngularVelocityDelegate = vFuncDelegate;
+				this._x = x;
+				this._y = y;
+				this._z = z;
 			}
 
 			public void Run()
 			{
-				var angularVelocity = stackalloc float[4];
-				angularVelocity[0] = x;
-				angularVelocity[1] = y;
-				angularVelocity[2] = z;
+				float* angularVelocity = stackalloc float[4];
+				angularVelocity[0] = _x;
+				angularVelocity[1] = _y;
+				angularVelocity[2] = _z;
 
-				setAngularVelocityDelegate(entityAddress, angularVelocity);
+				_setAngularVelocityDelegate(_entityAddress, angularVelocity);
 			}
 		}
 
 		public static float* GetEntityAngularVelocity(IntPtr entityAddress)
 		{
-			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)GetAngularVelocityVFuncOfEntityOffset);
+			ulong vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)GetAngularVelocityVFuncOfEntityOffset);
 			var getEntityAngularVelocity = (delegate* unmanaged[Stdcall]<IntPtr, float*>)(vFuncAddr);
 
 			return getEntityAngularVelocity(entityAddress);
@@ -1964,7 +2066,7 @@ namespace SHVDN
 
 		public static void SetEntityAngularVelocity(IntPtr entityAddress, float x, float y, float z)
 		{
-			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)SetAngularVelocityVFuncOfEntityOffset);
+			ulong vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)SetAngularVelocityVFuncOfEntityOffset);
 			var setEntityAngularVelocityDelegate = (delegate* unmanaged[Stdcall]<IntPtr, float*, void>)(vFuncAddr);
 
 			var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
@@ -1979,7 +2081,7 @@ namespace SHVDN
 
 		// the size is at least 0x10 in all game versions
 		[StructLayout(LayoutKind.Explicit, Size = 0x10)]
-		struct CAttacker
+		private struct CAttacker
 		{
 			[FieldOffset(0x0)]
 			internal ulong attackerEntityAddress;
@@ -2006,55 +2108,66 @@ namespace SHVDN
 
 		public static bool IsIndexOfEntityDamageRecordValid(IntPtr entityAddress, uint index)
 		{
-			if (cAttackerArrayOfEntityOffset == 0 ||
-				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
-				elementSizeOfCAttackerArrayOfEntity == 0)
+			if (NativeMemory.CAttackerArrayOfEntityOffset == 0 ||
+				NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset == 0 ||
+				NativeMemory.ElementSizeOfCAttackerArrayOfEntity == 0)
+			{
 				return false;
+			}
 
-			var entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
+			{
 				return false;
+			}
 
-			var entryCount = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
+			int entryCount = *(int*)((byte*)entityCAttackerArrayAddress + NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset);
 
 			return index < entryCount;
 		}
-		static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
-		{
-			var cAttacker = (CAttacker*)(cAttackerArrayAddress + index * elementSizeOfCAttackerArrayOfEntity);
 
-			var attackerEntityAddress = cAttacker->attackerEntityAddress;
-			var weaponHash = cAttacker->weaponHash;
-			var gameTime = cAttacker->gameTime;
-			var attackerHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
+		private static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
+		{
+			var cAttacker = (CAttacker*)((byte*)cAttackerArrayAddress + index * NativeMemory.ElementSizeOfCAttackerArrayOfEntity);
+
+			ulong attackerEntityAddress = cAttacker->attackerEntityAddress;
+			int weaponHash = cAttacker->weaponHash;
+			int gameTime = cAttacker->gameTime;
+			int attackerHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
 
 			return new EntityDamageRecordForReturnValue(attackerHandle, weaponHash, gameTime);
 		}
 		public static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
 		{
-			var entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
+			{
 				return default(EntityDamageRecordForReturnValue);
+			}
 
 			return GetEntityDamageRecordEntryAtIndexInternal(entityCAttackerArrayAddress, index);
 		}
 
 		public static EntityDamageRecordForReturnValue[] GetEntityDamageRecordEntries(IntPtr entityAddress)
 		{
-			if (cAttackerArrayOfEntityOffset == 0 ||
-				elementCountOfCAttackerArrayOfEntityOffset == 0 ||
-				elementSizeOfCAttackerArrayOfEntity == 0)
+			if (NativeMemory.CAttackerArrayOfEntityOffset == 0 ||
+				NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset == 0 ||
+				NativeMemory.ElementSizeOfCAttackerArrayOfEntity == 0)
+			{
 				return Array.Empty<EntityDamageRecordForReturnValue>();
+			}
 
-			var entityCAttackerArrayAddress = *(ulong*)(entityAddress + (int)cAttackerArrayOfEntityOffset).ToPointer();
+			ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
 
 			if (entityCAttackerArrayAddress == 0)
+			{
 				return Array.Empty<EntityDamageRecordForReturnValue>();
+			}
 
-			var returnEntrySize = *(int*)(entityCAttackerArrayAddress + elementCountOfCAttackerArrayOfEntityOffset);
-			var returnEntries = returnEntrySize != 0 ? new EntityDamageRecordForReturnValue[returnEntrySize] : Array.Empty<EntityDamageRecordForReturnValue>();
+			int returnEntrySize = *(int*)((byte*)entityCAttackerArrayAddress + NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset);
+			EntityDamageRecordForReturnValue[] returnEntries = returnEntrySize != 0 ? new EntityDamageRecordForReturnValue[returnEntrySize] : Array.Empty<EntityDamageRecordForReturnValue>();
 
 			for (uint i = 0; i < returnEntries.Length; i++)
 			{
@@ -2062,6 +2175,149 @@ namespace SHVDN
 			}
 
 			return returnEntries;
+		}
+
+		public static bool EntityRecordsCollision(int entityHandle)
+		{
+			IntPtr entityAddress = GetEntityAddress(entityHandle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return false;
+			}
+
+			return CPhysicalRecordsCollision(entityAddress);
+		}
+
+		public static bool CPhysicalRecordsCollision(IntPtr cPhysicalAddress)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return false;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x47;
+			return *(byte*)(cPhysicalAddress + offsetToRead) != 0;
+		}
+
+		public static bool HasEntityCollidedWithBuildingOrAnimatedBuilding(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return false;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x8;
+			return GetTargetCEntityAddressCollidingWith(entityHandle, offsetToRead) != IntPtr.Zero;
+		}
+
+		public static int GetVehicleHandleEntityIsCollidingWith(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x10;
+			return GetPhysicalEntityHandleEntityIsCollidingWith(entityHandle, offsetToRead);
+		}
+
+		public static int GetPedHandleEntityIsCollidingWith(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x18;
+			return GetPhysicalEntityHandleEntityIsCollidingWith(entityHandle, offsetToRead);
+		}
+
+		// maybe there's another collision record entry for CObject, but we're not sure about this
+		public static int GetPropHandleEntityIsCollidingWith(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x20;
+			return GetPhysicalEntityHandleEntityIsCollidingWith(entityHandle, offsetToRead);
+		}
+
+		public static int GetPhysicalEntityHandleFromLastCollisionEntryOfEntity(int entityHandle)
+		{
+			if (CAttackerArrayOfEntityOffset == 0)
+			{
+				return 0;
+			}
+
+			int offsetToRead = CAttackerArrayOfEntityOffset + 0x30;
+			IntPtr targetCEntityAddress = GetTargetCEntityAddressCollidingWith(entityHandle, offsetToRead);
+
+			if (targetCEntityAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			var targetCEntityType = (EntityTypeInternal)(*(byte*)(targetCEntityAddress + 0x28));
+			switch (targetCEntityType)
+			{
+				case EntityTypeInternal.Vehicle:
+				case EntityTypeInternal.Ped:
+				case EntityTypeInternal.Object:
+					return GetEntityHandleFromAddress(targetCEntityAddress);
+				default:
+					return 0;
+			}
+		}
+
+		private static int GetPhysicalEntityHandleEntityIsCollidingWith(int entityHandle, int offsetOfCollisionRecord)
+		{
+			IntPtr targetCEntityAddress = GetTargetCEntityAddressCollidingWith(entityHandle, offsetOfCollisionRecord);
+			if (targetCEntityAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(targetCEntityAddress);
+		}
+
+		private static IntPtr GetTargetCEntityAddressCollidingWith(int entityHandle, int offsetOfCollisionRecord)
+		{
+			IntPtr entityAddress = GetEntityAddress(entityHandle);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return IntPtr.Zero;
+			}
+
+			if (!CPhysicalRecordsCollision(entityAddress))
+			{
+				return IntPtr.Zero;
+			}
+
+			long** collisionRecord = *(long***)(entityAddress + offsetOfCollisionRecord);
+			if (collisionRecord == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			long* targetCEntityAddress = *collisionRecord;
+			if (targetCEntityAddress == null)
+			{
+				return IntPtr.Zero;
+			}
+
+			return new IntPtr(targetCEntityAddress);
+		}
+
+		private enum EntityTypeInternal
+		{
+			Invalid = 0,
+			Building = 1,
+			AnimatedBuilding = 2,
+			Vehicle = 3,
+			Ped = 4,
+			Object = 5
 		}
 
 		#endregion
@@ -2080,7 +2336,9 @@ namespace SHVDN
 		public static int GetLastVehicleHandleOfPed(IntPtr pedAddress)
 		{
 			if (PedLastVehicleOffset == 0)
+			{
 				return 0;
+			}
 
 			var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + PedLastVehicleOffset));
 			return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
@@ -2095,12 +2353,16 @@ namespace SHVDN
 		public static int GetVehicleHandlePedIsIn(IntPtr pedAddress)
 		{
 			if (PedIsInVehicleOffset == 0 || PedLastVehicleOffset == 0)
+			{
 				return 0;
+			}
 
-			var bitFlags = *(uint*)(pedAddress + PedIsInVehicleOffset);
-			var isPedInVehicle = ((bitFlags & (1 << 0x1E)) != 0);
+			uint bitFlags = *(uint*)(pedAddress + PedIsInVehicleOffset);
+			bool isPedInVehicle = ((bitFlags & (1 << 0x1E)) != 0);
 			if (!isPedInVehicle)
+			{
 				return 0;
+			}
 
 			var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + PedLastVehicleOffset));
 			return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
@@ -2114,7 +2376,7 @@ namespace SHVDN
 		public static int GearOffset { get; }
 		public static int HighGearOffset { get; }
 
-		public static int CurrentRPMOffset { get; }
+		public static int CurrentRpmOffset { get; }
 		public static int ClutchOffset { get; }
 		public static int AccelerationOffset { get; }
 
@@ -2185,23 +2447,23 @@ namespace SHVDN
 		public static IntPtr GetSubHandlingData(IntPtr handlingDataAddr, int handlingType)
 		{
 			var subHandlingArray = (RageAtArrayPtr*)(handlingDataAddr + SubHandlingDataArrayOffset);
-			var subHandlingCount = subHandlingArray->size;
+			ushort subHandlingCount = subHandlingArray->size;
 			if (subHandlingCount <= 0)
 			{
 				return IntPtr.Zero;
 			}
 
-			for (var i = 0; i < subHandlingCount; i++)
+			for (int i = 0; i < subHandlingCount; i++)
 			{
-				var subHandlingDataAddr = subHandlingArray->GetElementAddress(i);
+				ulong subHandlingDataAddr = subHandlingArray->GetElementAddress(i);
 				if (subHandlingDataAddr == 0)
 				{
 					continue;
 				}
 
-				var vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
+				ulong vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
 				var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(vFuncAddr);
-				var handlingTypeOfCurrentElement = getSubHandlingDataVFunc(subHandlingDataAddr);
+				int handlingTypeOfCurrentElement = getSubHandlingDataVFunc(subHandlingDataAddr);
 				if (handlingTypeOfCurrentElement == handlingType)
 				{
 					return new IntPtr((long)subHandlingDataAddr);
@@ -2218,7 +2480,7 @@ namespace SHVDN
 				return 0f;
 			}
 
-			var vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+			byte* vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
 
 			if (vehEngineStructAddr == null)
 			{
@@ -2234,7 +2496,7 @@ namespace SHVDN
 				return;
 			}
 
-			var vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+			byte* vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
 
 			if (vehEngineStructAddr == null)
 			{
@@ -2246,7 +2508,7 @@ namespace SHVDN
 
 		private static byte* GetCVehicleEngine(int vehicleHandle)
 		{
-			var address = GetEntityAddress(vehicleHandle);
+			IntPtr address = GetEntityAddress(vehicleHandle);
 
 			if (address == IntPtr.Zero)
 			{
@@ -2263,7 +2525,7 @@ namespace SHVDN
 
 		public static bool HasMutedSirens(int vehicleHandle)
 		{
-			var address = GetEntityAddress(vehicleHandle);
+			IntPtr address = GetEntityAddress(vehicleHandle);
 
 			if (address == IntPtr.Zero)
 			{
@@ -2275,14 +2537,14 @@ namespace SHVDN
 
 		public static bool VehicleHasSiren(int vehicleHandle)
 		{
-			var address = GetEntityAddress(vehicleHandle);
+			IntPtr address = GetEntityAddress(vehicleHandle);
 
 			if (address == IntPtr.Zero)
 			{
 				return false;
 			}
 
-			var modelAddress = GetModelInfo(address);
+			IntPtr modelAddress = GetModelInfo(address);
 
 			if (modelAddress == IntPtr.Zero)
 			{
@@ -2306,21 +2568,21 @@ namespace SHVDN
 
 		#region -- Prop Data --
 
-		static int objParentEntityAddressDetachedFromOffset;
+		private static int s_objParentEntityAddressDetachedFromOffset;
 
-		static IntPtr GetParentEntityOfPropDetachedFrom(int objHandle)
+		private static IntPtr GetParentEntityOfPropDetachedFrom(int objHandle)
 		{
-			var entityAddress = GetEntityAddress(objHandle);
-			if (objParentEntityAddressDetachedFromOffset == 0 || entityAddress == IntPtr.Zero)
+			IntPtr entityAddress = GetEntityAddress(objHandle);
+			if (s_objParentEntityAddressDetachedFromOffset == 0 || entityAddress == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
 			}
 
-			return new IntPtr(*(long*)(entityAddress + objParentEntityAddressDetachedFromOffset));
+			return new IntPtr(*(long*)(entityAddress + s_objParentEntityAddressDetachedFromOffset));
 		}
 		public static int GetParentEntityHandleOfPropDetachedFrom(int objHandle)
 		{
-			var parentEntityAddr = GetParentEntityOfPropDetachedFrom(objHandle);
+			IntPtr parentEntityAddr = GetParentEntityOfPropDetachedFrom(objHandle);
 			if (parentEntityAddr == IntPtr.Zero)
 			{
 				return 0;
@@ -2334,12 +2596,11 @@ namespace SHVDN
 
 		#region -- Vehicle Wheel Data --
 
-
-		static delegate* unmanaged[Stdcall]<IntPtr, void> FixVehicleWheelFunc;
-		static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void> PunctureVehicleTireNewFunc;
-		static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void> PunctureVehicleTireOldFunc;
-		static delegate* unmanaged[Stdcall]<IntPtr, void> BurstVehicleTireOnRimNewFunc;
-		static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> BurstVehicleTireOnRimOldFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, void> s_fixVehicleWheelFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void> s_punctureVehicleTireNewFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void> s_punctureVehicleTireOldFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, void> s_burstVehicleTireOnRimNewFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_burstVehicleTireOnRimOldFunc;
 
 		public static int VehicleWheelSteeringLimitMultiplierOffset { get; }
 
@@ -2360,14 +2621,16 @@ namespace SHVDN
 
 		public static int ShouldShowOnlyVehicleTiresWithPositiveHealthOffset { get; }
 
-		public static void FixVehicleWheel(IntPtr wheelAddress) => FixVehicleWheelFunc(wheelAddress);
+		public static void FixVehicleWheel(IntPtr wheelAddress) => s_fixVehicleWheelFunc(wheelAddress);
 
 		public static IntPtr GetVehicleWheelAddressByIndexOfWheelArray(IntPtr vehicleAddress, int index)
 		{
-			var vehicleWheelArrayAddr = *(ulong**)(vehicleAddress + SHVDN.NativeMemory.WheelPtrArrayOffset);
+			ulong* vehicleWheelArrayAddr = *(ulong**)(vehicleAddress + SHVDN.NativeMemory.WheelPtrArrayOffset);
 
 			if (vehicleWheelArrayAddr == null)
+			{
 				return IntPtr.Zero;
+			}
 
 			return new IntPtr((long)*(vehicleWheelArrayAddr + index));
 		}
@@ -2375,28 +2638,39 @@ namespace SHVDN
 		public static bool IsWheelTouchingSurface(IntPtr wheelAddress, IntPtr vehicleAddress)
 		{
 			if (VehicleWheelTouchingFlagsOffset == 0)
+			{
 				return false;
+			}
 
-			var wheelTouchingFlag = *(uint*)(wheelAddress + VehicleWheelTouchingFlagsOffset).ToPointer();
+			uint wheelTouchingFlag = *(uint*)(wheelAddress + VehicleWheelTouchingFlagsOffset).ToPointer();
 			if ((wheelTouchingFlag & 1) != 0)
+			{
 				return true;
+			}
 
 			#region Slower Check
 			if (((wheelTouchingFlag >> 1) & 1) == 0)
+			{
 				return false;
+			}
 
-			var phCollider = *(ulong*)(*(ulong*)(vehicleAddress + 0x50).ToPointer() + 0x50);
+			ulong phCollider = *(ulong*)(*(ulong*)(vehicleAddress + 0x50).ToPointer() + 0x50);
 			if (phCollider == 0)
+			{
 				return true;
-			var unkStructAddr = *(ulong*)(phCollider + 0x18);
+			}
+
+			ulong unkStructAddr = *(ulong*)(phCollider + 0x18);
 			if (unkStructAddr == 0)
+			{
 				return false;
+			}
 
 			return (*(uint*)(unkStructAddr + 0x14) & 0xFFFFFFFD) == 0;
 			#endregion
 		}
 
-		static bool VehicleWheelHasVehiclePtr() => GetGameVersion() >= 40;
+		private static bool VehicleWheelHasVehiclePtr() => GetGameVersion() >= 40;
 
 		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
 		{
@@ -2415,18 +2689,19 @@ namespace SHVDN
 		internal sealed class VehicleWheelPunctureTask : IScriptTask
 		{
 			#region Fields
-			IntPtr wheelAddress;
-			IntPtr vehicleAddress;
-			bool burstWheelCompletely;
-			float damage;
+
+			private IntPtr _wheelAddress;
+			private IntPtr _vehicleAddress;
+			private bool _burstWheelCompletely;
+			private float _damage;
 			#endregion
 
 			internal VehicleWheelPunctureTask(IntPtr wheelAddress, IntPtr vehicleAddress, bool burstWheelCompletely, float damage = 1000f)
 			{
-				this.wheelAddress = wheelAddress;
-				this.vehicleAddress = vehicleAddress;
-				this.burstWheelCompletely = burstWheelCompletely;
-				this.damage = damage;
+				this._wheelAddress = wheelAddress;
+				this._vehicleAddress = vehicleAddress;
+				this._burstWheelCompletely = burstWheelCompletely;
+				this._damage = damage;
 			}
 
 			public void Run()
@@ -2436,15 +2711,19 @@ namespace SHVDN
 
 				if (VehicleWheelHasVehiclePtr())
 				{
-					PunctureVehicleTireNewFunc(wheelAddress, 0, damage, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
-					if (burstWheelCompletely)
-						BurstVehicleTireOnRimNewFunc(wheelAddress);
+					s_punctureVehicleTireNewFunc(_wheelAddress, 0, _damage, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					if (_burstWheelCompletely)
+					{
+						s_burstVehicleTireOnRimNewFunc(_wheelAddress);
+					}
 				}
 				else
 				{
-					PunctureVehicleTireOldFunc(wheelAddress, 0, damage, vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
-					if (burstWheelCompletely)
-						BurstVehicleTireOnRimOldFunc(wheelAddress, vehicleAddress);
+					s_punctureVehicleTireOldFunc(_wheelAddress, 0, _damage, _vehicleAddress, (ulong)&outValInt, (ulong)&outValFloat, 3, 0, true);
+					if (_burstWheelCompletely)
+					{
+						s_burstVehicleTireOnRimOldFunc(_wheelAddress, _vehicleAddress);
+					}
 				}
 			}
 		}
@@ -2452,6 +2731,13 @@ namespace SHVDN
 		#endregion
 
 		#region -- Ped Offsets --
+
+		public static int CPedLowerWetnessHeightOffset { get; }
+		public static int CPedUpperWetnessHeightOffset { get; }
+		public static int CPedLowerWetnessLevelOffset { get; }
+		public static int CPedUpperWetnessLevelOffset { get; }
+
+		public static int CPedIsUsingWetEffectOffset { get; }
 
 		public static int SweatOffset { get; }
 
@@ -2480,6 +2766,8 @@ namespace SHVDN
 		public static int PedCauseOfDeathOffset { get; }
 		public static int PedTimeOfDeathOffset { get; }
 
+		public static int PedKnockOffVehicleTypeOffset { get; }
+
 		#region -- Ped Intelligence Offsets --
 
 		public static int PedIntelligenceOffset { get; }
@@ -2497,13 +2785,110 @@ namespace SHVDN
 		public static int VisualFieldPeripheralRangeOffset { get; }
 		public static int VisualFieldCenterAngleOffset { get; }
 
-		static int CTaskTreePedOffset { get; }
+		private static int CTaskTreePedOffset { get; }
 
-		static int CEventCountOffset { get; }
+		private static int CEventCountOffset { get; }
 
-		static int CEventStackOffset { get; }
+		private static int CEventStackOffset { get; }
+
+		public static int PedIntelligenceCTaskInfoOffset { get; }
+
+		public static int PedIntelligenceCombatTargetPedAddressOffset { get; }
+
+		public static int PedIntelligenceCurrentScriptTaskHashOffset { get; }
+		public static int PedIntelligenceCurrentScriptTaskStatusOffset { get; }
 
 		#endregion
+
+		#endregion
+
+		#region -- CPedIntelligence Data --
+
+		public static IntPtr GetCPedIntelligence(IntPtr pedAddress)
+			=> PedIntelligenceOffset != 0 ? new IntPtr(*(long*)(pedAddress + PedIntelligenceOffset)) : IntPtr.Zero;
+
+		public static int GetCombatTargetPedHandleFromCombatPed(IntPtr pedAddress)
+		{
+			if (PedIntelligenceCTaskInfoOffset == 0)
+			{
+				return 0;
+			}
+
+			IntPtr pedIntelligence = GetCPedIntelligence(pedAddress);
+			if (pedIntelligence == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			// Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
+			// and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
+			// In practical, however, it looks like we can use the target address without testing the 2 checks
+
+			var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
+			if (targetPedAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(targetPedAddress);
+		}
+
+		public static int GetCombatTargetPedHandleFromCombatPed(int pedHandle)
+		{
+			if (PedIntelligenceCTaskInfoOffset == 0)
+			{
+				return 0;
+			}
+
+			IntPtr pedAddress = GetEntityAddress(pedHandle);
+			if (pedAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			IntPtr pedIntelligence = GetCPedIntelligence(pedAddress);
+			if (pedIntelligence == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			// Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
+			// and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
+			// In practical, however, it looks like we can use the target address without testing the 2 checks
+
+			var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
+			if (targetPedAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			return GetEntityHandleFromAddress(targetPedAddress);
+		}
+
+		public static void GetScriptTaskHashAndStatus(int pedHandle, out uint taskHash, out uint taskStatus)
+		{
+			taskHash = 0x811E343C; // the hashed value of SCRIPT_TASK_INVALID, hardcoded in a lot of places
+			taskStatus = 3; // the vacant status, hardcoded nearby most of the places where the hashed value of SCRIPT_TASK_INVALID is hardcoded
+			if (PedIntelligenceCurrentScriptTaskHashOffset == 0 || PedIntelligenceCurrentScriptTaskStatusOffset == 0)
+			{
+				return;
+			}
+
+			IntPtr pedAddress = GetEntityAddress(pedHandle);
+			if (pedAddress == IntPtr.Zero)
+			{
+				return;
+			}
+
+			IntPtr pedIntelligence = GetCPedIntelligence(pedAddress);
+			if (pedIntelligence == IntPtr.Zero)
+			{
+				return;
+			}
+
+			taskHash = *(uint*)(pedIntelligence + PedIntelligenceCurrentScriptTaskHashOffset);
+			taskStatus = *(uint*)(pedIntelligence + PedIntelligenceCurrentScriptTaskStatusOffset);
+		}
 
 		#endregion
 
@@ -2516,7 +2901,7 @@ namespace SHVDN
 				return IntPtr.Zero;
 			}
 
-			var cPedAddress = GetEntityAddress(pedHandle);
+			IntPtr cPedAddress = GetEntityAddress(pedHandle);
 			if (cPedAddress == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
@@ -2527,18 +2912,18 @@ namespace SHVDN
 
 		public static uint[] GetAllWeaponHashesOfPedInventory(int pedHandle)
 		{
-			var weaponInventoryArray = GetWeaponInventoryArrayOfCPedInventory(pedHandle);
+			RageAtArrayPtr* weaponInventoryArray = GetWeaponInventoryArrayOfCPedInventory(pedHandle);
 			if (weaponInventoryArray == null)
 			{
 				return Array.Empty<uint>();
 			}
 
-			var weaponInventoryCount = weaponInventoryArray->size;
+			ushort weaponInventoryCount = weaponInventoryArray->size;
 			var result = new List<uint>(weaponInventoryCount);
 			for (int i = 0; i < weaponInventoryCount; i++)
 			{
-				var itemAddress = weaponInventoryArray->GetElementAddress(i);
-				var weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
+				ulong itemAddress = weaponInventoryArray->GetElementAddress(i);
+				ItemInfo* weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
 				if (weaponInfo != null)
 				{
 					result.Add(weaponInfo->nameHash);
@@ -2550,7 +2935,7 @@ namespace SHVDN
 
 		public static bool TryGetWeaponHashInPedInventoryBySlotHash(int pedHandle, uint slotHash, out uint weaponHash)
 		{
-			var weaponInventoryArray = GetWeaponInventoryArrayOfCPedInventory(pedHandle);
+			RageAtArrayPtr* weaponInventoryArray = GetWeaponInventoryArrayOfCPedInventory(pedHandle);
 			if (weaponInventoryArray == null)
 			{
 				weaponHash = 0;
@@ -2563,10 +2948,10 @@ namespace SHVDN
 				unsafe
 				{
 					int indexToRead = (low + high) >> 1;
-					var currentItem = weaponInventoryArray->GetElementAddress(indexToRead);
+					ulong currentItem = weaponInventoryArray->GetElementAddress(indexToRead);
 
-					var slotHashOfCurrentItem = *(uint*)(currentItem);
-					var weaponInfo = *(ItemInfo**)(currentItem + 0x8);
+					uint slotHashOfCurrentItem = *(uint*)(currentItem);
+					ItemInfo* weaponInfo = *(ItemInfo**)(currentItem + 0x8);
 					if (slotHashOfCurrentItem == slotHash && weaponInfo != null)
 					{
 						weaponHash = weaponInfo->nameHash;
@@ -2575,9 +2960,13 @@ namespace SHVDN
 
 					// The array is sorted in ascending order
 					if (slotHashOfCurrentItem <= slotHash)
+					{
 						low = indexToRead + 1;
+					}
 					else
+					{
 						high = indexToRead - 1;
+					}
 
 					if (low > high)
 					{
@@ -2595,13 +2984,13 @@ namespace SHVDN
 				return null;
 			}
 
-			var cPedAddress = GetEntityAddress(pedHandle);
+			IntPtr cPedAddress = GetEntityAddress(pedHandle);
 			if (cPedAddress == IntPtr.Zero)
 			{
 				return null;
 			}
 
-			var cPedInventoryAddress = *(ulong*)(cPedAddress + CPedIntentoryOfCPedOffset);
+			ulong cPedInventoryAddress = *(ulong*)(cPedAddress + CPedIntentoryOfCPedOffset);
 			if (cPedInventoryAddress == 0)
 			{
 				return null;
@@ -2615,7 +3004,7 @@ namespace SHVDN
 		#region -- Model Info --
 
 		[StructLayout(LayoutKind.Sequential)]
-		struct HashNode
+		private struct HashNode
 		{
 			internal int hash;
 			internal ushort data;
@@ -2623,7 +3012,7 @@ namespace SHVDN
 			internal HashNode* next;
 		}
 
-		enum ModelInfoClassType
+		private enum ModelInfoClassType
 		{
 			Invalid = 0,
 			Object = 1,
@@ -2633,7 +3022,8 @@ namespace SHVDN
 			Vehicle = 5,
 			Ped = 6
 		}
-		enum VehicleStructClassType
+
+		private enum VehicleStructClassType
 		{
 			None = -1,
 			Automobile = 0x0,
@@ -2675,14 +3065,14 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x400)]
-		struct CModelList
+		private struct CModelList
 		{
 			[FieldOffset(0x0)]
 			internal fixed uint modelMemberIndices[0x100];
 		}
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xB8)]
-		struct PedPersonality
+		private struct PedPersonality
 		{
 			[FieldOffset(0x7C)]
 			internal bool isMale;
@@ -2692,39 +3082,50 @@ namespace SHVDN
 			internal bool isGang;
 		}
 
-		static int vehicleMakeNameOffsetInModelInfo;
-		static int VehicleTypeOffsetInModelInfo;
-		static int handlingIndexOffsetInModelInfo;
-		static int pedPersonalityIndexOffsetInModelInfo;
-		static UInt32 modelNum1;
-		static UInt64 modelNum2;
-		static UInt64 modelNum3;
-		static UInt64 modelNum4;
-		static UInt64 modelHashTable;
-		static UInt16 modelHashEntries;
-		static ulong* modelInfoArrayPtr;
-		static ulong* cStreamingAddr;
-		static ulong* pedPersonalitiesArrayAddr;
+		private static int s_vehicleMakeNameOffsetInModelInfo;
+		private static int s_vehicleTypeOffsetInModelInfo;
+		private static int s_handlingIndexOffsetInModelInfo;
+		private static int s_pedPersonalityIndexOffsetInModelInfo;
+		private static UInt32 s_modelNum1;
+		private static UInt64 s_modelNum2;
+		private static UInt64 s_modelNum3;
+		private static UInt64 s_modelNum4;
+		private static UInt64 s_modelHashTable;
+		private static UInt16 s_modelHashEntries;
+		private static ulong* s_modelInfoArrayPtr;
+		private static ulong* s_cStreamingAddr;
+		private static ulong* s_pedPersonalitiesArrayAddr;
 
-		static IntPtr FindCModelInfo(int modelHash)
+		private static IntPtr FindCModelInfo(int modelHash)
 		{
-			for (var cur = ((HashNode**)modelHashTable)[(uint)(modelHash) % modelHashEntries]; cur != null; cur = cur->next)
+			for (HashNode* cur = ((HashNode**)s_modelHashTable)[(uint)(modelHash) % s_modelHashEntries]; cur != null; cur = cur->next)
 			{
 				if (cur->hash != modelHash)
+				{
 					continue;
+				}
 
-				var data = cur->data;
-				var bitTest = ((*(int*)(modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
-				if (data >= modelNum1 || !bitTest) continue;
-				var addr1 = modelNum4 + modelNum3 * data;
-				if (addr1 == 0) continue;
-				var address = (long*)(*(ulong*)(addr1));
+				ushort data = cur->data;
+				bool bitTest = ((*(int*)(s_modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
+				if (data >= s_modelNum1 || !bitTest)
+				{
+					continue;
+				}
+
+				ulong addr1 = s_modelNum4 + s_modelNum3 * data;
+				if (addr1 == 0)
+				{
+					continue;
+				}
+
+				long* address = (long*)(*(ulong*)(addr1));
 				return new IntPtr(address);
 			}
 
 			return IntPtr.Zero;
 		}
-		static ModelInfoClassType GetModelInfoClass(IntPtr address)
+
+		private static ModelInfoClassType GetModelInfoClass(IntPtr address)
 		{
 			if (address != IntPtr.Zero)
 			{
@@ -2733,29 +3134,39 @@ namespace SHVDN
 
 			return ModelInfoClassType.Invalid;
 		}
-		static VehicleStructClassType GetVehicleStructClass(IntPtr modelInfoAddress)
+
+		private static VehicleStructClassType GetVehicleStructClass(IntPtr modelInfoAddress)
 		{
-			if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Vehicle) return VehicleStructClassType.None;
-			var typeInt = (*(int*)((byte*)modelInfoAddress.ToPointer() + VehicleTypeOffsetInModelInfo));
+			if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Vehicle)
+			{
+				return VehicleStructClassType.None;
+			}
+
+			int typeInt = (*(int*)((byte*)modelInfoAddress.ToPointer() + s_vehicleTypeOffsetInModelInfo));
 
 			// Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
 			// The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
 			if (GetGameVersion() < 28 && typeInt >= 6)
+			{
 				typeInt += 2;
+			}
 
 			return (VehicleStructClassType)typeInt;
 
 		}
 		public static int GetVehicleType(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 
 			if (modelInfo == IntPtr.Zero)
+			{
 				return -1;
+			}
 
 			return (int)GetVehicleStructClass(modelInfo);
 		}
-		static IntPtr GetModelInfo(IntPtr entityAddress)
+
+		private static IntPtr GetModelInfo(IntPtr entityAddress)
 		{
 			if (entityAddress != IntPtr.Zero)
 			{
@@ -2764,7 +3175,8 @@ namespace SHVDN
 
 			return IntPtr.Zero;
 		}
-		static int GetModelHashFromFwArcheType(IntPtr fwArcheTypeAddress)
+
+		private static int GetModelHashFromFwArcheType(IntPtr fwArcheTypeAddress)
 		{
 			if (fwArcheTypeAddress != IntPtr.Zero)
 			{
@@ -2775,8 +3187,12 @@ namespace SHVDN
 		}
 		public static int GetModelHashFromEntity(IntPtr entityAddress)
 		{
-			if (entityAddress == IntPtr.Zero) return 0;
-			var modelInfoAddress = GetModelInfo(entityAddress);
+			if (entityAddress == IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			IntPtr modelInfoAddress = GetModelInfo(entityAddress);
 			if (modelInfoAddress != IntPtr.Zero)
 			{
 				return GetModelHashFromFwArcheType(modelInfoAddress);
@@ -2784,7 +3200,8 @@ namespace SHVDN
 
 			return 0;
 		}
-		static bool IsFwArcheTypeAFragment(IntPtr fwArcheTypeAddress)
+
+		private static bool IsFwArcheTypeAFragment(IntPtr fwArcheTypeAddress)
 		{
 			if (fwArcheTypeAddress != IntPtr.Zero)
 			{
@@ -2796,19 +3213,23 @@ namespace SHVDN
 		}
 		public static bool IsModelAFragment(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			if (modelInfo == IntPtr.Zero)
+			{
 				return false;
+			}
 
 			return IsFwArcheTypeAFragment(modelInfo);
 		}
 
-		static IntPtr GetModelInfoByIndex(uint index)
+		private static IntPtr GetModelInfoByIndex(uint index)
 		{
-			if (modelInfoArrayPtr == null || index < 0)
+			if (s_modelInfoArrayPtr == null || index < 0)
+			{
 				return IntPtr.Zero;
+			}
 
-			var modelInfoArrayFirstElemPtr = *modelInfoArrayPtr;
+			ulong modelInfoArrayFirstElemPtr = *s_modelInfoArrayPtr;
 
 			return new IntPtr(*(long*)(modelInfoArrayFirstElemPtr + index * 0x8));
 		}
@@ -2822,19 +3243,23 @@ namespace SHVDN
 		}
 		internal static List<int> GetLoadedHashesOfModelList(int startOffsetOfCStreaming)
 		{
-			if (modelInfoArrayPtr == null || cStreamingAddr == null)
+			if (s_modelInfoArrayPtr == null || s_cStreamingAddr == null)
+			{
 				return new List<int>();
+			}
 
 			var resultList = new List<int>();
 
-			const int MAX_MODEL_LIST_ELEMENT_COUNT = 256;
-			var modelSet = (CModelList*)((ulong)cStreamingAddr + (uint)startOffsetOfCStreaming);
-			for (uint i = 0; i < MAX_MODEL_LIST_ELEMENT_COUNT; i++)
+			const int maxModelListElementCount = 256;
+			var modelSet = (CModelList*)((ulong)s_cStreamingAddr + (uint)startOffsetOfCStreaming);
+			for (uint i = 0; i < maxModelListElementCount; i++)
 			{
-				var indexOfModelInfo = modelSet->modelMemberIndices[i];
+				uint indexOfModelInfo = modelSet->modelMemberIndices[i];
 
 				if (indexOfModelInfo == 0xFFFF)
+				{
 					break;
+				}
 
 				resultList.Add(GetModelHashFromFwArcheType(GetModelInfoByIndex(indexOfModelInfo)));
 			}
@@ -2845,47 +3270,47 @@ namespace SHVDN
 
 		public static bool IsModelAPed(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped;
 		}
 		public static bool IsModelABlimp(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Blimp;
 		}
 		public static bool IsModelAMotorcycle(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Bike;
 		}
 		public static bool IsModelASubmarine(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Submarine;
 		}
 		public static bool IsModelASubmarineCar(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.SubmarineCar;
 		}
 		public static bool IsModelATrailer(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
 		}
 		public static bool IsModelAMlo(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			return GetModelInfoClass(modelInfo) == ModelInfoClassType.Mlo;
 		}
 
 		public static string GetVehicleMakeName(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 
 			if (GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
 			{
-				return PtrToStringUTF8(modelInfo + vehicleMakeNameOffsetInModelInfo);
+				return PtrToStringUtf8(modelInfo + s_vehicleMakeNameOffsetInModelInfo);
 			}
 
 			return "CARNOTFOUND";
@@ -2896,12 +3321,18 @@ namespace SHVDN
 		private static bool HasVehicleFlagInternal(int modelHash, ulong flag, int flagOffset)
 		{
 			if (FirstVehicleFlagsOffset == 0)
+			{
 				return false;
+			}
 
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 
-			if (GetModelInfoClass(modelInfo) != ModelInfoClassType.Vehicle) return false;
-			var modelFlags = *(ulong*)(modelInfo + FirstVehicleFlagsOffset + flagOffset).ToPointer();
+			if (GetModelInfoClass(modelInfo) != ModelInfoClassType.Vehicle)
+			{
+				return false;
+			}
+
+			ulong modelFlags = *(ulong*)(modelInfo + FirstVehicleFlagsOffset + flagOffset).ToPointer();
 			return (modelFlags & flag) != 0;
 		}
 
@@ -2911,82 +3342,98 @@ namespace SHVDN
 		public static ReadOnlyCollection<int> PedModels { get; }
 
 
-		static delegate* unmanaged[Stdcall]<IntPtr, ulong> GetHandlingDataByHash;
-		static delegate* unmanaged[Stdcall]<int, ulong> GetHandlingDataByIndex;
+		private static delegate* unmanaged[Stdcall]<IntPtr, ulong> s_getHandlingDataByHash;
+		private static delegate* unmanaged[Stdcall]<int, ulong> s_getHandlingDataByIndex;
 
 		public static IntPtr GetHandlingDataByModelHash(int modelHash)
 		{
-			var modelInfo = FindCModelInfo(modelHash);
+			IntPtr modelInfo = FindCModelInfo(modelHash);
 			if (GetModelInfoClass(modelInfo) != ModelInfoClassType.Vehicle)
+			{
 				return IntPtr.Zero;
+			}
 
-			var handlingIndex = *(int*)(modelInfo + handlingIndexOffsetInModelInfo).ToPointer();
-			return new IntPtr((long)GetHandlingDataByIndex(handlingIndex));
+			int handlingIndex = *(int*)(modelInfo + s_handlingIndexOffsetInModelInfo).ToPointer();
+			return new IntPtr((long)s_getHandlingDataByIndex(handlingIndex));
 		}
 		public static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
 		{
-			return new IntPtr((long)GetHandlingDataByHash(new IntPtr(&handlingNameHash)));
+			return new IntPtr((long)s_getHandlingDataByHash(new IntPtr(&handlingNameHash)));
 		}
 
 		private static PedPersonality* GetPedPersonalityElementAddress(IntPtr modelInfoAddress)
 		{
 			if (modelInfoAddress == IntPtr.Zero ||
-				pedPersonalitiesArrayAddr == null ||
-				pedPersonalityIndexOffsetInModelInfo == 0 ||
-				*(ulong*)pedPersonalitiesArrayAddr == 0)
+				s_pedPersonalitiesArrayAddr == null ||
+				s_pedPersonalityIndexOffsetInModelInfo == 0 ||
+				*(ulong*)s_pedPersonalitiesArrayAddr == 0)
+			{
 				return null;
+			}
 
 			if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Ped)
+			{
 				return null;
+			}
 
 			// This values is not likely to be changed in further updates
-			const int PED_PERSONALITY_ELEMENT_SIZE = 0xB8;
+			const int pedPersonalityElementSize = 0xB8;
 
-			var indexOfPedPersonality = *(ushort*)(modelInfoAddress + pedPersonalityIndexOffsetInModelInfo).ToPointer();
-			return (PedPersonality*)(*(ulong*)pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PED_PERSONALITY_ELEMENT_SIZE));
+			ushort indexOfPedPersonality = *(ushort*)(modelInfoAddress + s_pedPersonalityIndexOffsetInModelInfo).ToPointer();
+			return (PedPersonality*)(*(ulong*)s_pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * pedPersonalityElementSize));
 		}
 		public static bool IsModelAMalePed(int modelHash)
 		{
-			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+			PedPersonality* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
 
 			if (pedPersonalityAddress == null)
+			{
 				return false;
+			}
 
 			return pedPersonalityAddress->isMale;
 		}
 		public static bool IsModelAFemalePed(int modelHash)
 		{
-			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+			PedPersonality* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
 
 			if (pedPersonalityAddress == null)
+			{
 				return false;
+			}
 
 			return !pedPersonalityAddress->isMale;
 		}
 		public static bool IsModelHumanPed(int modelHash)
 		{
-			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+			PedPersonality* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
 
 			if (pedPersonalityAddress == null)
+			{
 				return false;
+			}
 
 			return pedPersonalityAddress->isHuman;
 		}
 		public static bool IsModelAnAnimalPed(int modelHash)
 		{
-			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+			PedPersonality* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
 
 			if (pedPersonalityAddress == null)
+			{
 				return false;
+			}
 
 			return !pedPersonalityAddress->isHuman;
 		}
 		public static bool IsModelAGangPed(int modelHash)
 		{
-			var pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+			PedPersonality* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
 
 			if (pedPersonalityAddress == null)
+			{
 				return false;
+			}
 
 			return pedPersonalityAddress->isGang;
 		}
@@ -2996,7 +3443,7 @@ namespace SHVDN
 		#region -- Entity Pools --
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct FwScriptGuidPool
+		private struct FwScriptGuidPool
 		{
 			// The max count value should be at least 3072 as long as ScriptHookV is installed.
 			// Without ScriptHookV, the default value is hardcoded and may be different between different game versions (the value is 300 in b372 and 700 in b2824).
@@ -3020,7 +3467,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct VehiclePool
+		private struct VehiclePool
 		{
 			[FieldOffset(0x00)]
 			internal ulong* poolAddress;
@@ -3045,7 +3492,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct GenericPool
+		private struct GenericPool
 		{
 			[FieldOffset(0x00)]
 			public ulong poolStartAddress;
@@ -3067,8 +3514,8 @@ namespace SHVDN
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public bool IsHandleValid(int handle)
 			{
-				var handleUInt = (uint)handle;
-				var index = handleUInt >> 8;
+				uint handleUInt = (uint)handle;
+				uint index = handleUInt >> 8;
 				return GetCounter(index) == (handleUInt & 0xFFu);
 			}
 
@@ -3094,13 +3541,17 @@ namespace SHVDN
 			public int GetGuidHandleFromAddress(ulong address)
 			{
 				if (address < poolStartAddress || address >= poolStartAddress + size * itemSize)
+				{
 					return 0;
+				}
 
-				var offset = address - poolStartAddress;
+				ulong offset = address - poolStartAddress;
 				if (offset % itemSize != 0)
+				{
 					return 0;
+				}
 
-				var indexOfPool = (uint)(offset / itemSize);
+				uint indexOfPool = (uint)(offset / itemSize);
 				return (int)((indexOfPool << 8) + GetCounter(indexOfPool));
 			}
 
@@ -3109,7 +3560,7 @@ namespace SHVDN
 			{
 				unsafe
 				{
-					var byteArrayPtr = (byte*)byteArray.ToPointer();
+					byte* byteArrayPtr = (byte*)byteArray.ToPointer();
 					return (byte)(byteArrayPtr[index] & 0x7F);
 				}
 			}
@@ -3119,30 +3570,30 @@ namespace SHVDN
 			{
 				unsafe
 				{
-					var byteArrayPtr = (byte*)byteArray.ToPointer();
+					byte* byteArrayPtr = (byte*)byteArray.ToPointer();
 					long num1 = byteArrayPtr[index] & 0x80;
 					return (ulong)(~((num1 | -num1) >> 63));
 				}
 			}
 		}
 
-		static ulong* FwScriptGuidPoolAddress;
-		static ulong* PedPoolAddress;
-		static ulong* ObjectPoolAddress;
-		static ulong* PickupObjectPoolAddress;
-		static ulong* VehiclePoolAddress;
-		static ulong* BuildingPoolAddress;
-		static ulong* AnimatedBuildingPoolAddress;
-		static ulong* InteriorInstPoolAddress;
-		static ulong* InteriorProxyPoolAddress;
+		private static ulong* s_fwScriptGuidPoolAddress;
+		private static ulong* s_pedPoolAddress;
+		private static ulong* s_objectPoolAddress;
+		private static ulong* s_pickupObjectPoolAddress;
+		private static ulong* s_vehiclePoolAddress;
+		private static ulong* s_buildingPoolAddress;
+		private static ulong* s_animatedBuildingPoolAddress;
+		private static ulong* s_interiorInstPoolAddress;
+		private static ulong* s_interiorProxyPoolAddress;
 
-		static ulong* ProjectilePoolAddress;
-		static int* ProjectileCountAddress;
+		private static ulong* s_projectilePoolAddress;
+		private static int* s_projectileCountAddress;
 
 		// if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
-		static delegate* unmanaged[Stdcall]<ulong, float*, ulong> EntityPosFunc;
+		private static delegate* unmanaged[Stdcall]<ulong, float*, ulong> s_entityPosFunc;
 		// should be rage::fwScriptGuid::CreateGuid
-		static delegate* unmanaged[Stdcall]<ulong, int> CreateGuid;
+		private static delegate* unmanaged[Stdcall]<ulong, int> s_createGuid;
 
 		internal sealed class FwScriptGuidPoolTask : IScriptTask
 		{
@@ -3157,12 +3608,12 @@ namespace SHVDN
 			internal PoolType _poolType;
 			internal IntPtr _poolAddress;
 
-			internal bool doPosCheck = false;
-			internal bool doModelCheck = false;
-			internal float radiusSquared;
-			internal FVector3? position;
-			internal HashSet<int> modelHashes;
-			internal int[] resultHandles = Array.Empty<int>();
+			internal bool _doPosCheck = false;
+			internal bool _doModelCheck = false;
+			internal float _radiusSquared;
+			internal FVector3? _position;
+			internal HashSet<int> _modelHashes;
+			internal int[] _resultHandles = Array.Empty<int>();
 
 			#endregion
 
@@ -3173,160 +3624,197 @@ namespace SHVDN
 			}
 			internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, int[] modelHashes) : this(type, poolAddress)
 			{
-				if (modelHashes == null || modelHashes.Length <= 0) return;
-				doModelCheck = true;
-				this.modelHashes = new HashSet<int>(modelHashes);
+				if (modelHashes == null || modelHashes.Length <= 0)
+				{
+					return;
+				}
+
+				_doModelCheck = true;
+				this._modelHashes = new HashSet<int>(modelHashes);
 			}
 			internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared, int[] modelHashes = null) : this(type, poolAddress)
 			{
-				doPosCheck = true;
-				this.radiusSquared = radiusSquared;
-				this.position = position;
+				_doPosCheck = true;
+				this._radiusSquared = radiusSquared;
+				this._position = position;
 
-				if (modelHashes == null || modelHashes.Length <= 0) return;
-				doModelCheck = true;
-				this.modelHashes = new HashSet<int>(modelHashes);
+				if (modelHashes == null || modelHashes.Length <= 0)
+				{
+					return;
+				}
+
+				_doModelCheck = true;
+				this._modelHashes = new HashSet<int>(modelHashes);
 			}
 
 			public void Run()
 			{
-				if (*NativeMemory.FwScriptGuidPoolAddress == 0)
+				if (*NativeMemory.s_fwScriptGuidPoolAddress == 0)
+				{
 					return;
+				}
 
-				var fwScriptGuidPool = (FwScriptGuidPool*)(*NativeMemory.FwScriptGuidPoolAddress);
+				var fwScriptGuidPool = (FwScriptGuidPool*)(*NativeMemory.s_fwScriptGuidPoolAddress);
 
 				switch (_poolType)
 				{
 					case PoolType.Generic:
 						var genericPool = (GenericPool*)_poolAddress;
-						resultHandles = GetGuidHandlesFromGenericPool(fwScriptGuidPool, genericPool);
+						_resultHandles = GetGuidHandlesFromGenericPool(fwScriptGuidPool, genericPool);
 						break;
 
 					case PoolType.Vehicle:
 						var vehiclePool = (VehiclePool*)_poolAddress;
-						resultHandles = GetGuidHandlesFromVehiclePool(fwScriptGuidPool, vehiclePool);
+						_resultHandles = GetGuidHandlesFromVehiclePool(fwScriptGuidPool, vehiclePool);
 						break;
 
 					case PoolType.Projectile:
-						var projectilesCount = NativeMemory.GetProjectileCount();
-						var projectileCapacity = NativeMemory.GetProjectileCapacity();
-						var projectilePoolAddress = (ulong*)_poolAddress;
+						int projectilesCount = NativeMemory.GetProjectileCount();
+						int projectileCapacity = NativeMemory.GetProjectileCapacity();
+						ulong* projectilePoolAddress = (ulong*)_poolAddress;
 
-						resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity);
+						_resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity);
 						break;
 				}
 			}
 
-			int[] GetGuidHandlesFromGenericPool(FwScriptGuidPool* fwScriptGuidPool, GenericPool* genericPool)
+			private int[] GetGuidHandlesFromGenericPool(FwScriptGuidPool* fwScriptGuidPool, GenericPool* genericPool)
 			{
 				var resultList = new List<int>(genericPool->itemCount);
 
-				var genericPoolSize = genericPool->size;
+				uint genericPoolSize = genericPool->size;
 				for (uint i = 0; i < genericPoolSize; i++)
 				{
 					if (fwScriptGuidPool->IsFull())
+					{
 						throw new InvalidOperationException("The fwScriptGuid pool is full. The pool must be extended to retrieve all entity handles.");
+					}
 
 					if (!genericPool->IsValid(i))
 					{
 						continue;
 					}
 
-					var address = genericPool->GetAddress(i);
+					ulong address = genericPool->GetAddress(i);
 
-					if (doPosCheck && !CheckEntityDistance(address, position.GetValueOrDefault(), radiusSquared))
+					if (_doPosCheck && !CheckEntityDistance(address, _position.GetValueOrDefault(), _radiusSquared))
+					{
 						continue;
-					if (doModelCheck && !CheckEntityModel(address, modelHashes))
-						continue;
+					}
 
-					var createdHandle = NativeMemory.CreateGuid(address);
+					if (_doModelCheck && !CheckEntityModel(address, _modelHashes))
+					{
+						continue;
+					}
+
+					int createdHandle = NativeMemory.s_createGuid(address);
 					resultList.Add(createdHandle);
 				}
 
 				return resultList.ToArray();
 			}
 
-			int[] GetGuidHandlesFromVehiclePool(FwScriptGuidPool* fwScriptGuidPool, VehiclePool* vehiclePool)
+			private int[] GetGuidHandlesFromVehiclePool(FwScriptGuidPool* fwScriptGuidPool, VehiclePool* vehiclePool)
 			{
 				var resultList = new List<int>((int)vehiclePool->itemCount);
 
-				var poolSize = vehiclePool->size;
+				uint poolSize = vehiclePool->size;
 				for (uint i = 0; i < poolSize; i++)
 				{
 					if (fwScriptGuidPool->IsFull())
+					{
 						throw new InvalidOperationException("The fwScriptGuid pool is full. The pool must be extended to retrieve all vehicle handles.");
+					}
 
 					if (!vehiclePool->IsValid(i))
 					{
 						continue;
 					}
 
-					var address = vehiclePool->GetAddress(i);
+					ulong address = vehiclePool->GetAddress(i);
 
-					if (doPosCheck && !CheckEntityDistance(address, position.GetValueOrDefault(), radiusSquared))
+					if (_doPosCheck && !CheckEntityDistance(address, _position.GetValueOrDefault(), _radiusSquared))
+					{
 						continue;
-					if (doModelCheck && !CheckEntityModel(address, modelHashes))
-						continue;
+					}
 
-					var createdHandle = NativeMemory.CreateGuid(address);
+					if (_doModelCheck && !CheckEntityModel(address, _modelHashes))
+					{
+						continue;
+					}
+
+					int createdHandle = NativeMemory.s_createGuid(address);
 					resultList.Add(createdHandle);
 				}
 
 				return resultList.ToArray();
 			}
 
-			int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool, ulong* projectilePool, int itemCount, int maxItemCount)
+			private int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool, ulong* projectilePool, int itemCount, int maxItemCount)
 			{
-				var projectilesLeft = itemCount;
-				var projectileCapacity = maxItemCount;
+				int projectilesLeft = itemCount;
+				int projectileCapacity = maxItemCount;
 
 				var resultList = new List<int>(itemCount);
 
 				for (uint i = 0; (projectilesLeft > 0 && i < projectileCapacity); i++)
 				{
 					if (fwScriptGuidPool->IsFull())
+					{
 						throw new InvalidOperationException("The fwScriptGuid pool is full. The pool must be extended to retrieve all projectile handles.");
+					}
 
-					var entityAddress = (ulong)ReadAddress(new IntPtr(projectilePool + i)).ToInt64();
+					ulong entityAddress = (ulong)ReadAddress(new IntPtr(projectilePool + i)).ToInt64();
 					if (entityAddress == 0)
+					{
 						continue;
+					}
 
 					projectilesLeft--;
 
-					if (doPosCheck && !CheckEntityDistance(entityAddress, position.GetValueOrDefault(), radiusSquared))
+					if (_doPosCheck && !CheckEntityDistance(entityAddress, _position.GetValueOrDefault(), _radiusSquared))
+					{
 						continue;
-					if (doModelCheck && !CheckEntityModel(entityAddress, modelHashes))
-						continue;
+					}
 
-					var createdHandle = NativeMemory.CreateGuid(entityAddress);
+					if (_doModelCheck && !CheckEntityModel(entityAddress, _modelHashes))
+					{
+						continue;
+					}
+
+					int createdHandle = NativeMemory.s_createGuid(entityAddress);
 					resultList.Add(createdHandle);
 				}
 
 				return resultList.ToArray();
 			}
 
-			static bool CheckEntityDistance(ulong address, FVector3 position, float radiusSquared)
+			private static bool CheckEntityDistance(ulong address, FVector3 position, float radiusSquared)
 			{
-				var entityPosition = stackalloc float[4];
+				float* entityPosition = stackalloc float[4];
 
-				NativeMemory.EntityPosFunc(address, entityPosition);
+				NativeMemory.s_entityPosFunc(address, entityPosition);
 
-				var x = position.X - entityPosition[0];
-				var y = position.Y - entityPosition[1];
-				var z = position.Z - entityPosition[2];
+				float x = position.X - entityPosition[0];
+				float y = position.Y - entityPosition[1];
+				float z = position.Z - entityPosition[2];
 
-				var distanceSquared = (x * x) + (y * y) + (z * z);
+				float distanceSquared = (x * x) + (y * y) + (z * z);
 				if (distanceSquared > radiusSquared)
+				{
 					return false;
+				}
 
 				return true;
 			}
 
-			static bool CheckEntityModel(ulong address, HashSet<int> modelHashes)
+			private static bool CheckEntityModel(ulong address, HashSet<int> modelHashes)
 			{
-				var modelHash = GetModelHashFromEntity(new IntPtr((long)address));
+				int modelHash = GetModelHashFromEntity(new IntPtr((long)address));
 				if (!modelHashes.Contains(modelHash))
+				{
 					return false;
+				}
 
 				return true;
 			}
@@ -3335,37 +3823,42 @@ namespace SHVDN
 		internal sealed class GetEntityHandleTask : IScriptTask
 		{
 			#region Fields
-			internal ulong entityAddress;
-			internal int returnEntityHandle;
+			internal ulong _entityAddress;
+			internal int _returnEntityHandle;
 			#endregion
 
 			internal GetEntityHandleTask(IntPtr entityAddress)
 			{
-				this.entityAddress = (ulong)entityAddress.ToInt64();
+				this._entityAddress = (ulong)entityAddress.ToInt64();
 			}
 
 			public void Run()
 			{
-				returnEntityHandle = NativeMemory.CreateGuid(entityAddress);
+				_returnEntityHandle = NativeMemory.s_createGuid(_entityAddress);
 			}
 		}
 
 		public static int GetVehicleCount()
 		{
-			if (*VehiclePoolAddress == 0) return 0;
-			var pool = *(VehiclePool**)(*VehiclePoolAddress);
+			if (*s_vehiclePoolAddress == 0)
+			{
+				return 0;
+			}
+
+			VehiclePool* pool = *(VehiclePool**)(*s_vehiclePoolAddress);
 			return (int)pool->itemCount;
 		}
 
-		public static int GetPedCount() => PedPoolAddress != null ? GetGenericPoolCount(*PedPoolAddress) : 0;
-		public static int GetObjectCount() => ObjectPoolAddress != null ? GetGenericPoolCount(*ObjectPoolAddress) : 0;
-		public static int GetPickupObjectCount() => PickupObjectPoolAddress != null ? GetGenericPoolCount(*PickupObjectPoolAddress) : 0;
-		public static int GetBuildingCount() => BuildingPoolAddress != null ? GetGenericPoolCount(*BuildingPoolAddress) : 0;
-		public static int GetAnimatedBuildingCount() => AnimatedBuildingPoolAddress != null ? GetGenericPoolCount(*AnimatedBuildingPoolAddress) : 0;
-		public static int GetInteriorInstCount() => InteriorInstPoolAddress != null ? GetGenericPoolCount(*InteriorInstPoolAddress) : 0;
-		public static int GetInteriorProxyCount() => InteriorProxyPoolAddress != null ? GetGenericPoolCount(*InteriorProxyPoolAddress) : 0;
-		public static int GetProjectileCount() => ProjectileCountAddress != null ? *ProjectileCountAddress : 0;
-		static int GetGenericPoolCount(ulong address)
+		public static int GetPedCount() => s_pedPoolAddress != null ? GetGenericPoolCount(*s_pedPoolAddress) : 0;
+		public static int GetObjectCount() => s_objectPoolAddress != null ? GetGenericPoolCount(*s_objectPoolAddress) : 0;
+		public static int GetPickupObjectCount() => s_pickupObjectPoolAddress != null ? GetGenericPoolCount(*s_pickupObjectPoolAddress) : 0;
+		public static int GetBuildingCount() => s_buildingPoolAddress != null ? GetGenericPoolCount(*s_buildingPoolAddress) : 0;
+		public static int GetAnimatedBuildingCount() => s_animatedBuildingPoolAddress != null ? GetGenericPoolCount(*s_animatedBuildingPoolAddress) : 0;
+		public static int GetInteriorInstCount() => s_interiorInstPoolAddress != null ? GetGenericPoolCount(*s_interiorInstPoolAddress) : 0;
+		public static int GetInteriorProxyCount() => s_interiorProxyPoolAddress != null ? GetGenericPoolCount(*s_interiorProxyPoolAddress) : 0;
+		public static int GetProjectileCount() => s_projectileCountAddress != null ? *s_projectileCountAddress : 0;
+
+		private static int GetGenericPoolCount(ulong address)
 		{
 			var pool = (GenericPool*)(address);
 			return (int)pool->itemCount;
@@ -3373,20 +3866,25 @@ namespace SHVDN
 
 		public static int GetVehicleCapacity()
 		{
-			if (*VehiclePoolAddress == 0) return 0;
-			var pool = *(VehiclePool**)(*VehiclePoolAddress);
+			if (*s_vehiclePoolAddress == 0)
+			{
+				return 0;
+			}
+
+			VehiclePool* pool = *(VehiclePool**)(*s_vehiclePoolAddress);
 			return (int)pool->size;
 		}
-		public static int GetPedCapacity() => PedPoolAddress != null ? GetGenericPoolCapacity(*PedPoolAddress) : 0;
-		public static int GetObjectCapacity() => ObjectPoolAddress != null ? GetGenericPoolCapacity(*ObjectPoolAddress) : 0;
-		public static int GetPickupObjectCapacity() => PickupObjectPoolAddress != null ? GetGenericPoolCapacity(*PickupObjectPoolAddress) : 0;
-		public static int GetBuildingCapacity() => BuildingPoolAddress != null ? GetGenericPoolCapacity(*BuildingPoolAddress) : 0;
-		public static int GetAnimatedBuildingCapacity() => AnimatedBuildingPoolAddress != null ? GetGenericPoolCapacity(*AnimatedBuildingPoolAddress) : 0;
-		public static int GetInteriorInstCapacity() => InteriorInstPoolAddress != null ? GetGenericPoolCapacity(*InteriorInstPoolAddress) : 0;
-		public static int GetInteriorProxyCapacity() => InteriorProxyPoolAddress != null ? GetGenericPoolCapacity(*InteriorProxyPoolAddress) : 0;
+		public static int GetPedCapacity() => s_pedPoolAddress != null ? GetGenericPoolCapacity(*s_pedPoolAddress) : 0;
+		public static int GetObjectCapacity() => s_objectPoolAddress != null ? GetGenericPoolCapacity(*s_objectPoolAddress) : 0;
+		public static int GetPickupObjectCapacity() => s_pickupObjectPoolAddress != null ? GetGenericPoolCapacity(*s_pickupObjectPoolAddress) : 0;
+		public static int GetBuildingCapacity() => s_buildingPoolAddress != null ? GetGenericPoolCapacity(*s_buildingPoolAddress) : 0;
+		public static int GetAnimatedBuildingCapacity() => s_animatedBuildingPoolAddress != null ? GetGenericPoolCapacity(*s_animatedBuildingPoolAddress) : 0;
+		public static int GetInteriorInstCapacity() => s_interiorInstPoolAddress != null ? GetGenericPoolCapacity(*s_interiorInstPoolAddress) : 0;
+		public static int GetInteriorProxyCapacity() => s_interiorProxyPoolAddress != null ? GetGenericPoolCapacity(*s_interiorProxyPoolAddress) : 0;
 		//the max number of projectile has not been changed from 50
 		public static int GetProjectileCapacity() => 50;
-		static int GetGenericPoolCapacity(ulong address)
+
+		private static int GetGenericPoolCapacity(ulong address)
 		{
 			var pool = (GenericPool*)(address);
 			return (int)pool->size;
@@ -3394,43 +3892,43 @@ namespace SHVDN
 
 		public static int[] GetPedHandles(int[] modelHashes = null)
 		{
-			return GetGuidsInGenericPool(NativeMemory.PedPoolAddress, modelHashes);
+			return GetGuidsInGenericPool(NativeMemory.s_pedPoolAddress, modelHashes);
 		}
 		public static int[] GetPedHandles(FVector3 position, float radius, int[] modelHashes = null)
 		{
-			return GetGuidsInGenericPool(NativeMemory.PedPoolAddress, position, radius, modelHashes);
+			return GetGuidsInGenericPool(NativeMemory.s_pedPoolAddress, position, radius, modelHashes);
 		}
 
 		public static int[] GetPropHandles(int[] modelHashes = null)
 		{
-			return GetGuidsInGenericPool(NativeMemory.ObjectPoolAddress, modelHashes);
+			return GetGuidsInGenericPool(NativeMemory.s_objectPoolAddress, modelHashes);
 		}
 		public static int[] GetPropHandles(FVector3 position, float radius, int[] modelHashes = null)
 		{
-			return GetGuidsInGenericPool(NativeMemory.ObjectPoolAddress, position, radius, modelHashes);
+			return GetGuidsInGenericPool(NativeMemory.s_objectPoolAddress, position, radius, modelHashes);
 		}
 
 		public static int[] GetEntityHandles()
 		{
-			var vehicleHandles = GetVehicleHandles();
-			var pedHandles = GetPedHandles();
-			var propHandles = GetPropHandles();
+			int[] vehicleHandles = GetVehicleHandles();
+			int[] pedHandles = GetPedHandles();
+			int[] propHandles = GetPropHandles();
 
 			return BuildOneArrayFromElementsOfEntityHandleArrays(vehicleHandles, pedHandles, propHandles);
 		}
 		public static int[] GetEntityHandles(FVector3 position, float radius)
 		{
-			var vehicleHandles = GetVehicleHandles(position, radius);
-			var pedHandles = GetPedHandles(position, radius);
-			var propHandles = GetPropHandles(position, radius);
+			int[] vehicleHandles = GetVehicleHandles(position, radius);
+			int[] pedHandles = GetPedHandles(position, radius);
+			int[] propHandles = GetPropHandles(position, radius);
 
 			return BuildOneArrayFromElementsOfEntityHandleArrays(vehicleHandles, pedHandles, propHandles);
 		}
 
 		private static int[] BuildOneArrayFromElementsOfEntityHandleArrays(int[] vehicleHandles, int[] pedHandles, int[] propHandles)
 		{
-			var entityHandleCount = vehicleHandles.Length + pedHandles.Length + propHandles.Length;
-			var entityHandles = new int[entityHandleCount];
+			int entityHandleCount = vehicleHandles.Length + pedHandles.Length + propHandles.Length;
+			int[] entityHandles = new int[entityHandleCount];
 
 			Array.Copy(vehicleHandles, 0, entityHandles, 0, vehicleHandles.Length);
 			Array.Copy(pedHandles, 0, entityHandles, vehicleHandles.Length, pedHandles.Length);
@@ -3441,56 +3939,64 @@ namespace SHVDN
 
 		public static int[] GetVehicleHandles(int[] modelHashes = null)
 		{
-			if (*NativeMemory.VehiclePoolAddress == 0)
+			if (*NativeMemory.s_vehiclePoolAddress == 0)
+			{
 				return Array.Empty<int>();
+			}
 
-			var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.VehiclePoolAddress));
+			var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.s_vehiclePoolAddress));
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, modelHashes);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 		public static int[] GetVehicleHandles(FVector3 position, float radius, int[] modelHashes = null)
 		{
-			if (*NativeMemory.VehiclePoolAddress == 0)
+			if (*NativeMemory.s_vehiclePoolAddress == 0)
+			{
 				return Array.Empty<int>();
+			}
 
-			var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.VehiclePoolAddress));
+			var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.s_vehiclePoolAddress));
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, position, radius * radius, modelHashes);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 
 		public static int[] GetPickupObjectHandles()
 		{
-			return GetGuidsInGenericPool(NativeMemory.PickupObjectPoolAddress);
+			return GetGuidsInGenericPool(NativeMemory.s_pickupObjectPoolAddress);
 		}
 		public static int[] GetPickupObjectHandles(FVector3 position, float radius)
 		{
-			return GetGuidsInGenericPool(NativeMemory.PickupObjectPoolAddress, position, radius);
+			return GetGuidsInGenericPool(NativeMemory.s_pickupObjectPoolAddress, position, radius);
 		}
 		public static int[] GetProjectileHandles()
 		{
-			if (NativeMemory.ProjectilePoolAddress == null)
+			if (NativeMemory.s_projectilePoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.ProjectilePoolAddress));
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress));
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 		public static int[] GetProjectileHandles(FVector3 position, float radius)
 		{
-			if (NativeMemory.ProjectilePoolAddress == null)
+			if (NativeMemory.s_projectilePoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.ProjectilePoolAddress), position, radius * radius);
+			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 
 		private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr)
@@ -3498,119 +4004,145 @@ namespace SHVDN
 			var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
 
 			if (genericPool == IntPtr.Zero)
+			{
 				return Array.Empty<int>();
+			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 		private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr, int[] modelHashes)
 		{
 			var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
 
 			if (genericPool == IntPtr.Zero)
+			{
 				return Array.Empty<int>();
+			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool, modelHashes);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 		private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr, FVector3 position, float radius, int[] modelHashes = null)
 		{
 			var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
 
 			if (genericPool == IntPtr.Zero)
+			{
 				return Array.Empty<int>();
+			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool, position, radius * radius, modelHashes);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.resultHandles;
+			return task._resultHandles;
 		}
 
 		public static int[] GetBuildingHandles()
 		{
-			if (BuildingPoolAddress == null)
+			if (s_buildingPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetHandlesInGenericPool(*NativeMemory.BuildingPoolAddress);
+			return GetHandlesInGenericPool(*NativeMemory.s_buildingPoolAddress);
 		}
 
 		public static int[] GetBuildingHandles(FVector3 position, float radius)
 		{
-			if (BuildingPoolAddress == null)
+			if (s_buildingPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetCEntityHandlesInRange(*NativeMemory.BuildingPoolAddress, position, radius);
+			return GetCEntityHandlesInRange(*NativeMemory.s_buildingPoolAddress, position, radius);
 		}
 
 		public static int[] GetAnimatedBuildingHandles()
 		{
-			if (AnimatedBuildingPoolAddress == null)
+			if (s_animatedBuildingPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetHandlesInGenericPool(*NativeMemory.AnimatedBuildingPoolAddress);
+			return GetHandlesInGenericPool(*NativeMemory.s_animatedBuildingPoolAddress);
 		}
 
 		public static int[] GetAnimatedBuildingHandles(FVector3 position, float radius)
 		{
-			if (AnimatedBuildingPoolAddress == null)
+			if (s_animatedBuildingPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetCEntityHandlesInRange(*NativeMemory.AnimatedBuildingPoolAddress, position, radius);
+			return GetCEntityHandlesInRange(*NativeMemory.s_animatedBuildingPoolAddress, position, radius);
 		}
 
 		public static int[] GetInteriorInstHandles()
 		{
-			if (InteriorInstPoolAddress == null)
+			if (s_interiorInstPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetHandlesInGenericPool(*NativeMemory.InteriorInstPoolAddress);
+			return GetHandlesInGenericPool(*NativeMemory.s_interiorInstPoolAddress);
 		}
 
 		public static int[] GetInteriorInstHandles(FVector3 position, float radius)
 		{
-			if (InteriorInstPoolAddress == null)
+			if (s_interiorInstPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetCEntityHandlesInRange(*NativeMemory.InteriorInstPoolAddress, position, radius);
+			return GetCEntityHandlesInRange(*NativeMemory.s_interiorInstPoolAddress, position, radius);
 		}
 
 		public static int[] GetInteriorProxyHandles()
 		{
-			if (InteriorProxyPoolAddress == null)
+			if (s_interiorProxyPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			return GetHandlesInGenericPool(*NativeMemory.InteriorProxyPoolAddress);
+			return GetHandlesInGenericPool(*NativeMemory.s_interiorProxyPoolAddress);
 		}
 
 		public static int[] GetInteriorProxyHandles(FVector3 position, float radius)
 		{
-			if (InteriorProxyPoolAddress == null)
+			if (s_interiorProxyPoolAddress == null)
+			{
 				return Array.Empty<int>();
+			}
 
-			var pool = (GenericPool*)(*NativeMemory.InteriorProxyPoolAddress);
+			var pool = (GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress);
 
 			// CInteriorProxy is not a subclass of CEntity and position data is placed at different offset
 			var returnHandles = new List<int>();
-			var poolSize = pool->size;
-			var radiusSquared = radius * radius;
+			uint poolSize = pool->size;
+			float radiusSquared = radius * radius;
 			for (uint i = 0; i < poolSize; i++)
 			{
 				if (!pool->IsValid(i))
+				{
 					continue;
+				}
 
-				var address = pool->GetAddress(i);
+				ulong address = pool->GetAddress(i);
 
-				var x = *(float*)(address + 0x70) - position.X;
-				var y = *(float*)(address + 0x74) - position.Y;
-				var z = *(float*)(address + 0x78) - position.Z;
+				float x = *(float*)(address + 0x70) - position.X;
+				float y = *(float*)(address + 0x74) - position.Y;
+				float z = *(float*)(address + 0x78) - position.Z;
 
-				var distanceSquared = (x * x) + (y * y) + (z * z);
+				float distanceSquared = (x * x) + (y * y) + (z * z);
 				if (distanceSquared > radiusSquared)
+				{
 					continue;
+				}
 
 				returnHandles.Add(pool->GetGuidHandleByIndex(i));
 			}
@@ -3618,17 +4150,17 @@ namespace SHVDN
 			return returnHandles.ToArray();
 		}
 
-		public static bool BuildingHandleExists(int handle) => BuildingPoolAddress != null ? ((GenericPool*)(*BuildingPoolAddress))->IsHandleValid(handle) : false;
-		public static bool AnimatedBuildingHandleExists(int handle) => AnimatedBuildingPoolAddress != null ? ((GenericPool*)(*AnimatedBuildingPoolAddress))->IsHandleValid(handle) : false;
-		public static bool InteriorInstHandleExists(int handle) => InteriorInstPoolAddress != null ? ((GenericPool*)(*InteriorInstPoolAddress))->IsHandleValid(handle) : false;
-		public static bool InteriorProxyHandleExists(int handle) => InteriorProxyPoolAddress != null ? ((GenericPool*)(*InteriorProxyPoolAddress))->IsHandleValid(handle) : false;
+		public static bool BuildingHandleExists(int handle) => s_buildingPoolAddress != null ? ((GenericPool*)(*s_buildingPoolAddress))->IsHandleValid(handle) : false;
+		public static bool AnimatedBuildingHandleExists(int handle) => s_animatedBuildingPoolAddress != null ? ((GenericPool*)(*s_animatedBuildingPoolAddress))->IsHandleValid(handle) : false;
+		public static bool InteriorInstHandleExists(int handle) => s_interiorInstPoolAddress != null ? ((GenericPool*)(*s_interiorInstPoolAddress))->IsHandleValid(handle) : false;
+		public static bool InteriorProxyHandleExists(int handle) => s_interiorProxyPoolAddress != null ? ((GenericPool*)(*s_interiorProxyPoolAddress))->IsHandleValid(handle) : false;
 
-		static int[] GetHandlesInGenericPool(ulong poolAddress)
+		private static int[] GetHandlesInGenericPool(ulong poolAddress)
 		{
 			var pool = (GenericPool*)poolAddress;
 
 			var returnHandles = new List<int>(pool->itemCount);
-			var poolSize = pool->size;
+			uint poolSize = pool->size;
 			for (uint i = 0; i < poolSize; i++)
 			{
 				if (pool->IsValid(i))
@@ -3640,29 +4172,33 @@ namespace SHVDN
 			return returnHandles.ToArray();
 		}
 
-		static int[] GetCEntityHandlesInRange(ulong poolAddress, FVector3 position, float radius)
+		private static int[] GetCEntityHandlesInRange(ulong poolAddress, FVector3 position, float radius)
 		{
 			var pool = (GenericPool*)poolAddress;
 
 			var returnHandles = new List<int>();
-			var poolSize = pool->size;
-			var radiusSquared = radius * radius;
-			var entityPosition = stackalloc float[4];
+			uint poolSize = pool->size;
+			float radiusSquared = radius * radius;
+			float* entityPosition = stackalloc float[4];
 			for (uint i = 0; i < poolSize; i++)
 			{
 				if (!pool->IsValid(i))
+				{
 					continue;
+				}
 
-				var address = pool->GetAddress(i);
+				ulong address = pool->GetAddress(i);
 
-				NativeMemory.EntityPosFunc(address, entityPosition);
-				var x = entityPosition[0] - position.X;
-				var y = entityPosition[1] - position.Y;
-				var z = entityPosition[2] - position.Z;
+				NativeMemory.s_entityPosFunc(address, entityPosition);
+				float x = entityPosition[0] - position.X;
+				float y = entityPosition[1] - position.Y;
+				float z = entityPosition[2] - position.Z;
 
-				var distanceSquared = (x * x) + (y * y) + (z * z);
+				float distanceSquared = (x * x) + (y * y) + (z * z);
 				if (distanceSquared > radiusSquared)
+				{
 					continue;
+				}
 
 				returnHandles.Add(pool->GetGuidHandleByIndex(i));
 			}
@@ -3670,7 +4206,7 @@ namespace SHVDN
 			return returnHandles.ToArray();
 		}
 
-		static int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
+		private static int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
 		{
 			return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
 		}
@@ -3679,9 +4215,9 @@ namespace SHVDN
 
 		#region -- CPlayerInfo Data --
 
-		static delegate* unmanaged[Stdcall]<int, ulong> GetPlayerPedAddressFunc;
+		private static delegate* unmanaged[Stdcall]<int, ulong> s_getPlayerPedAddressFunc;
 
-		static bool* isGameMultiplayerAddr;
+		private static bool* s_isGameMultiplayerAddr;
 
 		/// <summary>
 		/// The offset for max health of CPlayerInfo, which is stored as an uint16_t.
@@ -3701,33 +4237,33 @@ namespace SHVDN
 		public static int CWantedStartTimeOfHiddenEvasionOffset { get; }
 		public static int CWantedIgnorePlayerFlagOffset { get; }
 
-		static delegate* unmanaged[Stdcall]<IntPtr, void> ActivateSpecialAbilityFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, void> s_activateSpecialAbilityFunc;
 
 		// The function is for b2060 or later and static offset is for prior to b2060
-		static delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr> GetSpecialAbilityAddressFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr> s_getSpecialAbilityAddressFunc;
 		public static int PlayerPedSpecialAbilityOffset { get; }
 
 		public static IntPtr GetPlayerPedAddress(int playerIndex)
 		{
-			return new IntPtr((long)GetPlayerPedAddressFunc(playerIndex));
+			return new IntPtr((long)s_getPlayerPedAddressFunc(playerIndex));
 		}
 		public static IntPtr GetLocalPlayerPedAddress()
 		{
-			return new IntPtr((long)GetLocalPlayerPedAddressFunc());
+			return new IntPtr((long)s_getLocalPlayerPedAddressFunc());
 		}
 		public static int GetPlayerPedHandle(int handle)
 		{
-			var playerPedAddress = GetPlayerPedAddress(handle);
+			IntPtr playerPedAddress = GetPlayerPedAddress(handle);
 			return playerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(playerPedAddress) : 0;
 		}
 		public static int GetLocalPlayerPedHandle()
 		{
-			var localPlayerPedAddress = GetLocalPlayerPedAddress();
+			IntPtr localPlayerPedAddress = GetLocalPlayerPedAddress();
 			return localPlayerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(localPlayerPedAddress) : 0;
 		}
 		public static int GetLocalPlayerIndex()
 		{
-			if (isGameMultiplayerAddr == null || *isGameMultiplayerAddr)
+			if (s_isGameMultiplayerAddr == null || *s_isGameMultiplayerAddr)
 			{
 				// A fallback path if the variable could not found to make sure the same value will be returned as what PLAYER_ID returns, an extreme edge case if the variable was found
 				// You even have to disable SHV to call NETWORK_GET_NUM_CONNECTED_PLAYERS (for preventing the game from going Online) before custom scripts (for enabling multiplayer) can use features for multiplayer
@@ -3739,7 +4275,7 @@ namespace SHVDN
 
 			static int GetLocalPlayerIndexViaNativeCall()
 			{
-				var resultAddr = NativeFunc.Invoke(0x4F8644AF03D0E0D6 /* PLAYER_ID */, null, 0);
+				ulong* resultAddr = NativeFunc.Invoke(0x4F8644AF03D0E0D6 /* PLAYER_ID */, null, 0);
 				if (resultAddr == null)
 				{
 					throw new InvalidOperationException("Game.Player can only be called from the main thread.");
@@ -3756,13 +4292,13 @@ namespace SHVDN
 				return IntPtr.Zero;
 			}
 
-			var playerPedAddr = GetPlayerPedAddress(playerIndex);
+			IntPtr playerPedAddr = GetPlayerPedAddress(playerIndex);
 			if (playerPedAddr == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
 			}
 
-			var playerInfoAddr = *(long**)((ulong)playerPedAddr + (uint)PedPlayerInfoOffset);
+			long* playerInfoAddr = *(long**)((ulong)playerPedAddr + (uint)PedPlayerInfoOffset);
 			if (playerPedAddr == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
@@ -3777,7 +4313,7 @@ namespace SHVDN
 				return IntPtr.Zero;
 			}
 
-			var cPlayerInfoAddr = GetCPlayerInfoAddress(playerIndex);
+			IntPtr cPlayerInfoAddr = GetCPlayerInfoAddress(playerIndex);
 			if (cPlayerInfoAddr == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
@@ -3792,7 +4328,7 @@ namespace SHVDN
 				return IntPtr.Zero;
 			}
 
-			var cPlayerInfoAddr = GetCPlayerInfoAddress(playerIndex);
+			IntPtr cPlayerInfoAddr = GetCPlayerInfoAddress(playerIndex);
 			if (cPlayerInfoAddr == IntPtr.Zero)
 			{
 				return IntPtr.Zero;
@@ -3803,13 +4339,13 @@ namespace SHVDN
 
 		public static int GetTargetedBuildingHandleOfPlayer(int playerIndex)
 		{
-			var playerPedTargetingAddr = GetCPlayerPedTargetingAddress(playerIndex);
+			IntPtr playerPedTargetingAddr = GetCPlayerPedTargetingAddress(playerIndex);
 			if (playerPedTargetingAddr == IntPtr.Zero)
 			{
 				return 0;
 			}
 
-			var targetedCEntityAddr = *(ulong*)(playerPedTargetingAddr + 0x110);
+			ulong targetedCEntityAddr = *(ulong*)(playerPedTargetingAddr + 0x110);
 			// Return zero if the targeted CEntity address is null or is not null but not a CBuilding instance
 			// Should be a CPhysical address in that case since the value is null if the player is aiming a CAnimatedBuilding instance (e.g. the fan at Ammu-Nation in Little Seoul)
 			if (targetedCEntityAddr == 0 || *(byte*)(targetedCEntityAddr + 0x28) != 1)
@@ -3828,7 +4364,7 @@ namespace SHVDN
 		/// </remarks>
 		public static void ActivateSpecialAbility(int playerIndex)
 		{
-			var specialAbilityAddr = GetPrimarySpecialAbilityStructAddress(playerIndex);
+			IntPtr specialAbilityAddr = GetPrimarySpecialAbilityStructAddress(playerIndex);
 			if (specialAbilityAddr == IntPtr.Zero)
 			{
 				return;
@@ -3839,7 +4375,7 @@ namespace SHVDN
 		}
 		public static IntPtr GetPrimarySpecialAbilityStructAddress(int playerIndex)
 		{
-			var playerPedAddress = GetPlayerPedAddress(playerIndex);
+			IntPtr playerPedAddress = GetPlayerPedAddress(playerIndex);
 
 			if (playerPedAddress == IntPtr.Zero)
 			{
@@ -3849,12 +4385,12 @@ namespace SHVDN
 			// Two special ability slots are available in b2060 and later versions
 			if (GetGameVersion() >= 59)
 			{
-				if (GetSpecialAbilityAddressFunc == null)
+				if (s_getSpecialAbilityAddressFunc == null)
 				{
 					return IntPtr.Zero;
 				}
 
-				return GetSpecialAbilityAddressFunc(playerPedAddress, 0);
+				return s_getSpecialAbilityAddressFunc(playerPedAddress, 0);
 			}
 			else
 			{
@@ -3870,17 +4406,17 @@ namespace SHVDN
 		internal sealed class ActivateSpecialAbilityTask : IScriptTask
 		{
 			#region Fields
-			internal IntPtr specialAbilityStructAddress;
+			internal IntPtr _specialAbilityStructAddress;
 			#endregion
 
 			internal ActivateSpecialAbilityTask(IntPtr specialAbilityStructAddress)
 			{
-				this.specialAbilityStructAddress = specialAbilityStructAddress;
+				this._specialAbilityStructAddress = specialAbilityStructAddress;
 			}
 
 			public void Run()
 			{
-				ActivateSpecialAbilityFunc(specialAbilityStructAddress);
+				s_activateSpecialAbilityFunc(_specialAbilityStructAddress);
 			}
 		}
 
@@ -3890,7 +4426,7 @@ namespace SHVDN
 
 		public static unsafe class PathFind
 		{
-			static ulong cPathFindInstanceAddress;
+			private static ulong s_cPathFindInstanceAddress;
 
 			static PathFind()
 			{
@@ -3899,13 +4435,13 @@ namespace SHVDN
 				address = FindPatternBmh("\x4D\x8B\xF0\x45\x8A\xE1\x48\x8B\xF9\x4C\x8D\x05", "xxxxxxxxxxxx");
 				if (address != null)
 				{
-					cPathFindInstanceAddress = (ulong)(*(int*)(address + 12) + address + 16);
+					s_cPathFindInstanceAddress = (ulong)(*(int*)(address + 12) + address + 16);
 				}
 			}
 
 			// These values hasn't been changed between b372 and b2845
-			const int START_PATH_NODE_OFFSET_OF_C_PATH_FIND = 0x1640;
-			const int MAX_C_PATH_REGION_COUNT = 0x400;
+			private const int StartPathNodeOffsetOfCPathFind = 0x1640;
+			private const int MaxCPathRegionCount = 0x400;
 
 			[StructLayout(LayoutKind.Explicit, Size = 0x70)]
 			internal struct CPathRegion
@@ -3960,14 +4496,14 @@ namespace SHVDN
 				internal CPathNodeLink* GetPathNodeLinkUnsafe(uint index) => (CPathNodeLink*)((ulong)NodeLinkPtr + index * (uint)sizeof(CPathNodeLink));
 			}
 
-			static CPathRegion* GetCPathRegion(uint areaId)
+			private static CPathRegion* GetCPathRegion(uint areaId)
 			{
-				if (areaId >= MAX_C_PATH_REGION_COUNT || cPathFindInstanceAddress == 0)
+				if (areaId >= MaxCPathRegionCount || s_cPathFindInstanceAddress == 0)
 				{
 					return null;
 				}
 
-				return *(CPathRegion**)(cPathFindInstanceAddress + START_PATH_NODE_OFFSET_OF_C_PATH_FIND + areaId * 0x8);
+				return *(CPathRegion**)(s_cPathFindInstanceAddress + StartPathNodeOffsetOfCPathFind + areaId * 0x8);
 			}
 
 			public enum VehiclePathNodeProperties
@@ -4158,7 +4694,7 @@ namespace SHVDN
 			{
 				GetCorrectedNodeAndAreaIdFromPathNodeHandle(handle, out uint areaId, out uint nodeId);
 
-				var pathRegion = GetCPathRegion(areaId);
+				CPathRegion* pathRegion = GetCPathRegion(areaId);
 				if (pathRegion == null)
 				{
 					return IntPtr.Zero;
@@ -4169,7 +4705,7 @@ namespace SHVDN
 
 			public static IntPtr GetPathNodeLinkAddress(int areaId, int nodeLinkIndex)
 			{
-				var pathRegion = GetCPathRegion((uint)areaId);
+				CPathRegion* pathRegion = GetCPathRegion((uint)areaId);
 				if (pathRegion == null)
 				{
 					return IntPtr.Zero;
@@ -4178,7 +4714,7 @@ namespace SHVDN
 				return new IntPtr(pathRegion->GetPathNodeLink((uint)nodeLinkIndex));
 			}
 
-			static void GetCorrectedNodeAndAreaIdFromPathNodeHandle(int handleForNatives, out uint areaId, out uint nodeId)
+			private static void GetCorrectedNodeAndAreaIdFromPathNodeHandle(int handleForNatives, out uint areaId, out uint nodeId)
 			{
 				uint handleCorrected = (uint)handleForNatives - 1;
 				areaId = (ushort)(handleCorrected & 0xFFFF);
@@ -4187,7 +4723,7 @@ namespace SHVDN
 
 			public static FVector3 GetPathNodePosition(int handle)
 			{
-				var pathNode = GetPathNodeAddress(handle);
+				IntPtr pathNode = GetPathNodeAddress(handle);
 				if (pathNode == null)
 				{
 					return default;
@@ -4198,7 +4734,7 @@ namespace SHVDN
 
 			public static int GetVehiclePathNodeDensity(int handle)
 			{
-				var pathNode = GetPathNodeAddress(handle);
+				IntPtr pathNode = GetPathNodeAddress(handle);
 				if (pathNode == null)
 				{
 					return 0;
@@ -4209,7 +4745,7 @@ namespace SHVDN
 
 			public static int GetVehiclePathNodePropertyFlags(int handle)
 			{
-				var pathNode = GetPathNodeAddress(handle);
+				IntPtr pathNode = GetPathNodeAddress(handle);
 				if (pathNode == null)
 				{
 					return 0;
@@ -4220,7 +4756,7 @@ namespace SHVDN
 
 			public static bool GetPathNodeSwitchedOffFlag(int handle)
 			{
-				var pathNode = GetPathNodeAddress(handle);
+				IntPtr pathNode = GetPathNodeAddress(handle);
 				if (pathNode == null)
 				{
 					return false;
@@ -4231,7 +4767,7 @@ namespace SHVDN
 
 			public static void SetPathNodeSwitchedOffFlag(int handle, bool toggle)
 			{
-				var pathNode = GetPathNodeAddress(handle);
+				IntPtr pathNode = GetPathNodeAddress(handle);
 				if (pathNode == null)
 				{
 					return;
@@ -4276,50 +4812,50 @@ namespace SHVDN
 			// Use this buffer when we get all loaded path nodes to avoid allocating new large objects for buffer space and costing a significant time, since the number of path node handles can even exceed more than 21250
 			// On the other hand, each vanilla ynd file (each ynd file has nodes in an area of 512 meters x 512 meters) contains likely 100 to 1500 nodes, and getting nodes nearby 512 meters will likely get less than 1500 nodes.
 			// Therefore, using this buffer won't make much difference in how many CPU cycles will be used when we get nodes in certain area
-			static List<int> _pathNodeBuffer = new List<int>();
+			private static List<int> s_pathNodeBuffer = new List<int>();
 
 			public static int[] GetAllLoadedVehicleNodes(Func<int, bool> predicateForFlags)
 			{
-				_pathNodeBuffer.Clear();
+				s_pathNodeBuffer.Clear();
 
-				for (uint i = 0; i < MAX_C_PATH_REGION_COUNT; i++)
+				for (uint i = 0; i < MaxCPathRegionCount; i++)
 				{
-					var pathRegion = GetCPathRegion(i);
+					CPathRegion* pathRegion = GetCPathRegion(i);
 					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
 					{
 						continue;
 					}
 
-					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					uint vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
 					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
 					{
-						var pathNode = pathRegion->GetPathNodeUnsafe(j);
+						CPathNode* pathNode = pathRegion->GetPathNodeUnsafe(j);
 						if (predicateForFlags == null || predicateForFlags((int)pathNode->GetPropertyFlags()))
 						{
-							_pathNodeBuffer.Add(pathNode->GetHandleForNativeFunctions());
+							s_pathNodeBuffer.Add(pathNode->GetHandleForNativeFunctions());
 						}
 					}
 				}
 
-				return _pathNodeBuffer.ToArray();
+				return s_pathNodeBuffer.ToArray();
 			}
 
 			public static int[] GetLoadedVehicleNodesInRange(float x, float y, float z, float radius, Func<int, bool> predicateForFlags)
 			{
 				var result = new List<int>();
 
-				foreach (var areaId in GetAreaIdsInRange(x, y, radius))
+				foreach (uint areaId in GetAreaIdsInRange(x, y, radius))
 				{
-					var pathRegion = GetCPathRegion(areaId);
+					CPathRegion* pathRegion = GetCPathRegion(areaId);
 					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
 					{
 						continue;
 					}
 
-					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					uint vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
 					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
 					{
-						var vehPathNode = pathRegion->GetPathNodeUnsafe(j);
+						CPathNode* vehPathNode = pathRegion->GetPathNodeUnsafe(j);
 						if (!CheckVehPathNodePropertyPredicateAndPosition(vehPathNode, predicateForFlags, x, y, z, radius))
 						{
 							continue;
@@ -4337,25 +4873,25 @@ namespace SHVDN
 				int result = 0;
 				float closestDistance = 3e38f;
 
-				foreach (var areaId in GetAreaIdsInRange(x, y, radius))
+				foreach (uint areaId in GetAreaIdsInRange(x, y, radius))
 				{
-					var pathRegion = GetCPathRegion(areaId);
+					CPathRegion* pathRegion = GetCPathRegion(areaId);
 					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
 					{
 						continue;
 					}
 
-					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					uint vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
 					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
 					{
-						var vehPathNode = pathRegion->GetPathNodeUnsafe(j);
+						CPathNode* vehPathNode = pathRegion->GetPathNodeUnsafe(j);
 						if (!CheckVehPathNodePropertyPredicateAndPosition(vehPathNode, predicateForFlags, x, y, z, radius))
 						{
 							continue;
 						}
 
-						var nodePos = vehPathNode->UncompressedPosition;
-						var nodeDist = DistanceToSquared(x, y, z, nodePos.X, nodePos.Y, nodePos.Z);
+						FVector3 nodePos = vehPathNode->UncompressedPosition;
+						float nodeDist = DistanceToSquared(x, y, z, nodePos.X, nodePos.Y, nodePos.Z);
 						if (nodeDist < closestDistance)
 						{
 							result = vehPathNode->GetHandleForNativeFunctions();
@@ -4369,27 +4905,27 @@ namespace SHVDN
 
 			public static int[] GetLoadedVehicleNodesInArea(float x1, float y1, float z1, float x2, float y2, float z2, Func<int, bool> predicateForFlags)
 			{
-				var minX = Math.Min(x1, x2);
-				var minY = Math.Min(y1, y2);
-				var minZ = Math.Min(z1, z2);
-				var maxX = Math.Max(x1, x2);
-				var maxY = Math.Max(y1, y2);
-				var maxZ = Math.Max(z1, z2);
+				float minX = Math.Min(x1, x2);
+				float minY = Math.Min(y1, y2);
+				float minZ = Math.Min(z1, z2);
+				float maxX = Math.Max(x1, x2);
+				float maxY = Math.Max(y1, y2);
+				float maxZ = Math.Max(z1, z2);
 
 				var result = new List<int>();
 
-				foreach (var areaId in GetAreaIdsInArea(minX, minY, maxX, maxY))
+				foreach (uint areaId in GetAreaIdsInArea(minX, minY, maxX, maxY))
 				{
-					var pathRegion = GetCPathRegion(areaId);
+					CPathRegion* pathRegion = GetCPathRegion(areaId);
 					if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
 					{
 						continue;
 					}
 
-					var vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+					uint vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
 					for (uint j = 0; j < vehicleNodeCountInRegion; j++)
 					{
-						var vehPathNode = pathRegion->GetPathNodeUnsafe(j);
+						CPathNode* vehPathNode = pathRegion->GetPathNodeUnsafe(j);
 
 						if (!CheckVehPathNodePropertyPredicateAndPosition(vehPathNode, predicateForFlags, minX, minY, minZ, maxX, maxY, maxZ))
 						{
@@ -4407,22 +4943,22 @@ namespace SHVDN
 			{
 				GetCorrectedNodeAndAreaIdFromPathNodeHandle(handleOfPathNode, out uint areaId, out uint nodeId);
 
-				var pathRegion = GetCPathRegion(areaId);
+				CPathRegion* pathRegion = GetCPathRegion(areaId);
 				if (pathRegion == null)
 				{
 					return Array.Empty<int>();
 				}
 
-				var pathNode = pathRegion->GetPathNode(nodeId);
+				CPathNode* pathNode = pathRegion->GetPathNode(nodeId);
 				if (pathNode == null)
 				{
 					return Array.Empty<int>();
 				}
 
-				var pathNodeLinkStartId = pathNode->LinkId;
-				var pathNodeLinkCount = pathNode->LinkCount;
+				ushort pathNodeLinkStartId = pathNode->LinkId;
+				int pathNodeLinkCount = pathNode->LinkCount;
 
-				var result = new int[pathNodeLinkCount];
+				int[] result = new int[pathNodeLinkCount];
 				for (int i = 0; i < pathNodeLinkCount; i++)
 				{
 					result[i] = pathNodeLinkStartId + i;
@@ -4432,7 +4968,7 @@ namespace SHVDN
 
 			public static bool GetPathNodeLinkLanes(int areaId, int nodeLinkIndex, out int forwardLaneCount, out int backwardLaneCount)
 			{
-				var pathRegion = GetCPathRegion((uint)areaId);
+				CPathRegion* pathRegion = GetCPathRegion((uint)areaId);
 				if (pathRegion == null)
 				{
 					forwardLaneCount = 0;
@@ -4441,7 +4977,7 @@ namespace SHVDN
 					return false;
 				}
 
-				var pathNodeLink = pathRegion->GetPathNodeLink((uint)nodeLinkIndex);
+				CPathNodeLink* pathNodeLink = pathRegion->GetPathNodeLink((uint)nodeLinkIndex);
 				if (pathNodeLink == null)
 				{
 					forwardLaneCount = 0;
@@ -4456,7 +4992,7 @@ namespace SHVDN
 
 			public static bool GetTargetAreaAndNodeIdToTargetNode(int areaIdOfNodeLink, int nodeLinkIndex, out int targetAreaId, out int targetNodeId)
 			{
-				var pathRegion = GetCPathRegion((uint)areaIdOfNodeLink);
+				CPathRegion* pathRegion = GetCPathRegion((uint)areaIdOfNodeLink);
 				if (pathRegion == null)
 				{
 					targetAreaId = 0;
@@ -4465,7 +5001,7 @@ namespace SHVDN
 					return false;
 				}
 
-				var pathNodeLink = pathRegion->GetPathNodeLink((uint)nodeLinkIndex);
+				CPathNodeLink* pathNodeLink = pathRegion->GetPathNodeLink((uint)nodeLinkIndex);
 				if (pathNodeLink == null)
 				{
 					targetAreaId = 0;
@@ -4480,24 +5016,24 @@ namespace SHVDN
 
 			public static int GetTargetNodeHandleFromNodeLink(int areaIdOfNodeLink, int nodeLinkIndex)
 			{
-				var pathRegionOfNodeLink = GetCPathRegion((uint)areaIdOfNodeLink);
+				CPathRegion* pathRegionOfNodeLink = GetCPathRegion((uint)areaIdOfNodeLink);
 				if (pathRegionOfNodeLink == null)
 				{
 					return 0;
 				}
-				var pathNodeLink = pathRegionOfNodeLink->GetPathNodeLink((uint)nodeLinkIndex);
+				CPathNodeLink* pathNodeLink = pathRegionOfNodeLink->GetPathNodeLink((uint)nodeLinkIndex);
 				if (pathNodeLink == null)
 				{
 					return 0;
 				}
 
-				pathNodeLink->GetTargetAreaAndNodeId(out var targetAreaId, out var targetNodeId);
-				var pathRegionOfTargetNode = GetCPathRegion((uint)targetAreaId);
+				pathNodeLink->GetTargetAreaAndNodeId(out int targetAreaId, out int targetNodeId);
+				CPathRegion* pathRegionOfTargetNode = GetCPathRegion((uint)targetAreaId);
 				if (pathRegionOfTargetNode == null)
 				{
 					return 0;
 				}
-				var targetPathNode = pathRegionOfTargetNode->GetPathNode((uint)targetNodeId);
+				CPathNode* targetPathNode = pathRegionOfTargetNode->GetPathNode((uint)targetNodeId);
 				if (targetPathNode == null)
 				{
 					return 0;
@@ -4506,7 +5042,7 @@ namespace SHVDN
 				return targetPathNode->GetHandleForNativeFunctions();
 			}
 
-			static bool CheckVehPathNodePropertyPredicateAndPosition(CPathNode* vehPathNode, Func<int, bool> predicateForFlags, float x, float y, float z, float maxDistRadius)
+			private static bool CheckVehPathNodePropertyPredicateAndPosition(CPathNode* vehPathNode, Func<int, bool> predicateForFlags, float x, float y, float z, float maxDistRadius)
 			{
 				if (predicateForFlags != null && !predicateForFlags((int)vehPathNode->GetPropertyFlags()))
 				{
@@ -4520,7 +5056,7 @@ namespace SHVDN
 				return true;
 			}
 
-			static bool CheckVehPathNodePropertyPredicateAndPosition(CPathNode* vehPathNode, Func<int, bool> predicateForFlags, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
+			private static bool CheckVehPathNodePropertyPredicateAndPosition(CPathNode* vehPathNode, Func<int, bool> predicateForFlags, float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 			{
 				if (predicateForFlags != null && !predicateForFlags((int)vehPathNode->GetPropertyFlags()))
 				{
@@ -4534,19 +5070,19 @@ namespace SHVDN
 				return true;
 			}
 
-			static IEnumerable<uint> GetAreaIdsInArea(float x1, float y1, float x2, float y2)
+			private static IEnumerable<uint> GetAreaIdsInArea(float x1, float y1, float x2, float y2)
 			{
-				var minX = Math.Min(x1, x2);
-				var minY = Math.Min(y1, y2);
-				var maxX = Math.Max(x1, x2);
-				var maxY = Math.Max(y1, y2);
+				float minX = Math.Min(x1, x2);
+				float minY = Math.Min(y1, y2);
+				float maxX = Math.Max(x1, x2);
+				float maxY = Math.Max(y1, y2);
 
-				var minAreaRegionX = Math.Min(Math.Max((int)((minX + 8192f) / 512), 0), 32);
-				var minAreaRegionY = Math.Min(Math.Max((int)((minY + 8192f) / 512), 0), 32);
-				var maxAreaRegionX = Math.Min(Math.Max((int)((maxX + 8192f) / 512), 0), 32);
-				var maxAreaRegionY = Math.Min(Math.Max((int)((maxY + 8192f) / 512), 0), 32);
+				int minAreaRegionX = Math.Min(Math.Max((int)((minX + 8192f) / 512), 0), 32);
+				int minAreaRegionY = Math.Min(Math.Max((int)((minY + 8192f) / 512), 0), 32);
+				int maxAreaRegionX = Math.Min(Math.Max((int)((maxX + 8192f) / 512), 0), 32);
+				int maxAreaRegionY = Math.Min(Math.Max((int)((maxY + 8192f) / 512), 0), 32);
 
-				var areaIdCount = (maxAreaRegionX - minAreaRegionX + 1) * (maxAreaRegionY - minAreaRegionY + 1);
+				int areaIdCount = (maxAreaRegionX - minAreaRegionX + 1) * (maxAreaRegionY - minAreaRegionY + 1);
 
 				for (int regionY = minAreaRegionY; regionY <= maxAreaRegionY; regionY++)
 				{
@@ -4557,17 +5093,17 @@ namespace SHVDN
 				}
 			}
 
-			static IEnumerable<uint> GetAreaIdsInRange(float x, float y, float radius)
+			private static IEnumerable<uint> GetAreaIdsInRange(float x, float y, float radius)
 			{
-				var rectMinX = x - radius;
-				var rectMinY = y - radius;
-				var rectMaxX = x + radius;
-				var rectMaxY = y + radius;
+				float rectMinX = x - radius;
+				float rectMinY = y - radius;
+				float rectMaxX = x + radius;
+				float rectMaxY = y + radius;
 
-				var minAreaRegionXIndex = Math.Min(Math.Max((int)((rectMinX + 8192f) / 512), 0), 32);
-				var minAreaRegionYIndex = Math.Min(Math.Max((int)((rectMinY + 8192f) / 512), 0), 32);
-				var maxAreaRegionXIndex = Math.Min(Math.Max((int)((rectMaxX + 8192f) / 512), 0), 32);
-				var maxAreaRegionYIndex = Math.Min(Math.Max((int)((rectMaxY + 8192f) / 512), 0), 32);
+				int minAreaRegionXIndex = Math.Min(Math.Max((int)((rectMinX + 8192f) / 512), 0), 32);
+				int minAreaRegionYIndex = Math.Min(Math.Max((int)((rectMinY + 8192f) / 512), 0), 32);
+				int maxAreaRegionXIndex = Math.Min(Math.Max((int)((rectMaxX + 8192f) / 512), 0), 32);
+				int maxAreaRegionYIndex = Math.Min(Math.Max((int)((rectMaxY + 8192f) / 512), 0), 32);
 
 				for (int regionYIndex = minAreaRegionYIndex; regionYIndex <= maxAreaRegionYIndex; regionYIndex++)
 				{
@@ -4586,16 +5122,16 @@ namespace SHVDN
 				}
 			}
 
-			static uint ComposeAreaIdByIndex(int x, int y) => (uint)(x + y * 0x20);
+			private static uint ComposeAreaIdByIndex(int x, int y) => (uint)(x + y * 0x20);
 
 			// Nodes at bound can be included in either area (e.g. a vehicle node at (0, 263, 10) can be included in either of the ynd files for the area IDs 527 (0x20F) or 528 (0x210))
-			static bool DoCircleAndRectIntersectOrTouch(float radius, float xCenter, float yCenter, float x1, float y1, float x2, float y2)
+			private static bool DoCircleAndRectIntersectOrTouch(float radius, float xCenter, float yCenter, float x1, float y1, float x2, float y2)
 			{
 				// Nearest position will be calculated wrong if x1 and y2 parameters are passed as x2 and y2 and vice versa
-				var nearestX = Math.Max(x1, Math.Min(xCenter, x2));
-				var nearestY = Math.Max(y1, Math.Min(yCenter, y2));
-				var deltaX = xCenter - nearestX;
-				var deltaY = yCenter - nearestY;
+				float nearestX = Math.Max(x1, Math.Min(xCenter, x2));
+				float nearestY = Math.Max(y1, Math.Min(yCenter, y2));
+				float deltaX = xCenter - nearestX;
+				float deltaY = yCenter - nearestY;
 
 				return (deltaX * deltaX + deltaY * deltaY) <= (radius * radius);
 			}
@@ -4605,35 +5141,40 @@ namespace SHVDN
 
 		#region -- Radar Blip Pool --
 
-		static ulong* RadarBlipPoolAddress;
-		static int* PossibleRadarBlipCountAddress;
-		static int* UnkFirstRadarBlipIndexAddress;
-		static int* NorthRadarBlipHandleAddress;
-		static int* CenterRadarBlipHandleAddress;
+		private static ulong* s_radarBlipPoolAddress;
+		private static int* s_possibleRadarBlipCountAddress;
+		private static int* s_unkFirstRadarBlipIndexAddress;
+		private static int* s_northRadarBlipHandleAddress;
+		private static int* s_centerRadarBlipHandleAddress;
 
-		static bool CheckBlip(ulong blipAddress, FVector3? position, float radius, params int[] spriteTypes)
+		private static bool CheckBlip(ulong blipAddress, FVector3? position, float radius, params int[] spriteTypes)
 		{
 			if (spriteTypes.Length > 0)
 			{
-				var spriteIndex = *(int*)(blipAddress + 0x40);
+				int spriteIndex = *(int*)(blipAddress + 0x40);
 				if (!Array.Exists(spriteTypes, x => x == spriteIndex))
+				{
 					return false;
+				}
 			}
 
-			if (position == null || !(radius > 0f)) return true;
+			if (position == null || !(radius > 0f))
+			{
+				return true;
+			}
 
-			var positionNonNullable = position.GetValueOrDefault();
-			var blipPosition = stackalloc float[3];
+			FVector3 positionNonNullable = position.GetValueOrDefault();
+			float* blipPosition = stackalloc float[3];
 
 			blipPosition[0] = *(float*)(blipAddress + 0x10);
 			blipPosition[1] = *(float*)(blipAddress + 0x14);
 			blipPosition[2] = *(float*)(blipAddress + 0x18);
 
-			var x = blipPosition[0] - positionNonNullable.X;
-			var y = blipPosition[1] - positionNonNullable.Y;
-			var z = blipPosition[2] - positionNonNullable.Z;
-			var distanceSquared = (x * x) + (y * y) + (z * z);
-			var radiusSquared = radius * radius;
+			float x = blipPosition[0] - positionNonNullable.X;
+			float y = blipPosition[1] - positionNonNullable.Y;
+			float z = blipPosition[2] - positionNonNullable.Z;
+			float distanceSquared = (x * x) + (y * y) + (z * z);
+			float radiusSquared = radius * radius;
 
 			return distanceSquared <= radiusSquared;
 		}
@@ -4645,14 +5186,14 @@ namespace SHVDN
 			{
 				return -1;
 			}
-			var blipIndex = (ushort)handle;
-			var blipAddress = *(RadarBlipPoolAddress + blipIndex);
+			ushort blipIndex = (ushort)handle;
+			ulong blipAddress = *(s_radarBlipPoolAddress + blipIndex);
 			if (blipAddress == 0)
 			{
 				return -1;
 			}
 
-			var blipCreationIncrement = (handle >> 0x10);
+			int blipCreationIncrement = (handle >> 0x10);
 			if (blipCreationIncrement != *(int*)(blipAddress + 0x8))
 			{
 				return -1;
@@ -4666,56 +5207,64 @@ namespace SHVDN
 		}
 		public static int[] GetNonCriticalRadarBlipHandles(FVector3? position = default, float radius = 0f, params int[] spriteTypes)
 		{
-			if (RadarBlipPoolAddress == null)
+			if (s_radarBlipPoolAddress == null)
 			{
 				return Array.Empty<int>();
 			}
 
-			var possibleBlipCount = *PossibleRadarBlipCountAddress;
-			var unkFirstBlipIndex = *UnkFirstRadarBlipIndexAddress;
-			int northBlipIndex = GetBlipIndexIfHandleIsValid(*NorthRadarBlipHandleAddress);
-			int centerBlipIndex = GetBlipIndexIfHandleIsValid(*CenterRadarBlipHandleAddress);
+			int possibleBlipCount = *s_possibleRadarBlipCountAddress;
+			int unkFirstBlipIndex = *s_unkFirstRadarBlipIndexAddress;
+			int northBlipIndex = GetBlipIndexIfHandleIsValid(*s_northRadarBlipHandleAddress);
+			int centerBlipIndex = GetBlipIndexIfHandleIsValid(*s_centerRadarBlipHandleAddress);
 
 			var handles = new List<int>(possibleBlipCount);
 
 			// Skip the 3 critical blips, just like GET_FIRST_BLIP_INFO_ID does
 			// The 3 critical blips is the north blip, the center blip, and the unknown simple blip (placeholder?).
-			for (var i = 0; i < possibleBlipCount; i++)
+			for (int i = 0; i < possibleBlipCount; i++)
 			{
-				var address = *(RadarBlipPoolAddress + i);
+				ulong address = *(s_radarBlipPoolAddress + i);
 
 				if (address == 0 || i == unkFirstBlipIndex || i == northBlipIndex || i == centerBlipIndex)
+				{
 					continue;
+				}
 
-				if (!CheckBlip(address, position, radius, spriteTypes)) continue;
-				var blipCreationIncrement = *(ushort*)(address + 8);
+				if (!CheckBlip(address, position, radius, spriteTypes))
+				{
+					continue;
+				}
+
+				ushort blipCreationIncrement = *(ushort*)(address + 8);
 				handles.Add((int)((blipCreationIncrement << 0x10) + (uint)i));
 			}
 
 			return handles.ToArray();
 		}
 
-		public static int GetNorthBlip() => NorthRadarBlipHandleAddress != null ? *NorthRadarBlipHandleAddress : 0;
+		public static int GetNorthBlip() => s_northRadarBlipHandleAddress != null ? *s_northRadarBlipHandleAddress : 0;
 
 		public static IntPtr GetBlipAddress(int handle)
 		{
-			if (RadarBlipPoolAddress == null)
+			if (s_radarBlipPoolAddress == null)
 			{
 				return IntPtr.Zero;
 			}
 
-			var poolIndexOfHandle = handle & 0xFFFF;
-			var possibleBlipCount = *PossibleRadarBlipCountAddress;
+			int poolIndexOfHandle = handle & 0xFFFF;
+			int possibleBlipCount = *s_possibleRadarBlipCountAddress;
 
 			if (poolIndexOfHandle >= possibleBlipCount)
 			{
 				return IntPtr.Zero;
 			}
 
-			var address = *(RadarBlipPoolAddress + poolIndexOfHandle);
+			ulong address = *(s_radarBlipPoolAddress + poolIndexOfHandle);
 
 			if (address != 0 && IsBlipCreationIncrementValid(address, handle))
+			{
 				return new IntPtr((long)address);
+			}
 
 			return IntPtr.Zero;
 
@@ -4732,7 +5281,7 @@ namespace SHVDN
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct CGameScriptResource
+		private struct CGameScriptResource
 		{
 			[FieldOffset(0x0)]
 			internal ulong* vTable;
@@ -4751,71 +5300,83 @@ namespace SHVDN
 		internal sealed class GetAllCScriptResourceHandlesTask : IScriptTask
 		{
 			#region Fields
-			internal CScriptResourceTypeNameIndex typeNameIndex;
-			internal int[] returnHandles = Array.Empty<int>();
+			internal CScriptResourceTypeNameIndex _typeNameIndex;
+			internal int[] _returnHandles = Array.Empty<int>();
 
-			const int MAX_CHECKPOINT_COUNT = 64; // hard coded in the exe
-			static readonly int[] _cScriptResourceHandleBuffer = new int[MAX_CHECKPOINT_COUNT];
+			private const int MaxCheckpointCount = 64; // hard coded in the exe
+			private static readonly int[] s_cScriptResourceHandleBuffer = new int[MaxCheckpointCount];
 			#endregion
 
 			internal GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex typeNameIndex)
 			{
-				this.typeNameIndex = typeNameIndex;
+				this._typeNameIndex = typeNameIndex;
 			}
 
 			public void Run()
 			{
-				var cGameScriptHandlerAddress = GetCGameScriptHandlerAddressFunc();
+				ulong cGameScriptHandlerAddress = s_getCGameScriptHandlerAddressFunc();
 
 				if (cGameScriptHandlerAddress == 0)
-					return;
-
-				var elementCount = 0;
-				var firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
-				for (var item = firstRegisteredScriptResourceItem; item != null; item = item->next)
 				{
-					if (item->resourceTypeNameIndex != typeNameIndex)
-						continue;
+					return;
+				}
 
-					_cScriptResourceHandleBuffer[elementCount++] = item->counterOfPool;
+				int elementCount = 0;
+				CGameScriptResource* firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
+				for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
+				{
+					if (item->resourceTypeNameIndex != _typeNameIndex)
+					{
+						continue;
+					}
+
+					s_cScriptResourceHandleBuffer[elementCount++] = item->counterOfPool;
 				}
 
 				if (elementCount == 0)
+				{
 					return;
+				}
 
-				returnHandles = new int[elementCount];
-				Array.Copy(_cScriptResourceHandleBuffer, returnHandles, elementCount);
+				_returnHandles = new int[elementCount];
+				Array.Copy(s_cScriptResourceHandleBuffer, _returnHandles, elementCount);
 			}
 		}
 
 		internal sealed class GetCScriptResourceAddressTask : IScriptTask
 		{
 			#region Fields
-			internal int targetHandle;
-			internal ulong* poolAddress;
-			internal int elementSize;
-			internal IntPtr returnAddress;
+			internal int _targetHandle;
+			internal ulong* _poolAddress;
+			internal int _elementSize;
+			internal IntPtr _returnAddress;
 			#endregion
 
 			internal GetCScriptResourceAddressTask(int handle, ulong* poolAddress, int elementSize)
 			{
-				this.targetHandle = handle;
-				this.poolAddress = poolAddress;
-				this.elementSize = elementSize;
+				this._targetHandle = handle;
+				this._poolAddress = poolAddress;
+				this._elementSize = elementSize;
 			}
 
 			public void Run()
 			{
-				var cGameScriptHandlerAddress = GetCGameScriptHandlerAddressFunc();
+				ulong cGameScriptHandlerAddress = s_getCGameScriptHandlerAddressFunc();
 
 				if (cGameScriptHandlerAddress == 0)
-					return;
-
-				var firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
-				for (var item = firstRegisteredScriptResourceItem; item != null; item = item->next)
 				{
-					if (item->counterOfPool != targetHandle) continue;
-					returnAddress = new IntPtr((long)((byte*)(poolAddress) + item->indexOfPool * elementSize));
+					return;
+				}
+
+				CGameScriptResource* firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
+				for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
+				{
+					if (item->counterOfPool != _targetHandle)
+					{
+						continue;
+					}
+
+					_returnAddress = new IntPtr((long)((byte*)(_poolAddress) + item->indexOfPool * _elementSize));
 					break;
 				}
 			}
@@ -4825,9 +5386,9 @@ namespace SHVDN
 
 		#region -- Checkpoint Pool --
 
-		static ulong* CheckpointPoolAddress;
+		private static ulong* s_checkpointPoolAddress;
 
-		static delegate* unmanaged[Stdcall]<ulong> GetCGameScriptHandlerAddressFunc;
+		private static delegate* unmanaged[Stdcall]<ulong> s_getCGameScriptHandlerAddressFunc;
 
 		public static int[] GetCheckpointHandles()
 		{
@@ -4835,43 +5396,45 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.returnHandles;
+			return task._returnHandles;
 		}
 
 		public static IntPtr GetCheckpointAddress(int handle)
 		{
-			var task = new GetCScriptResourceAddressTask(handle, CheckpointPoolAddress, 0x60);
+			var task = new GetCScriptResourceAddressTask(handle, s_checkpointPoolAddress, 0x60);
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.returnAddress;
+			return task._returnAddress;
 		}
 
 		#endregion
 
 		#region -- Waypoint Info Array --
 
-		static ulong* waypointInfoArrayStartAddress;
-		static ulong* waypointInfoArrayEndAddress;
-		static delegate* unmanaged[Stdcall]<ulong> GetLocalPlayerPedAddressFunc;
+		private static ulong* s_waypointInfoArrayStartAddress;
+		private static ulong* s_waypointInfoArrayEndAddress;
+		private static delegate* unmanaged[Stdcall]<ulong> s_getLocalPlayerPedAddressFunc;
 
 		public static int GetWaypointBlip()
 		{
-			if (waypointInfoArrayStartAddress == null || waypointInfoArrayEndAddress == null)
+			if (s_waypointInfoArrayStartAddress == null || s_waypointInfoArrayEndAddress == null)
+			{
 				return 0;
+			}
 
-			var playerPedModelHash = 0;
-			var playerPedAddress = GetLocalPlayerPedAddressFunc();
+			int playerPedModelHash = 0;
+			ulong playerPedAddress = s_getLocalPlayerPedAddressFunc();
 
 			if (playerPedAddress != 0)
 			{
 				playerPedModelHash = GetModelHashFromEntity(new IntPtr((long)playerPedAddress));
 			}
 
-			var waypointInfoAddress = (ulong)waypointInfoArrayStartAddress;
-			for (; waypointInfoAddress < (ulong)waypointInfoArrayEndAddress; waypointInfoAddress += 0x18)
+			ulong waypointInfoAddress = (ulong)s_waypointInfoArrayStartAddress;
+			for (; waypointInfoAddress < (ulong)s_waypointInfoArrayEndAddress; waypointInfoAddress += 0x18)
 			{
-				var modelHash = *(int*)waypointInfoAddress;
+				int modelHash = *(int*)waypointInfoAddress;
 
 				if (modelHash == playerPedModelHash)
 				{
@@ -4886,46 +5449,54 @@ namespace SHVDN
 
 		#region -- Pool Addresses --
 
-		static delegate* unmanaged[Stdcall]<int, ulong> GetPtfxAddressFunc;
+		private static delegate* unmanaged[Stdcall]<int, ulong> s_getPtfxAddressFunc;
 		// should be CGameScriptHandler::GetScriptEntity
-		static delegate* unmanaged[Stdcall]<int, ulong> GetScriptEntity;
+		private static delegate* unmanaged[Stdcall]<int, ulong> s_getScriptEntity;
 
 		public static IntPtr GetPtfxAddress(int handle)
 		{
-			return new IntPtr((long)GetPtfxAddressFunc(handle));
+			return new IntPtr((long)s_getPtfxAddressFunc(handle));
 		}
 		public static IntPtr GetEntityAddress(int handle)
 		{
-			return new IntPtr((long)GetScriptEntity(handle));
+			return new IntPtr((long)s_getScriptEntity(handle));
 		}
 
 		public static IntPtr GetBuildingAddress(int handle)
 		{
-			if (BuildingPoolAddress == null)
+			if (s_buildingPoolAddress == null)
+			{
 				return IntPtr.Zero;
+			}
 
-			return ((GenericPool*)(*NativeMemory.BuildingPoolAddress))->GetAddressFromHandle(handle);
+			return ((GenericPool*)(*NativeMemory.s_buildingPoolAddress))->GetAddressFromHandle(handle);
 		}
 		public static IntPtr GetAnimatedBuildingAddress(int handle)
 		{
-			if (AnimatedBuildingPoolAddress == null)
+			if (s_animatedBuildingPoolAddress == null)
+			{
 				return IntPtr.Zero;
+			}
 
-			return ((GenericPool*)(*NativeMemory.AnimatedBuildingPoolAddress))->GetAddressFromHandle(handle);
+			return ((GenericPool*)(*NativeMemory.s_animatedBuildingPoolAddress))->GetAddressFromHandle(handle);
 		}
 		public static IntPtr GetInteriorInstAddress(int handle)
 		{
-			if (InteriorInstPoolAddress == null)
+			if (s_interiorInstPoolAddress == null)
+			{
 				return IntPtr.Zero;
+			}
 
-			return ((GenericPool*)(*NativeMemory.InteriorInstPoolAddress))->GetAddressFromHandle(handle);
+			return ((GenericPool*)(*NativeMemory.s_interiorInstPoolAddress))->GetAddressFromHandle(handle);
 		}
 		public static IntPtr GetInteriorProxyAddress(int handle)
 		{
-			if (InteriorProxyPoolAddress == null)
+			if (s_interiorProxyPoolAddress == null)
+			{
 				return IntPtr.Zero;
+			}
 
-			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetAddressFromHandle(handle);
+			return ((GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetAddressFromHandle(handle);
 		}
 
 		#endregion
@@ -4937,7 +5508,7 @@ namespace SHVDN
 
 		#region -- Projectile Functions --
 
-		static delegate* unmanaged[Stdcall]<IntPtr, int, void> ExplodeProjectileFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, int, void> s_explodeProjectileFunc;
 
 		public static void ExplodeProjectile(IntPtr projectileAddress)
 		{
@@ -4948,17 +5519,17 @@ namespace SHVDN
 		internal sealed class ExplodeProjectileTask : IScriptTask
 		{
 			#region Fields
-			internal IntPtr projectileAddress;
+			internal IntPtr _projectileAddress;
 			#endregion
 
 			internal ExplodeProjectileTask(IntPtr projectileAddress)
 			{
-				this.projectileAddress = projectileAddress;
+				this._projectileAddress = projectileAddress;
 			}
 
 			public void Run()
 			{
-				ExplodeProjectileFunc(projectileAddress, 0);
+				s_explodeProjectileFunc(_projectileAddress, 0);
 			}
 		}
 
@@ -4971,44 +5542,60 @@ namespace SHVDN
 
 		public static int GetAssociatedInteriorInstHandleFromInteriorProxy(int interiorProxyHandle)
 		{
-			if (InteriorInstPtrInInteriorProxyOffset == 0 || InteriorInstPoolAddress == null)
+			if (InteriorInstPtrInInteriorProxyOffset == 0 || s_interiorInstPoolAddress == null)
+			{
 				return 0;
+			}
 
-			var interiorProxyAddress = GetInteriorProxyAddress(interiorProxyHandle);
+			IntPtr interiorProxyAddress = GetInteriorProxyAddress(interiorProxyHandle);
 			if (interiorProxyAddress == IntPtr.Zero)
+			{
 				return 0;
+			}
 
-			var interiorInstAddress = *(ulong*)(interiorProxyAddress + InteriorInstPtrInInteriorProxyOffset).ToPointer();
+			ulong interiorInstAddress = *(ulong*)(interiorProxyAddress + InteriorInstPtrInInteriorProxyOffset).ToPointer();
 			if (interiorInstAddress == 0)
+			{
 				return 0;
+			}
 
-			return ((GenericPool*)(*NativeMemory.InteriorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
+			return ((GenericPool*)(*NativeMemory.s_interiorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
 		}
 		public static int GetInteriorProxyHandleFromInteriorInst(int interiorInstHandle)
 		{
-			if (InteriorProxyPoolAddress == null)
+			if (s_interiorProxyPoolAddress == null)
+			{
 				return 0;
+			}
 
-			var interiorInstAddress = GetInteriorInstAddress(interiorInstHandle);
+			IntPtr interiorInstAddress = GetInteriorInstAddress(interiorInstHandle);
 			if (interiorInstAddress == IntPtr.Zero)
+			{
 				return 0;
+			}
 
-			var interiorProxyAddress = *(ulong*)(interiorInstAddress + 0x188).ToPointer();
+			ulong interiorProxyAddress = *(ulong*)(interiorInstAddress + 0x188).ToPointer();
 			if (interiorProxyAddress == 0)
+			{
 				return 0;
+			}
 
-			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
+			return ((GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
 		}
 		public static int GetInteriorProxyHandleFromGameplayCam()
 		{
-			if (InteriorProxyPtrFromGameplayCamAddress == null || InteriorInstPoolAddress == null)
+			if (InteriorProxyPtrFromGameplayCamAddress == null || s_interiorInstPoolAddress == null)
+			{
 				return 0;
+			}
 
-			var interiorProxyAddress = *InteriorProxyPtrFromGameplayCamAddress;
+			ulong interiorProxyAddress = *InteriorProxyPtrFromGameplayCamAddress;
 			if (interiorProxyAddress == 0)
+			{
 				return 0;
+			}
 
-			return ((GenericPool*)(*NativeMemory.InteriorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
+			return ((GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
 		}
 
 		public static int GetEntityHandleFromAddress(IntPtr address)
@@ -5017,27 +5604,27 @@ namespace SHVDN
 
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.returnEntityHandle;
+			return task._returnEntityHandle;
 		}
 
-		static int GetBuildingHandleFromAddress(IntPtr address)
+		private static int GetBuildingHandleFromAddress(IntPtr address)
 		{
-			if (BuildingPoolAddress == null)
+			if (s_buildingPoolAddress == null)
 			{
 				return 0;
 			}
 
-			return GetHandleForGenericPoolFromAddress(*BuildingPoolAddress, address);
+			return GetHandleForGenericPoolFromAddress(*s_buildingPoolAddress, address);
 		}
 
-		static int GetHandleForGenericPoolFromAddress(ulong poolAddress, IntPtr instanceAddress) => ((GenericPool*)poolAddress)->GetGuidHandleFromAddress((ulong)instanceAddress);
+		private static int GetHandleForGenericPoolFromAddress(ulong poolAddress, IntPtr instanceAddress) => ((GenericPool*)poolAddress)->GetGuidHandleFromAddress((ulong)instanceAddress);
 
 		#endregion
 
 		#region -- Weapon Info And Ammo Info --
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
-		struct RageAtArrayPtr
+		private struct RageAtArrayPtr
 		{
 			[FieldOffset(0x0)]
 			internal ulong* data;
@@ -5052,8 +5639,9 @@ namespace SHVDN
 			}
 		}
 
-		static RageAtArrayPtr* weaponAndAmmoInfoArrayPtr;
-		static HashSet<uint> disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>()
+		private static RageAtArrayPtr* s_weaponAndAmmoInfoArrayPtr;
+
+		private static HashSet<uint> s_disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>()
 		{
 			0x1B79F17,  /* weapon_briefcase_02 */
 			0x166218FF, /* weapon_passenger_rocket */
@@ -5064,18 +5652,18 @@ namespace SHVDN
 			0xFDBADCED, /* weapon_digiscanner */
 		};
 
-		static uint* weaponComponentArrayCountAddr;
+		private static uint* s_weaponComponentArrayCountAddr;
 		// Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).
-		static ulong offsetForCWeaponComponentArrayAddr;
-		static int weaponAttachPointsStartOffset;
-		static int weaponAttachPointsArrayCountOffset;
-		static int weaponAttachPointElementComponentCountOffset;
-		static int weaponAttachPointElementSize;
+		private static ulong s_offsetForCWeaponComponentArrayAddr;
+		private static int s_weaponAttachPointsStartOffset;
+		private static int s_weaponAttachPointsArrayCountOffset;
+		private static int s_weaponAttachPointElementComponentCountOffset;
+		private static int s_weaponAttachPointElementSize;
 
-		static int weaponInfoHumanNameHashOffset;
+		private static int s_weaponInfoHumanNameHashOffset;
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x20)]
-		struct ItemInfo
+		private struct ItemInfo
 		{
 			[FieldOffset(0x0)]
 			internal ulong* vTable;
@@ -5095,23 +5683,23 @@ namespace SHVDN
 				{
 					// The function is for the game version b2802 or later ones.
 					// This one directly returns a hash value (not a pointer value) unlike the previous function.
-					var GetClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)(vTable[2]);
-					return GetClassNameHashFunc();
+					var getClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)(vTable[2]);
+					return getClassNameHashFunc();
 				}
 
 				// The function is for game versions prior to b2802.
 				// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
 				// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
-				var GetClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)(vTable[2]);
+				var getClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)(vTable[2]);
 
 				uint outVal = 0;
-				var returnValueAddress = GetClassNameAddressHashFunc(0, &outVal);
+				uint* returnValueAddress = getClassNameAddressHashFunc(0, &outVal);
 				return *returnValueAddress;
 			}
 		}
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x48)]
-		struct WeaponComponentInfo
+		private struct WeaponComponentInfo
 		{
 			[FieldOffset(0x0)]
 			internal ulong* vTable;
@@ -5131,58 +5719,72 @@ namespace SHVDN
 			internal bool applyWeaponTint;
 		}
 
-		static ItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
+		private static ItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
 		{
-			if (weaponAndAmmoInfoArrayPtr == null)
+			if (s_weaponAndAmmoInfoArrayPtr == null)
 			{
 				return null;
 			}
 
-			var weaponAndAmmoInfoElementCount = weaponAndAmmoInfoArrayPtr->size;
+			ushort weaponAndAmmoInfoElementCount = s_weaponAndAmmoInfoArrayPtr->size;
 
 			if (weaponAndAmmoInfoElementCount == 0)
+			{
 				return null;
+			}
 
 			int low = 0, high = weaponAndAmmoInfoElementCount - 1;
 			while (true)
 			{
-				var indexToRead = (low + high) >> 1;
-				var weaponOrAmmoInfo = (ItemInfo*)weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
+				int indexToRead = (low + high) >> 1;
+				var weaponOrAmmoInfo = (ItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
 
 				if (weaponOrAmmoInfo->nameHash == nameHash)
+				{
 					return weaponOrAmmoInfo;
+				}
 
 				// The array is sorted in ascending order
 				if (weaponOrAmmoInfo->nameHash <= nameHash)
+				{
 					low = indexToRead + 1;
+				}
 				else
+				{
 					high = indexToRead - 1;
+				}
 
 				if (low > high)
+				{
 					return null;
+				}
 			}
 		}
 
-		static ItemInfo* FindWeaponInfo(uint nameHash)
+		private static ItemInfo* FindWeaponInfo(uint nameHash)
 		{
-			var itemInfoPtr = FindItemInfoFromWeaponAndAmmoInfoArray(nameHash);
+			ItemInfo* itemInfoPtr = FindItemInfoFromWeaponAndAmmoInfoArray(nameHash);
 
 			if (itemInfoPtr == null)
+			{
 				return null;
+			}
 
-			var classNameHash = itemInfoPtr->GetClassNameHash();
+			uint classNameHash = itemInfoPtr->GetClassNameHash();
 
-			const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
-			if (classNameHash == CWEAPONINFO_NAME_HASH)
+			const uint cWeaponInfoNameHash = 0x861905B4;
+			if (classNameHash == cWeaponInfoNameHash)
+			{
 				return itemInfoPtr;
+			}
 
 			return null;
 		}
 
-		static WeaponComponentInfo* FindWeaponComponentInfo(uint nameHash)
+		private static WeaponComponentInfo* FindWeaponComponentInfo(uint nameHash)
 		{
-			var cWeaponComponentArrayFirstPtr = (ulong*)((byte*)offsetForCWeaponComponentArrayAddr + 4 + *(int*)offsetForCWeaponComponentArrayAddr);
-			var arrayCount = weaponComponentArrayCountAddr != null ? *(uint*)weaponComponentArrayCountAddr : 0;
+			ulong* cWeaponComponentArrayFirstPtr = (ulong*)((byte*)s_offsetForCWeaponComponentArrayAddr + 4 + *(int*)s_offsetForCWeaponComponentArrayAddr);
+			uint arrayCount = s_weaponComponentArrayCountAddr != null ? *(uint*)s_weaponComponentArrayCountAddr : 0;
 			if (cWeaponComponentArrayFirstPtr == null || arrayCount == 0)
 			{
 				return null;
@@ -5191,20 +5793,28 @@ namespace SHVDN
 			int low = 0, high = (int)arrayCount - 1;
 			while (true)
 			{
-				var indexToRead = (low + high) >> 1;
+				int indexToRead = (low + high) >> 1;
 				var weaponComponentInfo = (WeaponComponentInfo*)cWeaponComponentArrayFirstPtr[indexToRead];
 
 				if (weaponComponentInfo->nameHash == nameHash)
+				{
 					return weaponComponentInfo;
+				}
 
 				// The array is sorted in ascending order
 				if (weaponComponentInfo->nameHash <= nameHash)
+				{
 					low = indexToRead + 1;
+				}
 				else
+				{
 					high = indexToRead - 1;
+				}
 
 				if (low > high)
+				{
 					return null;
+				}
 			}
 		}
 
@@ -5212,28 +5822,34 @@ namespace SHVDN
 
 		public static uint GetAttachmentPointHash(uint weaponHash, uint componentHash)
 		{
-			var weaponInfo = FindWeaponInfo(weaponHash);
+			ItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
 			if (weaponInfo == null)
-				return 0xFFFFFFFF;
-
-			var weaponAttachPointsAddr = (byte*)weaponInfo + weaponAttachPointsStartOffset;
-			var weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + weaponAttachPointsArrayCountOffset);
-			var weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr);
-
-			for (var i = 0; i < weaponAttachPointsCount; i++)
 			{
-				var weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + (i * weaponAttachPointElementSize) + 0x8;
-				var componentItemsCount = *(int*)(weaponAttachPointElementAddr + weaponAttachPointElementComponentCountOffset);
+				return 0xFFFFFFFF;
+			}
+
+			byte* weaponAttachPointsAddr = (byte*)weaponInfo + s_weaponAttachPointsStartOffset;
+			int weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + s_weaponAttachPointsArrayCountOffset);
+			byte* weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr);
+
+			for (int i = 0; i < weaponAttachPointsCount; i++)
+			{
+				byte* weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + (i * s_weaponAttachPointElementSize) + 0x8;
+				int componentItemsCount = *(int*)(weaponAttachPointElementAddr + s_weaponAttachPointElementComponentCountOffset);
 
 				if (componentItemsCount <= 0)
-					continue;
-
-				for (var j = 0; j < componentItemsCount; j++)
 				{
-					var componentHashInItemArray = *(uint*)(weaponAttachPointElementAddr + j * 0x8);
+					continue;
+				}
+
+				for (int j = 0; j < componentItemsCount; j++)
+				{
+					uint componentHashInItemArray = *(uint*)(weaponAttachPointElementAddr + j * 0x8);
 					if (componentHashInItemArray == componentHash)
-						return *(uint*)(weaponAttachPointElementStartAddr + i * weaponAttachPointElementSize);
+					{
+						return *(uint*)(weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize);
+					}
 				}
 			}
 
@@ -5242,26 +5858,30 @@ namespace SHVDN
 
 		public static List<uint> GetAllWeaponHashesForHumanPeds()
 		{
-			if (weaponAndAmmoInfoArrayPtr == null)
+			if (s_weaponAndAmmoInfoArrayPtr == null)
 			{
 				return new List<uint>();
 			}
 
-			var weaponAndAmmoInfoElementCount = weaponAndAmmoInfoArrayPtr->size;
+			ushort weaponAndAmmoInfoElementCount = s_weaponAndAmmoInfoArrayPtr->size;
 			var resultList = new List<uint>();
 
-			for (var i = 0; i < weaponAndAmmoInfoElementCount; i++)
+			for (int i = 0; i < weaponAndAmmoInfoElementCount; i++)
 			{
-				var weaponOrAmmoInfo = (ItemInfo*)weaponAndAmmoInfoArrayPtr->GetElementAddress(i);
+				var weaponOrAmmoInfo = (ItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(i);
 
-				if (!CanPedEquip(weaponOrAmmoInfo) && !disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->nameHash))
+				if (!CanPedEquip(weaponOrAmmoInfo) && !s_disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->nameHash))
+				{
 					continue;
+				}
 
-				var classNameHash = weaponOrAmmoInfo->GetClassNameHash();
+				uint classNameHash = weaponOrAmmoInfo->GetClassNameHash();
 
-				const uint CWEAPONINFO_NAME_HASH = 0x861905B4;
-				if (classNameHash == CWEAPONINFO_NAME_HASH)
+				const uint cWeaponInfoNameHash = 0x861905B4;
+				if (classNameHash == cWeaponInfoNameHash)
+				{
 					resultList.Add(weaponOrAmmoInfo->nameHash);
+				}
 			}
 
 			return resultList;
@@ -5274,14 +5894,14 @@ namespace SHVDN
 
 		public static List<uint> GetAllWeaponComponentHashes()
 		{
-			var cWeaponComponentArrayFirstPtr = (ulong*)((byte*)offsetForCWeaponComponentArrayAddr + 4 + *(int*)offsetForCWeaponComponentArrayAddr);
-			var arrayCount = weaponComponentArrayCountAddr != null ? *(uint*)weaponComponentArrayCountAddr : 0;
+			ulong* cWeaponComponentArrayFirstPtr = (ulong*)((byte*)s_offsetForCWeaponComponentArrayAddr + 4 + *(int*)s_offsetForCWeaponComponentArrayAddr);
+			uint arrayCount = s_weaponComponentArrayCountAddr != null ? *(uint*)s_weaponComponentArrayCountAddr : 0;
 			var resultList = new List<uint>();
 
 			for (uint i = 0; i < arrayCount; i++)
 			{
-				var cWeaponComponentInfo = cWeaponComponentArrayFirstPtr[i];
-				var weaponComponentNameHash = *(uint*)(cWeaponComponentInfo + 0x10);
+				ulong cWeaponComponentInfo = cWeaponComponentArrayFirstPtr[i];
+				uint weaponComponentNameHash = *(uint*)(cWeaponComponentInfo + 0x10);
 				resultList.Add(weaponComponentNameHash);
 			}
 
@@ -5290,25 +5910,29 @@ namespace SHVDN
 
 		public static List<uint> GetAllCompatibleWeaponComponentHashes(uint weaponHash)
 		{
-			var weaponInfo = FindWeaponInfo(weaponHash);
+			ItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
 			if (weaponInfo == null)
+			{
 				return new List<uint>();
+			}
 
 			var returnList = new List<uint>();
 
-			var weaponAttachPointsAddr = (byte*)weaponInfo + weaponAttachPointsStartOffset;
-			var weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + weaponAttachPointsArrayCountOffset);
-			var weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr + 0x8);
-			for (var i = 0; i < weaponAttachPointsCount; i++)
+			byte* weaponAttachPointsAddr = (byte*)weaponInfo + s_weaponAttachPointsStartOffset;
+			int weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + s_weaponAttachPointsArrayCountOffset);
+			byte* weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr + 0x8);
+			for (int i = 0; i < weaponAttachPointsCount; i++)
 			{
-				var weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + i * weaponAttachPointElementSize;
-				var componentItemsCount = *(int*)(weaponAttachPointElementAddr + weaponAttachPointElementComponentCountOffset);
+				byte* weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize;
+				int componentItemsCount = *(int*)(weaponAttachPointElementAddr + s_weaponAttachPointElementComponentCountOffset);
 
 				if (componentItemsCount <= 0)
+				{
 					continue;
+				}
 
-				for (var j = 0; j < componentItemsCount; j++)
+				for (int j = 0; j < componentItemsCount; j++)
 				{
 					returnList.Add(*(uint*)(weaponAttachPointElementAddr + j * 0x8));
 				}
@@ -5319,22 +5943,26 @@ namespace SHVDN
 
 		public static uint GetHumanNameHashOfWeaponInfo(uint weaponHash)
 		{
-			var weaponInfo = FindWeaponInfo(weaponHash);
+			ItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
 			if (weaponInfo == null)
 				// hashed value of WT_INVALID
+			{
 				return 0xBFED8500;
+			}
 
-			return *(uint*)((byte*)weaponInfo + weaponInfoHumanNameHashOffset);
+			return *(uint*)((byte*)weaponInfo + s_weaponInfoHumanNameHashOffset);
 		}
 
 		public static uint GetHumanNameHashOfWeaponComponentInfo(uint weaponComponentHash)
 		{
-			var weaponComponentInfo = FindWeaponComponentInfo(weaponComponentHash);
+			WeaponComponentInfo* weaponComponentInfo = FindWeaponComponentInfo(weaponComponentHash);
 
 			if (weaponComponentInfo == null)
 				// hashed value of WCT_INVALID
+			{
 				return 0xDE4BE9F8;
+			}
 
 			return weaponComponentInfo->locNameHash;
 		}
@@ -5343,11 +5971,11 @@ namespace SHVDN
 
 		#region -- Fragment Object for Entity --
 
-		static int getFragInstVFuncOffset;
-		static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> detachFragmentPartByIndexFunc;
-		static ulong** phSimulatorInstPtr;
-		static int colliderCapacityOffset;
-		static int colliderCountOffset;
+		private static int s_getFragInstVFuncOffset;
+		private static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> s_detachFragmentPartByIndexFunc;
+		private static ulong** s_phSimulatorInstPtr;
+		private static int s_colliderCapacityOffset;
+		private static int s_colliderCountOffset;
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC0)]
 		internal unsafe struct FragInst
@@ -5359,20 +5987,22 @@ namespace SHVDN
 			[FieldOffset(0xB8)]
 			internal uint unkType;
 
-			internal FragPhysicsLOD* GetAppropriateFragPhysicsLOD()
+			internal FragPhysicsLod* GetAppropriateFragPhysicsLod()
 			{
-				var fragPhysicsLODGroup = gtaFragType->fragPhysicsLODGroup;
-				if (fragPhysicsLODGroup == null)
+				FragPhysicsLodGroup* fragPhysicsLodGroup = gtaFragType->fragPhysicsLODGroup;
+				if (fragPhysicsLodGroup == null)
+				{
 					return null;
+				}
 
 				switch (unkType)
 				{
 					case 0:
 					case 1:
 					case 2:
-						return fragPhysicsLODGroup->GetFragPhysicsLODByIndex((int)unkType);
+						return fragPhysicsLodGroup->GetFragPhysicsLodByIndex((int)unkType);
 					default:
-						return fragPhysicsLODGroup->GetFragPhysicsLODByIndex(0);
+						return fragPhysicsLodGroup->GetFragPhysicsLodByIndex(0);
 				}
 			}
 		}
@@ -5387,7 +6017,7 @@ namespace SHVDN
 			[FieldOffset(0x30)]
 			internal FragDrawable* fragDrawable;
 			[FieldOffset(0xF0)]
-			internal FragPhysicsLODGroup* fragPhysicsLODGroup;
+			internal FragPhysicsLodGroup* fragPhysicsLODGroup;
 		}
 		[StructLayout(LayoutKind.Explicit)]
 		internal struct FragDrawable
@@ -5396,15 +6026,15 @@ namespace SHVDN
 			internal CrSkeletonData* crSkeletonData;
 		}
 		[StructLayout(LayoutKind.Explicit)]
-		internal struct FragPhysicsLODGroup
+		internal struct FragPhysicsLodGroup
 		{
 			[FieldOffset(0x10)]
 			internal fixed ulong fragPhysicsLODAddresses[3];
 
-			internal FragPhysicsLOD* GetFragPhysicsLODByIndex(int index) => (FragPhysicsLOD*)((ulong*)fragPhysicsLODAddresses[index]);
+			internal FragPhysicsLod* GetFragPhysicsLodByIndex(int index) => (FragPhysicsLod*)((ulong*)fragPhysicsLODAddresses[index]);
 		}
 		[StructLayout(LayoutKind.Explicit)]
-		internal struct FragPhysicsLOD
+		internal struct FragPhysicsLod
 		{
 			[FieldOffset(0xD0)]
 			internal ulong fragTypeChildArr;
@@ -5414,7 +6044,9 @@ namespace SHVDN
 			internal FragTypeChild* GetFragTypeChild(int index)
 			{
 				if (index >= fragmentGroupCount)
+				{
 					return null;
+				}
 
 				return (FragTypeChild*)*((ulong*)fragTypeChildArr + index);
 			}
@@ -5492,15 +6124,19 @@ namespace SHVDN
 				if (boneHashMap.elementCount == 0)
 				{
 					if (boneId < boneCount)
+					{
 						return boneId;
+					}
 
 					return -1;
 				}
 
 				if (boneHashMap.bucketCount == 0)
+				{
 					return -1;
+				}
 
-				if (boneHashMap.Get((uint)boneId, out var returnBoneId))
+				if (boneHashMap.Get((uint)boneId, out int returnBoneId))
 				{
 					return returnBoneId;
 				}
@@ -5514,7 +6150,9 @@ namespace SHVDN
 			internal int GetBoneIdByIndex(int boneIndex)
 			{
 				if (boneIndex < 0 || boneIndex >= boneCount)
+				{
 					return -1;
+				}
 
 				return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->boneId;
 			}
@@ -5532,7 +6170,7 @@ namespace SHVDN
 				}
 
 				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
-				var nextSiblingBoneIndexFetched = crBoneData->nextSiblingBoneIndex;
+				ushort nextSiblingBoneIndexFetched = crBoneData->nextSiblingBoneIndex;
 				if (nextSiblingBoneIndexFetched == 0xFFFF)
 				{
 					nextSiblingBoneIndex = -1;
@@ -5540,7 +6178,7 @@ namespace SHVDN
 					return;
 				}
 
-				var nextSiblingBoneIdFetched = GetBoneIdByIndex(nextSiblingBoneIndexFetched);
+				int nextSiblingBoneIdFetched = GetBoneIdByIndex(nextSiblingBoneIndexFetched);
 				if (nextSiblingBoneIndexFetched == 0xFFFF)
 				{
 					nextSiblingBoneIndex = -1;
@@ -5565,7 +6203,7 @@ namespace SHVDN
 				}
 
 				var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
-				var nextParentBoneIndexFetched = crBoneData->parentBoneIndex;
+				ushort nextParentBoneIndexFetched = crBoneData->parentBoneIndex;
 				if (nextParentBoneIndexFetched == 0xFFFF)
 				{
 					parentBoneIndex = -1;
@@ -5573,7 +6211,7 @@ namespace SHVDN
 					return;
 				}
 
-				var nextParentBoneIdFetched = GetBoneIdByIndex(nextParentBoneIndexFetched);
+				int nextParentBoneIdFetched = GetBoneIdByIndex(nextParentBoneIndexFetched);
 				if (nextParentBoneIdFetched == 0xFFFF)
 				{
 					parentBoneIndex = -1;
@@ -5591,7 +6229,9 @@ namespace SHVDN
 			internal string GetBoneName(int boneIndex)
 			{
 				if (boneIndex < 0 || boneIndex >= boneCount)
+				{
 					return null;
+				}
 
 				return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->Name;
 			}
@@ -5622,10 +6262,14 @@ namespace SHVDN
 
 			internal bool Get(uint hash, out int value)
 			{
-				var firstEntryAddr = (ulong*)GetBucketAddress((int)(hash % bucketCount));
+				ulong* firstEntryAddr = (ulong*)GetBucketAddress((int)(hash % bucketCount));
 				for (var hashEntry = (HashEntry*)firstEntryAddr; hashEntry != null; hashEntry = hashEntry->next)
 				{
-					if (hash != hashEntry->hash) continue;
+					if (hash != hashEntry->hash)
+					{
+						continue;
+					}
+
 					value = hashEntry->data;
 					return true;
 				}
@@ -5638,28 +6282,30 @@ namespace SHVDN
 		internal sealed class DetachFragmentPartByIndexTask : IScriptTask
 		{
 			#region Fields
-			internal FragInst* fragInst;
-			internal int fragmentGroupIndex;
-			internal bool wasNewFragInstCreated;
+			internal FragInst* _fragInst;
+			internal int _fragmentGroupIndex;
+			internal bool _wasNewFragInstCreated;
 			#endregion
 
 			internal DetachFragmentPartByIndexTask(FragInst* fragInst, int fragmentGroupIndex)
 			{
-				this.fragInst = fragInst;
-				this.fragmentGroupIndex = fragmentGroupIndex;
+				this._fragInst = fragInst;
+				this._fragmentGroupIndex = fragmentGroupIndex;
 			}
 
 			public void Run()
 			{
-				wasNewFragInstCreated = detachFragmentPartByIndexFunc(fragInst, fragmentGroupIndex) != null;
+				_wasNewFragInstCreated = s_detachFragmentPartByIndexFunc(_fragInst, _fragmentGroupIndex) != null;
 			}
 		}
 
 		public static int GetFragmentGroupCountFromEntity(IntPtr entityAddress)
 		{
-			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			FragInst* fragInst = GetFragInstAddressOfEntity(entityAddress);
 			if (fragInst == null)
+			{
 				return 0;
+			}
 
 			return GetFragmentGroupCountOfFragInst(fragInst);
 		}
@@ -5667,59 +6313,81 @@ namespace SHVDN
 		public static bool DetachFragmentPartByIndex(IntPtr entityAddress, int fragmentGroupIndex)
 		{
 			if (fragmentGroupIndex < 0)
+			{
 				return false;
+			}
 
 			// If the entity collider count is at the capacity, the game can crash for trying to create the new entity while no free collider slots are available
 			if (GetEntityColliderCount() >= GetEntityColliderCapacity())
+			{
 				return false;
+			}
 
-			var fragInst = GetFragInstAddressOfEntity(entityAddress);
+			FragInst* fragInst = GetFragInstAddressOfEntity(entityAddress);
 			if (fragInst == null)
+			{
 				return false;
+			}
 
-			var fragmentGroupCount = GetFragmentGroupCountOfFragInst(fragInst);
+			int fragmentGroupCount = GetFragmentGroupCountOfFragInst(fragInst);
 			if (fragmentGroupIndex >= fragmentGroupCount)
+			{
 				return false;
+			}
 
 			var task = new DetachFragmentPartByIndexTask(fragInst, fragmentGroupIndex);
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
-			return task.wasNewFragInstCreated;
+			return task._wasNewFragInstCreated;
 		}
 
 		public static int GetFragmentGroupIndexByEntityBoneIndex(IntPtr entityAddress, int boneIndex)
 		{
 			if ((boneIndex & 0x80000000) != 0) // boneIndex cant be negative
-				return -1;
-
-			var fragInst = GetFragInstAddressOfEntity(entityAddress);
-			if (fragInst == null)
-				return -1;
-
-
-			var crSkeletonData = fragInst->gtaFragType->fragDrawable->crSkeletonData;
-			if (crSkeletonData == null)
-				return -1;
-
-			var boneCount = crSkeletonData->boneCount;
-			if (boneIndex >= boneCount)
-				return -1;
-
-			var fragPhysicsLOD = fragInst->GetAppropriateFragPhysicsLOD();
-			if (fragPhysicsLOD == null)
-				return -1;
-
-			var fragmentGroupCount = fragPhysicsLOD->fragmentGroupCount;
-
-			for (var i = 0; i < fragmentGroupCount; i++)
 			{
-				var fragTypeChild = fragPhysicsLOD->GetFragTypeChild(i);
+				return -1;
+			}
+
+			FragInst* fragInst = GetFragInstAddressOfEntity(entityAddress);
+			if (fragInst == null)
+			{
+				return -1;
+			}
+
+
+			CrSkeletonData* crSkeletonData = fragInst->gtaFragType->fragDrawable->crSkeletonData;
+			if (crSkeletonData == null)
+			{
+				return -1;
+			}
+
+			ushort boneCount = crSkeletonData->boneCount;
+			if (boneIndex >= boneCount)
+			{
+				return -1;
+			}
+
+			FragPhysicsLod* fragPhysicsLod = fragInst->GetAppropriateFragPhysicsLod();
+			if (fragPhysicsLod == null)
+			{
+				return -1;
+			}
+
+			byte fragmentGroupCount = fragPhysicsLod->fragmentGroupCount;
+
+			for (int i = 0; i < fragmentGroupCount; i++)
+			{
+				FragTypeChild* fragTypeChild = fragPhysicsLod->GetFragTypeChild(i);
 
 				if (fragTypeChild == null)
+				{
 					continue;
+				}
 
 				if (boneIndex == crSkeletonData->GetBoneIndexByBoneId(fragTypeChild->boneId))
+				{
 					return i;
+				}
 			}
 
 			return -1;
@@ -5727,18 +6395,22 @@ namespace SHVDN
 
 		public static int GetEntityColliderCapacity()
 		{
-			if (*phSimulatorInstPtr == null)
+			if (*s_phSimulatorInstPtr == null)
+			{
 				return 0;
+			}
 
-			return *(int*)((byte*)*phSimulatorInstPtr + colliderCapacityOffset);
+			return *(int*)((byte*)*s_phSimulatorInstPtr + s_colliderCapacityOffset);
 		}
 
 		public static int GetEntityColliderCount()
 		{
-			if (*phSimulatorInstPtr == null)
+			if (*s_phSimulatorInstPtr == null)
+			{
 				return 0;
+			}
 
-			return *(int*)((byte*)*phSimulatorInstPtr + colliderCountOffset);
+			return *(int*)((byte*)*s_phSimulatorInstPtr + s_colliderCountOffset);
 		}
 
 		public static bool IsEntityFragmentObject(IntPtr entityAddress)
@@ -5749,7 +6421,7 @@ namespace SHVDN
 
 		private static FragInst* GetFragInstAddressOfEntity(IntPtr entityAddress)
 		{
-			var vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)getFragInstVFuncOffset);
+			ulong vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)s_getFragInstVFuncOffset);
 			var getFragInstFunc = (delegate* unmanaged[Stdcall]<IntPtr, FragInst*>)(vFuncAddr);
 
 			return getFragInstFunc(entityAddress);
@@ -5757,8 +6429,8 @@ namespace SHVDN
 
 		private static int GetFragmentGroupCountOfFragInst(FragInst* fragInst)
 		{
-			var fragPhysicsLOD = fragInst->GetAppropriateFragPhysicsLOD();
-			return fragPhysicsLOD != null ? fragPhysicsLOD->fragmentGroupCount : 0;
+			FragPhysicsLod* fragPhysicsLod = fragInst->GetAppropriateFragPhysicsLod();
+			return fragPhysicsLod != null ? fragPhysicsLod->fragmentGroupCount : 0;
 		}
 
 
@@ -5767,64 +6439,82 @@ namespace SHVDN
 		#region -- NaturalMotion Euphoria --
 
 		// These CNmParameter functions can also be called as virtual functions for your information
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> SetNmParameterInt;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> SetNmParameterBool;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> SetNmParameterFloat;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> SetNmParameterString;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> SetNmParameterVector;
+		private static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> s_setNmParameterInt;
+		private static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> s_setNmParameterBool;
+		private static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> s_setNmParameterFloat;
+		private static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> s_setNmParameterString;
+		private static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> s_setNmParameterVector;
 
-		static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> InitMessageMemoryFunc;
-		static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> SendNmMessageToPedFunc;
-		static delegate* unmanaged[Stdcall]<ulong, CTask*> GetActiveTaskFunc;
+		private static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> s_initMessageMemoryFunc;
+		private static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> s_sendNmMessageToPedFunc;
+		private static delegate* unmanaged[Stdcall]<ulong, CTask*> s_getActiveTaskFunc;
 
-		static int fragInstNMGtaOffset;
-		static int cTaskNMScriptControlTypeIndex;
-		static int cEventSwitch2NMTypeIndex;
-		static uint getEventTypeIndexVFuncOffset;
-		static uint fragInstNMGtaGetUnkValVFuncOffset;
+		private static int s_fragInstNmGtaOffset;
+		private static int s_cTaskNmScriptControlTypeIndex;
+		private static int s_cEventSwitch2NmTypeIndex;
+		private static uint s_getEventTypeIndexVFuncOffset;
+		private static uint s_fragInstNmGtaGetUnkValVFuncOffset;
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x38)]
-		struct CTask
+		private struct CTask
 		{
 			[FieldOffset(0x34)]
 			internal ushort taskTypeIndex;
 		}
 
-		public static bool IsTaskNMScriptControlOrEventSwitch2NMActive(IntPtr pedAddress)
+		public static bool IsTaskNmScriptControlOrEventSwitch2NmActive(IntPtr pedAddress)
 		{
-			var phInstGtaAddress = *(ulong*)(pedAddress + 0x30);
+			ulong phInstGtaAddress = *(ulong*)(pedAddress + 0x30);
 
 			if (phInstGtaAddress == 0)
+			{
 				return false;
+			}
 
-			var fragInstNMGtaAddress = *(ulong*)(pedAddress + fragInstNMGtaOffset);
+			ulong fragInstNmGtaAddress = *(ulong*)(pedAddress + s_fragInstNmGtaOffset);
 
-			if (phInstGtaAddress != fragInstNMGtaAddress || IsPedInjured((byte*)pedAddress)) return false;
+			if (phInstGtaAddress != fragInstNmGtaAddress || IsPedInjured((byte*)pedAddress))
+			{
+				return false;
+			}
+
 			// This virtual function will return -1 if phInstGta is not a NM one
-			var fragInstNMGtaGetUnkValVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNMGtaAddress + fragInstNMGtaGetUnkValVFuncOffset)));
-			if (fragInstNMGtaGetUnkValVFunc(fragInstNMGtaAddress) == -1) return false;
+			var fragInstNmGtaGetUnkValVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNmGtaAddress + s_fragInstNmGtaGetUnkValVFuncOffset)));
+			if (fragInstNmGtaGetUnkValVFunc(fragInstNmGtaAddress) == -1)
+			{
+				return false;
+			}
 
-			var pedIntelligenceAddr = *(ulong*)(pedAddress + PedIntelligenceOffset);
+			ulong pedIntelligenceAddr = *(ulong*)(pedAddress + PedIntelligenceOffset);
 
-			var activeTask = GetActiveTaskFunc(*(ulong*)((byte*)pedIntelligenceAddr + CTaskTreePedOffset));
-			if (activeTask != null && activeTask->taskTypeIndex == cTaskNMScriptControlTypeIndex)
+			CTask* activeTask = s_getActiveTaskFunc(*(ulong*)((byte*)pedIntelligenceAddr + CTaskTreePedOffset));
+			if (activeTask != null && activeTask->taskTypeIndex == s_cTaskNmScriptControlTypeIndex)
 			{
 				return true;
 			}
 
-			var eventCount = *(int*)((byte*)pedIntelligenceAddr + CEventCountOffset);
-			for (var i = 0; i < eventCount; i++)
+			int eventCount = *(int*)((byte*)pedIntelligenceAddr + CEventCountOffset);
+			for (int i = 0; i < eventCount; i++)
 			{
-				var eventAddress = *(ulong*)((byte*)pedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)pedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
-				if (eventAddress == 0) continue;
+				ulong eventAddress = *(ulong*)((byte*)pedIntelligenceAddr + CEventStackOffset + 8 * ((i + *(int*)((byte*)pedIntelligenceAddr + (CEventCountOffset - 4)) + 1) % 16));
+				if (eventAddress == 0)
+				{
+					continue;
+				}
 
-				var getEventTypeIndexVirtualFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(*(ulong*)(*(ulong*)eventAddress + getEventTypeIndexVFuncOffset));
-				if (getEventTypeIndexVirtualFunc(eventAddress) != cEventSwitch2NMTypeIndex) continue;
+				var getEventTypeIndexVirtualFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(*(ulong*)(*(ulong*)eventAddress + s_getEventTypeIndexVFuncOffset));
+				if (getEventTypeIndexVirtualFunc(eventAddress) != s_cEventSwitch2NmTypeIndex)
+				{
+					continue;
+				}
 
-				var taskInEvent = *(CTask**)(eventAddress + 0x28);
-				if (taskInEvent == null) continue;
+				CTask* taskInEvent = *(CTask**)(eventAddress + 0x28);
+				if (taskInEvent == null)
+				{
+					continue;
+				}
 
-				if (taskInEvent->taskTypeIndex == cTaskNMScriptControlTypeIndex)
+				if (taskInEvent->taskTypeIndex == s_cTaskNmScriptControlTypeIndex)
 				{
 					return true;
 				}
@@ -5833,49 +6523,49 @@ namespace SHVDN
 			return false;
 		}
 
-		static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
+		private static bool IsPedInjured(byte* pedAddress) => *(float*)(pedAddress + 0x280) < *(float*)(pedAddress + InjuryHealthThresholdOffset);
 
-		private static void SetNMParameters(ulong messageMemory, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
+		private static void SetNmParameters(ulong messageMemory, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
 		{
 			if (boolIntFloatParameters != null)
 			{
-				foreach (var arg in boolIntFloatParameters)
+				foreach (KeyValuePair<string, (int value, Type type)> arg in boolIntFloatParameters)
 				{
-					var name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
-					var (argValue, argType) = arg.Value;
+					(int argValue, Type argType) = arg.Value;
 
 					if (argType == typeof(float))
 					{
-						var argValueConverted = *(float*)(&argValue);
-						NativeMemory.SetNmParameterFloat(messageMemory, name, argValueConverted);
+						float argValueConverted = *(float*)(&argValue);
+						NativeMemory.s_setNmParameterFloat(messageMemory, name, argValueConverted);
 					}
 					else if (argType == typeof(bool))
 					{
-						var argValueConverted = argValue != 0 ? true : false;
-						NativeMemory.SetNmParameterBool(messageMemory, name, argValueConverted);
+						bool argValueConverted = argValue != 0 ? true : false;
+						NativeMemory.s_setNmParameterBool(messageMemory, name, argValueConverted);
 					}
 					else if (argType == typeof(int))
 					{
-						NativeMemory.SetNmParameterInt(messageMemory, name, argValue);
+						NativeMemory.s_setNmParameterInt(messageMemory, name, argValue);
 					}
 				}
 			}
 
 			if ((stringVector3ArrayParameters != null))
 			{
-				foreach (var arg in stringVector3ArrayParameters)
+				foreach (KeyValuePair<string, object> arg in stringVector3ArrayParameters)
 				{
-					var name = ScriptDomain.CurrentDomain.PinString(arg.Key);
+					IntPtr name = ScriptDomain.CurrentDomain.PinString(arg.Key);
 
-					var argValue = arg.Value;
+					object argValue = arg.Value;
 					switch (argValue)
 					{
 						case float[] vector3ArgValue:
-							NativeMemory.SetNmParameterVector(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
+							NativeMemory.s_setNmParameterVector(messageMemory, name, vector3ArgValue[0], vector3ArgValue[1], vector3ArgValue[2]);
 							break;
 						case string stringArgValue:
-							NativeMemory.SetNmParameterString(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
+							NativeMemory.s_setNmParameterString(messageMemory, name, ScriptDomain.CurrentDomain.PinString(stringArgValue));
 							break;
 					}
 				}
@@ -5885,40 +6575,48 @@ namespace SHVDN
 		internal sealed class NmMessageTask : IScriptTask
 		{
 			#region Fields
-			int targetHandle;
-			string messageName;
-			Dictionary<string, (int value, Type type)> boolIntFloatParameters;
-			Dictionary<string, object> stringVector3ArrayParameters;
+
+			private int _targetHandle;
+			private string _messageName;
+			private Dictionary<string, (int value, Type type)> _boolIntFloatParameters;
+			private Dictionary<string, object> _stringVector3ArrayParameters;
 			#endregion
 
 			internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
 			{
-				targetHandle = target;
-				this.messageName = messageName;
-				this.boolIntFloatParameters = boolIntFloatParameters;
-				this.stringVector3ArrayParameters = stringVector3ArrayParameters;
+				_targetHandle = target;
+				this._messageName = messageName;
+				this._boolIntFloatParameters = boolIntFloatParameters;
+				this._stringVector3ArrayParameters = stringVector3ArrayParameters;
 			}
 
 			public void Run()
 			{
-				var pedAddress = (byte*)NativeMemory.GetEntityAddress(targetHandle).ToPointer();
+				byte* pedAddress = (byte*)NativeMemory.GetEntityAddress(_targetHandle).ToPointer();
 
 				if (pedAddress == null)
+				{
 					return;
+				}
 
-				if (!IsTaskNMScriptControlOrEventSwitch2NMActive(new IntPtr(pedAddress)))
+				if (!IsTaskNmScriptControlOrEventSwitch2NmActive(new IntPtr(pedAddress)))
+				{
 					return;
+				}
 
-				var messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
+				ulong messageMemory = (ulong)AllocCoTaskMem(0x1218).ToInt64();
 				if (messageMemory == 0)
+				{
 					return;
-				InitMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
+				}
 
-				SetNMParameters(messageMemory, boolIntFloatParameters, stringVector3ArrayParameters);
+				s_initMessageMemoryFunc(messageMemory, messageMemory + 0x18, 0x40);
 
-				var fragInstNMGtaAddress = *(ulong*)(pedAddress + fragInstNMGtaOffset);
-				var messageStringPtr = ScriptDomain.CurrentDomain.PinString(messageName);
-				SendNmMessageToPedFunc((ulong)fragInstNMGtaAddress, messageStringPtr, messageMemory);
+				SetNmParameters(messageMemory, _boolIntFloatParameters, _stringVector3ArrayParameters);
+
+				ulong fragInstNmGtaAddress = *(ulong*)(pedAddress + s_fragInstNmGtaOffset);
+				IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(_messageName);
+				s_sendNmMessageToPedFunc((ulong)fragInstNmGtaAddress, messageStringPtr, messageMemory);
 
 				FreeCoTaskMem(new IntPtr((long)messageMemory));
 			}

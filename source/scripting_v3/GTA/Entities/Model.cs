@@ -370,7 +370,7 @@ namespace GTA
 		{
 			get
 			{
-				GetDimensions(out var rearBottomLeft, out var frontTopRight);
+				GetDimensions(out Vector3 rearBottomLeft, out Vector3 frontTopRight);
 				return (rearBottomLeft, frontTopRight);
 			}
 		}
@@ -412,8 +412,8 @@ namespace GTA
 		{
 			Request();
 
-			var startTime = Environment.TickCount;
-			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			int startTime = Environment.TickCount;
+			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{
@@ -445,8 +445,8 @@ namespace GTA
 		{
 			Request();
 
-			var startTime = Environment.TickCount;
-			var maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
+			int startTime = Environment.TickCount;
+			int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
 
 			while (!IsLoaded)
 			{

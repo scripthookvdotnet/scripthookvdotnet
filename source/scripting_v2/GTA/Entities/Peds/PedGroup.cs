@@ -15,8 +15,9 @@ namespace GTA
 		public class enumerator : IEnumerator<Ped>
 		{
 			#region Fields
-			int _index;
-			readonly PedGroup _group;
+
+			private int _index;
+			private readonly PedGroup _group;
 			#endregion
 
 			public enumerator(PedGroup group)
@@ -51,7 +52,11 @@ namespace GTA
 			{
 				while (true)
 				{
-					if (_index++ >= (_group.MemberCount - 1)) return false;
+					if (_index++ >= (_group.MemberCount - 1))
+					{
+						return false;
+					}
+
 					Current = _index < 0 ? _group.Leader : _group.GetMember(_index);
 
 					if (Entity.Exists(Current))
@@ -143,7 +148,7 @@ namespace GTA
 
 			if (includingLeader)
 			{
-				var leader = Leader;
+				Ped leader = Leader;
 
 				if (Entity.Exists(leader))
 				{
@@ -151,9 +156,9 @@ namespace GTA
 				}
 			}
 
-			for (var i = 0; i < MemberCount; i++)
+			for (int i = 0; i < MemberCount; i++)
 			{
-				var member = GetMember(i);
+				Ped member = GetMember(i);
 
 				if (Entity.Exists(member))
 				{

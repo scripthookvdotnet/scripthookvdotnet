@@ -218,7 +218,7 @@ namespace GTA
 		/// </value>
 		public static (ShapeTestHandle handle, Vector3 probeStartPosition, Vector3 probeEndPosition) StartTestMouseCursorLOSProbe(IntersectFlags intersectFlags, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.Default)
 		{
-			var handle = StartTestMouseCursorLOSProbe(out var probeStartPosition, out var probeEndPosition, intersectFlags, excludeEntity, options);
+			ShapeTestHandle handle = StartTestMouseCursorLOSProbe(out Vector3 probeStartPosition, out Vector3 probeEndPosition, intersectFlags, excludeEntity, options);
 			return (handle, probeStartPosition, probeEndPosition);
 		}
 	}

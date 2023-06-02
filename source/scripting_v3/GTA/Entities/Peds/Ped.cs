@@ -87,8 +87,8 @@ namespace GTA
 		/// </summary>
 		public void Resurrect()
 		{
-			var health = MaxHealth;
-			var isCollisionEnabled = IsCollisionEnabled;
+			int health = MaxHealth;
+			bool isCollisionEnabled = IsCollisionEnabled;
 
 			Function.Call(Hash.RESURRECT_PED, Handle);
 			Health = MaxHealth = health;
@@ -112,7 +112,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return IntPtr.Zero;
@@ -143,9 +143,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets a value that indicates whether this <see cref="Ped"/> will use a helmet on their own.
+		/// Sets a value that indicates whether this <see cref="Ped"/> is currently wearing a helmet.
 		/// </summary>
 		public bool IsWearingHelmet => Function.Call<bool>(Hash.IS_PED_WEARING_HELMET, Handle);
+
+		/// <summary>
+		/// Sets a value that indicates whether this <see cref="Ped"/> is currently taking off their helmet.
+		/// </summary>
+		public bool IsTakingOffHelmet => Function.Call<bool>(Hash.IS_PED_TAKING_OFF_HELMET, Handle);
 
 		public void ClearBloodDamage()
 		{
@@ -157,11 +162,38 @@ namespace GTA
 			Function.Call(Hash.RESET_PED_VISIBLE_DAMAGE, Handle);
 		}
 
+		[Obsolete("The Ped.GiveHelmet overload with Helmet enum parameter is obsolete, use the overload with HelmetPropFlags enum parameter instead.")]
 		public void GiveHelmet(bool canBeRemovedByPed, Helmet helmetType, int textureIndex)
 		{
 			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, (int)helmetType, textureIndex);
 		}
 
+		/// <summary>
+		/// Gives this <see cref="Ped"/> a helmet.
+		/// </summary>
+		/// <param name="dontTakeOffHelmet">If <see langword="true"/>, the <see cref="Ped"/> will not take off their helmet automatically.</param>
+		/// <param name="helmetPropFlags">
+		/// The helmet prop flags to test. If none of helmets for this <see cref="Ped"/> do not meet the requirements specified by the flags,
+		/// The <see cref="Ped"/> will not have a helmet.
+		/// </param>
+		/// <param name="overwriteHelmetTexureId">
+		/// If negative, a random texture will be used.
+		/// If non-negative and the specified texture id is present, the texture with specified id will be used.
+		/// If non-negative and the specified texture id is not present, the previous texture will be used
+		/// (texture with zero id will be used if the <see cref="Ped"/> has not been given a helmet before).
+		/// </param>
+		/// <remarks>
+		/// This method will not give the <see cref="Ped"/> a new helmet if they already has one.
+		/// </remarks>
+		public void GiveHelmet(bool dontTakeOffHelmet = true, HelmetPropFlags helmetPropFlags = HelmetPropFlags.DefaultHelmet, int overwriteHelmetTexureId = -1)
+		{
+			Function.Call(Hash.GIVE_PED_HELMET, Handle, dontTakeOffHelmet, (uint)helmetPropFlags, overwriteHelmetTexureId);
+		}
+
+		/// <summary>
+		/// Removes a helmet from this <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="instantly">If <see langword="true"/>, the helmet will be immediately removed without an animation.</param>
 		public void RemoveHelmet(bool instantly)
 		{
 			Function.Call(Hash.REMOVE_PED_HELMET, Handle, instantly);
@@ -187,7 +219,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SweatOffset == 0)
 				{
 					return 0.0f;
@@ -214,8 +246,14 @@ namespace GTA
 		/// Sets how high up on this <see cref="Ped"/>s body water should be visible.
 		/// </summary>
 		/// <value>
-		/// The height ranges from 0.0f to 1.99f, 0.0f being no water visible, 1.99f being covered in water.
+		/// The height offset ranges from -2f to 1.99f inclusive, -2f being no water visible, 1.99f being fully covered in water.
 		/// </value>
+		/// <remarks>
+		/// Although zero sets the height offset of the water line to zero in meters on water height members of <c>CPed</c>,
+		/// This property will clear the wet/soaked effect if the value is set to the zero for the compatibility of scripts built against v3.6.0.
+		/// </remarks>
+		[Obsolete("Ped.WetnessHeight is obsolete because it does not indicate that it clears the wetness effect from the ped if the value is exactly zero," +
+			"while the value can take any values in the range of -2f to 1.99f inclusive. Please use Ped.Wet or Ped.ClearWetnessEffect instead.")]
 		public float WetnessHeight
 		{
 			set
@@ -226,10 +264,237 @@ namespace GTA
 				}
 				else
 				{
-					Function.Call<float>(Hash.SET_PED_WETNESS_HEIGHT, Handle, value);
+					Function.Call(Hash.SET_PED_WETNESS_HEIGHT, Handle, value);
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the lower wetness height of this <see cref="Ped"/>.
+		/// The value should be in the range of 0 and 1 inclusive.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// <see cref="UpperWetnessLevel"/> and <see cref="UpperWetnessHeight"/> must be set before this value can have affect.
+		/// If <see cref="UpperWetnessLevel"/> is <c>-2f</c> or less or and <see cref="UpperWetnessHeight"/> is zero or less,
+		/// this value will be transferred to <see cref="UpperWetnessHeight"/> and then this value will be set to <c>-2f</c>.
+		/// </para>
+		/// <para>
+		/// The value must be less than <see cref="UpperWetnessHeight"/>, otherwise the value will be reset to <c>-2f</c> in a few frames.
+		/// </para>
+		/// </remarks>
+		public float LowerWetnessHeight
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessHeightOffset == 0)
+				{
+					return -2f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedLowerWetnessHeightOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessHeightOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedLowerWetnessHeightOffset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the upper wetness height of this <see cref="Ped"/>.
+		/// The value should be in the range of 0 and 1 inclusive.
+		/// </summary>
+		public float UpperWetnessHeight
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessHeightOffset == 0)
+				{
+					return -2f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedUpperWetnessHeightOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessHeightOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedUpperWetnessHeightOffset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the lower wetness level of this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The height offset of the lower water line in meters.
+		/// Should be in the range of <c>-2f</c> exclusive and <c>1.99f</c> inclusive.
+		/// If the value is <c>-2f</c> or less, the wetness effect will be cleared in a few frames.
+		/// If the value is more than <c>1.99f</c> (not <c>2f</c>), the value will be clamped to <c>1.99f</c>.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// If the <see cref="Ped"/> does not exist, this method will return <c>-2f</c>,
+		/// which is the default value that indicates the <see cref="Ped"/> is not wet.
+		/// </para>
+		/// <para>
+		/// <see cref="UpperWetnessLevel"/> and <see cref="UpperWetnessHeight"/> must be set before this value can have affect.
+		/// If <see cref="UpperWetnessLevel"/> is <c>-2f</c> or less or and <see cref="UpperWetnessHeight"/> is zero or less,
+		/// this value will be transferred to <see cref="UpperWetnessLevel"/> and then this value will be set to zero.
+		/// </para>
+		/// </remarks>
+		public float LowerWetnessLevel
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessLevelOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedLowerWetnessLevelOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedLowerWetnessLevelOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedLowerWetnessLevelOffset, value);
+			}
+		}
+		/// <summary>
+		/// Gets or sets the upper wetness level of this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The height offset of the upper water line in meters.
+		/// Should be in the range of <c>-2f</c> exclusive and <c>1.99f</c> inclusive.
+		/// If the value is <c>-2f</c> or less, the wetness effect will be cleared in a few frames.
+		/// If the value is more than <c>1.99f</c> (not <c>2f</c>), the value will be clamped to <c>1.99f</c>.
+		/// </value>
+		/// <remarks>
+		/// <para>
+		/// If the <see cref="Ped"/> does not exist, this method will return <c>-2f</c>,
+		/// which is the default value that indicates the <see cref="Ped"/> is not wet.
+		/// </para>
+		/// <para>
+		/// This value and <see cref="UpperWetnessHeight"/> must be set before <see cref="LowerWetnessLevel"/> can have affect.
+		/// </para>
+		/// </remarks>
+		public float UpperWetnessLevel
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessLevelOffset == 0)
+				{
+					return 0f;
+				}
+
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CPedUpperWetnessLevelOffset);
+			}
+			set
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedUpperWetnessLevelOffset == 0)
+				{
+					return;
+				}
+
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedUpperWetnessLevelOffset, value);
+			}
+		}
+
+		/// <summary>
+		/// Gets the value that indicates this <see cref="Ped"/> is wet at all.
+		/// Strictly, this method checks if the bit is set that determines wet/soaked effect is being used on this <see cref="Ped"/>.
+		/// </summary>
+		public bool IsWet
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.CPedIsUsingWetEffectOffset == 0)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.CPedIsUsingWetEffectOffset, 0);
+			}
+		}
+
+		/// <remarks>
+		/// <para>
+		/// This method changes <see cref="UpperWetnessHeight"/> to <paramref name="height"/> and <see cref="UpperWetnessLevel"/> to <c>1f</c>,
+		/// but <see cref="LowerWetnessHeight"/> will be set to <c>-2f</c> and <see cref="LowerWetnessLevel"/> will be set to zero.
+		/// </para>
+		/// <para>
+		/// If there are some cloth controllers (<c>rage::characterClothController</c>) of this <see cref="Ped"/> for physics,
+		/// the wind multiplier for physics will be set to 0.3 instead of 1.0 for the normal state.
+		/// </para>
+		/// </remarks>
+		/// <inheritdoc cref="Wet(float, float)"/>
+		public void Wet(float height) => Function.Call(Hash.SET_PED_WETNESS_HEIGHT, Handle, height);
+		/// <summary>
+		/// Makes this <see cref="Ped"/> wet.
+		/// </summary>
+		/// <param name="height">
+		/// The height offset of the water line in meters. Should be in the range of <c>-2f</c> exclusive and <c>1.99f</c> inclusive.
+		/// If the value is <c>-2f</c> or less, the wetness effect will be cleared in a few frames.
+		/// If the value is more than <c>1.99f</c> (not <c>2f</c>), the value will be clamped to <c>1.99f</c>.
+		/// </param>
+		/// <param name="wetLevel">The wet level between 0 and 1.</param>
+		/// <remarks>
+		/// <para>
+		/// This method changes <see cref="UpperWetnessHeight"/> to <paramref name="height"/> and <see cref="UpperWetnessLevel"/> to <paramref name="wetLevel"/>,
+		/// but <see cref="LowerWetnessHeight"/> will be set to <c>-2f</c> and <see cref="LowerWetnessLevel"/> will be set to zero.
+		/// </para>
+		/// <para>
+		/// If there are some cloth controllers (<c>rage::characterClothController</c>) of this <see cref="Ped"/> for physics,
+		/// the wind multiplier for physics will be set to 0.3 instead of 1.0 for the normal state.
+		/// </para>
+		/// </remarks>
+		public void Wet(float height, float wetLevel)
+		{
+			IntPtr address = MemoryAddress;
+			if (address == IntPtr.Zero)
+			{
+				return;
+			}
+
+			Wet(height);
+
+			if (SHVDN.NativeMemory.CPedUpperWetnessLevelOffset != 0)
+			{
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CPedUpperWetnessLevelOffset, wetLevel);
+			}
+		}
+		/// <summary>
+		/// Dries this <see cref="Ped"/>. In other words, clears the wet/soaked effect from the <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// If there are some cloth controllers (<c>rage::characterClothController</c>) of this <see cref="Ped"/> for physics,
+		/// the wind multiplier for physics will be set to 1.0 for the normal state.
+		/// </remarks>
+		public void DryOff() => Function.Call(Hash.CLEAR_PED_WETNESS, Handle);
+		/// <summary>
+		/// Enables a non-player <see cref="Ped"/> to get wet this frame from systems that it otherwise wouldn't (e.g. particle effects).
+		/// Since the system let the player <see cref="Ped"/> wet without this method, you do not need to call this method on the player <see cref="Ped"/>.
+		/// </summary>
+		public void SetWetnessEnabledThisFrame() => Function.Call(Hash.SET_PED_WETNESS_ENABLED_THIS_FRAME, Handle);
 
 		#endregion
 
@@ -258,7 +523,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.ArmorOffset == 0)
 				{
 					return 0.0f;
@@ -268,7 +533,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.ArmorOffset == 0)
 				{
 					return;
@@ -526,9 +791,67 @@ namespace GTA
 		public int TaskSequenceProgress => Function.Call<int>(Hash.GET_SEQUENCE_PROGRESS, Handle);
 
 		/// <summary>
-		/// Gets the task status of specified scripted task on this <see cref="Ped"/>.
+		/// Gets the script task status of specified scripted task on this <see cref="Ped"/>.
 		/// </summary>
-		public ScriptTaskStatus GetTaskStatus(ScriptTaskNameHash taskNameHash) => Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
+		/// <value>
+		/// The value of the current script task status if the <see cref="Ped"/> exists and has their intelligence instance,
+		/// and then <paramref name="taskNameHash"/> matches the current task name hash or <see cref="ScriptTaskNameHash.Any"/>;
+		/// otherwise, <see cref="ScriptTaskStatus.Finished"/>.
+		/// </value>
+		public ScriptTaskStatus GetScriptTaskStatus(ScriptTaskNameHash taskNameHash)
+			// Although GET_SCRIPT_TASK_STATUS does additional check if the game is multiplier mode and the hash does not match, we won't encounter such case
+			=> Function.Call<ScriptTaskStatus>(Hash.GET_SCRIPT_TASK_STATUS, Handle, (uint)taskNameHash);
+
+		/// <summary>
+		/// Gets the current script task name hash and status on this <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="nameHash">
+		/// When this method returns, contains the value of the current script task name hash, if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskNameHash.Invalid"/> as it is internally used in the game code outside native functions.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		/// <param name="status">
+		/// When this method returns, contains the value of the current script task status, if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskStatus.Vacant"/> as it is internally used in the game code outside native functions.
+		/// This parameter is passed uninitialized.
+		/// </param>
+		public void GetCurrentScriptTaskNameHashAndStatus(out ScriptTaskNameHash nameHash, out ScriptTaskStatus status)
+		{
+			SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out uint nameHashUInt, out uint statusUInt);
+			nameHash = (ScriptTaskNameHash)nameHashUInt;
+			status = (ScriptTaskStatus)statusUInt;
+		}
+
+		/// <summary>
+		/// Gets the current script task name hash on this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The value of the current script task name hash if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskNameHash.Invalid"/> as it is internally used in the game code outside native functions.
+		/// </value>
+		public ScriptTaskNameHash CurrentScriptTaskNameHash
+		{
+			get
+			{
+				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out uint nameHash, out _);
+				return (ScriptTaskNameHash)nameHash;
+			}
+		}
+		/// <summary>
+		/// Gets the current script task status on this <see cref="Ped"/>.
+		/// </summary>
+		/// <value>
+		/// The value of the current script task status if the <see cref="Ped"/> exists and has their intelligence instance;
+		/// otherwise, <see cref="ScriptTaskStatus.Vacant"/> as it is internally used in the game code outside native functions.
+		/// </value>
+		public ScriptTaskStatus CurrentScriptTaskStatus
+		{
+			get
+			{
+				SHVDN.NativeMemory.GetScriptTaskHashAndStatus(Handle, out _, out uint status);
+				return (ScriptTaskStatus)status;
+			}
+		}
 
 		/// <summary>
 		/// Gets Returns the state of any active <see cref="TaskInvoker.FollowNavMeshTo(GTA.Math.Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
@@ -622,7 +945,7 @@ namespace GTA
 				throw new ArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
 			}
 
-			var eventTypeCorrected = (int)eventType;
+			int eventTypeCorrected = (int)eventType;
 			if (eventTypeCorrected >= (int)EventType.ShockingCarAlarm)
 			{
 				eventTypeCorrected -= 2;
@@ -741,7 +1064,7 @@ namespace GTA
 					return 0;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -836,8 +1159,42 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets that this <see cref="Ped"/> can be knocked off a <see cref="Vehicle"/> (not limited to a bike despite the property name).
+		/// Sets the vehicle knock off type that determines how easy this <see cref="Ped"/> can be knocked off (fall off) a <see cref="Vehicle"/>.
 		/// </summary>
+		public KnockOffVehicleType KnockOffVehicleType
+		{
+			get
+			{
+				if (SHVDN.NativeMemory.PedKnockOffVehicleTypeOffset == 0)
+				{
+					return KnockOffVehicleType.Default;
+				}
+
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return KnockOffVehicleType.Default;
+				}
+
+				// The knock off vehicle type value uses the first 2 bits
+				return (KnockOffVehicleType)(SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.PedKnockOffVehicleTypeOffset) & 3);
+			}
+			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, (int)value);
+		}
+
+		/// <summary>
+		/// Get the value that indicates whether this <see cref="Ped"/> is in a bike and <see cref="KnockOffVehicleType"/> is not set to <see cref="GTA.KnockOffVehicleType.Never"/>
+		/// so the <see cref="Ped"/> can be be knocked off (fall off) a <see cref="Vehicle"/>.
+		/// </summary>
+		public bool CanBeKnockedOffVehicle
+		{
+			get => Function.Call<bool>(Hash.CAN_KNOCK_PED_OFF_VEHICLE, Handle);
+		}
+
+		/// <summary>
+		/// Sets the value that indicates whether this <see cref="Ped"/> can be knocked off a <see cref="Vehicle"/> (not limited to a bike despite the property name).
+		/// </summary>
+		[Obsolete("Ped.CanBeKnockedOffBike is obsolete, use Ped.KnockOffVehicleType instead.")]
 		public bool CanBeKnockedOffBike
 		{
 			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, !value);
@@ -897,7 +1254,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
@@ -905,7 +1262,7 @@ namespace GTA
 
 				// GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
 				// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
-				var vehicleHandle = SHVDN.NativeMemory.GetLastVehicleHandleOfPed(address);
+				int vehicleHandle = SHVDN.NativeMemory.GetLastVehicleHandleOfPed(address);
 				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
@@ -919,13 +1276,13 @@ namespace GTA
 			get
 			{
 				// In b2699, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
 				}
 
-				var vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
+				int vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
 				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
@@ -938,7 +1295,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
+				int handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
 				return handle != 0 ? new Vehicle(handle) : null;
 			}
 		}
@@ -953,7 +1310,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.SeatIndexOffset == 0)
 				{
 					return VehicleSeat.None;
@@ -1062,7 +1419,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_PEDS_JACKER, Handle);
+				int handle = Function.Call<int>(Hash.GET_PEDS_JACKER, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
@@ -1071,7 +1428,7 @@ namespace GTA
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_JACK_TARGET, Handle);
+				int handle = Function.Call<int>(Hash.GET_JACK_TARGET, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
@@ -1184,7 +1541,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
@@ -1219,11 +1576,27 @@ namespace GTA
 		/// </value>
 		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
 
+		/// <summary>
+		/// Gets the combat target <see cref="Ped"/> who this <see cref="Ped"/> is in combat with for a <c>CTaskCombat</c> of this <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Although <c>GET_PED_TARGET_FROM_COMBAT_PED</c> is not present in v1.0.2245.0 or earlier game versions,
+		/// this property supports all game versions.
+		/// </remarks>
+		public Ped CombatTarget
+		{
+			get
+			{
+				int targetEntityHandle = SHVDN.NativeMemory.GetCombatTargetPedHandleFromCombatPed(Handle);
+				return targetEntityHandle != 0 ? new Ped(targetEntityHandle) : null;
+			}
+		}
+
 		public Ped MeleeTarget
 		{
 			get
 			{
-				var handle = Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle);
+				int handle = Function.Call<int>(Hash.GET_MELEE_TARGET_FOR_PED, Handle);
 				return handle != 0 ? new Ped(handle) : null;
 			}
 		}
@@ -1254,7 +1627,7 @@ namespace GTA
 		/// </summary>
 		public void ClearKillerRecord()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSourceOfDeathOffset == 0)
 			{
 				return;
@@ -1269,7 +1642,7 @@ namespace GTA
 		/// </summary>
 		public void ClearCauseOfDeathRecord()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedCauseOfDeathOffset == 0)
 			{
 				return;
@@ -1284,7 +1657,7 @@ namespace GTA
 		/// </summary>
 		public void ClearTimeOfDeathRecord()
 		{
-			var address = MemoryAddress;
+			IntPtr address = MemoryAddress;
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.PedTimeOfDeathOffset == 0)
 			{
 				return;
@@ -1314,7 +1687,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSuffersCriticalHitOffset == 0)
 				{
 					return false;
@@ -1375,7 +1748,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
@@ -1426,7 +1799,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.InjuryHealthThresholdOffset == 0)
 				{
 					return 0.0f;
@@ -1436,7 +1809,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.InjuryHealthThresholdOffset == 0)
 				{
 					return;
@@ -1460,7 +1833,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.FatalInjuryHealthThresholdOffset == 0)
 				{
 					return 0.0f;
@@ -1470,7 +1843,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.FatalInjuryHealthThresholdOffset == 0)
 				{
 					return;
@@ -1544,7 +1917,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1567,7 +1940,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1591,7 +1964,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1615,7 +1988,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1639,7 +2012,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1663,7 +2036,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1686,7 +2059,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1709,7 +2082,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var address = PedIntelligenceAddress;
+				IntPtr address = PedIntelligenceAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -1809,10 +2182,10 @@ namespace GTA
 				{
 					// Movement sets can be applied from animation dictionaries and animation sets (also clip sets but they use the same native as animation sets).
 					// So check if the string is a valid dictionary, if so load it as such. Otherwise load it as an animation set.
-					var isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
+					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
 
 					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
-					var startTime = Environment.TickCount;
+					int startTime = Environment.TickCount;
 
 					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
 					{

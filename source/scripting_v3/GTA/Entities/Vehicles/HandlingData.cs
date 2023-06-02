@@ -1362,7 +1362,7 @@ namespace GTA
 					return 0.0f;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
+				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
 				return SHVDN.NativeMemory.ReadFloat(MemoryAddress + offset);
 			}
 			set
@@ -1372,7 +1372,7 @@ namespace GTA
 					return;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
+				int offset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x168 : 0x160;
 				SHVDN.NativeMemory.WriteFloat(MemoryAddress + offset, value);
 			}
 		}
@@ -1384,7 +1384,7 @@ namespace GTA
 		{
 			get
 			{
-				var bikeHandlingDataAddress = GetSubHandlingData(HandlingType.Bike);
+				IntPtr bikeHandlingDataAddress = GetSubHandlingData(HandlingType.Bike);
 				return bikeHandlingDataAddress != IntPtr.Zero ? new BikeHandlingData(bikeHandlingDataAddress, this) : null;
 			}
 		}
@@ -1395,7 +1395,7 @@ namespace GTA
 		{
 			get
 			{
-				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.Flying);
+				IntPtr flyingHandlingDataAddress = GetSubHandlingData(HandlingType.Flying);
 				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.Flying) : null;
 			}
 		}
@@ -1406,7 +1406,7 @@ namespace GTA
 		{
 			get
 			{
-				var flyingHandlingDataAddress = GetSubHandlingData(HandlingType.VerticalFlying);
+				IntPtr flyingHandlingDataAddress = GetSubHandlingData(HandlingType.VerticalFlying);
 				return flyingHandlingDataAddress != IntPtr.Zero ? new FlyingHandlingData(flyingHandlingDataAddress, this, HandlingType.VerticalFlying) : null;
 			}
 		}
@@ -1417,7 +1417,7 @@ namespace GTA
 		{
 			get
 			{
-				var boatHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
+				IntPtr boatHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
 				return boatHandlingDataAddress != IntPtr.Zero ? new BoatHandlingData(boatHandlingDataAddress, this) : null;
 			}
 		}
@@ -1428,7 +1428,7 @@ namespace GTA
 		{
 			get
 			{
-				var seaPlaneHandlingDataAddress = GetSubHandlingData(HandlingType.SeaPlane);
+				IntPtr seaPlaneHandlingDataAddress = GetSubHandlingData(HandlingType.SeaPlane);
 				return seaPlaneHandlingDataAddress != IntPtr.Zero ? new SeaPlaneHandlingData(seaPlaneHandlingDataAddress, this) : null;
 			}
 		}
@@ -1439,7 +1439,7 @@ namespace GTA
 		{
 			get
 			{
-				var submarineHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
+				IntPtr submarineHandlingDataAddress = GetSubHandlingData(HandlingType.Boat);
 				return submarineHandlingDataAddress != IntPtr.Zero ? new SubmarineHandlingData(submarineHandlingDataAddress, this) : null;
 			}
 		}
@@ -1450,7 +1450,7 @@ namespace GTA
 		{
 			get
 			{
-				var trailerHandlingDataAddress = GetSubHandlingData(HandlingType.Trailer);
+				IntPtr trailerHandlingDataAddress = GetSubHandlingData(HandlingType.Trailer);
 				return trailerHandlingDataAddress != IntPtr.Zero ? new TrailerHandlingData(trailerHandlingDataAddress, this) : null;
 			}
 		}
@@ -1461,7 +1461,7 @@ namespace GTA
 		{
 			get
 			{
-				var carHandlingDataAddress = GetSubHandlingData(HandlingType.Car);
+				IntPtr carHandlingDataAddress = GetSubHandlingData(HandlingType.Car);
 				return carHandlingDataAddress != IntPtr.Zero ? new CarHandlingData(carHandlingDataAddress, this) : null;
 			}
 		}
@@ -1472,7 +1472,7 @@ namespace GTA
 		{
 			get
 			{
-				var vehicleWeaponHandlingDataAddress = GetSubHandlingData(HandlingType.Weapon);
+				IntPtr vehicleWeaponHandlingDataAddress = GetSubHandlingData(HandlingType.Weapon);
 				return vehicleWeaponHandlingDataAddress != IntPtr.Zero ? new VehicleWeaponHandlingData(vehicleWeaponHandlingDataAddress, this) : null;
 			}
 		}

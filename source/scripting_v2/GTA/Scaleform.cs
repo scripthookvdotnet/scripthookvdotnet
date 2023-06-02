@@ -12,7 +12,7 @@ namespace GTA
 {
 	public sealed class Scaleform : IDisposable
 	{
-		string _scaleformID;
+		private string _scaleformID;
 
 		[Obsolete("Scaleform(int handle) is obsolete, Please Use Scaleform(string scaleformID) instead")]
 		public Scaleform(int handle)
@@ -61,7 +61,7 @@ namespace GTA
 				return;
 			}
 
-			var handle = Handle;
+			int handle = Handle;
 			unsafe
 			{
 				Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, &handle);
@@ -73,7 +73,7 @@ namespace GTA
 		{
 			Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, Handle, function);
 
-			foreach (var argument in arguments)
+			foreach (object argument in arguments)
 			{
 				switch (argument)
 				{
@@ -117,10 +117,10 @@ namespace GTA
 		}
 		public void Render2DScreenSpace(PointF position, PointF size)
 		{
-			var x = position.X / UI.WIDTH;
-			var y = position.Y / UI.HEIGHT;
-			var w = size.X / UI.WIDTH;
-			var h = size.Y / UI.HEIGHT;
+			float x = position.X / UI.WIDTH;
+			float y = position.Y / UI.HEIGHT;
+			float w = size.X / UI.WIDTH;
+			float h = size.Y / UI.HEIGHT;
 
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
 		}

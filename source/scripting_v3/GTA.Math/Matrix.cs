@@ -331,9 +331,9 @@ namespace GTA.Math
 		{
 			Vector3 scale = default;
 
-			for (var i = 0; i < 3; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				var squareSum = (this[i, 0] * this[i, 0]) + (this[i, 1] * this[i, 1]) + (this[i, 2] * this[i,2]);
+				float squareSum = (this[i, 0] * this[i, 0]) + (this[i, 1] * this[i, 1]) + (this[i, 2] * this[i,2]);
 				if (squareSum > tolerance)
 				{
 					scale[i] = (float)System.Math.Sqrt(squareSum);
@@ -366,12 +366,12 @@ namespace GTA.Math
 		/// <returns>The determinant of the matrix.</returns>
 		public float Determinant()
 		{
-			var temp1 = (M33 * M44) - (M34 * M43);
-			var temp2 = (M32 * M44) - (M34 * M42);
-			var temp3 = (M32 * M43) - (M33 * M42);
-			var temp4 = (M31 * M44) - (M34 * M41);
-			var temp5 = (M31 * M43) - (M33 * M41);
-			var temp6 = (M31 * M42) - (M32 * M41);
+			float temp1 = (M33 * M44) - (M34 * M43);
+			float temp2 = (M32 * M44) - (M34 * M42);
+			float temp3 = (M32 * M43) - (M33 * M42);
+			float temp4 = (M31 * M44) - (M34 * M41);
+			float temp5 = (M31 * M43) - (M33 * M41);
+			float temp6 = (M31 * M42) - (M32 * M41);
 
 			return ((((M11 * (((M22 * temp1) - (M23 * temp2)) + (M24 * temp3))) - (M12 * (((M21 * temp1) -
 				(M23 * temp4)) + (M24 * temp5)))) + (M13 * (((M21 * temp2) - (M22 * temp4)) + (M24 * temp6)))) -
@@ -388,33 +388,33 @@ namespace GTA.Math
 		/// </summary>
 		public void Invert()
 		{
-			var Det = Determinant();
+			float Det = Determinant();
 
 			if (Det == 0.0f)
 			{
 				return;
 			}
 
-			var invDet = 1.0f / Det;
-			var tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
-			var tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
-			var tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
-			var tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
+			float invDet = 1.0f / Det;
+			float tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
+			float tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
+			float tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
+			float tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
 
-			var tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
-			var tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
-			var tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
-			var tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
+			float tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
+			float tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
+			float tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
+			float tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
 
-			var tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
-			var tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
-			var tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
-			var tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
+			float tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
+			float tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
+			float tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
+			float tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
 
-			var tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
-			var tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
-			var tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
-			var tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
+			float tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
+			float tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
+			float tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
+			float tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
 
 			M11 = tM11;
 			M12 = tM12;
@@ -446,36 +446,36 @@ namespace GTA.Math
 		{
 			unsafe
 			{
-				var vectorFloat = new float[4, 4];
-				var VTempX = stackalloc float[4];
-				var VTempY = stackalloc float[4];
-				var VTempZ = stackalloc float[4];
+				float[,] vectorFloat = new float[4, 4];
+				float* vTempX = stackalloc float[4];
+				float* vTempY = stackalloc float[4];
+				float* vTempZ = stackalloc float[4];
 
 				fixed (float* vectorFloatPtr = &vectorFloat[0, 0])
 				{
 					// Splat x,y and z
-					for (var i = 0; i < 4; i++)
+					for (int i = 0; i < 4; i++)
 					{
-						VTempX[i] = point.X;
-						VTempY[i] = point.Y;
-						VTempZ[i] = point.Z;
+						vTempX[i] = point.X;
+						vTempY[i] = point.Y;
+						vTempZ[i] = point.Z;
 					}
 
 					// Multiply by the matrix
-					for (var i = 0; i < 4; i++)
+					for (int i = 0; i < 4; i++)
 					{
-						VTempX[i] *= this[0, i];
-						VTempY[i] *= this[1, i];
-						VTempZ[i] *= this[2, i];
+						vTempX[i] *= this[0, i];
+						vTempY[i] *= this[1, i];
+						vTempZ[i] *= this[2, i];
 					}
 
 					// Add them all together
-					for (var i = 0; i < 4; i++)
+					for (int i = 0; i < 4; i++)
 					{
-						VTempX[i] = VTempX[i] + VTempY[i] + VTempZ[i] + this[3, i];
+						vTempX[i] = vTempX[i] + vTempY[i] + vTempZ[i] + this[3, i];
 					}
 
-					return new Vector3(VTempX[0], VTempX[1], VTempX[2]);
+					return new Vector3(vTempX[0], vTempX[1], vTempX[2]);
 				}
 			}
 		}
@@ -497,11 +497,11 @@ namespace GTA.Math
 		{
 			unsafe
 			{
-				var vTempX = stackalloc float[3];
-				var vTempY = stackalloc float[3];
-				var vTempZ = stackalloc float[3];
+				float* vTempX = stackalloc float[3];
+				float* vTempY = stackalloc float[3];
+				float* vTempZ = stackalloc float[3];
 
-				for (var i = 0; i < 3; i++)
+				for (int i = 0; i < 3; i++)
 				{
 					vTempX[i] = vector.X * this[0, i];
 					vTempY[i] = vector.Y * this[1, i];
@@ -509,7 +509,7 @@ namespace GTA.Math
 				}
 
 				// Add them all together
-				for (var i = 0; i < 3; i++)
+				for (int i = 0; i < 3; i++)
 				{
 					vTempX[i] = vTempX[i] + vTempY[i] + vTempZ[i];
 				}
@@ -526,9 +526,9 @@ namespace GTA.Math
 		/// <returns>The vector transformed by the inverse of the given <see cref="Matrix"/>.</returns>
 		public Vector3 InverseTransformVector(Vector3 vector)
 		{
-			var scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
-			var scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
-			var scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
+			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
+			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
 
 			if (System.Math.Abs(1f - scaleXSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleYSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleZSquared) > FLT_EPSILON)
 			{
@@ -539,22 +539,22 @@ namespace GTA.Math
 
 			var inverseRotation = Quaternion.RotationMatrix(this);
 			inverseRotation.Invert();
-			var vectorUnrotated = inverseRotation * vector;
+			Vector3 vectorUnrotated = inverseRotation * vector;
 
 			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
 		}
 
 		private Vector3 InverseTransformVectorWithScale(Vector3 vector, float squaredScaleX, float squaredScaleY, float squaredScaleZ)
 		{
-			var safeScaleX = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleX));
-			var safeScaleY = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleY));
-			var safeScaleZ = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleZ));
+			float safeScaleX = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleX));
+			float safeScaleY = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleY));
+			float safeScaleZ = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleZ));
 
-			var matrixNoScaling = GetMatrixWithoutScale();
+			Matrix matrixNoScaling = GetMatrixWithoutScale();
 			var inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
 			inverseRotation.Invert();
 			inverseRotation.Normalize();
-			var vectorUnrotated = inverseRotation * vector;
+			Vector3 vectorUnrotated = inverseRotation * vector;
 
 			return new Vector3(vectorUnrotated.X * safeScaleX, vectorUnrotated.Y * safeScaleY, vectorUnrotated.Z * safeScaleZ);
 		}
@@ -569,9 +569,9 @@ namespace GTA.Math
 		/// <remarks>You should use <see cref="TransformPoint(Vector3)"/> for the conversion if the vector represents a position rather than a direction.</remarks>
 		public Vector3 TransformDirection(Vector3 direction)
 		{
-			var matrixNoScaling = GetMatrixWithoutScale();
+			Matrix matrixNoScaling = GetMatrixWithoutScale();
 			var inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
-			var vectorUnrotated = inverseRotation * direction;
+			Vector3 vectorUnrotated = inverseRotation * direction;
 
 			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
 		}
@@ -586,10 +586,10 @@ namespace GTA.Math
 		/// <remarks>You should use <see cref="InverseTransformPoint(Vector3)"/> for the conversion if the vector represents a position rather than a direction.</remarks>
 		public Vector3 InverseTransformDirection(Vector3 direction)
 		{
-			var matrixNoScaling = GetMatrixWithoutScale();
+			Matrix matrixNoScaling = GetMatrixWithoutScale();
 			var inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
 			inverseRotation.Invert();
-			var vectorUnrotated = inverseRotation * direction;
+			Vector3 vectorUnrotated = inverseRotation * direction;
 
 			return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
 		}
@@ -757,7 +757,7 @@ namespace GTA.Math
 		public static Matrix Divide(Matrix left, float right)
 		{
 			Matrix result;
-			var inv = 1.0f / right;
+			float inv = 1.0f / right;
 
 			result.M11 = left.M11 * inv;
 			result.M12 = left.M12 * inv;
@@ -857,8 +857,8 @@ namespace GTA.Math
 		public static Matrix RotationX(float angle)
 		{
 			Matrix result;
-			var cos = (float)System.Math.Cos(angle);
-			var sin = (float)(System.Math.Sin(angle));
+			float cos = (float)System.Math.Cos(angle);
+			float sin = (float)(System.Math.Sin(angle));
 
 			result.M11 = 1.0f;
 			result.M12 = 0.0f;
@@ -888,8 +888,8 @@ namespace GTA.Math
 		public static Matrix RotationY(float angle)
 		{
 			Matrix result;
-			var cos = (float)(System.Math.Cos(angle));
-			var sin = (float)(System.Math.Sin(angle));
+			float cos = (float)(System.Math.Cos(angle));
+			float sin = (float)(System.Math.Sin(angle));
 
 			result.M11 = cos;
 			result.M12 = 0.0f;
@@ -919,8 +919,8 @@ namespace GTA.Math
 		public static Matrix RotationZ(float angle)
 		{
 			Matrix result;
-			var cos = (float)(System.Math.Cos(angle));
-			var sin = (float)(System.Math.Sin(angle));
+			float cos = (float)(System.Math.Cos(angle));
+			float sin = (float)(System.Math.Sin(angle));
 
 			result.M11 = cos;
 			result.M12 = sin;
@@ -956,17 +956,17 @@ namespace GTA.Math
 			}
 
 			Matrix result;
-			var x = axis.X;
-			var y = axis.Y;
-			var z = axis.Z;
-			var cos = (float)(System.Math.Cos(angle));
-			var sin = (float)(System.Math.Sin(angle));
-			var xx = x * x;
-			var yy = y * y;
-			var zz = z * z;
-			var xy = x * y;
-			var xz = x * z;
-			var yz = y * z;
+			float x = axis.X;
+			float y = axis.Y;
+			float z = axis.Z;
+			float cos = (float)(System.Math.Cos(angle));
+			float sin = (float)(System.Math.Sin(angle));
+			float xx = x * x;
+			float yy = y * y;
+			float zz = z * z;
+			float xy = x * y;
+			float xz = x * z;
+			float yz = y * z;
 
 			result.M11 = xx + (cos * (1.0f - xx));
 			result.M12 = (xy - (cos * xy)) + (sin * z);
@@ -997,15 +997,15 @@ namespace GTA.Math
 		{
 			Matrix result;
 
-			var xx = rotation.X * rotation.X;
-			var yy = rotation.Y * rotation.Y;
-			var zz = rotation.Z * rotation.Z;
-			var xy = rotation.X * rotation.Y;
-			var zw = rotation.Z * rotation.W;
-			var zx = rotation.Z * rotation.X;
-			var yw = rotation.Y * rotation.W;
-			var yz = rotation.Y * rotation.Z;
-			var xw = rotation.X * rotation.W;
+			float xx = rotation.X * rotation.X;
+			float yy = rotation.Y * rotation.Y;
+			float zz = rotation.Z * rotation.Z;
+			float xy = rotation.X * rotation.Y;
+			float zw = rotation.Z * rotation.W;
+			float zx = rotation.Z * rotation.X;
+			float yw = rotation.Y * rotation.W;
+			float yz = rotation.Y * rotation.Z;
+			float xw = rotation.X * rotation.W;
 			result.M11 = 1.0f - (2.0f * (yy + zz));
 			result.M12 = 2.0f * (xy + zw);
 			result.M13 = 2.0f * (zx - yw);
@@ -1131,7 +1131,7 @@ namespace GTA.Math
 		/// <returns>The created translation matrix.</returns>
 		public static Matrix Translation(Vector3 amount)
 		{
-			var result = Identity;
+			Matrix result = Identity;
 			result.M11 = 1.0f;
 			result.M12 = 0.0f;
 			result.M13 = 0.0f;
@@ -1198,7 +1198,7 @@ namespace GTA.Math
 		/// <returns>The matrix without scale information.</returns>
 		public Matrix GetMatrixWithoutScale()
 		{
-			var result = this;
+			Matrix result = this;
 			result.RemoveScaling(FLT_EPSILON);
 			return result;
 		}
@@ -1209,7 +1209,7 @@ namespace GTA.Math
 		/// <returns>The matrix without translation information.</returns>
 		public Matrix RemoveTranslation()
 		{
-			var result = this;
+			Matrix result = this;
 			result.M41 = 0f;
 			result.M42 = 0f;
 			result.M43 = 0f;
@@ -1223,27 +1223,27 @@ namespace GTA.Math
 		/// <returns>The matrix without scale information.</returns>
 		public void GetMatrixWithoutScale(float tolerance)
 		{
-			var scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
-			var scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
-			var scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
+			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
+			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
 
 			if (System.Math.Abs(1f - scaleXSquared) > tolerance)
 			{
-				var scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
+				float scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
 				M11 *= scaleX;
 				M12 *= scaleX;
 				M13 *= scaleX;
 			}
 			if (System.Math.Abs(1f - scaleYSquared) > tolerance)
 			{
-				var scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
+				float scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
 				M21 *= scaleY;
 				M22 *= scaleY;
 				M23 *= scaleY;
 			}
 			if (System.Math.Abs(1f - scaleZSquared) > tolerance)
 			{
-				var scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
+				float scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
 				M31 *= scaleZ;
 				M32 *= scaleZ;
 				M33 *= scaleZ;
@@ -1264,27 +1264,27 @@ namespace GTA.Math
 		/// <param name="tolerance">The error tolerance.</param>
 		public void RemoveScaling(float tolerance)
 		{
-			var scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
-			var scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
-			var scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
+			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
+			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
 
 			if (System.Math.Abs(1f - scaleXSquared) > tolerance)
 			{
-				var scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
+				float scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
 				M11 *= scaleX;
 				M12 *= scaleX;
 				M13 *= scaleX;
 			}
 			if (System.Math.Abs(1f - scaleYSquared) > tolerance)
 			{
-				var scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
+				float scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
 				M21 *= scaleY;
 				M22 *= scaleY;
 				M23 *= scaleY;
 			}
 			if (System.Math.Abs(1f - scaleZSquared) > tolerance)
 			{
-				var scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
+				float scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
 				M31 *= scaleZ;
 				M32 *= scaleZ;
 				M33 *= scaleZ;
@@ -1411,7 +1411,7 @@ namespace GTA.Math
 		public static Matrix operator /(Matrix left, float right)
 		{
 			Matrix result;
-			var invRight = 1.0f / right;
+			float invRight = 1.0f / right;
 			result.M11 = left.M11 * invRight;
 			result.M12 = left.M12 * invRight;
 			result.M13 = left.M13 * invRight;
@@ -1522,26 +1522,26 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			var currentCulture = CultureInfo.CurrentCulture;
-			var m11Str = M11.ToString(currentCulture);
-			var m12Str = M12.ToString(currentCulture);
-			var m13Str = M13.ToString(currentCulture);
-			var m14Str = M14.ToString(currentCulture);
+			CultureInfo currentCulture = CultureInfo.CurrentCulture;
+			string m11Str = M11.ToString(currentCulture);
+			string m12Str = M12.ToString(currentCulture);
+			string m13Str = M13.ToString(currentCulture);
+			string m14Str = M14.ToString(currentCulture);
 
-			var m21Str = M21.ToString(currentCulture);
-			var m22Str = M22.ToString(currentCulture);
-			var m23Str = M23.ToString(currentCulture);
-			var m24Str = M24.ToString(currentCulture);
+			string m21Str = M21.ToString(currentCulture);
+			string m22Str = M22.ToString(currentCulture);
+			string m23Str = M23.ToString(currentCulture);
+			string m24Str = M24.ToString(currentCulture);
 
-			var m31Str = M31.ToString(currentCulture);
-			var m32Str = M32.ToString(currentCulture);
-			var m33Str = M33.ToString(currentCulture);
-			var m34Str = M34.ToString(currentCulture);
+			string m31Str = M31.ToString(currentCulture);
+			string m32Str = M32.ToString(currentCulture);
+			string m33Str = M33.ToString(currentCulture);
+			string m34Str = M34.ToString(currentCulture);
 
-			var m41Str = M41.ToString(currentCulture);
-			var m42Str = M42.ToString(currentCulture);
-			var m43Str = M43.ToString(currentCulture);
-			var m44Str = M44.ToString(currentCulture);
+			string m41Str = M41.ToString(currentCulture);
+			string m42Str = M42.ToString(currentCulture);
+			string m43Str = M43.ToString(currentCulture);
+			string m44Str = M44.ToString(currentCulture);
 
 			return $"[M11:{m11Str} M12:{m12Str} M13:{m13Str} M14:{m14Str}] [M21:{m21Str} M22:{m22Str} M23:{m23Str} M24:{m24Str}] [M31:{m31Str} M32:{m32Str} M33:{m33Str} M34:{m34Str}] [M41:{m41Str} M42:{m42Str} M43:{m43Str} M44:{m44Str}]";
 		}
@@ -1558,26 +1558,26 @@ namespace GTA.Math
 				return ToString();
 			}
 
-			var currentCulture = CultureInfo.CurrentCulture;
-			var m11Str = M11.ToString(format, currentCulture);
-			var m12Str = M12.ToString(format, currentCulture);
-			var m13Str = M13.ToString(format, currentCulture);
-			var m14Str = M14.ToString(format, currentCulture);
+			CultureInfo currentCulture = CultureInfo.CurrentCulture;
+			string m11Str = M11.ToString(format, currentCulture);
+			string m12Str = M12.ToString(format, currentCulture);
+			string m13Str = M13.ToString(format, currentCulture);
+			string m14Str = M14.ToString(format, currentCulture);
 
-			var m21Str = M21.ToString(format, currentCulture);
-			var m22Str = M22.ToString(format, currentCulture);
-			var m23Str = M23.ToString(format, currentCulture);
-			var m24Str = M24.ToString(format, currentCulture);
+			string m21Str = M21.ToString(format, currentCulture);
+			string m22Str = M22.ToString(format, currentCulture);
+			string m23Str = M23.ToString(format, currentCulture);
+			string m24Str = M24.ToString(format, currentCulture);
 
-			var m31Str = M31.ToString(format, currentCulture);
-			var m32Str = M32.ToString(format, currentCulture);
-			var m33Str = M33.ToString(format, currentCulture);
-			var m34Str = M34.ToString(format, currentCulture);
+			string m31Str = M31.ToString(format, currentCulture);
+			string m32Str = M32.ToString(format, currentCulture);
+			string m33Str = M33.ToString(format, currentCulture);
+			string m34Str = M34.ToString(format, currentCulture);
 
-			var m41Str = M41.ToString(format, currentCulture);
-			var m42Str = M42.ToString(format, currentCulture);
-			var m43Str = M43.ToString(format, currentCulture);
-			var m44Str = M44.ToString(format, currentCulture);
+			string m41Str = M41.ToString(format, currentCulture);
+			string m42Str = M42.ToString(format, currentCulture);
+			string m43Str = M43.ToString(format, currentCulture);
+			string m44Str = M44.ToString(format, currentCulture);
 
 			return $"[M11:{m11Str} M12:{m12Str} M13:{m13Str} M14:{m14Str}] [M21:{m21Str} M22:{m22Str} M23:{m23Str} M24:{m24Str}] [M31:{m31Str} M32:{m32Str} M33:{m33Str} M34:{m34Str}] [M41:{m41Str} M42:{m42Str} M43:{m43Str} M44:{m44Str}]";
 		}
@@ -1590,7 +1590,7 @@ namespace GTA.Math
 		{
 			unchecked
 			{
-				var hashCode = M11.GetHashCode();
+				int hashCode = M11.GetHashCode();
 				hashCode = (hashCode * 397) ^ M12.GetHashCode();
 				hashCode = (hashCode * 397) ^ M13.GetHashCode();
 				hashCode = (hashCode * 397) ^ M14.GetHashCode();

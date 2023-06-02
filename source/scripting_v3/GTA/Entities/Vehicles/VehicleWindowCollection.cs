@@ -24,7 +24,7 @@ namespace GTA
 		{
 			get
 			{
-				if (!_vehicleWindows.TryGetValue(index, out var vehicleWindow))
+				if (!_vehicleWindows.TryGetValue(index, out VehicleWindow vehicleWindow))
 				{
 					vehicleWindow = new VehicleWindow(_owner, index);
 					_vehicleWindows.Add(index, vehicleWindow);

@@ -41,7 +41,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return IntPtr.Zero;
@@ -70,7 +70,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MatrixAddress;
+				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return new Matrix();
@@ -125,7 +125,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MatrixAddress;
+				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeTop;
@@ -142,7 +142,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MatrixAddress;
+				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeRight;
@@ -159,7 +159,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MatrixAddress;
+				IntPtr address = MatrixAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.RelativeFront;

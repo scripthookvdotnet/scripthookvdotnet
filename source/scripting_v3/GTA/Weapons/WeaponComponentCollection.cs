@@ -32,9 +32,13 @@ namespace GTA
 			{
 				if (index >= 0 && index < Count)
 				{
-					var componentHash = _components[index];
+					WeaponComponentHash componentHash = _components[index];
 
-					if (_weaponComponents.TryGetValue(componentHash, out var component)) return component;
+					if (_weaponComponents.TryGetValue(componentHash, out WeaponComponent component))
+					{
+						return component;
+					}
+
 					component = new WeaponComponent(_owner, _weapon, componentHash);
 					_weaponComponents.Add(componentHash, component);
 					return component;
@@ -50,8 +54,16 @@ namespace GTA
 		{
 			get
 			{
-				if (!_components.Contains(componentHash)) return _invalidComponent;
-				if (_weaponComponents.TryGetValue(componentHash, out var component)) return component;
+				if (!_components.Contains(componentHash))
+				{
+					return _invalidComponent;
+				}
+
+				if (_weaponComponents.TryGetValue(componentHash, out WeaponComponent component))
+				{
+					return component;
+				}
+
 				component = new WeaponComponent(_owner, _weapon, componentHash);
 				_weaponComponents.Add(componentHash, component);
 
@@ -68,7 +80,7 @@ namespace GTA
 		public IEnumerator<WeaponComponent> GetEnumerator()
 		{
 			var AllComponents = new WeaponComponent[Count];
-			for (var i = 0; i < Count; i++)
+			for (int i = 0; i < Count; i++)
 			{
 				AllComponents[i] = this[_components[i]];
 			}
@@ -85,7 +97,7 @@ namespace GTA
 		/// </returns>
 		public WeaponComponent GetClipComponent(int index)
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				if (component.AttachmentPoint is WeaponAttachmentPoint.Clip or WeaponAttachmentPoint.Clip2)
 				{
@@ -105,8 +117,8 @@ namespace GTA
 		{
 			get
 			{
-				var count = 0;
-				foreach (var component in this)
+				int count = 0;
+				foreach (WeaponComponent component in this)
 				{
 					if (component.AttachmentPoint is WeaponAttachmentPoint.Clip or WeaponAttachmentPoint.Clip2)
 					{
@@ -127,10 +139,14 @@ namespace GTA
 		/// </returns>
 		public WeaponComponent GetScopeComponent(int index)
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				if (component.AttachmentPoint != WeaponAttachmentPoint.Scope &&
-				    component.AttachmentPoint != WeaponAttachmentPoint.Scope2) continue;
+				    component.AttachmentPoint != WeaponAttachmentPoint.Scope2)
+				{
+					continue;
+				}
+
 				if (index-- == 0)
 				{
 					return component;
@@ -146,8 +162,8 @@ namespace GTA
 		{
 			get
 			{
-				var count = 0;
-				foreach (var component in this)
+				int count = 0;
+				foreach (WeaponComponent component in this)
 				{
 					if (component.AttachmentPoint is WeaponAttachmentPoint.Scope or WeaponAttachmentPoint.Scope2)
 					{
@@ -168,7 +184,7 @@ namespace GTA
 		/// </returns>
 		public WeaponComponent GetBarrelComponent(int index)
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				if (component.AttachmentPoint == WeaponAttachmentPoint.Barrel)
 				{
@@ -188,8 +204,8 @@ namespace GTA
 		{
 			get
 			{
-				var count = 0;
-				foreach (var component in this)
+				int count = 0;
+				foreach (WeaponComponent component in this)
 				{
 					if (component.AttachmentPoint == WeaponAttachmentPoint.Barrel)
 					{
@@ -210,10 +226,14 @@ namespace GTA
 		/// </returns>
 		public WeaponComponent GetSuppressorOrMuzzleBrakeComponent(int index)
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				if (component.AttachmentPoint != WeaponAttachmentPoint.Supp &&
-				    component.AttachmentPoint != WeaponAttachmentPoint.Supp2) continue;
+				    component.AttachmentPoint != WeaponAttachmentPoint.Supp2)
+				{
+					continue;
+				}
+
 				if (index-- == 0)
 				{
 					return component;
@@ -229,8 +249,8 @@ namespace GTA
 		{
 			get
 			{
-				var count = 0;
-				foreach (var component in this)
+				int count = 0;
+				foreach (WeaponComponent component in this)
 				{
 					if (component.AttachmentPoint is WeaponAttachmentPoint.Supp or WeaponAttachmentPoint.Supp2)
 					{
@@ -251,9 +271,13 @@ namespace GTA
 		/// </returns>
 		public WeaponComponent GetGunRootComponent(int index)
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
-				if (component.AttachmentPoint != WeaponAttachmentPoint.GunRoot) continue;
+				if (component.AttachmentPoint != WeaponAttachmentPoint.GunRoot)
+				{
+					continue;
+				}
+
 				if (index-- == 0)
 				{
 					return component;
@@ -269,8 +293,8 @@ namespace GTA
 		{
 			get
 			{
-				var count = 0;
-				foreach (var component in this)
+				int count = 0;
+				foreach (WeaponComponent component in this)
 				{
 					if (component.AttachmentPoint == WeaponAttachmentPoint.GunRoot)
 					{
@@ -291,7 +315,7 @@ namespace GTA
 		// This should get the suppressor instance, but we could add additional validations by checking if the weapon component info class is CWeaponComponentSuppressorInfo
 		public WeaponComponent GetSuppressorComponent()
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				if (component.AttachmentPoint is WeaponAttachmentPoint.Supp or WeaponAttachmentPoint.Supp2)
 				{
@@ -310,7 +334,7 @@ namespace GTA
 		/// </returns>
 		public WeaponComponent GetFlashLightComponent()
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				// COMPONENT_AT_RAILCOVER_01 is the only component that attaches the flashlight position other than actual flashlights
 				if (component.ComponentHash == WeaponComponentHash.AtRailCover01)
@@ -337,7 +361,7 @@ namespace GTA
 		[Obsolete("WeaponComponentCollection.GetLuxuryFinishComponent is wrongly named and cannot necessarily get all of the components for gun_root (e.g. camo components), please use WeaponComponentCollection.GetGunRootComponent instead.")]
 		public WeaponComponent GetLuxuryFinishComponent()
 		{
-			foreach (var component in this)
+			foreach (WeaponComponent component in this)
 			{
 				if (component.AttachmentPoint == WeaponAttachmentPoint.GunRoot)
 				{

@@ -62,7 +62,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -78,7 +78,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -102,7 +102,7 @@ namespace GTA
 			set
 			{
 				// Rotation information is stored in a matrix
-				var currentOffset = Offset;
+				Vector3 currentOffset = Offset;
 				Function.Call(Hash.SET_PARTICLE_FX_LOOPED_OFFSETS, Handle, currentOffset.X, currentOffset.Y, currentOffset.Z, value.X, value.Y, value.Z);
 			}
 		}
@@ -114,22 +114,22 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return default;
 				}
 
 				address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
-				var r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
-				var g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
-				var b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
-				var a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
+				byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
+				byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
+				byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
+				byte a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
 				return Color.FromArgb(a, r, g, b);
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -155,7 +155,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -165,7 +165,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -182,7 +182,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;

@@ -9,7 +9,7 @@ namespace GTA
 {
 	public sealed class Notification
 	{
-		readonly int handle;
+		private readonly int handle;
 
 		internal Notification(int handle)
 		{

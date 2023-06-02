@@ -17,7 +17,7 @@ ipch/
 *.sdf
 *.opensdf
 *.suo
-*.vcxproj.user
+*.user
 *.Args.json
 *.ArgsCfg.json
 

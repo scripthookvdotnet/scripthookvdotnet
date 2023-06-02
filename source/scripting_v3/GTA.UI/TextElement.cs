@@ -105,7 +105,7 @@ namespace GTA.UI
 
 		~TextElement()
 		{
-			foreach (var ptr in _pinnedText)
+			foreach (IntPtr ptr in _pinnedText)
 			{
 				Marshal.FreeCoTaskMem(ptr); //free any existing allocated text
 			}
@@ -180,7 +180,7 @@ namespace GTA.UI
 			set
 			{
 				_caption = value;
-				foreach (var ptr in _pinnedText)
+				foreach (IntPtr ptr in _pinnedText)
 				{
 					Marshal.FreeCoTaskMem(ptr); //free any existing allocated text
 				}
@@ -188,8 +188,8 @@ namespace GTA.UI
 
 				SHVDN.NativeFunc.PushLongString(value, (string str) =>
 				{
-					var data = Encoding.UTF8.GetBytes(str + "\0");
-					var next = Marshal.AllocCoTaskMem(data.Length);
+					byte[] data = Encoding.UTF8.GetBytes(str + "\0");
+					IntPtr next = Marshal.AllocCoTaskMem(data.Length);
 					Marshal.Copy(data, 0, next, data.Length);
 					_pinnedText.Add(next);
 				});
@@ -264,7 +264,7 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-				foreach (var ptr in _pinnedText)
+				foreach (IntPtr ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
@@ -284,7 +284,7 @@ namespace GTA.UI
 			{
 				Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-				foreach (var ptr in _pinnedText)
+				foreach (IntPtr ptr in _pinnedText)
 				{
 					Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 				}
@@ -310,9 +310,9 @@ namespace GTA.UI
 			Function.Call(Hash.SET_TEXT_FONT, (int)Font);
 			Function.Call(Hash.SET_TEXT_SCALE, Scale, Scale);
 
-			var x = Position.X / screenWidth;
-			var y = Position.Y / screenHeight;
-			var w = WrapWidth / screenWidth;
+			float x = Position.X / screenWidth;
+			float y = Position.Y / screenHeight;
+			float w = WrapWidth / screenWidth;
 
 			bool shouldSetWrapToDefault = false;
 
@@ -341,12 +341,12 @@ namespace GTA.UI
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING, SHVDN.NativeMemory.CellEmailBcon);
 
-			foreach (var ptr in _pinnedText)
+			foreach (IntPtr ptr in _pinnedText)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 			}
 
-			var result = Function.Call<int>(Hash.END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING, x, y);
+			int result = Function.Call<int>(Hash.END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING, x, y);
 
 			if (shouldSetWrapToDefault)
 			{
@@ -472,9 +472,9 @@ namespace GTA.UI
 				return;
 			}
 
-			var x = (Position.X + offset.Width) / screenWidth;
-			var y = (Position.Y + offset.Height) / screenHeight;
-			var w = WrapWidth / screenWidth;
+			float x = (Position.X + offset.Width) / screenWidth;
+			float y = (Position.Y + offset.Height) / screenHeight;
+			float w = WrapWidth / screenWidth;
 
 			if (Shadow)
 			{
@@ -512,7 +512,7 @@ namespace GTA.UI
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, SHVDN.NativeMemory.CellEmailBcon);
 
-			foreach (var ptr in _pinnedText)
+			foreach (IntPtr ptr in _pinnedText)
 			{
 				Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, ptr);
 			}

@@ -9,9 +9,9 @@ public class ExitVehicle : Script
 		Tick += OnTick;
 	}
 
-	DateTime _lastExit;
+	private DateTime _lastExit;
 
-	void OnTick(object sender, EventArgs e)
+	private void OnTick(object sender, EventArgs e)
 	{
 		Ped playerPed = Game.LocalPlayerPed;
 
@@ -22,7 +22,9 @@ public class ExitVehicle : Script
 			Vehicle vehicle = playerPed.CurrentVehicle;
 
 			if (vehicle == null)
+			{
 				return;
+			}
 
 			bool isPlayerTheDriver = vehicle.GetPedOnSeat(VehicleSeat.Driver) == playerPed;
 

@@ -48,7 +48,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -65,7 +65,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Matrix.Zero;
@@ -85,7 +85,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -93,7 +93,7 @@ namespace GTA
 
 				unsafe
 				{
-					var tempRotationArray = stackalloc float[3];
+					float* tempRotationArray = stackalloc float[3];
 					SHVDN.NativeMemory.GetRotationFromMatrix(tempRotationArray, address + 0x60);
 
 					return new Vector3(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2]);
@@ -108,7 +108,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Quaternion.Zero;
@@ -116,7 +116,7 @@ namespace GTA
 
 				unsafe
 				{
-					var tempRotationArray = stackalloc float[4];
+					float* tempRotationArray = stackalloc float[4];
 					SHVDN.NativeMemory.GetQuaternionFromMatrix(tempRotationArray, address + 0x60);
 
 					return new Quaternion(tempRotationArray[0], tempRotationArray[1], tempRotationArray[2], tempRotationArray[3]);
@@ -134,7 +134,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -152,13 +152,13 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return null;
 				}
 
-				var interiorProxyHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromInteriorInst(Handle);
+				int interiorProxyHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromInteriorInst(Handle);
 				return interiorProxyHandle != 0 ? new InteriorProxy(interiorProxyHandle) : null;
 			}
 		}

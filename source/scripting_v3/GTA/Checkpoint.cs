@@ -27,7 +27,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -37,7 +37,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -54,7 +54,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return Vector3.Zero;
@@ -64,7 +64,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -81,7 +81,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -91,7 +91,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -108,7 +108,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0;
@@ -118,7 +118,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -136,7 +136,7 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
@@ -146,7 +146,7 @@ namespace GTA
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
@@ -163,24 +163,24 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return System.Drawing.Color.Transparent;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
 				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(address + offset));
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 84 : 80;
 				SHVDN.NativeMemory.WriteInt32(address + offset, Color.ToArgb());
 			}
 		}
@@ -191,24 +191,24 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return System.Drawing.Color.Transparent;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
 				return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(address + offset));
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 88 : 84;
 				SHVDN.NativeMemory.WriteInt32(address + offset, Color.ToArgb());
 			}
 		}
@@ -220,24 +220,24 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 80 : 76;
 				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}
@@ -248,24 +248,24 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 72 : 68;
 				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}
@@ -276,24 +276,24 @@ namespace GTA
 		{
 			get
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return 0.0f;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
 				return SHVDN.NativeMemory.ReadFloat(address + offset);
 			}
 			set
 			{
-				var address = MemoryAddress;
+				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
 					return;
 				}
 
-				var offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
+				int offset = Game.Version >= GameVersion.v1_0_877_1_Steam ? 76 : 72;
 				SHVDN.NativeMemory.WriteFloat(address + offset, value);
 			}
 		}

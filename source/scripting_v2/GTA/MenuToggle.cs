@@ -11,9 +11,9 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuToggle : IMenuItem
 	{
-		UIText text = null;
-		UIRectangle button = null;
-		bool toggleSelection;
+		private UIText text = null;
+		private UIRectangle button = null;
+		private bool toggleSelection;
 
 		public MenuToggle(string caption, string description) : this(caption, description, false)
 		{
@@ -87,12 +87,12 @@ namespace GTA
 			UpdateText();
 		}
 
-		void UpdateText()
+		private void UpdateText()
 		{
 			text.Caption = Caption + (toggleSelection ? " <ON>" : " <OFF>");
 		}
 
-		void ChangeSelection()
+		private void ChangeSelection()
 		{
 			Value = !toggleSelection;
 
