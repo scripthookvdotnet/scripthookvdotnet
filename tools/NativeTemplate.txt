@@ -7,6 +7,6 @@ namespace GTA
 		public enum Hash : ulong
 		{{
 {0}
-		}};
+		}}
 	}}
 }}
