@@ -24,7 +24,7 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         git fetch --unshallow
-        echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })" >> $Env:GITHUB_ENV
+        echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })" >> $env:GITHUB_ENV
         echo "Version: ${{env.SHVDN_VERSION}}"
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -43,7 +43,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ github.event.repository.name }}
+        name: ScriptHookVDotNet
         path: bin/Release/*
   create-release-draft:
     runs-on: windows-latest
@@ -56,15 +56,21 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         with:
-          name: ${{ github.event.repository.name }}
+          name: ScriptHookVDotNet
           path: bin/Release
       - run: ls -R
         working-directory: bin/Release
-      - run: 7z a ${{ github.event.repository.name }}-${{ github.event.ref }}.zip ${{ github.workspace }}/bin/Release/*
-      - uses: softprops/action-gh-release@v1
+      - run: |
+          echo "TAG_VERSION_NAME=$($env:GITHUB_REF.Substring(10))" >> $env:GITHUB_ENV
+      - run: 7z a ScriptHookVDotNet-${{ env.TAG_VERSION_NAME }}.zip ${{ github.workspace }}/bin/Release/*
+      - uses: ncipollo/release-action@v1.12.0
         with:
+          name: ScriptHookVDotNet ${{ env.TAG_VERSION_NAME }}
+          artifacts: |
+            ScriptHookVDotNet-${{ env.TAG_VERSION_NAME }}.zip
           draft: true
-          name: ScriptHookVDotNet ${{ github.event.ref }}
-          files: ${{ github.event.repository.name }}-${{ github.event.ref }}.zip
-          generate_release_notes: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          token: ${{ secrets.RELEASE_TOKEN_GITHUB }}
