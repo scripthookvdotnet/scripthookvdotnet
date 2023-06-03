@@ -67,4 +67,4 @@ jobs:
           name: ScriptHookVDotNet ${{ github.event.ref }}
           files: ${{ github.event.repository.name }}-${{ github.event.ref }}.zip
           generate_release_notes: true
-          token: ${{ secrets.RELEASE_TOKEN_GITHUB }}
+          token: ${{ secrets.GITHUB_TOKEN }}
