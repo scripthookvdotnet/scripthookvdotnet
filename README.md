@@ -1,7 +1,9 @@
-Community Script Hook V .NET
+Community Script Hook V .NET (SHVDN)
 ============================
 
+[![NuGet](https://img.shields.io/nuget/v/scripthookvdotnet3.svg?label=nuget%20%28v3%29)](https://www.nuget.org/packages/scripthookvdotnet3)
 [![Build Status](https://github.com/scripthookvdotnet/scripthookvdotnet/actions/workflows/build.yml/badge.svg)](https://github.com/scripthookvdotnet/scripthookvdotnet/actions)
+[![License](https://img.shields.io/github/license/scripthookvdotnet/scripthookvdotnet?color=%232A922A)](LICENSE.md)
 
 This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language in-game.
 
