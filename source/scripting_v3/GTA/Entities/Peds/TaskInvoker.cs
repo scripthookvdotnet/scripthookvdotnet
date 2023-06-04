@@ -256,13 +256,20 @@ namespace GTA
 			Function.Call(Hash.TASK_FOLLOW_TO_OFFSET_OF_ENTITY, _ped.Handle, target.Handle, offset.X, offset.Y, offset.Z, movementSpeed, timeout, distanceToFollow, persistFollowing);
 		}
 
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to follow the navmesh to the given coord.
+		/// </summary>
 		/// <param name="position">The position to go to.</param>
 		/// <param name="moveBlendRatio">Specifies how much fast the ped will move. If <see langword="null"/>, the value will default to <c>2f</c>.</param>
 		/// <param name="timeBeforeWarp">The time before warping in milliseconds.</param>
 		/// <param name="radius">An Unknown radius parameter (possibly the radius for navmesh search) but does not affect the distance where the ped will stop.</param>
 		/// <param name="navigationFlags">The navigation flags.</param>
 		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <see cref="DefaultNavmeshFinalHeading"/> to leave as is.</param>
-		/// <inheritdoc cref="FollowNavMeshTo(Vector3, PedMoveBlendRatio, int, float, FollowNavMeshFlags, float, float, float, float)"/>
+		/// <remarks>
+		/// Sometimes a path may not be able to be found. This could happen because there simply isn't any way to get there, or maybe a bunch of dynamic objects have blocked the way,
+		/// or maybe the destination is too far away. In this case the <see cref="Ped"/> will simply stand still.
+		/// To identify when this has happened, you can use <see cref="Ped.GetNavMeshRouteResult()"/>. This will help you find situations where <see cref="Ped"/> cannot get to their target.
+		/// </remarks>
 		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio? moveBlendRatio = null, int timeBeforeWarp = -1, float radius = 0.25f, FollowNavMeshFlags navigationFlags = FollowNavMeshFlags.Default, float finalHeading = DefaultNavmeshFinalHeading)
 		{
 			float moveBlendRatioArgForNative = 2.0f;
@@ -290,9 +297,11 @@ namespace GTA
 		/// (value must be between 1 and 255 inclusive).
 		/// </param>
 		/// <param name="finalHeading">The final heading that the <see cref="Ped"/> will turn to at the end of the task. Leave <see cref="DefaultNavmeshFinalHeading"/> to leave as is.</param>
-		/// <remarks>Sometimes a path may not be able to be found. This could happen because there simply isn't any way to get there, or maybe a bunch of dynamic objects have blocked the way,
-		///  or maybe the destination is too far away. In this case the <see cref="Ped"/> will simply stand still.
-		///  To identify when this has happened, you can use <see cref="Ped.GetNavMeshRouteResult()"/>. This will help you find situations where <see cref="Ped"/> cannot get to their target.</remarks>
+		/// <remarks>
+		/// Sometimes a path may not be able to be found. This could happen because there simply isn't any way to get there, or maybe a bunch of dynamic objects have blocked the way,
+		/// or maybe the destination is too far away. In this case the <see cref="Ped"/> will simply stand still.
+		/// To identify when this has happened, you can use <see cref="Ped.GetNavMeshRouteResult()"/>. This will help you find situations where <see cref="Ped"/> cannot get to their target.
+		/// </remarks>
 		public void FollowNavMeshTo(Vector3 position, PedMoveBlendRatio moveBlendRatio, int timeBeforeWarp, float radius, FollowNavMeshFlags navigationFlags, float slideToCoordHeading, float maxSlopeNavigable, float clampMaxSearchDistance, float finalHeading = DefaultNavmeshFinalHeading)
 		{
 			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD_ADVANCED, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, radius, (int)navigationFlags, slideToCoordHeading, maxSlopeNavigable, clampMaxSearchDistance, finalHeading);

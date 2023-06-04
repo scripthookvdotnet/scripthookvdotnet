@@ -11,7 +11,8 @@ namespace GTA
 {
 	/// <summary>
 	/// Represents a shape test handle.
-	/// You need to call <see cref="O:GetResult"/> or <see cref="O:GetResultIncludingMaterial"/> every frame until one of the methods returns <see cref="ShapeTestStatus.Ready"/>.
+	/// You need to call <see cref="GetResult(out ShapeTestResult)"/> or <see cref="GetResultIncludingMaterial(out ShapeTestResult, out MaterialHash)"/>
+	/// every frame until one of the methods returns <see cref="ShapeTestStatus.Ready"/>.
 	/// </summary>
 	public struct ShapeTestHandle : IEquatable<ShapeTestHandle>, INativeValue
 	{
