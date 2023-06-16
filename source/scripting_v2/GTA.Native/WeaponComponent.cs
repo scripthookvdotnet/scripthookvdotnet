@@ -128,6 +128,11 @@ namespace GTA.Native
 		CarbineRifleClip02 = 0x91109691,
 		CarbineRifleClip03 = 0xBA62E935,
 		CarbineRifleVarmodLuxe = 0xD89B9658,
+		/// <summary>
+		/// Named "Suede Bucks Finish" in the Ammunation menu in GTA Online.
+		/// No valid name for this component for the weapon wheel HUD.
+		/// </summary>
+		CarbineRifleVarmodMich = 0x5FB24D6A,
 		CarbineRifleMk2Camo = 0x4BDD6F16,
 		CarbineRifleMk2Camo02 = 0x406A7908,
 		CarbineRifleMk2Camo03 = 0x2F3856A4,
@@ -255,6 +260,11 @@ namespace GTA.Native
 		MicroSMGClip01 = 0xCB48AEF0,
 		MicroSMGClip02 = 0x10E6BA2B,
 		MicroSMGVarmodLuxe = 0x487AAE09,
+		/// <summary>
+		/// Named "Employee of the Month Finish" in the Ammunation menu in GTA Online.
+		/// No valid name for this component for the weapon wheel HUD.
+		/// </summary>
+		MicroSMGVarmodFrn = 0x64FC7BD6,
 		MGClip01 = 0xF434EF84,
 		MGClip02 = 0x82158B47,
 		MGVarmodLowrider = 0xD6DABABE,
@@ -343,6 +353,11 @@ namespace GTA.Native
 		RevolverMk2ClipIncendiary = 0xEFBF25,
 		RevolverMk2ClipTracer = 0xC6D8E476,
 		RPGClip01 = 0x4EA573B3,
+		/// <summary>
+		/// Named "Uncle T Finish" in the Ammunation menu in GTA Online.
+		/// No valid name for this component for the weapon wheel HUD.
+		/// </summary>
+		RPGVarmodTvr = 0xB614EC80,
 		SawnoffShotgunClip01 = 0xC7D62225,
 		SawnoffShotgunVarmodLuxe = 0x85A64DF9,
 		ServiceCarbineClip01 = 0x3749B8BB,
@@ -426,6 +441,8 @@ namespace GTA.Native
 		SwitchbladeVarmodBase = 0x9137A500,
 		SwitchbladeVarmodVar1 = 0x5B3E7DB6,
 		SwitchbladeVarmodVar2 = 0xE7939662,
+		TacticalSMGClip01 = 0x383664EE,
+		TacticalSMGClip02 = 0x1286198E,
 		UpNAtomizerVarmodXmas18 = 0xD7DBF707,
 		VintagePistolClip01 = 0x45A3B6BB,
 		VintagePistolClip02 = 0x33BA12E8,

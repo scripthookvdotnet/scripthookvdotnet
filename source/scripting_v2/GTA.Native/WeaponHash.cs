@@ -42,6 +42,7 @@ namespace GTA.Native
 		AssaultSMG = 0xEFE7E2DF,
 		CombatPDW = 0x0A3D4D34,
 		MiniSMG = 0xBD248B55,
+		TacticalSMG = 0x14E5AFD5,
 		AssaultRifle = 0xBFEFFF6D,
 		AssaultrifleMk2 = 0x394F415C,
 		CarbineRifle = 0x83BF0278,
