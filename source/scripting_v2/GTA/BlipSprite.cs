@@ -889,5 +889,15 @@ namespace GTA
 		AcidProductionBoost,
 		GangLeader,
 		EclipseBlvdGarage,
+		TheVinewoodCarClub,
+		AssaultOnCayoPerico,
+		Bicycle,
+		JunkEnergyTimeTrial,
+		F160Raiju,
+		BuckinghamWeaponizedConada,
+		ReadyForSellOverlay,
+		MissingSuppliesOverlay,
+		Streamer216,
+		SignalJammer,
 	}
 }
