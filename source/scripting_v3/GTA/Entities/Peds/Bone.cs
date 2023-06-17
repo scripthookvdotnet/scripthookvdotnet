@@ -5,12 +5,18 @@
 
 namespace GTA
 {
+	/// <summary>
+	/// An enumeration of possible bone tag values for <see cref="Ped"/>.
+	/// </summary>
 	public enum Bone
 	{
 		/// <summary>
 		/// The correspoinding bone tag value for <c>BONETAG_INVALID</c>, which is used in some meta/xml files such as weapon meta files and <c>damages.meta</c>.
 		/// </summary>
-		Invalid = -1,
+		/// <remarks>
+		/// This value specifies 0xFFFF instead of -1 which will be 0xFFFFFFFF in uint32_t, because a bone tag value takes 2 bytes, not 4 bytes.
+		/// </remarks>
+		Invalid = 0xFFFF,
 		SkelRoot = 0x0,
 		SkelPelvis = 0x2E28,
 		SkelLeftThigh = 0xE39F,
