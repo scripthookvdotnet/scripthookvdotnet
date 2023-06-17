@@ -959,6 +959,12 @@ namespace SHVDN
 				SeatIndexOffset = *(int*)(address + 8);
 			}
 
+			address = FindPatternBmh("\x84\xC0\x0F\x84\x2C\x01\x00\x00\x48\x8D\x9F\x00\x00\x00\x00\x48\x8B\x0B\x48\x3B\xCE\x74\x1B\x48\x85\xC9\x74\x08\x48\x8B\xD3\xE8", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				CPedVehicleStandingOnOffset = *(int*)(address + 11);
+			}
+
 			address = FindPatternBmh("\xC1\xE8\x11\xA8\x01\x75\x10\x48\x8B\xCB\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84", "xxxxxxxxxxx????xxxx");
 			if (address != null)
 			{
@@ -2368,6 +2374,20 @@ namespace SHVDN
 			return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
 		}
 
+		/// <summary>
+		/// Gets the vehicle the ped is standing on.
+		/// </summary>
+		public static int GetVehicleHandlePedIsStandingOn(IntPtr pedAddress)
+		{
+			if (CPedVehicleStandingOnOffset == 0)
+			{
+				return 0;
+			}
+
+			var vehicleStandingOnAddress = new IntPtr(*(long*)(pedAddress + CPedVehicleStandingOnOffset));
+			return vehicleStandingOnAddress != IntPtr.Zero ? GetEntityHandleFromAddress(vehicleStandingOnAddress) : 0;
+		}
+
 		#endregion
 
 		#region -- Vehicle Offsets --
@@ -2761,6 +2781,8 @@ namespace SHVDN
 		public static int PedIsInVehicleOffset { get; }
 		public static int PedLastVehicleOffset { get; }
 		public static int SeatIndexOffset { get; }
+
+		public static int CPedVehicleStandingOnOffset { get; }
 
 		public static int PedSourceOfDeathOffset { get; }
 		public static int PedCauseOfDeathOffset { get; }
