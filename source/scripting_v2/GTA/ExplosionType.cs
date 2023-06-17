@@ -85,6 +85,8 @@ namespace GTA
 		BombWaterSecondary,
 		ScriptMissileLarge = 81,
 		SubmarineBig,
-		EmpLauncherEmp
+		EmpLauncherEmp,
+		RailgunXm3,
+		BalancedCannons,
 	}
 }
