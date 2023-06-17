@@ -2844,7 +2844,7 @@ namespace SHVDN
 
 			// Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
 			// and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
-			// In practical, however, it looks like we can use the target address without testing the 2 checks
+			// In practice, however, it looks like we can use the target address without testing the 2 checks
 
 			var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
 			if (targetPedAddress == IntPtr.Zero)
@@ -2876,7 +2876,7 @@ namespace SHVDN
 
 			// Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
 			// and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
-			// In practical, however, it looks like we can use the target address without testing the 2 checks
+			// In practice, however, it looks like we can use the target address without testing the 2 checks
 
 			var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
 			if (targetPedAddress == IntPtr.Zero)

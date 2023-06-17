@@ -47,7 +47,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Model"/> exists.
-		/// This property is practically the same as <see cref="IsInCdImage"/> since an additional check this method does does not work in practical.
+		/// This property is practically the same as <see cref="IsInCdImage"/> since an additional check this method does does not work in practice.
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Model"/> is valid; otherwise, <see langword="false" />.
@@ -60,7 +60,7 @@ namespace GTA
 		public bool IsValid => Function.Call<bool>(Native.Hash.IS_MODEL_VALID, Hash);
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Model"/> is in the CD image.
-		/// This property is practically the same as <see cref="IsValid"/> since its additional check does not work in practical.
+		/// This property is practically the same as <see cref="IsValid"/> since its additional check does not work in practice.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Model"/> is in the CD image; otherwise, <see langword="false" />.

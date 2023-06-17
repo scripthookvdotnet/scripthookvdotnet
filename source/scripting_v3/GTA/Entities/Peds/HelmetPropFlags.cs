@@ -11,7 +11,7 @@ namespace GTA
 	/// An enumeration of possible helmet prop flags for <see cref="Ped"/>s.
 	/// This flags will restrict helmet types using AND bitwise, so no helmet props will be used if none of the available helmet props are found that match all the flags specified.
 	/// The original enum name should be <c>ePedCompFlags</c>, but this enum uses <c>HelmetPropFlags</c> instead of <c>PedComponentFlags</c>
-	/// as this enum is only used for native functions for ped helmets in practical.
+	/// as this enum is only used for native functions for ped helmets in practice.
 	/// </summary>
 	/// <remarks>
 	/// You can check if the listed enum names are correct by searching the dumped exe for hashed values like <c>PV_FLAG_[enum name (snake case)]</c>
