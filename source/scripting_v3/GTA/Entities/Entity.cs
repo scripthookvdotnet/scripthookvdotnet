@@ -1770,6 +1770,56 @@ namespace GTA
 
 		#endregion
 
+		#region Animation
+
+		/// <summary>
+		/// Plays an <see cref="Entity"/> animation.
+		/// </summary>
+		/// <param name="animName">The animation name.</param>
+		/// <param name="animDictName">The animation dictionary name.</param>
+		/// <param name="blendDelta">The blend delta.</param>
+		/// <param name="loop">Specifies whether the animation should loop.</param>
+		/// <param name="holdLastFrame">Specifies whether the <see cref="Entity"/> should hold on the last frame.</param>
+		/// <param name="driveToPose">
+		/// Enable drive-to-pose for the animation if <see langword="true"/> (object must be set up with articulation for this to work).
+		/// </param>
+		/// <param name="startPhase">The start phase between 0f to 1f.</param>
+		/// <param name="animFlags">The animation flags.</param>
+		/// <remarks>For <see cref="Ped"/>, use <see cref="TaskInvoker.PlayAnimation(AnimationDictionary, string)"/>.</remarks>
+		private void PlayAnimation(string animName, AnimationDictionary animDictName, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
+		{
+			Function.Call(Hash.PLAY_ENTITY_ANIM, Handle, animName, animDictName, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
+		}
+
+		/// <summary>
+		/// Stops an <see cref="Entity"/> animation.
+		/// </summary>
+		private void StopAnimation(string animName, AnimationDictionary animDictName, AnimationBlendDelta blendDelta)
+		{
+			Function.Call(Hash.STOP_ENTITY_ANIM, Handle, animName, animDictName, blendDelta.Value);
+		}
+
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> is playing the animation.
+		/// </summary>
+		private void IsPlayingAnimation(AnimationDictionary animDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
+		{
+			Function.Call(Hash.PLAY_ENTITY_ANIM, Handle, animDictName, animName, type);
+		}
+
+		/// <summary>
+		/// Gets a value that indicates whether the animation specified is being held on the last frame for this <see cref="Entity"/>.
+		/// </summary>
+		/// <remarks>
+		/// Will only ever return <see langword="true"/> for anims that hold at the end (i.e. anims that loop or end automatically will always return <see langword="false"/>).
+		/// </remarks>
+		private void HasFinishedAnimation(AnimationDictionary animDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
+		{
+			Function.Call(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, animDictName, animName, type);
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Marks this <see cref="Entity"/> as a mission entity.
 		/// </summary>
