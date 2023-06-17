@@ -1804,7 +1804,7 @@ namespace GTA
 		/// </summary>
 		private void IsPlayingAnimation(AnimationDictionary animDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			Function.Call(Hash.PLAY_ENTITY_ANIM, Handle, animDictName, animName, type);
+			Function.Call(Hash.IS_ENTITY_PLAYING_ANIM, Handle, animDictName, animName, type);
 		}
 
 		/// <summary>
