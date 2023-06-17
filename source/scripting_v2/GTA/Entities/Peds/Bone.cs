@@ -5,6 +5,9 @@
 
 namespace GTA
 {
+	/// <summary>
+	/// An enumeration of possible bone tag values for <see cref="Ped"/>.
+	/// </summary>
 	public enum Bone
 	{
 		SKEL_ROOT = 0x0,
