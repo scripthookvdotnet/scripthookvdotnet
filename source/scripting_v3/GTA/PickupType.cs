@@ -69,6 +69,7 @@ namespace GTA
 		WeaponCombatPDW = 2023061218u,
 		WeaponMachinePistol = 4123384540u,
 		WeaponMiniSMG = 3547474523u,
+		WeaponTacticalSMG = 2292608621u,
 		WeaponMG = 2244651441u,
 		WeaponCombatMG = 2995980820u,
 		WeaponCombatMGMk2 = 2837437579u,
