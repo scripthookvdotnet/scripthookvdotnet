@@ -6,8 +6,9 @@
 namespace GTA
 {
 	/// <summary>
-	/// An enumeration of possible bone tag values for <see cref="Ped"/>.
+	/// An enumeration of possible bone tag values for <see cref="Ped"/>, which is for <c>eAnimBoneTag</c>.
 	/// </summary>
+	/// <remarks>
 	public enum Bone
 	{
 		SKEL_ROOT = 0x0,

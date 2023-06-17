@@ -5,10 +5,19 @@
 
 namespace GTA
 {
+	/// <summary>
+	/// An enumeration of possible bone tag values for <see cref="Ped"/>, which is for <c>eAnimBoneTag</c>.
+	/// </summary>
+	/// <remarks>
+	/// This enum has normal bone tag values in the range of uint16_t and has <c>BONETAG_INVALID</c> with the value -1 (0xFFFFFFFF).
+	/// <c>eAnimBoneTag</c> specifies 32 bit type for its enum subtype.
+	/// rage::parMemberEnum itself supports 32 bit, 16 bit, and 8 bit values for enums in all RAGE games until GTA V (64 bit enums are supported starting from RDR3).
+	/// </remarks>
 	public enum Bone
 	{
 		/// <summary>
-		/// The correspoinding bone tag value for <c>BONETAG_INVALID</c>, which is used in some meta/xml files such as weapon meta files and <c>damages.meta</c>.
+		/// The correspoinding bone tag value for <c>BONETAG_INVALID</c>,
+		/// which is used in some meta/xml files such as weapon meta files and <c>damages.meta</c>.
 		/// </summary>
 		Invalid = -1,
 		SkelRoot = 0x0,
