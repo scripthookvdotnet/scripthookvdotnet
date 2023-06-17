@@ -1237,6 +1237,21 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is standing on any <see cref="Vehicle"/>.
+		/// </summary>
+		public bool IsStandingOnVehicle()
+		{
+			return Function.Call<bool>(Hash.IS_PED_ON_VEHICLE, Handle);
+		}
+		/// <summary>
+		/// Indicates whether this <see cref="Ped"/> is standing on the specified <see cref="Vehicle"/>.
+		/// </summary>
+		public bool IsStandingOnVehicle(Vehicle vehicle)
+		{
+			return Function.Call<bool>(Hash.IS_PED_ON_SPECIFIC_VEHICLE, Handle, vehicle.Handle);
+		}
+
+		/// <summary>
 		/// Sets this <see cref="Ped"/> into the relevant seat of the specified <see cref="Vehicle"/>.
 		/// </summary>
 		/// <param name="vehicle">The vehicle this <see cref="Ped"/> will be set into.</param>
@@ -1275,7 +1290,7 @@ namespace GTA
 		{
 			get
 			{
-				// In b2699, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
+				// In b2699 or later, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
@@ -1297,6 +1312,25 @@ namespace GTA
 			{
 				int handle = Function.Call<int>(Hash.GET_VEHICLE_PED_IS_TRYING_TO_ENTER, Handle);
 				return handle != 0 ? new Vehicle(handle) : null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is standing on.
+		/// </summary>
+		/// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> is not standing on a <see cref="Vehicle"/>.</remarks>
+		public Vehicle VehicleStandingOn
+		{
+			get
+			{
+				IntPtr address = MemoryAddress;
+				if (address == IntPtr.Zero)
+				{
+					return null;
+				}
+
+				int vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsStandingOn(address);
+				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
 
