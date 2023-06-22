@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2015 crosire & contributors
-// License: https://github.com/crosire/scripthookvdotnet#license
+// Copyright (C) 2015 kagikn & contributors
+// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
 using System;
