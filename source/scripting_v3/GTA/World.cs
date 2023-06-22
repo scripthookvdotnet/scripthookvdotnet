@@ -1166,48 +1166,119 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Spawns a pickup <see cref="Prop"/> at the specified position.
+		/// Creates a pickup <see cref="Prop"/> similar to those dropped by dead <see cref="Ped"/>s.
+		/// These types of pickups are part of the ambient population and will get removed if the player moves too far away from them.
 		/// </summary>
-		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
+		/// <param name="type">The pickup type hash.</param>
+		/// <param name="position">The pickup position to place in world space.</param>
+		/// <param name="placementFlags">The pickup placement flags.</param>
+		/// <param name="amount">
+		/// A variable amount that can be specified for some pickups, such as money or ammo.
+		/// Leave this parameter as <c>-1</c> to apply the default amount.
+		/// </param>
+		/// <param name="customModel">
+		/// If set to non-zero value, this model will be used for the pickup instead of the default one.
+		/// </param>
+		/// <param name="createAsScriptObject">
+		/// If <see langword="true"/>, the pickup will be treated as a script object and persist until the SHVDN runtime terminates, or the pickup <see cref="Prop"/> is marked as no longer needed.
+		/// </param>
+		public static Prop CreateAmbientPickup(
+			PickupType type,
+			Vector3 position,
+			PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+			int amount = -1,
+			Model customModel = default,
+			bool createAsScriptObject = false)
 		{
-			if (!model.Request(1000))
+			if (customModel.Hash != 0 && !customModel.Request(1000))
 			{
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, 0, value, model.Hash, false, true);
+			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, (int)placementFlags, amount, customModel.Hash, createAsScriptObject, true);
 
 			return handle == 0 ? null : new Prop(handle);
 		}
 
 		/// <summary>
-		/// Spawns a <see cref="Pickup"/> at the specified position.
+		/// Creates a pickup <see cref="Prop"/> similar to those dropped by dead <see cref="Ped"/>s.
+		/// These types of pickups are part of the ambient population and will get removed if the player moves too far away from them.
 		/// </summary>
-		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
+		[Obsolete("The World.CreateAmbientPickup overload with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
+			"Use the other World.CreateAmbientPickup overload with optional placement flags and amount parameters.")]
+		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
+			=> CreateAmbientPickup(type, position, PickupPlacementFlags.None, value, model, false);
+
+		/// <inheritdoc cref="CreatePickup(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model)"/>
+		public static Pickup CreatePickup(
+			PickupType type,
+			Vector3 position,
+			PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+			int amount = -1,
+			Model customModel = default)
 		{
-			if (!model.Request(1000))
+			if (customModel.Hash != 0 && !customModel.Request(1000))
 			{
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, 0, value, true, model.Hash);
+			// The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, (int)placementFlags, amount, true, customModel.Hash);
 
 			return handle == 0 ? null : new Pickup(handle);
 		}
 		/// <summary>
-		/// Spawns a <see cref="Pickup"/> at the specified position.
+		/// Creates a pickup spawner (a <see cref="Pickup"/> instance) which can be referenced by the script and will spawn a pickup whenever the player gets near.
+		/// This spawner can also regenerate the pickup after it is collected.
+		/// The spawner is removed when the script terminates.
 		/// </summary>
-		public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
+		/// <param name="type">The pickup type hash.</param>
+		/// <param name="position">The pickup position to place in world space.</param>
+		/// <param name="rotation">The pickup oritentation.</param>
+		/// <param name="placementFlags">The pickup placement flags.</param>
+		/// <param name="amount">
+		/// A variable amount that can be specified for some pickups, such as money or ammo.
+		/// Leave this parameter as <c>-1</c> to apply the default amount.
+		/// </param>
+		/// <param name="rotOrder">The rotation order in world space.</param>
+		/// <param name="customModel">
+		/// If set to non-zero value, this model will be used for the pickup instead of the default one.
+		/// </param>
+		public static Pickup CreatePickup(
+			PickupType type,
+			Vector3 position,
+			Vector3 rotation,
+			PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+			int amount = -1,
+			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
+			Model customModel = default
+			)
 		{
-			if (!model.Request(1000))
+			if (customModel.Hash != 0 && !customModel.Request(1000))
 			{
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, value, 2, true, model.Hash);
+			// The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, (int)placementFlags, amount, (int)rotOrder, true, customModel.Hash);
 
 			return handle == 0 ? null : new Pickup(handle);
 		}
+
+		/// <summary>
+		/// Spawns a <see cref="Pickup"/> at the specified position.
+		/// </summary>
+		[Obsolete("The World.CreatePickup overloads with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
+			"Use a World.CreatePickup overload with optional placement flags and amount parameters.")]
+		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
+			=> CreatePickup(type, position, PickupPlacementFlags.None, value, model);
+		/// <summary>
+		/// Spawns a <see cref="Pickup"/> at the specified position.
+		/// </summary>
+		[Obsolete("The World.CreatePickup overloads with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
+			"Use a World.CreatePickup overload with optional placement flags and amount parameters.")]
+		public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
+			=> CreatePickup(type, position, rotation, PickupPlacementFlags.None, value, EulerRotationOrder.YXZ, model);
 
 		#endregion
 
