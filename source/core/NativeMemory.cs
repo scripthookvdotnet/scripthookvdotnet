@@ -486,6 +486,20 @@ namespace SHVDN
 			address = FindPatternBmh("\x48\x83\xEC\x20\x48\x8B\x91\x00\x00\x00\x00\x33\xF6\x48\x8B\xD9\x48\x85\xD2\x74\x2B\x48\x8D\x0D", "xxxxxxx??xxxxxxxxxxxxxxx");
 			s_cStreamingAddr = (ulong*)(*(int*)(address + 24) + address + 28);
 
+			address = FindPatternBmh("\x44\x39\x38\x74\x17\x48\xFF\xC1\x48\x83\xC0\x04\x48\x3B\xCB\x7C\xEF\x41\x8B\xD7\x49\x8B\xCE\xE8", "xxxxxxxxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				var unkFuncForVehicleModelIndices = (byte*)(*(int*)(address + 0x18) + address + 0x1C);
+				s_cStreamingAppropriateVehicleIndicesOffset = *(int*)(unkFuncForVehicleModelIndices + 0x1E);
+			}
+
+			address = FindPatternBmh("\x75\x0D\x8B\xD7\x49\x8B\xCE\xE8\x00\x00\x00\x00\x41\x2B\xDD\x45\x03\xFD\x41\x03\xDD\x41\x3B\xDC\x0F\x8C\x9A\xFE\xFF\xFF", "xxxxxxxx????xxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				var unkFuncForPedModelIndices = (byte*)(*(int*)(address + 8) + address + 12);
+				s_cStreamingAppropriatePedIndicesOffset = *(int*)(unkFuncForPedModelIndices + 0x1E);
+			}
+
 			address = FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
 			s_weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
 
@@ -3115,8 +3129,11 @@ namespace SHVDN
 		private static UInt64 s_modelHashTable;
 		private static UInt16 s_modelHashEntries;
 		private static ulong* s_modelInfoArrayPtr;
-		private static ulong* s_cStreamingAddr;
 		private static ulong* s_pedPersonalitiesArrayAddr;
+
+		private static ulong* s_cStreamingAddr;
+		private static int s_cStreamingAppropriateVehicleIndicesOffset;
+		private static int s_cStreamingAppropriatePedIndicesOffset;
 
 		private static IntPtr FindCModelInfo(int modelHash)
 		{
@@ -3257,11 +3274,11 @@ namespace SHVDN
 		}
 		public static List<int> GetLoadedAppropriateVehicleHashes()
 		{
-			return GetLoadedHashesOfModelList(0x2D00);
+			return GetLoadedHashesOfModelList(s_cStreamingAppropriateVehicleIndicesOffset);
 		}
 		public static List<int> GetLoadedAppropriatePedHashes()
 		{
-			return GetLoadedHashesOfModelList(0x4504);
+			return GetLoadedHashesOfModelList(s_cStreamingAppropriatePedIndicesOffset);
 		}
 		internal static List<int> GetLoadedHashesOfModelList(int startOffsetOfCStreaming)
 		{
