@@ -144,6 +144,59 @@ namespace GTA
 		/// </value>
 		public bool IsAlive => !IsDead;
 
+		#region Streaming
+
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> has a drawable object.
+		/// <see cref="PlayAnimation(string, AnimationDictionary, AnimationBlendDelta, bool, bool, bool, float, AnimationFlags)"/>
+		/// and <c>PLAY_SYNCHRONIZED_ENTITY_ANIM</c> require the <see cref="Entity"/> to have a drawable.
+		/// You can use this property to check that the entity has a drawable before attempting to play the anim.
+		/// </summary>
+		/// <value>
+		/// <see langword="true"/> if this <see cref="Entity"/> has a drawable object; otherwise, <see langword="false"/>.
+		/// </value>
+		public bool HasDrawable => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_DRAWABLE, Handle);
+
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> has physics.
+		/// Before calling physics methods or properties such as <see cref="set_Velocity"/>, you have to check that the entity has physics.
+		/// </summary>
+		/// <value>
+		/// <see langword="true"/> if this <see cref="Entity"/> has physics; otherwise, <see langword="false" />.
+		/// </value>
+		/// <remarks>
+		/// Physics are streamed in separately from the drawable object, though <see cref="Entity"/> physics near the player are streamed.
+		/// </remarks>
+		public bool HasPhysics => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_PHYSICS, Handle);
+
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> has a skeleton.
+		/// <see cref="HasAnimationEventFired(int)"/> requires the <see cref="Entity"/> to have a skeleton.
+		/// You can use this property to check that the entity has a skeleton before calling that method.
+		/// </summary>
+		/// <value>
+		/// <see langword="true"/> if this <see cref="Entity"/> has a skeleton; otherwise, <see langword="false"/>.
+		/// </value>
+		/// <remarks>
+		/// Currently only available in v1.0.2699.0 or later.
+		/// </remarks>
+		public bool HasSkeleton => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_SKELETON, Handle);
+
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> has an animation director.
+		/// <see cref="HasAnimationEventFired(int)"/> requires the <see cref="Entity"/> to have an animation director.
+		/// You can use this property to check that the entity has an animation director before calling that method.
+		/// </summary>
+		/// <value>
+		/// <see langword="true"/> if this <see cref="Entity"/> has an animation director; otherwise, <see langword="false"/>.
+		/// </value>
+		/// <remarks>
+		/// Currently only available in v1.0.2699.0 or later.
+		/// </remarks>
+		public bool HasAnimationDirector => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_ANIM_DIRECTOR, Handle);
+
+		#endregion
+
 		#region Styling
 
 		/// <summary>
@@ -1816,6 +1869,68 @@ namespace GTA
 		public void HasFinishedAnimation(AnimationDictionary animDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
 			Function.Call(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, animDictName, animName, type);
+		}
+
+		/// <summary>
+		/// Gets a value that indicates whether the animation event has been fired from an animation this <see cref="Entity"/> is playing.
+		/// Use this to check if a particular event tag is present in an animation playing on the <see cref="Entity"/> this frame.
+		///	Some events are instantaneous (so this will only return true once).
+		///	Others may have duration, which means that this function may continuously return <see langword="true"/> for a range of values.
+		/// </summary>
+		/// <param name="eventHash">The event hash.
+		/// Use <see cref="Game.GenerateHash(string)"/> or <see cref="Game.GenerateHashAscii(string)"/> to convert the original event name to the hash.
+		/// </param>
+		/// <remarks>
+		/// The event must have been tagged with the <c>VisibleToScript</c> attribute (joaat hash: <c>0xF301E135</c>) in the ycd animation file to make it detectable with this method.
+		/// Events can include one or more attributes of different types that can be used to get data from the animation.
+		/// </remarks>
+		public void HasAnimationEventFired(int eventHash) => Function.Call(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
+
+		/// <summary>
+		/// Gets a float value representing animation's current playtime with respect to its total playtime.
+		/// This value increasing in a range from [0.0 to 1.0] and wrap back to 0.0 when it reach 1.0.
+		/// The phase of the anim is between 0.0 and 1.0 regardless of the anim length.
+		/// </summary>
+		public float GetAnimationCurrentTime(AnimationDictionary animDictName, string animName)
+			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, Handle, animDictName, animName);
+
+		/// <summary>
+		/// Gets the total animation time in milliseconds.
+		/// </summary>
+		public float GetAnimationTotalTime(AnimationDictionary animDictName, string animName)
+			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_TOTAL_TIME, Handle, animDictName, animName);
+
+		/// <summary>
+		/// Searches an animation for the start and end phase of an event.
+		/// </summary>
+		/// <param name="animDictName">
+		/// The animation dictionary name.
+		/// </param>
+		/// <param name="animName">
+		/// The animation clip name.
+		/// </param>
+		/// <param name="eventName">
+		/// The event name. Will be converted to a joaat hash internally since event name is stored as a hash.
+		/// </param>
+		/// <param name="startPhase">
+		/// If the event tag is found, it's start phase will be filled.
+		/// </param>
+		/// <param name="endPhase">
+		/// If the event tag is found, it's end phase will be filled.
+		/// </param>
+		/// <returns><see langword="true"/> if this method found an event tag in an animation playing; otherwise, <see langword="false"/>.</returns>
+		public bool FindAnimationEventPhase(AnimationDictionary animDictName, string animName, string eventName, out float startPhase, out float endPhase)
+		{
+			float startPhaseTemp, endPhaseTemp;
+
+			unsafe
+			{
+				bool foundEventTag = Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, animDictName, animName, eventName, &startPhaseTemp, &endPhaseTemp);
+
+				startPhase = startPhaseTemp;
+				endPhase = endPhaseTemp;
+				return foundEventTag;
+			}
 		}
 
 		#endregion
