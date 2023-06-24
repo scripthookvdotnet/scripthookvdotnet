@@ -4644,7 +4644,7 @@ namespace SHVDN
 				/// </summary>
 				internal VehiclePathNodeProperties GetPropertyFlags()
 				{
-					// for those wondering the proper implementation in GET, you can find it with "41 0F B6 40 27 83 E0 0F 89 07 41 F6 40 20 08" (tested with b372, b2699, and b2944)
+					// for those wondering the proper implementation in GET_VEHICLE_NODE_PROPERTIES, you can find it with "41 0F B6 40 27 83 E0 0F 89 07 41 F6 40 20 08" (tested with b372, b2699, and b2944)
 
 					VehiclePathNodeProperties propertyFlags = VehiclePathNodeProperties.None;
 					if ((Flags1 & 8) != 0)
@@ -4667,7 +4667,7 @@ namespace SHVDN
 					{
 						propertyFlags |= VehiclePathNodeProperties.TunnelOrInterior;
 					}
-					// equivalent to if (*(uint32_t*)(CPathNode + 36) & 0x70000000) in C or C++
+					// equivalent to "if (*(uint32_t*)(CPathNode + 36) & 0x70000000)" in C or C++
 					if ((Flag5AndDensity & 0x70) != 0)
 					{
 						propertyFlags |= VehiclePathNodeProperties.LeadsToDeadEnd;
