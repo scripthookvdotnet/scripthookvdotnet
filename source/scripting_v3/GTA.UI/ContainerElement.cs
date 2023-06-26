@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace GTA.UI
 {
-	public class ContainerElement : IElement
+	public class ContainerElement : IWorldDrawableElement
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ContainerElement"/> class used for grouping items on screen.

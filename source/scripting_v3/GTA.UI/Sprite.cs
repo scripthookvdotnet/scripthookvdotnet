@@ -16,7 +16,7 @@ namespace GTA.UI
 	/// <summary>
 	/// A sprite element using a built-in texture.
 	/// </summary>
-	public class Sprite : ISpriteElement, IDisposable
+	public class Sprite : ISpriteElement, IWorldDrawableElement, IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Sprite"/> class used for drawing in game textures on the screen.

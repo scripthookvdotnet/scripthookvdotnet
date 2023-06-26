@@ -13,7 +13,7 @@ using System.Text;
 
 namespace GTA.UI
 {
-	public class TextElement : IElement
+	public class TextElement : IWorldDrawableElement
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextElement"/> class used for drawing text on the screen.

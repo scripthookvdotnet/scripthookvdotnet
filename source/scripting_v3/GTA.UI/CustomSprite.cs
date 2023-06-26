@@ -14,7 +14,7 @@ namespace GTA.UI
 	/// <summary>
 	/// A sprite element using a custom image texture.
 	/// </summary>
-	public class CustomSprite : ISpriteElement
+	public class CustomSprite : ISpriteElement, IWorldDrawableElement
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
