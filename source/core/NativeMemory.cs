@@ -450,12 +450,11 @@ namespace SHVDN
 			{
 				byte* unkClockFunc = (byte*)(*(int*)(address + 19) + address + 23);
 				s_millisecondsPerGameMinuteAddress = (int*)(*(int*)(unkClockFunc + 0x46) + unkClockFunc + 0x4A);
+				s_lastClockTickAddress = (int*)(s_millisecondsPerGameMinuteAddress + 2);
 			}
 
 			address = FindPatternBmh("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
-
 			s_isClockPausedAddress = (byte*)(*(int*)(address + 5) + address + 9);
-			s_lastClockTickAddress = (int*)(s_isClockPausedAddress + 8);
 
 			// Find camera objects
 			address = FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
