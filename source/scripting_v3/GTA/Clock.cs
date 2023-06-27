@@ -16,7 +16,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets a value indicating whether the in-game clock is paused.
 		/// </summary>
-		public static bool IsClockPaused
+		public static bool IsPaused
 		{
 			get => SHVDN.NativeMemory.IsClockPaused;
 			set => Function.Call(Hash.PAUSE_CLOCK, value);
