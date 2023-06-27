@@ -43,9 +43,7 @@ namespace GTA
 
 		#region Time & Day
 
-		/// <summary>
-		/// Gets or sets a value indicating whether the in-game clock is paused.
-		/// </summary>
+		/// <inheritdoc cref="Clock.IsPaused"/>
 		public static bool IsClockPaused
 		{
 			get => SHVDN.NativeMemory.IsClockPaused;
@@ -63,11 +61,13 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the current date and time in the GTA World.
+		/// Gets or sets the current date and time in the GTA world.
 		/// </summary>
 		/// <value>
 		/// The current date and time.
 		/// </value>
+		[Obsolete("World.CurrentDate is obsolete because DateTime cannot represent 31 days for all the months and the game does not store a millisecond or nanosecond based tick." +
+			"Use properties or methods of GTA.Clock instead.")]
 		public static DateTime CurrentDate
 		{
 			get
@@ -88,12 +88,7 @@ namespace GTA
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the current time of day in the GTA World.
-		/// </summary>
-		/// <value>
-		/// The current time of day
-		/// </value>
+		/// <inheritdoc cref="Clock.TimeOfDay"/>
 		public static TimeSpan CurrentTimeOfDay
 		{
 			get
@@ -107,12 +102,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
 		}
 
-		/// <summary>
-		/// Gets or sets how many milliseconds in the real world one game minute takes.
-		/// </summary>
-		/// <value>
-		/// The milliseconds one game minute takes in the real world.
-		/// </value>
+		/// <inheritdoc cref="Clock.MillisecondsPerGameMinute"/>
 		public static int MillisecondsPerGameMinute
 		{
 			get => Function.Call<int>(Hash.GET_MILLISECONDS_PER_GAME_MINUTE);
