@@ -14,12 +14,25 @@ namespace GTA
 	public static class Clock
 	{
 		/// <summary>
-		/// Gets or sets a value indicating whether the in-game clock is paused.
+		/// Gets or sets a value that indicates whether the in-game clock is paused.
 		/// </summary>
 		public static bool IsPaused
 		{
 			get => SHVDN.NativeMemory.IsClockPaused;
 			set => Function.Call(Hash.PAUSE_CLOCK, value);
+		}
+
+		/// <summary>
+		/// Gets or sets the last time the clock is ticked.
+		/// You can set a value to this property to shift the clock minute.
+		/// </summary>
+		/// <remarks>
+		/// If <see cref="IsPaused"/> is set to <see langword="true"/>, this value will be updated to <see cref="Game.GameTime"/> every frame.
+		/// </remarks>
+		public static int LastTimeTicked
+		{
+			get => SHVDN.NativeMemory.LastTimeClockTicked;
+			set => SHVDN.NativeMemory.LastTimeClockTicked = value;
 		}
 
 		/// <summary>

@@ -453,7 +453,9 @@ namespace SHVDN
 			}
 
 			address = FindPatternBmh("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
+
 			s_isClockPausedAddress = (byte*)(*(int*)(address + 5) + address + 9);
+			s_lastClockTickAddress = (int*)(s_isClockPausedAddress + 8);
 
 			// Find camera objects
 			address = FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
@@ -1828,6 +1830,14 @@ namespace SHVDN
 		private static byte* s_isClockPausedAddress;
 
 		public static bool IsClockPaused => *s_isClockPausedAddress != 0;
+
+		private static int* s_lastClockTickAddress;
+
+		public static int LastTimeClockTicked
+		{
+			get => *s_lastClockTickAddress;
+			set => *s_lastClockTickAddress = value;
+		} 
 
 		private static float* s_readWorldGravityAddress;
 		private static float* s_writeWorldGravityAddress;
