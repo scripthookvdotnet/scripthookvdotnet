@@ -42,7 +42,7 @@ namespace GTA
 		public static int Day
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH);
-			set => Function.Call(Hash.SET_CLOCK_DATE, value, MonthZero, Year);
+			set => SetDateZeroBasedMonth(value, MonthZero, Year);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace GTA
 		public static int MonthZero
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_MONTH);
-			set => Function.Call(Hash.SET_CLOCK_DATE, Day, value, Year);
+			set => SetDateZeroBasedMonth(Day, value, Year);
 		}
 		/// <summary>
 		/// Gets or sets the year number from 1 to 9999.
@@ -76,8 +76,39 @@ namespace GTA
 		public static int Year
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_YEAR);
-			set => Function.Call(Hash.SET_CLOCK_DATE, Day, MonthZero, value);
+			set => SetDateZeroBasedMonth(Day, MonthZero, value);
 		}
+
+		/// <param name="day">
+		/// The day number from 1 to 31.
+		/// The max value is the same regardless of <paramref name="month"/>.
+		/// </param>
+		/// <param name="month">
+		/// The month number from 1 to 12.
+		/// </param>
+		/// <param name="year">
+		/// The year number from 1 to 9999.
+		/// </param>
+		/// <inheritdoc cref="SetDateZeroBasedMonth(int, int, int)"/>
+		public static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
+
+		/// <summary>
+		/// Sets the current date in the GTA world.
+		/// </summary>
+		/// <param name="day">
+		/// The day number from 1 to 31.
+		/// The max value is the same regardless of <paramref name="month"/>.
+		/// </param>
+		/// <param name="month">
+		/// The month number from 0 to 11.
+		/// </param>
+		/// <param name="year">
+		/// The year number from 1 to 9999.
+		/// </param>
+		/// <remarks>
+		/// If you set to a date that the game cannot handle properly, the <see cref="Day"/> will be set to 1985.
+		/// </remarks>
+		public static void SetDateZeroBasedMonth(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
 
 		/// <summary>
 		/// Gets the day of the week.
