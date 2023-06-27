@@ -24,7 +24,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the day of month starting from 1 to 31.
-		/// The max value is guaranteed to be 31  regardless of the month.
+		/// The max value is guaranteed to be 31 regardless of the month.
 		/// </summary>
 		public static int Day
 		{
@@ -35,14 +35,19 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the day of month starting from 1.
 		/// </summary>
+		/// <remarks>
+		/// When you do not plan to use this value to draw on the screen,
+		/// consider using <see cref="MonthZero"/> since the game internally uses the zero-based month representation.
+		/// </remarks>
 		public static int Month
 		{
-			get => Function.Call<int>(Hash.GET_CLOCK_MONTH + 1);
-			set => Function.Call(Hash.SET_CLOCK_DATE, Day, value - 1, Year);
+			get => MonthZero + 1;
+			set => MonthZero = value - 1;
 		}
 
 		/// <summary>
 		/// Gets or sets the day of month starting from 0.
+		/// The representation is the same as the game uses for the month.
 		/// </summary>
 		public static int MonthZero
 		{
@@ -50,7 +55,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_CLOCK_DATE, Day, value, Year);
 		}
 		/// <summary>
-		/// Gets or sets the year number from 0 to 9999.
+		/// Gets or sets the year number from 1 to 9999.
 		/// </summary>
 		/// <value>
 		/// The current year number.
@@ -67,7 +72,7 @@ namespace GTA
 		/// <remarks>
 		/// Returns the cached value, not the value calculated by <see cref="Day"/>, <see cref="Month"/>, and <see cref="Year"/>.
 		/// If some of them is modified without updating the cached value for the day of week by direct memory editing,
-		/// this property will return a incorrect value.
+		/// this property will return an incorrect value.
 		/// </remarks>
 		public static DayOfWeek DayOfWeek => Function.Call<DayOfWeek>(Hash.GET_CLOCK_DAY_OF_WEEK);
 
@@ -143,7 +148,7 @@ namespace GTA
 
 		/// <param name="day">
 		/// The day number from 1 to 31.
-		/// The max value is the same regardless of the month number.
+		/// The max value is the same regardless of <paramref name="month"/>.
 		/// </param>
 		/// <param name="month">
 		/// The month number from 1 to 12.
@@ -160,7 +165,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="day">
 		/// The day number from 1 to 31.
-		/// The max value is the same regardless of the month number.
+		/// The max value is the same regardless of <paramref name="month"/>.
 		/// </param>
 		/// <param name="month">
 		/// The month number from 0 to 11.
