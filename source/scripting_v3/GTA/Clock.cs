@@ -156,8 +156,8 @@ namespace GTA
 		/// <param name="year">
 		/// The year number from 1 to 9999.
 		/// </param>
-		/// <inheritdoc cref="GetDayOfWeekMonthZero(int, int, int)"/>
-		public static DayOfWeek GetDayOfWeek(int day, int month, int year) => GetDayOfWeekMonthZero(day, month - 1, year);
+		/// <inheritdoc cref="GetDayOfWeekZeroBasedMonth(int, int, int)"/>
+		public static DayOfWeek GetDayOfWeek(int day, int month, int year) => GetDayOfWeekZeroBasedMonth(day, month - 1, year);
 
 		/// <summary>
 		/// Gets the day of the week.
@@ -177,7 +177,7 @@ namespace GTA
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Throws when one of the arguments is out of the range.
 		/// </exception>
-		public static DayOfWeek GetDayOfWeekMonthZero(int day, int month, int year)
+		public static DayOfWeek GetDayOfWeekZeroBasedMonth(int day, int month, int year)
 		{
 			if (day < 1 || day > 31)
 			{
