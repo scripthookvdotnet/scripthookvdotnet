@@ -34,6 +34,10 @@ namespace GTA
 			Function.Call(Hash.PLAY_SOUND_FROM_COORD, id, soundFile, position.X, position.Y, position.Z, soundSet, 0, 0, 0);
 			return id;
 		}
+		public static int PlaySoundFromEntity(Entity entity, string sound)
+			=> PlaySoundAt(entity, sound);
+		public static int PlaySoundFromEntity(Entity entity, string sound, string set)
+			=> PlaySoundAt(entity, sound, set);
 
 		public static int PlaySoundFrontend(string soundFile)
 		{
