@@ -24,7 +24,9 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the last time the clock is ticked.
-		/// You can set a value to this property to shift the clock minute.
+		/// You can use this value to calculate pseudo milliseconds along with <see cref="Game.GameTime"/>
+		/// and <see cref="MillisecondsPerGameMinute"/> when the clock is not paused.
+		/// You can also set a value to this property to shift the clock minute.
 		/// </summary>
 		/// <remarks>
 		/// If <see cref="IsPaused"/> is set to <see langword="true"/>, this value will be updated to <see cref="Game.GameTime"/> every frame.
@@ -155,11 +157,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the current time of day in the GTA World.
+		/// Gets or sets the current time of day in the GTA world.
 		/// </summary>
 		/// <value>
 		/// The current time of day.
 		/// </value>
+		/// <remarks>
+		/// The resolution of the value is 1 second.
+		/// </remarks>
 		public static TimeSpan TimeOfDay
 		{
 			get => new (Hour, Minute, Second);
