@@ -147,6 +147,7 @@ namespace GTA
 			set => SHVDN.NativeMemory.MillisecondsPerGameMinute = value;
 		}
 
+		// these 2 arrays was taken from the exe (embedded as 4-byte arrays)
 		private static int[] s_firstDaysOfWeekForNonLeapYear = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
 		private static int[] s_firstDaysOfWeekForLeapYear = new int[12] { 6, 2, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
 
