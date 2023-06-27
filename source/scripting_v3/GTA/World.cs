@@ -68,6 +68,8 @@ namespace GTA
 		/// <value>
 		/// The current date and time.
 		/// </value>
+		[Obsolete("World.CurrentDate is obsolete because DateTime cannot represent 31 days for all the months." +
+			"Use properties or methods of GTA.Clock instead.")]
 		public static DateTime CurrentDate
 		{
 			get
