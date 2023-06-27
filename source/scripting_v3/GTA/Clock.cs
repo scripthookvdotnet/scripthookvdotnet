@@ -23,10 +23,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the last time the clock is ticked.
+		/// Gets or sets the last game time the clock is ticked.
 		/// You can use this value to calculate pseudo milliseconds along with <see cref="Game.GameTime"/>
 		/// and <see cref="MillisecondsPerGameMinute"/> when the clock is not paused.
-		/// You can also set a value to this property to shift the clock minute.
+		/// You can also set a value to this property to shift the clock minute when the clock is not paused.
 		/// </summary>
 		/// <remarks>
 		/// If <see cref="IsPaused"/> is set to <see langword="true"/>, this value will be updated to <see cref="Game.GameTime"/> every frame.
@@ -183,7 +183,7 @@ namespace GTA
 			set => SHVDN.NativeMemory.MillisecondsPerGameMinute = value;
 		}
 
-		// these 2 arrays was taken from the exe (embedded as 4-byte arrays)
+		// these 2 arrays were taken from the exe (embedded as 4-byte arrays)
 		private static int[] s_firstDaysOfWeekForNonLeapYear = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
 		private static int[] s_firstDaysOfWeekForLeapYear = new int[12] { 6, 2, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
 
