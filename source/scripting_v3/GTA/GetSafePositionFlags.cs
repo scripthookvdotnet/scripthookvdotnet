@@ -42,23 +42,23 @@ namespace GTA
 		/// </remarks>
 		NotInterior = 4,
 		/// <summary>
-		/// Removes explosions in the vicinity of the <see cref="Player"/>.
+		/// No navmesh polygons marked as water.
 		/// </summary>
 		/// <remarks>
-		/// The isolated flag is named <c>B07_IsWater</c> in CodeWalker30_dev44.
+		/// The water flag is named <c>B07_IsWater</c> in CodeWalker30_dev44.
 		/// </remarks>
 		NotWater = 8,
 		/// <summary>
 		/// Only navmesh polygons marked as "network spawn candidate".
 		/// </summary>
 		/// <remarks>
-		/// The isolated flag is named <c>B17_IsFlatGround</c> in CodeWalker30_dev44.
+		/// The flag is named <c>B17_IsFlatGround</c> in CodeWalker30_dev44.
 		/// Despite the name in the said CodeWalker build, some slope navmesh polygons has the "network spawn candidate" flag.
 		/// </remarks>
 		OnlyNetworkSpawn = 16,
 		/// <summary>
 		/// Specify whether to use a flood-fill from the starting position, as opposed to scanning all polygons within the search volume.
 		/// </summary>
-		UseFloodFill = 128,
+		UseFloodFill = 32,
 	}
 }
