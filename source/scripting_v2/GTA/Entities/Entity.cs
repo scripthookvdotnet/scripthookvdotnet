@@ -760,6 +760,7 @@ namespace GTA
 		/// <returns>
 		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
 		/// </returns>
+		[Obsolete("Entity.IsInArea(Vector3, Vector3, float) is obsolete because it actually tests using an angled area, use Entity.IsInAngledArea(Vector3, Vector3, float) instead.")]
 		public bool IsInArea(Vector3 pos1, Vector3 pos2, float angle)
 		{
 			return IsInAngledArea(pos1, pos2, angle);
