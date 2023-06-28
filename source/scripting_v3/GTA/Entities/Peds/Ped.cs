@@ -2153,12 +2153,8 @@ namespace GTA
 
 		#endregion
 
-		#region Speech & Animation
-
-		public bool CanPlayGestures
-		{
-			set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
-		}
+		#region Speeches
+		// This region is for properties and methods that access an audSpeechAudioEntity instance
 
 		public bool IsPainAudioEnabled
 		{
@@ -2191,13 +2187,39 @@ namespace GTA
 
 			Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
 		}
+		/// <summary>
+		/// Stops currently playing speech (pain, ambient, scripted, breathing).
+		/// </summary>
+		public void StopCurrentPlayingSpeech() => Function.Call(Hash.STOP_CURRENT_PLAYING_SPEECH, Handle);
+		/// <summary>
+		/// Stops currently playing ambient speech.
+		/// </summary>
+		/// <remarks>
+		/// Does nothing if the currently playing speech is not an ambient one.
+		/// </remarks>
+		public void StopCurrentPlayingAmbientSpeech() => Function.Call(Hash.STOP_CURRENT_PLAYING_AMBIENT_SPEECH, Handle);
 
 		/// <summary>
-		/// Sets the voice to use when this <see cref="Ped"/> speaks.
+		/// Sets the ambient voice to use when this <see cref="Ped"/> speaks.
 		/// </summary>
+		/// <remarks>
+		/// The voice name will be stored as a joaat hash converted in the same way as <see cref="Game.GenerateHash(string)"/> does.
+		/// </remarks>
 		public string Voice
 		{
 			set => Function.Call(Hash.SET_AMBIENT_VOICE_NAME, Handle, value);
+		}
+
+		#endregion
+
+		#region Animation
+
+		/// <summary>
+		/// Sets the value that indicates this <see cref="Ped"/> can play gesture animations.
+		/// </summary>
+		public bool CanPlayGestures
+		{
+			set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
 		}
 
 		/// <summary>
