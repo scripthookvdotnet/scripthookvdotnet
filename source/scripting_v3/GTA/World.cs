@@ -2001,12 +2001,40 @@ namespace GTA
 			return resultArg;
 		}
 
+
+		/// <summary>
+		/// Checks to see if it can find a safe bit of ground to place a <see cref="Ped"/>.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		/// <param name="safePosition">If successful, will be filled with the position to check around.</param>
+		/// <param name="flags">The flags to determine how the method searches for positions.</param>
+		/// <returns>
+		/// <see langword="true"/> if successfully found a safe bit of ground to place a <see cref="Ped"/>; otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// Use this carefully since it can have a considerable performance hit, having to stall the game whilst it queries navmesh polygons.
+		/// </remarks>
+		public static bool GetSafePositionForPed(Vector3 position, out Vector3 safePosition, GetSafePositionFlags flags = GetSafePositionFlags.Default)
+		{
+			NativeVector3 outPos;
+			unsafe
+			{
+				// the 4th position sets the internal initial bitflag value to 3 instead of 2 if set,
+				// making it like the 1nd bit flag of 6th parameter is always set
+				bool foundSafePos = Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, flags);
+				safePosition = outPos;
+				return foundSafePos;
+			}
+		}
+
 		/// <summary>
 		/// Gets the nearest safe coordinate to position a <see cref="Ped"/>.
 		/// </summary>
 		/// <param name="position">The position to check around.</param>
 		/// <param name="sidewalk">if set to <see langword="true" /> Only find positions on the sidewalk.</param>
 		/// <param name="flags">The flags.</param>
+		[Obsolete("World.GetSafeCoordForPed is obsolete since there is no way to check if the method is failed while GET_SAFE_COORD_FOR_PED provides one." +
+			"Use GetSafePositionForPed instead.")]
 		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
 		{
 			NativeVector3 outPos;
