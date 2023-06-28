@@ -655,6 +655,9 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if this <see cref="Entity"/> is upright; otherwise, <see langword="false" />.
 		/// </value>
+		/// <remarks>
+		/// This property always returned <see langword="false"/> in v2.10.10 or earlier APIs.
+		/// </remarks>
 		public bool IsUpright => Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, 30.0f);
 
 		/// <summary>
