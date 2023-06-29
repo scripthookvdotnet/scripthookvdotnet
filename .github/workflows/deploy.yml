@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  create-release-draft:
+    runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && startsWith(github.ref, 'refs/tags/v') }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: ScriptHookVDotNet
+          path: bin/Release
+      - run: ls -R
+        working-directory: bin/Release
+      - run: |
+          echo "TAG_VERSION_NAME=$($env:GITHUB_REF.Substring(10))" >> $env:GITHUB_ENV
+      - run: 7z a ScriptHookVDotNet-${{ env.TAG_VERSION_NAME }}.zip ${{ github.workspace }}/bin/Release/*
+      - uses: ncipollo/release-action@v1.12.0
+        with:
+          name: ScriptHookVDotNet ${{ env.TAG_VERSION_NAME }}
+          artifacts: |
+            ScriptHookVDotNet-${{ env.TAG_VERSION_NAME }}.zip
+          draft: true
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          token: ${{ secrets.RELEASE_TOKEN_GITHUB }}
