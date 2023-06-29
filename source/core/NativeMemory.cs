@@ -392,6 +392,9 @@ namespace SHVDN
 				s_waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
+			address = FindPatternBmh("\x80\x3D\x00\x00\x00\x00\x00\x8B\xDA\x75\x29\x48\x8B\xD1\x33\xC9\xE8", "xxxxxxxxxxxxxxxxx");
+			s_isDecoratorLocked = (byte*)(*(int*)(address + 2) + address + 6);
+
 			address = FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
 			{
@@ -440,7 +443,7 @@ namespace SHVDN
 			address = FindPatternBmh("\xF3\x0F\x11\x05\x00\x00\x00\x00\xF3\x0F\x10\x08\x0F\x2F\xC8\x73\x03\x0F\x28\xC1\x48\x83\xC0\x04\x49\x2B", "xxxx????xxxxxxxxxxxxxxxxxx");
 			float* timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
 			if (timeScaleArrayAddress != null)
-				// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
+			// SET_TIME_SCALE changes the 2nd element, so obtain the address of it
 			{
 				s_timeScaleAddress = timeScaleArrayAddress + 1;
 			}
@@ -1806,6 +1809,18 @@ namespace SHVDN
 			}
 		}
 
+
+		#endregion
+
+		#region -- Decorator Data --
+
+		private static byte* s_isDecoratorLocked;
+
+		public static bool IsDecoratorLocked
+		{
+			get => *s_isDecoratorLocked != 0;
+			set => *s_isDecoratorLocked = (byte)(value ? 1 : 0);
+		}
 
 		#endregion
 
