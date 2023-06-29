@@ -4702,6 +4702,10 @@ namespace SHVDN
 					{
 						propertyFlags |= VehiclePathNodeProperties.Boat;
 					}
+					if ((Flags2 & 1) != 0)
+					{
+						propertyFlags |= VehiclePathNodeProperties.DontAllowGps;
+					}
 
 					return propertyFlags;
 				}
