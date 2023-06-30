@@ -392,8 +392,11 @@ namespace SHVDN
 				s_waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
 			}
 
-			address = FindPatternBmh("\x80\x3D\x00\x00\x00\x00\x00\x8B\xDA\x75\x29\x48\x8B\xD1\x33\xC9\xE8", "xxxxxxxxxxxxxxxxx");
-			s_isDecoratorLocked = (byte*)(*(int*)(address + 2) + address + 6);
+			address = FindPatternBmh("\x80\x3D\x00\x00\x00\x00\x00\x8B\xDA\x75\x29\x48\x8B\xD1\x33\xC9\xE8", "xx????xxxxxxxxxxx");
+			if (address != null)
+			{
+				s_isDecoratorLocked = (byte*)(*(int*)(address + 2) + address + 7);
+			}			
 
 			address = FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
