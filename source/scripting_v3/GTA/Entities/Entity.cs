@@ -158,18 +158,6 @@ namespace GTA
 		public bool HasDrawable => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_DRAWABLE, Handle);
 
 		/// <summary>
-		/// Gets a value that indicates whether this <see cref="Entity"/> has physics.
-		/// Before calling physics methods or properties such as <see cref="set_Velocity"/>, you have to check that the entity has physics.
-		/// </summary>
-		/// <value>
-		/// <see langword="true"/> if this <see cref="Entity"/> has physics; otherwise, <see langword="false" />.
-		/// </value>
-		/// <remarks>
-		/// Physics are streamed in separately from the drawable object, though <see cref="Entity"/> physics near the player are streamed.
-		/// </remarks>
-		public bool HasPhysics => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_PHYSICS, Handle);
-
-		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> has a skeleton.
 		/// <see cref="HasAnimationEventFired(int)"/> requires the <see cref="Entity"/> to have a skeleton.
 		/// You can use this property to check that the entity has a skeleton before calling that method.
@@ -1679,7 +1667,42 @@ namespace GTA
 
 		#endregion
 
-		#region Forces
+		#region Physics
+
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> has physics.
+		/// Before calling physics methods or properties such as <see cref="set_Velocity"/>, you have to check that the entity has physics.
+		/// </summary>
+		/// <value>
+		/// <see langword="true"/> if this <see cref="Entity"/> has physics; otherwise, <see langword="false" />.
+		/// </value>
+		/// <remarks>
+		/// Physics are streamed in separately from the drawable object, though <see cref="Entity"/> physics near the player are streamed.
+		/// </remarks>
+		public bool HasPhysics => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_PHYSICS, Handle);
+		/// <summary>
+		/// Activates the physics of this <see cref="Entity"/>.
+		/// </summary>
+		/// <seealso cref="HasPhysics"/>
+		public void ActivatePhysics() => Function.Call(Hash.ACTIVATE_PHYSICS, Handle);
+
+		/// <summary>
+		/// Sets a <see cref="Entity"/> damping.
+		/// </summary>
+		public void SetDamping(PhysicsDampingType dampingType, float dampingValue) => Function.Call(Hash.SET_DAMPING, Handle, dampingType, dampingValue);
+
+		/// <summary>
+		/// Gets or sets the center of gravity offset.
+		/// </summary>
+		public Vector3 CenterOfGravityOffset
+		{
+			get => Function.Call<Vector3>(Hash.GET_CGOFFSET, Handle);
+			set => Function.Call(Hash.SET_CGOFFSET, Handle, value.X, value.Y, value.Z);
+		}
+		/// <summary>
+		/// Sets center of gravity at bound center.
+		/// </summary>
+		public void SetCenterOfGravityAtBoundCenter() => Function.Call(Hash.SET_CG_AT_BOUNDCENTER, Handle);
 
 		/// <summary>
 		/// Applies a force to this <see cref="Entity"/>.
