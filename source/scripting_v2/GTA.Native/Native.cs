@@ -372,7 +372,7 @@ namespace GTA.Native
 
 				for (int i = 0; i < argCount; ++i)
 				{
-					argPtr[i] = arguments[i].data;
+					argPtr[i] = arguments[i]?.data ?? 0;
 				}
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
@@ -396,7 +396,7 @@ namespace GTA.Native
 				const int argCount = 1;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
+				argPtr[0] = argument0?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -409,8 +409,8 @@ namespace GTA.Native
 				const int argCount = 2;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -423,9 +423,9 @@ namespace GTA.Native
 				const int argCount = 3;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -438,10 +438,10 @@ namespace GTA.Native
 				const int argCount = 4;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -459,11 +459,11 @@ namespace GTA.Native
 				const int argCount = 5;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -482,12 +482,12 @@ namespace GTA.Native
 				const int argCount = 6;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -507,13 +507,13 @@ namespace GTA.Native
 				const int argCount = 7;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -534,14 +534,14 @@ namespace GTA.Native
 				const int argCount = 8;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -563,15 +563,15 @@ namespace GTA.Native
 				const int argCount = 9;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -594,16 +594,16 @@ namespace GTA.Native
 				const int argCount = 10;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -627,17 +627,17 @@ namespace GTA.Native
 				const int argCount = 11;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -662,18 +662,18 @@ namespace GTA.Native
 				const int argCount = 12;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -699,19 +699,19 @@ namespace GTA.Native
 				const int argCount = 13;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -738,20 +738,20 @@ namespace GTA.Native
 				const int argCount = 14;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
-				argPtr[13] = argument13.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
+				argPtr[13] = argument13?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -779,21 +779,21 @@ namespace GTA.Native
 				const int argCount = 15;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
-				argPtr[13] = argument13.data;
-				argPtr[14] = argument14.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
+				argPtr[13] = argument13?.data ?? 0;
+				argPtr[14] = argument14?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -822,22 +822,22 @@ namespace GTA.Native
 				const int argCount = 16;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
-				argPtr[13] = argument13.data;
-				argPtr[14] = argument14.data;
-				argPtr[15] = argument15.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
+				argPtr[13] = argument13?.data ?? 0;
+				argPtr[14] = argument14?.data ?? 0;
+				argPtr[15] = argument15?.data ?? 0;
 
 				ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 				return ReturnValueFromNativeIfNotNull<T>(res);
@@ -874,7 +874,7 @@ namespace GTA.Native
 
 				for (int i = 0; i < argCount; ++i)
 				{
-					argPtr[i] = arguments[i].data;
+					argPtr[i] = arguments[i]?.data ?? 0;
 				}
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
@@ -896,7 +896,7 @@ namespace GTA.Native
 				const int argCount = 1;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
+				argPtr[0] = argument0?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -908,8 +908,8 @@ namespace GTA.Native
 				const int argCount = 2;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -921,9 +921,9 @@ namespace GTA.Native
 				const int argCount = 3;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -935,10 +935,10 @@ namespace GTA.Native
 				const int argCount = 4;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -955,11 +955,11 @@ namespace GTA.Native
 				const int argCount = 5;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -977,12 +977,12 @@ namespace GTA.Native
 				const int argCount = 6;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1001,13 +1001,13 @@ namespace GTA.Native
 				const int argCount = 7;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1027,14 +1027,14 @@ namespace GTA.Native
 				const int argCount = 8;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1055,15 +1055,15 @@ namespace GTA.Native
 				const int argCount = 9;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1085,16 +1085,16 @@ namespace GTA.Native
 				const int argCount = 10;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1117,17 +1117,17 @@ namespace GTA.Native
 				const int argCount = 11;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1151,18 +1151,18 @@ namespace GTA.Native
 				const int argCount = 12;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1187,19 +1187,19 @@ namespace GTA.Native
 				const int argCount = 13;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1225,20 +1225,20 @@ namespace GTA.Native
 				const int argCount = 14;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
-				argPtr[13] = argument13.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
+				argPtr[13] = argument13?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1265,21 +1265,21 @@ namespace GTA.Native
 				const int argCount = 15;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
-				argPtr[13] = argument13.data;
-				argPtr[14] = argument14.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
+				argPtr[13] = argument13?.data ?? 0;
+				argPtr[14] = argument14?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
@@ -1307,22 +1307,22 @@ namespace GTA.Native
 				const int argCount = 16;
 				ulong* argPtr = stackalloc ulong[argCount];
 
-				argPtr[0] = argument0.data;
-				argPtr[1] = argument1.data;
-				argPtr[2] = argument2.data;
-				argPtr[3] = argument3.data;
-				argPtr[4] = argument4.data;
-				argPtr[5] = argument5.data;
-				argPtr[6] = argument6.data;
-				argPtr[7] = argument7.data;
-				argPtr[8] = argument8.data;
-				argPtr[9] = argument9.data;
-				argPtr[10] = argument10.data;
-				argPtr[11] = argument11.data;
-				argPtr[12] = argument12.data;
-				argPtr[13] = argument13.data;
-				argPtr[14] = argument14.data;
-				argPtr[15] = argument15.data;
+				argPtr[0] = argument0?.data ?? 0;
+				argPtr[1] = argument1?.data ?? 0;
+				argPtr[2] = argument2?.data ?? 0;
+				argPtr[3] = argument3?.data ?? 0;
+				argPtr[4] = argument4?.data ?? 0;
+				argPtr[5] = argument5?.data ?? 0;
+				argPtr[6] = argument6?.data ?? 0;
+				argPtr[7] = argument7?.data ?? 0;
+				argPtr[8] = argument8?.data ?? 0;
+				argPtr[9] = argument9?.data ?? 0;
+				argPtr[10] = argument10?.data ?? 0;
+				argPtr[11] = argument11?.data ?? 0;
+				argPtr[12] = argument12?.data ?? 0;
+				argPtr[13] = argument13?.data ?? 0;
+				argPtr[14] = argument14?.data ?? 0;
+				argPtr[15] = argument15?.data ?? 0;
 
 				SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
 			}
