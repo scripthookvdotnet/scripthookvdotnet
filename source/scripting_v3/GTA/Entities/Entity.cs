@@ -1282,6 +1282,19 @@ namespace GTA
 		public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
 
 		/// <summary>
+		/// Gets an upright value for this <see cref="Entity"/> between 1.0 being upright and -1.0 being upside down.
+		/// </summary>
+		/// <value>
+		/// The upright value between 1.0 being upright and -1.0 being upside down.
+		/// </value>
+		public float UprightValue => Function.Call<float>(Hash.GET_ENTITY_UPRIGHT_VALUE, Handle);
+
+		/// <summary>
+		/// Checks if this <see cref="Entity"/> is upright within a define angle limit.
+		/// </summary>
+		public bool IsUprightWithin(float angleToVerticalLimit = 90f) => Function.Call<bool>(Hash.IS_ENTITY_UPRIGHT, Handle, angleToVerticalLimit);
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Entity"/> has gravity.
 		/// </summary>
 		/// <value>
