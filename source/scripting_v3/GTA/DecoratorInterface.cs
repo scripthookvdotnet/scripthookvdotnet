@@ -35,25 +35,37 @@ namespace GTA
 		/// <summary>
 		/// Adds or updates a time decorator on the <see cref="Entity"/>.
 		/// </summary>
-		/// <returns><see langword="true"/> if completed successfuly; otherwise, <see langword="false"/>.</returns>
+		/// <returns>
+		/// <see langword="true"/> if the <see cref="Entity"/> exists; otherwise, <see langword="false"/>.
+		/// Does not check if <paramref name="decoratorName"/> is registered.
+		/// </returns>
 		public static bool SetTime(Entity entity, string decoratorName, int value)
 			=> Function.Call<bool>(Hash.DECOR_SET_TIME, entity, decoratorName, value);
 		/// <summary>
 		/// Adds or updates a bool decorator on the <see cref="Entity"/>.
 		/// </summary>
-		/// <returns><see langword="true"/> if completed successfuly; otherwise, <see langword="false"/>.</returns>
+		/// <returns>
+		/// <see langword="true"/> if the <see cref="Entity"/> exists; otherwise, <see langword="false"/>.
+		/// Does not check if <paramref name="decoratorName"/> is registered.
+		/// </returns>
 		public static bool SetBool(Entity entity, string decoratorName, bool value)
 			=> Function.Call<bool>(Hash.DECOR_SET_BOOL, entity, decoratorName, value);
 		/// <summary>
 		/// Adds or updates a float decorator on the <see cref="Entity"/>.
 		/// </summary>
-		/// <returns><see langword="true"/> if completed successfuly; otherwise, <see langword="false"/>.</returns>
+		/// <returns>
+		/// <see langword="true"/> if the <see cref="Entity"/> exists; otherwise, <see langword="false"/>.
+		/// Does not check if <paramref name="decoratorName"/> is registered.
+		/// </returns>
 		public static bool SetFloat(Entity entity, string decoratorName, float value)
 			=> Function.Call<bool>(Hash.DECOR_SET_FLOAT, entity, decoratorName, value);
 		/// <summary>
 		/// Adds or updates an int decorator on the <see cref="Entity"/>.
 		/// </summary>
-		/// <returns><see langword="true"/> if completed successfuly; otherwise, <see langword="false"/>.</returns>
+		/// <returns>
+		/// <see langword="true"/> if the <see cref="Entity"/> exists; otherwise, <see langword="false"/>.
+		/// Does not check if <paramref name="decoratorName"/> is registered.
+		/// </returns>
 		public static bool SetInt(Entity entity, string decoratorName, int value)
 			=> Function.Call<bool>(Hash.DECOR_SET_INT, entity, decoratorName, value);
 
@@ -79,7 +91,7 @@ namespace GTA
 		/// <summary>
 		/// Queries to see if an <see cref="Entity"/> has the decorator applied to it.
 		/// </summary>
-		/// <returns><see langword="true"/> if the decorator exists; otherwise, <see langword="false"/>.</returns>
+		/// <returns><see langword="true"/> if the <see cref="Entity"/> has the decorator; otherwise, <see langword="false"/>.</returns>
 		public static bool ExistsOn(Entity entity, string decoratorName)
 			=> Function.Call<bool>(Hash.DECOR_EXIST_ON, entity, decoratorName);
 		/// <summary>
