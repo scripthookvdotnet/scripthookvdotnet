@@ -1689,7 +1689,7 @@ namespace GTA
 		/// <summary>
 		/// Sets a <see cref="Entity"/> damping.
 		/// </summary>
-		public void SetDamping(PhysicsDampingType dampingType, float dampingValue) => Function.Call(Hash.SET_DAMPING, Handle, dampingType, dampingValue);
+		public void SetDamping(PhysicsDampingType dampingType, float dampingValue) => Function.Call(Hash.SET_DAMPING, Handle, (int)dampingType, dampingValue);
 
 		/// <summary>
 		/// Gets or sets the center of gravity offset.
