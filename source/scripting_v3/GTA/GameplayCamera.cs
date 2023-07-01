@@ -76,27 +76,37 @@ namespace GTA
 			return Matrix.InverseTransformPoint(worldCoords);
 		}
 
+#region Third Person Camera
+
+		public static void FollowCameraIgnoreAttachParentMovementThisUpdate()
+			=> Function.Call(Hash.SET_FOLLOW_CAM_IGNORE_ATTACH_PARENT_MOVEMENT_THIS_UPDATE);
+
 		/// <summary>
 		/// Forces the active third person camera using the specified heading limits only for this update.
 		/// </summary>
-		/// <param name="min">The minimum yaw value.</param>
-		/// <param name="max">The maximum yaw value.</param>
-		public static void ClampYaw(float min, float max)
-		{
-			Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_HEADING_LIMITS_THIS_UPDATE, min, max);
-		}
+		/// <param name="minRelativeHeading">The minimum yaw value.</param>
+		/// <param name="maxRelativeHeading">The maximum yaw value.</param>
+		public static void SetThirdPersonCameraRelativeHeadingLimitsThisUpdate(float minRelativeHeading, float maxRelativeHeading)
+			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_HEADING_LIMITS_THIS_UPDATE, minRelativeHeading, maxRelativeHeading);
 		/// <summary>
 		/// Forces the active third person camera using the specified pitch limits only for this update.
 		/// </summary>
-		/// <param name="min">The minimum pitch value.</param>
-		/// <param name="max">The maximum pitch value.</param>
-		public static void ClampPitch(float min, float max)
-		{
-			Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_PITCH_LIMITS_THIS_UPDATE, min, max);
-		}
+		/// <param name="minRelativePitch">The minimum pitch value.</param>
+		/// <param name="maxRelativePitch">The maximum pitch value.</param>
+		public static void SetThirdPersonCameraRelativePitchLimitsThisUpdate(float minRelativePitch, float maxRelativePitch)
+			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_PITCH_LIMITS_THIS_UPDATE, minRelativePitch, maxRelativePitch);
+		/// <summary>
+		/// Forces the active third person camera using the specified pitch limits only for this update.
+		/// </summary>
+		/// <param name="minDistance">The minimum distance in meters.</param>
+		/// <param name="maxDistance">The maximum distance in meters.</param>
+		public static void SetThirdPersonCameraOrbitDistanceLimitsThisUpdate(float minDistance, float maxDistance)
+			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_ORBIT_DISTANCE_LIMITS_THIS_UPDATE, minDistance, maxDistance);
+
+#endregion
 
 		/// <summary>
-		/// Gets the <see cref="GameplayCamera"/>'s pitch relative to the target entity (ped or vehicle.)
+		/// Gets the <see cref="GameplayCamera"/>'s pitch relative to the target entity (ped or vehicle) in degrees.
 		/// </summary>
 		public static float RelativePitch
 		{
@@ -105,13 +115,82 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="GameplayCamera"/>'s heading relative to the target entity (ped or vehicle.)
+		/// Sets the gameplay camera's pitch relative to the target entity (<see cref="Ped"/> or <see cref="Vehicle"/>).
+		/// </summary>
+		/// <param name="pitch">The relative pitch to set in degrees.</param>
+		/// <param name="smoothRate">
+		/// The rate at which the relative pitch should be attained. 1.0f is instant, 0.0f is infinite.
+		/// </param>
+		public static void SetRelativePitch(float pitch, float smoothRate)
+			=> Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, pitch, smoothRate);
+
+		/// <summary>
+		/// Gets the <see cref="GameplayCamera"/>'s heading relative to the target entity (ped or vehicle) in degrees.
 		/// </summary>
 		public static float RelativeHeading
 		{
 			get => Function.Call<float>(Hash.GET_GAMEPLAY_CAM_RELATIVE_HEADING);
 			set => Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_HEADING, value);
 		}
+
+		/// <summary>
+		/// Sets the gameplay camera's pitch relative to the target entity (<see cref="Ped"/> or <see cref="Vehicle"/>).
+		/// </summary>
+		/// <param name="heading">The relative heading to set in degrees.</param>
+		/// <param name="pitch">The relative pitch to set in degrees.</param>
+		/// <param name="smoothRate">
+		/// The rate at which the relative pitch should be attained. 1.0f is instant, 0.0f is infinite.
+		/// </param>
+		public static void ForceRelativeHeadingAndPitch(float heading, float pitch, float smoothRate)
+			=> Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, heading, pitch, smoothRate);
+
+		/// <summary>
+		/// Gets the value that indicates a follow-ped camera is active.
+		/// </summary>
+		public static bool IsFollowPedCameraActive => Function.Call<bool>(Hash.IS_FOLLOW_PED_CAM_ACTIVE);
+
+		/// <summary>
+		/// Gets the global view mode used by all follow-ped cameras.
+		/// </summary>
+		public static CameraViewMode FollowPedCameraViewMode
+		{
+			get => Function.Call<CameraViewMode>(Hash.GET_FOLLOW_PED_CAM_VIEW_MODE);
+			set => Function.Call(Hash.SET_FOLLOW_PED_CAM_VIEW_MODE, (int)value);
+		}
+
+		/// <summary>
+		/// Gets the value that indicates a follow-vehicle camera is active.
+		/// </summary>
+		public static bool IsFollowVehicleCameraActive => Function.Call<bool>(Hash.IS_FOLLOW_VEHICLE_CAM_ACTIVE);
+
+		/// <summary>
+		/// Gets or sets the view mode used by the follow-vehicle and vehicle-aim cameras associated with classes of vehicles
+		/// that are not handled specially, such as cars.
+		/// Use <see cref="GetCameraViewModeForContext"/> or <see cref="SetCameraViewModeForContext"/>
+		/// to query the view mode applied for other classes of vehicle.
+		/// </summary>
+		public static CameraViewMode FollowVehicleCameraViewMode
+		{
+			get => Function.Call<CameraViewMode>(Hash.GET_FOLLOW_VEHICLE_CAM_VIEW_MODE);
+			set => Function.Call(Hash.SET_FOLLOW_VEHICLE_CAM_VIEW_MODE, (int)value);
+		}
+
+		/// <summary>
+		///  Gets the camera view mode for the specified context.
+		/// </summary>
+		public static CameraViewMode GetCameraViewModeForContext(CameraViewModeContext context)
+			=> Function.Call<CameraViewMode>(Hash.GET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context);
+		/// <summary>
+		///	Sets the camera view mode for the specified context.
+		/// </summary>
+		public static CameraViewMode SetCameraViewModeForContext(CameraViewModeContext context, CameraViewMode viewMode)
+			=> Function.Call<CameraViewMode>(Hash.SET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context, (int)viewMode);
+
+		/// <summary>
+		/// Returns the view mode context for the active gameplay camera.
+		/// </summary>
+		public static CameraViewModeContext ActiveViewModeContext
+			=> Function.Call<CameraViewModeContext>(Hash.GET_CAM_ACTIVE_VIEW_MODE_CONTEXT);
 
 		/// <summary>
 		/// Gets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
