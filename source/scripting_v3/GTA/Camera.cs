@@ -9,6 +9,9 @@ using System;
 
 namespace GTA
 {
+	/// <summary>
+	/// Represents a scripted camera.
+	/// </summary>
 	public sealed class Camera : PoolObject, ISpatial
 	{
 		internal static readonly string[] shakeNames = {
@@ -52,7 +55,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="Camera"/> is currently being rendered.
+		/// Gets or sets a value indicating whether this <see cref="Camera"/> is active.
+		/// Returning <see langword="false"/> means this <see cref="Camera"/> is not rendering to the game screen,
+		/// but returning <see langword="true"/> does not mean it's rendering to the screen.
 		/// </summary>
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Camera"/> is active; otherwise, <see langword="false" />.
@@ -188,7 +193,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the far clip of this <see cref="Camera"/>.
+		/// Gets or sets the far clip distance of this <see cref="Camera"/> in meters.
 		/// </summary>
 		public float FarClip
 		{
@@ -197,7 +202,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the near clip of this <see cref="Camera"/>.
+		/// Gets or sets the near clip distance of this <see cref="Camera"/> in meters.
 		/// </summary>
 		public float NearClip
 		{
@@ -206,7 +211,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the field of view of this <see cref="Camera"/>.
+		/// Gets or sets the field of view of this <see cref="Camera"/> in degrees.
 		/// </summary>
 		public float FieldOfView
 		{
@@ -215,7 +220,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the far depth of field of this <see cref="Camera"/>.
+		/// Gets or sets the far depth of field distance of this <see cref="Camera"/> in meters.
 		/// </summary>
 		public float FarDepthOfField
 		{
@@ -224,7 +229,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the near depth of field for this <see cref="Camera"/>.
+		/// Sets the near depth of field distance for this <see cref="Camera"/> in meters.
 		/// </summary>
 		public float NearDepthOfField
 		{
@@ -232,7 +237,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the strength of the motion blur for this <see cref="Camera"/>
+		/// Sets the strength of the motion blur for this <see cref="Camera"/>.
 		/// </summary>
 		public float MotionBlurStrength
 		{
@@ -317,7 +322,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Moves this <see cref="Camera"/> to the <paramref name="to"/> position.
+		/// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
 		/// </summary>
 		public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
 		{
@@ -336,7 +341,7 @@ namespace GTA
 		/// Attaches this <see cref="Camera"/> to a specific <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to attach to.</param>
-		/// <param name="offset">The offset from the <paramref name="entity"/> to attach to.</param>
+		/// <param name="offset">The relative offset from the <paramref name="entity"/> to attach to.</param>
 		public void AttachTo(Entity entity, Vector3 offset)
 		{
 			Function.Call(Hash.ATTACH_CAM_TO_ENTITY, Handle, entity.Handle, offset.X, offset.Y, offset.Z, true);
@@ -345,7 +350,7 @@ namespace GTA
 		/// Attaches this <see cref="Camera"/> to a specific <see cref="PedBone"/>.
 		/// </summary>
 		/// <param name="pedBone">The <see cref="PedBone"/> to attach to.</param>
-		/// <param name="offset">The offset from the <paramref name="pedBone"/> to attach to.</param>
+		/// <param name="offset">The relative offset from the <paramref name="pedBone"/> to attach to.</param>
 		public void AttachTo(PedBone pedBone, Vector3 offset)
 		{
 			Function.Call(Hash.ATTACH_CAM_TO_PED_BONE, Handle, pedBone.Owner.Handle, pedBone, offset.X, offset.Y, offset.Z, true);
