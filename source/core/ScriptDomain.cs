@@ -585,7 +585,7 @@ namespace SHVDN
 					unsafe
 					{
 						NativeFunc.InvokeInternal(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
-						NativeFunc.PushLongString($"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is not actively supported. Check the console or the log file for more details.");
+						NativeFunc.PushLongString($"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is deprecated and not actively supported. See the console outputs or the log file for more details.");
 						NativeFunc.InvokeInternal(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
 					}
 				}
@@ -597,7 +597,7 @@ namespace SHVDN
 
 					string apiVersionString = apiVersion != 0 ? $"{apiVersion}.x" : "0.x or 1.x (fallbacked to the v2 API)";
 
-					Log.Message(Log.Level.Warning, $"Found {scriptAssemblyCount} script(s) resolved to the API version {apiVersionString}. The v2 API is no longer actively supported. Please report to script developers. The list of script names:");
+					Log.Message(Log.Level.Warning, $"Found {scriptAssemblyCount} script(s) resolved to the deprecated API version {apiVersionString}. The v2 API is no longer actively supported. Please report to the authors who developed some of the deprecated scripts. The list of script names:");
 					foreach (string scriptName in apiVersionAndScriptNameDict.Value)
 					{
 						Log.Message(Log.Level.Warning, scriptName);
