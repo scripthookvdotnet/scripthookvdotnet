@@ -202,9 +202,9 @@ namespace GTA
 		#region Hint Camera
 
 		// All the 3 const values below are taken from the official cam header file
-		private const int DefaultDwellTime = 2000;
-		private const int DefaultInterpInTime = 2000;
-		private const int DefaultInterpOutTime = 2000;
+		public const int DefaultDwellTime = 2000;
+		public const int DefaultInterpInTime = 2000;
+		public const int DefaultInterpOutTime = 2000;
 
 		/// <summary>
 		///	Sets the gameplay to hint a coord.
