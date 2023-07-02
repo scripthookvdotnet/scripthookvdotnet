@@ -24,7 +24,7 @@ namespace GTA
 		/// </remarks>
 		DefaultHintHelper = 0x6B83254B,
 		/// <remarks>
-		/// The original name is <c>SKY_DIVING_VEHICLE_HELPER</c>, which does not appear in ysc scripts.
+		/// The original name is <c>SKY_DIVING_HINT_HELPER</c>, which does not appear in ysc scripts.
 		/// </remarks>
 		SkyDivingHintHelper = 0xD4A14726,
 		/// <remarks>
