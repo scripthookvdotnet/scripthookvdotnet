@@ -387,7 +387,6 @@ namespace GTA
 		/// </summary>
 		public static void InvalidateIdleCamera() => Function.Call(Hash.INVALIDATE_IDLE_CAM);
 
-
 		/// <summary>
 		/// Gets or sets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
 		/// or the mobile phone camera, if active.

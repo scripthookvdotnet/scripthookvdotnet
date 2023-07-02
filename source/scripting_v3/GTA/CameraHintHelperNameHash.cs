@@ -15,7 +15,8 @@ namespace GTA
 	{
 		/// <summary>
 		/// The gameplay director will use the hint helper set to the current hint metadata
-		/// if this value is specified for
+		/// if this value is specified for <see cref="GameplayCamera.SetCoordHint"/> or
+		/// <see cref="GameplayCamera.SetEntityHint"/>.
 		/// </summary>
 		None = 0,
 		/// <remarks>
