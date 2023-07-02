@@ -168,7 +168,7 @@ namespace GTA
 		/// </summary>
 		public static implicit operator InputArgument(PathNode value)
 		{
-			return new InputArgument((ulong)value.Handle);
+			return new InputArgument((ulong)(value?.Handle ?? 0));
 		}
 
 		public override int GetHashCode()
