@@ -48,6 +48,18 @@ namespace GTA
 		/// </remarks>
 		RemoveProjectiles = 32,
 		/// <summary>
+		/// Deactivates all the player's gadgets.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Only works when you disable the controls.
+		/// </para>
+		/// <para>
+		/// Internally calls an additional function for <c>CPedWeaponManager</c> on the player <see cref="Ped"/>.
+		/// </para>
+		/// </remarks>
+		DeactivateGadgets = 64,
+		/// <summary>
 		/// Re-enables the player's controls if they die whilst not under control.
 		/// </summary>
 		/// <remarks>
