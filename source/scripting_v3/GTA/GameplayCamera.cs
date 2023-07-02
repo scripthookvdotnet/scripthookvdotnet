@@ -76,7 +76,7 @@ namespace GTA
 			return Matrix.InverseTransformPoint(worldCoords);
 		}
 
-#region Third Person Camera
+		#region Third Person Camera
 
 		public static void FollowCameraIgnoreAttachParentMovementThisUpdate()
 			=> Function.Call(Hash.SET_FOLLOW_CAM_IGNORE_ATTACH_PARENT_MOVEMENT_THIS_UPDATE);
@@ -86,15 +86,21 @@ namespace GTA
 		/// </summary>
 		/// <param name="minRelativeHeading">The minimum yaw value.</param>
 		/// <param name="maxRelativeHeading">The maximum yaw value.</param>
-		public static void SetThirdPersonCameraRelativeHeadingLimitsThisUpdate(float minRelativeHeading, float maxRelativeHeading)
-			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_HEADING_LIMITS_THIS_UPDATE, minRelativeHeading, maxRelativeHeading);
+		public static void SetThirdPersonCameraRelativeHeadingLimitsThisUpdate(float minRelativeHeading,
+			float maxRelativeHeading)
+			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_HEADING_LIMITS_THIS_UPDATE, minRelativeHeading,
+				maxRelativeHeading);
+
 		/// <summary>
 		/// Forces the active third person camera using the specified pitch limits only for this update.
 		/// </summary>
 		/// <param name="minRelativePitch">The minimum pitch value.</param>
 		/// <param name="maxRelativePitch">The maximum pitch value.</param>
-		public static void SetThirdPersonCameraRelativePitchLimitsThisUpdate(float minRelativePitch, float maxRelativePitch)
-			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_PITCH_LIMITS_THIS_UPDATE, minRelativePitch, maxRelativePitch);
+		public static void SetThirdPersonCameraRelativePitchLimitsThisUpdate(float minRelativePitch,
+			float maxRelativePitch)
+			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_RELATIVE_PITCH_LIMITS_THIS_UPDATE, minRelativePitch,
+				maxRelativePitch);
+
 		/// <summary>
 		/// Forces the active third person camera using the specified pitch limits only for this update.
 		/// </summary>
@@ -103,7 +109,7 @@ namespace GTA
 		public static void SetThirdPersonCameraOrbitDistanceLimitsThisUpdate(float minDistance, float maxDistance)
 			=> Function.Call(Hash.SET_THIRD_PERSON_CAM_ORBIT_DISTANCE_LIMITS_THIS_UPDATE, minDistance, maxDistance);
 
-#endregion
+		#endregion
 
 		/// <summary>
 		/// Gets the <see cref="GameplayCamera"/>'s pitch relative to the target entity (ped or vehicle) in degrees.
@@ -180,6 +186,7 @@ namespace GTA
 		/// </summary>
 		public static CameraViewMode GetCameraViewModeForContext(CameraViewModeContext context)
 			=> Function.Call<CameraViewMode>(Hash.GET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context);
+
 		/// <summary>
 		///	Sets the camera view mode for the specified context.
 		/// </summary>
@@ -192,11 +199,217 @@ namespace GTA
 		public static CameraViewModeContext ActiveViewModeContext
 			=> Function.Call<CameraViewModeContext>(Hash.GET_CAM_ACTIVE_VIEW_MODE_CONTEXT);
 
+		#region Hint Camera
+
+		// All the 3 const values below are taken from the official cam header file
+		private const int DefaultDwellTime = 2000;
+		private const int DefaultInterpInTime = 2000;
+		private const int DefaultInterpOutTime = 2000;
+
+		/// <summary>
+		///	Sets the gameplay to hint a coord.
+		/// </summary>
+		/// <param name="coord">The coordinate to hint (point at).</param>
+		/// <param name="dwellTime">How long cam looks at the coordinate.</param>
+		/// <param name="interpTo">How long the interp to the hint is.</param>
+		/// <param name="interpFrom">How long the interp is from the interp.</param>
+		/// <param name="overriddenHintType">The overridden hint type.</param>
+		public static void SetCoordHint(Vector3 coord, int dwellTime = DefaultDwellTime,
+			int interpTo = DefaultInterpInTime, int interpFrom = DefaultInterpOutTime,
+			CameraHintHelperNameHash overriddenHintType = CameraHintHelperNameHash.None)
+			=> Function.Call(Hash.SET_GAMEPLAY_COORD_HINT, coord.X, coord.Y, coord.Z, dwellTime, interpTo, interpFrom,
+				(uint)overriddenHintType);
+
+		/// <summary>
+		///	Sets the gameplay to hint an <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="Entity"/> to hint (point at).</param>
+		/// <param name="offset">The offset from the <see cref="Entity"/>.</param>
+		/// <param name="relativeOffset">Specifies whether the offset is relative to the <see cref="Entity"/>.</param>
+		/// <param name="dwellTime">How long cam looks at the coordinate.</param>
+		/// <param name="interpTo">How long the interp to the hint is.</param>
+		/// <param name="interpFrom">How long the interp is from the interp.</param>
+		/// <param name="overriddenHintType">The overridden hint type.</param>
+		public static void SetEntityHint(Entity entity, Vector3 offset, bool relativeOffset = true,
+			int dwellTime = DefaultDwellTime, int interpTo = DefaultInterpInTime, int interpFrom = DefaultInterpOutTime,
+			CameraHintHelperNameHash overriddenHintType = CameraHintHelperNameHash.None)
+			=> Function.Call(Hash.SET_GAMEPLAY_ENTITY_HINT, entity, offset.X, offset.Y, offset.Z, relativeOffset,
+				dwellTime, interpTo, interpFrom, (uint)overriddenHintType);
+
+		/// <summary>
+		/// Gets the value that indicates whether a hint is running.
+		/// In other words, the return value indicates whether the gameplay camera is zooming to
+		/// some <see cref="Entity"/> or coordinate.
+		/// </summary>
+		public static bool IsHintActive => Function.Call<bool>(Hash.IS_GAMEPLAY_HINT_ACTIVE);
+
+		/// <summary>
+		/// Scales the cameras orbit distance between the camera and its attach <see cref="Entity"/> or coordinate.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Call at the start of the hint to avoid pops.
+		/// This value will be cleared after a hint is finished.
+		/// </para>
+		/// </remarks>
+		public static float HintFollowDistanceScaler
+		{
+			set => Function.Call(Hash.SET_GAMEPLAY_HINT_FOLLOW_DISTANCE_SCALAR, value);
+		}
+
+		/// <summary>
+		/// Adjusts the pitch of camera relative to its attach parent.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Call at the start of the hint to avoid pops.
+		/// This value will be cleared after a hint is finished.
+		/// </para>
+		/// <para>
+		/// Changes nothing if the passed value is not in the range of [1f, 130f].
+		/// </para>
+		/// </remarks>
+		public static float HintBaseOrbitPitchOffset
+		{
+			set => Function.Call(Hash.SET_GAMEPLAY_HINT_BASE_ORBIT_PITCH_OFFSET, value);
+		}
+
+		/// <summary>
+		/// Sets an side offset relative attach parent in meters.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Call at the start of the hint to avoid pops.
+		/// This value will be cleared after a hint is finished.
+		/// </para>
+		/// </remarks>
+		public static float HintCameraRelativeSideOffset
+		{
+			set => Function.Call(Hash.SET_GAMEPLAY_HINT_CAMERA_RELATIVE_SIDE_OFFSET, value);
+		}
+
+		/// <summary>
+		/// Sets an vertical offset relative attach parent in meters.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Call at the start of the hint to avoid pops.
+		/// This value will be cleared after a hint is finished.
+		/// </para>
+		/// <para>
+		/// This will cause the camera to pull back to frame the player correctly,
+		/// may need to use in conjunction with the <see cref="HintFollowDistanceScaler"/>.
+		/// </para>
+		/// </remarks>
+		public static float HintCameraRelativeVerticalOffset
+		{
+			set => Function.Call(Hash.SET_GAMEPLAY_HINT_CAMERA_RELATIVE_VERTICAL_OFFSET, value);
+		}
+
+		/// <summary>
+		/// Sets the hint field of view override.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Call at the start of the hint to avoid pops.
+		/// This value will be cleared after a hint is finished.
+		/// </para>
+		/// <para>
+		/// Changes nothing if the passed value is not in the range of [1f, 130f].
+		/// </para>
+		/// </remarks>
+		public static float HintFovOverride
+		{
+			set => Function.Call(Hash.SET_GAMEPLAY_HINT_FOV, value);
+		}
+
+		/// <summary>
+		/// Stops the hint cam running except if its a code gameplay hint.
+		/// </summary>
+		/// <param name="stopImmediately">
+		/// If <see langword="true"/>, the hint camera will stop immediately,
+		/// otherwise it will enter its release phase.
+		/// </param>
+		public static void StopGameplayHint(bool stopImmediately)
+			=> Function.Call(Hash.STOP_GAMEPLAY_HINT, stopImmediately);
+
+		/// <summary>
+		///  Stops any active code gameplay hint.
+		/// </summary>
+		/// <param name="stopImmediately">
+		/// If <see langword="true"/>, the hint camera will stop immediately,
+		/// otherwise it will enter its release phase.
+		/// </param>
+		public static void StopCodeGameplayHint(bool stopImmediately)
+			=> Function.Call(Hash.STOP_CODE_GAMEPLAY_HINT, stopImmediately);
+
+		/// <summary>
+		/// Gets the value that indicates whether that a code gameplay hint is active.
+		/// </summary>
+		/// <remarks>
+		/// A code gameplay hint is a hint activated by the game code (not by some script).
+		/// Hints are based on a first come, fist served basis.
+		/// </remarks>
+		public static bool IsCodeHintActive => Function.Call<bool>(Hash.IS_CODE_GAMEPLAY_HINT_ACTIVE);
+
+		/// <summary>
+		/// Sets the camera exit/enter state for <see cref="Vehicle"/>s which defines
+		/// if the follow vehicle or follow ped camera runs.
+		/// You can use this method to get the camera to interpolate between the follow ped and follow vehicle cameras
+		/// the intermediate states have to be called.
+		/// </summary>
+		/// <param name="vehicle">
+		/// The vehicle for follow vehicle camera.
+		/// You can pass <see langword="null"/> or a invalid <see cref="Vehicle"/>
+		/// if <paramref name="inVehicleState"/> is set to <see cref="CameraInVehicleState.OutsideVehicle"/>,
+		/// since this value will not be used for <see cref="CameraInVehicleState.OutsideVehicle"/>.
+		/// </param>
+		/// <param name="inVehicleState">The in vehicle camera state enum.</param>
+		public static void SetInVehicleCameraStateThisUpdate(Vehicle vehicle, CameraInVehicleState inVehicleState)
+			=> Function.Call(Hash.SET_IN_VEHICLE_CAM_STATE_THIS_UPDATE, vehicle, (int)inVehicleState);
+
+		/// <summary>
+		/// Disables on foot first person view, must be called every update.
+		/// </summary>
+		public static void DisableOnFootFirstPersonViewThisUpdate()
+			=> Function.Call(Hash.DISABLE_ON_FOOT_FIRST_PERSON_VIEW_THIS_UPDATE);
+
+		/// <summary>
+		/// Disables flash effects from first person transitions, must be called every update.
+		/// </summary>
+		public static void DisableFirstPersonFlashEffectThisUpdate()
+			=> Function.Call(Hash.DISABLE_FIRST_PERSON_FLASH_EFFECT_THIS_UPDATE);
+
+		#endregion
+
+		/// <summary>
+		/// Invalidates the cinematic idle camera, restarting the associated idle counter.
+		/// </summary>
+		public static void InvalidateIdleCamera() => Function.Call(Hash.INVALIDATE_IDLE_CAM);
+
+
+		/// <summary>
+		/// Gets or sets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
+		/// or the mobile phone camera, if active.
+		/// </summary>
+		/// <remarks>
+		/// The specified zoom factor will be clamped to between 1.0 and the maximum zoom factor supported by the specific weapon/camera.
+		/// The zoom factor will also automatically reset to 1.0 if the follow <see cref="Ped"/>'s equipped weapon changes or the mobile phone camera toggles on or off.
+		/// </remarks>
+		public static float FirstPersonAimCameraZoomFactor
+		{
+			get => Function.Call<float>(Hash.GET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR);
+			set => Function.Call(Hash.SET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR, value);
+		}
+
 		/// <summary>
 		/// Gets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
 		/// or the mobile phone camera, if active.
 		/// </summary>
-		public static float Zoom => Function.Call<float>(Hash.GET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR);
+		[Obsolete(
+			"GameplayCamera.Zoom is obsolete since it does not suggest the value is relevant only when a first person aim camera is used."
+			+ "Use GameplayCamera.FirstPersonAimCameraZoomFactor instead.")]
+		public static float Zoom => FirstPersonAimCameraZoomFactor;
 
 		/// <summary>
 		/// Gets the field of view of the <see cref="GameplayCamera"/>.

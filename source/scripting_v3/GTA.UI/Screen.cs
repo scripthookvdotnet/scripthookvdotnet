@@ -311,6 +311,18 @@ namespace GTA.UI
 		#region Space Conversion
 
 		/// <summary>
+		/// Gets the value that indicates whether the sphere created with supplied arguments is visible
+		/// in the global viewport (<c>CViewportGame</c> instance).
+		/// </summary>
+		/// <param name="position">The center position of the sphere.</param>
+		/// <param name="radius">The radius of the sphere.</param>
+		/// <returns>
+		/// <see langword="true"/> if the sphere is visible in the global viewport; otherwise,<see langword="false"/>.
+		/// </returns>
+		public static bool IsSphereVisible(Vector3 position, float radius)
+			=> Function.Call<bool>(Hash.IS_SPHERE_VISIBLE, position.X, position.Y, position.Z, radius);
+
+		/// <summary>
 		/// Translates a point in WorldSpace to its given Coordinates on the <see cref="Screen"/>
 		/// </summary>
 		/// <param name="position">The position in the World.</param>
