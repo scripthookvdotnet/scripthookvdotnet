@@ -148,7 +148,7 @@ namespace GTA
 		/// The rate at which the relative pitch should be attained. 1.0f is instant, 0.0f is infinite.
 		/// </param>
 		public static void ForceRelativeHeadingAndPitch(float heading, float pitch, float smoothRate)
-			=> Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, heading, pitch, smoothRate);
+			=> Function.Call(Hash.FORCE_CAMERA_RELATIVE_HEADING_AND_PITCH, heading, pitch, smoothRate);
 
 		/// <summary>
 		/// Gets the value that indicates a follow-ped camera is active.
