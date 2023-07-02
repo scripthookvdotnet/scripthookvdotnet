@@ -11,9 +11,9 @@ namespace GTA
 	public enum SetPlayerControlFlags
 	{
 		None = 0,
-		// There's no 1 here, since the internal function that SET_PLAYER_CONTROL calls overwrites the 1st bit for the disable
-		// control flag (set if the separate disable bool was set, not set if it wasn't set), while all the other bits are
-		// carried as a uint32_t value
+		// There's no 1 here, since the 1st bit is overwritten with the disable control flag (set if it was set,
+		// not set if it wasn't set) before passing the internal function that SET_PLAYER_CONTROL calls,
+		// while all the other bits are carried as a uint32_t value (the 1st bit is overwritten with said bool)
 		/// <summary>
 		/// Sets or removes the additional flag that determines whether this was called by an ambient script.
 		/// </summary>
