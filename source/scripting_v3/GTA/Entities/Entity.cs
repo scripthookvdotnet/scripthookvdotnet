@@ -2071,7 +2071,7 @@ namespace GTA
 		/// </summary>
 		public static implicit operator InputArgument(Entity value)
 		{
-			return new InputArgument((ulong)value.Handle);
+			return new InputArgument((ulong)(value?.Handle ?? 0));
 		}
 
 		public override int GetHashCode()
