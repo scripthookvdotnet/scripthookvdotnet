@@ -1113,7 +1113,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="setControlOn">Specifies whether the player control should be on.</param>
 		/// <param name="flags">
-		/// The flags for additional flag modifications or additonal function calls such as removing projectiles.
+		/// The flags for additional flag modifications or additional function calls such as removing projectiles.
 		/// All the flags except for <see cref="SetPlayerControlFlags.AmbientScript"/> work only when <paramref name="setControlOn"/> is set to <see langword="false"/>.
 		/// </param>
 		public void SetControlState(bool setControlOn, SetPlayerControlFlags flags = SetPlayerControlFlags.None)

@@ -16,7 +16,7 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// You will need to set this flag to make the <see cref="Player"/> have control when you switch the controls back on
-		/// if you specifed this flag when you disabled the controls.
+		/// if you specified this flag when you disabled the controls.
 		/// </remarks>
 		AmbientScript = 2,
 		/// <summary>
