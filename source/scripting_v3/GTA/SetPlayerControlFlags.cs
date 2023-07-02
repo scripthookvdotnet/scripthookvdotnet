@@ -63,7 +63,7 @@ namespace GTA
 		/// </remarks>
 		LeaveCameraControlOn = 256,
 		/// <summary>
-		/// Allow the player to be damaged even if their control is turned off. 
+		/// Allow the player to be damaged even if their control is turned off.
 		/// </summary>
 		/// <remarks>
 		/// Only works when you disable the controls.
@@ -89,6 +89,6 @@ namespace GTA
 		/// <remarks>
 		/// Only works when you disable the controls.
 		/// </remarks>
-		AllowPadRumble = 4096,
+		AllowPadShake = 4096,
 	}
 }
