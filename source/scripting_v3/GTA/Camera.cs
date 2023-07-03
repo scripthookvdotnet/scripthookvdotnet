@@ -494,6 +494,30 @@ namespace GTA
 		{
 			Function.Call(Hash.DESTROY_CAM, Handle, 0);
 		}
+		/// <summary>
+		/// Destroys this <see cref="Camera"/>.
+		/// </summary>
+		/// <param name="shouldApplyAcrossAllThreads">
+		/// If <see langword="true"/>, a request to stop rendering will be enforced irrespective of whether other
+		/// script threads (<c>GtaThread</c>s) expect rendering to be active.
+		/// Note that this can result in conflicts between concurrent script threads, so this must be used with caution.
+		/// </param>
+		public void Delete(bool shouldApplyAcrossAllThreads)
+		{
+			Function.Call(Hash.DESTROY_CAM, Handle, shouldApplyAcrossAllThreads);
+		}
+		/// <summary>
+		/// Destroys this <see cref="Camera"/>.
+		/// </summary>
+		/// <param name="shouldApplyAcrossAllThreads">
+		/// If <see langword="true"/>, a request to stop rendering will be enforced irrespective of whether other
+		/// script threads (<c>GtaThread</c>s) expect rendering to be active.
+		/// Note that this can result in conflicts between concurrent script threads, so this must be used with caution.
+		/// </param>
+		public static void DeleteAllCameras(bool shouldApplyAcrossAllThreads = false)
+		{
+			Function.Call(Hash.DESTROY_ALL_CAMS, shouldApplyAcrossAllThreads);
+		}
 
 		/// <summary>
 		/// Determines if this <see cref="Camera"/> exists.
