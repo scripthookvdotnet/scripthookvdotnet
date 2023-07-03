@@ -174,7 +174,7 @@ namespace GTA
 
 		public static implicit operator InputArgument(ScriptSoundId value)
 		{
-			return new InputArgument(value.Id);
+			return new InputArgument((ulong)value.Id);
 		}
 		public static implicit operator ScriptSoundId(int value)
 		{
