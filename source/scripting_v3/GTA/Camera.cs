@@ -275,7 +275,8 @@ namespace GTA
 			CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
 			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
 		{
-			Function.Call(Hash.SET_CAM_PARAMS, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z,
+			Function.Call(Hash.SET_CAM_PARAMS, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y,
+				rotation.Z,
 				fov, duration, (int)graphTypePos, (int)graphTypeRot, (int)rotOrder);
 		}
 
