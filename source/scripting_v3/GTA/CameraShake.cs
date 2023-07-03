@@ -18,5 +18,6 @@ namespace GTA
 		SkyDiving,
 		FamilyDrugTrip,
 		DeathFail,
+		Wobbly,
 	}
 }
