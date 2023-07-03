@@ -1358,7 +1358,7 @@ namespace GTA
 		/// <param name="cameraNameHash">
 		/// The camera name hash.
 		/// Passing a invalid name hash will result in the <see langword="null"/> return value.
-		/// It would result in some unintended rendering behaviors such as that super lod models are always used
+		/// It would result in some unintended behaviors such as the camera position not being able to change
 		/// if you pass a camera name hash whose metadata is not designed for scripted cameras.
 		/// </param>
 		/// <param name="position">The position of the camera.</param>
@@ -1389,7 +1389,7 @@ namespace GTA
 		/// <param name="cameraName">
 		/// The camera name.
 		/// Passing a invalid name will result in the <see langword="null"/> return value.
-		/// It would result in some unintended rendering behaviors such as that super lod models are always used
+		/// It would result in some unintended behaviors such as the camera position not being able to change
 		/// if you pass a camera name hash whose metadata is not designed for scripted cameras.
 		/// </param>
 		/// <param name="position">The position of the camera.</param>
