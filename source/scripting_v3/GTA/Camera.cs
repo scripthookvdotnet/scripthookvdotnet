@@ -14,23 +14,90 @@ namespace GTA
 	/// </summary>
 	public sealed class Camera : PoolObject, ISpatial
 	{
-		internal static readonly string[] shakeNames = {
-			"HAND_SHAKE",
-			"SMALL_EXPLOSION_SHAKE",
-			"MEDIUM_EXPLOSION_SHAKE",
-			"LARGE_EXPLOSION_SHAKE",
-			"JOLT_SHAKE",
-			"VIBRATE_SHAKE",
-			"ROAD_VIBRATION_SHAKE",
-			"DRUNK_SHAKE",
-			"SKY_DIVING_SHAKE",
-			"FAMILY5_DRUG_TRIP_SHAKE",
-			"DEATH_FAIL_IN_EFFECT_SHAKE"
+		internal static readonly string[] shakeNames =
+		{
+			"HAND_SHAKE", "SMALL_EXPLOSION_SHAKE", "MEDIUM_EXPLOSION_SHAKE", "LARGE_EXPLOSION_SHAKE", "JOLT_SHAKE",
+			"VIBRATE_SHAKE", "ROAD_VIBRATION_SHAKE", "DRUNK_SHAKE", "SKY_DIVING_SHAKE", "FAMILY5_DRUG_TRIP_SHAKE",
+			"DEATH_FAIL_IN_EFFECT_SHAKE", "WOBBLY_SHAKE",
 		};
 
 		public Camera(int handle) : base(handle)
 		{
 		}
+
+		/// <summary>
+		/// Gets the scripted camera currently rendering to the game screen.
+		/// </summary>
+		/// <remarks>
+		/// This property will return <see langword="null"/> if no scripted camera is rendering to the game screen,
+		/// where the scripted camera director (<c>camScriptDirector</c>) is not handling any scripted camera.
+		/// </remarks>
+		public static Camera RenderingScriptedCamera
+		{
+			get
+			{
+				int handle = Function.Call<int>(Hash.GET_RENDERING_CAM);
+				// GET_RENDERING_CAM returns -1 if no script cam is rendering to the game screen
+				// Game code for cams does never treat negative values as valid cam handles either
+				return handle < 0 ? null : new Camera(handle);
+			}
+		}
+
+		/*
+		 * We don't use 6th argument for RENDER_SCRIPT_CAMS, but that's not an oversight
+		 * The way we see it with Cheat Engine, RENDER_SCRIPT_CAMS does set the flag value for the 6th params,
+		 * but the game seem to clear of the flag value with zero without reading (even decompiled scripts always leave
+		 * the 6th param as zero, which is the default value)
+		 */
+
+		/// <summary>
+		/// Starts rendering a scripted camera without interpolation.
+		/// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
+		/// wants to enable rendering of scripted cameras.
+		/// </summary>
+		public static void StartRenderingScriptedCamera(bool shouldLockInterpolationSourceFrame = true)
+			=> Function.Call(Hash.RENDER_SCRIPT_CAMS, true, false, 3000, shouldLockInterpolationSourceFrame, 0, 0);
+		/// <summary>
+		/// Starts rendering a scripted camera while interpolating from the gameplay camera
+		/// that the gameplay camera director (<c>camGameplayDirector</c>) is using to a scripted camera.
+		/// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
+		/// wants to enable rendering of scripted cameras.
+		/// </summary>
+		/// <inheritdoc cref="StopRenderingScriptedCameraWithInterp"/>
+		public static void StartRenderingScriptedCameraWithInterp(int interpDuration = 3000, bool shouldLockInterpolationSourceFrame = true)
+			=> Function.Call(Hash.RENDER_SCRIPT_CAMS, true, true, interpDuration, shouldLockInterpolationSourceFrame, 0, 0);
+		/// <summary>
+		/// Stops rendering a scripted camera without interpolation.
+		/// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
+		/// wants to disable rendering of scripted cameras.
+		/// </summary>
+		/// <inheritdoc cref="StopRenderingScriptedCameraWithInterp"/>
+		public static void StopRenderingScriptedCamera(bool shouldLockInterpolationSourceFrame = true, bool shouldApplyAcrossAllThreads = false)
+			=> Function.Call(Hash.RENDER_SCRIPT_CAMS, false, false, 3000, shouldLockInterpolationSourceFrame, shouldApplyAcrossAllThreads, 0);
+		/// <summary>
+		/// Stops rendering a scripted camera while interpolating from the previously rendered scripted camera to
+		/// the gameplay camera that the gameplay camera director (<c>camGameplayDirector</c>) is using.
+		/// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
+		/// wants to disable rendering of scripted cameras.
+		/// </summary>
+		/// <param name="interpDuration">The interpolation duration in milliseconds.</param>
+		/// <param name="shouldLockInterpolationSourceFrame">
+		/// If <see langword="false"/>, the source frame is updated throughout the interpolation,
+		/// allowing for fully dynamic interpolation that can reduce the appearance of 'lag' when the source frame is not static.
+		/// </param>
+		/// <param name="shouldApplyAcrossAllThreads">
+		/// If <see langword="true"/>, a request to stop rendering will be enforced irrespective of whether other
+		/// script threads (<c>GtaThread</c>s) expect rendering to be active.
+		/// Note that this can result in conflicts between concurrent script threads, so this must be used with caution.
+		/// </param>
+		/// <remarks>
+		/// At least one of the scripts loaded by SHVDN must have created a <see cref="Camera"/> that can be rendered,
+		/// so you would want to set <see cref="IsActive"/> to <see langword="true"/> on your <see cref="Camera"/>.
+		/// Note that rendering is typically not stopped if another script thread (<c>GtaThread</c>) other than
+		/// the SHVDN runtime still expects it to be active (see <paramref name="shouldApplyAcrossAllThreads"/>.)
+		/// </remarks>
+		public static void StopRenderingScriptedCameraWithInterp(int interpDuration = 3000, bool shouldLockInterpolationSourceFrame = true, bool shouldApplyAcrossAllThreads = false)
+			=> Function.Call(Hash.RENDER_SCRIPT_CAMS, false, true, interpDuration, shouldLockInterpolationSourceFrame, shouldApplyAcrossAllThreads, 0);
 
 		/// <summary>
 		/// Gets the memory address of this <see cref="Camera"/>.
@@ -191,6 +258,26 @@ namespace GTA
 		{
 			return Matrix.InverseTransformPoint(worldCoords);
 		}
+		/// <summary>
+		/// Sets the camera's position, rotation and field of view.
+		/// If <paramref name="duration"/> is greater than zero,
+		/// the <see cref="Camera"/> will interp to the specified settings.
+		/// </summary>
+		/// <param name="position">The target position.</param>
+		/// <param name="rotation">The target rotation.</param>
+		/// <param name="fov">The target field of view.</param>
+		/// <param name="duration">The duration of any interpolation in milliseconds.</param>
+		/// <param name="graphTypePos">The camera graph type for position transition.</param>
+		/// <param name="graphTypeRot">The camera graph type for rotation transition.</param>
+		/// <param name="rotOrder">The rotation order in world space.</param>
+		public void TransitionTo(Vector3 position, Vector3 rotation, float fov, int duration,
+			CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
+			CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
+			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+		{
+			Function.Call(Hash.SET_CAM_PARAMS, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z,
+				fov, duration, (int)graphTypePos, (int)graphTypeRot, (int)rotOrder);
+		}
 
 		/// <summary>
 		/// Gets or sets the far clip distance of this <see cref="Camera"/> in meters.
@@ -253,7 +340,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Shakes this <see cref="Camera"/>.
+		/// Apples a predefined shake to the camera.
 		/// </summary>
 		/// <param name="shakeType">Type of the shake to apply.</param>
 		/// <param name="amplitude">The amplitude of the shaking.</param>
@@ -261,14 +348,31 @@ namespace GTA
 		{
 			Function.Call(Hash.SHAKE_CAM, Handle, shakeNames[(int)shakeType], amplitude);
 		}
+		/// <summary>
+		/// Apples a predefined shake to the camera.
+		/// </summary>
+		/// <param name="shakeName">
+		/// The shake name to apply.
+		/// You can find shake names in cameras.ymt, search for <c>camShakeMetadata</c>.
+		/// </param>
+		/// <param name="amplitudeScaler">The amplitude of the shaking.</param>
+		public void Shake(string shakeName, float amplitudeScaler)
+		{
+			Function.Call(Hash.SHAKE_CAM, Handle, shakeName, amplitudeScaler);
+		}
 
+		/// <summary>
+		/// Immediately stops shaking this <see cref="Camera"/>.
+		/// </summary>
+		public void StopShaking() => StopShaking(true);
 		/// <summary>
 		/// Stops shaking this <see cref="Camera"/>.
 		/// </summary>
-		public void StopShaking()
-		{
-			Function.Call(Hash.STOP_CAM_SHAKING, Handle, true);
-		}
+		/// <param name="stopImmediately">
+		/// If <see langword="true"/>, the shake will stop immediately, otherwise it will enter its release phase and fade out.
+		/// </param>
+		public void StopShaking(bool stopImmediately)
+			=> Function.Call(Hash.STOP_CAM_SHAKING, Handle, stopImmediately);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Camera"/> is shaking.
@@ -324,6 +428,24 @@ namespace GTA
 		/// <summary>
 		/// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
 		/// </summary>
+		/// <param name="destinationCam">The <see cref="Camera"/> that will be interpolated to.</param>
+		/// <param name="duration">The duration of any interpolation in milliseconds.</param>
+		/// <param name="graphTypePos">The camera graph type for position transition.</param>
+		/// <param name="graphTypeRot">The camera graph type for rotation transition.</param>
+		/// <param name="rotOrder">The rotation order in world space.</param>
+		public void InterpTo(Camera destinationCam, int duration,
+			CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
+			CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
+			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+		{
+			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, destinationCam.Handle, Handle, duration, (int)graphTypePos,
+				(int)graphTypeRot, (int)rotOrder);
+		}
+		/// <summary>
+		/// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
+		/// </summary>
+		[Obsolete("Camera.InterpTo(Camera, int, int, int) is obsolete." +
+		          "Use Camera.InterpTo(Camera, int, CameraGraphType, CameraGraphType, EulerRotationOrder) instead.")]
 		public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
 		{
 			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);
