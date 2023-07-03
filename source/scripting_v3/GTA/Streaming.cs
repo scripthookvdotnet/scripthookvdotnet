@@ -51,7 +51,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position in world space.</param>
 		/// <param name="velocity">
-		/// The velocity to use for <see cref="Ped"/> & <see cref="Vehicle"/> population in meters.
+		/// The velocity to use for <see cref="Ped"/> &amp; <see cref="Vehicle"/> population in meters.
 		/// </param>
 		public static void SetFocusPositionAndVelocity(Vector3 position, Vector3 velocity)
 			=> Function.Call(Hash.SET_FOCUS_POS_AND_VEL, position.X, position.Y, position.Z, velocity.X, velocity.Y,
