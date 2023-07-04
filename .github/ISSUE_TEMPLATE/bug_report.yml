@@ -10,6 +10,7 @@ body:
         - Please note: **ScriptHookVDotNet is NOT ScriptHookV**!
           - If you get the `FATAL: Unknown game version` error after a game update, then this project is not responsible. Instead, you need to wait for [**ScriptHookV**](http://www.dev-c.com/gtav/scripthookv/) to update.
         - Look for similar errors in existing [GitHub Issues](https://github.com/scripthookvdotnet/scripthookvdotnet/issues?q=is%3Aissue) (open or closed) before creating a new issue.
+        - Also, you should try using the latest nightly version to make sure your issue has not already been fixed. Nightly builds are available on [GitHub Actions](https://github.com/scripthookvdotnet/scripthookvdotnet/actions).
         - If you are not familiar with how to program and you are encountering some issues related to some SHVDN scripts such as compatibility issues due to game versions, please try to seek help from the authors and ask them to find out the causes.
   - type: dropdown
     id: modules-with-problem
@@ -29,8 +30,8 @@ body:
     attributes:
       label: SHVDN Version
       description: |
-        For dev versions, write an unique commit hash (like 0d5b09b). Don't use a short commit hash less than 7 characters to avoid easy hash collisions.
-        For stable release versions, open the console to check.
+        For nightly versions, write an unique commit hash (like 0d5b09b). Don't use a short commit hash less than 7 characters to avoid easy hash collisions.
+        For stable release versions, open the console to check. However, you should try the latest nightly version to make sure your issue has not already been fixed.
       placeholder: "0d5b09b"
   - type: input
     id: game-version
@@ -48,7 +49,7 @@ body:
       label: Bug Description
       description: |
        Please provide a clear and concise description of what the bug is. Include appropriate logs or screenshots if needed.
-       Please test using the latest dev version of SHVDN to make sure your issue has not already been fixed.
+       Please test using the latest nightly version of SHVDN to make sure your issue has not already been fixed.
   - type: textarea
     id: steps-to-repro
     validations:
