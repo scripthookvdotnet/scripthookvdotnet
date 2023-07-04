@@ -361,7 +361,7 @@ namespace GTA.Native
 
 	public static class Function
 	{
-		private const int MaxArgCount = 32;
+		private const int MaxArgCount = 63;
 
 		public static T Call<T>(Hash hash, params InputArgument[] arguments)
 		{

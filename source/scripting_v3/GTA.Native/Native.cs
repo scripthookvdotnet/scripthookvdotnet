@@ -402,7 +402,7 @@ namespace GTA.Native
 	/// </summary>
 	public static class Function
 	{
-		const int MAX_ARG_COUNT = 32;
+		private const int MaxArgCount = 63;
 
 		/// <summary>
 		/// Calls the specified native script function and returns its return value.
@@ -414,7 +414,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				int argCount = arguments.Length <= MaxArgCount ? arguments.Length : MaxArgCount;
 				ulong* argPtr = stackalloc ulong[argCount];
 
 				for (int i = 0; i < argCount; ++i)
@@ -1154,7 +1154,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				int argCount = arguments.Length <= MAX_ARG_COUNT ? arguments.Length : MAX_ARG_COUNT;
+				int argCount = arguments.Length <= MaxArgCount ? arguments.Length : MaxArgCount;
 				ulong* argPtr = stackalloc ulong[argCount];
 
 				for (int i = 0; i < argCount; ++i)
