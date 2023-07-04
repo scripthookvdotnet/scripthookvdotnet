@@ -297,15 +297,29 @@ namespace GTA.Native
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OutputArgument"/> class for script functions that output data into pointers.
+		/// Allocates 24 bytes so the instance can allocate for <see cref="Vector3"/>.
 		/// </summary>
 		public OutputArgument()
 		{
 			storage = Marshal.AllocCoTaskMem(24);
 		}
 		/// <summary>
-		/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions that require the pointer to data instead of the actual data.
+		/// Initializes a new instance of the <see cref="OutputArgument"/> class for script functions that output data into pointers.
+		/// Allocates a block of memory of specified size.
+		/// </summary>
+		public OutputArgument(int size)
+		{
+			storage = Marshal.AllocCoTaskMem(size);
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions
+		/// that require the pointer to data instead of the actual data.
 		/// </summary>
 		/// <param name="value">The value to set the data of this <see cref="OutputArgument"/> to.</param>
+		/// <remarks>
+		/// This constructor only supports <see langword="null"/>, <see cref="string"/>, and classes and structs that implements <see cref="INativeValue"/>.
+		/// Otherwise, this constructor throws an exception.
+		/// </remarks>
 		public OutputArgument(object value) : this()
 		{
 			unsafe
@@ -335,19 +349,52 @@ namespace GTA.Native
 			}
 
 			Marshal.FreeCoTaskMem(storage);
+			storage = IntPtr.Zero;
 			disposed = true;
 		}
 
 		/// <summary>
-		/// Gets the value of data stored in this <see cref="OutputArgument"/>.
+		/// Allocates a <see cref="OutputArgument"/> instance where the storage has a block of memory of the specified struct type.
 		/// </summary>
+		static public OutputArgument AllocForStcuct<T>() where T : unmanaged
+		{
+			unsafe
+			{
+				return new OutputArgument(sizeof(T));
+			}
+		}
+
+		/// <summary>
+		/// Gets the value of data stored in this <see cref="OutputArgument"/>.
+		/// Do not use this method for custom struct types that are not primitives or defined in the SDK/API.
+		/// Use <see cref="GetResultAsBittableStruct{T}"/> for custom struct types instead.
+		/// </summary>
+		/// <exception cref="InvalidCastException">Thrown when failed to get the result for unsupported type.</exception>
+		/// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
 		public T GetResult<T>()
 		{
 			unsafe
 			{
+				if (storage == IntPtr.Zero)
+				{
+					// throw an exception from a dedicated method so JIT can inline the body of GetResult
+					// this path won't be visited unless users don't care about if the instance is disposed
+					ThrowNullReferenceExceptionIfDisposed();
+				}
+
 				return Function.ReturnValueFromResultAddress<T>((ulong*)storage.ToPointer());
 			}
+
+			static void ThrowNullReferenceExceptionIfDisposed() => throw new NullReferenceException();
 		}
+
+		/// <summary>
+		/// Gets the value of data stored in this <see cref="OutputArgument"/> as a bittable struct without any conversion.
+		/// Do not use this method for scripting types defined in the SDK/API such as <see cref="Vector3"/>.
+		/// Use <see cref="GetResult{T}"/> for scipting types instead.
+		/// </summary>
+		/// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
+		public T GetResultAsBittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(storage);
 	}
 
 	/// <summary>
