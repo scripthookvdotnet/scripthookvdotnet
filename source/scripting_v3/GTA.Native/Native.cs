@@ -280,7 +280,7 @@ namespace GTA.Native
 
 		public static implicit operator InputArgument(OutputArgument value)
 		{
-			return new InputArgument(value.storage);
+			return new InputArgument(value._storage);
 		}
 		#endregion
 	}
@@ -291,8 +291,8 @@ namespace GTA.Native
 	public class OutputArgument : IDisposable
 	{
 		#region Fields
-		bool disposed = false;
-		internal IntPtr storage = IntPtr.Zero;
+		bool _disposed = false;
+		internal IntPtr _storage = IntPtr.Zero;
 		#endregion
 
 		/// <summary>
@@ -301,7 +301,7 @@ namespace GTA.Native
 		/// </summary>
 		public OutputArgument()
 		{
-			storage = Marshal.AllocCoTaskMem(24);
+			_storage = Marshal.AllocCoTaskMem(24);
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OutputArgument"/> class for script functions that output data into pointers.
@@ -309,7 +309,7 @@ namespace GTA.Native
 		/// </summary>
 		public OutputArgument(int size)
 		{
-			storage = Marshal.AllocCoTaskMem(size);
+			_storage = Marshal.AllocCoTaskMem(size);
 		}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions
@@ -324,7 +324,7 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				*(ulong*)(storage) = Function.ObjectToNative(value);
+				*(ulong*)(_storage) = Function.ObjectToNative(value);
 			}
 		}
 
@@ -343,14 +343,14 @@ namespace GTA.Native
 		}
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposed)
+			if (_disposed)
 			{
 				return;
 			}
 
-			Marshal.FreeCoTaskMem(storage);
-			storage = IntPtr.Zero;
-			disposed = true;
+			Marshal.FreeCoTaskMem(_storage);
+			_storage = IntPtr.Zero;
+			_disposed = true;
 		}
 
 		/// <summary>
@@ -375,14 +375,14 @@ namespace GTA.Native
 		{
 			unsafe
 			{
-				if (storage == IntPtr.Zero)
+				if (_storage == IntPtr.Zero)
 				{
 					// throw an exception from a dedicated method so JIT can inline the body of GetResult
 					// this path won't be visited unless users don't care about if the instance is disposed
 					ThrowNullReferenceExceptionIfDisposed();
 				}
 
-				return Function.ReturnValueFromResultAddress<T>((ulong*)storage.ToPointer());
+				return Function.ReturnValueFromResultAddress<T>((ulong*)_storage.ToPointer());
 			}
 
 			static void ThrowNullReferenceExceptionIfDisposed() => throw new NullReferenceException();
@@ -394,7 +394,7 @@ namespace GTA.Native
 		/// Use <see cref="GetResult{T}"/> for scipting types instead.
 		/// </summary>
 		/// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
-		public T GetResultAsBittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(storage);
+		public T GetResultAsBittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(_storage);
 	}
 
 	/// <summary>
