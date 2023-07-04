@@ -356,7 +356,7 @@ namespace GTA.Native
 		/// <summary>
 		/// Allocates a <see cref="OutputArgument"/> instance where the storage has a block of memory of the specified struct type.
 		/// </summary>
-		static public OutputArgument AllocForStcuct<T>() where T : unmanaged
+		static public OutputArgument AllocForBittableStcuct<T>() where T : unmanaged
 		{
 			unsafe
 			{
