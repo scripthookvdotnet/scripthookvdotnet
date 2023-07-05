@@ -2094,7 +2094,7 @@ namespace GTA
 		{
 			if (Game.Version < GameVersion.v1_0_505_2_Steam)
 			{
-				throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps))
+				throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps));
 			}
 
 			bool foundCollision;
