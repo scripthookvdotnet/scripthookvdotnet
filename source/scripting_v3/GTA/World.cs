@@ -2163,8 +2163,14 @@ namespace GTA
 		/// <remarks>
 		/// This test excludes any fragment <see cref="Prop"/>s.
 		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.463.1 or earlier game versions.</exception>
 		public static bool GetGroundHeightExcludingProps(Vector3 position, out float height, GetGroundHeightMode mode = GetGroundHeightMode.Normal)
 		{
+			if (Game.Version < GameVersion.v1_0_505_2_Steam)
+			{
+				throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps))
+			}
+
 			bool foundCollision;
 
 			// ignoreDistToWaterLevelCheck (the original name of 6th arg) will be ignored if waterAsGround (the original name of 5th arg) is not set
