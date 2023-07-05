@@ -303,7 +303,8 @@ namespace GTA
 				}
 
 				Vector3 position = waypointBlip.Position;
-				position.Z = GetGroundHeight((Vector2)position);
+				GetGroundHeight(new Vector3(position.X, position.Y, 1000f), out float groundHeight);
+				position.Z = groundHeight; // will be zero if test failed since values will be initialized with zero by default in C#
 				return position;
 			}
 			set => Function.Call(Hash.SET_NEW_WAYPOINT, value.X, value.Y);
@@ -1095,7 +1096,8 @@ namespace GTA
 
 			if (placeOnGround)
 			{
-				position.Z = GetGroundHeight(position);
+				GetGroundHeight(position, out float groundHeight);
+				position.Z = groundHeight; // will be zero if the test failed since values will be initialized with zero by default in C#
 			}
 
 			return new Prop(Function.Call<int>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
@@ -2062,10 +2064,142 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Tries to store the z coordinate of the highest ground below the given point.
+		/// Detects <see cref="Building"/>s and some of static <see cref="Prop"/>s that are on the ground,
+		/// such as "prop_portacabin01" at (916.3843, -3242.021, 4.886292).
+		/// </summary>
+		/// <param name="position">The start position to test.</param>
+		/// <param name="height">
+		/// When this method returns, contains the Z coordinate of the highest ground below <paramref name="position"/>,
+		/// if the highest ground is found. This parameter is passed uninitialized.
+		/// </param>
+		/// <param name="mode">
+		/// The test mode. Does not make any difference in earlier game versions such as v1.0.372.2.
+		/// </param>
+		/// <returns><see langword="true"/> if it finds collision; otherwise, <see langword="false"/>.</returns>
+		/// <remarks>
+		/// This test does not include all kind of static <see cref="Prop"/>s, and this test excludes any fragment <see cref="Prop"/>s.
+		/// </remarks>
+		public static bool GetGroundHeight(Vector3 position, out float height, GetGroundHeightMode mode = GetGroundHeightMode.Normal)
+		{
+			bool foundCollision;
+
+			// ignoreDistToWaterLevelCheck (the original name of 6th arg) will be ignored if waterAsGround (the original name of 5th arg) is not set
+			bool waterAsGround = false;
+			bool ignoreDistToWaterLevelCheck = false;
+			switch (mode)
+			{
+				case GetGroundHeightMode.ConsiderWaterAsGround:
+					waterAsGround = true;
+					break;
+				case GetGroundHeightMode.ConsiderWaterAsGroundNoWaves:
+					waterAsGround = true;
+					ignoreDistToWaterLevelCheck = true;
+					break;
+				case GetGroundHeightMode.Normal:
+				default:
+					break;
+			}
+
+			unsafe
+			{
+				float returnZ;
+				foundCollision = Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &returnZ, waterAsGround, ignoreDistToWaterLevelCheck);
+				height = returnZ;
+			}
+			return foundCollision;
+		}
+		/// <summary>
+		/// Tries to store the z coordinate and surface normal of the highest ground below the given point.
+		/// Detects <see cref="Building"/>s and some of static <see cref="Prop"/>s that are on the ground,
+		/// such as "prop_portacabin01" at (916.3843, -3242.021, 4.886292).
+		/// </summary>
+		/// <param name="position">The start position to test.</param>
+		/// <param name="height">
+		/// When this method returns, contains the Z coordinate of the highest ground below <paramref name="position"/>,
+		/// if the highest ground is found. This parameter is passed uninitialized.
+		/// </param>
+		/// <param name="normal">
+		/// When this method returns, contains the surface normal of the highest ground below <paramref name="position"/>,
+		/// if the highest ground is found. This parameter is passed uninitialized.
+		/// </param>
+		/// <returns><see langword="true"/> if it finds collision; otherwise, <see langword="false"/>.</returns>
+		/// <remarks>
+		/// This test does not include all kind of static <see cref="Prop"/>s, and this test excludes any fragment <see cref="Prop"/>s.
+		/// </remarks>
+		public static bool GetGroundHeightAndNormal(Vector3 position, out float height, out Vector3 normal)
+		{
+			bool foundCollision;
+
+			unsafe
+			{
+				float returnZ;
+				NativeVector3 outNormal;
+				foundCollision = Function.Call<bool>(Hash.GET_GROUND_Z_AND_NORMAL_FOR_3D_COORD, position.X, position.Y, position.Z, &returnZ, &outNormal);
+				height = returnZ;
+				normal = outNormal;
+			}
+
+			return foundCollision;
+		}
+		/// <summary>
+		/// <para>
+		/// Tries to store the z coordinate of the highest ground below the given point.
+		/// This test excludes any <see cref="Prop"/>s that are on the ground (so only <see cref="Building"/>s can be detected).
+		/// </para>
+		/// <para>
+		/// Not available in v1.0.463.1 or earlier game versions (currently).
+		/// </para>
+		/// </summary>
+		/// <param name="position">The start position to test.</param>
+		/// <param name="height">
+		/// When this method returns, contains the Z coordinate of the highest ground below <paramref name="position"/>,
+		/// if the highest ground is found. This parameter is passed uninitialized.
+		/// </param>
+		/// <param name="mode">
+		/// The test mode. May not make any difference in very earlier game versions (not confirmed if there are any).
+		/// </param>
+		/// <returns><see langword="true"/> if it finds collision; otherwise, <see langword="false"/>.</returns>
+		/// <remarks>
+		/// This test excludes any fragment <see cref="Prop"/>s.
+		/// </remarks>
+		public static bool GetGroundHeightExcludingProps(Vector3 position, out float height, GetGroundHeightMode mode = GetGroundHeightMode.Normal)
+		{
+			bool foundCollision;
+
+			// ignoreDistToWaterLevelCheck (the original name of 6th arg) will be ignored if waterAsGround (the original name of 5th arg) is not set
+			bool waterAsGround = false;
+			bool ignoreDistToWaterLevelCheck = false;
+			switch (mode)
+			{
+				case GetGroundHeightMode.ConsiderWaterAsGround:
+					waterAsGround = true;
+					break;
+				case GetGroundHeightMode.ConsiderWaterAsGroundNoWaves:
+					waterAsGround = true;
+					ignoreDistToWaterLevelCheck = true;
+					break;
+				case GetGroundHeightMode.Normal:
+				default:
+					break;
+			}
+
+			unsafe
+			{
+				float returnZ;
+				foundCollision = Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &returnZ, waterAsGround, ignoreDistToWaterLevelCheck);
+				height = returnZ;
+			}
+
+			return foundCollision;
+		}
+
+		/// <summary>
 		/// Gets the height of the ground at a given position.
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>
+		[Obsolete("\"float GetGroundHeight(Vector2)\" is obsolete. Use \"bool GetGroundHeight(Vector3, out float, GetGroundHeightMode)\" instead.")]
 		public static float GetGroundHeight(Vector2 position)
 		{
 			return GetGroundHeight(new Vector3(position.X, position.Y, 1000f));
@@ -2077,6 +2211,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>
+		[Obsolete("\"float GetGroundHeight(Vector3)\" is obsolete. Use \"bool GetGroundHeight(Vector3, out float, GetGroundHeightMode)\" instead.")]
 		public static float GetGroundHeight(Vector3 position)
 		{
 			float resultArg;
@@ -2087,6 +2222,98 @@ namespace GTA
 			return resultArg;
 		}
 
+		/// <summary>
+		/// Returns an approximate height at the 2d coordinate in meters.
+		/// This is based on a coarse grid compiled from collision data.
+		/// </summary>
+		/// <remarks>A coarse grids has a 50-meter x 50-meter tile.</remarks>
+		public static float GetApproxHeightForPoint(Vector2 position)
+			=> Function.Call<float>(Hash.GET_APPROX_HEIGHT_FOR_POINT, position.X, position.Y);
+		/// <summary>
+		/// Returns an approximate height for the area in meters.
+		/// This is based on a coarse grid compiled from collision data.
+		/// </summary>
+		/// <returns>The approximate height for the area, which is the maximum height in that area.</returns>
+		/// <remarks>A coarse grids has a 50-meter x 50-meter tile.</remarks>
+		public static float GetApproxHeightForArea(Vector2 minPosition, Vector2 maxPosition)
+			=> Function.Call<float>(Hash.GET_APPROX_HEIGHT_FOR_AREA, minPosition.X, minPosition.Y, maxPosition.X,
+				maxPosition.Y);
+		/// <summary>
+		/// Returns an approximate floor at the 2d coordinate in meters.
+		/// This is based on a coarse grid compiled from collision data.
+		/// </summary>
+		/// <remarks>A coarse grids has a 50-meter x 50-meter tile.</remarks>
+		public static float GetApproxFloorForPoint(Vector2 position)
+			=> Function.Call<float>(Hash.GET_APPROX_FLOOR_FOR_POINT, position.X, position.Y);
+		/// <summary>
+		/// Returns an approximate floor for the area in meters.
+		/// This is based on a coarse grid compiled from collision data.
+		/// </summary>
+		/// <returns>The approximate floor for the area, which is the maximum height in that area.</returns>
+		/// <remarks>A coarse grids has a 50-meter x 50-meter tile.</remarks>
+		public static float GetApproxFloorForArea(Vector2 minPosition, Vector2 maxPosition)
+			=> Function.Call<float>(Hash.GET_APPROX_FLOOR_FOR_AREA, minPosition.X, minPosition.Y, maxPosition.X,
+				maxPosition.Y);
+
+		/// <summary>
+		/// Gets the height of the water below the position including the waves.
+		/// This method takes the waves into account so the result may be different depending on the exact frame of calling.
+		/// </summary>
+		/// <returns></returns>
+		public static bool GetWaterHeight(Vector3 position, out float height)
+		{
+			unsafe
+			{
+				float returnZ;
+				bool foundWater =
+					Function.Call<bool>(Hash.GET_WATER_HEIGHT, position.X, position.Y, position.Z, &returnZ);
+
+				height = returnZ;
+				return foundWater;
+			}
+		}
+		/// <summary>
+		/// Gets the height of the water below the position excluding the waves.
+		/// This method does not take the waves into account so the result will be the same between different frames.
+		/// </summary>
+		/// <returns></returns>
+		public static bool GetWaterHeightNoWaves(Vector3 position, out float height)
+		{
+			unsafe
+			{
+				float returnZ;
+				bool foundWater = Function.Call<bool>(Hash.GET_WATER_HEIGHT_NO_WAVES, position.X, position.Y,
+					position.Z, &returnZ);
+
+				height = returnZ;
+				return foundWater;
+			}
+		}
+
+		/// <summary>
+		/// Test a directed probe against the water.
+		/// </summary>
+		/// <param name="startPos">The start of the probe.</param>
+		/// <param name="endPos">The end of the probe.</param>
+		/// <param name="intersectionPos">
+		/// When this method returns, contains the intersection position on the water, the probe hits water before
+		/// hitting land. This parameter is passed uninitialized.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the probe hits water before hitting land; otherwise, <see langword="false"/>.
+		/// </returns>
+		public static bool TestProbeAgainstWater(Vector3 startPos, Vector3 endPos, out Vector3 intersectionPos)
+		{
+			unsafe
+			{
+				NativeVector3 outPos;
+				bool hitWaterBeforeLand = Function.Call<bool>(Hash.TEST_PROBE_AGAINST_WATER, startPos.X, startPos.Y,
+					startPos.Z, endPos.X, endPos.Y, endPos.Z,  &outPos);
+
+				intersectionPos = outPos;
+				return hitWaterBeforeLand;
+			}
+		}
 
 		/// <summary>
 		/// Checks to see if it can find a safe bit of ground to place a <see cref="Ped"/>.
