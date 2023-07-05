@@ -507,7 +507,7 @@ namespace GTA
 			Function.Call(Hash.DESTROY_CAM, Handle, shouldApplyAcrossAllThreads);
 		}
 		/// <summary>
-		/// Destroys this <see cref="Camera"/>.
+		/// Destroys all scripted <see cref="Camera"/>s.
 		/// </summary>
 		/// <param name="shouldApplyAcrossAllThreads">
 		/// If <see langword="true"/>, a request to stop rendering will be enforced irrespective of whether other

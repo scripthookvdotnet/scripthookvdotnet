@@ -1318,8 +1318,9 @@ namespace GTA
 		#region Cameras
 
 		/// <summary>
-		/// Destroys all user created <see cref="Camera"/>s.
+		/// Destroys all scripted <see cref="Camera"/>s.
 		/// </summary>
+		[Obsolete("World.DestroyAllCameras is obsolete. Use Camera.DeleteAllCameras instead.")]
 		public static void DestroyAllCameras()
 		{
 			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
