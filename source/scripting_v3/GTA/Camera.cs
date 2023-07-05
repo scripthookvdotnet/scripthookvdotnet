@@ -25,6 +25,81 @@ namespace GTA
 		{
 		}
 
+		/// <inheritdoc cref="CreateCamera(ScriptedCameraNameHash, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
+		public static Camera CreateCamera(ScriptedCameraNameHash cameraNameHash, bool startActivated = false)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CAMERA, (uint)cameraNameHash, startActivated);
+			return handle > 0 ? new Camera(handle) : null;
+		}
+		/// <inheritdoc cref="CreateCamera(string, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
+		public static Camera CreateCamera(string cameraName, bool startActivated = false)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CAM, cameraName, startActivated);
+			return handle > 0 ? new Camera(handle) : null;
+		}
+		/// <summary>
+		/// Creates a scripted <see cref="Camera"/> of a given name hash.
+		/// </summary>
+		/// <param name="cameraNameHash">
+		/// The camera name hash.
+		/// Passing a invalid name hash will result in the <see langword="null"/> return value.
+		/// It would result in some unintended behaviors such as the camera position not being able to change
+		/// if you pass a camera name hash whose metadata is not designed for scripted cameras.
+		/// </param>
+		/// <param name="position">The position of the camera.</param>
+		/// <param name="rotation">The rotation of the camera.</param>
+		/// <param name="fov">The field of view of the camera.</param>
+		/// <param name="startActivated">
+		/// If <see langword="true"/>, the created camera will be activated upon creation.
+		/// </param>
+		/// <param name="rotOrder">The rotation order in world space.</param>
+		/// <returns>
+		/// A new <see cref="Camera"/> instance if the method successfully created a new <see cref="Camera"/>;
+		/// otherwise, <see langword="null"/>.
+		/// </returns>
+		/// <remarks>
+		/// The method will fail to create a scripted <see cref="Camera"/> if the passed camera name is invalid
+		/// or the camera pool is full. The method will return <see langword="null"/> in said conditions.
+		/// </remarks>
+		public static Camera CreateCamera(ScriptedCameraNameHash cameraNameHash, Vector3 position, Vector3 rotation,
+			float fov = 65.0f, bool startActivated = false, EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CAMERA_WITH_PARAMS, (uint)cameraNameHash, position.X,
+				position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, startActivated, (int)rotOrder);
+			return handle > 0 ? new Camera(handle) : null;
+		}
+		/// <summary>
+		/// Creates a scripted <see cref="Camera"/> of a given name.
+		/// </summary>
+		/// <param name="cameraName">
+		/// The camera name.
+		/// Passing a invalid name will result in the <see langword="null"/> return value.
+		/// It would result in some unintended behaviors such as the camera position not being able to change
+		/// if you pass a camera name hash whose metadata is not designed for scripted cameras.
+		/// </param>
+		/// <param name="position">The position of the camera.</param>
+		/// <param name="rotation">The rotation of the camera.</param>
+		/// <param name="fov">The field of view of the camera.</param>
+		/// <param name="startActivated">
+		/// If <see langword="true"/>, the created camera will be activated upon creation.
+		/// </param>
+		/// <param name="rotOrder">The rotation order in world space.</param>
+		/// <returns>
+		/// A new <see cref="Camera"/> instance if the method successfully created a new <see cref="Camera"/>;
+		/// otherwise, <see langword="null"/>.
+		/// </returns>
+		/// <remarks>
+		/// The method will fail to create a scripted <see cref="Camera"/> if the passed camera name is invalid
+		/// or the camera pool is full. The method will return <see langword="null"/> in said conditions.
+		/// </remarks>
+		public static Camera CreateCamera(string cameraName, Vector3 position, Vector3 rotation,
+			float fov = 65.0f, bool startActivated = false, EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+		{
+			int handle = Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, cameraName, position.X,
+				position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, startActivated, (int)rotOrder);
+			return handle > 0 ? new Camera(handle) : null;
+		}
+
 		/// <summary>
 		/// Gets the scripted camera currently rendering to the game screen.
 		/// </summary>
