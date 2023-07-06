@@ -9,8 +9,15 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Represents a animation dictionary struct.
+	/// Represents a dictionary struct for an animation/clip dictionary.
+	/// Note that animation/clip dictionaries are different from clip sets, which is defined in
+	/// <c>clip_sets.ymt</c> or <c>clip_sets.xml</c> files.
 	/// </summary>
+	/// <remarks>
+	/// Despite the name, GTA V doesn't have game classes for animation dictionaries different from
+	/// clip dictionaries while the exe has <c>rage::crClipDictionary</c> and
+	/// <c>rage::fwClipDictionaryStore</c> classes.
+	/// </remarks>
 	public readonly struct AnimationDictionary : IEquatable<AnimationDictionary>, IStreamingResource
 	{
 		public AnimationDictionary(string name) : this()
@@ -19,7 +26,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the animation dictionary name.
+		/// Gets the name.
 		/// </summary>
 		public string Name
 		{
