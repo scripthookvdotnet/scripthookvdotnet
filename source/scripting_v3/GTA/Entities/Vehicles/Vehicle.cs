@@ -1391,7 +1391,7 @@ namespace GTA
 
 				return lightState1;
 			}
-			[Obsolete("The geter of Vehicle.AreLightsOn is obsolete. Use Vehicle.SetScriptedLightSetting instead.")]
+			[Obsolete("The setter of Vehicle.AreLightsOn is obsolete. Use Vehicle.SetScriptedLightSetting instead.")]
 			set => Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle, value ? 3 : 4);
 		}
 
