@@ -1337,7 +1337,7 @@ namespace GTA
 		/// even if the method fails to create and <c>CREATE_CAM_WITH_PARAMS</c> returns -1 due to the camera pool being full.
 		/// This is done for compatibility for scripts built against v3.6.0 or earlier.
 		/// </remarks>
-		[Obsolete("World.CreateCamera is obsolete. Use Camera.CreateCamera instead.")]
+		[Obsolete("World.CreateCamera is obsolete. Use Camera.Create instead.")]
 		public static Camera CreateCamera(Vector3 position, Vector3 rotation, float fov)
 		{
 			return new Camera(Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2));

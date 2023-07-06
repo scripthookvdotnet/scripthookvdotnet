@@ -7,7 +7,7 @@ namespace GTA
 {
 	/// <summary>
 	/// An enumeration of hashes of camera names where you can safely use with
-	/// <see cref="Camera.CreateCamera(ScriptedCameraNameHash, bool)"/> out of all camera metadata in <c>cameras.ymt</c>.
+	/// <see cref="Camera.Create(ScriptedCameraNameHash, bool)"/> out of all camera metadata in <c>cameras.ymt</c>.
 	/// </summary>
 	/// <remarks>
 	/// You can find name hashes for camera metadata in <c>cameras.ymt</c>.

@@ -25,14 +25,14 @@ namespace GTA
 		{
 		}
 
-		/// <inheritdoc cref="CreateCamera(ScriptedCameraNameHash, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
-		public static Camera CreateCamera(ScriptedCameraNameHash cameraNameHash, bool startActivated = false)
+		/// <inheritdoc cref="Create(ScriptedCameraNameHash, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
+		public static Camera Create(ScriptedCameraNameHash cameraNameHash, bool startActivated = false)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CAMERA, (uint)cameraNameHash, startActivated);
 			return handle > 0 ? new Camera(handle) : null;
 		}
-		/// <inheritdoc cref="CreateCamera(string, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
-		public static Camera CreateCamera(string cameraName, bool startActivated = false)
+		/// <inheritdoc cref="Create(string, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
+		public static Camera Create(string cameraName, bool startActivated = false)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CAM, cameraName, startActivated);
 			return handle > 0 ? new Camera(handle) : null;
@@ -61,7 +61,7 @@ namespace GTA
 		/// The method will fail to create a scripted <see cref="Camera"/> if the passed camera name is invalid
 		/// or the camera pool is full. The method will return <see langword="null"/> in said conditions.
 		/// </remarks>
-		public static Camera CreateCamera(ScriptedCameraNameHash cameraNameHash, Vector3 position, Vector3 rotation,
+		public static Camera Create(ScriptedCameraNameHash cameraNameHash, Vector3 position, Vector3 rotation,
 			float fov = 65.0f, bool startActivated = false, EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CAMERA_WITH_PARAMS, (uint)cameraNameHash, position.X,
@@ -92,7 +92,7 @@ namespace GTA
 		/// The method will fail to create a scripted <see cref="Camera"/> if the passed camera name is invalid
 		/// or the camera pool is full. The method will return <see langword="null"/> in said conditions.
 		/// </remarks>
-		public static Camera CreateCamera(string cameraName, Vector3 position, Vector3 rotation,
+		public static Camera Create(string cameraName, Vector3 position, Vector3 rotation,
 			float fov = 65.0f, bool startActivated = false, EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
 		{
 			int handle = Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, cameraName, position.X,

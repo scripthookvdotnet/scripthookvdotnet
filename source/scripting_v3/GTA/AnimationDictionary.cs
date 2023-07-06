@@ -27,12 +27,14 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="AnimationDictionary"/> is valid.
+		/// Gets a value indicating whether this <see cref="AnimationDictionary"/> exists
+		/// in the <c>fwClipDictionaryStore</c> pool.
 		/// </summary>
-		public bool IsValid => Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, Name);
+		public bool Exists => Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, Name);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="AnimationDictionary"/> is loaded so the animations of this <see cref="AnimationDictionary"/> are ready to use.
+		/// Gets a value indicating whether this <see cref="AnimationDictionary"/> is loaded
+		/// so the animations of this <see cref="AnimationDictionary"/> are ready to use.
 		/// </summary>
 		public bool IsLoaded => Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, Name);
 
