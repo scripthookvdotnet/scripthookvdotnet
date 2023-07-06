@@ -2223,8 +2223,20 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the animation dictionary or set this <see cref="Ped"/> should use or <see langword="null" /> to clear it.
+		/// Sets the clip/animation set this <see cref="Ped"/> should use or <see langword="null"/>
+		/// to reset to the default value defined in <c>peds.meta</c> under <c>&lt;MovementClipSet&gt;</c>.
 		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// When the value is set to <see langword="null"/>, <see cref="TaskInvoker.ClearAll"/> will be called
+		/// right after resetting the movement clipset.
+		/// </para>
+		/// <para>
+		/// Despite what the doc for this property said in between v3.0.0 in v3.6.0, the loading state of some animation
+		/// dictionaries has nothing to do with this property. Specifying a string only resigtered as a clip/animation
+		/// dictionary will result in the setter failure.
+		/// </para>
+		/// </remarks>
 		public string MovementAnimationSet
 		{
 			set
@@ -2236,14 +2248,10 @@ namespace GTA
 				}
 				else
 				{
-					// Movement sets can be applied from animation dictionaries and animation sets (also clip sets but they use the same native as animation sets).
-					// So check if the string is a valid dictionary, if so load it as such. Otherwise load it as an animation set.
-					bool isDict = Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, value);
-
-					Function.Call(isDict ? Hash.REQUEST_ANIM_DICT : Hash.REQUEST_ANIM_SET, value);
+					Function.Call(Hash.REQUEST_CLIP_SET, value);
 					int startTime = Environment.TickCount;
 
-					while (!Function.Call<bool>(isDict ? Hash.HAS_ANIM_DICT_LOADED : Hash.HAS_ANIM_SET_LOADED, value))
+					while (!Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, value))
 					{
 						Script.Yield();
 
