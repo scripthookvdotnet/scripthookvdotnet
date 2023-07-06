@@ -2026,7 +2026,7 @@ namespace GTA
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 				}
 
-				Function.Call<int>(Hash.SET_VEHICLE_BOMB_AMMO, Handle, value);
+				Function.Call(Hash.SET_VEHICLE_BOMB_AMMO, Handle, value);
 			}
 		}
 
@@ -2061,7 +2061,7 @@ namespace GTA
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 				}
 
-				Function.Call<int>(Hash.SET_VEHICLE_COUNTERMEASURE_AMMO, Handle, value);
+				Function.Call(Hash.SET_VEHICLE_COUNTERMEASURE_AMMO, Handle, value);
 			}
 		}
 
