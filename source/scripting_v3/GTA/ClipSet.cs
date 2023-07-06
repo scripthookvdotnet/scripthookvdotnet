@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015 crosire & kagikn & contributors
+// Copyright (C) 2023 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
@@ -76,9 +76,9 @@ namespace GTA
 			Function.Call(Hash.REMOVE_CLIP_SET, Name);
 		}
 
-		public bool Equals(ClipSet animationDictionary)
+		public bool Equals(ClipSet other)
 		{
-			return Name == animationDictionary.Name;
+			return Name == other.Name;
 		}
 		public override bool Equals(object obj)
 		{
