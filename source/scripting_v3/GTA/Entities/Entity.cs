@@ -148,7 +148,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> has a drawable object.
-		/// <see cref="PlayAnimation(string, AnimationDictionary, AnimationBlendDelta, bool, bool, bool, float, AnimationFlags)"/>
+		/// <see cref="PlayAnimation(string, ClipDictionary, AnimationBlendDelta, bool, bool, bool, float, AnimationFlags)"/>
 		/// and <c>PLAY_SYNCHRONIZED_ENTITY_ANIM</c> require the <see cref="Entity"/> to have a drawable.
 		/// You can use this property to check that the entity has a drawable before attempting to play the anim.
 		/// </summary>
@@ -1865,7 +1865,7 @@ namespace GTA
 		/// Plays an <see cref="Entity"/> animation.
 		/// </summary>
 		/// <param name="animName">The animation name.</param>
-		/// <param name="animDictName">The animation dictionary name.</param>
+		/// <param name="clipDictName">The animation dictionary name.</param>
 		/// <param name="blendDelta">The blend delta.</param>
 		/// <param name="loop">Specifies whether the animation should loop.</param>
 		/// <param name="holdLastFrame">Specifies whether the <see cref="Entity"/> should hold on the last frame.</param>
@@ -1874,26 +1874,26 @@ namespace GTA
 		/// </param>
 		/// <param name="startPhase">The start phase between 0f to 1f.</param>
 		/// <param name="animFlags">The animation flags.</param>
-		/// <remarks>For <see cref="Ped"/>, use <see cref="TaskInvoker.PlayAnimation(AnimationDictionary, string)"/>.</remarks>
-		public void PlayAnimation(string animName, AnimationDictionary animDictName, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
+		/// <remarks>For <see cref="Ped"/>, use <see cref="TaskInvoker.PlayAnimation(ClipDictionary, string)"/>.</remarks>
+		public void PlayAnimation(string animName, ClipDictionary clipDictName, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
 		{
-			Function.Call(Hash.PLAY_ENTITY_ANIM, Handle, animName, animDictName, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
+			Function.Call(Hash.PLAY_ENTITY_ANIM, Handle, animName, clipDictName, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
 		}
 
 		/// <summary>
 		/// Stops an <see cref="Entity"/> animation.
 		/// </summary>
-		public void StopAnimation(string animName, AnimationDictionary animDictName, AnimationBlendDelta blendDelta)
+		public void StopAnimation(string animName, ClipDictionary clipDictName, AnimationBlendDelta blendDelta)
 		{
-			Function.Call(Hash.STOP_ENTITY_ANIM, Handle, animName, animDictName, blendDelta.Value);
+			Function.Call(Hash.STOP_ENTITY_ANIM, Handle, animName, clipDictName, blendDelta.Value);
 		}
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> is playing the animation.
 		/// </summary>
-		public void IsPlayingAnimation(AnimationDictionary animDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
+		public void IsPlayingAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			Function.Call(Hash.IS_ENTITY_PLAYING_ANIM, Handle, animDictName, animName, type);
+			Function.Call(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDictName, animName, type);
 		}
 
 		/// <summary>
@@ -1902,9 +1902,9 @@ namespace GTA
 		/// <remarks>
 		/// Will only ever return <see langword="true"/> for anims that hold at the end (i.e. anims that loop or end automatically will always return <see langword="false"/>).
 		/// </remarks>
-		public void HasFinishedAnimation(AnimationDictionary animDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
+		public void HasFinishedAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			Function.Call(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, animDictName, animName, type);
+			Function.Call(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDictName, animName, type);
 		}
 
 		/// <summary>
@@ -1927,19 +1927,19 @@ namespace GTA
 		/// This value increasing in a range from [0.0 to 1.0] and wrap back to 0.0 when it reach 1.0.
 		/// The phase of the anim is between 0.0 and 1.0 regardless of the anim length.
 		/// </summary>
-		public float GetAnimationCurrentTime(AnimationDictionary animDictName, string animName)
-			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, Handle, animDictName, animName);
+		public float GetAnimationCurrentTime(ClipDictionary clipDictName, string animName)
+			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, Handle, clipDictName, animName);
 
 		/// <summary>
 		/// Gets the total animation time in milliseconds.
 		/// </summary>
-		public float GetAnimationTotalTime(AnimationDictionary animDictName, string animName)
-			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_TOTAL_TIME, Handle, animDictName, animName);
+		public float GetAnimationTotalTime(ClipDictionary clipDictName, string animName)
+			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_TOTAL_TIME, Handle, clipDictName, animName);
 
 		/// <summary>
 		/// Searches an animation for the start and end phase of an event.
 		/// </summary>
-		/// <param name="animDictName">
+		/// <param name="clipDictName">
 		/// The animation dictionary name.
 		/// </param>
 		/// <param name="animName">
@@ -1955,13 +1955,13 @@ namespace GTA
 		/// If the event tag is found, it's end phase will be filled.
 		/// </param>
 		/// <returns><see langword="true"/> if this method found an event tag in an animation playing; otherwise, <see langword="false"/>.</returns>
-		public bool FindAnimationEventPhase(AnimationDictionary animDictName, string animName, string eventName, out float startPhase, out float endPhase)
+		public bool FindAnimationEventPhase(ClipDictionary clipDictName, string animName, string eventName, out float startPhase, out float endPhase)
 		{
 			float startPhaseTemp, endPhaseTemp;
 
 			unsafe
 			{
-				bool foundEventTag = Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, animDictName, animName, eventName, &startPhaseTemp, &endPhaseTemp);
+				bool foundEventTag = Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDictName, animName, eventName, &startPhaseTemp, &endPhaseTemp);
 
 				startPhase = startPhaseTemp;
 				endPhase = endPhaseTemp;
