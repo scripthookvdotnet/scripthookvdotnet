@@ -1934,6 +1934,139 @@ namespace GTA
 
 		#endregion
 
+		#region Weapons
+
+		/// <summary>
+		/// <para>
+		/// Gets the current restricted ammo count for a particular vehicle weapon index on this <see cref="Vehicle"/>.
+		/// When the restricted ammo count is set positive, the game will count down with every fire and prevent firing at 0.
+		/// </para>
+		/// <para>
+		/// Not available in v1.0.877.1 or earlier game versions due to absence of members for restricted
+		/// ammo counts in <c>CVehicle</c>.
+		/// Currently not available in v1.0.944.2 due to absence of <c>GET_VEHICLE_WEAPON_RESTRICTED_AMMO</c>.
+		/// </para>
+		/// </summary>
+		/// <param name="vehicleWeaponIndex">
+		/// The weapon index, corresponds to each weapon slot in the vehicle's handling.meta.
+		/// The valid range is between 0 and 5 since the game version v1.0.1180.2, between 0 and 4 in the game version between v1.0.944.2 and v1.0.1103.2.
+		/// you can see what weapon hashes the weapon sub handling data specifies with <see cref="VehicleWeaponHandlingData.WeaponHash"/>.
+		/// </param>
+		/// <returns>
+		/// The current restricted ammo count for specified weapon index if the <see cref="Vehicle"/> exists and the weapon index is valid
+		/// (can be a negative value other than -1); otherwise, -1, which is the same as the default value set when the <see cref="Vehicle"/> just spawned.
+		/// </returns>
+		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.944.2 or earlier game versions.</exception>
+		public int GetRestrictedAmmoCount(int vehicleWeaponIndex)
+		{
+			if (Game.Version < GameVersion.v1_0_1011_1_Steam)
+			{
+				throw new GameVersionNotSupportedException(GameVersion.v1_0_1011_1_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
+			}
+
+			return Function.Call<int>(Hash.GET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex);
+		}
+		/// <summary>
+		/// <para>
+		/// Sets the current restricted ammo count for a particular vehicle weapon index on this <see cref="Vehicle"/>.
+		/// </para>
+		/// <para>
+		/// Not available in v1.0.877.1 or earlier game versions due to absence of members for restricted
+		/// ammo counts in <c>CVehicle</c>.
+		/// </para>
+		/// </summary>
+		/// <param name="vehicleWeaponIndex">
+		/// The weapon index, corresponds to each weapon slot in the vehicle's handling.meta.
+		/// The valid range is between 0 and 5 since the game version v1.0.1180.2, between 0 and 4 in the game version between v1.0.944.2 and v1.0.1103.2.
+		/// you can see what weapon hashes the weapon sub handling data specifies with <see cref="VehicleWeaponHandlingData.WeaponHash"/>.
+		/// </param>
+		/// <param name="ammoCount">
+		/// When set positive, will count down with every fire and prevent firing at 0.
+		/// Set -1 (or another negative value) to disable restricted ammo, which will result in the same result as when the <see cref="Vehicle"/> just spawned.
+		/// </param>
+		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.877.1 or earlier game versions.</exception>
+		public void SetRestrictedAmmoCount(int vehicleWeaponIndex, int ammoCount)
+		{
+			if (Game.Version < GameVersion.v1_0_944_2_Steam)
+			{
+				throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(SetRestrictedAmmoCount));
+			}
+
+			Function.Call(Hash.SET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex, ammoCount);
+		}
+
+		/// <summary>
+		/// <para>
+		/// Sets the current bomb ammo count on this <see cref="Vehicle"/>, which does not make the game prevent from using bombs
+		/// but can be read/write across scripts.
+		/// </para>
+		/// <para>
+		/// Not available in v1.0.1103.2 or earlier game versions.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// Unlike restricted vehicle ammo (which is game code fired), this is script-fired and manually decremented,
+		/// and only stored in vehicle code for network sync purposes. Therefore, you need to manage this property in your scripts on your own.
+		/// </remarks>
+		public int BombAmmoCount
+		{
+			get
+			{
+				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
+				}
+
+				return Function.Call<int>(Hash.GET_VEHICLE_BOMB_AMMO, Handle);
+			}
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
+				}
+
+				Function.Call<int>(Hash.SET_VEHICLE_BOMB_AMMO, Handle, value);
+			}
+		}
+
+		/// <summary>
+		/// <para>
+		/// Sets the current countermeasure ammo count on this <see cref="Vehicle"/>, which does not make the game prevent from using bombs
+		/// but can be read/write across scripts.
+		/// </para>
+		/// <para>
+		/// Not available in v1.0.1103.2 or earlier game versions.
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// Unlike restricted vehicle ammo (which is game code fired), this is script-fired and manually decremented,
+		/// and only stored in vehicle code for network sync purposes. Therefore, you need to manage this property in your scripts on your own.
+		/// </remarks>
+		public int CountermeasureAmmoCount
+		{
+			get
+			{
+				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
+				}
+
+				return Function.Call<int>(Hash.GET_VEHICLE_COUNTERMEASURE_AMMO, Handle);
+			}
+			set
+			{
+				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
+				{
+					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
+				}
+
+				Function.Call<int>(Hash.SET_VEHICLE_COUNTERMEASURE_AMMO, Handle, value);
+			}
+		}
+
+		#endregion
+
 		#region Towing
 
 		/// <summary>
