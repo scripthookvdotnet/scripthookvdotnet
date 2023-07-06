@@ -382,18 +382,18 @@ namespace GTA
 		/// because creating <see cref="ValueTuple"/> costs much (about 10x) more than using out parameters in .NET Framework.
 		/// </para>
 		/// </summary>
-		/// <param name="rearBottomLeft">The rear bottom left relative offset from the origin of the model.</param>
-		/// <param name="frontTopRight">The front top right relative offset from the origin of the model.</param>
-		public void GetDimensions(out Vector3 rearBottomLeft, out Vector3 frontTopRight)
+		/// <param name="min">The minimum offset, a.k.a. the rear bottom left relative offset, from the origin of the model.</param>
+		/// <param name="max">The maximum offset, a.k.a. the front top right relative offset, from the origin of the model.</param>
+		public void GetDimensions(out Vector3 min, out Vector3 max)
 		{
-			NativeVector3 min, max;
+			NativeVector3 retMin, retMax;
 			unsafe
 			{
-				Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &min, &max);
+				Function.Call(Native.Hash.GET_MODEL_DIMENSIONS, Hash, &retMin, &retMax);
 			}
 
-			rearBottomLeft = min;
-			frontTopRight = max;
+			min = retMin;
+			max = retMax;
 		}
 
 		/// <summary>
