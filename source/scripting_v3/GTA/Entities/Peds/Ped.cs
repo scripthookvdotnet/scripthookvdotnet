@@ -2223,7 +2223,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the clip/animation set this <see cref="Ped"/> should use or <see langword="null"/>
+		/// Sets the movement clip/animation set this <see cref="Ped"/> should use or <see langword="null"/>
 		/// to reset to the default value defined in <c>peds.meta</c> under <c>&lt;MovementClipSet&gt;</c>.
 		/// </summary>
 		/// <remarks>
@@ -2237,6 +2237,7 @@ namespace GTA
 		/// dictionary will result in the setter failure.
 		/// </para>
 		/// </remarks>
+		[Obsolete("Ped.MovementAnimationSet is obsolete. Use Ped.SetMovementClipSet or Ped.ResetMovementClipSet instead.")]
 		public string MovementAnimationSet
 		{
 			set
@@ -2265,6 +2266,60 @@ namespace GTA
 				}
 			}
 		}
+
+		/// <summary>
+		/// Sets the movement clipset this <see cref="Ped"/> should use.
+		/// Do not forget to stream in/load the clipset you want to load, or the method silently will fail.
+		/// </summary>
+		/// <remarks>
+		/// Unlike any methods that requires some resource to be loaded before the main operation and that are present in v3.6.0,
+		/// this method does not load the clipset automatically. Load the clipset you want to load beforehand.
+		/// </remarks>
+		public void SetMovementClipSet(ClipSet clipSet, float blendDuration = 0.25f)
+			=> Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, Handle, clipSet, blendDuration);
+
+		/// <summary>
+		/// Resets the movement clipset to the default value defined in <c>peds.meta</c> under <c>&lt;MovementClipSet&gt;</c>.
+		/// Do not forget to unstream the clipset if no longer needed.
+		/// </summary>
+		public void ResetMovementClipSet(float blendDuration = 0.25f)
+			=> Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, Handle, blendDuration);
+
+		/// <summary>
+		/// Sets the strafe clipset this <see cref="Ped"/> should use.
+		/// Do not forget to stream in/load the clipset you want to load, or the method silently will fail.
+		/// </summary>
+		/// <remarks>
+		/// Unlike any methods that requires some resource to be loaded before the main operation and that are present in v3.6.0,
+		/// this method does not load the clipset automatically. Load the clipset you want to load beforehand.
+		/// </remarks>
+		public void SetStrafeClipSet(ClipSet clipSet)
+			=> Function.Call(Hash.SET_PED_STRAFE_CLIPSET, Handle, clipSet);
+
+		/// <summary>
+		/// Resets the strafe clipset to the default value defined in <c>peds.meta</c> under <c>&lt;StrafeClipSet&gt;</c>.
+		/// Do not forget to unstream the clipset if no longer needed.
+		/// </summary>
+		public void ResetStrafeClipSet()
+			=> Function.Call(Hash.RESET_PED_STRAFE_CLIPSET, Handle);
+
+		/// <summary>
+		/// Sets the weapon movement clipset this <see cref="Ped"/> should use.
+		/// Do not forget to stream in/load the clipset you want to load, or the method silently will fail.
+		/// </summary>
+		/// <remarks>
+		/// Unlike any methods that requires some resource to be loaded before the main operation and that are present in v3.6.0,
+		/// this method does not load the clipset automatically. Load the clipset you want to load beforehand.
+		/// </remarks>
+		public void SetWeaponMovementClipSet(ClipSet clipSet)
+			=> Function.Call(Hash.SET_PED_WEAPON_MOVEMENT_CLIPSET, Handle, clipSet);
+
+		/// <summary>
+		/// Resets the weapon movement clipset to the default value defined in <c>peds.meta</c> under <c>&lt;StrafeClipSet&gt;</c>.
+		/// Do not forget to unstream the clipset if no longer needed.
+		/// </summary>
+		public void ResetWeaponMovementClipSet()
+			=> Function.Call(Hash.RESET_PED_WEAPON_MOVEMENT_CLIPSET, Handle);
 
 		#endregion
 
