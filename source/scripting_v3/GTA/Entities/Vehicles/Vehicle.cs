@@ -1391,7 +1391,22 @@ namespace GTA
 
 				return lightState1;
 			}
+			[Obsolete("The geter of Vehicle.AreLightsOn is obsolete. Use Vehicle.SetScriptedLightSetting instead.")]
 			set => Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle, value ? 3 : 4);
+		}
+
+		/// <summary>
+		/// Sets scripted vehicle light setting.
+		/// </summary>
+		/// <param name="lightSetting">
+		/// The scripted light setting to set.
+		/// If set to <see cref="ScriptedVehicleLightSetting.SetVehicleLightsOn"/>
+		/// or <see cref="ScriptedVehicleLightSetting.SetVehicleLightsOff"/>, the method will also change non-scripted light states
+		/// (for <see cref="ScriptedVehicleLightSetting.SetVehicleLightsOff"/>, in a bit incomplete way).
+		/// </param>
+		public void SetScriptedLightSetting(ScriptedVehicleLightSetting lightSetting)
+		{
+			Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle,(int)lightSetting);
 		}
 
 		/// <summary>
