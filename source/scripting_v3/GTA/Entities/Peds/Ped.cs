@@ -632,6 +632,12 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Activates or deactivates the combat attributes.
+		/// </summary>
+		public void SetCombatAttribute(CombatAttributes attribute, bool activeSkill)
+			=> Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, Handle, (int)attribute, activeSkill);
+
+		/// <summary>
 		/// Sets a value indicating whether this <see cref="Entity"/> is persistent.
 		/// Unlike <see cref="Entity.IsPersistent"/>, calling this method does not affect assigned tasks.
 		/// </summary>
