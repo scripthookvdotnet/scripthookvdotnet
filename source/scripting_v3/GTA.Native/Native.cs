@@ -11,7 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using GTA.Math;
-
+using InlineIL;
+using static InlineIL.IL.Emit;
 
 namespace GTA.Native
 {
@@ -356,11 +357,39 @@ namespace GTA.Native
 		/// <summary>
 		/// Allocates a <see cref="OutputArgument"/> instance where the storage has a block of memory of the specified struct type.
 		/// </summary>
-		static public OutputArgument Alloc<T>() where T : unmanaged
+		public static OutputArgument Alloc<T>() where T : unmanaged
 		{
 			unsafe
 			{
 				return new OutputArgument(sizeof(T));
+			}
+		}
+		/// <summary>
+		/// Initializes a <see cref="OutputArgument"/> instance with the specified bittable struct.
+		/// </summary>
+		public static OutputArgument Init<T>(T value) where T : unmanaged
+		{
+			unsafe
+			{
+				var outArg = new OutputArgument(sizeof(T));
+				*(T*)outArg._storage = value;
+
+				return outArg;
+			}
+		}
+		/// <summary>
+		/// Initializes a <see cref="OutputArgument"/> instance with the specified bittable struct.
+		/// </summary>
+		public static OutputArgument Init<T>(ref T value) where T : unmanaged
+		{
+			unsafe
+			{
+				var outArg = new OutputArgument(sizeof(T));
+				// since the byte size is the same between the passed struct and the strage in the OutputArgument instance,
+				// it is safe to initalize the storage with the passed value
+				*(T*)(void*)outArg._storage = *(T*)AsPointer(ref value);
+
+				return outArg;
 			}
 		}
 
@@ -395,6 +424,16 @@ namespace GTA.Native
 		/// </summary>
 		/// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
 		public T GetResultAsBittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(_storage);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE0060 // Remove unused parameter
+		private static unsafe void* AsPointer<T>(ref T value)
+#pragma warning restore IDE0060 // Remove unused parameter
+		{
+			Ldarg(nameof(value));
+			Conv_U();
+			return IL.ReturnPointer();
+		}
 	}
 
 	/// <summary>
