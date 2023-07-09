@@ -57,6 +57,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all" />
+    <PackageReference Include="InlineIL.Fody" Version="1.7.4" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj" />
   </ItemGroup>
   <ItemGroup>
