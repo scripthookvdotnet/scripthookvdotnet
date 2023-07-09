@@ -1042,6 +1042,10 @@ namespace SHVDN
 				compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
 				compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
 
+				// With this parameter, you can use natives that require accessible addresses without having to use
+				// members of the Marshall class (e.g. SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED)
+				compilerOptions.CompilerOptions += " /unsafe";
+
 				foreach (Script script in ScriptDomain.CurrentDomain.RunningScripts.Where(x => x.IsRunning))
 				{
 					if (System.IO.File.Exists(script.Filename) && System.IO.Path.GetExtension(script.Filename) == ".dll")
