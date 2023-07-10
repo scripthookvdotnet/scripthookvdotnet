@@ -1865,7 +1865,7 @@ namespace GTA
 		/// Plays an <see cref="Entity"/> animation.
 		/// </summary>
 		/// <param name="animName">The animation name.</param>
-		/// <param name="clipDictName">The animation dictionary name.</param>
+		/// <param name="clipDictName">The clip/animation dictionary name.</param>
 		/// <param name="blendDelta">The blend delta.</param>
 		/// <param name="loop">Specifies whether the animation should loop.</param>
 		/// <param name="holdLastFrame">Specifies whether the <see cref="Entity"/> should hold on the last frame.</param>
@@ -1940,7 +1940,7 @@ namespace GTA
 		/// Searches an animation for the start and end phase of an event.
 		/// </summary>
 		/// <param name="clipDictName">
-		/// The animation dictionary name.
+		/// The clip/animation dictionary name.
 		/// </param>
 		/// <param name="animName">
 		/// The animation clip name.
