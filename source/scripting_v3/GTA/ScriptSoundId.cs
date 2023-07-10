@@ -176,10 +176,6 @@ namespace GTA
 		{
 			return new InputArgument((ulong)value.Id);
 		}
-		public static implicit operator ScriptSoundId(int value)
-		{
-			return new ScriptSoundId(value);
-		}
 
 		public override int GetHashCode()
 		{
