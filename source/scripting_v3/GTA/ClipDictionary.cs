@@ -113,7 +113,7 @@ namespace GTA
 		{
 			return new InputArgument(value.Name);
 		}
-		public static implicit operator ClipDictionary(string value)
+		public static explicit operator ClipDictionary(string value)
 		{
 			return new ClipDictionary(value);
 		}

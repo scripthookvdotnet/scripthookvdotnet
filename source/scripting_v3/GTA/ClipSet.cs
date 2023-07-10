@@ -103,7 +103,7 @@ namespace GTA
 		{
 			return new InputArgument(value.Name);
 		}
-		public static implicit operator ClipSet(string value)
+		public static explicit operator ClipSet(string value)
 		{
 			return new ClipSet(value);
 		}

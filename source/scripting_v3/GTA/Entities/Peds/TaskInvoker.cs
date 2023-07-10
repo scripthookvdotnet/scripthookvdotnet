@@ -173,7 +173,7 @@ namespace GTA
 
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
 		{
-			EnterVehicle(vehicle, seat, timeout, speed, flag, null);
+			EnterVehicle(vehicle, seat, timeout, (PedMoveBlendRatio)speed, flag, null);
 		}
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat, int timeout, PedMoveBlendRatio? moveBlendRatio = null, EnterVehicleFlags flag = EnterVehicleFlags.None, string overriddenClipSet = null)
 		{
@@ -459,7 +459,7 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName)
 		{
-			PlayAnimationInternal(animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(ClipDictionary clipDict, string animName)
 		{
@@ -468,7 +468,7 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
-			PlayAnimationInternal(animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(ClipDictionary clipDict, string animName, AnimationBlendDelta blendSpeed, int duration, float startPhase)
 		{
@@ -477,12 +477,12 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
-			PlayAnimationInternal(animDict, animName, blendInSpeed, -8f, duration, flags, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 		{
-			PlayAnimationInternal(animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, AnimationIKControlFlags.None);
 		}
 
 		public void PlayAnimation(ClipDictionary clipDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)

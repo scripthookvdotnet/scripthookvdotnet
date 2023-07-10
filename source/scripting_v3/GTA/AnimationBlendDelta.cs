@@ -60,7 +60,7 @@ namespace GTA
 		/// </summary>
 		public static AnimationBlendDelta Instant => new(1000.0f);
 
-		public static implicit operator AnimationBlendDelta(float value) => new(value);
+		public static explicit operator AnimationBlendDelta(float value) => new(value);
 		public static explicit operator float(AnimationBlendDelta value) => value.Value;
 		public static implicit operator InputArgument(AnimationBlendDelta value)
 		{

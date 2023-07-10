@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (C) 2015 crosire & kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
@@ -43,7 +43,7 @@ namespace GTA
 		/// </summary>
 		public static PedMoveBlendRatio Sprint => new(3.0f);
 
-		public static implicit operator PedMoveBlendRatio(float value) => new(value);
+		public static explicit operator PedMoveBlendRatio(float value) => new(value);
 		public static explicit operator float(PedMoveBlendRatio value) => value.Value;
 		public static implicit operator InputArgument(PedMoveBlendRatio value)
 		{
