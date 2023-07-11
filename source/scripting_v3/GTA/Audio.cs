@@ -46,12 +46,14 @@ namespace GTA
 		/// <remarks>
 		/// <para>
 		/// SoundIds can be reused, without needing to release them and grab a new one. If a sound's finished playing,
-		/// you can reuse its SoundId to kick off another one. If the sound's not finished playing,
-		/// it'll be stopped first (fading out or whatever is set up in RAVE by the sound designer), and the new one kicked off; usually it is safer to just get a new SoundId. 
+		/// you can reuse its <see cref="ScriptSoundId"/> to kick off another one. If the sound's not finished playing,
+		/// it'll be stopped first (fading out or whatever is set up in RAVE by the sound designer), and the new one kicked off;
+		/// usually it is safer to just get a new <see cref="ScriptSoundId"/>.
 		/// </para>
 		/// <para>
-		/// The <see cref="ScriptSoundId"/> is always an integer greater than or equal to zero; if a playback function has a SoundId field but the sound doesn't need to be altered after 
-		/// triggering then call the forget method variants in <see cref="Audio"/> class, rather than getting a <see cref="ScriptSoundId"/>.
+		/// Identifiers of <see cref="ScriptSoundId"/> are always integral values greater than or equal to zero;
+		/// if a playback function has a SoundId field but the sound doesn't need to be altered after triggering
+		/// then call the forget method variants in <see cref="Audio"/> class, rather than getting a <see cref="ScriptSoundId"/>.
 		/// </para>
 		/// <para>
 		/// Scripted sound id can be reserved up to 100 in the <c>audScriptAudioEntity</c> instance.
@@ -59,10 +61,14 @@ namespace GTA
 		/// </para>
 		/// </remarks>
 		/// <returns>
-		/// A <see cref="ScriptSoundId"/> instance with the assigned id in the range of from 0 to 100 if the method successfully found an empty id/index;
-		/// otherwise, a <see cref="ScriptSoundId"/> instance with the id -1.
+		/// A <see cref="ScriptSoundId"/> instance with the assigned id in the range of from 0 to 100 if the method successfully found a free id/index;
+		/// otherwise, <see langword="null"/>.
 		/// </returns>
-		public static ScriptSoundId GetSoundId() => new (Function.Call<int>(Hash.GET_SOUND_ID));
+		public static ScriptSoundId GetSoundId()
+		{
+			int id = Function.Call<int>(Hash.GET_SOUND_ID);
+			return id >= 0 ? new ScriptSoundId(id) : null;
+		}
 
 		/// <summary>
 		/// Plays back a sound with the name <paramref name="soundName"/>, but do not track of sounds.

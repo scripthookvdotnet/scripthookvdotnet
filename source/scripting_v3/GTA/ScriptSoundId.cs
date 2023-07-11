@@ -12,9 +12,9 @@ namespace GTA
 	/// <summary>
 	/// Represents a script sound id, which is used for script audio sounds processed via the static <c>audScriptAudioEntity</c> instance.
 	/// </summary>
-	public readonly struct ScriptSoundId : IEquatable<ScriptSoundId>
+	public class ScriptSoundId : IEquatable<ScriptSoundId>
 	{
-		internal ScriptSoundId(int id) : this()
+		internal ScriptSoundId(int id)
 		{
 			Id = id;
 		}
@@ -29,12 +29,9 @@ namespace GTA
 
 		/// <summary>
 		/// Returns <see langword="true"/> if the sound <see cref="Id"/> is negative,
-		/// which indicates <see cref="Audio.GetSoundId()"/> fails to reserve a new script sound id (with the return value -1).
+		/// which indicates this <see cref="ScriptSoundId"/> is not valid.
 		/// </summary>
-		/// <remarks>
-		/// Do not trust this property if the struct is created via something other than <see cref="Audio.GetSoundId()"/>.
-		/// </remarks>
-		public bool IsNullId => Id < 0;
+		public bool IsNull => Id < 0;
 
 		/// <summary>
 		/// Plays back a sound with the name <paramref name="soundName"/>.
