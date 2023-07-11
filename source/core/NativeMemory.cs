@@ -5348,7 +5348,7 @@ namespace SHVDN
 
 		#region -- CScriptResource Data --
 
-		internal enum CScriptResourceTypeNameIndex
+		internal enum CScriptResourceTypeNameIndex : ushort
 		{
 			Checkpoint = 6
 		}
