@@ -5350,20 +5350,22 @@ namespace SHVDN
 
 		internal enum CScriptResourceTypeNameIndex : ushort
 		{
-			Checkpoint = 6
+			Checkpoint = 6,
+			RelGroup = 20,
+			ScaleformMovie = 21,
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		private struct CGameScriptResource
+		internal struct CGameScriptResource
 		{
 			[FieldOffset(0x0)]
 			internal ulong* vTable;
 			[FieldOffset(0x8)]
 			internal CScriptResourceTypeNameIndex resourceTypeNameIndex;
 			[FieldOffset(0xC)]
-			internal int counterOfPool;
+			internal uint counterOfPool;
 			[FieldOffset(0x10)]
-			internal int indexOfPool;
+			internal uint indexOfPool;
 			[FieldOffset(0x18)]
 			internal CGameScriptResource* next;
 			[FieldOffset(0x20)]
@@ -5403,7 +5405,7 @@ namespace SHVDN
 						continue;
 					}
 
-					s_cScriptResourceHandleBuffer[elementCount++] = item->counterOfPool;
+					s_cScriptResourceHandleBuffer[elementCount++] = (int)item->counterOfPool;
 				}
 
 				if (elementCount == 0)
@@ -5455,6 +5457,42 @@ namespace SHVDN
 			}
 		}
 
+		internal sealed class GetCScriptResourceByIndexTask : IScriptTask
+		{
+			#region Fields
+			internal CScriptResourceTypeNameIndex _resourceType;
+			internal uint _targetIndex;
+			internal CGameScriptResource* _result;
+			#endregion
+
+			internal GetCScriptResourceByIndexTask(CScriptResourceTypeNameIndex resourceType, uint index)
+			{
+				this._resourceType = resourceType;
+				this._targetIndex = index;
+			}
+
+			public void Run()
+			{
+				ulong cGameScriptHandlerAddress = s_getCGameScriptHandlerAddressFunc();
+
+				if (cGameScriptHandlerAddress == 0)
+				{
+					return;
+				}
+
+				CGameScriptResource* firstItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
+				for (_result = firstItem;
+					_result != null && (_result->resourceTypeNameIndex != _resourceType || _result->indexOfPool != _targetIndex);
+					_result = _result->next
+					)
+				{
+					;
+				}
+
+				// _result should have the result address or null if not found
+			}
+		}
+
 		#endregion
 
 		#region -- Checkpoint Pool --
@@ -5479,6 +5517,25 @@ namespace SHVDN
 			ScriptDomain.CurrentDomain.ExecuteTask(task);
 
 			return task._returnAddress;
+		}
+
+		#endregion
+
+		#region -- Scaleform Movie Data --
+
+		public static bool IsScaleformMovieHandleValid(uint handle)
+		{
+			// handle cannot be zero
+			if (handle == 0)
+			{
+				return false;
+			}
+
+			var task = new GetCScriptResourceByIndexTask(CScriptResourceTypeNameIndex.ScaleformMovie, handle);
+
+			ScriptDomain.CurrentDomain.ExecuteTask(task);
+
+			return task._result != null;
 		}
 
 		#endregion
